@@ -673,26 +673,6 @@ test("current-turn hair loss wording can load safety overlay without saved profi
   assert.ok(guidance.avoid.some((line) => /diagnose|regrowth|hair-loss/i.test(line)))
 })
 
-test("current-turn separated hair-loss wording can load safety overlay", async () => {
-  const guidance = await loadAdvisorGuidance({
-    intent: "problem_context",
-    category: "general_haircare",
-    categories: [],
-    profileFocus: ["hair_loss_or_thinning_guardrail", "dry_lengths"],
-    message: "mir fallen seit kurzem viele Haare aus, kann ein Oel helfen?",
-    userContext: createUserContext({
-      profile: createHairProfile({
-        thickness: "normal",
-        concerns: ["dryness"],
-      }),
-    }),
-    conversationState: null,
-  })
-
-  assert.ok(guidance.loaded_guidance_ids.includes("overlay:hair_loss_or_thinning_guardrail"))
-  assert.ok(guidance.avoid.some((line) => /diagnose|regrowth|hair-loss/i.test(line)))
-})
-
 test("current-turn separated hair-loss wording loads safety overlay without model focus", async () => {
   const guidance = await loadAdvisorGuidance({
     intent: "problem_context",
@@ -710,8 +690,14 @@ test("current-turn separated hair-loss wording loads safety overlay without mode
     conversationState: null,
   })
 
-  assert.ok(guidance.loaded_guidance_ids.includes("overlay:hair_loss_or_thinning_guardrail"))
-  assert.ok(guidance.avoid.some((line) => /diagnose|regrowth|hair-loss/i.test(line)))
+  assert.ok(
+    guidance.loaded_guidance_ids.includes("overlay:hair_loss_or_thinning_guardrail"),
+    "current-turn separated hair-loss wording must select the safety overlay without model focus",
+  )
+  assert.ok(
+    guidance.avoid.some((line) => /diagnose|regrowth|hair-loss/i.test(line)),
+    "selected hair-loss guardrail must retain its parsed avoidance receipt",
+  )
 })
 
 test("current-turn itchy burning scalp wording loads safety overlay without model focus", async () => {

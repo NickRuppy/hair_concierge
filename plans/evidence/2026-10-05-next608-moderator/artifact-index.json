@@ -1,0 +1,1634 @@
+[
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/ast-mapping.json",
+    "archived": "proposal/ast-mapping.json",
+    "sha256": "b6d33ea8d7edf64f874d6603ee9c16c87f681cfbd740e0ac1703c755c5ecf9ff",
+    "bytes": 99521
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/build-handoff.py",
+    "archived": "proposal/build-handoff.py.txt",
+    "sha256": "d9bd7a35e20d9c29f4050f507f9dda14f3a9e3a5aff9c973542101d9f8e29146",
+    "bytes": 16706
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/build-ledger.py",
+    "archived": "proposal/build-ledger.py.txt",
+    "sha256": "9d82651704c96cafaa1b97af81168b1782a976e51688b72d768ec40fb452bdb5",
+    "bytes": 22038
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/build-static.cjs",
+    "archived": "proposal/build-static.cjs.txt",
+    "sha256": "593c9d0d9259937ec172e799a2b26d8c382b67fad9dde6549678afcd741d6757",
+    "bytes": 8939
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/candidates.json",
+    "archived": "proposal/candidates.json",
+    "sha256": "1de59e9e3ece80720592bc207a38420a0773f166f9cd077aaa390e0fd5e0635f",
+    "bytes": 4762
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/complete-ledger.md",
+    "archived": "proposal/complete-ledger.md",
+    "sha256": "1188e120dd8a445ae453d5d004d9a05108d73bdcdaea4f4137d457a3064f3d29",
+    "bytes": 41310
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/complete.diff",
+    "archived": "proposal/complete.diff",
+    "sha256": "c6c20c5c834a3b45653d6810a23f5cd2f5fb0df4c1bc99d670a59d1aea872653",
+    "bytes": 1060
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/controls.json",
+    "archived": "proposal/controls.json",
+    "sha256": "9477608cfb7e7e8298e42b5cf35b947215e0078468cdd6acf75f6b4f7393ae9f",
+    "bytes": 4536
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/cut.diff",
+    "archived": "proposal/cut.diff",
+    "sha256": "311b6c6379983f3d942da8835aab47a90c7a840449ac1407af85c1a1740e067f",
+    "bytes": 1165
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/handoff-receipt.json",
+    "archived": "proposal/handoff-receipt.json",
+    "sha256": "baabc8f3a6c49edfa848a1b99915929a34bec147f96283682470cf3e588d3dab",
+    "bytes": 1109
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/inventory.json",
+    "archived": "proposal/inventory.json",
+    "sha256": "4fd60191669305738a9e6b6a614acc343a9f46fbb80947eb52fcb1c25b014346",
+    "bytes": 41247
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/judgments.json",
+    "archived": "proposal/judgments.json",
+    "sha256": "9d5c079fe4268ad2fa327f109642a7205c1ead4d86f5974dcbaa8936e0f658e5",
+    "bytes": 379075
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/layer-plan.md",
+    "archived": "proposal/layer-plan.md",
+    "sha256": "bddf32836a31ecc3404d7d8a6547481e5f7ad986425d31396d9e39425dbdca2f",
+    "bytes": 6614
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/main-commands.json",
+    "archived": "proposal/main-commands.json",
+    "sha256": "26361638399c6ea426046320af5900eeb939371855717ec9b79fae1763e0f082",
+    "bytes": 2593
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/manifest.json",
+    "archived": "proposal/manifest.json",
+    "sha256": "736ce42f2cc6dcb915680facd3c0e0b52bb2c22a4fe5616a4abfe53425089288",
+    "bytes": 57637
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/phase-files.json",
+    "archived": "proposal/phase-files.json",
+    "sha256": "9165669b32375160ff6d4823f91259c67e25a7d00d605667c2209fb1b5350d05",
+    "bytes": 18543
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/read-scope.json",
+    "archived": "proposal/read-scope.json",
+    "sha256": "e241b937a2c7952d05e51fa59ecc5e1e3dcc33b633b8c6758e1a4d94faf281ef",
+    "bytes": 37649
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/moderator-account-maintenance.test.ts",
+    "archived": "proposal/snapshots/before/tests/moderator-account-maintenance.test.ts.txt",
+    "sha256": "0608050698d408ed4b09c55b56861ed8970c074a30237bdd701f50303eff525a",
+    "bytes": 14184
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/moderator-account-reset-execution.test.ts",
+    "archived": "proposal/snapshots/before/tests/moderator-account-reset-execution.test.ts.txt",
+    "sha256": "625b090a1c22ce5e01b758b38d25426e5da9ce1be148a16baf2ad8cfe07101f2",
+    "bytes": 16032
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/moderator-account-reset.test.ts",
+    "archived": "proposal/snapshots/before/tests/moderator-account-reset.test.ts.txt",
+    "sha256": "132addacf27aec26a018061afe7e041f5ba341426e9c69fb2cfdde0b27fb184c",
+    "bytes": 29124
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/moderator-hosted-activation-probe.test.ts",
+    "archived": "proposal/snapshots/before/tests/moderator-hosted-activation-probe.test.ts.txt",
+    "sha256": "da619372b2c743e192eaf3ba3982d997b8731aab9110d052279091d50b227a3e",
+    "bytes": 15835
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/moderator-hosted-auth-probe.test.ts",
+    "archived": "proposal/snapshots/before/tests/moderator-hosted-auth-probe.test.ts.txt",
+    "sha256": "34d94a7f3d69d53df94380fd11c7b7393f369133d20616e54ccf6ce5799f9318",
+    "bytes": 12608
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/moderator-organic-fresh-start.test.ts",
+    "archived": "proposal/snapshots/before/tests/moderator-organic-fresh-start.test.ts.txt",
+    "sha256": "65c840b8a01db98064d738d2e693bf90a4efaec27e194efe8a6c0348016ce7fc",
+    "bytes": 4125
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/moderator-quiz-draft-scope.test.ts",
+    "archived": "proposal/snapshots/before/tests/moderator-quiz-draft-scope.test.ts.txt",
+    "sha256": "8fa270c2b9aa19f764daa45382d92952843aa28eb8b411f206bd020862869925",
+    "bytes": 1915
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/personal-plan-field-test-activation-route.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-field-test-activation-route.test.ts.txt",
+    "sha256": "f40aab18ec11eb8b097a8afda206d30f71fbd3a11d24a8213a3f2b407779d880",
+    "bytes": 4809
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/personal-plan-field-test-activation.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-field-test-activation.test.ts.txt",
+    "sha256": "f595bfaeccf6529daaa03b3d09fe387e0ddd02ba7ea5c807d28e5fbd0a32eed4",
+    "bytes": 2173
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/personal-plan-field-test-analytics.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-field-test-analytics.test.ts.txt",
+    "sha256": "4992c22e606ecc186fb36b6e24050cde0b92ad09ed22d43b1e5fda60232b8d10",
+    "bytes": 4105
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/personal-plan-field-test-campaign-command.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-field-test-campaign-command.test.ts.txt",
+    "sha256": "074c15f31ee2360f673f76f87594eb2bdc8c53e9e596485f47f77b60e5fb97ab",
+    "bytes": 7530
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/personal-plan-field-test-entry-route.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-field-test-entry-route.test.ts.txt",
+    "sha256": "37f48ffb9abae8f25999bea7b8082d05c65a30d91628b47e9ae68e00f000d867",
+    "bytes": 8315
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/personal-plan-field-test-routing-migration.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-field-test-routing-migration.test.ts.txt",
+    "sha256": "1e498b3f47b237937bf63fdb8a2f2ed14487de90ab5b62f7d92da9de326893f9",
+    "bytes": 2026
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/personal-plan-field-test-schema.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-field-test-schema.test.ts.txt",
+    "sha256": "86634d005795e018e75fb0efc8df91a7062dfe5b97f1a633fb1233d04d30f34f",
+    "bytes": 7877
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/personal-plan-field-test-server.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-field-test-server.test.ts.txt",
+    "sha256": "33dc524be1f901efe9b37fdc1c833202566cbfe322279a79e86b1b4ab8b004bb",
+    "bytes": 10388
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/personal-plan-field-test-ui.test.tsx",
+    "archived": "proposal/snapshots/before/tests/personal-plan-field-test-ui.test.tsx.txt",
+    "sha256": "3a2b873d802dfb9667ca5f8167bb95d5b6eb23cda0a7b8dc90a4ba153d3335e8",
+    "bytes": 5698
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/personal-plan-moderator-activation-route.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-moderator-activation-route.test.ts.txt",
+    "sha256": "34c9efa1acfb4f11bdb3f30a1450f2779ec4d4febfabbcededb41f57fd5e34a7",
+    "bytes": 8264
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/personal-plan-moderator-contract.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-moderator-contract.test.ts.txt",
+    "sha256": "22c047a2be03a200941843439bae813b590b35bdff33635bcd713e1430deeee9",
+    "bytes": 11600
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/personal-plan-moderator-journey.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-moderator-journey.test.ts.txt",
+    "sha256": "572cb8eb0937625d60fc771a19473e267b9cec7adea4052cb9f7a0d19d46f079",
+    "bytes": 7381
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/personal-plan-moderator-schema.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-moderator-schema.test.ts.txt",
+    "sha256": "fb3280dbdab55d23467133a971ce27faad6a37a9b901d4bd809b2910afe10bf8",
+    "bytes": 4554
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/personal-plan-moderator-sql-execution.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-moderator-sql-execution.test.ts.txt",
+    "sha256": "0d3026f1e7a9d32c0d45a1195cf6c88bb2584420b1e47b2ec59166ca46dc0148",
+    "bytes": 36791
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/personal-plan-moderator-start-route.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-moderator-start-route.test.ts.txt",
+    "sha256": "5b37f4ea7d313c70e0f0998bf3803d2c3ffae2de301336c1c66a3ac7ec0f6e5c",
+    "bytes": 7983
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/regular-quiz-field-test-activation-route.test.ts",
+    "archived": "proposal/snapshots/before/tests/regular-quiz-field-test-activation-route.test.ts.txt",
+    "sha256": "0c7ae564226e9706e4cf04096fabf1f3c540153c9079b60a8bee442d69fdef94",
+    "bytes": 5386
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/regular-quiz-field-test-activation.test.ts",
+    "archived": "proposal/snapshots/before/tests/regular-quiz-field-test-activation.test.ts.txt",
+    "sha256": "83c4741f16bd2b3adff4c21197d446a3c41c540d85f5d66425ff2aa786922a15",
+    "bytes": 2016
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/regular-quiz-field-test-runtime.test.ts",
+    "archived": "proposal/snapshots/before/tests/regular-quiz-field-test-runtime.test.ts.txt",
+    "sha256": "5ad3f31d6f3d3ef8af3e38e2cba56d2b0b402f80c8b505cb072ac247c8e23e56",
+    "bytes": 12372
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/regular-quiz-field-test-schema.test.ts",
+    "archived": "proposal/snapshots/before/tests/regular-quiz-field-test-schema.test.ts.txt",
+    "sha256": "e16fe6ca59820237d68e5a5a85c2a04afbe8d5cc3b70d3d9b6ab82e5dafc0b7c",
+    "bytes": 4780
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/before/tests/regular-quiz-field-test-ui.test.tsx",
+    "archived": "proposal/snapshots/before/tests/regular-quiz-field-test-ui.test.tsx.txt",
+    "sha256": "27aa6d0538df579432dcfc5229f780df85a3bbc4d460f601de9de6e50e821a91",
+    "bytes": 9923
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/moderator-account-maintenance.test.ts",
+    "archived": "proposal/snapshots/cut/tests/moderator-account-maintenance.test.ts.txt",
+    "sha256": "0608050698d408ed4b09c55b56861ed8970c074a30237bdd701f50303eff525a",
+    "bytes": 14184
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/moderator-account-reset-execution.test.ts",
+    "archived": "proposal/snapshots/cut/tests/moderator-account-reset-execution.test.ts.txt",
+    "sha256": "625b090a1c22ce5e01b758b38d25426e5da9ce1be148a16baf2ad8cfe07101f2",
+    "bytes": 16032
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/moderator-account-reset.test.ts",
+    "archived": "proposal/snapshots/cut/tests/moderator-account-reset.test.ts.txt",
+    "sha256": "132addacf27aec26a018061afe7e041f5ba341426e9c69fb2cfdde0b27fb184c",
+    "bytes": 29124
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/moderator-hosted-activation-probe.test.ts",
+    "archived": "proposal/snapshots/cut/tests/moderator-hosted-activation-probe.test.ts.txt",
+    "sha256": "da619372b2c743e192eaf3ba3982d997b8731aab9110d052279091d50b227a3e",
+    "bytes": 15835
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/moderator-hosted-auth-probe.test.ts",
+    "archived": "proposal/snapshots/cut/tests/moderator-hosted-auth-probe.test.ts.txt",
+    "sha256": "34d94a7f3d69d53df94380fd11c7b7393f369133d20616e54ccf6ce5799f9318",
+    "bytes": 12608
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/moderator-organic-fresh-start.test.ts",
+    "archived": "proposal/snapshots/cut/tests/moderator-organic-fresh-start.test.ts.txt",
+    "sha256": "65c840b8a01db98064d738d2e693bf90a4efaec27e194efe8a6c0348016ce7fc",
+    "bytes": 4125
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/moderator-quiz-draft-scope.test.ts",
+    "archived": "proposal/snapshots/cut/tests/moderator-quiz-draft-scope.test.ts.txt",
+    "sha256": "8fa270c2b9aa19f764daa45382d92952843aa28eb8b411f206bd020862869925",
+    "bytes": 1915
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/personal-plan-field-test-activation-route.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-field-test-activation-route.test.ts.txt",
+    "sha256": "f40aab18ec11eb8b097a8afda206d30f71fbd3a11d24a8213a3f2b407779d880",
+    "bytes": 4809
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/personal-plan-field-test-activation.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-field-test-activation.test.ts.txt",
+    "sha256": "f595bfaeccf6529daaa03b3d09fe387e0ddd02ba7ea5c807d28e5fbd0a32eed4",
+    "bytes": 2173
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/personal-plan-field-test-analytics.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-field-test-analytics.test.ts.txt",
+    "sha256": "4992c22e606ecc186fb36b6e24050cde0b92ad09ed22d43b1e5fda60232b8d10",
+    "bytes": 4105
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/personal-plan-field-test-campaign-command.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-field-test-campaign-command.test.ts.txt",
+    "sha256": "074c15f31ee2360f673f76f87594eb2bdc8c53e9e596485f47f77b60e5fb97ab",
+    "bytes": 7530
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/personal-plan-field-test-entry-route.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-field-test-entry-route.test.ts.txt",
+    "sha256": "37f48ffb9abae8f25999bea7b8082d05c65a30d91628b47e9ae68e00f000d867",
+    "bytes": 8315
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/personal-plan-field-test-routing-migration.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-field-test-routing-migration.test.ts.txt",
+    "sha256": "1e498b3f47b237937bf63fdb8a2f2ed14487de90ab5b62f7d92da9de326893f9",
+    "bytes": 2026
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/personal-plan-field-test-schema.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-field-test-schema.test.ts.txt",
+    "sha256": "86634d005795e018e75fb0efc8df91a7062dfe5b97f1a633fb1233d04d30f34f",
+    "bytes": 7877
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/personal-plan-field-test-server.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-field-test-server.test.ts.txt",
+    "sha256": "33dc524be1f901efe9b37fdc1c833202566cbfe322279a79e86b1b4ab8b004bb",
+    "bytes": 10388
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/personal-plan-field-test-ui.test.tsx",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-field-test-ui.test.tsx.txt",
+    "sha256": "4737c57eee0061e44ab84e47abef535bef3de94df7cc05de70622b9bc65965e8",
+    "bytes": 5427
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/personal-plan-moderator-activation-route.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-moderator-activation-route.test.ts.txt",
+    "sha256": "34c9efa1acfb4f11bdb3f30a1450f2779ec4d4febfabbcededb41f57fd5e34a7",
+    "bytes": 8264
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/personal-plan-moderator-contract.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-moderator-contract.test.ts.txt",
+    "sha256": "22c047a2be03a200941843439bae813b590b35bdff33635bcd713e1430deeee9",
+    "bytes": 11600
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/personal-plan-moderator-journey.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-moderator-journey.test.ts.txt",
+    "sha256": "572cb8eb0937625d60fc771a19473e267b9cec7adea4052cb9f7a0d19d46f079",
+    "bytes": 7381
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/personal-plan-moderator-schema.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-moderator-schema.test.ts.txt",
+    "sha256": "fb3280dbdab55d23467133a971ce27faad6a37a9b901d4bd809b2910afe10bf8",
+    "bytes": 4554
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/personal-plan-moderator-sql-execution.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-moderator-sql-execution.test.ts.txt",
+    "sha256": "0d3026f1e7a9d32c0d45a1195cf6c88bb2584420b1e47b2ec59166ca46dc0148",
+    "bytes": 36791
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/personal-plan-moderator-start-route.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-moderator-start-route.test.ts.txt",
+    "sha256": "5b37f4ea7d313c70e0f0998bf3803d2c3ffae2de301336c1c66a3ac7ec0f6e5c",
+    "bytes": 7983
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/regular-quiz-field-test-activation-route.test.ts",
+    "archived": "proposal/snapshots/cut/tests/regular-quiz-field-test-activation-route.test.ts.txt",
+    "sha256": "0c7ae564226e9706e4cf04096fabf1f3c540153c9079b60a8bee442d69fdef94",
+    "bytes": 5386
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/regular-quiz-field-test-activation.test.ts",
+    "archived": "proposal/snapshots/cut/tests/regular-quiz-field-test-activation.test.ts.txt",
+    "sha256": "83c4741f16bd2b3adff4c21197d446a3c41c540d85f5d66425ff2aa786922a15",
+    "bytes": 2016
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/regular-quiz-field-test-runtime.test.ts",
+    "archived": "proposal/snapshots/cut/tests/regular-quiz-field-test-runtime.test.ts.txt",
+    "sha256": "5ad3f31d6f3d3ef8af3e38e2cba56d2b0b402f80c8b505cb072ac247c8e23e56",
+    "bytes": 12372
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/regular-quiz-field-test-schema.test.ts",
+    "archived": "proposal/snapshots/cut/tests/regular-quiz-field-test-schema.test.ts.txt",
+    "sha256": "e16fe6ca59820237d68e5a5a85c2a04afbe8d5cc3b70d3d9b6ab82e5dafc0b7c",
+    "bytes": 4780
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/cut/tests/regular-quiz-field-test-ui.test.tsx",
+    "archived": "proposal/snapshots/cut/tests/regular-quiz-field-test-ui.test.tsx.txt",
+    "sha256": "27aa6d0538df579432dcfc5229f780df85a3bbc4d460f601de9de6e50e821a91",
+    "bytes": 9923
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/moderator-account-maintenance.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/moderator-account-maintenance.test.ts.txt",
+    "sha256": "0608050698d408ed4b09c55b56861ed8970c074a30237bdd701f50303eff525a",
+    "bytes": 14184
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/moderator-account-reset-execution.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/moderator-account-reset-execution.test.ts.txt",
+    "sha256": "625b090a1c22ce5e01b758b38d25426e5da9ce1be148a16baf2ad8cfe07101f2",
+    "bytes": 16032
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/moderator-account-reset.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/moderator-account-reset.test.ts.txt",
+    "sha256": "132addacf27aec26a018061afe7e041f5ba341426e9c69fb2cfdde0b27fb184c",
+    "bytes": 29124
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/moderator-hosted-activation-probe.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/moderator-hosted-activation-probe.test.ts.txt",
+    "sha256": "da619372b2c743e192eaf3ba3982d997b8731aab9110d052279091d50b227a3e",
+    "bytes": 15835
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/moderator-hosted-auth-probe.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/moderator-hosted-auth-probe.test.ts.txt",
+    "sha256": "34d94a7f3d69d53df94380fd11c7b7393f369133d20616e54ccf6ce5799f9318",
+    "bytes": 12608
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/moderator-organic-fresh-start.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/moderator-organic-fresh-start.test.ts.txt",
+    "sha256": "65c840b8a01db98064d738d2e693bf90a4efaec27e194efe8a6c0348016ce7fc",
+    "bytes": 4125
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/moderator-quiz-draft-scope.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/moderator-quiz-draft-scope.test.ts.txt",
+    "sha256": "8fa270c2b9aa19f764daa45382d92952843aa28eb8b411f206bd020862869925",
+    "bytes": 1915
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/personal-plan-field-test-activation-route.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-field-test-activation-route.test.ts.txt",
+    "sha256": "f40aab18ec11eb8b097a8afda206d30f71fbd3a11d24a8213a3f2b407779d880",
+    "bytes": 4809
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/personal-plan-field-test-activation.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-field-test-activation.test.ts.txt",
+    "sha256": "f595bfaeccf6529daaa03b3d09fe387e0ddd02ba7ea5c807d28e5fbd0a32eed4",
+    "bytes": 2173
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/personal-plan-field-test-analytics.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-field-test-analytics.test.ts.txt",
+    "sha256": "4992c22e606ecc186fb36b6e24050cde0b92ad09ed22d43b1e5fda60232b8d10",
+    "bytes": 4105
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/personal-plan-field-test-campaign-command.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-field-test-campaign-command.test.ts.txt",
+    "sha256": "074c15f31ee2360f673f76f87594eb2bdc8c53e9e596485f47f77b60e5fb97ab",
+    "bytes": 7530
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/personal-plan-field-test-entry-route.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-field-test-entry-route.test.ts.txt",
+    "sha256": "37f48ffb9abae8f25999bea7b8082d05c65a30d91628b47e9ae68e00f000d867",
+    "bytes": 8315
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/personal-plan-field-test-routing-migration.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-field-test-routing-migration.test.ts.txt",
+    "sha256": "1e498b3f47b237937bf63fdb8a2f2ed14487de90ab5b62f7d92da9de326893f9",
+    "bytes": 2026
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/personal-plan-field-test-schema.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-field-test-schema.test.ts.txt",
+    "sha256": "86634d005795e018e75fb0efc8df91a7062dfe5b97f1a633fb1233d04d30f34f",
+    "bytes": 7877
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/personal-plan-field-test-server.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-field-test-server.test.ts.txt",
+    "sha256": "33dc524be1f901efe9b37fdc1c833202566cbfe322279a79e86b1b4ab8b004bb",
+    "bytes": 10388
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/personal-plan-field-test-ui.test.tsx",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-field-test-ui.test.tsx.txt",
+    "sha256": "399ab430e51c6b7781d49ced998e98c930204f8835dd60d5d14babf19562f51d",
+    "bytes": 5844
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/personal-plan-moderator-activation-route.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-moderator-activation-route.test.ts.txt",
+    "sha256": "34c9efa1acfb4f11bdb3f30a1450f2779ec4d4febfabbcededb41f57fd5e34a7",
+    "bytes": 8264
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/personal-plan-moderator-contract.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-moderator-contract.test.ts.txt",
+    "sha256": "22c047a2be03a200941843439bae813b590b35bdff33635bcd713e1430deeee9",
+    "bytes": 11600
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/personal-plan-moderator-journey.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-moderator-journey.test.ts.txt",
+    "sha256": "572cb8eb0937625d60fc771a19473e267b9cec7adea4052cb9f7a0d19d46f079",
+    "bytes": 7381
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/personal-plan-moderator-schema.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-moderator-schema.test.ts.txt",
+    "sha256": "fb3280dbdab55d23467133a971ce27faad6a37a9b901d4bd809b2910afe10bf8",
+    "bytes": 4554
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/personal-plan-moderator-sql-execution.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-moderator-sql-execution.test.ts.txt",
+    "sha256": "0d3026f1e7a9d32c0d45a1195cf6c88bb2584420b1e47b2ec59166ca46dc0148",
+    "bytes": 36791
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/personal-plan-moderator-start-route.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-moderator-start-route.test.ts.txt",
+    "sha256": "5b37f4ea7d313c70e0f0998bf3803d2c3ffae2de301336c1c66a3ac7ec0f6e5c",
+    "bytes": 7983
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/regular-quiz-field-test-activation-route.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/regular-quiz-field-test-activation-route.test.ts.txt",
+    "sha256": "0c7ae564226e9706e4cf04096fabf1f3c540153c9079b60a8bee442d69fdef94",
+    "bytes": 5386
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/regular-quiz-field-test-activation.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/regular-quiz-field-test-activation.test.ts.txt",
+    "sha256": "83c4741f16bd2b3adff4c21197d446a3c41c540d85f5d66425ff2aa786922a15",
+    "bytes": 2016
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/regular-quiz-field-test-runtime.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/regular-quiz-field-test-runtime.test.ts.txt",
+    "sha256": "5ad3f31d6f3d3ef8af3e38e2cba56d2b0b402f80c8b505cb072ac247c8e23e56",
+    "bytes": 12372
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/regular-quiz-field-test-schema.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/regular-quiz-field-test-schema.test.ts.txt",
+    "sha256": "e16fe6ca59820237d68e5a5a85c2a04afbe8d5cc3b70d3d9b6ab82e5dafc0b7c",
+    "bytes": 4780
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/snapshots/transfer/tests/regular-quiz-field-test-ui.test.tsx",
+    "archived": "proposal/snapshots/transfer/tests/regular-quiz-field-test-ui.test.tsx.txt",
+    "sha256": "27aa6d0538df579432dcfc5229f780df85a3bbc4d460f601de9de6e50e821a91",
+    "bytes": 9923
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/start-pins.json",
+    "archived": "proposal/start-pins.json",
+    "sha256": "d7876784f9204ea0839202a157430e876aefcaae27a042398479eb59039c093c",
+    "bytes": 31701
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/static-check.json",
+    "archived": "proposal/static-check.json",
+    "sha256": "db59f3fe5c7f23535f1aedf67b18bcc75ed35b6ba95341f6d420ef2527855742",
+    "bytes": 670
+  },
+  {
+    "original": "/tmp/test-audit-moderator-fieldtest183/transfer.diff",
+    "archived": "proposal/transfer.diff",
+    "sha256": "f427d331cc9e458922e6f30f8f1eee9c9ebcd91c247cd0a30ddb63b5a44670f0",
+    "bytes": 537
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/README.md",
+    "archived": "operator/README.md",
+    "sha256": "8940322dbf5e0a9b7ca6cc50365d51d3f1ef56dd1eefb67048ec4205313b1ca4",
+    "bytes": 9549
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/controls-check.log",
+    "archived": "operator/controls-check.log",
+    "sha256": "87d432eb3aeaefb195f490287ff7f0f7ab3ab9ece47c61f45fbbd885e4fbc96a",
+    "bytes": 363
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/editor-check.log",
+    "archived": "operator/editor-check.log",
+    "sha256": "bc47f71e43e37b085dd96cfc93a665b33ce29378a012fcbef37c28ab035ddfca",
+    "bytes": 412
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/intent.json",
+    "archived": "operator/operator-apply-cut-hP1mTJ/intent.json",
+    "sha256": "17d5296afe3af531d5b0495409a98de03f2ca644606a70dd943bb38a847e60f9",
+    "bytes": 7165
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/moderator-account-maintenance.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/moderator-account-maintenance.test.ts.txt",
+    "sha256": "0608050698d408ed4b09c55b56861ed8970c074a30237bdd701f50303eff525a",
+    "bytes": 14184
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/moderator-account-reset-execution.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/moderator-account-reset-execution.test.ts.txt",
+    "sha256": "625b090a1c22ce5e01b758b38d25426e5da9ce1be148a16baf2ad8cfe07101f2",
+    "bytes": 16032
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/moderator-account-reset.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/moderator-account-reset.test.ts.txt",
+    "sha256": "132addacf27aec26a018061afe7e041f5ba341426e9c69fb2cfdde0b27fb184c",
+    "bytes": 29124
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/moderator-hosted-activation-probe.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/moderator-hosted-activation-probe.test.ts.txt",
+    "sha256": "da619372b2c743e192eaf3ba3982d997b8731aab9110d052279091d50b227a3e",
+    "bytes": 15835
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/moderator-hosted-auth-probe.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/moderator-hosted-auth-probe.test.ts.txt",
+    "sha256": "34d94a7f3d69d53df94380fd11c7b7393f369133d20616e54ccf6ce5799f9318",
+    "bytes": 12608
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/moderator-organic-fresh-start.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/moderator-organic-fresh-start.test.ts.txt",
+    "sha256": "65c840b8a01db98064d738d2e693bf90a4efaec27e194efe8a6c0348016ce7fc",
+    "bytes": 4125
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/moderator-quiz-draft-scope.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/moderator-quiz-draft-scope.test.ts.txt",
+    "sha256": "8fa270c2b9aa19f764daa45382d92952843aa28eb8b411f206bd020862869925",
+    "bytes": 1915
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-activation-route.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-activation-route.test.ts.txt",
+    "sha256": "f40aab18ec11eb8b097a8afda206d30f71fbd3a11d24a8213a3f2b407779d880",
+    "bytes": 4809
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-activation.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-activation.test.ts.txt",
+    "sha256": "f595bfaeccf6529daaa03b3d09fe387e0ddd02ba7ea5c807d28e5fbd0a32eed4",
+    "bytes": 2173
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-analytics.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-analytics.test.ts.txt",
+    "sha256": "4992c22e606ecc186fb36b6e24050cde0b92ad09ed22d43b1e5fda60232b8d10",
+    "bytes": 4105
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-campaign-command.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-campaign-command.test.ts.txt",
+    "sha256": "074c15f31ee2360f673f76f87594eb2bdc8c53e9e596485f47f77b60e5fb97ab",
+    "bytes": 7530
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-entry-route.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-entry-route.test.ts.txt",
+    "sha256": "37f48ffb9abae8f25999bea7b8082d05c65a30d91628b47e9ae68e00f000d867",
+    "bytes": 8315
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-routing-migration.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-routing-migration.test.ts.txt",
+    "sha256": "1e498b3f47b237937bf63fdb8a2f2ed14487de90ab5b62f7d92da9de326893f9",
+    "bytes": 2026
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-schema.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-schema.test.ts.txt",
+    "sha256": "86634d005795e018e75fb0efc8df91a7062dfe5b97f1a633fb1233d04d30f34f",
+    "bytes": 7877
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-server.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-server.test.ts.txt",
+    "sha256": "33dc524be1f901efe9b37fdc1c833202566cbfe322279a79e86b1b4ab8b004bb",
+    "bytes": 10388
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-ui.test.tsx",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-field-test-ui.test.tsx.txt",
+    "sha256": "399ab430e51c6b7781d49ced998e98c930204f8835dd60d5d14babf19562f51d",
+    "bytes": 5844
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-moderator-activation-route.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-moderator-activation-route.test.ts.txt",
+    "sha256": "34c9efa1acfb4f11bdb3f30a1450f2779ec4d4febfabbcededb41f57fd5e34a7",
+    "bytes": 8264
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-moderator-contract.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-moderator-contract.test.ts.txt",
+    "sha256": "22c047a2be03a200941843439bae813b590b35bdff33635bcd713e1430deeee9",
+    "bytes": 11600
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-moderator-journey.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-moderator-journey.test.ts.txt",
+    "sha256": "572cb8eb0937625d60fc771a19473e267b9cec7adea4052cb9f7a0d19d46f079",
+    "bytes": 7381
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-moderator-schema.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-moderator-schema.test.ts.txt",
+    "sha256": "fb3280dbdab55d23467133a971ce27faad6a37a9b901d4bd809b2910afe10bf8",
+    "bytes": 4554
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-moderator-sql-execution.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-moderator-sql-execution.test.ts.txt",
+    "sha256": "0d3026f1e7a9d32c0d45a1195cf6c88bb2584420b1e47b2ec59166ca46dc0148",
+    "bytes": 36791
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-moderator-start-route.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/personal-plan-moderator-start-route.test.ts.txt",
+    "sha256": "5b37f4ea7d313c70e0f0998bf3803d2c3ffae2de301336c1c66a3ac7ec0f6e5c",
+    "bytes": 7983
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/regular-quiz-field-test-activation-route.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/regular-quiz-field-test-activation-route.test.ts.txt",
+    "sha256": "0c7ae564226e9706e4cf04096fabf1f3c540153c9079b60a8bee442d69fdef94",
+    "bytes": 5386
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/regular-quiz-field-test-activation.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/regular-quiz-field-test-activation.test.ts.txt",
+    "sha256": "83c4741f16bd2b3adff4c21197d446a3c41c540d85f5d66425ff2aa786922a15",
+    "bytes": 2016
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/regular-quiz-field-test-runtime.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/regular-quiz-field-test-runtime.test.ts.txt",
+    "sha256": "5ad3f31d6f3d3ef8af3e38e2cba56d2b0b402f80c8b505cb072ac247c8e23e56",
+    "bytes": 12372
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/regular-quiz-field-test-schema.test.ts",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/regular-quiz-field-test-schema.test.ts.txt",
+    "sha256": "e16fe6ca59820237d68e5a5a85c2a04afbe8d5cc3b70d3d9b6ab82e5dafc0b7c",
+    "bytes": 4780
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/originals/tests/regular-quiz-field-test-ui.test.tsx",
+    "archived": "operator/operator-apply-cut-hP1mTJ/originals/tests/regular-quiz-field-test-ui.test.tsx.txt",
+    "sha256": "27aa6d0538df579432dcfc5229f780df85a3bbc4d460f601de9de6e50e821a91",
+    "bytes": 9923
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-cut-hP1mTJ/receipt.json",
+    "archived": "operator/operator-apply-cut-hP1mTJ/receipt.json",
+    "sha256": "865e64b4326ecf0858d04942bb145edf4080f804b8f9f3486e1cb471eb2780b4",
+    "bytes": 4030
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/intent.json",
+    "archived": "operator/operator-apply-transfer-iFkUWg/intent.json",
+    "sha256": "5748b4f01bd46d06ce3d54cf2617c16d0c4c7754b236b1a0fd2975b49e3a7654",
+    "bytes": 6923
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/moderator-account-maintenance.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/moderator-account-maintenance.test.ts.txt",
+    "sha256": "0608050698d408ed4b09c55b56861ed8970c074a30237bdd701f50303eff525a",
+    "bytes": 14184
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/moderator-account-reset-execution.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/moderator-account-reset-execution.test.ts.txt",
+    "sha256": "625b090a1c22ce5e01b758b38d25426e5da9ce1be148a16baf2ad8cfe07101f2",
+    "bytes": 16032
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/moderator-account-reset.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/moderator-account-reset.test.ts.txt",
+    "sha256": "132addacf27aec26a018061afe7e041f5ba341426e9c69fb2cfdde0b27fb184c",
+    "bytes": 29124
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/moderator-hosted-activation-probe.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/moderator-hosted-activation-probe.test.ts.txt",
+    "sha256": "da619372b2c743e192eaf3ba3982d997b8731aab9110d052279091d50b227a3e",
+    "bytes": 15835
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/moderator-hosted-auth-probe.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/moderator-hosted-auth-probe.test.ts.txt",
+    "sha256": "34d94a7f3d69d53df94380fd11c7b7393f369133d20616e54ccf6ce5799f9318",
+    "bytes": 12608
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/moderator-organic-fresh-start.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/moderator-organic-fresh-start.test.ts.txt",
+    "sha256": "65c840b8a01db98064d738d2e693bf90a4efaec27e194efe8a6c0348016ce7fc",
+    "bytes": 4125
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/moderator-quiz-draft-scope.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/moderator-quiz-draft-scope.test.ts.txt",
+    "sha256": "8fa270c2b9aa19f764daa45382d92952843aa28eb8b411f206bd020862869925",
+    "bytes": 1915
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-activation-route.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-activation-route.test.ts.txt",
+    "sha256": "f40aab18ec11eb8b097a8afda206d30f71fbd3a11d24a8213a3f2b407779d880",
+    "bytes": 4809
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-activation.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-activation.test.ts.txt",
+    "sha256": "f595bfaeccf6529daaa03b3d09fe387e0ddd02ba7ea5c807d28e5fbd0a32eed4",
+    "bytes": 2173
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-analytics.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-analytics.test.ts.txt",
+    "sha256": "4992c22e606ecc186fb36b6e24050cde0b92ad09ed22d43b1e5fda60232b8d10",
+    "bytes": 4105
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-campaign-command.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-campaign-command.test.ts.txt",
+    "sha256": "074c15f31ee2360f673f76f87594eb2bdc8c53e9e596485f47f77b60e5fb97ab",
+    "bytes": 7530
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-entry-route.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-entry-route.test.ts.txt",
+    "sha256": "37f48ffb9abae8f25999bea7b8082d05c65a30d91628b47e9ae68e00f000d867",
+    "bytes": 8315
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-routing-migration.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-routing-migration.test.ts.txt",
+    "sha256": "1e498b3f47b237937bf63fdb8a2f2ed14487de90ab5b62f7d92da9de326893f9",
+    "bytes": 2026
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-schema.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-schema.test.ts.txt",
+    "sha256": "86634d005795e018e75fb0efc8df91a7062dfe5b97f1a633fb1233d04d30f34f",
+    "bytes": 7877
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-server.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-server.test.ts.txt",
+    "sha256": "33dc524be1f901efe9b37fdc1c833202566cbfe322279a79e86b1b4ab8b004bb",
+    "bytes": 10388
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-ui.test.tsx",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-field-test-ui.test.tsx.txt",
+    "sha256": "3a2b873d802dfb9667ca5f8167bb95d5b6eb23cda0a7b8dc90a4ba153d3335e8",
+    "bytes": 5698
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-moderator-activation-route.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-moderator-activation-route.test.ts.txt",
+    "sha256": "34c9efa1acfb4f11bdb3f30a1450f2779ec4d4febfabbcededb41f57fd5e34a7",
+    "bytes": 8264
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-moderator-contract.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-moderator-contract.test.ts.txt",
+    "sha256": "22c047a2be03a200941843439bae813b590b35bdff33635bcd713e1430deeee9",
+    "bytes": 11600
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-moderator-journey.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-moderator-journey.test.ts.txt",
+    "sha256": "572cb8eb0937625d60fc771a19473e267b9cec7adea4052cb9f7a0d19d46f079",
+    "bytes": 7381
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-moderator-schema.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-moderator-schema.test.ts.txt",
+    "sha256": "fb3280dbdab55d23467133a971ce27faad6a37a9b901d4bd809b2910afe10bf8",
+    "bytes": 4554
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-moderator-sql-execution.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-moderator-sql-execution.test.ts.txt",
+    "sha256": "0d3026f1e7a9d32c0d45a1195cf6c88bb2584420b1e47b2ec59166ca46dc0148",
+    "bytes": 36791
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-moderator-start-route.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/personal-plan-moderator-start-route.test.ts.txt",
+    "sha256": "5b37f4ea7d313c70e0f0998bf3803d2c3ffae2de301336c1c66a3ac7ec0f6e5c",
+    "bytes": 7983
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/regular-quiz-field-test-activation-route.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/regular-quiz-field-test-activation-route.test.ts.txt",
+    "sha256": "0c7ae564226e9706e4cf04096fabf1f3c540153c9079b60a8bee442d69fdef94",
+    "bytes": 5386
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/regular-quiz-field-test-activation.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/regular-quiz-field-test-activation.test.ts.txt",
+    "sha256": "83c4741f16bd2b3adff4c21197d446a3c41c540d85f5d66425ff2aa786922a15",
+    "bytes": 2016
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/regular-quiz-field-test-runtime.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/regular-quiz-field-test-runtime.test.ts.txt",
+    "sha256": "5ad3f31d6f3d3ef8af3e38e2cba56d2b0b402f80c8b505cb072ac247c8e23e56",
+    "bytes": 12372
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/regular-quiz-field-test-schema.test.ts",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/regular-quiz-field-test-schema.test.ts.txt",
+    "sha256": "e16fe6ca59820237d68e5a5a85c2a04afbe8d5cc3b70d3d9b6ab82e5dafc0b7c",
+    "bytes": 4780
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/originals/tests/regular-quiz-field-test-ui.test.tsx",
+    "archived": "operator/operator-apply-transfer-iFkUWg/originals/tests/regular-quiz-field-test-ui.test.tsx.txt",
+    "sha256": "27aa6d0538df579432dcfc5229f780df85a3bbc4d460f601de9de6e50e821a91",
+    "bytes": 9923
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-apply-transfer-iFkUWg/receipt.json",
+    "archived": "operator/operator-apply-transfer-iFkUWg/receipt.json",
+    "sha256": "1602d103d2e190358e4bf744791a38219353820677123e59043705c5e44e684b",
+    "bytes": 3798
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-before.ts",
+    "archived": "operator/operator-before.ts.txt",
+    "sha256": "3a2b873d802dfb9667ca5f8167bb95d5b6eb23cda0a7b8dc90a4ba153d3335e8",
+    "bytes": 5698
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-candidates.json",
+    "archived": "operator/operator-candidates.json",
+    "sha256": "23568d5059519ed1bd8b3e4e55e5d666243cb2a4907e97a0a4ca7b567f7bf819",
+    "bytes": 5835
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-controls-normalized.json",
+    "archived": "operator/operator-controls-normalized.json",
+    "sha256": "6e7771cc574dfef29925e427788b76c5f6e0be67b9ecd92d8f57a49b9d102391",
+    "bytes": 4640
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-cut.ts",
+    "archived": "operator/operator-cut.ts.txt",
+    "sha256": "4737c57eee0061e44ab84e47abef535bef3de94df7cc05de70622b9bc65965e8",
+    "bytes": 5427
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-edit.cjs",
+    "archived": "operator/operator-edit.cjs.txt",
+    "sha256": "b2df54c9bd7495ca813b344cf0acb228681aca1e742fa64cb2b69816681f285c",
+    "bytes": 3530
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-evidence.json",
+    "archived": "operator/operator-evidence.json",
+    "sha256": "78f4416ee4bb2abb6bb8c9ab41d474aa2a31e8891b9fd9d2a10244a91dab2410",
+    "bytes": 10514
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-guard.cjs",
+    "archived": "operator/operator-guard.cjs.txt",
+    "sha256": "4c19cce3fc2d79c7dfddc5556f9d69ddb63fbb1a72d6263341169bb3e09fee20",
+    "bytes": 13029
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/C1-copy/originals/src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/C1-copy/originals/src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx.txt",
+    "sha256": "7898dc4da1566e74de856fc8176b5a478398dae9fc8813f5836e2f7a1e0d3ffd",
+    "bytes": 1317
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/C1-copy-after.command.json",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/C1-copy-after.command.json",
+    "sha256": "570a20ee53a9cb557eebf2808e239724d7a8f6cb8adf09d57e94a43e1ef44980",
+    "bytes": 429
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/C1-copy-after.tap",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/C1-copy-after.tap",
+    "sha256": "8006b3b6003437996414d1995afcf11801800d132e86939d556889f2d5a8260c",
+    "bytes": 322
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/C1-copy-before.command.json",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/C1-copy-before.command.json",
+    "sha256": "570a20ee53a9cb557eebf2808e239724d7a8f6cb8adf09d57e94a43e1ef44980",
+    "bytes": 429
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/C1-copy-before.tap",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/C1-copy-before.tap",
+    "sha256": "d7c346a30fe9e5656ded725ae419bdbcd70b1c65c5316f60c5900d0b5cf4f792",
+    "bytes": 323
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/C1-copy-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/C1-copy-fault.command.json",
+    "sha256": "570a20ee53a9cb557eebf2808e239724d7a8f6cb8adf09d57e94a43e1ef44980",
+    "bytes": 429
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/C1-copy-fault.tap",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/C1-copy-fault.tap",
+    "sha256": "ecdf37b8c3854db4979b845390fe9816d326e2e2bb4082919569147750fe20d8",
+    "bytes": 2558
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/C1-payment/originals/src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/C1-payment/originals/src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx.txt",
+    "sha256": "7898dc4da1566e74de856fc8176b5a478398dae9fc8813f5836e2f7a1e0d3ffd",
+    "bytes": 1317
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/C1-payment-after.command.json",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/C1-payment-after.command.json",
+    "sha256": "570a20ee53a9cb557eebf2808e239724d7a8f6cb8adf09d57e94a43e1ef44980",
+    "bytes": 429
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/C1-payment-after.tap",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/C1-payment-after.tap",
+    "sha256": "401bccd1e8873e4911d2d784822d3b0b77b157ecc51a80aa9a2b850e5d3311d6",
+    "bytes": 320
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/C1-payment-before.command.json",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/C1-payment-before.command.json",
+    "sha256": "570a20ee53a9cb557eebf2808e239724d7a8f6cb8adf09d57e94a43e1ef44980",
+    "bytes": 429
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/C1-payment-before.tap",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/C1-payment-before.tap",
+    "sha256": "9836cc46b3a73e00888d70f6aeba7f96016cf9396483417978ba059cb63f2675",
+    "bytes": 323
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/C1-payment-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/C1-payment-fault.command.json",
+    "sha256": "570a20ee53a9cb557eebf2808e239724d7a8f6cb8adf09d57e94a43e1ef44980",
+    "bytes": 429
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/C1-payment-fault.tap",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/C1-payment-fault.tap",
+    "sha256": "1822532a071951d92c90a8f621771eb7a9e821f533176dd1270ff80f72c0aa12",
+    "bytes": 2623
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx.txt",
+    "sha256": "7898dc4da1566e74de856fc8176b5a478398dae9fc8813f5836e2f7a1e0d3ffd",
+    "bytes": 1317
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/moderator-account-maintenance.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/moderator-account-maintenance.test.ts.txt",
+    "sha256": "0608050698d408ed4b09c55b56861ed8970c074a30237bdd701f50303eff525a",
+    "bytes": 14184
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/moderator-account-reset-execution.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/moderator-account-reset-execution.test.ts.txt",
+    "sha256": "625b090a1c22ce5e01b758b38d25426e5da9ce1be148a16baf2ad8cfe07101f2",
+    "bytes": 16032
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/moderator-account-reset.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/moderator-account-reset.test.ts.txt",
+    "sha256": "132addacf27aec26a018061afe7e041f5ba341426e9c69fb2cfdde0b27fb184c",
+    "bytes": 29124
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/moderator-hosted-activation-probe.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/moderator-hosted-activation-probe.test.ts.txt",
+    "sha256": "da619372b2c743e192eaf3ba3982d997b8731aab9110d052279091d50b227a3e",
+    "bytes": 15835
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/moderator-hosted-auth-probe.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/moderator-hosted-auth-probe.test.ts.txt",
+    "sha256": "34d94a7f3d69d53df94380fd11c7b7393f369133d20616e54ccf6ce5799f9318",
+    "bytes": 12608
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/moderator-organic-fresh-start.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/moderator-organic-fresh-start.test.ts.txt",
+    "sha256": "65c840b8a01db98064d738d2e693bf90a4efaec27e194efe8a6c0348016ce7fc",
+    "bytes": 4125
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/moderator-quiz-draft-scope.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/moderator-quiz-draft-scope.test.ts.txt",
+    "sha256": "8fa270c2b9aa19f764daa45382d92952843aa28eb8b411f206bd020862869925",
+    "bytes": 1915
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-activation-route.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-activation-route.test.ts.txt",
+    "sha256": "f40aab18ec11eb8b097a8afda206d30f71fbd3a11d24a8213a3f2b407779d880",
+    "bytes": 4809
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-activation.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-activation.test.ts.txt",
+    "sha256": "f595bfaeccf6529daaa03b3d09fe387e0ddd02ba7ea5c807d28e5fbd0a32eed4",
+    "bytes": 2173
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-analytics.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-analytics.test.ts.txt",
+    "sha256": "4992c22e606ecc186fb36b6e24050cde0b92ad09ed22d43b1e5fda60232b8d10",
+    "bytes": 4105
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-campaign-command.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-campaign-command.test.ts.txt",
+    "sha256": "074c15f31ee2360f673f76f87594eb2bdc8c53e9e596485f47f77b60e5fb97ab",
+    "bytes": 7530
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-entry-route.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-entry-route.test.ts.txt",
+    "sha256": "37f48ffb9abae8f25999bea7b8082d05c65a30d91628b47e9ae68e00f000d867",
+    "bytes": 8315
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-routing-migration.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-routing-migration.test.ts.txt",
+    "sha256": "1e498b3f47b237937bf63fdb8a2f2ed14487de90ab5b62f7d92da9de326893f9",
+    "bytes": 2026
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-schema.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-schema.test.ts.txt",
+    "sha256": "86634d005795e018e75fb0efc8df91a7062dfe5b97f1a633fb1233d04d30f34f",
+    "bytes": 7877
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-server.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-server.test.ts.txt",
+    "sha256": "33dc524be1f901efe9b37fdc1c833202566cbfe322279a79e86b1b4ab8b004bb",
+    "bytes": 10388
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-ui.test.tsx",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-field-test-ui.test.tsx.txt",
+    "sha256": "399ab430e51c6b7781d49ced998e98c930204f8835dd60d5d14babf19562f51d",
+    "bytes": 5844
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-moderator-activation-route.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-moderator-activation-route.test.ts.txt",
+    "sha256": "34c9efa1acfb4f11bdb3f30a1450f2779ec4d4febfabbcededb41f57fd5e34a7",
+    "bytes": 8264
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-moderator-contract.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-moderator-contract.test.ts.txt",
+    "sha256": "22c047a2be03a200941843439bae813b590b35bdff33635bcd713e1430deeee9",
+    "bytes": 11600
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-moderator-journey.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-moderator-journey.test.ts.txt",
+    "sha256": "572cb8eb0937625d60fc771a19473e267b9cec7adea4052cb9f7a0d19d46f079",
+    "bytes": 7381
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-moderator-schema.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-moderator-schema.test.ts.txt",
+    "sha256": "fb3280dbdab55d23467133a971ce27faad6a37a9b901d4bd809b2910afe10bf8",
+    "bytes": 4554
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-moderator-sql-execution.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-moderator-sql-execution.test.ts.txt",
+    "sha256": "0d3026f1e7a9d32c0d45a1195cf6c88bb2584420b1e47b2ec59166ca46dc0148",
+    "bytes": 36791
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-moderator-start-route.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/personal-plan-moderator-start-route.test.ts.txt",
+    "sha256": "5b37f4ea7d313c70e0f0998bf3803d2c3ffae2de301336c1c66a3ac7ec0f6e5c",
+    "bytes": 7983
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/regular-quiz-field-test-activation-route.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/regular-quiz-field-test-activation-route.test.ts.txt",
+    "sha256": "0c7ae564226e9706e4cf04096fabf1f3c540153c9079b60a8bee442d69fdef94",
+    "bytes": 5386
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/regular-quiz-field-test-activation.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/regular-quiz-field-test-activation.test.ts.txt",
+    "sha256": "83c4741f16bd2b3adff4c21197d446a3c41c540d85f5d66425ff2aa786922a15",
+    "bytes": 2016
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/regular-quiz-field-test-runtime.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/regular-quiz-field-test-runtime.test.ts.txt",
+    "sha256": "5ad3f31d6f3d3ef8af3e38e2cba56d2b0b402f80c8b505cb072ac247c8e23e56",
+    "bytes": 12372
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/regular-quiz-field-test-schema.test.ts",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/regular-quiz-field-test-schema.test.ts.txt",
+    "sha256": "e16fe6ca59820237d68e5a5a85c2a04afbe8d5cc3b70d3d9b6ab82e5dafc0b7c",
+    "bytes": 4780
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/all-originals/tests/regular-quiz-field-test-ui.test.tsx",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/all-originals/tests/regular-quiz-field-test-ui.test.tsx.txt",
+    "sha256": "27aa6d0538df579432dcfc5229f780df85a3bbc4d460f601de9de6e50e821a91",
+    "bytes": 9923
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/complete.json",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/complete.json",
+    "sha256": "ac041c8d2d6954a503ed4c9edf735719d73413d546d7f867ffb05037622bbad4",
+    "bytes": 41770
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/intent.json",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/intent.json",
+    "sha256": "8766ce916ee104acc08fb87be01eabebc60121f0843cc7853ba25fad63473029",
+    "bytes": 3652
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-mutations-transfer-uDNGwq/receipt.json",
+    "archived": "operator/operator-mutations-transfer-uDNGwq/receipt.json",
+    "sha256": "412a9f06ea77732913142d8e1a53ce72a109184deaff839189c79236a2615f91",
+    "bytes": 127741
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-pins.json",
+    "archived": "operator/operator-pins.json",
+    "sha256": "37dcec58febab9809b5a64510fd18a288f6b3756c9a19bb7a00cfadfbba8c20f",
+    "bytes": 1024924
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-proof.cjs",
+    "archived": "operator/operator-proof.cjs.txt",
+    "sha256": "5996f0f10ad76dc01639cd8205ec6ded6a4b906d5179ddb9664bb96dc70dcfdc",
+    "bytes": 4925
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-readonly-preload.cjs",
+    "archived": "operator/operator-readonly-preload.cjs.txt",
+    "sha256": "e1d17e207ee830cae3197a07bb0c142ba1288dc972958cefac0951abbfda4d6c",
+    "bytes": 2054
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-run-controls.cjs",
+    "archived": "operator/operator-run-controls.cjs.txt",
+    "sha256": "9e32142e9e1d03893ce44e628a2e175c58f53770a498dd9f5a56db7f49ff7fbc",
+    "bytes": 8058
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-selected-closure.json",
+    "archived": "operator/operator-selected-closure.json",
+    "sha256": "1dac7effecfa49ec3a2975309ad8e7db0cd0751de5e276f750bd2096d12deaaf",
+    "bytes": 116085
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-transfer.ts",
+    "archived": "operator/operator-transfer.ts.txt",
+    "sha256": "399ab430e51c6b7781d49ced998e98c930204f8835dd60d5d14babf19562f51d",
+    "bytes": 5844
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/prepare-pins.cjs",
+    "archived": "operator/prepare-pins.cjs.txt",
+    "sha256": "f80b29c5cc82d2ad08bfd58aa358f405f60e62a35bebd072aa8d5a71b994cef3",
+    "bytes": 13782
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/prepare-pins.diff",
+    "archived": "operator/prepare-pins.diff",
+    "sha256": "70dee43e802534ebfe190d8981bd8a689634df3a74c3db5b502073c1cf3fa7fa",
+    "bytes": 23115
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/shared-tools.diff",
+    "archived": "operator/shared-tools.diff",
+    "sha256": "5e3fa391d9130022f82f98c6542075a35625a6e59c84136b8f1a09272e03a9a0",
+    "bytes": 15300
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/static-receipt.json",
+    "archived": "operator/static-receipt.json",
+    "sha256": "4e6a8f20d0bcf667e19eb128978189780e94ad148e6e4c7078fe5d9356544304",
+    "bytes": 3716
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/syntax-check.log",
+    "archived": "operator/syntax-check.log",
+    "sha256": "723cf1857cd1eaffd8e63eef65f7df52073289e0b5938aa982ebcc65e5ef49cf",
+    "bytes": 174
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-tools-p18tq7i2/tool-code-hashes.json",
+    "archived": "operator/tool-code-hashes.json",
+    "sha256": "d84873706a686eaf4dd33b8f05213a09e1cead2f8a2081ab9246b25c05e054f1",
+    "bytes": 1879
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-independent-preservation.md",
+    "archived": "independent/test-audit-moderator183-independent-preservation.md",
+    "sha256": "eea51c7078249b58025cda6f036a3956657bd8d67015b5b9c80250320294a9b2",
+    "bytes": 6653
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-independent-static.json",
+    "archived": "independent/test-audit-moderator183-independent-static.json",
+    "sha256": "6881ee490c061a93219a606c4baf731fc2e8586f930f8419dd7bb541baf44d6e",
+    "bytes": 1896
+  },
+  {
+    "original": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-main-metadata-refresh2-cy95wbmi/disposition.json",
+    "archived": "metadata-refresh2/disposition.json",
+    "sha256": "d658f93994ddd07c87832ae2600c18111a2fb9aa31d3199b7bf129afa80534fa",
+    "bytes": 801
+  },
+  {
+    "original": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-main-metadata-refresh2-cy95wbmi/receipt.json",
+    "archived": "metadata-refresh2/receipt.json",
+    "sha256": "629d61ec3b8913e5c1c227170dda178bfdad45efd099cce1aa64cd4ba5655394",
+    "bytes": 2059
+  },
+  {
+    "original": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-main-metadata-refresh2-cy95wbmi/test-audit-discovery163-tools-70q2q9t7/operator-edit.cjs",
+    "archived": "metadata-refresh2/test-audit-discovery163-tools-70q2q9t7/operator-edit.cjs.txt",
+    "sha256": "f632302e868911745f20ca43300ff8d024c3af896b15b04bae0246da43de4136",
+    "bytes": 3639
+  },
+  {
+    "original": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-main-metadata-refresh2-cy95wbmi/test-audit-discovery163-tools-70q2q9t7/operator-pins.json",
+    "archived": "metadata-refresh2/test-audit-discovery163-tools-70q2q9t7/operator-pins.json",
+    "sha256": "7886fcb73b5fc3b0396595668c23a84c75f37cf9586c3692862662e09d2e652f",
+    "bytes": 1486522
+  },
+  {
+    "original": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-main-metadata-refresh2-cy95wbmi/test-audit-discovery163-tools-70q2q9t7/operator-run-controls.cjs",
+    "archived": "metadata-refresh2/test-audit-discovery163-tools-70q2q9t7/operator-run-controls.cjs.txt",
+    "sha256": "ce80a82c513a863c958e808a086981101bd29747dbb82815c003aed6a48491ce",
+    "bytes": 8058
+  },
+  {
+    "original": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-main-metadata-refresh2-cy95wbmi/test-audit-email94-tools-c435q0q0/operator-edit.cjs",
+    "archived": "metadata-refresh2/test-audit-email94-tools-c435q0q0/operator-edit.cjs.txt",
+    "sha256": "d3dd8538694f1ff777fe33c023129880dc986e2f19012927ff4a8b5d437b4d73",
+    "bytes": 3563
+  },
+  {
+    "original": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-main-metadata-refresh2-cy95wbmi/test-audit-email94-tools-c435q0q0/operator-pins.json",
+    "archived": "metadata-refresh2/test-audit-email94-tools-c435q0q0/operator-pins.json",
+    "sha256": "d78a79b4a1411f0b004711bf14e2a7793a190b85221467d1489bf36ad1f41e90",
+    "bytes": 74729
+  },
+  {
+    "original": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-main-metadata-refresh2-cy95wbmi/test-audit-email94-tools-c435q0q0/operator-run-controls.cjs",
+    "archived": "metadata-refresh2/test-audit-email94-tools-c435q0q0/operator-run-controls.cjs.txt",
+    "sha256": "3629217f9b069474302df6ac950aed8caf2f655b7897a94e0c3ec7fa692b9be8",
+    "bytes": 8060
+  },
+  {
+    "original": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-main-metadata-refresh2-cy95wbmi/test-audit-moderator183-tools-p18tq7i2/operator-edit.cjs",
+    "archived": "metadata-refresh2/test-audit-moderator183-tools-p18tq7i2/operator-edit.cjs.txt",
+    "sha256": "fa3a139c304707975f792191b40babfbcbd534c4ad339241fe155ae74a997f2c",
+    "bytes": 3530
+  },
+  {
+    "original": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-main-metadata-refresh2-cy95wbmi/test-audit-moderator183-tools-p18tq7i2/operator-pins.json",
+    "archived": "metadata-refresh2/test-audit-moderator183-tools-p18tq7i2/operator-pins.json",
+    "sha256": "40b28a91dfe702eb9b16efdd9fef248075a84be66444db1312ae701928b07d61",
+    "bytes": 1023661
+  },
+  {
+    "original": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-main-metadata-refresh2-cy95wbmi/test-audit-moderator183-tools-p18tq7i2/operator-run-controls.cjs",
+    "archived": "metadata-refresh2/test-audit-moderator183-tools-p18tq7i2/operator-run-controls.cjs.txt",
+    "sha256": "9a0f631a1d2df21d008989cb6feb36ba485d123b5537379f7d5bb4b8198cf1b4",
+    "bytes": 8058
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/alias-pin-receipt.json",
+    "archived": "relevant-config-policy/alias-pin-receipt.json",
+    "sha256": "eae1fb959c1bd496ad3deea5f470e307271d174d405b9dba4a083ea9d06d75d8",
+    "bytes": 1560
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/config-exact.diff",
+    "archived": "relevant-config-policy/config-exact.diff",
+    "sha256": "ad13069b4bcc4550e89fbc3167423c1639866b8475e046a4d343436ac95dccde",
+    "bytes": 295
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/disposition.json",
+    "archived": "relevant-config-policy/disposition.json",
+    "sha256": "04de875c4e62e53c69af322fcc215bf0c04f8098c0ebd3bc3ef46eba730f1ecf",
+    "bytes": 2035
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/policy-check.json",
+    "archived": "relevant-config-policy/policy-check.json",
+    "sha256": "08d6ea223db324a233de469d018e39cf49a40802d3af0f0abcf999d63a49c0e8",
+    "bytes": 1383
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/receipt.json",
+    "archived": "relevant-config-policy/receipt.json",
+    "sha256": "902137fd1387b9757d249a996f64bf6ff03a515585eefd41944539e35e081d9a",
+    "bytes": 1586
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-discovery163-tools-70q2q9t7/operator-edit.cjs",
+    "archived": "relevant-config-policy/test-audit-discovery163-tools-70q2q9t7/operator-edit.cjs.txt",
+    "sha256": "16c337939b2734cfc0c290d79ba4f2390cde7d5378cee6549e22cb7ca9bcade4",
+    "bytes": 3639
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-discovery163-tools-70q2q9t7/operator-guard.cjs",
+    "archived": "relevant-config-policy/test-audit-discovery163-tools-70q2q9t7/operator-guard.cjs.txt",
+    "sha256": "ed7a111d95e29d0754423208ab615cc95b0d197c381d0fbadf4245c606b5cff5",
+    "bytes": 12745
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-discovery163-tools-70q2q9t7/operator-pins.json",
+    "archived": "relevant-config-policy/test-audit-discovery163-tools-70q2q9t7/operator-pins.json",
+    "sha256": "014b77aea202bc5fbf01029c9462c3fe809a14fd926755479da3b5dffef8e325",
+    "bytes": 1487035
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-discovery163-tools-70q2q9t7/operator-run-controls.cjs",
+    "archived": "relevant-config-policy/test-audit-discovery163-tools-70q2q9t7/operator-run-controls.cjs.txt",
+    "sha256": "9490fc5627cc382b817e7a9604e81cca382f952da218d66d5577ed6cd22685b6",
+    "bytes": 8058
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-discovery163-tools-70q2q9t7-alias-operator-edit.cjs.before.txt",
+    "archived": "relevant-config-policy/test-audit-discovery163-tools-70q2q9t7-alias-operator-edit.cjs.before.txt",
+    "sha256": "5b814936dd5e597c48281b5065a73b9e93073340a86c83d804827a416a5c2195",
+    "bytes": 3639
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-discovery163-tools-70q2q9t7-alias-operator-run-controls.cjs.before.txt",
+    "archived": "relevant-config-policy/test-audit-discovery163-tools-70q2q9t7-alias-operator-run-controls.cjs.before.txt",
+    "sha256": "bb0e67e11754bfc9f90e0b78a0acaf471b56f6e5027982254300968b0bc5261d",
+    "bytes": 8058
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-discovery163-tools-70q2q9t7-alias-pin-before.json",
+    "archived": "relevant-config-policy/test-audit-discovery163-tools-70q2q9t7-alias-pin-before.json",
+    "sha256": "26cc5e7ef1f54dd63818654e7b1da43f2679e5ca6d95cef4db28a8613e41c873",
+    "bytes": 1487785
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-email94-tools-c435q0q0/operator-edit.cjs",
+    "archived": "relevant-config-policy/test-audit-email94-tools-c435q0q0/operator-edit.cjs.txt",
+    "sha256": "702e15169799719d65f675ca5be11381b25796485b28e85d62082ac986977cc2",
+    "bytes": 3563
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-email94-tools-c435q0q0/operator-guard.cjs",
+    "archived": "relevant-config-policy/test-audit-email94-tools-c435q0q0/operator-guard.cjs.txt",
+    "sha256": "263f44b7e738dd8a3858e7e55ea7414a94b1fb20f875df049fc5fed35892df8f",
+    "bytes": 12801
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-email94-tools-c435q0q0/operator-pins.json",
+    "archived": "relevant-config-policy/test-audit-email94-tools-c435q0q0/operator-pins.json",
+    "sha256": "6216824dfb0ecfd4c3d46757e762b80dc8cc1ab6d92d9f442ca734829b4c2220",
+    "bytes": 75242
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-email94-tools-c435q0q0/operator-run-controls.cjs",
+    "archived": "relevant-config-policy/test-audit-email94-tools-c435q0q0/operator-run-controls.cjs.txt",
+    "sha256": "f00318a8d724059019524f410d688459b199d4bf0a97452f1b50129c2566d841",
+    "bytes": 8060
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-email94-tools-c435q0q0-alias-operator-edit.cjs.before.txt",
+    "archived": "relevant-config-policy/test-audit-email94-tools-c435q0q0-alias-operator-edit.cjs.before.txt",
+    "sha256": "9eef92b610a481fde1c6546b6eb8288c636f04c55550658c64b400909eef286b",
+    "bytes": 3563
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-email94-tools-c435q0q0-alias-operator-run-controls.cjs.before.txt",
+    "archived": "relevant-config-policy/test-audit-email94-tools-c435q0q0-alias-operator-run-controls.cjs.before.txt",
+    "sha256": "1880ffac2dd8369e42e83bc3fb75eb3982364bd0904f5327136836076388627e",
+    "bytes": 8060
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-email94-tools-c435q0q0-alias-pin-before.json",
+    "archived": "relevant-config-policy/test-audit-email94-tools-c435q0q0-alias-pin-before.json",
+    "sha256": "8db29deac5c1912150516ef3298bca3e373ead46adc697ec48572a093500043e",
+    "bytes": 75987
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-moderator183-tools-p18tq7i2/operator-edit.cjs",
+    "archived": "relevant-config-policy/test-audit-moderator183-tools-p18tq7i2/operator-edit.cjs.txt",
+    "sha256": "6228cac3b2fa59f58f7fb7624281b9f3693397671835349645c6162b7cbf410d",
+    "bytes": 3530
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-moderator183-tools-p18tq7i2/operator-guard.cjs",
+    "archived": "relevant-config-policy/test-audit-moderator183-tools-p18tq7i2/operator-guard.cjs.txt",
+    "sha256": "042c0a65c9685f722b4edff5a58f9c8afe84f006fcd1aca32d8258f58c64db15",
+    "bytes": 12209
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-moderator183-tools-p18tq7i2/operator-pins.json",
+    "archived": "relevant-config-policy/test-audit-moderator183-tools-p18tq7i2/operator-pins.json",
+    "sha256": "d91f665b1db983e127884d01bb171b510cddb4fc7ec58606ae86396b24740432",
+    "bytes": 1024174
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-moderator183-tools-p18tq7i2/operator-run-controls.cjs",
+    "archived": "relevant-config-policy/test-audit-moderator183-tools-p18tq7i2/operator-run-controls.cjs.txt",
+    "sha256": "488e06544e45bf5f20761638a700400280b7dd448d96fec41d6b4312537c6e5d",
+    "bytes": 8058
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-moderator183-tools-p18tq7i2-alias-operator-edit.cjs.before.txt",
+    "archived": "relevant-config-policy/test-audit-moderator183-tools-p18tq7i2-alias-operator-edit.cjs.before.txt",
+    "sha256": "6b38fa8a8161f53a065504e300d7164765ab9ad2cd60a5392c461728a4a3643f",
+    "bytes": 3530
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-moderator183-tools-p18tq7i2-alias-operator-run-controls.cjs.before.txt",
+    "archived": "relevant-config-policy/test-audit-moderator183-tools-p18tq7i2-alias-operator-run-controls.cjs.before.txt",
+    "sha256": "4166752578de59df834d811f5b289ae3b1ba6f52a7a814981c8de7ee3259b0d7",
+    "bytes": 8058
+  },
+  {
+    "original": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-moderator183-tools-p18tq7i2-alias-pin-before.json",
+    "archived": "relevant-config-policy/test-audit-moderator183-tools-p18tq7i2-alias-pin-before.json",
+    "sha256": "fe3690f6e980e146ae42ee388c67389117b924a4e312e6cbbbf273c26224a29d",
+    "bytes": 1024924
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-main-before.tap",
+    "archived": "native/test-audit-moderator183-main-before.tap",
+    "sha256": "64ce995adfd98804450624b28b2d92f5887b635b3dc7cd113140def31041c8a8",
+    "bytes": 38455
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-main-before.command.json",
+    "archived": "native/test-audit-moderator183-main-before.command.json",
+    "sha256": "395e9da0a75f9f03b4763b618dc4cdeeb39b39d39a7148fe7f41af72a97a15b7",
+    "bytes": 1714
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-main-transfer.tap",
+    "archived": "native/test-audit-moderator183-main-transfer.tap",
+    "sha256": "128a0b061b1e8411fa47d1820417582a893b41fa569cccd6de20884ba90b166d",
+    "bytes": 38406
+  },
+  {
+    "original": "/tmp/test-audit-moderator183-main-transfer.command.json",
+    "archived": "native/test-audit-moderator183-main-transfer.command.json",
+    "sha256": "395e9da0a75f9f03b4763b618dc4cdeeb39b39d39a7148fe7f41af72a97a15b7",
+    "bytes": 1714
+  },
+  {
+    "original": "/tmp/test-audit-moderator182-main-cut.tap",
+    "archived": "native/test-audit-moderator182-main-cut.tap",
+    "sha256": "85ff86d60ab896cce088a361d2493913c1222d615be3ae07effdb5b4340d6bd4",
+    "bytes": 38227
+  },
+  {
+    "original": "/tmp/test-audit-moderator182-main-cut.command.json",
+    "archived": "native/test-audit-moderator182-main-cut.command.json",
+    "sha256": "395e9da0a75f9f03b4763b618dc4cdeeb39b39d39a7148fe7f41af72a97a15b7",
+    "bytes": 1714
+  },
+  {
+    "original": "/tmp/test-audit-moderator182-main-cut.result.json",
+    "archived": "native/test-audit-moderator182-main-cut.result.json",
+    "sha256": "4164aaf96e9003dcbb713fc07a78fbcbd8c0056925dc4366dca774891a566242",
+    "bytes": 173
+  }
+]

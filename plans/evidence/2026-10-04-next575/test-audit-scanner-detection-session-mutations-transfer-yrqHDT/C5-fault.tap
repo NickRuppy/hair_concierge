@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: auxiliary_closed with cancelSubmit: reopening and submitting again still works (a fresh token owns the flow)
+not ok 1 - auxiliary_closed with cancelSubmit: reopening and submitting again still works (a fresh token owns the flow)
+  ---
+  duration_ms: 2.928416
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-flow-state.test.ts:2:12411'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-flow-state.test.ts:381:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 195.114

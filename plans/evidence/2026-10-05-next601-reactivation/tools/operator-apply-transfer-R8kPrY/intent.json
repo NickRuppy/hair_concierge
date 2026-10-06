@@ -1,0 +1,56 @@
+{
+  "mode": "transfer",
+  "from": "before",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "53a0eef9d6f320b4e07ca6987d9b8c995dfbc459e349f3fe2384cf94475a9d76",
+  "prerequisite": null,
+  "files": [
+    {
+      "file": "tests/reactivation-stripe-context-postgres.test.ts",
+      "before": "386b328b8478e40597058348a792890627f573e3df9a6697ed7e1723fc54a270",
+      "after": "386b328b8478e40597058348a792890627f573e3df9a6697ed7e1723fc54a270"
+    },
+    {
+      "file": "tests/reactivation-checkout-metadata.test.ts",
+      "before": "784478263208522bf37bb2dffc1f4e816811d0b08c45f345e4d5aca92b76bd3e",
+      "after": "784478263208522bf37bb2dffc1f4e816811d0b08c45f345e4d5aca92b76bd3e"
+    },
+    {
+      "file": "tests/reactivation-retained-account-activation.test.ts",
+      "before": "8ef221ef187d867ab2941c5bb5205e49af67439e33b3c529e14cdb53bbb288d7",
+      "after": "f17b5ef299ee814826530918c1f412ade5e6368cc83b29f5b075a35ab013c890"
+    },
+    {
+      "file": "tests/reactivation-stripe-context-runtime.test.ts",
+      "before": "257a4a472930539e71266d8320dffd60f175b091749ba5c74caae4ebf75e84e9",
+      "after": "257a4a472930539e71266d8320dffd60f175b091749ba5c74caae4ebf75e84e9"
+    },
+    {
+      "file": "tests/reactivation-helpers.test.ts",
+      "before": "6639b8910ac9253d87b2b008fb5e53c3f38e335511a518b6dcb97fa7dea39ab7",
+      "after": "6639b8910ac9253d87b2b008fb5e53c3f38e335511a518b6dcb97fa7dea39ab7"
+    },
+    {
+      "file": "tests/reactivation-checkout-recovery.spec.ts",
+      "before": "82f0c6591d955477440721ee865bfa370055d12b9066b0f8c881ab86aa401a8a",
+      "after": "82f0c6591d955477440721ee865bfa370055d12b9066b0f8c881ab86aa401a8a"
+    },
+    {
+      "file": "tests/reactivation-trial-management.test.ts",
+      "before": "c8f04e9cbc7d85c908b7e9a59fc753a42c3cad7bd8156f9075b24222c984d637",
+      "after": "c8f04e9cbc7d85c908b7e9a59fc753a42c3cad7bd8156f9075b24222c984d637"
+    },
+    {
+      "file": "tests/reactivation-auth-return.test.ts",
+      "before": "0438dc495f5c5c01c6f0ee0ed6406cfaafc359d8086fe0debe5f99bfbd35b17d",
+      "after": "0438dc495f5c5c01c6f0ee0ed6406cfaafc359d8086fe0debe5f99bfbd35b17d"
+    },
+    {
+      "file": "tests/reactivation-routing.test.ts",
+      "before": "72b7affede80ab62f0db66e4c73e42f8c3ac532ed6e2100c46172f0bcf998623",
+      "after": "72b7affede80ab62f0db66e4c73e42f8c3ac532ed6e2100c46172f0bcf998623"
+    }
+  ]
+}

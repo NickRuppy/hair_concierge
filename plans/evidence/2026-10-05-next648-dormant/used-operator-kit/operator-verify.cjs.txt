@@ -1,0 +1,10 @@
+'use strict'
+// Read-only final receipt verification; never applies a cut or starts children.
+const g=require('./operator-guard.cjs'),p=require('./operator-proof.cjs')
+const PIN_SHA='1d93d7ae5effb128241fa0e24922e385b618f25d362ff6966bd0ffda03293af6'
+const ctx=g.load(PIN_SHA),state=ctx.current()
+if(process.argv.length===3&&process.argv[2]==='--check'){console.log(JSON.stringify({phase:state.phase,readOnly:true,acceptance:false,runtimeProof:false}));process.exit(0)}
+if(process.argv.length!==10)g.fail('Use <before-cohort-dir> <sha> <before-controls-dir> <sha> <cut-cohort-dir> <sha> <cut-controls-dir> <sha>')
+if(state.phase!=='cut')g.fail('Exact complete cut phase required')
+const a=process.argv.slice(2),before=p.validateTransferReceipt(ctx,PIN_SHA,...a.slice(0,4)),after={cohort:p.validateCohortReceipt(ctx,PIN_SHA,a[4],a[5],'cut'),controls:p.validateControlsReceipt(ctx,PIN_SHA,a[6],a[7],'cut')}
+ctx.current();console.log(JSON.stringify({boundedProofVerified:true,pinsSHA:PIN_SHA,before,after,limits:'Only exact103/97 cohort and28 actual owner controls; independent acceptance/type/full campaign coverage remain separate.'},null,2))

@@ -1,0 +1,11 @@
+{
+  "accepted": [],
+  "deferred": [
+    {
+      "id": "W1",
+      "kind": "zero-quota wrapper retirement only",
+      "symbol": "buildAuthenticatedAppRedirectUrl",
+      "reason": "Direct callers are tests/auth-middleware-replay.test.ts three calls and excluded tests/auth-post-checkout-routes.spec.ts one browser harness call. No caller may be dropped. Scope expansion and separate browser proof required; no retirement phases included."
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "status": "FROZEN_MAIN_ONLY_CONDITIONAL_TOOLKIT_NO_RUNTIME_CREDIT",
+  "directory": "/tmp/test-audit-catalog99-tools-k9e7uyhg",
+  "proposal": "/tmp/test-audit-catalog-publication99-0f7kicd2",
+  "originalProposalManifestSHA256": "d53bee703b3486be20d12d1e0cd61051efbd08b2f21501da88c87ac9ac52b87d",
+  "pinsSHA256": "4ac6d1b4344d4296e8c91668d9c62bc352869ce8636f4d2c54f42612bf118a3d",
+  "artifactHashesSHA256": "37506b5f722f1f64c757144eea6e23f9d3e3a919d51bb70326bdbe6c3fb68123",
+  "counts": {
+    "phaseFiles": 16,
+    "phaseSnapshots": 48,
+    "AST": {
+      "before": 99,
+      "transfer": 99,
+      "cut": 96
+    },
+    "nativeLiteralTitleMultisets": {
+      "before": 99,
+      "transfer": 99,
+      "cut": 96
+    },
+    "callbackAssertions": {
+      "before": 300,
+      "transfer": 307,
+      "cut": 300
+    },
+    "conditionalCuts": 3,
+    "changedKeepers": 2,
+    "transferredAssertions": 7,
+    "unchangedUnrelatedCallbacks": 94,
+    "controls": 6,
+    "originalProposalGuards": 111,
+    "localStaticClosure": 79,
+    "newLocalSourcePins": 0,
+    "nonphaseReadsetGuardsIncludingFrozenMigrations": 440,
+    "dependencyFiles": 5197,
+    "dependencyTrees": 34,
+    "sourceCleanup": 0,
+    "removalCredit": 0
+  },
+  "c3ApprovedAmendment": {
+    "dispositionSHA256": "31d64ada9026e651aedfe7d1f9ef8ecab89335b5c9f4f24c4538e94e2745e639",
+    "controlsSHA256": "c7b511585431eef2118599014bab4aa7c845730a7d0887cdebf646389ffbb865",
+    "mutantSHA256": "298cc691179accd3dbf8391704fca25df81a45982ebe3a0ad0f8b5bc89e6ff36",
+    "originalPacketUnchanged": true,
+    "change": "Forbidden serialized flag first; parent-approved temporary fault recipe only. Strict typed 10000-code-unit Node inspect prefix supported; regex expected empty TAP object plus exact decoded header."
+  },
+  "codeHashes": {
+    "operator-edit.cjs": "914fb2adb87a82962e1ede374445ec6c781ca2131bcdf3f4fc150d9727059574",
+    "operator-guard.cjs": "15c32770cf23bbdd17d4ea28e54ad56d1fb0f8ee408af63b54f9b0a2e9a65c68",
+    "operator-native-proof.cjs": "9e605235a50ae4f32194ac8f65fb3f5c192fb6ffb8b5c3a1a73983907a92e761",
+    "operator-proof.cjs": "3ae1bda88ceca8c1dbcf14fa635eda9f9204f2561556730994eb7d74e2f86dc0",
+    "operator-readonly-preload.cjs": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "operator-run-controls.cjs": "68c37c9b89beea2ae1af205ee8b4a42c59fc0b31e8207ccb190ffdb9d6ff9455",
+    "prepare-pins.cjs": "b59513b1427da823a1cec1d50d4e97f5ca1188de3d0116b7bfb35a021dceeb59",
+    "proof-attestation.cjs": "75a8ae4aab76f0c0df2613f7dcdb5767f142893832ca49ba6706167cef2f51a0",
+    "static-integrity.cjs": "1326d0d1cffb34ad626c84fe6bb8421820dc5f021996de2889a29c849ac31599"
+  },
+  "checks": {
+    "editor": "a7a42c4e60a25683851350ec5f0277992f75def69e21d55db374c6c0602379bd",
+    "controls": "e8362324e420a6978c4331b0e2e0b643d57e1d0205fd99a7d608efb4463c4c35",
+    "integrity": "6949ff05ded824801205234d4fdfc913f06ac37d796f22f56ece416001ecc6df",
+    "synthetic": "a0968b4bc13d059ea136a37a03c05ddb8e6c1d79143f6c0399f3ecde70691e6d",
+    "syntheticCount": 290,
+    "preloadAttempts": {
+      "repositoryWrites": 0,
+      "children": 0,
+      "ownerImports": 0,
+      "networkCalls": 0
+    }
+  },
+  "commands": {
+    "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+    "check": "/usr/local/bin/node --require /tmp/test-audit-catalog99-tools-k9e7uyhg/operator-readonly-preload.cjs /tmp/test-audit-catalog99-tools-k9e7uyhg/operator-edit.cjs --check",
+    "transfer": "/usr/local/bin/node /tmp/test-audit-catalog99-tools-k9e7uyhg/operator-edit.cjs transfer",
+    "controlsTransferAndCut": "/usr/local/bin/node /tmp/test-audit-catalog99-tools-k9e7uyhg/operator-run-controls.cjs run",
+    "cut": "/usr/local/bin/node /tmp/test-audit-catalog99-tools-k9e7uyhg/operator-edit.cjs cut <exact-transfer-receipt-dir> <completion-sha256>",
+    "fullNative": "Exact executable/args/cwd object in full-native-command.json; before99/transfer99/cut96 all pass expected. Main only.",
+    "recordedNativeChecker": "/usr/local/bin/node /tmp/test-audit-catalog99-tools-k9e7uyhg/operator-native-proof.cjs <before|transfer|cut> <closed-native.tap> <exact-command.json>"
+  },
+  "limits": [
+    "Main still owns semantic/independent acceptance, full tool review, all native/fault/restore proofs, coverage and CI.",
+    "No native test, owner/test import, child/native subprocess, source mutation, repository/config write or provider/network/DB operation performed by preparer.",
+    "Static parser/synthetic shapes prove tool rejection behavior, not actual fault reachability or TAP output.",
+    "Base ERR_ASSERTION/operator/named-one/FIRST outer assertion predicate retained; decoded expected/actual requirement is an additional conjunction.",
+    "The inherited dependency closure is bounded, not exhaustive vendor execution coverage.",
+    "Original proposal and preliminary C3 descriptor/mutant remain intact; only fresh TMP operator artifacts use separately approved control amendment."
+  ]
+}

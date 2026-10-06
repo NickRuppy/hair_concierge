@@ -1,0 +1,3428 @@
+{
+  "nativeTests": [
+    "tests/recommendation-engine-shampoo-cadence.test.ts",
+    "tests/care-balance-frequency-targets.test.ts",
+    "tests/personal-plan-routine-candidate-compiler.test.ts",
+    "tests/personal-plan-routine-cadence.test.ts",
+    "tests/personal-plan/product-previews.test.ts",
+    "tests/personal-plan-exact-catalog-bundle.test.ts",
+    "tests/personal-plan-stage3-contracts.test.ts"
+  ],
+  "localFiles": [
+    "src/app/api/personal-plan/stage-1/previews/route.ts",
+    "src/components/ui/icon.tsx",
+    "src/lib/agent/tools/care-balance-context.ts",
+    "src/lib/billing/personal-plan-one-time-consent-copy.ts",
+    "src/lib/billing/personal-plan-one-time-consents.ts",
+    "src/lib/billing/pricing-catalog.ts",
+    "src/lib/billing/purchases.ts",
+    "src/lib/billing/subscriptions.ts",
+    "src/lib/billing/trial-access-projection.ts",
+    "src/lib/billing/trial-policy.ts",
+    "src/lib/billing/types.ts",
+    "src/lib/bondbuilder/constants.ts",
+    "src/lib/conditioner/constants.ts",
+    "src/lib/deep-cleansing-shampoo/constants.ts",
+    "src/lib/dry-shampoo/constants.ts",
+    "src/lib/entitlements/flag.ts",
+    "src/lib/hair-profile/derived.ts",
+    "src/lib/help/info-tips.ts",
+    "src/lib/leave-in/constants.ts",
+    "src/lib/mask/constants.ts",
+    "src/lib/oil/constants.ts",
+    "src/lib/oil/purpose.ts",
+    "src/lib/onboarding/product-options.ts",
+    "src/lib/paypal/trial-collection-start.ts",
+    "src/lib/peeling/constants.ts",
+    "src/lib/personal-plan-field-test/errors.ts",
+    "src/lib/personal-plan-quiz/offer-adapter.ts",
+    "src/lib/personal-plan-quiz/persistence.ts",
+    "src/lib/personal-plan-quiz/primary-concern.ts",
+    "src/lib/personal-plan-quiz/types.ts",
+    "src/lib/personal-plan/categories/bondbuilder.ts",
+    "src/lib/personal-plan/categories/conditioner.ts",
+    "src/lib/personal-plan/categories/deep-cleansing.ts",
+    "src/lib/personal-plan/categories/dry-shampoo.ts",
+    "src/lib/personal-plan/categories/heat-protectant.ts",
+    "src/lib/personal-plan/categories/leave-in.ts",
+    "src/lib/personal-plan/categories/mask.ts",
+    "src/lib/personal-plan/categories/oil.ts",
+    "src/lib/personal-plan/categories/scalp-care.ts",
+    "src/lib/personal-plan/categories/shampoo.ts",
+    "src/lib/personal-plan/compute-stage1.ts",
+    "src/lib/personal-plan/decision-presentation.ts",
+    "src/lib/personal-plan/enrollment.ts",
+    "src/lib/personal-plan/freemium-enrollment.ts",
+    "src/lib/personal-plan/input.ts",
+    "src/lib/personal-plan/journey-access-loader.ts",
+    "src/lib/personal-plan/journey-access.ts",
+    "src/lib/personal-plan/migration-admission.ts",
+    "src/lib/personal-plan/needs.ts",
+    "src/lib/personal-plan/oil-heat-context.ts",
+    "src/lib/personal-plan/persistence/index.ts",
+    "src/lib/personal-plan/persistence/stage1-service.ts",
+    "src/lib/personal-plan/persistence/stage1-supabase.ts",
+    "src/lib/personal-plan/portfolio.ts",
+    "src/lib/personal-plan/product-preview-contract.ts",
+    "src/lib/personal-plan/product-previews.ts",
+    "src/lib/personal-plan/products/authorities.ts",
+    "src/lib/personal-plan/products/authority/catalog-batching.ts",
+    "src/lib/personal-plan/products/authority/catalog-facts.ts",
+    "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+    "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+    "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+    "src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts",
+    "src/lib/personal-plan/products/authority/categories/dry-shampoo.ts",
+    "src/lib/personal-plan/products/authority/categories/heat-protectant.ts",
+    "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+    "src/lib/personal-plan/products/authority/categories/mask.ts",
+    "src/lib/personal-plan/products/authority/categories/oil.ts",
+    "src/lib/personal-plan/products/authority/categories/scalp-care.ts",
+    "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts",
+    "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+    "src/lib/personal-plan/products/authority/category-decision-schema.ts",
+    "src/lib/personal-plan/products/authority/contracts.ts",
+    "src/lib/personal-plan/products/authority/evaluate.ts",
+    "src/lib/personal-plan/products/authority/shared.ts",
+    "src/lib/personal-plan/products/authority/snapshot.ts",
+    "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+    "src/lib/personal-plan/products/candidate-ranking.ts",
+    "src/lib/personal-plan/products/comparison-dimensions.ts",
+    "src/lib/personal-plan/products/contracts.ts",
+    "src/lib/personal-plan/products/fit-comparison-schema.ts",
+    "src/lib/personal-plan/products/fit-comparison.ts",
+    "src/lib/personal-plan/products/gateway.ts",
+    "src/lib/personal-plan/products/product-load-resolution.ts",
+    "src/lib/personal-plan/products/recovery-desired-state.ts",
+    "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+    "src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts",
+    "src/lib/personal-plan/reasons.ts",
+    "src/lib/personal-plan/release.ts",
+    "src/lib/personal-plan/rollout-access.ts",
+    "src/lib/personal-plan/routine-candidate-compiler.ts",
+    "src/lib/personal-plan/routine-proposal-stager.ts",
+    "src/lib/personal-plan/routine/cadence-authority.ts",
+    "src/lib/personal-plan/routine/cadence.ts",
+    "src/lib/personal-plan/routine/canonicalize.ts",
+    "src/lib/personal-plan/routine/commerce.ts",
+    "src/lib/personal-plan/routine/diff.ts",
+    "src/lib/personal-plan/routine/editor.ts",
+    "src/lib/personal-plan/stage5-access.ts",
+    "src/lib/personal-plan/transition-performance.ts",
+    "src/lib/personal-plan/types.ts",
+    "src/lib/product-intake/catalog-enrichment/stage5-catalog-bundle.ts",
+    "src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts",
+    "src/lib/product-specs/constants.ts",
+    "src/lib/product-usage/routine-identity.ts",
+    "src/lib/product-usage/shampoo-fallback.ts",
+    "src/lib/profile/brush-type.ts",
+    "src/lib/profile/chemical-treatment.ts",
+    "src/lib/profile/signal-derivations.ts",
+    "src/lib/quiz/diagnostic-input.ts",
+    "src/lib/quiz/normalization.ts",
+    "src/lib/quiz/primary-concern.ts",
+    "src/lib/quiz/types.ts",
+    "src/lib/recommendation-engine/adapters/from-persistence.ts",
+    "src/lib/recommendation-engine/assessments/care-needs.ts",
+    "src/lib/recommendation-engine/assessments/damage.ts",
+    "src/lib/recommendation-engine/assessments/reset.ts",
+    "src/lib/recommendation-engine/care-balance/evaluators.ts",
+    "src/lib/recommendation-engine/care-balance/frequency-targets.ts",
+    "src/lib/recommendation-engine/care-balance/index.ts",
+    "src/lib/recommendation-engine/care-balance/shared.ts",
+    "src/lib/recommendation-engine/categories/bondbuilder.ts",
+    "src/lib/recommendation-engine/categories/conditioner.ts",
+    "src/lib/recommendation-engine/categories/deep-cleansing-shampoo.ts",
+    "src/lib/recommendation-engine/categories/dry-shampoo.ts",
+    "src/lib/recommendation-engine/categories/index.ts",
+    "src/lib/recommendation-engine/categories/leave-in.ts",
+    "src/lib/recommendation-engine/categories/mask.ts",
+    "src/lib/recommendation-engine/categories/oil.ts",
+    "src/lib/recommendation-engine/categories/peeling.ts",
+    "src/lib/recommendation-engine/categories/shampoo.ts",
+    "src/lib/recommendation-engine/categories/shared.ts",
+    "src/lib/recommendation-engine/contracts.ts",
+    "src/lib/recommendation-engine/effective-care-context.ts",
+    "src/lib/recommendation-engine/normalize.ts",
+    "src/lib/recommendation-engine/planner/intervention.ts",
+    "src/lib/recommendation-engine/request-context.ts",
+    "src/lib/recommendation-engine/runtime.ts",
+    "src/lib/recommendation-engine/shampoo-cadence.ts",
+    "src/lib/recommendation-engine/types.ts",
+    "src/lib/recommendation-engine/utils/levels.ts",
+    "src/lib/routines/personal-plan/application/contracts-v2.ts",
+    "src/lib/routines/personal-plan/application/contracts.ts",
+    "src/lib/shampoo/constants.ts",
+    "src/lib/supabase/admin.ts",
+    "src/lib/supabase/server.ts",
+    "src/lib/types.ts",
+    "src/lib/vocabulary/concerns-goals.ts",
+    "src/lib/vocabulary/errors.ts",
+    "src/lib/vocabulary/frequencies.ts",
+    "src/lib/vocabulary/hair-length.ts",
+    "src/lib/vocabulary/hair-types.ts",
+    "src/lib/vocabulary/index.ts",
+    "src/lib/vocabulary/onboarding-care.ts",
+    "src/lib/vocabulary/onboarding-goals.ts",
+    "src/lib/vocabulary/profile-labels.ts",
+    "src/lib/vocabulary/source-labels.ts",
+    "tests/care-balance-frequency-targets.test.ts",
+    "tests/personal-plan-exact-catalog-bundle.test.ts",
+    "tests/personal-plan-routine-cadence.test.ts",
+    "tests/personal-plan-routine-candidate-compiler.test.ts",
+    "tests/personal-plan-stage3-contracts.test.ts",
+    "tests/personal-plan/fixtures.ts",
+    "tests/personal-plan/product-previews.test.ts",
+    "tests/recommendation-engine-foundation.fixtures.ts",
+    "tests/recommendation-engine-shampoo-cadence.test.ts",
+    "tests/server-only-register.cjs"
+  ],
+  "edges": [
+    {
+      "from": "tests/recommendation-engine-shampoo-cadence.test.ts",
+      "to": "src/lib/recommendation-engine/adapters/from-persistence.ts",
+      "spec": "../src/lib/recommendation-engine/adapters/from-persistence",
+      "kind": "static"
+    },
+    {
+      "from": "tests/recommendation-engine-shampoo-cadence.test.ts",
+      "to": "src/lib/recommendation-engine/shampoo-cadence.ts",
+      "spec": "../src/lib/recommendation-engine/shampoo-cadence",
+      "kind": "static"
+    },
+    {
+      "from": "tests/recommendation-engine-shampoo-cadence.test.ts",
+      "to": "src/lib/recommendation-engine/effective-care-context.ts",
+      "spec": "../src/lib/recommendation-engine/effective-care-context",
+      "kind": "static"
+    },
+    {
+      "from": "tests/recommendation-engine-shampoo-cadence.test.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "../src/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/recommendation-engine-shampoo-cadence.test.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "../src/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/recommendation-engine-shampoo-cadence.test.ts",
+      "to": "tests/recommendation-engine-foundation.fixtures.ts",
+      "spec": "./recommendation-engine-foundation.fixtures",
+      "kind": "static"
+    },
+    {
+      "from": "tests/care-balance-frequency-targets.test.ts",
+      "to": "src/lib/agent/tools/care-balance-context.ts",
+      "spec": "../src/lib/agent/tools/care-balance-context",
+      "kind": "static"
+    },
+    {
+      "from": "tests/care-balance-frequency-targets.test.ts",
+      "to": "src/lib/recommendation-engine/care-balance/frequency-targets.ts",
+      "spec": "../src/lib/recommendation-engine/care-balance/frequency-targets",
+      "kind": "static"
+    },
+    {
+      "from": "tests/care-balance-frequency-targets.test.ts",
+      "to": "src/lib/recommendation-engine/runtime.ts",
+      "spec": "../src/lib/recommendation-engine/runtime",
+      "kind": "static"
+    },
+    {
+      "from": "tests/care-balance-frequency-targets.test.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "../src/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/care-balance-frequency-targets.test.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "../src/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/care-balance-frequency-targets.test.ts",
+      "to": "tests/recommendation-engine-foundation.fixtures.ts",
+      "spec": "./recommendation-engine-foundation.fixtures",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "../src/lib/personal-plan/products/authorities",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../src/lib/personal-plan/products/contracts",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "to": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "spec": "../src/lib/personal-plan/routine-candidate-compiler",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../src/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/personal-plan-routine-cadence.test.ts",
+      "to": "src/lib/personal-plan/routine/cadence.ts",
+      "spec": "../src/lib/personal-plan/routine/cadence",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan-routine-cadence.test.ts",
+      "to": "src/lib/personal-plan/routine/cadence-authority.ts",
+      "spec": "../src/lib/personal-plan/routine/cadence-authority",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan/product-previews.test.ts",
+      "to": "src/lib/personal-plan/compute-stage1.ts",
+      "spec": "../../src/lib/personal-plan/compute-stage1",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan/product-previews.test.ts",
+      "to": "src/app/api/personal-plan/stage-1/previews/route.ts",
+      "spec": "../../src/app/api/personal-plan/stage-1/previews/route",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan/product-previews.test.ts",
+      "to": "src/lib/personal-plan/product-previews.ts",
+      "spec": "../../src/lib/personal-plan/product-previews",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan/product-previews.test.ts",
+      "to": "src/lib/personal-plan/decision-presentation.ts",
+      "spec": "../../src/lib/personal-plan/decision-presentation",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan/product-previews.test.ts",
+      "to": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "spec": "../../src/lib/personal-plan/persistence/stage1-service",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/personal-plan/product-previews.test.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../../src/lib/personal-plan/products/authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/personal-plan/product-previews.test.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../../src/lib/personal-plan/products/contracts",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan/product-previews.test.ts",
+      "to": "src/lib/personal-plan/product-preview-contract.ts",
+      "spec": "../../src/lib/personal-plan/product-preview-contract",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/personal-plan/product-previews.test.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../../src/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/personal-plan/product-previews.test.ts",
+      "to": "tests/personal-plan/fixtures.ts",
+      "spec": "./fixtures",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan-exact-catalog-bundle.test.ts",
+      "to": "src/lib/product-intake/catalog-enrichment/stage5-catalog-bundle.ts",
+      "spec": "@/lib/product-intake/catalog-enrichment/stage5-catalog-bundle",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan-stage3-contracts.test.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "../src/lib/personal-plan/products/authorities",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan-stage3-contracts.test.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../src/lib/personal-plan/products/contracts",
+      "kind": "static"
+    },
+    {
+      "from": "tests/personal-plan-stage3-contracts.test.ts",
+      "to": "src/lib/personal-plan/products/recovery-desired-state.ts",
+      "spec": "../src/lib/personal-plan/products/recovery-desired-state",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/adapters/from-persistence.ts",
+      "to": "src/lib/types.ts",
+      "spec": "@/lib/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/adapters/from-persistence.ts",
+      "to": "src/lib/product-usage/routine-identity.ts",
+      "spec": "@/lib/product-usage/routine-identity",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/adapters/from-persistence.ts",
+      "to": "src/lib/hair-profile/derived.ts",
+      "spec": "@/lib/hair-profile/derived",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/adapters/from-persistence.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/adapters/from-persistence.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/shampoo-cadence.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/shampoo-cadence.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/effective-care-context.ts",
+      "to": "src/lib/recommendation-engine/normalize.ts",
+      "spec": "@/lib/recommendation-engine/normalize",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/effective-care-context.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/shampoo/constants.ts",
+      "spec": "@/lib/shampoo/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/oil/constants.ts",
+      "spec": "@/lib/oil/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "spec": "@/lib/leave-in/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "spec": "@/lib/product-specs/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/recommendation-engine/contracts.ts",
+      "spec": "@/lib/recommendation-engine/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-types.ts",
+      "spec": "./hair-types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-types.ts",
+      "spec": "./hair-types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-length.ts",
+      "spec": "./hair-length",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-length.ts",
+      "spec": "./hair-length",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "./concerns-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "./concerns-goals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "./frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "./frequencies",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/profile-labels.ts",
+      "spec": "./profile-labels",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/profile-labels.ts",
+      "spec": "./profile-labels",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "spec": "../leave-in/constants",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "spec": "../leave-in/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/source-labels.ts",
+      "spec": "./source-labels",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/source-labels.ts",
+      "spec": "./source-labels",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/errors.ts",
+      "spec": "./errors",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/onboarding-goals.ts",
+      "spec": "./onboarding-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "./frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "./frequencies",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "spec": "./onboarding-care",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "spec": "./onboarding-care",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/recommendation-engine-foundation.fixtures.ts",
+      "to": "src/lib/types.ts",
+      "spec": "../src/lib/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/recommendation-engine-foundation.fixtures.ts",
+      "to": "src/lib/recommendation-engine/adapters/from-persistence.ts",
+      "spec": "../src/lib/recommendation-engine/adapters/from-persistence",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/agent/tools/care-balance-context.ts",
+      "to": "src/lib/recommendation-engine/runtime.ts",
+      "spec": "@/lib/recommendation-engine/runtime",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/agent/tools/care-balance-context.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/agent/tools/care-balance-context.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/care-balance/frequency-targets.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/care-balance/frequency-targets.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/runtime.ts",
+      "to": "src/lib/types.ts",
+      "spec": "@/lib/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/runtime.ts",
+      "to": "src/lib/recommendation-engine/adapters/from-persistence.ts",
+      "spec": "@/lib/recommendation-engine/adapters/from-persistence",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/runtime.ts",
+      "to": "src/lib/recommendation-engine/assessments/care-needs.ts",
+      "spec": "@/lib/recommendation-engine/assessments/care-needs",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/runtime.ts",
+      "to": "src/lib/recommendation-engine/assessments/damage.ts",
+      "spec": "@/lib/recommendation-engine/assessments/damage",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/runtime.ts",
+      "to": "src/lib/recommendation-engine/assessments/reset.ts",
+      "spec": "@/lib/recommendation-engine/assessments/reset",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/runtime.ts",
+      "to": "src/lib/recommendation-engine/care-balance/index.ts",
+      "spec": "@/lib/recommendation-engine/care-balance",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/runtime.ts",
+      "to": "src/lib/recommendation-engine/categories/index.ts",
+      "spec": "@/lib/recommendation-engine/categories",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/runtime.ts",
+      "to": "src/lib/recommendation-engine/effective-care-context.ts",
+      "spec": "@/lib/recommendation-engine/effective-care-context",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/runtime.ts",
+      "to": "src/lib/recommendation-engine/planner/intervention.ts",
+      "spec": "@/lib/recommendation-engine/planner/intervention",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/runtime.ts",
+      "to": "src/lib/recommendation-engine/request-context.ts",
+      "spec": "@/lib/recommendation-engine/request-context",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/runtime.ts",
+      "to": "src/lib/recommendation-engine/shampoo-cadence.ts",
+      "spec": "@/lib/recommendation-engine/shampoo-cadence",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/runtime.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authorities.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authorities.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "./authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "./products/authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./products/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/persistence/index.ts",
+      "spec": "./persistence",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/routine-proposal-stager.ts",
+      "spec": "./routine-proposal-stager",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/routine/canonicalize.ts",
+      "spec": "./routine/canonicalize",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/routine/editor.ts",
+      "spec": "./routine/editor",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/routine/diff.ts",
+      "spec": "./routine/diff",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "to": "src/lib/personal-plan/routine/cadence.ts",
+      "spec": "./routine/cadence",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/types.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "@/lib/personal-plan-quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/types.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/cadence.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../products/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/cadence.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/cadence-authority.ts",
+      "to": "src/lib/personal-plan/routine/cadence.ts",
+      "spec": "./cadence",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/bondbuilder.ts",
+      "spec": "./categories/bondbuilder",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/conditioner.ts",
+      "spec": "./categories/conditioner",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/deep-cleansing.ts",
+      "spec": "./categories/deep-cleansing",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/dry-shampoo.ts",
+      "spec": "./categories/dry-shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/heat-protectant.ts",
+      "spec": "./categories/heat-protectant",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/leave-in.ts",
+      "spec": "./categories/leave-in",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/mask.ts",
+      "spec": "./categories/mask",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/oil.ts",
+      "spec": "./categories/oil",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/scalp-care.ts",
+      "spec": "./categories/scalp-care",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/categories/shampoo.ts",
+      "spec": "./categories/shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/input.ts",
+      "spec": "./input",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/needs.ts",
+      "spec": "./needs",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/portfolio.ts",
+      "spec": "./portfolio",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/compute-stage1.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/personal-plan/stage-1/previews/route.ts",
+      "to": "src/lib/personal-plan/product-preview-contract.ts",
+      "spec": "@/lib/personal-plan/product-preview-contract",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/personal-plan/stage-1/previews/route.ts",
+      "to": "src/lib/personal-plan/product-previews.ts",
+      "spec": "@/lib/personal-plan/product-previews",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/personal-plan/stage-1/previews/route.ts",
+      "to": "src/lib/personal-plan/journey-access.ts",
+      "spec": "@/lib/personal-plan/journey-access",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/personal-plan/stage-1/previews/route.ts",
+      "to": "src/lib/personal-plan/journey-access-loader.ts",
+      "spec": "@/lib/personal-plan/journey-access-loader",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/personal-plan/stage-1/previews/route.ts",
+      "to": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "spec": "@/lib/personal-plan/persistence/stage1-service",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/personal-plan/stage-1/previews/route.ts",
+      "to": "src/lib/personal-plan/persistence/stage1-supabase.ts",
+      "spec": "@/lib/personal-plan/persistence/stage1-supabase",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/personal-plan/stage-1/previews/route.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/app/api/personal-plan/stage-1/previews/route.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/personal-plan/stage-1/previews/route.ts",
+      "to": "src/lib/supabase/server.ts",
+      "spec": "@/lib/supabase/server",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/product-preview-contract.ts",
+      "spec": "@/lib/personal-plan/product-preview-contract",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/decision-presentation.ts",
+      "spec": "./decision-presentation",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "./products/authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "spec": "./products/authority/catalog-facts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./products/authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "spec": "./products/authority/evaluate",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./products/contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/product-previews.ts",
+      "to": "src/lib/personal-plan/routine/commerce.ts",
+      "spec": "./routine/commerce",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/decision-presentation.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/decision-presentation.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "to": "src/lib/personal-plan/compute-stage1.ts",
+      "spec": "../compute-stage1",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "to": "src/lib/personal-plan/input.ts",
+      "spec": "../input",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "@/lib/quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "to": "src/lib/personal-plan/persistence/index.ts",
+      "spec": "./index",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/contracts.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/contracts.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/product-preview-contract.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "./products/authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/product-preview-contract.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "tests/personal-plan/fixtures.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "../../src/lib/personal-plan-quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/product-intake/catalog-enrichment/stage5-catalog-bundle.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "spec": "@/lib/routines/personal-plan/application/contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/product-intake/catalog-enrichment/stage5-catalog-bundle.ts",
+      "to": "src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts",
+      "spec": "@/lib/product-intake/catalog-enrichment/stage5-v2-builder",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/recovery-desired-state.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/recovery-desired-state.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/recovery-desired-state.ts",
+      "to": "src/lib/personal-plan/products/gateway.ts",
+      "spec": "./gateway",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "spec": "@/lib/leave-in/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/mask/constants.ts",
+      "spec": "@/lib/mask/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/conditioner/constants.ts",
+      "spec": "@/lib/conditioner/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/bondbuilder/constants.ts",
+      "spec": "@/lib/bondbuilder/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/deep-cleansing-shampoo/constants.ts",
+      "spec": "@/lib/deep-cleansing-shampoo/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/dry-shampoo/constants.ts",
+      "spec": "@/lib/dry-shampoo/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/oil/constants.ts",
+      "spec": "@/lib/oil/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/peeling/constants.ts",
+      "spec": "@/lib/peeling/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "spec": "@/lib/product-specs/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/shampoo/constants.ts",
+      "spec": "@/lib/shampoo/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/product-usage/routine-identity.ts",
+      "to": "src/lib/types.ts",
+      "spec": "@/lib/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/hair-profile/derived.ts",
+      "to": "src/lib/onboarding/product-options.ts",
+      "spec": "@/lib/onboarding/product-options",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/hair-profile/derived.ts",
+      "to": "src/lib/product-usage/shampoo-fallback.ts",
+      "spec": "@/lib/product-usage/shampoo-fallback",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/hair-profile/derived.ts",
+      "to": "src/lib/types.ts",
+      "spec": "@/lib/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/hair-profile/derived.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/normalize.ts",
+      "to": "src/lib/recommendation-engine/contracts.ts",
+      "spec": "@/lib/recommendation-engine/contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/normalize.ts",
+      "to": "src/lib/product-usage/routine-identity.ts",
+      "spec": "@/lib/product-usage/routine-identity",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/normalize.ts",
+      "to": "src/lib/profile/brush-type.ts",
+      "spec": "@/lib/profile/brush-type",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/normalize.ts",
+      "to": "src/lib/product-usage/shampoo-fallback.ts",
+      "spec": "@/lib/product-usage/shampoo-fallback",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/normalize.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/normalize.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/shampoo/constants.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/shampoo/constants.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/oil/constants.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/contracts.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/onboarding-goals.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "./concerns-goals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/vocabulary/onboarding-goals.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "./concerns-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/vocabulary/onboarding-goals.ts",
+      "to": "src/lib/vocabulary/hair-types.ts",
+      "spec": "./hair-types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/assessments/care-needs.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/assessments/care-needs.ts",
+      "to": "src/lib/profile/chemical-treatment.ts",
+      "spec": "@/lib/profile/chemical-treatment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/assessments/care-needs.ts",
+      "to": "src/lib/recommendation-engine/utils/levels.ts",
+      "spec": "@/lib/recommendation-engine/utils/levels",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/assessments/damage.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/assessments/damage.ts",
+      "to": "src/lib/profile/brush-type.ts",
+      "spec": "@/lib/profile/brush-type",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/assessments/damage.ts",
+      "to": "src/lib/profile/signal-derivations.ts",
+      "spec": "@/lib/profile/signal-derivations",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/assessments/damage.ts",
+      "to": "src/lib/profile/chemical-treatment.ts",
+      "spec": "@/lib/profile/chemical-treatment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/assessments/damage.ts",
+      "to": "src/lib/recommendation-engine/utils/levels.ts",
+      "spec": "@/lib/recommendation-engine/utils/levels",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/assessments/reset.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/assessments/reset.ts",
+      "to": "src/lib/profile/chemical-treatment.ts",
+      "spec": "@/lib/profile/chemical-treatment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/assessments/reset.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/care-balance/index.ts",
+      "to": "src/lib/recommendation-engine/care-balance/evaluators.ts",
+      "spec": "./evaluators",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/bondbuilder.ts",
+      "spec": "@/lib/recommendation-engine/categories/bondbuilder",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/conditioner.ts",
+      "spec": "@/lib/recommendation-engine/categories/conditioner",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/deep-cleansing-shampoo.ts",
+      "spec": "@/lib/recommendation-engine/categories/deep-cleansing-shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/dry-shampoo.ts",
+      "spec": "@/lib/recommendation-engine/categories/dry-shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/leave-in.ts",
+      "spec": "@/lib/recommendation-engine/categories/leave-in",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/mask.ts",
+      "spec": "@/lib/recommendation-engine/categories/mask",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/oil.ts",
+      "spec": "@/lib/recommendation-engine/categories/oil",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/peeling.ts",
+      "spec": "@/lib/recommendation-engine/categories/peeling",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/shampoo.ts",
+      "spec": "@/lib/recommendation-engine/categories/shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/assessments/reset.ts",
+      "spec": "@/lib/recommendation-engine/assessments/reset",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/bondbuilder.ts",
+      "spec": "@/lib/recommendation-engine/categories/bondbuilder",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/shampoo.ts",
+      "spec": "@/lib/recommendation-engine/categories/shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/conditioner.ts",
+      "spec": "@/lib/recommendation-engine/categories/conditioner",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/mask.ts",
+      "spec": "@/lib/recommendation-engine/categories/mask",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/leave-in.ts",
+      "spec": "@/lib/recommendation-engine/categories/leave-in",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/oil.ts",
+      "spec": "@/lib/recommendation-engine/categories/oil",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/deep-cleansing-shampoo.ts",
+      "spec": "@/lib/recommendation-engine/categories/deep-cleansing-shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/dry-shampoo.ts",
+      "spec": "@/lib/recommendation-engine/categories/dry-shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/index.ts",
+      "to": "src/lib/recommendation-engine/categories/peeling.ts",
+      "spec": "@/lib/recommendation-engine/categories/peeling",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/planner/intervention.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/planner/intervention.ts",
+      "to": "src/lib/profile/signal-derivations.ts",
+      "spec": "@/lib/profile/signal-derivations",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/planner/intervention.ts",
+      "to": "src/lib/recommendation-engine/categories/shared.ts",
+      "spec": "@/lib/recommendation-engine/categories/shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/planner/intervention.ts",
+      "to": "src/lib/recommendation-engine/request-context.ts",
+      "spec": "@/lib/recommendation-engine/request-context",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/request-context.ts",
+      "to": "src/lib/oil/purpose.ts",
+      "spec": "@/lib/oil/purpose",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/request-context.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/index.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../products/contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-proposal-stager.ts",
+      "to": "src/lib/personal-plan/persistence/index.ts",
+      "spec": "./persistence",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-proposal-stager.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine-proposal-stager.ts",
+      "to": "src/lib/personal-plan/routine/cadence.ts",
+      "spec": "./routine/cadence",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/editor.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "../products/authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/editor.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/editor.ts",
+      "to": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "spec": "../routine-candidate-compiler",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/diff.ts",
+      "to": "src/lib/personal-plan/routine/canonicalize.ts",
+      "spec": "./canonicalize",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/routine/diff.ts",
+      "to": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "spec": "../routine-candidate-compiler",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/types.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "@/lib/quiz/diagnostic-input",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/bondbuilder.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/conditioner.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/deep-cleansing.ts",
+      "to": "src/lib/personal-plan/reasons.ts",
+      "spec": "../reasons",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/deep-cleansing.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/dry-shampoo.ts",
+      "to": "src/lib/personal-plan/reasons.ts",
+      "spec": "../reasons",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/dry-shampoo.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/heat-protectant.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/leave-in.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/leave-in.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/mask.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/mask.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/oil.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/scalp-care.ts",
+      "to": "src/lib/personal-plan/reasons.ts",
+      "spec": "../reasons",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/scalp-care.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/shampoo.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/reasons.ts",
+      "spec": "../reasons",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "../types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/input.ts",
+      "to": "src/lib/personal-plan-quiz/persistence.ts",
+      "spec": "@/lib/personal-plan-quiz/persistence",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/input.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "@/lib/personal-plan-quiz/types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/input.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/input.ts",
+      "to": "src/lib/quiz/normalization.ts",
+      "spec": "@/lib/quiz/normalization",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/input.ts",
+      "to": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "spec": "@/lib/personal-plan-quiz/offer-adapter",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/input.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "@/lib/quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/needs.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/portfolio.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/portfolio.ts",
+      "to": "src/lib/personal-plan/reasons.ts",
+      "spec": "./reasons",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/transition-performance.ts",
+      "spec": "./transition-performance",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+      "spec": "./products/stage2-entry-adapter",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "spec": "./products/authority/snapshot",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./products/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/release.ts",
+      "spec": "./release",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/stage5-access.ts",
+      "spec": "./stage5-access",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/journey-access.ts",
+      "spec": "./journey-access",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/enrollment.ts",
+      "spec": "./enrollment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/journey-access-loader.ts",
+      "to": "src/lib/personal-plan/migration-admission.ts",
+      "spec": "./migration-admission",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage1-supabase.ts",
+      "to": "src/lib/personal-plan/release.ts",
+      "spec": "@/lib/personal-plan/release",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage1-supabase.ts",
+      "to": "src/lib/personal-plan/enrollment.ts",
+      "spec": "@/lib/personal-plan/enrollment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage1-supabase.ts",
+      "to": "src/lib/personal-plan/migration-admission.ts",
+      "spec": "@/lib/personal-plan/migration-admission",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/persistence/stage1-supabase.ts",
+      "to": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "spec": "./stage1-service",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "to": "src/lib/personal-plan/oil-heat-context.ts",
+      "spec": "@/lib/personal-plan/oil-heat-context",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "spec": "@/lib/routines/personal-plan/application/contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "../authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "spec": "./categories/shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "to": "src/lib/personal-plan/products/authority/catalog-batching.ts",
+      "spec": "./catalog-batching",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+      "spec": "./categories/bondbuilder",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+      "spec": "./categories/conditioner",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts",
+      "spec": "./categories/deep-cleansing-shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/dry-shampoo.ts",
+      "spec": "./categories/dry-shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/heat-protectant.ts",
+      "spec": "./categories/heat-protectant",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "spec": "./categories/leave-in",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "spec": "./categories/mask",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/oil.ts",
+      "spec": "./categories/oil",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/scalp-care.ts",
+      "spec": "./categories/scalp-care",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "spec": "./categories/shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/components/ui/icon.tsx",
+      "spec": "@/components/ui/icon",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/lib/help/info-tips.ts",
+      "spec": "@/lib/help/info-tips",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "@/lib/vocabulary/concerns-goals",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/types.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "./diagnostic-input",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "spec": "@/lib/routines/personal-plan/application/contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "spec": "@/lib/routines/personal-plan/application/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts-v2.ts",
+      "spec": "@/lib/routines/personal-plan/application/contracts-v2",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/gateway.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/gateway.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/gateway.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/gateway.ts",
+      "to": "src/lib/personal-plan/products/fit-comparison.ts",
+      "spec": "./fit-comparison",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/gateway.ts",
+      "to": "src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts",
+      "spec": "./stage3-bootstrap-review-contract",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/mask/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "spec": "@/lib/product-specs/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/conditioner/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "spec": "@/lib/product-specs/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/bondbuilder/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "spec": "@/lib/product-specs/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/deep-cleansing-shampoo/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "spec": "@/lib/product-specs/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/deep-cleansing-shampoo/constants.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/dry-shampoo/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "spec": "@/lib/product-specs/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/peeling/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "spec": "@/lib/product-specs/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/onboarding/product-options.ts",
+      "to": "src/components/ui/icon.tsx",
+      "spec": "@/components/ui/icon",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/onboarding/product-options.ts",
+      "to": "src/lib/help/info-tips.ts",
+      "spec": "@/lib/help/info-tips",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/product-usage/shampoo-fallback.ts",
+      "to": "src/lib/types.ts",
+      "spec": "@/lib/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/product-usage/shampoo-fallback.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/profile/brush-type.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/profile/chemical-treatment.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/utils/levels.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/profile/signal-derivations.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "spec": "@/lib/leave-in/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/profile/signal-derivations.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/profile/signal-derivations.ts",
+      "to": "src/lib/profile/brush-type.ts",
+      "spec": "@/lib/profile/brush-type",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/care-balance/evaluators.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/care-balance/evaluators.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/care-balance/evaluators.ts",
+      "to": "src/lib/recommendation-engine/care-balance/shared.ts",
+      "spec": "@/lib/recommendation-engine/care-balance/shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/care-balance/evaluators.ts",
+      "to": "src/lib/recommendation-engine/care-balance/frequency-targets.ts",
+      "spec": "@/lib/recommendation-engine/care-balance/frequency-targets",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/care-balance/evaluators.ts",
+      "to": "src/lib/recommendation-engine/shampoo-cadence.ts",
+      "spec": "@/lib/recommendation-engine/shampoo-cadence",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/bondbuilder.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/bondbuilder.ts",
+      "to": "src/lib/recommendation-engine/categories/shared.ts",
+      "spec": "@/lib/recommendation-engine/categories/shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/bondbuilder.ts",
+      "to": "src/lib/recommendation-engine/request-context.ts",
+      "spec": "@/lib/recommendation-engine/request-context",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/conditioner.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/conditioner.ts",
+      "to": "src/lib/recommendation-engine/categories/shared.ts",
+      "spec": "@/lib/recommendation-engine/categories/shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/conditioner.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/deep-cleansing-shampoo.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/deep-cleansing-shampoo.ts",
+      "to": "src/lib/recommendation-engine/categories/shared.ts",
+      "spec": "@/lib/recommendation-engine/categories/shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/dry-shampoo.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/dry-shampoo.ts",
+      "to": "src/lib/recommendation-engine/categories/shared.ts",
+      "spec": "@/lib/recommendation-engine/categories/shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/dry-shampoo.ts",
+      "to": "src/lib/recommendation-engine/request-context.ts",
+      "spec": "@/lib/recommendation-engine/request-context",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/leave-in.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/leave-in.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "spec": "@/lib/leave-in/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/leave-in.ts",
+      "to": "src/lib/profile/signal-derivations.ts",
+      "spec": "@/lib/profile/signal-derivations",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/leave-in.ts",
+      "to": "src/lib/recommendation-engine/categories/shared.ts",
+      "spec": "@/lib/recommendation-engine/categories/shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/leave-in.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/leave-in.ts",
+      "to": "src/lib/profile/chemical-treatment.ts",
+      "spec": "@/lib/profile/chemical-treatment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/mask.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/mask.ts",
+      "to": "src/lib/recommendation-engine/categories/shared.ts",
+      "spec": "@/lib/recommendation-engine/categories/shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/oil.ts",
+      "to": "src/lib/oil/purpose.ts",
+      "spec": "@/lib/oil/purpose",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/oil.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/peeling.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/peeling.ts",
+      "to": "src/lib/recommendation-engine/categories/shared.ts",
+      "spec": "@/lib/recommendation-engine/categories/shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/peeling.ts",
+      "to": "src/lib/recommendation-engine/request-context.ts",
+      "spec": "@/lib/recommendation-engine/request-context",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/shampoo.ts",
+      "to": "src/lib/shampoo/constants.ts",
+      "spec": "@/lib/shampoo/constants",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/shampoo.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/shampoo.ts",
+      "to": "src/lib/recommendation-engine/categories/shared.ts",
+      "spec": "@/lib/recommendation-engine/categories/shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/shared.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/shared.ts",
+      "to": "src/lib/recommendation-engine/assessments/reset.ts",
+      "spec": "@/lib/recommendation-engine/assessments/reset",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/shared.ts",
+      "to": "src/lib/recommendation-engine/request-context.ts",
+      "spec": "@/lib/recommendation-engine/request-context",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/shared.ts",
+      "to": "src/lib/profile/signal-derivations.ts",
+      "spec": "@/lib/profile/signal-derivations",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/shared.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/categories/shared.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/oil/purpose.ts",
+      "to": "src/lib/types.ts",
+      "spec": "@/lib/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/oil/purpose.ts",
+      "to": "src/lib/oil/constants.ts",
+      "spec": "@/lib/oil/constants",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/reasons.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/persistence.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "./types",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "@/lib/vocabulary/concerns-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/normalization.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "./diagnostic-input",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "spec": "@/lib/vocabulary/concerns-goals",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "@/lib/quiz/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "@/lib/quiz/diagnostic-input",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "to": "src/lib/personal-plan-quiz/primary-concern.ts",
+      "spec": "./primary-concern",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+      "to": "src/lib/personal-plan/products/gateway.ts",
+      "spec": "./gateway",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "./authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "../authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "to": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "spec": "../product-load-resolution",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "to": "src/lib/personal-plan/products/authority/category-decision-schema.ts",
+      "spec": "./category-decision-schema",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "to": "src/lib/personal-plan/routine/canonicalize.ts",
+      "spec": "@/lib/personal-plan/routine/canonicalize",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/billing/purchases.ts",
+      "spec": "@/lib/billing/purchases",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "@/lib/billing/pricing-catalog",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/billing/subscriptions.ts",
+      "spec": "@/lib/billing/subscriptions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/personal-plan-field-test/errors.ts",
+      "spec": "@/lib/personal-plan-field-test/errors",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/personal-plan/release.ts",
+      "spec": "@/lib/personal-plan/release",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/personal-plan/rollout-access.ts",
+      "spec": "@/lib/personal-plan/rollout-access",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/personal-plan/migration-admission.ts",
+      "spec": "./migration-admission",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/enrollment.ts",
+      "to": "src/lib/personal-plan/freemium-enrollment.ts",
+      "spec": "./freemium-enrollment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/oil-heat-context.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "spec": "../../comparison-dimensions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/products/candidate-ranking.ts",
+      "spec": "../../candidate-ranking",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts",
+      "spec": "./shampoo-spec-target",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts",
+      "spec": "./shampoo-spec-target",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+      "to": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "spec": "../../comparison-dimensions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+      "to": "src/lib/personal-plan/products/candidate-ranking.ts",
+      "spec": "../../candidate-ranking",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+      "spec": "./axis-fit",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/dry-shampoo.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/dry-shampoo.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/heat-protectant.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/heat-protectant.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/heat-protectant.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "to": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "spec": "../../comparison-dimensions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "to": "src/lib/personal-plan/products/candidate-ranking.ts",
+      "spec": "../../candidate-ranking",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+      "spec": "./axis-fit",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "to": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "spec": "../../comparison-dimensions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+      "spec": "./axis-fit",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "to": "src/lib/personal-plan/products/candidate-ranking.ts",
+      "spec": "../../candidate-ranking",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/oil.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/oil.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/oil.ts",
+      "to": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "spec": "../../comparison-dimensions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/oil.ts",
+      "to": "src/lib/personal-plan/products/candidate-ranking.ts",
+      "spec": "../../candidate-ranking",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/oil.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/scalp-care.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/scalp-care.ts",
+      "to": "src/lib/personal-plan/products/authority/shared.ts",
+      "spec": "../shared",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/routines/personal-plan/application/contracts-v2.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "spec": "./contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/routines/personal-plan/application/contracts-v2.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "spec": "./contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+      "spec": "./authority/categories/axis-fit",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "spec": "./authority/evaluate",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+      "spec": "./authority/supportive-owned-recommendation",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/candidate-ranking.ts",
+      "spec": "./candidate-ranking",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "spec": "./comparison-dimensions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/fit-comparison-schema.ts",
+      "spec": "./fit-comparison-schema",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison.ts",
+      "to": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "spec": "./comparison-dimensions",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts",
+      "to": "src/lib/personal-plan/products/fit-comparison.ts",
+      "spec": "./fit-comparison",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/care-balance/shared.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "spec": "@/lib/recommendation-engine/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/recommendation-engine/care-balance/shared.ts",
+      "to": "src/lib/profile/chemical-treatment.ts",
+      "spec": "@/lib/profile/chemical-treatment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/recommendation-engine/care-balance/shared.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "spec": "@/lib/vocabulary",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/primary-concern.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "spec": "@/lib/quiz/diagnostic-input",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/primary-concern.ts",
+      "to": "src/lib/quiz/primary-concern.ts",
+      "spec": "@/lib/quiz/primary-concern",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "to": "src/lib/personal-plan/routine/canonicalize.ts",
+      "spec": "@/lib/personal-plan/routine/canonicalize",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "./authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/category-decision-schema.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/category-decision-schema.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../contracts",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/category-decision-schema.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "../authorities",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/purchases.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/billing/purchases.ts",
+      "to": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "spec": "./personal-plan-one-time-consents",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/subscriptions.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/billing/subscriptions.ts",
+      "to": "src/lib/billing/purchases.ts",
+      "spec": "./purchases",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/subscriptions.ts",
+      "to": "src/lib/billing/trial-access-projection.ts",
+      "spec": "./trial-access-projection",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/types.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "./pricing-catalog",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/freemium-enrollment.ts",
+      "to": "src/lib/billing/subscriptions.ts",
+      "spec": "@/lib/billing/subscriptions",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/freemium-enrollment.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/freemium-enrollment.ts",
+      "to": "src/lib/entitlements/flag.ts",
+      "spec": "@/lib/entitlements/flag",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+      "spec": "./authority/categories/axis-fit",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts",
+      "spec": "./authority/categories/shampoo-spec-target",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "to": "src/lib/personal-plan/products/fit-comparison-schema.ts",
+      "spec": "./fit-comparison-schema",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/shared.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/shared.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts",
+      "to": "src/lib/shampoo/constants.ts",
+      "spec": "@/lib/shampoo/constants",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+      "spec": "./categories/bondbuilder",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "spec": "./categories/mask",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/oil.ts",
+      "spec": "./categories/oil",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+      "to": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "spec": "./categories/shampoo",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison-schema.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/personal-plan/products/fit-comparison-schema.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/quiz/primary-concern.ts",
+      "to": "src/lib/quiz/normalization.ts",
+      "spec": "./normalization",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/quiz/primary-concern.ts",
+      "to": "src/lib/quiz/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "to": "src/lib/billing/personal-plan-one-time-consent-copy.ts",
+      "spec": "./personal-plan-one-time-consent-copy",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "./types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "to": "src/lib/billing/personal-plan-one-time-consent-copy.ts",
+      "spec": "./personal-plan-one-time-consent-copy",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-access-projection.ts",
+      "to": "src/lib/billing/trial-policy.ts",
+      "spec": "./trial-policy",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-policy.ts",
+      "to": "src/lib/paypal/trial-collection-start.ts",
+      "spec": "../paypal/trial-collection-start",
+      "kind": "static"
+    }
+  ],
+  "externalPins": [
+    {
+      "specifier": "zod",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/package.json"
+    },
+    {
+      "specifier": "server-only",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/server-only/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/server-only/package.json"
+    },
+    {
+      "specifier": "next/server",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/server.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json"
+    },
+    {
+      "specifier": "@supabase/supabase-js",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/dist/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/package.json"
+    },
+    {
+      "specifier": "@supabase/ssr",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/ssr/dist/main/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/ssr/package.json"
+    },
+    {
+      "specifier": "next/headers",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/headers.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json"
+    },
+    {
+      "specifier": "react",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react/package.json"
+    },
+    {
+      "specifier": "lucide-react",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/lucide-react/dist/cjs/lucide-react.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/lucide-react/package.json"
+    },
+    {
+      "specifier": "typescript",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/typescript.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/package.json"
+    },
+    {
+      "specifier": "tsx",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/loader.mjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/package.json"
+    }
+  ],
+  "nonliteralImports": [],
+  "pinOrigins": {
+    "tests/server-only-register.cjs": "original83 strict",
+    "src/lib/recommendation-engine/adapters/from-persistence.ts": "original83 strict",
+    "src/lib/recommendation-engine/shampoo-cadence.ts": "original83 strict",
+    "src/lib/recommendation-engine/effective-care-context.ts": "original83 strict",
+    "src/lib/recommendation-engine/types.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/vocabulary/index.ts": "first-time literal local closure pin; no semantic review credit",
+    "tests/recommendation-engine-foundation.fixtures.ts": "original83 strict",
+    "src/lib/agent/tools/care-balance-context.ts": "original83 strict",
+    "src/lib/recommendation-engine/care-balance/frequency-targets.ts": "original83 strict",
+    "src/lib/recommendation-engine/runtime.ts": "original83 strict",
+    "src/lib/personal-plan/products/authorities.ts": "original83 strict",
+    "src/lib/personal-plan/products/contracts.ts": "original83 strict",
+    "src/lib/personal-plan/routine-candidate-compiler.ts": "original83 strict",
+    "src/lib/personal-plan/types.ts": "original83 strict",
+    "src/lib/personal-plan/routine/cadence.ts": "original83 strict",
+    "src/lib/personal-plan/routine/cadence-authority.ts": "original83 strict",
+    "src/lib/personal-plan/compute-stage1.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/app/api/personal-plan/stage-1/previews/route.ts": "original83 strict",
+    "src/lib/personal-plan/product-previews.ts": "original83 strict",
+    "src/lib/personal-plan/decision-presentation.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/persistence/stage1-service.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/contracts.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/product-preview-contract.ts": "first-time literal local closure pin; no semantic review credit",
+    "tests/personal-plan/fixtures.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/product-intake/catalog-enrichment/stage5-catalog-bundle.ts": "original83 strict",
+    "src/lib/personal-plan/products/recovery-desired-state.ts": "original83 strict",
+    "src/lib/types.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/product-usage/routine-identity.ts": "original83 strict",
+    "src/lib/hair-profile/derived.ts": "original83 strict",
+    "src/lib/recommendation-engine/normalize.ts": "original83 strict",
+    "src/lib/shampoo/constants.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/oil/constants.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/leave-in/constants.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/product-specs/constants.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/recommendation-engine/contracts.ts": "original83 strict",
+    "src/lib/vocabulary/hair-types.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/vocabulary/hair-length.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/vocabulary/concerns-goals.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/vocabulary/frequencies.ts": "original83 strict",
+    "src/lib/vocabulary/profile-labels.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/vocabulary/source-labels.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/vocabulary/errors.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/vocabulary/onboarding-goals.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/vocabulary/onboarding-care.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/recommendation-engine/assessments/care-needs.ts": "original83 strict",
+    "src/lib/recommendation-engine/assessments/damage.ts": "original83 strict",
+    "src/lib/recommendation-engine/assessments/reset.ts": "original83 strict",
+    "src/lib/recommendation-engine/care-balance/index.ts": "original83 strict",
+    "src/lib/recommendation-engine/categories/index.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/recommendation-engine/planner/intervention.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/recommendation-engine/request-context.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/persistence/index.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/routine-proposal-stager.ts": "original83 strict",
+    "src/lib/personal-plan/routine/canonicalize.ts": "original83 strict",
+    "src/lib/personal-plan/routine/editor.ts": "original83 strict",
+    "src/lib/personal-plan/routine/diff.ts": "original83 strict",
+    "src/lib/personal-plan-quiz/types.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/categories/bondbuilder.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/categories/conditioner.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/categories/deep-cleansing.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/categories/dry-shampoo.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/categories/heat-protectant.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/categories/leave-in.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/categories/mask.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/categories/oil.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/categories/scalp-care.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/categories/shampoo.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/input.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/needs.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/portfolio.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/journey-access.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/journey-access-loader.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/persistence/stage1-supabase.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/supabase/admin.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/supabase/server.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/catalog-facts.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/evaluate.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/routine/commerce.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/quiz/types.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/routines/personal-plan/application/contracts.ts": "original83 strict",
+    "src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts": "original83 strict",
+    "src/lib/personal-plan/products/gateway.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/mask/constants.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/conditioner/constants.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/bondbuilder/constants.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/deep-cleansing-shampoo/constants.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/dry-shampoo/constants.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/peeling/constants.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/onboarding/product-options.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/product-usage/shampoo-fallback.ts": "original83 strict",
+    "src/lib/profile/brush-type.ts": "original83 strict",
+    "src/lib/profile/chemical-treatment.ts": "original83 strict",
+    "src/lib/recommendation-engine/utils/levels.ts": "original83 strict",
+    "src/lib/profile/signal-derivations.ts": "original83 strict",
+    "src/lib/recommendation-engine/care-balance/evaluators.ts": "original83 strict",
+    "src/lib/recommendation-engine/categories/bondbuilder.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/recommendation-engine/categories/conditioner.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/recommendation-engine/categories/deep-cleansing-shampoo.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/recommendation-engine/categories/dry-shampoo.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/recommendation-engine/categories/leave-in.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/recommendation-engine/categories/mask.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/recommendation-engine/categories/oil.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/recommendation-engine/categories/peeling.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/recommendation-engine/categories/shampoo.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/recommendation-engine/categories/shared.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/oil/purpose.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/quiz/diagnostic-input.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/reasons.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan-quiz/persistence.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/quiz/normalization.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan-quiz/offer-adapter.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/transition-performance.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/stage2-entry-adapter.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/snapshot.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/release.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/stage5-access.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/enrollment.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/migration-admission.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/oil-heat-context.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/categories/shampoo.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/catalog-batching.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/categories/bondbuilder.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/categories/conditioner.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/categories/dry-shampoo.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/categories/heat-protectant.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/categories/leave-in.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/categories/mask.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/categories/oil.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/categories/scalp-care.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/components/ui/icon.tsx": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/help/info-tips.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/routines/personal-plan/application/contracts-v2.ts": "original83 strict",
+    "src/lib/personal-plan/products/fit-comparison.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/recommendation-engine/care-balance/shared.ts": "original83 strict",
+    "src/lib/personal-plan-quiz/primary-concern.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/product-load-resolution.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/category-decision-schema.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/billing/purchases.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/billing/pricing-catalog.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/billing/subscriptions.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/billing/types.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan-field-test/errors.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/rollout-access.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/freemium-enrollment.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/comparison-dimensions.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/candidate-ranking.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/shared.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/categories/axis-fit.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/personal-plan/products/fit-comparison-schema.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/quiz/primary-concern.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/billing/personal-plan-one-time-consents.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/billing/trial-access-projection.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/entitlements/flag.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/billing/personal-plan-one-time-consent-copy.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/billing/trial-policy.ts": "first-time literal local closure pin; no semantic review credit",
+    "src/lib/paypal/trial-collection-start.ts": "first-time literal local closure pin; no semantic review credit"
+  },
+  "limits": "Literal local imports including types only, not semantic review or owner execution. Template5020 dependency files/32 selected distributions retained byte/member exact; new selected entry/package files only. No recursive vendor expansion. No arbitrary dynamic-load guarantee."
+}

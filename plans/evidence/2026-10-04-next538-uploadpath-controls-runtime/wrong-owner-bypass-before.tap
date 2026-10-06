@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: route handler returns controlled client error for wrong-user upload paths
+ok 1 - route handler returns controlled client error for wrong-user upload paths
+  ---
+  duration_ms: 4.165833
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 512.804084

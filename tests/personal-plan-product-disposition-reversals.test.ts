@@ -289,19 +289,6 @@ test("builds the exact one-product OGX identity resolution cohort", () => {
   assert.equal(built.manifest.items[0]?.expected_disposition.disposition, "identity_ambiguous")
 })
 
-test("oil reversal cohorts account for the 13 E18 products plus exact OGX identity once", () => {
-  const productIds: readonly string[] = Object.values(
-    PRODUCT_DISPOSITION_REVERSAL_BATCH_PRODUCTS,
-  ).flat()
-  assert.equal(productIds.length, 14)
-  assert.equal(new Set(productIds).size, 14)
-  // Garnier has no disposition to reverse, while the separately reviewed Balea
-  // body oil remains outside the exact approved cohort.
-  assert.ok(!productIds.includes("c574ee6f-ad22-45c0-b936-57b847d93433"))
-  assert.ok(productIds.includes("1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf"))
-  assert.ok(!productIds.includes("4f373d4f-fef8-4434-91c7-055133d8427f"))
-})
-
 test("approved S5R-01 artifact validates and matches its pinned fingerprint", async () => {
   const input = JSON.parse(
     await readFile(

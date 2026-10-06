@@ -1,0 +1,213 @@
+{
+  "phase": "transfer",
+  "receipts": [
+    {
+      "id": "C1-no-coral",
+      "source": "src/app/beratung/einladung/discovery-invitation-client.tsx",
+      "sourceBefore": "4e19b7d712515d1abd2d04c8008526843c203cdc5fa15f92fbbccde531013edc",
+      "mutant": "4ca142c450f292eaf081e5c772cb33ff90d7d858ee70a3bbf4ec8150a2239af2",
+      "phase": "transfer",
+      "oracle": {
+        "line": 68,
+        "text": "assert.ok(prefilled.includes(\"bg-[var(--brand-coral)]\"), \"positive coral CTA absent\")",
+        "message": "positive coral CTA absent"
+      },
+      "backup": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral/originals/src/app/beratung/einladung/discovery-invitation-client.tsx",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral-before.tap",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "applied": true,
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral-fault.tap",
+        "tests": 1,
+        "pass": 0,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "assertion": {
+        "accepted": true,
+        "oracle": {
+          "line": 68,
+          "text": "assert.ok(prefilled.includes(\"bg-[var(--brand-coral)]\"), \"positive coral CTA absent\")",
+          "message": "positive coral CTA absent"
+        },
+        "expectedFirstFrame": "tests/discovery-invitation-card.test.tsx:68:",
+        "firstFrame": "    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-invitation-card.test.tsx:68:10)",
+        "title": true,
+        "message": true
+      },
+      "restoredSHA": "4e19b7d712515d1abd2d04c8008526843c203cdc5fa15f92fbbccde531013edc",
+      "exactRestored": true,
+      "after": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral-after.tap",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "cleanAfter": true,
+      "verified": true
+    },
+    {
+      "id": "C1-extra-plum",
+      "source": "src/app/beratung/einladung/discovery-invitation-client.tsx",
+      "sourceBefore": "4e19b7d712515d1abd2d04c8008526843c203cdc5fa15f92fbbccde531013edc",
+      "mutant": "c18c8cb4b83aee0715c2f4384194b99cd42540460bbd38d99e0b1d0bc1d52e7b",
+      "phase": "transfer",
+      "oracle": {
+        "line": 69,
+        "text": "assert.ok(!prefilled.includes(\"bg-[var(--brand-plum)]\"), \"negative plum token present\")",
+        "message": "negative plum token present"
+      },
+      "backup": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum/originals/src/app/beratung/einladung/discovery-invitation-client.tsx",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum-before.tap",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "applied": true,
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum-fault.tap",
+        "tests": 1,
+        "pass": 0,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "assertion": {
+        "accepted": true,
+        "oracle": {
+          "line": 69,
+          "text": "assert.ok(!prefilled.includes(\"bg-[var(--brand-plum)]\"), \"negative plum token present\")",
+          "message": "negative plum token present"
+        },
+        "expectedFirstFrame": "tests/discovery-invitation-card.test.tsx:69:",
+        "firstFrame": "    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-invitation-card.test.tsx:69:10)",
+        "title": true,
+        "message": true
+      },
+      "restoredSHA": "4e19b7d712515d1abd2d04c8008526843c203cdc5fa15f92fbbccde531013edc",
+      "exactRestored": true,
+      "after": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum-after.tap",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "cleanAfter": true,
+      "verified": true
+    },
+    {
+      "id": "C2-no-fade",
+      "source": "src/app/beratung/einladung/discovery-invitation-client.tsx",
+      "sourceBefore": "4e19b7d712515d1abd2d04c8008526843c203cdc5fa15f92fbbccde531013edc",
+      "mutant": "554343c68a8da1ea46685b2ae8982cde53fe3ecdbe369684c4a495ec9c16810d",
+      "phase": "transfer",
+      "oracle": {
+        "line": 78,
+        "text": "assert.match(empty, /motion-safe:animate-\\[personalPlanStageTargetFade_var\\(--motion-screen\\)/)",
+        "message": null
+      },
+      "backup": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade/originals/src/app/beratung/einladung/discovery-invitation-client.tsx",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade-before.tap",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "applied": true,
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade-fault.tap",
+        "tests": 1,
+        "pass": 0,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "assertion": {
+        "accepted": true,
+        "oracle": {
+          "line": 78,
+          "text": "assert.match(empty, /motion-safe:animate-\\[personalPlanStageTargetFade_var\\(--motion-screen\\)/)",
+          "message": null
+        },
+        "expectedFirstFrame": "tests/discovery-invitation-card.test.tsx:78:",
+        "firstFrame": "    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-invitation-card.test.tsx:78:10)",
+        "title": true,
+        "message": true
+      },
+      "restoredSHA": "4e19b7d712515d1abd2d04c8008526843c203cdc5fa15f92fbbccde531013edc",
+      "exactRestored": true,
+      "after": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade-after.tap",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "cleanAfter": true,
+      "verified": true
+    }
+  ],
+  "interrupted": null
+}

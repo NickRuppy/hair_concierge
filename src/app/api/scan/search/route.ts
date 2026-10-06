@@ -15,20 +15,13 @@ import { createScanRoute, scanOk } from "@/lib/scan/route"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
-/**
- * `inventory-search.ts`'s `searchOwnedProductCatalog` is locked to one category (its
- * `OwnedProductCatalogSource.listActiveProducts` boundary has no production Supabase
- * implementation to call into either) — scan search spans all 10 categories at once, so
- * per the brief this drops to a direct query instead, sharing `catalog-search.ts`'s
- * identity-title matching and ranking with the mobile scan search service.
- */
+/** Scan search spans all categories and shares identity-title matching and ranking with the mobile catalog-search service. */
 const MIN_QUERY_LENGTH = 2
 const MAX_QUERY_LENGTH = 120
 const MAX_RESULTS = 8
 // Catalog sits around 348 active products today, well under this cap, so an in-Node
 // filter over one page is fine. A full page means the catalog outgrew the cap and results
-// are computed over a partial catalog — reported as `truncated` (mirroring
-// inventory-search.ts's `totalCapped`) rather than silently swallowed.
+// are computed over a partial catalog — reported as `truncated` rather than silently swallowed.
 export const CANDIDATE_LOAD_LIMIT = 1000
 
 export type ScanSearchResponse = {

@@ -1,5 +1,4 @@
 import assert from "node:assert/strict"
-import { readdirSync } from "node:fs"
 import { readFile } from "node:fs/promises"
 import test from "node:test"
 import { PGlite } from "@electric-sql/pglite"
@@ -20,7 +19,6 @@ const CHAIN = [
   "20260927120000_discovery_call_decisions_per_item.sql",
   "20260928120000_discovery_call_sheets.sql",
 ]
-const OWN = CHAIN.at(-1)!
 
 const predecessorSchema = `
 CREATE SCHEMA auth;
@@ -57,21 +55,6 @@ async function enrollment(pg: PGlite) {
   )
   return row.rows[0].id
 }
-
-test("the migration has a unique version that sorts after every migration", () => {
-  const versions = readdirSync(dir)
-    .filter((name) => name.endsWith(".sql"))
-    .map((name) => name.split("_")[0])
-  const own = OWN.split("_")[0]
-  assert.equal(versions.filter((version) => version === own).length, 1)
-  // Was "sorts after every migration" when it was the newest; the catalog-hardening
-  // migrations now follow it, so what still matters is that it follows its chain.
-  const predecessors = CHAIN.slice(0, CHAIN.indexOf(OWN)).map((name) => name.split("_")[0])
-  assert.ok(
-    predecessors.every((version) => version < own),
-    "must sort after its prerequisites",
-  )
-})
 
 test("a fresh sheet defaults to empty arrays and nulls", async (t) => {
   const pg = await migrated(t)

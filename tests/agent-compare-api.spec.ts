@@ -212,14 +212,7 @@ test("handleAgentCompareRequest supports blinded multi-turn classic vs tool-loop
         runCurrentComparisonForUser: async ({ turns, toolLoopVariant }) => {
           seenTurns.push(turns ?? [])
           seenVariants.push(toolLoopVariant)
-          return {
-            system: "classic",
-            answer: "Classic Antwort",
-            latency_ms: 120,
-            debug_lines: [],
-            matched_products: [],
-            error: null,
-          }
+          throw new Error("Classic comparison failed")
         },
         runShadowComparisonForUser: async ({ turns, toolLoopVariant }) => {
           seenTurns.push(turns ?? [])
@@ -266,6 +259,13 @@ test("handleAgentCompareRequest supports blinded multi-turn classic vs tool-loop
       (entry: { system: string }) => entry.system === "tool_loop",
     )
     assert.deepEqual(toolLoopResult?.tool_loop_trace?.consultation_brief, consultationBrief)
+    const classicResult = body.results.find(
+      (entry: { system: string }) => entry.system === "classic",
+    )
+    assert.equal(classicResult?.error, "Classic comparison failed")
+    assert.equal(classicResult?.answer, "")
+    assert.equal(toolLoopResult?.answer, "Tool Loop Antwort")
+    assert.equal(toolLoopResult?.error, null)
   }))
 
 test("handleAgentCompareRequest preserves AgentV2 request interpretation trace in blinded mode", async () =>

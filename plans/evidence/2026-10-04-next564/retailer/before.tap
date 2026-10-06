@@ -1,0 +1,520 @@
+TAP version 13
+# Subtest: exact canonical hit maps the trusted draft and measured lookup
+ok 1 - exact canonical hit maps the trusted draft and measured lookup
+  ---
+  duration_ms: 5.7585
+  ...
+# Subtest: EAN-13/GTIN-14 and EAN-8 spellings match; false rows remain not found
+ok 2 - EAN-13/GTIN-14 and EAN-8 spellings match; false rows remain not found
+  ---
+  duration_ms: 3.86125
+  ...
+# Subtest: wrong generation GTIN cannot seed identity; warning carries only route and reason
+ok 3 - wrong generation GTIN cannot seed identity; warning carries only route and reason
+  ---
+  duration_ms: 0.175084
+  ...
+# Subtest: flag off and invalid check digit skip the outbound call and all timing
+ok 4 - flag off and invalid check digit skip the outbound call and all timing
+  ---
+  duration_ms: 0.112167
+  ...
+# Subtest: all failures fail open and expected timeout does not alert
+ok 5 - all failures fail open and expected timeout does not alert
+  ---
+  duration_ms: 0.437542
+  ...
+# Subtest: invalid image hosts, protocol, path, credentials and port become a placeholder
+ok 6 - invalid image hosts, protocol, path, credentials and port become a placeholder
+  ---
+  duration_ms: 0.226209
+  ...
+# Subtest: required identity and row shape must be valid, optional empty cells map to null
+ok 7 - required identity and row shape must be valid, optional empty cells map to null
+  ---
+  duration_ms: 0.172583
+  ...
+# Subtest: reporting failure cannot turn enrichment failure into a scan failure
+ok 8 - reporting failure cannot turn enrichment failure into a scan failure
+  ---
+  duration_ms: 0.065875
+  ...
+# Subtest: timeout configuration is bounded and feature flag is exact opt-in
+ok 9 - timeout configuration is bounded and feature flag is exact opt-in
+  ---
+  duration_ms: 0.282
+  ...
+# (node:33218) ExperimentalWarning: The MockTimers API is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a stalled SDK close cannot hold a timeout result or leave a live request
+ok 10 - a stalled SDK close cannot hold a timeout result or leave a live request
+  ---
+  duration_ms: 23.06025
+  ...
+# Subtest: official SDK accepts JSON framing and sends only numeric GTIN arguments
+ok 11 - official SDK accepts JSON framing and sends only numeric GTIN arguments
+  ---
+  duration_ms: 3.682125
+  ...
+# Subtest: official SDK accepts SSE framing and sends only numeric GTIN arguments
+ok 12 - official SDK accepts SSE framing and sends only numeric GTIN arguments
+  ---
+  duration_ms: 5.783083
+  ...
+# Subtest: expired session reconnects once with a fresh session
+ok 13 - expired session reconnects once with a fresh session
+  ---
+  duration_ms: 2.440708
+  ...
+# Subtest: two expiries return sanitized session_expired without a third attempt
+ok 14 - two expiries return sanitized session_expired without a third attempt
+  ---
+  duration_ms: 1.981
+  ...
+# Subtest: absolute budget includes initialize, notification and tool call
+ok 15 - absolute budget includes initialize, notification and tool call
+  ---
+  duration_ms: 55.652875
+  ...
+# Subtest: a stalled initialized notification aborts at deadline and never issues tools/call
+ok 16 - a stalled initialized notification aborts at deadline and never issues tools/call
+  ---
+  duration_ms: 4.164833
+  ...
+# Subtest: retry shares the original budget
+ok 17 - retry shares the original budget
+  ---
+  duration_ms: 221.875583
+  ...
+# Subtest: concurrent calls on the same factory never share sessions
+ok 18 - concurrent calls on the same factory never share sessions
+  ---
+  duration_ms: 2.045333
+  ...
+# Subtest: malformed table, missing JSON result and tool isError fail with sanitized errors
+ok 19 - malformed table, missing JSON result and tool isError fail with sanitized errors
+  ---
+  duration_ms: 1.694417
+  ...
+# Subtest: transport error contains neither original exception nor its URL
+ok 20 - transport error contains neither original exception nor its URL
+  ---
+  duration_ms: 0.325208
+  ...
+# Subtest: searchProducts sends a plain-string query and parses the captured OGX probe payload
+ok 21 - searchProducts sends a plain-string query and parses the captured OGX probe payload
+  ---
+  duration_ms: 1.394583
+  ...
+# Subtest: searchProducts respects the same absolute timeout budget as getProductDetails
+ok 22 - searchProducts respects the same absolute timeout budget as getProductDetails
+  ---
+  duration_ms: 57.13275
+  ...
+# Subtest: only unambiguous name keywords suggest one supported category
+ok 23 - only unambiguous name keywords suggest one supported category
+  ---
+  duration_ms: 13.594917
+  ...
+# Subtest: all found products from the real probe have the expected suggestion
+ok 24 - all found products from the real probe have the expected suggestion
+  ---
+  duration_ms: 0.804791
+  ...
+# Subtest: adds bounded resolve telemetry and private submit telemetry
+ok 25 - adds bounded resolve telemetry and private submit telemetry
+  ---
+  duration_ms: 1.119459
+  ...
+# Subtest: adds a privacy-safe daily aggregate before deleting either dm raw source
+ok 26 - adds a privacy-safe daily aggregate before deleting either dm raw source
+  ---
+  duration_ms: 0.363833
+  ...
+# Subtest: keeps both new relations service-role-only and preserves the invoker retention boundary
+ok 27 - keeps both new relations service-role-only and preserves the invoker retention boundary
+  ---
+  duration_ms: 0.200542
+  ...
+# Subtest: migration rolls up each source exactly once across two retention runs and preserves the 30-day boundary
+ok 28 - migration rolls up each source exactly once across two retention runs and preserves the 30-day boundary
+  ---
+  duration_ms: 576.554
+  ...
+# Subtest: dm telemetry migration: real PostgreSQL RLS, grants, and two-run retention
+ok 29 - dm telemetry migration: real PostgreSQL RLS, grants, and two-run retention # SKIP
+  ---
+  duration_ms: 0.412542
+  ...
+# Subtest: dm probe parses all ten rows without losing identity, URLs or ingredient text
+ok 30 - dm probe parses all ten rows without losing identity, URLs or ingredient text
+  ---
+  duration_ms: 1.392917
+  ...
+# Subtest: quoted pipes, quotes, escapes, empty cells and CRLF stay intact
+ok 31 - quoted pipes, quotes, escapes, empty cells and CRLF stay intact
+  ---
+  duration_ms: 0.364291
+  ...
+# Subtest: malformed headers, width, quoting and row counts fail closed
+ok 32 - malformed headers, width, quoting and row counts fail closed
+  ---
+  duration_ms: 0.331417
+  ...
+# Subtest: dm search probe parses all 15 rows from a name-prefixed, comma-delimited table
+ok 33 - dm search probe parses all 15 rows from a name-prefixed, comma-delimited table
+  ---
+  duration_ms: 0.78925
+  ...
+# Subtest: empty search result yields no rows
+ok 34 - empty search result yields no rows
+  ---
+  duration_ms: 0.157375
+  ...
+# Subtest: malformed inner JSON on the search result fails closed
+ok 35 - malformed inner JSON on the search result fails closed
+  ---
+  duration_ms: 0.169208
+  ...
+# Subtest: malformed search TOON (bad header, width, quoting or short row count) fails closed
+ok 36 - malformed search TOON (bad header, width, quoting or short row count) fails closed
+  ---
+  duration_ms: 0.234583
+  ...
+# Subtest: declaring fewer rows than the table actually contains fails closed instead of truncating
+ok 37 - declaring fewer rows than the table actually contains fails closed instead of truncating
+  ---
+  duration_ms: 0.064958
+  ...
+# Subtest: a genuine trailing footer (blank line + unindented tip) does not trip the extra-row check
+ok 38 - a genuine trailing footer (blank line + unindented tip) does not trip the extra-row check
+  ---
+  duration_ms: 0.36975
+  ...
+# Subtest: validateEanInput: valid EAN-13 passes checksum
+ok 39 - validateEanInput: valid EAN-13 passes checksum
+  ---
+  duration_ms: 2.394709
+  ...
+# Subtest: validateEanInput: valid EAN-8 passes checksum
+ok 40 - validateEanInput: valid EAN-8 passes checksum
+  ---
+  duration_ms: 0.149542
+  ...
+# Subtest: validateEanInput: corrupted digit fails checksum, not length
+ok 41 - validateEanInput: corrupted digit fails checksum, not length
+  ---
+  duration_ms: 0.068
+  ...
+# Subtest: validateEanInput: wrong length rejected before checksum is computed
+ok 42 - validateEanInput: wrong length rejected before checksum is computed
+  ---
+  duration_ms: 0.056208
+  ...
+# Subtest: validateEanInput: non-digit characters rejected as length
+ok 43 - validateEanInput: non-digit characters rejected as length
+  ---
+  duration_ms: 0.068916
+  ...
+# Subtest: validateEanInput: surrounding whitespace tolerated
+ok 44 - validateEanInput: surrounding whitespace tolerated
+  ---
+  duration_ms: 0.106666
+  ...
+# Subtest: lookupCatalogProductByIdentifier: normalizes whitespace and matches active product
+ok 45 - lookupCatalogProductByIdentifier: normalizes whitespace and matches active product
+  ---
+  duration_ms: 0.310875
+  ...
+# Subtest: lookupCatalogProductByIdentifier: hyphenated spelling queries canonical ownership
+ok 46 - lookupCatalogProductByIdentifier: hyphenated spelling queries canonical ownership
+  ---
+  duration_ms: 0.077875
+  ...
+# Subtest: lookupCatalogProductByIdentifier: leading zeros preserved
+ok 47 - lookupCatalogProductByIdentifier: leading zeros preserved
+  ---
+  duration_ms: 0.259375
+  ...
+# Subtest: lookupCatalogProductByIdentifier: searches all barcode identifier types, interchangeably
+ok 48 - lookupCatalogProductByIdentifier: searches all barcode identifier types, interchangeably
+  ---
+  duration_ms: 0.442083
+  ...
+# Subtest: lookupCatalogProductByIdentifier: inactive-only match is a miss
+ok 49 - lookupCatalogProductByIdentifier: inactive-only match is a miss
+  ---
+  duration_ms: 0.184
+  ...
+# Subtest: lookupCatalogProductByIdentifier: a discontinued product is filtered out too
+ok 50 - lookupCatalogProductByIdentifier: a discontinued product is filtered out too
+  ---
+  duration_ms: 0.164291
+  ...
+# Subtest: lookupCatalogProductByIdentifier: no identifier row is a miss
+ok 51 - lookupCatalogProductByIdentifier: no identifier row is a miss
+  ---
+  duration_ms: 0.064041
+  ...
+# Subtest: lookupCatalogProductByIdentifier: collision fails closed instead of picking a winner
+ok 52 - lookupCatalogProductByIdentifier: collision fails closed instead of picking a winner
+  ---
+  duration_ms: 0.208
+  ...
+# Subtest: lookupCatalogProductByIdentifier: equivalent stored GTIN spellings use one ownership key
+ok 53 - lookupCatalogProductByIdentifier: equivalent stored GTIN spellings use one ownership key
+  ---
+  duration_ms: 0.062041
+  ...
+# Subtest: lookupCatalogProductByIdentifier: canonical input uses the same ownership key
+ok 54 - lookupCatalogProductByIdentifier: canonical input uses the same ownership key
+  ---
+  duration_ms: 0.144833
+  ...
+# Subtest: lookupCatalogProductByIdentifier: invalid GTIN never reaches the catalog query
+ok 55 - lookupCatalogProductByIdentifier: invalid GTIN never reaches the catalog query
+  ---
+  duration_ms: 0.04525
+  ...
+# Subtest: scan search-retailer: unauthenticated is rejected
+ok 56 - scan search-retailer: unauthenticated is rejected
+  ---
+  duration_ms: 2.094875
+  ...
+# Subtest: scan search-retailer: rate limited returns 429
+ok 57 - scan search-retailer: rate limited returns 429
+  ---
+  duration_ms: 0.303
+  ...
+# Subtest: scan search-retailer: consumes only its own retailer bucket, never the shared scan bucket
+ok 58 - scan search-retailer: consumes only its own retailer bucket, never the shared scan bucket
+  ---
+  duration_ms: 1.201875
+  ...
+# Subtest: scan search-retailer: a 429 carries the retailer bucket's Retry-After
+ok 59 - scan search-retailer: a 429 carries the retailer bucket's Retry-After
+  ---
+  duration_ms: 0.241792
+  ...
+# Subtest: scan search-retailer: flag off returns disabled with no dm or catalog calls
+ok 60 - scan search-retailer: flag off returns disabled with no dm or catalog calls
+  ---
+  duration_ms: 1.009542
+  ...
+# Subtest: scan search-retailer: a too-short query is empty ok, not a dm call
+ok 61 - scan search-retailer: a too-short query is empty ok, not a dm call
+  ---
+  duration_ms: 0.481833
+  ...
+# Subtest: scan search-retailer: a missing query is empty ok, not a dm call
+ok 62 - scan search-retailer: a missing query is empty ok, not a dm call
+  ---
+  duration_ms: 0.274667
+  ...
+# Subtest: scan search-retailer: an over-length query is empty ok, not a dm call
+ok 63 - scan search-retailer: an over-length query is empty ok, not a dm call
+  ---
+  duration_ms: 0.375916
+  ...
+# Subtest: scan search-retailer: a dm timeout maps to retailerOutcome unavailable, catalog still an empty array
+ok 64 - scan search-retailer: a dm timeout maps to retailerOutcome unavailable, catalog still an empty array
+  ---
+  duration_ms: 0.808417
+  ...
+# Subtest: scan search-retailer: a non-DmMcpError dm throw still resolves to unavailable, reported as unexpected
+ok 65 - scan search-retailer: a non-DmMcpError dm throw still resolves to unavailable, reported as unexpected
+  ---
+  duration_ms: 0.803458
+  ...
+# Subtest: scan search-retailer: a successful dm-lane attempt reports ok with the partitioned counts
+ok 66 - scan search-retailer: a successful dm-lane attempt reports ok with the partitioned counts
+  ---
+  duration_ms: 0.358125
+  ...
+# Subtest: partitionDmSearchRows: an 11-digit gtin is padded to 12 and then maps
+ok 67 - partitionDmSearchRows: an 11-digit gtin is padded to 12 and then maps
+  ---
+  duration_ms: 0.506958
+  ...
+# Subtest: partitionDmSearchRows: a leading-zero-lost 11-digit gtin maps after padding
+ok 68 - partitionDmSearchRows: a leading-zero-lost 11-digit gtin maps after padding
+  ---
+  duration_ms: 0.112917
+  ...
+# Subtest: partitionDmSearchRows: a bad-checksum gtin is dropped
+ok 69 - partitionDmSearchRows: a bad-checksum gtin is dropped
+  ---
+  duration_ms: 0.055375
+  ...
+# Subtest: partitionDmSearchRows: a missing gtin is dropped
+ok 70 - partitionDmSearchRows: a missing gtin is dropped
+  ---
+  duration_ms: 0.154417
+  ...
+# Subtest: partitionDmSearchRows: a duplicate canonical gtin keeps the first (best-ranked) row
+ok 71 - partitionDmSearchRows: a duplicate canonical gtin keeps the first (best-ranked) row
+  ---
+  duration_ms: 4.975
+  ...
+# Subtest: partitionDmSearchRows: dedupe is keyed on the canonical form, not the raw string
+ok 72 - partitionDmSearchRows: dedupe is keyed on the canonical form, not the raw string
+  ---
+  duration_ms: 3.539042
+  ...
+# Subtest: partitionDmSearchRows: an 8-digit-source row surfaces an 8-digit gtin
+ok 73 - partitionDmSearchRows: an 8-digit-source row surfaces an 8-digit gtin
+  ---
+  duration_ms: 0.125875
+  ...
+# Subtest: partitionDmSearchRows: a 12- or 13-digit-source row surfaces a 13-digit gtin
+ok 74 - partitionDmSearchRows: a 12- or 13-digit-source row surfaces a 13-digit gtin
+  ---
+  duration_ms: 0.264125
+  ...
+# Subtest: partitionDmSearchRows: a non-zero-indicator GTIN-14 has no EAN form and is dropped
+ok 75 - partitionDmSearchRows: a non-zero-indicator GTIN-14 has no EAN form and is dropped
+  ---
+  duration_ms: 0.089875
+  ...
+# Subtest: partitionDmSearchRows: an active mapped product goes to catalog via toScanSearchResult
+ok 76 - partitionDmSearchRows: an active mapped product goes to catalog via toScanSearchResult
+  ---
+  duration_ms: 0.088875
+  ...
+# Subtest: partitionDmSearchRows: an inactive/discontinued mapped product presents as dm-only
+ok 77 - partitionDmSearchRows: an inactive/discontinued mapped product presents as dm-only
+  ---
+  duration_ms: 0.076583
+  ...
+# Subtest: partitionDmSearchRows: a dangling identifier (no product_identifiers row) presents as dm-only
+ok 78 - partitionDmSearchRows: a dangling identifier (no product_identifiers row) presents as dm-only
+  ---
+  duration_ms: 0.065792
+  ...
+# Subtest: partitionDmSearchRows: a quarantined product's gtin is dropped entirely (ruling R7)
+ok 79 - partitionDmSearchRows: a quarantined product's gtin is dropped entirely (ruling R7)
+  ---
+  duration_ms: 0.0975
+  ...
+# Subtest: partitionDmSearchRows: a non-hair dm-only row with no category suggestion is dropped
+ok 80 - partitionDmSearchRows: a non-hair dm-only row with no category suggestion is dropped
+  ---
+  duration_ms: 0.055875
+  ...
+# Subtest: partitionDmSearchRows: a hair-relevant dm-only row keeps a suggested categoryLabel
+ok 81 - partitionDmSearchRows: a hair-relevant dm-only row keeps a suggested categoryLabel
+  ---
+  duration_ms: 0.061542
+  ...
+# Subtest: partitionDmSearchRows: caps dm-only retailer rows at 8, preserving dm order
+ok 82 - partitionDmSearchRows: caps dm-only retailer rows at 8, preserving dm order
+  ---
+  duration_ms: 0.220042
+  ...
+# Subtest: partitionDmSearchRows: an identifier-lookup error throws a stable error
+ok 83 - partitionDmSearchRows: an identifier-lookup error throws a stable error
+  ---
+  duration_ms: 0.239209
+  ...
+# Subtest: anti-leak: catalog and retailer rows carry exactly the contract's keys
+ok 84 - anti-leak: catalog and retailer rows carry exactly the contract's keys
+  ---
+  duration_ms: 0.149084
+  ...
+# [scan] search failed Error: scan_search_catalog_unavailable
+#     at TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-search-route.test.ts:94:18)
+#     at Test.runInAsyncScope (node:async_hooks:211:14)
+#     at Test.run (node:internal/test_runner/test:934:25)
+#     at Test.processPendingSubtests (node:internal/test_runner/test:633:18)
+#     at Test.postRun (node:internal/test_runner/test:1045:19)
+#     at Test.run (node:internal/test_runner/test:973:12)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# Subtest: scan search: unauthenticated is rejected
+ok 85 - scan search: unauthenticated is rejected
+  ---
+  duration_ms: 1.929792
+  ...
+# Subtest: scan search: rate limited returns 429
+ok 86 - scan search: rate limited returns 429
+  ---
+  duration_ms: 0.298
+  ...
+# Subtest: scan search: rate limiter unavailable fails closed with 503, without a Sentry capture
+ok 87 - scan search: rate limiter unavailable fails closed with 503, without a Sentry capture
+  ---
+  duration_ms: 0.468209
+  ...
+# Subtest: scan search: a too-short query is empty results, not a 400
+ok 88 - scan search: a too-short query is empty results, not a 400
+  ---
+  duration_ms: 1.40575
+  ...
+# Subtest: scan search: missing q param is empty results
+ok 89 - scan search: missing q param is empty results
+  ---
+  duration_ms: 0.522459
+  ...
+# Subtest: scan search: returns the injected search results
+ok 90 - scan search: returns the injected search results
+  ---
+  duration_ms: 0.325209
+  ...
+# Subtest: scan search: an unexpected lookup error maps to 503 and captures to Sentry
+ok 91 - scan search: an unexpected lookup error maps to 503 and captures to Sentry
+  ---
+  duration_ms: 1.596125
+  ...
+# Subtest: searchScanCatalog: matches across brand+name, case-insensitive
+ok 92 - searchScanCatalog: matches across brand+name, case-insensitive
+  ---
+  duration_ms: 0.704584
+  ...
+# Subtest: searchScanCatalog: an exact label match ranks first regardless of sort_order
+ok 93 - searchScanCatalog: an exact label match ranks first regardless of sort_order
+  ---
+  duration_ms: 0.234625
+  ...
+# Subtest: searchScanCatalog: caps results at 8
+ok 94 - searchScanCatalog: caps results at 8
+  ---
+  duration_ms: 0.433041
+  ...
+# Subtest: searchScanCatalog: a query load error throws a stable error
+ok 95 - searchScanCatalog: a query load error throws a stable error
+  ---
+  duration_ms: 0.200958
+  ...
+# Subtest: searchScanCatalog: excludes a disposition-quarantined product (ruling R7)
+ok 96 - searchScanCatalog: excludes a disposition-quarantined product (ruling R7)
+  ---
+  duration_ms: 0.09525
+  ...
+# Subtest: scan search: the truncation flag is passed through to the response
+ok 97 - scan search: the truncation flag is passed through to the response
+  ---
+  duration_ms: 0.2585
+  ...
+# Subtest: searchScanCatalog: a full candidate page reports truncated
+ok 98 - searchScanCatalog: a full candidate page reports truncated
+  ---
+  duration_ms: 0.979375
+  ...
+# Subtest: searchScanCatalog: a canonical-brand-only query misses raw brand+name but hits via the composed identity title
+ok 99 - searchScanCatalog: a canonical-brand-only query misses raw brand+name but hits via the composed identity title
+  ---
+  duration_ms: 0.079083
+  ...
+# Subtest: searchScanCatalog: a partial candidate page is not truncated
+ok 100 - searchScanCatalog: a partial candidate page is not truncated
+  ---
+  duration_ms: 0.099417
+  ...
+1..100
+# tests 100
+# suites 0
+# pass 99
+# fail 0
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 1402.10625

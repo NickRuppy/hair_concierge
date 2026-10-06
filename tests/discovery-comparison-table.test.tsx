@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { JSDOM } from "jsdom"
 import { AppRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import type { ReactElement } from "react"
 import { renderToStaticMarkup } from "react-dom/server"
@@ -66,60 +67,6 @@ function cellsOf(markup: string, attribute: string): string[] {
   return [...markup.matchAll(new RegExp(`${attribute}="([^"]*)"`, "g"))].map((match) => match[1]!)
 }
 
-test("the table has the iOS header: two blank columns, PRODUKT, ZIEL (cockpit voice) in plum", () => {
-  const markup = renderToStaticMarkup(<DiscoveryComparisonTable rows={ROWS} />)
-  assert.match(markup, /rounded-\[14px\]/)
-  assert.match(markup, /bg-\[#f6f3f0\]/)
-  assert.match(markup, />Produkt</)
-  assert.match(markup, /text-\[var\(--brand-plum\)\][^>]*>Ziel</)
-  // Upper-cased by CSS, like the iOS caps header.
-  assert.match(markup, /uppercase/)
-})
-
-test("each dimension is one row: name, status disc, product value in status colour, target in plum", () => {
-  const markup = renderToStaticMarkup(<DiscoveryComparisonTable rows={ROWS} />)
-  assert.deepEqual(cellsOf(markup, "data-status"), ["match", "partial", "mismatch", "unknown"])
-  // One glyph per row, white on the status colour.
-  assert.deepEqual(cellsOf(markup, "data-glyph"), ["✓", "!", "✕", "–"])
-  // Status surfaces and word colours from the locked spec (tokens where they match).
-  assert.match(markup, /bg-\[var\(--status-ok-bg\)\]/)
-  assert.match(markup, /bg-\[var\(--status-pending-bg\)\]/)
-  assert.match(markup, /bg-\[var\(--status-danger-bg\)\]/)
-  assert.match(markup, /text-\[var\(--status-danger-text\)\][^>]*>Protein</)
-  assert.match(markup, /text-\[var\(--brand-plum\)\][^>]*>Feuchtigkeit</)
-  // Rows are at least 52 px, with 1-px dividers between them.
-  assert.match(markup, /min-h-\[52px\]/)
-  assert.match(markup, /divide-y/)
-})
-
-test("in / out / no-target: a missing value reads „–“, never an invented word", () => {
-  const markup = renderToStaticMarkup(<DiscoveryComparisonTable rows={ROWS} />)
-  // in target: product and target both named.
-  assert.match(markup, /aria-label="Kopfhaut, passt, Produkt: fettig, Ziel: fettig"/)
-  // out of target: the miss is named against the target.
-  assert.match(
-    markup,
-    /aria-label="Pflegegewicht, mit Einschränkung, Produkt: mittel, Ziel: leicht"/,
-  )
-  // no target: the target cell is a dash.
-  assert.match(
-    markup,
-    /aria-label="Reinigung, nicht einschätzbar, Produkt: mild, Ziel: nicht verfügbar"/,
-  )
-  assert.match(markup, /text-\[var\(--brand-plum\)\][^>]*>–</)
-  // The long property names may break at their word joint, like iOS („Pflege-/gewicht").
-  assert.ok(markup.includes("Pflege­gewicht"))
-  assert.ok(markup.includes("Pflege­richtung"))
-})
-
-test("the compact variant (alternatives) uses the smaller value font", () => {
-  const full = renderToStaticMarkup(<DiscoveryComparisonTable rows={ROWS} />)
-  const compact = renderToStaticMarkup(<DiscoveryComparisonTable rows={ROWS} compact />)
-  assert.match(full, /text-\[13px\] font-bold/)
-  assert.match(compact, /text-\[12px\] font-bold/)
-  assert.doesNotMatch(compact, /text-\[13px\] font-bold/)
-})
-
 test("an alternative without her product: two columns, ALTERNATIVE | ZIEL", () => {
   const markup = renderToStaticMarkup(<DiscoveryComparisonTable rows={ROWS} compact />)
   assert.deepEqual(cellsOf(markup, "data-comparison"), ["compact"])
@@ -131,6 +78,8 @@ test("an alternative without her product: two columns, ALTERNATIVE | ZIEL", () =
     <DiscoveryComparisonTable rows={ROWS} compact ownedRows={[]} />,
   )
   assert.equal(empty, markup)
+  assert.match(markup, /text-\[12px\] font-bold/)
+  assert.doesNotMatch(markup, /text-\[13px\] font-bold/)
 })
 
 test("her own table ignores ownedRows — it stays PRODUKT | ZIEL", () => {
@@ -249,16 +198,6 @@ const SCANNER_RESULT = SCAN_PARITY_DIMENSION_RESULT as unknown as Parameters<
   typeof ScanVerdictSections
 >[0]["result"]
 
-test("the scanner's own sections still render the slider bars (no table prop)", () => {
-  const markup = renderToStaticMarkup(<ScanVerdictSections result={SCANNER_RESULT} />)
-  // The bars' section and one bar per dimension, exactly as before.
-  assert.match(
-    markup,
-    /divide-y divide-border rounded-\[14px\] border border-border bg-card px-4 py-1/,
-  )
-  assert.doesNotMatch(markup, /data-glyph/)
-})
-
 test("only a cockpit-supplied comparison replaces the bars", () => {
   const withTable = renderToStaticMarkup(
     <ScanVerdictSections
@@ -276,6 +215,13 @@ test("only a cockpit-supplied comparison replaces the bars", () => {
   const banner = without.indexOf("rounded-[14px] px-4 py-3.5")
   assert.ok(banner > 0)
   assert.equal(withTable.slice(0, banner), without.slice(0, banner))
+
+  // The bars' section and one bar per dimension, exactly as before.
+  assert.match(
+    without,
+    /divide-y divide-border rounded-\[14px\] border border-border bg-card px-4 py-1/,
+  )
+  assert.doesNotMatch(without, /data-glyph/)
 })
 
 // --- cockpit ------------------------------------------------------------------
@@ -368,6 +314,50 @@ test("the cockpit shows her product as a comparison table instead of bars and te
   // `data-owned-glyph`, so the alternative's glyph count stays 5.
   assert.deepEqual(cellsOf(markup, "data-comparison"), ["full", "compact-owned"])
   assert.equal(cellsOf(markup, "data-glyph").length, 5)
+  // The full table uses the same four ROWS as the step fixture above.
+  const dom = new JSDOM(markup)
+  const tables = dom.window.document.querySelectorAll('[data-comparison="full"]')
+  assert.equal(tables.length, 1)
+  const full = tables[0]!.outerHTML
+  const header = tables[0]!.firstElementChild?.outerHTML
+  assert.ok(header)
+  dom.window.close()
+
+  assert.match(full, /rounded-\[14px\]/)
+  assert.match(header, /bg-\[#f6f3f0\]/)
+  assert.match(header, />Produkt</)
+  assert.match(header, /text-\[var\(--brand-plum\)\][^>]*>Ziel</)
+  // Upper-cased by CSS, like the iOS caps header.
+  assert.match(header, /uppercase/)
+
+  assert.deepEqual(cellsOf(full, "data-status"), ["match", "partial", "mismatch", "unknown"])
+  // One glyph per row, white on the status colour.
+  assert.deepEqual(cellsOf(full, "data-glyph"), ["✓", "!", "✕", "–"])
+  // Status surfaces and word colours from the locked spec (tokens where they match).
+  assert.match(full, /bg-\[var\(--status-ok-bg\)\]/)
+  assert.match(full, /bg-\[var\(--status-pending-bg\)\]/)
+  assert.match(full, /bg-\[var\(--status-danger-bg\)\]/)
+  assert.match(full, /text-\[var\(--status-danger-text\)\][^>]*>Protein</)
+  assert.match(full, /text-\[var\(--brand-plum\)\][^>]*>Feuchtigkeit</)
+  // Rows are at least 52 px, with 1-px dividers between them.
+  assert.match(full, /min-h-\[52px\]/)
+  assert.match(full, /divide-y/)
+
+  // in target: product and target both named.
+  assert.match(full, /aria-label="Kopfhaut, passt, Produkt: fettig, Ziel: fettig"/)
+  // out of target: the miss is named against the target.
+  assert.match(full, /aria-label="Pflegegewicht, mit Einschränkung, Produkt: mittel, Ziel: leicht"/)
+  // no target: the target cell is a dash.
+  assert.match(
+    full,
+    /aria-label="Reinigung, nicht einschätzbar, Produkt: mild, Ziel: nicht verfügbar"/,
+  )
+  assert.match(full, /text-\[var\(--brand-plum\)\][^>]*>–</)
+  // The long property names may break at their word joint, like iOS („Pflege-/gewicht").
+  assert.ok(full.includes("Pflege­gewicht"))
+  assert.ok(full.includes("Pflege­richtung"))
+
+  assert.match(full, /text-\[13px\] font-bold/)
 })
 
 test("without rows the cockpit falls back to the scanner's bars rather than showing nothing", () => {

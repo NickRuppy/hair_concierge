@@ -1,0 +1,1041 @@
+{
+  "phase": "transfer",
+  "verified": 2,
+  "controlIds": [
+    "C1-copy",
+    "C1-payment"
+  ],
+  "cleanRuns": 4,
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "d91f665b1db983e127884d01bb171b510cddb4fc7ec58606ae86396b24740432",
+  "receiptSHA256": "412a9f06ea77732913142d8e1a53ce72a109184deaff839189c79236a2615f91",
+  "allTestHashes": {
+    "tests/moderator-account-maintenance.test.ts": "0608050698d408ed4b09c55b56861ed8970c074a30237bdd701f50303eff525a",
+    "tests/moderator-account-reset-execution.test.ts": "625b090a1c22ce5e01b758b38d25426e5da9ce1be148a16baf2ad8cfe07101f2",
+    "tests/moderator-account-reset.test.ts": "132addacf27aec26a018061afe7e041f5ba341426e9c69fb2cfdde0b27fb184c",
+    "tests/moderator-hosted-activation-probe.test.ts": "da619372b2c743e192eaf3ba3982d997b8731aab9110d052279091d50b227a3e",
+    "tests/moderator-hosted-auth-probe.test.ts": "34d94a7f3d69d53df94380fd11c7b7393f369133d20616e54ccf6ce5799f9318",
+    "tests/moderator-organic-fresh-start.test.ts": "65c840b8a01db98064d738d2e693bf90a4efaec27e194efe8a6c0348016ce7fc",
+    "tests/moderator-quiz-draft-scope.test.ts": "8fa270c2b9aa19f764daa45382d92952843aa28eb8b411f206bd020862869925",
+    "tests/personal-plan-field-test-activation-route.test.ts": "f40aab18ec11eb8b097a8afda206d30f71fbd3a11d24a8213a3f2b407779d880",
+    "tests/personal-plan-field-test-activation.test.ts": "f595bfaeccf6529daaa03b3d09fe387e0ddd02ba7ea5c807d28e5fbd0a32eed4",
+    "tests/personal-plan-field-test-analytics.test.ts": "4992c22e606ecc186fb36b6e24050cde0b92ad09ed22d43b1e5fda60232b8d10",
+    "tests/personal-plan-field-test-campaign-command.test.ts": "074c15f31ee2360f673f76f87594eb2bdc8c53e9e596485f47f77b60e5fb97ab",
+    "tests/personal-plan-field-test-entry-route.test.ts": "37f48ffb9abae8f25999bea7b8082d05c65a30d91628b47e9ae68e00f000d867",
+    "tests/personal-plan-field-test-routing-migration.test.ts": "1e498b3f47b237937bf63fdb8a2f2ed14487de90ab5b62f7d92da9de326893f9",
+    "tests/personal-plan-field-test-schema.test.ts": "86634d005795e018e75fb0efc8df91a7062dfe5b97f1a633fb1233d04d30f34f",
+    "tests/personal-plan-field-test-server.test.ts": "33dc524be1f901efe9b37fdc1c833202566cbfe322279a79e86b1b4ab8b004bb",
+    "tests/personal-plan-field-test-ui.test.tsx": "399ab430e51c6b7781d49ced998e98c930204f8835dd60d5d14babf19562f51d",
+    "tests/personal-plan-moderator-activation-route.test.ts": "34c9efa1acfb4f11bdb3f30a1450f2779ec4d4febfabbcededb41f57fd5e34a7",
+    "tests/personal-plan-moderator-contract.test.ts": "22c047a2be03a200941843439bae813b590b35bdff33635bcd713e1430deeee9",
+    "tests/personal-plan-moderator-journey.test.ts": "572cb8eb0937625d60fc771a19473e267b9cec7adea4052cb9f7a0d19d46f079",
+    "tests/personal-plan-moderator-schema.test.ts": "fb3280dbdab55d23467133a971ce27faad6a37a9b901d4bd809b2910afe10bf8",
+    "tests/personal-plan-moderator-sql-execution.test.ts": "0d3026f1e7a9d32c0d45a1195cf6c88bb2584420b1e47b2ec59166ca46dc0148",
+    "tests/personal-plan-moderator-start-route.test.ts": "5b37f4ea7d313c70e0f0998bf3803d2c3ffae2de301336c1c66a3ac7ec0f6e5c",
+    "tests/regular-quiz-field-test-activation-route.test.ts": "0c7ae564226e9706e4cf04096fabf1f3c540153c9079b60a8bee442d69fdef94",
+    "tests/regular-quiz-field-test-activation.test.ts": "83c4741f16bd2b3adff4c21197d446a3c41c540d85f5d66425ff2aa786922a15",
+    "tests/regular-quiz-field-test-runtime.test.ts": "5ad3f31d6f3d3ef8af3e38e2cba56d2b0b402f80c8b505cb072ac247c8e23e56",
+    "tests/regular-quiz-field-test-schema.test.ts": "e16fe6ca59820237d68e5a5a85c2a04afbe8d5cc3b70d3d9b6ab82e5dafc0b7c",
+    "tests/regular-quiz-field-test-ui.test.tsx": "27aa6d0538df579432dcfc5229f780df85a3bbc4d460f601de9de6e50e821a91"
+  },
+  "sourceGuards": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": ".nvmrc",
+      "sha": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts",
+      "sha": "aa4bc50bc6ba80c59ad64dd2f58112b873b6b2f255e383dae69f3c4abb4a753b"
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/src/PostgrestFilterBuilder.ts",
+      "sha": "49b784b351661bddfd0e223f6395eebde85f8c4a348462cf8e5e83ec850402f8"
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/src/PostgrestTransformBuilder.ts",
+      "sha": "3483dce13f52a70e35149044b424112bce6f0a4f3140da9130d9dcf71deb4f95"
+    },
+    {
+      "file": "node_modules/@supabase/supabase-js/src/SupabaseClient.ts",
+      "sha": "6471325c10145a7a6c4f92d1e332fc6d51203ef0c2e7cf022ade5511217c2a60"
+    },
+    {
+      "file": "node_modules/@types/react-dom/server.d.ts",
+      "sha": "b25350193e103ae90423c5418ddb0ad1168dc9c393c9295ef34980b990030617"
+    },
+    {
+      "file": "node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js",
+      "sha": "e0a591b81f983794366bbc8338df0ebbbc7add48fdcee772870e226eadcda9ce"
+    },
+    {
+      "file": "node_modules/react-dom/cjs/react-dom-server-legacy.node.production.js",
+      "sha": "02ee18a3036d1fc1bc236adbab2424107e5cddc59650559658163179e5dae46f"
+    },
+    {
+      "file": "node_modules/react-dom/server.node.js",
+      "sha": "f2dd93f6f91f983cd91232098d4ac55578596d33d680d7cb9438ea3b0a611b4b"
+    },
+    {
+      "file": "package-lock.json",
+      "sha": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "package.json",
+      "sha": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "scripts/lib/moderator-account-reset-execution.ts",
+      "sha": "0acb1899e92518959ad61b12a9473dcdd23e9873adc4e014ccb96b2a9b972c62"
+    },
+    {
+      "file": "scripts/lib/moderator-account-reset-inventory.ts",
+      "sha": "42fb55f73c1be9306d0ad383893f7b9f41f10bcf6cbb27e61e84569f520460df"
+    },
+    {
+      "file": "scripts/lib/moderator-account-reset-plan.ts",
+      "sha": "3727022e3a9859b054cc3eb0b1e5101d60b1334276ebf548fb7323b6dd9ee646"
+    },
+    {
+      "file": "scripts/lib/moderator-account-reset-types.ts",
+      "sha": "c592bf318d39fe4834d1610b907d6e750efe657b1e8db08136b7d3eb99ded8a2"
+    },
+    {
+      "file": "scripts/moderator-account-maintenance.ts",
+      "sha": "98defa9df2c513efb0d795dec982310684517c401fd8c967321f8016f7697c0e"
+    },
+    {
+      "file": "scripts/moderator-hosted-activation-probe.ts",
+      "sha": "1761a667218946e446ddfeffa3b4a99ccf822288f63c3ddc71cbd584701eeaa0"
+    },
+    {
+      "file": "scripts/moderator-hosted-auth-probe.ts",
+      "sha": "660a51f1f757203e00d58ae53021882542f406d136b82174b9c18deeb07cea29"
+    },
+    {
+      "file": "scripts/personal-plan-field-test-campaign.ts",
+      "sha": "6950955a29676e52bea6e35d8311396b58d91c60fb02ff1fbe12b20818083a12"
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/activate/route.ts",
+      "sha": "cc81676e5f7352f30fafcb84acb7acc5cb65ef36d162bef9aa7138f18c9f6cd9"
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/moderator/activate-organic/route.ts",
+      "sha": "1f64fc63054fed7dcdc601a2af78a8001356ba38ef963307a927ce3816cbde24"
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/moderator/activate/route.ts",
+      "sha": "e039eb061eaa680ea07b2d8a3548232ccba7f1556cf84fff5bc5ffdfcde90186"
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/moderator/start/route.ts",
+      "sha": "b2603bf9278f809233de2e031dde951d9347b152399f62814fc5b55f9f77fbad"
+    },
+    {
+      "file": "src/app/api/quiz/field-test/activate/route.ts",
+      "sha": "4a13e5b3862b1572fb1aeb699ef43051e5cc9e3e1949990c973265e01538520d"
+    },
+    {
+      "file": "src/app/api/quiz/lead/route.ts",
+      "sha": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-lead/route.ts",
+      "sha": "305fda288afd763743b050c9a5f620ad3742286d4397f49ea657bf7939c52595"
+    },
+    {
+      "file": "src/app/lp/[slug]/page.tsx",
+      "sha": "c986d0de667d792caf017dd92d97ea9a946d85812340af9006768da532b01cec"
+    },
+    {
+      "file": "src/app/quiz/layout.tsx",
+      "sha": "40a1fc09f82f8d6832a57b76449af4b159fb4e2877989eb9e79bbbab99fe4e4d"
+    },
+    {
+      "file": "src/app/quiz/page.tsx",
+      "sha": "d2ada32e0a4cebbd2c5201d434739a4d78200de6522096e56c7edca7d688a60f"
+    },
+    {
+      "file": "src/app/quiz/quiz-shell.tsx",
+      "sha": "d1d3e2a68116e12d9008d553973a3c181693ef374cfd097a474dfbb3fed8a66b"
+    },
+    {
+      "file": "src/app/result/[leadId]/page.tsx",
+      "sha": "83ce34fd0d9d356a66b9e4201a3676236d11c7e06ec09563e0742ee91ca36ae1"
+    },
+    {
+      "file": "src/app/result/[leadId]/result-client.tsx",
+      "sha": "cc17af0e9eaa37a9fc05646cdafc32ee9314935b4632ce9fdec4f9385e48aa3f"
+    },
+    {
+      "file": "src/app/test/haarplan/[token]/route.ts",
+      "sha": "d09b0e336ff545c0f71280c124d29921f75b3dcaab32485688354ea51689d7ab"
+    },
+    {
+      "file": "src/app/test/haarplan/beendet/page.tsx",
+      "sha": "0faaeaaceea33b3520bc5dfbffeae775cd50b9d2de2faaec1d2302e32887c022"
+    },
+    {
+      "file": "src/app/test/haarplan/konto/moderator-account-entry.tsx",
+      "sha": "5aa282c5a5fae33dd9f84ef4925d61cda07303868d7952a0c79885834f864555"
+    },
+    {
+      "file": "src/app/test/haarplan/konto/moderator-account-page.tsx",
+      "sha": "05ad72a73dc445d936c60c8a57bc08f45d6b0018b35558d2a0274bf2df7e8120"
+    },
+    {
+      "file": "src/app/test/quiz/[token]/route.ts",
+      "sha": "0b94094686fd2c54cbc9bbd18b974497f98a813fea1166dc559c69efd706485d"
+    },
+    {
+      "file": "src/app/test/quiz/beendet/normal/route.ts",
+      "sha": "d74a62cf50a392e6f561f0b8ef28bec26becf627746d47dc711a00fec83f1f03"
+    },
+    {
+      "file": "src/app/test/quiz/session/layout.tsx",
+      "sha": "9b934a17908682708300bbbaf702ee7993a4ca86e8fd9b07db6fa489d082fa16"
+    },
+    {
+      "file": "src/components/billing/scanner-trial-offer.tsx",
+      "sha": "cdc36a0c78ba3d8d599836b6192416699f6d56d3983b2f334946713cfffdc58f"
+    },
+    {
+      "file": "src/components/billing/trial-offer.tsx",
+      "sha": "4051ca8d025e47a2d1bd1d32796bdba7791953087493980148d672837a05374a"
+    },
+    {
+      "file": "src/components/checkout/active-subscription-dialog.tsx",
+      "sha": "384d027758879c6ea1e7df1b44aa7e276274a8e2198de7c9b3300077d5d3ba79"
+    },
+    {
+      "file": "src/components/checkout/checkout-access-recovery-panel.tsx",
+      "sha": "39e0ab1c6d8ea3b9bfaf99c842248890fe8c7c9e4522d5bb70f1c594f50056da"
+    },
+    {
+      "file": "src/components/checkout/offer-payment-overlay.tsx",
+      "sha": "522228797fbec0514a40d3e05ecc1b29e89523c8fdb8706716c72d119f27c404"
+    },
+    {
+      "file": "src/components/checkout/payment-feedback-card.tsx",
+      "sha": "824ffc5a6f01137cee22d96c76689e0555f06c2324f6a68efd68670eb3e33834"
+    },
+    {
+      "file": "src/components/checkout/payment-method-checkout.tsx",
+      "sha": "93a3cc1c82fc6b0e8db03ec6af00b48a863496ccea37faaed17f5f9ce289f3b4"
+    },
+    {
+      "file": "src/components/checkout/payment-option-exposure.tsx",
+      "sha": "66a8621f37b4f4bc78765bcf653b236710fb32a405b30997be06b29de309bb05"
+    },
+    {
+      "file": "src/components/checkout/paypal-one-time-button.tsx",
+      "sha": "a60cf97517aa398c79d87eb6132a72430708474bf81054c35496be911ffaa07b"
+    },
+    {
+      "file": "src/components/checkout/paypal-script-failure.ts",
+      "sha": "948dfcd8c7c9a479cc0a91cf2e36630bdb0778b592c8a217b4f6719c9c8fdbc5"
+    },
+    {
+      "file": "src/components/checkout/paypal-subscription-button.tsx",
+      "sha": "df81932a397efbe358f595927ce40ad73425bcdf0e64aeafc2fe7fd9db11fae1"
+    },
+    {
+      "file": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "sha": "3d1ba6216be7fd0f1c647139c3ad019bb382e93c76969bad93ba023c66ec6882"
+    },
+    {
+      "file": "src/components/checkout/plan-reference-prices.ts",
+      "sha": "82a8d1a6e05bd99aa39a90f4544b53de44b2dd3fae9eb02ed62d612a471e1135"
+    },
+    {
+      "file": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "sha": "640d0f6e54f5dbedec2ca4a81fb0c2ec2acf71871e4d5b38a1a3913aba0b34b3"
+    },
+    {
+      "file": "src/components/checkout/subscription-plan-selector.tsx",
+      "sha": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783"
+    },
+    {
+      "file": "src/components/checkout/use-payment-support-report.ts",
+      "sha": "55a3f51ade14a7e4049f3a05a2401afa9b804a867791a3a369d823f8d2ff8307"
+    },
+    {
+      "file": "src/components/checkout/use-plan-selection.ts",
+      "sha": "0146c5bbe05892ab2b74305a0530f64c02c2ab0b4ee129f264a7fbb270052884"
+    },
+    {
+      "file": "src/components/discovery-call-offer/discovery-call-offer.tsx",
+      "sha": "b1b8981e50718dedf3d5ff757a1c8e9b1a17ec5ec3165ca18b0ce168c7f5f4e7"
+    },
+    {
+      "file": "src/components/landing/footer-links.tsx",
+      "sha": "6d53d50de38d6edf20a907ef65332c4aaa5937239382dcbf3eadad66361a3233"
+    },
+    {
+      "file": "src/components/landing/site-footer.tsx",
+      "sha": "3bd99615296e036976359c3d712ce345679213537d99d6fc529b61a15672b2b6"
+    },
+    {
+      "file": "src/components/landing/wordmark.tsx",
+      "sha": "85fe31fd2f08109b7a1daea897a6e232c6d6b607177182100f6dc9f2a0d2ea87"
+    },
+    {
+      "file": "src/components/offer-media/before-after-figure.tsx",
+      "sha": "7e6b04432cbc2e4a846f137f8d616c4749e93a191de4bc1179cc1fcff771913b"
+    },
+    {
+      "file": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "sha": "251bf2db6b11eb8b033c535d6da6767fe0788939180cc5766b24dd1025324a57"
+    },
+    {
+      "file": "src/components/organic-plan-offer/wistia-video.tsx",
+      "sha": "33e3042db12fe907bf21be2776ceb6cc55abb54a7aac832383e542557095a229"
+    },
+    {
+      "file": "src/components/partner-access/activation-button.tsx",
+      "sha": "99b2782f09e4f64feb5478bae863da45652af9c95da161c6faf9c81eeeb52357"
+    },
+    {
+      "file": "src/components/partner-access/activation-card.tsx",
+      "sha": "389c48eb2bd60f51cc5c6003b6578c6238bec21dc2d16119df47dd969ffb67c0"
+    },
+    {
+      "file": "src/components/partner-access/unavailable.tsx",
+      "sha": "fa238454145dbe87ec66d054ba776f60debb9353d92e850c386ba2d79850b432"
+    },
+    {
+      "file": "src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx",
+      "sha": "7898dc4da1566e74de856fc8176b5a478398dae9fc8813f5836e2f7a1e0d3ffd"
+    },
+    {
+      "file": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "sha": "f8373a3f8f9ee26815679654c15d7fc840221f51c25c1e7d50e7199841478033"
+    },
+    {
+      "file": "src/components/personal-plan-offer/types.ts",
+      "sha": "1d9e0e7d7f3aa109f6b356579b7d29108156b6b672c5f9bec3c7f75a45809817"
+    },
+    {
+      "file": "src/components/personal-plan-quiz/moderator-quiz-context.tsx",
+      "sha": "ebee2c9aed47739f03a433ded77e7294a0142507693228672bc5288386181e8c"
+    },
+    {
+      "file": "src/components/personal-plan-quiz/personal-plan-quiz-entry.tsx",
+      "sha": "b37707a35509abb85ab0f44e2d43cd290f36372063cb0ea668e8d16244612bb6"
+    },
+    {
+      "file": "src/components/personal-plan-quiz/personal-plan-quiz-first-screen.tsx",
+      "sha": "fee63e94d8b38ffbbbdb8f892c1ef54109b3f7acae8d022e8f1d1c1058a3a545"
+    },
+    {
+      "file": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+      "sha": "03c62d161ba8d95900b91307782de9cbd33ac786047e744adc1017cc08ec8ebd"
+    },
+    {
+      "file": "src/components/personal-plan-quiz/progressive-entry-contract.ts",
+      "sha": "38baa45782fda7e10e784ebbbe41616dc414d45e92ca1c81652049e8f17b5c43"
+    },
+    {
+      "file": "src/components/personal-plan-quiz/quiz-data.ts",
+      "sha": "aa4e80b540d84cb6205235ba671ed53b1c6045b50df6bb3a1c269dac3a954b58"
+    },
+    {
+      "file": "src/components/personal-plan-quiz/texture-question.ts",
+      "sha": "56749d2b7c09a21e66488691d93b25bedb55d299e394e08e6c3fcb98e1c923e3"
+    },
+    {
+      "file": "src/components/providers/payment-runtime-provider.tsx",
+      "sha": "9b4d251a31c5e817a93d1a61ca98aaeca7c51746e94e575c5f5a161c5f41915c"
+    },
+    {
+      "file": "src/components/quiz/hair-length-option-card.tsx",
+      "sha": "76884c108303c0e08dbfd58edec3492e321a7be4d7fad38204352d2297f450b2"
+    },
+    {
+      "file": "src/components/quiz/hair-portrait-figure.tsx",
+      "sha": "7a782bfc42c3de2d640462da3da463e70f5ba039ff0e7b8364ced4c0569c8495"
+    },
+    {
+      "file": "src/components/quiz/legacy-quiz-visuals.ts",
+      "sha": "e75ed193f9527dfda71029a5bb782f750491973aece3eaf3fc6de42752696ebb"
+    },
+    {
+      "file": "src/components/quiz/offer-tracking-provider.tsx",
+      "sha": "f37765d1a238f67e48d99fbef9310311b56f4e994674ca879bb075b8b1af3995"
+    },
+    {
+      "file": "src/components/quiz/quiz-main-problem-sheet.tsx",
+      "sha": "4814352d9a51aca84c6dcc0a689ca012adc6fa4e17ebc10d3219042ecc48e25e"
+    },
+    {
+      "file": "src/components/quiz/quiz-option-card.tsx",
+      "sha": "d3886b23445bfa5c3346cc9fa435968e0dbad35a6cecdb2d5a4ebf4dd0e391af"
+    },
+    {
+      "file": "src/components/quiz/quiz-result-lever-rows.tsx",
+      "sha": "b77bd6e6f8b7f31411d5fe098cf5ce4d97ffcde6c5fbb1c2ad022013a2763b92"
+    },
+    {
+      "file": "src/components/quiz/quiz-result-transformation-card.tsx",
+      "sha": "0b29ee79157f5f3c85a2879a0e3bf2a814a8f5d2339495fa8d17fc243c71da9f"
+    },
+    {
+      "file": "src/components/quiz/quiz-results-view.tsx",
+      "sha": "cf7e57f2bee1f2aa71a50d4fb0d37506d2adf9b0e98b5faf6371330086b22792"
+    },
+    {
+      "file": "src/components/quiz/result-offer-pricing.tsx",
+      "sha": "461bf77fd54505e7fdcaa10c0630bfc942803fdb13ddc546ba7c745c6e91d33a"
+    },
+    {
+      "file": "src/components/regular-quiz-field-test/activation-card.tsx",
+      "sha": "f043e0a38eeaa6ff95de6741976b7879bc1b30cb77828c1c0a15a2918c0cc271"
+    },
+    {
+      "file": "src/components/regular-quiz-field-test/banner.tsx",
+      "sha": "6fa319da17cc833d8d4da3aa9d1fa3c5b3cc52e123d4e667efc4423f9837398c"
+    },
+    {
+      "file": "src/components/regular-quiz-field-test/unavailable.tsx",
+      "sha": "a3b0c4cb6239829c0b7f5c8d137b2d3d4f9c09b3a50b9f47f4c7a4dc56d7f164"
+    },
+    {
+      "file": "src/components/scan-regal-offer/scan-hero-demo.tsx",
+      "sha": "9b807343ce9020c8d489fcbbeef72bcc5cc074f1add4c34811968b48c0a02705"
+    },
+    {
+      "file": "src/components/scan-regal-offer/scan-regal-offer.tsx",
+      "sha": "fbdc301ce706b9f5f10ca35537da94b40be92b758ade2ef2da0851859c6096e5"
+    },
+    {
+      "file": "src/components/scan-regal-offer/scanner-refined-offer.tsx",
+      "sha": "1de858dc5dd017a2a6de3a780355b4b5619bea2177d217c37974509d3f7e74e7"
+    },
+    {
+      "file": "src/components/scan-regal-offer/scanner-refined-styles.ts",
+      "sha": "6f517efbacb70d5f2ef3a9c77f0cf71afc61fe7b06745a7d11f6ef36b0a78355"
+    },
+    {
+      "file": "src/components/ui/bottom-sheet.tsx",
+      "sha": "373944ebf90fab3c4347599cba20ef2e162db35c43f722d1f190585817caa625"
+    },
+    {
+      "file": "src/components/ui/button.tsx",
+      "sha": "7328a21e4aa02dad2cb657ae7af61280b71288b16ae4d38c5d31895c9d6535df"
+    },
+    {
+      "file": "src/components/ui/dialog.tsx",
+      "sha": "a4b7de55068c01e6ec9fa79c5966f9b9a5ae9ec842f6e75a29c8803ae210eabe"
+    },
+    {
+      "file": "src/components/ui/icon.tsx",
+      "sha": "4db2f41605245aae7210dd610d5ee26423f8b1883e6b0e632c50f6a28c7b953e"
+    },
+    {
+      "file": "src/components/ui/input.tsx",
+      "sha": "a030050630b6734d394812c864a1b8560db63c112ab03b26430a1cc11a5f0203"
+    },
+    {
+      "file": "src/funnels/offers/discovery-call-v1.tsx",
+      "sha": "1e5d36fe036fe6bcdb54f3613794e399c326a0c43621e2ba9e1642566fc34d0c"
+    },
+    {
+      "file": "src/funnels/offers/organic-plan-before-after-v1.tsx",
+      "sha": "2d4e7b406008cef2ca84a8c7906452ea39239c70966542330b9c9fc0524660ef"
+    },
+    {
+      "file": "src/funnels/offers/organic-plan-v1.tsx",
+      "sha": "92f6d79b9a86c237e86d356e7e41bf21e69d824e839c0c28d7f2b66d50aa1397"
+    },
+    {
+      "file": "src/funnels/offers/personal-plan-v1.tsx",
+      "sha": "62372b7401851701cf300d92b9504e79d7c9bc6bdb6be1c407ec520a640ec9c4"
+    },
+    {
+      "file": "src/funnels/offers/registry.generated.ts",
+      "sha": "a3f7996b58873b9d1bd2ab1877f0445baab6bc2ad076db7c2ca01d618fb9a11f"
+    },
+    {
+      "file": "src/funnels/offers/registry.ts",
+      "sha": "c9ec409689d19f3a2cdefc977af660e2b4c8da6a5f01a4167435ad89ff4bec81"
+    },
+    {
+      "file": "src/funnels/offers/scan-regal-v1.tsx",
+      "sha": "22a56c0dbcf3fa037e978899792ab19c0fc1efa3ff8395f0d30a4f6172d92518"
+    },
+    {
+      "file": "src/funnels/packages.json",
+      "sha": "fd299fc9fd61f06531fcc9b66fd497fd14c25a38214f8db241dab4e3a0131811"
+    },
+    {
+      "file": "src/funnels/quizzes/registry.json",
+      "sha": "4dce2f7f0eaf19ba28dc063b8a9cd70884a8a468bb401b8ff214853601c44947"
+    },
+    {
+      "file": "src/funnels/quizzes/registry.ts",
+      "sha": "225fa3638b4406aa711b4afda77ef748e24dd35e6b29bcd46f4d3ac6fe320bbe"
+    },
+    {
+      "file": "src/funnels/types.ts",
+      "sha": "de33f764303fd3245acd8e66769f24ccc676a9620357d1a5b1c1b5c0590c9719"
+    },
+    {
+      "file": "src/lib/analytics/checkout-attempt.ts",
+      "sha": "16866c953671cd2acda88699368a0f9e08bfa11599344024bc6748f23c737bfd"
+    },
+    {
+      "file": "src/lib/analytics/destinations/customerio.ts",
+      "sha": "06847f20cd2c8c2e0f11947469c787cbb8d357eefc9b65a241efec5bc4c6543b"
+    },
+    {
+      "file": "src/lib/analytics/destinations/meta.ts",
+      "sha": "5988b93df2bc11dba72bc719cc9d7b098190fa4d09267b5f12c6c2d2372227f0"
+    },
+    {
+      "file": "src/lib/analytics/destinations/posthog.ts",
+      "sha": "50a10cb0bdebec1ae539d8fbf83e1987b632995758d6a7bc5b1f3bd6d49db766"
+    },
+    {
+      "file": "src/lib/analytics/events.ts",
+      "sha": "48ce55be88f197549909df5014cfd51334d3238efc6b7ecb63456b48ad137238"
+    },
+    {
+      "file": "src/lib/analytics/meta-offer-view-client.ts",
+      "sha": "320ea8d68143153d486d771fadcedc64877205ebf288dfc1da090b7d2a5a0565"
+    },
+    {
+      "file": "src/lib/analytics/meta-offer-view-id.ts",
+      "sha": "3456cc669f5cdf679cc7192c7b02a2ccec6383e303f5e827b662d08aaec6d127"
+    },
+    {
+      "file": "src/lib/analytics/observe-once-engaged.ts",
+      "sha": "7795f7cf0912e68e9f5b38a7ef349d0adc2bc5e163a58fed80accbaf0ef17d25"
+    },
+    {
+      "file": "src/lib/analytics/observe-once-visible.ts",
+      "sha": "f3b016faf8bb5bf2f7e58a8b7404d8d32a817882640a2cdfd21db5988a3cf477"
+    },
+    {
+      "file": "src/lib/analytics/offer-engagement.ts",
+      "sha": "e8396f8cdff7d2cae540cac9c58c52c2f97882fc908abe7e16527ec411f2e4a8"
+    },
+    {
+      "file": "src/lib/analytics/offer-payment-option-view.ts",
+      "sha": "6394a77aea0b700cc508a6ee33d0f3e360709855f603740121ae9c70d125d29f"
+    },
+    {
+      "file": "src/lib/analytics/offer-section-order.ts",
+      "sha": "1494d1984f4aaf437f2de3d8b7e3d638bc6ce0d80c7056eb0c56e9e5156ec167"
+    },
+    {
+      "file": "src/lib/analytics/offer-tracking-claims.ts",
+      "sha": "cefab73151409d50140d7c563815852037cd8900d5f0b4222e8406da120ea127"
+    },
+    {
+      "file": "src/lib/analytics/offer-viewed-payload.ts",
+      "sha": "db1fc7e9fa3c8c6cb20b51ab5f106bac713c5a8ce5bec859288092f0251aa6ac"
+    },
+    {
+      "file": "src/lib/analytics/page-url.ts",
+      "sha": "1cdde9d294fca5daf861b63bfb178a4458a6b8fd44d14b37b3d30d05a4551428"
+    },
+    {
+      "file": "src/lib/analytics/routes.ts",
+      "sha": "b1ea998155308a84bb64fe1a0c96469cb431dfc0992dbc29b9e2d7efdaa9acf2"
+    },
+    {
+      "file": "src/lib/analytics/runtime/bounded-fifo.ts",
+      "sha": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4"
+    },
+    {
+      "file": "src/lib/analytics/runtime/environment.ts",
+      "sha": "ff05a8672de300fddd0779669947a4ee0f2b0e62276c881fa94d525d48f11a4f"
+    },
+    {
+      "file": "src/lib/analytics/runtime/posthog.ts",
+      "sha": "0d2152292c62cec544e5bcb44f07f5c28238684ef1d1272826cf14f575c04591"
+    },
+    {
+      "file": "src/lib/analytics/track-app-event.ts",
+      "sha": "d72b4009f31a5f4fbbfc953956e46a5962282d72bf9d9daf0382500eadf4969d"
+    },
+    {
+      "file": "src/lib/auth/free-registration.ts",
+      "sha": "daabd541a5c2553f02058b501e48afb00820f32466729e132c6b6de91bbaae6e"
+    },
+    {
+      "file": "src/lib/auth/route-classification.ts",
+      "sha": "6a5c8c0a283054ab108779a6a8f23764a4919b67adea2f0a94cb389abb4d57a6"
+    },
+    {
+      "file": "src/lib/billing/offer-products.ts",
+      "sha": "3e2c7f6195974480280792b94dd7c27ab3fcd75dc3f12eae7538e5c7382b22b8"
+    },
+    {
+      "file": "src/lib/billing/payment-runtime-config.ts",
+      "sha": "2f5f9414aee446b43f337e5fa3ade5e5a2b6a7e6d1b0685dcf4ed611fcfd0e07"
+    },
+    {
+      "file": "src/lib/billing/pricing-catalog.ts",
+      "sha": "bf01815cb824ef9cd3346be051d8f94868c9b916c593b2d2cd8e1140bc8dfae7"
+    },
+    {
+      "file": "src/lib/billing/trial-offer.ts",
+      "sha": "14083f0eb5677db3063e22ab585ca9779a51fac4e04ab8852ee2e11f087d4725"
+    },
+    {
+      "file": "src/lib/billing/types.ts",
+      "sha": "f99c6f799c5c79a4218a2425fbd1b4ad4565c7f0592d1419b45ae6cb09e5047b"
+    },
+    {
+      "file": "src/lib/calendly/constants.ts",
+      "sha": "2f1d1000ba6c442cf87f5c2ab2cab9bb48bff0855dfa8aa33697e01b383c5824"
+    },
+    {
+      "file": "src/lib/checkout/access-recovery.ts",
+      "sha": "dc8936f36a3516493cdbdbae5a4b9835e379c71d7d137ea406dd8c56cf636b76"
+    },
+    {
+      "file": "src/lib/checkout/offer-checkout-history.ts",
+      "sha": "c3c42b60400b565d10eace7da0cefbed9394ca44db8325df64df34b7b2496dc6"
+    },
+    {
+      "file": "src/lib/checkout/payment-feedback.ts",
+      "sha": "88e3803bd9c586499b24492fabe48491810ed0f437a0343e02027322deabe95f"
+    },
+    {
+      "file": "src/lib/checkout/paypal-one-time-recovery.ts",
+      "sha": "f7cfcb6ed1fae2a6b18d4ae943173b154659f0460fb68c5009f491820d46524b"
+    },
+    {
+      "file": "src/lib/cookie-consent.ts",
+      "sha": "d5759e5e356628f91ffc58a37cd8ad25720078f60499c5a260bfd4c14094161c"
+    },
+    {
+      "file": "src/lib/customerio-tracking.ts",
+      "sha": "499afed0161ee2fabaae9d89d4b96934bb697258638b01261e91f20b58e0c93a"
+    },
+    {
+      "file": "src/lib/customerio/offer-engagement-client.ts",
+      "sha": "5b4980168838c29f962b5234c81b4d3d25627106233ad43f982967efd811abdf"
+    },
+    {
+      "file": "src/lib/email-deliverability-shared.ts",
+      "sha": "97928eee799f71cb6a2fc3b01f9506e410d31b630bcb29f633f7c45e067a2afa"
+    },
+    {
+      "file": "src/lib/funnel/client.ts",
+      "sha": "9c3728cffff3810d829afd198c2406e35cf6edb3d4c68dbfc5a1cfa845e100a8"
+    },
+    {
+      "file": "src/lib/funnel/cookie.ts",
+      "sha": "522741b96f60560c02f92a5445428380de02231b2b3724b4143dfc6da14f7b48"
+    },
+    {
+      "file": "src/lib/funnel/flags.ts",
+      "sha": "981bd9436dae7c1fc7cbd8d6dc60e3d6bbaa9dc3bea994e0a33fac525f02528d"
+    },
+    {
+      "file": "src/lib/funnel/journey-kind.ts",
+      "sha": "6088e7e2554b37b0d2da5231dd5361fdeed8cd2ebf1dae5286e107d7543efe88"
+    },
+    {
+      "file": "src/lib/funnel/offer-presentation.ts",
+      "sha": "e38f85f885a9e94b35abef31ed3a73368fb24a8c23bcebe3ba88e5d6602eb4f4"
+    },
+    {
+      "file": "src/lib/funnel/organic-offer-media-experiment.ts",
+      "sha": "8e0882803faa756e7c103c53a16b857a73db8ac9e5f9c261ea013743f7902887"
+    },
+    {
+      "file": "src/lib/funnel/packages.ts",
+      "sha": "66cab34518f29604a37c7a32721f74ca5c930f82a12dcf293db69e3b90a080be"
+    },
+    {
+      "file": "src/lib/funnel/personal-plan-pricing-experiment.ts",
+      "sha": "2df4e53841c87e421524c1cbaaeb0daeed9ac6d2a467cd8ae4da849faf2af516"
+    },
+    {
+      "file": "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+      "sha": "ac0fce778e1594083573a8b4fdb1f8ed5aa00e8d9427338856f8ae22781a0cf4"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "sha": "775feb24b57ae2c7d71c4dec2f5ef4a8781fefaf355699331718fc44f92380dd"
+    },
+    {
+      "file": "src/lib/help/info-tips.ts",
+      "sha": "897afb7bd7bbf9f336fe01b66ad95b8872cf6b7a264313716b88e4c338abfe1e"
+    },
+    {
+      "file": "src/lib/leave-in/constants.ts",
+      "sha": "9ccffc3c5faaa69ab6ed436f7af56aa0fa867ae6e898a71f2bd8a7d78410a7f4"
+    },
+    {
+      "file": "src/lib/meta-pixel.ts",
+      "sha": "56bc9d532d658f0a2d9d8278d01a437b1ec10b9e781ec8ec4476396f3569016c"
+    },
+    {
+      "file": "src/lib/motion.ts",
+      "sha": "ad6d8c7f8243297762beade95101fd15fc607c5ca3bc02b2512055d3a54cebdd"
+    },
+    {
+      "file": "src/lib/observability/checkout-watchdog.ts",
+      "sha": "d45406e6c6551cecb0c49ffd4c9c3e8c27ddd34defa3d5ece40fdf19aa7fd1d8"
+    },
+    {
+      "file": "src/lib/observability/checkout.ts",
+      "sha": "34c41d9cc134da4df6762251af4ba11dcffd5180f21bffd1bb5e8b5f8484d49d"
+    },
+    {
+      "file": "src/lib/observability/offer-experiment.ts",
+      "sha": "9c0d5f6b8038b8dcbeafa3ac0efd7de126965e50022dbed7d2117e606ea20487"
+    },
+    {
+      "file": "src/lib/observability/payment-client.ts",
+      "sha": "aa15ad9a6be014b430f0ae9aaeb29278879c3fca0b96aa62f177a0ba5daa25f2"
+    },
+    {
+      "file": "src/lib/observability/payment.ts",
+      "sha": "866ebbd656bcd23b9d46efa8804b99ae39cbe7cef4424f64cc86b031e7c9f316"
+    },
+    {
+      "file": "src/lib/observability/sentry-scrubbing.ts",
+      "sha": "3980e1d096344f18c4288226d63f9577037fc486bb049a67316d8e157b6a8c60"
+    },
+    {
+      "file": "src/lib/onboarding/goal-flow.ts",
+      "sha": "18d310d2dbd9382b54aa068d453d480c8a3d5fdf9d0a0c8d82c064371bf5ccea"
+    },
+    {
+      "file": "src/lib/openai-ads/browser.ts",
+      "sha": "30c0a0b871aac8a5bf6f2131d7c48a6643f71dc7c31cca298196bed4ab288ab3"
+    },
+    {
+      "file": "src/lib/paypal/checkout-intents.ts",
+      "sha": "a26c67160595e5d4f620d461d42141009dbe4a4ee26f666d1d11246becb25765"
+    },
+    {
+      "file": "src/lib/paypal/welcome-url.ts",
+      "sha": "1a6ae37dde2135a61d2ca844efca93f39868a443e998cc6a12af4f49bb9c2920"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/activation.ts",
+      "sha": "239383612fa01fcf3772d724be6aebe645997fb2197b144b97dcd27a19804641"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/campaign-cookie.ts",
+      "sha": "6aeb1727031200b25e9343ec9dfe2e8947d025deef1322dbb756791ec0be4f6d"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/constants.ts",
+      "sha": "e83a2f4837ba82a48c48cb752c8160b19df78e4b1d97248eaf2ab8d9f2bab0ae"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/errors.ts",
+      "sha": "1e9b1f458e6adb52ee76ecf725c3a6007e91aab6ccb5f89a6dd00232691c93a1"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/index.ts",
+      "sha": "4e4769a07e80ee506d27847a1d4a7767b59a0642bf45adf6d18e02e6da0a3afa"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/lifecycle.ts",
+      "sha": "6d659057384131874cc8f0a1cce0e96f77bdd3fae75c715826b6ff7a80399caf"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/moderator-contract.ts",
+      "sha": "d0b5f90ae45555be0e52945a2ff11c510ff8a98acee369eefd26b7c1e7fb8e9c"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/moderator-journey.ts",
+      "sha": "0fd1882119d91b10865dda3c6fb4ed0c03596fe3088b8e87d6aea0e4b81a3931"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/moderator-organic.ts",
+      "sha": "bd9b75a133acbae7581de30ef5f78e3688c21437966ad5e2c71256436d2dc944"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/moderator.ts",
+      "sha": "dba5f364f8111b31ab8e640c3b2aab237ca6e0186f0ba5b3de86e2653d4ca628"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/regular-quiz-campaign-cookie.ts",
+      "sha": "e6d9ecb3df1531b25083eb92dd91bac55a2309f34283c1b1c62fe8dc5c759a96"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/server.ts",
+      "sha": "1ad09a70d19fdba940656d90af595006695e301be287d59af463f4c59337d799"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/token.ts",
+      "sha": "a30e67820c6141bc1aa37c05d42067383b4903f48e0d82d408838e079cfd0c37"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/assessment-copy.ts",
+      "sha": "77c25aa207451e902d4f378e5afab5a6bc32563459599886fc8fe3b4b6772480"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/customerio.ts",
+      "sha": "fb1a2ed1d913687beb8472949da09a123c439221bfc4779228012b9244bbd6ff"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/draft-scope.ts",
+      "sha": "80a330256ee55ca065fba088cb7973d0dd8694073aed9cc452282d9bbea0cd29"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/draft.ts",
+      "sha": "0e7229ba64337d19f8704790819dffdc3a98daca633860db330e21247bd5a60a"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/flow.ts",
+      "sha": "f027cfed94da99a0d1339124e4536c104f62ddcc52468788303b31988956715e"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/hair-assessment.ts",
+      "sha": "c79a891137127fcfa30110a41ddd1744640b7cbe2f76aafa1b4c30544604c3b5"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/index.ts",
+      "sha": "d64ffbed216a9dcbcc0cd73495e2f022d3ba9f8efba674cdbf308da3f969b8be"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/loading-timeline.ts",
+      "sha": "d00955e60c6e01c95c1fb1574b00faae65f0037a9081a6d9c901e00cbf883a04"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "sha": "67cce9c3515c8bb2aff287131fda1be77c7c81188732b3fc9e66b1e3afefa6f4"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/offer-focus.ts",
+      "sha": "818a12f6192c75397c84fb012d335109bf943eb5fc395edabd5e06923d0b3987"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/option-intensity.ts",
+      "sha": "667b1c30503c0d1dc13a3188a390a59b867b00a800b9946c9a6c365c0ebf5e55"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/preparation-client.ts",
+      "sha": "7955e6d8b95bccc25b6c68bd98fa31ea477cf19fb4e01a61315a21bdf526bdfe"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/primary-concern.ts",
+      "sha": "3f6757b22ae9ba0c1c1951f1813c13c9c3102cfdd8f02c929fdefbbfbde456df"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/profile-summary.ts",
+      "sha": "078c1d0b2c8189233b192484eaf6f94c22c9ab24522c0b3cf4c85338aa484ea1"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/server-draft-client.ts",
+      "sha": "2f528abcd79e7bbc81a3dde00f1dab5bfa44da3df0324fb14bf14d0c4e445da9"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/types.ts",
+      "sha": "19565073dbad675141bcbbb94a796a73da7727569164a01e0622a4e471736c46"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authorities.ts",
+      "sha": "46722afc73e14c5f10b83fd220bc4e5f82c3de001086881190cd1fb769b91e2b"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/contracts.ts",
+      "sha": "300032e978090b8226f72f4880c6cdf310beb95438786b9e966d594bc3416781"
+    },
+    {
+      "file": "src/lib/personal-plan/products/contracts.ts",
+      "sha": "bc4291e12db65a3e220c884344255403e4ea3c3eb19d24fb3c5a4605ae011366"
+    },
+    {
+      "file": "src/lib/personal-plan/types.ts",
+      "sha": "40297a7f5b93d2ae223603fe818111f8a546c21299579d4eaf1da3d6089e2389"
+    },
+    {
+      "file": "src/lib/profile/chemical-treatment.ts",
+      "sha": "b50c624c6955692ace304835c40632ce4176e5fda20603ec9170a9394ada9382"
+    },
+    {
+      "file": "src/lib/quiz/diagnostic-input.ts",
+      "sha": "964652bf5d3e3d8cd9bc233b18977e59e3cf7264a97ec7de5d5c4ac6cea7149e"
+    },
+    {
+      "file": "src/lib/quiz/draft.ts",
+      "sha": "ade503f1a6baebb94afbcb7c5b59225c1b06a0cdfca8a2eeba7ad7bf8e1d0177"
+    },
+    {
+      "file": "src/lib/quiz/hair-portrait-assets.ts",
+      "sha": "668a06934525cfccf0a134a49255792f239b4ded7186d01a0bd03e505483d960"
+    },
+    {
+      "file": "src/lib/quiz/moderator-fresh-start.ts",
+      "sha": "267ad66268e13fd592c5bd2f3048471fcad31c084df406bb89dab8c522b5aa39"
+    },
+    {
+      "file": "src/lib/quiz/need-lane.ts",
+      "sha": "01e69e7f79db4d5919a629f2a568c140bdb1a17e05aaf88cbeec387123251344"
+    },
+    {
+      "file": "src/lib/quiz/normalization.ts",
+      "sha": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239"
+    },
+    {
+      "file": "src/lib/quiz/portrait-config.ts",
+      "sha": "942805bc7427df2587da558526a5fb5db8d00d002e7b7de742f66ca6a68b2fba"
+    },
+    {
+      "file": "src/lib/quiz/primary-concern.ts",
+      "sha": "fc33b4465dec57bcc2797ca11ab7d521280189c97495ba8c30b41dd4671207d1"
+    },
+    {
+      "file": "src/lib/quiz/result-cta.ts",
+      "sha": "c5ae045f6efb4fbb6384e8d50c3155a2f7f352552ed2612508bc2f4b25cbb059"
+    },
+    {
+      "file": "src/lib/quiz/result-narrative.ts",
+      "sha": "1cc0a22b9baeb3552e304b902776b650355767cd624a73bd34764ac103652e50"
+    },
+    {
+      "file": "src/lib/quiz/result-navigation.ts",
+      "sha": "a543e752d5c6f7291177585f6b5b1b8a0dcab2a28437db83ec5f778297c838ed"
+    },
+    {
+      "file": "src/lib/quiz/scan-insert-examples.ts",
+      "sha": "afc3a4a47631517ff9a9826f8f8c8c55e3a9581d3c6b46125b93cce7e76c23f3"
+    },
+    {
+      "file": "src/lib/quiz/types.ts",
+      "sha": "11ec81f1d6f0e5480132ec892301a2437852c2fc80bf95c22abf2207e6b1fce2"
+    },
+    {
+      "file": "src/lib/reactivation/return-destination.ts",
+      "sha": "48b88020e14c0e29db0744e616ce9a94d4399d8e52952c2eed95233d307807ab"
+    },
+    {
+      "file": "src/lib/stripe/intervals.ts",
+      "sha": "c6bc97592febb4666b6e9ae9f85e5ce3ffbcaf8bc9cfeaef5db0bde41c3d568a"
+    },
+    {
+      "file": "src/lib/stripe/offer-client-loader.ts",
+      "sha": "a9a093ef1091516a68e849d2d0e2e903dabdb01f35f920894029d0fcf3a1d9c2"
+    },
+    {
+      "file": "src/lib/stripe/prepared-checkout-credential.ts",
+      "sha": "894e6b63de98e2d307cdebf89c49a53a4a2e15e161f0d51b52558e24935b1053"
+    },
+    {
+      "file": "src/lib/stripe/prepared-stripe-checkout-state.ts",
+      "sha": "814348cd7fe4025f2da68fef543522feeaab087a70f884102033c8abb1ee8c60"
+    },
+    {
+      "file": "src/lib/stripe/pricing-plans.ts",
+      "sha": "5852bc9d1f9da7d76a0620df8f2e329cb641f044018804ff832140249bb4b90b"
+    },
+    {
+      "file": "src/lib/supabase/admin.ts",
+      "sha": "bd6ec1538d65a01f82b3f55b2839f0ac347d617c6de29d13cea4b0eff737386a"
+    },
+    {
+      "file": "src/lib/supabase/middleware.ts",
+      "sha": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7"
+    },
+    {
+      "file": "src/lib/trustpilot-reviews.ts",
+      "sha": "c286b29db2ea115a574d2516488756d389ae4c115751669487464d1bfea41270"
+    },
+    {
+      "file": "src/lib/ui/modal-layer-manager.ts",
+      "sha": "91279f8beb6559de02df719111dbaf523985f20f28dfc228ae4001e8965cf7c2"
+    },
+    {
+      "file": "src/lib/utils.ts",
+      "sha": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d"
+    },
+    {
+      "file": "src/lib/vocabulary/concerns-goals.ts",
+      "sha": "f588c309f78685855551f8270f8dec4fc5e046d5c1165d734a63f168315f28e8"
+    },
+    {
+      "file": "src/lib/vocabulary/errors.ts",
+      "sha": "79aa0a1fe9ddc787d7f487df6d91d608a2c8d2cb9ea2ac4f06411683395b68aa"
+    },
+    {
+      "file": "src/lib/vocabulary/frequencies.ts",
+      "sha": "d79bb3584473a8f6541feecff58a40633736f9376981ff190b645114dc0eb3a9"
+    },
+    {
+      "file": "src/lib/vocabulary/hair-length.ts",
+      "sha": "3dd675892cb15b6021d7365203bdc225e86805bfb15beec305cc90e83d74c9e4"
+    },
+    {
+      "file": "src/lib/vocabulary/hair-types.ts",
+      "sha": "36c517006e2cf2717a7f9527fe0484c7c117ba7caa8b7ed7008445950cd79b72"
+    },
+    {
+      "file": "src/lib/vocabulary/index.ts",
+      "sha": "5e011545b7a6a94b96720af7b225dc12c025dbf0509f8b20cdd352bbcfa3109b"
+    },
+    {
+      "file": "src/lib/vocabulary/onboarding-care.ts",
+      "sha": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547"
+    },
+    {
+      "file": "src/lib/vocabulary/onboarding-goals.ts",
+      "sha": "71ead0b61b4aeffeb47b53c63acb6fe84acae797e18ea774fa25104854c8a098"
+    },
+    {
+      "file": "src/lib/vocabulary/profile-labels.ts",
+      "sha": "e0e8d5df461dc19c3e0eb1a85a8dbac8c5f32316c12cd90352bcec506ac5e466"
+    },
+    {
+      "file": "src/lib/vocabulary/source-labels.ts",
+      "sha": "b4cce749ac8d49b3f0dd3a9a2e1e6e9cea64f6ae76858bc161d7f173b22475f1"
+    },
+    {
+      "file": "src/proxy.ts",
+      "sha": "a309a92a1b3a6f420a3739690babd3bc371beb2daf441aa94da2977f5ee82bfa"
+    },
+    {
+      "file": "supabase/migrations/20260728130000_add_personal_plan_prepared_artifacts.sql",
+      "sha": "ace9b75c1f0af85bdbdc8b46d0ca68a94857ab421068a066ce21d868493b6783"
+    },
+    {
+      "file": "supabase/migrations/20260801100000_customerio_profile_sync_outbox.sql",
+      "sha": "91a8385f3a6edb1bda31f1b095a15c7aeec67f73a59c500c053b286a8e52bcbb"
+    },
+    {
+      "file": "supabase/migrations/20260810120016_personal_plan_field_test_access.sql",
+      "sha": "bc1b5da679b3afa99b4456dbdfdaf65d2a6846fb53f4b5a9f2e63aea6a6fabf0"
+    },
+    {
+      "file": "supabase/migrations/20260811120000_regular_quiz_field_test_access.sql",
+      "sha": "3ea1404c9fe56ce4e119993297a7fe7c1e0710a225e247085228786bf2bdf2e4"
+    },
+    {
+      "file": "supabase/migrations/20260813091352_regular_quiz_field_test_personal_plan_routing.sql",
+      "sha": "597b20f6c43804662eb584a1d5b2ed9e8a6e2484cca7390f3a1a4f323c6662f4"
+    },
+    {
+      "file": "supabase/migrations/20260827100624_personal_plan_moderator_email_bound_access.sql",
+      "sha": "5405126450defa01da7a082192238b78b6edabefa0e422ff41722edeea609602"
+    },
+    {
+      "file": "supabase/migrations/20260827150340_personal_plan_moderator_organic_access.sql",
+      "sha": "8dab21a96b028b3c2490939386e3f15f5e163955fb93cbcffbe6915c0343f1f8"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    }
+  ]
+}

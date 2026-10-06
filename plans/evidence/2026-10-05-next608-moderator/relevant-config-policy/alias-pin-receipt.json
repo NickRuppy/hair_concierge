@@ -1,0 +1,32 @@
+[
+  {
+    "directory": "/tmp/test-audit-discovery163-tools-70q2q9t7",
+    "priorPinsSha": "26cc5e7ef1f54dd63818654e7b1da43f2679e5ca6d95cef4db28a8613e41c873",
+    "finalPinsSha": "3fca83bc5a719ae90107a6ae8408aa2d8f45c511701b31ce2ac5ff279c8efdac",
+    "sameGuardRealpathAliases": [
+      "/private/tmp/test-audit-discovery163-tools-70q2q9t7/operator-guard.cjs",
+      "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-guard.cjs"
+    ],
+    "guardSha": "fda51c060377a3566172dff9e51c0081a68d79d3a3f0913c49a005474a6e3a2c"
+  },
+  {
+    "directory": "/tmp/test-audit-email94-tools-c435q0q0",
+    "priorPinsSha": "8db29deac5c1912150516ef3298bca3e373ead46adc697ec48572a093500043e",
+    "finalPinsSha": "17b3d560a371e23ff452bedfa05532f665e64b0c56e86a1781149e63ef49e3d3",
+    "sameGuardRealpathAliases": [
+      "/private/tmp/test-audit-email94-tools-c435q0q0/operator-guard.cjs",
+      "/tmp/test-audit-email94-tools-c435q0q0/operator-guard.cjs"
+    ],
+    "guardSha": "3c7aa53343600ad6b1b5a9f6079b0febb6772d3450b0b7aff58b63cd0f5c2449"
+  },
+  {
+    "directory": "/tmp/test-audit-moderator183-tools-p18tq7i2",
+    "priorPinsSha": "fe3690f6e980e146ae42ee388c67389117b924a4e312e6cbbbf273c26224a29d",
+    "finalPinsSha": "37dcec58febab9809b5a64510fd18a288f6b3756c9a19bb7a00cfadfbba8c20f",
+    "sameGuardRealpathAliases": [
+      "/private/tmp/test-audit-moderator183-tools-p18tq7i2/operator-guard.cjs",
+      "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-guard.cjs"
+    ],
+    "guardSha": "4c19cce3fc2d79c7dfddc5556f9d69ddb63fbb1a72d6263341169bb3e09fee20"
+  }
+]

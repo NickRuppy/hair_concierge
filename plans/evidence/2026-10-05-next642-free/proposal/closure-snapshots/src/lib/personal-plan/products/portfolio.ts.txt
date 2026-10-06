@@ -1,0 +1,309 @@
+import { computeStage3PathState } from "./state-machine"
+import {
+  isExecutableChoice,
+  type Stage3CategoryRequirement,
+  type ProposedProductPortfolio,
+  type Stage3CategoryResolution,
+  type Stage3OwnedProduct,
+  type Stage3PendingProduct,
+  type Stage3PlannedPurchase,
+  type Stage3ProductDecision,
+  type Stage3ProductDraft,
+  type Stage3RetainedInventoryProduct,
+  type Stage3RetainedOwnedProduct,
+  type Stage3UncoveredRole,
+} from "./contracts"
+import {
+  effectiveStage3Requirements,
+  requireCurrentProductLoadResolution,
+} from "./product-load-resolution"
+
+type CreatePortfolioOptions = {
+  portfolioVersionId: string
+  createdAt: string
+}
+
+export function createProposedProductPortfolio(
+  draft: Stage3ProductDraft,
+  requirements: Stage3CategoryRequirement[],
+  options: CreatePortfolioOptions,
+): ProposedProductPortfolio {
+  requireCurrentProductLoadResolution(draft)
+  const effectiveRequirements = effectiveStage3Requirements(requirements, draft)
+  const pathState = computeStage3PathState(draft, effectiveRequirements)
+  if (!pathState.canCreatePortfolio) {
+    throw new Error("Cannot create portfolio from incomplete draft")
+  }
+
+  const productsById = new Map(
+    draft.products.map((product) => [product.capturedProductId, product]),
+  )
+  const categoryResolutions: Stage3CategoryResolution[] = []
+  const ownedProducts: Stage3OwnedProduct[] = []
+  const plannedPurchases: Stage3PlannedPurchase[] = []
+  const pendingProducts: Stage3PendingProduct[] = []
+  const retainedOwnedProducts: Stage3RetainedOwnedProduct[] = []
+  const retainedInventoryProducts: Stage3RetainedInventoryProduct[] = []
+  const uncoveredRoles: Stage3UncoveredRole[] = []
+  const schemaVersion =
+    (draft.inventoryDispositions?.length ?? 0) > 0
+      ? 4
+      : hasV3ResolutionAction(draft)
+        ? 3
+        : draft.productLoadResolution
+          ? 2
+          : 1
+
+  for (const decision of draft.decisions) {
+    // The authority has already proved that a planned/owned Oil is the exact
+    // carrier for this heat need. This is not a user-deferred heat gap: the
+    // persisted criterion result is the sole reason it may disappear from the
+    // standalone portfolio projection.
+    if (isVerifiedIntegratedHeatCarrierResolution(decision)) continue
+    const product = decision.capturedProductId
+      ? productsById.get(decision.capturedProductId)
+      : undefined
+    const catalogOwned =
+      isExecutableChoice(decision.choiceState) && product?.identity.kind === "catalog_product"
+    const replacementCatalogProduct =
+      isReplacementSelection(decision) && product?.identity.kind === "catalog_product"
+    const executable = catalogOwned && !replacementCatalogProduct
+    const gapPreserved = !executable
+
+    categoryResolutions.push({
+      decisionKey: decision.decisionKey,
+      category: decision.category,
+      role: decision.role,
+      verdict: decision.verdict,
+      choiceState: decision.choiceState,
+      capturedProductId: decision.capturedProductId,
+      executable,
+      gapPreserved,
+    })
+
+    if (replacementCatalogProduct && product?.identity.kind === "catalog_product") {
+      retainedOwnedProducts.push({
+        capturedProductId: product.capturedProductId,
+        userProductId: product.userProductId,
+        productId: product.identity.productId,
+        displayName: product.identity.displayName,
+        category: decision.category,
+        role: decision.role,
+        sourceDecisionKey: decision.decisionKey,
+        planStatus: "not_used",
+      })
+      projectSelectedReplacement(decision, plannedPurchases, uncoveredRoles)
+      continue
+    }
+
+    if (executable && product?.identity.kind === "catalog_product") {
+      const choiceState = decision.choiceState as "owned_active" | "owned_override"
+      ownedProducts.push({
+        capturedProductId: product.capturedProductId,
+        userProductId: product.userProductId,
+        productId: product.identity.productId,
+        displayName: product.identity.displayName,
+        category: decision.category,
+        role: decision.role,
+        frequencyRange: product.frequencyRange,
+        choiceState,
+        sourceDecisionKey: decision.decisionKey,
+      })
+      continue
+    }
+
+    projectNonExecutableDecision(
+      draft,
+      decision,
+      product,
+      schemaVersion === 3 || schemaVersion === 4,
+      plannedPurchases,
+      pendingProducts,
+      uncoveredRoles,
+    )
+  }
+
+  for (const disposition of draft.inventoryDispositions ?? []) {
+    if (!disposition.acknowledged) {
+      throw new Error("Cannot create portfolio from incomplete draft")
+    }
+    const product = productsById.get(disposition.capturedProductId)
+    if (!product) continue
+    if (product.identity.kind === "catalog_product") {
+      retainedInventoryProducts.push({
+        kind: "catalog_product",
+        capturedProductId: product.capturedProductId,
+        userProductId: product.userProductId,
+        productId: product.identity.productId,
+        displayName: product.identity.displayName,
+        category: disposition.category,
+        role: null,
+        sourceDispositionKey: disposition.dispositionKey,
+        planStatus: "not_used",
+        reason: disposition.reason,
+      })
+    } else {
+      retainedInventoryProducts.push({
+        kind: "pending_submission",
+        capturedProductId: product.capturedProductId,
+        userProductId: product.userProductId,
+        submissionId: product.identity.submissionId,
+        displayName: product.identity.displayName,
+        category: disposition.category,
+        role: null,
+        reviewStatus: product.identity.reviewStatus,
+        sourceDispositionKey: disposition.dispositionKey,
+        planStatus: "not_used",
+        reason: disposition.reason,
+      })
+    }
+  }
+
+  return {
+    schemaVersion,
+    portfolioVersionId: options.portfolioVersionId,
+    personalPlanId: draft.personalPlanId,
+    refinedVersionId: draft.refinedVersionId,
+    sourceDraftRevision: draft.revision,
+    categoryResolutions,
+    ownedProducts,
+    plannedPurchases,
+    pendingProducts,
+    uncoveredRoles,
+    ...(draft.productLoadResolution ? { productLoadResolution: draft.productLoadResolution } : {}),
+    ...(schemaVersion === 3 || schemaVersion === 4 ? { retainedOwnedProducts } : {}),
+    ...(schemaVersion === 4
+      ? {
+          inventoryDispositions: draft.inventoryDispositions ?? [],
+          retainedInventoryProducts,
+        }
+      : {}),
+    createdAt: options.createdAt,
+  } as unknown as ProposedProductPortfolio
+}
+
+function isReplacementSelection(decision: Stage3ProductDecision): boolean {
+  return decision.resolutionAction === "select_replacement"
+}
+
+function isVerifiedIntegratedHeatCarrierResolution(decision: Stage3ProductDecision): boolean {
+  return (
+    decision.category === "heat_protectant" &&
+    decision.role === "pre_heat_protection" &&
+    decision.choiceState === "unassigned" &&
+    decision.resolutionAction === "leave_uncovered" &&
+    decision.verdict === "ideal" &&
+    decision.capturedProductId === null &&
+    decision.recommendation === null &&
+    decision.deferralReason === undefined &&
+    decision.criterionResults.some(
+      (criterion) =>
+        criterion.criterionId === "heat_protectant.carrier.verified" && criterion.result === "pass",
+    )
+  )
+}
+
+function hasV3ResolutionAction(draft: Stage3ProductDraft): boolean {
+  return draft.decisions.some(isReplacementSelection)
+}
+
+function projectSelectedReplacement(
+  decision: Stage3ProductDecision,
+  plannedPurchases: Stage3PlannedPurchase[],
+  uncoveredRoles: Stage3UncoveredRole[],
+): void {
+  if (!decision.recommendation) return
+  plannedPurchases.push({
+    plannedPurchaseId: `planned:${decision.decisionKey}`,
+    sourceDecisionKey: decision.decisionKey,
+    category: decision.category,
+    role: decision.role,
+    recommendationId: decision.recommendation.recommendationId,
+    productId: decision.recommendation.productId,
+    displayName: decision.recommendation.displayName,
+    reason: decision.recommendation.reason,
+    authorityRuleId: decision.recommendation.authorityRuleId,
+  })
+  uncoveredRoles.push({
+    category: decision.category,
+    role: decision.role,
+    reason: "planned_purchase_not_acquired",
+    linkedDecisionKey: decision.decisionKey,
+  })
+}
+
+function projectNonExecutableDecision(
+  draft: Stage3ProductDraft,
+  decision: Stage3ProductDecision,
+  product: Stage3ProductDraft["products"][number] | undefined,
+  useDecisionKeyedPlannedPurchases: boolean,
+  plannedPurchases: Stage3PlannedPurchase[],
+  pendingProducts: Stage3PendingProduct[],
+  uncoveredRoles: Stage3UncoveredRole[],
+): void {
+  if (isReplacementSelection(decision)) {
+    projectSelectedReplacement(decision, plannedPurchases, uncoveredRoles)
+  }
+
+  if (
+    decision.choiceState === "planned_purchase" &&
+    decision.recommendation &&
+    !isReplacementSelection(decision)
+  ) {
+    plannedPurchases.push({
+      plannedPurchaseId: `planned:${decision.category}:${decision.role ?? "category"}`,
+      ...(useDecisionKeyedPlannedPurchases ? { sourceDecisionKey: decision.decisionKey } : {}),
+      category: decision.category,
+      role: decision.role,
+      recommendationId: decision.recommendation.recommendationId,
+      productId: decision.recommendation.productId,
+      displayName: decision.recommendation.displayName,
+      reason: decision.recommendation.reason,
+      authorityRuleId: decision.recommendation.authorityRuleId,
+    })
+    uncoveredRoles.push({
+      category: decision.category,
+      role: decision.role,
+      reason: "planned_purchase_not_acquired",
+      linkedDecisionKey: decision.decisionKey,
+    })
+    return
+  }
+
+  if (
+    (decision.choiceState === "pending_review" || isReplacementSelection(decision)) &&
+    product?.identity.kind === "pending_submission"
+  ) {
+    pendingProducts.push({
+      capturedProductId: product.capturedProductId,
+      userProductId: product.userProductId,
+      submissionId: product.identity.submissionId,
+      category: decision.category,
+      role: decision.role,
+      displayName: product.identity.displayName,
+      reviewStatus: product.identity.reviewStatus,
+    })
+    uncoveredRoles.push({
+      category: decision.category,
+      role: decision.role,
+      reason: "pending_review",
+      linkedDecisionKey: decision.decisionKey,
+    })
+    if (!isReplacementSelection(decision)) return
+  }
+
+  if (decision.choiceState === "inactive" || decision.choiceState === "unassigned") {
+    const capturedGap = draft.uncoveredRoles.find(
+      (uncoveredRole) =>
+        uncoveredRole.category === decision.category && uncoveredRole.role === decision.role,
+    )
+    uncoveredRoles.push({
+      category: decision.category,
+      role: decision.role,
+      reason: capturedGap?.reason ?? decision.choiceState,
+      linkedDecisionKey: decision.decisionKey,
+      // Carries the server-derived deferral through to every portfolio reader.
+      ...(decision.deferralReason ? { deferralReason: decision.deferralReason } : {}),
+    })
+  }
+}

@@ -1,0 +1,852 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "nodeVersion": "v22.12.0",
+  "evidenceSha256": "1194b49d9104155b11445305fbba8ca11f48adef42dcb8b677c3ee9f260aa416",
+  "candidateSha256": "9d5b1bd6b4c262ac2bc2f6939484a8fc7b7507c92fb88235c218dd251204dc05",
+  "tests": [
+    {
+      "file": "tests/product-thumbnail.test.ts",
+      "phases": {
+        "before": {
+          "text": "import assert from \"node:assert/strict\"\nimport { createHash } from \"node:crypto\"\nimport test from \"node:test\"\n\nimport sharp from \"sharp\"\n\nimport {\n  PRODUCT_SEARCH_THUMBNAIL_VERSION,\n  generateProductSearchThumbnail,\n} from \"../scripts/product-intake/product-thumbnail\"\n\nconst ANIMATED_GIF = Buffer.from(\n  \"R0lGODlhAgACAIAAAExpcf8AACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFCgAAACwAAAAAAgACAAACAoxTACH5BAUKAAAALAAAAAACAAIAgExpcQAA/wICjFMAOw==\",\n  \"base64\",\n)\n\nfunction sha256(value: Buffer) {\n  return createHash(\"sha256\").update(value).digest(\"hex\")\n}\n\ntest(\"generates a versioned 144px WebP thumbnail keyed by the full canonical hash\", async () => {\n  const source = await sharp({\n    create: {\n      width: 320,\n      height: 200,\n      channels: 4,\n      background: { r: 0, g: 0, b: 0, alpha: 0 },\n    },\n  })\n    .composite([\n      {\n        input: {\n          create: {\n            width: 80,\n            height: 160,\n            channels: 4,\n            background: { r: 122, g: 74, b: 163, alpha: 1 },\n          },\n        },\n        left: 120,\n        top: 20,\n      },\n    ])\n    .png()\n    .toBuffer()\n\n  const result = await generateProductSearchThumbnail(source)\n  const sourceSha256 = sha256(source)\n  const metadata = await sharp(result.bytes).metadata()\n\n  assert.equal(PRODUCT_SEARCH_THUMBNAIL_VERSION, \"search_thumbnail_v1\")\n  assert.equal(result.version, \"search_thumbnail_v1\")\n  assert.equal(result.sourceSha256, sourceSha256)\n  assert.equal(result.outputSha256, sha256(result.bytes))\n  assert.equal(result.storagePath, `thumbnails/search-v1/${sourceSha256}.webp`)\n  assert.equal(result.width, 144)\n  assert.equal(result.height, 144)\n  assert.equal(result.hasAlpha, true)\n  assert.equal(metadata.format, \"webp\")\n  assert.equal(metadata.width, 144)\n  assert.equal(metadata.height, 144)\n  assert.equal(metadata.hasAlpha, true)\n  assert.ok(result.bytes.length > 100)\n  assert.ok(result.bytes.length < source.length)\n})\n\ntest(\"produces a different immutable path when canonical bytes change\", async () => {\n  const first = await sharp({\n    create: {\n      width: 1200,\n      height: 1200,\n      channels: 3,\n      background: { r: 255, g: 255, b: 255 },\n    },\n  })\n    .jpeg()\n    .toBuffer()\n  const second = Buffer.from(first)\n  second[second.length - 1] ^= 1\n\n  const firstResult = await generateProductSearchThumbnail(first)\n  const secondResult = await generateProductSearchThumbnail(second)\n\n  assert.notEqual(firstResult.sourceSha256, secondResult.sourceSha256)\n  assert.notEqual(firstResult.storagePath, secondResult.storagePath)\n})\n\ntest(\"rejects unreadable and animated canonical files\", async () => {\n  await assert.rejects(\n    generateProductSearchThumbnail(Buffer.from(\"not an image\")),\n    /readable supported image/i,\n  )\n  await assert.rejects(generateProductSearchThumbnail(ANIMATED_GIF), /animated images/i)\n})\n",
+          "sha256": "d09a91c7edc2b55c04ad6e492765ba151dca5dc134d4c8fbb56419e374bcea4a",
+          "declarations": [
+            {
+              "title": "generates a versioned 144px WebP thumbnail keyed by the full canonical hash",
+              "statementSha256": "0fc14b2007bc519444c74232e10d99d4bdb33e721a979986492a13fa5bc08608",
+              "bodySha256": "d2841208b5bdab97d866d79482a70dff3256c3e217dbe76794df8d413ee65e35"
+            },
+            {
+              "title": "produces a different immutable path when canonical bytes change",
+              "statementSha256": "f7fac2782366bfd54cad14786b868c65e4869c7e960dfe247104cf6bc2e25637",
+              "bodySha256": "6ea6e7a4270f748aa71a2dd78ffbac235467aed8e36b79500bc76d8e26bc8ca1"
+            },
+            {
+              "title": "rejects unreadable and animated canonical files",
+              "statementSha256": "840db0015eb965f56b635edfa273ba41ba5183369551660ada3785bc21e4745c",
+              "bodySha256": "d0c9b3ecfc9a81abf70242ab778a830a70dfa9e431dd55221d200b926229e32d"
+            }
+          ]
+        },
+        "transfer": {
+          "text": "import assert from \"node:assert/strict\"\nimport { createHash } from \"node:crypto\"\nimport test from \"node:test\"\n\nimport sharp from \"sharp\"\n\nimport {\n  PRODUCT_SEARCH_THUMBNAIL_VERSION,\n  generateProductSearchThumbnail,\n} from \"../scripts/product-intake/product-thumbnail\"\n\nconst ANIMATED_GIF = Buffer.from(\n  \"R0lGODlhAgACAIAAAExpcf8AACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFCgAAACwAAAAAAgACAAACAoxTACH5BAUKAAAALAAAAAACAAIAgExpcQAA/wICjFMAOw==\",\n  \"base64\",\n)\n\nfunction sha256(value: Buffer) {\n  return createHash(\"sha256\").update(value).digest(\"hex\")\n}\n\ntest(\"generates a versioned 144px WebP thumbnail keyed by the full canonical hash\", async () => {\n  const source = await sharp({\n    create: {\n      width: 320,\n      height: 200,\n      channels: 4,\n      background: { r: 0, g: 0, b: 0, alpha: 0 },\n    },\n  })\n    .composite([\n      {\n        input: {\n          create: {\n            width: 80,\n            height: 160,\n            channels: 4,\n            background: { r: 122, g: 74, b: 163, alpha: 1 },\n          },\n        },\n        left: 120,\n        top: 20,\n      },\n    ])\n    .png()\n    .toBuffer()\n\n  const result = await generateProductSearchThumbnail(source)\n  const sourceSha256 = sha256(source)\n  const metadata = await sharp(result.bytes).metadata()\n\n  assert.equal(PRODUCT_SEARCH_THUMBNAIL_VERSION, \"search_thumbnail_v1\")\n  assert.equal(result.version, \"search_thumbnail_v1\")\n  assert.equal(result.sourceSha256, sourceSha256)\n  assert.equal(result.outputSha256, sha256(result.bytes))\n  assert.equal(result.storagePath, `thumbnails/search-v1/${sourceSha256}.webp`)\n  assert.equal(result.width, 144)\n  assert.equal(result.height, 144)\n  assert.equal(result.hasAlpha, true)\n  assert.equal(metadata.format, \"webp\")\n  assert.equal(metadata.width, 144)\n  assert.equal(metadata.height, 144)\n  assert.equal(metadata.hasAlpha, true)\n  assert.ok(result.bytes.length > 100)\n  assert.ok(result.bytes.length < source.length)\n})\n\ntest(\"produces a different immutable path when canonical bytes change\", async () => {\n  const first = await sharp({\n    create: {\n      width: 1200,\n      height: 1200,\n      channels: 3,\n      background: { r: 255, g: 255, b: 255 },\n    },\n  })\n    .jpeg()\n    .toBuffer()\n  const second = Buffer.from(first)\n  second[second.length - 1] ^= 1\n\n  const firstResult = await generateProductSearchThumbnail(first)\n  const secondResult = await generateProductSearchThumbnail(second)\n\n  assert.notEqual(firstResult.sourceSha256, secondResult.sourceSha256)\n  assert.notEqual(firstResult.storagePath, secondResult.storagePath)\n})\n\ntest(\"rejects unreadable and animated canonical files\", async () => {\n  await assert.rejects(\n    generateProductSearchThumbnail(Buffer.from(\"not an image\")),\n    /readable supported image/i,\n  )\n  await assert.rejects(generateProductSearchThumbnail(ANIMATED_GIF), /animated images/i)\n})\n",
+          "sha256": "d09a91c7edc2b55c04ad6e492765ba151dca5dc134d4c8fbb56419e374bcea4a",
+          "declarations": [
+            {
+              "title": "generates a versioned 144px WebP thumbnail keyed by the full canonical hash",
+              "statementSha256": "0fc14b2007bc519444c74232e10d99d4bdb33e721a979986492a13fa5bc08608",
+              "bodySha256": "d2841208b5bdab97d866d79482a70dff3256c3e217dbe76794df8d413ee65e35"
+            },
+            {
+              "title": "produces a different immutable path when canonical bytes change",
+              "statementSha256": "f7fac2782366bfd54cad14786b868c65e4869c7e960dfe247104cf6bc2e25637",
+              "bodySha256": "6ea6e7a4270f748aa71a2dd78ffbac235467aed8e36b79500bc76d8e26bc8ca1"
+            },
+            {
+              "title": "rejects unreadable and animated canonical files",
+              "statementSha256": "840db0015eb965f56b635edfa273ba41ba5183369551660ada3785bc21e4745c",
+              "bodySha256": "d0c9b3ecfc9a81abf70242ab778a830a70dfa9e431dd55221d200b926229e32d"
+            }
+          ]
+        },
+        "cut": {
+          "text": "import assert from \"node:assert/strict\"\nimport { createHash } from \"node:crypto\"\nimport test from \"node:test\"\n\nimport sharp from \"sharp\"\n\nimport {\n  PRODUCT_SEARCH_THUMBNAIL_VERSION,\n  generateProductSearchThumbnail,\n} from \"../scripts/product-intake/product-thumbnail\"\n\nconst ANIMATED_GIF = Buffer.from(\n  \"R0lGODlhAgACAIAAAExpcf8AACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFCgAAACwAAAAAAgACAAACAoxTACH5BAUKAAAALAAAAAACAAIAgExpcQAA/wICjFMAOw==\",\n  \"base64\",\n)\n\nfunction sha256(value: Buffer) {\n  return createHash(\"sha256\").update(value).digest(\"hex\")\n}\n\ntest(\"generates a versioned 144px WebP thumbnail keyed by the full canonical hash\", async () => {\n  const source = await sharp({\n    create: {\n      width: 320,\n      height: 200,\n      channels: 4,\n      background: { r: 0, g: 0, b: 0, alpha: 0 },\n    },\n  })\n    .composite([\n      {\n        input: {\n          create: {\n            width: 80,\n            height: 160,\n            channels: 4,\n            background: { r: 122, g: 74, b: 163, alpha: 1 },\n          },\n        },\n        left: 120,\n        top: 20,\n      },\n    ])\n    .png()\n    .toBuffer()\n\n  const result = await generateProductSearchThumbnail(source)\n  const sourceSha256 = sha256(source)\n  const metadata = await sharp(result.bytes).metadata()\n\n  assert.equal(PRODUCT_SEARCH_THUMBNAIL_VERSION, \"search_thumbnail_v1\")\n  assert.equal(result.version, \"search_thumbnail_v1\")\n  assert.equal(result.sourceSha256, sourceSha256)\n  assert.equal(result.outputSha256, sha256(result.bytes))\n  assert.equal(result.storagePath, `thumbnails/search-v1/${sourceSha256}.webp`)\n  assert.equal(result.width, 144)\n  assert.equal(result.height, 144)\n  assert.equal(result.hasAlpha, true)\n  assert.equal(metadata.format, \"webp\")\n  assert.equal(metadata.width, 144)\n  assert.equal(metadata.height, 144)\n  assert.equal(metadata.hasAlpha, true)\n  assert.ok(result.bytes.length > 100)\n  assert.ok(result.bytes.length < source.length)\n})\n\ntest(\"produces a different immutable path when canonical bytes change\", async () => {\n  const first = await sharp({\n    create: {\n      width: 1200,\n      height: 1200,\n      channels: 3,\n      background: { r: 255, g: 255, b: 255 },\n    },\n  })\n    .jpeg()\n    .toBuffer()\n  const second = Buffer.from(first)\n  second[second.length - 1] ^= 1\n\n  const firstResult = await generateProductSearchThumbnail(first)\n  const secondResult = await generateProductSearchThumbnail(second)\n\n  assert.notEqual(firstResult.sourceSha256, secondResult.sourceSha256)\n  assert.notEqual(firstResult.storagePath, secondResult.storagePath)\n})\n\ntest(\"rejects unreadable and animated canonical files\", async () => {\n  await assert.rejects(\n    generateProductSearchThumbnail(Buffer.from(\"not an image\")),\n    /readable supported image/i,\n  )\n  await assert.rejects(generateProductSearchThumbnail(ANIMATED_GIF), /animated images/i)\n})\n",
+          "sha256": "d09a91c7edc2b55c04ad6e492765ba151dca5dc134d4c8fbb56419e374bcea4a",
+          "declarations": [
+            {
+              "title": "generates a versioned 144px WebP thumbnail keyed by the full canonical hash",
+              "statementSha256": "0fc14b2007bc519444c74232e10d99d4bdb33e721a979986492a13fa5bc08608",
+              "bodySha256": "d2841208b5bdab97d866d79482a70dff3256c3e217dbe76794df8d413ee65e35"
+            },
+            {
+              "title": "produces a different immutable path when canonical bytes change",
+              "statementSha256": "f7fac2782366bfd54cad14786b868c65e4869c7e960dfe247104cf6bc2e25637",
+              "bodySha256": "6ea6e7a4270f748aa71a2dd78ffbac235467aed8e36b79500bc76d8e26bc8ca1"
+            },
+            {
+              "title": "rejects unreadable and animated canonical files",
+              "statementSha256": "840db0015eb965f56b635edfa273ba41ba5183369551660ada3785bc21e4745c",
+              "bodySha256": "d0c9b3ecfc9a81abf70242ab778a830a70dfa9e431dd55221d200b926229e32d"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "file": "tests/product-thumbnail-backfill.test.ts",
+      "phases": {
+        "before": {
+          "text": "import assert from \"node:assert/strict\"\nimport test from \"node:test\"\n\nimport sharp from \"sharp\"\n\nimport { backfillProductThumbnails } from \"../scripts/product-intake/backfill-product-thumbnails\"\nimport { generateProductSearchThumbnail } from \"../scripts/product-intake/product-thumbnail\"\n\nconst PREFIX = \"https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/\"\n\nasync function canonicalImage() {\n  return sharp({\n    create: {\n      width: 1200,\n      height: 1200,\n      channels: 3,\n      background: { r: 243, g: 239, b: 232 },\n    },\n  })\n    .composite([\n      {\n        input: Buffer.from(\n          '<svg width=\"300\" height=\"900\"><rect width=\"300\" height=\"900\" rx=\"80\" fill=\"#68458f\"/></svg>',\n        ),\n        left: 450,\n        top: 150,\n      },\n    ])\n    .webp()\n    .toBuffer()\n}\n\ntest(\"dry-run accounts for image and no-image rows without writes\", async () => {\n  const source = await canonicalImage()\n  let writes = 0\n  const result = await backfillProductThumbnails({\n    apply: false,\n    rows: [\n      {\n        id: \"with-image\",\n        name: \"With image\",\n        image_url: `${PREFIX}catalog/with.webp`,\n        thumbnail_image_url: null,\n      },\n      { id: \"without-image\", name: \"Without image\", image_url: null, thumbnail_image_url: null },\n    ],\n    deps: {\n      fetchCanonical: async () => source,\n      downloadThumbnail: async () => null,\n      uploadThumbnail: async () => {\n        writes += 1\n      },\n      updatePointer: async () => {\n        writes += 1\n        return true\n      },\n    },\n  })\n\n  assert.equal(writes, 0)\n  assert.deepEqual(\n    result.items.map((item) => [item.product_id, item.status]),\n    [\n      [\"with-image\", \"planned_create\"],\n      [\"without-image\", \"not_applicable\"],\n    ],\n  )\n})\n\ntest(\"apply creates a missing object and compare-and-set pointer\", async () => {\n  const source = await canonicalImage()\n  const calls: string[] = []\n  const result = await backfillProductThumbnails({\n    apply: true,\n    rows: [\n      {\n        id: \"product-1\",\n        name: \"Product\",\n        image_url: `${PREFIX}catalog/product.webp`,\n        thumbnail_image_url: null,\n      },\n    ],\n    deps: {\n      fetchCanonical: async () => source,\n      downloadThumbnail: async (path) => {\n        calls.push(`download:${path}`)\n        return null\n      },\n      uploadThumbnail: async (path, bytes) => {\n        calls.push(`upload:${path}:${bytes.length}`)\n      },\n      updatePointer: async (id, imageUrl, thumbnailUrl) => {\n        calls.push(`update:${id}:${imageUrl}:${thumbnailUrl}`)\n        return true\n      },\n    },\n  })\n\n  assert.equal(result.items[0]?.status, \"created\")\n  assert.equal(\n    calls.some((call) => call.startsWith(\"upload:thumbnails/search-v1/\")),\n    true,\n  )\n  assert.equal(\n    calls.some((call) => call.startsWith(\"update:product-1:\")),\n    true,\n  )\n})\n\ntest(\"apply reuses a valid stored thumbnail and refuses a source-change race\", async () => {\n  const source = await canonicalImage()\n  const probe = await backfillProductThumbnails({\n    apply: false,\n    rows: [\n      {\n        id: \"product-1\",\n        name: \"Product\",\n        image_url: `${PREFIX}catalog/product.webp`,\n        thumbnail_image_url: null,\n      },\n    ],\n    deps: {\n      fetchCanonical: async () => source,\n      downloadThumbnail: async () => null,\n      uploadThumbnail: async () => {},\n      updatePointer: async () => true,\n    },\n  })\n  const expectedUrl = probe.items[0]?.expected_thumbnail_url\n  assert.ok(expectedUrl)\n\n  const result = await backfillProductThumbnails({\n    apply: true,\n    rows: [\n      {\n        id: \"product-1\",\n        name: \"Product\",\n        image_url: `${PREFIX}catalog/product.webp`,\n        thumbnail_image_url: null,\n      },\n    ],\n    deps: {\n      fetchCanonical: async () => source,\n      downloadThumbnail: async () =>\n        sharp({\n          create: {\n            width: 144,\n            height: 144,\n            channels: 3,\n            background: { r: 255, g: 255, b: 255 },\n          },\n        })\n          .webp()\n          .toBuffer(),\n      uploadThumbnail: async () => assert.fail(\"must not overwrite existing thumbnail\"),\n      updatePointer: async () => false,\n    },\n  })\n\n  assert.equal(result.items[0]?.status, \"refused\")\n  assert.equal(result.items[0]?.reason, \"canonical_source_changed\")\n})\n\ntest(\"refuses canonical URLs outside the owned product-images bucket\", async () => {\n  const result = await backfillProductThumbnails({\n    apply: false,\n    rows: [\n      {\n        id: \"external\",\n        name: \"External\",\n        image_url: \"https://example.test/image.webp\",\n        thumbnail_image_url: null,\n      },\n    ],\n    deps: {\n      fetchCanonical: async () => assert.fail(\"must not fetch external image\"),\n      downloadThumbnail: async () => null,\n      uploadThumbnail: async () => {},\n      updatePointer: async () => true,\n    },\n  })\n\n  assert.equal(result.items[0]?.status, \"refused\")\n  assert.equal(result.items[0]?.reason, \"unsupported_canonical_url\")\n})\n\ntest(\"a full rerun reuses the matching object and performs zero writes\", async () => {\n  const canonical = await canonicalImage()\n  const generated = await generateProductSearchThumbnail(canonical)\n  let uploads = 0\n  let updates = 0\n  const result = await backfillProductThumbnails({\n    apply: true,\n    rows: [\n      {\n        id: \"product-1\",\n        name: \"Conditioner\",\n        image_url: `${PREFIX}canonical.webp`,\n        thumbnail_image_url: `${PREFIX}${generated.storagePath}`,\n      },\n    ],\n    deps: {\n      fetchCanonical: async () => canonical,\n      downloadThumbnail: async () => generated.bytes,\n      uploadThumbnail: async () => {\n        uploads += 1\n      },\n      updatePointer: async () => {\n        updates += 1\n        return true\n      },\n    },\n  })\n\n  assert.equal(result.items[0]?.status, \"reused\")\n  assert.equal(uploads, 0)\n  assert.equal(updates, 0)\n})\n",
+          "sha256": "d4bc8321cb853ada95698ec17ef0ff817f3fce9f35c58f409ce6dcc795c92cbb",
+          "declarations": [
+            {
+              "title": "dry-run accounts for image and no-image rows without writes",
+              "statementSha256": "bd33d8fdf38bda863a48a4b228fcc2464c17f8a57fc22d6e4e24c330fcc1a8c2",
+              "bodySha256": "88c514f5dc03b9e5df6fd2f0e8a85106044f3f59810940969e1106b0be75c081"
+            },
+            {
+              "title": "apply creates a missing object and compare-and-set pointer",
+              "statementSha256": "918c4e663a1562ead15827dda4d007b4f2639733f6c4f8eee63bcb85a8e868f6",
+              "bodySha256": "de1d4a5edc12740bd8597a81fbc0ceae6a595c799fd60f79b7e08508cdecc4a8"
+            },
+            {
+              "title": "apply reuses a valid stored thumbnail and refuses a source-change race",
+              "statementSha256": "82c7982976bfe2b477e179b98d901b73eca7dc6690a3fabde56ca71f722f8441",
+              "bodySha256": "706510b27d3987de3edb2cbd4e1abcf92c6059e0afa1fb45f12b2a9e78cdbc1a"
+            },
+            {
+              "title": "refuses canonical URLs outside the owned product-images bucket",
+              "statementSha256": "9b29b594755c03ceded3cb1f972b9da07f01dda524563b539912e4b50ffb1048",
+              "bodySha256": "a45854a6b91c6974a55fe3295a82e85d380a53a4771c9b2bb771ed143e8faa55"
+            },
+            {
+              "title": "a full rerun reuses the matching object and performs zero writes",
+              "statementSha256": "9bda2227d77dc305c0260e82894ae7988512c7635353fee73f42a0a53cbbbf94",
+              "bodySha256": "5e77cc11474054b61c2bf28c0294796f4c8dfed80619c7843de545b43153b467"
+            }
+          ]
+        },
+        "transfer": {
+          "text": "import assert from \"node:assert/strict\"\nimport test from \"node:test\"\n\nimport sharp from \"sharp\"\n\nimport { backfillProductThumbnails } from \"../scripts/product-intake/backfill-product-thumbnails\"\nimport { generateProductSearchThumbnail } from \"../scripts/product-intake/product-thumbnail\"\n\nconst PREFIX = \"https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/\"\n\nasync function canonicalImage() {\n  return sharp({\n    create: {\n      width: 1200,\n      height: 1200,\n      channels: 3,\n      background: { r: 243, g: 239, b: 232 },\n    },\n  })\n    .composite([\n      {\n        input: Buffer.from(\n          '<svg width=\"300\" height=\"900\"><rect width=\"300\" height=\"900\" rx=\"80\" fill=\"#68458f\"/></svg>',\n        ),\n        left: 450,\n        top: 150,\n      },\n    ])\n    .webp()\n    .toBuffer()\n}\n\ntest(\"dry-run accounts for image and no-image rows without writes\", async () => {\n  const source = await canonicalImage()\n  let writes = 0\n  const result = await backfillProductThumbnails({\n    apply: false,\n    rows: [\n      {\n        id: \"with-image\",\n        name: \"With image\",\n        image_url: `${PREFIX}catalog/with.webp`,\n        thumbnail_image_url: null,\n      },\n      { id: \"without-image\", name: \"Without image\", image_url: null, thumbnail_image_url: null },\n    ],\n    deps: {\n      fetchCanonical: async () => source,\n      downloadThumbnail: async () => null,\n      uploadThumbnail: async () => {\n        writes += 1\n      },\n      updatePointer: async () => {\n        writes += 1\n        return true\n      },\n    },\n  })\n\n  assert.equal(writes, 0)\n  assert.deepEqual(\n    result.items.map((item) => [item.product_id, item.status]),\n    [\n      [\"with-image\", \"planned_create\"],\n      [\"without-image\", \"not_applicable\"],\n    ],\n  )\n})\n\ntest(\"apply creates a missing object and compare-and-set pointer\", async () => {\n  const source = await canonicalImage()\n  const calls: string[] = []\n  const result = await backfillProductThumbnails({\n    apply: true,\n    rows: [\n      {\n        id: \"product-1\",\n        name: \"Product\",\n        image_url: `${PREFIX}catalog/product.webp`,\n        thumbnail_image_url: null,\n      },\n    ],\n    deps: {\n      fetchCanonical: async () => source,\n      downloadThumbnail: async (path) => {\n        calls.push(`download:${path}`)\n        return null\n      },\n      uploadThumbnail: async (path, bytes) => {\n        calls.push(`upload:${path}:${bytes.length}`)\n      },\n      updatePointer: async (id, imageUrl, thumbnailUrl) => {\n        calls.push(`update:${id}:${imageUrl}:${thumbnailUrl}`)\n        return true\n      },\n    },\n  })\n\n  assert.equal(result.items[0]?.status, \"created\")\n  assert.equal(\n    calls.some((call) => call.startsWith(\"upload:thumbnails/search-v1/\")),\n    true,\n  )\n  assert.equal(\n    calls.some((call) => call.startsWith(\"update:product-1:\")),\n    true,\n  )\n})\n\ntest(\"apply reuses a valid stored thumbnail and refuses a source-change race\", async () => {\n  const source = await canonicalImage()\n  const probe = await backfillProductThumbnails({\n    apply: false,\n    rows: [\n      {\n        id: \"product-1\",\n        name: \"Product\",\n        image_url: `${PREFIX}catalog/product.webp`,\n        thumbnail_image_url: null,\n      },\n    ],\n    deps: {\n      fetchCanonical: async () => source,\n      downloadThumbnail: async () => null,\n      uploadThumbnail: async () => {},\n      updatePointer: async () => true,\n    },\n  })\n  const expectedUrl = probe.items[0]?.expected_thumbnail_url\n  assert.ok(expectedUrl)\n\n  const result = await backfillProductThumbnails({\n    apply: true,\n    rows: [\n      {\n        id: \"product-1\",\n        name: \"Product\",\n        image_url: `${PREFIX}catalog/product.webp`,\n        thumbnail_image_url: null,\n      },\n    ],\n    deps: {\n      fetchCanonical: async () => source,\n      downloadThumbnail: async () =>\n        sharp({\n          create: {\n            width: 144,\n            height: 144,\n            channels: 3,\n            background: { r: 255, g: 255, b: 255 },\n          },\n        })\n          .webp()\n          .toBuffer(),\n      uploadThumbnail: async () => assert.fail(\"must not overwrite existing thumbnail\"),\n      updatePointer: async () => false,\n    },\n  })\n\n  assert.equal(result.items[0]?.status, \"refused\")\n  assert.equal(result.items[0]?.reason, \"canonical_source_changed\")\n})\n\ntest(\"refuses canonical URLs outside the owned product-images bucket\", async () => {\n  const result = await backfillProductThumbnails({\n    apply: false,\n    rows: [\n      {\n        id: \"external\",\n        name: \"External\",\n        image_url: \"https://example.test/image.webp\",\n        thumbnail_image_url: null,\n      },\n    ],\n    deps: {\n      fetchCanonical: async () => assert.fail(\"must not fetch external image\"),\n      downloadThumbnail: async () => null,\n      uploadThumbnail: async () => {},\n      updatePointer: async () => true,\n    },\n  })\n\n  assert.equal(result.items[0]?.status, \"refused\")\n  assert.equal(result.items[0]?.reason, \"unsupported_canonical_url\")\n})\n\ntest(\"a full rerun reuses the matching object and performs zero writes\", async () => {\n  const canonical = await canonicalImage()\n  const generated = await generateProductSearchThumbnail(canonical)\n  let uploads = 0\n  let updates = 0\n  const result = await backfillProductThumbnails({\n    apply: true,\n    rows: [\n      {\n        id: \"product-1\",\n        name: \"Conditioner\",\n        image_url: `${PREFIX}canonical.webp`,\n        thumbnail_image_url: `${PREFIX}${generated.storagePath}`,\n      },\n    ],\n    deps: {\n      fetchCanonical: async () => canonical,\n      downloadThumbnail: async () => generated.bytes,\n      uploadThumbnail: async () => {\n        uploads += 1\n      },\n      updatePointer: async () => {\n        updates += 1\n        return true\n      },\n    },\n  })\n\n  assert.equal(result.items[0]?.status, \"reused\")\n  assert.equal(uploads, 0)\n  assert.equal(updates, 0)\n})\n",
+          "sha256": "d4bc8321cb853ada95698ec17ef0ff817f3fce9f35c58f409ce6dcc795c92cbb",
+          "declarations": [
+            {
+              "title": "dry-run accounts for image and no-image rows without writes",
+              "statementSha256": "bd33d8fdf38bda863a48a4b228fcc2464c17f8a57fc22d6e4e24c330fcc1a8c2",
+              "bodySha256": "88c514f5dc03b9e5df6fd2f0e8a85106044f3f59810940969e1106b0be75c081"
+            },
+            {
+              "title": "apply creates a missing object and compare-and-set pointer",
+              "statementSha256": "918c4e663a1562ead15827dda4d007b4f2639733f6c4f8eee63bcb85a8e868f6",
+              "bodySha256": "de1d4a5edc12740bd8597a81fbc0ceae6a595c799fd60f79b7e08508cdecc4a8"
+            },
+            {
+              "title": "apply reuses a valid stored thumbnail and refuses a source-change race",
+              "statementSha256": "82c7982976bfe2b477e179b98d901b73eca7dc6690a3fabde56ca71f722f8441",
+              "bodySha256": "706510b27d3987de3edb2cbd4e1abcf92c6059e0afa1fb45f12b2a9e78cdbc1a"
+            },
+            {
+              "title": "refuses canonical URLs outside the owned product-images bucket",
+              "statementSha256": "9b29b594755c03ceded3cb1f972b9da07f01dda524563b539912e4b50ffb1048",
+              "bodySha256": "a45854a6b91c6974a55fe3295a82e85d380a53a4771c9b2bb771ed143e8faa55"
+            },
+            {
+              "title": "a full rerun reuses the matching object and performs zero writes",
+              "statementSha256": "9bda2227d77dc305c0260e82894ae7988512c7635353fee73f42a0a53cbbbf94",
+              "bodySha256": "5e77cc11474054b61c2bf28c0294796f4c8dfed80619c7843de545b43153b467"
+            }
+          ]
+        },
+        "cut": {
+          "text": "import assert from \"node:assert/strict\"\nimport test from \"node:test\"\n\nimport sharp from \"sharp\"\n\nimport { backfillProductThumbnails } from \"../scripts/product-intake/backfill-product-thumbnails\"\nimport { generateProductSearchThumbnail } from \"../scripts/product-intake/product-thumbnail\"\n\nconst PREFIX = \"https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/\"\n\nasync function canonicalImage() {\n  return sharp({\n    create: {\n      width: 1200,\n      height: 1200,\n      channels: 3,\n      background: { r: 243, g: 239, b: 232 },\n    },\n  })\n    .composite([\n      {\n        input: Buffer.from(\n          '<svg width=\"300\" height=\"900\"><rect width=\"300\" height=\"900\" rx=\"80\" fill=\"#68458f\"/></svg>',\n        ),\n        left: 450,\n        top: 150,\n      },\n    ])\n    .webp()\n    .toBuffer()\n}\n\ntest(\"dry-run accounts for image and no-image rows without writes\", async () => {\n  const source = await canonicalImage()\n  let writes = 0\n  const result = await backfillProductThumbnails({\n    apply: false,\n    rows: [\n      {\n        id: \"with-image\",\n        name: \"With image\",\n        image_url: `${PREFIX}catalog/with.webp`,\n        thumbnail_image_url: null,\n      },\n      { id: \"without-image\", name: \"Without image\", image_url: null, thumbnail_image_url: null },\n    ],\n    deps: {\n      fetchCanonical: async () => source,\n      downloadThumbnail: async () => null,\n      uploadThumbnail: async () => {\n        writes += 1\n      },\n      updatePointer: async () => {\n        writes += 1\n        return true\n      },\n    },\n  })\n\n  assert.equal(writes, 0)\n  assert.deepEqual(\n    result.items.map((item) => [item.product_id, item.status]),\n    [\n      [\"with-image\", \"planned_create\"],\n      [\"without-image\", \"not_applicable\"],\n    ],\n  )\n})\n\ntest(\"apply creates a missing object and compare-and-set pointer\", async () => {\n  const source = await canonicalImage()\n  const calls: string[] = []\n  const result = await backfillProductThumbnails({\n    apply: true,\n    rows: [\n      {\n        id: \"product-1\",\n        name: \"Product\",\n        image_url: `${PREFIX}catalog/product.webp`,\n        thumbnail_image_url: null,\n      },\n    ],\n    deps: {\n      fetchCanonical: async () => source,\n      downloadThumbnail: async (path) => {\n        calls.push(`download:${path}`)\n        return null\n      },\n      uploadThumbnail: async (path, bytes) => {\n        calls.push(`upload:${path}:${bytes.length}`)\n      },\n      updatePointer: async (id, imageUrl, thumbnailUrl) => {\n        calls.push(`update:${id}:${imageUrl}:${thumbnailUrl}`)\n        return true\n      },\n    },\n  })\n\n  assert.equal(result.items[0]?.status, \"created\")\n  assert.equal(\n    calls.some((call) => call.startsWith(\"upload:thumbnails/search-v1/\")),\n    true,\n  )\n  assert.equal(\n    calls.some((call) => call.startsWith(\"update:product-1:\")),\n    true,\n  )\n})\n\ntest(\"apply reuses a valid stored thumbnail and refuses a source-change race\", async () => {\n  const source = await canonicalImage()\n  const probe = await backfillProductThumbnails({\n    apply: false,\n    rows: [\n      {\n        id: \"product-1\",\n        name: \"Product\",\n        image_url: `${PREFIX}catalog/product.webp`,\n        thumbnail_image_url: null,\n      },\n    ],\n    deps: {\n      fetchCanonical: async () => source,\n      downloadThumbnail: async () => null,\n      uploadThumbnail: async () => {},\n      updatePointer: async () => true,\n    },\n  })\n  const expectedUrl = probe.items[0]?.expected_thumbnail_url\n  assert.ok(expectedUrl)\n\n  const result = await backfillProductThumbnails({\n    apply: true,\n    rows: [\n      {\n        id: \"product-1\",\n        name: \"Product\",\n        image_url: `${PREFIX}catalog/product.webp`,\n        thumbnail_image_url: null,\n      },\n    ],\n    deps: {\n      fetchCanonical: async () => source,\n      downloadThumbnail: async () =>\n        sharp({\n          create: {\n            width: 144,\n            height: 144,\n            channels: 3,\n            background: { r: 255, g: 255, b: 255 },\n          },\n        })\n          .webp()\n          .toBuffer(),\n      uploadThumbnail: async () => assert.fail(\"must not overwrite existing thumbnail\"),\n      updatePointer: async () => false,\n    },\n  })\n\n  assert.equal(result.items[0]?.status, \"refused\")\n  assert.equal(result.items[0]?.reason, \"canonical_source_changed\")\n})\n\ntest(\"refuses canonical URLs outside the owned product-images bucket\", async () => {\n  const result = await backfillProductThumbnails({\n    apply: false,\n    rows: [\n      {\n        id: \"external\",\n        name: \"External\",\n        image_url: \"https://example.test/image.webp\",\n        thumbnail_image_url: null,\n      },\n    ],\n    deps: {\n      fetchCanonical: async () => assert.fail(\"must not fetch external image\"),\n      downloadThumbnail: async () => null,\n      uploadThumbnail: async () => {},\n      updatePointer: async () => true,\n    },\n  })\n\n  assert.equal(result.items[0]?.status, \"refused\")\n  assert.equal(result.items[0]?.reason, \"unsupported_canonical_url\")\n})\n\ntest(\"a full rerun reuses the matching object and performs zero writes\", async () => {\n  const canonical = await canonicalImage()\n  const generated = await generateProductSearchThumbnail(canonical)\n  let uploads = 0\n  let updates = 0\n  const result = await backfillProductThumbnails({\n    apply: true,\n    rows: [\n      {\n        id: \"product-1\",\n        name: \"Conditioner\",\n        image_url: `${PREFIX}canonical.webp`,\n        thumbnail_image_url: `${PREFIX}${generated.storagePath}`,\n      },\n    ],\n    deps: {\n      fetchCanonical: async () => canonical,\n      downloadThumbnail: async () => generated.bytes,\n      uploadThumbnail: async () => {\n        uploads += 1\n      },\n      updatePointer: async () => {\n        updates += 1\n        return true\n      },\n    },\n  })\n\n  assert.equal(result.items[0]?.status, \"reused\")\n  assert.equal(uploads, 0)\n  assert.equal(updates, 0)\n})\n",
+          "sha256": "d4bc8321cb853ada95698ec17ef0ff817f3fce9f35c58f409ce6dcc795c92cbb",
+          "declarations": [
+            {
+              "title": "dry-run accounts for image and no-image rows without writes",
+              "statementSha256": "bd33d8fdf38bda863a48a4b228fcc2464c17f8a57fc22d6e4e24c330fcc1a8c2",
+              "bodySha256": "88c514f5dc03b9e5df6fd2f0e8a85106044f3f59810940969e1106b0be75c081"
+            },
+            {
+              "title": "apply creates a missing object and compare-and-set pointer",
+              "statementSha256": "918c4e663a1562ead15827dda4d007b4f2639733f6c4f8eee63bcb85a8e868f6",
+              "bodySha256": "de1d4a5edc12740bd8597a81fbc0ceae6a595c799fd60f79b7e08508cdecc4a8"
+            },
+            {
+              "title": "apply reuses a valid stored thumbnail and refuses a source-change race",
+              "statementSha256": "82c7982976bfe2b477e179b98d901b73eca7dc6690a3fabde56ca71f722f8441",
+              "bodySha256": "706510b27d3987de3edb2cbd4e1abcf92c6059e0afa1fb45f12b2a9e78cdbc1a"
+            },
+            {
+              "title": "refuses canonical URLs outside the owned product-images bucket",
+              "statementSha256": "9b29b594755c03ceded3cb1f972b9da07f01dda524563b539912e4b50ffb1048",
+              "bodySha256": "a45854a6b91c6974a55fe3295a82e85d380a53a4771c9b2bb771ed143e8faa55"
+            },
+            {
+              "title": "a full rerun reuses the matching object and performs zero writes",
+              "statementSha256": "9bda2227d77dc305c0260e82894ae7988512c7635353fee73f42a0a53cbbbf94",
+              "bodySha256": "5e77cc11474054b61c2bf28c0294796f4c8dfed80619c7843de545b43153b467"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "file": "tests/product-image-thumbnail-migration.test.ts",
+      "phases": {
+        "before": {
+          "text": "import assert from \"node:assert/strict\"\nimport { readFileSync } from \"node:fs\"\nimport test from \"node:test\"\n\nconst migration = readFileSync(\n  new URL(\"../supabase/migrations/20260815074148_product_image_thumbnails.sql\", import.meta.url),\n  \"utf8\",\n)\n\ntest(\"adds a nullable versioned thumbnail URL that is cleared with canonical replacement\", () => {\n  assert.match(migration, /ADD COLUMN thumbnail_image_url text/i)\n  assert.ok(migration.includes(\"thumbnails/search-v[0-9]+/[a-f0-9]{64}\\\\.webp\"))\n  assert.match(migration, /OLD\\.image_url IS DISTINCT FROM NEW\\.image_url/i)\n  assert.match(migration, /NEW\\.thumbnail_image_url := NULL/i)\n  assert.match(migration, /BEFORE UPDATE OF image_url ON public\\.products/i)\n})\n\ntest(\"wraps product intake approval and validates matching source-hash metadata\", () => {\n  assert.match(\n    migration,\n    /RENAME TO product_intake_approve_reviewed_product_before_thumbnail_image/i,\n  )\n  assert.match(migration, /canonical_image_sha256/i)\n  assert.match(migration, /thumbnail_image_url/i)\n  assert.match(\n    migration,\n    /canonical_image_sha256 IS NULL AND v_thumbnail_image_url IS NULL[\\s\\S]*expected_thumbnail_image_url := NULL/i,\n  )\n  assert.match(migration, /approved_product_id := \\(approval_result->>'product_id'\\)::uuid/i)\n  assert.match(\n    migration,\n    /IF v_thumbnail_image_url IS NOT NULL THEN[\\s\\S]*UPDATE public\\.products[\\s\\S]*thumbnail_image_url/i,\n  )\n})\n\ntest(\"adds service-role-only v3 search by delegating to v2 and restoring its order\", () => {\n  assert.match(\n    migration,\n    /CREATE OR REPLACE FUNCTION public\\.personal_plan_search_assessment_products_v3/i,\n  )\n  assert.match(migration, /personal_plan_search_assessment_products_v2\\(/i)\n  assert.match(migration, /product\\.thumbnail_image_url/i)\n  assert.match(\n    migration,\n    /ORDER BY result\\.sort_order NULLS LAST, result\\.product_name, result\\.product_id/i,\n  )\n  assert.match(\n    migration,\n    /REVOKE ALL ON FUNCTION public\\.personal_plan_search_assessment_products_v3[\\s\\S]*FROM PUBLIC, anon, authenticated/i,\n  )\n  assert.match(\n    migration,\n    /GRANT EXECUTE ON FUNCTION public\\.personal_plan_search_assessment_products_v3[\\s\\S]*TO service_role/i,\n  )\n})\n",
+          "sha256": "2cca3fcd244a2ce8a51d0eb3723c64a58ff72d6aecfa87992eb37a63716abd1f",
+          "declarations": [
+            {
+              "title": "adds a nullable versioned thumbnail URL that is cleared with canonical replacement",
+              "statementSha256": "578f32864542cb0002e0cf8b7d88c56030fa55bc75cb646eb1568e20eb3c8210",
+              "bodySha256": "c047cbfdb8e7e4dd9413519b1bdaf92aea478c60415ce9dd1564189d63da84a4"
+            },
+            {
+              "title": "wraps product intake approval and validates matching source-hash metadata",
+              "statementSha256": "464db00fb5349e7c62ade4ad06b669642ad34f5ab349f23a14cb6312dd77d96c",
+              "bodySha256": "4989ca2dda7f0151e0b2a51362d8a16ba499bef5080430bbf72a3ddc1085c5f8"
+            },
+            {
+              "title": "adds service-role-only v3 search by delegating to v2 and restoring its order",
+              "statementSha256": "164d5af8676d8df3c5b7c4b98596ac3c958d6fb5c62e5686d0537116f9bfeed7",
+              "bodySha256": "6a299665670d33f3785f49ef3fc08d39e864e9cabc2098a0164f96c2ba068db1"
+            }
+          ]
+        },
+        "transfer": {
+          "text": "import assert from \"node:assert/strict\"\nimport { readFileSync } from \"node:fs\"\nimport test from \"node:test\"\n\nconst migration = readFileSync(\n  new URL(\"../supabase/migrations/20260815074148_product_image_thumbnails.sql\", import.meta.url),\n  \"utf8\",\n)\n\ntest(\"adds a nullable versioned thumbnail URL that is cleared with canonical replacement\", () => {\n  assert.match(migration, /ADD COLUMN thumbnail_image_url text/i)\n  assert.ok(migration.includes(\"thumbnails/search-v[0-9]+/[a-f0-9]{64}\\\\.webp\"))\n  assert.match(migration, /OLD\\.image_url IS DISTINCT FROM NEW\\.image_url/i)\n  assert.match(migration, /NEW\\.thumbnail_image_url := NULL/i)\n  assert.match(migration, /BEFORE UPDATE OF image_url ON public\\.products/i)\n})\n\ntest(\"wraps product intake approval and validates matching source-hash metadata\", () => {\n  assert.match(\n    migration,\n    /RENAME TO product_intake_approve_reviewed_product_before_thumbnail_image/i,\n  )\n  assert.match(migration, /canonical_image_sha256/i)\n  assert.match(migration, /thumbnail_image_url/i)\n  assert.match(\n    migration,\n    /canonical_image_sha256 IS NULL AND v_thumbnail_image_url IS NULL[\\s\\S]*expected_thumbnail_image_url := NULL/i,\n  )\n  assert.match(migration, /approved_product_id := \\(approval_result->>'product_id'\\)::uuid/i)\n  assert.match(\n    migration,\n    /IF v_thumbnail_image_url IS NOT NULL THEN[\\s\\S]*UPDATE public\\.products[\\s\\S]*thumbnail_image_url/i,\n  )\n})\n\ntest(\"adds service-role-only v3 search by delegating to v2 and restoring its order\", () => {\n  assert.match(\n    migration,\n    /CREATE OR REPLACE FUNCTION public\\.personal_plan_search_assessment_products_v3/i,\n  )\n  assert.match(migration, /personal_plan_search_assessment_products_v2\\(/i)\n  assert.match(migration, /product\\.thumbnail_image_url/i)\n  assert.match(\n    migration,\n    /ORDER BY result\\.sort_order NULLS LAST, result\\.product_name, result\\.product_id/i,\n  )\n  assert.match(\n    migration,\n    /REVOKE ALL ON FUNCTION public\\.personal_plan_search_assessment_products_v3[\\s\\S]*FROM PUBLIC, anon, authenticated/i,\n  )\n  assert.match(\n    migration,\n    /GRANT EXECUTE ON FUNCTION public\\.personal_plan_search_assessment_products_v3[\\s\\S]*TO service_role/i,\n  )\n})\n",
+          "sha256": "2cca3fcd244a2ce8a51d0eb3723c64a58ff72d6aecfa87992eb37a63716abd1f",
+          "declarations": [
+            {
+              "title": "adds a nullable versioned thumbnail URL that is cleared with canonical replacement",
+              "statementSha256": "578f32864542cb0002e0cf8b7d88c56030fa55bc75cb646eb1568e20eb3c8210",
+              "bodySha256": "c047cbfdb8e7e4dd9413519b1bdaf92aea478c60415ce9dd1564189d63da84a4"
+            },
+            {
+              "title": "wraps product intake approval and validates matching source-hash metadata",
+              "statementSha256": "464db00fb5349e7c62ade4ad06b669642ad34f5ab349f23a14cb6312dd77d96c",
+              "bodySha256": "4989ca2dda7f0151e0b2a51362d8a16ba499bef5080430bbf72a3ddc1085c5f8"
+            },
+            {
+              "title": "adds service-role-only v3 search by delegating to v2 and restoring its order",
+              "statementSha256": "164d5af8676d8df3c5b7c4b98596ac3c958d6fb5c62e5686d0537116f9bfeed7",
+              "bodySha256": "6a299665670d33f3785f49ef3fc08d39e864e9cabc2098a0164f96c2ba068db1"
+            }
+          ]
+        },
+        "cut": {
+          "text": "import assert from \"node:assert/strict\"\nimport { readFileSync } from \"node:fs\"\nimport test from \"node:test\"\n\nconst migration = readFileSync(\n  new URL(\"../supabase/migrations/20260815074148_product_image_thumbnails.sql\", import.meta.url),\n  \"utf8\",\n)\n\ntest(\"adds a nullable versioned thumbnail URL that is cleared with canonical replacement\", () => {\n  assert.match(migration, /ADD COLUMN thumbnail_image_url text/i)\n  assert.ok(migration.includes(\"thumbnails/search-v[0-9]+/[a-f0-9]{64}\\\\.webp\"))\n  assert.match(migration, /OLD\\.image_url IS DISTINCT FROM NEW\\.image_url/i)\n  assert.match(migration, /NEW\\.thumbnail_image_url := NULL/i)\n  assert.match(migration, /BEFORE UPDATE OF image_url ON public\\.products/i)\n})\n\ntest(\"wraps product intake approval and validates matching source-hash metadata\", () => {\n  assert.match(\n    migration,\n    /RENAME TO product_intake_approve_reviewed_product_before_thumbnail_image/i,\n  )\n  assert.match(migration, /canonical_image_sha256/i)\n  assert.match(migration, /thumbnail_image_url/i)\n  assert.match(\n    migration,\n    /canonical_image_sha256 IS NULL AND v_thumbnail_image_url IS NULL[\\s\\S]*expected_thumbnail_image_url := NULL/i,\n  )\n  assert.match(migration, /approved_product_id := \\(approval_result->>'product_id'\\)::uuid/i)\n  assert.match(\n    migration,\n    /IF v_thumbnail_image_url IS NOT NULL THEN[\\s\\S]*UPDATE public\\.products[\\s\\S]*thumbnail_image_url/i,\n  )\n})\n\ntest(\"adds service-role-only v3 search by delegating to v2 and restoring its order\", () => {\n  assert.match(\n    migration,\n    /CREATE OR REPLACE FUNCTION public\\.personal_plan_search_assessment_products_v3/i,\n  )\n  assert.match(migration, /personal_plan_search_assessment_products_v2\\(/i)\n  assert.match(migration, /product\\.thumbnail_image_url/i)\n  assert.match(\n    migration,\n    /ORDER BY result\\.sort_order NULLS LAST, result\\.product_name, result\\.product_id/i,\n  )\n  assert.match(\n    migration,\n    /REVOKE ALL ON FUNCTION public\\.personal_plan_search_assessment_products_v3[\\s\\S]*FROM PUBLIC, anon, authenticated/i,\n  )\n  assert.match(\n    migration,\n    /GRANT EXECUTE ON FUNCTION public\\.personal_plan_search_assessment_products_v3[\\s\\S]*TO service_role/i,\n  )\n})\n",
+          "sha256": "2cca3fcd244a2ce8a51d0eb3723c64a58ff72d6aecfa87992eb37a63716abd1f",
+          "declarations": [
+            {
+              "title": "adds a nullable versioned thumbnail URL that is cleared with canonical replacement",
+              "statementSha256": "578f32864542cb0002e0cf8b7d88c56030fa55bc75cb646eb1568e20eb3c8210",
+              "bodySha256": "c047cbfdb8e7e4dd9413519b1bdaf92aea478c60415ce9dd1564189d63da84a4"
+            },
+            {
+              "title": "wraps product intake approval and validates matching source-hash metadata",
+              "statementSha256": "464db00fb5349e7c62ade4ad06b669642ad34f5ab349f23a14cb6312dd77d96c",
+              "bodySha256": "4989ca2dda7f0151e0b2a51362d8a16ba499bef5080430bbf72a3ddc1085c5f8"
+            },
+            {
+              "title": "adds service-role-only v3 search by delegating to v2 and restoring its order",
+              "statementSha256": "164d5af8676d8df3c5b7c4b98596ac3c958d6fb5c62e5686d0537116f9bfeed7",
+              "bodySha256": "6a299665670d33f3785f49ef3fc08d39e864e9cabc2098a0164f96c2ba068db1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "file": "tests/product-images-batch-run.test.ts",
+      "phases": {
+        "before": {
+          "text": "import assert from \"node:assert/strict\"\nimport { mkdtempSync, mkdirSync } from \"node:fs\"\nimport { tmpdir } from \"node:os\"\nimport { join } from \"node:path\"\nimport test from \"node:test\"\n\nimport sharp from \"sharp\"\n\nimport { alphaCoverage, haloScore, processItem } from \"../scripts/product-images/batch-run\"\n\n/**\n * Builds a synthetic RGBA raw buffer: a filled square \"subject\" of `size`\n * on a `size + 2*margin` fully-transparent canvas, so tests can control the\n * subject's boundary geometry precisely without needing real image files.\n */\nfunction buildSquareSubject(params: {\n  size: number\n  margin: number\n  fill: (x: number, y: number) => [number, number, number]\n}): { data: Buffer; width: number; height: number } {\n  const { size, margin, fill } = params\n  const dim = size + margin * 2\n  const data = Buffer.alloc(dim * dim * 4)\n  for (let y = 0; y < dim; y += 1) {\n    for (let x = 0; x < dim; x += 1) {\n      const idx = (y * dim + x) * 4\n      const insideSubject = x >= margin && x < margin + size && y >= margin && y < margin + size\n      if (!insideSubject) continue\n      const [r, g, b] = fill(x - margin, y - margin)\n      data[idx] = r\n      data[idx + 1] = g\n      data[idx + 2] = b\n      data[idx + 3] = 255\n    }\n  }\n  return { data, width: dim, height: dim }\n}\n\ntest(\"alphaCoverage: fully transparent canvas is 0\", () => {\n  const { data, width, height } = buildSquareSubject({ size: 0, margin: 5, fill: () => [0, 0, 0] })\n  assert.equal(alphaCoverage(data, width, height), 0)\n})\n\ntest(\"alphaCoverage: matches the known opaque fraction of a synthetic square\", () => {\n  const size = 10\n  const margin = 5\n  const { data, width, height } = buildSquareSubject({ size, margin, fill: () => [255, 255, 255] })\n  const expected = (size * size) / (width * height)\n  assert.ok(Math.abs(alphaCoverage(data, width, height) - expected) < 1e-9)\n})\n\ntest(\"haloScore: a uniformly bright subject has ~0 boundary halo\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: () => [235, 230, 225],\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)\n})\n\ntest(\"haloScore: a warm dark ring around the boundary scores high\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 30 - 1 - x, 30 - 1 - y)\n      // Cast-shadow signature: dark, warm-tinted (r > b), within the boundary ring.\n      return distToEdge < 3 ? [120, 90, 60] : [235, 230, 225]\n    },\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score > 0.5, `expected a high halo score for a shadow-ringed subject, got ${score}`)\n})\n\ntest(\"haloScore: a dark but neutral (non-warm) boundary ring does not trigger the heuristic\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 30 - 1 - x, 30 - 1 - y)\n      // Neutral dark (r == g == b): label text / product darks, not a warm cast shadow.\n      return distToEdge < 3 ? [40, 40, 40] : [235, 230, 225]\n    },\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score < 0.02, `expected neutral dark boundary pixels to be ignored, got ${score}`)\n})\n\ntest(\"haloScore: empty canvas does not divide by zero\", () => {\n  const { data, width, height } = buildSquareSubject({ size: 0, margin: 4, fill: () => [0, 0, 0] })\n  assert.equal(haloScore(data, width, height), 0)\n})\n\n/** A scratch `Dirs` triple plus a PNG source file `processItem` can resolve. */\nasync function scratchRun(params: {\n  size: number\n  margin: number\n  fill: (x: number, y: number) => [number, number, number]\n}) {\n  const root = mkdtempSync(join(tmpdir(), \"chaarlie-batch-run-\"))\n  const dirs = {\n    sources: join(root, \"sources\"),\n    cutouts: join(root, \"cutouts\"),\n    qa: join(root, \"qa\"),\n  }\n  for (const dir of Object.values(dirs)) mkdirSync(dir, { recursive: true })\n\n  const { data, width, height } = buildSquareSubject(params)\n  const source = join(root, \"input.png\")\n  await sharp(data, { raw: { width, height, channels: 4 } })\n    .png()\n    .toFile(source)\n  return { dirs, source }\n}\n\ntest(\"a low-res source with a shadow halo reports BOTH reasons, not just the last one\", async () => {\n  // 100x100 canvas: under the 800px source-quality floor, and carrying the warm\n  // dark boundary ring that scores above HALO_TRIGGER. With no python\n  // interpreter passed, the deshadow is skipped and its own reason is recorded.\n  // A single overwritten `reason` field would have dropped the low-res flag\n  // here — for exactly the images with two things wrong with them.\n  const { dirs, source } = await scratchRun({\n    size: 80,\n    margin: 10,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 80 - 1 - x, 80 - 1 - y)\n      return distToEdge < 6 ? [120, 90, 60] : [235, 230, 225]\n    },\n  })\n\n  const result = await processItem({ id: \"combined\", source }, dirs, null)\n\n  assert.equal(result.status, \"flagged\")\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\", \"deshadow_skipped\"])\n  assert.ok(result.reason, \"a flagged result must say why\")\n  assert.match(result.reason, /low-res source \\(100x100/)\n  assert.match(result.reason, /possible baked-in shadow/)\n  assert.match(result.reason, /; /, \"multiple reasons are joined, not replaced\")\n})\n\ntest(\"a clean high-res source is ok with no reason at all\", async () => {\n  const { dirs, source } = await scratchRun({\n    size: 900,\n    margin: 20,\n    fill: () => [235, 230, 225],\n  })\n\n  const result = await processItem({ id: \"clean\", source }, dirs, null)\n\n  assert.equal(result.status, \"ok\")\n  assert.equal(result.reason, null)\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\"])\n})\n",
+          "sha256": "1000ecb729d86e3b5bfd317d7427b46611cb387cf22e55f1194b192ae5c93309",
+          "declarations": [
+            {
+              "title": "alphaCoverage: fully transparent canvas is 0",
+              "statementSha256": "5ba0475470b141ad15c24cbc00ff4022123c98783c264d0fe6cbd0410d5e9345",
+              "bodySha256": "cb242987c5b9a92940ec9c0ae3d69ff2a76f8ae131f86eda2de2cd0a4679b251"
+            },
+            {
+              "title": "alphaCoverage: matches the known opaque fraction of a synthetic square",
+              "statementSha256": "73d98d461b173cf20be95d838a773f39169c5a1cd3defcffdc455ed281548141",
+              "bodySha256": "07ac130c63d6329ed21a77af00ac1464a36eacfd94f805f464d24b1876746d59"
+            },
+            {
+              "title": "haloScore: a uniformly bright subject has ~0 boundary halo",
+              "statementSha256": "8102992a4ef553e5605357c39ef4c98de12f1c327ca985ffdcc3f1d11aede25f",
+              "bodySha256": "ff26a2f44a3e00882ffe623b20ab23c5fe12328fcff527fbd6dd098c21cf896c"
+            },
+            {
+              "title": "haloScore: a warm dark ring around the boundary scores high",
+              "statementSha256": "3e54e85d099b7cbe6a2c2241133d813844f45e86b5341fc9a22dd6e01f761170",
+              "bodySha256": "9ad543ccccd5e917d6630f859ff07166b08fd1f228c2295c24f86af65094ee36"
+            },
+            {
+              "title": "haloScore: a dark but neutral (non-warm) boundary ring does not trigger the heuristic",
+              "statementSha256": "5451f2d3a9a6903242a8794c19f7b71e78e1f98ac9767c4dfdf1fadc692344d6",
+              "bodySha256": "50d90a21203ee5bd804bffabb4b0ae60a08db853ecc125fa0341d21b15dde0cb"
+            },
+            {
+              "title": "haloScore: empty canvas does not divide by zero",
+              "statementSha256": "736d86c0f86236d8c84b34891582f1d14efa68731a5057fb86c83615bee4df91",
+              "bodySha256": "49574ca5a7707cbc3847c7e50cf63d6f3c42967902beb6e1cc196dade276a01c"
+            },
+            {
+              "title": "a low-res source with a shadow halo reports BOTH reasons, not just the last one",
+              "statementSha256": "1ba744f3a21b164fc3c39861e765d5b7a9db5729e4912fa8bf45c50d9666ba81",
+              "bodySha256": "fa752d181e4cb1a8488e62d3ca388911cf6df7a4f12bc6617f3f03f6eafb7ef2"
+            },
+            {
+              "title": "a clean high-res source is ok with no reason at all",
+              "statementSha256": "64e16a78690082650cdcad0f7c710017685fd01aaa0d5b736dba5ae2665dd193",
+              "bodySha256": "4e250a2e7422a31fbe01a4b06d334a86f217041e5467b6c9761e66dd1a8eaa3c"
+            }
+          ]
+        },
+        "transfer": {
+          "text": "import assert from \"node:assert/strict\"\nimport { mkdtempSync, mkdirSync } from \"node:fs\"\nimport { tmpdir } from \"node:os\"\nimport { join } from \"node:path\"\nimport test from \"node:test\"\n\nimport sharp from \"sharp\"\n\nimport { alphaCoverage, haloScore, processItem } from \"../scripts/product-images/batch-run\"\n\n/**\n * Builds a synthetic RGBA raw buffer: a filled square \"subject\" of `size`\n * on a `size + 2*margin` fully-transparent canvas, so tests can control the\n * subject's boundary geometry precisely without needing real image files.\n */\nfunction buildSquareSubject(params: {\n  size: number\n  margin: number\n  fill: (x: number, y: number) => [number, number, number]\n}): { data: Buffer; width: number; height: number } {\n  const { size, margin, fill } = params\n  const dim = size + margin * 2\n  const data = Buffer.alloc(dim * dim * 4)\n  for (let y = 0; y < dim; y += 1) {\n    for (let x = 0; x < dim; x += 1) {\n      const idx = (y * dim + x) * 4\n      const insideSubject = x >= margin && x < margin + size && y >= margin && y < margin + size\n      if (!insideSubject) continue\n      const [r, g, b] = fill(x - margin, y - margin)\n      data[idx] = r\n      data[idx + 1] = g\n      data[idx + 2] = b\n      data[idx + 3] = 255\n    }\n  }\n  return { data, width: dim, height: dim }\n}\n\ntest(\"alphaCoverage: fully transparent canvas is 0\", () => {\n  const { data, width, height } = buildSquareSubject({ size: 0, margin: 5, fill: () => [0, 0, 0] })\n  assert.equal(alphaCoverage(data, width, height), 0)\n})\n\ntest(\"alphaCoverage: matches the known opaque fraction of a synthetic square\", () => {\n  const size = 10\n  const margin = 5\n  const { data, width, height } = buildSquareSubject({ size, margin, fill: () => [255, 255, 255] })\n  const expected = (size * size) / (width * height)\n  assert.ok(Math.abs(alphaCoverage(data, width, height) - expected) < 1e-9)\n})\n\ntest(\"haloScore: a uniformly bright subject has ~0 boundary halo\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: () => [235, 230, 225],\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)\n})\n\ntest(\"haloScore: a warm dark ring around the boundary scores high\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 30 - 1 - x, 30 - 1 - y)\n      // Cast-shadow signature: dark, warm-tinted (r > b), within the boundary ring.\n      return distToEdge < 3 ? [120, 90, 60] : [235, 230, 225]\n    },\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score > 0.5, `expected a high halo score for a shadow-ringed subject, got ${score}`)\n})\n\ntest(\"haloScore: a dark but neutral (non-warm) boundary ring does not trigger the heuristic\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 30 - 1 - x, 30 - 1 - y)\n      // Neutral dark (r == g == b): label text / product darks, not a warm cast shadow.\n      return distToEdge < 3 ? [40, 40, 40] : [235, 230, 225]\n    },\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score < 0.02, `expected neutral dark boundary pixels to be ignored, got ${score}`)\n})\n\ntest(\"haloScore: empty canvas does not divide by zero\", () => {\n  const { data, width, height } = buildSquareSubject({ size: 0, margin: 4, fill: () => [0, 0, 0] })\n  assert.equal(haloScore(data, width, height), 0)\n})\n\n/** A scratch `Dirs` triple plus a PNG source file `processItem` can resolve. */\nasync function scratchRun(params: {\n  size: number\n  margin: number\n  fill: (x: number, y: number) => [number, number, number]\n}) {\n  const root = mkdtempSync(join(tmpdir(), \"chaarlie-batch-run-\"))\n  const dirs = {\n    sources: join(root, \"sources\"),\n    cutouts: join(root, \"cutouts\"),\n    qa: join(root, \"qa\"),\n  }\n  for (const dir of Object.values(dirs)) mkdirSync(dir, { recursive: true })\n\n  const { data, width, height } = buildSquareSubject(params)\n  const source = join(root, \"input.png\")\n  await sharp(data, { raw: { width, height, channels: 4 } })\n    .png()\n    .toFile(source)\n  return { dirs, source }\n}\n\ntest(\"a low-res source with a shadow halo reports BOTH reasons, not just the last one\", async () => {\n  // 100x100 canvas: under the 800px source-quality floor, and carrying the warm\n  // dark boundary ring that scores above HALO_TRIGGER. With no python\n  // interpreter passed, the deshadow is skipped and its own reason is recorded.\n  // A single overwritten `reason` field would have dropped the low-res flag\n  // here — for exactly the images with two things wrong with them.\n  const { dirs, source } = await scratchRun({\n    size: 80,\n    margin: 10,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 80 - 1 - x, 80 - 1 - y)\n      return distToEdge < 6 ? [120, 90, 60] : [235, 230, 225]\n    },\n  })\n\n  const result = await processItem({ id: \"combined\", source }, dirs, null)\n\n  assert.equal(result.status, \"flagged\")\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\", \"deshadow_skipped\"])\n  assert.ok(result.reason, \"a flagged result must say why\")\n  assert.match(result.reason, /low-res source \\(100x100/)\n  assert.match(result.reason, /possible baked-in shadow/)\n  assert.match(result.reason, /; /, \"multiple reasons are joined, not replaced\")\n})\n\ntest(\"a clean high-res source is ok with no reason at all\", async () => {\n  const { dirs, source } = await scratchRun({\n    size: 900,\n    margin: 20,\n    fill: () => [235, 230, 225],\n  })\n\n  const result = await processItem({ id: \"clean\", source }, dirs, null)\n\n  assert.equal(result.status, \"ok\")\n  assert.equal(result.reason, null)\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\"])\n\n  const score = result.metrics.halo_score\n  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)\n})\n",
+          "sha256": "d89fa62e48db960b07f71a0ca4c607eecfe6087e2aaf3ebad185b5e71c603070",
+          "declarations": [
+            {
+              "title": "alphaCoverage: fully transparent canvas is 0",
+              "statementSha256": "5ba0475470b141ad15c24cbc00ff4022123c98783c264d0fe6cbd0410d5e9345",
+              "bodySha256": "cb242987c5b9a92940ec9c0ae3d69ff2a76f8ae131f86eda2de2cd0a4679b251"
+            },
+            {
+              "title": "alphaCoverage: matches the known opaque fraction of a synthetic square",
+              "statementSha256": "73d98d461b173cf20be95d838a773f39169c5a1cd3defcffdc455ed281548141",
+              "bodySha256": "07ac130c63d6329ed21a77af00ac1464a36eacfd94f805f464d24b1876746d59"
+            },
+            {
+              "title": "haloScore: a uniformly bright subject has ~0 boundary halo",
+              "statementSha256": "8102992a4ef553e5605357c39ef4c98de12f1c327ca985ffdcc3f1d11aede25f",
+              "bodySha256": "ff26a2f44a3e00882ffe623b20ab23c5fe12328fcff527fbd6dd098c21cf896c"
+            },
+            {
+              "title": "haloScore: a warm dark ring around the boundary scores high",
+              "statementSha256": "3e54e85d099b7cbe6a2c2241133d813844f45e86b5341fc9a22dd6e01f761170",
+              "bodySha256": "9ad543ccccd5e917d6630f859ff07166b08fd1f228c2295c24f86af65094ee36"
+            },
+            {
+              "title": "haloScore: a dark but neutral (non-warm) boundary ring does not trigger the heuristic",
+              "statementSha256": "5451f2d3a9a6903242a8794c19f7b71e78e1f98ac9767c4dfdf1fadc692344d6",
+              "bodySha256": "50d90a21203ee5bd804bffabb4b0ae60a08db853ecc125fa0341d21b15dde0cb"
+            },
+            {
+              "title": "haloScore: empty canvas does not divide by zero",
+              "statementSha256": "736d86c0f86236d8c84b34891582f1d14efa68731a5057fb86c83615bee4df91",
+              "bodySha256": "49574ca5a7707cbc3847c7e50cf63d6f3c42967902beb6e1cc196dade276a01c"
+            },
+            {
+              "title": "a low-res source with a shadow halo reports BOTH reasons, not just the last one",
+              "statementSha256": "1ba744f3a21b164fc3c39861e765d5b7a9db5729e4912fa8bf45c50d9666ba81",
+              "bodySha256": "fa752d181e4cb1a8488e62d3ca388911cf6df7a4f12bc6617f3f03f6eafb7ef2"
+            },
+            {
+              "title": "a clean high-res source is ok with no reason at all",
+              "statementSha256": "b56c34baf8098ecaa2b4cff19f9765e15db2bbd8f784f9af4a66f79637b91b87",
+              "bodySha256": "006298530ab9473e4a9dd72b256e3d4fe8250fd0afbf1380b48c99c283f20b72"
+            }
+          ]
+        },
+        "cut": {
+          "text": "import assert from \"node:assert/strict\"\nimport { mkdtempSync, mkdirSync } from \"node:fs\"\nimport { tmpdir } from \"node:os\"\nimport { join } from \"node:path\"\nimport test from \"node:test\"\n\nimport sharp from \"sharp\"\n\nimport { alphaCoverage, haloScore, processItem } from \"../scripts/product-images/batch-run\"\n\n/**\n * Builds a synthetic RGBA raw buffer: a filled square \"subject\" of `size`\n * on a `size + 2*margin` fully-transparent canvas, so tests can control the\n * subject's boundary geometry precisely without needing real image files.\n */\nfunction buildSquareSubject(params: {\n  size: number\n  margin: number\n  fill: (x: number, y: number) => [number, number, number]\n}): { data: Buffer; width: number; height: number } {\n  const { size, margin, fill } = params\n  const dim = size + margin * 2\n  const data = Buffer.alloc(dim * dim * 4)\n  for (let y = 0; y < dim; y += 1) {\n    for (let x = 0; x < dim; x += 1) {\n      const idx = (y * dim + x) * 4\n      const insideSubject = x >= margin && x < margin + size && y >= margin && y < margin + size\n      if (!insideSubject) continue\n      const [r, g, b] = fill(x - margin, y - margin)\n      data[idx] = r\n      data[idx + 1] = g\n      data[idx + 2] = b\n      data[idx + 3] = 255\n    }\n  }\n  return { data, width: dim, height: dim }\n}\n\ntest(\"alphaCoverage: fully transparent canvas is 0\", () => {\n  const { data, width, height } = buildSquareSubject({ size: 0, margin: 5, fill: () => [0, 0, 0] })\n  assert.equal(alphaCoverage(data, width, height), 0)\n})\n\ntest(\"alphaCoverage: matches the known opaque fraction of a synthetic square\", () => {\n  const size = 10\n  const margin = 5\n  const { data, width, height } = buildSquareSubject({ size, margin, fill: () => [255, 255, 255] })\n  const expected = (size * size) / (width * height)\n  assert.ok(Math.abs(alphaCoverage(data, width, height) - expected) < 1e-9)\n})\n\n\n\ntest(\"haloScore: a warm dark ring around the boundary scores high\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 30 - 1 - x, 30 - 1 - y)\n      // Cast-shadow signature: dark, warm-tinted (r > b), within the boundary ring.\n      return distToEdge < 3 ? [120, 90, 60] : [235, 230, 225]\n    },\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score > 0.5, `expected a high halo score for a shadow-ringed subject, got ${score}`)\n})\n\ntest(\"haloScore: a dark but neutral (non-warm) boundary ring does not trigger the heuristic\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 30 - 1 - x, 30 - 1 - y)\n      // Neutral dark (r == g == b): label text / product darks, not a warm cast shadow.\n      return distToEdge < 3 ? [40, 40, 40] : [235, 230, 225]\n    },\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score < 0.02, `expected neutral dark boundary pixels to be ignored, got ${score}`)\n})\n\ntest(\"haloScore: empty canvas does not divide by zero\", () => {\n  const { data, width, height } = buildSquareSubject({ size: 0, margin: 4, fill: () => [0, 0, 0] })\n  assert.equal(haloScore(data, width, height), 0)\n})\n\n/** A scratch `Dirs` triple plus a PNG source file `processItem` can resolve. */\nasync function scratchRun(params: {\n  size: number\n  margin: number\n  fill: (x: number, y: number) => [number, number, number]\n}) {\n  const root = mkdtempSync(join(tmpdir(), \"chaarlie-batch-run-\"))\n  const dirs = {\n    sources: join(root, \"sources\"),\n    cutouts: join(root, \"cutouts\"),\n    qa: join(root, \"qa\"),\n  }\n  for (const dir of Object.values(dirs)) mkdirSync(dir, { recursive: true })\n\n  const { data, width, height } = buildSquareSubject(params)\n  const source = join(root, \"input.png\")\n  await sharp(data, { raw: { width, height, channels: 4 } })\n    .png()\n    .toFile(source)\n  return { dirs, source }\n}\n\ntest(\"a low-res source with a shadow halo reports BOTH reasons, not just the last one\", async () => {\n  // 100x100 canvas: under the 800px source-quality floor, and carrying the warm\n  // dark boundary ring that scores above HALO_TRIGGER. With no python\n  // interpreter passed, the deshadow is skipped and its own reason is recorded.\n  // A single overwritten `reason` field would have dropped the low-res flag\n  // here — for exactly the images with two things wrong with them.\n  const { dirs, source } = await scratchRun({\n    size: 80,\n    margin: 10,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 80 - 1 - x, 80 - 1 - y)\n      return distToEdge < 6 ? [120, 90, 60] : [235, 230, 225]\n    },\n  })\n\n  const result = await processItem({ id: \"combined\", source }, dirs, null)\n\n  assert.equal(result.status, \"flagged\")\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\", \"deshadow_skipped\"])\n  assert.ok(result.reason, \"a flagged result must say why\")\n  assert.match(result.reason, /low-res source \\(100x100/)\n  assert.match(result.reason, /possible baked-in shadow/)\n  assert.match(result.reason, /; /, \"multiple reasons are joined, not replaced\")\n})\n\ntest(\"a clean high-res source is ok with no reason at all\", async () => {\n  const { dirs, source } = await scratchRun({\n    size: 900,\n    margin: 20,\n    fill: () => [235, 230, 225],\n  })\n\n  const result = await processItem({ id: \"clean\", source }, dirs, null)\n\n  assert.equal(result.status, \"ok\")\n  assert.equal(result.reason, null)\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\"])\n\n  const score = result.metrics.halo_score\n  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)\n})\n",
+          "sha256": "92d64f7855f12b4913789510e2e3ef27c1c17de2226932eac40411304268b313",
+          "declarations": [
+            {
+              "title": "alphaCoverage: fully transparent canvas is 0",
+              "statementSha256": "5ba0475470b141ad15c24cbc00ff4022123c98783c264d0fe6cbd0410d5e9345",
+              "bodySha256": "cb242987c5b9a92940ec9c0ae3d69ff2a76f8ae131f86eda2de2cd0a4679b251"
+            },
+            {
+              "title": "alphaCoverage: matches the known opaque fraction of a synthetic square",
+              "statementSha256": "73d98d461b173cf20be95d838a773f39169c5a1cd3defcffdc455ed281548141",
+              "bodySha256": "07ac130c63d6329ed21a77af00ac1464a36eacfd94f805f464d24b1876746d59"
+            },
+            {
+              "title": "haloScore: a warm dark ring around the boundary scores high",
+              "statementSha256": "3e54e85d099b7cbe6a2c2241133d813844f45e86b5341fc9a22dd6e01f761170",
+              "bodySha256": "9ad543ccccd5e917d6630f859ff07166b08fd1f228c2295c24f86af65094ee36"
+            },
+            {
+              "title": "haloScore: a dark but neutral (non-warm) boundary ring does not trigger the heuristic",
+              "statementSha256": "5451f2d3a9a6903242a8794c19f7b71e78e1f98ac9767c4dfdf1fadc692344d6",
+              "bodySha256": "50d90a21203ee5bd804bffabb4b0ae60a08db853ecc125fa0341d21b15dde0cb"
+            },
+            {
+              "title": "haloScore: empty canvas does not divide by zero",
+              "statementSha256": "736d86c0f86236d8c84b34891582f1d14efa68731a5057fb86c83615bee4df91",
+              "bodySha256": "49574ca5a7707cbc3847c7e50cf63d6f3c42967902beb6e1cc196dade276a01c"
+            },
+            {
+              "title": "a low-res source with a shadow halo reports BOTH reasons, not just the last one",
+              "statementSha256": "1ba744f3a21b164fc3c39861e765d5b7a9db5729e4912fa8bf45c50d9666ba81",
+              "bodySha256": "fa752d181e4cb1a8488e62d3ca388911cf6df7a4f12bc6617f3f03f6eafb7ef2"
+            },
+            {
+              "title": "a clean high-res source is ok with no reason at all",
+              "statementSha256": "b56c34baf8098ecaa2b4cff19f9765e15db2bbd8f784f9af4a66f79637b91b87",
+              "bodySha256": "006298530ab9473e4a9dd72b256e3d4fe8250fd0afbf1380b48c99c283f20b72"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "candidate": {
+    "id": "C1",
+    "file": "tests/product-images-batch-run.test.ts",
+    "donor": {
+      "title": "haloScore: a uniformly bright subject has ~0 boundary halo",
+      "line": 52,
+      "start": 1860,
+      "end": 2201,
+      "bodyEnd": 2199,
+      "statement": "test(\"haloScore: a uniformly bright subject has ~0 boundary halo\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: () => [235, 230, 225],\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)\n})",
+      "body": "{\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: () => [235, 230, 225],\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)\n}",
+      "sha256": "8102992a4ef553e5605357c39ef4c98de12f1c327ca985ffdcc3f1d11aede25f",
+      "class": "C",
+      "reason": "C1: Same bright RGB235/230/225, alpha0/255, nonempty boundary and radius5 are already processed by clean high-res keeper; preserve original score<0.02 assertion against actual result.metrics.halo_score without new calls/inputs."
+    },
+    "keeper": {
+      "title": "a clean high-res source is ok with no reason at all",
+      "line": 142,
+      "start": 5429,
+      "end": 5827,
+      "bodyEnd": 5825,
+      "statement": "test(\"a clean high-res source is ok with no reason at all\", async () => {\n  const { dirs, source } = await scratchRun({\n    size: 900,\n    margin: 20,\n    fill: () => [235, 230, 225],\n  })\n\n  const result = await processItem({ id: \"clean\", source }, dirs, null)\n\n  assert.equal(result.status, \"ok\")\n  assert.equal(result.reason, null)\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\"])\n})",
+      "body": "{\n  const { dirs, source } = await scratchRun({\n    size: 900,\n    margin: 20,\n    fill: () => [235, 230, 225],\n  })\n\n  const result = await processItem({ id: \"clean\", source }, dirs, null)\n\n  assert.equal(result.status, \"ok\")\n  assert.equal(result.reason, null)\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\"])\n}",
+      "sha256": "64e16a78690082650cdcad0f7c710017685fd01aaa0d5b736dba5ae2665dd193",
+      "class": "R",
+      "reason": "R keeper C1: Existing actual processItem940px clean PNG produces ok/no reason/alpha_passthrough, now additionally preserves original near-zero score bound."
+    },
+    "addition": "\n  const score = result.metrics.halo_score\n  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)\n",
+    "originalAssertion": "assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)",
+    "keeperTransfer": {
+      "title": "a clean high-res source is ok with no reason at all",
+      "line": 142,
+      "start": 5429,
+      "end": 5965,
+      "bodyEnd": 5963,
+      "statement": "test(\"a clean high-res source is ok with no reason at all\", async () => {\n  const { dirs, source } = await scratchRun({\n    size: 900,\n    margin: 20,\n    fill: () => [235, 230, 225],\n  })\n\n  const result = await processItem({ id: \"clean\", source }, dirs, null)\n\n  assert.equal(result.status, \"ok\")\n  assert.equal(result.reason, null)\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\"])\n\n  const score = result.metrics.halo_score\n  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)\n})",
+      "body": "{\n  const { dirs, source } = await scratchRun({\n    size: 900,\n    margin: 20,\n    fill: () => [235, 230, 225],\n  })\n\n  const result = await processItem({ id: \"clean\", source }, dirs, null)\n\n  assert.equal(result.status, \"ok\")\n  assert.equal(result.reason, null)\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\"])\n\n  const score = result.metrics.halo_score\n  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)\n}",
+      "sha256": "b56c34baf8098ecaa2b4cff19f9765e15db2bbd8f784f9af4a66f79637b91b87"
+    },
+    "keeperCut": {
+      "title": "a clean high-res source is ok with no reason at all",
+      "line": 134,
+      "start": 5088,
+      "end": 5624,
+      "bodyEnd": 5622,
+      "statement": "test(\"a clean high-res source is ok with no reason at all\", async () => {\n  const { dirs, source } = await scratchRun({\n    size: 900,\n    margin: 20,\n    fill: () => [235, 230, 225],\n  })\n\n  const result = await processItem({ id: \"clean\", source }, dirs, null)\n\n  assert.equal(result.status, \"ok\")\n  assert.equal(result.reason, null)\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\"])\n\n  const score = result.metrics.halo_score\n  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)\n})",
+      "body": "{\n  const { dirs, source } = await scratchRun({\n    size: 900,\n    margin: 20,\n    fill: () => [235, 230, 225],\n  })\n\n  const result = await processItem({ id: \"clean\", source }, dirs, null)\n\n  assert.equal(result.status, \"ok\")\n  assert.equal(result.reason, null)\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\"])\n\n  const score = result.metrics.halo_score\n  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)\n}",
+      "sha256": "b56c34baf8098ecaa2b4cff19f9765e15db2bbd8f784f9af4a66f79637b91b87"
+    },
+    "phases": {
+      "before": {
+        "text": "import assert from \"node:assert/strict\"\nimport { mkdtempSync, mkdirSync } from \"node:fs\"\nimport { tmpdir } from \"node:os\"\nimport { join } from \"node:path\"\nimport test from \"node:test\"\n\nimport sharp from \"sharp\"\n\nimport { alphaCoverage, haloScore, processItem } from \"../scripts/product-images/batch-run\"\n\n/**\n * Builds a synthetic RGBA raw buffer: a filled square \"subject\" of `size`\n * on a `size + 2*margin` fully-transparent canvas, so tests can control the\n * subject's boundary geometry precisely without needing real image files.\n */\nfunction buildSquareSubject(params: {\n  size: number\n  margin: number\n  fill: (x: number, y: number) => [number, number, number]\n}): { data: Buffer; width: number; height: number } {\n  const { size, margin, fill } = params\n  const dim = size + margin * 2\n  const data = Buffer.alloc(dim * dim * 4)\n  for (let y = 0; y < dim; y += 1) {\n    for (let x = 0; x < dim; x += 1) {\n      const idx = (y * dim + x) * 4\n      const insideSubject = x >= margin && x < margin + size && y >= margin && y < margin + size\n      if (!insideSubject) continue\n      const [r, g, b] = fill(x - margin, y - margin)\n      data[idx] = r\n      data[idx + 1] = g\n      data[idx + 2] = b\n      data[idx + 3] = 255\n    }\n  }\n  return { data, width: dim, height: dim }\n}\n\ntest(\"alphaCoverage: fully transparent canvas is 0\", () => {\n  const { data, width, height } = buildSquareSubject({ size: 0, margin: 5, fill: () => [0, 0, 0] })\n  assert.equal(alphaCoverage(data, width, height), 0)\n})\n\ntest(\"alphaCoverage: matches the known opaque fraction of a synthetic square\", () => {\n  const size = 10\n  const margin = 5\n  const { data, width, height } = buildSquareSubject({ size, margin, fill: () => [255, 255, 255] })\n  const expected = (size * size) / (width * height)\n  assert.ok(Math.abs(alphaCoverage(data, width, height) - expected) < 1e-9)\n})\n\ntest(\"haloScore: a uniformly bright subject has ~0 boundary halo\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: () => [235, 230, 225],\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)\n})\n\ntest(\"haloScore: a warm dark ring around the boundary scores high\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 30 - 1 - x, 30 - 1 - y)\n      // Cast-shadow signature: dark, warm-tinted (r > b), within the boundary ring.\n      return distToEdge < 3 ? [120, 90, 60] : [235, 230, 225]\n    },\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score > 0.5, `expected a high halo score for a shadow-ringed subject, got ${score}`)\n})\n\ntest(\"haloScore: a dark but neutral (non-warm) boundary ring does not trigger the heuristic\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 30 - 1 - x, 30 - 1 - y)\n      // Neutral dark (r == g == b): label text / product darks, not a warm cast shadow.\n      return distToEdge < 3 ? [40, 40, 40] : [235, 230, 225]\n    },\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score < 0.02, `expected neutral dark boundary pixels to be ignored, got ${score}`)\n})\n\ntest(\"haloScore: empty canvas does not divide by zero\", () => {\n  const { data, width, height } = buildSquareSubject({ size: 0, margin: 4, fill: () => [0, 0, 0] })\n  assert.equal(haloScore(data, width, height), 0)\n})\n\n/** A scratch `Dirs` triple plus a PNG source file `processItem` can resolve. */\nasync function scratchRun(params: {\n  size: number\n  margin: number\n  fill: (x: number, y: number) => [number, number, number]\n}) {\n  const root = mkdtempSync(join(tmpdir(), \"chaarlie-batch-run-\"))\n  const dirs = {\n    sources: join(root, \"sources\"),\n    cutouts: join(root, \"cutouts\"),\n    qa: join(root, \"qa\"),\n  }\n  for (const dir of Object.values(dirs)) mkdirSync(dir, { recursive: true })\n\n  const { data, width, height } = buildSquareSubject(params)\n  const source = join(root, \"input.png\")\n  await sharp(data, { raw: { width, height, channels: 4 } })\n    .png()\n    .toFile(source)\n  return { dirs, source }\n}\n\ntest(\"a low-res source with a shadow halo reports BOTH reasons, not just the last one\", async () => {\n  // 100x100 canvas: under the 800px source-quality floor, and carrying the warm\n  // dark boundary ring that scores above HALO_TRIGGER. With no python\n  // interpreter passed, the deshadow is skipped and its own reason is recorded.\n  // A single overwritten `reason` field would have dropped the low-res flag\n  // here — for exactly the images with two things wrong with them.\n  const { dirs, source } = await scratchRun({\n    size: 80,\n    margin: 10,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 80 - 1 - x, 80 - 1 - y)\n      return distToEdge < 6 ? [120, 90, 60] : [235, 230, 225]\n    },\n  })\n\n  const result = await processItem({ id: \"combined\", source }, dirs, null)\n\n  assert.equal(result.status, \"flagged\")\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\", \"deshadow_skipped\"])\n  assert.ok(result.reason, \"a flagged result must say why\")\n  assert.match(result.reason, /low-res source \\(100x100/)\n  assert.match(result.reason, /possible baked-in shadow/)\n  assert.match(result.reason, /; /, \"multiple reasons are joined, not replaced\")\n})\n\ntest(\"a clean high-res source is ok with no reason at all\", async () => {\n  const { dirs, source } = await scratchRun({\n    size: 900,\n    margin: 20,\n    fill: () => [235, 230, 225],\n  })\n\n  const result = await processItem({ id: \"clean\", source }, dirs, null)\n\n  assert.equal(result.status, \"ok\")\n  assert.equal(result.reason, null)\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\"])\n})\n",
+        "sha256": "1000ecb729d86e3b5bfd317d7427b46611cb387cf22e55f1194b192ae5c93309",
+        "count": 8
+      },
+      "transfer": {
+        "text": "import assert from \"node:assert/strict\"\nimport { mkdtempSync, mkdirSync } from \"node:fs\"\nimport { tmpdir } from \"node:os\"\nimport { join } from \"node:path\"\nimport test from \"node:test\"\n\nimport sharp from \"sharp\"\n\nimport { alphaCoverage, haloScore, processItem } from \"../scripts/product-images/batch-run\"\n\n/**\n * Builds a synthetic RGBA raw buffer: a filled square \"subject\" of `size`\n * on a `size + 2*margin` fully-transparent canvas, so tests can control the\n * subject's boundary geometry precisely without needing real image files.\n */\nfunction buildSquareSubject(params: {\n  size: number\n  margin: number\n  fill: (x: number, y: number) => [number, number, number]\n}): { data: Buffer; width: number; height: number } {\n  const { size, margin, fill } = params\n  const dim = size + margin * 2\n  const data = Buffer.alloc(dim * dim * 4)\n  for (let y = 0; y < dim; y += 1) {\n    for (let x = 0; x < dim; x += 1) {\n      const idx = (y * dim + x) * 4\n      const insideSubject = x >= margin && x < margin + size && y >= margin && y < margin + size\n      if (!insideSubject) continue\n      const [r, g, b] = fill(x - margin, y - margin)\n      data[idx] = r\n      data[idx + 1] = g\n      data[idx + 2] = b\n      data[idx + 3] = 255\n    }\n  }\n  return { data, width: dim, height: dim }\n}\n\ntest(\"alphaCoverage: fully transparent canvas is 0\", () => {\n  const { data, width, height } = buildSquareSubject({ size: 0, margin: 5, fill: () => [0, 0, 0] })\n  assert.equal(alphaCoverage(data, width, height), 0)\n})\n\ntest(\"alphaCoverage: matches the known opaque fraction of a synthetic square\", () => {\n  const size = 10\n  const margin = 5\n  const { data, width, height } = buildSquareSubject({ size, margin, fill: () => [255, 255, 255] })\n  const expected = (size * size) / (width * height)\n  assert.ok(Math.abs(alphaCoverage(data, width, height) - expected) < 1e-9)\n})\n\ntest(\"haloScore: a uniformly bright subject has ~0 boundary halo\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: () => [235, 230, 225],\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)\n})\n\ntest(\"haloScore: a warm dark ring around the boundary scores high\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 30 - 1 - x, 30 - 1 - y)\n      // Cast-shadow signature: dark, warm-tinted (r > b), within the boundary ring.\n      return distToEdge < 3 ? [120, 90, 60] : [235, 230, 225]\n    },\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score > 0.5, `expected a high halo score for a shadow-ringed subject, got ${score}`)\n})\n\ntest(\"haloScore: a dark but neutral (non-warm) boundary ring does not trigger the heuristic\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 30 - 1 - x, 30 - 1 - y)\n      // Neutral dark (r == g == b): label text / product darks, not a warm cast shadow.\n      return distToEdge < 3 ? [40, 40, 40] : [235, 230, 225]\n    },\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score < 0.02, `expected neutral dark boundary pixels to be ignored, got ${score}`)\n})\n\ntest(\"haloScore: empty canvas does not divide by zero\", () => {\n  const { data, width, height } = buildSquareSubject({ size: 0, margin: 4, fill: () => [0, 0, 0] })\n  assert.equal(haloScore(data, width, height), 0)\n})\n\n/** A scratch `Dirs` triple plus a PNG source file `processItem` can resolve. */\nasync function scratchRun(params: {\n  size: number\n  margin: number\n  fill: (x: number, y: number) => [number, number, number]\n}) {\n  const root = mkdtempSync(join(tmpdir(), \"chaarlie-batch-run-\"))\n  const dirs = {\n    sources: join(root, \"sources\"),\n    cutouts: join(root, \"cutouts\"),\n    qa: join(root, \"qa\"),\n  }\n  for (const dir of Object.values(dirs)) mkdirSync(dir, { recursive: true })\n\n  const { data, width, height } = buildSquareSubject(params)\n  const source = join(root, \"input.png\")\n  await sharp(data, { raw: { width, height, channels: 4 } })\n    .png()\n    .toFile(source)\n  return { dirs, source }\n}\n\ntest(\"a low-res source with a shadow halo reports BOTH reasons, not just the last one\", async () => {\n  // 100x100 canvas: under the 800px source-quality floor, and carrying the warm\n  // dark boundary ring that scores above HALO_TRIGGER. With no python\n  // interpreter passed, the deshadow is skipped and its own reason is recorded.\n  // A single overwritten `reason` field would have dropped the low-res flag\n  // here — for exactly the images with two things wrong with them.\n  const { dirs, source } = await scratchRun({\n    size: 80,\n    margin: 10,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 80 - 1 - x, 80 - 1 - y)\n      return distToEdge < 6 ? [120, 90, 60] : [235, 230, 225]\n    },\n  })\n\n  const result = await processItem({ id: \"combined\", source }, dirs, null)\n\n  assert.equal(result.status, \"flagged\")\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\", \"deshadow_skipped\"])\n  assert.ok(result.reason, \"a flagged result must say why\")\n  assert.match(result.reason, /low-res source \\(100x100/)\n  assert.match(result.reason, /possible baked-in shadow/)\n  assert.match(result.reason, /; /, \"multiple reasons are joined, not replaced\")\n})\n\ntest(\"a clean high-res source is ok with no reason at all\", async () => {\n  const { dirs, source } = await scratchRun({\n    size: 900,\n    margin: 20,\n    fill: () => [235, 230, 225],\n  })\n\n  const result = await processItem({ id: \"clean\", source }, dirs, null)\n\n  assert.equal(result.status, \"ok\")\n  assert.equal(result.reason, null)\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\"])\n\n  const score = result.metrics.halo_score\n  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)\n})\n",
+        "sha256": "d89fa62e48db960b07f71a0ca4c607eecfe6087e2aaf3ebad185b5e71c603070",
+        "count": 8
+      },
+      "cut": {
+        "text": "import assert from \"node:assert/strict\"\nimport { mkdtempSync, mkdirSync } from \"node:fs\"\nimport { tmpdir } from \"node:os\"\nimport { join } from \"node:path\"\nimport test from \"node:test\"\n\nimport sharp from \"sharp\"\n\nimport { alphaCoverage, haloScore, processItem } from \"../scripts/product-images/batch-run\"\n\n/**\n * Builds a synthetic RGBA raw buffer: a filled square \"subject\" of `size`\n * on a `size + 2*margin` fully-transparent canvas, so tests can control the\n * subject's boundary geometry precisely without needing real image files.\n */\nfunction buildSquareSubject(params: {\n  size: number\n  margin: number\n  fill: (x: number, y: number) => [number, number, number]\n}): { data: Buffer; width: number; height: number } {\n  const { size, margin, fill } = params\n  const dim = size + margin * 2\n  const data = Buffer.alloc(dim * dim * 4)\n  for (let y = 0; y < dim; y += 1) {\n    for (let x = 0; x < dim; x += 1) {\n      const idx = (y * dim + x) * 4\n      const insideSubject = x >= margin && x < margin + size && y >= margin && y < margin + size\n      if (!insideSubject) continue\n      const [r, g, b] = fill(x - margin, y - margin)\n      data[idx] = r\n      data[idx + 1] = g\n      data[idx + 2] = b\n      data[idx + 3] = 255\n    }\n  }\n  return { data, width: dim, height: dim }\n}\n\ntest(\"alphaCoverage: fully transparent canvas is 0\", () => {\n  const { data, width, height } = buildSquareSubject({ size: 0, margin: 5, fill: () => [0, 0, 0] })\n  assert.equal(alphaCoverage(data, width, height), 0)\n})\n\ntest(\"alphaCoverage: matches the known opaque fraction of a synthetic square\", () => {\n  const size = 10\n  const margin = 5\n  const { data, width, height } = buildSquareSubject({ size, margin, fill: () => [255, 255, 255] })\n  const expected = (size * size) / (width * height)\n  assert.ok(Math.abs(alphaCoverage(data, width, height) - expected) < 1e-9)\n})\n\n\n\ntest(\"haloScore: a warm dark ring around the boundary scores high\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 30 - 1 - x, 30 - 1 - y)\n      // Cast-shadow signature: dark, warm-tinted (r > b), within the boundary ring.\n      return distToEdge < 3 ? [120, 90, 60] : [235, 230, 225]\n    },\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score > 0.5, `expected a high halo score for a shadow-ringed subject, got ${score}`)\n})\n\ntest(\"haloScore: a dark but neutral (non-warm) boundary ring does not trigger the heuristic\", () => {\n  const { data, width, height } = buildSquareSubject({\n    size: 30,\n    margin: 8,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 30 - 1 - x, 30 - 1 - y)\n      // Neutral dark (r == g == b): label text / product darks, not a warm cast shadow.\n      return distToEdge < 3 ? [40, 40, 40] : [235, 230, 225]\n    },\n  })\n  const score = haloScore(data, width, height)\n  assert.ok(score < 0.02, `expected neutral dark boundary pixels to be ignored, got ${score}`)\n})\n\ntest(\"haloScore: empty canvas does not divide by zero\", () => {\n  const { data, width, height } = buildSquareSubject({ size: 0, margin: 4, fill: () => [0, 0, 0] })\n  assert.equal(haloScore(data, width, height), 0)\n})\n\n/** A scratch `Dirs` triple plus a PNG source file `processItem` can resolve. */\nasync function scratchRun(params: {\n  size: number\n  margin: number\n  fill: (x: number, y: number) => [number, number, number]\n}) {\n  const root = mkdtempSync(join(tmpdir(), \"chaarlie-batch-run-\"))\n  const dirs = {\n    sources: join(root, \"sources\"),\n    cutouts: join(root, \"cutouts\"),\n    qa: join(root, \"qa\"),\n  }\n  for (const dir of Object.values(dirs)) mkdirSync(dir, { recursive: true })\n\n  const { data, width, height } = buildSquareSubject(params)\n  const source = join(root, \"input.png\")\n  await sharp(data, { raw: { width, height, channels: 4 } })\n    .png()\n    .toFile(source)\n  return { dirs, source }\n}\n\ntest(\"a low-res source with a shadow halo reports BOTH reasons, not just the last one\", async () => {\n  // 100x100 canvas: under the 800px source-quality floor, and carrying the warm\n  // dark boundary ring that scores above HALO_TRIGGER. With no python\n  // interpreter passed, the deshadow is skipped and its own reason is recorded.\n  // A single overwritten `reason` field would have dropped the low-res flag\n  // here — for exactly the images with two things wrong with them.\n  const { dirs, source } = await scratchRun({\n    size: 80,\n    margin: 10,\n    fill: (x, y) => {\n      const distToEdge = Math.min(x, y, 80 - 1 - x, 80 - 1 - y)\n      return distToEdge < 6 ? [120, 90, 60] : [235, 230, 225]\n    },\n  })\n\n  const result = await processItem({ id: \"combined\", source }, dirs, null)\n\n  assert.equal(result.status, \"flagged\")\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\", \"deshadow_skipped\"])\n  assert.ok(result.reason, \"a flagged result must say why\")\n  assert.match(result.reason, /low-res source \\(100x100/)\n  assert.match(result.reason, /possible baked-in shadow/)\n  assert.match(result.reason, /; /, \"multiple reasons are joined, not replaced\")\n})\n\ntest(\"a clean high-res source is ok with no reason at all\", async () => {\n  const { dirs, source } = await scratchRun({\n    size: 900,\n    margin: 20,\n    fill: () => [235, 230, 225],\n  })\n\n  const result = await processItem({ id: \"clean\", source }, dirs, null)\n\n  assert.equal(result.status, \"ok\")\n  assert.equal(result.reason, null)\n  assert.deepEqual(result.path_taken, [\"alpha_passthrough\"])\n\n  const score = result.metrics.halo_score\n  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)\n})\n",
+        "sha256": "92d64f7855f12b4913789510e2e3ef27c1c17de2226932eac40411304268b313",
+        "count": 7
+      }
+    },
+    "control": {
+      "id": "image-clean-halo-minimum",
+      "file": "scripts/product-images/batch-run.ts",
+      "sourceSha256": "ce470ce7d24e838e5c552875981896986e8fab503ba5d6c236bcb022333fe2c2",
+      "from": "return boundaryTotal > 0 ? warmDark / boundaryTotal : 0",
+      "to": "return boundaryTotal > 0 ? Math.max(0.03, warmDark / boundaryTotal) : 0",
+      "mutatedSha256": "9b822df3f3881530d1c84b92b981001ff0ccf308b8a50501ada067012502eb16",
+      "test": {
+        "file": "tests/product-images-batch-run.test.ts",
+        "name": "a clean high-res source is ok with no reason at all"
+      },
+      "oracles": {
+        "transfer": {
+          "assertion": "assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)",
+          "line": 156
+        },
+        "cut": {
+          "assertion": "assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)",
+          "line": 148
+        }
+      },
+      "reason": "A numerical floor0.03 does not cross HALO_FLAG0.05, so existing status/path/reason assertions remain satisfied; transferred<0.02 must fail. Static only."
+    }
+  },
+  "guards": {
+    "scripts/product-images/batch-run.ts": "ce470ce7d24e838e5c552875981896986e8fab503ba5d6c236bcb022333fe2c2",
+    "scripts/product-intake/product-thumbnail.ts": "046aa3b27bf5fd1e005fd6e6f80296645aa266644ee5bc5eeba322bb4f25d0ec",
+    "scripts/product-intake/backfill-product-thumbnails.ts": "245dda13adf56f7de1ad1ba37b963906d54ef1a434fb07fdbe9e249a68aa6a77",
+    "supabase/migrations/20260815074148_product_image_thumbnails.sql": "bd666a934b7e5631ceff5b512f10c0abd2ead217176af864e454bf01079fba6b",
+    "scripts/product-images/cli-args.ts": "1fa4a8fff05739b16629f2ae0b6b361b82c1a3126d7808884e0bae8a606e97b0",
+    "scripts/product-intake/cli.ts": "ed0d04b4980c0e4efe4c6c79a859767084deafeee343e37ee1588d81c2ff42b2",
+    "scripts/product-intake/finalize-package-image.ts": "f16247fc44d100360c79b136fb04ecbb9d054c7625c9b0929da5a144f6505e2c",
+    "src/lib/personal-plan/products/stage3-persistence-supabase.ts": "7b1e5b2b8668b973a1d2dc208e19273fb481fad8cd9bf042cf05e4c04a927ea3",
+    "tests/personal-plan/products/stage3-persistence-supabase.test.ts": "2f676ab0f342e3eda3d56360c84e192c00a55ed259bb6a209d4b435535e47565",
+    "plans/product-image-thumbnails.md": "a866e4adf223d406d9a640596c7f2158399d0d15cfffcd2b8ce0e816af26d03e",
+    "docs/scan-db-expansion-playbook.md": "5bf21ee17299236a192bb43a0cdf9c72fd9dbd9078225e4dd3cd04deba3618bd",
+    "docs/product-image-background-removal.md": "b180255bda2cbe1785419ef06240ed8ad57dee8ad1c1110c334802c90b984372",
+    "package.json": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    "package-lock.json": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
+    ".github/workflows/ci.yml": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "tests/server-only-register.cjs": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+    "tsconfig.json": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd",
+    ".nvmrc": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+    "src/lib/observability/product-intake.ts": "685bb78f1f174352851b0c3e51c3ddd1e7666e44a04c38373ccdccf2f919f31d",
+    "src/lib/observability/checkout.ts": "34c41d9cc134da4df6762251af4ba11dcffd5180f21bffd1bb5e8b5f8484d49d",
+    "src/lib/observability/sentry-scrubbing.ts": "3980e1d096344f18c4288226d63f9577037fc486bb049a67316d8e157b6a8c60"
+  },
+  "externalDependencyGuards": {
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/package.json": "e6be69319929151be3aa240bf1485f25a3477cb6d2286f92510b9fceb3cbef26",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/lib/output.js": "71cec9ac95f3db764ee4d2e26eec1deb16da63c47fdd352f6a41af4dbb0f1831",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/lib/input.js": "d88bdf5d807ef57ce8aa5d9be29bc7b9199974eac385bf559f19d5fc06bd632a",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/lib/channel.js": "4a699621c111427f9f6b3b767764a292f6a358616de2866e0078475830420f42",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/lib/constructor.js": "b38f3e7ceecc305a8f81f278bf9219cba966993b8c2d7cebafdb8e8d5005760c",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/src/pipeline.cc": "8fa9d1f70f46ea0f27f30203dfa1ebe8df8a5679b9d93a8f8dadf72dd1fa6e59",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/_tsc.js": "e8f349eabd48486bdb2bf9dc1a00c89d58297270c54b745838879e2859194419",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/_tsserver.js": "0efcc88cdf0593cc1dcc8b6afd605c7bed9eca6f648c70c8f0df8695114bf6d7",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/_typingsInstaller.js": "62a69c574365f1c81633b86b3214f9df860aad08843028dd5244b00aa7f1e190",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/cs/diagnosticMessages.generated.json": "5b30e58d35f877521e14c16551c86320b2ed19ddb70fe5f41841b561d27f18c2",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/de/diagnosticMessages.generated.json": "a4031a8028febc35f92ba317104878d93f02c1750e6ee16351c2270ab4dff517",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/es/diagnosticMessages.generated.json": "3c7844125e1f2a3a2227e16dd1fed75218a3454919706b34cd8a5da9d43cda22",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/fr/diagnosticMessages.generated.json": "9fc1836d7575840a8b7a63dacdedd99e90e4144c0bbe29a4b7fa78a86e0e8bf5",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/it/diagnosticMessages.generated.json": "a740fe2b2338d72a8d165fb8c7c22ac1393a18b6aa7f1ed6d45b79887867f98a",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/ja/diagnosticMessages.generated.json": "ae1a2d439bfb60b9fa32408bde0e9ec39840a33d621014fcb5b2fb4e69a606de",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/ko/diagnosticMessages.generated.json": "31b27d2d556fc037eeac1672f771bf940ec70afba342e977faa75a2fa292a8be",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/pl/diagnosticMessages.generated.json": "0645575abe920de1ee4cf3f2f70c7abc7f6691daa01cf1e9ad6b1ce53917c9ff",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/pt-br/diagnosticMessages.generated.json": "34a649eb937cd70fe7b15663c2e5479e753d42df0e5c2933636789b60c2c939d",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/ru/diagnosticMessages.generated.json": "29bb8ea9d44f55bb7acdedfac0a57865ea40552f004d0d6e3b96746ac76666cc",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/tr/diagnosticMessages.generated.json": "9466915f3e0cdb2625495bbe9c02c8b7ef9e3543fffae957ba034655563abf65",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/tsc.js": "2cffde0b8c6760dfb0b5b0382bbb7e00ba6a8b2d981b9205b256a700a481d983",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/tsserver.js": "e3ccfeec65ec5c470b8ffc5611878a31182650c7e8a062c38a719f83b523edcb",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/tsserverlibrary.js": "7ca9b464de80a5382d9ccfed2b224323bc0274c8de61bf0464e89ee824677c76",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/typesMap.json": "4143fb8b1c5d4421dfa19a4b80ddf2da375fc0835a349c3b18519fda5955e1d9",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/typescript.js": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/typingsInstaller.js": "2d48a038523ea7c626fa2796a30fa5fdc07612ea5fab83544423009d7683a213",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/watchGuard.js": "471200d4bc555ef8d8429358bdca2a68ea7c9bfff6c853b5b048d2512fe4092a",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/zh-cn/diagnosticMessages.generated.json": "6bd4ae6aea0991f6b73c46ec79ebb643b280a07e4808be363b07d01d2f6d399d",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/zh-tw/diagnosticMessages.generated.json": "c35cf732ff01539090a3622b7a07f7bb4cadb28f6f13048b366012c458329be1",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/package.json": "822ef7ca6452205657b6288b066481ecf508bfbf43455d715cf7d3ec457561e6",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cjs/api/index.cjs": "b396a280df2ea1de64a7fa989db0d46cf1b90fc07f12e4dc5e57d5e5a99d4feb",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cjs/api/index.mjs": "685c2a23306b7bba191e8f4f123382fa380fdcb2a58bbb1cc46a1f0a6d2255ff",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cjs/index.cjs": "a6d966dff90f93d5a9cb22206d9a37f05eb3f66f004a07424bd96aebfeda9acf",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cjs/index.mjs": "940bf50aae38d11425db038dfacd2102e469eca6b6e896879c927611e593f6cf",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cli.cjs": "c2553d91855f764f54abd5959973fb2359028678eb3cf4e598b7babe0d404e46",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cli.mjs": "8729ecfb90d9d568939e4190e6f1d3317c946583b7d37a776e0c23a21c021cf8",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/client-BQVF1NaW.mjs": "334ad3dbfaf820eeb08dd2fa40750c8316e6f8a61311bdf99defd3c361fbece4",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/client-D6NvIMSC.cjs": "af10790d58385f62c205140c3f7c25dae26638c2961fa24eb958f888d8995a40",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/esm/api/index.cjs": "b97d8aa5122372689e759de9a7c30e6d1f29eb683a7a714beaab953cc8eceaa7",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/esm/api/index.mjs": "477bed5ef167ef825ec4cb99ed010ac6d70833d1b4e8b46e23825cc6de543d8e",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/esm/index.cjs": "a95457ef5fea5e06d56c8bafbb96f4ce86c651fa0bfcc4ccb90b740f126f4863",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/esm/index.mjs": "9fab711543eb155d50fb147f8984e104db348a73b74daee4e3974bec109aa381",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/get-pipe-path-BHW2eJdv.mjs": "307483caa22c2406677b4bd513bf602b4de3986f3e23eac7724e99c0d7ddc8d6",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/get-pipe-path-BoR10qr8.cjs": "70a7fd0d550d1df1336946c504b36dcf97658a7c3328e02a69834ae0c4bfee91",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/index-7AaEi15b.mjs": "47851348bc3bbc11413edd4bf44758b7a85e28419847583231d74a182b044e22",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/index-BWFBUo6r.cjs": "fe29b97b254312970fceb8995a519abc8751f26972c221281959a7d77858a464",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/index-gbaejti9.mjs": "76febbe946957c96066d1d59293c4a26fc874c05876394cf4c178e4f4d0b6ba8",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/index-gckBtVBf.cjs": "49ad679be79684c7706ad7ca495f0afa7bfa361b354eb77e6389cf19df91c524",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/lexer-DQCqS3nf.mjs": "6b77bebaee2dd7741177e287a78ef4329d9ef91f6939d09cfcf0029b3859f883",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/lexer-DgIbo0BU.cjs": "9b92935847bf0f6daade96b21c8271139ed8b48ef3fa59647af0ef1d36770db0",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/loader.cjs": "ff33128961cec9865a3c8ffb37f4edaecfd1ba960cc9a0a249f816594972dcf9",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/loader.mjs": "0b1c5b86192772fe9257710e739959cee5947c11ae1f93b61abfaa9b80c6def1",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/node-features-_8ZFwP_x.mjs": "dbf95f05cce9b129a9a89f33f43b7804ab641aa8b256e7cf64ad9f92b880cecc",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/node-features-roYmp9jK.cjs": "18c0185390eec5bb60600ecb503a933673a77832bb93db3a258933f4ab051768",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/package-CeBgXWuR.mjs": "81246f1169deb713dd5bae44fc39d68bd876395e99b6ce1560d4882e2dd70dd4",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/package-Dxt5kIHw.cjs": "a6f7dc15288c2e5dc03394061d16945e42190e43cb1cf6422a93d064c1fc1377",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/patch-repl.cjs": "33f5f6755270054783f4c568d0d48d4a79fecde965ec6f91ca27f0f949ba6da6",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/patch-repl.mjs": "3850acac507aa554620693d272bed6b7ac1e1b8ab5af406581c632522ad8c872",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/preflight.cjs": "a088ad17ad4151c1a9f2ad7090fcdbc422fe26c8f4e5fdc53a489dcb0b21ae69",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/preflight.mjs": "cf384c149f11748fb8497b2118d58e21ea884ae2848e4b4c81298927f268c3bb",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/register-2sWVXuRQ.cjs": "583b65c6caaec95e71e73fa65617c95162428aacd845394689f690b48a9328d5",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/register-B7jrtLTO.mjs": "10184ddf4354bab38743d80a5844796f26ffc4589d2820781da90c6a67507aaf",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/register-CFH5oNdT.mjs": "7c7d2d4f757a1a35610b483e0348aee2eb1140968631f4b2105c4b4ad9ffbf0a",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/register-D46fvsV_.cjs": "7f0e410a859fadcc75a452160e69c860543f5e13e2321b934c0bc4e3d14c01f6",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/repl.cjs": "1dcdd7c363bbedd2f93062a838f5800651b9a432d91f081031bb2856faede47c",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/repl.mjs": "061e45ad7e989290e5ee79c6b36848d2a9dc818fd695b6387655e74380f7617b",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/require-D4F1Lv60.cjs": "468f626104c0572958b7944fbce075777efa2f4ef1577c9fa0c89499cb9e100b",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/require-DQxpCAr4.mjs": "dc1b6944ffaa8f4d70e5007116b9aeac77c1cdf80a62526763eab34a123fa902",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/suppress-warnings.cjs": "028063d20bd49083f03a0b1ed4f7a3d55fac1f64f5aca0e58e1ec61601f20ee7",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/suppress-warnings.mjs": "4c7d8eb24f7c16282453bc18d649c310028a63d3850e6590338932cdd896017f",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/temporary-directory-B83uKxJF.cjs": "da189099aba4a7aff1e0ca337cd71410a0f96abc66298403db041cb812cbd24c",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/temporary-directory-CwHp0_NW.mjs": "e0771b7d9b216d438ff2ade7494a7a3ac6202c66cb752f2cd99bffb3d78226fe",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/package.json": "6e764b21991c21595441f82387c1451ccd10a3e7a3f0973cc5e3649a12dea7d2",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/bin/esbuild": "b82c6243eb58d520d0bc55cddcf6993dd0f5572f3ab8dc2ba6d77058be043e62",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/install.js": "10f6fa3644d8d23d066ff67b0ae449074e75884503546a9fedb667f1dcb9ade2",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/lib/main.js": "bce772de103e1cbb118f1b7313916caa81f0e85461b3b6e3531607e7ed75ec85",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/package.json": "9ce21c976ffbbb95001f460e9e8af7c6d719f748eb70441e617a14dd0b68a5b8",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/install/build.js": "37f7c9591d75dbc5fe734c5a196a46c355b3d7de5134260ba011efed8433a718",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/install/check.js": "31fd360ede9ff3e80d643faff6c4570d0b2b5c621dc421b6c4086dfe86ce981f",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/lib/colour.js": "024d2e9c04d50b492e91ae781da539c837fcaf40a585508c043356fdd9e69297",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/lib/composite.js": "73f04ab765a11bfc72771dbd0a6324e8e34ea354d16108cc1277bba4e80dd523",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/lib/index.js": "5e30578a16290fa0855c32fe3d544ce4f26c147de6bad69cffaf7bc416a2919a",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/lib/is.js": "7ecb71679b5b58e7ddf7e14fa697ff6a31bbe9ef107745170095031519e93463",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/lib/libvips.js": "ae8cbc8008bf88f5100ca56729ed43d45cd88316e030dc2eed62e142f657cd79",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/lib/operation.js": "01019d62cfb83c5f6192a65a4a97635214e5dc61da07c51be59b8216ba907a7a",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/lib/resize.js": "d85081a35bb1195ff6f057d2db4343adfe3241abccc7e277d13673a116fea1ad",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/lib/sharp.js": "59e9436f1c62a58b8781acb3803e55114bada9984cc7c39b9291769155811cd3",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/lib/utility.js": "ada1854f397f54ee09286094a4f4cd9a4d4af9f4ddbaae3b4f477edbd8c1fd14",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/src/common.cc": "9102e55ed0c5d3027fad3df16e751b5424265d32201568395958862ab3a3f6e1",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/src/common.h": "44940aefc7ec601e316dad5c3882041c56d6070f84cc2b2871f6236b75df5cb4",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/src/metadata.cc": "04366c98d90cf3415a50cb5f47a07c3a7f25ace2a67d603e72035807f99af33f",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/src/metadata.h": "bd50ae9c3e55d9ed5f8b3c4e09d9a79f496ef665b6c993ff1b2c7edecc32d03a",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/src/operations.cc": "db97d0ca7ec042279cf5b4331fdc19466c20318ca4bc52fda4e3fdc13781a8c2",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/src/operations.h": "80a4f350793f657c10769e2b4e82d3b103f5d4984dc27d10e592e14b8cc1b34b",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/src/pipeline.h": "89f81e2d0308ed696a0f39099d42b7867b8ffb5fcd4969c7dbfb3e6778c0de23",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/src/sharp.cc": "9f407b50bb2d02e5eb711b769f05d3e6659028430e055c4271e5ab1593f5a257",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/src/stats.cc": "084df95f2cc863e522c35e5da31976e1dc4d370d40ab6d2a0b398763208af4ea",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/src/stats.h": "db854f0c3c4a0db1751021ed676413c6d5ca00becc08bdc13258b29047450b8c",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/src/utilities.cc": "7141d5bb1e7b1bca0fdd7d14c30b27b2a4b3f177441b04106e460e013cd061ed",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/src/utilities.h": "0b126ab63cf1aedf8e71e6cb8179899d3ef02c46419100e847b2ca4284b8901b",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/dist/cors.cjs": "19d5cddb62597e73932ddf5d5b0c21726dd2b69d71bf4291fc4a3cf60b85e3af",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/dist/cors.mjs": "f9e41fbeda2174ce91ba48d0660102e6de9be19bf8f5256f37b5bbb23cd4a056",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/dist/index.cjs": "64f612acfbf8fdb41d7f5e423156ccad3b8a1b82c6a13aa5fdf102b615375486",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/dist/index.mjs": "67b7037e089478c6474246dc08da79428a73de3c5570e31e8612ab8859d2cc07",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/dist/umd/supabase.js": "e6cc2a8f6bc5b68451fd62bf0afa2c0049097f4a80f499bbc70dcf41a80459ef",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/package.json": "d17fb698c70f7ad0cf000a9c46dcffe8944dcc3248e15f5ca2f6b661a22bb791",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/dotenv/config.js": "cd401a4aeb31f30ee55c295b0b65fccb6f1a0e3b7dfd2def4f69dd2a13a8fef2",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/dotenv/lib/cli-options.js": "927537ee249dd941a5115b58ccadcc90c52bcbf9ae51cd5853251020686096e3",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/dotenv/lib/env-options.js": "3f8b820081078d1c49737eb257d033881c6d16ee82322c33f229cd38fbb22108",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/dotenv/lib/main.js": "3381601545980775b6ecd2bf078ce369a3b24316e10a3182ab78811f01dc83b5",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/dotenv/package.json": "922be338d27d6b0b3a238f8da99daeb1f42ef972e71b4568d5104bbef661f5f5",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/client/browserTracingIntegration.js": "c723364ea4717d17ec09122d1ac3cfc2a21c0cbcf8135aeb665fb343c9140501",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/client/clientNormalizationIntegration.js": "e442a521a784f1d9e14587978a94fe903d09c6b12738b7966035b65d5f77f889",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/client/index.js": "71f799c688f5759bf6b9f4c45de99f92f957a29e069554eaa30384764e17cab4",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/client/routing/appRouterRoutingInstrumentation.js": "3c96165f6bb0449299c288929d67a2bf3e22dc5737c38b5225b9ca4ba083eb0f",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/client/routing/isrRoutingTracing.js": "ecbe649a50fbf606839b33db677aebaba3314df0269833cc44a259cc9937c330",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/client/routing/nextRoutingInstrumentation.js": "eea37d9fce4ac257cf9167e5e91eaab621efe29e018f49cff685a8b0318787ce",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/client/routing/pagesRouterRoutingInstrumentation.js": "637a577556f461c7fc4bce20e76d86c0e367871acdbefc202001c6fc8039674b",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/client/routing/parameterization.js": "9e562893b025c9c1b7f1b78763d2003736f7d4c3e9570781682f424b56710e55",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/client/tunnelRoute.js": "8943add1db828d83e256c388576c25ffd7feea70725cd993a800ae81ba1db537",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/captureRequestError.js": "1a54da75e540fef06143acb42da02d47f61c6a9315fd4faa49d83b8ac8b64687",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/debug-build.js": "8413b12b6ddea9e9c7d2b8cdca22b7e00a79b56cb834a1f9d0da6377644f71a5",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/devErrorSymbolicationEventProcessor.js": "9a7c670b97ec79becaed5b3df55490390c7bcbac2dd1ea6a17097c1a22f1d8ec",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/getVercelEnv.js": "f46ac2eb541687b20c3488fde647593476b0fb69db86a898a787be9c08334652",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/nextNavigationErrorUtils.js": "2b42362d75300b3010a3634ece89cb66c9dedb94d21e5dc2a98e850b25488ffe",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/nextSpanAttributes.js": "49a76b6405e7321e6c11ea4e01c0a5764ab64e79b31033474bbb986bc9e0dd11",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/pages-router-instrumentation/_error.js": "b5c10fef1dcd454e9548d8f4916c6bba5d0cca308e0c5e723e2f50f7a8cdb22f",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/pages-router-instrumentation/wrapApiHandlerWithSentry.js": "f8504a8e74c7731c4099a7adf3b7dfc51eb06b044cbfafb5005921cc6aa63a8f",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/pages-router-instrumentation/wrapApiHandlerWithSentryVercelCrons.js": "777eb492a993e59417a00a57b51cd322dba5297450b5de5d137c32355f0d8f3d",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/pages-router-instrumentation/wrapAppGetInitialPropsWithSentry.js": "3f9ce68ce8e9061c8750b327211414b6afc22ed2ef0567f26bf54d47bcb3c2ee",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/pages-router-instrumentation/wrapDocumentGetInitialPropsWithSentry.js": "30a2c44b435a4f1879951983cb21944652be00f962e5bd19737aa721c90f3085",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/pages-router-instrumentation/wrapErrorGetInitialPropsWithSentry.js": "70ec6e6a3e713653b57297c5feb0de49a79068c9e68672a6b2e6d46ae50139d7",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/pages-router-instrumentation/wrapGetInitialPropsWithSentry.js": "163a3a904f90a3a2b42b1f48014c75d7e3f8e903da90e084fb56624456c666a4",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/pages-router-instrumentation/wrapGetServerSidePropsWithSentry.js": "79e77980f7085f7466ba8270e78636faa2a8b07931dc0ee27abde5fc240601b1",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/pages-router-instrumentation/wrapGetStaticPropsWithSentry.js": "c2f5cb5f81e380a86147ab60693c84fab0125a6072ea682a18246d81861dd601",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/pages-router-instrumentation/wrapPageComponentWithSentry.js": "95a605c904f60e0849aacc6dee4bd1323f77891cc785ac628c5a3948b6262b77",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/span-attributes-with-logic-attached.js": "d5367ab29e94a00def7beb1591d96afe8f8b188609d520532e35ddddd39b5663",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/utils/addHeadersAsAttributes.js": "67c759d132e19f9b23e39b3912bf101137de4197995158e944f0da7200867cdb",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/utils/dropMiddlewareTunnelRequests.js": "44961d689389c0994f8e335485700ba8c3541b5cdcc030e7a4b747bfcea33d75",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/utils/isBuild.js": "5fed0fbe1bcc0afefbd47cef1f2fc0a794e2b0f375f2370c1310012f3f2fd98c",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/utils/isUseCacheFunction.js": "78cebe941604db40f0f4be0910db001bdaa0d7b420c717a7c96914d161166b2b",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/utils/nextSpan.js": "173c2a97a69c860af83b50457c7fcf1d65a7440fc9d0a393adde9ce50db22e29",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/utils/responseEnd.js": "68885c96f60b625aca89e0febe2e4d540cebf00c2609de2ce720201ed3a96518",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/utils/setUrlProcessingMetadata.js": "bf0ac853c5b317446c87668883ef9319087a69c98a30ebeeaa4c7eb3976f2a62",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/utils/tracingUtils.js": "108da5cce1860ad4fe71e063fa7ec08e3b93bd147c214bb7379fecfafa4c26d9",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/utils/tunnelPathnameMatch.js": "7be7f727061d5058a751a68348d2f01a2824e478407b0159d58abf18d81a9dd8",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/utils/urls.js": "fb96d0421ffd4f846dc166a200220e6af79e3a0dd847f6d91dfc289db7ae29a8",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/utils/wrapperUtils.js": "d9b91f9e9d64b90c9d6fcb7b1ebd47162d7398982f7188a9b78f5a29a6139347",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/withServerActionInstrumentation.js": "4710fca507d517d9c83e08a70ffccfb67516051a20d3611fe892cb188b04fd49",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/wrapGenerationFunctionWithSentry.js": "982ec6e7f478e4e6c14617d431c688ee7273866ba098d27d09e3b75b39413e83",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/wrapMiddlewareWithSentry.js": "12001018c26278ab7547c77db91a1cd930aa8fb79a75c2bcbb3b962366d1a7d0",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/wrapRouteHandlerWithSentry.js": "366cc0cfaa67306eab8256ddd12610ef88e577c38f342d9491b15785b4d8b8b5",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/common/wrapServerComponentWithSentry.js": "219a04cd0bccf2f3fafaef268d0f533e61f723373e69d4823aac4c153ffe1ae8",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/getBuildPluginOptions.js": "e519fcbd81781b49ce44c6b1b099ba0fe78ff220e61d0cba6af0de71335e20b8",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/handleRunAfterProductionCompile.js": "a7ffd0808af8be88e64800d6f4af76f4ad75b5967037e40d4859e150176feb3a",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/index.js": "021bd9ef2c1290686f6527756a61adaada279f9a8bac25c0e780a28794aa8dcf",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/loaders/componentAnnotationLoader.js": "c894ef30ac3767854f982cd919b4b388418774d795fd6a8b09d83813c577b82c",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/loaders/index.js": "e1e3e5a361e1dd973a5878d3d9a7d501c9ae7d29704b8b123695164e0d61c2cb",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/loaders/moduleMetadataInjectionLoader.js": "b5e0926da149374c0c90874a67ca678e19f1e2a8f87dba6084ab5b1c449105fe",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/loaders/prefixLoader.js": "b17d6e03d71b7c8dffa018a7809bffd8a748077ed53f56cacbf942d8d3b5af17",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/loaders/valueInjectionLoader.js": "ff05157b063423ba942c01fc2639b3642cc2d78e8177a56fec4f631d830bc215",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/loaders/wrappingLoader.js": "546b46de7d45a42d656119f6ccad14b00668f53bec55e7da022460d690f25384",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/manifest/createRouteManifest.js": "266ee79bfc19d14e1f0081a7c81d487636d68b1aa6c473351e7b385ea0bdf654",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/polyfills/perf_hooks.js": "649655c14c24fde4293cd7aac9b07042639a33a1a4112249a24e4f74494d1fe3",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/templates/apiWrapperTemplate.js": "f18e84bcfafd9dcc3cbc5fa599e0091c5d7cfa45c0cea6643bb3f3f93d92c162",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/templates/middlewareWrapperTemplate.js": "7e475f51866299b1e6ec34771531d0d7e69ee95616a4e01977b87e64183c9c24",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/templates/pageWrapperTemplate.js": "d4dc97239154475644e530d5b0f33e514816b4b347797f753252b62063ce4837",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/templates/requestAsyncStorageShim.js": "773a1ee67c01398576de3df2212a73807eed810cce806ee12641206340a1dcfd",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/templates/routeHandlerWrapperTemplate.js": "5d30827a41c79fdf4e51c9f8bc684d4676cde37d5a857d17bcada5c408dfcad1",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/templates/sentryInitWrapperTemplate.js": "6f7ec769f6ad189e10566f251fbeb5f73a460b7faebc0adca8a07dad4652756f",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/templates/serverComponentWrapperTemplate.js": "70854cab3fe09196965c715a9db2f0250904340d12232693c844b6331c851726",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/turbopack/constructTurbopackConfig.js": "dee9afd4c906cb04473c5ec6c36fee8928bba17d5ca04a27153c258e0fe6462f",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/turbopack/generateValueInjectionRules.js": "8c1235021364377ce8654d3b048b228145fcce097d5d283fe3049c030b2e2435",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/util.js": "f95f02970cf6aa6d9bb8ebd5a8f9fc33dc0ae711c236e6dc3a5b37a67c126c8f",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/webpack.js": "b52369b5037bba5c8f475ad15ce38b0d70a3ada7b239f3456eab895adaa2366d",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/withSentryConfig/buildTime.js": "e60b345f7afc4bfb2befadceaa9bdd30cc56a13e558c823c70f283e1046c6e34",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/withSentryConfig/constants.js": "2bede05413753adc2115638f02f21c2e0f15aae1b3bef8efe38f9c195ffd4ca3",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/withSentryConfig/deprecatedWebpackOptions.js": "881afbfe703205067620010dd25cfa4ab15c897c2ab5ee72d5334bae334754e1",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/withSentryConfig/getFinalConfigObject.js": "f39f3a2b181b7d3d713f9b2e179a49a3c0b56da6abd74d5c77b3a22325a1e383",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/withSentryConfig/getFinalConfigObjectBundlerUtils.js": "e349902da1381bdcb1a9ad050a6e8f7debcf172fccfd9a0225568f2db11ad7e6",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/withSentryConfig/getFinalConfigObjectUtils.js": "806e20c30503a8fa9d9a27d867db2138c32954e106996c6291f11de30d6570f6",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/withSentryConfig/index.js": "84d57a2b16e58c3aaaf6f9be9ae64e9dd1d4ec01620b064274b0bc9971c86d21",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/config/withSentryConfig/tunnel.js": "dc759dfe9cfc59907cdc92311148bb3eb972a973c974a693600055d85156eab5",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/edge/distDirRewriteFramesIntegration.js": "68403427f46ac31de7aa96026016b7f532f0e3b0b5440eaea998cca5c571c856",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/edge/enhanceMiddlewareRootSpan.js": "8e677f8400de75a84c02dd937b297dde59683c7104b94f12d237f0a7c05fb2fc",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/edge/index.js": "a609396d3e726f47865c89205f2f42d0e95290ee0b2653ff501ded23bc00a6cd",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/edge/wrapApiHandlerWithSentry.js": "f146486a4ef4820fd1976afe120d5dbea10c8aa22625bf44dfd626940b954930",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/index.client.js": "8aff06e87d412cc9ccf1c69fc61d69047db29f5d5f0e33c1995a9ba502a22551",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/index.server.js": "56984f681e6d5d63924ff38f95ce9a805c167e41d1f15c3d813b9fe652c3b2cb",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/server/distDirRewriteFramesIntegration.js": "3748d3cd327034d305f7c9ce9f246e9d270a16243ba77d8f2ba751b1e10078e4",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/server/enhanceHandleRequestRootSpan.js": "4343040977cd1c8f9da5f4858f2cfc7051276b1241d81aea81540ddc02e5d2a7",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/server/handleOnSpanStart.js": "7f01dfbc3901ce9680969337ecdc2a4c6bdd2d975cf27b3d4fb827c9729febdc",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/server/index.js": "b52c67e1289d25b02afd38fe18f4173ae36f58d6ed6dd7855526a92e1d57a9bb",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/server/prepareSafeIdGeneratorContext.js": "ae7b95d99eac590de2cdfe3ffe5716426f34fbbfd3542334f8afe92831d7c175",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/server/vercelCronsMonitoring.js": "8f016f759f26676438da6b7973b394477466d282c9084b51268406c0f1a6710a",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/server/vercelQueuesMonitoring.js": "81d3f4ef375fe0f4928c64584f5b23ce9da472ac459690febe30c4ff2f5fb577",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/client/browserTracingIntegration.js": "8f0a7afd2aa5da8be54f58e1e8a7abbff1f0683ca3611fb08c1f3a30fbf800a8",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/client/clientNormalizationIntegration.js": "bfe44bae08103c5f6f4859bbe891cc21bb33d91369b63d28f557326915bacb5d",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/client/index.js": "137e75694dd2074aa7ed0322c2fcd4580cce3f9616eadbeb9c518723b3352466",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/client/routing/appRouterRoutingInstrumentation.js": "690d3bfd19633e0553408e0036552627e05f6d1bcf738a549d88a2e4b6fe934c",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/client/routing/isrRoutingTracing.js": "0928f05d7c27c29d487ebab4bb06af20c9513293a729154eed77b19de5c04750",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/client/routing/nextRoutingInstrumentation.js": "232a58c60e781ded65a69ead19adcd63d2c0e6912a553dc2a9f514fe0b367027",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/client/routing/pagesRouterRoutingInstrumentation.js": "025c4cd0a8c9697f10e76a1e96c5c3cd1cc16f61b5d327eb47fa99c4b4c83d12",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/client/routing/parameterization.js": "93674102d40fa0e0fdf657fce811ff0ea4dc34f1355760a4c5ed4a64fb439dac",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/client/tunnelRoute.js": "861a5b3b3191295c08e69dcb8e61d5f069dc663a2b95ce0446907df7c4fcef4c",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/captureRequestError.js": "a7f7df9a8f1266ce132e6264184f5db350d5676dde496e3f1eec024150ae25ff",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/debug-build.js": "bb860e39a46e6e788bb7f07b1e2947c0780f9d906f6c6b0ee0e876cee990cf7d",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/devErrorSymbolicationEventProcessor.js": "a9d07d0dfd29828337360d92c2705f281e8ed60d0e1072414ae5a145b845de06",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/getVercelEnv.js": "6253c0cd5a4df0f2d59846bfff541058400695abee982b47675c1c4165808b36",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/nextNavigationErrorUtils.js": "06360bdb485ce72f3a5d5f5416bed130700fe098b1ceda598db0f903fb49cebc",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/nextSpanAttributes.js": "b3b9416aa62c188528db5b6b3bab532974265884a21d48321be8e10b40a7a677",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/pages-router-instrumentation/_error.js": "0ea47a1116f87d576ad2b760e498726b206965caabddf8d1bc00f5d978872d2d",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/pages-router-instrumentation/wrapApiHandlerWithSentry.js": "b75b11001c0abcf51c148683a19ceed9e0c1c97640430d5a61829bc52de1628d",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/pages-router-instrumentation/wrapApiHandlerWithSentryVercelCrons.js": "dff3a64cfa0892a3b99e6f09b71d6fc0cbe175354d2db3b9b6153856183f38bb",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/pages-router-instrumentation/wrapAppGetInitialPropsWithSentry.js": "80713f294e73e35141afde31da1dfa67d879ef6415fdfb940f02af15179b938c",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/pages-router-instrumentation/wrapDocumentGetInitialPropsWithSentry.js": "e45c47ef1e844b9f9b9f49f8944e48a518ec22505e7f18bebf0e92ead9fad5fa",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/pages-router-instrumentation/wrapErrorGetInitialPropsWithSentry.js": "cf4dd91f51ea6cbf80c4a4ccdbe9fb651b9555d0ef0100170fe7b55fdfa0cd96",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/pages-router-instrumentation/wrapGetInitialPropsWithSentry.js": "ced4507f0dac655295c28b41a76aefbb034933d8ff62aff38820a46792ece898",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/pages-router-instrumentation/wrapGetServerSidePropsWithSentry.js": "15a0c8fb86fbf60c3364d4267dd837cabcc9cf3742b1d8fe1ba694c4d4ed123d",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/pages-router-instrumentation/wrapGetStaticPropsWithSentry.js": "d8d293df8e60c8f6ad1b24bb84dfb5fa79b089032757878537a7ac96dd9a0513",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/pages-router-instrumentation/wrapPageComponentWithSentry.js": "0d698a78547b5b03b8c9ea353820a409ec6f72809bd1d9c69dbc1312f81fcc04",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/span-attributes-with-logic-attached.js": "0fce7a2583ce2a17025fa882679c6d101fddbd6024c9e3dc6b222a36ca6863f8",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/utils/addHeadersAsAttributes.js": "bea39b44c48065328655b37ffcd6da205fa23b6ef1ef723396ddac3598cbc63e",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/utils/dropMiddlewareTunnelRequests.js": "d462c3cbac9991e006c8b690337daa3c7234eebf290d69a68a318c3f826c2092",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/utils/isBuild.js": "ea5ed7f205b63ccd13db684407bacadbb5702695973facc532a5f58f886fab4f",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/utils/isUseCacheFunction.js": "595b6340aafefc9e764458394bb0315ccd4dec4c6ef06c5f289aff09e4267b29",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/utils/nextSpan.js": "bc1487312f2504ea23b999b9ecbdcebaf8e8418ac5355ec956c9fb621af9adba",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/utils/responseEnd.js": "67fd9d80b0ef2ae481a06147eeaf8a7ab6d85d413f42e310463b040c412a9da9",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/utils/setUrlProcessingMetadata.js": "8b79b5576fff850eedb4d9b2175cd342f1d84c0a3b1ad17fca99e3ad514cff44",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/utils/tracingUtils.js": "b61a1a03c8a3c59f4338e65fd68dafc9d070fc35cf7aab0a7d0604dabbdc2838",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/utils/tunnelPathnameMatch.js": "de883f886688494e099586eebcdd0c2090c1f808c964ddecc5d5e75fda07d959",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/utils/urls.js": "c1832f7d96faea29a0ff9c54b1395d6f5c3930a3d006e63cc15b29603e338014",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/utils/wrapperUtils.js": "9593b3a6e8f2627a901734235e7740a5951dc6da32eda21615150ba7f2e2db64",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/withServerActionInstrumentation.js": "3da8613671909f5782f03f22c2cc1848f2c35f9accf875310ea133727e583406",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/wrapGenerationFunctionWithSentry.js": "5101358f80b6341017c58ff55cb4d90dd636d597c59c583f9db67b737e6e22b0",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/wrapMiddlewareWithSentry.js": "c3ecb99aab1485c864cde743e645ef79bd142720847b969c53956935a097cdd8",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/wrapRouteHandlerWithSentry.js": "705592ffb19f92c82007d6ab61b82b8161cbf4f44eb5310da4e4af39b303177b",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/common/wrapServerComponentWithSentry.js": "e5f34249c6107249e5da377ce3e1b318b26398762a836cedce80aa09b3f3dc1b",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/getBuildPluginOptions.js": "7d3a82ab4ec99992b47d9110ecc4c5c67b0eeaf14ea06eff5010d1870478ef7b",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/handleRunAfterProductionCompile.js": "c094c8d8c82002f878f0f6b73d2fda2ed26ee5325ea6e97aceb600313ff20448",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/index.js": "816e4f57bf84495b5eafaa984dd3d1efbfba46452ff6c1bd80b058dfa18aa0e1",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/loaders/componentAnnotationLoader.js": "00912f522d0a114c2e3e44bfdf65573710eb8c0a76b719c4af75fd6a32d8bc7b",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/loaders/index.js": "c555092a6baa6c16e4b1b519dffc6351f74dfcbc574fcb3b1c98861d1c3a19be",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/loaders/moduleMetadataInjectionLoader.js": "4929917020b93117557a37b8277e9c1c3add798bc0fb5c09b56ae8d93a9aa8b7",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/loaders/prefixLoader.js": "25bac6781a42585b2d8f7e388261b3eea46e9cdacc9d0b6b47128728e5fe5347",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/loaders/valueInjectionLoader.js": "d5ac090dbf70375aa678af720e596011ca9846960c4be914f6ee54416f89ced3",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/loaders/wrappingLoader.js": "60b3571ac077d6f5b0ce168c34304f899d79b7ac9c7b80dd6a8abc9f482f8248",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/manifest/createRouteManifest.js": "3f2a98a64bf70b9a5e6e28cce7026e239d2c52a8586b74ee3240d3591f4f195d",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/polyfills/perf_hooks.js": "98d4c393165d407798db1e97c2ee3f00b94269a618ebd2e2b4fe861583e6495f",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/templates/apiWrapperTemplate.js": "f18e84bcfafd9dcc3cbc5fa599e0091c5d7cfa45c0cea6643bb3f3f93d92c162",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/templates/middlewareWrapperTemplate.js": "7e475f51866299b1e6ec34771531d0d7e69ee95616a4e01977b87e64183c9c24",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/templates/pageWrapperTemplate.js": "d4dc97239154475644e530d5b0f33e514816b4b347797f753252b62063ce4837",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/templates/requestAsyncStorageShim.js": "773a1ee67c01398576de3df2212a73807eed810cce806ee12641206340a1dcfd",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/templates/routeHandlerWrapperTemplate.js": "5d30827a41c79fdf4e51c9f8bc684d4676cde37d5a857d17bcada5c408dfcad1",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/templates/sentryInitWrapperTemplate.js": "6f7ec769f6ad189e10566f251fbeb5f73a460b7faebc0adca8a07dad4652756f",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/templates/serverComponentWrapperTemplate.js": "70854cab3fe09196965c715a9db2f0250904340d12232693c844b6331c851726",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/turbopack/constructTurbopackConfig.js": "47cff191a708a08f1522236f5e9d045e1e77e8a78a1878140f6753de8b3b54c5",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/turbopack/generateValueInjectionRules.js": "1a097be232de56e652801b46969806d9fb69116094d408a24b691f6c520679c9",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/util.js": "2ca8dd9cd64c6e23fcb881bd2d05649a7c8794bf74c45bded1496c6db9493cd6",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/webpack.js": "75519f8bd639fa87eb9118275a5e974d56e0b4794707f7b9d5d573dc35644476",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/withSentryConfig/buildTime.js": "34c9fd12fcb5875da29d3b718f8da9f4d1dd895bb19c6886563765ce7bf919b6",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/withSentryConfig/constants.js": "28e8900cc8ce91ff0697bbe25f9f94b632870645cc6c2c0995722516e74913ac",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/withSentryConfig/deprecatedWebpackOptions.js": "9ef76ef16e164db92ab71527cedc1f4e88d19c2626616cb537b4ff356813062f",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/withSentryConfig/getFinalConfigObject.js": "ae34ae29df0e32452c32c5094d7c56c205dc2850b132431d9b386df0a8759cde",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/withSentryConfig/getFinalConfigObjectBundlerUtils.js": "9ad298c0b3c4d64a444a381240412bd2c52ee377451733a9256bff5180b3a429",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/withSentryConfig/getFinalConfigObjectUtils.js": "9e813e694fd4c08a73fd46d1f62d0aae151c4b0b34e329cee54f178043104b17",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/withSentryConfig/index.js": "2f93157f54491c13f185ee46b825644b9b3fd98987f1b5c3c36727caab5ae882",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/config/withSentryConfig/tunnel.js": "381147d5d176630d283f71630f55dbd8bdf13b2ac3897e7751e406056d51c259",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/edge/distDirRewriteFramesIntegration.js": "76c75762aa00766d7a1cd6af4a39f0d15faf55ddc58e2ca3c3cf31044cf2c67f",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/edge/enhanceMiddlewareRootSpan.js": "ad515fbbdc3b930508d4f650a4f888c192553434a7ac9028cb2310ffaf8e21c1",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/edge/index.js": "c059600bbd264ad8c0b3e49244c8d2c1db2f9b87abb9ec07c21c6be388017aec",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/edge/wrapApiHandlerWithSentry.js": "fa2a12dbacdbe9a049bff696afb8c8f198cf70eb6bc2ff28b9d525afa30c9459",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/index.client.js": "c5666018bd0be97d015c5d809c4ca8d547155221e144700082fc20cd217a8c99",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/index.server.js": "90bbcf14d3ca676f4f4eec4d14412a2cf5f26e15261367454b0314387952feb9",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/package.json": "0176ac1d7e4a1e22ba841b40e67bba6b60f0314fde86cb8b9fe74127cabd7ecf",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/server/distDirRewriteFramesIntegration.js": "2381c104b91ebd406359880192099247cab7802a93f2c9dffe2a418c8252057e",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/server/enhanceHandleRequestRootSpan.js": "c01bd8268013940a8f1f41eab45ae832200eef6cd2ab14b5e75b2a3a3b597920",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/server/handleOnSpanStart.js": "38a0570b4588fab00a70743ea6a312551f80344c30c66f968e669e43d70750a9",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/server/index.js": "cb5ee88a3600090a93e82c999a27a8501d2275dcde4fe155cd4893065da31174",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/server/prepareSafeIdGeneratorContext.js": "d90775a1be00ba9492969c0b0da2f0136e756696d047f8643cbf9a5c495a9203",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/server/vercelCronsMonitoring.js": "cfe39dd26a02c583f72832d5fa56b13474bb78e600eea7dc0b2a273e0763183e",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/esm/server/vercelQueuesMonitoring.js": "1a6760c14461e63e379c4d1e26ced961d7f61fdebc2558c4305b255c12e83742",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/import-hook.mjs": "cab0504059815ff2fc39c44ccba72bb9ee880a9947615ebc1f18cf626ea7333d",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/loader-hook.mjs": "01033bf72a62a26f90023286136b09f2a4bace4633bf7fa188699e2b3fba3f98",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/package.json": "fc6e1e8c15c462de8ad33d396d29389ebf30497800248aa148a1810773d0713d",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@esbuild/darwin-arm64/bin/esbuild": "b82c6243eb58d520d0bc55cddcf6993dd0f5572f3ab8dc2ba6d77058be043e62",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@esbuild/darwin-arm64/package.json": "2716c24eaffc7327a0f910d977a72e266daa0d88f2155390dc31af0e164f4a0e",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@img/colour/color.cjs": "a008c415ff97d93d6c1dbeac5856247eafca1b3ca973bfcd751cb596e8e729ac",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@img/colour/index.cjs": "e6e93e7fb209420a20fdf2ec676e9c67413be8d5ace99eec64f9468480f0368d",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@img/colour/package.json": "6efa01cec55e687246d7bf6222d17863de389985874312e6a74b9df1a44e952a",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@img/sharp-darwin-arm64/lib/sharp-darwin-arm64.node": "05dba5ee40609b0ac94e14e591c515b3d9bd813ff5939625ff9a4bb78eb7c628",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@img/sharp-darwin-arm64/package.json": "58155bcbf12d3937751d3003794b6a54a64c973949be71ae036c9e2cfd993392",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@img/sharp-libvips-darwin-arm64/lib/glib-2.0/include/glibconfig.h": "6e6b30ab9b5f9142a926126e31807f5c0e8ed2f435a86587831f92cd30fe028c",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@img/sharp-libvips-darwin-arm64/lib/index.js": "516a08c06660cddb50d5f30ccac29a0514b05724956a11e8a7e6b799f2e1ab72",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@img/sharp-libvips-darwin-arm64/lib/libvips-cpp.8.17.3.dylib": "ad39fe2d407fca7532326eb819af010725a1df9187ef26a6d4aba629b71f173d",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@img/sharp-libvips-darwin-arm64/package.json": "36961cede2dd16bfac3ba20dbd340162e5f06ff0a4c766fb640a3aad2241940b",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@img/sharp-libvips-darwin-arm64/versions.json": "e823074bfa33ed7b1861b797dd3c60d7ef8c34cd2faa9a7d22ec32dd6d6ad8ad",
+    "/usr/local/bin/node": "9c40e9b16cacab464b63e45731ffd020830144a14c50d440b59b90e22709fe80"
+  },
+  "repositoryValueImportClosure": [
+    "scripts/product-images/batch-run.ts",
+    "scripts/product-images/cli-args.ts",
+    "scripts/product-intake/backfill-product-thumbnails.ts",
+    "scripts/product-intake/cli.ts",
+    "scripts/product-intake/product-thumbnail.ts",
+    "src/lib/observability/checkout.ts",
+    "src/lib/observability/product-intake.ts",
+    "src/lib/observability/sentry-scrubbing.ts"
+  ],
+  "externalPackages": [
+    "@sentry/nextjs",
+    "@supabase/supabase-js",
+    "dotenv",
+    "esbuild",
+    "sharp",
+    "tsx",
+    "typescript"
+  ],
+  "controls": [
+    {
+      "id": "image-clean-halo-minimum",
+      "file": "scripts/product-images/batch-run.ts",
+      "sourceSha256": "ce470ce7d24e838e5c552875981896986e8fab503ba5d6c236bcb022333fe2c2",
+      "mutatedSha256": "9b822df3f3881530d1c84b92b981001ff0ccf308b8a50501ada067012502eb16",
+      "anchor": {
+        "kind": "function",
+        "scope": "haloScore",
+        "expectedOccurrences": 1
+      },
+      "from": "return boundaryTotal > 0 ? warmDark / boundaryTotal : 0",
+      "to": "return boundaryTotal > 0 ? Math.max(0.03, warmDark / boundaryTotal) : 0",
+      "parseAs": "typescript",
+      "test": {
+        "file": "tests/product-images-batch-run.test.ts",
+        "name": "a clean high-res source is ok with no reason at all"
+      },
+      "intendedAssertion": "assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)",
+      "oracles": {
+        "transfer": {
+          "assertion": "assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)",
+          "startLine": 156,
+          "endLine": 156
+        },
+        "cut": {
+          "assertion": "assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)",
+          "startLine": 148,
+          "endLine": 148
+        }
+      },
+      "testPhases": {
+        "transfer": "d89fa62e48db960b07f71a0ca4c607eecfe6087e2aaf3ebad185b5e71c603070",
+        "cut": "92d64f7855f12b4913789510e2e3ef27c1c17de2226932eac40411304268b313"
+      }
+    }
+  ],
+  "limits": "Static owner value-import closure plus frozen26readset items. Direct external packages and installed Sharp/@img native binaries and Node pinned; lockfile pins resolution, not every transitive external byte or computed dynamic import. Supporting large callers read only relevant slices."
+}

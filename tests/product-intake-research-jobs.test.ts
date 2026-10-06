@@ -2,10 +2,7 @@ import assert from "node:assert/strict"
 import { readdirSync, readFileSync, rmSync } from "node:fs"
 import test from "node:test"
 
-import {
-  validateProductIntakeApprovalPayload,
-  type ProductIntakeReviewCategoryKey,
-} from "../src/lib/product-intake/category-validators"
+import { validateProductIntakeApprovalPayload } from "../src/lib/product-intake/category-validators"
 import {
   PRODUCT_INTAKE_ARTIFACT_KINDS,
   PRODUCT_INTAKE_NON_TERMINAL_JOB_STATUSES,
@@ -14,10 +11,6 @@ import {
   PRODUCT_INTAKE_TERMINAL_JOB_STATUSES,
   normalizeCodexConcurrency,
 } from "../packages/product-intake-core/src/jobs"
-import {
-  buildResearchedPayloadWithFinalImage,
-  finalImageUploadDecisionFromArtifacts,
-} from "../apps/product-intake-review/app/api/submissions/[submissionId]/publish/final-image-handoff"
 import { buildReviewPropertyRows } from "../apps/product-intake-review/app/submissions/[submissionId]/review-property-rows"
 import {
   createRetailerEnrichmentWarningReporter,
@@ -123,19 +116,6 @@ const submissionActionsSource = readFileSync(
   "apps/product-intake-review/app/submissions/[submissionId]/submission-actions.tsx",
   "utf8",
 )
-
-const REVIEW_CATEGORY_KEYS: ProductIntakeReviewCategoryKey[] = [
-  "shampoo",
-  "conditioner",
-  "mask",
-  "leave_in",
-  "oil",
-  "dry_shampoo",
-  "deep_cleansing_shampoo",
-  "bondbuilder",
-  "heat_protectant",
-  "scalp_care",
-]
 
 test("Bondbuilder worker prompt requires current full research instead of legacy intensity specs", (t) => {
   const path = writePromptPacket(
@@ -313,331 +293,6 @@ test("worker packet reports an exact-GTIN mismatch without preserving a packet o
   ])
 })
 
-const ARRAY_SPEC_TABLES = new Set([
-  "product_shampoo_specs",
-  "product_conditioner_specs",
-  "product_leave_in_eligibility",
-  "product_oil_eligibility",
-  "product_application_protocols",
-])
-
-function exactProtocol(category: ProductIntakeReviewCategoryKey, role: string) {
-  return {
-    category,
-    role,
-    cadence: { kind: "fixture" },
-    application_stage: "fixture_stage",
-    application_state: "either",
-    placement: "fixture_area",
-    contact_time_seconds: null,
-    rinse_action: "fixture_action",
-    reapplication: "not_stated",
-    instruction_modifiers: [],
-    source_label: "Hersteller",
-    source_url: "https://example.test/instructions",
-    source_text: "Exakte Herstelleranleitung.",
-    guidance_payload: {
-      schemaVersion: 1,
-      guidanceKey: `fixture-${category}-${role}`,
-      protocolVersion: 1,
-      locale: "de",
-      scope: { kind: "product", category, productId: "__PRODUCT_ID__" },
-      role: null,
-      applicationFamily: "post_wash_booster",
-      compatibleDayTypes: ["wash_day"],
-      exactGuidanceRequired: true,
-      sequence: { anchor: "damp_leave_on", before: [], after: [], conflictsWith: [] },
-      requirements: {
-        requiredCatalogFacts: [],
-        requiredProtocolFacts: [],
-        requiredProfileFacts: [],
-      },
-      protocolFacts: {
-        applicationArea: "lengths_ends",
-        rinse: "leave_in",
-        contactTimeSeconds: null,
-        conditionerRelationship: "not_applicable",
-        reapplication: "none",
-        amount: null,
-        cautions: [],
-      },
-      steps: [{ stepKey: "apply", action: "apply_product", copyTemplateDe: "Auftragen." }],
-      evidence: [
-        {
-          sourceUrl: "https://example.test/instructions",
-          sourceType: "manufacturer",
-          checkedAt: "2026-08-11",
-        },
-      ],
-    },
-  }
-}
-
-function approvalReadyPayload(
-  categoryKey: ProductIntakeReviewCategoryKey,
-  categorySpecs: Record<string, unknown>,
-) {
-  const fieldRationales = Object.fromEntries(
-    [
-      "product.canonical_brand",
-      "product.clean_name",
-      "product.category_key",
-      "product.suitable_thicknesses",
-      "product.affiliate_link",
-      "product.image_url",
-      "product.price_eur",
-      "product.purchase_link_status",
-      ...Object.keys(categorySpecs).flatMap((key) => [
-        `category_specs.${key}`,
-        `category_specs.${key}.audit_child`,
-      ]),
-    ].map((key) => [key, `Reviewed evidence supports ${key}.`]),
-  )
-
-  return {
-    final: {
-      product: {
-        canonical_brand: "Audit Brand",
-        product_line: null,
-        clean_name: `Audit ${categoryKey} Product`,
-        category_key: categoryKey,
-        suitable_thicknesses: ["heat_protectant", "dry_shampoo", "scalp_care"].includes(categoryKey)
-          ? []
-          : ["normal"],
-        affiliate_link: "https://example.test/product",
-        image_url: "https://example.test/raw-image.png",
-        price_eur: 9.95,
-        currency: "EUR",
-        purchase_link_status: "available",
-        purchase_link_checked_at: "2026-07-02T10:00:00.000Z",
-        price_checked_at: "2026-07-02T10:00:00.000Z",
-      },
-      identifiers: [
-        { type: "EAN", value: " 4063528086280 ", source: "https://example.test/product" },
-        {
-          identifier_type: "manufacturer_no",
-          identifier_value: "NQ-HO-RO-201",
-          source: "https://example.test/product",
-        },
-      ],
-      category_specs: categorySpecs,
-      sources: [
-        {
-          url: "https://example.test/product",
-          title: "Audit product page",
-          evidence: "Source supports the reviewed product fields and category specs.",
-        },
-      ],
-      field_rationales: fieldRationales,
-      review: {
-        manual_reviewed: false,
-        reviewed_by: null,
-        reviewed_at: null,
-        notes: "Worker preview only.",
-      },
-    },
-  }
-}
-
-function legacyRowsWrappedSpecs(specs: Record<string, unknown>): Record<string, unknown> {
-  return Object.fromEntries(
-    Object.entries(specs).map(([table, value]) => {
-      if (table === "product_oil_specs") return [table, value]
-      if (Array.isArray(value)) return [table, { rows: value }]
-      if (value && typeof value === "object") return [table, { rows: [value] }]
-      return [table, value]
-    }),
-  )
-}
-
-function validCategorySpecsForAudit(
-  categoryKey: ProductIntakeReviewCategoryKey,
-): Record<string, unknown> {
-  switch (categoryKey) {
-    case "shampoo":
-      return {
-        product_shampoo_specs: [
-          {
-            thickness: "fine",
-            shampoo_bucket: "normal",
-            scalp_route: "balanced",
-            cleansing_intensity: "regular",
-          },
-          {
-            thickness: "normal",
-            shampoo_bucket: "trocken",
-            scalp_route: "dry",
-            cleansing_intensity: "gentle",
-          },
-        ],
-        product_application_protocols: [exactProtocol(categoryKey, "shampoo_everyday")],
-      }
-    case "conditioner":
-      return {
-        product_conditioner_specs: [
-          { thickness: "fine", protein_moisture_balance: "snaps" },
-          { thickness: "normal", protein_moisture_balance: "stretches_bounces" },
-        ],
-        product_conditioner_rerank_specs: {
-          weight: "light",
-          repair_level: "medium",
-          balance_direction: null,
-          ingredient_flags: ["humectants"],
-        },
-        product_application_protocols: [exactProtocol(categoryKey, "conditioner_rinse_out")],
-      }
-    case "mask":
-      return {
-        product_mask_specs: {
-          weight: "medium",
-          concentration: "high",
-          balance_direction: "moisture",
-          ingredient_flags: ["humectants", "oils"],
-          repair_support_level: "medium",
-          functional_benefits: ["shine"],
-        },
-        product_application_protocols: [exactProtocol(categoryKey, "intensive_conditioning_mask")],
-      }
-    case "leave_in":
-      return {
-        product_leave_in_specs: {
-          format: "spray",
-          weight: "light",
-          roles: ["styling_prep"],
-          provides_heat_protection: true,
-          heat_activation_required: false,
-          care_benefits: ["moisture", "anti_frizz"],
-          ingredient_flags: ["polymers"],
-          application_stage: ["pre_heat"],
-          care_direction: "moisture",
-          repair_support_level: "low",
-          plan_roles: ["post_wash_leave_in", "pre_heat_application"],
-          functional_benefits: ["heat_protect"],
-        },
-        product_leave_in_fit_specs: {
-          weight: "light",
-          conditioner_relationship: "booster_only",
-          care_benefits: ["heat_protect", "detangle_smooth"],
-        },
-        product_leave_in_eligibility: [
-          { thickness: "fine", need_bucket: "heat_protect", styling_context: "heat_style" },
-          { thickness: "normal", need_bucket: "moisture_anti_frizz", styling_context: "air_dry" },
-        ],
-        product_application_protocols: [
-          exactProtocol(categoryKey, "post_wash_leave_in"),
-          exactProtocol(categoryKey, "pre_heat_protection"),
-        ],
-      }
-    case "oil":
-      return {
-        product_oil_specs: {
-          weight: "light",
-          role_support: ["dry_finish", "leave_on_fibre_conditioning"],
-          provides_heat_protection: false,
-        },
-        product_oil_eligibility: [
-          {
-            thickness: "fine",
-            oil_subtype: "trocken-oel",
-            oil_purpose: "light_finish",
-            ingredient_flags: ["silicones"],
-          },
-          {
-            thickness: "coarse",
-            oil_subtype: "natuerliches-oel",
-            oil_purpose: null,
-            ingredient_flags: ["oils"],
-          },
-        ],
-        product_application_protocols: [
-          exactProtocol(categoryKey, "dry_finish"),
-          exactProtocol(categoryKey, "leave_on_fibre_conditioning"),
-        ],
-      }
-    case "dry_shampoo":
-      return {
-        product_dry_shampoo_specs: {
-          primary_effect: "classic_refresh",
-          hair_color_fit: "universal",
-          scalp_sensitivity_fit: "sensitive_ok",
-          format: "aerosol_spray",
-        },
-        product_application_protocols: [exactProtocol(categoryKey, "root_refresh_bridge")],
-      }
-    case "deep_cleansing_shampoo":
-      return {
-        product_deep_cleansing_shampoo_specs: {
-          scalp_type_focus: "oily",
-          reset_intensity: "medium",
-          reset_focus: "product_sebum_buildup",
-          color_treated_suitability: "suitable",
-        },
-        product_application_protocols: [exactProtocol(categoryKey, "residue_reset")],
-      }
-    case "bondbuilder":
-      return {
-        product_bondbuilder_specs: {
-          bond_repair_intensity: "intensive",
-          application_mode: "post_wash_leave_in",
-          bond_repair_axis: "peptide_chain",
-          treatment_mode: "leave_in",
-          product_format: "leave_in_mask",
-          usage_protocol: "k18_leave_in",
-        },
-        product_application_protocols: [exactProtocol(categoryKey, "specialized_bond_treatment")],
-      }
-    case "heat_protectant":
-      return {
-        product_heat_protectant_specs: { format: "spray", provides_heat_protection: true },
-        product_application_protocols: [
-          {
-            category: "heat_protectant",
-            role: "pre_heat_protection",
-            cadence: { kind: "event" },
-            application_stage: "before_heat",
-            application_state: "damp",
-            placement: "lengths",
-            contact_time_seconds: null,
-            rinse_action: "leave_in",
-            reapplication: "required",
-            instruction_modifiers: [],
-            source_label: "Hersteller",
-            source_url: "https://example.test/instructions",
-            source_text: "Vor jeder Hitze anwenden.",
-            guidance_payload: exactProtocol(categoryKey, "pre_heat_protection").guidance_payload,
-          },
-        ],
-      }
-    case "scalp_care":
-      return {
-        product_scalp_care_specs: {
-          primary_role: "scalp_comfort",
-          presentation_format: "serum",
-          rinse_mode: "leave_on",
-          application_instructions: "Auf die Kopfhaut auftragen.",
-        },
-        product_application_protocols: [
-          {
-            category: "scalp_care",
-            role: "scalp_comfort",
-            cadence: { kind: "as_needed" },
-            application_stage: "after_washing",
-            application_state: "either",
-            placement: "scalp",
-            contact_time_seconds: null,
-            rinse_action: "leave_in",
-            reapplication: "not_stated",
-            instruction_modifiers: [],
-            source_label: "Hersteller",
-            source_url: "https://example.test/instructions",
-            source_text: "Bei Bedarf anwenden.",
-            guidance_payload: exactProtocol(categoryKey, "scalp_comfort").guidance_payload,
-          },
-        ],
-      }
-  }
-}
-
 test("workspace wiring keeps review cockpit separate from root app checks", () => {
   assert.deepEqual(packageJson.workspaces, ["apps/*", "packages/*"])
   assert.equal(
@@ -792,6 +447,13 @@ test("review cockpit kicks the local Codex worker after enqueueing work", () => 
   assert.match(workerKickSource, /spawn\("npm"/)
   assert.match(workerKickSource, /products:intake:codex-worker/)
   assert.match(workerKickSource, /--execute-codex/)
+  assert.match(workerKickSource, /"--execute-codex",\s*"--watch"/)
+  assert.match(workerKickSource, /"--concurrency",\s*"2"/)
+  assert.match(workerKickSource, /"--poll-ms",\s*"5000"/)
+  assert.match(
+    workerKickSource,
+    /npm run products:intake:codex-worker -- --execute-codex --watch --concurrency=2 --poll-ms=5000/,
+  )
   assert.match(workerKickSource, /detached: true/)
   assert.match(workerKickSource, /findRepoRoot/)
   assert.match(workerKickSource, /PRODUCT_INTAKE_CODEX_CONCURRENCY/)
@@ -1012,16 +674,6 @@ test("detail page exposes research artifacts, comments, rework, and preflight co
   assert.match(reviewCockpitCss, /identityCandidate/)
 })
 
-test("local worker kick starts a persistent watched worker", () => {
-  assert.match(workerKickSource, /"--execute-codex",\s*"--watch"/)
-  assert.match(workerKickSource, /"--concurrency",\s*"2"/)
-  assert.match(workerKickSource, /"--poll-ms",\s*"5000"/)
-  assert.match(
-    workerKickSource,
-    /npm run products:intake:codex-worker -- --execute-codex --watch --concurrency=2 --poll-ms=5000/,
-  )
-})
-
 test("review property rows show exact database field paths and raw approval values", () => {
   const rows = buildReviewPropertyRows(
     {
@@ -1155,24 +807,66 @@ test("review property rows show exact database field paths and raw approval valu
 })
 
 test("shampoo approval specs require explicit scalp routes", () => {
-  const payload = buildResearchedPayloadWithFinalImage(
-    approvalReadyPayload("shampoo", {
-      product_shampoo_specs: [
+  const payload = {
+    final: {
+      product: {
+        canonical_brand: "Audit Brand",
+        product_line: null,
+        clean_name: "Audit shampoo Product",
+        category_key: "shampoo",
+        suitable_thicknesses: ["normal"],
+        affiliate_link: "https://example.test/product",
+        image_url:
+          "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/audit/final.webp",
+        price_eur: 9.95,
+        currency: "EUR",
+        purchase_link_status: "available",
+        purchase_link_checked_at: "2026-07-02T10:00:00.000Z",
+        price_checked_at: "2026-07-02T10:00:00.000Z",
+      },
+      identifiers: [
+        { type: "ean", value: "4063528086280", source: "https://example.test/product" },
+        { type: "retailer_sku", value: "NQ-HO-RO-201", source: "https://example.test/product" },
+      ],
+      category_specs: {
+        product_shampoo_specs: [
+          {
+            thickness: "normal",
+            shampoo_bucket: "trocken",
+            scalp_route: null,
+            cleansing_intensity: "regular",
+          },
+        ],
+      },
+      sources: [
         {
-          thickness: "normal",
-          shampoo_bucket: "trocken",
-          scalp_route: null,
-          cleansing_intensity: "regular",
+          url: "https://example.test/product",
+          title: "Audit product page",
+          evidence: "Source supports the reviewed product fields and category specs.",
         },
       ],
-    }),
-    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/audit/final.webp",
-    {
-      reviewedBy: "nick",
-      reviewedAt: "2026-07-02T10:30:00.000Z",
-      notes: "Audit approval-shape normalization.",
+      field_rationales: {
+        "product.canonical_brand": "Reviewed evidence supports product.canonical_brand.",
+        "product.clean_name": "Reviewed evidence supports product.clean_name.",
+        "product.category_key": "Reviewed evidence supports product.category_key.",
+        "product.suitable_thicknesses": "Reviewed evidence supports product.suitable_thicknesses.",
+        "product.affiliate_link": "Reviewed evidence supports product.affiliate_link.",
+        "product.image_url": "Reviewed evidence supports product.image_url.",
+        "product.price_eur": "Reviewed evidence supports product.price_eur.",
+        "product.purchase_link_status": "Reviewed evidence supports product.purchase_link_status.",
+        "category_specs.product_shampoo_specs":
+          "Reviewed evidence supports category_specs.product_shampoo_specs.",
+        "category_specs.product_shampoo_specs.audit_child":
+          "Reviewed evidence supports category_specs.product_shampoo_specs.audit_child.",
+      },
+      review: {
+        manual_reviewed: true,
+        reviewed_by: "nick",
+        reviewed_at: "2026-07-02T10:30:00.000Z",
+        notes: "Audit approval-shape normalization.",
+      },
     },
-  )
+  }
   const validation = validateProductIntakeApprovalPayload(payload)
 
   assert.equal(validation.ok, false)
@@ -1181,68 +875,6 @@ test("shampoo approval specs require explicit scalp routes", () => {
     "final.category_specs.product_application_protocols",
     "final.category_specs.product_shampoo_specs.0.scalp_route",
   ])
-})
-
-test("final handoff normalizes every category into approval-validator shape", () => {
-  for (const categoryKey of REVIEW_CATEGORY_KEYS) {
-    const originalSpecs = validCategorySpecsForAudit(categoryKey)
-    const legacySpecs = legacyRowsWrappedSpecs(originalSpecs)
-    const updated = buildResearchedPayloadWithFinalImage(
-      approvalReadyPayload(categoryKey, legacySpecs),
-      "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/audit/final.webp",
-      {
-        reviewedBy: "nick",
-        reviewedAt: "2026-07-02T10:30:00.000Z",
-        notes: "Audit approval-shape normalization.",
-      },
-    )
-    const validation = validateProductIntakeApprovalPayload(updated)
-
-    assert.equal(
-      validation.ok,
-      true,
-      `${categoryKey} should validate after final handoff normalization: ${
-        validation.ok ? "" : validation.missingFields.join(", ")
-      }`,
-    )
-    assert.deepEqual(updated.final.identifiers, [
-      {
-        type: "ean",
-        value: "4063528086280",
-        source: "https://example.test/product",
-      },
-      {
-        type: "retailer_sku",
-        value: "NQ-HO-RO-201",
-        source: "https://example.test/product",
-      },
-    ])
-
-    const updatedCategorySpecs = updated.final.category_specs as Record<string, unknown>
-    const updatedFieldRationales = updated.final.field_rationales as Record<string, unknown>
-    for (const [table, expectedValue] of Object.entries(originalSpecs)) {
-      const actualValue = updatedCategorySpecs[table]
-      if (ARRAY_SPEC_TABLES.has(table)) {
-        assert.equal(
-          Array.isArray(actualValue),
-          true,
-          `${categoryKey}.${table} should stay an array`,
-        )
-      } else {
-        assert.equal(
-          Array.isArray(actualValue),
-          false,
-          `${categoryKey}.${table} should be one object`,
-        )
-      }
-      assert.deepEqual(actualValue, expectedValue)
-      assert.equal(
-        typeof updatedFieldRationales[`category_specs.${table}`],
-        "string",
-        `${categoryKey}.${table} should have a parent rationale`,
-      )
-    }
-  }
 })
 
 test("codex worker can run preview-only or explicit codex cli mode and persists review output", () => {
@@ -1440,180 +1072,6 @@ test("publish route is fail-closed and leaves final writes to the CLI handoff", 
   assert.match(preflightRouteSource, /publishRouteEnabled: false/)
   assert.match(preflightRouteSource, /validateSubmissionReady/)
   assert.match(preflightRouteSource, /approval_validation_failed/)
-})
-
-test("cockpit publish handoff promotes the processed image storage URL into the approval payload", () => {
-  const sourceImageUrl = "https://retailer.example.test/raw-image.jpg"
-  const finalPublicUrl =
-    "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-07-01/submission-1/final.webp"
-  const storagePath = "product-intake/2026-07-01/submission-1/final.webp"
-  const artifact = {
-    id: "artifact-1",
-    kind: "processed_image" as const,
-    status: "pending_review",
-    confidence: 0.9,
-    source_urls: [],
-    model: null,
-    prompt_version: null,
-    job_id: "job-1",
-    submission_id: "submission-1",
-    created_at: "2026-07-01T09:00:00.000Z",
-    payload: {
-      final_file: "/tmp/final.webp",
-      asset_sha256: "a".repeat(64),
-      thumbnail_file: "/tmp/thumbnail.webp",
-      thumbnail_asset_sha256: "b".repeat(64),
-      thumbnail_storage_path: `thumbnails/search-v1/${"a".repeat(64)}.webp`,
-      thumbnail_public_url: `https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/${"a".repeat(64)}.webp`,
-      storage_bucket: "product-images",
-      storage_path: storagePath,
-      planned_public_url: finalPublicUrl,
-      final_image_ready: true,
-      transparent_background_detected: true,
-    },
-  }
-  const staleArtifact = {
-    ...artifact,
-    id: "artifact-stale",
-    status: "needs_image_work",
-    created_at: "2026-07-01T09:05:00.000Z",
-    payload: {
-      ...artifact.payload,
-      final_image_ready: false,
-      transparent_background_detected: false,
-    },
-  }
-  const existingPayload = {
-    spec_operations: [{ table: "product_conditioner_specs" }],
-    final: {
-      review: {
-        manual_reviewed: false,
-        reviewed_by: null,
-        reviewed_at: null,
-        notes: "Prepared for Product Intake Review Cockpit only.",
-      },
-      product: {
-        canonical_brand: "Balea Professional",
-        clean_name: "Hair Sealer Leave-in Serum",
-        category_key: "leave_in",
-        image_url: sourceImageUrl,
-        product_mask_specs: {
-          weight: "medium",
-          concentration: "high",
-          balance_direction: "moisture",
-          ingredient_flags: ["humectants", "oils"],
-        },
-      },
-      identifiers: [
-        {
-          identifier_type: "manufacturer_product_number",
-          identifier_value: "2900101127",
-          source: "https://retailer.example.test/product",
-        },
-        {
-          identifier_type: "retailer_item_no",
-          identifier_value: "NF-NQ-HO-RO-201",
-          source: "https://retailer.example.test/product",
-        },
-      ],
-      category_specs: {
-        product_oil_eligibility: {
-          rows: [
-            {
-              thickness: "fine",
-              oil_subtype: "natuerliches-oel",
-              oil_purpose: "pre_wash_oiling",
-              ingredient_flags: ["oils"],
-            },
-          ],
-        },
-      },
-      field_rationales: {
-        "category_specs.product_mask_specs.weight":
-          "Mask texture and conditioning base indicate medium weight.",
-        "category_specs.product_oil_eligibility.0.oil_purpose":
-          "Official use is a rinse-out rosemary oil treatment before washing.",
-      },
-    },
-  }
-
-  const decision = finalImageUploadDecisionFromArtifacts([staleArtifact, artifact])
-  assert.equal(decision.ok, true)
-  assert.equal(decision.ok ? decision.publicUrl : null, finalPublicUrl)
-  assert.equal(decision.ok ? decision.storagePath : null, storagePath)
-  assert.equal(
-    decision.ok ? decision.thumbnailStoragePath : null,
-    `thumbnails/search-v1/${"a".repeat(64)}.webp`,
-  )
-  assert.equal(decision.ok ? decision.artifact.id : null, "artifact-1")
-
-  const updated = buildResearchedPayloadWithFinalImage(
-    existingPayload,
-    finalPublicUrl,
-    {
-      reviewedBy: "nick",
-      reviewedAt: "2026-07-02T08:30:00.000Z",
-      notes: "Approved from Product Intake Review Cockpit.",
-    },
-    {
-      canonicalImageSha256: "a".repeat(64),
-      thumbnailImageUrl: `https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/${"a".repeat(64)}.webp`,
-    },
-  )
-
-  assert.equal(updated.final.product.image_url, finalPublicUrl)
-  assert.equal(updated.final.product.canonical_image_sha256, "a".repeat(64))
-  assert.match(String(updated.final.product.thumbnail_image_url), /thumbnails\/search-v1/)
-  assert.deepEqual(updated.final.identifiers, [
-    {
-      type: "retailer_sku",
-      value: "2900101127",
-      source: "https://retailer.example.test/product",
-    },
-    {
-      type: "retailer_sku",
-      value: "NF-NQ-HO-RO-201",
-      source: "https://retailer.example.test/product",
-    },
-  ])
-  assert.deepEqual(updated.final.category_specs, {
-    product_oil_eligibility: [
-      {
-        thickness: "fine",
-        oil_subtype: "natuerliches-oel",
-        oil_purpose: "pre_wash_oiling",
-        ingredient_flags: ["oils"],
-      },
-    ],
-    product_mask_specs: {
-      weight: "medium",
-      concentration: "high",
-      balance_direction: "moisture",
-      ingredient_flags: ["humectants", "oils"],
-    },
-  })
-  assert.equal(
-    (updated.final.field_rationales as Record<string, unknown>)[
-      "category_specs.product_mask_specs"
-    ],
-    "Mask texture and conditioning base indicate medium weight.",
-  )
-  assert.equal(
-    (updated.final.field_rationales as Record<string, unknown>)[
-      "category_specs.product_oil_eligibility"
-    ],
-    "Official use is a rinse-out rosemary oil treatment before washing.",
-  )
-  assert.equal("product_mask_specs" in updated.final.product, false)
-  assert.deepEqual(updated.final.review, {
-    manual_reviewed: true,
-    reviewed_by: "nick",
-    reviewed_at: "2026-07-02T08:30:00.000Z",
-    notes: "Approved from Product Intake Review Cockpit.",
-  })
-  assert.equal("spec_operations" in updated, false)
-  assert.equal(existingPayload.final.product.image_url, sourceImageUrl)
-  assert.equal(existingPayload.final.review.manual_reviewed, false)
 })
 
 test("review decisions validate image and publish field paths", () => {

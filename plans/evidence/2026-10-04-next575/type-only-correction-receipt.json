@@ -1,0 +1,8 @@
+{
+  "file": "tests/scan-scanner-session.test.ts",
+  "before": "f876c3fba1cf329f67a0f73bea0fdb17fee350e33f9418e587ec22526f378252",
+  "after": "d3e5cdc7f92318e61c6495a074285c8e34ca8aa0f4eea0f3904b494cf751fa26",
+  "change": "Explicit existing expected-state generic type; no runtime calls/inputs/assertions changed",
+  "beforeSnapshot": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-scanner-typefix-b1hnxged/before.ts.txt",
+  "afterSnapshot": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-scanner-typefix-b1hnxged/after.ts.txt"
+}

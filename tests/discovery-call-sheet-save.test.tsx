@@ -664,7 +664,7 @@ test("generate (R15): a hand-edited brief asks before any request; cancel sends 
   }
 })
 
-test("generate (R15): unsaved Diagnose edits ask first; score/Gewohnheiten edits do not and survive", async () => {
+test("generate (R15): unsaved Diagnose edits ask first; score edits do not and survive", async () => {
   const { router } = fakeRouter()
   const render = createHarness(() => DiscoveryRunsheetBrief(briefProps()), router)
   const fetchStub = stubFetch(generated)
@@ -974,26 +974,22 @@ test("generate helpers: expected state, R15 warning, error lines, apply", () => 
   })
 })
 
-// --- the brief's lists + server stamp + R14 (consult-agent final review) -------------------
-
-test("brief lists: Call-Fragen and Erwartungen render editable; the Ziel-Lücken list is gone (v4)", () => {
-  const { router } = fakeRouter()
-  const tree = createHarness(() => DiscoveryRunsheetBrief(briefProps()), router)()
-  assert.equal(
-    findAll(tree, (element) => String(element.props.id ?? "").startsWith("runsheet-zielLuecken"))
-      .length,
-    0,
-  )
-  assert.equal(byId(tree, "runsheet-callFragen-s0-f-0").props.value, "Wie oft glättest du?")
-  assert.equal(byId(tree, "runsheet-erwartungen-s0-e-0").props.value, "Erste Wirkung nach 4 Wochen")
-})
-
 test("brief lists: edits mark the brief dirty (R15) and the save round-trips them", async () => {
   const { router } = fakeRouter()
   const render = createHarness(() => DiscoveryRunsheetBrief(briefProps()), router)
   const fetchStub = stubFetch(() => ({ status: 200, body: { callSheet: {} } }))
   try {
     let tree = render()
+    assert.equal(byId(tree, "runsheet-callFragen-s0-f-0").props.value, "Wie oft glättest du?")
+    assert.equal(
+      byId(tree, "runsheet-erwartungen-s0-e-0").props.value,
+      "Erste Wirkung nach 4 Wochen",
+    )
+    assert.equal(
+      findAll(tree, (element) => String(element.props.id ?? "").startsWith("runsheet-zielLuecken"))
+        .length,
+      0,
+    )
     byId(tree, "runsheet-callFragen-s0-f-0").props.onChange({
       target: { value: "Wie oft glättest du pro Woche?" },
     })
@@ -1191,20 +1187,18 @@ test("mechanik: shown above the Diagnose, an edit marks the brief dirty and is s
   }
 })
 
-test("Maßnahmen: two bucket-specific add buttons replace the single one", () => {
-  const { router } = fakeRouter()
-  const tree = createHarness(() => DiscoveryRunsheetBrief(briefProps()), router)()
-  assert.equal(byId(tree, "runsheet-hebel-add-produkt").props.children, "Produkt-Hebel hinzufügen")
-  assert.equal(byId(tree, "runsheet-hebel-add-umgang").props.children, "Umgang-Hebel hinzufügen")
-  assert.equal(findAll(tree, (element) => element.props.id === "runsheet-hebel-add").length, 0)
-})
-
 test("Maßnahmen: a Produkt add lands before the Umgang rows, an Umgang add at the end; buckets are saved", async () => {
   const { router } = fakeRouter()
   const render = createHarness(() => DiscoveryRunsheetBrief(briefProps()), router)
   const fetchStub = stubFetch(() => ({ status: 200, body: { callSheet: {} } }))
   try {
     let tree = render()
+    assert.equal(
+      byId(tree, "runsheet-hebel-add-produkt").props.children,
+      "Produkt-Hebel hinzufügen",
+    )
+    assert.equal(byId(tree, "runsheet-hebel-add-umgang").props.children, "Umgang-Hebel hinzufügen")
+    assert.equal(findAll(tree, (element) => element.props.id === "runsheet-hebel-add").length, 0)
     byId(tree, "runsheet-hebel-add-umgang").props.onClick()
     tree = render()
     byId(tree, "runsheet-hebel-add-produkt").props.onClick()

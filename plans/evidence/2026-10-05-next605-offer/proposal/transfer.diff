@@ -1,0 +1,28 @@
+--- a/tests/free-reveal.test.ts
++++ b/tests/free-reveal.test.ts
+@@ -116,12 +116,14 @@
+ })
+ 
+ test("consumeFreeReveal: second consume for the same user returns already_used", async () => {
+-  const { client, rows } = createFakeFreeRevealClient()
++  const fake = createFakeFreeRevealClient()
++  const { client, rows } = fake
+ 
+   const first = await consumeFreeReveal(client as never, {
+     userId: "user-1",
+     productId: "product-a",
+   })
++  assert.deepEqual(rows.get("user-1"), { user_id: "user-1", product_id: "product-a" })
+   const second = await consumeFreeReveal(client as never, {
+     userId: "user-1",
+     productId: "product-b",
+@@ -132,6 +134,9 @@
+   // The original row stands -- a second consume never overwrites what the
+   // credit was spent on.
+   assert.deepEqual(rows.get("user-1"), { user_id: "user-1", product_id: "product-a" })
++
++  assert.equal(fake.insertCalls, 2)
++  assert.equal(fake.selectCalls, 0)
+ })
+ 
+ test("consumeFreeReveal: relies on the insert's own PK conflict, never reads first", async () => {

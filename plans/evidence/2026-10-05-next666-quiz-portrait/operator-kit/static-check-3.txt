@@ -1,0 +1,30 @@
+{
+  "status": "PASS_STATIC_INTEGRITY",
+  "pinsSHA": "f834e22d29ca38c7105a3723a4aad845ef6ed96ee367b9ddfc78dac28308c396",
+  "parsed": [
+    "operator-edit.cjs",
+    "operator-guard.cjs",
+    "operator-native-proof.cjs",
+    "operator-proof.cjs",
+    "operator-readonly-preload.cjs",
+    "operator-run-controls.cjs",
+    "prepare-pins.cjs",
+    "proof-attestation.cjs",
+    "static-integrity.cjs"
+  ],
+  "original82Unchanged": true,
+  "scannerIdentityDependenciesUnchanged": true,
+  "scannerMessageDecoderByteExact": true,
+  "catalogDiagnosticValueByteExact": true,
+  "scannerIntendedPredicatePreservedWithAdditionalConjunctions": true,
+  "allTemplateSourceDispositionExplicit": true,
+  "controls": 3,
+  "sourceMutantParse": "enforced in guard --check",
+  "repositoryWrites": 0,
+  "children": 0,
+  "ownerImports": 0,
+  "network": 0,
+  "nativeRuns": 0
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

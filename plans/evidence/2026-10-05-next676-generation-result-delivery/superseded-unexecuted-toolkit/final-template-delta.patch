@@ -1,0 +1,383 @@
+--- reviewed-care102/operator-guard.cjs
++++ generation157/operator-guard.cjs
+@@ -4,8 +4,8 @@
+ const path = require('node:path')
+ const crypto = require('node:crypto')
+ const ROOT = '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+-const BASE = '/tmp/test-audit-care102-tools-fz8_q695/operator'
+-const PROPOSAL = '/tmp/test-audit-residual-care102-ezeu563r'
++const BASE = '/tmp/test-audit-generation157-tools-xwq0stb7/operator'
++const PROPOSAL = '/tmp/test-audit-plan-generation157-R7hJl1'
+ const LOCK = '/tmp/test-audit-pruning-operator-lock'
+ const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex')
+ const fail = message => { throw Error(message) }
+@@ -81,12 +81,14 @@
+   return rows
+ }
+ function nativeRegistrationNames(ts,file,text){
+-  const sf=parse(ts,file,text),names=[];
+-  function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){
+-    const title=n.arguments[0];if(!ts.isStringLiteralLike(title))fail('Dynamic title rejected');
+-    for(let p=n.parent;p;p=p.parent)if(ts.isForOfStatement(p)||ts.isForStatement(p)||ts.isForInStatement(p)||ts.isFunctionLike(p))fail('Dynamic or nested registration rejected');
+-    names.push(title.text);
+-  }if(ts.isCallExpression(n)&&n.expression.getText(sf)==='t.test')fail('Nested test rejected');ts.forEachChild(n,walk)}walk(sf);return names
++ const sf=parse(ts,file,text),names=[];
++ function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){
++  const title=n.arguments[0],loops=[];for(let p=n.parent;p;p=p.parent){if(ts.isFunctionLike(p)||ts.isForStatement(p)||ts.isForInStatement(p))fail('Nested/dynamic registration');if(ts.isForOfStatement(p))loops.push(p)}
++  if(!loops.length){if(!ts.isStringLiteralLike(title))fail('Unbound title');names.push(title.text)}else{
++   const loop=loops[0];if(file!=='tests/personal-plan/input.test.ts'||loops.length!==1||loop.initializer.getText(sf)!=='const field'||loop.expression.getText(sf)!=='["thickness", "elasticResponse"] as const'||title.getText(sf)!=='`mask-missing-${field}: required Mask target input fails closed at the shared parser`')fail('Only exact pre-existing two-row input loop accepted');
++   for(const field of ['thickness','elasticResponse'])names.push('mask-missing-'+field+': required Mask target input fails closed at the shared parser');
++  }
++ }if(ts.isCallExpression(n)&&n.expression.getText(sf)==='t.test')fail('Nested test');ts.forEachChild(n,walk)}walk(sf);return names
+ }
+ function replaceOnce(text,from,to,label) {
+   if (text.split(from).length !== 2) fail('Non-unique anchor: ' + label)
+@@ -109,9 +111,9 @@
+   guardArtifactsAndDependencies()
+   const evidence=readJSON(BASE+'-evidence.json'),candidates=readJSON(BASE+'-candidates.json'),controls=readJSON(BASE+'-controls-normalized.json')
+   const ts=require(ROOT+'/node_modules/typescript')
+-  if(evidence.root!==ROOT||evidence.head!==pins.head||evidence.branch!==pins.branch||candidates.length!==1||controls.length!==13||ts.version!==pins.typescriptVersion)fail('Proposal identity/count mismatch')
++  if(evidence.root!==ROOT||evidence.head!==pins.head||evidence.branch!==pins.branch||candidates.length!==7||controls.length!==18||ts.version!==pins.typescriptVersion)fail('Proposal identity/count mismatch')
+   const snapshots={},counts={before:0,transfer:0,cut:0};let unrelated=0,unchangedRetained=0,changedKeepers=0
+-  const keepers=new Map(candidates.map(c=>[c.keeper.file+'\0'+c.keeper.name,c.keeper]));if(keepers.size!==1)fail('One unique keeper required')
++  const keepers=new Map(candidates.flatMap(c=>c.keepers.map(k=>[k.file+'\0'+k.name,k])));if(keepers.size!==11)fail('Eleven unique preservation keepers required')
+   for(const file of Object.keys(evidence.phases.before)){
+     snapshots[file]={}
+     for(const phase of Object.keys(counts)){
+@@ -129,9 +131,10 @@
+         reconstructed=replaceOnce(reconstructed,k.body,k.after,'keeper transfer');changedKeepers++
+       }else if(k.reviewedEdits.length)fail('Unexpected assertion addition')
+     }
++    for(const e of evidence.supportEdits.filter(e=>e.file===file&&e.phase==='transfer'))reconstructed=replaceOnce(reconstructed,e.from,e.to,'exact observational support transfer');
+     if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated bytes')
+-    for(const c of local)reconstructed=replaceOnce(reconstructed,c.donor.body+'\n\n','',c.id)
+-    for(const edit of evidence.supportEdits.filter(e=>e.file===file))reconstructed=replaceOnce(reconstructed,edit.from,edit.to,'exact unused import removal')
++    for(const c of local)reconstructed=replaceOnce(reconstructed,c.donor.body,'',c.id)
++    for(const edit of evidence.supportEdits.filter(e=>e.file===file&&e.phase==='cut'))reconstructed=replaceOnce(reconstructed,edit.from,edit.to,'exact unused import removal')
+     if(reconstructed!==cut.bytes.toString())fail('Cut changed unrelated support bytes')
+     for(const [name,row]of before.rows){const t=transfer.rows.get(name),k=cut.rows.get(name)
+       if(local.some(c=>c.donor.name===name)){if(k||t?.statement!==row.statement)fail('Donor phase mismatch');continue}
+@@ -140,23 +143,19 @@
+       if(t?.statement!==row.statement||k?.statement!==row.statement)fail('Retained callback changed');unchangedRetained++;if(!keeper)unrelated++
+     }
+   }
+-  if(Object.keys(snapshots).length!==7||JSON.stringify(counts)!=='{"before":102,"transfer":102,"cut":101}'||unrelated!==100||unchangedRetained!==100||changedKeepers!==1)fail('Phase conservation mismatch')
+-  const ledger=readJSON(PROPOSAL+'/ledger.json');if(ledger.filter(j=>j.classification==='F').length!==4)fail('Held F count');
+-  for(const held of ledger.filter(j=>j.classification==='F'))for(const phase of ['before','transfer','cut'])if(sha(snapshots[held.file][phase].rows.get(JSON.parse(held.title))?.callback||'')!==held.callbackSHA256)fail('Held F changed');
++  if(Object.keys(snapshots).length!==27||JSON.stringify(counts)!=='{"before":157,"transfer":157,"cut":150}'||unrelated!==139||unchangedRetained!==143||changedKeepers!==7)fail('Phase conservation mismatch')
++  const ledger=readJSON(PROPOSAL+'/ledger.json').cases;if(ledger.filter(j=>j.verdict==='F').length!==11)fail('Held F count');
++  for(const held of ledger.filter(j=>j.verdict==='F'))for(const phase of ['before','transfer','cut'])if(sha(snapshots[held.file][phase].rows.get(held.name)?.callback||'')!==held.callbackSHA)fail('Held F changed');
+   for(const phase of ['before','transfer','cut']){
+     const names=Object.keys(snapshots).flatMap(file=>nativeRegistrationNames(ts,file,snapshots[file][phase].bytes.toString()));
+-    if(JSON.stringify(names)!==JSON.stringify(evidence.nativeNames[phase])||names.length!==(phase==='cut'?101:102)||new Set(names).size!==names.length)fail('Exact native registration inventory changed');
++    if(JSON.stringify(names)!==JSON.stringify(evidence.nativeNames[phase])||names.length!==(phase==='cut'?151:158)||new Set(names).size!==names.length)fail('Exact native registration inventory changed');
+   }
+   for(const c of candidates){
+-    const donor=snapshots[c.file].before.rows.get(c.donor.name)
+-    if(c.assertionUnion.length!==donor.assertions.length)fail('Incomplete donor assertion accounting')
+-    for(const phase of ['transfer','cut']){
+-      const row=snapshots[c.keeper.file][phase].rows.get(c.keeper.name)
+-      if(row?.statement!==c.keeper.after)fail('Keeper union phase mismatch')
+-      for(let i=0;i<c.assertionUnion.length;i++){
+-        const u=c.assertionUnion[i]
+-        if(u.donorText!==donor.assertions[i].text||u.keeperText!==row.assertions[u.keeperIndex]?.text||!u.basis)fail('Frozen whole assertion union mismatch')
+-      }
++    const donor=snapshots[c.file].before.rows.get(c.donor.name);
++    if(c.assertionUnion.length!==donor.assertions.length)fail('Incomplete donor assertion accounting');
++    for(let i=0;i<c.assertionUnion.length;i++){
++      const u=c.assertionUnion[i];if(u.donorText!==donor.assertions[i].text||!u.basis||!u.targets.length)fail('Donor assertion union missing');
++      for(const t of u.targets)for(const phase of ['transfer','cut']){const row=snapshots[t.file][phase].rows.get(t.name);if(row?.assertions[t.index]?.text!==t.text)fail('Exact destination assertion changed')}
+     }
+   }
+   function guards(overrides={}) {
+@@ -181,7 +180,7 @@
+   const exactCommand=['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1','--test-name-pattern=^'+escaped+'$',c.test.file]
+   if(JSON.stringify(c.command)!==JSON.stringify(exactCommand))fail('Control command is not exact pinned keeper')
+   const pattern=new RegExp('^'+escaped+'$')
+-  for(const phase of ['before','transfer','cut'])if([...ctx.snapshots[c.test.file][phase].rows.keys()].filter(n=>pattern.test(n)).length!==1)fail('Exactly one keeper must match in every phase')
++  for(const phase of ['before','transfer','cut'])if(nativeRegistrationNames(ctx.ts,c.test.file,ctx.snapshots[c.test.file][phase].bytes.toString()).filter(n=>pattern.test(n)).length!==1)fail('Exactly one keeper must match in every phase')
+   const original=fs.readFileSync(path.join(ROOT,c.file))
+   if(sha(original)!==c.sourceSha256)fail('Fault owner drift: '+c.id)
+   const text=original.toString(),sf=c.file.endsWith('.sql')?null:parse(ctx.ts,c.file,text)
+@@ -195,7 +194,7 @@
+   if(sf)parse(ctx.ts,c.file,mutated.toString());else if(c.anchor.kind!=='sql-bytes')fail('SQL raw-byte anchor required')
+   if(sha(mutated)!==c.mutatedSha256)fail('Prospective fault hash mismatch')
+   for(const phase of ['transfer','cut']){
+-    const row=ctx.snapshots[c.test.file][phase].rows.get(c.test.name),o=c.oracles[phase]
++    const row=ctx.snapshots[c.test.file][phase].rows.get(c.test.registrationName||c.test.name),o=c.oracles[phase]
+     const matches=row?.assertions.filter(a=>a.text===o.text)||[]
+     if(sha(row?.statement||'')!==o.keeperSha256||matches.length!==1||matches[0].startLine!==o.startLine||sha(ctx.snapshots[c.test.file][phase].bytes)!==o.testFileSha256)fail('Callback-scoped fault oracle drift')
+   }
+
+--- reviewed-care102/operator-edit.cjs
++++ generation157/operator-edit.cjs
+@@ -2,14 +2,14 @@
+ // Main only. --check is zero-write/no-child; mutation modes are never invoked by worker.
+ const fs=require('node:fs'),path=require('node:path')
+ const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='67f792bcbb94f1a2f6f807cddd4403c08da414aeec3748c71ad49d5bd28ccb89'
++const PIN_SHA='04fa5cb7e922f757827213f81d5eda7421e159408c146a11da8ea5e53a669a50'
+ const mode=(process.argv[2]||'check').replace(/^--/,'')
+ if(!['check','transfer','cut'].includes(mode)||(mode!=='cut'&&process.argv.length>3)||(mode==='cut'&&process.argv.length!==5))g.fail('Use --check | transfer | cut <transfer-receipt-dir> <completion-sha256>')
+ const context=g.load(PIN_SHA)
+ for(const c of context.controls)g.fault(context,c)
+ const initial=context.current()
+ if(mode==='check'){
+- console.log(JSON.stringify({mode,phase:initial.phase,counts:context.counts,unrelatedCallbacks:context.unrelated,unchangedRetainedCallbacks:context.unchangedRetained,parsedPhaseFiles:21,sourceControlsParsed:13,readsetGuards:context.pins.readset.length,dependencyFiles:context.pins.dependencies.length,repositoryWrites:0,childrenStarted:0},null,2));process.exit(0)
++ console.log(JSON.stringify({mode,phase:initial.phase,counts:context.counts,unrelatedCallbacks:context.unrelated,unchangedRetainedCallbacks:context.unchangedRetained,parsedPhaseFiles:81,sourceControlsParsed:18,readsetGuards:context.pins.readset.length,dependencyFiles:context.pins.dependencies.length,repositoryWrites:0,childrenStarted:0},null,2));process.exit(0)
+ }
+ const from=mode==='transfer'?'before':'transfer'
+ if(initial.phase!==from)g.fail('Expected '+from+', found '+initial.phase)
+
+--- reviewed-care102/operator-run-controls.cjs
++++ generation157/operator-run-controls.cjs
+@@ -2,7 +2,7 @@
+ // Main-only serial actual-owner faults. --check never starts a child or writes repository bytes.
+ const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process')
+ const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='67f792bcbb94f1a2f6f807cddd4403c08da414aeec3748c71ad49d5bd28ccb89'
++const PIN_SHA='04fa5cb7e922f757827213f81d5eda7421e159408c146a11da8ea5e53a669a50'
+ const mode=(process.argv[2]||'check').replace(/^--/,'')
+ const selectedId=process.argv[3]
+ if(!['check','run'].includes(mode)||process.argv.length>4)g.fail('Use --check [control-id] | run [control-id]')
+@@ -10,8 +10,9 @@
+ if(!controls.length)g.fail('Unknown control ID')
+ const prepared=new Map(context.controls.map(c=>[c.id,g.fault(context,c)])),initial=context.current()
+ if(mode==='check'){
+-  console.log(JSON.stringify({mode,phase:initial.phase,controls:controls.length,tsMutantsParsed:13,sqlByteRecipes:0,allControlsPrepared:prepared.size===13,phaseOracles:'exact assertion startLine and text in transfer/cut',selectedTestCount:1,repositoryWrites:0,runtimeRuns:0,childrenStarted:0},null,2));process.exit(0)
++  console.log(JSON.stringify({mode,phase:initial.phase,controls:controls.length,tsMutantsParsed:18,sqlByteRecipes:0,allControlsPrepared:prepared.size===18,phaseOracles:'exact assertion startLine and text in transfer/cut',selectedTestCount:1,repositoryWrites:0,runtimeRuns:0,childrenStarted:0},null,2));process.exit(0)
+ }
++if(!selectedId&&context.controls.some(c=>!c.diagnosticReady))g.fail('Full run blocked: unresolved D1-required-thickness diagnostic. No automatic probe. Root may explicitly select it for controlled capture, which cannot pass or authorize cut.');
+ if(!['transfer','cut'].includes(initial.phase))g.fail('Transfer/cut phase required; no original false-pass claim')
+ for(const key of ['TRIAL_ADMISSION_MUTANT','TRIAL_ACCESS_MUTANT','NODE_OPTIONS','TSX_TSCONFIG_PATH'])if(process.env[key])g.fail('Existing harness mutant is active: '+key)
+ const phase=initial.phase,unlock=g.lock(),receipts=[]
+@@ -52,7 +53,7 @@
+ ;(async()=>{
+  try{
+   dir=fs.mkdtempSync(g.BASE+'-mutations-'+phase+'-')
+-  // Snapshot ALL7 test originals and ALL unique mutant-owner originals before first child/write.
++  // Snapshot ALL27 test originals and ALL unique mutant-owner originals before first child/write.
+   ensurePhase()
+   const originals=new Map(Object.entries(initial.bytes))
+   for(const control of context.controls)originals.set(control.file,prepared.get(control.id).original)
+@@ -93,6 +94,6 @@
+   const complete={phase,verified:receipts.length,controlIds:receipts.map(r=>r.id),cleanRuns:receipts.length*2,root:g.ROOT,head:context.pins.head,branch:context.pins.branch,pinsSHA:PIN_SHA,receiptSHA256:g.sha(fs.readFileSync(path.join(dir,'receipt.json'))),allTestHashes:Object.fromEntries(Object.entries(final.bytes).map(([f,b])=>[f,g.sha(b)])),sourceGuards:context.pins.readset}
+   const completeBytes=JSON.stringify(complete,null,2)+'\n'
+   fs.writeFileSync(path.join(dir,'complete.json'),completeBytes,{flag:'wx'})
+-  console.log(JSON.stringify({receiptDir:dir,completionSHA256:g.sha(completeBytes),verified:receipts.length,eligibleForCut:phase==='transfer'&&receipts.length===13},null,2))
++  console.log(JSON.stringify({receiptDir:dir,completionSHA256:g.sha(completeBytes),verified:receipts.length,eligibleForCut:phase==='transfer'&&receipts.length===18},null,2))
+  }finally{killOwnedGroup('SIGKILL');process.off('SIGINT',stop);process.off('SIGTERM',stop);unlock()}
+ })().catch(error=>{record();if(dir)fs.writeFileSync(path.join(dir,'failure.json'),JSON.stringify({error:String(error),interrupted},null,2)+'\n',{flag:'wx'});console.error(error);process.exitCode=1})
+
+--- reviewed-care102/operator-proof.cjs
++++ generation157/operator-proof.cjs
+@@ -28,19 +28,20 @@
+  const operator=run.text.match(/^\s{2}operator:\s*['"]([^'"]+)['"]\s*$/m)?.[1]||''
+  const message=errorMessage(run.text)
+  const codes=[...run.text.matchAll(/^\s{2}code:\s*['"]([^'"]+)['"]\s*$/gm)].map(m=>m[1])
++ const names=[...run.text.matchAll(/^\s{2}name:\s*['"]([^'"]+)['"]\s*$/gm)].map(m=>m[1])
+  const messageMatches=typeof message==='string'&&control.errorMessageIncludes.length>=2&&control.errorMessageIncludes.every(t=>message.includes(t))
+- return {accepted:run.status===1&&run.signal===null&&!run.timedOut&&!run.spawnError&&run.tests===1&&run.pass===0&&run.fail===1&&run.skipped===0&&run.cancelled===0&&run.todo===0&&codes.length===1&&codes[0]==='ERR_ASSERTION'&&named(control,run)&&operator===control.expectedOperator&&messageMatches&&firstFrame.includes(stackToken),operator,message,messageMatches,firstFrame,stackToken,expected:oracle}
++ return {accepted:run.status===1&&run.signal===null&&!run.timedOut&&!run.spawnError&&run.tests===1&&run.pass===0&&run.fail===1&&run.skipped===0&&run.cancelled===0&&run.todo===0&&codes.length===1&&codes[0]==='ERR_ASSERTION'&&names.length===1&&names[0]==='AssertionError'&&control.diagnosticReady===true&&named(control,run)&&operator===control.expectedOperator&&messageMatches&&firstFrame.includes(stackToken),operator,message,messageMatches,firstFrame,stackToken,expected:oracle}
+ }
+ function validateTransferReceipt(ctx,pinSHA,dir,completionSHA){
+  if(!dir||!new RegExp('^'+g.BASE.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'-mutations-transfer-[A-Za-z0-9]+$').test(dir)||path.dirname(fs.realpathSync(dir))!==fs.realpathSync(path.dirname(g.BASE)))g.fail('Exact owned transfer receipt directory required')
+  if(!/^[a-f0-9]{64}$/.test(completionSHA||''))g.fail('Main must provide exact completion SHA256')
+  const raw=fs.readFileSync(path.join(dir,'complete.json'));if(g.sha(raw)!==completionSHA)g.fail('Completion receipt hash mismatch')
+  const complete=JSON.parse(raw),receiptBytes=fs.readFileSync(path.join(dir,'receipt.json'))
+- if(complete.pinsSHA!==pinSHA||complete.root!==g.ROOT||complete.head!==ctx.pins.head||complete.branch!==ctx.pins.branch||complete.phase!=='transfer'||complete.verified!==13||complete.cleanRuns!==26||g.sha(receiptBytes)!==complete.receiptSHA256)g.fail('Incomplete/wrong transfer proof')
+- if(JSON.stringify(complete.controlIds)!==JSON.stringify(ctx.controls.map(c=>c.id)))g.fail('Required13 controls absent or out of order')
++ if(complete.pinsSHA!==pinSHA||complete.root!==g.ROOT||complete.head!==ctx.pins.head||complete.branch!==ctx.pins.branch||complete.phase!=='transfer'||complete.verified!==18||complete.cleanRuns!==36||g.sha(receiptBytes)!==complete.receiptSHA256)g.fail('Incomplete/wrong transfer proof')
++ if(JSON.stringify(complete.controlIds)!==JSON.stringify(ctx.controls.map(c=>c.id)))g.fail('Required18 controls absent or out of order')
+  for(const[file,hash]of Object.entries(complete.allTestHashes||{})){if(!ctx.snapshots[file]||hash!==g.sha(ctx.snapshots[file].transfer.bytes))g.fail('Receipt test phase mismatch')}
+- if(Object.keys(complete.allTestHashes||{}).length!==7)g.fail('Full cohort proof missing')
+- const records=JSON.parse(receiptBytes);if(records.length!==13)g.fail('Thirteen records required')
++ if(Object.keys(complete.allTestHashes||{}).length!==27)g.fail('Full cohort proof missing')
++ const records=JSON.parse(receiptBytes);if(records.length!==18)g.fail('Eighteen records required')
+  function reload(record,label,c){
+   const p=path.join(dir,c.id+'-'+label+'.tap')
+   if(record.log!==p||!record.logSHA256||g.sha(fs.readFileSync(p))!==record.logSHA256)g.fail('TAP path/hash drift')
+@@ -55,6 +56,6 @@
+   for(const readset of ctx.pins.readset)if(r.readsetBefore?.[readset.file]!==readset.sha||r.readsetAfter?.[readset.file]!==readset.sha)g.fail('Readset proof mismatch: '+c.id)
+   if(!clean(c,reload(r.before,'before',c))||!intended(c,reload(r.fault,'fault',c),'transfer').accepted||!clean(c,reload(r.after,'after',c)))g.fail('Required clean1/red1/restored clean1 not proved: '+c.id)
+  }
+- return {dir,completionSHA,verified:13,logFiles:39,phase:'transfer'}
++ return {dir,completionSHA,verified:18,logFiles:54,phase:'transfer'}
+ }
+ module.exports={parseTAP,named,clean,errorMessage,intended,validateTransferReceipt}
+
+
+--- reviewed-care102/operator-native-proof.cjs
++++ generation157/operator-native-proof.cjs
+@@ -1,7 +1,7 @@
+ 'use strict';
+ // Main's read-only full-cohort receipt checker. Does not run native or import tests.
+ const fs=require('node:fs'),path=require('node:path'),g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs');
+-const PIN_SHA='67f792bcbb94f1a2f6f807cddd4403c08da414aeec3748c71ad49d5bd28ccb89';
++const PIN_SHA='04fa5cb7e922f757827213f81d5eda7421e159408c146a11da8ea5e53a669a50';
+ if(process.argv.length!==5)g.fail('Use <before|transfer|cut> <closed-native.tap> <command.json>');
+ const [phase,logPath,commandPath]=process.argv.slice(2),ctx=g.load(PIN_SHA);
+ if(!['before','transfer','cut'].includes(phase)||ctx.current().phase!==phase)g.fail('Exact current native phase required');
+@@ -9,6 +9,7 @@
+ const raw=fs.readFileSync(logPath),commandBytes=fs.readFileSync(commandPath),command=JSON.parse(commandBytes);
+ if(JSON.stringify(command)!==JSON.stringify(expectedCommand))g.fail('Exact full cohort command receipt required');
+ const text=raw.toString(),totals=proof.parseTAP(text),names=[...text.matchAll(/^# Subtest: (.+)$/gm)].map(x=>x[1]);
+-const expected=ctx.evidence.nativeNames[phase],n=phase==='cut'?101:102;
+-if(totals.tests!==n||totals.pass!==n||totals.fail!==0||totals.skipped!==0||totals.cancelled!==0||totals.todo!==0||names.length!==n||new Set(names).size!==n||names.some(name=>!expected.includes(name))||/^not ok /m.test(text))g.fail('Full native names/count/pass proof failed');
++const expected=ctx.evidence.nativeNames[phase],n=phase==='cut'?151:158;
++if(totals.tests!==n||totals.pass!==n-1||totals.fail!==0||totals.skipped!==1||totals.cancelled!==0||totals.todo!==0||names.length!==n||new Set(names).size!==n||names.some(name=>!expected.includes(name))||/^not ok /m.test(text))g.fail('Full native names/count/pass proof failed');
++const skipped=[...text.matchAll(/^ok \d+ - (.+?) # SKIP(?: .*)?$/gm)].map(x=>x[1]);if(JSON.stringify(skipped)!==JSON.stringify(['real PostgreSQL serializes parallel repairs and rejects a concurrent source change']))g.fail('Only unchanged opt-in PostgreSQL skip allowed');
+ console.log(JSON.stringify({status:'PASS_RECORDED_FULL_NATIVE_TAP',phase,totals,logPath:path.resolve(logPath),logSHA256:g.sha(raw),commandSHA256:g.sha(commandBytes),pinsSHA:PIN_SHA,counts:ctx.counts,limits:'Main must attest closed process exit 0; text validation cannot prove process status. No runtime launched by this checker.',repositoryWrites:0,children:0,ownerImports:0},null,2));
+
+--- reviewed-care102/prepare-pins.cjs
++++ generation157/prepare-pins.cjs
+@@ -1,7 +1,7 @@
+ 'use strict';
+ // TMP-only static preparation. Product/test modules are never loaded.
+ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),cp=require('node:child_process'),Module=require('node:module'),assert=require('node:assert/strict');
+-const R='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',D='/tmp/test-audit-care102-tools-fz8_q695',P='/tmp/test-audit-residual-care102-ezeu563r',T='/tmp/test-audit-scanner119-tools-e5gg36wq';
++const R='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',D='/tmp/test-audit-generation157-tools-xwq0stb7',P='/tmp/test-audit-plan-generation157-R7hJl1',T='/tmp/test-audit-care102-tools-fz8_q695';
+ let attemptedRepositoryWrites=0,attemptedChildren=0,attemptedOwnerImports=0,attemptedNetworkCalls=0;
+ for(const n of ['spawn','spawnSync','exec','execSync','execFile','execFileSync','fork'])cp[n]=()=>{attemptedChildren++;throw Error('Preparation child forbidden')};
+ const load=Module._load;Module._load=function(request,parent,isMain){const full=Module._resolveFilename(request,parent,isMain);if(typeof full==='string'&&full.startsWith(R+'/')&&/^(src|tests|scripts)\//.test(full.slice(R.length+1))){attemptedOwnerImports++;throw Error('Owner import forbidden')}return load.call(this,request,parent,isMain)};
+@@ -9,31 +9,59 @@
+ for(const n of ['writeFileSync','appendFileSync','mkdirSync','chmodSync','unlinkSync','rmSync','rmdirSync','truncateSync','utimesSync','mkdtempSync']){const fn=fs[n];fs[n]=function(p,...args){if(typeof p!=='string'||!path.resolve(p).startsWith(D+'/')){attemptedRepositoryWrites++;throw Error('Outside own TMP write')}return fn.call(this,p,...args)}}
+ for(const n of ['renameSync','copyFileSync','symlinkSync','linkSync'])fs[n]=()=>{throw Error('Preparation operation forbidden '+n)};
+ const sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p)),write=(n,x)=>{const file=D+'/'+n,bytes=Buffer.from(JSON.stringify(x,null,2)+'\n');if(fs.existsSync(file)){if(!fs.readFileSync(file).equals(bytes))throw Error('Existing TMP artifact differs: '+n)}else fs.writeFileSync(file,bytes,{flag:'wx',mode:0o444})},fail=m=>{throw Error(m)};
+-const oldBytes=fs.readFileSync(T+'/operator-pins.json');if(sha(oldBytes)!=='b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f')fail('Template pins drift');
+-if(sha(fs.readFileSync(P+'/manifest.json'))!=='946a680f03ce84419ba6e3dc31e6c155cbecb2d96d10f36b2ee3a1dc6cec1a9b'||sha(fs.readFileSync(P+'/handoff-receipt.json'))!=='d926359a52cb978c073d649af31c99a2ca5ca3c5d6f9c54d8839a0355f8a6000')fail('Proposal drift');
++const oldBytes=fs.readFileSync(T+'/operator-pins.json');if(sha(oldBytes)!=='67f792bcbb94f1a2f6f807cddd4403c08da414aeec3748c71ad49d5bd28ccb89')fail('Template pins drift');
++if(sha(fs.readFileSync(P+'/manifest.json'))!=='5a1b8e56f7e6fc31b1f972fa98d91d8746169261702e5a3bef33f9f6ce74abcd'||sha(fs.readFileSync(P+'/handoff.json'))!=='504f0497b4ce931fe86b5ae449d547a410102a75d803f09115c939c96928003a')fail('Proposal drift');
+ const old=JSON.parse(oldBytes),M=read(P+'/manifest.json'),g=require('./operator-guard.cjs'),ts=require(R+'/node_modules/typescript'),req=Module.createRequire(R+'/package.json');
+ g.identity(old);
+-const original=read(P+'/read-scope.json').readset,files=M.phaseHashes.filter(x=>x.phase==='before').map(x=>x.file),cohort=new Set(files);
+-if(original.length!==83||files.length!==7)fail('Original scope');for(const p of original)if(sha(fs.readFileSync(R+'/'+p.file))!==p.sha256)fail('Original83 drift '+p.file);
+-for(const a of M.artifacts)if(sha(fs.readFileSync(P+'/'+a.file))!==a.sha256)fail('Proposal seal drift '+a.file);
+-const evidence={root:R,head:M.head,branch:M.branch,ownedFiles:files,phases:{},snapshotPaths:{},supportEdits:[],nativeNames:{}};
+-for(const phase of ['before','transfer','cut']){evidence.phases[phase]={};evidence.snapshotPaths[phase]={};const names=[];for(const f of files){const p=P+'/snapshots/'+phase+'/'+f,b=fs.readFileSync(p),expected=M.phaseHashes.find(x=>x.phase===phase&&x.file===f);if(sha(b)!==expected.sha256)fail('Phase drift');evidence.phases[phase][f]=sha(b);evidence.snapshotPaths[phase][f]=p;names.push(...g.nativeRegistrationNames(ts,f,b.toString()))}if(names.length!==(phase==='cut'?101:102)||new Set(names).size!==names.length)fail('Native names');evidence.nativeNames[phase]=names}
++const original=read(P+'/readsets.json'),files=M.scope,cohort=new Set(files);
++if(original.length!==109||files.length!==27)fail('Original scope');for(const p of original)if(sha(fs.readFileSync(R+'/'+p.file))!==p.sha256)fail('Original109 drift '+p.file);
++for(const a of M.artifacts)if(sha(fs.readFileSync(P+'/'+a.path))!==a.sha256)fail('Proposal seal drift '+a.path);
++const evidence={root:R,head:M.head,branch:M.branch,ownedFiles:files,phases:{},snapshotPaths:{},supportEdits:[{phase:'transfer',file:'tests/personal-plan-prepare-route.test.ts',from:'  const rateCalls: Array<{ identifier: string; prefix: string }> = []',to:'  const rateCalls: Array<{ identifier: string; prefix: string }> = []\n  const rateConfigs: Array<{ prefix: string; limit: number; windowMs: number }> = []'},{phase:'transfer',file:'tests/personal-plan-prepare-route.test.ts',from:'      rateCalls.push({ identifier, prefix: config.prefix })',to:'      rateCalls.push({ identifier, prefix: config.prefix })\n      rateConfigs.push({ ...config })'},{phase:'transfer',file:'tests/personal-plan-prepare-route.test.ts',from:'  return { deps, order, rateCalls, preparations, warnings }',to:'  return { deps, order, rateCalls, rateConfigs, preparations, warnings }'},{phase:'cut',file:'tests/personal-plan/types.test.ts',from:'import {\n  INITIAL_UNKNOWN_ROUTINE_CONTEXT,\n  STAGE1_CATEGORY_ORDER,\n} from "../../src/lib/personal-plan/types"',to:'import { STAGE1_CATEGORY_ORDER } from "../../src/lib/personal-plan/types"'}],nativeNames:{}};
++for(const phase of ['before','transfer','cut']){evidence.phases[phase]={};evidence.snapshotPaths[phase]={};const names=[];for(const f of files){const p=P+'/'+phase+'/'+f,b=fs.readFileSync(p),expected=M.phases[phase].find(x=>x.file===f);if(sha(b)!==expected.sha256)fail('Phase drift');evidence.phases[phase][f]=sha(b);evidence.snapshotPaths[phase][f]=p;names.push(...g.nativeRegistrationNames(ts,f,b.toString()))}if(names.length!==(phase==='cut'?151:158)||new Set(names).size!==names.length)fail('Native names');evidence.nativeNames[phase]=names}
+ write('operator-evidence.json',evidence);
+ function keeperEdit(before,after){if(before===after)return[];const a=before.split('\n'),b=after.split('\n');let p=0,q=0;while(p<a.length&&p<b.length&&a[p]===b[p])p++;while(q<a.length-p&&q<b.length-p&&a[a.length-1-q]===b[b.length-1-q])q++;let start=Math.max(0,p-1),end=Math.min(a.length,a.length-q+1),bend=Math.min(b.length,b.length-q+1);while(true){const from=a.slice(start,end).join('\n'),to=b.slice(start,bend).join('\n');if(from&&before.split(from).length===2&&before.replace(from,()=>to)===after)return[{from,to}];if(start>0)start--;else if(end<a.length){end++;bend++}else fail('Cannot isolate reviewed keeper hunk')}}
+-const candidates=read(P+'/candidates.json').map(c=>{const rows=phase=>g.registrations(ts,c.file,fs.readFileSync(evidence.snapshotPaths[phase][c.file],'utf8'));const donor=rows('before').get(JSON.parse(c.donor.title)),before=rows('before').get(JSON.parse(c.keeper.title)),after=rows('transfer').get(before.name);if(sha(donor.callback)!==c.donor.callbackSHA256||sha(before.callback)!==c.keeper.callbackSHA256||donor.assertions.length!==7||before.assertions.length!==3||after.assertions.length!==10)fail('Candidate identity');return{id:c.id,mark:c.classification,file:c.file,donor:{name:donor.name,body:donor.statement,sha256:sha(donor.statement)},keeper:{file:c.file,name:before.name,body:before.statement,sha256:sha(before.statement),after:after.statement,reviewedEdits:keeperEdit(before.statement,after.statement)},assertionUnion:donor.assertions.map((a,i)=>{if(a.text!==after.assertions[i+3].text||a.text!==c.assertionUnion[i].text)fail('Exact union');return{donorText:a.text,keeperIndex:i+3,keeperText:after.assertions[i+3].text,basis:c.inputEquivalence}}),equivalence:c.inputEquivalence}});
+-write('operator-candidates.json',candidates);
++const candidates=read(P+'/candidates.json').map(c=>{
++ const rows=(phase,file)=>g.registrations(ts,file,fs.readFileSync(evidence.snapshotPaths[phase][file],'utf8'));
++ const donor=rows('before',c.donor.file).get(c.donor.name);if(donor.statement!==c.donor.fullStatement||sha(donor.callback)!==c.donor.sha256)fail('Original donor');
++ const keepers=c.keepers.map(k=>{const before=rows('before',k.file).get(k.name),after=rows('transfer',k.file).get(k.name);if(before.statement!==k.before.statement||after.statement!==k.transfer.statement||sha(before.callback)!==k.before.callbackSHA||sha(after.callback)!==k.transfer.callbackSHA)fail('Keeper pins');return{file:k.file,name:k.name,body:before.statement,sha256:sha(before.statement),after:after.statement,reviewedEdits:keeperEdit(before.statement,after.statement)}});
++ const target=(k,index)=>{const row=rows('transfer',k.file).get(k.name);if(!row.assertions[index])fail('Union destination absent');return{file:k.file,name:k.name,index,text:row.assertions[index].text}};
++ const assertionUnion=donor.assertions.map((a,i)=>{
++  let targets=[];const first=keepers[0],list=rows('transfer',first.file).get(first.name).assertions;
++  if(c.id==='C1'||c.id==='C2')targets=[target(first,list.length-1)];
++  else if(c.id==='C3')targets=[target(first,list.length-(i<2?3:i===2?1:2))];
++  else if(c.id==='C4')targets=keepers.map(k=>target(k,rows('transfer',k.file).get(k.name).assertions.length-3+i));
++  else if(c.id==='D1')targets=[target(first,0)];
++  else if(c.id==='D2'){const index=list.findIndex(x=>x.text==='assert.equal(sends[0].transactionalMessageId, 42)');targets=[target(first,index)]}
++  else if(c.id==='D3'){const index=list.findIndex(x=>x.text===a.text);targets=[target(first,index)]}
++  else fail('Unexpected candidate');return{donorText:a.text,targets,basis:c.equivalence+' '+c.assertionUnion};
++ });
++ return{id:c.id,mark:c.classification,file:c.donor.file,donor:{name:donor.name,body:donor.statement,sha256:sha(donor.statement)},keepers,keeper:keepers[0],assertionUnion,equivalence:c.equivalence,limits:'Union destinations are frozen literal assertion bodies; semantic interpretation is retained from proposal, not independently accepted by toolkit.'};
++});write('operator-candidates.json',candidates);
+ // Decode literal expected values from frozen assertion AST only; never evaluate source expressions.
+ function literal(n){if(ts.isStringLiteralLike(n))return n.text;if(ts.isNumericLiteral(n))return Number(n.text);if(n.kind===ts.SyntaxKind.TrueKeyword)return true;if(n.kind===ts.SyntaxKind.FalseKeyword)return false;if(n.kind===ts.SyntaxKind.NullKeyword)return null;if(ts.isArrayLiteralExpression(n))return n.elements.map(literal);if(ts.isObjectLiteralExpression(n)){const out={};for(const p of n.properties){if(!ts.isPropertyAssignment(p)||!(ts.isIdentifier(p.name)||ts.isStringLiteralLike(p.name)))fail('Nonliteral expected property');out[p.name.text]=literal(p.initializer)}return out}fail('Nonliteral expected input')}
+-const controls=read(P+'/controls.json').map(c=>{const text=fs.readFileSync(R+'/'+c.source,'utf8');if(sha(text)!==c.originalSourceSHA256)fail('Source drift');const mutant=g.replaceOnce(text,c.find,c.replace,c.id);if(sha(mutant)!==c.mutantSHA256)fail('Full mutant drift');g.parse(ts,c.source,mutant);const out=D+'/mutants/'+c.id+'/'+c.source;fs.mkdirSync(path.dirname(out),{recursive:true});fs.writeFileSync(out,mutant,{flag:'wx',mode:0o444});
+- const o={};for(const phase of ['transfer','cut']){const frozen=c.oracle[phase],file=c.oracle.testFile,b=fs.readFileSync(evidence.snapshotPaths[phase][file]),row=g.registrations(ts,file,b.toString()).get(c.oracle.keeperTitle);if(row.assertions.filter(a=>a.startLine===frozen.line&&a.text===frozen.assertion).length!==1)fail('Oracle drift');o[phase]={startLine:frozen.line,text:frozen.assertion,keeperSha256:sha(row.statement),testFileSha256:sha(b)}}
+- const sf=g.parse(ts,'assertion.ts',o.transfer.text),call=sf.statements[0].expression;if(!ts.isCallExpression(call)||call.arguments.length!==2)fail('Two-argument assertion required');const expected=literal(call.arguments[1]);let actual=structuredClone(expected);const index=Number(c.id.slice(3));
+- if(index<=3)actual.reverse();else if(index<=10){const changes={4:['key','wrong-assignment'],5:['assessment','optional'],6:['inclusion','excluded'],7:['availability','none'],8:['fitDecision','standard'],9:['executable',false],10:['productKind','none']};const [field,value]=changes[index];actual[0][field]=value}else actual=true;
+- const message=new assert.AssertionError({actual,expected,operator:c.oracle.operator}).message;const name=c.oracle.keeperTitle,file=c.oracle.testFile,escaped=name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+- return{id:c.id,candidates:[c.candidate],file:c.source,sourceSha256:c.originalSourceSHA256,mutatedSha256:c.mutantSHA256,anchor:{kind:'file',scope:c.source,scopeSha256:c.originalSourceSHA256,expectedOccurrences:1},from:c.find,to:c.replace,fullMutantPath:out,test:{file,name},command:['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1','--test-name-pattern=^'+escaped+'$',file],oracles:o,expectedOperator:c.oracle.operator,expectedValue:expected,actualValue:actual,errorMessageIncludes:[message.trimEnd(),message.split('\n')[0]],intendedAssertion:o.transfer.text,limits:'Static literal-value diagnostic prediction only; actual owner sensitivity requires main clean/red/byte-restored/clean runs and first outer assertion frame.'}
+-});if(controls.length!==13||new Set(controls.map(c=>c.mutatedSha256)).size!==13)fail('13 unique faults');write('operator-controls-normalized.json',controls);
++const controls=read(P+'/controls.json').map(c=>{
++ const text=fs.readFileSync(R+'/'+c.owner,'utf8');if(sha(text)!==c.sourceSHA256)fail('Source drift '+c.id);
++ const mutant=g.replaceOnce(text,c.uniqueFrom,c.to,c.id);if(sha(mutant)!==c.mutantSHA256||sha(fs.readFileSync(P+'/'+c.mutantSnapshot))!==c.mutantSHA256)fail('Original mutant drift');g.parse(ts,c.owner,mutant);
++ const out=D+'/mutants/'+c.id+'/'+c.owner;fs.mkdirSync(path.dirname(out),{recursive:true});if(fs.existsSync(out)){if(fs.readFileSync(out,'utf8')!==mutant)fail('Existing own mutant differs')}else fs.writeFileSync(out,mutant,{flag:'wx',mode:0o444});
++ const file=c.keeper.file,name=c.keeper.title,registrationName=name.startsWith('mask-missing-thickness:')?'`mask-missing-${field}: required Mask target input fails closed at the shared parser`':name,o={};
++ for(const phase of ['transfer','cut']){const frozen=c.oracle.phase[phase],b=fs.readFileSync(evidence.snapshotPaths[phase][file]),row=g.registrations(ts,file,b.toString()).get(registrationName),matches=row?.assertions.filter(a=>a.startLine===frozen.line&&a.text.startsWith(frozen.assertion))||[];if(matches.length!==1)fail('Oracle drift '+c.id);o[phase]={startLine:frozen.line,text:matches[0].text,keeperSha256:sha(row.statement),testFileSha256:sha(b)}}
++ const sf=g.parse(ts,'assertion.ts',o.transfer.text),call=sf.statements[0].expression;
++ let expected=c.oracle.expected,actual=c.oracle.prospectiveActual,ready=c.id!=='D1-required-thickness';
++ if(c.id==='C2-default-reason'){expected=literal(call.arguments[1]);actual=structuredClone(expected);actual.scalpIrritationState.reason='heat_tool_use'}
++ else if(/^C3-(ip|journey)-/.test(c.id)){
++  expected=literal(call.arguments[1]);actual=structuredClone(expected);const [,group,field]=c.id.split('-'),index=group==='ip'?0:1;
++  if(field==='prefix')actual[index].prefix+='-wrong';else if(field==='limit')actual[index].limit++;else actual[index].windowMs=11000;
++ }
++ let message;
++ if(c.id.startsWith('C4-')){if(call.arguments.length!==3||!ts.isStringLiteral(call.arguments[2])||call.arguments[2].text!==c.oracle.messageIncludes)fail('Exact custom SSR message required');message=call.arguments[2].text}
++ else if(ready)message=new assert.AssertionError({actual,expected,operator:c.oracle.operator}).message;
++ else message='UNRESOLVED: D1-required-thickness complete successful envelope diagnostic must be reviewed by root; no acceptance from any generic failure.';
++ const escaped=name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
++ return{id:c.id,candidates:[c.candidate],file:c.owner,sourceSha256:c.sourceSHA256,mutatedSha256:c.mutantSHA256,anchor:{kind:'file',scope:c.owner,scopeSha256:c.sourceSHA256,expectedOccurrences:1},from:c.uniqueFrom,to:c.to,fullMutantPath:out,test:{file,name,registrationName},command:['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1','--test-name-pattern=^'+escaped+'$',file],oracles:o,expectedOperator:c.oracle.operator,expectedValue:expected,actualValue:actual,diagnosticReady:ready,diagnosticKind:c.id.startsWith('C4-')?'exact custom SSR assertion message, not full actual HTML':ready?'full predicted literal error message':'unresolved successful payload diagnostic',errorMessageIncludes:[message.trimEnd(),message.split('\n')[0]],intendedAssertion:o.transfer.text,limits:'No runtime evidence. Full decoded message and FIRST keeper assertion required. D1-required-thickness cannot pass this version; no fabricated successful envelope.'}
++});if(controls.length!==18||new Set(controls.map(c=>c.mutatedSha256)).size!==18)fail('18 unique faults');write('operator-controls-normalized.json',controls);
+ const originalPins=new Map(original.map(p=>[p.file,p.sha256])),readset=new Map(original.filter(p=>!cohort.has(p.file)).map(p=>[p.file,p.sha256])),queue=[...files,'tests/server-only-register.cjs'],seen=new Set(),edges=[],externals=new Set(),nonliteral=[],origins={};
+ const opts={moduleResolution:ts.ModuleResolutionKind.Bundler,module:ts.ModuleKind.ESNext,allowJs:true,resolveJsonModule:true,baseUrl:R,paths:{'@/*':['src/*']}};
+-while(queue.length){const file=queue.shift();if(seen.has(file))continue;seen.add(file);if(seen.size>500)fail('Local closure bound');const text=fs.readFileSync(R+'/'+file,'utf8'),h=sha(text);if(!cohort.has(file)){const prior=originalPins.get(file);if(prior&&prior!==h)fail('Original closure drift');readset.set(file,prior||h);origins[file]=prior?'original83 strict':'first-time literal local closure pin; no semantic review credit'}if(!/\.(?:[cm]?[jt]sx?)$/.test(file))continue;const sf=g.parse(ts,file,text);
++while(queue.length){const file=queue.shift();if(seen.has(file))continue;seen.add(file);if(seen.size>1500)fail('Local closure bound');const text=fs.readFileSync(R+'/'+file,'utf8'),h=sha(text);if(!cohort.has(file)){const prior=originalPins.get(file);if(prior&&prior!==h)fail('Original closure drift');readset.set(file,prior||h);origins[file]=prior?'original109 strict':'first-time literal local closure pin; no semantic review credit'}if(!/\.(?:[cm]?[jt]sx?)$/.test(file))continue;const sf=g.parse(ts,file,text);
+  function add(spec,kind){if(spec.startsWith('node:'))return;if(!spec.startsWith('.')&&!spec.startsWith('@/')){externals.add(spec);return}const full=ts.resolveModuleName(spec,R+'/'+file,opts,ts.sys).resolvedModule?.resolvedFileName;if(!full||!full.startsWith(R+'/')||full.includes('/node_modules/'))fail('Unresolved local '+file+' '+spec);const dest=path.relative(R,full);edges.push({from:file,to:dest,spec,kind});queue.push(dest)}
+  function walk(n){if((ts.isImportDeclaration(n)||ts.isExportDeclaration(n))&&n.moduleSpecifier&&ts.isStringLiteralLike(n.moduleSpecifier))add(n.moduleSpecifier.text,n.importClause?.isTypeOnly||n.isTypeOnly?'type-only':'static');if(ts.isCallExpression(n)&&(n.expression.kind===ts.SyntaxKind.ImportKeyword||n.expression.getText(sf)==='require')){if(n.arguments[0]&&ts.isStringLiteralLike(n.arguments[0]))add(n.arguments[0].text,'literal dynamic');else nonliteral.push({file,line:sf.getLineAndCharacterOfPosition(n.getStart(sf)).line+1})}ts.forEachChild(n,walk)}walk(sf)
+ }
+@@ -42,16 +70,16 @@
+ function pin(file){return{path:file,realpath:fs.realpathSync(file),sha:sha(fs.readFileSync(file))}}
+ for(const spec of [...externals,'typescript','tsx']){let entry;try{entry=req.resolve(spec)}catch{fail('Unresolved external '+spec)}if(!path.isAbsolute(entry))continue;const pkg=R+'/node_modules/'+(spec.startsWith('@')?spec.split('/').slice(0,2).join('/'):spec.split('/')[0])+'/package.json';for(const file of[entry,pkg]){const fresh=pin(file),prior=deps.get(file);if(prior&&(prior.sha!==fresh.sha||prior.realpath!==fresh.realpath))fail('Existing dependency drift');deps.set(file,prior||fresh)}externalPins.push({specifier:spec,entry,package:pkg})}
+ if(deps.size>6000||trees.length!==32)fail('Bounded selected runtime envelope');
+-const closure={nativeTests:files,localFiles:[...seen].sort(),edges,externalPins,nonliteralImports:nonliteral,pinOrigins:origins,limits:'Literal local imports including types only, not semantic review or owner execution. Template5020 dependency files/32 selected distributions retained byte/member exact; new selected entry/package files only. No recursive vendor expansion. No arbitrary dynamic-load guarantee.'};write('operator-selected-closure.json',closure);
++const closure={nativeTests:files,localFiles:[...seen].sort(),edges,externalPins,nonliteralImports:nonliteral,pinOrigins:origins,limits:'Literal local imports including types only, not semantic review or owner execution. Reviewed template dependency files/32 selected distributions retained byte/member exact; new selected entry/package files only. No recursive vendor expansion. No arbitrary dynamic-load guarantee.'};write('operator-selected-closure.json',closure);
+ write('full-native-command.json',{executable:process.execPath,args:['--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1',...files],cwd:R});
+-const artifacts={};for(const a of M.artifacts)artifacts[P+'/'+a.file]=a.sha256;for(const file of ['manifest.json','handoff-receipt.json'])artifacts[P+'/'+file]=sha(fs.readFileSync(P+'/'+file));for(const x of M.phaseHashes)artifacts[P+'/snapshots/'+x.phase+'/'+x.file]=x.sha256;
+-for(const p of original){const frozen=P+'/read-snapshots/'+p.file;if(sha(fs.readFileSync(frozen))!==p.sha256)fail('Original snapshot drift '+p.file);artifacts[frozen]=p.sha256}
+-for(const file of ['operator-guard.cjs','operator-proof.cjs','operator-readonly-preload.cjs','operator-evidence.json','operator-candidates.json','operator-controls-normalized.json','operator-selected-closure.json','prepare-pins.cjs','prepare-tools.py','template-delta.patch','template-provenance.json','proof-attestation.cjs','static-integrity.cjs','README.md','full-native-command.json'])artifacts[D+'/'+file]=sha(fs.readFileSync(D+'/'+file));
++const artifacts={};for(const a of M.artifacts)artifacts[P+'/'+a.path]=a.sha256;for(const file of ['manifest.json','handoff.json'])artifacts[P+'/'+file]=sha(fs.readFileSync(P+'/'+file));for(const phase of ['before','transfer','cut'])for(const x of M.phases[phase])artifacts[P+'/'+phase+'/'+x.file]=x.sha256;
++for(const p of original){if(p.file==='node_modules/typescript/lib/typescript.js'){if(p.readDepth!=='mechanical hash only; not semantic read'||sha(fs.readFileSync(R+'/'+p.file))!==p.sha256)fail('Explicit parser mechanical pin drift');continue}const frozen=P+(cohort.has(p.file)?'/before/':'/original-readsets/')+p.file;if(sha(fs.readFileSync(frozen))!==p.sha256)fail('Original snapshot drift '+p.file);artifacts[frozen]=p.sha256}
++for(const file of ['operator-guard.cjs','operator-proof.cjs','operator-readonly-preload.cjs','operator-evidence.json','operator-candidates.json','operator-controls-normalized.json','operator-selected-closure.json','prepare-pins.cjs','prepare-tools.py','template-provenance.json','proof-attestation.cjs','static-integrity.cjs','README.md','full-native-command.json'])artifacts[D+'/'+file]=sha(fs.readFileSync(D+'/'+file));
+ for(const c of controls)artifacts[c.fullMutantPath]=c.mutatedSha256;for(const file of fs.readdirSync(D+'/template-originals'))artifacts[D+'/template-originals/'+file]=sha(fs.readFileSync(D+'/template-originals/'+file));
+ for(const [file,h]of Object.entries(old.artifactHashes))if(file.startsWith('/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/')||file===old.metadataPolicy.path){if(sha(fs.readFileSync(file))!==h)fail('Existing metadata policy drift');artifacts[file]=h}
+ const entrypointTemplateHashes={};for(const file of ['operator-edit.cjs','operator-run-controls.cjs','operator-native-proof.cjs'])entrypointTemplateHashes[D+'/'+file]=sha(fs.readFileSync(D+'/'+file));
+-const pins={root:R,head:M.head,branch:M.branch,gitDir:old.gitDir,commonDir:old.commonDir,identityFiles:old.identityFiles,node:old.node,typescriptVersion:old.typescriptVersion,metadataPolicy:old.metadataPolicy,original83Guards:original,readset:[...readset].sort(([a],[b])=>a.localeCompare(b)).map(([file,sha])=>({file,sha})),dependencies:[...deps.values()].sort((a,b)=>a.path.localeCompare(b.path)),dependencyTrees:trees,repositoryTrees:[],artifactHashes:artifacts,entrypointTemplateHashes,limits:closure.limits};
+-for(const p of original)if(sha(fs.readFileSync(R+'/'+p.file))!==p.sha256)fail('Original83 final drift');g.identity(pins);if(ts.version!==pins.typescriptVersion)fail('Parser version drift');
++const pins={root:R,head:M.head,branch:M.branch,gitDir:old.gitDir,commonDir:old.commonDir,identityFiles:old.identityFiles,node:old.node,typescriptVersion:old.typescriptVersion,metadataPolicy:old.metadataPolicy,original109Guards:original,readset:[...readset].sort(([a],[b])=>a.localeCompare(b)).map(([file,sha])=>({file,sha})),dependencies:[...deps.values()].sort((a,b)=>a.path.localeCompare(b.path)),dependencyTrees:trees,repositoryTrees:[],artifactHashes:artifacts,entrypointTemplateHashes,limits:closure.limits};
++for(const p of original)if(sha(fs.readFileSync(R+'/'+p.file))!==p.sha256)fail('Original109 final drift');g.identity(pins);if(ts.version!==pins.typescriptVersion)fail('Parser version drift');
+ const bytes=JSON.stringify(pins,null,2)+'\n',pinSHA=sha(bytes);fs.writeFileSync(D+'/operator-pins.json',bytes,{flag:'wx',mode:0o444});
+ for(const file of ['operator-edit.cjs','operator-run-controls.cjs','operator-native-proof.cjs']){const s=fs.readFileSync(D+'/'+file,'utf8');if(s.split("const PIN_SHA='PIN_SHA_PLACEHOLDER'").length!==2)fail('Entrypoint placeholder');fs.writeFileSync(D+'/'+file,s.replace("const PIN_SHA='PIN_SHA_PLACEHOLDER'","const PIN_SHA='"+pinSHA+"'"))}
+-console.log(JSON.stringify({directory:D,pinSHA,originalGuards:83,phases:{before:102,transfer:102,cut:101},nativeCounts:{before:102,transfer:102,cut:101},readset:readset.size,localClosure:seen.size,dependencies:deps.size,dependencyTrees:trees.length,controls:13,tsMutants:13,nonliteralImports:nonliteral,attemptedRepositoryWrites,attemptedChildren,attemptedOwnerImports,attemptedNetworkCalls},null,2));
++console.log(JSON.stringify({directory:D,pinSHA,originalGuards:109,phases:{before:157,transfer:157,cut:150},nativeCounts:{before:158,transfer:158,cut:151},readset:readset.size,localClosure:seen.size,dependencies:deps.size,dependencyTrees:trees.length,controls:18,tsMutants:18,unresolvedDiagnostics:controls.filter(c=>!c.diagnosticReady).map(c=>c.id),nonliteralImports:nonliteral,attemptedRepositoryWrites,attemptedChildren,attemptedOwnerImports,attemptedNetworkCalls},null,2));
+
+--- reviewed-care102/proof-attestation.cjs
++++ generation157/proof-attestation.cjs
+@@ -5,7 +5,7 @@
+ function tap(c,phase){const o=c.oracles[phase];return `TAP version 13\n# Subtest: ${c.test.name}\nnot ok 1 - ${c.test.name}\n  ---\n  error: |-\n    ${c.errorMessageIncludes[0].replaceAll('\n','\n    ')}\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  operator: '${c.expectedOperator}'\n  stack: |-\n    TestContext.<anonymous> (${c.test.file}:${o.startLine}:10)\n    Test.run (node:internal/test_runner/test:1000:1)\n  ...\n1..1\n# tests 1\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n`}
+ function run(text,extra={}){return{status:1,signal:null,timedOut:false,spawnError:null,...proof.parseTAP(text),text,...extra}}
+ for(const c of controls)for(const phase of ['transfer','cut']){
+- const text=tap(c,phase);ok(proof.intended(c,run(text),phase).accepted,c.id+' intended');
++ const text=tap(c,phase);if(!c.diagnosticReady){ok(!proof.intended(c,run(text),phase).accepted,'Unresolved thickness never accepted');continue}ok(proof.intended(c,run(text),phase).accepted,c.id+' intended');
+  ok(!proof.intended(c,run(text,{timedOut:true}),phase).accepted,'timeout rejected');
+  ok(!proof.intended(c,run(text,{signal:'SIGKILL'}),phase).accepted,'signal rejected');
+  ok(!proof.intended(c,run(text,{spawnError:'error'}),phase).accepted,'spawn rejected');
+@@ -31,4 +31,4 @@
+  ok(proof.clean(c,run(cleanText,{status:0})),'clean accepted');
+  ok(!proof.clean(c,run(cleanText.replace('# tests 1','# tests 0'),{status:0})),'zero clean rejected');
+ }
+-console.log(JSON.stringify({status:'PASS_STATIC_SYNTHETIC_PARSER_ONLY',controls:13,phases:2,assertions,children:0,ownerImports:0,repositoryWrites:0,runtimeClaims:0,note:'Diagnostic-shape rejection checks only, not native fault sensitivity or real TAP evidence.'},null,2));
++console.log(JSON.stringify({status:'PASS_STATIC_SYNTHETIC_PARSER_ONLY',controls:18,phases:2,assertions,children:0,ownerImports:0,repositoryWrites:0,runtimeClaims:0,note:'Diagnostic-shape rejection checks only, not native fault sensitivity or real TAP evidence.'},null,2));
+
+--- reviewed-care102/static-integrity.cjs
++++ generation157/static-integrity.cjs
+@@ -1,13 +1,13 @@
+ 'use strict';
+ const fs=require('node:fs'),vm=require('node:vm'),crypto=require('node:crypto');
+-const D=__dirname,P='/tmp/test-audit-residual-care102-ezeu563r',sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p));
++const D=__dirname,P='/tmp/test-audit-plan-generation157-R7hJl1',sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p));
+ const old=read(D+'/template-originals/operator-pins.json'),pins=read(D+'/operator-pins.json');
+ const parsed=[];for(const n of fs.readdirSync(D).filter(n=>n.endsWith('.cjs'))){new vm.Script(fs.readFileSync(D+'/'+n,'utf8'),{filename:n});parsed.push(n)}
+-const prefix=s=>s.slice(0,s.indexOf('function validateTransferReceipt('));if(prefix(fs.readFileSync(D+'/operator-proof.cjs','utf8'))!==prefix(fs.readFileSync(D+'/template-originals/operator-proof.cjs','utf8')))throw Error('Strict decoded FULL message/FIRST frame policy changed');
+-if(JSON.stringify(pins.original83Guards)!==JSON.stringify(read(P+'/read-scope.json').readset))throw Error('Original83 repinned');
++const extract=s=>s.slice(s.indexOf('function parseTAP('),s.indexOf('function intended('));if(extract(fs.readFileSync(D+'/operator-proof.cjs','utf8'))!==extract(fs.readFileSync(D+'/template-originals/operator-proof.cjs','utf8')))throw Error('Base counter/clean/error decoder changed');
++if(JSON.stringify(pins.original109Guards)!==JSON.stringify(read(P+'/readsets.json')))throw Error('Original109 repinned');
+ for(const k of ['head','branch','gitDir','commonDir','node','typescriptVersion','metadataPolicy','identityFiles'])if(JSON.stringify(pins[k])!==JSON.stringify(old[k]))throw Error('Existing identity/policy drift '+k);
+ for(const p of old.dependencies)if(!pins.dependencies.some(q=>JSON.stringify(p)===JSON.stringify(q)))throw Error('Existing dependency changed');
+ if(JSON.stringify(old.dependencyTrees)!==JSON.stringify(pins.dependencyTrees))throw Error('Existing distribution changed');
+-const controls=read(D+'/operator-controls-normalized.json');if(controls.length!==13||new Set(controls.map(x=>x.mutatedSha256)).size!==13)throw Error('13 unique controls');
++const controls=read(D+'/operator-controls-normalized.json');if(controls.length!==18||new Set(controls.map(x=>x.mutatedSha256)).size!==18)throw Error('18 unique controls');
+ for(const c of controls)if(sha(fs.readFileSync(c.fullMutantPath))!==c.mutatedSha256)throw Error('Full mutant drift');
+-console.log(JSON.stringify({status:'PASS_STATIC',pinsSHA:sha(fs.readFileSync(D+'/operator-pins.json')),parsedToolFiles:parsed,original83GuardsUnchanged:true,templateIdentityRuntimeDependenciesUnchanged:true,strictProofPredicateDecoderByteIdentical:true,sourceControls:13,repositoryWrites:0,children:0,ownerImports:0,nativeRuns:0},null,2));
++console.log(JSON.stringify({status:'PASS_STATIC',pinsSHA:sha(fs.readFileSync(D+'/operator-pins.json')),parsedToolFiles:parsed,original109GuardsUnchanged:true,templateIdentityRuntimeDependenciesUnchanged:true,baseCounterCleanDecoderByteIdentical:true,unresolvedDiagnosticBlocked:controls.filter(c=>!c.diagnosticReady).map(c=>c.id),sourceControls:18,repositoryWrites:0,children:0,ownerImports:0,nativeRuns:0},null,2));

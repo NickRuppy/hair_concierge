@@ -1,0 +1,35 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "phase": "cut",
+  "counts": {
+    "before": 83,
+    "transfer": 83,
+    "cut": 81
+  },
+  "pinsSHA": "53a0eef9d6f320b4e07ca6987d9b8c995dfbc459e349f3fe2384cf94475a9d76",
+  "prerequisite": {
+    "dir": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z",
+    "completionSHA": "a67b07eec8846f9801e09ae11bd1ab100e9f76afb7dc2dccd843779b935919c1",
+    "verified": 2,
+    "logFiles": 6,
+    "phase": "transfer"
+  },
+  "changed": [
+    "tests/reactivation-retained-account-activation.test.ts"
+  ],
+  "allTestHashes": {
+    "tests/reactivation-stripe-context-postgres.test.ts": "386b328b8478e40597058348a792890627f573e3df9a6697ed7e1723fc54a270",
+    "tests/reactivation-checkout-metadata.test.ts": "784478263208522bf37bb2dffc1f4e816811d0b08c45f345e4d5aca92b76bd3e",
+    "tests/reactivation-retained-account-activation.test.ts": "1cfbd182a19d4408e704de5d28ef3ddee7517873c0fd549f2651bb8835aa3573",
+    "tests/reactivation-stripe-context-runtime.test.ts": "257a4a472930539e71266d8320dffd60f175b091749ba5c74caae4ebf75e84e9",
+    "tests/reactivation-helpers.test.ts": "6639b8910ac9253d87b2b008fb5e53c3f38e335511a518b6dcb97fa7dea39ab7",
+    "tests/reactivation-checkout-recovery.spec.ts": "82f0c6591d955477440721ee865bfa370055d12b9066b0f8c881ab86aa401a8a",
+    "tests/reactivation-trial-management.test.ts": "c8f04e9cbc7d85c908b7e9a59fc753a42c3cad7bd8156f9075b24222c984d637",
+    "tests/reactivation-auth-return.test.ts": "0438dc495f5c5c01c6f0ee0ed6406cfaafc359d8086fe0debe5f99bfbd35b17d",
+    "tests/reactivation-routing.test.ts": "72b7affede80ab62f0db66e4c73e42f8c3ac532ed6e2100c46172f0bcf998623"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-apply-cut-hIzViW/originals"
+}

@@ -1,0 +1,23 @@
+{
+  "status": "static PASS",
+  "counts": {
+    "before": 119,
+    "transfer": 119,
+    "cut": 105
+  },
+  "files": 21,
+  "snapshots": 63,
+  "candidates": 14,
+  "keepers": 7,
+  "unrelatedCallbacks": 98,
+  "heldF": 2,
+  "guards": 76,
+  "controls": 18,
+  "tsSourceMutantsParsed": 16,
+  "sqlRecipesNotExecuted": 2,
+  "repositoryWrites": 0,
+  "children": 0,
+  "ownerImports": 0,
+  "nativeTests": 0,
+  "node": "v22.12.0"
+}

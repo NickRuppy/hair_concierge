@@ -1,0 +1,31 @@
+TAP version 13
+# Subtest: route handler returns controlled client error for wrong-user upload paths
+not ok 1 - route handler returns controlled client error for wrong-user upload paths
+  ---
+  duration_ms: 8.304458
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/product-intake-submissions.test.ts:2:59898'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    410 !== 400
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 400
+  actual: 410
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/product-intake-submissions.test.ts:1983:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 396.815

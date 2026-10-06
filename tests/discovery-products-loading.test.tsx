@@ -39,19 +39,16 @@ function realEmptyScreen() {
   )
 }
 
-test("the loading screen reads exactly like the empty products screen", () => {
+test("the loading screen reuses the real screen's layout classes and has no controls", () => {
   const loading = renderToStaticMarkup(<DiscoveryChecklistLoading />)
-  assert.deepEqual(textSequence(loading), textSequence(realEmptyScreen()))
+  const real = realEmptyScreen()
+  assert.deepEqual(textSequence(loading), textSequence(real))
   assert.deepEqual(textSequence(loading).slice(0, 3), [
     "Deine Produkte",
     "Produkt suchen",
     "Scannen",
   ])
-})
-
-test("the loading screen reuses the real screen's layout classes and has no controls", () => {
-  const loading = renderToStaticMarkup(<DiscoveryChecklistLoading />)
-  const realClasses = new Set(classes(realEmptyScreen()))
+  const realClasses = new Set(classes(real))
   for (const layoutClass of [
     "flex min-h-dvh flex-col bg-[#faf8f6]",
     "flex-1 px-4 pb-8 pt-10",

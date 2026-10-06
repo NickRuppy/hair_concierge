@@ -162,15 +162,6 @@ test("v2-t20 package: refuses an eligibility operation or a non-allowlisted chan
   )
 })
 
-test("v2-t20 preflight: green on the pinned state with zero eligibility operations", async () => {
-  const batch = loadBatch()
-  const report = await preflightLeaveInCalibrationV2T20({ read: readerFor(batch), batch })
-  assert.equal(report.ok, true, JSON.stringify(report.products.filter((product) => !product.ok)))
-  assert.equal(report.summary.staleFingerprints, 0)
-  assert.equal(report.summary.eligibilityOperations, 0)
-  assert.equal(report.summary.invariantViolations, 0)
-})
-
 test("v2-t20 preflight: a live row that drifted is stale and red", async () => {
   const batch = loadBatch()
   const read = readerFor(batch, (productId, rows) =>
@@ -231,6 +222,14 @@ test("v2-t20 run classification and apply: one RPC call with the canonical packa
   const batch = loadBatch()
   const built = buildLeaveInCalibrationV2T20Package(batch)
   const preflight = await preflightLeaveInCalibrationV2T20({ read: readerFor(batch), batch })
+  assert.equal(
+    preflight.ok,
+    true,
+    JSON.stringify(preflight.products.filter((product) => !product.ok)),
+  )
+  assert.equal(preflight.summary.staleFingerprints, 0)
+  assert.equal(preflight.summary.eligibilityOperations, 0)
+  assert.equal(preflight.summary.invariantViolations, 0)
   const run = classifyLeaveInCalibrationV2T20Run({ built, preflight, ledger: [] })
   assert.deepEqual(run, { mode: "first_apply" })
 

@@ -1,0 +1,471 @@
+{
+  "config": {
+    "configFile": "/tmp/test-audit-chat-persistence18.playwright.config.cjs",
+    "rootDir": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/tmp/test-audit-next564-memory-before-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "isolated-contract",
+        "name": "isolated-contract",
+        "testDir": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "user-memory.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.59.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "user-memory.spec.ts",
+      "file": "user-memory.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "User memory extraction contracts",
+          "file": "user-memory.spec.ts",
+          "line": 225,
+          "column": 6,
+          "specs": [
+            {
+              "title": "documents the explicit hair-care-only extraction boundary",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "isolated-contract",
+                  "projectName": "isolated-contract",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-04T11:22:36.020Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "640d24558c904660d2b3-2d71945e7c40ff4b5e30",
+              "file": "user-memory.spec.ts",
+              "line": 226,
+              "column": 7
+            },
+            {
+              "title": "parses valid structured JSON and rejects malformed or unsupported output",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "isolated-contract",
+                  "projectName": "isolated-contract",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-04T11:22:36.033Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "640d24558c904660d2b3-42c07b8e4655e6befdb2",
+              "file": "user-memory.spec.ts",
+              "line": 233,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "User memory pure rules",
+          "file": "user-memory.spec.ts",
+          "line": 265,
+          "column": 6,
+          "specs": [
+            {
+              "title": "normalizes stable keys and sanitizes candidate payloads",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "isolated-contract",
+                  "projectName": "isolated-contract",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-04T11:22:36.042Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "640d24558c904660d2b3-ee7f6325dee818e8f93b",
+              "file": "user-memory.spec.ts",
+              "line": 266,
+              "column": 7
+            },
+            {
+              "title": "builds compact prompt context from active memories only",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "isolated-contract",
+                  "projectName": "isolated-contract",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-04T11:22:36.049Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "640d24558c904660d2b3-2ae3daf0ba3929b0c639",
+              "file": "user-memory.spec.ts",
+              "line": 295,
+              "column": 7
+            },
+            {
+              "title": "downranks exact disliked products only when memory is enabled",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "isolated-contract",
+                  "projectName": "isolated-contract",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-04T11:22:36.056Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "640d24558c904660d2b3-b9d51569f4a67192430c",
+              "file": "user-memory.spec.ts",
+              "line": 309,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "User memory persistence with fake Supabase",
+          "file": "user-memory.spec.ts",
+          "line": 344,
+          "column": 6,
+          "specs": [
+            {
+              "title": "ensures default settings and respects disabled memory context",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "isolated-contract",
+                  "projectName": "isolated-contract",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-04T11:22:36.067Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "640d24558c904660d2b3-bd7327f9d87f02206feb",
+              "file": "user-memory.spec.ts",
+              "line": 345,
+              "column": 7
+            },
+            {
+              "title": "latest-wins insert archives the old memory and rebuilds the prompt cache",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "isolated-contract",
+                  "projectName": "isolated-contract",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-04T11:22:36.074Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "640d24558c904660d2b3-10e72450eecb4f4e7247",
+              "file": "user-memory.spec.ts",
+              "line": 370,
+              "column": 7
+            },
+            {
+              "title": "manual edits clear hidden product metadata and rebuild cache",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "isolated-contract",
+                  "projectName": "isolated-contract",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-04T11:22:36.079Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "640d24558c904660d2b3-719f7a0362f943877c35",
+              "file": "user-memory.spec.ts",
+              "line": 418,
+              "column": 7
+            },
+            {
+              "title": "manual edit returns null when normalized_key collides with another active memory",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "isolated-contract",
+                  "projectName": "isolated-contract",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-04T11:22:36.084Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "640d24558c904660d2b3-9de012ddb2f328f34573",
+              "file": "user-memory.spec.ts",
+              "line": 453,
+              "column": 7
+            },
+            {
+              "title": "manual edit succeeds when normalized_key changes but no collision exists",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "isolated-contract",
+                  "projectName": "isolated-contract",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-04T11:22:36.089Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "640d24558c904660d2b3-9e3ad70c76dd67ac4c9b",
+              "file": "user-memory.spec.ts",
+              "line": 490,
+              "column": 7
+            },
+            {
+              "title": "deletes single memories and conversation-sourced memories without touching manual rows",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "isolated-contract",
+                  "projectName": "isolated-contract",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 11,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-04T11:22:36.093Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "640d24558c904660d2b3-1c72993b8bbcdbe12048",
+              "file": "user-memory.spec.ts",
+              "line": 520,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-04T11:22:34.533Z",
+    "duration": 1583.3449999999998,
+    "expected": 11,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

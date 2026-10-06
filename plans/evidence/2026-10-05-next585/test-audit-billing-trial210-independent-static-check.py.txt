@@ -1,0 +1,42 @@
+import json, hashlib, re
+from pathlib import Path
+root=Path('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning')
+p=Path('/tmp/test-audit-billing-trial210-proposal-pj1NC1')
+sha=lambda b:hashlib.sha256(b).hexdigest()
+read=lambda f:Path(f).read_text()
+m=json.loads(read(p/'manifest.json'));cs=json.loads(read(p/'candidates.json'));controls=json.loads(read(p/'controls.json'));ledger=json.loads(read('/tmp/test-audit-billing-trial210-ledger.json'))
+checks={};phases={};pins={}
+checks['manifest_pin']=sha((p/'manifest.json').read_bytes())=='741867fbc7dd285c1942d7ed0d0c23044c44f77ee7eee35bb16c43cdbb12060a'
+for x in m['files']:
+ f=x['file'];phases[f]={}
+ for phase,meta in x['phases'].items():
+  b=Path(meta['path']).read_bytes();phases[f][phase]=b.decode();pins[f+'@'+phase]=sha(b);checks[f+'@'+phase+' hash']=sha(b)==meta['sha256']
+ checks[f+' live-before']= (root/f).read_bytes()==phases[f]['before'].encode()
+ expected=phases[f]['before']
+ for c in cs:
+  if c['keeper']['file']==f and c.get('transfer'):
+   before=c['keeper']['declaration'];after=c['keeperAfterTransfer']['declaration'];checks[c['id']+' keeper unique']=expected.count(before)==1;expected=expected.replace(before,after,1)
+ checks[f+' transfer exact']=expected==phases[f]['transfer']
+ for c in cs:
+  if c['donor']['file']==f:
+   decl=c['donor']['declaration'];checks[c['id']+' donor unique']=expected.count(decl)==1
+   expected=expected.replace(decl+'\n\n','',1)
+ checks[f+' cut exact']=expected==phases[f]['cut']
+for x in m['readset']:
+ checks[x['file']+' readset pin']=sha((root/x['file']).read_bytes())==x['sha256']
+excluded={(c['donor']['file'],c['donor']['body']) for c in cs}|{(cs[1]['keeper']['file'],cs[1]['keeper']['body'])}
+untouched=[x for x in ledger['sites'] if (x['file'],x['body']) not in excluded]
+checks['206 unchanged sites']=len(untouched)==206
+for x in untouched:
+ checks[x['file']+':'+str(x['line'])+' unchanged callback']=all(x['body'] in phases[x['file']][phase] for phase in ['before','transfer','cut'])
+checks['2 F unchanged']=len([x for x in untouched if x['disposition']=='F'])==2
+counts={phase:sum(len(re.findall(r'^\s*test\(',v[phase],re.M)) for v in phases.values()) for phase in ['before','transfer','cut']}
+checks['literal registration counts']=counts=={'before':210,'transfer':210,'cut':207}
+controlpins=[]
+for c in controls:
+ source=read(root/c['file']);checks[c['id']+' source pin']=sha(source.encode())==c['sourceSha256'];checks[c['id']+' unique anchor']=source.count(c['from'])==1
+ controlpins.append({'id':c['id'],'file':c['file'],'sourceSha256':sha(source.encode()),'mutantSha256':sha(source.replace(c['from'],c['to'],1).encode()),'anchorLine':source[:source.index(c['from'])].count('\n')+1,'status':'not executed','intendedOracle':c['expected']})
+extra=['tests/server-only-register.cjs','node_modules/@electric-sql/pglite/package.json','node_modules/@electric-sql/pglite/dist/index.cjs.map']
+out={'scope':'Independent static preservation review of C1,C2,C3 only; no runtime, no broad 210 semantic audit','root':str(root),'head':m['expectedHead'],'verdicts':{c['id']:'CONDITIONAL PASS: main exact intended-assertion control and phase proof required' for c in cs},'counts':counts,'unchangedCallbacks':len(untouched),'heldF':2,'checks':checks,'all_checks_pass':all(checks.values()),'phaseHashes':pins,'authorReadsetPins':m['readset'],'additionalPins':{f:sha((root/f).read_bytes()) for f in extra},'artifactPins':{f.name:sha(f.read_bytes()) for f in p.iterdir() if f.is_file()},'controls':controlpins}
+Path('/tmp/test-audit-billing-trial210-independent-static.json').write_text(json.dumps(out,indent=2)+'\n')
+print(json.dumps({'all_checks_pass':out['all_checks_pass'],'checks':len(checks),'failed':[k for k,v in checks.items() if not v],'counts':counts,'snapshots':len(pins),'readsetPins':len(m['readset']),'heldF':2},indent=2))

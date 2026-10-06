@@ -1,0 +1,2109 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "files": [
+    {
+      "file": "tests/expansion-apply-batch.test.ts",
+      "sha256": "2d12291a8386f0c9633aa641d6258d10c1decb59bd88d83976db0ec5c73b84b9",
+      "sites": 18,
+      "rows": [
+        {
+          "title": "the reviewed mask manifest parks only its excluded-identifier product",
+          "line": 106,
+          "body": "test(\"the reviewed mask manifest parks only its excluded-identifier product\", async () => {\n  const manifest = await maskManifest()\n  const result = buildExpansionApplyBatch({ manifest, supplement: supplementFor(manifest) })\n\n  // Ruling R-C cleared every deviation from this manifest, so the only product\n  // that cannot publish is the one whose single EAN failed the two-source rule\n  // and carries `excluded_from_apply: true`.\n  assert.equal(result.batch.items.length + result.parked.length, manifest.products.length)\n  assert.equal(result.parked.length, 1, JSON.stringify(result.parked))\n  assert.ok(result.parked[0]!.gaps.includes(\"no_applicable_identifier\"))\n  assert.ok(\n    result.batch.items.every((item) => !result.parked.some((p) => p.item_key === item.item_key)),\n  )\n})",
+          "sha256": "422ec8c64a982f364131ef965fb037216ac14546a2cd5cee5a6b6a0cd26d4e4a",
+          "assertions": [
+            {
+              "line": 113,
+              "text": "assert.equal(result.batch.items.length + result.parked.length, manifest.products.length)"
+            },
+            {
+              "line": 114,
+              "text": "assert.equal(result.parked.length, 1, JSON.stringify(result.parked))"
+            },
+            {
+              "line": 115,
+              "text": "assert.ok(result.parked[0]!.gaps.includes(\"no_applicable_identifier\"))"
+            },
+            {
+              "line": 116,
+              "text": "assert.ok(\n    result.batch.items.every((item) => !result.parked.some((p) => p.item_key === item.item_key)),\n  )"
+            }
+          ]
+        },
+        {
+          "title": "a deviation-flagged protocol parks the product for Nick's review (R4/F-06)",
+          "line": 121,
+          "body": "test(\"a deviation-flagged protocol parks the product for Nick's review (R4/F-06)\", async () => {\n  const manifest = await maskManifest()\n  // The reviewed manifest no longer carries a deviation, so inject one: the rule\n  // is what is under test, not the current contents of the research lane.\n  const withDeviation = structuredClone(manifest)\n  const target = withDeviation.products[0]!\n  const protocol = (target.final.protocols as Array<Record<string, unknown>>)[0]!\n  protocol.deviation = {\n    reason: \"Packungstext nennt eine andere Einwirkzeit als die Herstellerseite.\",\n    packaging_text: \"1-2 Minuten einwirken lassen.\",\n  }\n\n  const result = buildExpansionApplyBatch({\n    manifest: withDeviation,\n    supplement: supplementFor(withDeviation),\n  })\n\n  const product = target.final.product as { brand: string; name: string }\n  const parked = result.parked.find(\n    (entry) => entry.item_key === expansionItemKey(product.brand, product.name),\n  )\n  assert.ok(parked, JSON.stringify(result.parked))\n  assert.ok(\n    parked.gaps.some((gap) => gap.startsWith(\"deviation_requires_review\")),\n    parked.gaps.join(\"; \"),\n  )\n})",
+          "sha256": "c5a14bc991d900f83f6da19b8e88f4c9fa90102be872cfdc9531cc1af07acf16",
+          "assertions": [
+            {
+              "line": 142,
+              "text": "assert.ok(parked, JSON.stringify(result.parked))"
+            },
+            {
+              "line": 143,
+              "text": "assert.ok(\n    parked.gaps.some((gap) => gap.startsWith(\"deviation_requires_review\")),\n    parked.gaps.join(\"; \"),\n  )"
+            }
+          ]
+        },
+        {
+          "title": "a product without a finalized own-bucket image is parked, not published (R5/T4b)",
+          "line": 149,
+          "body": "test(\"a product without a finalized own-bucket image is parked, not published (R5/T4b)\", async () => {\n  const manifest = await maskManifest()\n  const supplement = supplementFor(manifest, (_key, entry) => ({\n    ...entry,\n    image_url: \"https://products.dm-static.com/images/candidate.jpg\",\n  }))\n  const result = buildExpansionApplyBatch({ manifest, supplement })\n\n  assert.equal(result.batch.items.length, 0)\n  assert.ok(\n    result.parked.every((parked) =>\n      parked.gaps.some((gap) => gap.startsWith(\"missing_finalized_image\")),\n    ),\n  )\n})",
+          "sha256": "5981de442ea87b01c0044823f7a5ea7dd530dddf3a57d293c2939004880c157e",
+          "assertions": [
+            {
+              "line": 157,
+              "text": "assert.equal(result.batch.items.length, 0)"
+            },
+            {
+              "line": 158,
+              "text": "assert.ok(\n    result.parked.every((parked) =>\n      parked.gaps.some((gap) => gap.startsWith(\"missing_finalized_image\")),\n    ),\n  )"
+            }
+          ]
+        },
+        {
+          "title": "a product with no operator supplement is parked with a named gap",
+          "line": 165,
+          "body": "test(\"a product with no operator supplement is parked with a named gap\", async () => {\n  const manifest = await maskManifest()\n  const supplement = supplementFor(manifest, (key, entry) =>\n    key.startsWith(\"garnier\") ? null : entry,\n  )\n  const result = buildExpansionApplyBatch({ manifest, supplement })\n\n  const parked = result.parked.find((entry) => entry.item_key?.startsWith(\"garnier\"))\n  assert.ok(parked)\n  assert.deepEqual(parked.gaps, [\n    \"missing_operator_supplement (finalized image, purchase link, checked_at)\",\n  ])\n})",
+          "sha256": "8b83cad8b3c5903b6ac5b93d1fbd6680b4d393c91a943983efec0e5b04f16633",
+          "assertions": [
+            {
+              "line": 173,
+              "text": "assert.ok(parked)"
+            },
+            {
+              "line": 174,
+              "text": "assert.deepEqual(parked.gaps, [\n    \"missing_operator_supplement (finalized image, purchase link, checked_at)\",\n  ])"
+            }
+          ]
+        },
+        {
+          "title": "evidence with no quote anywhere is parked — a source text is never invented",
+          "line": 179,
+          "body": "test(\"evidence with no quote anywhere is parked — a source text is never invented\", async () => {\n  // The shipped manifests now carry a verbatim quote on every evidence row, so\n  // the quoteless state has to be constructed: strip the researcher quotes and\n  // point one row at a URL no protocol or supplement covers.\n  const manifest = structuredClone(await maskManifest())\n  for (const entry of manifest.products) {\n    for (const evidence of entry.final.evidence as Array<Record<string, unknown>>) {\n      delete evidence.source_text\n    }\n    ;(entry.final.evidence as Array<Record<string, unknown>>)[0].source_url =\n      \"https://www.example-manufacturer.test/no-protocol-covers-this\"\n  }\n  const supplement = supplementFor(manifest, (_key, entry) => ({\n    ...entry,\n    evidence_source_texts: {},\n  }))\n  const result = buildExpansionApplyBatch({ manifest, supplement })\n\n  const withGap = result.parked.filter((parked) =>\n    parked.gaps.some((gap) => gap.startsWith(\"evidence_source_text_missing\")),\n  )\n  assert.ok(withGap.length > 0)\n})",
+          "sha256": "de300e07157f5ecad7283f087d9c4597c79c5ff1a5fd7389263dafa525cdf79b",
+          "assertions": [
+            {
+              "line": 200,
+              "text": "assert.ok(withGap.length > 0)"
+            }
+          ]
+        },
+        {
+          "title": "the manifest's own evidence source_text wins over every fallback",
+          "line": 203,
+          "body": "test(\"the manifest's own evidence source_text wins over every fallback\", async () => {\n  const manifest = await maskManifest()\n  const quoted = structuredClone(manifest)\n  for (const entry of quoted.products) {\n    for (const evidence of entry.final.evidence as Array<Record<string, unknown>>) {\n      evidence.source_text = `Zitat aus dem Manifest für ${String(evidence.fact_key)}.`\n    }\n  }\n\n  // Both fallbacks are present and both are wrong: the operator supplement says\n  // something else, and the protocol source on the same URL says something else\n  // again. The researcher's own quote must survive.\n  const result = buildExpansionApplyBatch({\n    manifest: quoted,\n    supplement: supplementFor(quoted, (_key, entry) => ({\n      ...entry,\n      evidence_source_texts: Object.fromEntries(\n        Object.keys(entry.evidence_source_texts ?? {}).map((key) => [key, \"Operator-Fallback\"]),\n      ),\n    })),\n  })\n\n  assert.ok(result.batch.items.length > 0)\n  for (const item of result.batch.items) {\n    if (item.kind !== \"new_product\") continue\n    for (const evidence of item.evidence) {\n      assert.equal(evidence.source_text, `Zitat aus dem Manifest für ${evidence.fact_key}.`)\n    }\n  }\n})",
+          "sha256": "50a04b6266ada994f73104334b4dc2579a868073d43b366a845bbaf36afec5c2",
+          "assertions": [
+            {
+              "line": 225,
+              "text": "assert.ok(result.batch.items.length > 0)"
+            },
+            {
+              "line": 229,
+              "text": "assert.equal(evidence.source_text, `Zitat aus dem Manifest für ${evidence.fact_key}.`)"
+            }
+          ]
+        },
+        {
+          "title": "a manifest quote rescues a product the operator supplement would have parked",
+          "line": 234,
+          "body": "test(\"a manifest quote rescues a product the operator supplement would have parked\", async () => {\n  const manifest = await maskManifest()\n  const quoted = structuredClone(manifest)\n  for (const entry of quoted.products) {\n    for (const evidence of entry.final.evidence as Array<Record<string, unknown>>) {\n      evidence.source_text = \"Verbatim vom Hersteller.\"\n    }\n  }\n\n  // Same empty supplement that parks products on the unquoted manifest above.\n  const empty = supplementFor(quoted, (_key, entry) => ({ ...entry, evidence_source_texts: {} }))\n  const result = buildExpansionApplyBatch({ manifest: quoted, supplement: empty })\n\n  assert.equal(\n    result.parked.filter((parked) =>\n      parked.gaps.some((gap) => gap.startsWith(\"evidence_source_text_missing\")),\n    ).length,\n    0,\n    JSON.stringify(result.parked),\n  )\n  assert.ok(result.batch.items.length > 0)\n})",
+          "sha256": "c912b2e78764233a4121d77d6e9c5cae127ac875f91945c8af93926a22fcc740",
+          "assertions": [
+            {
+              "line": 247,
+              "text": "assert.equal(\n    result.parked.filter((parked) =>\n      parked.gaps.some((gap) => gap.startsWith(\"evidence_source_text_missing\")),\n    ).length,\n    0,\n    JSON.stringify(result.parked),\n  )"
+            },
+            {
+              "line": 254,
+              "text": "assert.ok(result.batch.items.length > 0)"
+            }
+          ]
+        },
+        {
+          "title": "an existing-product update whose target is quarantined is parked (disposition guard)",
+          "line": 257,
+          "body": "test(\"an existing-product update whose target is quarantined is parked (disposition guard)\", async () => {\n  const productId = \"22222222-2222-4222-8222-222222222222\"\n  const manifest = {\n    batch_id: \"scan-expansion-existing\",\n    generated_at: \"2026-09-02T09:00:00.000Z\",\n    products: [],\n    existing_product_updates: [\n      {\n        product_id: productId,\n        rename: {\n          from: \"Ultimate Shampoo\",\n          to: \"Elvital Glycolic Gloss Shampoo\",\n          reason: \"Katalogname war der Platzhalter der Erstaufnahme.\",\n        },\n      },\n    ],\n  }\n  const existingProducts = [\n    {\n      id: productId,\n      name: \"Ultimate Shampoo\",\n      brand: \"L'Oréal Paris Elvital\",\n      category_key: \"shampoo\",\n      is_active: true,\n      lifecycle_status: \"active\",\n      is_chaarlie_recommended: false,\n    },\n  ]\n  const supplement: ExpansionApplySupplement = {\n    batch_id: \"scan-expansion-existing\",\n    operator_profile_id: OPERATOR,\n    reviewed_head: REVIEWED_HEAD,\n    products: {},\n  }\n\n  const clean = buildExpansionApplyBatch({ manifest, supplement, existingProducts })\n  assert.equal(clean.batch.items.length, 1, \"control: the update publishes without a disposition\")\n\n  const quarantined = buildExpansionApplyBatch({\n    manifest,\n    supplement,\n    existingProducts,\n    dispositionProductIds: [productId],\n  })\n  assert.equal(quarantined.batch.items.length, 0)\n  assert.equal(quarantined.parked.length, 1)\n  assert.ok(\n    quarantined.parked[0]!.gaps.some((gap) => gap.startsWith(\"existing_product_has_disposition\")),\n    JSON.stringify(quarantined.parked),\n  )\n})",
+          "sha256": "0df59bf11ec102fb5ae0d566ec984669d5533f3cdca94d3814c01ab6543cb631",
+          "assertions": [
+            {
+              "line": 293,
+              "text": "assert.equal(clean.batch.items.length, 1, \"control: the update publishes without a disposition\")"
+            },
+            {
+              "line": 301,
+              "text": "assert.equal(quarantined.batch.items.length, 0)"
+            },
+            {
+              "line": 302,
+              "text": "assert.equal(quarantined.parked.length, 1)"
+            },
+            {
+              "line": 303,
+              "text": "assert.ok(\n    quarantined.parked[0]!.gaps.some((gap) => gap.startsWith(\"existing_product_has_disposition\")),\n    JSON.stringify(quarantined.parked),\n  )"
+            }
+          ]
+        },
+        {
+          "title": "a canonical GTIN already owned by another product parks the item",
+          "line": 309,
+          "body": "test(\"a canonical GTIN already owned by another product parks the item\", async () => {\n  const manifest = await maskManifest()\n  const target = manifest.products.find((entry) => {\n    const product = entry.final.product as { brand: string; name: string }\n    return expansionItemKey(product.brand, product.name).startsWith(\"garnier\")\n  })\n  assert.ok(target)\n  const gtin = (target.final.identifiers as Array<{ value: string }>)[0]!.value\n\n  const result = buildExpansionApplyBatch({\n    manifest,\n    supplement: supplementFor(manifest),\n    existingIdentifiers: [\n      {\n        product_id: \"cccccccc-0000-4000-8000-000000000003\",\n        canonical_gtin14: canonicalGtin14(gtin),\n      },\n    ],\n  })\n\n  const parked = result.parked.find((entry) => entry.item_key?.startsWith(\"garnier\"))\n  assert.ok(parked)\n  assert.ok(parked.gaps.some((gap) => gap.startsWith(\"canonical_gtin_already_owned\")))\n})",
+          "sha256": "3ee52c7f6019751e6c7a4aa506cd45b253b559feb4df4bb7a5048c7d31fc21c1",
+          "assertions": [
+            {
+              "line": 315,
+              "text": "assert.ok(target)"
+            },
+            {
+              "line": 330,
+              "text": "assert.ok(parked)"
+            },
+            {
+              "line": 331,
+              "text": "assert.ok(parked.gaps.some((gap) => gap.startsWith(\"canonical_gtin_already_owned\")))"
+            }
+          ]
+        },
+        {
+          "title": "an active product with the same brand+name parks the item as an identity collision (F-09)",
+          "line": 334,
+          "body": "test(\"an active product with the same brand+name parks the item as an identity collision (F-09)\", async () => {\n  const manifest = await maskManifest()\n  const target = manifest.products.find((entry) => {\n    const product = entry.final.product as { brand: string; name: string }\n    return expansionItemKey(product.brand, product.name).startsWith(\"garnier\")\n  })\n  assert.ok(target)\n  const product = target.final.product as { brand: string; name: string; category_key: string }\n\n  const result = buildExpansionApplyBatch({\n    manifest,\n    supplement: supplementFor(manifest),\n    existingProducts: [\n      {\n        id: \"dddddddd-0000-4000-8000-000000000004\",\n        name: `${product.brand} ${product.name}`,\n        brand: product.brand,\n        category_key: product.category_key,\n        is_active: true,\n        lifecycle_status: \"active\",\n        is_chaarlie_recommended: false,\n      },\n    ],\n  })\n\n  const parked = result.parked.find((entry) => entry.item_key?.startsWith(\"garnier\"))\n  assert.ok(parked)\n  assert.ok(parked.gaps.some((gap) => gap.startsWith(\"identity_collision\")))\n})",
+          "sha256": "0d777b263c397ead78a72a41bb4f0c7a1dcdca1eb22b8f5aec436bb99c18879f",
+          "assertions": [
+            {
+              "line": 340,
+              "text": "assert.ok(target)"
+            },
+            {
+              "line": 360,
+              "text": "assert.ok(parked)"
+            },
+            {
+              "line": 361,
+              "text": "assert.ok(parked.gaps.some((gap) => gap.startsWith(\"identity_collision\")))"
+            }
+          ]
+        },
+        {
+          "title": "an oil product's non-mask protocols stamp instead of parking (B1)",
+          "line": 372,
+          "body": "test(\"an oil product's non-mask protocols stamp instead of parking (B1)\", async () => {\n  const manifest = await researchManifest(\"oil-manifest.json\")\n  const result = buildExpansionApplyBatch({ manifest, supplement: supplementFor(manifest) })\n\n  assert.deepEqual(\n    result.parked.filter((parked) =>\n      parked.gaps.some((gap) => gap.startsWith(\"protocol_stamp_failed\")),\n    ),\n    [],\n  )\n\n  const key = expansionItemKey(\"Schwarzkopf Gliss\", \"Haaröl Tägliches Öl Elixier\")\n  const item = result.batch.items.find((entry) => entry.item_key === key)\n  assert.ok(item, `${key} must publish — parked: ${JSON.stringify(result.parked)}`)\n  // TPL-OIL-DRYFINISH + TPL-OIL-LEAVEON, the manifest's two reviewed templates.\n  assert.deepEqual(protocolRoles(item), [\"dry_finish\", \"leave_on_fibre_conditioning\"])\n  assert.equal(\n    result.parked.filter((parked) =>\n      parked.gaps.some((gap) => gap.startsWith(\"missing_protocol_for_derived_role\")),\n    ).length,\n    0,\n    JSON.stringify(result.parked),\n  )\n})",
+          "sha256": "bc8c30d4ee213af3fd1cd545e2802c4556f3e0265e2d96082e3efd19ae7bde95",
+          "assertions": [
+            {
+              "line": 376,
+              "text": "assert.deepEqual(\n    result.parked.filter((parked) =>\n      parked.gaps.some((gap) => gap.startsWith(\"protocol_stamp_failed\")),\n    ),\n    [],\n  )"
+            },
+            {
+              "line": 385,
+              "text": "assert.ok(item, `${key} must publish — parked: ${JSON.stringify(result.parked)}`)"
+            },
+            {
+              "line": 387,
+              "text": "assert.deepEqual(protocolRoles(item), [\"dry_finish\", \"leave_on_fibre_conditioning\"])"
+            },
+            {
+              "line": 388,
+              "text": "assert.equal(\n    result.parked.filter((parked) =>\n      parked.gaps.some((gap) => gap.startsWith(\"missing_protocol_for_derived_role\")),\n    ).length,\n    0,\n    JSON.stringify(result.parked),\n  )"
+            }
+          ]
+        },
+        {
+          "title": "a stray mask wait copy in the supplement cannot break a non-mask stamp (B1)",
+          "line": 397,
+          "body": "test(\"a stray mask wait copy in the supplement cannot break a non-mask stamp (B1)\", async () => {\n  const manifest = await researchManifest(\"oil-manifest.json\")\n  const result = buildExpansionApplyBatch({\n    manifest,\n    supplement: supplementFor(manifest, (_key, entry) => ({\n      ...entry,\n      mask_wait_copy_de: \"5–10 Minuten einwirken lassen.\",\n    })),\n  })\n\n  assert.deepEqual(\n    result.parked.filter((parked) =>\n      parked.gaps.some((gap) => gap.startsWith(\"protocol_stamp_failed\")),\n    ),\n    [],\n  )\n  const item = result.batch.items.find(\n    (entry) =>\n      entry.item_key === expansionItemKey(\"Schwarzkopf Gliss\", \"Haaröl Tägliches Öl Elixier\"),\n  )\n  assert.ok(item, JSON.stringify(result.parked))\n  assert.deepEqual(protocolRoles(item), [\"dry_finish\", \"leave_on_fibre_conditioning\"])\n})",
+          "sha256": "576a78852ec80093235e46a29d5b4c0114afe4c69ed48854a731eda5d504cee3",
+          "assertions": [
+            {
+              "line": 407,
+              "text": "assert.deepEqual(\n    result.parked.filter((parked) =>\n      parked.gaps.some((gap) => gap.startsWith(\"protocol_stamp_failed\")),\n    ),\n    [],\n  )"
+            },
+            {
+              "line": 417,
+              "text": "assert.ok(item, JSON.stringify(result.parked))"
+            },
+            {
+              "line": 418,
+              "text": "assert.deepEqual(protocolRoles(item), [\"dry_finish\", \"leave_on_fibre_conditioning\"])"
+            }
+          ]
+        },
+        {
+          "title": "a leave-in product's TPL-LEAVEIN-DAMP protocol stamps instead of parking (B1)",
+          "line": 421,
+          "body": "test(\"a leave-in product's TPL-LEAVEIN-DAMP protocol stamps instead of parking (B1)\", async () => {\n  const manifest = await researchManifest(\"leave-in-manifest.json\")\n  const result = buildExpansionApplyBatch({ manifest, supplement: supplementFor(manifest) })\n\n  assert.deepEqual(\n    result.parked.filter((parked) =>\n      parked.gaps.some((gap) => gap.startsWith(\"protocol_stamp_failed\")),\n    ),\n    [],\n  )\n\n  const key = expansionItemKey(\"Garnier Fructis\", \"Leave-In Creme Aloe Air Dry\")\n  const item = result.batch.items.find((entry) => entry.item_key === key)\n  assert.ok(item, `${key} must publish — parked: ${JSON.stringify(result.parked)}`)\n  assert.deepEqual(protocolRoles(item), [\"post_wash_leave_in\"])\n})",
+          "sha256": "356b7684cc41f0b5bda61428379d79bce1dac8b0a1991e0df1bf15ca869c76d7",
+          "assertions": [
+            {
+              "line": 425,
+              "text": "assert.deepEqual(\n    result.parked.filter((parked) =>\n      parked.gaps.some((gap) => gap.startsWith(\"protocol_stamp_failed\")),\n    ),\n    [],\n  )"
+            },
+            {
+              "line": 434,
+              "text": "assert.ok(item, `${key} must publish — parked: ${JSON.stringify(result.parked)}`)"
+            },
+            {
+              "line": 435,
+              "text": "assert.deepEqual(protocolRoles(item), [\"post_wash_leave_in\"])"
+            }
+          ]
+        },
+        {
+          "title": "the emitted batch never carries a recommendation flag (R3)",
+          "line": 438,
+          "body": "test(\"the emitted batch never carries a recommendation flag (R3)\", async () => {\n  const manifest = await maskManifest()\n  const result = buildExpansionApplyBatch({ manifest, supplement: supplementFor(manifest) })\n  assert.ok(result.batch.items.length > 0)\n  assert.doesNotMatch(result.batchJson, /is_chaarlie_recommended/)\n})",
+          "sha256": "f228b3ad3f1c74675a3a8b6e7503da836d42bb5efe999d5b6b61051d347f0ad5",
+          "assertions": [
+            {
+              "line": 441,
+              "text": "assert.ok(result.batch.items.length > 0)"
+            },
+            {
+              "line": 442,
+              "text": "assert.doesNotMatch(result.batchJson, /is_chaarlie_recommended/)"
+            }
+          ]
+        },
+        {
+          "title": "the apply gate opens only when the switch is armed on the exact reviewed head",
+          "line": 455,
+          "body": "test(\"the apply gate opens only when the switch is armed on the exact reviewed head\", () => {\n  assert.deepEqual(scanExpansionExecutionBlockers(ARMED), [])\n})",
+          "sha256": "649ef002d958b3c72382867217952593c95e091bb344daf7fcd0a80cbe489bf4",
+          "assertions": [
+            {
+              "line": 456,
+              "text": "assert.deepEqual(scanExpansionExecutionBlockers(ARMED), [])"
+            }
+          ]
+        },
+        {
+          "title": "--confirm alone cannot execute: the environment switch is independent",
+          "line": 459,
+          "body": "test(\"--confirm alone cannot execute: the environment switch is independent\", () => {\n  for (const value of [undefined, \"\", \"1\", \"TRUE\", \"yes\", \"false\"]) {\n    const blockers = scanExpansionExecutionBlockers({ ...ARMED, executionEnabled: value })\n    assert.ok(\n      blockers.some((blocker) => blocker.includes(\"kill switch is disabled\")),\n      `${String(value)} must not arm the run — got ${JSON.stringify(blockers)}`,\n    )\n  }\n})",
+          "sha256": "3362787a676bb3066ba51fd09f025646f31061b2284c55950c2aed4bada2f068",
+          "assertions": [
+            {
+              "line": 462,
+              "text": "assert.ok(\n      blockers.some((blocker) => blocker.includes(\"kill switch is disabled\")),\n      `${String(value)} must not arm the run — got ${JSON.stringify(blockers)}`,\n    )"
+            }
+          ]
+        },
+        {
+          "title": "a well-formed but stale --reviewed-head is refused",
+          "line": 469,
+          "body": "test(\"a well-formed but stale --reviewed-head is refused\", () => {\n  const blockers = scanExpansionExecutionBlockers({\n    ...ARMED,\n    reviewedHead: \"b\".repeat(40),\n  })\n  assert.ok(\n    blockers.some((blocker) => blocker.includes(\"git HEAD must equal --reviewed-head\")),\n    JSON.stringify(blockers),\n  )\n})",
+          "sha256": "ffac3fcc05e79d4ae4d835d42e65f2a4f65918af11ffaf9e1d3317023a96e05b",
+          "assertions": [
+            {
+              "line": 474,
+              "text": "assert.ok(\n    blockers.some((blocker) => blocker.includes(\"git HEAD must equal --reviewed-head\")),\n    JSON.stringify(blockers),\n  )"
+            }
+          ]
+        },
+        {
+          "title": "a dirty worktree is refused even on the right head",
+          "line": 480,
+          "body": "test(\"a dirty worktree is refused even on the right head\", () => {\n  const blockers = scanExpansionExecutionBlockers({\n    ...ARMED,\n    git: { head: ARMED.reviewedHead, clean: false },\n  })\n  assert.ok(\n    blockers.some((blocker) => blocker.includes(\"git worktree must be clean\")),\n    JSON.stringify(blockers),\n  )\n})",
+          "sha256": "3d7c2cb0e3eb0881d8b9987fd5abd5686f16a477ead8d9b3e4a935614b1343fd",
+          "assertions": [
+            {
+              "line": 485,
+              "text": "assert.ok(\n    blockers.some((blocker) => blocker.includes(\"git worktree must be clean\")),\n    JSON.stringify(blockers),\n  )"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/expansion-apply-templates.test.ts",
+      "sha256": "27145efd09abaffd8f57fdb232e02ca2e9e778321f4a3066392057af674ca1d4",
+      "sites": 10,
+      "rows": [
+        {
+          "title": "all 11 templates produce a schema-valid, product-scoped V1 guidance payload",
+          "line": 57,
+          "body": "test(\"all 11 templates produce a schema-valid, product-scoped V1 guidance payload\", () => {\n  assert.equal(EXPANSION_TEMPLATE_IDS.length, 11)\n\n  for (const templateId of EXPANSION_TEMPLATE_IDS) {\n    const row = buildExpansionProtocolRow(templateId, defaultSlots(templateId))\n    const payload = parsePayload(templateId, row)\n\n    // §2.1: a row is verified_complete only when the payload is scoped to this exact\n    // product and category.\n    assert.equal(payload.scope.kind, \"product\", templateId)\n    assert.equal(\n      payload.scope.kind === \"product\" ? payload.scope.productId : null,\n      PRODUCT_ID,\n      templateId,\n    )\n    assert.equal(payload.scope.category, EXPANSION_TEMPLATE_META[templateId].category, templateId)\n\n    // Every ⟨…⟩ slot is filled.\n    const serialized = JSON.stringify(row.guidance_payload)\n    assert.ok(!serialized.includes(\"⟨\"), `${templateId}: unfilled ⟨…⟩ slot remains in the payload`)\n    assert.ok(!serialized.includes(\"⟩\"), `${templateId}: unfilled ⟨…⟩ slot remains in the payload`)\n\n    // §2.6 stable-ID convention: the key carries the real product uuid.\n    assert.ok(\n      payload.guidanceKey.includes(PRODUCT_ID),\n      `${templateId}: guidanceKey lacks productId`,\n    )\n\n    // §2.3 shared constants.\n    assert.equal(payload.schemaVersion, 1, templateId)\n    assert.equal(payload.protocolVersion, 1, templateId)\n    assert.equal(payload.locale, \"de\", templateId)\n    assert.equal(payload.exactGuidanceRequired, true, templateId)\n    assert.deepEqual(payload.protocolFacts.cautions, [], templateId)\n    assert.deepEqual(\n      payload.requirements,\n      { requiredCatalogFacts: [], requiredProtocolFacts: [], requiredProfileFacts: [] },\n      templateId,\n    )\n    assert.equal(payload.protocolFacts.workflowId, undefined, templateId)\n    assert.deepEqual(payload.evidence, EVIDENCE, templateId)\n  }\n})",
+          "sha256": "d0adb943c73b2b6f6526f9b6c7c4e08dd5e95aa8ec9daeae4b89063497c1f26b",
+          "assertions": [
+            {
+              "line": 58,
+              "text": "assert.equal(EXPANSION_TEMPLATE_IDS.length, 11)"
+            },
+            {
+              "line": 66,
+              "text": "assert.equal(payload.scope.kind, \"product\", templateId)"
+            },
+            {
+              "line": 67,
+              "text": "assert.equal(\n      payload.scope.kind === \"product\" ? payload.scope.productId : null,\n      PRODUCT_ID,\n      templateId,\n    )"
+            },
+            {
+              "line": 72,
+              "text": "assert.equal(payload.scope.category, EXPANSION_TEMPLATE_META[templateId].category, templateId)"
+            },
+            {
+              "line": 76,
+              "text": "assert.ok(!serialized.includes(\"⟨\"), `${templateId}: unfilled ⟨…⟩ slot remains in the payload`)"
+            },
+            {
+              "line": 77,
+              "text": "assert.ok(!serialized.includes(\"⟩\"), `${templateId}: unfilled ⟨…⟩ slot remains in the payload`)"
+            },
+            {
+              "line": 80,
+              "text": "assert.ok(\n      payload.guidanceKey.includes(PRODUCT_ID),\n      `${templateId}: guidanceKey lacks productId`,\n    )"
+            },
+            {
+              "line": 86,
+              "text": "assert.equal(payload.schemaVersion, 1, templateId)"
+            },
+            {
+              "line": 87,
+              "text": "assert.equal(payload.protocolVersion, 1, templateId)"
+            },
+            {
+              "line": 88,
+              "text": "assert.equal(payload.locale, \"de\", templateId)"
+            },
+            {
+              "line": 89,
+              "text": "assert.equal(payload.exactGuidanceRequired, true, templateId)"
+            },
+            {
+              "line": 90,
+              "text": "assert.deepEqual(payload.protocolFacts.cautions, [], templateId)"
+            },
+            {
+              "line": 91,
+              "text": "assert.deepEqual(\n      payload.requirements,\n      { requiredCatalogFacts: [], requiredProtocolFacts: [], requiredProfileFacts: [] },\n      templateId,\n    )"
+            },
+            {
+              "line": 96,
+              "text": "assert.equal(payload.protocolFacts.workflowId, undefined, templateId)"
+            },
+            {
+              "line": 97,
+              "text": "assert.deepEqual(payload.evidence, EVIDENCE, templateId)"
+            }
+          ]
+        },
+        {
+          "title": "TPL-OIL-LEAVEON stamps only the reviewed wash-family day types",
+          "line": 101,
+          "body": "test(\"TPL-OIL-LEAVEON stamps only the reviewed wash-family day types\", () => {\n  const row = buildExpansionProtocolRow(\"TPL-OIL-LEAVEON\", defaultSlots(\"TPL-OIL-LEAVEON\"))\n  const payload = parsePayload(\"TPL-OIL-LEAVEON\", row)\n\n  assert.deepEqual(payload.compatibleDayTypes, [\n    \"wash_day\",\n    \"intensive_care_day\",\n    \"bond_repair_day\",\n    \"clarifying_wash_day\",\n  ])\n})",
+          "sha256": "f425a044f81ad2489a42113826aeba43be99b6c790ffd642d06ec9428b13020c",
+          "assertions": [
+            {
+              "line": 105,
+              "text": "assert.deepEqual(payload.compatibleDayTypes, [\n    \"wash_day\",\n    \"intensive_care_day\",\n    \"bond_repair_day\",\n    \"clarifying_wash_day\",\n  ])"
+            }
+          ]
+        },
+        {
+          "title": "row role/category come from EXPANSION_TEMPLATE_META, not the payload's semantic role",
+          "line": 113,
+          "body": "test(\"row role/category come from EXPANSION_TEMPLATE_META, not the payload's semantic role\", () => {\n  for (const templateId of EXPANSION_TEMPLATE_IDS) {\n    const row = buildExpansionProtocolRow(templateId, defaultSlots(templateId))\n    const meta = EXPANSION_TEMPLATE_META[templateId]\n    assert.equal(row.role, meta.role, templateId)\n    assert.equal(row.category, meta.category, templateId)\n  }\n\n  // The two vocabularies genuinely differ — the mask row is `intensive_conditioning_mask`\n  // while its payload keeps the markdown's semantic `intensive_care`.\n  const maskRow = buildExpansionProtocolRow(MASK_TEMPLATE_ID, defaultSlots(MASK_TEMPLATE_ID))\n  assert.equal(maskRow.role, \"intensive_conditioning_mask\")\n  assert.equal((maskRow.guidance_payload as { role: string }).role, \"intensive_care\")\n})",
+          "sha256": "b4a19e5254bc24932a1f001a5e633cf88fc00c16beae87a6bf9d1ada5c17a00c",
+          "assertions": [
+            {
+              "line": 117,
+              "text": "assert.equal(row.role, meta.role, templateId)"
+            },
+            {
+              "line": 118,
+              "text": "assert.equal(row.category, meta.category, templateId)"
+            },
+            {
+              "line": 124,
+              "text": "assert.equal(maskRow.role, \"intensive_conditioning_mask\")"
+            },
+            {
+              "line": 125,
+              "text": "assert.equal((maskRow.guidance_payload as { role: string }).role, \"intensive_care\")"
+            }
+          ]
+        },
+        {
+          "title": "§2.4 column ↔ payload invariants hold for all 11 templates",
+          "line": 128,
+          "body": "test(\"§2.4 column ↔ payload invariants hold for all 11 templates\", () => {\n  for (const templateId of EXPANSION_TEMPLATE_IDS) {\n    const row = buildExpansionProtocolRow(templateId, defaultSlots(templateId))\n    const payload = parsePayload(templateId, row)\n\n    assert.equal(row.contact_time_seconds, payload.protocolFacts.contactTimeSeconds, templateId)\n    assert.equal(row.placement, payload.protocolFacts.applicationArea, templateId)\n\n    if (templateId === \"TPL-OIL-PREWASH\") {\n      // The one documented exception: washed out with shampoo, not rinsed with water.\n      assert.equal(row.rinse_action, \"shampoo_out\", templateId)\n      assert.equal(payload.protocolFacts.rinse, \"rinse_out\", templateId)\n    } else {\n      assert.equal(row.rinse_action, payload.protocolFacts.rinse, templateId)\n    }\n\n    // No `do_not_rinse` anywhere — §2.4 standardizes the no-rinse code on `leave_in`.\n    assert.notEqual(row.rinse_action, \"do_not_rinse\", templateId)\n    assert.ok(\n      [\"rinse_out\", \"leave_in\", \"shampoo_out\"].includes(row.rinse_action as string),\n      `${templateId}: unexpected rinse_action ${String(row.rinse_action)}`,\n    )\n\n    // Generated columns are never written, and the caller owns the sources.\n    const rowKeys = Object.keys(row)\n    for (const forbidden of [\n      \"application_family\",\n      \"category_key\",\n      \"source_label\",\n      \"source_url\",\n      \"source_text\",\n    ]) {\n      assert.ok(!rowKeys.includes(forbidden), `${templateId}: row must not emit ${forbidden}`)\n    }\n    assert.equal(row.cadence, null, templateId)\n    assert.deepEqual(row.instruction_modifiers, [], templateId)\n\n    // P7: heat protection is always reapplied before each separate heat session.\n    if (isHeat(templateId)) {\n      assert.equal(row.reapplication, \"required\", templateId)\n      assert.equal(payload.protocolFacts.reapplication, \"each_separate_heat_event\", templateId)\n    } else {\n      assert.equal(row.reapplication, \"not_stated\", templateId)\n      assert.equal(payload.protocolFacts.reapplication, \"none\", templateId)\n    }\n  }\n})",
+          "sha256": "55f5a4e6e67a98c5050e0bdbf38a27de5de5f76107d998aa7631dfc9bebf6827",
+          "assertions": [
+            {
+              "line": 133,
+              "text": "assert.equal(row.contact_time_seconds, payload.protocolFacts.contactTimeSeconds, templateId)"
+            },
+            {
+              "line": 134,
+              "text": "assert.equal(row.placement, payload.protocolFacts.applicationArea, templateId)"
+            },
+            {
+              "line": 138,
+              "text": "assert.equal(row.rinse_action, \"shampoo_out\", templateId)"
+            },
+            {
+              "line": 139,
+              "text": "assert.equal(payload.protocolFacts.rinse, \"rinse_out\", templateId)"
+            },
+            {
+              "line": 141,
+              "text": "assert.equal(row.rinse_action, payload.protocolFacts.rinse, templateId)"
+            },
+            {
+              "line": 145,
+              "text": "assert.notEqual(row.rinse_action, \"do_not_rinse\", templateId)"
+            },
+            {
+              "line": 146,
+              "text": "assert.ok(\n      [\"rinse_out\", \"leave_in\", \"shampoo_out\"].includes(row.rinse_action as string),\n      `${templateId}: unexpected rinse_action ${String(row.rinse_action)}`,\n    )"
+            },
+            {
+              "line": 160,
+              "text": "assert.ok(!rowKeys.includes(forbidden), `${templateId}: row must not emit ${forbidden}`)"
+            },
+            {
+              "line": 162,
+              "text": "assert.equal(row.cadence, null, templateId)"
+            },
+            {
+              "line": 163,
+              "text": "assert.deepEqual(row.instruction_modifiers, [], templateId)"
+            },
+            {
+              "line": 167,
+              "text": "assert.equal(row.reapplication, \"required\", templateId)"
+            },
+            {
+              "line": 168,
+              "text": "assert.equal(payload.protocolFacts.reapplication, \"each_separate_heat_event\", templateId)"
+            },
+            {
+              "line": 170,
+              "text": "assert.equal(row.reapplication, \"not_stated\", templateId)"
+            },
+            {
+              "line": 171,
+              "text": "assert.equal(payload.protocolFacts.reapplication, \"none\", templateId)"
+            }
+          ]
+        },
+        {
+          "title": "stamped rows build a V2 pointer whose applicationFamily matches the template map",
+          "line": 176,
+          "body": "test(\"stamped rows build a V2 pointer whose applicationFamily matches the template map\", () => {\n  for (const templateId of EXPANSION_TEMPLATE_IDS) {\n    const row = buildExpansionProtocolRow(templateId, defaultSlots(templateId))\n    const pointer = buildProductApplicationPointerV2({\n      sourceRole: row.role,\n      guidancePayload: row.guidance_payload,\n      applicationState: row.application_state,\n    })\n\n    assert.equal(\n      pointer.applicationFamily,\n      EXPANSION_TEMPLATE_APPLICATION_FAMILY[templateId],\n      `${templateId}: V2 applicationFamily drifted from EXPANSION_TEMPLATE_APPLICATION_FAMILY`,\n    )\n    // §2.2: when both payloads are written they must agree, or the generated column\n    // will not match the V1 template.\n    assert.equal(\n      pointer.applicationFamily,\n      (row.guidance_payload as { applicationFamily: string }).applicationFamily,\n      `${templateId}: V1 and V2 families disagree`,\n    )\n    assert.equal(pointer.scope.productId, PRODUCT_ID, templateId)\n    assert.equal(pointer.sourceRole, EXPANSION_TEMPLATE_META[templateId].role, templateId)\n  }\n})",
+          "sha256": "16d3f85b0ef331c4227de3ed001ef495d996c9a42fc0832efa49d3b82f424cca",
+          "assertions": [
+            {
+              "line": 185,
+              "text": "assert.equal(\n      pointer.applicationFamily,\n      EXPANSION_TEMPLATE_APPLICATION_FAMILY[templateId],\n      `${templateId}: V2 applicationFamily drifted from EXPANSION_TEMPLATE_APPLICATION_FAMILY`,\n    )"
+            },
+            {
+              "line": 192,
+              "text": "assert.equal(\n      pointer.applicationFamily,\n      (row.guidance_payload as { applicationFamily: string }).applicationFamily,\n      `${templateId}: V1 and V2 families disagree`,\n    )"
+            },
+            {
+              "line": 197,
+              "text": "assert.equal(pointer.scope.productId, PRODUCT_ID, templateId)"
+            },
+            {
+              "line": 198,
+              "text": "assert.equal(pointer.sourceRole, EXPANSION_TEMPLATE_META[templateId].role, templateId)"
+            }
+          ]
+        },
+        {
+          "title": "the ruled contact windows survive the V2 builder's German copy parsing (§2.5)",
+          "line": 202,
+          "body": "test(\"the ruled contact windows survive the V2 builder's German copy parsing (§2.5)\", () => {\n  const contactTimeFor = (templateId: ExpansionTemplateId) => {\n    const row = buildExpansionProtocolRow(templateId, defaultSlots(templateId))\n    return buildProductApplicationPointerV2({\n      sourceRole: row.role,\n      guidancePayload: row.guidance_payload,\n      applicationState: row.application_state,\n    }).facts.contactTime\n  }\n\n  // Standard shampoo: no wait step at all (P1/P4).\n  assert.equal(contactTimeFor(\"TPL-SHAMPOO-STD\"), null)\n  // Targeted + dandruff shampoo: 2–3 min range.\n  assert.deepEqual(contactTimeFor(\"TPL-SHAMPOO-TARGETED\"), {\n    kind: \"range_seconds\",\n    minimumSeconds: 120,\n    maximumSeconds: 180,\n  })\n  assert.deepEqual(contactTimeFor(\"TPL-SHAMPOO-DANDRUFF\"), {\n    kind: \"range_seconds\",\n    minimumSeconds: 120,\n    maximumSeconds: 180,\n  })\n  // Conditioner: 1–3 min, and it only reaches V2 because sharedTemplateContactTime is \"include\".\n  assert.deepEqual(contactTimeFor(\"TPL-CONDITIONER\"), {\n    kind: \"range_seconds\",\n    minimumSeconds: 60,\n    maximumSeconds: 180,\n  })\n  const conditionerRow = buildExpansionProtocolRow(\n    \"TPL-CONDITIONER\",\n    defaultSlots(\"TPL-CONDITIONER\"),\n  )\n  assert.equal(\n    parsePayload(\"TPL-CONDITIONER\", conditionerRow).protocolFacts.sharedTemplateContactTime,\n    \"include\",\n  )\n  // Pre-wash oil: the ruled 15–20 min window (P8).\n  assert.deepEqual(contactTimeFor(\"TPL-OIL-PREWASH\"), {\n    kind: \"range_seconds\",\n    minimumSeconds: 900,\n    maximumSeconds: 1200,\n  })\n  // Mask: the sourced exact time wins.\n  assert.deepEqual(contactTimeFor(\"TPL-MASK\"), { kind: \"seconds\", seconds: 180 })\n})",
+          "sha256": "d1f29d61c0e12861c062ed2feddcadbf7b7345cb9800119758b763b77cb27e51",
+          "assertions": [
+            {
+              "line": 213,
+              "text": "assert.equal(contactTimeFor(\"TPL-SHAMPOO-STD\"), null)"
+            },
+            {
+              "line": 215,
+              "text": "assert.deepEqual(contactTimeFor(\"TPL-SHAMPOO-TARGETED\"), {\n    kind: \"range_seconds\",\n    minimumSeconds: 120,\n    maximumSeconds: 180,\n  })"
+            },
+            {
+              "line": 220,
+              "text": "assert.deepEqual(contactTimeFor(\"TPL-SHAMPOO-DANDRUFF\"), {\n    kind: \"range_seconds\",\n    minimumSeconds: 120,\n    maximumSeconds: 180,\n  })"
+            },
+            {
+              "line": 226,
+              "text": "assert.deepEqual(contactTimeFor(\"TPL-CONDITIONER\"), {\n    kind: \"range_seconds\",\n    minimumSeconds: 60,\n    maximumSeconds: 180,\n  })"
+            },
+            {
+              "line": 235,
+              "text": "assert.equal(\n    parsePayload(\"TPL-CONDITIONER\", conditionerRow).protocolFacts.sharedTemplateContactTime,\n    \"include\",\n  )"
+            },
+            {
+              "line": 240,
+              "text": "assert.deepEqual(contactTimeFor(\"TPL-OIL-PREWASH\"), {\n    kind: \"range_seconds\",\n    minimumSeconds: 900,\n    maximumSeconds: 1200,\n  })"
+            },
+            {
+              "line": 246,
+              "text": "assert.deepEqual(contactTimeFor(\"TPL-MASK\"), { kind: \"seconds\", seconds: 180 })"
+            }
+          ]
+        },
+        {
+          "title": "TPL-MASK accepts a sourced range/maximum with contactTimeSeconds null",
+          "line": 249,
+          "body": "test(\"TPL-MASK accepts a sourced range/maximum with contactTimeSeconds null\", () => {\n  for (const [copy, expected] of [\n    [\n      \"5–10 Minuten einwirken lassen.\",\n      { kind: \"range_seconds\", minimumSeconds: 300, maximumSeconds: 600 },\n    ],\n    [\"Bis zu 10 Minuten einwirken lassen.\", { kind: \"maximum_seconds\", maximumSeconds: 600 }],\n  ] as const) {\n    const row = buildExpansionProtocolRow(MASK_TEMPLATE_ID, {\n      productId: PRODUCT_ID,\n      evidence: EVIDENCE,\n      contactTimeSeconds: null,\n      waitCopyDe: copy,\n    })\n    parsePayload(MASK_TEMPLATE_ID, row)\n    assert.equal(row.contact_time_seconds, null, copy)\n    const pointer = buildProductApplicationPointerV2({\n      sourceRole: row.role,\n      guidancePayload: row.guidance_payload,\n      applicationState: row.application_state,\n    })\n    assert.deepEqual(pointer.facts.contactTime, expected, copy)\n  }\n})",
+          "sha256": "cd12a6292e1072c668c0ac1892616315ad74cd0e3115284ef20660a5e179750b",
+          "assertions": [
+            {
+              "line": 264,
+              "text": "assert.equal(row.contact_time_seconds, null, copy)"
+            },
+            {
+              "line": 270,
+              "text": "assert.deepEqual(pointer.facts.contactTime, expected, copy)"
+            }
+          ]
+        },
+        {
+          "title": "heat templates switch family/stage/state on the researched damp-or-dry fact (P9)",
+          "line": 274,
+          "body": "test(\"heat templates switch family/stage/state on the researched damp-or-dry fact (P9)\", () => {\n  for (const templateId of HEAT_TEMPLATE_IDS) {\n    const dampRow = buildExpansionProtocolRow(templateId, {\n      productId: PRODUCT_ID,\n      evidence: EVIDENCE,\n      usableOnDryHair: false,\n    })\n    const dampPayload = parsePayload(templateId, dampRow)\n    assert.equal(dampPayload.applicationFamily, \"pre_heat_damp\", templateId)\n    assert.equal(dampPayload.sequence.anchor, \"damp_leave_on\", templateId)\n    assert.equal(dampRow.application_stage, \"damp_leave_on\", templateId)\n    assert.equal(dampRow.application_state, \"damp\", templateId)\n\n    const eitherRow = buildExpansionProtocolRow(templateId, {\n      productId: PRODUCT_ID,\n      evidence: EVIDENCE,\n      usableOnDryHair: true,\n    })\n    const eitherPayload = parsePayload(templateId, eitherRow)\n    assert.equal(eitherPayload.applicationFamily, \"either_state_protection\", templateId)\n    assert.equal(eitherPayload.sequence.anchor, \"dry_pre_heat\", templateId)\n    assert.equal(eitherRow.application_stage, \"dry_pre_heat\", templateId)\n    assert.equal(eitherRow.application_state, \"either\", templateId)\n    assert.ok(\n      !JSON.stringify(eitherRow.guidance_payload).includes(\"⟨\"),\n      `${templateId}: either-state copy left a slot unfilled`,\n    )\n\n    const eitherPointer = buildProductApplicationPointerV2({\n      sourceRole: eitherRow.role,\n      guidancePayload: eitherRow.guidance_payload,\n      applicationState: eitherRow.application_state,\n    })\n    assert.equal(eitherPointer.applicationFamily, \"either_state_protection\", templateId)\n    assert.equal(eitherPointer.facts.applicationState, \"damp_or_dry_hair\", templateId)\n    assert.deepEqual(\n      eitherPointer.facts.heat,\n      {\n        supportedStates: [\"damp_hair\", \"dry_hair\"],\n        activationRequired: false,\n        maximumClaimedTemperatureC: null,\n        reapplication: \"each_separate_heat_event\",\n      },\n      templateId,\n    )\n  }\n})",
+          "sha256": "df6e4dab1b0ed1abc8d3e76512b46d7cd8d99b3c07db6d40d24f6046482e5126",
+          "assertions": [
+            {
+              "line": 282,
+              "text": "assert.equal(dampPayload.applicationFamily, \"pre_heat_damp\", templateId)"
+            },
+            {
+              "line": 283,
+              "text": "assert.equal(dampPayload.sequence.anchor, \"damp_leave_on\", templateId)"
+            },
+            {
+              "line": 284,
+              "text": "assert.equal(dampRow.application_stage, \"damp_leave_on\", templateId)"
+            },
+            {
+              "line": 285,
+              "text": "assert.equal(dampRow.application_state, \"damp\", templateId)"
+            },
+            {
+              "line": 293,
+              "text": "assert.equal(eitherPayload.applicationFamily, \"either_state_protection\", templateId)"
+            },
+            {
+              "line": 294,
+              "text": "assert.equal(eitherPayload.sequence.anchor, \"dry_pre_heat\", templateId)"
+            },
+            {
+              "line": 295,
+              "text": "assert.equal(eitherRow.application_stage, \"dry_pre_heat\", templateId)"
+            },
+            {
+              "line": 296,
+              "text": "assert.equal(eitherRow.application_state, \"either\", templateId)"
+            },
+            {
+              "line": 297,
+              "text": "assert.ok(\n      !JSON.stringify(eitherRow.guidance_payload).includes(\"⟨\"),\n      `${templateId}: either-state copy left a slot unfilled`,\n    )"
+            },
+            {
+              "line": 307,
+              "text": "assert.equal(eitherPointer.applicationFamily, \"either_state_protection\", templateId)"
+            },
+            {
+              "line": 308,
+              "text": "assert.equal(eitherPointer.facts.applicationState, \"damp_or_dry_hair\", templateId)"
+            },
+            {
+              "line": 309,
+              "text": "assert.deepEqual(\n      eitherPointer.facts.heat,\n      {\n        supportedStates: [\"damp_hair\", \"dry_hair\"],\n        activationRequired: false,\n        maximumClaimedTemperatureC: null,\n        reapplication: \"each_separate_heat_event\",\n      },\n      templateId,\n    )"
+            }
+          ]
+        },
+        {
+          "title": "missing or invalid required per-product slots throw",
+          "line": 322,
+          "body": "test(\"missing or invalid required per-product slots throw\", () => {\n  // TPL-MASK without a sourced contact time (P5).\n  assert.throws(\n    () =>\n      buildExpansionProtocolRow(MASK_TEMPLATE_ID, {\n        productId: PRODUCT_ID,\n        evidence: EVIDENCE,\n        waitCopyDe: \"3 Minuten einwirken lassen.\",\n      }),\n    /TPL-MASK requires slots\\.contactTimeSeconds/,\n  )\n  assert.throws(\n    () =>\n      buildExpansionProtocolRow(MASK_TEMPLATE_ID, {\n        productId: PRODUCT_ID,\n        evidence: EVIDENCE,\n        contactTimeSeconds: 180,\n      }),\n    /TPL-MASK requires slots\\.waitCopyDe/,\n  )\n  // \"Kurz einwirken lassen.\" is explicitly not a stampable mask fill.\n  assert.throws(\n    () =>\n      buildExpansionProtocolRow(MASK_TEMPLATE_ID, {\n        productId: PRODUCT_ID,\n        evidence: EVIDENCE,\n        contactTimeSeconds: null,\n        waitCopyDe: \"Kurz einwirken lassen.\",\n      }),\n    /must name a time/,\n  )\n  // An exact digit form with contactTimeSeconds null loses the time in V2 (§2.5).\n  assert.throws(\n    () =>\n      buildExpansionProtocolRow(MASK_TEMPLATE_ID, {\n        productId: PRODUCT_ID,\n        evidence: EVIDENCE,\n        contactTimeSeconds: null,\n        waitCopyDe: \"Zehn Minuten einwirken lassen.\",\n      }),\n    /must name a time/,\n  )\n\n  // Heat templates without the researched damp/either fact.\n  for (const templateId of HEAT_TEMPLATE_IDS) {\n    assert.throws(\n      () => buildExpansionProtocolRow(templateId, { productId: PRODUCT_ID, evidence: EVIDENCE }),\n      /requires slots\\.usableOnDryHair/,\n      templateId,\n    )\n  }\n\n  // Evidence is never optional (F-06).\n  for (const templateId of EXPANSION_TEMPLATE_IDS) {\n    const slots = { ...defaultSlots(templateId), evidence: [] }\n    assert.throws(\n      () => buildExpansionProtocolRow(templateId, slots),\n      /slots\\.evidence requires at least one/,\n      templateId,\n    )\n  }\n\n  // A payload not scoped to the real product uuid silently degrades to\n  // verified_incomplete (§2.1), so reject it up front.\n  assert.throws(\n    () => buildExpansionProtocolRow(\"TPL-SHAMPOO-STD\", { productId: \"\", evidence: EVIDENCE }),\n    /slots\\.productId is required/,\n  )\n  assert.throws(\n    () =>\n      buildExpansionProtocolRow(\"TPL-SHAMPOO-STD\", { productId: \"not-a-uuid\", evidence: EVIDENCE }),\n    /must be a uuid/,\n  )\n\n  // Slots that belong to a different template are rejected rather than ignored.\n  assert.throws(\n    () =>\n      buildExpansionProtocolRow(\"TPL-CONDITIONER\", {\n        productId: PRODUCT_ID,\n        evidence: EVIDENCE,\n        contactTimeSeconds: 120,\n      }),\n    /only valid for TPL-MASK/,\n  )\n  assert.throws(\n    () =>\n      buildExpansionProtocolRow(\"TPL-LEAVEIN-DAMP\", {\n        productId: PRODUCT_ID,\n        evidence: EVIDENCE,\n        usableOnDryHair: true,\n      }),\n    /only valid for TPL-LEAVEIN-HEAT/,\n  )\n\n  assert.throws(\n    () =>\n      buildExpansionProtocolRow(\"TPL-SHAMPOO-STD\", {\n        productId: PRODUCT_ID,\n        evidence: [\n          { sourceUrl: \"https://example.com\", sourceType: \"blog\", checkedAt: \"2026-09-02\" },\n        ],\n      } as unknown as ExpansionTemplateSlots),\n    /sourceType must be one of/,\n  )\n  assert.throws(\n    () =>\n      buildExpansionProtocolRow(\"TPL-SHAMPOO-STD\", {\n        productId: PRODUCT_ID,\n        evidence: [\n          { sourceUrl: \"https://example.com\", sourceType: \"retailer\", checkedAt: \"02.09.2026\" },\n        ],\n      }),\n    /checkedAt must be YYYY-MM-DD/,\n  )\n})",
+          "sha256": "59cafbb063517151f9ad65b040a46dd34a4a2e98a9099511fc75a407b222de74",
+          "assertions": [
+            {
+              "line": 324,
+              "text": "assert.throws(\n    () =>\n      buildExpansionProtocolRow(MASK_TEMPLATE_ID, {\n        productId: PRODUCT_ID,\n        evidence: EVIDENCE,\n        waitCopyDe: \"3 Minuten einwirken lassen.\",\n      }),\n    /TPL-MASK requires slots\\.contactTimeSeconds/,\n  )"
+            },
+            {
+              "line": 333,
+              "text": "assert.throws(\n    () =>\n      buildExpansionProtocolRow(MASK_TEMPLATE_ID, {\n        productId: PRODUCT_ID,\n        evidence: EVIDENCE,\n        contactTimeSeconds: 180,\n      }),\n    /TPL-MASK requires slots\\.waitCopyDe/,\n  )"
+            },
+            {
+              "line": 343,
+              "text": "assert.throws(\n    () =>\n      buildExpansionProtocolRow(MASK_TEMPLATE_ID, {\n        productId: PRODUCT_ID,\n        evidence: EVIDENCE,\n        contactTimeSeconds: null,\n        waitCopyDe: \"Kurz einwirken lassen.\",\n      }),\n    /must name a time/,\n  )"
+            },
+            {
+              "line": 354,
+              "text": "assert.throws(\n    () =>\n      buildExpansionProtocolRow(MASK_TEMPLATE_ID, {\n        productId: PRODUCT_ID,\n        evidence: EVIDENCE,\n        contactTimeSeconds: null,\n        waitCopyDe: \"Zehn Minuten einwirken lassen.\",\n      }),\n    /must name a time/,\n  )"
+            },
+            {
+              "line": 367,
+              "text": "assert.throws(\n      () => buildExpansionProtocolRow(templateId, { productId: PRODUCT_ID, evidence: EVIDENCE }),\n      /requires slots\\.usableOnDryHair/,\n      templateId,\n    )"
+            },
+            {
+              "line": 377,
+              "text": "assert.throws(\n      () => buildExpansionProtocolRow(templateId, slots),\n      /slots\\.evidence requires at least one/,\n      templateId,\n    )"
+            },
+            {
+              "line": 386,
+              "text": "assert.throws(\n    () => buildExpansionProtocolRow(\"TPL-SHAMPOO-STD\", { productId: \"\", evidence: EVIDENCE }),\n    /slots\\.productId is required/,\n  )"
+            },
+            {
+              "line": 390,
+              "text": "assert.throws(\n    () =>\n      buildExpansionProtocolRow(\"TPL-SHAMPOO-STD\", { productId: \"not-a-uuid\", evidence: EVIDENCE }),\n    /must be a uuid/,\n  )"
+            },
+            {
+              "line": 397,
+              "text": "assert.throws(\n    () =>\n      buildExpansionProtocolRow(\"TPL-CONDITIONER\", {\n        productId: PRODUCT_ID,\n        evidence: EVIDENCE,\n        contactTimeSeconds: 120,\n      }),\n    /only valid for TPL-MASK/,\n  )"
+            },
+            {
+              "line": 406,
+              "text": "assert.throws(\n    () =>\n      buildExpansionProtocolRow(\"TPL-LEAVEIN-DAMP\", {\n        productId: PRODUCT_ID,\n        evidence: EVIDENCE,\n        usableOnDryHair: true,\n      }),\n    /only valid for TPL-LEAVEIN-HEAT/,\n  )"
+            },
+            {
+              "line": 416,
+              "text": "assert.throws(\n    () =>\n      buildExpansionProtocolRow(\"TPL-SHAMPOO-STD\", {\n        productId: PRODUCT_ID,\n        evidence: [\n          { sourceUrl: \"https://example.com\", sourceType: \"blog\", checkedAt: \"2026-09-02\" },\n        ],\n      } as unknown as ExpansionTemplateSlots),\n    /sourceType must be one of/,\n  )"
+            },
+            {
+              "line": 426,
+              "text": "assert.throws(\n    () =>\n      buildExpansionProtocolRow(\"TPL-SHAMPOO-STD\", {\n        productId: PRODUCT_ID,\n        evidence: [\n          { sourceUrl: \"https://example.com\", sourceType: \"retailer\", checkedAt: \"02.09.2026\" },\n        ],\n      }),\n    /checkedAt must be YYYY-MM-DD/,\n  )"
+            }
+          ]
+        },
+        {
+          "title": "unknown template ids throw instead of silently stamping nothing",
+          "line": 438,
+          "body": "test(\"unknown template ids throw instead of silently stamping nothing\", () => {\n  assert.throws(\n    () =>\n      buildExpansionProtocolRow(\"TPL-NOT-A-TEMPLATE\" as ExpansionTemplateId, {\n        productId: PRODUCT_ID,\n        evidence: EVIDENCE,\n      }),\n    /unknown expansion template id/,\n  )\n})",
+          "sha256": "c88daa5b966780a152383ba32404a9395628c65ba12cb8805b047b24f2744401",
+          "assertions": [
+            {
+              "line": 439,
+              "text": "assert.throws(\n    () =>\n      buildExpansionProtocolRow(\"TPL-NOT-A-TEMPLATE\" as ExpansionTemplateId, {\n        productId: PRODUCT_ID,\n        evidence: EVIDENCE,\n      }),\n    /unknown expansion template id/,\n  )"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/admin-product-category-write-policy.test.ts",
+      "sha256": "d514f46097b447fe1b5dcbd3b295278faef6171b913a67984a72d56671f0ad9d",
+      "sites": 2,
+      "rows": [
+        {
+          "title": "admin product edits allow aliases of the same canonical category",
+          "line": 6,
+          "body": "test(\"admin product edits allow aliases of the same canonical category\", () => {\n  assert.equal(requiresGuardedProductRecategorization(\"conditioner\", \"Conditioner Profi\"), false)\n  assert.equal(requiresGuardedProductRecategorization(\"oil\", \"Oil\"), false)\n})",
+          "sha256": "f7430738a363232512952a42d1cefc701b7ba4d21fbec9b2cd3bd0ab6cc9e925",
+          "assertions": [
+            {
+              "line": 7,
+              "text": "assert.equal(requiresGuardedProductRecategorization(\"conditioner\", \"Conditioner Profi\"), false)"
+            },
+            {
+              "line": 8,
+              "text": "assert.equal(requiresGuardedProductRecategorization(\"oil\", \"Oil\"), false)"
+            }
+          ]
+        },
+        {
+          "title": "admin product edits reject category changes and unresolved legacy values",
+          "line": 11,
+          "body": "test(\"admin product edits reject category changes and unresolved legacy values\", () => {\n  assert.equal(requiresGuardedProductRecategorization(\"mask\", \"Conditioner\"), true)\n  assert.equal(requiresGuardedProductRecategorization(null, \"Maske\"), true)\n  assert.equal(requiresGuardedProductRecategorization(\"mask\", \"unmapped\"), true)\n})",
+          "sha256": "507924b4dd1bfaaafdd03ae0008eca4eb3a1916daf9ef212d7bfb82575a48f02",
+          "assertions": [
+            {
+              "line": 12,
+              "text": "assert.equal(requiresGuardedProductRecategorization(\"mask\", \"Conditioner\"), true)"
+            },
+            {
+              "line": 13,
+              "text": "assert.equal(requiresGuardedProductRecategorization(null, \"Maske\"), true)"
+            },
+            {
+              "line": 14,
+              "text": "assert.equal(requiresGuardedProductRecategorization(\"mask\", \"unmapped\"), true)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/admin-product-support-specs.test.ts",
+      "sha256": "0a699fb0d2bc8dc18029e9cdc870fd99c296525f3247c89bc944a5f2af0ec7e8",
+      "sites": 13,
+      "rows": [
+        {
+          "title": "product schema accepts bondbuilder support specs",
+          "line": 24,
+          "body": "test(\"product schema accepts bondbuilder support specs\", () => {\n  const parsed = productSchema.safeParse(\n    buildBaseProduct({\n      category: \"Bondbuilder\",\n      bondbuilder_specs: {\n        bond_repair_intensity: \"intensive\",\n        application_mode: \"post_wash_leave_in\",\n        bond_repair_axis: \"peptide_chain\",\n        treatment_mode: \"leave_in\",\n        product_format: \"leave_in_mask\",\n        usage_protocol: \"k18_leave_in\",\n      },\n    }),\n  )\n\n  assert.equal(parsed.success, true)\n})",
+          "sha256": "27885aabd35e0f9c6f9a426c94409f4df29e2673467a5603f933f53912fe18a2",
+          "assertions": [
+            {
+              "line": 39,
+              "text": "assert.equal(parsed.success, true)"
+            }
+          ]
+        },
+        {
+          "title": "product schema accepts canonical leave-in fit specs",
+          "line": 42,
+          "body": "test(\"product schema accepts canonical leave-in fit specs\", () => {\n  const parsed = productSchema.safeParse(\n    buildBaseProduct({\n      category: \"Leave-in\",\n      leave_in_specs: {\n        weight: \"light\",\n        conditioner_relationship: \"replacement_capable\",\n        care_benefits: [\"heat_protect\", \"repair\"],\n      },\n    }),\n  )\n\n  assert.equal(parsed.success, true)\n})",
+          "sha256": "8b21f1efd77fe549e0beaab8b3f8a4fbe688788e64b7e13e019efa25cab763c7",
+          "assertions": [
+            {
+              "line": 54,
+              "text": "assert.equal(parsed.success, true)"
+            }
+          ]
+        },
+        {
+          "title": "product schema accepts engine-native mask specs",
+          "line": 57,
+          "body": "test(\"product schema accepts engine-native mask specs\", () => {\n  const parsed = productSchema.safeParse(\n    buildBaseProduct({\n      category: \"Maske\",\n      mask_specs: {\n        weight: \"medium\",\n        concentration: \"high\",\n        balance_direction: \"moisture\",\n      },\n    }),\n  )\n\n  assert.equal(parsed.success, true)\n})",
+          "sha256": "cca41c0d968d796abf3ebdb855c1dab46fcaad3d11aa96bf02cd3fe132888883",
+          "assertions": [
+            {
+              "line": 69,
+              "text": "assert.equal(parsed.success, true)"
+            }
+          ]
+        },
+        {
+          "title": "product schema preserves purchase-link health fields without category specs",
+          "line": 72,
+          "body": "test(\"product schema preserves purchase-link health fields without category specs\", () => {\n  const parsed = productSchema.safeParse(\n    buildBaseProduct({\n      category: \"Serum\",\n      purchase_link_status: \"unavailable\",\n      purchase_link_checked_at: \"2026-06-09T12:05:00.000Z\",\n      price_checked_at: \"2026-06-09T12:10:00.000Z\",\n    }),\n  )\n\n  assert.equal(parsed.success, true)\n  if (!parsed.success) {\n    throw new Error(\"Expected purchase-link health fields to parse\")\n  }\n  assert.equal(parsed.data.purchase_link_status, \"unavailable\")\n  assert.equal(parsed.data.purchase_link_checked_at, \"2026-06-09T12:05:00.000Z\")\n  assert.equal(parsed.data.price_checked_at, \"2026-06-09T12:10:00.000Z\")\n})",
+          "sha256": "c93a943bd92aee9f42432436012c5663f5876eceb169bd1afca7bc74ab9bafc9",
+          "assertions": [
+            {
+              "line": 82,
+              "text": "assert.equal(parsed.success, true)"
+            },
+            {
+              "line": 86,
+              "text": "assert.equal(parsed.data.purchase_link_status, \"unavailable\")"
+            },
+            {
+              "line": 87,
+              "text": "assert.equal(parsed.data.purchase_link_checked_at, \"2026-06-09T12:05:00.000Z\")"
+            },
+            {
+              "line": 88,
+              "text": "assert.equal(parsed.data.price_checked_at, \"2026-06-09T12:10:00.000Z\")"
+            }
+          ]
+        },
+        {
+          "title": "product schema rejects missing and unmapped catalogue categories",
+          "line": 91,
+          "body": "test(\"product schema rejects missing and unmapped catalogue categories\", () => {\n  for (const category of [null, \"\", \"Freie Fantasiekategorie\"]) {\n    const parsed = productSchema.safeParse(buildBaseProduct({ category }))\n\n    assert.equal(parsed.success, false)\n    if (parsed.success) throw new Error(`Expected category ${String(category)} to fail`)\n    assert.ok(parsed.error.flatten().fieldErrors.category)\n  }\n})",
+          "sha256": "8eba32b7959733206775c17fc50535a1ccc3c1c7142e91716cacd0bf287fd8b4",
+          "assertions": [
+            {
+              "line": 95,
+              "text": "assert.equal(parsed.success, false)"
+            },
+            {
+              "line": 97,
+              "text": "assert.ok(parsed.error.flatten().fieldErrors.category)"
+            }
+          ]
+        },
+        {
+          "title": "product schema requires deep-cleansing specs for deep-cleansing products",
+          "line": 101,
+          "body": "test(\"product schema requires deep-cleansing specs for deep-cleansing products\", () => {\n  const parsed = productSchema.safeParse(\n    buildBaseProduct({\n      category: \"Tiefenreinigungsshampoo\",\n    }),\n  )\n\n  assert.equal(parsed.success, false)\n  if (parsed.success) {\n    throw new Error(\"Expected deep-cleansing spec validation to fail\")\n  }\n  assert.ok(parsed.error.flatten().fieldErrors.deep_cleansing_shampoo_specs)\n})",
+          "sha256": "5ed4a831c22f4dfd9cd1e51a541522d59baf0e260ce636b2f1a5eb1b42c44df7",
+          "assertions": [
+            {
+              "line": 108,
+              "text": "assert.equal(parsed.success, false)"
+            },
+            {
+              "line": 112,
+              "text": "assert.ok(parsed.error.flatten().fieldErrors.deep_cleansing_shampoo_specs)"
+            }
+          ]
+        },
+        {
+          "title": "product schema rejects incomplete deep-cleansing specs to preserve fit metadata",
+          "line": 115,
+          "body": "test(\"product schema rejects incomplete deep-cleansing specs to preserve fit metadata\", () => {\n  const parsed = productSchema.safeParse(\n    buildBaseProduct({\n      category: \"Tiefenreinigungsshampoo\",\n      deep_cleansing_shampoo_specs: {\n        scalp_type_focus: \"balanced\",\n      },\n    }),\n  )\n\n  assert.equal(parsed.success, false)\n  if (parsed.success) {\n    throw new Error(\"Expected incomplete deep-cleansing specs to fail\")\n  }\n  assert.ok(parsed.error.flatten().fieldErrors.deep_cleansing_shampoo_specs)\n})",
+          "sha256": "90ebbc0a2fedbc2e8b8abdd609e8e4770700b60487b6ab9dba43554402babf0e",
+          "assertions": [
+            {
+              "line": 125,
+              "text": "assert.equal(parsed.success, false)"
+            },
+            {
+              "line": 129,
+              "text": "assert.ok(parsed.error.flatten().fieldErrors.deep_cleansing_shampoo_specs)"
+            }
+          ]
+        },
+        {
+          "title": "product schema accepts complete deep-cleansing reset specs",
+          "line": 132,
+          "body": "test(\"product schema accepts complete deep-cleansing reset specs\", () => {\n  const parsed = productSchema.safeParse(\n    buildBaseProduct({\n      category: \"Tiefenreinigungsshampoo\",\n      deep_cleansing_shampoo_specs: {\n        scalp_type_focus: \"balanced\",\n        reset_intensity: \"medium\",\n        reset_focus: \"broad_spectrum_detox\",\n        color_treated_suitability: \"suitable\",\n      },\n    }),\n  )\n\n  assert.equal(parsed.success, true)\n  if (!parsed.success) {\n    throw new Error(\"Expected complete deep-cleansing specs to parse\")\n  }\n  assert.deepEqual(parsed.data.deep_cleansing_shampoo_specs, {\n    scalp_type_focus: \"balanced\",\n    reset_intensity: \"medium\",\n    reset_focus: \"broad_spectrum_detox\",\n    color_treated_suitability: \"suitable\",\n  })\n})",
+          "sha256": "afea25a99aa294850762bcbf71329cb7ae1902a03dce0efab9fc2c5e49101da5",
+          "assertions": [
+            {
+              "line": 145,
+              "text": "assert.equal(parsed.success, true)"
+            },
+            {
+              "line": 149,
+              "text": "assert.deepEqual(parsed.data.deep_cleansing_shampoo_specs, {\n    scalp_type_focus: \"balanced\",\n    reset_intensity: \"medium\",\n    reset_focus: \"broad_spectrum_detox\",\n    color_treated_suitability: \"suitable\",\n  })"
+            }
+          ]
+        },
+        {
+          "title": "product schema restricts dry shampoo to supported bridge spec fields",
+          "line": 157,
+          "body": "test(\"product schema restricts dry shampoo to supported bridge spec fields\", () => {\n  const parsed = productSchema.safeParse(\n    buildBaseProduct({\n      category: \"Trockenshampoo\",\n      dry_shampoo_specs: {\n        primary_effect: \"deep_cleanse\",\n        hair_color_fit: \"universal\",\n        scalp_sensitivity_fit: \"normal_only\",\n        format: \"aerosol_spray\",\n      },\n    }),\n  )\n\n  assert.equal(parsed.success, false)\n  if (parsed.success) {\n    throw new Error(\"Expected dry shampoo spec validation to fail\")\n  }\n  assert.ok(parsed.error.flatten().fieldErrors.dry_shampoo_specs)\n})",
+          "sha256": "13fd2d542a20aee7cc620f9161d6c41e6101ced0274eb25459f6121c06ca24d8",
+          "assertions": [
+            {
+              "line": 170,
+              "text": "assert.equal(parsed.success, false)"
+            },
+            {
+              "line": 174,
+              "text": "assert.ok(parsed.error.flatten().fieldErrors.dry_shampoo_specs)"
+            }
+          ]
+        },
+        {
+          "title": "product schema accepts peeling specs with canonical peeling type",
+          "line": 177,
+          "body": "test(\"product schema accepts peeling specs with canonical peeling type\", () => {\n  const parsed = productSchema.safeParse(\n    buildBaseProduct({\n      category: \"Peeling\",\n      peeling_specs: {\n        scalp_type_focus: \"balanced\",\n        peeling_type: \"acid_serum\",\n      },\n    }),\n  )\n\n  assert.equal(parsed.success, true)\n})",
+          "sha256": "2a1d10e985882610fd5ca75467f65c6b5fcf48bf1873fee07fa6ce6b27c8fa21",
+          "assertions": [
+            {
+              "line": 188,
+              "text": "assert.equal(parsed.success, true)"
+            }
+          ]
+        },
+        {
+          "title": "product schema rejects profile-only concerns on products",
+          "line": 191,
+          "body": "test(\"product schema rejects profile-only concerns on products\", () => {\n  const parsed = productSchema.safeParse(\n    buildBaseProduct({\n      category: \"Leave-in\",\n      suitable_concerns: [\"hair_loss\"],\n      leave_in_specs: {\n        weight: \"light\",\n        conditioner_relationship: \"replacement_capable\",\n        care_benefits: [\"repair\"],\n      },\n    }),\n  )\n\n  assert.equal(parsed.success, false)\n})",
+          "sha256": "fa9d128e7b612487ca28b682b5440196924ac33d0b4919eff8e04caf6e4ad4cd",
+          "assertions": [
+            {
+              "line": 204,
+              "text": "assert.equal(parsed.success, false)"
+            }
+          ]
+        },
+        {
+          "title": "product schema allows tangling on leave-in but not on shampoo",
+          "line": 207,
+          "body": "test(\"product schema allows tangling on leave-in but not on shampoo\", () => {\n  const leaveInParsed = productSchema.safeParse(\n    buildBaseProduct({\n      category: \"Leave-in\",\n      suitable_concerns: [\"tangling\"],\n      leave_in_specs: {\n        weight: \"light\",\n        conditioner_relationship: \"replacement_capable\",\n        care_benefits: [\"repair\"],\n      },\n    }),\n  )\n\n  assert.equal(leaveInParsed.success, true)\n\n  const shampooParsed = productSchema.safeParse(\n    buildBaseProduct({\n      category: \"Shampoo\",\n      suitable_concerns: [\"tangling\"],\n    }),\n  )\n\n  assert.equal(shampooParsed.success, false)\n})",
+          "sha256": "7f49ff401f84997eab96e04b124ce44cbff331a35df89951456f4289c37ed1e8",
+          "assertions": [
+            {
+              "line": 220,
+              "text": "assert.equal(leaveInParsed.success, true)"
+            },
+            {
+              "line": 229,
+              "text": "assert.equal(shampooParsed.success, false)"
+            }
+          ]
+        },
+        {
+          "title": "product schema allows dryness on shampoo",
+          "line": 232,
+          "body": "test(\"product schema allows dryness on shampoo\", () => {\n  const parsed = productSchema.safeParse(\n    buildBaseProduct({\n      category: \"Shampoo\",\n      suitable_concerns: [\"dryness\"],\n    }),\n  )\n\n  assert.equal(parsed.success, true)\n})",
+          "sha256": "cccaf7137f2f4f03177446c393f098daedec1ea032fef330552bbbd0964d4c2b",
+          "assertions": [
+            {
+              "line": 240,
+              "text": "assert.equal(parsed.success, true)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/catalog-authority-historical-repair-migration.test.ts",
+      "sha256": "fe9ad82db99a589fdd2efd8a616303a06a7ee1cb6ff98943765d599f80b34182",
+      "sites": 5,
+      "rows": [
+        {
+          "title": "historical repair migration exists",
+          "line": 11,
+          "body": "test(\"historical repair migration exists\", () => {\n  assert.ok(migrationFile, \"catalogue authority historical repair migration is missing\")\n})",
+          "sha256": "5a62310f80f7c3b67f1d47e250719187c4da97d3e8cfa6b51bff804bf648d284",
+          "assertions": [
+            {
+              "line": 12,
+              "text": "assert.ok(migrationFile, \"catalogue authority historical repair migration is missing\")"
+            }
+          ]
+        },
+        {
+          "title": "Leave-in shared semantics are canonical and legacy parity fails closed",
+          "line": 15,
+          "body": "test(\"Leave-in shared semantics are canonical and legacy parity fails closed\", () => {\n  assert.ok(migrationFile)\n  const sql = readFileSync(join(migrationsDir, migrationFile), \"utf8\")\n    .replace(/\\s+/g, \" \")\n    .toLowerCase()\n\n  assert.match(sql, /legacy leave-in weight conflicts with canonical authority/)\n  assert.match(sql, /legacy leave-in conditioner relationship conflicts with canonical roles/)\n  assert.match(\n    sql,\n    /add column conditioner_relationship text generated always as \\(\\s*case when 'replacement_conditioner' = any \\(roles\\) then 'replacement_capable' else 'booster_only' end\\s*\\) stored/,\n  )\n  assert.doesNotMatch(sql, /set care_benefits\\s*=/)\n  assert.doesNotMatch(sql, /drop table public\\.product_leave_in_fit_specs/)\n})",
+          "sha256": "73e7d7cb807c7b295ab4a2ebe7e3edfd442542b2f70384f9fa70b1d698118b64",
+          "assertions": [
+            {
+              "line": 16,
+              "text": "assert.ok(migrationFile)"
+            },
+            {
+              "line": 21,
+              "text": "assert.match(sql, /legacy leave-in weight conflicts with canonical authority/)"
+            },
+            {
+              "line": 22,
+              "text": "assert.match(sql, /legacy leave-in conditioner relationship conflicts with canonical roles/)"
+            },
+            {
+              "line": 23,
+              "text": "assert.match(\n    sql,\n    /add column conditioner_relationship text generated always as \\(\\s*case when 'replacement_conditioner' = any \\(roles\\) then 'replacement_capable' else 'booster_only' end\\s*\\) stored/,\n  )"
+            },
+            {
+              "line": 27,
+              "text": "assert.doesNotMatch(sql, /set care_benefits\\s*=/)"
+            },
+            {
+              "line": 28,
+              "text": "assert.doesNotMatch(sql, /drop table public\\.product_leave_in_fit_specs/)"
+            }
+          ]
+        },
+        {
+          "title": "contextual eligibility foreign keys receive demonstrated supporting indexes",
+          "line": 31,
+          "body": "test(\"contextual eligibility foreign keys receive demonstrated supporting indexes\", () => {\n  assert.ok(migrationFile)\n  const sql = readFileSync(join(migrationsDir, migrationFile), \"utf8\")\n    .replace(/\\s+/g, \" \")\n    .toLowerCase()\n\n  for (const [table, index] of Object.entries({\n    product_shampoo_specs: \"product_shampoo_specs_identity_thickness_idx\",\n    product_conditioner_specs: \"product_conditioner_specs_identity_thickness_idx\",\n    product_leave_in_eligibility: \"product_leave_in_eligibility_identity_thickness_idx\",\n    product_oil_eligibility: \"product_oil_eligibility_identity_thickness_idx\",\n  })) {\n    assert.match(\n      sql,\n      new RegExp(\n        `create index ${index} on public\\\\.${table} \\\\(product_id, category_key, thickness\\\\)`,\n      ),\n    )\n  }\n})",
+          "sha256": "1f6d3920022360cf731329afa3ba21b921a6652edc8fe7c65927eec87ec8a092",
+          "assertions": [
+            {
+              "line": 32,
+              "text": "assert.ok(migrationFile)"
+            },
+            {
+              "line": 43,
+              "text": "assert.match(\n      sql,\n      new RegExp(\n        `create index ${index} on public\\\\.${table} \\\\(product_id, category_key, thickness\\\\)`,\n      ),\n    )"
+            }
+          ]
+        },
+        {
+          "title": "constraint validation remains gated on clean reviewed repair receipts",
+          "line": 52,
+          "body": "test(\"constraint validation remains gated on clean reviewed repair receipts\", () => {\n  assert.ok(migrationFile)\n  const sql = readFileSync(join(migrationsDir, migrationFile), \"utf8\").toLowerCase()\n\n  assert.doesNotMatch(sql, /validate constraint products_category_key_not_null_check/)\n  assert.doesNotMatch(sql, /alter column category_key set not null/)\n  assert.doesNotMatch(sql, /validate constraint product_.*_product_category_fkey/)\n})",
+          "sha256": "ce1427311559fe0d6ebbcfb8a66773a1bbb07aaf104cd4825d47c2821a159644",
+          "assertions": [
+            {
+              "line": 53,
+              "text": "assert.ok(migrationFile)"
+            },
+            {
+              "line": 56,
+              "text": "assert.doesNotMatch(sql, /validate constraint products_category_key_not_null_check/)"
+            },
+            {
+              "line": 57,
+              "text": "assert.doesNotMatch(sql, /alter column category_key set not null/)"
+            },
+            {
+              "line": 58,
+              "text": "assert.doesNotMatch(sql, /validate constraint product_.*_product_category_fkey/)"
+            }
+          ]
+        },
+        {
+          "title": "new writes cannot create contradictory recommendation lifecycle state",
+          "line": 61,
+          "body": "test(\"new writes cannot create contradictory recommendation lifecycle state\", () => {\n  assert.ok(migrationFile)\n  const sql = readFileSync(join(migrationsDir, migrationFile), \"utf8\")\n    .replace(/\\s+/g, \" \")\n    .toLowerCase()\n\n  assert.match(\n    sql,\n    /add constraint products_recommendable_requires_active_check check \\( not is_chaarlie_recommended or \\(is_active and lifecycle_status = 'active'\\) \\) not valid/,\n  )\n  assert.doesNotMatch(sql, /validate constraint products_recommendable_requires_active_check/)\n})",
+          "sha256": "9a26baf9658d2fb6c49d78866cbe97d944bfbb6481e96ac81b4aea10cae1935d",
+          "assertions": [
+            {
+              "line": 62,
+              "text": "assert.ok(migrationFile)"
+            },
+            {
+              "line": 67,
+              "text": "assert.match(\n    sql,\n    /add constraint products_recommendable_requires_active_check check \\( not is_chaarlie_recommended or \\(is_active and lifecycle_status = 'active'\\) \\) not valid/,\n  )"
+            },
+            {
+              "line": 71,
+              "text": "assert.doesNotMatch(sql, /validate constraint products_recommendable_requires_active_check/)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/catalog-authority-legacy-sync-retirement-migration.test.ts",
+      "sha256": "8d275f1272daeae6368df33db91edb717dbe0e3d09ce1cdb655aa275b932789b",
+      "sites": 4,
+      "rows": [
+        {
+          "title": "every destructive legacy-derivation trigger and function is retired",
+          "line": 21,
+          "body": "test(\"every destructive legacy-derivation trigger and function is retired\", () => {\n  const text = sql()\n  for (const trigger of [\n    \"trg_sync_product_oil_eligibility on public.products\",\n    \"trg_sync_product_conditioner_specs on public.products\",\n    \"trg_sync_product_leave_in_eligibility_from_products on public.products\",\n    \"trg_sync_product_leave_in_eligibility_from_specs on public.product_leave_in_specs\",\n  ]) {\n    assert.match(text, new RegExp(`drop trigger if exists ${trigger}`))\n  }\n  for (const fn of [\n    \"sync_product_oil_eligibility_from_products\",\n    \"sync_product_conditioner_specs_from_products\",\n    \"sync_product_leave_in_eligibility_from_products\",\n    \"sync_product_leave_in_eligibility_from_specs\",\n    \"rebuild_product_leave_in_eligibility\",\n  ]) {\n    assert.match(text, new RegExp(`drop function if exists public\\\\.${fn}`))\n  }\n  // The Task 2 transitional compat triggers must survive this migration.\n  assert.doesNotMatch(text, /catalog_authority_sync_product_eligibility_compat/)\n})",
+          "sha256": "607dff29a6299a44bbbbf7a12564900421315e86c948433d67f676d716935f52",
+          "assertions": [
+            {
+              "line": 29,
+              "text": "assert.match(text, new RegExp(`drop trigger if exists ${trigger}`))"
+            },
+            {
+              "line": 38,
+              "text": "assert.match(text, new RegExp(`drop function if exists public\\\\.${fn}`))"
+            },
+            {
+              "line": 41,
+              "text": "assert.doesNotMatch(text, /catalog_authority_sync_product_eligibility_compat/)"
+            }
+          ]
+        },
+        {
+          "title": "the Neqi legacy projection sync is guarded and asserts canonical safety",
+          "line": 44,
+          "body": "test(\"the Neqi legacy projection sync is guarded and asserts canonical safety\", () => {\n  const text = sql()\n  assert.match(\n    text,\n    /update public\\.products set suitable_thicknesses = array\\['fine', 'normal', 'coarse'\\]/,\n  )\n  assert.match(text, /where id = '010cf825-4892-4f78-bf20-26ad72122c60' and category_key = 'oil'/)\n  assert.match(text, /is distinct from array\\['fine', 'normal', 'coarse'\\]/)\n  assert.match(text, /neqi legacy projection sync failed/)\n  assert.match(text, /canonical oil eligibility was altered/)\n})",
+          "sha256": "397a647a991e4407cac4d4609411d924aa581b99bce02ccbdbdc44002bd14b2e",
+          "assertions": [
+            {
+              "line": 46,
+              "text": "assert.match(\n    text,\n    /update public\\.products set suitable_thicknesses = array\\['fine', 'normal', 'coarse'\\]/,\n  )"
+            },
+            {
+              "line": 50,
+              "text": "assert.match(text, /where id = '010cf825-4892-4f78-bf20-26ad72122c60' and category_key = 'oil'/)"
+            },
+            {
+              "line": 51,
+              "text": "assert.match(text, /is distinct from array\\['fine', 'normal', 'coarse'\\]/)"
+            },
+            {
+              "line": 52,
+              "text": "assert.match(text, /neqi legacy projection sync failed/)"
+            },
+            {
+              "line": 53,
+              "text": "assert.match(text, /canonical oil eligibility was altered/)"
+            }
+          ]
+        },
+        {
+          "title": "deferred constraints are validated and category identity becomes a column contract",
+          "line": 56,
+          "body": "test(\"deferred constraints are validated and category identity becomes a column contract\", () => {\n  const text = sql()\n  for (const constraint of [\n    \"products_recommendable_requires_active_check\",\n    \"products_category_key_not_null_check\",\n    \"product_thickness_eligibility_product_category_fkey\",\n    \"product_concern_eligibility_product_category_fkey\",\n    \"product_shampoo_specs_thickness_eligibility_fkey\",\n    \"product_conditioner_specs_thickness_eligibility_fkey\",\n    \"product_leave_in_eligibility_thickness_eligibility_fkey\",\n    \"product_oil_eligibility_thickness_eligibility_fkey\",\n  ]) {\n    assert.match(text, new RegExp(`validate constraint ${constraint}`))\n  }\n  assert.match(text, /alter column category_key set not null/)\n  assert.match(text, /drop constraint products_category_key_not_null_check/)\n})",
+          "sha256": "8d6fa17cf5b81bd466c5429d6519f05884c155175ab0479ee59243d83ba36db7",
+          "assertions": [
+            {
+              "line": 68,
+              "text": "assert.match(text, new RegExp(`validate constraint ${constraint}`))"
+            },
+            {
+              "line": 70,
+              "text": "assert.match(text, /alter column category_key set not null/)"
+            },
+            {
+              "line": 71,
+              "text": "assert.match(text, /drop constraint products_category_key_not_null_check/)"
+            }
+          ]
+        },
+        {
+          "title": "the schema contract matches the migration outcome",
+          "line": 74,
+          "body": "test(\"the schema contract matches the migration outcome\", () => {\n  const required = new Set<string>(CATALOG_AUTHORITY_REQUIRED_SCHEMA_OBJECTS)\n  const validated = new Set<string>(CATALOG_AUTHORITY_REQUIRED_VALIDATED_SCHEMA_OBJECTS)\n\n  assert.equal(required.has(\"products_category_key_not_null_check\"), false)\n  assert.equal(validated.has(\"products_category_key_not_null_check\"), false)\n  for (const name of [\n    \"products_recommendable_requires_active_check\",\n    \"product_thickness_eligibility_product_category_fkey\",\n    \"product_concern_eligibility_product_category_fkey\",\n    \"product_shampoo_specs_thickness_eligibility_fkey\",\n    \"product_conditioner_specs_thickness_eligibility_fkey\",\n    \"product_leave_in_eligibility_thickness_eligibility_fkey\",\n    \"product_oil_eligibility_thickness_eligibility_fkey\",\n  ]) {\n    assert.equal(required.has(name), true, `${name} missing from required objects`)\n    assert.equal(validated.has(name), true, `${name} missing from validated objects`)\n  }\n})",
+          "sha256": "d5456f4835eebded2127a0c9395601c3be277e33d71ca215b29a6286932f2c7b",
+          "assertions": [
+            {
+              "line": 78,
+              "text": "assert.equal(required.has(\"products_category_key_not_null_check\"), false)"
+            },
+            {
+              "line": 79,
+              "text": "assert.equal(validated.has(\"products_category_key_not_null_check\"), false)"
+            },
+            {
+              "line": 89,
+              "text": "assert.equal(required.has(name), true, `${name} missing from required objects`)"
+            },
+            {
+              "line": 90,
+              "text": "assert.equal(validated.has(name), true, `${name} missing from validated objects`)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/catalog-authority-lifecycle-repair.test.ts",
+      "sha256": "6d39e19cf0bcd141b8d331825d95d809d8bfdf47ff2c1dc06aeb9b81921f11d9",
+      "sites": 2,
+      "rows": [
+        {
+          "title": "lifecycle repair preflight pins every approved source row",
+          "line": 38,
+          "body": "test(\"lifecycle repair preflight pins every approved source row\", () => {\n  assert.equal(SOURCE_IDS.length, 19)\n  for (const id of SOURCE_IDS) {\n    assert.match(preflight, new RegExp(id, \"g\"))\n    assert.match(repair, new RegExp(id, \"g\"))\n  }\n  assert.match(preflight, /driftRows/)\n  assert.match(preflight, /targetDefects/)\n  assert.match(preflight, /conflictingRelationships/)\n})",
+          "sha256": "0c79dca7e97bc7f709c2fbe7b09b5f6d8dd5045a2ffcefaa1b58801d423348af",
+          "assertions": [
+            {
+              "line": 39,
+              "text": "assert.equal(SOURCE_IDS.length, 19)"
+            },
+            {
+              "line": 41,
+              "text": "assert.match(preflight, new RegExp(id, \"g\"))"
+            },
+            {
+              "line": 42,
+              "text": "assert.match(repair, new RegExp(id, \"g\"))"
+            },
+            {
+              "line": 44,
+              "text": "assert.match(preflight, /driftRows/)"
+            },
+            {
+              "line": 45,
+              "text": "assert.match(preflight, /targetDefects/)"
+            },
+            {
+              "line": 46,
+              "text": "assert.match(preflight, /conflictingRelationships/)"
+            }
+          ]
+        },
+        {
+          "title": "lifecycle repair is one guarded transaction with bounded table writes",
+          "line": 49,
+          "body": "test(\"lifecycle repair is one guarded transaction with bounded table writes\", () => {\n  assert.match(repair, /BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;/)\n  assert.match(repair, /pg_advisory_xact_lock/)\n  assert.match(repair, /GET DIAGNOSTICS v_count = ROW_COUNT;/)\n  assert.match(repair, /IF v_count <> 19/)\n  assert.match(repair, /IF v_count <> 6/)\n  assert.match(repair, /COMMIT;/)\n  assert.doesNotMatch(repair, /\\b(?:DELETE|TRUNCATE)\\b/i)\n\n  const writtenTables = [\n    ...repair.matchAll(/(?:UPDATE|INSERT INTO)\\s+public\\.([a-z_]+)/g),\n  ].map((match) => match[1])\n  assert.deepEqual(\n    [...new Set(writtenTables)].sort(),\n    [\"product_relationships\", \"products\"],\n  )\n})",
+          "sha256": "407c5f1f992c04a38e47fe211a89d47330be20b8bbae2eccd09c93c7c19ad9b3",
+          "assertions": [
+            {
+              "line": 50,
+              "text": "assert.match(repair, /BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;/)"
+            },
+            {
+              "line": 51,
+              "text": "assert.match(repair, /pg_advisory_xact_lock/)"
+            },
+            {
+              "line": 52,
+              "text": "assert.match(repair, /GET DIAGNOSTICS v_count = ROW_COUNT;/)"
+            },
+            {
+              "line": 53,
+              "text": "assert.match(repair, /IF v_count <> 19/)"
+            },
+            {
+              "line": 54,
+              "text": "assert.match(repair, /IF v_count <> 6/)"
+            },
+            {
+              "line": 55,
+              "text": "assert.match(repair, /COMMIT;/)"
+            },
+            {
+              "line": 56,
+              "text": "assert.doesNotMatch(repair, /\\b(?:DELETE|TRUNCATE)\\b/i)"
+            },
+            {
+              "line": 61,
+              "text": "assert.deepEqual(\n    [...new Set(writtenTables)].sort(),\n    [\"product_relationships\", \"products\"],\n  )"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/catalog-authority-product-spec-relationship-verification.test.ts",
+      "sha256": "ea17f620d4a5eee9c4c4dea903d155982f1ac64da19d231dc1e48a1360b78309",
+      "sites": 2,
+      "rows": [
+        {
+          "title": "relationship verification requires an explicit matching non-production project",
+          "line": 9,
+          "body": "test(\"relationship verification requires an explicit matching non-production project\", () => {\n  assert.throws(() => readRelationshipVerificationTarget({}), /credentials_missing/)\n  assert.throws(\n    () =>\n      readRelationshipVerificationTarget({\n        CATALOG_RELATIONSHIP_VERIFY_SUPABASE_URL: \"https://pqdkhefxsxkyeqelqegq.supabase.co\",\n        CATALOG_RELATIONSHIP_VERIFY_SERVICE_ROLE_KEY: \"secret\",\n        CATALOG_RELATIONSHIP_VERIFY_PROJECT_REF: \"pqdkhefxsxkyeqelqegq\",\n      }),\n    /production_forbidden/,\n  )\n  assert.throws(\n    () =>\n      readRelationshipVerificationTarget({\n        CATALOG_RELATIONSHIP_VERIFY_SUPABASE_URL: \"https://different.supabase.co\",\n        CATALOG_RELATIONSHIP_VERIFY_SERVICE_ROLE_KEY: \"secret\",\n        CATALOG_RELATIONSHIP_VERIFY_PROJECT_REF: \"branch-ref\",\n      }),\n    /project_mismatch/,\n  )\n  assert.deepEqual(\n    readRelationshipVerificationTarget({\n      CATALOG_RELATIONSHIP_VERIFY_SUPABASE_URL: \"https://branch-ref.supabase.co\",\n      CATALOG_RELATIONSHIP_VERIFY_SERVICE_ROLE_KEY: \"secret\",\n      CATALOG_RELATIONSHIP_VERIFY_PROJECT_REF: \"branch-ref\",\n    }),\n    {\n      url: \"https://branch-ref.supabase.co\",\n      serviceRoleKey: \"secret\",\n      projectRef: \"branch-ref\",\n    },\n  )\n})",
+          "sha256": "ed1aec052748a6bb57aa3a2556eb2ff161e3365f261074d978e2c080584e6725",
+          "assertions": [
+            {
+              "line": 10,
+              "text": "assert.throws(() => readRelationshipVerificationTarget({}), /credentials_missing/)"
+            },
+            {
+              "line": 11,
+              "text": "assert.throws(\n    () =>\n      readRelationshipVerificationTarget({\n        CATALOG_RELATIONSHIP_VERIFY_SUPABASE_URL: \"https://pqdkhefxsxkyeqelqegq.supabase.co\",\n        CATALOG_RELATIONSHIP_VERIFY_SERVICE_ROLE_KEY: \"secret\",\n        CATALOG_RELATIONSHIP_VERIFY_PROJECT_REF: \"pqdkhefxsxkyeqelqegq\",\n      }),\n    /production_forbidden/,\n  )"
+            },
+            {
+              "line": 20,
+              "text": "assert.throws(\n    () =>\n      readRelationshipVerificationTarget({\n        CATALOG_RELATIONSHIP_VERIFY_SUPABASE_URL: \"https://different.supabase.co\",\n        CATALOG_RELATIONSHIP_VERIFY_SERVICE_ROLE_KEY: \"secret\",\n        CATALOG_RELATIONSHIP_VERIFY_PROJECT_REF: \"branch-ref\",\n      }),\n    /project_mismatch/,\n  )"
+            },
+            {
+              "line": 29,
+              "text": "assert.deepEqual(\n    readRelationshipVerificationTarget({\n      CATALOG_RELATIONSHIP_VERIFY_SUPABASE_URL: \"https://branch-ref.supabase.co\",\n      CATALOG_RELATIONSHIP_VERIFY_SERVICE_ROLE_KEY: \"secret\",\n      CATALOG_RELATIONSHIP_VERIFY_PROJECT_REF: \"branch-ref\",\n    }),\n    {\n      url: \"https://branch-ref.supabase.co\",\n      serviceRoleKey: \"secret\",\n      projectRef: \"branch-ref\",\n    },\n  )"
+            }
+          ]
+        },
+        {
+          "title": "relationship verification requires representative rows with exact embed cardinality",
+          "line": 43,
+          "body": "test(\"relationship verification requires representative rows with exact embed cardinality\", () => {\n  assert.throws(() => assertProductSpecProjectionShape([], [\"singleton\"]), /projection_empty/)\n  assert.throws(\n    () => assertProductSpecProjectionShape([{ id: \"product\", singleton: [] }], [\"singleton\"]),\n    /shape_invalid/,\n  )\n  assert.throws(\n    () =>\n      assertProductSpecProjectionShape([{ id: \"product\", contextual: null }], [], [\"contextual\"]),\n    /shape_invalid/,\n  )\n  assert.deepEqual(\n    assertProductSpecProjectionShape(\n      [{ id: \"product\", singleton: null, contextual: [{ value: \"known\" }] }],\n      [\"singleton\"],\n      [\"contextual\"],\n    ),\n    [{ id: \"product\", singleton: null, contextual: [{ value: \"known\" }] }],\n  )\n})",
+          "sha256": "9c3e160b5936c1e7472595c7f0e97e3f694fad01ec9e022877314d98f79ec9a9",
+          "assertions": [
+            {
+              "line": 44,
+              "text": "assert.throws(() => assertProductSpecProjectionShape([], [\"singleton\"]), /projection_empty/)"
+            },
+            {
+              "line": 45,
+              "text": "assert.throws(\n    () => assertProductSpecProjectionShape([{ id: \"product\", singleton: [] }], [\"singleton\"]),\n    /shape_invalid/,\n  )"
+            },
+            {
+              "line": 49,
+              "text": "assert.throws(\n    () =>\n      assertProductSpecProjectionShape([{ id: \"product\", contextual: null }], [], [\"contextual\"]),\n    /shape_invalid/,\n  )"
+            },
+            {
+              "line": 54,
+              "text": "assert.deepEqual(\n    assertProductSpecProjectionShape(\n      [{ id: \"product\", singleton: null, contextual: [{ value: \"known\" }] }],\n      [\"singleton\"],\n      [\"contextual\"],\n    ),\n    [{ id: \"product\", singleton: null, contextual: [{ value: \"known\" }] }],\n  )"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/catalog-authority-relationship-convergence-migration.test.ts",
+      "sha256": "60e55dba47fc6cf284c8dec4af3dea6f36e635465ded021d00294f6653bb9b05",
+      "sites": 2,
+      "rows": [
+        {
+          "title": "relationship convergence validates every composite FK before removing its legacy FK",
+          "line": 30,
+          "body": "test(\"relationship convergence validates every composite FK before removing its legacy FK\", () => {\n  assert.equal(existsSync(migrationPath), true, \"relationship convergence migration is missing\")\n  const sql = readFileSync(migrationPath, \"utf8\").replace(/\\s+/g, \" \").toLowerCase()\n\n  for (const table of categoryTables) {\n    const validate = `alter table public.${table} validate constraint ${table}_product_category_fkey;`\n    const drop = `alter table public.${table} drop constraint ${table}_product_id_fkey;`\n    assert.equal((sql.match(new RegExp(validate.replaceAll(\".\", \"\\\\.\"), \"g\")) ?? []).length, 1)\n    assert.equal((sql.match(new RegExp(drop.replaceAll(\".\", \"\\\\.\"), \"g\")) ?? []).length, 1)\n    assert.ok(sql.indexOf(validate) < sql.indexOf(drop), `${table} must validate before drop`)\n  }\n\n  assert.doesNotMatch(sql, /drop constraint [^;]*product_category_fkey/)\n  assert.doesNotMatch(sql, /if exists|execute\\s+format|\\b(update|insert|delete|truncate)\\b/)\n  assert.match(sql, /^begin;/)\n  assert.match(sql, /commit;\\s*$/)\n})",
+          "sha256": "0c59d29e064f3faacd6fb2d74d144667f8cf850ba747f51cdfeba5f581f3f624",
+          "assertions": [
+            {
+              "line": 31,
+              "text": "assert.equal(existsSync(migrationPath), true, \"relationship convergence migration is missing\")"
+            },
+            {
+              "line": 37,
+              "text": "assert.equal((sql.match(new RegExp(validate.replaceAll(\".\", \"\\\\.\"), \"g\")) ?? []).length, 1)"
+            },
+            {
+              "line": 38,
+              "text": "assert.equal((sql.match(new RegExp(drop.replaceAll(\".\", \"\\\\.\"), \"g\")) ?? []).length, 1)"
+            },
+            {
+              "line": 39,
+              "text": "assert.ok(sql.indexOf(validate) < sql.indexOf(drop), `${table} must validate before drop`)"
+            },
+            {
+              "line": 42,
+              "text": "assert.doesNotMatch(sql, /drop constraint [^;]*product_category_fkey/)"
+            },
+            {
+              "line": 43,
+              "text": "assert.doesNotMatch(sql, /if exists|execute\\s+format|\\b(update|insert|delete|truncate)\\b/)"
+            },
+            {
+              "line": 44,
+              "text": "assert.match(sql, /^begin;/)"
+            },
+            {
+              "line": 45,
+              "text": "assert.match(sql, /commit;\\s*$/)"
+            }
+          ]
+        },
+        {
+          "title": "schema receipt inspects the exact redundant relationship names",
+          "line": 48,
+          "body": "test(\"schema receipt inspects the exact redundant relationship names\", () => {\n  const auditSql = readFileSync(\n    join(process.cwd(), \"scripts\", \"catalog-authority\", \"schema-audit.sql\"),\n    \"utf8\",\n  )\n  for (const table of categoryTables) {\n    assert.match(auditSql, new RegExp(`${table}_product_id_fkey`))\n  }\n})",
+          "sha256": "e9256089e826d3f9b5114acfbfb2d219fefcf33554c5549da8af1d7ee9912af0",
+          "assertions": [
+            {
+              "line": 54,
+              "text": "assert.match(auditSql, new RegExp(`${table}_product_id_fkey`))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/catalog-authority-repair.test.ts",
+      "sha256": "122cb85071c3d033e087698fed73b50d62bdb72a19d64bec5aabc1041f8be27e",
+      "sites": 10,
+      "rows": [
+        {
+          "title": "an approved repair is bound to its reviewed content and current authority fingerprint",
+          "line": 47,
+          "body": "test(\"an approved repair is bound to its reviewed content and current authority fingerprint\", () => {\n  const manifest = approvedManifest()\n  const ready = assertCatalogAuthorityRepairReady(manifest, [\n    { productId: PRODUCT_ID, categoryKey: \"shampoo\", authority: before },\n  ])\n\n  assert.equal(ready.entries.length, 1)\n  assert.throws(\n    () =>\n      assertCatalogAuthorityRepairReady(manifest, [\n        {\n          productId: PRODUCT_ID,\n          categoryKey: \"shampoo\",\n          authority: { thicknessEligibility: [\"coarse\"] },\n        },\n      ]),\n    /catalog_authority_repair_stale_current_state/,\n  )\n})",
+          "sha256": "2ac87203fdb44ab2dfa59bf1c6562188d30206427719d4e5845e8879ff9cab02",
+          "assertions": [
+            {
+              "line": 53,
+              "text": "assert.equal(ready.entries.length, 1)"
+            },
+            {
+              "line": 54,
+              "text": "assert.throws(\n    () =>\n      assertCatalogAuthorityRepairReady(manifest, [\n        {\n          productId: PRODUCT_ID,\n          categoryKey: \"shampoo\",\n          authority: { thicknessEligibility: [\"coarse\"] },\n        },\n      ]),\n    /catalog_authority_repair_stale_current_state/,\n  )"
+            }
+          ]
+        },
+        {
+          "title": "review becomes stale when intended authority changes",
+          "line": 67,
+          "body": "test(\"review becomes stale when intended authority changes\", () => {\n  const manifest = approvedManifest()\n  manifest.entries[0]!.intendedAuthority = { thicknessEligibility: [\"coarse\"] }\n\n  assert.throws(\n    () =>\n      assertCatalogAuthorityRepairReady(manifest, [\n        { productId: PRODUCT_ID, categoryKey: \"shampoo\", authority: before },\n      ]),\n    /catalog_authority_repair_new_fingerprint_mismatch|catalog_authority_repair_review_stale/,\n  )\n})",
+          "sha256": "ef59389e6de5cd17be5788f4d7c7c43e8d3138ede15149028a5af4456e5a0866",
+          "assertions": [
+            {
+              "line": 71,
+              "text": "assert.throws(\n    () =>\n      assertCatalogAuthorityRepairReady(manifest, [\n        { productId: PRODUCT_ID, categoryKey: \"shampoo\", authority: before },\n      ]),\n    /catalog_authority_repair_new_fingerprint_mismatch|catalog_authority_repair_review_stale/,\n  )"
+            }
+          ]
+        },
+        {
+          "title": "duplicate products and missing current authority stop the whole slice",
+          "line": 80,
+          "body": "test(\"duplicate products and missing current authority stop the whole slice\", () => {\n  const duplicate = approvedManifest()\n  duplicate.entries.push(structuredClone(duplicate.entries[0]!))\n  duplicate.review.reviewedContentFingerprint = catalogAuthorityRepairReviewFingerprint(duplicate)\n\n  assert.throws(\n    () =>\n      assertCatalogAuthorityRepairReady(duplicate, [\n        { productId: PRODUCT_ID, categoryKey: \"shampoo\", authority: before },\n      ]),\n    /catalog_authority_repair_duplicate_product/,\n  )\n\n  const manifest = approvedManifest()\n  assert.throws(\n    () => assertCatalogAuthorityRepairReady(manifest, []),\n    /catalog_authority_repair_current_state_missing/,\n  )\n})",
+          "sha256": "340ad111da9c3bf64b1513926db2d09f5b125df32683f8b7f55bc898357e8b2d",
+          "assertions": [
+            {
+              "line": 85,
+              "text": "assert.throws(\n    () =>\n      assertCatalogAuthorityRepairReady(duplicate, [\n        { productId: PRODUCT_ID, categoryKey: \"shampoo\", authority: before },\n      ]),\n    /catalog_authority_repair_duplicate_product/,\n  )"
+            },
+            {
+              "line": 94,
+              "text": "assert.throws(\n    () => assertCatalogAuthorityRepairReady(manifest, []),\n    /catalog_authority_repair_current_state_missing/,\n  )"
+            }
+          ]
+        },
+        {
+          "title": "draft or partially reviewed manifests cannot execute",
+          "line": 100,
+          "body": "test(\"draft or partially reviewed manifests cannot execute\", () => {\n  const manifest = approvedManifest()\n  manifest.review = {\n    state: \"draft\",\n    reviewedBy: null,\n    reviewedAt: null,\n    reviewedContentFingerprint: null,\n  }\n\n  assert.throws(\n    () =>\n      assertCatalogAuthorityRepairReady(manifest, [\n        { productId: PRODUCT_ID, categoryKey: \"shampoo\", authority: before },\n      ]),\n    /catalog_authority_repair_not_approved/,\n  )\n})",
+          "sha256": "38ac2ec620f83f6e820689102d338b5e97709be0199c9f82325d3bc900923566",
+          "assertions": [
+            {
+              "line": 109,
+              "text": "assert.throws(\n    () =>\n      assertCatalogAuthorityRepairReady(manifest, [\n        { productId: PRODUCT_ID, categoryKey: \"shampoo\", authority: before },\n      ]),\n    /catalog_authority_repair_not_approved/,\n  )"
+            }
+          ]
+        },
+        {
+          "title": "category-bounded slices reject entries from another repair lane",
+          "line": 118,
+          "body": "test(\"category-bounded slices reject entries from another repair lane\", () => {\n  const manifest = approvedManifest()\n  manifest.entries[0]!.categoryKey = \"mask\"\n  manifest.review.reviewedContentFingerprint = catalogAuthorityRepairReviewFingerprint(manifest)\n\n  assert.throws(\n    () =>\n      assertCatalogAuthorityRepairReady(manifest, [\n        { productId: PRODUCT_ID, categoryKey: \"mask\", authority: before },\n      ]),\n    /catalog_authority_repair_slice_category_conflict/,\n  )\n})",
+          "sha256": "ee06b51aeee70a7c15a95378ea3f363042a974e0e3cfa6fb2e4098976106ce73",
+          "assertions": [
+            {
+              "line": 123,
+              "text": "assert.throws(\n    () =>\n      assertCatalogAuthorityRepairReady(manifest, [\n        { productId: PRODUCT_ID, categoryKey: \"mask\", authority: before },\n      ]),\n    /catalog_authority_repair_slice_category_conflict/,\n  )"
+            }
+          ]
+        },
+        {
+          "title": "value fingerprints are stable across key insertion order",
+          "line": 132,
+          "body": "test(\"value fingerprints are stable across key insertion order\", () => {\n  const forward = catalogAuthorityValueFingerprint({ alpha: 1, beta: [true, null], gamma: \"x\" })\n  const reversed = catalogAuthorityValueFingerprint({ gamma: \"x\", beta: [true, null], alpha: 1 })\n\n  assert.equal(forward, reversed)\n})",
+          "sha256": "1094f47562cbd3b09fe54d86a7c27a7e3b79edb125feb3a8e05f444673b80bde",
+          "assertions": [
+            {
+              "line": 136,
+              "text": "assert.equal(forward, reversed)"
+            }
+          ]
+        },
+        {
+          "title": "unicode-equivalent but distinct keys produce distinct fingerprints in any order",
+          "line": 139,
+          "body": "test(\"unicode-equivalent but distinct keys produce distinct fingerprints in any order\", () => {\n  const composed = \"é\"\n  const decomposed = \"é\"\n  const forward = catalogAuthorityValueFingerprint({ [composed]: 1, [decomposed]: 2 })\n  const reversed = catalogAuthorityValueFingerprint({ [decomposed]: 2, [composed]: 1 })\n\n  assert.equal(forward, reversed)\n  assert.notEqual(\n    catalogAuthorityValueFingerprint({ [composed]: 1 }),\n    catalogAuthorityValueFingerprint({ [decomposed]: 1 }),\n  )\n})",
+          "sha256": "e735219a82a544560844aae09b357f3bc3668a1b6bc2193759763a6880d68e7c",
+          "assertions": [
+            {
+              "line": 145,
+              "text": "assert.equal(forward, reversed)"
+            },
+            {
+              "line": 146,
+              "text": "assert.notEqual(\n    catalogAuthorityValueFingerprint({ [composed]: 1 }),\n    catalogAuthorityValueFingerprint({ [decomposed]: 1 }),\n  )"
+            }
+          ]
+        },
+        {
+          "title": "fingerprinting rejects values JSON would silently coerce",
+          "line": 152,
+          "body": "test(\"fingerprinting rejects values JSON would silently coerce\", () => {\n  assert.throws(\n    () => catalogAuthorityValueFingerprint([undefined]),\n    /catalog_authority_fingerprint_undefined_value/,\n  )\n  assert.throws(\n    () => catalogAuthorityValueFingerprint({ value: Number.NaN }),\n    /catalog_authority_fingerprint_non_finite_number/,\n  )\n  assert.throws(\n    () => catalogAuthorityValueFingerprint({ value: Number.POSITIVE_INFINITY }),\n    /catalog_authority_fingerprint_non_finite_number/,\n  )\n  assert.throws(\n    () => catalogAuthorityValueFingerprint({ value: undefined }),\n    /catalog_authority_fingerprint_undefined_value/,\n  )\n})",
+          "sha256": "7b97ea6b5f3c22942522fbfaa6e1127236a5239cb7af1d0876e67bc2c5bdb18f",
+          "assertions": [
+            {
+              "line": 153,
+              "text": "assert.throws(\n    () => catalogAuthorityValueFingerprint([undefined]),\n    /catalog_authority_fingerprint_undefined_value/,\n  )"
+            },
+            {
+              "line": 157,
+              "text": "assert.throws(\n    () => catalogAuthorityValueFingerprint({ value: Number.NaN }),\n    /catalog_authority_fingerprint_non_finite_number/,\n  )"
+            },
+            {
+              "line": 161,
+              "text": "assert.throws(\n    () => catalogAuthorityValueFingerprint({ value: Number.POSITIVE_INFINITY }),\n    /catalog_authority_fingerprint_non_finite_number/,\n  )"
+            },
+            {
+              "line": 165,
+              "text": "assert.throws(\n    () => catalogAuthorityValueFingerprint({ value: undefined }),\n    /catalog_authority_fingerprint_undefined_value/,\n  )"
+            }
+          ]
+        },
+        {
+          "title": "manifest entries reject non-JSON intended authority values",
+          "line": 171,
+          "body": "test(\"manifest entries reject non-JSON intended authority values\", () => {\n  const manifest = approvedManifest()\n  const broken = {\n    ...manifest,\n    entries: [\n      {\n        ...manifest.entries[0]!,\n        intendedAuthority: { thicknessEligibility: Number.NaN },\n      },\n    ],\n  }\n\n  assert.throws(() =>\n    assertCatalogAuthorityRepairReady(broken, [\n      { productId: PRODUCT_ID, categoryKey: \"shampoo\", authority: before },\n    ]),\n  )\n})",
+          "sha256": "f5357c7bc4fe172f8cb1f3568bfde8adc180a9102fb6b0e724af49184e50e1b3",
+          "assertions": [
+            {
+              "line": 183,
+              "text": "assert.throws(() =>\n    assertCatalogAuthorityRepairReady(broken, [\n      { productId: PRODUCT_ID, categoryKey: \"shampoo\", authority: before },\n    ]),\n  )"
+            }
+          ]
+        },
+        {
+          "title": "explicit expected current authority is fingerprint-bound before approval can execute",
+          "line": 190,
+          "body": "test(\"explicit expected current authority is fingerprint-bound before approval can execute\", () => {\n  const manifest = approvedManifest()\n  const entry = manifest.entries[0]! as CatalogAuthorityRepairManifest[\"entries\"][number] & {\n    expectedCurrentAuthority?: Record<string, unknown>\n  }\n  entry.expectedCurrentAuthority = { thicknessEligibility: [\"coarse\"] }\n  manifest.review.reviewedContentFingerprint = catalogAuthorityRepairReviewFingerprint(manifest)\n\n  assert.throws(\n    () =>\n      assertCatalogAuthorityRepairReady(manifest, [\n        { productId: PRODUCT_ID, categoryKey: \"shampoo\", authority: before },\n      ]),\n    /catalog_authority_repair_old_fingerprint_mismatch/,\n  )\n})",
+          "sha256": "6eaacffc540131d37d446406e67ce5481a46afd2380d371066f8268dfff7a49b",
+          "assertions": [
+            {
+              "line": 198,
+              "text": "assert.throws(\n    () =>\n      assertCatalogAuthorityRepairReady(manifest, [\n        { productId: PRODUCT_ID, categoryKey: \"shampoo\", authority: before },\n      ]),\n    /catalog_authority_repair_old_fingerprint_mismatch/,\n  )"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/catalog-authority-schema-foundations-migration.test.ts",
+      "sha256": "38c4775d77780e01c516e60bf2e7ec7678a9941fb7b425b0f3bfe3ef840302d4",
+      "sites": 8,
+      "rows": [
+        {
+          "title": "migration creates normalized service-only eligibility relations",
+          "line": 47,
+          "body": "test(\"migration creates normalized service-only eligibility relations\", () => {\n  for (const table of [\"product_thickness_eligibility\", \"product_concern_eligibility\"]) {\n    assertSql(`create table public.${table}`)\n    assertSql(`alter table public.${table} enable row level security`)\n    assertSql(`revoke all on table public.${table} from public, anon, authenticated`)\n    assertSql(`grant select, insert, update, delete on table public.${table} to service_role`)\n  }\n\n  assertSql(\"primary key (product_id, category_key, thickness)\")\n  assertSql(\"primary key (product_id, category_key, concern_key)\")\n  assertSql(\"check (thickness in ('fine', 'normal', 'coarse'))\")\n  assertSql(\"check (length(btrim(concern_key)) > 0)\")\n})",
+          "sha256": "6ac50c92109e9a302a859aaae7e86f47d38d6db45ae5af9eac6b42d9f480e2e9",
+          "assertions": []
+        },
+        {
+          "title": "migration backfills eligibility idempotently from legacy arrays and category-valid tuples",
+          "line": 61,
+          "body": "test(\"migration backfills eligibility idempotently from legacy arrays and category-valid tuples\", () => {\n  assertSql(\"cross join lateral unnest(coalesce(product.suitable_thicknesses, '{}'::text[]))\")\n  assertSql(\"cross join lateral unnest(coalesce(product.suitable_concerns, '{}'::text[]))\")\n  assertSql(\"on conflict (product_id, category_key, thickness) do nothing\")\n  assertSql(\"on conflict (product_id, category_key, concern_key) do nothing\")\n\n  for (const [table, category] of [\n    [\"product_shampoo_specs\", \"shampoo\"],\n    [\"product_conditioner_specs\", \"conditioner\"],\n    [\"product_leave_in_eligibility\", \"leave_in\"],\n    [\"product_oil_eligibility\", \"oil\"],\n  ] as const) {\n    assert.match(\n      normalizedSql,\n      new RegExp(\n        `from public\\\\.${table}[^;]+join public\\\\.products[^;]+category_key = '${category}'`,\n        \"i\",\n      ),\n    )\n  }\n})",
+          "sha256": "04fa5135af78c7502e661eb9d2d76bd94547da3b603e2074921d13803b272eae",
+          "assertions": [
+            {
+              "line": 73,
+              "text": "assert.match(\n      normalizedSql,\n      new RegExp(\n        `from public\\\\.${table}[^;]+join public\\\\.products[^;]+category_key = '${category}'`,\n        \"i\",\n      ),\n    )"
+            }
+          ]
+        },
+        {
+          "title": "migration establishes the product spine keys in expand-before-validate order",
+          "line": 83,
+          "body": "test(\"migration establishes the product spine keys in expand-before-validate order\", () => {\n  assertSql(\"validate constraint products_origin_check\")\n  assertSql(\"validate constraint products_category_key_fkey\")\n  assertSql(\"add constraint products_id_category_key_key unique (id, category_key)\")\n  assert.match(\n    normalizedSql,\n    /add constraint products_category_key_not_null_check check \\(category_key is not null\\) not valid/,\n  )\n  assert.doesNotMatch(normalizedSql, /validate constraint products_category_key_not_null_check/)\n  assert.doesNotMatch(normalizedSql, /alter column category_key set not null/)\n  assert.doesNotMatch(normalizedSql, /category\\.is_catalog_supported = true/)\n})",
+          "sha256": "c624014c50e673e847e7e11c57b15fded5e680a4b9fdcfb89a5cb4a5a16f254f",
+          "assertions": [
+            {
+              "line": 87,
+              "text": "assert.match(\n    normalizedSql,\n    /add constraint products_category_key_not_null_check check \\(category_key is not null\\) not valid/,\n  )"
+            },
+            {
+              "line": 91,
+              "text": "assert.doesNotMatch(normalizedSql, /validate constraint products_category_key_not_null_check/)"
+            },
+            {
+              "line": 92,
+              "text": "assert.doesNotMatch(normalizedSql, /alter column category_key set not null/)"
+            },
+            {
+              "line": 93,
+              "text": "assert.doesNotMatch(normalizedSql, /category\\.is_catalog_supported = true/)"
+            }
+          ]
+        },
+        {
+          "title": "every category fact table carries constant identity and an unvalidated composite FK",
+          "line": 96,
+          "body": "test(\"every category fact table carries constant identity and an unvalidated composite FK\", () => {\n  for (const [table, category] of Object.entries(categoryTables)) {\n    assert.match(\n      normalizedSql,\n      new RegExp(\n        `alter table public\\\\.${table}[^;]+add column category_key text[^;]+not null[^;]+default '${category}'`,\n        \"i\",\n      ),\n    )\n    assert.match(\n      normalizedSql,\n      new RegExp(\n        `constraint ${table}_category_key_check check \\\\(category_key = '${category}'\\\\)`,\n        \"i\",\n      ),\n    )\n    assert.match(\n      normalizedSql,\n      new RegExp(\n        `constraint ${table}_product_category_fkey foreign key \\\\(product_id, category_key\\\\) references public\\\\.products\\\\(id, category_key\\\\) on update restrict on delete cascade not valid`,\n        \"i\",\n      ),\n    )\n    assertSql(\n      `create index ${table}_product_category_idx on public.${table} (product_id, category_key)`,\n    )\n    assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`validate constraint ${table}_product_category_fkey`, \"i\"),\n    )\n  }\n})",
+          "sha256": "f443e04314de531c09309b2abf5d2ef65cb3f936c2e9975a086630a2d71035bc",
+          "assertions": [
+            {
+              "line": 98,
+              "text": "assert.match(\n      normalizedSql,\n      new RegExp(\n        `alter table public\\\\.${table}[^;]+add column category_key text[^;]+not null[^;]+default '${category}'`,\n        \"i\",\n      ),\n    )"
+            },
+            {
+              "line": 105,
+              "text": "assert.match(\n      normalizedSql,\n      new RegExp(\n        `constraint ${table}_category_key_check check \\\\(category_key = '${category}'\\\\)`,\n        \"i\",\n      ),\n    )"
+            },
+            {
+              "line": 112,
+              "text": "assert.match(\n      normalizedSql,\n      new RegExp(\n        `constraint ${table}_product_category_fkey foreign key \\\\(product_id, category_key\\\\) references public\\\\.products\\\\(id, category_key\\\\) on update restrict on delete cascade not valid`,\n        \"i\",\n      ),\n    )"
+            },
+            {
+              "line": 122,
+              "text": "assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`validate constraint ${table}_product_category_fkey`, \"i\"),\n    )"
+            }
+          ]
+        },
+        {
+          "title": "the schema receipt inspects supporting indexes and both eligibility FK layers",
+          "line": 129,
+          "body": "test(\"the schema receipt inspects supporting indexes and both eligibility FK layers\", () => {\n  assert.match(schemaAuditSql, /from pg_catalog\\.pg_index/)\n  assert.match(schemaAuditSql, /product\\\\_%\\\\_product\\\\_category\\\\_idx/)\n  assert.match(schemaAuditSql, /product\\\\_%\\\\_thickness\\\\_eligibility\\\\_fkey/)\n})",
+          "sha256": "b332fe79ce5fd09dec5f113395533692bc1ec14a9a7ef75cd1b0417f46219f69",
+          "assertions": [
+            {
+              "line": 130,
+              "text": "assert.match(schemaAuditSql, /from pg_catalog\\.pg_index/)"
+            },
+            {
+              "line": 131,
+              "text": "assert.match(schemaAuditSql, /product\\\\_%\\\\_product\\\\_category\\\\_idx/)"
+            },
+            {
+              "line": 132,
+              "text": "assert.match(schemaAuditSql, /product\\\\_%\\\\_thickness\\\\_eligibility\\\\_fkey/)"
+            }
+          ]
+        },
+        {
+          "title": "exact protocols assert their indexed category against product identity",
+          "line": 135,
+          "body": "test(\"exact protocols assert their indexed category against product identity\", () => {\n  assertSql(\n    \"alter table public.product_application_protocols add column category_key text generated always as (category) stored\",\n  )\n  assert.doesNotMatch(normalizedSql, /product_application_protocols_category_key_check/)\n  assertSql(\n    \"constraint product_application_protocols_product_category_fkey foreign key (product_id, category_key) references public.products(id, category_key) on update restrict on delete cascade not valid\",\n  )\n})",
+          "sha256": "4b058e7c083fb136ce38e3c520a5f7046c4aa60a594d8cd23540efd4e20b47a5",
+          "assertions": [
+            {
+              "line": 139,
+              "text": "assert.doesNotMatch(normalizedSql, /product_application_protocols_category_key_check/)"
+            }
+          ]
+        },
+        {
+          "title": "contextual thickness rows reference normalized eligibility without validating historical debt",
+          "line": 145,
+          "body": "test(\"contextual thickness rows reference normalized eligibility without validating historical debt\", () => {\n  for (const table of [\n    \"product_shampoo_specs\",\n    \"product_conditioner_specs\",\n    \"product_leave_in_eligibility\",\n    \"product_oil_eligibility\",\n  ]) {\n    assertSql(\n      `constraint ${table}_thickness_eligibility_fkey foreign key (product_id, category_key, thickness) references public.product_thickness_eligibility(product_id, category_key, thickness) on update restrict on delete no action deferrable initially deferred not valid`,\n    )\n    assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`validate constraint ${table}_thickness_eligibility_fkey`, \"i\"),\n    )\n  }\n})",
+          "sha256": "8942667a0bf0ff184a67f9acc3dbeb4c38200f8843f6544f3ea37cc5f790171a",
+          "assertions": [
+            {
+              "line": 155,
+              "text": "assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`validate constraint ${table}_thickness_eligibility_fkey`, \"i\"),\n    )"
+            }
+          ]
+        },
+        {
+          "title": "expand-phase compatibility keeps existing product and contextual writers valid",
+          "line": 162,
+          "body": "test(\"expand-phase compatibility keeps existing product and contextual writers valid\", () => {\n  assertSql(\n    \"create function public.catalog_authority_set_category_key_compat_v1() returns trigger language plpgsql security definer set search_path = ''\",\n  )\n  assertSql(\n    \"create trigger catalog_authority_set_category_key_compat_v1 before insert on public.products\",\n  )\n  assertSql(\n    \"new.category_key := case pg_catalog.lower(pg_catalog.btrim(coalesce(new.category, '')))\",\n  )\n\n  assertSql(\n    \"create function public.catalog_authority_sync_product_eligibility_compat_v1() returns trigger language plpgsql security definer set search_path = ''\",\n  )\n  assertSql(\n    \"create trigger aa_catalog_authority_sync_product_eligibility_compat_v1 after insert or update of suitable_thicknesses, suitable_concerns on public.products\",\n  )\n  assertSql(\n    \"create trigger zz_catalog_authority_sync_product_eligibility_compat_v1 after insert or update of suitable_thicknesses, suitable_concerns on public.products\",\n  )\n  assertSql(\"if tg_name like 'zz_%' then\")\n  assertSql(\"new.category_key not in ('heat_protectant', 'dry_shampoo', 'scalp_care')\")\n  assertSql(\n    \"create function public.catalog_authority_sync_contextual_thickness_compat_v1() returns trigger language plpgsql security definer set search_path = ''\",\n  )\n  assertSql(\n    \"create function public.catalog_authority_prune_contextual_thickness_compat_v1() returns trigger language plpgsql security definer set search_path = ''\",\n  )\n\n  for (const table of [\n    \"product_shampoo_specs\",\n    \"product_conditioner_specs\",\n    \"product_leave_in_eligibility\",\n    \"product_oil_eligibility\",\n  ]) {\n    assertSql(\n      `create trigger catalog_authority_sync_contextual_thickness_compat_v1 before insert or update of product_id, category_key, thickness on public.${table}`,\n    )\n    assertSql(\n      `create trigger catalog_authority_prune_contextual_thickness_compat_v1 after delete or update of product_id, category_key, thickness on public.${table}`,\n    )\n  }\n\n  for (const signature of [\n    \"public.catalog_authority_set_category_key_compat_v1()\",\n    \"public.catalog_authority_sync_product_eligibility_compat_v1()\",\n    \"public.catalog_authority_sync_contextual_thickness_compat_v1()\",\n    \"public.catalog_authority_prune_contextual_thickness_compat_v1()\",\n  ]) {\n    assertSql(`revoke all on function ${signature} from public, anon, authenticated`)\n  }\n})",
+          "sha256": "a099569f317c2817d477dc7523814e5335dc4353787d422790c3aa416f1a76c2",
+          "assertions": []
+        }
+      ]
+    },
+    {
+      "file": "tests/catalog-apply-executor-hardening-postgres.test.ts",
+      "sha256": "1d3ebeb58c69d1822e05dc192d278eb03ffe5c9d05671b3c5a8108b70ab1ca49",
+      "sites": 4,
+      "rows": [
+        {
+          "title": "the migration's inventory is every reviewer-gated apply executor not already hardened",
+          "line": 185,
+          "body": "test(\"the migration's inventory is every reviewer-gated apply executor not already hardened\", () => {\n  assert.equal(hardenCalls.length, 13)\n  assert.equal(\n    hardenCalls.length,\n    (hardeningSql.match(/SELECT pg_temp\\.harden_catalog_apply_executor\\(/g) ?? []).length,\n    \"every harden call was parsed\",\n  )\n  const hardened = new Set(hardenCalls.map((call) => call.name))\n  assert.equal(hardened.size, hardenCalls.length, \"no executor is patched twice\")\n  const expected = new Set(\n    [...reviewerGatedApplyExecutors(HARDENING_FILE)].filter((name) => !ALREADY_HARDENED.has(name)),\n  )\n  assert.deepEqual([...hardened].sort(), [...expected].sort())\n  assert.deepEqual([...hardened].sort(), Object.keys(PRODUCTION_PROSRC_MD5).sort())\n})",
+          "sha256": "41e9849b59515de287d862650a8b564da0ff7c5935cb43dafa9c7bf2efd2b5dc",
+          "assertions": [
+            {
+              "line": 186,
+              "text": "assert.equal(hardenCalls.length, 13)"
+            },
+            {
+              "line": 187,
+              "text": "assert.equal(\n    hardenCalls.length,\n    (hardeningSql.match(/SELECT pg_temp\\.harden_catalog_apply_executor\\(/g) ?? []).length,\n    \"every harden call was parsed\",\n  )"
+            },
+            {
+              "line": 193,
+              "text": "assert.equal(hardened.size, hardenCalls.length, \"no executor is patched twice\")"
+            },
+            {
+              "line": 197,
+              "text": "assert.deepEqual([...hardened].sort(), [...expected].sort())"
+            },
+            {
+              "line": 198,
+              "text": "assert.deepEqual([...hardened].sort(), Object.keys(PRODUCTION_PROSRC_MD5).sort())"
+            }
+          ]
+        },
+        {
+          "title": "the rebuilt pre-hardening definitions are exactly production's",
+          "line": 201,
+          "body": "test(\"the rebuilt pre-hardening definitions are exactly production's\", async (t) => {\n  const pg = await rebuiltDatabase(t, hardenCalls)\n  for (const { name } of hardenCalls) {\n    let body = await prosrc(pg, name)\n    if (COMMENT_STRIPPED_IN_PRODUCTION.has(name)) {\n      body = body\n        .split(\"\\n\")\n        .filter((line) => !line.trimStart().startsWith(\"--\"))\n        .join(\"\\n\")\n    }\n    assert.equal(md5(body), PRODUCTION_PROSRC_MD5[name], `${name} matches production`)\n  }\n})",
+          "sha256": "534f0149c6ea1b530fd844beb0a7140fe4b116fd9b5b2524cc393716781155f3",
+          "assertions": [
+            {
+              "line": 211,
+              "text": "assert.equal(md5(body), PRODUCTION_PROSRC_MD5[name], `${name} matches production`)"
+            }
+          ]
+        },
+        {
+          "title": "the whole migration applies, and each body changes only by its listed edits",
+          "line": 215,
+          "body": "test(\"the whole migration applies, and each body changes only by its listed edits\", async (t) => {\n  const pg = await rebuiltDatabase(t, hardenCalls)\n  const before = new Map<string, string>()\n  for (const { name } of hardenCalls) before.set(name, await prosrc(pg, name))\n  await pg.query(\n    `GRANT EXECUTE ON FUNCTION public.apply_catalog_enrichment_leave_in_calibration_v1(text,text,text) TO service_role`,\n  )\n\n  await pg.exec(hardeningSql)\n\n  for (const call of hardenCalls) {\n    const after = await prosrc(pg, call.name)\n    // Undo the listed edits; what remains must be the original body byte for byte.\n    // Replacer functions: the guard text contains `$'`, a special pattern in string replacements.\n    let reverted = after.replace(`${SHARED_LOCK_BLOCK}${call.anchor}`, () => call.anchor)\n    for (const [oldText, newText] of call.edits) {\n      assert.equal(after.split(newText).length, 2, `${call.name}: edit text is unique`)\n      reverted = reverted.replace(newText, () => oldText)\n    }\n    assert.equal(reverted, before.get(call.name), `${call.name} has no unlisted change`)\n  }\n  const privilege = await pg.query<{ service: boolean }>(\n    `SELECT has_function_privilege('service_role', $1, 'EXECUTE') AS service`,\n    [\"public.apply_catalog_enrichment_leave_in_calibration_v1(text,text,text)\"],\n  )\n  assert.equal(privilege.rows[0]!.service, true, \"CREATE OR REPLACE keeps the existing grant\")\n})",
+          "sha256": "ab15cc0cb815382878e06d38b9d214efd62d8c0d209f24a78270f5e21105d75e",
+          "assertions": [
+            {
+              "line": 231,
+              "text": "assert.equal(after.split(newText).length, 2, `${call.name}: edit text is unique`)"
+            },
+            {
+              "line": 234,
+              "text": "assert.equal(reverted, before.get(call.name), `${call.name} has no unlisted change`)"
+            },
+            {
+              "line": 240,
+              "text": "assert.equal(privilege.rows[0]!.service, true, \"CREATE OR REPLACE keeps the existing grant\")"
+            }
+          ]
+        },
+        {
+          "title": "every patched executor takes the shared lock first and has no NULL-unsafe argument guard",
+          "line": 243,
+          "body": "test(\"every patched executor takes the shared lock first and has no NULL-unsafe argument guard\", async (t) => {\n  const pg = await rebuiltDatabase(t, hardenCalls)\n  await pg.exec(hardeningSql)\n\n  for (const { name } of hardenCalls) {\n    const body = await prosrc(pg, name)\n    const shared = body.indexOf(SHARED_LOCK)\n    assert.ok(shared > 0, `${name} takes the shared lock`)\n    assert.equal(body.lastIndexOf(SHARED_LOCK), shared, `${name} takes it once`)\n    const prefix = body.slice(0, shared)\n    for (const pattern of [\n      /FOR UPDATE/,\n      /\\bUPDATE public\\./,\n      /\\bINSERT INTO public\\./,\n      /\\bDELETE FROM public\\./,\n    ]) {\n      assert.doesNotMatch(prefix, pattern, `${name}: ${pattern.source} precedes the shared lock`)\n    }\n    assert.equal(\n      prefix.match(/pg_advisory_xact_lock\\(/g)?.length,\n      1,\n      `${name}: the shared lock's own PERFORM is the only advisory lock before it`,\n    )\n    assert.ok(\n      body.indexOf(\"pg_advisory_xact_lock(\", shared) > shared,\n      `${name} still takes its own advisory lock after the shared one`,\n    )\n\n    assert.doesNotMatch(body, /p_reviewed_by <>/, `${name} reviewer guard`)\n    // Local variables only: comparisons against stored ledger columns (`v_existing.x`) are out of scope.\n    assert.doesNotMatch(\n      body,\n      /(?<![.\\w])\\w+_fingerprint <> p_expected_\\w+/,\n      `${name} fingerprint match`,\n    )\n    assert.doesNotMatch(body, /(?<![.\\w])\\w+_fingerprint <> v_approved_\\w+/, `${name} approved pin`)\n    for (const match of body.matchAll(/\\b(p_\\w+) !~/g)) {\n      const preceding = body.slice(Math.max(0, match.index - 80), match.index)\n      assert.match(\n        preceding,\n        new RegExp(`${match[1]} IS NULL\\\\s+OR\\\\s*$`),\n        `${name}: ${match[1]} regex guard has an explicit NULL check`,\n      )\n    }\n  }\n})",
+          "sha256": "9d438e56b8b00b2785c07ce1382d7e633d14b018c582ee70e7eed7ee3f885547",
+          "assertions": [
+            {
+              "line": 250,
+              "text": "assert.ok(shared > 0, `${name} takes the shared lock`)"
+            },
+            {
+              "line": 251,
+              "text": "assert.equal(body.lastIndexOf(SHARED_LOCK), shared, `${name} takes it once`)"
+            },
+            {
+              "line": 259,
+              "text": "assert.doesNotMatch(prefix, pattern, `${name}: ${pattern.source} precedes the shared lock`)"
+            },
+            {
+              "line": 261,
+              "text": "assert.equal(\n      prefix.match(/pg_advisory_xact_lock\\(/g)?.length,\n      1,\n      `${name}: the shared lock's own PERFORM is the only advisory lock before it`,\n    )"
+            },
+            {
+              "line": 266,
+              "text": "assert.ok(\n      body.indexOf(\"pg_advisory_xact_lock(\", shared) > shared,\n      `${name} still takes its own advisory lock after the shared one`,\n    )"
+            },
+            {
+              "line": 271,
+              "text": "assert.doesNotMatch(body, /p_reviewed_by <>/, `${name} reviewer guard`)"
+            },
+            {
+              "line": 273,
+              "text": "assert.doesNotMatch(\n      body,\n      /(?<![.\\w])\\w+_fingerprint <> p_expected_\\w+/,\n      `${name} fingerprint match`,\n    )"
+            },
+            {
+              "line": 278,
+              "text": "assert.doesNotMatch(body, /(?<![.\\w])\\w+_fingerprint <> v_approved_\\w+/, `${name} approved pin`)"
+            },
+            {
+              "line": 281,
+              "text": "assert.match(\n        preceding,\n        new RegExp(`${match[1]} IS NULL\\\\s+OR\\\\s*$`),\n        `${name}: ${match[1]} regex guard has an explicit NULL check`,\n      )"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/product-identifier-global-ownership-migration.test.ts",
+      "sha256": "b31189e4db4f3a4be4092aa308239377b0cc5948c84e746804bf67d42e0b7d15",
+      "sites": 5,
+      "rows": [
+        {
+          "title": "GTIN expand migration adds checksum canonicalization and keeps invalid legacy rows outside canonical ownership",
+          "line": 25,
+          "body": "test(\"GTIN expand migration adds checksum canonicalization and keeps invalid legacy rows outside canonical ownership\", () => {\n  const sql = compact(expandSql)\n  assert.match(\n    sql,\n    /create or replace function public\\.product_identifier_has_valid_gs1_check_digit/,\n  )\n  assert.match(sql, /create or replace function public\\.product_identifier_canonical_gtin14/)\n  assert.match(sql, /add column if not exists canonical_gtin14 text generated always as/)\n  assert.match(sql, /stored/)\n  assert.match(sql, /canonical_gtin14 is null/)\n  assert.ok(sql.includes(\"regexp_replace(btrim(coalesce(p_value, '')), '[[:space:]-]+', '', 'g')\"))\n  assert.doesNotMatch(sql, /regexp_replace\\([^;]*'\\[\\^0-9\\]\\+'/)\n  assert.match(sql, /where coalesce\\(p_digits, ''\\) ~ '\\^\\[0-9\\]\\{2,\\}\\$'/)\n})",
+          "sha256": "3af67d60968940f78d9b635c04502423b0ef9e499222ff302348d796be6146a8",
+          "assertions": [
+            {
+              "line": 27,
+              "text": "assert.match(\n    sql,\n    /create or replace function public\\.product_identifier_has_valid_gs1_check_digit/,\n  )"
+            },
+            {
+              "line": 31,
+              "text": "assert.match(sql, /create or replace function public\\.product_identifier_canonical_gtin14/)"
+            },
+            {
+              "line": 32,
+              "text": "assert.match(sql, /add column if not exists canonical_gtin14 text generated always as/)"
+            },
+            {
+              "line": 33,
+              "text": "assert.match(sql, /stored/)"
+            },
+            {
+              "line": 34,
+              "text": "assert.match(sql, /canonical_gtin14 is null/)"
+            },
+            {
+              "line": 35,
+              "text": "assert.ok(sql.includes(\"regexp_replace(btrim(coalesce(p_value, '')), '[[:space:]-]+', '', 'g')\"))"
+            },
+            {
+              "line": 36,
+              "text": "assert.doesNotMatch(sql, /regexp_replace\\([^;]*'\\[\\^0-9\\]\\+'/)"
+            },
+            {
+              "line": 37,
+              "text": "assert.match(sql, /where coalesce\\(p_digits, ''\\) ~ '\\^\\[0-9\\]\\{2,\\}\\$'/)"
+            }
+          ]
+        },
+        {
+          "title": "GTIN writer migration preflights inactive canonical owners before approval or link-existing transitions",
+          "line": 40,
+          "body": "test(\"GTIN writer migration preflights inactive canonical owners before approval or link-existing transitions\", () => {\n  const sql = compact(writersSql)\n  assert.doesNotMatch(sql, /before_canonical_gtin/)\n  assert.match(sql, /product_intake_approve_reviewed_product_before_scanned_identifier/)\n  assert.match(sql, /product_intake_link_existing_product_before_scanned_identifier/)\n  assert.match(sql, /product_identifier_assert_canonical_owner_available/)\n  assert.match(sql, /p_allowed_product_id/)\n  assert.match(sql, /existing\\.canonical_gtin14 = v_canonical_gtin14/)\n  assert.doesNotMatch(sql, /product\\.is_active = true[^;]+canonical_gtin14/)\n})",
+          "sha256": "1474774b0a8abdfbafb1fe4058d150cfcf64a077146e04754b402d029518a8ba",
+          "assertions": [
+            {
+              "line": 42,
+              "text": "assert.doesNotMatch(sql, /before_canonical_gtin/)"
+            },
+            {
+              "line": 43,
+              "text": "assert.match(sql, /product_intake_approve_reviewed_product_before_scanned_identifier/)"
+            },
+            {
+              "line": 44,
+              "text": "assert.match(sql, /product_intake_link_existing_product_before_scanned_identifier/)"
+            },
+            {
+              "line": 45,
+              "text": "assert.match(sql, /product_identifier_assert_canonical_owner_available/)"
+            },
+            {
+              "line": 46,
+              "text": "assert.match(sql, /p_allowed_product_id/)"
+            },
+            {
+              "line": 47,
+              "text": "assert.match(sql, /existing\\.canonical_gtin14 = v_canonical_gtin14/)"
+            },
+            {
+              "line": 48,
+              "text": "assert.doesNotMatch(sql, /product\\.is_active = true[^;]+canonical_gtin14/)"
+            }
+          ]
+        },
+        {
+          "title": "GTIN writer migration retires legacy Heat and Scalp executor replay",
+          "line": 51,
+          "body": "test(\"GTIN writer migration retires legacy Heat and Scalp executor replay\", () => {\n  const sql = compact(writersSql)\n  assert.match(\n    sql,\n    /revoke all on function public\\.apply_catalog_enrichment_personal_plan_heat_v1\\(text, text, text\\) from public, anon, authenticated, service_role/,\n  )\n  assert.match(\n    sql,\n    /revoke all on function public\\.apply_catalog_enrichment_personal_plan_scalp_v1\\(text, text, text\\) from public, anon, authenticated, service_role/,\n  )\n})",
+          "sha256": "932295ca7afda0d1d304de378b213b3365db31d8d6ce44f89a89f7c7769aa8ed",
+          "assertions": [
+            {
+              "line": 53,
+              "text": "assert.match(\n    sql,\n    /revoke all on function public\\.apply_catalog_enrichment_personal_plan_heat_v1\\(text, text, text\\) from public, anon, authenticated, service_role/,\n  )"
+            },
+            {
+              "line": 57,
+              "text": "assert.match(\n    sql,\n    /revoke all on function public\\.apply_catalog_enrichment_personal_plan_scalp_v1\\(text, text, text\\) from public, anon, authenticated, service_role/,\n  )"
+            }
+          ]
+        },
+        {
+          "title": "GTIN invariant migration blocks duplicate valid ownership before creating the partial unique index",
+          "line": 63,
+          "body": "test(\"GTIN invariant migration blocks duplicate valid ownership before creating the partial unique index\", () => {\n  const sql = compact(invariantSql)\n  assert.match(sql, /raise exception 'product identifier canonical gtin collision/)\n  assert.match(sql, /count\\(distinct product_id\\) > 1/)\n  assert.match(\n    sql,\n    /create unique index if not exists idx_product_identifiers_canonical_gtin14_owner/,\n  )\n  assert.match(sql, /where canonical_gtin14 is not null/)\n  assert.match(sql, /drop index if exists public\\.idx_product_identifiers_canonical_gtin14_lookup/)\n})",
+          "sha256": "0ab78de20e933317b94ad8f8fc726b3df479d42e4b9a18d186b60639f0e88758",
+          "assertions": [
+            {
+              "line": 65,
+              "text": "assert.match(sql, /raise exception 'product identifier canonical gtin collision/)"
+            },
+            {
+              "line": 66,
+              "text": "assert.match(sql, /count\\(distinct product_id\\) > 1/)"
+            },
+            {
+              "line": 67,
+              "text": "assert.match(\n    sql,\n    /create unique index if not exists idx_product_identifiers_canonical_gtin14_owner/,\n  )"
+            },
+            {
+              "line": 71,
+              "text": "assert.match(sql, /where canonical_gtin14 is not null/)"
+            },
+            {
+              "line": 72,
+              "text": "assert.match(sql, /drop index if exists public\\.idx_product_identifiers_canonical_gtin14_lookup/)"
+            }
+          ]
+        },
+        {
+          "title": "GTIN migrations execute and enforce canonical ownership in Postgres",
+          "line": 75,
+          "body": "test(\"GTIN migrations execute and enforce canonical ownership in Postgres\", async (t) => {\n  const pg = new PGlite()\n  t.after(async () => pg.close())\n\n  await pg.exec(`\n    CREATE ROLE anon;\n    CREATE ROLE authenticated;\n    CREATE ROLE service_role;\n\n    CREATE TABLE public.products (\n      id uuid PRIMARY KEY,\n      is_active boolean NOT NULL DEFAULT true,\n      lifecycle_status text NOT NULL DEFAULT 'active',\n      net_content_value numeric,\n      net_content_unit text,\n      updated_at timestamptz NOT NULL DEFAULT now()\n    );\n    CREATE TABLE public.product_submissions (\n      id uuid PRIMARY KEY,\n      scanned_identifier_type text,\n      scanned_identifier_value text\n    );\n    CREATE TABLE public.product_identifiers (\n      id uuid PRIMARY KEY DEFAULT gen_random_uuid(),\n      product_id uuid NOT NULL REFERENCES public.products(id),\n      identifier_type text NOT NULL,\n      identifier_value text NOT NULL,\n      normalized_identifier_value text GENERATED ALWAYS AS (\n        lower(regexp_replace(btrim(identifier_value), '[[:space:]]+', '', 'g'))\n      ) STORED,\n      source text,\n      created_at timestamptz NOT NULL DEFAULT now(),\n      UNIQUE (product_id, identifier_type, normalized_identifier_value)\n    );\n\n    CREATE FUNCTION public.product_intake_review_normalize_identifier_value(text, text)\n    RETURNS text LANGUAGE sql IMMUTABLE AS $$\n      SELECT lower(regexp_replace(btrim($2), '[[:space:]]+', '', 'g'))\n    $$;\n\n    CREATE FUNCTION public.product_intake_approve_reviewed_product_before_scanned_identifier(\n      uuid, jsonb, jsonb, text, timestamptz, text\n    ) RETURNS jsonb LANGUAGE sql AS $$\n      SELECT jsonb_build_object(\n        'base', 'approve',\n        'product_id', '22222222-2222-4222-8222-222222222222',\n        'identifiers', COALESCE($2 -> 'identifiers', '[]'::jsonb)\n      )\n    $$;\n    CREATE FUNCTION public.product_intake_approve_reviewed_product(\n      uuid, jsonb, jsonb, text, timestamptz, text\n    ) RETURNS jsonb LANGUAGE sql AS $$ SELECT '{\"wrapper\":\"approve\"}'::jsonb $$;\n    CREATE FUNCTION public.product_intake_link_existing_product_before_scanned_identifier(\n      uuid, uuid, text, timestamptz, text\n    ) RETURNS jsonb LANGUAGE sql AS $$ SELECT '{\"base\":\"link\"}'::jsonb $$;\n    CREATE FUNCTION public.product_intake_link_existing_product(\n      uuid, uuid, text, timestamptz, text\n    ) RETURNS jsonb LANGUAGE sql AS $$ SELECT '{\"wrapper\":\"link\"}'::jsonb $$;\n    CREATE FUNCTION public.apply_catalog_enrichment_personal_plan_heat_v1(text, text, text)\n    RETURNS void LANGUAGE sql AS $$ SELECT $$;\n    CREATE FUNCTION public.apply_catalog_enrichment_personal_plan_scalp_v1(text, text, text)\n    RETURNS void LANGUAGE sql AS $$ SELECT $$;\n\n    INSERT INTO public.products (id) VALUES\n      ('11111111-1111-4111-8111-111111111111'),\n      ('22222222-2222-4222-8222-222222222222');\n    INSERT INTO public.product_identifiers (\n      product_id, identifier_type, identifier_value, source\n    ) VALUES (\n      '11111111-1111-4111-8111-111111111111', 'ean', 'abc4006381333931', 'legacy'\n    );\n  `)\n\n  await pg.exec(expandSql)\n  const invalid = await pg.query<{ canonical_gtin14: string | null }>(\n    \"SELECT canonical_gtin14 FROM public.product_identifiers WHERE identifier_value = 'abc4006381333931'\",\n  )\n  assert.equal(invalid.rows[0]?.canonical_gtin14, null)\n\n  await pg.exec(writersSql)\n  const deduplicated = await pg.query<{ result: { identifiers: Array<{ value: string }> } }>(\n    `SELECT public.product_intake_approve_reviewed_product(\n      $1,\n      '{\"product\":{},\"identifiers\":[{\"type\":\"ean\",\"value\":\"4006381333931\"},{\"type\":\"gtin\",\"value\":\"04006381333931\"}]}'::jsonb,\n      '[]'::jsonb, 'reviewer'\n    ) AS result`,\n    [\"44444444-4444-4444-8444-444444444444\"],\n  )\n  assert.deepEqual(deduplicated.rows[0]?.result.identifiers, [\n    { type: \"ean\", value: \"4006381333931\" },\n  ])\n  const approved = await pg.query<{ result: { product_id: string } }>(\n    `SELECT public.product_intake_approve_reviewed_product(\n      $1, '{\"product\":{\"net_content_value\":\"250\",\"net_content_unit\":\"ml\"}}'::jsonb,\n      '[]'::jsonb, 'reviewer'\n    ) AS result`,\n    [\"33333333-3333-4333-8333-333333333333\"],\n  )\n  assert.equal(approved.rows[0]?.result.product_id, \"22222222-2222-4222-8222-222222222222\")\n  assert.deepEqual(\n    (\n      await pg.query<{ net_content_value: string | null; net_content_unit: string | null }>(\n        \"SELECT net_content_value::text, net_content_unit FROM public.products WHERE id = '22222222-2222-4222-8222-222222222222'\",\n      )\n    ).rows[0],\n    { net_content_value: \"250\", net_content_unit: \"ml\" },\n  )\n  await pg.exec(\n    \"UPDATE public.products SET net_content_value = 999, net_content_unit = 'g' WHERE id = '22222222-2222-4222-8222-222222222222'\",\n  )\n  await pg.query(\n    `SELECT public.product_intake_approve_reviewed_product(\n      $1, '{\"product\":{}}'::jsonb, '[]'::jsonb, 'reviewer'\n    )`,\n    [\"33333333-3333-4333-8333-333333333333\"],\n  )\n  assert.deepEqual(\n    (\n      await pg.query<{ net_content_value: string | null; net_content_unit: string | null }>(\n        \"SELECT net_content_value::text, net_content_unit FROM public.products WHERE id = '22222222-2222-4222-8222-222222222222'\",\n      )\n    ).rows[0],\n    { net_content_value: null, net_content_unit: null },\n  )\n  await pg.exec(`\n    INSERT INTO public.product_submissions (\n      id, scanned_identifier_type, scanned_identifier_value\n    ) VALUES (\n      '33333333-3333-4333-8333-333333333333', 'ean', '4006381333930'\n    );\n  `)\n  await assert.rejects(\n    pg.query(\n      `SELECT public.product_intake_approve_reviewed_product(\n        $1, '{}'::jsonb, '[]'::jsonb, 'reviewer'\n      )`,\n      [\"33333333-3333-4333-8333-333333333333\"],\n    ),\n    /invalid GTIN identifier/i,\n  )\n  await assert.rejects(\n    pg.query(\n      `SELECT public.product_intake_link_existing_product(\n        $1, $2, 'reviewer'\n      )`,\n      [\"33333333-3333-4333-8333-333333333333\", \"22222222-2222-4222-8222-222222222222\"],\n    ),\n    /invalid GTIN identifier/i,\n  )\n  await pg.exec(`\n    INSERT INTO public.product_identifiers (\n      product_id, identifier_type, identifier_value, source\n    ) VALUES (\n      '11111111-1111-4111-8111-111111111111', 'ean', '0022796976116', 'test'\n    );\n  `)\n  await pg.exec(invariantSql)\n\n  await assert.rejects(\n    pg.exec(`\n      INSERT INTO public.product_identifiers (\n        product_id, identifier_type, identifier_value, source\n      ) VALUES (\n        '22222222-2222-4222-8222-222222222222', 'gtin', '00022796976116', 'test'\n      );\n    `),\n    /idx_product_identifiers_canonical_gtin14_owner|duplicate key/i,\n  )\n})",
+          "sha256": "7c54d3aec1d590ac270d7620ea647e8266173eb893a228f6699562fe69aef654",
+          "assertions": [
+            {
+              "line": 152,
+              "text": "assert.equal(invalid.rows[0]?.canonical_gtin14, null)"
+            },
+            {
+              "line": 163,
+              "text": "assert.deepEqual(deduplicated.rows[0]?.result.identifiers, [\n    { type: \"ean\", value: \"4006381333931\" },\n  ])"
+            },
+            {
+              "line": 173,
+              "text": "assert.equal(approved.rows[0]?.result.product_id, \"22222222-2222-4222-8222-222222222222\")"
+            },
+            {
+              "line": 174,
+              "text": "assert.deepEqual(\n    (\n      await pg.query<{ net_content_value: string | null; net_content_unit: string | null }>(\n        \"SELECT net_content_value::text, net_content_unit FROM public.products WHERE id = '22222222-2222-4222-8222-222222222222'\",\n      )\n    ).rows[0],\n    { net_content_value: \"250\", net_content_unit: \"ml\" },\n  )"
+            },
+            {
+              "line": 191,
+              "text": "assert.deepEqual(\n    (\n      await pg.query<{ net_content_value: string | null; net_content_unit: string | null }>(\n        \"SELECT net_content_value::text, net_content_unit FROM public.products WHERE id = '22222222-2222-4222-8222-222222222222'\",\n      )\n    ).rows[0],\n    { net_content_value: null, net_content_unit: null },\n  )"
+            },
+            {
+              "line": 206,
+              "text": "assert.rejects(\n    pg.query(\n      `SELECT public.product_intake_approve_reviewed_product(\n        $1, '{}'::jsonb, '[]'::jsonb, 'reviewer'\n      )`,\n      [\"33333333-3333-4333-8333-333333333333\"],\n    ),\n    /invalid GTIN identifier/i,\n  )"
+            },
+            {
+              "line": 215,
+              "text": "assert.rejects(\n    pg.query(\n      `SELECT public.product_intake_link_existing_product(\n        $1, $2, 'reviewer'\n      )`,\n      [\"33333333-3333-4333-8333-333333333333\", \"22222222-2222-4222-8222-222222222222\"],\n    ),\n    /invalid GTIN identifier/i,\n  )"
+            },
+            {
+              "line": 233,
+              "text": "assert.rejects(\n    pg.exec(`\n      INSERT INTO public.product_identifiers (\n        product_id, identifier_type, identifier_value, source\n      ) VALUES (\n        '22222222-2222-4222-8222-222222222222', 'gtin', '00022796976116', 'test'\n      );\n    `),\n    /idx_product_identifiers_canonical_gtin14_owner|duplicate key/i,\n  )"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/audit-product-metadata-script.test.ts",
+      "sha256": "e5512246eb5bd26b0a50c5fd44cfc9c1030c38a8fb0aa3a38766df22745d268c",
+      "sites": 6,
+      "rows": [
+        {
+          "title": "checkStoredLinkBuyability returns unavailable for missing or unusable links",
+          "line": 22,
+          "body": "test(\"checkStoredLinkBuyability returns unavailable for missing or unusable links\", async () => {\n  assert.equal(\n    await checkStoredLinkBuyability(buildProduct({ affiliate_link: null })),\n    \"unavailable\",\n  )\n  assert.equal(\n    await checkStoredLinkBuyability(buildProduct({ affiliate_link: \"kein-link\" })),\n    \"unavailable\",\n  )\n})",
+          "sha256": "8ec35e909affef9b33b7969eb90758eed50b67ef9b54216db8cff61d9a2bbcd3",
+          "assertions": [
+            {
+              "line": 23,
+              "text": "assert.equal(\n    await checkStoredLinkBuyability(buildProduct({ affiliate_link: null })),\n    \"unavailable\",\n  )"
+            },
+            {
+              "line": 27,
+              "text": "assert.equal(\n    await checkStoredLinkBuyability(buildProduct({ affiliate_link: \"kein-link\" })),\n    \"unavailable\",\n  )"
+            }
+          ]
+        },
+        {
+          "title": "checkStoredLinkBuyability classifies known retailer content",
+          "line": 33,
+          "body": "test(\"checkStoredLinkBuyability classifies known retailer content\", async () => {\n  const originalFetch = globalThis.fetch\n  globalThis.fetch = async () =>\n    new Response(\"<html><body>Online momentan nicht verfügbar</body></html>\", { status: 200 })\n\n  try {\n    const status = await checkStoredLinkBuyability(\n      buildProduct({ affiliate_link: \"https://www.rossmann.de/de/pflege-und-duft-test/p/123\" }),\n    )\n    assert.equal(status, \"unavailable\")\n  } finally {\n    globalThis.fetch = originalFetch\n  }\n})",
+          "sha256": "199db0f1a90c122c2afc7119274eb83ded524fcc26e281e9037db40c4c56965a",
+          "assertions": [
+            {
+              "line": 42,
+              "text": "assert.equal(status, \"unavailable\")"
+            }
+          ]
+        },
+        {
+          "title": "checkStoredLinkBuyability lets unavailable dm text win over cart markup",
+          "line": 48,
+          "body": "test(\"checkStoredLinkBuyability lets unavailable dm text win over cart markup\", async () => {\n  const originalFetch = globalThis.fetch\n  globalThis.fetch = async () =>\n    new Response(\"<html><body>Nicht lieferbar In den Warenkorb</body></html>\", { status: 200 })\n\n  try {\n    const status = await checkStoredLinkBuyability(\n      buildProduct({ affiliate_link: \"https://www.dm.de/p/d/123/test-product\" }),\n    )\n    assert.equal(status, \"unavailable\")\n  } finally {\n    globalThis.fetch = originalFetch\n  }\n})",
+          "sha256": "73212c72b7349b34f08f3d700a0c77d9fd72212b06fa688ba281cbf9019258f5",
+          "assertions": [
+            {
+              "line": 57,
+              "text": "assert.equal(status, \"unavailable\")"
+            }
+          ]
+        },
+        {
+          "title": "checkStoredLinkBuyability lets unavailable Mueller text win over cart markup",
+          "line": 63,
+          "body": "test(\"checkStoredLinkBuyability lets unavailable Mueller text win over cart markup\", async () => {\n  const originalFetch = globalThis.fetch\n  globalThis.fetch = async () =>\n    new Response(\"<html><body>Nicht lieferbar In den Warenkorb</body></html>\", { status: 200 })\n\n  try {\n    const status = await checkStoredLinkBuyability(\n      buildProduct({ affiliate_link: \"https://www.mueller.de/p/test-product-PPN123/\" }),\n    )\n    assert.equal(status, \"unavailable\")\n  } finally {\n    globalThis.fetch = originalFetch\n  }\n})",
+          "sha256": "af2cd06f5e1a750c7a2f49c22d00087cb8a33083de7f2580b93a382bd19c91b3",
+          "assertions": [
+            {
+              "line": 72,
+              "text": "assert.equal(status, \"unavailable\")"
+            }
+          ]
+        },
+        {
+          "title": "checkStoredLinkBuyability lets generic unavailable Rossmann text win over cart markup",
+          "line": 78,
+          "body": "test(\"checkStoredLinkBuyability lets generic unavailable Rossmann text win over cart markup\", async () => {\n  const originalFetch = globalThis.fetch\n  globalThis.fetch = async () =>\n    new Response(\"<html><body>Nicht verfügbar Zum Warenkorb</body></html>\", { status: 200 })\n\n  try {\n    const status = await checkStoredLinkBuyability(\n      buildProduct({ affiliate_link: \"https://www.rossmann.de/de/test-product/p/123456789\" }),\n    )\n    assert.equal(status, \"unavailable\")\n  } finally {\n    globalThis.fetch = originalFetch\n  }\n})",
+          "sha256": "0ddbc75d622e5992b09efba8a3ee47de9254b8a14b22be8eb0ec82b3d3d1d36f",
+          "assertions": [
+            {
+              "line": 87,
+              "text": "assert.equal(status, \"unavailable\")"
+            }
+          ]
+        },
+        {
+          "title": "checkStoredLinkBuyability returns manual-review null for inconclusive fetch results",
+          "line": 93,
+          "body": "test(\"checkStoredLinkBuyability returns manual-review null for inconclusive fetch results\", async () => {\n  const originalFetch = globalThis.fetch\n  globalThis.fetch = async () =>\n    new Response(\"<html><body>Bitte aktivieren Sie JavaScript</body></html>\")\n\n  try {\n    const status = await checkStoredLinkBuyability(\n      buildProduct({ affiliate_link: \"https://www.rossmann.de/de/pflege-und-duft-test/p/123\" }),\n    )\n    assert.equal(status, null)\n  } finally {\n    globalThis.fetch = originalFetch\n  }\n})",
+          "sha256": "58349959662275c7262c2d0d14f1c2d4f6080747a264648aa78e211130da7dbd",
+          "assertions": [
+            {
+              "line": 102,
+              "text": "assert.equal(status, null)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/product-metadata-health.test.ts",
+      "sha256": "a7901948598a66553af2ce65ca81076c8b11fcab46a5d34eb3b9bdadfce4c5eb",
+      "sites": 4,
+      "rows": [
+        {
+          "title": "hasSuspiciousNameMarker flags catalog footnote markers",
+          "line": 30,
+          "body": "test(\"hasSuspiciousNameMarker flags catalog footnote markers\", () => {\n  assert.equal(hasSuspiciousNameMarker(\"Guhl Panthenol*\"), true)\n  assert.equal(hasSuspiciousNameMarker(\"Olaplex No. 5 Leave-In Conditioner\"), false)\n})",
+          "sha256": "d8e7863106df5e1e995bbe1eac4b4c25c34867eead40ce49ea87f2b55b351ddb",
+          "assertions": [
+            {
+              "line": 31,
+              "text": "assert.equal(hasSuspiciousNameMarker(\"Guhl Panthenol*\"), true)"
+            },
+            {
+              "line": 32,
+              "text": "assert.equal(hasSuspiciousNameMarker(\"Olaplex No. 5 Leave-In Conditioner\"), false)"
+            }
+          ]
+        },
+        {
+          "title": "numericPrice handles number, comma decimal, and empty values",
+          "line": 35,
+          "body": "test(\"numericPrice handles number, comma decimal, and empty values\", () => {\n  assert.equal(numericPrice(4.99), 4.99)\n  assert.equal(numericPrice(\"4,99\"), 4.99)\n  assert.equal(numericPrice(\"\"), null)\n})",
+          "sha256": "cc628d4d6376bc555d50dd4f9df0da4abd228cf473e905d27049fe3df93c9cea",
+          "assertions": [
+            {
+              "line": 36,
+              "text": "assert.equal(numericPrice(4.99), 4.99)"
+            },
+            {
+              "line": 37,
+              "text": "assert.equal(numericPrice(\"4,99\"), 4.99)"
+            },
+            {
+              "line": 38,
+              "text": "assert.equal(numericPrice(\"\"), null)"
+            }
+          ]
+        },
+        {
+          "title": "auditProductMetadata reports known metadata issues",
+          "line": 41,
+          "body": "test(\"auditProductMetadata reports known metadata issues\", () => {\n  const findings = auditProductMetadata(\n    buildProduct({\n      name: \"Guhl Panthenol*\",\n      affiliate_link: \"https://www.geizhals.de/guhl-panthenol\",\n      image_url: \"\",\n      price_eur: null,\n      purchase_link_status: \"unavailable\",\n    }),\n  )\n\n  assert.deepEqual(\n    findings.map((finding) => finding.type),\n    [\"suspicious_name_marker\", \"denylisted_host\", \"missing_price\", \"missing_image\", \"unavailable\"],\n  )\n})",
+          "sha256": "324168c89acfc409d79ccd3f688405f624ee34cc27ddb21d41d28440ae8ceb3e",
+          "assertions": [
+            {
+              "line": 52,
+              "text": "assert.deepEqual(\n    findings.map((finding) => finding.type),\n    [\"suspicious_name_marker\", \"denylisted_host\", \"missing_price\", \"missing_image\", \"unavailable\"],\n  )"
+            }
+          ]
+        },
+        {
+          "title": "hasStalePrice flags watched price deltas above the expected maximum",
+          "line": 58,
+          "body": "test(\"hasStalePrice flags watched price deltas above the expected maximum\", () => {\n  const olaplexCheck: ExpectedPriceCheck = {\n    id: \"4827c174-92e9-4121-ab70-843d5c037ad0\",\n    expected_price_eur: 34,\n    max_delta_eur: 0.05,\n    source_url: \"https://olaplex.de/products/original-olaplex-n-5leave-in-conditioner\",\n  }\n\n  assert.equal(hasStalePrice(19.65, olaplexCheck), true)\n})",
+          "sha256": "5b916a01269e2b547bbbeec22996d43379ae2c630ffd95252aeb4cdeb2b7af9d",
+          "assertions": [
+            {
+              "line": 66,
+              "text": "assert.equal(hasStalePrice(19.65, olaplexCheck), true)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/product-metadata-ingest-identity.test.ts",
+      "sha256": "b7eef8effe81bdafa8c0101eae8184242ae781a9eb98b7cfd842cefda4cd9635",
+      "sites": 4,
+      "rows": [
+        {
+          "title": "resolveProductIdentity fails closed when explicit id is missing",
+          "line": 19,
+          "body": "test(\"resolveProductIdentity fails closed when explicit id is missing\", async () => {\n  await assert.rejects(\n    resolveProductIdentity(\n      { id: \"missing-id\", name: \"Known Product\", category: \"Leave-in\" },\n      new Map(),\n      {\n        findProductById: async () => null,\n        findProductByNameCategory: async () => existingProduct,\n      },\n    ),\n    /Explicit product id missing-id/,\n  )\n})",
+          "sha256": "bbfea168a4bc1cc822468a712640696a6ed8655464365ad5b40d39b30033a122",
+          "assertions": [
+            {
+              "line": 20,
+              "text": "assert.rejects(\n    resolveProductIdentity(\n      { id: \"missing-id\", name: \"Known Product\", category: \"Leave-in\" },\n      new Map(),\n      {\n        findProductById: async () => null,\n        findProductByNameCategory: async () => existingProduct,\n      },\n    ),\n    /Explicit product id missing-id/,\n  )"
+            }
+          ]
+        },
+        {
+          "title": "resolveProductIdentity fails closed when alias points to a missing row",
+          "line": 33,
+          "body": "test(\"resolveProductIdentity fails closed when alias points to a missing row\", async () => {\n  const aliases = parseProductIdentityAliases(\n    JSON.stringify([\n      {\n        id: \"missing-alias-id\",\n        aliases: [{ name: \"Alias Product\", category: \"Conditioner\" }],\n      },\n    ]),\n  )\n\n  await assert.rejects(\n    resolveProductIdentity({ name: \"Alias Product\", category: \"Conditioner\" }, aliases, {\n      findProductById: async () => null,\n      findProductByNameCategory: async () => existingProduct,\n    }),\n    /resolves to missing id missing-alias-id/,\n  )\n})",
+          "sha256": "3039741027091d980bd938258222ca01ad6745da0480ca8ce08758af7a38273b",
+          "assertions": [
+            {
+              "line": 43,
+              "text": "assert.rejects(\n    resolveProductIdentity({ name: \"Alias Product\", category: \"Conditioner\" }, aliases, {\n      findProductById: async () => null,\n      findProductByNameCategory: async () => existingProduct,\n    }),\n    /resolves to missing id missing-alias-id/,\n  )"
+            }
+          ]
+        },
+        {
+          "title": "resolveProductIdentity falls back to name/category when no explicit id or alias exists",
+          "line": 52,
+          "body": "test(\"resolveProductIdentity falls back to name/category when no explicit id or alias exists\", async () => {\n  const resolution = await resolveProductIdentity(\n    { name: \"Known Product\", category: \"Leave-in\" },\n    new Map(),\n    {\n      findProductById: async () => {\n        throw new Error(\"id lookup should not run\")\n      },\n      findProductByNameCategory: async () => existingProduct,\n    },\n  )\n\n  assert.equal(resolution.source, \"name_category\")\n  assert.equal(resolution.product?.id, \"existing-id\")\n})",
+          "sha256": "75ade722a8df8e174931d1ca49637d457fd82cfb78b4c7feec457de60920d776",
+          "assertions": [
+            {
+              "line": 64,
+              "text": "assert.equal(resolution.source, \"name_category\")"
+            },
+            {
+              "line": 65,
+              "text": "assert.equal(resolution.product?.id, \"existing-id\")"
+            }
+          ]
+        },
+        {
+          "title": "mergeCommercialFields preserves existing commercial fields unless force overwrite is set",
+          "line": 68,
+          "body": "test(\"mergeCommercialFields preserves existing commercial fields unless force overwrite is set\", () => {\n  assert.deepEqual(\n    mergeCommercialFields(\n      existingProduct,\n      { affiliate_link: \"\", image_url: \"   \", price_eur: undefined },\n      false,\n    ),\n    {\n      affiliate_link: \"https://example.com/old\",\n      image_url: \"https://example.com/old.jpg\",\n      price_eur: 12.99,\n    },\n  )\n\n  assert.deepEqual(\n    mergeCommercialFields(\n      existingProduct,\n      { affiliate_link: undefined, image_url: null, price_eur: undefined },\n      true,\n    ),\n    {\n      affiliate_link: null,\n      image_url: null,\n      price_eur: null,\n    },\n  )\n})",
+          "sha256": "36e88111d3d920f2263c138691d757698dcdc87431605e0c8add8feee7db8dd2",
+          "assertions": [
+            {
+              "line": 69,
+              "text": "assert.deepEqual(\n    mergeCommercialFields(\n      existingProduct,\n      { affiliate_link: \"\", image_url: \"   \", price_eur: undefined },\n      false,\n    ),\n    {\n      affiliate_link: \"https://example.com/old\",\n      image_url: \"https://example.com/old.jpg\",\n      price_eur: 12.99,\n    },\n  )"
+            },
+            {
+              "line": 82,
+              "text": "assert.deepEqual(\n    mergeCommercialFields(\n      existingProduct,\n      { affiliate_link: undefined, image_url: null, price_eur: undefined },\n      true,\n    ),\n    {\n      affiliate_link: null,\n      image_url: null,\n      price_eur: null,\n    },\n  )"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sites": 99,
+  "semanticReadClaim": false
+}

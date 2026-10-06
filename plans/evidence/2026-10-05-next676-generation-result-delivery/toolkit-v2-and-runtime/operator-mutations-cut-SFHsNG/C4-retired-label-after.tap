@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: missing source facts ask for the fact without claiming no action is needed
+ok 1 - missing source facts ask for the fact without claiming no action is needed
+  ---
+  duration_ms: 10.80825
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 345.782959

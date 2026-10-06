@@ -76,14 +76,6 @@ test("no-complete-day state retains visible Pausentag plus recovery explanation"
   assert.match(html, /href="\/routine"/)
 })
 
-test("unavailable retry refreshes the server route instead of linking to the same page", () => {
-  const source = readFileSync("src/components/application/application-state.tsx", "utf8")
-
-  assert.match(source, /router\.refresh\(\)/)
-  assert.match(source, /actionHref: null/)
-  assert.doesNotMatch(source, /actionHref: "\/anwendung"/)
-})
-
 test("an unavailable direct day offers the bounded overview while transient failures retry", () => {
   const dayUnavailable = renderToStaticMarkup(
     createElement(ApplicationPage, {
@@ -97,6 +89,8 @@ test("an unavailable direct day offers the bounded overview while transient fail
   const source = readFileSync("src/components/application/application-state.tsx", "utf8")
   assert.match(source, /actionLabel: "Erneut laden"/)
   assert.match(source, /router\.refresh\(\)/)
+  assert.match(source, /actionHref: null/)
+  assert.doesNotMatch(source, /actionHref: "\/anwendung"/)
   assert.match(source, /var\(--personal-plan-shell-bottom-padding,0px\)/)
 })
 

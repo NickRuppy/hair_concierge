@@ -1,0 +1,7 @@
+{
+  "freeze": "/tmp/test-audit-final538-tested-tree.json",
+  "freshMembershipCount": 3471,
+  "sameMembership": true,
+  "hashDrift": [],
+  "allHashesExact": true
+}

@@ -1,0 +1,34 @@
+TAP version 13
+# [discovery] call sheet lookup failed: TypeError: client.from is not a function
+#     at Object.loadDiscoveryCallSheet (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/discovery/call-sheet.ts:113:6)
+#     at DiscoveryCockpitPage (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/admin/beratung/[enrollmentId]/page.tsx:215:30)
+#     at async renderCockpit (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-unanswered-categories.test.tsx:247:19)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-unanswered-categories.test.tsx:270:18)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+# Subtest: a submitted intake's untouched step says so at the step — never „benutzt nichts“
+not ok 1 - a submitted intake's untouched step says so at the step — never „benutzt nichts“
+  ---
+  duration_ms: 18.033958
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-unanswered-categories.test.tsx:2:7678'
+  failureType: 'testCodeFailure'
+  error: 'summary names exactly the six unanswered categories without steps'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-unanswered-categories.test.tsx:286:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1106.276167

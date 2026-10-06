@@ -1,0 +1,177 @@
+from pathlib import Path
+import json,hashlib
+P=Path(__file__).parent;sites=json.loads((P/'sites.json').read_text());cs=json.loads((P/'candidate-bodies.json').read_text());cm={(c['donor']['file'],c['donor']['title']):c['id'] for c in cs}
+notes={
+'scan-alternative-comparison.test.ts':[
+'C1: empty-array projection is already called by the retained undefined-criteria masking keeper; exact {rows:[],summaryScore:0}.',
+'C2: pass->match/id-label verbatim/score1 complete row is owned by the composed payload keeper, strengthened for its existing first default alternative; generic copied string fields differ but no category/identifier branch exists.',
+'R: caution/fail/unknown exercise three distinct switch arms; pass-only composed fixtures cannot catch swapped mismatch/unknown mappings.',
+'R: two matches among four rows constrain denominator and unknown inclusion; all-pass/empty score probes cannot catch denominator counting only measured rows.',
+'R: two ordered distinct row IDs and labels constrain order; the retained route label oracle sorts and cannot detect row reversal.',
+'C3: exact composed comparison deepEqual forbids every extra own row field, subsuming sorted own keys on the default one-row projection.',
+'R: two calls on the same frozen array reject unstable output and array mutation; this is not a deep-freeze proof against mutation of the nested criterion object.'
+],
+'scan-analytics.test.ts':[
+'R: literal destination booleans prevent scan events being forwarded to Customer.io/Meta; direct PostHog mapper tests cannot detect routing leaks.',
+'R: explicitly injected/default no-op port must not forward. Consent factory is a separate callable object and cannot detect accidental no-op implementation forwarding.',
+'R: declined/unset consent suppresses events; granted consent forwards all original typed payloads. Serializer siblings call the destination directly and bypass this policy.',
+'R: actual destination maps ten scan events to independent literal snake_case outputs; swapped/deleted properties fail. Provider capture is only the observed sink.',
+'R: name_search and null suggestedCategory preserve distinct public recovery attribution; prior table emits scan with nonnull category.',
+'R: product-bearing not_needed remains catalog hit; null product becomes false. A kind-only predicate fails the independent null/header check.'
+],
+'scan-catalog-search-typo.test.ts':[
+'R: ten table rows cover deletion/substitution/long-token edit budget/transposition/reject bounds/multiple tokens/prefix distance. One AST site, no row regrouping or removal proposed.',
+'R: short-token whole-word guard rejects oil while longer/whole deletion matches; dropping the prefix-length guard broadens unrelated product hits.',
+'R: a two-character query receives no typo budget; the three/five-character fixtures do not prove this boundary.',
+'R: all four ranking tiers conflict with sort_order, so putting sort ahead of tier produces a wrong full order.',
+'F: still protects sort_order then name within typo tier, but every name differs; the claimed final id tiebreak is not exercised. Retain full callback, no added fixture or zero-credit repair here.',
+'R: uppercase and multiword substring route bypass edit distance and constrain compatibility of preexisting search.',
+'R: digit-bearing query/title tokens preserve numeric identities; allowing edit distance on them would mix100/200 or No3/No4.'
+],
+'scan-masked-alternative.test.ts':[
+'C4: payload keeper already calls actual maskAlternative for each existing alternative and checks exact outer key set on both.',
+'C5: actual resolve masked alternativeB already carries supportive/Passt eingeschränkt; transfer both literal assertions to that existing HTTP response.',
+'C6: first payload alternative is exactly alternative() with the same criterion; add exact existing rows/score union there, no new invocation.',
+'R: undefined criteria must enter ??[] and yield empty rows/zero; explicit [] only tests the downstream projection and misses fallback removal.',
+'R: full JSON snapshot before/after catches mutation of input identity and nested criteria; merely comparing output keys cannot.',
+'R primary keeper: two alternatives both masked while exact verdictTitle/coverage/dimensions references survive; now owns first default comparison row/score assertions too.',
+'R: empty alternative list must remain empty; a fallback/recommendation placeholder insertion is not exercised by the two-item keeper.'
+],
+'scan-name-only-submission-migration.test.ts':[
+'D1: exact same EAN INSERT runs first in retained two-lane coexistence SQL keeper; final count2 observes both surviving insertions.',
+'D2: same name-only identity and INSERT is accepted in retained coexistence keeper; existing EAN row is excluded by name-index predicate, and count2 observes both.',
+'R: missing both identity forms must fail the named CHECK; allowing incomplete scan rows would pass happy SQL replays.',
+'R: brand-only differs from completely absent name data and must still fail AND constraint; weakening AND to OR is caught.',
+'R: non-scan source bypasses scanner-specific CHECK. Applying scan restrictions to onboarding is distinct regression.',
+'R: lowercased duplicate across two open states must fail named unique index; dropping lower() or researching from predicate escapes simple happy inserts.',
+'F: actual rows independently vary user/category/name, not brand despite title. Retain three proven scope dimensions/count4; no extra input or cut claimed.',
+'R: prior rejected state must not block a new open request; including closed status in partial index fails second insert.',
+'R primary keeper: same user/category can store EAN and name-only rows concurrently; exact original INSERTs/count2 subsume two isolated happy callbacks.'
+],
+'scan-observability.test.ts':[
+'R: actual capture builds tags/string status/context/error severity and passes same thrown error to sink; wrong scope transformation fails literal dictionaries.',
+'R: explicit warning overrides default severity and stays absent from serialized tags/context; default-error test does not cover it.',
+'R: undefined reason/user omitted rather than emitted empty; populated error fixture cannot constrain absence.',
+'R: five distinct public route tag values retained. They are operator filtering identifiers, not private implementation names; no stronger actual sink keeper covers their complete literal union.',
+'R: fixed safe message and reason plus throttle suppression/window expiry protect privacy and incident-volume behavior, independent of payload builder.'
+],
+'scan-pending-submission.test.ts':[
+'R: real query adapter emits user isolation, complete open statuses, GTIN variants and maps id/status from returned data. Stubs only record actual query; route deps replace this owner.',
+'C12: existing variant-query keeper also receives {data:null,error:null}; wrap its existing await with null assertion. Query variant differences are consumed in request construction, but not after the data-null return predicate; all variant assertions retained.',
+'R primary keeper: three GTIN spellings including UPC preserve query compatibility; now also observes actual null-data output on that existing call.'
+],
+'scan-presentation-rows.test.ts':[
+'R: actual factory must request products id/category and both active gates; injected route loader siblings never observe this SQL-builder protocol.',
+'R: no row -> null and query error -> caller-specific reveal code are distinct response branches; successful row mapping cannot prove them.',
+'R: full commerce select list/deduped IDs and unknown purchase status normalization; dropping a column or leaking pending status is detectable.',
+'R: empty IDs perform no query, while nonempty query error preserves caller-specific code; both explicit controls remain.'
+],
+'scan-product-presentation.test.ts':[
+'R: exact scan header projection and German commerce values bridge identity/category and commerce owner; masked route checks only scanned name/brand, not full header.',
+'R: unavailable link is hidden while known price remains; blindly dropping all commerce or exposing unavailable URL fails.',
+'R: missing currency fails closed rather than assumingEUR; availableEUR fixture cannot prove this null gate.',
+'R: alternative keyed row enriches brand/purchase URL while verdict-core price/title pass through unchanged; joins by array order or replaces core price would fail.',
+'R: no alternative row -> null brand and URL, rather than wrong scanned row fallback or throw; keyed happy join insufficient.',
+'R: not_needed payload passes through unchanged; in_catalog enrichment must not create alternatives/reshape independent not-needed contract.'
+],
+'scan-profile-context.test.ts':[
+'R: refined literal source/revision and hash plus real generated decision/routine preservation. Shared compute fixture is not an independent engine-correctness oracle; source selection/publication still independent.',
+'R primary keeper: initial-only actual adapter output preserves decisions/source; now also retains original initial hair projection.',
+'C11: both callbacks set refined=null; validNeed returns on !need before inspecting current_refined_need_version_id. Only remaining fixture difference is that dead pointer; identical initial source/engine calls. Move exact hair assertion to existing initial keeper.',
+'R: absent completed profile exits before source assembly and performs only read RPC; explicit no-publish oracle retains isolation of missing context.',
+'R: completed profile + plan but no owned need/lead is a later rejection than absentprofile; must not fabricate source from a bare profile.',
+'R: DB read error and hash mismatch reject unavailable rather than returning null/missing profile; retain actual hash/RPC error distinctions.'
+],
+'scan-resolve-anti-leak.test.ts':[
+'R primary actual route keeper: authenticated productId path -> real presentation/quarantine/masking/JSON wrapper with injected external reads. Preserves adversarial string exclusions/scanned identity and now full recursive key/labels/supportive alternative assertions.',
+'C7: exact same route fixture/deps/request/flag as primary string keeper; transfer all alternatives2/forbidden recursive keys/exact allowed set assertions onto its parsed existing body.',
+'C8: exact same route invocation as primary keeper; transfer existing generic-label projection assertion, no extra response or handler call.',
+'R: identifier HTTP branch consumes request EAN via validation/lookup/attempt telemetry rather than productId path; preserve raw request identifier exclusion.',
+'R: alternative/scanned product identity collision is retained conservatively; it changes identifiers consumed by presentation/quarantine reads before serialization. No input-complete independent keeper proved for that collision.',
+'R: unknown retailer enrichment exposes only six identified fields and no URL/INCI/descriptive secrets. Distinct not-found response branch, not masked known-product projection.'
+],
+'scan-role-selection.test.ts':[
+'R: status known passes four verdicts; unknown/pending/unsupported normalizeunknown; missing status handling can overclaim fit.',
+'R: empty entries ->null avoids fabricatedwinner/null dereference; nonempty cases insufficient.',
+'R: single mismatch winner remains actual entry; single cardinality is supported public selector input, not same as rankingtwo.',
+'R: ideal outranks supportive despite later input order; swapping rank entries fails.',
+'R: supportive outranks knownunknown; adjacent rank ordering distinct.',
+'R: unknown outranks mismatch to avoid unjustifiedrejection; changing unknown rank fails.',
+'R: two mismatches preserve first and resultingmismatch verdict; tie and statusinteraction retained.',
+'R: higher measured matches breaks equalverdict; ignoring coverage fails.',
+'R: null coverage loses to measuredpositive; treating absence as high/full coverage fails.',
+'R: equalrank/coverage picks fewer cautions; dropping cautioncount fails.',
+'R: full tie preserves either suppliedorder on two existing calls; fixedrole bias or unstable sorting fails.',
+'R: caller array remains unchanged despite bettersecond; in-place sorting would fail. Winner tests alone do not observe mutation.'
+],
+'scan-submit-dm-event-log.test.ts':[
+'R: actualwriter exact table and safe outcome/time fields, including explicitcreatedAt; substitutingclient mock output cannot implement this mapping itself.',
+'R: resolved insert error does notreject, warns without rawprovider detail and emits once perwindow; privacy/throttle behavior realowner executes. No claim of rejectedpromise/syncthrow coverage.'
+],
+'scan-trigger-cards-ui.test.tsx':[
+'R: actual card element produces one region/CTA per supportedid with nonempty accessible name; bounded shape/a11y contract, not independent proof of exact per-idcopy quality.',
+'R: categorygap uses routinehref and nobutton/noopen; cannot be subsumed by remaining imperativeCTA cases.',
+'R: three supported prompt buttons invoke suppliedcallback exactlyonce and expose noa; actualcomponent event wiring runs.',
+'R: repeatedcategory literalShampoo and ownmarker/button callback; distinct component/personalizedlabel.'
+],
+'scan-trigger-session-marker.test.ts':[
+'C9: exact initial recordScanSession(storage,1000) call already exists in session3 keeper. Transfer returned1 and persistentrecord truthy observations immediately afterfirstcall.',
+'C10: exactsecondcall at1000+31minutes already exists in session3 keeper. Transfer return2 assertion in place withoutanothercall.',
+'R:29minute and+5second remount remain same session; catches threshold/update-lastSeen handling notcovered31min gaps.',
+'R primary keeper: threeexisting timestampcalls now assert1/storedrecord/2/3, retaining laterincrement proof.',
+'R: nullstorage directSSR gate safe1 differs from thrown accessor catch.',
+'R: throwing storage returns1 throughcatch; unsafegetItem/setItem propagation fails.',
+'R: invalidJSON parsecatch restarts1; freshmissingstorage does notexercise corruptedserializedrecord.',
+'R: absentfatigue value ->null throughrealgetItem validation; other tests coverinvalidstring andnoadapter rather thanfreshstorage.',
+'R: frust_serie exactenum value persists/rawkey matches; actualwhitelist membership is productprotocol, retain independently of categorygaproundtrip.',
+'R: nullstorage andinvalidenum content safe null; prevents readingarbitrary values as triggerIDs.',
+'R: thrown fatigue read andwrite do notcrash; both guardedoperations retain externalstorage failure boundary.',
+'R: kategorien_luecke membership is independently consumed by runtime trigger-ID whitelist. It is not remount execution, but realwrite/read enumacceptance differs from retainedfrust_serie; no claimed duplicate solely by mockstorage.'
+],
+'scan-verdict-access.test.ts':[
+'R: own marker presence bothtrue/false distinguishes masked from premium/notneeded. Booleanvalue-only guard regression fails.',
+'R: onlyincatalog proves tier; unknownproduct/pending/notneeded cannotinferpremium. Distinct wirekinds retained.',
+'R: unknownnext preserves currenttier and realnewtier overrides; prevents accidentalunlocks orstale purchase state.',
+'R: reveal requiresunusedcredit andno409override; both spentboolean andserverobservedspent cases retained.'
+],
+'scanner-analytics-context.test.ts':[
+'R: durable row wins overmissing/replacedtouch and stripsprivateclickid; lateracquisitioncannot overwriteoriginal.',
+'R: signedmatching session accepts touch, differentjourney/dbfailure/non-scanner excludes; independentauthority guards.',
+'R: dynamic path/objectcampaign withheld, strings trimmed, trustedinternal/testkind/session values survive; privacyliteral constraints.',
+'R: confirmedemptyacquisition remainsready whileDBfailure notready; trackerretryneeds distinction.'
+],
+'scanner-offer-analytics.test.ts':[
+'R: eventdestination routing denies Meta/Customerio for twooffer contentevents; serialization testsbypassrouter.',
+'R: twoactualPostHog eventcases carry event-specific fields andcommonofferIDs; undefinedsection removed, presentsection retained. Missingproperty andwrongname regressions detected.'
+],
+'scanner-quiz-view.test.ts':[
+'R: settledperpackage snapshot usesfirst step/resume/event-time andfullsafecontext exactlyonce; subsequentcall cannotretime/replace it.',
+'R: ordinarydisplayedquiz mustnotemit fromlatescannercontext; stalecontext alone insufficient.',
+'R: inactive mount beforecontextresolve suppresses emission; realisCurrentcallback observed.',
+'R: nullcontext retried preserving originalstep/id/time; freshretry snapshot or noretry fails.',
+'R: twoseparate trackerinstances emittwodistinctids while eachsettlesonce; singleton/globalsettledstate fails.',
+'R: real destination mapping boundedquizsnapshot plusPostHog-only route; trackerstub doesnotcoverwire naming/destination.',
+'R: metadatafalse retries bounded3; recovery2 emitsonewithinternalflag andpersistentfailure emitsnone; nullcontextcase doesnotcoverpartialauthoritative metadata.'
+],
+'scanner-result-artifact-email.test.ts':[
+'R: actualpayload dedicatedconfigurednumerictemplate, trimmedtarget/encodedlead resultURL andonlytwomessagedata keys; genericartifactbuilder is separateformat.',
+'R: omittedmessageid throws explicitdedicatedenvkey, neverorganicfallback; configuredhappycase insufficient.'
+],
+'scanner-trial-offer.test.tsx':[
+'R: actualcompactscannerUI selectedyear/monthcallback plusmonthlycomparison,savings,introprice,paymentnotice andnoherocopy. Defaultoffer distinctrenderbranch.',
+'R: equalfirst/renewalprice switches copyandannualequivalent/savings; introductoryfixture cannotcoverbranch.',
+'R: pending disablescallback andrendersmonthterms bothdirectcomponent andrealTrialOffer scannerbranch; callbackno-opanddelegationdistinct.',
+'R: exactpricingCTA analytics attributes plusselectedmonth arelivepubliceventprotocol; pricingtextpendingtests do notassert these attributes.'
+]}
+ledger=[]
+for file in dict.fromkeys(s['file'] for s in sites):
+ rows=[s for s in sites if s['file']==file];ns=notes[file.removeprefix('tests/')];assert len(rows)==len(ns),(file,len(rows),len(ns))
+ for s,n in zip(rows,ns):
+  cid=cm.get((file,s['title']));mark=cid[0] if cid else n[0];assert mark in 'RFCD';ledger.append({**{k:s[k] for k in ['file','title','line','sha256']},'classification':mark,'candidate':cid,'evidence':n,'runtime':'Not run; do not delete baseline failures.'})
+(P/'ledger.json').write_text(json.dumps(ledger,indent=2)+'\n');counts={m:sum(x['classification']==m for x in ledger) for m in 'RFCD'}
+md='# Residual scanner119 complete declaration ledger\n\nFull21testfiles/callbacks/helpers/tables read.119AST sites; catalog TYPO_TABLE tenrows remain oneAST site. No runtime, provider, DB, browser or repository edits. This is a conditional proposal, not removal credit.\n\nClassification: '+str(counts)+'\n\n'
+for file in dict.fromkeys(s['file'] for s in sites):
+ md+='## '+file+'\n\n'
+ for x in [l for l in ledger if l['file']==file]:md+=f"- **{x['classification']}** `{x['line']}` {x['title']} — {x['evidence']} SHA `{x['sha256']}`\n"
+ md+='\n'
+(P/'complete-ledger.md').write_text(md);print(counts)

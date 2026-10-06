@@ -1,4 +1,4 @@
-import { createHash, randomBytes, timingSafeEqual } from "node:crypto"
+import { createHash, randomBytes } from "node:crypto"
 
 export function issuePersonalPlanFieldTestToken() {
   const token = randomBytes(32).toString("base64url")
@@ -7,10 +7,4 @@ export function issuePersonalPlanFieldTestToken() {
 
 export function hashPersonalPlanFieldTestToken(token: string) {
   return createHash("sha256").update(token, "utf8").digest("hex")
-}
-
-export function verifyPersonalPlanFieldTestToken(token: string, expectedHash: string) {
-  const actual = Buffer.from(hashPersonalPlanFieldTestToken(token), "hex")
-  const expected = Buffer.from(expectedHash, "hex")
-  return actual.length === expected.length && timingSafeEqual(actual, expected)
 }

@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: active entitlement within the 24h expiry grace still reports active
+ok 1 - active entitlement within the 24h expiry grace still reports active
+  ---
+  duration_ms: 0.84875
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 199.725584

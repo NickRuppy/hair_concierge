@@ -1,14 +1,13 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
+import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
 import {
-  CATEGORY_ROLE_POLICIES,
   addCapturedProduct,
   assignProductRoles,
   completeCaptureCategory,
   computeStage3PathState,
   createStage3Draft,
-  effectiveStage3Coverage,
   finalizeCaptureCategory,
   invalidateDraftForRefinedVersion,
   markRoleUncovered,
@@ -17,11 +16,14 @@ import {
   recordProductDecision,
   reopenCaptureCategory,
   resolveStage3NeedRevision,
-  resolveStage3ProductLoadResolution,
   acknowledgeStage3InventoryDisposition,
   finalizeStage3CaptureWithoutInventoryAuthority,
-  type Stage3CategoryRequirement,
-} from "../src/lib/personal-plan/products"
+} from "../src/lib/personal-plan/products/state-machine"
+import {
+  effectiveStage3Coverage,
+  resolveStage3ProductLoadResolution,
+} from "../src/lib/personal-plan/products/product-load-resolution"
+import { type Stage3CategoryRequirement } from "../src/lib/personal-plan/products/contracts"
 import type { InitialNeedPlanSnapshot } from "../src/lib/personal-plan/types"
 import type { Stage3AuthoritySnapshotV1 } from "../src/lib/personal-plan/products/contracts"
 import type { Stage3ProductDraft } from "../src/lib/personal-plan/products/contracts"
@@ -1605,11 +1607,21 @@ test("multiple captured Oils do not inherit category-level purpose frequency loa
   draft = completeCaptureCategory(draft, "oil", [oilRequirement])
 
   assert.equal(draft.productLoadResolution, undefined)
+  const authority = draft.inventoryAuthority
+  assert.ok(authority)
+  assert.equal(authority.status, "not_needed")
+  assert.equal(authority.proposedOutputSnapshot, null)
+  assert.deepEqual(authority.materialDelta, [])
 })
 
 test("captured weekly Oil without scalp or dry-finish purpose does not create product-load overlay", () => {
   const draft = oilOnlyDraft([])
   assert.equal(draft.productLoadResolution, undefined)
+  const authority = draft.inventoryAuthority
+  assert.ok(authority)
+  assert.equal(authority.status, "not_needed")
+  assert.equal(authority.proposedOutputSnapshot, null)
+  assert.deepEqual(authority.materialDelta, [])
 })
 
 test("capture edits clear the pending need authority and dependent decisions", () => {
@@ -1631,92 +1643,6 @@ test("capture edits clear the pending need authority and dependent decisions", (
   assert.equal(reopened.orderedCategories.includes("deep_cleansing_shampoo"), false)
   assert.equal(reopened.completedCaptureCategories.includes("deep_cleansing_shampoo"), false)
   assert.equal(reopened.authorityVersions.deep_cleansing_shampoo, undefined)
-})
-
-test("atomic category replacement clears and reassigns two-product Shampoo ownership", () => {
-  const shampooRequirement: Stage3CategoryRequirement = {
-    category: "shampoo",
-    requiredRoles: ["shampoo_everyday"],
-    needSummary: "Sanfte Reinigung",
-    authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
-  }
-  let draft = createStage3Draft({
-    draftId: "draft-shampoo-replacement",
-    userId: "user-1",
-    personalPlanId: "plan-1",
-    refinedVersionId: "refined-v1",
-    requirements: [shampooRequirement],
-    now,
-  })
-  for (const id of ["shampoo-a", "shampoo-b"] as const) {
-    draft = addCapturedProduct(draft, {
-      capturedProductId: id,
-      userProductId: `user-product-${id}`,
-      identity: {
-        kind: "catalog_product",
-        productId: `product-${id}`,
-        displayName: id,
-        category: "shampoo",
-      },
-      frequencyRange: "weekly_2x",
-      ownership: "owned",
-      source: "catalog_search",
-    })
-  }
-
-  const assignedA = replaceCategoryRoleAssignments(
-    draft,
-    "shampoo",
-    [
-      {
-        capturedProductId: "shampoo-a",
-        category: "shampoo",
-        roles: ["shampoo_everyday"],
-      },
-    ],
-    [shampooRequirement],
-  )
-  const reassignedB = replaceCategoryRoleAssignments(
-    assignedA,
-    "shampoo",
-    [
-      {
-        capturedProductId: "shampoo-b",
-        category: "shampoo",
-        roles: ["shampoo_everyday"],
-      },
-    ],
-    [shampooRequirement],
-  )
-
-  assert.deepEqual(reassignedB.roleAssignments, [
-    {
-      capturedProductId: "shampoo-b",
-      category: "shampoo",
-      roles: ["shampoo_everyday"],
-    },
-  ])
-  assert.throws(
-    () =>
-      replaceCategoryRoleAssignments(
-        reassignedB,
-        "shampoo",
-        [
-          {
-            capturedProductId: "shampoo-a",
-            category: "shampoo",
-            roles: ["shampoo_everyday"],
-          },
-          {
-            capturedProductId: "shampoo-b",
-            category: "shampoo",
-            roles: ["shampoo_everyday"],
-          },
-        ],
-        [shampooRequirement],
-      ),
-    /role shampoo_everyday already assigned/,
-  )
 })
 
 test("atomic category replacement moves Oil roles and clears the previous product in one revision", () => {

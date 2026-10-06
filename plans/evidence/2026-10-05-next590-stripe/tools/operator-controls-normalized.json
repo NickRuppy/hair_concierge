@@ -1,0 +1,468 @@
+[
+  {
+    "id": "C1-fingerprint",
+    "candidate": "C1",
+    "file": "src/lib/stripe/trial-authorization.ts",
+    "sourceSha256": "a399a889fc879d52020ad3285e54925885211da3529682fa3ab281dcf7fdda73",
+    "from": "    cardFingerprint: paymentMethod.card.fingerprint,",
+    "to": "    cardFingerprint: \"incorrect\",",
+    "mutatedSha256": "8c54d49930c44b10b0960cd9dd48ecab6470aa2820997618c403b048c053f155",
+    "anchor": {
+      "kind": "function",
+      "scope": "verifyStripeTrialAuthorization",
+      "scopeSha256": "67e8f7fa0739974d6b0e8d8a25f3c515e9f05439b2454b573bb326aa39f302b1",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/stripe-trial-authorization.test.ts",
+      "name": "retrieves provider authorities itself before returning verified trial facts"
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^retrieves provider authorities itself before returning verified trial facts$",
+      "tests/stripe-trial-authorization.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 397,
+        "text": "assert.deepEqual(evidence?.authorization, {\n    enrollmentId: ENROLLMENT_ID,\n    providerAgreementId: SUBSCRIPTION_ID,\n    authorizationSucceededAt: \"2026-09-13T12:00:00.000Z\",\n    trialEndAt: \"2026-09-20T12:00:00.000Z\",\n    customerId: CUSTOMER_ID,\n    paymentMethodId: PAYMENT_METHOD_ID,\n    cardFingerprint: \"fp_server_only\",\n    unverifiedFutureInvoiceObligations: [\n      \"verify_first_paid_invoice_amount\",\n      \"verify_renewal_invoice_amount\",\n    ],\n  })",
+        "keeperSha256": "2159e7ab6a15b06895ffaaa28ba24932757dacd6c5a77f2b61b67b5fd38be275",
+        "testFileSha256": "2892f7bd5e3ec2e4e8f9888d89b6a3d4808c9a19603eede5fa8d305a5a391f35"
+      },
+      "cut": {
+        "startLine": 383,
+        "text": "assert.deepEqual(evidence?.authorization, {\n    enrollmentId: ENROLLMENT_ID,\n    providerAgreementId: SUBSCRIPTION_ID,\n    authorizationSucceededAt: \"2026-09-13T12:00:00.000Z\",\n    trialEndAt: \"2026-09-20T12:00:00.000Z\",\n    customerId: CUSTOMER_ID,\n    paymentMethodId: PAYMENT_METHOD_ID,\n    cardFingerprint: \"fp_server_only\",\n    unverifiedFutureInvoiceObligations: [\n      \"verify_first_paid_invoice_amount\",\n      \"verify_renewal_invoice_amount\",\n    ],\n  })",
+        "keeperSha256": "2159e7ab6a15b06895ffaaa28ba24932757dacd6c5a77f2b61b67b5fd38be275",
+        "testFileSha256": "b11893cf101df492ab4f0440798a4d94f9ef2ae8e0905c0ca73c060f8214ebd2"
+      }
+    },
+    "intendedAssertion": "deepEqual evidence.authorization literal fingerprint fp_server_only",
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:",
+      "fp_server_only",
+      "incorrect"
+    ]
+  },
+  {
+    "id": "C1-clock",
+    "candidate": "C1",
+    "file": "src/lib/stripe/trial-authorization.ts",
+    "sourceSha256": "a399a889fc879d52020ad3285e54925885211da3529682fa3ab281dcf7fdda73",
+    "from": "    authorizationSucceededAt: new Date(trialStart * 1000).toISOString(),",
+    "to": "    authorizationSucceededAt: new Date(trialEnd * 1000).toISOString(),",
+    "mutatedSha256": "dd103bfec496ae2b65e9a6b048f4d27f54c04390c89f0d7987fcc2c26c367b57",
+    "anchor": {
+      "kind": "function",
+      "scope": "verifyStripeTrialAuthorization",
+      "scopeSha256": "67e8f7fa0739974d6b0e8d8a25f3c515e9f05439b2454b573bb326aa39f302b1",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/stripe-trial-authorization.test.ts",
+      "name": "retrieves provider authorities itself before returning verified trial facts"
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^retrieves provider authorities itself before returning verified trial facts$",
+      "tests/stripe-trial-authorization.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 397,
+        "text": "assert.deepEqual(evidence?.authorization, {\n    enrollmentId: ENROLLMENT_ID,\n    providerAgreementId: SUBSCRIPTION_ID,\n    authorizationSucceededAt: \"2026-09-13T12:00:00.000Z\",\n    trialEndAt: \"2026-09-20T12:00:00.000Z\",\n    customerId: CUSTOMER_ID,\n    paymentMethodId: PAYMENT_METHOD_ID,\n    cardFingerprint: \"fp_server_only\",\n    unverifiedFutureInvoiceObligations: [\n      \"verify_first_paid_invoice_amount\",\n      \"verify_renewal_invoice_amount\",\n    ],\n  })",
+        "keeperSha256": "2159e7ab6a15b06895ffaaa28ba24932757dacd6c5a77f2b61b67b5fd38be275",
+        "testFileSha256": "2892f7bd5e3ec2e4e8f9888d89b6a3d4808c9a19603eede5fa8d305a5a391f35"
+      },
+      "cut": {
+        "startLine": 383,
+        "text": "assert.deepEqual(evidence?.authorization, {\n    enrollmentId: ENROLLMENT_ID,\n    providerAgreementId: SUBSCRIPTION_ID,\n    authorizationSucceededAt: \"2026-09-13T12:00:00.000Z\",\n    trialEndAt: \"2026-09-20T12:00:00.000Z\",\n    customerId: CUSTOMER_ID,\n    paymentMethodId: PAYMENT_METHOD_ID,\n    cardFingerprint: \"fp_server_only\",\n    unverifiedFutureInvoiceObligations: [\n      \"verify_first_paid_invoice_amount\",\n      \"verify_renewal_invoice_amount\",\n    ],\n  })",
+        "keeperSha256": "2159e7ab6a15b06895ffaaa28ba24932757dacd6c5a77f2b61b67b5fd38be275",
+        "testFileSha256": "b11893cf101df492ab4f0440798a4d94f9ef2ae8e0905c0ca73c060f8214ebd2"
+      }
+    },
+    "intendedAssertion": "deepEqual evidence.authorization authorizationSucceededAt 2026-09-13T12:00:00.000Z",
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:",
+      "2026-09-13T12:00:00.000Z",
+      "2026-09-20T12:00:00.000Z"
+    ]
+  },
+  {
+    "id": "C2-no-invoice",
+    "candidate": "C2",
+    "file": "src/lib/stripe/trial-account-admission.ts",
+    "sourceSha256": "36267f9ff61d48e48bebc4278d8606e0a7c677b05c3b425639fc4da35d7a50c0",
+    "from": "      invoice_now: false,",
+    "to": "      invoice_now: true,",
+    "mutatedSha256": "f27ef34a855b722cf8847fb6cd647be69bf721e689565016169c36d9a1b3c713",
+    "anchor": {
+      "kind": "function",
+      "scope": "neutralizeStripeTrialAgreement",
+      "scopeSha256": "ab902fa170302efcdb9c475f809aba6966541648cc4b0ca14b0556e6a8b85cd8",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/stripe-trial-account-activation.test.ts",
+      "name": "read-only Stripe return recovery exposes a released prior-use denial only after binding proof"
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^read-only Stripe return recovery exposes a released prior-use denial only after binding proof$",
+      "tests/stripe-trial-account-activation.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 503,
+        "text": "assert.deepEqual(\n    f.effects.find((e) => e[0] === \"cancel\"),\n    [\"cancel\", \"sub_trial\", { invoice_now: false, prorate: false }],\n  )",
+        "keeperSha256": "3d3bb45ba4c1deec6dfe44e99d76d18049804912c03f9696ec93f3d1c013a232",
+        "testFileSha256": "b501af7ceb20a13b51776bc55659f9d911b0c1e44a81bd0ed042afd6fb9e8fb2"
+      },
+      "cut": {
+        "startLine": 476,
+        "text": "assert.deepEqual(\n    f.effects.find((e) => e[0] === \"cancel\"),\n    [\"cancel\", \"sub_trial\", { invoice_now: false, prorate: false }],\n  )",
+        "keeperSha256": "3d3bb45ba4c1deec6dfe44e99d76d18049804912c03f9696ec93f3d1c013a232",
+        "testFileSha256": "e3fc44ca68bbbabd28a2dcf2c79ae5826f4e2fc43d5979a5d6ce846867746e47"
+      }
+    },
+    "intendedAssertion": "deepEqual cancel effect [cancel,sub_trial,{invoice_now:false,prorate:false}]",
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:",
+      "invoice_now",
+      "true",
+      "false"
+    ]
+  },
+  {
+    "id": "C2-error-code",
+    "candidate": "C2",
+    "file": "src/lib/stripe/trial-account-admission.ts",
+    "sourceSha256": "36267f9ff61d48e48bebc4278d8606e0a7c677b05c3b425639fc4da35d7a50c0",
+    "from": "        result === \"trial_used\" ? \"trial_unavailable\" : \"trial_checkout_conflict\",",
+    "to": "        result === \"trial_used\" ? \"trial_checkout_conflict\" : \"trial_checkout_conflict\",",
+    "mutatedSha256": "5b4ed65c880a910746f88d47e3687e824ac8d5522dec8c307436977ef0be8927",
+    "anchor": {
+      "kind": "function",
+      "scope": "admitStripeTrialAccount",
+      "scopeSha256": "725ed7223c827d0fa52ba3d2e8ee725cc81e378b6180dce188f804edb8b79733",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/stripe-trial-account-activation.test.ts",
+      "name": "read-only Stripe return recovery exposes a released prior-use denial only after binding proof"
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^read-only Stripe return recovery exposes a released prior-use denial only after binding proof$",
+      "tests/stripe-trial-account-activation.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 498,
+        "text": "assert.equal(error.code, \"trial_unavailable\")",
+        "keeperSha256": "3d3bb45ba4c1deec6dfe44e99d76d18049804912c03f9696ec93f3d1c013a232",
+        "testFileSha256": "b501af7ceb20a13b51776bc55659f9d911b0c1e44a81bd0ed042afd6fb9e8fb2"
+      },
+      "cut": {
+        "startLine": 471,
+        "text": "assert.equal(error.code, \"trial_unavailable\")",
+        "keeperSha256": "3d3bb45ba4c1deec6dfe44e99d76d18049804912c03f9696ec93f3d1c013a232",
+        "testFileSha256": "e3fc44ca68bbbabd28a2dcf2c79ae5826f4e2fc43d5979a5d6ce846867746e47"
+      }
+    },
+    "intendedAssertion": "equal error.code trial_unavailable inside selected keeper rejection predicate",
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:",
+      "trial_checkout_conflict",
+      "trial_unavailable"
+    ]
+  },
+  {
+    "id": "C2-release",
+    "candidate": "C2",
+    "file": "src/lib/stripe/trial-account-admission.ts",
+    "sourceSha256": "36267f9ff61d48e48bebc4278d8606e0a7c677b05c3b425639fc4da35d7a50c0",
+    "from": "    !(await releaseTrialAdmission(deps.supabase, enrollmentId, `stripe:canceled:${agreementId}`))",
+    "to": "    !true",
+    "mutatedSha256": "109f804e1c14c59eca65d80b6632891fdf394b66c8f10ab39348a7ea75cb0517",
+    "anchor": {
+      "kind": "function",
+      "scope": "neutralizeStripeTrialAgreement",
+      "scopeSha256": "ab902fa170302efcdb9c475f809aba6966541648cc4b0ca14b0556e6a8b85cd8",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/stripe-trial-account-activation.test.ts",
+      "name": "read-only Stripe return recovery exposes a released prior-use denial only after binding proof"
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^read-only Stripe return recovery exposes a released prior-use denial only after binding proof$",
+      "tests/stripe-trial-account-activation.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 507,
+        "text": "assert.ok(f.effects.some((e) => e[0] === \"release_trial_enrollment\"), \"denied trial must release its reserved claim\")",
+        "keeperSha256": "3d3bb45ba4c1deec6dfe44e99d76d18049804912c03f9696ec93f3d1c013a232",
+        "testFileSha256": "b501af7ceb20a13b51776bc55659f9d911b0c1e44a81bd0ed042afd6fb9e8fb2"
+      },
+      "cut": {
+        "startLine": 480,
+        "text": "assert.ok(f.effects.some((e) => e[0] === \"release_trial_enrollment\"), \"denied trial must release its reserved claim\")",
+        "keeperSha256": "3d3bb45ba4c1deec6dfe44e99d76d18049804912c03f9696ec93f3d1c013a232",
+        "testFileSha256": "e3fc44ca68bbbabd28a2dcf2c79ae5826f4e2fc43d5979a5d6ce846867746e47"
+      }
+    },
+    "intendedAssertion": "assert.ok message denied trial must release its reserved claim",
+    "expectedOperator": "==",
+    "errorMessageIncludes": [
+      "denied trial must release its reserved claim"
+    ]
+  },
+  {
+    "id": "C3-cause",
+    "candidate": "C3",
+    "file": "src/lib/stripe/trial-account-admission.ts",
+    "sourceSha256": "36267f9ff61d48e48bebc4278d8606e0a7c677b05c3b425639fc4da35d7a50c0",
+    "from": "          authorization.providerAgreementId,\n          runtime.livemode,\n        )\n      } catch (cause) {\n        throw new CheckoutRecoveryError(\"trial_reconciliation_required\", { cause })",
+    "to": "          authorization.providerAgreementId,\n          runtime.livemode,\n        )\n      } catch (cause) {\n        throw new CheckoutRecoveryError(\"trial_reconciliation_required\", { cause: new Error(\"lost provider cause\") })",
+    "mutatedSha256": "614157be317aae437eeba09d36beda72e1671f33af38812f3c9bdf49b5f9d266",
+    "anchor": {
+      "kind": "function",
+      "scope": "admitStripeTrialAccount",
+      "scopeSha256": "725ed7223c827d0fa52ba3d2e8ee725cc81e378b6180dce188f804edb8b79733",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/stripe-trial-account-activation.test.ts",
+      "name": "read-only Stripe return recovery sends outstanding cleanup and unsafe replay bindings to reconciliation"
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^read-only Stripe return recovery sends outstanding cleanup and unsafe replay bindings to reconciliation$",
+      "tests/stripe-trial-account-activation.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 529,
+        "text": "assert.match(String(error.cause), /provider timeout/)",
+        "keeperSha256": "701e034230a83fae861b6da8a871aae2451fa3a00c3926c57a977599a7584252",
+        "testFileSha256": "b501af7ceb20a13b51776bc55659f9d911b0c1e44a81bd0ed042afd6fb9e8fb2"
+      },
+      "cut": {
+        "startLine": 502,
+        "text": "assert.match(String(error.cause), /provider timeout/)",
+        "keeperSha256": "701e034230a83fae861b6da8a871aae2451fa3a00c3926c57a977599a7584252",
+        "testFileSha256": "e3fc44ca68bbbabd28a2dcf2c79ae5826f4e2fc43d5979a5d6ce846867746e47"
+      }
+    },
+    "intendedAssertion": "match String(error.cause) /provider timeout/ in first cleanup rejection",
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input did not match the regular expression",
+      "provider timeout",
+      "lost provider cause"
+    ]
+  },
+  {
+    "id": "C4-phase",
+    "candidate": "C4",
+    "file": "src/lib/stripe/trial-invoice.ts",
+    "sourceSha256": "85e094f3d91b771acecddca5ed9468fa170807836399baea9b560294ed35f8c2",
+    "from": "    payment: succeeded ? { amountMinor: invoice.amount_paid, occurredAt, result } : null,",
+    "to": "    payment: succeeded ? { amountMinor: invoice.amount_paid, occurredAt, result: { ...result, phase: result.phase === \"first_paid\" ? \"renewal\" : result.phase } } : null,",
+    "mutatedSha256": "1a6fa569bdbe96a7e60e9305b0672b3af1dbd7001310ba84094f170208475d48",
+    "anchor": {
+      "kind": "function",
+      "scope": "handleStripeTrialInvoice",
+      "scopeSha256": "8fb6cc3dd495eeefdc2c7568a3628e494d21abdd86c541fbd6c229b6251736f8",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/stripe-trial-invoice.test.ts",
+      "name": "late failure retrieving paid truth dispatches Purchase, while absent failure facts stay a no-op"
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^late failure retrieving paid truth dispatches Purchase, while absent failure facts stay a no-op$",
+      "tests/stripe-trial-invoice.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 550,
+        "text": "assert.deepEqual(paid.analyticsLookups, [\"stripe:purchase_completed:in_1\"])",
+        "keeperSha256": "2a7a0e14eea462493f84b5ee8d92d3d7b140561f52c38750b4043b60e58c0aac",
+        "testFileSha256": "6d0cb2013d4c46a2c2ecc544934238e882f231897d2ef33168439fd90976a31d"
+      },
+      "cut": {
+        "startLine": 539,
+        "text": "assert.deepEqual(paid.analyticsLookups, [\"stripe:purchase_completed:in_1\"])",
+        "keeperSha256": "2a7a0e14eea462493f84b5ee8d92d3d7b140561f52c38750b4043b60e58c0aac",
+        "testFileSha256": "b1aaf4a84a836bb658817d56a2e5b7fa7ec9ff67fbf5158069e04db9453defbf"
+      }
+    },
+    "intendedAssertion": "deepEqual paid.analyticsLookups [stripe:purchase_completed:in_1]",
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:",
+      "stripe:purchase_completed:in_1",
+      "stripe:payment_completed:in_1"
+    ]
+  },
+  {
+    "id": "C4-outcome",
+    "candidate": "C4",
+    "file": "src/lib/stripe/trial-invoice.ts",
+    "sourceSha256": "85e094f3d91b771acecddca5ed9468fa170807836399baea9b560294ed35f8c2",
+    "from": "    outcome: succeeded ? \"succeeded\" : \"failed\",",
+    "to": "    outcome: \"failed\",",
+    "mutatedSha256": "37a8ac7bbca0161388426b96c3bc2c898b2870142bb6877669ea732554a861f8",
+    "anchor": {
+      "kind": "function",
+      "scope": "handleStripeTrialInvoice",
+      "scopeSha256": "8fb6cc3dd495eeefdc2c7568a3628e494d21abdd86c541fbd6c229b6251736f8",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/stripe-trial-invoice.test.ts",
+      "name": "late failure retrieving paid truth dispatches Purchase, while absent failure facts stay a no-op"
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^late failure retrieving paid truth dispatches Purchase, while absent failure facts stay a no-op$",
+      "tests/stripe-trial-invoice.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 549,
+        "text": "assert.equal(paid.recorded[0].outcome, \"succeeded\")",
+        "keeperSha256": "2a7a0e14eea462493f84b5ee8d92d3d7b140561f52c38750b4043b60e58c0aac",
+        "testFileSha256": "6d0cb2013d4c46a2c2ecc544934238e882f231897d2ef33168439fd90976a31d"
+      },
+      "cut": {
+        "startLine": 538,
+        "text": "assert.equal(paid.recorded[0].outcome, \"succeeded\")",
+        "keeperSha256": "2a7a0e14eea462493f84b5ee8d92d3d7b140561f52c38750b4043b60e58c0aac",
+        "testFileSha256": "b1aaf4a84a836bb658817d56a2e5b7fa7ec9ff67fbf5158069e04db9453defbf"
+      }
+    },
+    "intendedAssertion": "equal paid.recorded[0].outcome succeeded",
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:",
+      "failed",
+      "succeeded"
+    ]
+  },
+  {
+    "id": "C5-no-intent",
+    "candidate": "C5",
+    "file": "src/lib/stripe/trial-invoice.ts",
+    "sourceSha256": "85e094f3d91b771acecddca5ed9468fa170807836399baea9b560294ed35f8c2",
+    "from": "    return base\n  requireFact(hasContinuation || effective.agreementId === agreementId)",
+    "to": "    return (await deps.stripe.paymentIntents.retrieve(\"unexpected_zero_invoice_read\"), base)\n  requireFact(hasContinuation || effective.agreementId === agreementId)",
+    "mutatedSha256": "49e7f9acbad31b670a7ed4cb0194f4e55f4ceb8f4816ac5f808f4af658b90c54",
+    "anchor": {
+      "kind": "function",
+      "scope": "handleStripeTrialInvoice",
+      "scopeSha256": "8fb6cc3dd495eeefdc2c7568a3628e494d21abdd86c541fbd6c229b6251736f8",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/stripe-trial-invoice.test.ts",
+      "name": "missing initial binding is typed retryable and restored binding succeeds without payment"
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^missing initial binding is typed retryable and restored binding succeeds without payment$",
+      "tests/stripe-trial-invoice.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 577,
+        "text": "assert.equal(f.calls.includes(\"intent\"), false)",
+        "keeperSha256": "1d6a7bf7e88d2b30bc36ae208400f1193490f094d4c83baf28f92bf0b0eef514",
+        "testFileSha256": "6d0cb2013d4c46a2c2ecc544934238e882f231897d2ef33168439fd90976a31d"
+      },
+      "cut": {
+        "startLine": 566,
+        "text": "assert.equal(f.calls.includes(\"intent\"), false)",
+        "keeperSha256": "1d6a7bf7e88d2b30bc36ae208400f1193490f094d4c83baf28f92bf0b0eef514",
+        "testFileSha256": "b1aaf4a84a836bb658817d56a2e5b7fa7ec9ff67fbf5158069e04db9453defbf"
+      }
+    },
+    "intendedAssertion": "equal f.calls.includes(intent) false after existing final restored-binding call",
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:",
+      "true !== false"
+    ]
+  }
+]

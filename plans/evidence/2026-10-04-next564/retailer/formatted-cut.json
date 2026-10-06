@@ -1,0 +1,69 @@
+{
+  "count": 87,
+  "result": [
+    {
+      "file": "tests/scan-dm-enrichment.test.ts",
+      "callbacks": 9,
+      "allCutCallbacksExact": true,
+      "formattedFileSha": "ae6c4449a65c03978f4ceb474170b78e2bdab8e895041e441347d36a1c6c7b01",
+      "stagedCutSha": "ae6c4449a65c03978f4ceb474170b78e2bdab8e895041e441347d36a1c6c7b01"
+    },
+    {
+      "file": "tests/scan-dm-mcp-client.test.ts",
+      "callbacks": 11,
+      "allCutCallbacksExact": true,
+      "formattedFileSha": "b3d66aac6bb6199723343711657634efe6e93c068e23481ec5de85d18b7de846",
+      "stagedCutSha": "b3d66aac6bb6199723343711657634efe6e93c068e23481ec5de85d18b7de846"
+    },
+    {
+      "file": "tests/scan-dm-suggest-category.test.ts",
+      "callbacks": 2,
+      "allCutCallbacksExact": true,
+      "formattedFileSha": "057ca6d225751f41064c5a4a2a8aae9d8ad84514a11111098d42b6c7d6c0f6b2",
+      "stagedCutSha": "057ca6d225751f41064c5a4a2a8aae9d8ad84514a11111098d42b6c7d6c0f6b2"
+    },
+    {
+      "file": "tests/scan-dm-telemetry-migration.test.ts",
+      "callbacks": 4,
+      "allCutCallbacksExact": true,
+      "formattedFileSha": "6741c01852636ee0f85ced4747a2cc6a967d5bc7cbf1616bdf461d7c54407bf9",
+      "stagedCutSha": "6741c01852636ee0f85ced4747a2cc6a967d5bc7cbf1616bdf461d7c54407bf9"
+    },
+    {
+      "file": "tests/scan-dm-telemetry-postgres.test.ts",
+      "callbacks": 1,
+      "allCutCallbacksExact": true,
+      "formattedFileSha": "66a805ae185a6606f3e9ebe79127ce722fc08bf431ca26aa5b0bac50263cbf74",
+      "stagedCutSha": "66a805ae185a6606f3e9ebe79127ce722fc08bf431ca26aa5b0bac50263cbf74"
+    },
+    {
+      "file": "tests/scan-dm-toon.test.ts",
+      "callbacks": 7,
+      "allCutCallbacksExact": true,
+      "formattedFileSha": "14e8a8104af7c97f947447c2c257373effbd70280371baa5b487a4f8bf6c4379",
+      "stagedCutSha": "14e8a8104af7c97f947447c2c257373effbd70280371baa5b487a4f8bf6c4379"
+    },
+    {
+      "file": "tests/scan-identifier-lookup.test.ts",
+      "callbacks": 15,
+      "allCutCallbacksExact": true,
+      "formattedFileSha": "5a0818d06a9d8120e9d25122e9a5d4abb57e73a6415129c4068b9ea795dd4915",
+      "stagedCutSha": "1e7f9ea2acdd5879bf7a5487f0307413b6815db864e0f30b88e2d3a47eae1583"
+    },
+    {
+      "file": "tests/scan-search-retailer-route.test.ts",
+      "callbacks": 24,
+      "allCutCallbacksExact": true,
+      "formattedFileSha": "4b4240e064d0435b999d353fe0f5f683de8bb0b11c0ae256dc47a9b4c4ed4049",
+      "stagedCutSha": "500cb714a0ca91a04cfc4c40fbaef34ddfa57abe46400a0e7f180b05ab18c91c"
+    },
+    {
+      "file": "tests/scan-search-route.test.ts",
+      "callbacks": 14,
+      "allCutCallbacksExact": true,
+      "formattedFileSha": "2d7778a56b32010ffa1989336fbcc6ed600554b23c770f9aa1afe2e478f0d39a",
+      "stagedCutSha": "e8bfd7706656b62f3db0c142093ef6a8c3d0ccda5aaceeb2d6f394993f461499"
+    }
+  ],
+  "readsetRestored": true
+}

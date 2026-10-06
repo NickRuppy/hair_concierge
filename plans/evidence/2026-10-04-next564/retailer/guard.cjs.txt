@@ -1,0 +1,164 @@
+'use strict'
+// Read-only guard/reconstruction shared by the main-only editor and fault driver.
+const fs = require('node:fs'), path = require('node:path'), crypto = require('node:crypto'), cp = require('node:child_process')
+const ROOT = '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+const BASE = '/tmp/test-audit-retailer-boundary99'
+const sha = value => crypto.createHash('sha256').update(value).digest('hex')
+const fail = message => { throw new Error(message) }
+const git = args => cp.execFileSync('git', args, { cwd: ROOT, encoding: 'utf8' }).trim()
+function branchConfig(branch) {
+  const result = cp.spawnSync('git', ['config', '--local', '--get-regexp', '^branch\\.' + branch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\.'], { cwd: ROOT, encoding: 'utf8' })
+  if (![0, 1].includes(result.status)) fail('Cannot read branch configuration')
+  return result.stdout.trim()
+}
+function identity(pins) {
+  if (process.cwd() !== ROOT || fs.realpathSync(process.cwd()) !== ROOT) fail('Exact checkout required')
+  if (git(['rev-parse', '--show-toplevel']) !== ROOT || git(['rev-parse', 'HEAD']) !== pins.head) fail('Root/HEAD drift')
+  if (git(['branch', '--show-current']) !== pins.branch || branchConfig(pins.branch) !== pins.branchConfig) fail('Branch/config drift')
+  if (git(['rev-parse', '--absolute-git-dir']) !== pins.gitDir) fail('Worktree identity drift')
+  if (process.version !== pins.node.version || fs.realpathSync(process.execPath) !== pins.node.realpath || sha(fs.readFileSync(process.execPath)) !== pins.node.sha) fail('Pinned Node runtime required')
+}
+function parse(ts, file, text) {
+  const sf = ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true)
+  if (sf.parseDiagnostics.length) fail('Parse diagnostics: ' + file)
+  return sf
+}
+function registrations(ts, file, text) {
+  const sf = parse(ts, file, text), result = new Map()
+  function visit(node) {
+    if (ts.isCallExpression(node) && node.expression.getText(sf) === 'test') {
+      const cb = node.arguments.find(a => ts.isArrowFunction(a) || ts.isFunctionExpression(a))
+      if (cb) {
+        const name = ts.isStringLiteral(node.arguments[0]) ? node.arguments[0].text : node.arguments[0].getText(sf)
+        if (result.has(name)) fail('Duplicate registration: ' + name)
+        const assertions = []
+        function assertionsVisit(n) {
+          if (ts.isCallExpression(n) && /^assert\./.test(n.expression.getText(sf))) assertions.push({ startLine: sf.getLineAndCharacterOfPosition(n.getStart(sf)).line + 1, text: n.getText(sf) })
+          ts.forEachChild(n, assertionsVisit)
+        }
+        assertionsVisit(cb)
+        result.set(name, { name, callback: cb.getText(sf), callbackStart: cb.getStart(sf), callbackEnd: cb.end, assertions })
+      }
+    }
+    ts.forEachChild(node, visit)
+  }
+  visit(sf)
+  return result
+}
+function replaceOnce(text, from, to, label) {
+  if (text.split(from).length !== 2) fail('Non-unique anchor: ' + label)
+  return text.replace(from, () => to)
+}
+function load(pinSHA) {
+  const raw = fs.readFileSync(BASE + '-editor-pins.json')
+  if (sha(raw) !== pinSHA) fail('Editor pins changed')
+  const pins = JSON.parse(raw)
+  identity(pins)
+  for (const [file, expected] of Object.entries(pins.artifactHashes)) if (sha(fs.readFileSync(file)) !== expected) fail('Artifact drift: ' + file)
+  const manifest = JSON.parse(fs.readFileSync(BASE + '-manifest.json'))
+  const candidates = JSON.parse(fs.readFileSync(BASE + '-candidates.json'))
+  const controls = JSON.parse(fs.readFileSync(BASE + '-controls-normalized.json'))
+  const ts = require(ROOT + '/node_modules/typescript')
+  if (manifest.root !== ROOT || manifest.head !== pins.head || candidates.length !== 12 || controls.length !== 41) fail('Proposal identity/count mismatch')
+  const snapshots = {}, counts = { before: 0, transfer: 0, cut: 0 }
+  let untouched = 0
+  for (const file of manifest.files) {
+    snapshots[file.file] = {}
+    for (const phase of Object.keys(counts)) {
+      const entry = file.phases[phase], bytes = fs.readFileSync(entry.path)
+      if (sha(bytes) !== entry.sha) fail('Phase snapshot hash: ' + file.file)
+      const rows = registrations(ts, file.file, bytes.toString())
+      if (rows.size !== entry.declarations) fail('Declaration count: ' + file.file)
+      for (const row of entry.callbacks) if (sha(rows.get(row.name)?.callback || '') !== row.callbackSha) fail('Callback hash: ' + row.name)
+      counts[phase] += rows.size
+      snapshots[file.file][phase] = { bytes, rows }
+    }
+    const { before, transfer, cut } = snapshots[file.file]
+    const keepers = new Map()
+    for (const candidate of candidates.filter(c => c.keeper.file === file.file)) {
+      const row = before.rows.get(candidate.keeper.name)
+      if (!row || row.callback !== candidate.keeper.callback || sha(candidate.keeperAfter) !== candidate.keeperAfterSha) fail('Keeper identity mismatch')
+      if (keepers.has(row.name) && keepers.get(row.name).after !== candidate.keeperAfter) fail('Conflicting union')
+      keepers.set(row.name, { ...row, after: candidate.keeperAfter })
+    }
+    let reconstructed = before.bytes.toString()
+    for (const row of [...keepers.values()].sort((a, b) => b.callbackStart - a.callbackStart)) reconstructed = reconstructed.slice(0, row.callbackStart) + row.after + reconstructed.slice(row.callbackEnd)
+    if (reconstructed !== transfer.bytes.toString()) fail('Whole-file transfer reconstruction: ' + file.file)
+    for (const c of candidates.filter(c => c.donor.file === file.file)) {
+      if (before.rows.get(c.donor.name)?.callback !== c.donor.callback) fail('Donor identity mismatch')
+      reconstructed = replaceOnce(reconstructed, c.donor.body, '', c.id)
+    }
+    if (file.file === 'tests/scan-dm-toon.test.ts') {
+      reconstructed = replaceOnce(reconstructed, 'import { readFileSync } from "node:fs"\n', '', 'unused fs import')
+      const start = reconstructed.indexOf('const fixture = readFileSync('), end = reconstructed.indexOf('test("quoted pipes')
+      if (start < 0 || end < start) fail('Parser fixture support anchors')
+      const support = reconstructed.slice(start, end)
+      if (support !== pins.parserSupportRemoval) fail('Only reviewed two fixture bindings may disappear')
+      reconstructed = reconstructed.slice(0, start) + reconstructed.slice(end)
+    }
+    if (reconstructed !== cut.bytes.toString()) fail('Whole-file cut reconstruction: ' + file.file)
+    for (const [name, row] of before.rows) {
+      const donor = candidates.some(c => c.donor.file === file.file && c.donor.name === name)
+      if (!keepers.has(name) && transfer.rows.get(name)?.callback !== row.callback) fail('Unrelated transfer callback changed')
+      if (donor) { if (cut.rows.has(name)) fail('Donor survived cut') }
+      else {
+        if (cut.rows.get(name)?.callback !== transfer.rows.get(name)?.callback) fail('Retained callback changed at cut')
+        if (!keepers.has(name) || keepers.get(name).after === row.callback) untouched++
+      }
+    }
+  }
+  if (Object.keys(snapshots).length !== 9 || JSON.stringify(counts) !== '{"before":99,"transfer":99,"cut":87}' || untouched !== 83) fail('Cohort conservation mismatch')
+  function current(overrides = {}) {
+    identity(pins)
+    for (const guard of pins.readset) if (sha(fs.readFileSync(path.join(ROOT, guard.file))) !== (overrides[guard.file] || guard.sha)) fail('Readset changed/fault active: ' + guard.file)
+    const bytes = Object.fromEntries(Object.keys(snapshots).map(file => [file, fs.readFileSync(path.join(ROOT, file))]))
+    const phases = Object.keys(counts).filter(phase => Object.entries(bytes).every(([file, data]) => data.equals(snapshots[file][phase].bytes)))
+    if (phases.length !== 1) fail('Mixed/unrecognized test phase')
+    return { phase: phases[0], bytes }
+  }
+  return { pins, manifest, candidates, controls, ts, snapshots, counts, untouched, current }
+}
+function fault(context, control) {
+  const { ts } = context, original = fs.readFileSync(path.join(ROOT, control.file)), text = original.toString()
+  if (sha(original) !== control.sourceSha256) fail('Fault owner drift: ' + control.id)
+  const sf = parse(ts, control.file, text)
+  let start = 0, end = text.length
+  if (control.anchor.kind === 'function') {
+    const found = []
+    function visit(n) { if (ts.isFunctionDeclaration(n) && n.name?.text === control.anchor.scope) found.push(n); ts.forEachChild(n, visit) }
+    visit(sf)
+    if (found.length !== 1) fail('Unique owner function missing: ' + control.id)
+    start = found[0].getStart(sf); end = found[0].end
+  }
+  let body = text.slice(start, end)
+  for (const patch of control.patches) body = replaceOnce(body, patch.from, patch.to, control.id)
+  const mutated = Buffer.from(text.slice(0, start) + body + text.slice(end))
+  parse(ts, control.file, mutated.toString())
+  if (sha(mutated) !== control.mutatedSha256) fail('Mutated bytes changed: ' + control.id)
+  for (const phase of ['transfer', 'cut']) {
+    const registration = context.snapshots[control.test.file][phase].rows.get(control.test.registrationExpression)
+    const oracle = control.oracles[phase]
+    if (!registration || !registration.assertions.some(a => a.startLine === oracle.startLine && a.text === oracle.text)) fail('Intended assertion drift: ' + control.id + '/' + phase)
+  }
+  return { original, mutated }
+}
+function atomicCAS(file, expected, next) {
+  const destination = path.join(ROOT, file), temp = destination + '.test-audit-' + process.pid + '-' + crypto.randomUUID() + '.tmp'
+  if (!fs.readFileSync(destination).equals(expected)) fail('Owned CAS failed: ' + file)
+  try {
+    fs.writeFileSync(temp, next, { flag: 'wx', mode: fs.statSync(destination).mode })
+    if (!fs.readFileSync(destination).equals(expected)) fail('Pre-rename CAS failed: ' + file)
+    fs.renameSync(temp, destination)
+  } finally { if (fs.existsSync(temp)) fs.unlinkSync(temp) }
+}
+function lock() {
+  const directory = BASE + '-operator-lock', token = crypto.randomUUID()
+  fs.mkdirSync(directory)
+  fs.writeFileSync(path.join(directory, 'owner.json'), JSON.stringify({ token, pid: process.pid, root: ROOT }))
+  return () => {
+    const owner = JSON.parse(fs.readFileSync(path.join(directory, 'owner.json')))
+    if (owner.token !== token) fail('Lock no longer ours; preserve it')
+    fs.unlinkSync(path.join(directory, 'owner.json')); fs.rmdirSync(directory)
+  }
+}
+module.exports = { ROOT, BASE, sha, fail, git, branchConfig, identity, parse, registrations, replaceOnce, load, fault, atomicCAS, lock }

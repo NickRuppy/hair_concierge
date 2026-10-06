@@ -1,0 +1,34 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "phases": {
+    "before": {
+      "tests/personal-plan-offer-motion.spec.ts": "56e17fcbbc4950bcc618a1f21b10934b0f9126a8805faca5a655f1a0772271c7",
+      "tests/personal-plan-pricing-experiment.test.ts": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31",
+      "tests/free-reveal.test.ts": "c2e6a44a32c5a6a983143d4417fdadd12a0d4ae93a4ee3d4b9ed5c36fa8c0ad8",
+      "tests/meta-offer-view.test.ts": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6",
+      "tests/organic-offer-media-experiment.test.ts": "429e96be662296b1f76bee7e8044ae3ff8a7d4bd4cfb3f498271a50d73048a41",
+      "tests/meta-offer-view-client.test.ts": "7c4d0831d19962626e38a47b8350909059599611663f034faa11d4a9f13316cd",
+      "tests/personal-plan-transition-motion.test.tsx": "482ca59f56dbbf4d2ecb72df4c776fafec98701cb548d8e91268344a385a57d4"
+    },
+    "transfer": {
+      "tests/personal-plan-offer-motion.spec.ts": "56e17fcbbc4950bcc618a1f21b10934b0f9126a8805faca5a655f1a0772271c7",
+      "tests/personal-plan-pricing-experiment.test.ts": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31",
+      "tests/free-reveal.test.ts": "637ba8ad5dbd1de05f92b862719929d899298bcd2f0d8ef5992df11b6c6a37f1",
+      "tests/meta-offer-view.test.ts": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6",
+      "tests/organic-offer-media-experiment.test.ts": "429e96be662296b1f76bee7e8044ae3ff8a7d4bd4cfb3f498271a50d73048a41",
+      "tests/meta-offer-view-client.test.ts": "7c4d0831d19962626e38a47b8350909059599611663f034faa11d4a9f13316cd",
+      "tests/personal-plan-transition-motion.test.tsx": "482ca59f56dbbf4d2ecb72df4c776fafec98701cb548d8e91268344a385a57d4"
+    },
+    "cut": {
+      "tests/personal-plan-offer-motion.spec.ts": "56e17fcbbc4950bcc618a1f21b10934b0f9126a8805faca5a655f1a0772271c7",
+      "tests/personal-plan-pricing-experiment.test.ts": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31",
+      "tests/free-reveal.test.ts": "f996d4d961e0c744849017e3c82931c30d2ddc5713fc5595aa81e8d9b84e72ad",
+      "tests/meta-offer-view.test.ts": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6",
+      "tests/organic-offer-media-experiment.test.ts": "429e96be662296b1f76bee7e8044ae3ff8a7d4bd4cfb3f498271a50d73048a41",
+      "tests/meta-offer-view-client.test.ts": "7c4d0831d19962626e38a47b8350909059599611663f034faa11d4a9f13316cd",
+      "tests/personal-plan-transition-motion.test.tsx": "482ca59f56dbbf4d2ecb72df4c776fafec98701cb548d8e91268344a385a57d4"
+    }
+  }
+}

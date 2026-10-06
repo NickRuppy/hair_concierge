@@ -1,0 +1,21 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "target": "tests/agent-guidance.spec.ts",
+  "targetBeforeSha256": "863d7208cfba4f741cbe8811014ba168e926150ffb7c5493e0c5e9ebb76a61df",
+  "sourceAndDependencyGuards": {
+    "src/lib/agent/tools/load-advisor-guidance.ts": "48afec6c7a5f36cae965bb318e001d517df50658b09de21ff8b7684fd103eaab",
+    "data/agent-guidance/overlays/hair-loss-or-thinning-guardrail.md": "c7f971cc3fd81bef7042b9cf9d609164679bdb51c16d214bda6897640ec0ecd3",
+    "package.json": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    "tests/server-only-register.cjs": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+    ".github/workflows/ci.yml": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+  },
+  "phases": {
+    "before": { "count": 32, "sha256": "863d7208cfba4f741cbe8811014ba168e926150ffb7c5493e0c5e9ebb76a61df", "role": "exact HEAD snapshot" },
+    "transfer": { "count": 32, "sha256": "cf3a8bda9ed862e57b0e7cd9ef90044df13e0665fe45d5a015a3dcf01ab79a48", "role": "keeper messages only; donor byte-identical" },
+    "cut": { "count": 31, "sha256": "63f8dcda9eebe1df8b509e78e09625d7232f1ab0d277a9ea068b3ba5465e8e24", "role": "donor absent; keeper transfer retained" }
+  },
+  "editor": "/tmp/guidance-render51-hairloss-editor.cjs",
+  "controls": "/tmp/guidance-render51-hairloss-controls.json",
+  "nativeCommand": "node --import ./tests/server-only-register.cjs --import tsx --test tests/agent-guidance.spec.ts"
+}

@@ -1,0 +1,33 @@
+{
+  "phase": "transfer",
+  "controls": [
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P6",
+    "P7",
+    "P8",
+    "P9",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P14"
+  ],
+  "originalHashes": {
+    "src/lib/personal-plan/rollout-access.ts": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+    "src/lib/personal-plan/journey-access-loader.ts": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "src/lib/personal-plan/release.ts": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+    "tests/personal-plan-journey-access-loader.test.ts": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67",
+    "tests/personal-plan-stage3-release.test.ts": "d25fd6ac50e6ba5a09c3870b83ae55cbc729a72b55cb0329b2d6c414b4dc2f1e",
+    "tests/auth-middleware-personal-plan-routine.test.ts": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+    "tests/freemium-enrollment-admission.test.ts": "fcc6c0f7c564fa5078c7c81823991341ab1859d414d6e00c33f72c369b8a2389",
+    "tests/personal-plan-trial-stage1-journey.test.ts": "ce32342ee184872e96bc13191d0f5dc25d0d863a8acaa477e4ccd8df62bf9fc0",
+    "tests/personal-plan-field-test-access.test.ts": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a",
+    "tests/personal-plan-rollout-access.test.ts": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+    "src/lib/personal-plan/enrollment.ts": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3"
+  },
+  "pinsSHA": "1d93d7ae5effb128241fa0e24922e385b618f25d362ff6966bd0ffda03293af6"
+}

@@ -124,6 +124,7 @@ test("overlay presentation watchdog reports only a real visibility timeout", () 
   }, dependencies)
   dismissed.start()
   dismissed.stop()
+  assert.deepEqual(cleared, [1, 3])
   assert.equal(failures, 1)
 })
 
@@ -238,25 +239,6 @@ test("one-time drawer stays mounted across hidden same-plan resumes", async () =
   assert.match(oneTime, /trackCheckoutLifecycle\([\s\S]*transition: "resumed"/)
   assert.match(oneTime, /trackCheckoutLifecycle\([\s\S]*transition: "dismissed"/)
   assert.doesNotMatch(oneTime, /checkoutWaiting|ResolvedOpen|oneTimePrewarm/i)
-})
-
-test("one-time pricing keeps the launch anchor and trust stack in the approved order", async () => {
-  const source = await readFile(sourcePath, "utf8")
-  const oneTime = source.slice(
-    source.indexOf("function PersonalPlanOneTimePricing"),
-    source.indexOf("function MembershipResultOfferPricing"),
-  )
-
-  assert.match(source, /plannedRegularPrice[\s\S]*\.toFixed\(2\)/)
-  assert.match(
-    oneTime,
-    /Launch-Preis[\s\S]*<s[^>]*>[\s\S]*\{personalPlanOneTimeReferencePriceLabel\}[\s\S]*<\/s>[\s\S]*<strong[^>]*>€29,99<\/strong>/,
-  )
-  assert.match(
-    oneTime,
-    /14 Tage Geld-zurück-Garantie · Einmalzahlung · Kein Abo[\s\S]*PayPal · Apple Pay \(auf unterstützten Geräten\) · Visa · Mastercard[\s\S]*Zahlungsdaten verarbeitet dein gewählter Anbieter\.[\s\S]*Mehr zum Datenschutz\./,
-  )
-  assert.doesNotMatch(oneTime, /Sicher bezahlen über deinen gewählten Zahlungsanbieter\./)
 })
 
 test("pricing visibility waits for intersection and fires exactly once", () => {

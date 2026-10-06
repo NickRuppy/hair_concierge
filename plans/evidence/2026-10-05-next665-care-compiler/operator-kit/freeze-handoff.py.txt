@@ -1,0 +1,32 @@
+from pathlib import Path
+import hashlib,json,difflib
+D=Path(__file__).parent
+sha=lambda b:hashlib.sha256(b).hexdigest()
+def put(name,data):
+ p=D/name;assert p.resolve().is_relative_to(D.resolve())
+ assert not p.exists(),p
+ p.write_bytes(data.encode() if isinstance(data,str) else data)
+PINS='67f792bcbb94f1a2f6f807cddd4403c08da414aeec3748c71ad49d5bd28ccb89'
+assert sha((D/'operator-pins.json').read_bytes())==PINS
+pins=json.loads((D/'operator-pins.json').read_text())
+for file,h in pins['artifactHashes'].items():assert sha(Path(file).read_bytes())==h,file
+for file,h in pins['entrypointTemplateHashes'].items():assert sha(Path(file).read_text().replace("const PIN_SHA='"+PINS+"'","const PIN_SHA='PIN_SHA_PLACEHOLDER'").encode())==h,file
+provenance=json.loads((D/'template-provenance.json').read_text())
+delta=''.join(''.join(difflib.unified_diff((D/'template-originals'/x['file']).read_text().splitlines(True),(D/x['file']).read_text().splitlines(True),fromfile=x['template'],tofile=str(D/x['file']))) for x in provenance['files'])
+put('final-template-delta.patch',delta)
+results={}
+for name in ['edit-check','controls-check','static-integrity','proof-attestation']:
+ text=(D/(name+'.txt')).read_text()
+ decoder=json.JSONDecoder();vals=[]
+ while text.strip():
+  text=text.lstrip();v,end=decoder.raw_decode(text);vals.append(v);text=text[end:]
+ assert vals[-2]=={'staticReadOnlyEnforced':True,'attemptedWrites':0,'attemptedChildren':0}
+ assert vals[-1]=={'attemptedOwnerImports':0,'attemptedNetworkCalls':0}
+ results[name]={'sha256':sha((D/(name+'.txt')).read_bytes()),'result':vals[0],'preload':vals[1:]}
+receipt={'status':'PASS_STATIC_ONLY_NOT_ACCEPTANCE_OR_RUNTIME','pinsSHA256':PINS,'proposalManifestSHA256':'946a680f03ce84419ba6e3dc31e6c155cbecb2d96d10f36b2ee3a1dc6cec1a9b','proposalHandoffSHA256':'d926359a52cb978c073d649af31c99a2ca5ca3c5d6f9c54d8839a0355f8a6000','templatePinsSHA256':'b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f','counts':{'before':102,'transfer':102,'cut':101,'unrelated':100,'heldF':4,'files':7,'fullPhaseFiles':21,'actualOwnerFaultDescriptors':13},'original83Exact':True,'existingIdentityDependenciesPoliciesUnchanged':True,'strictDecodedFullMessageFirstOuterFramePredicateByteExact':True,'staticResults':results,'preparation':json.loads((D/'preparation-result.json').read_text()),'limits':['No native tests, source faults, compiler/typecheck, owner imports, network, DB or provider activity.','Parser and literal expected-value diagnostic construction only; 468 synthetic checks do not establish real fault sensitivity.','195 guards include new mechanical import closure; no new semantic reading credit.','Root must inspect, accept and run all before/transfer/cut native and 13 transfer plus 13 cut control cycles after other runners close.','Shared lock guards operator peers only; main must sequence ordinary native/coverage runners.','Conditional independent preservation review and main acceptance remain external to this kit.']}
+put('static-receipt.json',json.dumps(receipt,indent=2)+'\n')
+files={str(p.relative_to(D)):sha(p.read_bytes()) for p in sorted(D.rglob('*')) if p.is_file()}
+put('artifact-hashes.json',json.dumps(files,indent=2)+'\n')
+hand={'directory':str(D),'pinsSHA256':PINS,'staticReceiptSHA256':sha((D/'static-receipt.json').read_bytes()),'artifactHashesSHA256':sha((D/'artifact-hashes.json').read_bytes()),'finalTemplateDeltaSHA256':sha((D/'final-template-delta.patch').read_bytes()),'READMEsha256':sha((D/'README.md').read_bytes()),'state':'FROZEN MAIN-ONLY TOOLING; STATIC ONLY; NO EXECUTION OR ACCEPTANCE CLAIM'}
+put('HANDOFF.json',json.dumps(hand,indent=2)+'\n')
+print(json.dumps({**hand,'HANDOFFsha256':sha((D/'HANDOFF.json').read_bytes())},indent=2))

@@ -1,0 +1,239 @@
+--- a/tests/partner-access-journey.test.ts
++++ b/tests/partner-access-journey.test.ts
+@@ -77,17 +77,7 @@
+   return client as unknown as Parameters<typeof defaultLoadInvitation>[1]
+ }
+ 
+-test("a signed-out visitor gets an ordinary journey with zero lookups", async () => {
+-  const resolution = await resolvePartnerJourney(
+-    dependencies({
+-      getUser: async () => null,
+-      loadInvitation: async () => {
+-        throw new Error("must not look up an invitation without a signed-in user")
+-      },
+-    }),
+-  )
+-  assert.deepEqual(resolution, { kind: "none" })
+-})
++
+ 
+ test("a signed-in user with no claimed invitation gets an ordinary journey", async () => {
+   const resolution = await resolvePartnerJourney(
+@@ -98,17 +88,7 @@
+   assert.deepEqual(resolution, { kind: "none" })
+ })
+ 
+-test("a claimed, unrevoked invitation authorizes the partner journey from the user alone", async () => {
+-  const resolution = await resolvePartnerJourney(dependencies())
+-  assert.deepEqual(resolution, {
+-    kind: "authorized",
+-    invitationId: invitationRow.id,
+-    userId: "creator-user",
+-    name: invitationRow.display_name,
+-    email: invitationRow.normalized_email,
+-    funnelSessionId: invitationRow.funnel_session_id,
+-  })
+-})
++
+ 
+ test("a revoked invitation makes the account an ordinary user again, never blocked", async () => {
+   // Exercises the real `defaultLoadInvitation` query against a fake admin
+@@ -163,19 +143,7 @@
+   assert.deepEqual(resolution, { kind: "unavailable" })
+ })
+ 
+-test("an auth-service error on getUser() is unavailable, not none", async () => {
+-  const resolution = await resolvePartnerJourney(
+-    dependencies({
+-      getUser: async () => {
+-        throw new Error("auth service blip")
+-      },
+-      loadInvitation: async () => {
+-        throw new Error("must not look up an invitation when getUser() failed")
+-      },
+-    }),
+-  )
+-  assert.deepEqual(resolution, { kind: "unavailable" })
+-})
++
+ 
+ /**
+  * Fake `@supabase/ssr` server client, injected into the real `defaultGetUser`
+@@ -235,7 +203,14 @@
+       ),
+     loadInvitation: async () => invitationRow,
+   })
+-  assert.equal(resolution.kind, "authorized")
++  assert.deepEqual(resolution, {
++    kind: "authorized",
++    invitationId: invitationRow.id,
++    userId: "creator-user",
++    name: invitationRow.display_name,
++    email: invitationRow.normalized_email,
++    funnelSessionId: invitationRow.funnel_session_id,
++  })
+ })
+ 
+ test("a signed-in user without the claim stamp never reads the invitation table", async () => {
+@@ -253,26 +228,7 @@
+   assert.equal(lookups, 0)
+ })
+ 
+-test("only a stamped account can be made unavailable by an invitation read error", async () => {
+-  const unstamped = await resolvePartnerJourney(
+-    dependencies({
+-      getUser: async () => ({ id: "ordinary-user", app_metadata: {} }),
+-      loadInvitation: async () => {
+-        throw new Error("database unavailable")
+-      },
+-    }),
+-  )
+-  assert.deepEqual(unstamped, { kind: "none" })
+-
+-  const stamped = await resolvePartnerJourney(
+-    dependencies({
+-      loadInvitation: async () => {
+-        throw new Error("database unavailable")
+-      },
+-    }),
+-  )
+-  assert.deepEqual(stamped, { kind: "unavailable" })
+-})
++
+ 
+ test("an invitation row without a funnel session stays an ordinary journey", async () => {
+   const sessionlessRow: FakeInvitationDbRow = {
+--- a/tests/partner-access-claim-route.test.ts
++++ b/tests/partner-access-claim-route.test.ts
+@@ -72,7 +72,11 @@
+ }
+ 
+ test("new creator claim creates and signs into the exact named account without an email roundtrip", async () => {
+-  const { calls, deps } = dependencies()
++  const { calls, deps } = dependencies({
++    hasCurrentPaidAppAccess: async () => {
++      throw new Error("must not be called for a just-created account")
++    },
++  })
+   const response = await createPartnerAccessClaimHandler(deps)(request())
+ 
+   assert.equal(response.status, 200)
+@@ -96,21 +100,7 @@
+   assert.equal(response.cookies.get("chaarlie_funnel_session")?.value, "signed-funnel-cookie")
+ })
+ 
+-test("an existing unrelated account requires normal mailbox proof once", async () => {
+-  const { calls, deps } = dependencies({
+-    createUser: async () => {
+-      throw Object.assign(new Error("already registered"), { code: "email_exists", status: 422 })
+-    },
+-  })
+-  const response = await createPartnerAccessClaimHandler(deps)(request())
+-
+-  assert.equal(response.status, 202)
+-  assert.deepEqual(await response.json(), { requiresEmail: true, email: "lea@example.test" })
+-  assert.deepEqual(
+-    calls.map(([name]) => name),
+-    ["reserve", "release", "magicLink"],
+-  )
+-})
++
+ 
+ test("an existing-account email can resume the claim in a different browser", async () => {
+   const first = dependencies({
+@@ -118,7 +108,13 @@
+       throw Object.assign(new Error("already registered"), { code: "email_exists", status: 422 })
+     },
+   })
+-  await createPartnerAccessClaimHandler(first.deps)(request())
++  const firstResponse = await createPartnerAccessClaimHandler(first.deps)(request())
++  assert.equal(firstResponse.status, 202)
++  assert.deepEqual(await firstResponse.json(), { requiresEmail: true, email: "lea@example.test" })
++  assert.deepEqual(
++    first.calls.map(([name]) => name),
++    ["reserve", "release", "magicLink"],
++  )
+   const magicLink = first.calls.find(([name]) => name === "magicLink")?.[1] as {
+     redirectTo: string
+   }
+@@ -221,37 +217,9 @@
+   })
+ })
+ 
+-test("a lapsed account claims with a fresh start", async () => {
+-  const { calls, deps } = dependencies({
+-    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
+-    hasCurrentPaidAppAccess: async () => false,
+-  })
+-  const response = await createPartnerAccessClaimHandler(deps)(request())
+-  assert.equal(response.status, 200)
+-  assert.equal(
+-    (calls.find(([name]) => name === "complete")?.[1] as { freshStart: boolean }).freshStart,
+-    true,
+-  )
+-  assert.deepEqual(await response.json(), {
+-    destination: "/quiz?partner=1",
+-    requiresEmail: false,
+-    freshStart: true,
+-  })
+-})
+-
+-test("a new account always claims with a fresh start, without consulting billing", async () => {
+-  const { calls, deps } = dependencies({
+-    hasCurrentPaidAppAccess: async () => {
+-      throw new Error("must not be called for a just-created account")
+-    },
+-  })
+-  const response = await createPartnerAccessClaimHandler(deps)(request())
+-  assert.equal(response.status, 200)
+-  assert.equal(
+-    (calls.find(([name]) => name === "complete")?.[1] as { freshStart: boolean }).freshStart,
+-    true,
+-  )
+-})
++
++
++
+ 
+ test("a paid-access lookup failure fails closed instead of assuming a fresh start", async () => {
+   const { calls, deps } = dependencies({
+--- a/tests/partner-access-ui.test.tsx
++++ b/tests/partner-access-ui.test.tsx
+@@ -6,17 +6,14 @@
+ import { PartnerInvitationCard } from "../src/app/partner/einladung/partner-invitation-client"
+ import { shouldClearQuizDraft } from "../src/lib/partner-access/quiz-context"
+ 
+-test("creator invitation keeps the approved concise identity and account-creation copy", () => {
++
++
++test("creator invitation greets a full-name account by first name", () => {
+   const html = renderToStaticMarkup(
+-    <PartnerInvitationCard
+-      email="lea@example.test"
+-      mode="ready"
+-      name="Lea"
+-      onChangeEmail={() => {}}
+-      onContinue={() => {}}
+-    />,
++    <PartnerInvitationCard email="lea@example.test" mode="ready" name="Lea Sommer" />,
+   )
+   assert.match(html, /Hi Lea, dein Zugang ist bereit\./)
++  assert.doesNotMatch(html, /Hi Lea Sommer/)
+   assert.match(html, /lea@example\.test/)
+   assert.match(html, /Nicht deine E-Mail\? Ändern/)
+   assert.match(html, /Los geht’s/)
+@@ -25,14 +22,6 @@
+     /Damit erstellst du dein Chaarlie Konto mit dieser E-Mail\. Hast du schon eins, startest du damit neu\./,
+   )
+   assert.doesNotMatch(html, /Abo|Zahlung|lebenslang|Produkttest|kostenlos/i)
+-})
+-
+-test("creator invitation greets a full-name account by first name", () => {
+-  const html = renderToStaticMarkup(
+-    <PartnerInvitationCard email="lea@example.test" mode="ready" name="Lea Sommer" />,
+-  )
+-  assert.match(html, /Hi Lea, dein Zugang ist bereit\./)
+-  assert.doesNotMatch(html, /Hi Lea Sommer/)
+ })
+ 
+ test("email correction stays inline and short", () => {

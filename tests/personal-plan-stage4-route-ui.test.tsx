@@ -186,6 +186,8 @@ test("Routine unavailable recovery offers an explicit reload action", () => {
   assert.match(html, /<button[^>]*type="button"/)
   assert.match(html, />Erneut laden<\/button>/)
 
+  assert.match(html, /<a[^>]*href="\/plan-start"[^>]*>Zum Plan<\/a>/)
+
   let retries = 0
   const retry = RetryRefreshButtonView({ label: "Erneut laden", onRetry: () => retries++ })
   retry.props.onClick()
@@ -193,20 +195,6 @@ test("Routine unavailable recovery offers an explicit reload action", () => {
 
   const retrySource = readFileSync("src/components/ui/retry-refresh-button.tsx", "utf8")
   assert.match(retrySource, /onRetry=\{\(\) => router\.refresh\(\)\}/)
-})
-
-test("Routine unavailable recovery also offers a forward CTA out of the dead end", () => {
-  const html = renderToStaticMarkup(
-    RoutineUnavailableState({
-      retryAction: createElement(RetryRefreshButtonView, {
-        label: "Erneut laden",
-        onRetry: () => undefined,
-      }),
-    }),
-  )
-  assert.match(html, /<a[^>]*href="\/plan-start"[^>]*>Zum Plan<\/a>/)
-  // Both actions stay reachable side by side; the reload button is unchanged.
-  assert.match(html, />Erneut laden<\/button>/)
 })
 
 test("Routine resolver does not construct a Personal Plan Routine view before Stage 4 is reachable", async () => {

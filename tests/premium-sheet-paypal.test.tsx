@@ -318,16 +318,3 @@ test("PayPal's premium_sheet contract now refuses what Stripe's has always refus
     )
   }
 })
-
-test("funnelEventId and checkoutAttemptId stay allowed for premium_sheet on both routes", () => {
-  assert.equal(PayPalSubscriptionIntentRequestSchema.safeParse(paypalSheetRequest).success, true)
-  assert.equal(
-    StripeCheckoutSessionRequestSchema.safeParse({
-      interval: "year",
-      source: "premium_sheet",
-      checkoutAttemptId: paypalSheetRequest.checkoutAttemptId,
-      returnPath: "/scan",
-    }).success,
-    true,
-  )
-})

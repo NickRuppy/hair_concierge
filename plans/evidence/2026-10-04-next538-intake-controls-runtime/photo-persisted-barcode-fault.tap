@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: photo intake persists only server-derived uncertain validation state
+not ok 1 - photo intake persists only server-derived uncertain validation state
+  ---
+  duration_ms: 6.118458
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/product-intake-submissions.test.ts:2:23383'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + null
+    - '11111111-1111-4111-8111-111111111111/2a5c4457-e015-4073-a184-c5e5ba267f3d/barcode-barcode.jpg'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '11111111-1111-4111-8111-111111111111/2a5c4457-e015-4073-a184-c5e5ba267f3d/barcode-barcode.jpg'
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/product-intake-submissions.test.ts:819:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 351.117167

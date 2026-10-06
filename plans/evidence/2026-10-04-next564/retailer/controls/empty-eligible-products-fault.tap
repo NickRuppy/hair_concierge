@@ -1,0 +1,38 @@
+TAP version 13
+# Subtest: lookupCatalogProductByIdentifier: a discontinued product is filtered out too
+not ok 1 - lookupCatalogProductByIdentifier: a discontinued product is filtered out too
+  ---
+  duration_ms: 2.338375
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-identifier-lookup.test.ts:2:6127'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + {
+    +   category: 'shampoo',
+    +   productId: '__audit'
+    + }
+    - null
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: ~
+  actual:
+    productId: '__audit'
+    category: 'shampoo'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-identifier-lookup.test.ts:172:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 191.722584

@@ -1,0 +1,84 @@
+--- tests/analytics-runtime.test.ts (transfer)
++++ tests/analytics-runtime.test.ts (cut)
+@@ -1,7 +1,6 @@
+ import assert from "node:assert/strict"
+ import test from "node:test"
+ 
+-import { createBoundedFifo } from "../src/lib/analytics/runtime/bounded-fifo"
+ import {
+   createCustomerIoBrowserLoader,
+   createCustomerIoRuntime,
+@@ -18,23 +17,7 @@
+   type PostHogRuntimeClient,
+ } from "../src/lib/analytics/runtime/posthog"
+ import { scheduleAfterFirstPaint } from "../src/lib/analytics/runtime/post-paint"
+-
+-test("bounded FIFO drops the oldest item and warns when full", () => {
+-  const warnings: string[] = []
+-  const queue = createBoundedFifo<number>({
+-    label: "test",
+-    limit: 2,
+-    warn: (message) => warnings.push(message),
+-  })
+-
+-  queue.push(1)
+-  queue.push(2)
+-  queue.push(3)
+ 
+-  assert.deepEqual(queue.drain(), [2, 3])
+-  assert.equal(warnings.length, 1)
+-})
+-
+ test("post-paint scheduling releases only after two animation frames", () => {
+   const frames: FrameRequestCallback[] = []
+   const calls: string[] = []
+@@ -270,30 +253,6 @@
+   assert.equal(shouldMaskPostHogSessionRecordingInputs("true"), false)
+ })
+ 
+-test("Customer.io bridges page, identify, track, and reset in FIFO order", () => {
+-  const calls: unknown[][] = []
+-  const tracker = createCustomerIoTracker({ queueLimit: 10 })
+-
+-  tracker.page("/quiz")
+-  tracker.identify("user-1", { email: "test@example.com" })
+-  tracker.track("quiz_started", { step_number: 2 })
+-  tracker.reset()
+-
+-  tracker.setClient({
+-    identify: (...args) => calls.push(["identify", ...args]),
+-    page: (...args) => calls.push(["page", ...args]),
+-    reset: () => calls.push(["reset"]),
+-    track: (...args) => calls.push(["track", ...args]),
+-  })
+-
+-  assert.deepEqual(calls, [
+-    ["page", undefined, "/quiz", {}],
+-    ["identify", "user-1", { email: "test@example.com" }],
+-    ["track", "quiz_started", { step_number: 2 }],
+-    ["reset"],
+-  ])
+-})
+-
+ test("Customer.io browser loader unwraps the SDK tuple before flushing queued calls", async () => {
+   const calls: unknown[][] = []
+   const tracker = createCustomerIoTracker({ queueLimit: 10 })
+--- tests/app-performance-telemetry.test.ts (transfer)
++++ tests/app-performance-telemetry.test.ts (cut)
+@@ -128,16 +128,3 @@
+   assert.equal(outcomeForResponseStatus(503), "transient_error")
+ })
+ 
+-test("accepts only generated UUID v4 correlation identifiers", () => {
+-  assert.throws(
+-    () =>
+-      createAppPerformanceEvent({
+-        routeGroup: "routine",
+-        operation: "proxy_access",
+-        outcome: "success",
+-        durationMs: 1,
+-        correlationId: "request-correlation-id",
+-      }),
+-    /correlationId/,
+-  )
+-})

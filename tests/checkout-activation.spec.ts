@@ -600,13 +600,29 @@ test("ensureCheckoutAccount treats duplicate createUser races as an existing acc
 })
 
 test("ensureCheckoutAccount creates a missing profile for duplicate auth users", async () => {
-  const { deps, duplicateEmails, profiles, users } = stubDeps()
-  duplicateEmails.add("auth-only@example.com")
+  const { deps, calls, profiles, users } = stubDeps()
   users["auth-only@example.com"] = {
     id: "user-auth-only",
     email: "auth-only@example.com",
     app_metadata: {},
   }
+
+  const admin = deps.supabase.auth.admin as any
+  let authLookups = 0
+  const profilesAtAuthLookup: unknown[] = []
+  admin.createUser = async (args: { email: string }) => {
+    calls.push(["createUser", args])
+    return {
+      data: { user: null },
+      error: { message: "User already registered", status: 422, code: "email_exists" },
+    }
+  }
+  admin.listUsers = async () => {
+    authLookups += 1
+    profilesAtAuthLookup.push(profiles["user-auth-only"])
+    return { data: { users: Object.values(users) }, error: null }
+  }
+  expect(profiles["user-auth-only"]).toBeUndefined()
 
   const result = await ensureCheckoutAccount(
     checkoutSession({
@@ -618,6 +634,9 @@ test("ensureCheckoutAccount creates a missing profile for duplicate auth users",
     deps,
   )
 
+  expect(authLookups).toBe(1)
+  expect(profilesAtAuthLookup).toEqual([undefined])
+  expect(calls.filter(([op]) => op === "upsert-profiles")).toHaveLength(1)
   expect(result).toMatchObject({
     userId: "user-auth-only",
     email: "auth-only@example.com",
@@ -915,19 +934,17 @@ test("verifyCheckoutSessionForActivation rejects complete unpaid sessions even i
     default_payment_method: { id: "pm_sepa", type: "sepa_debit" },
   })
 
+  let subscriptionReads = 0
+  const retrieveSubscription = stripe.subscriptions.retrieve.bind(stripe.subscriptions)
+  stripe.subscriptions.retrieve = async (id: string) => {
+    subscriptionReads += 1
+    return retrieveSubscription(id)
+  }
+
   await expect(verifyCheckoutSessionForActivation("cs_unpaid_sepa", stripe)).rejects.toMatchObject({
     code: "checkout_session_unpaid",
   })
-})
-
-test("verifyCheckoutSessionForActivation rejects complete unpaid sessions even if subscription default payment method is card", async () => {
-  const stripe = stripeForCheckoutActivation({
-    default_payment_method: { id: "pm_card", type: "card" },
-  })
-
-  await expect(verifyCheckoutSessionForActivation("cs_unpaid_card", stripe)).rejects.toMatchObject({
-    code: "checkout_session_unpaid",
-  })
+  expect(subscriptionReads).toBe(0)
 })
 
 test("verifyCheckoutSessionForActivation rejects complete unpaid sessions even if SEPA was offered", async () => {

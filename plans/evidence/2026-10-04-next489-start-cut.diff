@@ -1,0 +1,413 @@
+--- a/tests/personal-plan-stage3-flow.test.tsx
++++ b/tests/personal-plan-stage3-flow.test.tsx
+@@ -2245,71 +2245,6 @@
+   )
+ })
+ 
+-test("two-product Shampoo submits one complete category assignment replacement", async () => {
+-  const recordedMutationTypes: string[] = []
+-  const gateway = createAuthorityTestGateway()
+-  const originalMutate = gateway.mutate.bind(gateway)
+-  gateway.mutate = async (input) => {
+-    recordedMutationTypes.push(input.mutation.type)
+-    return originalMutate(input)
+-  }
+-  const entryContext: Stage3EntryContext = {
+-    schemaVersion: 1,
+-    personalPlanId: "plan-shampoo-atomic-roles",
+-    refinedVersionId: "refined-shampoo-atomic-roles",
+-    orderedCategories: [
+-      {
+-        category: "shampoo",
+-        requiredRoles: ["shampoo_everyday"],
+-        needSummary: "Sanfte Reinigung",
+-        authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
+-      },
+-    ],
+-    inventoryPrompts: [{ category: "shampoo", allowsMultiple: true, allowsExplicitNone: true }],
+-  }
+-  const harness = createClientStateHarness(() =>
+-    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+-  )
+-
+-  let tree = await renderSettled(harness)
+-  await captureCatalogProduct(harness, "Shampoo", "shampoo")
+-  tree = await renderSettled(harness)
+-  const firstCapture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+-    tree,
+-    ProductCaptureScreen,
+-  )
+-  assert.equal(firstCapture?.props.showAddAnotherProduct, true)
+-  firstCapture?.props.onAddAnotherProduct()
+-  await captureCatalogProduct(harness, "Shampoo", "shampoo", 1)
+-  tree = await renderSettled(harness)
+-  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+-    tree,
+-    ProductCaptureScreen,
+-  )?.props.onContinue()
+-  tree = await renderSettled(harness)
+-  const roleScreen = findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
+-    tree,
+-    SemanticRoleAssignment,
+-  )
+-  assert.ok(roleScreen)
+-  roleScreen.props.onToggleRole(
+-    roleScreen.props.products[0]!.capturedProductId,
+-    "shampoo_everyday",
+-    true,
+-  )
+-  tree = await renderSettled(harness)
+-  await findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
+-    tree,
+-    SemanticRoleAssignment,
+-  )?.props.onContinue()
+-  tree = await renderSettled(harness)
+-
+-  assert.ok(
+-    findByType<React.ComponentProps<typeof ProductFitComparison>>(tree, ProductFitComparison),
+-  )
+-  assert.deepEqual(recordedMutationTypes.slice(-1), ["replace_capture_category"])
+-})
+-
+ test("submitting an unchecked role deliberately records an open not-ready gap", async () => {
+   let finalization:
+     | Extract<
+@@ -5530,40 +5465,6 @@
+   assert.equal(oilGroupCommitLabel(3, 3, false), "Empfehlungen für alle 3 einplanen")
+   assert.equal(oilGroupCommitLabel(2, 3, true), "Für 2 Einsätze einplanen")
+   assert.equal(oilGroupCommitLabel(1, 3, true), "Für diesen Einsatz einplanen")
+-})
+-
+-test("three oil use cases render as one grouped screen with pre-checked cases", async () => {
+-  const gateway = createAuthorityTestGateway()
+-  const entryContext = threeUseCaseOilEntryContext("oil-group")
+-  const harness = createClientStateHarness(() =>
+-    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
+-  )
+-
+-  const tree = await reachOilReview(harness)
+-
+-  const grouped = oilGroupScreen(tree)
+-  assert.ok(grouped, "the three pending oil use cases share one review screen")
+-  assert.deepEqual(
+-    grouped.props.group.map((useCase) => useCase.roleTitle),
+-    ["Vor der Haarwäsche", "Im feuchten Haar", "Im trockenen Haar"],
+-  )
+-  assert.equal(grouped.props.checkedKeys.size, 3)
+-  assert.equal(grouped.props.uniformProposition, true)
+-  const anchor = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+-    tree,
+-    ProductFitComparison,
+-  )
+-  assert.ok(anchor)
+-  assert.equal(anchor.props.headingOverride, undefined)
+-  assert.equal(anchor.props.scopeContextLine, undefined)
+-  assert.equal(anchor.props.primaryActionLabelOverride, undefined)
+-  assert.equal(anchor.props.reviewPosition, 1)
+-  assert.equal(anchor.props.reviewTotal, 1, "the grouped use cases count as one review step")
+-  assert.equal(
+-    anchor.props.roleLabel,
+-    null,
+-    "the grouped screen covers every use case, so its kicker names none of them",
+-  )
+ })
+ 
+ test("committing the full group records one local choice per member and advances past all oil subjects", async () => {
+@@ -6006,31 +5907,6 @@
+   }
+ })
+ 
+-test("the grouped Öl use cases are exposed as one labelled checkbox group", () => {
+-  const html = renderToStaticMarkup(
+-    <OilGroupReview
+-      group={[
+-        {
+-          role: "dry_finish",
+-          roleTitle: "Im trockenen Haar",
+-          roleSubtitle: "Für Glanz und Finish",
+-          decisionKey: "oil-1",
+-          productName: null,
+-        },
+-      ]}
+-      uniformProposition
+-      checkedKeys={new Set(["oil-1"])}
+-      onToggle={() => undefined}
+-      onCommit={() => undefined}
+-    >
+-      <div>Vergleich</div>
+-    </OilGroupReview>,
+-  )
+-
+-  assert.match(html, /role="group"/)
+-  assert.match(html, /role="group"[^>]*aria-labelledby="oil-group-use-cases-title"/)
+-})
+-
+ test("a kicker without a role segment keeps category and counter", () => {
+   const comparison: Stage3FitComparison = {
+     schemaVersion: 1,
+--- a/tests/personal-plan-start-ui.test.tsx
++++ b/tests/personal-plan-start-ui.test.tsx
+@@ -527,63 +527,6 @@
+   optional: null,
+ }
+ 
+-test("two same-tier oil roles group into one card, each with its own role cadence", () => {
+-  const applied = applyStage1ProductExamplePreviews(
+-    oilPlan,
+-    previewResponse([oilPreWash, oilDryFinish]),
+-  )
+-
+-  // Neither role has its own per-role tier here (this fixture has no
+-  // `roleTones`), so both fall back to the category's aggregate tone
+-  // ("basis") and land in one group, in canonical role order.
+-  assert.deepEqual(
+-    applied.basis.cards.map((item) => item.id),
+-    ["oil:group:basis"],
+-  )
+-  const oilGroup = asGroup(applied.basis.cards[0])
+-  assert.equal(oilGroup.category, "oil")
+-  assert.equal(oilGroup.statusLabel, "Basis")
+-  assert.equal(oilGroup.members.length, 2)
+-
+-  const [primary, secondary] = oilGroup.members
+-  assert.equal(primary?.id, "oil:pre_wash_fibre_treatment")
+-  assert.equal(primary?.product?.name, "Reichhaltiges Vorwäsche-Öl")
+-  assert.equal(primary?.targetType, "Pflege vor der Haarwäsche")
+-  assert.equal(primary?.frequency, "vor jeder Haarwäsche")
+-
+-  // Same card pattern, same category identity — only the role changes.
+-  assert.equal(secondary?.id, "oil:dry_finish")
+-  assert.equal(secondary?.category, "oil")
+-  assert.equal(secondary?.categoryLabel, "Haaröl")
+-  assert.equal(secondary?.tone, "basis")
+-  assert.equal(secondary?.statusLabel, "Basis")
+-  assert.equal(secondary?.product?.name, "Leichtes Finish-Öl")
+-  assert.equal(secondary?.product?.priceLabel, "24,90 €")
+-  assert.equal(secondary?.imageUrl, "https://example.com/oil-dry-finish.webp")
+-  assert.equal(secondary?.imageAlt, "Produktbild: Leichtes Finish-Öl")
+-  assert.equal(secondary?.fallbackNote ?? null, null)
+-
+-  // The role is what makes the second card readable: type subline, purpose and
+-  // pill all name this role instead of repeating the category's lead role.
+-  // The frequency line is this role's own cadence, not the payload's generic
+-  // reasoning text ("bei Bedarf") or the category's aggregate cadence.
+-  assert.equal(secondary?.targetType, "Finish")
+-  assert.equal(secondary?.purpose, "Schließt die Routine als Finish für die Längen ab.")
+-  assert.deepEqual(secondary?.pills, ["Finish & Glanz"])
+-  assert.equal(secondary?.frequency, "als Finish nach jeder Haarwäsche")
+-  assert.deepEqual(secondary?.detailBlocks, [
+-    {
+-      title: "Worauf es beim Produkt ankommt",
+-      body: "Mit kleiner Dosierung glätten und Glanz geben, ohne schwer zu wirken.",
+-    },
+-    {
+-      title: "Warum das zu deinem Haar passt",
+-      body: "Deine raueren Spitzen profitieren von einem gezielten Finish.",
+-    },
+-    { title: "Empfohlener Rhythmus", body: "als Finish nach jeder Haarwäsche" },
+-  ])
+-})
+-
+ test("the optional count names the cards on the page, not the categories behind them", () => {
+   const optionalOilPlan: PlanStartReadyViewModel = {
+     ...readyPlan,
+@@ -620,25 +563,6 @@
+       ?.countLabel,
+     "1 Vorschlag",
+   )
+-})
+-
+-test("the basis count keeps counting categories after the per-role expansion", () => {
+-  const applied = applyStage1ProductExamplePreviews(
+-    readyPlan,
+-    previewResponse([
+-      recommendation(),
+-      recommendation({
+-        role: "shampoo_dandruff",
+-        decisionKey: "decision:shampoo:shampoo_dandruff:gap",
+-        productName: "Anti-Schuppen Shampoo",
+-      }),
+-    ]),
+-  )
+-
+-  // The two shampoo roles group into one card, plus the conditioner card.
+-  assert.equal(applied.basis.cards.length, 2)
+-  // "N Kategorien" stays literally true: two categories on the page.
+-  assert.equal(applied.basis.countLabel, "2 Kategorien")
+ })
+ 
+ test("a secondary role without a product adds no card at all", () => {
+@@ -919,43 +843,6 @@
+   assert.equal(optionalOil?.product?.name, "Leichtes Finish-Öl")
+ })
+ 
+-test("group renders one shell with a single kicker and full member anatomy", () => {
+-  const applied = applyStage1ProductExamplePreviews(
+-    planWithMixedOilTiers,
+-    previewResponse([oilPreWash, oilLeaveOn, oilDryFinish]),
+-  )
+-  const oilGroup = asGroup(applied.optional!.cards.find((item) => item.category === "oil")!)
+-  assert.equal(oilGroup.id, "oil:group:optional")
+-  assert.equal(oilGroup.members.length, 2)
+-  const [primary, secondary] = oilGroup.members
+-  assert.equal(primary?.id, "oil:leave_on_fibre_conditioning")
+-  assert.equal(secondary?.id, "oil:dry_finish")
+-
+-  const html = renderToStaticMarkup(
+-    <NeedPlanScreen screen={{ ...applied.optional!, cards: [oilGroup] }} hasOptionalPage />,
+-  )
+-
+-  // Exactly one shell for the whole group, carrying the group id and tone.
+-  assert.equal(html.match(/data-plan-start-card-group="oil:group:optional"/g)?.length, 1)
+-  assert.ok(
+-    html.includes(
+-      'data-plan-start-card-group="oil:group:optional" data-plan-start-card-tone="optional"',
+-    ),
+-  )
+-  // One kicker row for the group ("Haaröl · Optional"), not one per member.
+-  assert.equal(html.match(/>Haaröl</g)?.length, 1)
+-  assert.equal(html.match(/>Optional</g)?.length, 1)
+-  // Both members still render as full, independently addressable cards.
+-  assert.ok(html.includes(`data-plan-start-card="${primary!.id}"`))
+-  assert.ok(html.includes(`data-plan-start-card="${secondary!.id}"`))
+-  assert.ok(html.includes(primary!.product!.name))
+-  assert.ok(html.includes(secondary!.product!.name))
+-  assert.ok(html.includes(`${primary!.targetType} · ${primary!.product!.priceLabel}`))
+-  assert.ok(html.includes(`${secondary!.targetType} · ${secondary!.product!.priceLabel}`))
+-  // A divider sits between the two stacked members, and only there.
+-  assert.equal(html.match(/mx-3 border-t border-\[rgba\(67,55,48,0\.12\)\]/g)?.length, 1)
+-})
+-
+ test("each group member opens its own detail sheet", () => {
+   const applied = applyStage1ProductExamplePreviews(
+     planWithMixedOilTiers,
+@@ -1112,31 +999,6 @@
+   const oilCard = asCard(applied.basis.cards[0])
+   assert.equal(oilCard.product ?? null, null)
+   assert.equal(oilCard.fallbackNote, NEED_CARD_FALLBACK_NOTE)
+-})
+-
+-test("single-role categories are byte-identical to before: no id change, no group, category copy kept", () => {
+-  const applied = applyStage1ProductExamplePreviews(
+-    readyPlan,
+-    previewResponse([
+-      recommendation({
+-        category: "conditioner",
+-        role: "conditioner_rinse_out",
+-        decisionKey: "decision:conditioner:conditioner_rinse_out:gap",
+-        productId: "conditioner-light",
+-        productName: "Leichter Conditioner",
+-      }),
+-    ]),
+-  )
+-
+-  assert.deepEqual(
+-    applied.basis.cards.map((item) => item.id),
+-    ["shampoo", "conditioner"],
+-  )
+-  const conditioner = asCard(applied.basis.cards[1])
+-  // Category-level copy (from `cardFromDecision`) survives untouched — only a
+-  // second role of the same category would ever replace it with role copy.
+-  assert.equal(conditioner.targetType, card().targetType)
+-  assert.equal(conditioner.product?.name, "Leichter Conditioner")
+ })
+ 
+ // `adaptInitialNeedSnapshotToPlanStartViewModel`'s paused-only-optional merge
+@@ -1351,26 +1213,6 @@
+   assert.doesNotMatch(html, /data-plan-start-card-group/)
+ })
+ 
+-test("a single card keeps all four data attributes on its outer article — no nested wrapper", () => {
+-  const html = renderToStaticMarkup(<NeedCard card={card({ product: { ...productFixture } })} />)
+-
+-  // The root element must be the shell `<article>` itself — the same
+-  // element that carries the visual card class — not a `<div>` nested
+-  // one level inside it. A regression here breaks Playwright selectors
+-  // like `[data-plan-start-card-list] article[data-plan-start-card-preview]`.
+-  const articleOpenTag = html.match(/<article\b[^>]*>/)?.[0]
+-  assert.ok(articleOpenTag, "expected the card to render as an <article>")
+-  assert.match(articleOpenTag!, /rounded-\[19px\]/)
+-  assert.match(articleOpenTag!, /data-plan-start-card="shampoo"/)
+-  assert.match(articleOpenTag!, /data-plan-start-card-tone="basis"/)
+-  assert.match(articleOpenTag!, /data-plan-start-card-paused="false"/)
+-  assert.match(articleOpenTag!, /data-plan-start-card-preview="example"/)
+-  // No inner element duplicates the card's own data-plan-start-card hook.
+-  assert.equal(html.match(/data-plan-start-card="shampoo"/g)?.length, 1)
+-  // Not a group: no group-only attribute leaks onto a standalone card.
+-  assert.doesNotMatch(html, /data-plan-start-card-group/)
+-})
+-
+ test("a fallback card keeps the category need and says the product follows later", () => {
+   const html = renderToStaticMarkup(
+     <NeedCard card={card({ imageUrl: null, fallbackNote: NEED_CARD_FALLBACK_NOTE })} />,
+@@ -1567,15 +1409,6 @@
+   )
+ })
+ 
+-test("renders paused cards as visible included categories with need details", () => {
+-  const html = renderToStaticMarkup(<NeedCard card={asCard(readyPlan.optional!.cards[0])} />)
+-
+-  assert.match(html, /data-plan-start-card-paused="true"/)
+-  assert.match(html, /Pausiert/)
+-  assert.match(html, /Aktuell nicht anwenden/)
+-  assert.match(html, /aria-haspopup="dialog"/)
+-})
+-
+ test("renders every Stage 1 category with its approved shell and dot palette", () => {
+   const categoryStyles = {
+     shampoo: ["bg-[#F5F0E5]", "border-[#E2D4B8]", "bg-[#A77D31]"],
+@@ -1668,28 +1501,6 @@
+ 
+   assert.doesNotMatch(retry, /Personal-Plan-Stufen/)
+   assert.doesNotMatch(retry, /aria-label="Stufen im Personal Plan"/)
+-})
+-
+-test("Idealplan surfaces retire the 5-stage bar: it narrates a sequence that ends right after them (founder field test 27.08.2026)", () => {
+-  const basis = renderToStaticMarkup(<PlanStartFlow state="ready" plan={readyPlan} />)
+-  const optional = renderToStaticMarkup(
+-    <PlanStartFlow state="ready" plan={readyPlan} initialStep="optional" onContinue={() => {}} />,
+-  )
+-  const loading = renderToStaticMarkup(<PlanStartLoading />)
+-  const retry = renderToStaticMarkup(<PlanStartRetryableError />)
+-  const unavailable = renderToStaticMarkup(<PlanStartUnavailable />)
+-
+-  for (const html of [basis, optional, loading, retry, unavailable]) {
+-    // Scoped to the journey header's 5-stage bar specifically: the Basis/
+-    // Optional page's own "Plan-Fortschritt" progressbar (Progress, 50/100)
+-    // is a different, still-legitimate indicator and must survive untouched.
+-    assert.doesNotMatch(html, /Personal-Plan-Stufen/)
+-    assert.doesNotMatch(html, /aria-label="Stufen im Personal Plan"/)
+-  }
+-
+-  // The wordmark and Back control survive — only the stage-progress row goes.
+-  assert.match(basis, />chaarlie</)
+-  assert.match(optional, /aria-label="Zur Basis"/)
+ })
+ 
+ test("the customer path has no redundant Stage 1 transition before the Stage 2 invitation", () => {
+@@ -1956,25 +1767,6 @@
+   assert.doesNotMatch(flowSource, /InvitationShell|"invitation"/)
+ })
+ 
+-test("preserves paused included categories from the saved snapshot", () => {
+-  const snapshot = computedSnapshot({
+-    ...COMPLETE_V3_PLAN_ENVELOPE.answers,
+-    scalpOiliness: "oily",
+-    scalpConcerns: ["irritated"],
+-  })
+-  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot)
+-
+-  assert.ok(plan)
+-  assert.ok(plan.optional)
+-  const paused = findCard(
+-    plan.optional.cards,
+-    (item) => !isNeedCardGroup(item) && Boolean(item.paused),
+-  )
+-  assert.ok(paused)
+-  assert.equal(paused.statusLabel, "Pausiert")
+-  assert.equal(paused.targetType, "Aktuell nicht anwenden")
+-})
+-
+ test("untreated rough-surface Lea gets no Bondbuilder card or chemical-stress presentation", () => {
+   const snapshot = computedSnapshot({
+     ...COMPLETE_V3_PLAN_ENVELOPE.answers,

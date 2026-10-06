@@ -64,7 +64,6 @@ const TYPE_FIXTURES: TypeFixture[] = [
   { rule: "T6_compound_oil", input: { name: "Arganöl" }, expected: "oil" },
   { rule: "T6_compound_oil", input: { name: "Kopfhautöl Beruhigend" }, expected: "oil" },
   // T7 — a scalp word in front of a base product is a modifier, not scalp care.
-  { rule: "T7_scalp_modifier", input: { name: "Scalp Oil" }, expected: "oil" },
   { rule: "T7_scalp_modifier", input: { name: "Scalp Shampoo" }, expected: "shampoo" },
   {
     rule: "T7_scalp_modifier",
@@ -72,43 +71,25 @@ const TYPE_FIXTURES: TypeFixture[] = [
     expected: "deep_cleansing_shampoo",
   },
   // T8 — within the care family a leave-in statement decides.
-  { rule: "T8_leave_in_dominates", input: { name: "Haarkur Leave-in" }, expected: "leave_in" },
   { rule: "T8_leave_in_dominates", input: { name: "Leave-in Conditioner" }, expected: "leave_in" },
   // T3 — colour products and 2-in-1s are never guessed, whatever else the name says.
-  { rule: "T3_never_guessed", input: { name: "2in1 Shampoo & Spülung" }, expected: null },
   { rule: "T3_never_guessed", input: { name: "2-in-1 Shampoo" }, expected: null },
   { rule: "T3_never_guessed", input: { name: "2‑in‑1 Shampoo" }, expected: null },
   { rule: "T3_never_guessed", input: { name: "2–in–1 Shampoo" }, expected: null },
   { rule: "T3_never_guessed", input: { name: "2 in 1 Pflege-Shampoo" }, expected: null },
-  { rule: "T3_never_guessed", input: { name: "2in1 Öl-Kur" }, expected: null },
-  { rule: "T3_never_guessed", input: { name: "Color Shampoo" }, expected: null },
   { rule: "T3_never_guessed", input: { name: "Tönung Kopfhaut Kur" }, expected: null },
   // T4 — a scalp word plus a treatment word, and no oil, is scalp care.
-  { rule: "T4_scalp_treatment", input: { name: "Scalp Treatment" }, expected: "scalp_care" },
-  { rule: "T4_scalp_treatment", input: { name: "Kopfhaut-Kur" }, expected: "scalp_care" },
-  { rule: "T4_scalp_treatment", input: { name: "Kopfhaut-Serum" }, expected: "scalp_care" },
   { rule: "T4_scalp_treatment", input: { name: "Scalp Tonic" }, expected: "scalp_care" },
   // T9 — an oil with a treatment word is an oil.
-  { rule: "T9_oil_treatment", input: { name: "Öl-Kur" }, expected: "oil" },
-  { rule: "T9_oil_treatment", input: { name: "Oil Treatment" }, expected: "oil" },
-  { rule: "T9_oil_treatment", input: { name: "Haaröl-Kur" }, expected: "oil" },
   { rule: "T9_oil_treatment", input: { name: "Ölkur Intensiv" }, expected: "oil" },
-  { rule: "T9_oil_treatment", input: { name: "Scalp Oil Treatment" }, expected: "oil" },
   // T10 — an oil with a pre-wash word is an oil („Pre-Wash Oil" already is one by T5).
   { rule: "T10_oil_pre_wash", input: { name: "Pre-Shampoo Öl" }, expected: "oil" },
-  { rule: "T5_name", input: { name: "Pre-Wash Oil" }, expected: "oil" },
   // T11 — an oil with a leave-in word is an oil.
-  { rule: "T11_oil_leave_in", input: { name: "Leave-in Öl" }, expected: "oil" },
-  { rule: "T11_oil_leave_in", input: { name: "Leave-in Oil" }, expected: "oil" },
   { rule: "T11_oil_leave_in", input: { name: "Sprühkur Öl" }, expected: "oil" },
   // T12 — nothing (or more than one product noun) matched: unknown. The oil rules need
   // the oil to be the only product noun left.
-  { rule: "T12_unknown", input: { name: "Argan Oil Shampoo" }, expected: null },
   { rule: "T12_unknown", input: { name: "Öl Maske" }, expected: null },
   { rule: "T12_unknown", input: { name: "Haarkur mit Öl" }, expected: null },
-  { rule: "T12_unknown", input: { name: "Leave-in Conditioner mit Öl" }, expected: null },
-  { rule: "T12_unknown", input: { name: "Olaplex" }, expected: null },
-  { rule: "T12_unknown", input: { name: "" }, expected: null },
   { rule: "T12_unknown", input: {}, expected: null },
 ]
 
@@ -392,6 +373,7 @@ test("R9: the oil question offers exactly the four uses, three oil roles and the
 
 test("R9: the care and shampoo questions map to their categories without roles", () => {
   assert.equal(DISCOVERY_USAGE_QUESTIONS.care_use.prompt, "Wie benutzt du das?")
+  assert.equal(DISCOVERY_USAGE_QUESTIONS.care_use.options[3]?.key, "conditioner_pre_wash")
   assert.deepEqual(
     DISCOVERY_USAGE_QUESTIONS.care_use.options.map((option) => [option.label, option.usage]),
     [

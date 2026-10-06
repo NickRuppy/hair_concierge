@@ -1,0 +1,21 @@
+import pathlib,json,hashlib
+P='/tmp/test-audit-discovery-consult-pdf61';r=pathlib.Path('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning')
+full=['src/app/admin/beratung/[enrollmentId]/pdf/page.tsx','src/components/discovery/print/discovery-routine-document.tsx','src/lib/discovery/cockpit.ts','src/lib/discovery/refined-routine.ts','src/lib/discovery/cadence-label.ts','src/lib/discovery/product-label.ts','src/lib/personal-plan/routine/canonicalize.ts','src/lib/product-identity/display-title.ts','src/lib/discovery/classify.ts','src/lib/discovery/frequency.ts','src/app/api/admin/beratung/[enrollmentId]/consult-brief/route.ts','src/app/api/admin/beratung/[enrollmentId]/call-sheet/route.ts','src/app/api/admin/beratung/shared.ts','src/lib/discovery/call-sheet.ts']
+full += ['src/lib/discovery/consult-brief/'+f+'.ts' for f in ['source','input','snapshot-facts','hash','generate','api-schema','prompt','lint','knowledge']]
+full += ['scripts/eval-consult-brief/checks.ts','tests/fixtures/consult-brief/golden-profiles.ts','tests/fixtures/consult-brief/recorded-nomi.json','src/lib/discovery/heat-styling.ts','src/lib/discovery/runsheet/index.ts','src/lib/discovery/runsheet/buckets.ts','src/lib/discovery/runsheet/checklist.ts','src/app/admin/layout.tsx','tests/server-only-register.cjs','node_modules/react-dom/server.node.js','node_modules/next/dist/client/components/not-found.js']
+partial=['src/lib/discovery/quiz-answers.ts','src/app/admin/beratung/[enrollmentId]/page.tsx','src/components/discovery/cockpit/discovery-call-cockpit.tsx','src/components/discovery/cockpit/runsheet-brief.tsx','scripts/eval-consult-brief/run.ts','src/components/feedback/feedback-widget.tsx','src/components/cookie-consent/cookie-consent.tsx','src/app/layout.tsx','node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js','node_modules/next/dist/client/components/redirect.js','package.json','.github/workflows/ci.yml']
+guards=['package-lock.json','tsconfig.json','.nvmrc','node_modules/typescript/lib/typescript.js','node_modules/typescript/package.json','node_modules/react/package.json','node_modules/react-dom/package.json','node_modules/next/package.json','node_modules/tsx/package.json','src/lib/discovery/consult-brief/knowledge-sources.ts','src/lib/discovery/concern-recipes.ts','src/lib/vocabulary/frequencies.ts','src/lib/product-identity/index.ts','src/lib/personal-plan/decision-presentation.ts']
+rows=[]
+for scope,files in [('full read',full),('operative ranges inspected',partial),('support/import/version pin; no new full semantic review claimed',guards)]:
+ for f in files:
+  b=(r/f).read_bytes();rows.append(dict(file=f,sha256=hashlib.sha256(b).hexdigest(),bytes=len(b),reviewScope=scope))
+json.dump(dict(root=str(r),readset=rows),open(P+'-readset.json','w'),indent=2)
+artifacts=list(pathlib.Path('/tmp').glob('test-audit-discovery-consult-pdf61-*'));files=[]
+for p in artifacts:
+ if p.is_dir(): files.extend(p.rglob('*'))
+ else: files.append(p)
+receipt={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in files if p.is_file() and not p.name.endswith('static-receipt.json')}
+json.dump(dict(status='STATIC ONLY: no native tests, faults or repo writes',declarations=[61,61,60],assertionCalls=[302,324,302],unrelatedDeclarationsByteExact=59,prospectiveTsParse=True,mutantTsxParse=True,artifacts=receipt),open(P+'-static-receipt.json','w'),indent=2)
+print('Readset pins:',len(rows),'artifacts:',len(receipt))
+for suffix in ['manifest.json','candidates.json','controls.json','readset.json','ledger.md','layer-plan.md','static-receipt.json']:
+ p=pathlib.Path(P+'-'+suffix);print(p.name,hashlib.sha256(p.read_bytes()).hexdigest())

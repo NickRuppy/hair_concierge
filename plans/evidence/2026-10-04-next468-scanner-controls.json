@@ -1,0 +1,708 @@
+[
+  {
+    "id": "research-close-omitted",
+    "file": "src/components/scan/scan-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "        dispatch({ type: \"auxiliary_closed\" })\n        dispatch({\n          type: \"submitted\",",
+    "to": "        dispatch({\n          type: \"submitted\",",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    "intendedAssertion": "Search auxiliary open remains true after successful receipt; transferred false fails.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C01"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+  },
+  {
+    "id": "research-pending-headline",
+    "file": "src/components/scan/scan-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "          pending: {\n            kind: \"pending_submission\",\n            submissionId: result.submissionId,\n            headline: result.headline,\n            status: \"pending_review\",\n          },\n        })\n      } catch {\n        dispatch({ type: \"submit_failed\", token, error: GENERIC_ERROR })\n      }\n    },\n    [analytics, requests, resolve],\n  )\n\n  const { step } = state",
+    "to": "          pending: {\n            kind: \"pending_submission\",\n            submissionId: result.submissionId,\n            headline: \"Falscher Titel\",\n            status: \"pending_review\",\n          },\n        })\n      } catch {\n        dispatch({ type: \"submit_failed\", token, error: GENERIC_ERROR })\n      }\n    },\n    [analytics, requests, resolve],\n  )\n\n  const { step } = state",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    "intendedAssertion": "Literal Eingereicht! sheet title fails.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C01"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+  },
+  {
+    "id": "research-event-omitted",
+    "file": "src/components/scan/scan-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "        analytics.track(\"scan_submission_created\", {\n          category: input.category,\n          suggestedCategory: null,\n          selectionPath: \"grid\",\n          scanInteractionId: crypto.randomUUID(),\n          msConfirmationToPending: Math.round(performance.now() - confirmedAt),\n          intakePath: \"name_search\",\n        })",
+    "to": "        // controlled fault: missing completed-submission telemetry",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    "intendedAssertion": "submitted existence assertion fails after valid pending UI.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C02"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+  },
+  {
+    "id": "research-event-category",
+    "file": "src/components/scan/scan-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "        analytics.track(\"scan_submission_created\", {\n          category: input.category,\n          suggestedCategory: null,\n          selectionPath: \"grid\",\n          scanInteractionId: crypto.randomUUID(),\n          msConfirmationToPending: Math.round(performance.now() - confirmedAt),\n          intakePath: \"name_search\",\n        })",
+    "to": "        analytics.track(\"scan_submission_created\", {\n          category: \"conditioner\",\n          suggestedCategory: null,\n          selectionPath: \"grid\",\n          scanInteractionId: crypto.randomUUID(),\n          msConfirmationToPending: Math.round(performance.now() - confirmedAt),\n          intakePath: \"name_search\",\n        })",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    "intendedAssertion": "Transferred literal category assertion fails; request and pending delivery remain valid.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C02"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+  },
+  {
+    "id": "research-event-suggestion",
+    "file": "src/components/scan/scan-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "        analytics.track(\"scan_submission_created\", {\n          category: input.category,\n          suggestedCategory: null,\n          selectionPath: \"grid\",\n          scanInteractionId: crypto.randomUUID(),\n          msConfirmationToPending: Math.round(performance.now() - confirmedAt),\n          intakePath: \"name_search\",\n        })",
+    "to": "        analytics.track(\"scan_submission_created\", {\n          category: input.category,\n          suggestedCategory: \"shampoo\",\n          selectionPath: \"grid\",\n          scanInteractionId: crypto.randomUUID(),\n          msConfirmationToPending: Math.round(performance.now() - confirmedAt),\n          intakePath: \"name_search\",\n        })",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    "intendedAssertion": "Transferred literal suggestion assertion fails; request and pending delivery remain valid.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C02"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+  },
+  {
+    "id": "research-event-selection",
+    "file": "src/components/scan/scan-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "        analytics.track(\"scan_submission_created\", {\n          category: input.category,\n          suggestedCategory: null,\n          selectionPath: \"grid\",\n          scanInteractionId: crypto.randomUUID(),\n          msConfirmationToPending: Math.round(performance.now() - confirmedAt),\n          intakePath: \"name_search\",\n        })",
+    "to": "        analytics.track(\"scan_submission_created\", {\n          category: input.category,\n          suggestedCategory: null,\n          selectionPath: \"one_tap\",\n          scanInteractionId: crypto.randomUUID(),\n          msConfirmationToPending: Math.round(performance.now() - confirmedAt),\n          intakePath: \"name_search\",\n        })",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    "intendedAssertion": "Transferred literal selection assertion fails; request and pending delivery remain valid.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C02"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+  },
+  {
+    "id": "research-event-interaction",
+    "file": "src/components/scan/scan-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "        analytics.track(\"scan_submission_created\", {\n          category: input.category,\n          suggestedCategory: null,\n          selectionPath: \"grid\",\n          scanInteractionId: crypto.randomUUID(),\n          msConfirmationToPending: Math.round(performance.now() - confirmedAt),\n          intakePath: \"name_search\",\n        })",
+    "to": "        analytics.track(\"scan_submission_created\", {\n          category: input.category,\n          suggestedCategory: null,\n          selectionPath: \"grid\",\n          scanInteractionId: \"broken\",\n          msConfirmationToPending: Math.round(performance.now() - confirmedAt),\n          intakePath: \"name_search\",\n        })",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    "intendedAssertion": "Transferred literal interaction assertion fails; request and pending delivery remain valid.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C02"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+  },
+  {
+    "id": "research-event-path",
+    "file": "src/components/scan/scan-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "        analytics.track(\"scan_submission_created\", {\n          category: input.category,\n          suggestedCategory: null,\n          selectionPath: \"grid\",\n          scanInteractionId: crypto.randomUUID(),\n          msConfirmationToPending: Math.round(performance.now() - confirmedAt),\n          intakePath: \"name_search\",\n        })",
+    "to": "        analytics.track(\"scan_submission_created\", {\n          category: input.category,\n          suggestedCategory: null,\n          selectionPath: \"grid\",\n          scanInteractionId: crypto.randomUUID(),\n          msConfirmationToPending: Math.round(performance.now() - confirmedAt),\n          intakePath: \"scan\",\n        })",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key"
+    },
+    "intendedAssertion": "Transferred literal path assertion fails; request and pending delivery remain valid.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C02"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+  },
+  {
+    "id": "retailer-open-category",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "categoryLabel: result.categoryLabel,\n                                })",
+    "to": "categoryLabel: \"Shampoo\",\n                                })",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet: a dm-row tap calls onSelectRetailerResult with its GTIN"
+    },
+    "intendedAssertion": "Exact opened event payload Conditioner fails while GTIN callback still succeeds.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C03"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa"
+  },
+  {
+    "id": "flag-off-telemetry",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    if (!submittable) return\n    clearPendingDebounces()",
+    "to": "    if (!submittable) return\n    if (!retailerSearchEnabled) analytics.track(\"scan_retailer_search\", { catalogCount: 0, retailerCount: 0, outcome: \"disabled\", durationMs: 0, trigger: \"submit\" })\n    clearPendingDebounces()",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet: retailerSearchEnabled=false never fetches the dm lane, even on submit"
+    },
+    "intendedAssertion": "No retailer HTTP request still passes, added event violates transferred zero-event assertion.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C04"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa"
+  },
+  {
+    "id": "invitation-terminal-overlap",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    (!retailerSearchEnabled || dmSettled)",
+    "to": "    (!retailerSearchEnabled || dmSettled || showQuietInvitation)",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet + ScanResearchIntakeForm: no user-facing copy leaks 'dm' (word-boundary), and every \u00a76 string matches verbatim, across every state incl. intake"
+    },
+    "intendedAssertion": "Existing invitation renders terminal-empty copy too; transferred false fails.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C05"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa"
+  },
+  {
+    "id": "catalog-recovery-copy",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "const PERSISTENT_RECOVERY_PROMPT = \"Nicht dabei?\"",
+    "to": "const PERSISTENT_RECOVERY_PROMPT = \"Fehlt dein Produkt?\"",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "Batch 8 (supersedes Task 8 delta review Finding 2): a resubmit's reload keeps the stale rows AND the recovery link up, with no skeleton, until the new answer lands"
+    },
+    "intendedAssertion": "Initial full recovery phrase fails before unchanged reload behavior.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C06"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa"
+  },
+  {
+    "id": "masked-header-lock",
+    "file": "src/components/scan/scan-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "          locked={merkenLocked}",
+    "to": "          locked={tier === \"free\"}",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "free tier: the reveal posts the SCANNED product's id and unblurs into the full card"
+    },
+    "intendedAssertion": "Omittedtier masked-response header locked musttrue, fault reads premiumprop only.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C07"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+  },
+  {
+    "id": "masked-footer-lock",
+    "file": "src/components/scan/scan-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "              saveLocked={merkenLocked}",
+    "to": "              saveLocked={tier === \"free\"}",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "free tier: the reveal posts the SCANNED product's id and unblurs into the full card"
+    },
+    "intendedAssertion": "Masked-response footer saveLocked true fails with prop-only lock.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C07"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+  },
+  {
+    "id": "background-reveal-product",
+    "file": "src/components/scan/scan-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "body: JSON.stringify({ productId }),",
+    "to": "body: JSON.stringify({ productId: \"wrong-product\" }),",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "free tier: the post-reveal CTA opens the Premium sheet for empfehlungen"
+    },
+    "intendedAssertion": "Recorded silent reveal body must p-a, fault changes actual HTTP payload.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C08"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+  },
+  {
+    "id": "wishlist-flag-bypass",
+    "file": "src/components/scan/scan-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    if (!merklisteEnabled || tier === \"free\") return",
+    "to": "    if (tier === \"free\") return",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "Z1 flag off: the unlocked bookmark opens the in-flow Merkliste sheet and never deep-links"
+    },
+    "intendedAssertion": "Transferred countundefined or zero-counter fails; with ORIGINAL selected Z1 throwing fixture this fault should pass (old oracle control).",
+    "sensitivityLimit": "Old-pass/new-red recipe: run selected original keeper under identical fault before transfer, restore; then repaired keeper fault. Original independent donor also catches this fault; it is preserved proof, not newly discovered coverage.",
+    "donors": [
+      "C09"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+  },
+  {
+    "id": "premium-debug-present",
+    "file": "src/components/scan/scan-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "  const scanFlowDebugAttributes = merkenLocked",
+    "to": "  const scanFlowDebugAttributes = merkenLocked || tier === \"premium\"",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "F5: premium and flag-off (no tier prop) cause zero trigger-storage activity"
+    },
+    "intendedAssertion": "Premium root exact absence false fails for first attribute; storage remains0.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C10",
+      "C11"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+  },
+  {
+    "id": "back-query-cleared",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "              focusSearchOnMountRef.current = true\n              setIntakeOpen(false)",
+    "to": "              focusSearchOnMountRef.current = true\n              setQuery(\"\")\n              setIntakeOpen(false)",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet: Zur\u00fcck returns focus to the search field"
+    },
+    "intendedAssertion": "Query must remain kerastase ciment, focus flag otherwise untouched.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C12"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa"
+  },
+  {
+    "id": "back-header-corrupted",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "const DEFAULT_TITLE = \"Produkt finden\"",
+    "to": "const DEFAULT_TITLE = \"Produkt suchen\"",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet: Zur\u00fcck returns focus to the search field"
+    },
+    "intendedAssertion": "Restored header literal Produkt finden fails after Back.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C12"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa"
+  },
+  {
+    "id": "keyboard-hint",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "enterKeyHint=\"search\"",
+    "to": "enterKeyHint=\"go\"",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet: default header is 'Produkt finden'; the timeout reason keeps its own header"
+    },
+    "intendedAssertion": "Transferred actual input prop hint literal fails.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C13"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa"
+  },
+  {
+    "id": "keyboard-correct",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "autoCorrect=\"off\"",
+    "to": "autoCorrect=\"on\"",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet: default header is 'Produkt finden'; the timeout reason keeps its own header"
+    },
+    "intendedAssertion": "Transferred actual input prop correct literal fails.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C13"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa"
+  },
+  {
+    "id": "keyboard-cap",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "autoCapitalize=\"none\"",
+    "to": "autoCapitalize=\"sentences\"",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet: default header is 'Produkt finden'; the timeout reason keeps its own header"
+    },
+    "intendedAssertion": "Transferred actual input prop cap literal fails.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C13"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa"
+  },
+  {
+    "id": "keyboard-spell",
+    "file": "src/components/scan/scan-search-sheet.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "spellCheck={false}",
+    "to": "spellCheck={true}",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "ScanSearchSheet: default header is 'Produkt finden'; the timeout reason keeps its own header"
+    },
+    "intendedAssertion": "Transferred actual input prop spell literal fails.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C13"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa"
+  },
+  {
+    "id": "resolved-slot-retained",
+    "file": "src/lib/scan/scan-flow-state.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "        step: nextStep,\n        activeRequest: null,",
+    "to": "        step: nextStep,\n        activeRequest: state.activeRequest,",
+    "test": {
+      "file": "tests/scan-flow-state.test.ts",
+      "name": "resolved: omitting tier/sessionNumber fails closed to no trigger at all (every pre-T10 call site)"
+    },
+    "intendedAssertion": "Full result still opens but transferred activeRequest null fails.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C14"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8"
+  },
+  {
+    "id": "result-payload-corrupted",
+    "file": "src/lib/scan/scan-flow-state.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "  return { kind: \"result\", result }",
+    "to": "  return { kind: \"result\", result: { ...result, product: { ...result.product, productId: \"wrong-product\" } } }",
+    "test": {
+      "file": "tests/scan-flow-state.test.ts",
+      "name": "resolved: omitting tier/sessionNumber fails closed to no trigger at all (every pre-T10 call site)"
+    },
+    "intendedAssertion": "Whole step literal result payload differs at productId.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C14"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8"
+  },
+  {
+    "id": "pending-payload-corrupted",
+    "file": "src/lib/scan/scan-flow-state.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "  if (result.kind === \"pending_submission\") return { kind: \"pending\", pending: result }",
+    "to": "  if (result.kind === \"pending_submission\") return { kind: \"pending\", pending: { ...result, submissionId: \"wrong-submission\" } }",
+    "test": {
+      "file": "tests/scan-flow-state.test.ts",
+      "name": "F2: a pending_submission resolve under would-be-qualifying conditions also leaves the budget unspent"
+    },
+    "intendedAssertion": "Whole pending step differs despite no proactive card and unchanged history.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C15"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8"
+  },
+  {
+    "id": "unknown-spends-budget",
+    "file": "src/lib/scan/scan-flow-state.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "        nextStep.kind === \"result\"\n          ? resolveGatedProactiveScanTrigger(",
+    "to": "        (nextStep.kind === \"result\" || nextStep.kind === \"unknown\")\n          ? resolveGatedProactiveScanTrigger(",
+    "test": {
+      "file": "tests/scan-flow-state.test.ts",
+      "name": "F2: after an unknown resolve, the NEXT in_catalog resolve can still pitch (budget was never spent)"
+    },
+    "intendedAssertion": "Intermediate unknown active trigger expectednull; fault evaluates qualifying session2 and spends winner.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C16"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8"
+  },
+  {
+    "id": "history-unknown_product",
+    "file": "src/lib/scan/scan-flow-state.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "  const category = categoryOfResult(result)\n  return category === null ? history : [...history, category]",
+    "to": "  const category = categoryOfResult(result)\n  if (result.kind === \"unknown_product\") return [...history, \"shampoo\"]\n  return category === null ? history : [...history, category]",
+    "test": {
+      "file": "tests/scan-flow-state.test.ts",
+      "name": "F2: after an unknown resolve, the NEXT in_catalog resolve can still pitch (budget was never spent)"
+    },
+    "intendedAssertion": "Exact [] categoriesScanned fails for unknown_product at existing state point.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C17"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8"
+  },
+  {
+    "id": "history-pending_submission",
+    "file": "src/lib/scan/scan-flow-state.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "  const category = categoryOfResult(result)\n  return category === null ? history : [...history, category]",
+    "to": "  const category = categoryOfResult(result)\n  if (result.kind === \"pending_submission\") return [...history, \"shampoo\"]\n  return category === null ? history : [...history, category]",
+    "test": {
+      "file": "tests/scan-flow-state.test.ts",
+      "name": "F2: a pending_submission resolve under would-be-qualifying conditions also leaves the budget unspent"
+    },
+    "intendedAssertion": "Exact [] categoriesScanned fails for pending_submission at existing state point.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C17"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8"
+  },
+  {
+    "id": "background409-toast",
+    "file": "src/components/scan/scan-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "if (!alreadyUsed && !silent) toast({ title: GENERIC_ERROR, variant: \"destructive\" })",
+    "to": "if (alreadyUsed || !silent) toast({ title: GENERIC_ERROR, variant: \"destructive\" })",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "free tier: the post-reveal CTA opens the Premium sheet for empfehlungen"
+    },
+    "intendedAssertion": "Transferred toasts [] fails on silent409 while same gate remains.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C08"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+  },
+  {
+    "id": "nonrevealed-empty-array",
+    "file": "src/lib/scan/scan-flow-state.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "  if (state.reveal.status !== \"revealed\") return null",
+    "to": "  if (state.reveal.status !== \"revealed\") return []",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "free tier: the post-reveal CTA opens the Premium sheet for empfehlungen"
+    },
+    "intendedAssertion": "Transferred revealedAlternatives exactlynull fails, [] is not accepted.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C07",
+      "C08"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8"
+  },
+  {
+    "id": "masked-paywall-auto-open",
+    "file": "src/components/scan/scan-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "        open={state.premiumSheet !== null}",
+    "to": "        open={merkenLocked || state.premiumSheet !== null}",
+    "test": {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "name": "free tier: the reveal posts the SCANNED product's id and unblurs into the full card"
+    },
+    "intendedAssertion": "Initial premium sheet mustclosed before onReveal; automatic gate opening fails.",
+    "sensitivityLimit": "Static recipe only; intended red must be verified by main.",
+    "donors": [
+      "C07"
+    ],
+    "staticFileOccurrences": 1,
+    "sourceSHA256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+  }
+]

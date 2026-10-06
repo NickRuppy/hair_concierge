@@ -1,0 +1,53 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "phase": "cut",
+  "counts": {
+    "before": 119,
+    "transfer": 119,
+    "cut": 105
+  },
+  "pinsSHA": "b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f",
+  "prerequisite": {
+    "dir": "/tmp/test-audit-scanner119-tools-e5gg36wq/operator-mutations-transfer-yeVtxk",
+    "completionSHA": "77dd80d785b4e535c8414fa201287a169501b5744c7e7b39f2babd4283b4f941",
+    "verified": 18,
+    "logFiles": 54,
+    "phase": "transfer"
+  },
+  "changed": [
+    "tests/scan-alternative-comparison.test.ts",
+    "tests/scan-masked-alternative.test.ts",
+    "tests/scan-name-only-submission-migration.test.ts",
+    "tests/scan-pending-submission.test.ts",
+    "tests/scan-profile-context.test.ts",
+    "tests/scan-resolve-anti-leak.test.ts",
+    "tests/scan-trigger-session-marker.test.ts"
+  ],
+  "allTestHashes": {
+    "tests/scan-alternative-comparison.test.ts": "e320644703a003625cfb34beeb7eb1e84cdae701a5bdb90c31ce02081ffbbfc6",
+    "tests/scan-analytics.test.ts": "1dff0ddbcec5ca5f07d4cd404ac43b419c6b077e85cbf6c39982390e7934871e",
+    "tests/scan-catalog-search-typo.test.ts": "07e11e116311151d810306a03a939a3b65761113ca4eb48040c98608e7fd9897",
+    "tests/scan-masked-alternative.test.ts": "49af07e5dd6197d82e27d7dfc4fee4851b60561096b74933460fb53c364d9ba0",
+    "tests/scan-name-only-submission-migration.test.ts": "6b8bbe5a6850617220ed2b081d71af17501e34de4e7bcade5c16399b43d715cd",
+    "tests/scan-observability.test.ts": "4fad30a5f6d04dbae371b31b687373186c846d2d59a84bcef5c1044144058782",
+    "tests/scan-pending-submission.test.ts": "f3cf3e2a66495a21fc329ceae68928fe8e36cc03125df21f8ac4919a8da261c6",
+    "tests/scan-presentation-rows.test.ts": "224e8072febd335de814e1e0404d59fddb47bd3674b22298bf9943d47fabf8e8",
+    "tests/scan-product-presentation.test.ts": "df169295dd5af81c3f1ff27050f1ceba23902530f09a6eb2ec80606289453d8b",
+    "tests/scan-profile-context.test.ts": "1220a4bb1c2eb038cf109e82b86799049a2a00a7028d41c1cefdc9bd85485131",
+    "tests/scan-resolve-anti-leak.test.ts": "1394f54f526b9ec84959439e655c0697b59203de11c3caf8e8b6af6b167b4c12",
+    "tests/scan-role-selection.test.ts": "29d0c60a38ec3e47102da2fa4c130dfa3f7c01ff5232d8fd99a9e43c32adeb12",
+    "tests/scan-submit-dm-event-log.test.ts": "03ca04ca2493e7065d49908e2a7abc0c73dc12ecaefcb71a1f0af8f3147dfbbb",
+    "tests/scan-trigger-cards-ui.test.tsx": "7316d3546d9d53002c5db75a42b5c8ba05f89bad6f8a5636bba6a28a273f1ec3",
+    "tests/scan-trigger-session-marker.test.ts": "55feedcdc07e9f5d310830382e83e4419a843d7f2ef90cf6ed95abc5c6ad91ce",
+    "tests/scan-verdict-access.test.ts": "9995cb859942dd65316448cff235f9d9781d6f09c56517048f816b4783d6a0b8",
+    "tests/scanner-analytics-context.test.ts": "5919aab593441fca35598b5169dc38530325fe0a4e35c47879f07220b89e2e5e",
+    "tests/scanner-offer-analytics.test.ts": "9e54b9c2cfc4b0b95ff3a339bf92158b9d43dbe35d9c73b73d2745401cb43282",
+    "tests/scanner-quiz-view.test.ts": "ff83b01c9de59739fbbfcbd3f80e3142e22f1ff576094a6b428b93ba56d93fa7",
+    "tests/scanner-result-artifact-email.test.ts": "fc43bac2b3ee3199d55e3e9db3d464c489a4c2a0fbaaac00ef30133cdb554455",
+    "tests/scanner-trial-offer.test.tsx": "054d6897fd9a11c332562d8a5052295b2f668e3677ba4bd155706a0467081205"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-scanner119-tools-e5gg36wq/operator-apply-cut-cBdtwI/originals"
+}

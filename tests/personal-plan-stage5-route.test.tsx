@@ -72,13 +72,6 @@ test("retained portfolio presentation data cannot create an Anwendung item", asy
   )
 })
 
-test("loading does not flash Anwendung navigation before owner eligibility is known", () => {
-  const source = readFileSync("src/app/anwendung/loading.tsx", "utf8")
-
-  assert.doesNotMatch(source, /<Header/)
-  assert.doesNotMatch(source, /PersonalPlanNavigation/)
-})
-
 const DAY_KEYS: ApplicationDayTypeKey[] = [
   "wash_day",
   "intensive_care_day",
@@ -240,39 +233,6 @@ test("journey denial happens before any Routine, profile, catalog, or content re
         throw new Error("must not read")
       },
     }),
-  )
-  assert.deepEqual(view, { state: "feature_disabled" })
-  assert.equal(privilegedReads, 0)
-})
-
-test("journey frontier denial happens before any Routine, profile, catalog, or content read", async () => {
-  let privilegedReads = 0
-  const view = await resolveAnwendungPage(
-    readyDeps({
-      loadJourneyAccess: async () => ({
-        kind: "personal_plan",
-        personalPlanId: "plan-1",
-        frontier: "stage4",
-        nextHref: "/routine",
-        allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false },
-      }),
-      loadRoutineVersion: async () => {
-        privilegedReads += 1
-        throw new Error("must not read")
-      },
-      adaptRoutine: async () => {
-        privilegedReads += 1
-        throw new Error("must not read")
-      },
-      loadProfile: async () => {
-        privilegedReads += 1
-        throw new Error("must not read")
-      },
-      loadContent: () => {
-        privilegedReads += 1
-        throw new Error("must not read")
-      },
-    } as never),
   )
   assert.deepEqual(view, { state: "feature_disabled" })
   assert.equal(privilegedReads, 0)

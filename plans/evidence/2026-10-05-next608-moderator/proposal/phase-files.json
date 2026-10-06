@@ -1,0 +1,650 @@
+[
+  {
+    "phase": "before",
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "sha256": "0608050698d408ed4b09c55b56861ed8970c074a30237bdd701f50303eff525a",
+    "bytes": 14184,
+    "lines": 456,
+    "sites": 13
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "sha256": "0608050698d408ed4b09c55b56861ed8970c074a30237bdd701f50303eff525a",
+    "bytes": 14184,
+    "lines": 456,
+    "sites": 13
+  },
+  {
+    "phase": "cut",
+    "file": "tests/moderator-account-maintenance.test.ts",
+    "sha256": "0608050698d408ed4b09c55b56861ed8970c074a30237bdd701f50303eff525a",
+    "bytes": 14184,
+    "lines": 456,
+    "sites": 13
+  },
+  {
+    "phase": "before",
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "sha256": "625b090a1c22ce5e01b758b38d25426e5da9ce1be148a16baf2ad8cfe07101f2",
+    "bytes": 16032,
+    "lines": 425,
+    "sites": 9
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "sha256": "625b090a1c22ce5e01b758b38d25426e5da9ce1be148a16baf2ad8cfe07101f2",
+    "bytes": 16032,
+    "lines": 425,
+    "sites": 9
+  },
+  {
+    "phase": "cut",
+    "file": "tests/moderator-account-reset-execution.test.ts",
+    "sha256": "625b090a1c22ce5e01b758b38d25426e5da9ce1be148a16baf2ad8cfe07101f2",
+    "bytes": 16032,
+    "lines": 425,
+    "sites": 9
+  },
+  {
+    "phase": "before",
+    "file": "tests/moderator-account-reset.test.ts",
+    "sha256": "132addacf27aec26a018061afe7e041f5ba341426e9c69fb2cfdde0b27fb184c",
+    "bytes": 29124,
+    "lines": 681,
+    "sites": 15
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/moderator-account-reset.test.ts",
+    "sha256": "132addacf27aec26a018061afe7e041f5ba341426e9c69fb2cfdde0b27fb184c",
+    "bytes": 29124,
+    "lines": 681,
+    "sites": 15
+  },
+  {
+    "phase": "cut",
+    "file": "tests/moderator-account-reset.test.ts",
+    "sha256": "132addacf27aec26a018061afe7e041f5ba341426e9c69fb2cfdde0b27fb184c",
+    "bytes": 29124,
+    "lines": 681,
+    "sites": 15
+  },
+  {
+    "phase": "before",
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "sha256": "da619372b2c743e192eaf3ba3982d997b8731aab9110d052279091d50b227a3e",
+    "bytes": 15835,
+    "lines": 441,
+    "sites": 10
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "sha256": "da619372b2c743e192eaf3ba3982d997b8731aab9110d052279091d50b227a3e",
+    "bytes": 15835,
+    "lines": 441,
+    "sites": 10
+  },
+  {
+    "phase": "cut",
+    "file": "tests/moderator-hosted-activation-probe.test.ts",
+    "sha256": "da619372b2c743e192eaf3ba3982d997b8731aab9110d052279091d50b227a3e",
+    "bytes": 15835,
+    "lines": 441,
+    "sites": 10
+  },
+  {
+    "phase": "before",
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "sha256": "34d94a7f3d69d53df94380fd11c7b7393f369133d20616e54ccf6ce5799f9318",
+    "bytes": 12608,
+    "lines": 371,
+    "sites": 10
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "sha256": "34d94a7f3d69d53df94380fd11c7b7393f369133d20616e54ccf6ce5799f9318",
+    "bytes": 12608,
+    "lines": 371,
+    "sites": 10
+  },
+  {
+    "phase": "cut",
+    "file": "tests/moderator-hosted-auth-probe.test.ts",
+    "sha256": "34d94a7f3d69d53df94380fd11c7b7393f369133d20616e54ccf6ce5799f9318",
+    "bytes": 12608,
+    "lines": 371,
+    "sites": 10
+  },
+  {
+    "phase": "before",
+    "file": "tests/moderator-organic-fresh-start.test.ts",
+    "sha256": "65c840b8a01db98064d738d2e693bf90a4efaec27e194efe8a6c0348016ce7fc",
+    "bytes": 4125,
+    "lines": 120,
+    "sites": 6
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/moderator-organic-fresh-start.test.ts",
+    "sha256": "65c840b8a01db98064d738d2e693bf90a4efaec27e194efe8a6c0348016ce7fc",
+    "bytes": 4125,
+    "lines": 120,
+    "sites": 6
+  },
+  {
+    "phase": "cut",
+    "file": "tests/moderator-organic-fresh-start.test.ts",
+    "sha256": "65c840b8a01db98064d738d2e693bf90a4efaec27e194efe8a6c0348016ce7fc",
+    "bytes": 4125,
+    "lines": 120,
+    "sites": 6
+  },
+  {
+    "phase": "before",
+    "file": "tests/moderator-quiz-draft-scope.test.ts",
+    "sha256": "8fa270c2b9aa19f764daa45382d92952843aa28eb8b411f206bd020862869925",
+    "bytes": 1915,
+    "lines": 52,
+    "sites": 2
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/moderator-quiz-draft-scope.test.ts",
+    "sha256": "8fa270c2b9aa19f764daa45382d92952843aa28eb8b411f206bd020862869925",
+    "bytes": 1915,
+    "lines": 52,
+    "sites": 2
+  },
+  {
+    "phase": "cut",
+    "file": "tests/moderator-quiz-draft-scope.test.ts",
+    "sha256": "8fa270c2b9aa19f764daa45382d92952843aa28eb8b411f206bd020862869925",
+    "bytes": 1915,
+    "lines": 52,
+    "sites": 2
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-field-test-activation-route.test.ts",
+    "sha256": "f40aab18ec11eb8b097a8afda206d30f71fbd3a11d24a8213a3f2b407779d880",
+    "bytes": 4809,
+    "lines": 139,
+    "sites": 4
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-field-test-activation-route.test.ts",
+    "sha256": "f40aab18ec11eb8b097a8afda206d30f71fbd3a11d24a8213a3f2b407779d880",
+    "bytes": 4809,
+    "lines": 139,
+    "sites": 4
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-field-test-activation-route.test.ts",
+    "sha256": "f40aab18ec11eb8b097a8afda206d30f71fbd3a11d24a8213a3f2b407779d880",
+    "bytes": 4809,
+    "lines": 139,
+    "sites": 4
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-field-test-activation.test.ts",
+    "sha256": "f595bfaeccf6529daaa03b3d09fe387e0ddd02ba7ea5c807d28e5fbd0a32eed4",
+    "bytes": 2173,
+    "lines": 67,
+    "sites": 2
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-field-test-activation.test.ts",
+    "sha256": "f595bfaeccf6529daaa03b3d09fe387e0ddd02ba7ea5c807d28e5fbd0a32eed4",
+    "bytes": 2173,
+    "lines": 67,
+    "sites": 2
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-field-test-activation.test.ts",
+    "sha256": "f595bfaeccf6529daaa03b3d09fe387e0ddd02ba7ea5c807d28e5fbd0a32eed4",
+    "bytes": 2173,
+    "lines": 67,
+    "sites": 2
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-field-test-analytics.test.ts",
+    "sha256": "4992c22e606ecc186fb36b6e24050cde0b92ad09ed22d43b1e5fda60232b8d10",
+    "bytes": 4105,
+    "lines": 127,
+    "sites": 5
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-field-test-analytics.test.ts",
+    "sha256": "4992c22e606ecc186fb36b6e24050cde0b92ad09ed22d43b1e5fda60232b8d10",
+    "bytes": 4105,
+    "lines": 127,
+    "sites": 5
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-field-test-analytics.test.ts",
+    "sha256": "4992c22e606ecc186fb36b6e24050cde0b92ad09ed22d43b1e5fda60232b8d10",
+    "bytes": 4105,
+    "lines": 127,
+    "sites": 5
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "sha256": "074c15f31ee2360f673f76f87594eb2bdc8c53e9e596485f47f77b60e5fb97ab",
+    "bytes": 7530,
+    "lines": 244,
+    "sites": 8
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "sha256": "074c15f31ee2360f673f76f87594eb2bdc8c53e9e596485f47f77b60e5fb97ab",
+    "bytes": 7530,
+    "lines": 244,
+    "sites": 8
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-field-test-campaign-command.test.ts",
+    "sha256": "074c15f31ee2360f673f76f87594eb2bdc8c53e9e596485f47f77b60e5fb97ab",
+    "bytes": 7530,
+    "lines": 244,
+    "sites": 8
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "sha256": "37f48ffb9abae8f25999bea7b8082d05c65a30d91628b47e9ae68e00f000d867",
+    "bytes": 8315,
+    "lines": 234,
+    "sites": 8
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "sha256": "37f48ffb9abae8f25999bea7b8082d05c65a30d91628b47e9ae68e00f000d867",
+    "bytes": 8315,
+    "lines": 234,
+    "sites": 8
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-field-test-entry-route.test.ts",
+    "sha256": "37f48ffb9abae8f25999bea7b8082d05c65a30d91628b47e9ae68e00f000d867",
+    "bytes": 8315,
+    "lines": 234,
+    "sites": 8
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-field-test-routing-migration.test.ts",
+    "sha256": "1e498b3f47b237937bf63fdb8a2f2ed14487de90ab5b62f7d92da9de326893f9",
+    "bytes": 2026,
+    "lines": 45,
+    "sites": 2
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-field-test-routing-migration.test.ts",
+    "sha256": "1e498b3f47b237937bf63fdb8a2f2ed14487de90ab5b62f7d92da9de326893f9",
+    "bytes": 2026,
+    "lines": 45,
+    "sites": 2
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-field-test-routing-migration.test.ts",
+    "sha256": "1e498b3f47b237937bf63fdb8a2f2ed14487de90ab5b62f7d92da9de326893f9",
+    "bytes": 2026,
+    "lines": 45,
+    "sites": 2
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-field-test-schema.test.ts",
+    "sha256": "86634d005795e018e75fb0efc8df91a7062dfe5b97f1a633fb1233d04d30f34f",
+    "bytes": 7877,
+    "lines": 181,
+    "sites": 4
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-field-test-schema.test.ts",
+    "sha256": "86634d005795e018e75fb0efc8df91a7062dfe5b97f1a633fb1233d04d30f34f",
+    "bytes": 7877,
+    "lines": 181,
+    "sites": 4
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-field-test-schema.test.ts",
+    "sha256": "86634d005795e018e75fb0efc8df91a7062dfe5b97f1a633fb1233d04d30f34f",
+    "bytes": 7877,
+    "lines": 181,
+    "sites": 4
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "sha256": "33dc524be1f901efe9b37fdc1c833202566cbfe322279a79e86b1b4ab8b004bb",
+    "bytes": 10388,
+    "lines": 380,
+    "sites": 12
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "sha256": "33dc524be1f901efe9b37fdc1c833202566cbfe322279a79e86b1b4ab8b004bb",
+    "bytes": 10388,
+    "lines": 380,
+    "sites": 12
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-field-test-server.test.ts",
+    "sha256": "33dc524be1f901efe9b37fdc1c833202566cbfe322279a79e86b1b4ab8b004bb",
+    "bytes": 10388,
+    "lines": 380,
+    "sites": 12
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "sha256": "3a2b873d802dfb9667ca5f8167bb95d5b6eb23cda0a7b8dc90a4ba153d3335e8",
+    "bytes": 5698,
+    "lines": 169,
+    "sites": 7
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "sha256": "399ab430e51c6b7781d49ced998e98c930204f8835dd60d5d14babf19562f51d",
+    "bytes": 5844,
+    "lines": 171,
+    "sites": 7
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "sha256": "4737c57eee0061e44ab84e47abef535bef3de94df7cc05de70622b9bc65965e8",
+    "bytes": 5427,
+    "lines": 164,
+    "sites": 6
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "sha256": "34c9efa1acfb4f11bdb3f30a1450f2779ec4d4febfabbcededb41f57fd5e34a7",
+    "bytes": 8264,
+    "lines": 252,
+    "sites": 7
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "sha256": "34c9efa1acfb4f11bdb3f30a1450f2779ec4d4febfabbcededb41f57fd5e34a7",
+    "bytes": 8264,
+    "lines": 252,
+    "sites": 7
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-moderator-activation-route.test.ts",
+    "sha256": "34c9efa1acfb4f11bdb3f30a1450f2779ec4d4febfabbcededb41f57fd5e34a7",
+    "bytes": 8264,
+    "lines": 252,
+    "sites": 7
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "sha256": "22c047a2be03a200941843439bae813b590b35bdff33635bcd713e1430deeee9",
+    "bytes": 11600,
+    "lines": 429,
+    "sites": 7
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "sha256": "22c047a2be03a200941843439bae813b590b35bdff33635bcd713e1430deeee9",
+    "bytes": 11600,
+    "lines": 429,
+    "sites": 7
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-moderator-contract.test.ts",
+    "sha256": "22c047a2be03a200941843439bae813b590b35bdff33635bcd713e1430deeee9",
+    "bytes": 11600,
+    "lines": 429,
+    "sites": 7
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-moderator-journey.test.ts",
+    "sha256": "572cb8eb0937625d60fc771a19473e267b9cec7adea4052cb9f7a0d19d46f079",
+    "bytes": 7381,
+    "lines": 238,
+    "sites": 6
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-moderator-journey.test.ts",
+    "sha256": "572cb8eb0937625d60fc771a19473e267b9cec7adea4052cb9f7a0d19d46f079",
+    "bytes": 7381,
+    "lines": 238,
+    "sites": 6
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-moderator-journey.test.ts",
+    "sha256": "572cb8eb0937625d60fc771a19473e267b9cec7adea4052cb9f7a0d19d46f079",
+    "bytes": 7381,
+    "lines": 238,
+    "sites": 6
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-moderator-schema.test.ts",
+    "sha256": "fb3280dbdab55d23467133a971ce27faad6a37a9b901d4bd809b2910afe10bf8",
+    "bytes": 4554,
+    "lines": 106,
+    "sites": 3
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-moderator-schema.test.ts",
+    "sha256": "fb3280dbdab55d23467133a971ce27faad6a37a9b901d4bd809b2910afe10bf8",
+    "bytes": 4554,
+    "lines": 106,
+    "sites": 3
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-moderator-schema.test.ts",
+    "sha256": "fb3280dbdab55d23467133a971ce27faad6a37a9b901d4bd809b2910afe10bf8",
+    "bytes": 4554,
+    "lines": 106,
+    "sites": 3
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "sha256": "0d3026f1e7a9d32c0d45a1195cf6c88bb2584420b1e47b2ec59166ca46dc0148",
+    "bytes": 36791,
+    "lines": 997,
+    "sites": 8
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "sha256": "0d3026f1e7a9d32c0d45a1195cf6c88bb2584420b1e47b2ec59166ca46dc0148",
+    "bytes": 36791,
+    "lines": 997,
+    "sites": 8
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-moderator-sql-execution.test.ts",
+    "sha256": "0d3026f1e7a9d32c0d45a1195cf6c88bb2584420b1e47b2ec59166ca46dc0148",
+    "bytes": 36791,
+    "lines": 997,
+    "sites": 8
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "sha256": "5b37f4ea7d313c70e0f0998bf3803d2c3ffae2de301336c1c66a3ac7ec0f6e5c",
+    "bytes": 7983,
+    "lines": 246,
+    "sites": 7
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "sha256": "5b37f4ea7d313c70e0f0998bf3803d2c3ffae2de301336c1c66a3ac7ec0f6e5c",
+    "bytes": 7983,
+    "lines": 246,
+    "sites": 7
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-moderator-start-route.test.ts",
+    "sha256": "5b37f4ea7d313c70e0f0998bf3803d2c3ffae2de301336c1c66a3ac7ec0f6e5c",
+    "bytes": 7983,
+    "lines": 246,
+    "sites": 7
+  },
+  {
+    "phase": "before",
+    "file": "tests/regular-quiz-field-test-activation-route.test.ts",
+    "sha256": "0c7ae564226e9706e4cf04096fabf1f3c540153c9079b60a8bee442d69fdef94",
+    "bytes": 5386,
+    "lines": 161,
+    "sites": 4
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/regular-quiz-field-test-activation-route.test.ts",
+    "sha256": "0c7ae564226e9706e4cf04096fabf1f3c540153c9079b60a8bee442d69fdef94",
+    "bytes": 5386,
+    "lines": 161,
+    "sites": 4
+  },
+  {
+    "phase": "cut",
+    "file": "tests/regular-quiz-field-test-activation-route.test.ts",
+    "sha256": "0c7ae564226e9706e4cf04096fabf1f3c540153c9079b60a8bee442d69fdef94",
+    "bytes": 5386,
+    "lines": 161,
+    "sites": 4
+  },
+  {
+    "phase": "before",
+    "file": "tests/regular-quiz-field-test-activation.test.ts",
+    "sha256": "83c4741f16bd2b3adff4c21197d446a3c41c540d85f5d66425ff2aa786922a15",
+    "bytes": 2016,
+    "lines": 67,
+    "sites": 2
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/regular-quiz-field-test-activation.test.ts",
+    "sha256": "83c4741f16bd2b3adff4c21197d446a3c41c540d85f5d66425ff2aa786922a15",
+    "bytes": 2016,
+    "lines": 67,
+    "sites": 2
+  },
+  {
+    "phase": "cut",
+    "file": "tests/regular-quiz-field-test-activation.test.ts",
+    "sha256": "83c4741f16bd2b3adff4c21197d446a3c41c540d85f5d66425ff2aa786922a15",
+    "bytes": 2016,
+    "lines": 67,
+    "sites": 2
+  },
+  {
+    "phase": "before",
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "sha256": "5ad3f31d6f3d3ef8af3e38e2cba56d2b0b402f80c8b505cb072ac247c8e23e56",
+    "bytes": 12372,
+    "lines": 382,
+    "sites": 8
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "sha256": "5ad3f31d6f3d3ef8af3e38e2cba56d2b0b402f80c8b505cb072ac247c8e23e56",
+    "bytes": 12372,
+    "lines": 382,
+    "sites": 8
+  },
+  {
+    "phase": "cut",
+    "file": "tests/regular-quiz-field-test-runtime.test.ts",
+    "sha256": "5ad3f31d6f3d3ef8af3e38e2cba56d2b0b402f80c8b505cb072ac247c8e23e56",
+    "bytes": 12372,
+    "lines": 382,
+    "sites": 8
+  },
+  {
+    "phase": "before",
+    "file": "tests/regular-quiz-field-test-schema.test.ts",
+    "sha256": "e16fe6ca59820237d68e5a5a85c2a04afbe8d5cc3b70d3d9b6ab82e5dafc0b7c",
+    "bytes": 4780,
+    "lines": 112,
+    "sites": 4
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/regular-quiz-field-test-schema.test.ts",
+    "sha256": "e16fe6ca59820237d68e5a5a85c2a04afbe8d5cc3b70d3d9b6ab82e5dafc0b7c",
+    "bytes": 4780,
+    "lines": 112,
+    "sites": 4
+  },
+  {
+    "phase": "cut",
+    "file": "tests/regular-quiz-field-test-schema.test.ts",
+    "sha256": "e16fe6ca59820237d68e5a5a85c2a04afbe8d5cc3b70d3d9b6ab82e5dafc0b7c",
+    "bytes": 4780,
+    "lines": 112,
+    "sites": 4
+  },
+  {
+    "phase": "before",
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "sha256": "27aa6d0538df579432dcfc5229f780df85a3bbc4d460f601de9de6e50e821a91",
+    "bytes": 9923,
+    "lines": 245,
+    "sites": 10
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "sha256": "27aa6d0538df579432dcfc5229f780df85a3bbc4d460f601de9de6e50e821a91",
+    "bytes": 9923,
+    "lines": 245,
+    "sites": 10
+  },
+  {
+    "phase": "cut",
+    "file": "tests/regular-quiz-field-test-ui.test.tsx",
+    "sha256": "27aa6d0538df579432dcfc5229f780df85a3bbc4d460f601de9de6e50e821a91",
+    "bytes": 9923,
+    "lines": 245,
+    "sites": 10
+  }
+]

@@ -1,0 +1,110 @@
+[
+  {
+    "id": "C1",
+    "mark": "C",
+    "file": "tests/freemium-sheet-checkout-contract.test.ts",
+    "donor": {
+      "file": "tests/freemium-sheet-checkout-contract.test.ts",
+      "index": 1,
+      "title": "the submitted catalog is standard for the sheet in BOTH launch-pricing states",
+      "line": 40,
+      "start": 1528,
+      "end": 1907,
+      "body": "test(\"the submitted catalog is standard for the sheet in BOTH launch-pricing states\", () => {\n  for (const launchPricingEnabled of [false, true]) {\n    assert.equal(\n      resolveCheckoutPricingCatalog({ source: \"premium_sheet\", launchPricingEnabled }),\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )\n  }\n})",
+      "sha256": "9e1cbb3882137f8627064ab79b1ab1a97c520db48f8922c8db6824e506cc8dbf",
+      "assertions": [
+        {
+          "text": "assert.equal(\n      resolveCheckoutPricingCatalog({ source: \"premium_sheet\", launchPricingEnabled }),\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )",
+          "line": 42
+        }
+      ],
+      "nonAssertionCalls": [
+        "resolveCheckoutPricingCatalog"
+      ]
+    },
+    "keeperBefore": {
+      "file": "tests/freemium-sheet-checkout-contract.test.ts",
+      "index": 3,
+      "title": "the submitted price id equals the price the sheet rendered, both flag states",
+      "line": 61,
+      "start": 2388,
+      "end": 3318,
+      "body": "test(\"the submitted price id equals the price the sheet rendered, both flag states\", () => {\n  for (const launchPricingEnabled of [false, true]) {\n    const catalog = resolveCheckoutPricingCatalog({\n      source: \"premium_sheet\",\n      launchPricingEnabled,\n    })\n    for (const row of premiumSheetPlans()) {\n      const plan = getStripePricingPlan(row.interval, catalog)\n      assert.equal(\n        plan.amount,\n        row.amount,\n        `${row.interval}: rendered ${row.amount} but would charge ${plan.amount}`,\n      )\n      assert.equal(plan.analyticsId, row.analyticsId)\n      // The env may not configure every price id locally; when it does, it must be the\n      // standard-catalog one, never the launch one.\n      const standardPriceId = getStripePriceId(row.interval, \"standard\")\n      const submittedPriceId = getStripePriceId(row.interval, catalog)\n      assert.equal(submittedPriceId, standardPriceId)\n    }\n  }\n})",
+      "sha256": "5b8defc8fc503d32f305f7d2858c64aa5d7da18fb4c9357f4154abe67d3dfdc6",
+      "assertions": [
+        {
+          "text": "assert.equal(\n        plan.amount,\n        row.amount,\n        `${row.interval}: rendered ${row.amount} but would charge ${plan.amount}`,\n      )",
+          "line": 69
+        },
+        {
+          "text": "assert.equal(plan.analyticsId, row.analyticsId)",
+          "line": 74
+        },
+        {
+          "text": "assert.equal(submittedPriceId, standardPriceId)",
+          "line": 79
+        }
+      ],
+      "nonAssertionCalls": [
+        "resolveCheckoutPricingCatalog",
+        "premiumSheetPlans",
+        "getStripePricingPlan",
+        "getStripePriceId",
+        "getStripePriceId"
+      ]
+    },
+    "keeperAfter": {
+      "name": "the submitted price id equals the price the sheet rendered, both flag states",
+      "body": "test(\"the submitted price id equals the price the sheet rendered, both flag states\", () => {\n  for (const launchPricingEnabled of [false, true]) {\n    const catalog = resolveCheckoutPricingCatalog({\n      source: \"premium_sheet\",\n      launchPricingEnabled,\n    })\n    assert.equal(\n      catalog,\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )\n    for (const row of premiumSheetPlans()) {\n      const plan = getStripePricingPlan(row.interval, catalog)\n      assert.equal(\n        plan.amount,\n        row.amount,\n        `${row.interval}: rendered ${row.amount} but would charge ${plan.amount}`,\n      )\n      assert.equal(plan.analyticsId, row.analyticsId)\n      // The env may not configure every price id locally; when it does, it must be the\n      // standard-catalog one, never the launch one.\n      const standardPriceId = getStripePriceId(row.interval, \"standard\")\n      const submittedPriceId = getStripePriceId(row.interval, catalog)\n      assert.equal(submittedPriceId, standardPriceId)\n    }\n  }\n})",
+      "sha256": "4df01926ed61cba0a502a674261d4c4dc14274446c53e3f53d00e76b447644c6",
+      "assertions": [
+        {
+          "text": "assert.equal(\n      catalog,\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )",
+          "line": 67
+        },
+        {
+          "text": "assert.equal(\n        plan.amount,\n        row.amount,\n        `${row.interval}: rendered ${row.amount} but would charge ${plan.amount}`,\n      )",
+          "line": 74
+        },
+        {
+          "text": "assert.equal(plan.analyticsId, row.analyticsId)",
+          "line": 79
+        },
+        {
+          "text": "assert.equal(submittedPriceId, standardPriceId)",
+          "line": 84
+        }
+      ],
+      "calls": [
+        "resolveCheckoutPricingCatalog({\n      source: \"premium_sheet\",\n      launchPricingEnabled,\n    })",
+        "premiumSheetPlans()",
+        "getStripePricingPlan(row.interval, catalog)",
+        "getStripePriceId(row.interval, \"standard\")",
+        "getStripePriceId(row.interval, catalog)"
+      ]
+    },
+    "assertionUnion": [
+      {
+        "donor": {
+          "text": "assert.equal(\n      resolveCheckoutPricingCatalog({ source: \"premium_sheet\", launchPricingEnabled }),\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )",
+          "line": 42
+        },
+        "keeper": {
+          "text": "assert.equal(\n      catalog,\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )",
+          "line": 67
+        },
+        "substitution": "Only replace the identical existing owner call expression by already-captured catalog; preserve expected literal and diagnostic template verbatim.",
+        "literalRows": [
+          false,
+          true
+        ]
+      }
+    ],
+    "operativeInputEquivalence": "Both callbacks loop literal [false,true] and call resolveCheckoutPricingCatalog({source:\"premium_sheet\",launchPricingEnabled}) exactly once per row. Pure owner reads only those fields and standard literal/flag resolver. Keeper uses same result for subsequent price comparisons; transfer occurs before any row helper or price-ID lookup. No fixture, flag environment, owner call, case, loop row, skip or expectation change.",
+    "limits": "Static pure helper/catalog alignment; keeper does not invoke POST or provider. Configured Stripe price equality may be vacuous for absent IDs, so separate literal standard-price test stays. This consolidation does not strengthen that inherited limit.",
+    "sourceCleanup": [],
+    "newCalls": 0,
+    "newInputs": 0,
+    "newRows": 0
+  }
+]

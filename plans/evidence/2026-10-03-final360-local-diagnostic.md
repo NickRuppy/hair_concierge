@@ -1,0 +1,9 @@
+# Frozen360 local coverage diagnostic
+
+Both aggregate2pp gates pass. Raw baseline-to360 per-file diagnostic flags37 metrics, four more than336: order-intents.ts lines/statements −11.505000pp; persistence/index.ts lines/statements −2.679392pp. This diagnostic is not a pass and does not imply every raw counter is preserved.
+
+Main matched gitHEAD source bytes against the336 freeze before interpreting source-map positions. All eight surviving order-intent function bodies and all three surviving persistence hash/normalization function bodies are byte-identical. Their actual-body hit counts are unchanged except expiry13→12: the removed creation test had one expiry invocation. No previously covered surviving function-body line became zero-covered. Binding/provider capture/missing-table branches already had zero actual-body execution and remain zero; this audit does not claim them covered.
+
+PayPal file loses149 source-line units,137 formerly covered: token/DTO/create/idempotency lookup/provider creation/unique-violation functions plus exclusive imports/TTL. Decoder barrel loses105 formerly covered units from uninstantiated schema/registry/decoder definitions. Retained hash normalization has identical real-body counts4435/4968/159; stable schema still has five uncovered units before and after (197/202→92/97). Current source/path closure is in the359 plan and actual focused receipts. No hidden failure suppression or deleted live hash/activation/capture keeper.
+
+Evidence: /tmp/test-audit-final360-local-attribution.cjs and .json, original/final c8 coverage-final.json, /tmp/test-audit-retirement-final360-comparison.json. Four new flags are attributed to deleted covered units within surviving files; earlier33 flags remain historical. This scoped attribution is not a blanket proof that all branch counters throughout the repository are equal.

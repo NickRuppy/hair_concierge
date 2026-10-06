@@ -321,24 +321,6 @@ test("uses a neutral shelf fallback when a confirmed catalog image is missing", 
   assert.doesNotMatch(html, /\(bestätigt\)/)
 })
 
-test("uses a neutral contained fallback for nonstandard product imagery", () => {
-  const compiled = compiledView()
-  compiled.days[0]!.productBlocks[0]!.imageUrl = "https://owner.example/uploads/shampoo.jpg"
-  const productStep = compiled.days[0]!.outerSequence.find((step) => step.kind === "product")
-  if (productStep?.kind === "product") {
-    productStep.block.imageUrl = "https://owner.example/uploads/shampoo.jpg"
-  }
-
-  const view = toApplicationPageView({ compiled, dayDefinitions: definitions })
-  assert.equal(view.state, "ready")
-  if (view.state !== "ready") return
-
-  const html = renderToStaticMarkup(createElement(ApplicationPage, { view }))
-  assert.match(html, /data-application-image-treatment="fallback"/)
-  assert.match(html, /src="https:\/\/owner\.example\/uploads\/shampoo\.jpg"/)
-  assert.doesNotMatch(html, /data-application-silhouette="shampoo"/)
-})
-
 test("keeps the provisional status data hook accessible for nonstandard product imagery", () => {
   const compiled = compiledView()
   compiled.days[0]!.productBlocks[0]!.status = "provisional"
@@ -359,6 +341,10 @@ test("keeps the provisional status data hook accessible for nonstandard product 
   assert.match(html, /data-application-shelf-slot="provisional"/)
   assert.match(html, /Regal: Shampoo: Mildes Shampoo/)
   assert.doesNotMatch(html, /\(vorläufig\)/)
+
+  assert.match(html, /data-application-image-treatment="fallback"/)
+  assert.match(html, /src="https:\/\/owner\.example\/uploads\/shampoo\.jpg"/)
+  assert.doesNotMatch(html, /data-application-silhouette="shampoo"/)
 })
 
 test("renders the ten approved category-specific product silhouettes", () => {

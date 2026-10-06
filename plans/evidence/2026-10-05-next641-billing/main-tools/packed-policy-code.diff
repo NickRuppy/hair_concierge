@@ -1,0 +1,42 @@
+--- /tmp/test-audit-billing125-tools-svsmm1u3/operator-guard.cjs
++++ /tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-guard.cjs
+@@ -4,7 +4,7 @@
+ const path = require('node:path')
+ const crypto = require('node:crypto')
+ const ROOT = '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+-const BASE = '/tmp/test-audit-billing125-tools-svsmm1u3/operator'
++const BASE = '/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator'
+ const PROPOSAL = '/tmp/test-audit-billing-operational125'
+ const LOCK = '/tmp/test-audit-pruning-operator-lock'
+ const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex')
+@@ -26,6 +26,8 @@
+       if (keep) lines.push(line)
+     }
+     if (sha(lines.join('')) !== pin.sharedConfigRelevantSHA) fail('Relevant shared config drift')
++  } else if (pin.sharedPackedRelevantSHA) {
++    require('/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/policy.cjs').check(pin, bytes)
+   } else if (sha(bytes) !== pin.sha) fail('Pinned file drift: ' + pin.path)
+ }
+ function inventory(dir) {
+--- /tmp/test-audit-billing125-tools-svsmm1u3/operator-run-controls.cjs
++++ /tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-run-controls.cjs
+@@ -2,7 +2,7 @@
+ // Main-only serial actual-owner faults. --check never starts a child or writes repository bytes.
+ const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process')
+ const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='873f158cc84d4346588d02675130a9c33a5da5178536c744e106b1626affd09b'
++const PIN_SHA='PIN_SHA_PLACEHOLDER'
+ const mode=(process.argv[2]||'check').replace(/^--/,'')
+ const selectedId=process.argv[3]
+ if(!['check','run'].includes(mode)||process.argv.length>4)g.fail('Use --check [control-id] | run [control-id]')
+--- /tmp/test-audit-billing125-tools-svsmm1u3/operator-edit.cjs
++++ /tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-edit.cjs
+@@ -2,7 +2,7 @@
+ // Main only. --check is zero-write/no-child; mutation modes are never invoked by worker.
+ const fs=require('node:fs'),path=require('node:path')
+ const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='873f158cc84d4346588d02675130a9c33a5da5178536c744e106b1626affd09b'
++const PIN_SHA='PIN_SHA_PLACEHOLDER'
+ const mode=(process.argv[2]||'check').replace(/^--/,'')
+ if(!['check','transfer','cut'].includes(mode)||(mode!=='cut'&&process.argv.length>3)||(mode==='cut'&&process.argv.length!==5))g.fail('Use --check | transfer | cut <transfer-receipt-dir> <completion-sha256>')
+ const context=g.load(PIN_SHA)

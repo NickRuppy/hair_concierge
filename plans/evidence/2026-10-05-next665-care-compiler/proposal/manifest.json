@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 1,
+  "task": "residual deterministic care102",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "status": "FROZEN CONDITIONAL PROPOSAL; no execution/integration acceptance",
+  "classifications": {
+    "R": 97,
+    "F": 4,
+    "C": 1,
+    "D": 0
+  },
+  "counts": {
+    "before": 102,
+    "transfer": 102,
+    "cut": 101,
+    "unrelatedExact": 100,
+    "controlDescriptors": 13
+  },
+  "changedFiles": [
+    "tests/personal-plan-routine-candidate-compiler.test.ts"
+  ],
+  "unchangedWholeTestFiles": [
+    "tests/recommendation-engine-shampoo-cadence.test.ts",
+    "tests/care-balance-frequency-targets.test.ts",
+    "tests/personal-plan-routine-cadence.test.ts",
+    "tests/personal-plan/product-previews.test.ts",
+    "tests/personal-plan-exact-catalog-bundle.test.ts",
+    "tests/personal-plan-stage3-contracts.test.ts"
+  ],
+  "testLOC": {
+    "before": 901,
+    "cut": 898,
+    "delta": -3,
+    "productionDelta": 0,
+    "supportDelta": 0
+  },
+  "phaseHashes": [
+    {
+      "phase": "before",
+      "file": "tests/recommendation-engine-shampoo-cadence.test.ts",
+      "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+      "bytes": 13821
+    },
+    {
+      "phase": "before",
+      "file": "tests/care-balance-frequency-targets.test.ts",
+      "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+      "bytes": 10763
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "sha256": "d1967063160af1b28843b08791ebebf80c9ad95f43bef60dedcc7198c56c5533",
+      "bytes": 28416
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-routine-cadence.test.ts",
+      "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+      "bytes": 11362
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan/product-previews.test.ts",
+      "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+      "bytes": 43433
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-exact-catalog-bundle.test.ts",
+      "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+      "bytes": 17041
+    },
+    {
+      "phase": "before",
+      "file": "tests/personal-plan-stage3-contracts.test.ts",
+      "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+      "bytes": 21649
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/recommendation-engine-shampoo-cadence.test.ts",
+      "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+      "bytes": 13821
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/care-balance-frequency-targets.test.ts",
+      "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+      "bytes": 10763
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "sha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3",
+      "bytes": 30639
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-routine-cadence.test.ts",
+      "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+      "bytes": 11362
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan/product-previews.test.ts",
+      "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+      "bytes": 43433
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-exact-catalog-bundle.test.ts",
+      "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+      "bytes": 17041
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/personal-plan-stage3-contracts.test.ts",
+      "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+      "bytes": 21649
+    },
+    {
+      "phase": "cut",
+      "file": "tests/recommendation-engine-shampoo-cadence.test.ts",
+      "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+      "bytes": 13821
+    },
+    {
+      "phase": "cut",
+      "file": "tests/care-balance-frequency-targets.test.ts",
+      "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+      "bytes": 10763
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "sha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d",
+      "bytes": 28228
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-routine-cadence.test.ts",
+      "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+      "bytes": 11362
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan/product-previews.test.ts",
+      "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+      "bytes": 43433
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-exact-catalog-bundle.test.ts",
+      "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+      "bytes": 17041
+    },
+    {
+      "phase": "cut",
+      "file": "tests/personal-plan-stage3-contracts.test.ts",
+      "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+      "bytes": 21649
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "start-pins.json",
+      "sha256": "4ea1f9044e072394223a5082236b50f101e70bfa303913cbfbcc3d8cad69febc",
+      "bytes": 4569
+    },
+    {
+      "file": "inventory.json",
+      "sha256": "9b04a5fd24a6f6ac0286cf03af3aedd805fe735b79e2073f514f4f22c115a683",
+      "bytes": 442506
+    },
+    {
+      "file": "support-and-tables.json",
+      "sha256": "aab2da728649b8192614dd1f71db509b1bedfdd256ca33c7d9e08518ab85ce9b",
+      "bytes": 51772
+    },
+    {
+      "file": "complete-ledger.md",
+      "sha256": "551e5f581d73ecd3008f8476b3b134ee96d294338ec5d6765574a94724baea51",
+      "bytes": 40823
+    },
+    {
+      "file": "ledger.json",
+      "sha256": "632a31a7ddeb97110365675bbf20793a1215c867d92a501493d4bbd8b266e034",
+      "bytes": 351580
+    },
+    {
+      "file": "layer-plan.md",
+      "sha256": "f92849aa2e164dd15c818730e7243e7b2b5d108e218df34f35c685acb21a6912",
+      "bytes": 11122
+    },
+    {
+      "file": "candidates.json",
+      "sha256": "eda3a07d46903a9d3e126cf49e7b70be711c0a632f4d0afe58eb2f798e5ff601",
+      "bytes": 5076
+    },
+    {
+      "file": "controls.json",
+      "sha256": "4d720607e62772e9c829959c515e09fbfefcdbd8b737ba65c2bdf42b8dc1ffc1",
+      "bytes": 45148
+    },
+    {
+      "file": "transfer.diff",
+      "sha256": "fa9becad1c891fe9e20b2cb3b61f5abff369f4d8f143f7c70980382596984d9e",
+      "bytes": 2668
+    },
+    {
+      "file": "cut.diff",
+      "sha256": "ad629ad2e05d59b0d1eebaaeb49ce3e8ce4734ba2520245a524b8e667d556d72",
+      "bytes": 2802
+    },
+    {
+      "file": "complete.diff",
+      "sha256": "5a98da594685f5e4ebe2dad5a8fc61589a7ae3cebf1ae60b75024cd6ab3e0d31",
+      "bytes": 6314
+    },
+    {
+      "file": "phase-hashes.json",
+      "sha256": "09c2c6dd41d0c91e219903b4a981bb7614fd292e33789188e0e77d67cf477406",
+      "bytes": 4109
+    },
+    {
+      "file": "phase-inventory.json",
+      "sha256": "4e19a1dd25f6742e07811abe29187ef189eb94c36758f67585ffc3b37872ce7e",
+      "bytes": 1329665
+    },
+    {
+      "file": "static-check.json",
+      "sha256": "9f52b5b58b65c642e2735d43a0800393f23e43f8e5ff4d3b1b853f3afd1ac546",
+      "bytes": 21046
+    },
+    {
+      "file": "read-scope.json",
+      "sha256": "7c04bdb4c7afc6056755501e62e4c86782d065f4e0917d3ab6fe841723a5de45",
+      "bytes": 31800
+    },
+    {
+      "file": "readset-current-check.json",
+      "sha256": "de5f8023501dc1716a77a9ecf3980b631691347b03944fcd142a818fa87b7e30",
+      "bytes": 127
+    },
+    {
+      "file": "recovered-product-previews-ledger.md",
+      "sha256": "7b0b410f1ba57327239a96160bb8fa1f372a0cc910d8533dda8a959a68448a80",
+      "bytes": 4268
+    },
+    {
+      "file": "old-evidence.json",
+      "sha256": "2e20468ba54c6f90237f9b6d05c3f4e2a9b5ef370f87b3213b2424d4c1c9e3ae",
+      "bytes": 1034
+    },
+    {
+      "file": "catalog-consumed-structure.json",
+      "sha256": "24caea4fd960924c2495ba1a5403e646d491346fcc1a99fe87fca85041b40f0a",
+      "bytes": 167612
+    },
+    {
+      "file": "main-commands.json",
+      "sha256": "7bd0a885bbfb666ad0960146040c7ac73ba4a7b0983e03815197dc304478e94c",
+      "bytes": 1364
+    },
+    {
+      "file": "inventory.cjs",
+      "sha256": "f160a5aac2c235da207166e3ec1555207ba8c4b1049ef470e5703402a267af4b",
+      "bytes": 3342
+    },
+    {
+      "file": "prepare-proposal.py",
+      "sha256": "5aa3f2ccc7cc12d4bc2d436d9d6fd271c6d220d3047c1d439e9d82f5a6126601",
+      "bytes": 6639
+    },
+    {
+      "file": "static-check.cjs",
+      "sha256": "3dd7c36551fd1167bf8b218af4529a1dc991fa2c15fd4bc2f7d1ec4affc4ca53",
+      "bytes": 5590
+    },
+    {
+      "file": "write-ledger.py",
+      "sha256": "2504bd256fd84d459f241245ff02036cde5a96a921c1257f352efbe6e1bc7a1b",
+      "bytes": 15347
+    },
+    {
+      "file": "freeze-evidence.py",
+      "sha256": "ac1945694889e760aca30d0f90f04f9fe858f7d44a496e9f4f906fd12e0e8d63",
+      "bytes": 7686
+    }
+  ]
+}

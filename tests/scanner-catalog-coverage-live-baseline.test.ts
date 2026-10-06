@@ -96,13 +96,10 @@ test("baseline is deterministic, supported-active-only, and reconciles barcode r
   assert.equal(first.reconciliation.barcode_linked_products, 1)
   assert.equal(first.reconciliation.barcode_rows, 2)
   assert.equal(first.products[0]?.readiness.scan_candidate, true)
-})
 
-test("baseline sanitizes facts and open submissions without user data", () => {
-  const baseline = buildBaseline(input)
-  const serialized = JSON.stringify(baseline)
+  const serialized = JSON.stringify(first)
   assert.doesNotMatch(serialized, /must-not-export|user_id|researched_payload/)
-  assert.deepEqual(baseline.open_submission_identity_candidates.resolved_identity_candidates, [
+  assert.deepEqual(first.open_submission_identity_candidates.resolved_identity_candidates, [
     {
       submission_id: "submission-1",
       status: "researching",
@@ -114,7 +111,7 @@ test("baseline sanitizes facts and open submissions without user data", () => {
       canonical_gtin14s: ["04006381333931", "04066447238952"],
     },
   ])
-  assert.deepEqual(baseline.products[0]?.category_primary_facts, {
+  assert.deepEqual(first.products[0]?.category_primary_facts, {
     product_shampoo_specs: [{ shampoo_bucket: "normal" }],
   })
 })

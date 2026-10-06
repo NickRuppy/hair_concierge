@@ -1,0 +1,81 @@
+commit 1cc03a97b73627c80d61b63493295518292fa9ed
+Author:     NickRuppy <149665130+NickRuppy@users.noreply.github.com>
+AuthorDate: Fri Sep 11 14:48:05 2026 +0200
+Commit:     GitHub <noreply@github.com>
+CommitDate: Fri Sep 11 14:48:05 2026 +0200
+
+    Freemium scanner-first PR3: gated Beispiel pages (GatedPreview + presentation-only compositions) (#527)
+    
+    ## Freemium scanner-first PR3: gated Beispiel pages — GatedPreview frame
+    + presentation-only compositions
+    
+    **Stacked on #526** (base: `codex/freemium-scanner-first-pr2`). Part of
+    the six-PR freemium restructure (plan:
+    `plans/freemium-scanner-first/plan.md`, tasks T11–T12). Everything
+    remains dark behind `FREEMIUM_SCANNER_FIRST_ENABLED`.
+    
+    ### What this delivers
+    
+    - **T11 — `GatedPreview`** (`src/components/gated-preview/`): the
+    framed-example chrome for locked pages — „Beispiel" badge, in-frame
+    scroll, sticky benefit line + one CTA opening the PremiumSheet with the
+    page's `{feature, source}` context. Purely presentational; 3 new files,
+    no existing file touched.
+    - **T12 — Beispiel compositions for `/routine`, `/anwendung`, `/chat`**:
+    free users see framed example pages rendered through the REAL production
+    components over static, catalog-true fixtures (complete profile
+    archetype, populated wash days, short capability-true chat transcript —
+    no scan-aware claims). All live behavior suppressed: no mount-sync POST,
+    no chat fetches, inert interactions, zero network mutations (asserted in
+    a dedicated test lane). Premium and flag-off render today's pages
+    byte-identically via server-side tier branching on the
+    email/field-test-aware paid-access composite (fail-closed to premium),
+    run in parallel with each page's own resolver.
+    
+    ### Review trail
+    
+    SDD loop per task (independent reviews, fix rounds, scoped re-reviews —
+    all clean). Pre-boundary fix wave: real premium `/chat` route evidence
+    via a real-route Playwright spec, parallelized tier lookup, bundle-bloat
+    investigation (null result, documented), copy corrections. Pre-push
+    Codex whole-branch review (gpt-6-astra, high) found 3 issues, all fixed
+    and re-verified: thrown billing-read exceptions now normalize to the
+    premium fallback instead of crashing the pages; `/chat` flag-on streams
+    the tier branch behind Suspense so premium pays no serial mount latency
+    (flag-off path is literally the pre-branch code); time-dependent
+    greeting assertion made deterministic.
+    
+    ### Verification
+    
+    - `npm run ci:verify` ✅; full `npm run test:node` 6045/6046 (the 1
+    failure = pre-existing `billing-plan-change-route` TAP issue on `main`)
+    - Playwright live against a dev server: flag-on 15/15 passed (incl.
+    premium `/chat` through the Suspense boundary); flag-off real-route
+    cases covered by source-level base-branch identity (verified in review)
+    + node render tests
+    - No migrations, no new deps
+    
+    ### Open items (ledgered for later tasks / final review)
+    
+    - `/chat/[conversationId]` deliberately ungated → T17 (lapsed-user
+    story) — free users have no conversations and `POST /api/chat` stays
+    premium-denied
+    - Sentry capture fires on gated-render **error** paths via the discarded
+    parallel resolver read (rare, error-only) — deferred minor
+    - German fixture/frame copy pending Nick's copy pass
+    
+    🤖 Generated with [Claude Code](https://claude.com/claude-code)
+    
+    ---------
+    
+    Co-authored-by: Claude Fable 5 <noreply@anthropic.com>
+
+ .../gated-preview/gated-anwendung-example.tsx      |  36 +++
+ .../gated-preview/gated-chat-example.tsx           |  58 ++++
+ src/components/gated-preview/gated-preview.tsx     | 106 +++++++
+ .../gated-preview/gated-routine-example.tsx        |  38 +++
+ src/components/gated-preview/inert-example.tsx     |  62 ++++
+ tests/gated-example-pages.test.tsx                 | 327 +++++++++++++++++++++
+ tests/gated-pages-zero-mutation.test.tsx           | 282 ++++++++++++++++++
+ tests/gated-preview-component.test.tsx             | 203 +++++++++++++
+ 8 files changed, 1112 insertions(+)

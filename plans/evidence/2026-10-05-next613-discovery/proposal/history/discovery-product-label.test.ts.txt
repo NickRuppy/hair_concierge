@@ -1,0 +1,2 @@
+2a1f3add00dcf5de71be2ba73f0aeaead28ad8c3 2026-09-23 feat(beratung): invite management in admin + optional invite email (#606)
+928cc334e868fcb4f94e98e3e46988293d138d0c 2026-09-23 fix(beratung): discovery toolkit polish batch 1 (backlog 1–7) (#604)

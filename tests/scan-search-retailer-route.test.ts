@@ -44,14 +44,6 @@ test("scan search-retailer: unauthenticated is rejected", async () => {
   assert.equal(response.status, 401)
 })
 
-test("scan search-retailer: rate limited returns 429", async () => {
-  const handler = createScanRetailerSearchRouteHandler(
-    baseDeps({ checkRateLimit: async () => ({ allowed: false }) }),
-  )
-  const response = await handler(request("?q=ogx"))
-  assert.equal(response.status, 429)
-})
-
 test("scan search-retailer: consumes only its own retailer bucket, never the shared scan bucket", async () => {
   const checked: RateLimitConfig[] = []
   const handler = createScanRetailerSearchRouteHandler(
@@ -316,27 +308,6 @@ test("partitionDmSearchRows: an 11-digit gtin is padded to 12 and then maps", as
   assert.equal(result.retailer.length, 0)
 })
 
-test("partitionDmSearchRows: a leading-zero-lost 11-digit gtin maps after padding", async () => {
-  const client = stubClient({
-    identifierRows: [{ product_id: "p2", canonical_gtin14: "00071164341469" }],
-    productRows: [
-      {
-        id: "p2",
-        name: "Repair Shampoo",
-        brand: "HASK",
-        category_key: "shampoo",
-        image_url: null,
-        sort_order: 1,
-      },
-    ],
-  })
-  const result = await partitionDmSearchRows(client, [
-    dmRow({ gtin: "71164341469", title: "Shampoo repair + argan oil, 473 ml" }),
-  ])
-  assert.equal(result.catalog.length, 1)
-  assert.equal(result.catalog[0].id, "p2")
-})
-
 test("partitionDmSearchRows: a bad-checksum gtin is dropped", async () => {
   const client = stubClient()
   const result = await partitionDmSearchRows(client, [dmRow({ gtin: "12345678901" })])
@@ -349,16 +320,6 @@ test("partitionDmSearchRows: a missing gtin is dropped", async () => {
   delete (row as Record<string, string | undefined>).gtin
   const result = await partitionDmSearchRows(client, [row])
   assert.deepEqual(result, { catalog: [], retailer: [] })
-})
-
-test("partitionDmSearchRows: a duplicate canonical gtin keeps the first (best-ranked) row", async () => {
-  const client = stubClient()
-  const result = await partitionDmSearchRows(client, [
-    dmRow({ gtin: "3574661799438", title: "First Ranked Shampoo" }),
-    dmRow({ gtin: "3574661799438", title: "Second Ranked Shampoo" }),
-  ])
-  assert.equal(result.retailer.length, 1)
-  assert.equal(result.retailer[0].name, "First Ranked Shampoo")
 })
 
 test("partitionDmSearchRows: dedupe is keyed on the canonical form, not the raw string", async () => {
@@ -409,37 +370,6 @@ test("partitionDmSearchRows: a non-zero-indicator GTIN-14 has no EAN form and is
     dmRow({ gtin: "10000000000007", title: "Shampoo Sparpack, 3x385 ml" }),
   ])
   assert.deepEqual(result, { catalog: [], retailer: [] })
-})
-
-test("partitionDmSearchRows: an active mapped product goes to catalog via toScanSearchResult", async () => {
-  const client = stubClient({
-    identifierRows: [{ product_id: "p-active", canonical_gtin14: "03574661818450" }],
-    productRows: [
-      {
-        id: "p-active",
-        name: "Bond Protein Repair Shampoo",
-        brand: "OGX",
-        category_key: "shampoo",
-        image_url: null,
-        sort_order: 3,
-      },
-    ],
-  })
-  const result = await partitionDmSearchRows(client, [
-    dmRow({ gtin: "3574661818450", title: "Shampoo Bond Protein Repair, 385 ml" }),
-  ])
-  assert.deepEqual(result.catalog, [
-    {
-      id: "p-active",
-      name: "Bond Protein Repair Shampoo",
-      brand: "OGX",
-      category: "shampoo",
-      categoryLabel: "Shampoo",
-      imageUrl: null,
-      productLine: null,
-    },
-  ])
-  assert.equal(result.retailer.length, 0)
 })
 
 test("partitionDmSearchRows: an inactive/discontinued mapped product presents as dm-only", async () => {
@@ -498,20 +428,6 @@ test("partitionDmSearchRows: a non-hair dm-only row with no category suggestion 
   assert.deepEqual(result, { catalog: [], retailer: [] })
 })
 
-test("partitionDmSearchRows: a hair-relevant dm-only row keeps a suggested categoryLabel", async () => {
-  const client = stubClient({ identifierRows: [] })
-  const result = await partitionDmSearchRows(client, [
-    dmRow({
-      gtin: "3574661800202",
-      title: "Conditioner Repair, 385 ml",
-      brand: "OGX",
-      category: "Conditioner > Haarpflege",
-    }),
-  ])
-  assert.equal(result.retailer.length, 1)
-  assert.equal(result.retailer[0].categoryLabel, "Conditioner")
-})
-
 test("partitionDmSearchRows: caps dm-only retailer rows at 8, preserving dm order", async () => {
   const gtins = [
     "9000000000001",
@@ -568,6 +484,23 @@ test("anti-leak: catalog and retailer rows carry exactly the contract's keys", a
       category: "Conditioner > Haarpflege",
     }),
   ])
+  assert.deepEqual(result.catalog, [
+    {
+      id: "p-active",
+      name: "Bond Protein Repair Shampoo",
+      brand: "OGX",
+      category: "shampoo",
+      categoryLabel: "Shampoo",
+      imageUrl: null,
+      productLine: null,
+    },
+  ])
+  assert.equal(
+    result.retailer.some((row) => row.gtin === "3574661818450"),
+    false,
+    "mapped catalog product must not also enter the retailer lane",
+  )
+  assert.equal(result.retailer[0].categoryLabel, "Conditioner")
   assert.equal(result.catalog.length, 1)
   assert.equal(result.retailer.length, 1)
   assert.deepEqual(Object.keys(result.catalog[0]).sort(), [

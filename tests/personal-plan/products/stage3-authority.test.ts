@@ -280,7 +280,7 @@ function input(
       resolution: "resolved",
       needTier: "basis",
       roles: [role],
-      target: state === "unsupported" ? null : TARGETS[category],
+      target: state === "unsupported" ? null : structuredClone(TARGETS[category]),
       frequency: null,
       reasons: [],
       executionState: "available",
@@ -426,6 +426,9 @@ for (const category of [
     assert.deepEqual(result.allowedActions, ["leave_uncovered"])
     assert.equal(result.recommendation, null)
     assert.equal(result.productFactFingerprint, null)
+    if (category === "bondbuilder") {
+      assert.equal(result.recommendationFactFingerprint, null)
+    }
   })
 }
 
@@ -1252,7 +1255,7 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
 
 function maskCareDirectionInput(fixture: (typeof MASK_CARE_DIRECTION_FIXTURES)[number]) {
   const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
-  // input() shares the TARGETS object by reference; never mutate it across fixtures.
+  // Keep this R12 fixture's explicit copy before overriding its target axes.
   maskInput.categoryDecision.target = structuredClone(maskInput.categoryDecision.target)
   if (maskInput.categoryDecision.target?.category !== "mask") throw new Error("expected target")
   if (maskInput.productFacts?.category !== "mask") throw new Error("expected Mask fixture")
@@ -1863,22 +1866,6 @@ test("Heat candidate selection leaves a non-UUID tie unresolved", () => {
   if (result.status !== "known") return
   assert.equal(result.recommendation, null)
   assert.deepEqual(result.allowedActions, ["leave_uncovered"])
-})
-
-test("bondbuilder without a suitable candidate remains unknown", () => {
-  const bondbuilderInput = input("bondbuilder", "known")
-  bondbuilderInput.capturedProductId = null
-  bondbuilderInput.subjectIdentity = null
-  bondbuilderInput.productFacts = null
-
-  const result = evaluateStage3Authority(bondbuilderInput)
-  assert.equal(result.status, "known")
-  if (result.status !== "known") return
-  assert.equal(result.verdict, "unknown")
-  assert.deepEqual(result.allowedActions, ["leave_uncovered"])
-  assert.equal(result.recommendation, null)
-  assert.equal(result.productFactFingerprint, null)
-  assert.equal(result.recommendationFactFingerprint, null)
 })
 
 test("Conditioner recommendation ranking prefers ideal authority before catalog order", () => {

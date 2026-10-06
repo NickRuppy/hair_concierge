@@ -1,0 +1,99 @@
+{
+  "mode": "transfer",
+  "from": "before",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "files": [
+    {
+      "file": "tests/scan-detection-state.test.ts",
+      "before": "78a451323848138c8e0b4ed5510905ba5681da131b8a5e2d3a20b8fa5397dba8",
+      "after": "25243105288867ebf0412c520f6a3c2708df886ec6db910595e5cf9531ca4519"
+    },
+    {
+      "file": "tests/scan-scanner-session.test.ts",
+      "before": "32f015813d7449fe768b06aa2ff018e80ed1d7fb98e3993bf8101cb39e5eb699",
+      "after": "94bc4f49335b080dbb5948569600b97ed7cb7f753f959071700d68966b635d11"
+    },
+    {
+      "file": "tests/scan-scanner-loop.test.ts",
+      "before": "86640b8ea10146d39ef37d83ac05cf68e44703c8e96e766b854d887508bdafac",
+      "after": "415b34c381a9c596ae6ab7c606fa422af9c7e07faa37db6590cdde4b739b6742"
+    },
+    {
+      "file": "tests/scan-flow-state.test.ts",
+      "before": "c0e9cc2bdcb1e3fdc53c337c28a7c8e7dbe9bdcc7157a8a57750b589c79904da",
+      "after": "f8f3a4cc56a21862147cf01cac568cc7fd1b7084feb60bff981ca001f0b0750a"
+    }
+  ],
+  "sourceGuards": [
+    {
+      "file": "src/lib/scan/scanner-session.ts",
+      "sha": "6c29563e103ef08423ec0b4591a2fc48c614af2591718ea31010cedb4fa295ed"
+    },
+    {
+      "file": "src/lib/scan/scanner-loop.ts",
+      "sha": "7fb27faa9e2edbd8bcddac03a589a90eb02f661b5441455acc38e1c0584b83a0"
+    },
+    {
+      "file": "src/lib/scan/scan-flow-state.ts",
+      "sha": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8"
+    },
+    {
+      "file": "src/lib/scan/guidance.ts",
+      "sha": "807963d407fb8aec5a657be687ee5ea4a0de16a600d145c63d9e7d11a87f8138"
+    },
+    {
+      "file": "src/lib/scan/verdict-access.ts",
+      "sha": "7807e27e8048b6fb8ed8cf7d7e111025ee69692e8d2171ed3496ff9659519ab2"
+    },
+    {
+      "file": "src/lib/scan/triggers/trigger-rules.ts",
+      "sha": "3fd155b1aec9fe6a7cd2d2f037e6d68c1f015a5f62e31e967f217794823014f2"
+    },
+    {
+      "file": "src/components/scan/use-scanner-loop.ts",
+      "sha": "0f9df6e695ea332c923be7af0c8467158214698beb1e31022b80dd3bb52a9a80"
+    },
+    {
+      "file": "src/components/scan/scanner.tsx",
+      "sha": "18966588763154b4565247ac2895299246cddfc280dd160a25f0ac2515b3aba5"
+    },
+    {
+      "file": "src/components/scan/scan-flow.tsx",
+      "sha": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+    },
+    {
+      "file": "src/app/scan/scan-page-client.tsx",
+      "sha": "8ce5c49efe2a9cf3454b4b52f8ddea2c0d8bfe2203ec2feaa01ff3f9b1e859d6"
+    },
+    {
+      "file": "src/app/labs/scan/scan-lab-client.tsx",
+      "sha": "9c9f8d5e8a6850a8ade4cebde8139aae5fab5fb41608f3fcbe4636db19011a49"
+    },
+    {
+      "file": "package.json",
+      "sha": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "package-lock.json",
+      "sha": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": ".nvmrc",
+      "sha": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    }
+  ]
+}

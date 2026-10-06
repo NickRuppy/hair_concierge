@@ -1,0 +1,69 @@
+{
+  "pinsSHA256": "bad0288a008653b5714cbf3c1c3c32340fded754eda20eb468300c828ca18895",
+  "checks": {
+    "editor-check.log": {
+      "sha256": "190ac665685a4bfd742152b59070d5081a30be1d9caea565155008f59d0ff1d4",
+      "exitCode": 0,
+      "result": {
+        "mode": "check",
+        "phase": "before",
+        "counts": {
+          "before": 87,
+          "transfer": 87,
+          "cut": 83
+        },
+        "unrelatedCallbacks": 82,
+        "unchangedRetainedCallbacks": 82,
+        "parsedPhaseFiles": 21,
+        "sourceControlsParsed": 4,
+        "readsetGuards": 52,
+        "dependencyFiles": 73,
+        "repositoryWrites": 0,
+        "childrenStarted": 0
+      },
+      "preload": {
+        "staticReadOnlyEnforced": true,
+        "attemptedWrites": 0,
+        "attemptedChildren": 0
+      }
+    },
+    "controls-check.log": {
+      "sha256": "f677b3e4b2a92062625e7fef61c91e45d9acd0a510d895164ae61f665b30016b",
+      "exitCode": 0,
+      "result": {
+        "mode": "check",
+        "phase": "before",
+        "controls": 4,
+        "allUniqueOwnersParsed": true,
+        "allControlsParsed": true,
+        "phaseOracles": "exact assertion startLine and text in transfer/cut",
+        "selectedTestCount": 1,
+        "repositoryWrites": 0,
+        "runtimeRuns": 0,
+        "childrenStarted": 0
+      },
+      "preload": {
+        "staticReadOnlyEnforced": true,
+        "attemptedWrites": 0,
+        "attemptedChildren": 0
+      }
+    }
+  },
+  "counts": {
+    "before": 87,
+    "transfer": 87,
+    "cut": 83
+  },
+  "unchangedCallbacks": 82,
+  "unchangedFiles": 6,
+  "unchangedPW19": true,
+  "heldF": 3,
+  "controls": 4,
+  "originalReadset": 52,
+  "selectedRuntimeClosureFiles": 3,
+  "dependencyFiles": 73,
+  "toolHashesSHA256": "e382e14c1204e0fb08766d068593de44526c4f3c9ac596af0456c22d9ef1bc20",
+  "repositoryWrites": 0,
+  "ownerImports": 0,
+  "runtimeRuns": 0
+}

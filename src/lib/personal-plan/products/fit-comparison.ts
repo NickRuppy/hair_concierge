@@ -190,18 +190,6 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
   }
 }
 
-export function findStage3SelectedComparisonCandidate<C extends PersonalPlanCategory>(
-  input: Stage3AuthorityInput<C>,
-  selectedProductId: string,
-): Stage3SelectedComparisonCandidate | null {
-  const authorityInput = input as unknown as Stage3AuthorityInput
-  const candidate =
-    boundedSelectedComparisonCandidateAssessments(authorityInput).find(
-      (item) => item.productId === selectedProductId,
-    ) ?? null
-  return candidate ? publicSelectedCandidate(candidate) : null
-}
-
 function currentComparisonProductEntries(
   input: Stage3AuthorityInput,
   evaluation: Stage3AuthorityEvaluation,

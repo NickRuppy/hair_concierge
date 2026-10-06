@@ -1,0 +1,2418 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "scope": "validator192 reassessment; main-only writes; no new calls/inputs/sites",
+  "counts": {
+    "before": 192,
+    "transfer": 192,
+    "cut": 186
+  },
+  "sourceAndDependencyGuards": {
+    "src/lib/agent-v2/validation/final-answer-validator.ts": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "src/lib/agent-v2/validation/user-facing-language.ts": "434c6ab50bb0bb27bc2b5a91f84c89c7c3199447693d722ef15caa57e581608c",
+    "src/lib/agent-v2/contracts.ts": "4fe98f5eeaf5ad7487ff3b44359d66035d63ecbee564b3746a6aad4e1f4f7cd2",
+    "src/lib/agent-v2/evidence-normalization.ts": "d9b2ef26725d0839a12df98677f43b82417754691b5ba10393cb632b8ac75b50",
+    "src/lib/agent-v2/named-product-context.ts": "d42ff75aa10e1d3142bc9f92f066473c05dd8efdd1c12a0b5b975c1af2b9d08e",
+    "src/lib/agent-v2/product-lookup-policy.ts": "98f0032ba28a5634d8670f26de3b723f4d8ec83c69c6c61481da4a7efbe10dd0",
+    "src/lib/agent-v2/runtime/responses-agent.ts": "09a317d720f8bb290cf6d28c0f736e9b465d9ee622b838794e877181e2fbef17",
+    "src/lib/agent-v2/production/chat-pipeline.ts": "d3bef7860ac7be43e0ae42ed13bf9a7cf3148008ef87f27109884c5830cfa6c5",
+    "src/app/api/chat/route.ts": "ff6a8bc34d1fa28efedd65542f076aa6f1099c43edd17c8874822be5581abaea",
+    "src/lib/agent-v2/guidance/compiler.ts": "3d78a8bf08c9eb546eb5756f6b8fa80d610c440ee20c4eb4cc8fa73281f7664d",
+    "src/lib/german-orthography/ascii-transliterations.ts": "1470f2a1ea81768e3d4a9ee856de93e5486adf30cf3a171c649697d9c3aa36b2",
+    "node_modules/zod/src/v4/classic/schemas.ts": "bcdda87d184ab189c74993bfa300af4604ecbb049626420272233a749341ce48",
+    "node_modules/zod/src/v4/core/schemas.ts": "934bc0ff4312a3e86645ea5dccfdb59aa316345035e8394f72d938d98dd6728a",
+    "package.json": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    ".github/workflows/ci.yml": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+  },
+  "files": [
+    {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-validator192-staging-nua_oi29/before/tests/agent-v2-final-answer-validator.spec.ts",
+          "sha256": "5338c6de99279080ee5a056fb7272f8208db402b42f36f5830e58474708f7ade",
+          "count": 192
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-validator192-staging-nua_oi29/transfer/tests/agent-v2-final-answer-validator.spec.ts",
+          "sha256": "3514e0527d67708deca45dda4fb4446d4bfa078d6ab5174eae6ff75967ca2b90",
+          "count": 192
+        },
+        "cut": {
+          "path": "/tmp/test-audit-validator192-staging-nua_oi29/cut/tests/agent-v2-final-answer-validator.spec.ts",
+          "sha256": "5007085be82ed0c83545dc8d3593db9569dce529cb7ca778a65e9be19b8aa455",
+          "count": 186
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "validator diet softens hidden product interpretation metadata when answer is otherwise safe",
+            "bodySha256": "cfab7af9e49f2b1404f30998fe8450b32a51606636833e421cdd54af7fe4f5a8"
+          },
+          {
+            "title": "validator diet keeps low-confidence routine changes blocking",
+            "bodySha256": "20ca6db9e4a4e329728fedd9364cd04b1993abe0c7220830284e950df09c04a3"
+          },
+          {
+            "title": "validator accepts grounded text-only product assessment without visible recommendations",
+            "bodySha256": "856481959190ce1edc1d4508d68a495ee89dfe07f352fe3062770f7169dc737d"
+          },
+          {
+            "title": "validator accepts found-exact lookup grounding for product assessment with matching product facts",
+            "bodySha256": "7e7f6ff187bd42564fcd123ae17fa65d0c4dea0529e76e094d738949dea61951"
+          },
+          {
+            "title": "validator blocks product assessment from found-exact identity without product facts",
+            "bodySha256": "64c349c64985e277b8abc88f2c76fe27cda1abaa0b3a841030ffefc2ce079222"
+          },
+          {
+            "title": "validator blocks product assessment from identity-only projection without product facts",
+            "bodySha256": "504df7ed430fb8967a06caad2e6ba21815e6a2d7fc32dd76950f255e9d1f81a7"
+          },
+          {
+            "title": "validator accepts routine usage assessment from trusted routine product context without product facts",
+            "bodySha256": "c54dc45472b3d1f1af3e6c7ee07d8318d42fea56e52f6ff0afc57d34fae4d5de"
+          },
+          {
+            "title": "validator still requires product guidance for non-routine routine usage assessments",
+            "bodySha256": "42bf1da14ab04fe038716dc98ae6c81e16ce1165f0c95e035d447da8169833e0"
+          },
+          {
+            "title": "validator blocks product assessment that omits the resolved product name",
+            "bodySha256": "08ec563ea0f1ac963fdbccdad3d9b8fd33abeb624123ba84de7f43d2f86b3522"
+          },
+          {
+            "title": "validator blocks mixed product assessment prose for an unresolved second product",
+            "bodySha256": "3b7792e89ad54e9cb7b10981e4e9c315eb17b55af6036facc9928d963e23b9ad"
+          },
+          {
+            "title": "validator blocks product assessment for unresolved lookup contexts",
+            "bodySha256": "4f7a51fa0aa765ea8ede62156e64568516ff8c0df39fe4bf59bf10505e6c2886"
+          },
+          {
+            "title": "validator blocks pronoun product advice while active product review is pending",
+            "bodySha256": "b8ca6aa4c83999ddbd6b7f7cdfbc92ee6b491634b3de040de808dd54ed88cb43"
+          },
+          {
+            "title": "validator rejects recommendation-card payload fields for product assessment",
+            "bodySha256": "43cca84a6785b2c5fbe8de3e4bab975df3921486699f62b963696eb6f8fdbda2"
+          },
+          {
+            "title": "AgentV2 validator fills clear product offer without pending follow-up action",
+            "bodySha256": "0107c302f39419ef20c2a60a32d8895c23f2b67c43c4ed5e135f5e0cf24eb6f9"
+          },
+          {
+            "title": "validator does not require lookup from deterministic named-product context alone",
+            "bodySha256": "a83393b51ef0255ceb3db097ab4c0a6a25160ccea46ad3fef63932d8edb467d6"
+          },
+          {
+            "title": "validator requires lookup when deterministic context identifies an evaluation even if model misses product candidate",
+            "bodySha256": "9736960a51d2e524490015ff6b3059dd11d445ca16f5682c12da82a5ed9061a0"
+          },
+          {
+            "title": "validator requires lookup when visible answer claims about deterministic own-product context",
+            "bodySha256": "07c7511107ef3fe41708ebbe87249b701da039207965ecc7c50c0ea7c1e9d80b"
+          },
+          {
+            "title": "validator requires lookup from model-owned product candidate metadata without named-product context",
+            "bodySha256": "52a0d088d6c43680173f8c8a7a6930883a1742522f50a7c1b0bd5ce9fd533362"
+          },
+          {
+            "title": "validator does not require duplicate lookup when model-owned product candidate already called lookup",
+            "bodySha256": "a08ffbbf6646ad3f357a2a4d48e639c561628ce438f39d0c57201b15ccf0efb0"
+          },
+          {
+            "title": "validator matches lookup to mentioned product identity even when answer target category differs",
+            "bodySha256": "3486db95224667a81df434b4dd76d896f2209b7c12b8d7e1ffe8b145410eb3e3"
+          },
+          {
+            "title": "validator does not treat a different product lookup as satisfying model-owned candidate lookup",
+            "bodySha256": "565b76d79a59775e5202014dbe732f8b3772c5d0e7883d4285a585856060269b"
+          },
+          {
+            "title": "validator does not use lookup evidence quote alone as candidate identity",
+            "bodySha256": "b5d28b840f26dcef770c3818b087e1ded01b4acb4c70cbd1d888df380809beeb"
+          },
+          {
+            "title": "validator does not use generic product name fragment alone when lookup brand differs",
+            "bodySha256": "21ff4a421b12f734614f934c886680e98625f7d762a8f41cf549ffb5fb95f852"
+          },
+          {
+            "title": "validator does not use product-name-only evidence when lookup brand differs",
+            "bodySha256": "614fa387057bf1122ecb8da2acd932dda8e75a7d2511f1fb8bfded63be83ddf2"
+          },
+          {
+            "title": "validator requires lookup when constraint-blocked answer makes named-product claim",
+            "bodySha256": "00a7e1888490092813f9b0bcd90587e9a7738b2ef6c92081fa12bec0e05d4381"
+          },
+          {
+            "title": "validator does not use stale recent evidence text to satisfy a different product lookup",
+            "bodySha256": "ffb509be71ec42d45057e2f2f770d32aabda04086f6f2d4b41e06965a9a036e3"
+          },
+          {
+            "title": "validator requires lookup before clarification for exact own-product suitability turns",
+            "bodySha256": "e299e1f55d1b2dfdfcf481e0da7e15c76ec770acfa479261eecf23a5c9944dba"
+          },
+          {
+            "title": "validator does not require lookup for background current-use product mentions",
+            "bodySha256": "e5b8546023ee5cc1a33d0ef443df39a825af35ea4aa4c1e09e0eeefd4c50baf7"
+          },
+          {
+            "title": "validator does not require lookup for background product clarification answers",
+            "bodySha256": "d5562e62ce47642bc0cda0f7f5c212f9e3506ae1c044579f7463e3fd8ebc5528"
+          },
+          {
+            "title": "validator does not require unavailable product lookup when intake is disabled",
+            "bodySha256": "72f26041ba39a0f0975cb37c6707be00f920b9dced0484ae7267d908846777cd"
+          },
+          {
+            "title": "validator does not require lookup for broad product recommendations without a concrete product",
+            "bodySha256": "1e6b2b430a1eb539f965533a146d9e2fd69ffba4f64f072138646832f24d710c"
+          },
+          {
+            "title": "`validator blocks product recommendations after ${status} product lookup`",
+            "bodySha256": "2796ba52cbdfe9c51f6e3d6ec65de3fc0e33e514d91654d1d3969b1464b55019"
+          },
+          {
+            "title": "validator allows product recommendations after exact product lookup",
+            "bodySha256": "debf55741278a6c6de761d069b35df35bd2de3079b5944440f8d0944ad97fe77"
+          },
+          {
+            "title": "validator blocks unverified-product caveat for trusted selected product",
+            "bodySha256": "891d664a1d5597ab7b7e4c474e8b87ce9276210ecc16fcc2354b4ed7b281d7a6"
+          },
+          {
+            "title": "validator allows identity-only acknowledgement for trusted selected product without product tool",
+            "bodySha256": "6b8e0ec98da56222897f609a6795d13f27833d1013e1236d95add23f3c0036a0"
+          },
+          {
+            "title": "validator requires product tool for trusted selected product suitability claims",
+            "bodySha256": "3a67eda7d15b3684463a2610b19881de343a798430d5ebdf8033b1565169cff5"
+          },
+          {
+            "title": "validator allows claim-level hedge for trusted selected product",
+            "bodySha256": "a6584e1a3176c29328365925506c25e25c5508393a33dde9d653e1c6c77470f2"
+          },
+          {
+            "title": "validator allows claims for exact lookup products when another lookup is unresolved",
+            "bodySha256": "e0032b890105dbabbe37a5e3f8c842a7574b6b5cce81b76a4c2f4792b3a18788"
+          },
+          {
+            "title": "validator does not let an unresolved mentioned-product lookup block unrelated grounded recommendations",
+            "bodySha256": "db7dd610324ef7c8836a85d671bd5baad01c3f97e8d7709919bf657e5962355e"
+          },
+          {
+            "title": "validator does not let unresolved baseline lookup block grounded alternatives",
+            "bodySha256": "7a438f754bb0f414a13447e25601e48a3ca5e2088389564b0d9bbbe4db127a82"
+          },
+          {
+            "title": "validator does not require duplicate lookup for grounded alternatives to active product",
+            "bodySha256": "6add77432515ba15646cf8abbed32a8911a020e528f41c8775166561cfd08cd2"
+          },
+          {
+            "title": "validator diet softens unknown hard rule metadata on grounded product alternatives",
+            "bodySha256": "00a1ee2651d954fe00f843bff2c5e2ab1d5c8a64988442b5f2cf6f7d20cbf89b"
+          },
+          {
+            "title": "validator blocks named product detail prose after unresolved product lookup",
+            "bodySha256": "c6a873898c42e32d310c7062f8fff93d21dfa97a322632a7e4457c6eafd79c91"
+          },
+          {
+            "title": "validator blocks exact named-product property claims after unresolved lookup despite general-advice classification",
+            "bodySha256": "18efa4a4ce2a3d4271c835304c64fd6db3433d84535274f88b57be72d5dab0e6"
+          },
+          {
+            "title": "validator blocks pronoun product suitability claims after unresolved lookup",
+            "bodySha256": "0e0022af176288502538e2fd3e517c35478831bc128be66fa99a6f2423de679e"
+          },
+          {
+            "title": "validator blocks pronoun product claims after unresolved lookup with structured input identity",
+            "bodySha256": "3991437f0fec71914cf1663ba9141b4696e2843b63bd10a8302dec9d9acb8027"
+          },
+          {
+            "title": "validator blocks category-term product property claims after unresolved lookup",
+            "bodySha256": "5bc5b16b6bf8955061b04ceab153e1d1570019759ea3d36366490c8cf98b419d"
+          },
+          {
+            "title": "validator blocks named-product use claims after unresolved lookup",
+            "bodySha256": "35492da817eeca4f483bc14b6ad1697080f6147086b529efbe726d154a0c3b7e"
+          },
+          {
+            "title": "validator blocks product-phrase use claims after unresolved lookup",
+            "bodySha256": "ab766e2e559428ca1e350dd212798fffa36bc3cef1d12174e42785c72424f795"
+          },
+          {
+            "title": "validator blocks pronoun keep claims after unresolved lookup",
+            "bodySha256": "42d661a4ea308f480a11c6a6abd25621b5f5ac001e8933c78b8c839f42763651"
+          },
+          {
+            "title": "validator blocks category-term routine keep claims after unresolved lookup",
+            "bodySha256": "dbfc228605a50b3f837916e0edf352e7dc9361f0714344446f00edbe4fe5e5b4"
+          },
+          {
+            "title": "validator allows generic category context after unresolved lookup",
+            "bodySha256": "c052f55756fde9b05d288b3f53cc6021a5b9c9ab256bec0e89ee13a1c2c549ce"
+          },
+          {
+            "title": "validator blocks personalized category suitability after unresolved intake-card lookup",
+            "bodySha256": "a9e94483c7d1c949385171f4d0b733d517b4f7b434f3332007f94afe3a9f4865"
+          },
+          {
+            "title": "validator allows cautious product deferrals after unresolved lookup",
+            "bodySha256": "f023dba10211e38c16574515de160a94ff8919b739ba6347f70943c371afed5d"
+          },
+          {
+            "title": "`validator covers unresolved category-term use claims for ${testCase.category}`",
+            "bodySha256": "c0f46f85ccbc6cb2c865ba0ba259e95de759dd87eece23742541d276518053ce"
+          },
+          {
+            "title": "validator allows constraint-blocked deferral after unresolved product lookup",
+            "bodySha256": "5843cabad1b6b7574e102fd73817a6d3a1c12873e949c68f1d8aba6ff874964c"
+          },
+          {
+            "title": "AgentV2 validator blocks visible prose offers without structured pending follow-up action",
+            "bodySha256": "ab57c8828859f56a60f3ba70218dd70c81fbdd465c186da89ae695968d3f8208"
+          },
+          {
+            "title": "AgentV2 validator checks visible prose offers even when next_step_offer_de is non-confirmable",
+            "bodySha256": "39c922a11a74112530efffe5987ef33aac63c2919355273d6a72d3600997184c"
+          },
+          {
+            "title": "validator blocks social answers that claim a specific product candidate",
+            "bodySha256": "f21f9959ac7fac68c3d451860f699099f39cf4632f03670544c8af7194c79984"
+          },
+          {
+            "title": "AgentV2 validator does not treat plain Ich-kann answer openers as follow-up offers",
+            "bodySha256": "c1364f69c9da025a01580a57f685c649c7c8ea6bfb53efebbfd77abee5e92965"
+          },
+          {
+            "title": "AgentV2 validator blocks visible prose offers with first-person action verbs",
+            "bodySha256": "a1702d531c60bbdc199a4e744d75fdb75d734e997a7067fe240daed6d59a9eb2"
+          },
+          {
+            "title": "AgentV2 validator does not treat direct recommendations as follow-up offers",
+            "bodySha256": "ae32b16f65b374e872dba519c27c70870dd751f2f3e8171a25f6e0efb39eceba"
+          },
+          {
+            "title": "AgentV2 validator allows informational next step without pending follow-up action",
+            "bodySha256": "9a35cc28f49d2c36d59b4873aa6034aecf62a45b7d3fb74d64378cd03c3aef84"
+          },
+          {
+            "title": "AgentV2 validator strips hidden pending action behind informational next step",
+            "bodySha256": "abb28b8914a4033dc68443e490a6f57fa38edd864f5a957bc144e8f2d64aea96"
+          },
+          {
+            "title": "AgentV2 validator strips hidden pending follow-up actions without visible offer",
+            "bodySha256": "e01a49bb0c056a7c3fc3265e686b961ff9d35fc4d0bedd7880742732758a4ddf"
+          },
+          {
+            "title": "AgentV2 validator keeps hidden pending action blocking when mixed with product truth failures",
+            "bodySha256": "2b05c1f61a7670269c1a536e3a6fce5ac1dce20b14ce182a7bcc552eba838921"
+          },
+          {
+            "title": "AgentV2 validator blocks next-step offers that are not rendered in the visible answer",
+            "bodySha256": "1733612d3aae59fa0230b36f3f17c6c2793442216e8bdee404de406aa25a543b"
+          },
+          {
+            "title": "AgentV2 validator blocks visible product offers stored as advisor follow-up actions",
+            "bodySha256": "fd0d5a686da23500e7f40d8881fee1c0fde4db6d5748a7f0dd7725053811dec5"
+          },
+          {
+            "title": "AgentV2 validator accepts visible product offers with matching pending product action",
+            "bodySha256": "40ce1f63bf9b1d9cfe39e302555433b2926a5d2410e3b3f74289ca0163085002"
+          },
+          {
+            "title": "AgentV2 validator blocks visible routine mutation offers stored as advisor follow-up actions",
+            "bodySha256": "7c9dbec00bec2fe9ec6b610eec430501c8cb9efcf5b5ca501030f3fd33cdf20e"
+          },
+          {
+            "title": "AgentV2 validator accepts product-worded routine mutation offers",
+            "bodySha256": "b72f2be79594d9fbcf75771f46f7aefd69680b6593b9c9be87dfd369a6cc1a38"
+          },
+          {
+            "title": "AgentV2 validator normalizes advice-style routine offers stored as routine mutations",
+            "bodySha256": "3beacf24a071388b090399da95fa22c24ef64a08735ba513eccdfae4ba58e7d0"
+          },
+          {
+            "title": "AgentV2 validator blocks routine mutation category drift from visible offers",
+            "bodySha256": "eadb7ad19d5d6ed95eb72579f8e8547dca37b8580fc5b8e34f7afe175ce13d6a"
+          },
+          {
+            "title": "AgentV2 validator does not count mirrored next-step offer as a second visible question",
+            "bodySha256": "047ad4c0e91281f43479a620c6b2bad62912f19303a6e9a44709465d5d335fe0"
+          },
+          {
+            "title": "AgentV2 validator schema blocks routine action fields on product follow-up actions",
+            "bodySha256": "428e16e74c34a5886bc494b2759e079c9973cbb785f26a7ad66c94431890aabc"
+          },
+          {
+            "title": "validator accepts social and domain-boundary answers when gate-consistent",
+            "bodySha256": "6c307c3e22ccfa43a02bb4e8fc02e50fc2ace7d58209c76fe9770dd11164d4ba"
+          },
+          {
+            "title": "validator blocks social and domain-boundary answers without an authorized gate",
+            "bodySha256": "5805894e3df9ca506d93231da87a5f7935597af687c20ed05003c6e742db52ba"
+          },
+          {
+            "title": "validator blocks social and domain-boundary side effects",
+            "bodySha256": "32341cefd612fdaff39ba57fb73bafa38fe6e85e0f45da3bcbce6053a8c8d2ba"
+          },
+          {
+            "title": "validator blocks domain-boundary code and gate mismatch",
+            "bodySha256": "b2e0a19772509b4a31ea7c2ccc4b1922fcba053d20e0de20fb144245d0b0a576"
+          },
+          {
+            "title": "validator requires mode-specific and category guidance for category product answers",
+            "bodySha256": "b5f387c208a2be4f4861622b8a7969f082ca407362e05cc229122295e8f64147"
+          },
+          {
+            "title": "validator requires product guidance for product-detail clarifications",
+            "bodySha256": "81c0a0da1ac1ae0cb4f04fdbc73ac482121f92d53a7385482e7f2f14aa35ab7c"
+          },
+          {
+            "title": "validator blocks repeated exact-name clarification for already named off-catalog products",
+            "bodySha256": "4fe5e1c72b1cd6e943a121f3b1a95d9183b4a8a8ea1b8ebffe5d980ca6d60815"
+          },
+          {
+            "title": "validator blocks substitute catalog recommendations for already named off-catalog product detail turns",
+            "bodySha256": "1193e90f59c5f3f56c84757fff1cc42d87ccf1bc4f16446fff6bdbab932d9bc6"
+          },
+          {
+            "title": "validator requires category guidance for category education answers",
+            "bodySha256": "8a39336abf3500497d4a3590613cf775c924e15f58c00fe0ffa1c1e92f877087"
+          },
+          {
+            "title": "validator blocks hallucinated product ids",
+            "bodySha256": "a080f9172eb9599ca937f9cb0cf86093511d0b98588b3292a5d5bb60eb83ce17"
+          },
+          {
+            "title": "validator blocks payload product ids that bypass tool grounding",
+            "bodySha256": "254a61dcdce9490a08176652777de3bad9998b9f71c4402f9049433361475814"
+          },
+          {
+            "title": "validator blocks memory leakage in user prose",
+            "bodySha256": "d14f1d67babbcdd5283f6b5aaf90e5cf5e7ea69d2d5e1f9a3e3b9c6d579653ec"
+          },
+          {
+            "title": "validator blocks raw internal routine labels in user-facing copy",
+            "bodySha256": "ff0a2a9c341d7bf8e0438a450b57446869ce8366c45830b7f8876db7def2d05d"
+          },
+          {
+            "title": "validator blocks raw internal labels in visible payload recommendation fields",
+            "bodySha256": "f532e623fdd7cfaae6ae3f9fce8f505696ca105c46f6d5bda88738fd7de90943"
+          },
+          {
+            "title": "validator catches raw internal labels in visible payload routine step reasons",
+            "bodySha256": "29df585ce03e92712bac5eb8dbfbacc0219e0196d00dea8e374c44e98ebc728f"
+          },
+          {
+            "title": "validator blocks internal product-ranking language in user-facing copy",
+            "bodySha256": "8d11339dbeb6e18b7400b76d4ae36ae9f682f526bee289666a8df43e0d979ccf"
+          },
+          {
+            "title": "validator blocks internal instruction phrasing in user-facing copy",
+            "bodySha256": "7bebcfc89d6bd67a7377851028bebc6f94500395f8aafd396782d59cc57c558d"
+          },
+          {
+            "title": "validator warns on catalog metadata phrasing in visible payload routine step actions",
+            "bodySha256": "68dd928ffba4eaa00710b87e369d56312f918703a2a622ec22aca4e21f519f80"
+          },
+          {
+            "title": "validator ignores hidden non-user-facing fields when checking visible payload language",
+            "bodySha256": "572d8a1d9ccec7752f99ec63d62a765ec1436805e8d9736f17d92cd44c4bd2ab"
+          },
+          {
+            "title": "validator blocks bare Ja opening for non-confirmation user message",
+            "bodySha256": "54a3f6a97b11790496b3af2b26c0326cd3b7029e5b09a58c229d5027be5431ae"
+          },
+          {
+            "title": "validator allows Ja opening after explicit confirmation",
+            "bodySha256": "169613d6c63e593010e49a725d4947707b544fea46e430abef9d756ed39a37c4"
+          },
+          {
+            "title": "validator warns on catalog classification phrasing without failing validation",
+            "bodySha256": "83d25cac2cb405cc279887220187d3457a7e6fa14972941ddf79b8f36ba4d1f0"
+          },
+          {
+            "title": "validator warns on representative ASCII German orthography tokens without failing validation",
+            "bodySha256": "0a08651cf5eff0c2a9a9cdc8d8ee3784b8202521a3ffbd0dbe96f970fdaf125d"
+          },
+          {
+            "title": "validator does not warn on ordinary ue letter pairs or standard German orthography",
+            "bodySha256": "9fcef57542103977bf1f3b8ffd1453c9fb0cca9bab62b093093db25cf5a0c626"
+          },
+          {
+            "title": "validator allows cosmetic treatment wording for frizz",
+            "bodySha256": "c8d1a0a1eb89b7067efd7ad3f5701c939004641facdb6a1b227777978ecf1490"
+          },
+          {
+            "title": "validator allows public styling tool wording",
+            "bodySha256": "9ec8845f820452421ddc640114af430838666993738a91b8d9eb9b53b188926b"
+          },
+          {
+            "title": "validator blocks raw product property dump bullets",
+            "bodySha256": "10ec9386d3c7918e9f8accef1617a86f64890ad9bc041e50a4a1d3e10d25ff10"
+          },
+          {
+            "title": "validator accepts natural product fit sentences",
+            "bodySha256": "8e9501c4fc46f8ae47cc2f7e807793eb6e50657b323e72b4726fb0a243ba1660"
+          },
+          {
+            "title": "validator requires product answers to surface available recommendation options",
+            "bodySha256": "ddfe29df4601aa017918d0e912400914f62e4e15bc93c1cb0338098ff702bb93"
+          },
+          {
+            "title": "validator blocks empty product recommendations when selected products are available",
+            "bodySha256": "b7e69aa9f9b11da4e02a31101b380c429c82251bf29dda390801a95f46dac195"
+          },
+          {
+            "title": "validator requires semantic select_products tool arguments for concrete product interpretations",
+            "bodySha256": "f97c47c6d0875c2e05b248df98171ddb0c12e95b08ef4127b6e876b3fd80a88f"
+          },
+          {
+            "title": "validator treats product selection as supporting grounding for routine mutations",
+            "bodySha256": "fb8f171f62d3798cd24de5dc565ad86797be880ae61e432357c1212a8bf5019a"
+          },
+          {
+            "title": "validator blocks non-diagnostic request interpretation evidence quotes",
+            "bodySha256": "d1171b093139554d4989740fcc4eec2c5ec95a76271ed393cdf047914f773d31"
+          },
+          {
+            "title": "validator returns repair metadata for ungrounded evidence quotes",
+            "bodySha256": "aa0c19ac60102a06f01ae938b1a193a85983cc0eca57f07854e705ebe64a02c0"
+          },
+          {
+            "title": "validator allows full short user messages as evidence quotes",
+            "bodySha256": "d91277a5e92649bad3e382c8d45a022c62980ea4e4f68bd4cbee61f4b5ffe3ea"
+          },
+          {
+            "title": "validator allows exact short concern terms as evidence quotes",
+            "bodySha256": "3e1e07f22a9dbeec0ad50423f974c3c14c7639f781ec233daa0a02dd0fbd898d"
+          },
+          {
+            "title": "validator allows decorative quote marks and punctuation differences in evidence quotes",
+            "bodySha256": "dfc97afd46751a22918eb22d94fa046019b2228016619248556880227e3fcc9d"
+          },
+          {
+            "title": "validator allows German umlaut transliterations in evidence quotes",
+            "bodySha256": "b97a6217e6b993d32886d04ba2a6c84fc1875d81c67b68ded04be487f375ecd7"
+          },
+          {
+            "title": "validator allows evidence quotes from active routine visible step labels",
+            "bodySha256": "f4ff748b995d5aa226cad41647d266b758834eade24c393ec566fab6e1b7696b"
+          },
+          {
+            "title": "validator warns instead of blocking semantically close evidence paraphrases",
+            "bodySha256": "d29799dcb0e761a537ade144a821a647f69d35f10c3fe553c3d7d534fc1eec4e"
+          },
+          {
+            "title": "validator rejects vague or invented evidence quotes",
+            "bodySha256": "0ca926ebb7627137d121088bb08c6b0b5cc149b5715badda12bdcad88021740c"
+          },
+          {
+            "title": "validator sanitizes harmless terminal evidence quote metadata during validation",
+            "bodySha256": "a125ef53e9c85d89797eb2f869d8d07d77ce013191fc90511dd471f418915b1b"
+          },
+          {
+            "title": "validator sanitizer refuses mixed or non-evidence failures",
+            "bodySha256": "d9beabc8e07c32259edc45b58bd62d3e7305cb68136dc4c6952298136b5f36fa"
+          },
+          {
+            "title": "validator requires user-facing prose to mention each recommended product",
+            "bodySha256": "9e874420e37b4cf859ab743dec9e4d4e4df0a0c43b15ea055822f9731f38b975"
+          },
+          {
+            "title": "validator blocks incomplete routine prose that omits visible steps",
+            "bodySha256": "2036495939e265ecebe3d7e6ff34e36f1f2c62451602912ea621ea7c89f1582b"
+          },
+          {
+            "title": "validator blocks incomplete product prose that omits a final recommendation",
+            "bodySha256": "36ff4d26e4b154b4c8dbe1de10f413e4f7bddc092f377adf3399f0dba0724737"
+          },
+          {
+            "title": "validator blocks final product rendering when product names are unavailable",
+            "bodySha256": "17e3b31b0feb006c7d68c07375158681c151023e774f93acee565547d6b3686d"
+          },
+          {
+            "title": "validator blocks incomplete routine product deep dive prose that omits the product",
+            "bodySha256": "39f397804f6b485f42d441e0e335ef3076c21788327db17360f721b18affb031"
+          },
+          {
+            "title": "validator requires blocked answers to render the actual blocker, not only a generic phrase",
+            "bodySha256": "dd102a939e3395466841594851e0e26eeeb18f52de111d4f45093b50eec4c854"
+          },
+          {
+            "title": "validator rejects unasked product cards in general advice",
+            "bodySha256": "c0a2fc8b0dae9781c58bfc8bb3c4f1cb32df186e69b9c2c7d0adb9e0097ce943"
+          },
+          {
+            "title": "validator rejects product recommendation mode when the user did not ask for products",
+            "bodySha256": "a882b96ec9b8a59c4934631c633eb18d310f2d17f48bfc83144db217890f4550"
+          },
+          {
+            "title": "validator requires selected products to be surfaced for concrete category-fit asks",
+            "bodySha256": "c970c3006bfb038a3590f34e9c4148bead92ccd726630318be59ede9c0d538e5"
+          },
+          {
+            "title": "validator allows general category comparison without product fulfillment",
+            "bodySha256": "cae613e0b5b2e80af0356887479f5dab6cc0dd46ac770514bbc44c3e5d51fcd5"
+          },
+          {
+            "title": "validator respects an explicit request for two product recommendations",
+            "bodySha256": "2255490e211258c1a95bdd3406ac1baa259a58991abd9ef7bde3d38c64424560"
+          },
+          {
+            "title": "validator accepts explicit one and two product recommendation counts",
+            "bodySha256": "fd79587654d83b70caf2c1729565f37d20d13a485ae5c53a797ef9bae3637bf5"
+          },
+          {
+            "title": "validator allows vague alternatives to return one grounded option",
+            "bodySha256": "1731ac139048b0098ace9815d2c4014e78d4edd1f3311222c4c345fc8ea08815"
+          },
+          {
+            "title": "validator allows vague alternatives to return more than three grounded options",
+            "bodySha256": "c300e235d7e7d41be4446b601828a7c34a0d3d57eea57775ee2b1a351626c167"
+          },
+          {
+            "title": "validator accepts one visible recommendation per multi-category product slot",
+            "bodySha256": "fe4f068b8a79a1234a3c6b07537e402ff450358005698cafdef9518a58384f4b"
+          },
+          {
+            "title": "validator still blocks single-category exact-count mismatches",
+            "bodySha256": "10e932220f0774d63988624469d222971825cbe481db678c1b3ba1ff970596f7"
+          },
+          {
+            "title": "validator does not relax single-category exact-count requests into invented slots",
+            "bodySha256": "2637081aa90ec6042f787ffc85fd7d866485a1c0945674fd89ffa1a84e11976e"
+          },
+          {
+            "title": "validator does not let model-authored evidence unlock invented slots",
+            "bodySha256": "d554daa08169d7143a501073f4199da11debd86cffb7c61a9859f729783f07d6"
+          },
+          {
+            "title": "validator blocks multi-slot answers that surface products outside selected projections",
+            "bodySha256": "eb56618e25c70882dc080dc42c922e77c46686234ec46ac5e2d5e8f8fb162575"
+          },
+          {
+            "title": "validator blocks multi-slot answers above the distinct category cap",
+            "bodySha256": "8a56a70f851808765127ebfee06b6630a2fe0e05192d737c30794a3a6921990e"
+          },
+          {
+            "title": "validator does not relax multi-slot answers that double-fill one slot",
+            "bodySha256": "1fd43baf9b77ad15fbbc3cc9d2bab8c13fe7aafc3df350e56f79b15ace97a61f"
+          },
+          {
+            "title": "validator does not relax multi-slot answers with duplicate recommendation rows",
+            "bodySha256": "6f753ab8b63f8bde683ef82582eff0559fdac3754c9aee6721316f1da569f883"
+          },
+          {
+            "title": "validator does not apply the multi-slot cap to non-A2 multi-category traces",
+            "bodySha256": "a9aa9a1712256f1666a20ea26aa3b6586bbafa7a4ea93961026401bf72a864ec"
+          },
+          {
+            "title": "validator does not relax exact counts for terminal-only multi-category slot shape",
+            "bodySha256": "a39f571dbba49f10c583b63753ba3e2f3d91ce287c08059a45a8543b6e5754a0"
+          },
+          {
+            "title": "validator accepts natural catalog-verification wording for blocked product lookup answers",
+            "bodySha256": "8931b6567d26b470caee8a3a6ba8853809e7be8dd04f0cdfcb7e6560c063a913"
+          },
+          {
+            "title": "validator ignores hidden product grounding for blocked not-found product deferrals",
+            "bodySha256": "8e7269ec22f2ee0eac64d83027c5a8e0dd65ff83683ade7c52fd81e62b83fcd9"
+          },
+          {
+            "title": "validator does not relax multi-slot answers using prior-turn selected products",
+            "bodySha256": "12ae19b58fcf9fe14c6578735aa957fc9e8b58b0deb634f50ca15bd01599f9ec"
+          },
+          {
+            "title": "validator does not relax multi-slot answers that omit a fillable slot",
+            "bodySha256": "cea95bdcd551fc6321d887089ba5cd9f9f1f2c36cacd439dda1a067b3b530ba2"
+          },
+          {
+            "title": "validator accepts partial success for multi-category product slots",
+            "bodySha256": "ca293230651abaf5e5675bc195c11eb899fab00c4b55afdb489950a95e7eb7f2"
+          },
+          {
+            "title": "validator does not relax partial success that hides an empty slot",
+            "bodySha256": "621364627a48b72a646c98eb3f251fa62bc5b51433f75ad1d1e1ea74501cd4a8"
+          },
+          {
+            "title": "validator does not relax partial success that names an empty slot without no-match copy",
+            "bodySha256": "6c02e6c79a0e75e597b5bad44e7cf37a44ee310d2548a107ab5933e2f0c28ac4"
+          },
+          {
+            "title": "validator does not relax missing-slot copy when safe language refers elsewhere",
+            "bodySha256": "ffc74f51f2b98c8da3ce620695da12ce1a7d3bdd56fe903a1cc5264056a3d510"
+          },
+          {
+            "title": "validator allows routine product asks as product recommendations with routine context",
+            "bodySha256": "cfc479fcc94d710ec536ea1912e08384b1a8a3afd8abe381a3a098733c4352dc"
+          },
+          {
+            "title": "validator bases option count on projections relevant to the recommended products",
+            "bodySha256": "aca7c3cf326cb9581fba197b35d2d13430995b5ce09a453ac6f1b8b58f48760b"
+          },
+          {
+            "title": "validator validates every answer mode payload",
+            "bodySha256": "611b8513dd4bea1252ebb67637dc8be9881dbe97ad992e7f00998e260d24ef78"
+          },
+          {
+            "title": "validator rejects malformed mode payloads",
+            "bodySha256": "1c13929d5e300c939f96b920128d5062a6c26543ee2ceabfa84804a57f77a16d"
+          },
+          {
+            "title": "validator coerces constraint-shaped safety payloads",
+            "bodySha256": "25b243753a4d1a98e0eba03697dfcd668d276f32c59643b6c1e4ce76237d246b"
+          },
+          {
+            "title": "validator explains mismatched payload fields for repair",
+            "bodySha256": "99468ec5cf7b3f59c429b85f0e21d2f4693948009bf450c582d2a56a17f4e95e"
+          },
+          {
+            "title": "validator blocks hallucinated routine step ids",
+            "bodySha256": "6d8b07e0aed3c20762f308d2170b5f30cf78db59a3db629da5ce0df73d0402b3"
+          },
+          {
+            "title": "validator blocks payload routine step ids that bypass tool grounding",
+            "bodySha256": "15f649263c9d5053d60303170354d79474c4d699c6d3cb939e04502d43e49f51"
+          },
+          {
+            "title": "validator blocks routine payload layer that disagrees with routine context",
+            "bodySha256": "466035d480d7c334faef70dca089534e8e01196362b59bd6dcfbe9a2b179c827"
+          },
+          {
+            "title": "validator requires routine tool call even when routine projections are present",
+            "bodySha256": "c6cdbaca2b14f84acb7fcdff4b36855a359fc9039b2314512b53efabdb27b520"
+          },
+          {
+            "title": "validator allows first category-specific routine mutation when current routine inventory exists",
+            "bodySha256": "08a7cf4361bd178431860beaf773a75575ff94319f6af532923f7aeba7c595d5"
+          },
+          {
+            "title": "validator allows guidance-only general advice inside active routine thread",
+            "bodySha256": "28828199108f3d94062a36d57190860e4992323a65220a2ffedbd5af4a7ad001"
+          },
+          {
+            "title": "validator keeps routine context active for routine follow-up questions",
+            "bodySha256": "328cfe1196e3dca623445e385ce9c3c69d07bf980637631009e1e99e233bad71"
+          },
+          {
+            "title": "validator requires routine tool for routine mutation inside active thread",
+            "bodySha256": "6f7c58abafc118c47bd9648cef9f94613ad7e08b29df5308a70c09473c44ebb0"
+          },
+          {
+            "title": "validator blocks routine mutation intent even when mislabeled as general advice",
+            "bodySha256": "14c301e8dda886cd408d8e64767d110688bf283696f00d3b09e3dba41d991ebb"
+          },
+          {
+            "title": "validator blocks pronoun-based routine mutation intent in active routine thread",
+            "bodySha256": "cadce978afd192d6944e0c69f127e07fa6b10d98c07f0c79c13b6561de9ffdfc"
+          },
+          {
+            "title": "validator blocks routine layer regression using routine thread current layer fallback",
+            "bodySha256": "a0651066ea14cffd8834bdba1dca9a5c753ee7b959e5ca7d3138206e3583762e"
+          },
+          {
+            "title": "validator requires routine tool for hand-rolled routine change advice",
+            "bodySha256": "5c9e172c7e09eef582ee354c6eab6eebdd927c6ca46595eea007f6d14ba99a16"
+          },
+          {
+            "title": "validator allows placement-only dry shampoo advice without routine tooling",
+            "bodySha256": "b15b6b0943b733013a09ff30bf49d936ae5df563cfca32e9981e364c63a12e6e"
+          },
+          {
+            "title": "validator allows placement-only oil and leave-in advice without routine tooling",
+            "bodySha256": "57128058ffdd3a126f9b3329de915d2cac13c532ccd467179898e6da157127c5"
+          },
+          {
+            "title": "validator allows concise summaries inside active routine threads without routine tool",
+            "bodySha256": "2e6c8afb78b134c782400200db882bd65f5f42573a78bbc8bd89e635eff6837f"
+          },
+          {
+            "title": "validator requires product tool and routine return path for routine product recommendations",
+            "bodySha256": "788ecf09a9debfcf1164d64eb7286f18f27b6dcaffaa8ae5af31e38b317319e9"
+          },
+          {
+            "title": "validator allows nullable next step offer for routine product recommendations with return path",
+            "bodySha256": "b0f50363a434805d8d925d8e3f203791a9e30ac76edbcb234a972d707af12a56"
+          },
+          {
+            "title": "validator blocks objective bad conversation closers",
+            "bodySha256": "ef6093432bcf27c48b1d50f9a8e213ac41d9ce8e99d2d5b30b98325bdf9e736d"
+          },
+          {
+            "title": "validator checks rendered clarification question close text",
+            "bodySha256": "6b41c0a021db0370ac603e94daf6c0330a8c8c77e20403aa252507954e30b453"
+          },
+          {
+            "title": "validator warns but does not block weak conversation closers",
+            "bodySha256": "69ec87de98b5a841ead587dd118ea446f07dc912953931828bc3e0104ec6f404"
+          },
+          {
+            "title": "validator warns on duplicated medium-length visible answer paragraphs",
+            "bodySha256": "bbc95b003bb791145e4a5dbd4b860cf37cb23e6c49394293be5b291386753f2b"
+          },
+          {
+            "title": "validator warns on adjacent long visible answer paragraphs with high overlap",
+            "bodySha256": "0f624071bfbdeab5fe906d311cde8cfc6ceb5cefc2764c492cb713a401f6c120"
+          },
+          {
+            "title": "validator ignores repeated short visible answer labels",
+            "bodySha256": "f3b61870be4bc46dfd894f7246d256737c333e9e9296b93d19d1c2e22582e8fa"
+          },
+          {
+            "title": "validator allows honest clean stop for unsupported INCI-list analysis",
+            "bodySha256": "08edb5995a2a1b1e6c192d97ba9bc71343e06420208e73ec87bf42b0430e4cfe"
+          },
+          {
+            "title": "validator blocks carried routine step ids when active routine thread has no visible steps",
+            "bodySha256": "25eb1ee9ceb6e522b63deb3a811dc5006621ff39ca1f2524dcb7a4d306c3bbe1"
+          },
+          {
+            "title": "validator accepts routine product recommendation step ids from active routine thread visible steps",
+            "bodySha256": "8e78c33361d8140f600603ede64aa90707ba296ce9643f559feaaafd816c6a92"
+          },
+          {
+            "title": "validator blocks routine product recommendation context categories that disagree with interpretation",
+            "bodySha256": "56d3faed58f608619d9515c0c98ff7515e29c16dfe354aef06e19050cf7af563"
+          },
+          {
+            "title": "validator blocks routine product recommendation category that disagrees with referenced routine step",
+            "bodySha256": "0f0d00cb58a3571e18d88dcca6d60d03939a6d9d6f0df15526d052f88837db0b"
+          },
+          {
+            "title": "validator blocks ungrounded routine product recommendation step ids",
+            "bodySha256": "faf7727255cc2cbe11eb9d00007f83307e8faf0edfa76e69e53124ad0fe50975"
+          },
+          {
+            "title": "validator blocks product-first answers in restricted safety mode",
+            "bodySha256": "b62932133fe85e73da8442bf3ea2310df6437c5b0a315d513365e2290db6c0f6"
+          },
+          {
+            "title": "validator blocks common German medical diagnosis and treatment claims",
+            "bodySha256": "4129f691d032224682408cf4142ec001978ec1b4e7a5fb6ff28d2aaa8fec3a76"
+          },
+          {
+            "title": "validator caps product recommendations at three when count policy is cap",
+            "bodySha256": "74845b3ca9cc632245332c9bddecfcd3c362af5c66088695aba3013d11e96a48"
+          },
+          {
+            "title": "validator drops invalid session memory without blocking valid final answer",
+            "bodySha256": "cbfac47cfd9666942d017d9481176743f039db36e7f9c7812c24da3d1a60238c"
+          },
+          {
+            "title": "pending intake lookup for another category does not block a grounded recommendation",
+            "bodySha256": "8bedeae429dbd6a6f8b31ea52f93f8915293370aea5fa7f73e6618a497c395fc"
+          },
+          {
+            "title": "pending same-category intake does not veto a generic recommendation for other products",
+            "bodySha256": "8d13fae404bb800f3a02a6d38f10a9f750333367e81266b225a8066bff102953"
+          },
+          {
+            "title": "runtime-loaded guidance satisfies the requirement when the model omits it from grounding",
+            "bodySha256": "5c0b36eee5cfccf1a9d33da2d3fda561782f040b34b395e7fb870abe78d99410"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "validator diet softens hidden product interpretation metadata when answer is otherwise safe",
+            "bodySha256": "cfab7af9e49f2b1404f30998fe8450b32a51606636833e421cdd54af7fe4f5a8"
+          },
+          {
+            "title": "validator diet keeps low-confidence routine changes blocking",
+            "bodySha256": "20ca6db9e4a4e329728fedd9364cd04b1993abe0c7220830284e950df09c04a3"
+          },
+          {
+            "title": "validator accepts grounded text-only product assessment without visible recommendations",
+            "bodySha256": "856481959190ce1edc1d4508d68a495ee89dfe07f352fe3062770f7169dc737d"
+          },
+          {
+            "title": "validator accepts found-exact lookup grounding for product assessment with matching product facts",
+            "bodySha256": "7e7f6ff187bd42564fcd123ae17fa65d0c4dea0529e76e094d738949dea61951"
+          },
+          {
+            "title": "validator blocks product assessment from found-exact identity without product facts",
+            "bodySha256": "64c349c64985e277b8abc88f2c76fe27cda1abaa0b3a841030ffefc2ce079222"
+          },
+          {
+            "title": "validator blocks product assessment from identity-only projection without product facts",
+            "bodySha256": "504df7ed430fb8967a06caad2e6ba21815e6a2d7fc32dd76950f255e9d1f81a7"
+          },
+          {
+            "title": "validator accepts routine usage assessment from trusted routine product context without product facts",
+            "bodySha256": "c54dc45472b3d1f1af3e6c7ee07d8318d42fea56e52f6ff0afc57d34fae4d5de"
+          },
+          {
+            "title": "validator still requires product guidance for non-routine routine usage assessments",
+            "bodySha256": "42bf1da14ab04fe038716dc98ae6c81e16ce1165f0c95e035d447da8169833e0"
+          },
+          {
+            "title": "validator blocks product assessment that omits the resolved product name",
+            "bodySha256": "08ec563ea0f1ac963fdbccdad3d9b8fd33abeb624123ba84de7f43d2f86b3522"
+          },
+          {
+            "title": "validator blocks mixed product assessment prose for an unresolved second product",
+            "bodySha256": "3b7792e89ad54e9cb7b10981e4e9c315eb17b55af6036facc9928d963e23b9ad"
+          },
+          {
+            "title": "validator blocks product assessment for unresolved lookup contexts",
+            "bodySha256": "4f7a51fa0aa765ea8ede62156e64568516ff8c0df39fe4bf59bf10505e6c2886"
+          },
+          {
+            "title": "validator blocks pronoun product advice while active product review is pending",
+            "bodySha256": "b8ca6aa4c83999ddbd6b7f7cdfbc92ee6b491634b3de040de808dd54ed88cb43"
+          },
+          {
+            "title": "validator rejects recommendation-card payload fields for product assessment",
+            "bodySha256": "43cca84a6785b2c5fbe8de3e4bab975df3921486699f62b963696eb6f8fdbda2"
+          },
+          {
+            "title": "AgentV2 validator fills clear product offer without pending follow-up action",
+            "bodySha256": "0107c302f39419ef20c2a60a32d8895c23f2b67c43c4ed5e135f5e0cf24eb6f9"
+          },
+          {
+            "title": "validator does not require lookup from deterministic named-product context alone",
+            "bodySha256": "a83393b51ef0255ceb3db097ab4c0a6a25160ccea46ad3fef63932d8edb467d6"
+          },
+          {
+            "title": "validator requires lookup when deterministic context identifies an evaluation even if model misses product candidate",
+            "bodySha256": "9736960a51d2e524490015ff6b3059dd11d445ca16f5682c12da82a5ed9061a0"
+          },
+          {
+            "title": "validator requires lookup when visible answer claims about deterministic own-product context",
+            "bodySha256": "07c7511107ef3fe41708ebbe87249b701da039207965ecc7c50c0ea7c1e9d80b"
+          },
+          {
+            "title": "validator requires lookup from model-owned product candidate metadata without named-product context",
+            "bodySha256": "52a0d088d6c43680173f8c8a7a6930883a1742522f50a7c1b0bd5ce9fd533362"
+          },
+          {
+            "title": "validator does not require duplicate lookup when model-owned product candidate already called lookup",
+            "bodySha256": "a08ffbbf6646ad3f357a2a4d48e639c561628ce438f39d0c57201b15ccf0efb0"
+          },
+          {
+            "title": "validator matches lookup to mentioned product identity even when answer target category differs",
+            "bodySha256": "3486db95224667a81df434b4dd76d896f2209b7c12b8d7e1ffe8b145410eb3e3"
+          },
+          {
+            "title": "validator does not treat a different product lookup as satisfying model-owned candidate lookup",
+            "bodySha256": "565b76d79a59775e5202014dbe732f8b3772c5d0e7883d4285a585856060269b"
+          },
+          {
+            "title": "validator does not use lookup evidence quote alone as candidate identity",
+            "bodySha256": "b5d28b840f26dcef770c3818b087e1ded01b4acb4c70cbd1d888df380809beeb"
+          },
+          {
+            "title": "validator does not use generic product name fragment alone when lookup brand differs",
+            "bodySha256": "21ff4a421b12f734614f934c886680e98625f7d762a8f41cf549ffb5fb95f852"
+          },
+          {
+            "title": "validator does not use product-name-only evidence when lookup brand differs",
+            "bodySha256": "614fa387057bf1122ecb8da2acd932dda8e75a7d2511f1fb8bfded63be83ddf2"
+          },
+          {
+            "title": "validator requires lookup when constraint-blocked answer makes named-product claim",
+            "bodySha256": "00a7e1888490092813f9b0bcd90587e9a7738b2ef6c92081fa12bec0e05d4381"
+          },
+          {
+            "title": "validator does not use stale recent evidence text to satisfy a different product lookup",
+            "bodySha256": "ffb509be71ec42d45057e2f2f770d32aabda04086f6f2d4b41e06965a9a036e3"
+          },
+          {
+            "title": "validator requires lookup before clarification for exact own-product suitability turns",
+            "bodySha256": "e299e1f55d1b2dfdfcf481e0da7e15c76ec770acfa479261eecf23a5c9944dba"
+          },
+          {
+            "title": "validator does not require lookup for background current-use product mentions",
+            "bodySha256": "e5b8546023ee5cc1a33d0ef443df39a825af35ea4aa4c1e09e0eeefd4c50baf7"
+          },
+          {
+            "title": "validator does not require lookup for background product clarification answers",
+            "bodySha256": "d5562e62ce47642bc0cda0f7f5c212f9e3506ae1c044579f7463e3fd8ebc5528"
+          },
+          {
+            "title": "validator does not require unavailable product lookup when intake is disabled",
+            "bodySha256": "72f26041ba39a0f0975cb37c6707be00f920b9dced0484ae7267d908846777cd"
+          },
+          {
+            "title": "validator does not require lookup for broad product recommendations without a concrete product",
+            "bodySha256": "1e6b2b430a1eb539f965533a146d9e2fd69ffba4f64f072138646832f24d710c"
+          },
+          {
+            "title": "`validator blocks product recommendations after ${status} product lookup`",
+            "bodySha256": "2796ba52cbdfe9c51f6e3d6ec65de3fc0e33e514d91654d1d3969b1464b55019"
+          },
+          {
+            "title": "validator allows product recommendations after exact product lookup",
+            "bodySha256": "debf55741278a6c6de761d069b35df35bd2de3079b5944440f8d0944ad97fe77"
+          },
+          {
+            "title": "validator blocks unverified-product caveat for trusted selected product",
+            "bodySha256": "891d664a1d5597ab7b7e4c474e8b87ce9276210ecc16fcc2354b4ed7b281d7a6"
+          },
+          {
+            "title": "validator allows identity-only acknowledgement for trusted selected product without product tool",
+            "bodySha256": "6b8e0ec98da56222897f609a6795d13f27833d1013e1236d95add23f3c0036a0"
+          },
+          {
+            "title": "validator requires product tool for trusted selected product suitability claims",
+            "bodySha256": "3a67eda7d15b3684463a2610b19881de343a798430d5ebdf8033b1565169cff5"
+          },
+          {
+            "title": "validator allows claim-level hedge for trusted selected product",
+            "bodySha256": "a6584e1a3176c29328365925506c25e25c5508393a33dde9d653e1c6c77470f2"
+          },
+          {
+            "title": "validator allows claims for exact lookup products when another lookup is unresolved",
+            "bodySha256": "a4215736001fd341b0a731c045df2528fe497c6f940071c5ba47fbfd36517116"
+          },
+          {
+            "title": "validator does not let an unresolved mentioned-product lookup block unrelated grounded recommendations",
+            "bodySha256": "db7dd610324ef7c8836a85d671bd5baad01c3f97e8d7709919bf657e5962355e"
+          },
+          {
+            "title": "validator does not let unresolved baseline lookup block grounded alternatives",
+            "bodySha256": "7a438f754bb0f414a13447e25601e48a3ca5e2088389564b0d9bbbe4db127a82"
+          },
+          {
+            "title": "validator does not require duplicate lookup for grounded alternatives to active product",
+            "bodySha256": "6add77432515ba15646cf8abbed32a8911a020e528f41c8775166561cfd08cd2"
+          },
+          {
+            "title": "validator diet softens unknown hard rule metadata on grounded product alternatives",
+            "bodySha256": "00a1ee2651d954fe00f843bff2c5e2ab1d5c8a64988442b5f2cf6f7d20cbf89b"
+          },
+          {
+            "title": "validator blocks named product detail prose after unresolved product lookup",
+            "bodySha256": "c6a873898c42e32d310c7062f8fff93d21dfa97a322632a7e4457c6eafd79c91"
+          },
+          {
+            "title": "validator blocks exact named-product property claims after unresolved lookup despite general-advice classification",
+            "bodySha256": "18efa4a4ce2a3d4271c835304c64fd6db3433d84535274f88b57be72d5dab0e6"
+          },
+          {
+            "title": "validator blocks pronoun product suitability claims after unresolved lookup",
+            "bodySha256": "0e0022af176288502538e2fd3e517c35478831bc128be66fa99a6f2423de679e"
+          },
+          {
+            "title": "validator blocks pronoun product claims after unresolved lookup with structured input identity",
+            "bodySha256": "3991437f0fec71914cf1663ba9141b4696e2843b63bd10a8302dec9d9acb8027"
+          },
+          {
+            "title": "validator blocks category-term product property claims after unresolved lookup",
+            "bodySha256": "5bc5b16b6bf8955061b04ceab153e1d1570019759ea3d36366490c8cf98b419d"
+          },
+          {
+            "title": "validator blocks named-product use claims after unresolved lookup",
+            "bodySha256": "35492da817eeca4f483bc14b6ad1697080f6147086b529efbe726d154a0c3b7e"
+          },
+          {
+            "title": "validator blocks product-phrase use claims after unresolved lookup",
+            "bodySha256": "ab766e2e559428ca1e350dd212798fffa36bc3cef1d12174e42785c72424f795"
+          },
+          {
+            "title": "validator blocks pronoun keep claims after unresolved lookup",
+            "bodySha256": "42d661a4ea308f480a11c6a6abd25621b5f5ac001e8933c78b8c839f42763651"
+          },
+          {
+            "title": "validator blocks category-term routine keep claims after unresolved lookup",
+            "bodySha256": "dbfc228605a50b3f837916e0edf352e7dc9361f0714344446f00edbe4fe5e5b4"
+          },
+          {
+            "title": "validator allows generic category context after unresolved lookup",
+            "bodySha256": "c052f55756fde9b05d288b3f53cc6021a5b9c9ab256bec0e89ee13a1c2c549ce"
+          },
+          {
+            "title": "validator blocks personalized category suitability after unresolved intake-card lookup",
+            "bodySha256": "a9e94483c7d1c949385171f4d0b733d517b4f7b434f3332007f94afe3a9f4865"
+          },
+          {
+            "title": "validator allows cautious product deferrals after unresolved lookup",
+            "bodySha256": "f023dba10211e38c16574515de160a94ff8919b739ba6347f70943c371afed5d"
+          },
+          {
+            "title": "`validator covers unresolved category-term use claims for ${testCase.category}`",
+            "bodySha256": "c0f46f85ccbc6cb2c865ba0ba259e95de759dd87eece23742541d276518053ce"
+          },
+          {
+            "title": "validator allows constraint-blocked deferral after unresolved product lookup",
+            "bodySha256": "5843cabad1b6b7574e102fd73817a6d3a1c12873e949c68f1d8aba6ff874964c"
+          },
+          {
+            "title": "AgentV2 validator blocks visible prose offers without structured pending follow-up action",
+            "bodySha256": "ab57c8828859f56a60f3ba70218dd70c81fbdd465c186da89ae695968d3f8208"
+          },
+          {
+            "title": "AgentV2 validator checks visible prose offers even when next_step_offer_de is non-confirmable",
+            "bodySha256": "39c922a11a74112530efffe5987ef33aac63c2919355273d6a72d3600997184c"
+          },
+          {
+            "title": "validator blocks social answers that claim a specific product candidate",
+            "bodySha256": "f21f9959ac7fac68c3d451860f699099f39cf4632f03670544c8af7194c79984"
+          },
+          {
+            "title": "AgentV2 validator does not treat plain Ich-kann answer openers as follow-up offers",
+            "bodySha256": "c1364f69c9da025a01580a57f685c649c7c8ea6bfb53efebbfd77abee5e92965"
+          },
+          {
+            "title": "AgentV2 validator blocks visible prose offers with first-person action verbs",
+            "bodySha256": "a1702d531c60bbdc199a4e744d75fdb75d734e997a7067fe240daed6d59a9eb2"
+          },
+          {
+            "title": "AgentV2 validator does not treat direct recommendations as follow-up offers",
+            "bodySha256": "ae32b16f65b374e872dba519c27c70870dd751f2f3e8171a25f6e0efb39eceba"
+          },
+          {
+            "title": "AgentV2 validator allows informational next step without pending follow-up action",
+            "bodySha256": "9a35cc28f49d2c36d59b4873aa6034aecf62a45b7d3fb74d64378cd03c3aef84"
+          },
+          {
+            "title": "AgentV2 validator strips hidden pending action behind informational next step",
+            "bodySha256": "abb28b8914a4033dc68443e490a6f57fa38edd864f5a957bc144e8f2d64aea96"
+          },
+          {
+            "title": "AgentV2 validator strips hidden pending follow-up actions without visible offer",
+            "bodySha256": "e01a49bb0c056a7c3fc3265e686b961ff9d35fc4d0bedd7880742732758a4ddf"
+          },
+          {
+            "title": "AgentV2 validator keeps hidden pending action blocking when mixed with product truth failures",
+            "bodySha256": "2b05c1f61a7670269c1a536e3a6fce5ac1dce20b14ce182a7bcc552eba838921"
+          },
+          {
+            "title": "AgentV2 validator blocks next-step offers that are not rendered in the visible answer",
+            "bodySha256": "1733612d3aae59fa0230b36f3f17c6c2793442216e8bdee404de406aa25a543b"
+          },
+          {
+            "title": "AgentV2 validator blocks visible product offers stored as advisor follow-up actions",
+            "bodySha256": "fd0d5a686da23500e7f40d8881fee1c0fde4db6d5748a7f0dd7725053811dec5"
+          },
+          {
+            "title": "AgentV2 validator accepts visible product offers with matching pending product action",
+            "bodySha256": "40ce1f63bf9b1d9cfe39e302555433b2926a5d2410e3b3f74289ca0163085002"
+          },
+          {
+            "title": "AgentV2 validator blocks visible routine mutation offers stored as advisor follow-up actions",
+            "bodySha256": "7c9dbec00bec2fe9ec6b610eec430501c8cb9efcf5b5ca501030f3fd33cdf20e"
+          },
+          {
+            "title": "AgentV2 validator accepts product-worded routine mutation offers",
+            "bodySha256": "b72f2be79594d9fbcf75771f46f7aefd69680b6593b9c9be87dfd369a6cc1a38"
+          },
+          {
+            "title": "AgentV2 validator normalizes advice-style routine offers stored as routine mutations",
+            "bodySha256": "3beacf24a071388b090399da95fa22c24ef64a08735ba513eccdfae4ba58e7d0"
+          },
+          {
+            "title": "AgentV2 validator blocks routine mutation category drift from visible offers",
+            "bodySha256": "eadb7ad19d5d6ed95eb72579f8e8547dca37b8580fc5b8e34f7afe175ce13d6a"
+          },
+          {
+            "title": "AgentV2 validator does not count mirrored next-step offer as a second visible question",
+            "bodySha256": "047ad4c0e91281f43479a620c6b2bad62912f19303a6e9a44709465d5d335fe0"
+          },
+          {
+            "title": "AgentV2 validator schema blocks routine action fields on product follow-up actions",
+            "bodySha256": "428e16e74c34a5886bc494b2759e079c9973cbb785f26a7ad66c94431890aabc"
+          },
+          {
+            "title": "validator accepts social and domain-boundary answers when gate-consistent",
+            "bodySha256": "6c307c3e22ccfa43a02bb4e8fc02e50fc2ace7d58209c76fe9770dd11164d4ba"
+          },
+          {
+            "title": "validator blocks social and domain-boundary answers without an authorized gate",
+            "bodySha256": "5805894e3df9ca506d93231da87a5f7935597af687c20ed05003c6e742db52ba"
+          },
+          {
+            "title": "validator blocks social and domain-boundary side effects",
+            "bodySha256": "32341cefd612fdaff39ba57fb73bafa38fe6e85e0f45da3bcbce6053a8c8d2ba"
+          },
+          {
+            "title": "validator blocks domain-boundary code and gate mismatch",
+            "bodySha256": "b2e0a19772509b4a31ea7c2ccc4b1922fcba053d20e0de20fb144245d0b0a576"
+          },
+          {
+            "title": "validator requires mode-specific and category guidance for category product answers",
+            "bodySha256": "b5f387c208a2be4f4861622b8a7969f082ca407362e05cc229122295e8f64147"
+          },
+          {
+            "title": "validator requires product guidance for product-detail clarifications",
+            "bodySha256": "81c0a0da1ac1ae0cb4f04fdbc73ac482121f92d53a7385482e7f2f14aa35ab7c"
+          },
+          {
+            "title": "validator blocks repeated exact-name clarification for already named off-catalog products",
+            "bodySha256": "4fe5e1c72b1cd6e943a121f3b1a95d9183b4a8a8ea1b8ebffe5d980ca6d60815"
+          },
+          {
+            "title": "validator blocks substitute catalog recommendations for already named off-catalog product detail turns",
+            "bodySha256": "1193e90f59c5f3f56c84757fff1cc42d87ccf1bc4f16446fff6bdbab932d9bc6"
+          },
+          {
+            "title": "validator requires category guidance for category education answers",
+            "bodySha256": "8a39336abf3500497d4a3590613cf775c924e15f58c00fe0ffa1c1e92f877087"
+          },
+          {
+            "title": "validator blocks hallucinated product ids",
+            "bodySha256": "a080f9172eb9599ca937f9cb0cf86093511d0b98588b3292a5d5bb60eb83ce17"
+          },
+          {
+            "title": "validator blocks payload product ids that bypass tool grounding",
+            "bodySha256": "254a61dcdce9490a08176652777de3bad9998b9f71c4402f9049433361475814"
+          },
+          {
+            "title": "validator blocks memory leakage in user prose",
+            "bodySha256": "d14f1d67babbcdd5283f6b5aaf90e5cf5e7ea69d2d5e1f9a3e3b9c6d579653ec"
+          },
+          {
+            "title": "validator blocks raw internal routine labels in user-facing copy",
+            "bodySha256": "ff0a2a9c341d7bf8e0438a450b57446869ce8366c45830b7f8876db7def2d05d"
+          },
+          {
+            "title": "validator blocks raw internal labels in visible payload recommendation fields",
+            "bodySha256": "f532e623fdd7cfaae6ae3f9fce8f505696ca105c46f6d5bda88738fd7de90943"
+          },
+          {
+            "title": "validator catches raw internal labels in visible payload routine step reasons",
+            "bodySha256": "29df585ce03e92712bac5eb8dbfbacc0219e0196d00dea8e374c44e98ebc728f"
+          },
+          {
+            "title": "validator blocks internal product-ranking language in user-facing copy",
+            "bodySha256": "8d11339dbeb6e18b7400b76d4ae36ae9f682f526bee289666a8df43e0d979ccf"
+          },
+          {
+            "title": "validator blocks internal instruction phrasing in user-facing copy",
+            "bodySha256": "7bebcfc89d6bd67a7377851028bebc6f94500395f8aafd396782d59cc57c558d"
+          },
+          {
+            "title": "validator warns on catalog metadata phrasing in visible payload routine step actions",
+            "bodySha256": "68dd928ffba4eaa00710b87e369d56312f918703a2a622ec22aca4e21f519f80"
+          },
+          {
+            "title": "validator ignores hidden non-user-facing fields when checking visible payload language",
+            "bodySha256": "572d8a1d9ccec7752f99ec63d62a765ec1436805e8d9736f17d92cd44c4bd2ab"
+          },
+          {
+            "title": "validator blocks bare Ja opening for non-confirmation user message",
+            "bodySha256": "54a3f6a97b11790496b3af2b26c0326cd3b7029e5b09a58c229d5027be5431ae"
+          },
+          {
+            "title": "validator allows Ja opening after explicit confirmation",
+            "bodySha256": "169613d6c63e593010e49a725d4947707b544fea46e430abef9d756ed39a37c4"
+          },
+          {
+            "title": "validator warns on catalog classification phrasing without failing validation",
+            "bodySha256": "83d25cac2cb405cc279887220187d3457a7e6fa14972941ddf79b8f36ba4d1f0"
+          },
+          {
+            "title": "validator warns on representative ASCII German orthography tokens without failing validation",
+            "bodySha256": "0a08651cf5eff0c2a9a9cdc8d8ee3784b8202521a3ffbd0dbe96f970fdaf125d"
+          },
+          {
+            "title": "validator does not warn on ordinary ue letter pairs or standard German orthography",
+            "bodySha256": "9fcef57542103977bf1f3b8ffd1453c9fb0cca9bab62b093093db25cf5a0c626"
+          },
+          {
+            "title": "validator allows cosmetic treatment wording for frizz",
+            "bodySha256": "c8d1a0a1eb89b7067efd7ad3f5701c939004641facdb6a1b227777978ecf1490"
+          },
+          {
+            "title": "validator allows public styling tool wording",
+            "bodySha256": "9ec8845f820452421ddc640114af430838666993738a91b8d9eb9b53b188926b"
+          },
+          {
+            "title": "validator blocks raw product property dump bullets",
+            "bodySha256": "10ec9386d3c7918e9f8accef1617a86f64890ad9bc041e50a4a1d3e10d25ff10"
+          },
+          {
+            "title": "validator accepts natural product fit sentences",
+            "bodySha256": "8e9501c4fc46f8ae47cc2f7e807793eb6e50657b323e72b4726fb0a243ba1660"
+          },
+          {
+            "title": "validator requires product answers to surface available recommendation options",
+            "bodySha256": "ddfe29df4601aa017918d0e912400914f62e4e15bc93c1cb0338098ff702bb93"
+          },
+          {
+            "title": "validator blocks empty product recommendations when selected products are available",
+            "bodySha256": "b7e69aa9f9b11da4e02a31101b380c429c82251bf29dda390801a95f46dac195"
+          },
+          {
+            "title": "validator requires semantic select_products tool arguments for concrete product interpretations",
+            "bodySha256": "f97c47c6d0875c2e05b248df98171ddb0c12e95b08ef4127b6e876b3fd80a88f"
+          },
+          {
+            "title": "validator treats product selection as supporting grounding for routine mutations",
+            "bodySha256": "fb8f171f62d3798cd24de5dc565ad86797be880ae61e432357c1212a8bf5019a"
+          },
+          {
+            "title": "validator blocks non-diagnostic request interpretation evidence quotes",
+            "bodySha256": "d1171b093139554d4989740fcc4eec2c5ec95a76271ed393cdf047914f773d31"
+          },
+          {
+            "title": "validator returns repair metadata for ungrounded evidence quotes",
+            "bodySha256": "aa0c19ac60102a06f01ae938b1a193a85983cc0eca57f07854e705ebe64a02c0"
+          },
+          {
+            "title": "validator allows full short user messages as evidence quotes",
+            "bodySha256": "d91277a5e92649bad3e382c8d45a022c62980ea4e4f68bd4cbee61f4b5ffe3ea"
+          },
+          {
+            "title": "validator allows exact short concern terms as evidence quotes",
+            "bodySha256": "3e1e07f22a9dbeec0ad50423f974c3c14c7639f781ec233daa0a02dd0fbd898d"
+          },
+          {
+            "title": "validator allows decorative quote marks and punctuation differences in evidence quotes",
+            "bodySha256": "dfc97afd46751a22918eb22d94fa046019b2228016619248556880227e3fcc9d"
+          },
+          {
+            "title": "validator allows German umlaut transliterations in evidence quotes",
+            "bodySha256": "b97a6217e6b993d32886d04ba2a6c84fc1875d81c67b68ded04be487f375ecd7"
+          },
+          {
+            "title": "validator allows evidence quotes from active routine visible step labels",
+            "bodySha256": "f4ff748b995d5aa226cad41647d266b758834eade24c393ec566fab6e1b7696b"
+          },
+          {
+            "title": "validator warns instead of blocking semantically close evidence paraphrases",
+            "bodySha256": "d29799dcb0e761a537ade144a821a647f69d35f10c3fe553c3d7d534fc1eec4e"
+          },
+          {
+            "title": "validator rejects vague or invented evidence quotes",
+            "bodySha256": "0ca926ebb7627137d121088bb08c6b0b5cc149b5715badda12bdcad88021740c"
+          },
+          {
+            "title": "validator sanitizes harmless terminal evidence quote metadata during validation",
+            "bodySha256": "a125ef53e9c85d89797eb2f869d8d07d77ce013191fc90511dd471f418915b1b"
+          },
+          {
+            "title": "validator sanitizer refuses mixed or non-evidence failures",
+            "bodySha256": "d9beabc8e07c32259edc45b58bd62d3e7305cb68136dc4c6952298136b5f36fa"
+          },
+          {
+            "title": "validator requires user-facing prose to mention each recommended product",
+            "bodySha256": "9e874420e37b4cf859ab743dec9e4d4e4df0a0c43b15ea055822f9731f38b975"
+          },
+          {
+            "title": "validator blocks incomplete routine prose that omits visible steps",
+            "bodySha256": "2036495939e265ecebe3d7e6ff34e36f1f2c62451602912ea621ea7c89f1582b"
+          },
+          {
+            "title": "validator blocks incomplete product prose that omits a final recommendation",
+            "bodySha256": "a892f1ff4fcf3084b413329485be1497a258fb27874acd7030f2737b7a41111c"
+          },
+          {
+            "title": "validator blocks final product rendering when product names are unavailable",
+            "bodySha256": "17e3b31b0feb006c7d68c07375158681c151023e774f93acee565547d6b3686d"
+          },
+          {
+            "title": "validator blocks incomplete routine product deep dive prose that omits the product",
+            "bodySha256": "72edb2468914541d049b8eaf2f1ad95ce0d248d872ab7684a2bb4c938e851f79"
+          },
+          {
+            "title": "validator requires blocked answers to render the actual blocker, not only a generic phrase",
+            "bodySha256": "dd102a939e3395466841594851e0e26eeeb18f52de111d4f45093b50eec4c854"
+          },
+          {
+            "title": "validator rejects unasked product cards in general advice",
+            "bodySha256": "c0a2fc8b0dae9781c58bfc8bb3c4f1cb32df186e69b9c2c7d0adb9e0097ce943"
+          },
+          {
+            "title": "validator rejects product recommendation mode when the user did not ask for products",
+            "bodySha256": "a882b96ec9b8a59c4934631c633eb18d310f2d17f48bfc83144db217890f4550"
+          },
+          {
+            "title": "validator requires selected products to be surfaced for concrete category-fit asks",
+            "bodySha256": "c970c3006bfb038a3590f34e9c4148bead92ccd726630318be59ede9c0d538e5"
+          },
+          {
+            "title": "validator allows general category comparison without product fulfillment",
+            "bodySha256": "cae613e0b5b2e80af0356887479f5dab6cc0dd46ac770514bbc44c3e5d51fcd5"
+          },
+          {
+            "title": "validator respects an explicit request for two product recommendations",
+            "bodySha256": "2255490e211258c1a95bdd3406ac1baa259a58991abd9ef7bde3d38c64424560"
+          },
+          {
+            "title": "validator accepts explicit one and two product recommendation counts",
+            "bodySha256": "fd79587654d83b70caf2c1729565f37d20d13a485ae5c53a797ef9bae3637bf5"
+          },
+          {
+            "title": "validator allows vague alternatives to return one grounded option",
+            "bodySha256": "1731ac139048b0098ace9815d2c4014e78d4edd1f3311222c4c345fc8ea08815"
+          },
+          {
+            "title": "validator allows vague alternatives to return more than three grounded options",
+            "bodySha256": "c300e235d7e7d41be4446b601828a7c34a0d3d57eea57775ee2b1a351626c167"
+          },
+          {
+            "title": "validator accepts one visible recommendation per multi-category product slot",
+            "bodySha256": "fe4f068b8a79a1234a3c6b07537e402ff450358005698cafdef9518a58384f4b"
+          },
+          {
+            "title": "validator still blocks single-category exact-count mismatches",
+            "bodySha256": "10e932220f0774d63988624469d222971825cbe481db678c1b3ba1ff970596f7"
+          },
+          {
+            "title": "validator does not relax single-category exact-count requests into invented slots",
+            "bodySha256": "2637081aa90ec6042f787ffc85fd7d866485a1c0945674fd89ffa1a84e11976e"
+          },
+          {
+            "title": "validator does not let model-authored evidence unlock invented slots",
+            "bodySha256": "d554daa08169d7143a501073f4199da11debd86cffb7c61a9859f729783f07d6"
+          },
+          {
+            "title": "validator blocks multi-slot answers that surface products outside selected projections",
+            "bodySha256": "eb56618e25c70882dc080dc42c922e77c46686234ec46ac5e2d5e8f8fb162575"
+          },
+          {
+            "title": "validator blocks multi-slot answers above the distinct category cap",
+            "bodySha256": "8a56a70f851808765127ebfee06b6630a2fe0e05192d737c30794a3a6921990e"
+          },
+          {
+            "title": "validator does not relax multi-slot answers that double-fill one slot",
+            "bodySha256": "1fd43baf9b77ad15fbbc3cc9d2bab8c13fe7aafc3df350e56f79b15ace97a61f"
+          },
+          {
+            "title": "validator does not relax multi-slot answers with duplicate recommendation rows",
+            "bodySha256": "6f753ab8b63f8bde683ef82582eff0559fdac3754c9aee6721316f1da569f883"
+          },
+          {
+            "title": "validator does not apply the multi-slot cap to non-A2 multi-category traces",
+            "bodySha256": "a9aa9a1712256f1666a20ea26aa3b6586bbafa7a4ea93961026401bf72a864ec"
+          },
+          {
+            "title": "validator does not relax exact counts for terminal-only multi-category slot shape",
+            "bodySha256": "a39f571dbba49f10c583b63753ba3e2f3d91ce287c08059a45a8543b6e5754a0"
+          },
+          {
+            "title": "validator accepts natural catalog-verification wording for blocked product lookup answers",
+            "bodySha256": "8931b6567d26b470caee8a3a6ba8853809e7be8dd04f0cdfcb7e6560c063a913"
+          },
+          {
+            "title": "validator ignores hidden product grounding for blocked not-found product deferrals",
+            "bodySha256": "8e7269ec22f2ee0eac64d83027c5a8e0dd65ff83683ade7c52fd81e62b83fcd9"
+          },
+          {
+            "title": "validator does not relax multi-slot answers using prior-turn selected products",
+            "bodySha256": "12ae19b58fcf9fe14c6578735aa957fc9e8b58b0deb634f50ca15bd01599f9ec"
+          },
+          {
+            "title": "validator does not relax multi-slot answers that omit a fillable slot",
+            "bodySha256": "cea95bdcd551fc6321d887089ba5cd9f9f1f2c36cacd439dda1a067b3b530ba2"
+          },
+          {
+            "title": "validator accepts partial success for multi-category product slots",
+            "bodySha256": "ca293230651abaf5e5675bc195c11eb899fab00c4b55afdb489950a95e7eb7f2"
+          },
+          {
+            "title": "validator does not relax partial success that hides an empty slot",
+            "bodySha256": "621364627a48b72a646c98eb3f251fa62bc5b51433f75ad1d1e1ea74501cd4a8"
+          },
+          {
+            "title": "validator does not relax partial success that names an empty slot without no-match copy",
+            "bodySha256": "6c02e6c79a0e75e597b5bad44e7cf37a44ee310d2548a107ab5933e2f0c28ac4"
+          },
+          {
+            "title": "validator does not relax missing-slot copy when safe language refers elsewhere",
+            "bodySha256": "ffc74f51f2b98c8da3ce620695da12ce1a7d3bdd56fe903a1cc5264056a3d510"
+          },
+          {
+            "title": "validator allows routine product asks as product recommendations with routine context",
+            "bodySha256": "cfc479fcc94d710ec536ea1912e08384b1a8a3afd8abe381a3a098733c4352dc"
+          },
+          {
+            "title": "validator bases option count on projections relevant to the recommended products",
+            "bodySha256": "aca7c3cf326cb9581fba197b35d2d13430995b5ce09a453ac6f1b8b58f48760b"
+          },
+          {
+            "title": "validator validates every answer mode payload",
+            "bodySha256": "611b8513dd4bea1252ebb67637dc8be9881dbe97ad992e7f00998e260d24ef78"
+          },
+          {
+            "title": "validator rejects malformed mode payloads",
+            "bodySha256": "1c13929d5e300c939f96b920128d5062a6c26543ee2ceabfa84804a57f77a16d"
+          },
+          {
+            "title": "validator coerces constraint-shaped safety payloads",
+            "bodySha256": "25b243753a4d1a98e0eba03697dfcd668d276f32c59643b6c1e4ce76237d246b"
+          },
+          {
+            "title": "validator explains mismatched payload fields for repair",
+            "bodySha256": "99468ec5cf7b3f59c429b85f0e21d2f4693948009bf450c582d2a56a17f4e95e"
+          },
+          {
+            "title": "validator blocks hallucinated routine step ids",
+            "bodySha256": "6d8b07e0aed3c20762f308d2170b5f30cf78db59a3db629da5ce0df73d0402b3"
+          },
+          {
+            "title": "validator blocks payload routine step ids that bypass tool grounding",
+            "bodySha256": "15f649263c9d5053d60303170354d79474c4d699c6d3cb939e04502d43e49f51"
+          },
+          {
+            "title": "validator blocks routine payload layer that disagrees with routine context",
+            "bodySha256": "466035d480d7c334faef70dca089534e8e01196362b59bd6dcfbe9a2b179c827"
+          },
+          {
+            "title": "validator requires routine tool call even when routine projections are present",
+            "bodySha256": "c6cdbaca2b14f84acb7fcdff4b36855a359fc9039b2314512b53efabdb27b520"
+          },
+          {
+            "title": "validator allows first category-specific routine mutation when current routine inventory exists",
+            "bodySha256": "08a7cf4361bd178431860beaf773a75575ff94319f6af532923f7aeba7c595d5"
+          },
+          {
+            "title": "validator allows guidance-only general advice inside active routine thread",
+            "bodySha256": "28828199108f3d94062a36d57190860e4992323a65220a2ffedbd5af4a7ad001"
+          },
+          {
+            "title": "validator keeps routine context active for routine follow-up questions",
+            "bodySha256": "328cfe1196e3dca623445e385ce9c3c69d07bf980637631009e1e99e233bad71"
+          },
+          {
+            "title": "validator requires routine tool for routine mutation inside active thread",
+            "bodySha256": "6f7c58abafc118c47bd9648cef9f94613ad7e08b29df5308a70c09473c44ebb0"
+          },
+          {
+            "title": "validator blocks routine mutation intent even when mislabeled as general advice",
+            "bodySha256": "14c301e8dda886cd408d8e64767d110688bf283696f00d3b09e3dba41d991ebb"
+          },
+          {
+            "title": "validator blocks pronoun-based routine mutation intent in active routine thread",
+            "bodySha256": "cadce978afd192d6944e0c69f127e07fa6b10d98c07f0c79c13b6561de9ffdfc"
+          },
+          {
+            "title": "validator blocks routine layer regression using routine thread current layer fallback",
+            "bodySha256": "a0651066ea14cffd8834bdba1dca9a5c753ee7b959e5ca7d3138206e3583762e"
+          },
+          {
+            "title": "validator requires routine tool for hand-rolled routine change advice",
+            "bodySha256": "5c9e172c7e09eef582ee354c6eab6eebdd927c6ca46595eea007f6d14ba99a16"
+          },
+          {
+            "title": "validator allows placement-only dry shampoo advice without routine tooling",
+            "bodySha256": "b15b6b0943b733013a09ff30bf49d936ae5df563cfca32e9981e364c63a12e6e"
+          },
+          {
+            "title": "validator allows placement-only oil and leave-in advice without routine tooling",
+            "bodySha256": "57128058ffdd3a126f9b3329de915d2cac13c532ccd467179898e6da157127c5"
+          },
+          {
+            "title": "validator allows concise summaries inside active routine threads without routine tool",
+            "bodySha256": "2e6c8afb78b134c782400200db882bd65f5f42573a78bbc8bd89e635eff6837f"
+          },
+          {
+            "title": "validator requires product tool and routine return path for routine product recommendations",
+            "bodySha256": "788ecf09a9debfcf1164d64eb7286f18f27b6dcaffaa8ae5af31e38b317319e9"
+          },
+          {
+            "title": "validator allows nullable next step offer for routine product recommendations with return path",
+            "bodySha256": "b0f50363a434805d8d925d8e3f203791a9e30ac76edbcb234a972d707af12a56"
+          },
+          {
+            "title": "validator blocks objective bad conversation closers",
+            "bodySha256": "ef6093432bcf27c48b1d50f9a8e213ac41d9ce8e99d2d5b30b98325bdf9e736d"
+          },
+          {
+            "title": "validator checks rendered clarification question close text",
+            "bodySha256": "6b41c0a021db0370ac603e94daf6c0330a8c8c77e20403aa252507954e30b453"
+          },
+          {
+            "title": "validator warns but does not block weak conversation closers",
+            "bodySha256": "69ec87de98b5a841ead587dd118ea446f07dc912953931828bc3e0104ec6f404"
+          },
+          {
+            "title": "validator warns on duplicated medium-length visible answer paragraphs",
+            "bodySha256": "bbc95b003bb791145e4a5dbd4b860cf37cb23e6c49394293be5b291386753f2b"
+          },
+          {
+            "title": "validator warns on adjacent long visible answer paragraphs with high overlap",
+            "bodySha256": "0f624071bfbdeab5fe906d311cde8cfc6ceb5cefc2764c492cb713a401f6c120"
+          },
+          {
+            "title": "validator ignores repeated short visible answer labels",
+            "bodySha256": "f3b61870be4bc46dfd894f7246d256737c333e9e9296b93d19d1c2e22582e8fa"
+          },
+          {
+            "title": "validator allows honest clean stop for unsupported INCI-list analysis",
+            "bodySha256": "08edb5995a2a1b1e6c192d97ba9bc71343e06420208e73ec87bf42b0430e4cfe"
+          },
+          {
+            "title": "validator blocks carried routine step ids when active routine thread has no visible steps",
+            "bodySha256": "25eb1ee9ceb6e522b63deb3a811dc5006621ff39ca1f2524dcb7a4d306c3bbe1"
+          },
+          {
+            "title": "validator accepts routine product recommendation step ids from active routine thread visible steps",
+            "bodySha256": "8e78c33361d8140f600603ede64aa90707ba296ce9643f559feaaafd816c6a92"
+          },
+          {
+            "title": "validator blocks routine product recommendation context categories that disagree with interpretation",
+            "bodySha256": "56d3faed58f608619d9515c0c98ff7515e29c16dfe354aef06e19050cf7af563"
+          },
+          {
+            "title": "validator blocks routine product recommendation category that disagrees with referenced routine step",
+            "bodySha256": "0f0d00cb58a3571e18d88dcca6d60d03939a6d9d6f0df15526d052f88837db0b"
+          },
+          {
+            "title": "validator blocks ungrounded routine product recommendation step ids",
+            "bodySha256": "faf7727255cc2cbe11eb9d00007f83307e8faf0edfa76e69e53124ad0fe50975"
+          },
+          {
+            "title": "validator blocks product-first answers in restricted safety mode",
+            "bodySha256": "b62932133fe85e73da8442bf3ea2310df6437c5b0a315d513365e2290db6c0f6"
+          },
+          {
+            "title": "validator blocks common German medical diagnosis and treatment claims",
+            "bodySha256": "4129f691d032224682408cf4142ec001978ec1b4e7a5fb6ff28d2aaa8fec3a76"
+          },
+          {
+            "title": "validator caps product recommendations at three when count policy is cap",
+            "bodySha256": "74845b3ca9cc632245332c9bddecfcd3c362af5c66088695aba3013d11e96a48"
+          },
+          {
+            "title": "validator drops invalid session memory without blocking valid final answer",
+            "bodySha256": "f57af0893e4c9a94c3cbc7ee74d3f98b3c9ded6efa86b114ce3569333b7ceee3"
+          },
+          {
+            "title": "pending intake lookup for another category does not block a grounded recommendation",
+            "bodySha256": "8bedeae429dbd6a6f8b31ea52f93f8915293370aea5fa7f73e6618a497c395fc"
+          },
+          {
+            "title": "pending same-category intake does not veto a generic recommendation for other products",
+            "bodySha256": "8d13fae404bb800f3a02a6d38f10a9f750333367e81266b225a8066bff102953"
+          },
+          {
+            "title": "runtime-loaded guidance satisfies the requirement when the model omits it from grounding",
+            "bodySha256": "5c0b36eee5cfccf1a9d33da2d3fda561782f040b34b395e7fb870abe78d99410"
+          }
+        ],
+        "cut": [
+          {
+            "title": "validator diet softens hidden product interpretation metadata when answer is otherwise safe",
+            "bodySha256": "cfab7af9e49f2b1404f30998fe8450b32a51606636833e421cdd54af7fe4f5a8"
+          },
+          {
+            "title": "validator diet keeps low-confidence routine changes blocking",
+            "bodySha256": "20ca6db9e4a4e329728fedd9364cd04b1993abe0c7220830284e950df09c04a3"
+          },
+          {
+            "title": "validator accepts grounded text-only product assessment without visible recommendations",
+            "bodySha256": "856481959190ce1edc1d4508d68a495ee89dfe07f352fe3062770f7169dc737d"
+          },
+          {
+            "title": "validator accepts found-exact lookup grounding for product assessment with matching product facts",
+            "bodySha256": "7e7f6ff187bd42564fcd123ae17fa65d0c4dea0529e76e094d738949dea61951"
+          },
+          {
+            "title": "validator blocks product assessment from found-exact identity without product facts",
+            "bodySha256": "64c349c64985e277b8abc88f2c76fe27cda1abaa0b3a841030ffefc2ce079222"
+          },
+          {
+            "title": "validator blocks product assessment from identity-only projection without product facts",
+            "bodySha256": "504df7ed430fb8967a06caad2e6ba21815e6a2d7fc32dd76950f255e9d1f81a7"
+          },
+          {
+            "title": "validator accepts routine usage assessment from trusted routine product context without product facts",
+            "bodySha256": "c54dc45472b3d1f1af3e6c7ee07d8318d42fea56e52f6ff0afc57d34fae4d5de"
+          },
+          {
+            "title": "validator still requires product guidance for non-routine routine usage assessments",
+            "bodySha256": "42bf1da14ab04fe038716dc98ae6c81e16ce1165f0c95e035d447da8169833e0"
+          },
+          {
+            "title": "validator blocks product assessment that omits the resolved product name",
+            "bodySha256": "08ec563ea0f1ac963fdbccdad3d9b8fd33abeb624123ba84de7f43d2f86b3522"
+          },
+          {
+            "title": "validator blocks mixed product assessment prose for an unresolved second product",
+            "bodySha256": "3b7792e89ad54e9cb7b10981e4e9c315eb17b55af6036facc9928d963e23b9ad"
+          },
+          {
+            "title": "validator blocks product assessment for unresolved lookup contexts",
+            "bodySha256": "4f7a51fa0aa765ea8ede62156e64568516ff8c0df39fe4bf59bf10505e6c2886"
+          },
+          {
+            "title": "validator blocks pronoun product advice while active product review is pending",
+            "bodySha256": "b8ca6aa4c83999ddbd6b7f7cdfbc92ee6b491634b3de040de808dd54ed88cb43"
+          },
+          {
+            "title": "validator rejects recommendation-card payload fields for product assessment",
+            "bodySha256": "43cca84a6785b2c5fbe8de3e4bab975df3921486699f62b963696eb6f8fdbda2"
+          },
+          {
+            "title": "AgentV2 validator fills clear product offer without pending follow-up action",
+            "bodySha256": "0107c302f39419ef20c2a60a32d8895c23f2b67c43c4ed5e135f5e0cf24eb6f9"
+          },
+          {
+            "title": "validator does not require lookup from deterministic named-product context alone",
+            "bodySha256": "a83393b51ef0255ceb3db097ab4c0a6a25160ccea46ad3fef63932d8edb467d6"
+          },
+          {
+            "title": "validator requires lookup when deterministic context identifies an evaluation even if model misses product candidate",
+            "bodySha256": "9736960a51d2e524490015ff6b3059dd11d445ca16f5682c12da82a5ed9061a0"
+          },
+          {
+            "title": "validator requires lookup when visible answer claims about deterministic own-product context",
+            "bodySha256": "07c7511107ef3fe41708ebbe87249b701da039207965ecc7c50c0ea7c1e9d80b"
+          },
+          {
+            "title": "validator requires lookup from model-owned product candidate metadata without named-product context",
+            "bodySha256": "52a0d088d6c43680173f8c8a7a6930883a1742522f50a7c1b0bd5ce9fd533362"
+          },
+          {
+            "title": "validator does not require duplicate lookup when model-owned product candidate already called lookup",
+            "bodySha256": "a08ffbbf6646ad3f357a2a4d48e639c561628ce438f39d0c57201b15ccf0efb0"
+          },
+          {
+            "title": "validator matches lookup to mentioned product identity even when answer target category differs",
+            "bodySha256": "3486db95224667a81df434b4dd76d896f2209b7c12b8d7e1ffe8b145410eb3e3"
+          },
+          {
+            "title": "validator does not treat a different product lookup as satisfying model-owned candidate lookup",
+            "bodySha256": "565b76d79a59775e5202014dbe732f8b3772c5d0e7883d4285a585856060269b"
+          },
+          {
+            "title": "validator does not use lookup evidence quote alone as candidate identity",
+            "bodySha256": "b5d28b840f26dcef770c3818b087e1ded01b4acb4c70cbd1d888df380809beeb"
+          },
+          {
+            "title": "validator does not use generic product name fragment alone when lookup brand differs",
+            "bodySha256": "21ff4a421b12f734614f934c886680e98625f7d762a8f41cf549ffb5fb95f852"
+          },
+          {
+            "title": "validator does not use product-name-only evidence when lookup brand differs",
+            "bodySha256": "614fa387057bf1122ecb8da2acd932dda8e75a7d2511f1fb8bfded63be83ddf2"
+          },
+          {
+            "title": "validator requires lookup when constraint-blocked answer makes named-product claim",
+            "bodySha256": "00a7e1888490092813f9b0bcd90587e9a7738b2ef6c92081fa12bec0e05d4381"
+          },
+          {
+            "title": "validator does not use stale recent evidence text to satisfy a different product lookup",
+            "bodySha256": "ffb509be71ec42d45057e2f2f770d32aabda04086f6f2d4b41e06965a9a036e3"
+          },
+          {
+            "title": "validator requires lookup before clarification for exact own-product suitability turns",
+            "bodySha256": "e299e1f55d1b2dfdfcf481e0da7e15c76ec770acfa479261eecf23a5c9944dba"
+          },
+          {
+            "title": "validator does not require lookup for background current-use product mentions",
+            "bodySha256": "e5b8546023ee5cc1a33d0ef443df39a825af35ea4aa4c1e09e0eeefd4c50baf7"
+          },
+          {
+            "title": "validator does not require lookup for background product clarification answers",
+            "bodySha256": "d5562e62ce47642bc0cda0f7f5c212f9e3506ae1c044579f7463e3fd8ebc5528"
+          },
+          {
+            "title": "validator does not require unavailable product lookup when intake is disabled",
+            "bodySha256": "72f26041ba39a0f0975cb37c6707be00f920b9dced0484ae7267d908846777cd"
+          },
+          {
+            "title": "`validator blocks product recommendations after ${status} product lookup`",
+            "bodySha256": "2796ba52cbdfe9c51f6e3d6ec65de3fc0e33e514d91654d1d3969b1464b55019"
+          },
+          {
+            "title": "validator blocks unverified-product caveat for trusted selected product",
+            "bodySha256": "891d664a1d5597ab7b7e4c474e8b87ce9276210ecc16fcc2354b4ed7b281d7a6"
+          },
+          {
+            "title": "validator allows identity-only acknowledgement for trusted selected product without product tool",
+            "bodySha256": "6b8e0ec98da56222897f609a6795d13f27833d1013e1236d95add23f3c0036a0"
+          },
+          {
+            "title": "validator requires product tool for trusted selected product suitability claims",
+            "bodySha256": "3a67eda7d15b3684463a2610b19881de343a798430d5ebdf8033b1565169cff5"
+          },
+          {
+            "title": "validator allows claim-level hedge for trusted selected product",
+            "bodySha256": "a6584e1a3176c29328365925506c25e25c5508393a33dde9d653e1c6c77470f2"
+          },
+          {
+            "title": "validator allows claims for exact lookup products when another lookup is unresolved",
+            "bodySha256": "a4215736001fd341b0a731c045df2528fe497c6f940071c5ba47fbfd36517116"
+          },
+          {
+            "title": "validator does not let an unresolved mentioned-product lookup block unrelated grounded recommendations",
+            "bodySha256": "db7dd610324ef7c8836a85d671bd5baad01c3f97e8d7709919bf657e5962355e"
+          },
+          {
+            "title": "validator does not let unresolved baseline lookup block grounded alternatives",
+            "bodySha256": "7a438f754bb0f414a13447e25601e48a3ca5e2088389564b0d9bbbe4db127a82"
+          },
+          {
+            "title": "validator diet softens unknown hard rule metadata on grounded product alternatives",
+            "bodySha256": "00a1ee2651d954fe00f843bff2c5e2ab1d5c8a64988442b5f2cf6f7d20cbf89b"
+          },
+          {
+            "title": "validator blocks named product detail prose after unresolved product lookup",
+            "bodySha256": "c6a873898c42e32d310c7062f8fff93d21dfa97a322632a7e4457c6eafd79c91"
+          },
+          {
+            "title": "validator blocks exact named-product property claims after unresolved lookup despite general-advice classification",
+            "bodySha256": "18efa4a4ce2a3d4271c835304c64fd6db3433d84535274f88b57be72d5dab0e6"
+          },
+          {
+            "title": "validator blocks pronoun product suitability claims after unresolved lookup",
+            "bodySha256": "0e0022af176288502538e2fd3e517c35478831bc128be66fa99a6f2423de679e"
+          },
+          {
+            "title": "validator blocks pronoun product claims after unresolved lookup with structured input identity",
+            "bodySha256": "3991437f0fec71914cf1663ba9141b4696e2843b63bd10a8302dec9d9acb8027"
+          },
+          {
+            "title": "validator blocks category-term product property claims after unresolved lookup",
+            "bodySha256": "5bc5b16b6bf8955061b04ceab153e1d1570019759ea3d36366490c8cf98b419d"
+          },
+          {
+            "title": "validator blocks named-product use claims after unresolved lookup",
+            "bodySha256": "35492da817eeca4f483bc14b6ad1697080f6147086b529efbe726d154a0c3b7e"
+          },
+          {
+            "title": "validator blocks product-phrase use claims after unresolved lookup",
+            "bodySha256": "ab766e2e559428ca1e350dd212798fffa36bc3cef1d12174e42785c72424f795"
+          },
+          {
+            "title": "validator blocks pronoun keep claims after unresolved lookup",
+            "bodySha256": "42d661a4ea308f480a11c6a6abd25621b5f5ac001e8933c78b8c839f42763651"
+          },
+          {
+            "title": "validator blocks category-term routine keep claims after unresolved lookup",
+            "bodySha256": "dbfc228605a50b3f837916e0edf352e7dc9361f0714344446f00edbe4fe5e5b4"
+          },
+          {
+            "title": "validator allows generic category context after unresolved lookup",
+            "bodySha256": "c052f55756fde9b05d288b3f53cc6021a5b9c9ab256bec0e89ee13a1c2c549ce"
+          },
+          {
+            "title": "validator blocks personalized category suitability after unresolved intake-card lookup",
+            "bodySha256": "a9e94483c7d1c949385171f4d0b733d517b4f7b434f3332007f94afe3a9f4865"
+          },
+          {
+            "title": "validator allows cautious product deferrals after unresolved lookup",
+            "bodySha256": "f023dba10211e38c16574515de160a94ff8919b739ba6347f70943c371afed5d"
+          },
+          {
+            "title": "`validator covers unresolved category-term use claims for ${testCase.category}`",
+            "bodySha256": "c0f46f85ccbc6cb2c865ba0ba259e95de759dd87eece23742541d276518053ce"
+          },
+          {
+            "title": "validator allows constraint-blocked deferral after unresolved product lookup",
+            "bodySha256": "5843cabad1b6b7574e102fd73817a6d3a1c12873e949c68f1d8aba6ff874964c"
+          },
+          {
+            "title": "AgentV2 validator blocks visible prose offers without structured pending follow-up action",
+            "bodySha256": "ab57c8828859f56a60f3ba70218dd70c81fbdd465c186da89ae695968d3f8208"
+          },
+          {
+            "title": "AgentV2 validator checks visible prose offers even when next_step_offer_de is non-confirmable",
+            "bodySha256": "39c922a11a74112530efffe5987ef33aac63c2919355273d6a72d3600997184c"
+          },
+          {
+            "title": "validator blocks social answers that claim a specific product candidate",
+            "bodySha256": "f21f9959ac7fac68c3d451860f699099f39cf4632f03670544c8af7194c79984"
+          },
+          {
+            "title": "AgentV2 validator does not treat plain Ich-kann answer openers as follow-up offers",
+            "bodySha256": "c1364f69c9da025a01580a57f685c649c7c8ea6bfb53efebbfd77abee5e92965"
+          },
+          {
+            "title": "AgentV2 validator blocks visible prose offers with first-person action verbs",
+            "bodySha256": "a1702d531c60bbdc199a4e744d75fdb75d734e997a7067fe240daed6d59a9eb2"
+          },
+          {
+            "title": "AgentV2 validator does not treat direct recommendations as follow-up offers",
+            "bodySha256": "ae32b16f65b374e872dba519c27c70870dd751f2f3e8171a25f6e0efb39eceba"
+          },
+          {
+            "title": "AgentV2 validator strips hidden pending action behind informational next step",
+            "bodySha256": "abb28b8914a4033dc68443e490a6f57fa38edd864f5a957bc144e8f2d64aea96"
+          },
+          {
+            "title": "AgentV2 validator strips hidden pending follow-up actions without visible offer",
+            "bodySha256": "e01a49bb0c056a7c3fc3265e686b961ff9d35fc4d0bedd7880742732758a4ddf"
+          },
+          {
+            "title": "AgentV2 validator keeps hidden pending action blocking when mixed with product truth failures",
+            "bodySha256": "2b05c1f61a7670269c1a536e3a6fce5ac1dce20b14ce182a7bcc552eba838921"
+          },
+          {
+            "title": "AgentV2 validator blocks next-step offers that are not rendered in the visible answer",
+            "bodySha256": "1733612d3aae59fa0230b36f3f17c6c2793442216e8bdee404de406aa25a543b"
+          },
+          {
+            "title": "AgentV2 validator blocks visible product offers stored as advisor follow-up actions",
+            "bodySha256": "fd0d5a686da23500e7f40d8881fee1c0fde4db6d5748a7f0dd7725053811dec5"
+          },
+          {
+            "title": "AgentV2 validator accepts visible product offers with matching pending product action",
+            "bodySha256": "40ce1f63bf9b1d9cfe39e302555433b2926a5d2410e3b3f74289ca0163085002"
+          },
+          {
+            "title": "AgentV2 validator blocks visible routine mutation offers stored as advisor follow-up actions",
+            "bodySha256": "7c9dbec00bec2fe9ec6b610eec430501c8cb9efcf5b5ca501030f3fd33cdf20e"
+          },
+          {
+            "title": "AgentV2 validator accepts product-worded routine mutation offers",
+            "bodySha256": "b72f2be79594d9fbcf75771f46f7aefd69680b6593b9c9be87dfd369a6cc1a38"
+          },
+          {
+            "title": "AgentV2 validator normalizes advice-style routine offers stored as routine mutations",
+            "bodySha256": "3beacf24a071388b090399da95fa22c24ef64a08735ba513eccdfae4ba58e7d0"
+          },
+          {
+            "title": "AgentV2 validator blocks routine mutation category drift from visible offers",
+            "bodySha256": "eadb7ad19d5d6ed95eb72579f8e8547dca37b8580fc5b8e34f7afe175ce13d6a"
+          },
+          {
+            "title": "AgentV2 validator does not count mirrored next-step offer as a second visible question",
+            "bodySha256": "047ad4c0e91281f43479a620c6b2bad62912f19303a6e9a44709465d5d335fe0"
+          },
+          {
+            "title": "AgentV2 validator schema blocks routine action fields on product follow-up actions",
+            "bodySha256": "428e16e74c34a5886bc494b2759e079c9973cbb785f26a7ad66c94431890aabc"
+          },
+          {
+            "title": "validator accepts social and domain-boundary answers when gate-consistent",
+            "bodySha256": "6c307c3e22ccfa43a02bb4e8fc02e50fc2ace7d58209c76fe9770dd11164d4ba"
+          },
+          {
+            "title": "validator blocks social and domain-boundary answers without an authorized gate",
+            "bodySha256": "5805894e3df9ca506d93231da87a5f7935597af687c20ed05003c6e742db52ba"
+          },
+          {
+            "title": "validator blocks social and domain-boundary side effects",
+            "bodySha256": "32341cefd612fdaff39ba57fb73bafa38fe6e85e0f45da3bcbce6053a8c8d2ba"
+          },
+          {
+            "title": "validator blocks domain-boundary code and gate mismatch",
+            "bodySha256": "b2e0a19772509b4a31ea7c2ccc4b1922fcba053d20e0de20fb144245d0b0a576"
+          },
+          {
+            "title": "validator requires mode-specific and category guidance for category product answers",
+            "bodySha256": "b5f387c208a2be4f4861622b8a7969f082ca407362e05cc229122295e8f64147"
+          },
+          {
+            "title": "validator requires product guidance for product-detail clarifications",
+            "bodySha256": "81c0a0da1ac1ae0cb4f04fdbc73ac482121f92d53a7385482e7f2f14aa35ab7c"
+          },
+          {
+            "title": "validator blocks repeated exact-name clarification for already named off-catalog products",
+            "bodySha256": "4fe5e1c72b1cd6e943a121f3b1a95d9183b4a8a8ea1b8ebffe5d980ca6d60815"
+          },
+          {
+            "title": "validator blocks substitute catalog recommendations for already named off-catalog product detail turns",
+            "bodySha256": "1193e90f59c5f3f56c84757fff1cc42d87ccf1bc4f16446fff6bdbab932d9bc6"
+          },
+          {
+            "title": "validator requires category guidance for category education answers",
+            "bodySha256": "8a39336abf3500497d4a3590613cf775c924e15f58c00fe0ffa1c1e92f877087"
+          },
+          {
+            "title": "validator blocks hallucinated product ids",
+            "bodySha256": "a080f9172eb9599ca937f9cb0cf86093511d0b98588b3292a5d5bb60eb83ce17"
+          },
+          {
+            "title": "validator blocks payload product ids that bypass tool grounding",
+            "bodySha256": "254a61dcdce9490a08176652777de3bad9998b9f71c4402f9049433361475814"
+          },
+          {
+            "title": "validator blocks memory leakage in user prose",
+            "bodySha256": "d14f1d67babbcdd5283f6b5aaf90e5cf5e7ea69d2d5e1f9a3e3b9c6d579653ec"
+          },
+          {
+            "title": "validator blocks raw internal routine labels in user-facing copy",
+            "bodySha256": "ff0a2a9c341d7bf8e0438a450b57446869ce8366c45830b7f8876db7def2d05d"
+          },
+          {
+            "title": "validator blocks raw internal labels in visible payload recommendation fields",
+            "bodySha256": "f532e623fdd7cfaae6ae3f9fce8f505696ca105c46f6d5bda88738fd7de90943"
+          },
+          {
+            "title": "validator catches raw internal labels in visible payload routine step reasons",
+            "bodySha256": "29df585ce03e92712bac5eb8dbfbacc0219e0196d00dea8e374c44e98ebc728f"
+          },
+          {
+            "title": "validator blocks internal product-ranking language in user-facing copy",
+            "bodySha256": "8d11339dbeb6e18b7400b76d4ae36ae9f682f526bee289666a8df43e0d979ccf"
+          },
+          {
+            "title": "validator blocks internal instruction phrasing in user-facing copy",
+            "bodySha256": "7bebcfc89d6bd67a7377851028bebc6f94500395f8aafd396782d59cc57c558d"
+          },
+          {
+            "title": "validator warns on catalog metadata phrasing in visible payload routine step actions",
+            "bodySha256": "68dd928ffba4eaa00710b87e369d56312f918703a2a622ec22aca4e21f519f80"
+          },
+          {
+            "title": "validator ignores hidden non-user-facing fields when checking visible payload language",
+            "bodySha256": "572d8a1d9ccec7752f99ec63d62a765ec1436805e8d9736f17d92cd44c4bd2ab"
+          },
+          {
+            "title": "validator blocks bare Ja opening for non-confirmation user message",
+            "bodySha256": "54a3f6a97b11790496b3af2b26c0326cd3b7029e5b09a58c229d5027be5431ae"
+          },
+          {
+            "title": "validator allows Ja opening after explicit confirmation",
+            "bodySha256": "169613d6c63e593010e49a725d4947707b544fea46e430abef9d756ed39a37c4"
+          },
+          {
+            "title": "validator warns on catalog classification phrasing without failing validation",
+            "bodySha256": "83d25cac2cb405cc279887220187d3457a7e6fa14972941ddf79b8f36ba4d1f0"
+          },
+          {
+            "title": "validator warns on representative ASCII German orthography tokens without failing validation",
+            "bodySha256": "0a08651cf5eff0c2a9a9cdc8d8ee3784b8202521a3ffbd0dbe96f970fdaf125d"
+          },
+          {
+            "title": "validator does not warn on ordinary ue letter pairs or standard German orthography",
+            "bodySha256": "9fcef57542103977bf1f3b8ffd1453c9fb0cca9bab62b093093db25cf5a0c626"
+          },
+          {
+            "title": "validator allows cosmetic treatment wording for frizz",
+            "bodySha256": "c8d1a0a1eb89b7067efd7ad3f5701c939004641facdb6a1b227777978ecf1490"
+          },
+          {
+            "title": "validator allows public styling tool wording",
+            "bodySha256": "9ec8845f820452421ddc640114af430838666993738a91b8d9eb9b53b188926b"
+          },
+          {
+            "title": "validator blocks raw product property dump bullets",
+            "bodySha256": "10ec9386d3c7918e9f8accef1617a86f64890ad9bc041e50a4a1d3e10d25ff10"
+          },
+          {
+            "title": "validator requires product answers to surface available recommendation options",
+            "bodySha256": "ddfe29df4601aa017918d0e912400914f62e4e15bc93c1cb0338098ff702bb93"
+          },
+          {
+            "title": "validator blocks empty product recommendations when selected products are available",
+            "bodySha256": "b7e69aa9f9b11da4e02a31101b380c429c82251bf29dda390801a95f46dac195"
+          },
+          {
+            "title": "validator requires semantic select_products tool arguments for concrete product interpretations",
+            "bodySha256": "f97c47c6d0875c2e05b248df98171ddb0c12e95b08ef4127b6e876b3fd80a88f"
+          },
+          {
+            "title": "validator treats product selection as supporting grounding for routine mutations",
+            "bodySha256": "fb8f171f62d3798cd24de5dc565ad86797be880ae61e432357c1212a8bf5019a"
+          },
+          {
+            "title": "validator blocks non-diagnostic request interpretation evidence quotes",
+            "bodySha256": "d1171b093139554d4989740fcc4eec2c5ec95a76271ed393cdf047914f773d31"
+          },
+          {
+            "title": "validator returns repair metadata for ungrounded evidence quotes",
+            "bodySha256": "aa0c19ac60102a06f01ae938b1a193a85983cc0eca57f07854e705ebe64a02c0"
+          },
+          {
+            "title": "validator allows full short user messages as evidence quotes",
+            "bodySha256": "d91277a5e92649bad3e382c8d45a022c62980ea4e4f68bd4cbee61f4b5ffe3ea"
+          },
+          {
+            "title": "validator allows exact short concern terms as evidence quotes",
+            "bodySha256": "3e1e07f22a9dbeec0ad50423f974c3c14c7639f781ec233daa0a02dd0fbd898d"
+          },
+          {
+            "title": "validator allows decorative quote marks and punctuation differences in evidence quotes",
+            "bodySha256": "dfc97afd46751a22918eb22d94fa046019b2228016619248556880227e3fcc9d"
+          },
+          {
+            "title": "validator allows German umlaut transliterations in evidence quotes",
+            "bodySha256": "b97a6217e6b993d32886d04ba2a6c84fc1875d81c67b68ded04be487f375ecd7"
+          },
+          {
+            "title": "validator allows evidence quotes from active routine visible step labels",
+            "bodySha256": "f4ff748b995d5aa226cad41647d266b758834eade24c393ec566fab6e1b7696b"
+          },
+          {
+            "title": "validator warns instead of blocking semantically close evidence paraphrases",
+            "bodySha256": "d29799dcb0e761a537ade144a821a647f69d35f10c3fe553c3d7d534fc1eec4e"
+          },
+          {
+            "title": "validator rejects vague or invented evidence quotes",
+            "bodySha256": "0ca926ebb7627137d121088bb08c6b0b5cc149b5715badda12bdcad88021740c"
+          },
+          {
+            "title": "validator sanitizes harmless terminal evidence quote metadata during validation",
+            "bodySha256": "a125ef53e9c85d89797eb2f869d8d07d77ce013191fc90511dd471f418915b1b"
+          },
+          {
+            "title": "validator sanitizer refuses mixed or non-evidence failures",
+            "bodySha256": "d9beabc8e07c32259edc45b58bd62d3e7305cb68136dc4c6952298136b5f36fa"
+          },
+          {
+            "title": "validator blocks incomplete routine prose that omits visible steps",
+            "bodySha256": "2036495939e265ecebe3d7e6ff34e36f1f2c62451602912ea621ea7c89f1582b"
+          },
+          {
+            "title": "validator blocks incomplete product prose that omits a final recommendation",
+            "bodySha256": "a892f1ff4fcf3084b413329485be1497a258fb27874acd7030f2737b7a41111c"
+          },
+          {
+            "title": "validator blocks final product rendering when product names are unavailable",
+            "bodySha256": "17e3b31b0feb006c7d68c07375158681c151023e774f93acee565547d6b3686d"
+          },
+          {
+            "title": "validator blocks incomplete routine product deep dive prose that omits the product",
+            "bodySha256": "72edb2468914541d049b8eaf2f1ad95ce0d248d872ab7684a2bb4c938e851f79"
+          },
+          {
+            "title": "validator requires blocked answers to render the actual blocker, not only a generic phrase",
+            "bodySha256": "dd102a939e3395466841594851e0e26eeeb18f52de111d4f45093b50eec4c854"
+          },
+          {
+            "title": "validator rejects unasked product cards in general advice",
+            "bodySha256": "c0a2fc8b0dae9781c58bfc8bb3c4f1cb32df186e69b9c2c7d0adb9e0097ce943"
+          },
+          {
+            "title": "validator rejects product recommendation mode when the user did not ask for products",
+            "bodySha256": "a882b96ec9b8a59c4934631c633eb18d310f2d17f48bfc83144db217890f4550"
+          },
+          {
+            "title": "validator requires selected products to be surfaced for concrete category-fit asks",
+            "bodySha256": "c970c3006bfb038a3590f34e9c4148bead92ccd726630318be59ede9c0d538e5"
+          },
+          {
+            "title": "validator allows general category comparison without product fulfillment",
+            "bodySha256": "cae613e0b5b2e80af0356887479f5dab6cc0dd46ac770514bbc44c3e5d51fcd5"
+          },
+          {
+            "title": "validator respects an explicit request for two product recommendations",
+            "bodySha256": "2255490e211258c1a95bdd3406ac1baa259a58991abd9ef7bde3d38c64424560"
+          },
+          {
+            "title": "validator accepts explicit one and two product recommendation counts",
+            "bodySha256": "fd79587654d83b70caf2c1729565f37d20d13a485ae5c53a797ef9bae3637bf5"
+          },
+          {
+            "title": "validator allows vague alternatives to return one grounded option",
+            "bodySha256": "1731ac139048b0098ace9815d2c4014e78d4edd1f3311222c4c345fc8ea08815"
+          },
+          {
+            "title": "validator allows vague alternatives to return more than three grounded options",
+            "bodySha256": "c300e235d7e7d41be4446b601828a7c34a0d3d57eea57775ee2b1a351626c167"
+          },
+          {
+            "title": "validator accepts one visible recommendation per multi-category product slot",
+            "bodySha256": "fe4f068b8a79a1234a3c6b07537e402ff450358005698cafdef9518a58384f4b"
+          },
+          {
+            "title": "validator still blocks single-category exact-count mismatches",
+            "bodySha256": "10e932220f0774d63988624469d222971825cbe481db678c1b3ba1ff970596f7"
+          },
+          {
+            "title": "validator does not relax single-category exact-count requests into invented slots",
+            "bodySha256": "2637081aa90ec6042f787ffc85fd7d866485a1c0945674fd89ffa1a84e11976e"
+          },
+          {
+            "title": "validator does not let model-authored evidence unlock invented slots",
+            "bodySha256": "d554daa08169d7143a501073f4199da11debd86cffb7c61a9859f729783f07d6"
+          },
+          {
+            "title": "validator blocks multi-slot answers that surface products outside selected projections",
+            "bodySha256": "eb56618e25c70882dc080dc42c922e77c46686234ec46ac5e2d5e8f8fb162575"
+          },
+          {
+            "title": "validator blocks multi-slot answers above the distinct category cap",
+            "bodySha256": "8a56a70f851808765127ebfee06b6630a2fe0e05192d737c30794a3a6921990e"
+          },
+          {
+            "title": "validator does not relax multi-slot answers that double-fill one slot",
+            "bodySha256": "1fd43baf9b77ad15fbbc3cc9d2bab8c13fe7aafc3df350e56f79b15ace97a61f"
+          },
+          {
+            "title": "validator does not relax multi-slot answers with duplicate recommendation rows",
+            "bodySha256": "6f753ab8b63f8bde683ef82582eff0559fdac3754c9aee6721316f1da569f883"
+          },
+          {
+            "title": "validator does not apply the multi-slot cap to non-A2 multi-category traces",
+            "bodySha256": "a9aa9a1712256f1666a20ea26aa3b6586bbafa7a4ea93961026401bf72a864ec"
+          },
+          {
+            "title": "validator does not relax exact counts for terminal-only multi-category slot shape",
+            "bodySha256": "a39f571dbba49f10c583b63753ba3e2f3d91ce287c08059a45a8543b6e5754a0"
+          },
+          {
+            "title": "validator accepts natural catalog-verification wording for blocked product lookup answers",
+            "bodySha256": "8931b6567d26b470caee8a3a6ba8853809e7be8dd04f0cdfcb7e6560c063a913"
+          },
+          {
+            "title": "validator ignores hidden product grounding for blocked not-found product deferrals",
+            "bodySha256": "8e7269ec22f2ee0eac64d83027c5a8e0dd65ff83683ade7c52fd81e62b83fcd9"
+          },
+          {
+            "title": "validator does not relax multi-slot answers using prior-turn selected products",
+            "bodySha256": "12ae19b58fcf9fe14c6578735aa957fc9e8b58b0deb634f50ca15bd01599f9ec"
+          },
+          {
+            "title": "validator does not relax multi-slot answers that omit a fillable slot",
+            "bodySha256": "cea95bdcd551fc6321d887089ba5cd9f9f1f2c36cacd439dda1a067b3b530ba2"
+          },
+          {
+            "title": "validator accepts partial success for multi-category product slots",
+            "bodySha256": "ca293230651abaf5e5675bc195c11eb899fab00c4b55afdb489950a95e7eb7f2"
+          },
+          {
+            "title": "validator does not relax partial success that hides an empty slot",
+            "bodySha256": "621364627a48b72a646c98eb3f251fa62bc5b51433f75ad1d1e1ea74501cd4a8"
+          },
+          {
+            "title": "validator does not relax partial success that names an empty slot without no-match copy",
+            "bodySha256": "6c02e6c79a0e75e597b5bad44e7cf37a44ee310d2548a107ab5933e2f0c28ac4"
+          },
+          {
+            "title": "validator does not relax missing-slot copy when safe language refers elsewhere",
+            "bodySha256": "ffc74f51f2b98c8da3ce620695da12ce1a7d3bdd56fe903a1cc5264056a3d510"
+          },
+          {
+            "title": "validator allows routine product asks as product recommendations with routine context",
+            "bodySha256": "cfc479fcc94d710ec536ea1912e08384b1a8a3afd8abe381a3a098733c4352dc"
+          },
+          {
+            "title": "validator bases option count on projections relevant to the recommended products",
+            "bodySha256": "aca7c3cf326cb9581fba197b35d2d13430995b5ce09a453ac6f1b8b58f48760b"
+          },
+          {
+            "title": "validator validates every answer mode payload",
+            "bodySha256": "611b8513dd4bea1252ebb67637dc8be9881dbe97ad992e7f00998e260d24ef78"
+          },
+          {
+            "title": "validator rejects malformed mode payloads",
+            "bodySha256": "1c13929d5e300c939f96b920128d5062a6c26543ee2ceabfa84804a57f77a16d"
+          },
+          {
+            "title": "validator coerces constraint-shaped safety payloads",
+            "bodySha256": "25b243753a4d1a98e0eba03697dfcd668d276f32c59643b6c1e4ce76237d246b"
+          },
+          {
+            "title": "validator explains mismatched payload fields for repair",
+            "bodySha256": "99468ec5cf7b3f59c429b85f0e21d2f4693948009bf450c582d2a56a17f4e95e"
+          },
+          {
+            "title": "validator blocks hallucinated routine step ids",
+            "bodySha256": "6d8b07e0aed3c20762f308d2170b5f30cf78db59a3db629da5ce0df73d0402b3"
+          },
+          {
+            "title": "validator blocks payload routine step ids that bypass tool grounding",
+            "bodySha256": "15f649263c9d5053d60303170354d79474c4d699c6d3cb939e04502d43e49f51"
+          },
+          {
+            "title": "validator blocks routine payload layer that disagrees with routine context",
+            "bodySha256": "466035d480d7c334faef70dca089534e8e01196362b59bd6dcfbe9a2b179c827"
+          },
+          {
+            "title": "validator requires routine tool call even when routine projections are present",
+            "bodySha256": "c6cdbaca2b14f84acb7fcdff4b36855a359fc9039b2314512b53efabdb27b520"
+          },
+          {
+            "title": "validator allows first category-specific routine mutation when current routine inventory exists",
+            "bodySha256": "08a7cf4361bd178431860beaf773a75575ff94319f6af532923f7aeba7c595d5"
+          },
+          {
+            "title": "validator allows guidance-only general advice inside active routine thread",
+            "bodySha256": "28828199108f3d94062a36d57190860e4992323a65220a2ffedbd5af4a7ad001"
+          },
+          {
+            "title": "validator keeps routine context active for routine follow-up questions",
+            "bodySha256": "328cfe1196e3dca623445e385ce9c3c69d07bf980637631009e1e99e233bad71"
+          },
+          {
+            "title": "validator requires routine tool for routine mutation inside active thread",
+            "bodySha256": "6f7c58abafc118c47bd9648cef9f94613ad7e08b29df5308a70c09473c44ebb0"
+          },
+          {
+            "title": "validator blocks routine mutation intent even when mislabeled as general advice",
+            "bodySha256": "14c301e8dda886cd408d8e64767d110688bf283696f00d3b09e3dba41d991ebb"
+          },
+          {
+            "title": "validator blocks pronoun-based routine mutation intent in active routine thread",
+            "bodySha256": "cadce978afd192d6944e0c69f127e07fa6b10d98c07f0c79c13b6561de9ffdfc"
+          },
+          {
+            "title": "validator blocks routine layer regression using routine thread current layer fallback",
+            "bodySha256": "a0651066ea14cffd8834bdba1dca9a5c753ee7b959e5ca7d3138206e3583762e"
+          },
+          {
+            "title": "validator requires routine tool for hand-rolled routine change advice",
+            "bodySha256": "5c9e172c7e09eef582ee354c6eab6eebdd927c6ca46595eea007f6d14ba99a16"
+          },
+          {
+            "title": "validator allows placement-only dry shampoo advice without routine tooling",
+            "bodySha256": "b15b6b0943b733013a09ff30bf49d936ae5df563cfca32e9981e364c63a12e6e"
+          },
+          {
+            "title": "validator allows placement-only oil and leave-in advice without routine tooling",
+            "bodySha256": "57128058ffdd3a126f9b3329de915d2cac13c532ccd467179898e6da157127c5"
+          },
+          {
+            "title": "validator allows concise summaries inside active routine threads without routine tool",
+            "bodySha256": "2e6c8afb78b134c782400200db882bd65f5f42573a78bbc8bd89e635eff6837f"
+          },
+          {
+            "title": "validator requires product tool and routine return path for routine product recommendations",
+            "bodySha256": "788ecf09a9debfcf1164d64eb7286f18f27b6dcaffaa8ae5af31e38b317319e9"
+          },
+          {
+            "title": "validator allows nullable next step offer for routine product recommendations with return path",
+            "bodySha256": "b0f50363a434805d8d925d8e3f203791a9e30ac76edbcb234a972d707af12a56"
+          },
+          {
+            "title": "validator blocks objective bad conversation closers",
+            "bodySha256": "ef6093432bcf27c48b1d50f9a8e213ac41d9ce8e99d2d5b30b98325bdf9e736d"
+          },
+          {
+            "title": "validator checks rendered clarification question close text",
+            "bodySha256": "6b41c0a021db0370ac603e94daf6c0330a8c8c77e20403aa252507954e30b453"
+          },
+          {
+            "title": "validator warns but does not block weak conversation closers",
+            "bodySha256": "69ec87de98b5a841ead587dd118ea446f07dc912953931828bc3e0104ec6f404"
+          },
+          {
+            "title": "validator warns on duplicated medium-length visible answer paragraphs",
+            "bodySha256": "bbc95b003bb791145e4a5dbd4b860cf37cb23e6c49394293be5b291386753f2b"
+          },
+          {
+            "title": "validator warns on adjacent long visible answer paragraphs with high overlap",
+            "bodySha256": "0f624071bfbdeab5fe906d311cde8cfc6ceb5cefc2764c492cb713a401f6c120"
+          },
+          {
+            "title": "validator ignores repeated short visible answer labels",
+            "bodySha256": "f3b61870be4bc46dfd894f7246d256737c333e9e9296b93d19d1c2e22582e8fa"
+          },
+          {
+            "title": "validator allows honest clean stop for unsupported INCI-list analysis",
+            "bodySha256": "08edb5995a2a1b1e6c192d97ba9bc71343e06420208e73ec87bf42b0430e4cfe"
+          },
+          {
+            "title": "validator blocks carried routine step ids when active routine thread has no visible steps",
+            "bodySha256": "25eb1ee9ceb6e522b63deb3a811dc5006621ff39ca1f2524dcb7a4d306c3bbe1"
+          },
+          {
+            "title": "validator accepts routine product recommendation step ids from active routine thread visible steps",
+            "bodySha256": "8e78c33361d8140f600603ede64aa90707ba296ce9643f559feaaafd816c6a92"
+          },
+          {
+            "title": "validator blocks routine product recommendation context categories that disagree with interpretation",
+            "bodySha256": "56d3faed58f608619d9515c0c98ff7515e29c16dfe354aef06e19050cf7af563"
+          },
+          {
+            "title": "validator blocks routine product recommendation category that disagrees with referenced routine step",
+            "bodySha256": "0f0d00cb58a3571e18d88dcca6d60d03939a6d9d6f0df15526d052f88837db0b"
+          },
+          {
+            "title": "validator blocks ungrounded routine product recommendation step ids",
+            "bodySha256": "faf7727255cc2cbe11eb9d00007f83307e8faf0edfa76e69e53124ad0fe50975"
+          },
+          {
+            "title": "validator blocks product-first answers in restricted safety mode",
+            "bodySha256": "b62932133fe85e73da8442bf3ea2310df6437c5b0a315d513365e2290db6c0f6"
+          },
+          {
+            "title": "validator blocks common German medical diagnosis and treatment claims",
+            "bodySha256": "4129f691d032224682408cf4142ec001978ec1b4e7a5fb6ff28d2aaa8fec3a76"
+          },
+          {
+            "title": "validator caps product recommendations at three when count policy is cap",
+            "bodySha256": "74845b3ca9cc632245332c9bddecfcd3c362af5c66088695aba3013d11e96a48"
+          },
+          {
+            "title": "validator drops invalid session memory without blocking valid final answer",
+            "bodySha256": "f57af0893e4c9a94c3cbc7ee74d3f98b3c9ded6efa86b114ce3569333b7ceee3"
+          },
+          {
+            "title": "pending intake lookup for another category does not block a grounded recommendation",
+            "bodySha256": "8bedeae429dbd6a6f8b31ea52f93f8915293370aea5fa7f73e6618a497c395fc"
+          },
+          {
+            "title": "pending same-category intake does not veto a generic recommendation for other products",
+            "bodySha256": "8d13fae404bb800f3a02a6d38f10a9f750333367e81266b225a8066bff102953"
+          },
+          {
+            "title": "runtime-loaded guidance satisfies the requirement when the model omits it from grounding",
+            "bodySha256": "5c0b36eee5cfccf1a9d33da2d3fda561782f040b34b395e7fb870abe78d99410"
+          }
+        ]
+      }
+    }
+  ],
+  "donors": [
+    {
+      "line": 2080,
+      "id": "D1",
+      "mark": "D",
+      "title": "validator does not require lookup for broad product recommendations without a concrete product",
+      "bodySha256": "1e6b2b430a1eb539f965533a146d9e2fd69ffba4f64f072138646832f24d710c",
+      "keeperLine": 6161,
+      "keeperTitle": "validator accepts explicit one and two product recommendation counts"
+    },
+    {
+      "line": 2115,
+      "id": "C1",
+      "mark": "C",
+      "title": "validator allows product recommendations after exact product lookup",
+      "bodySha256": "debf55741278a6c6de761d069b35df35bd2de3079b5944440f8d0944ad97fe77",
+      "keeperLine": 2315,
+      "keeperTitle": "validator allows claims for exact lookup products when another lookup is unresolved"
+    },
+    {
+      "line": 2553,
+      "id": "D2",
+      "mark": "D",
+      "title": "validator does not require duplicate lookup for grounded alternatives to active product",
+      "bodySha256": "6add77432515ba15646cf8abbed32a8911a020e528f41c8775166561cfd08cd2",
+      "keeperLine": 2642,
+      "keeperTitle": "validator diet softens unknown hard rule metadata on grounded product alternatives"
+    },
+    {
+      "line": 3467,
+      "id": "D3",
+      "mark": "D",
+      "title": "AgentV2 validator allows informational next step without pending follow-up action",
+      "bodySha256": "9a35cc28f49d2c36d59b4873aa6034aecf62a45b7d3fb74d64378cd03c3aef84",
+      "keeperLine": 3500,
+      "keeperTitle": "AgentV2 validator strips hidden pending action behind informational next step"
+    },
+    {
+      "line": 5633,
+      "id": "D4",
+      "mark": "D",
+      "title": "validator requires user-facing prose to mention each recommended product",
+      "bodySha256": "9e874420e37b4cf859ab743dec9e4d4e4df0a0c43b15ea055822f9731f38b975",
+      "keeperLine": 5764,
+      "keeperTitle": "validator blocks incomplete product prose that omits a final recommendation"
+    },
+    {
+      "line": 4936,
+      "id": "D5",
+      "mark": "D",
+      "title": "validator accepts natural product fit sentences",
+      "bodySha256": "8e9501c4fc46f8ae47cc2f7e807793eb6e50657b323e72b4726fb0a243ba1660",
+      "keeperLine": 6161,
+      "keeperTitle": "validator accepts explicit one and two product recommendation counts"
+    }
+  ],
+  "modifiedExistingCallbacks": [
+    {
+      "line": 2315,
+      "title": "validator allows claims for exact lookup products when another lookup is unresolved",
+      "beforeSha256": "e0032b890105dbabbe37a5e3f8c842a7574b6b5cce81b76a4c2f4792b3a18788",
+      "afterSha256": "a4215736001fd341b0a731c045df2528fe497c6f940071c5ba47fbfd36517116"
+    },
+    {
+      "line": 5764,
+      "title": "validator blocks incomplete product prose that omits a final recommendation",
+      "beforeSha256": "36ff4d26e4b154b4c8dbe1de10f413e4f7bddc092f377adf3399f0dba0724737",
+      "afterSha256": "a892f1ff4fcf3084b413329485be1497a258fb27874acd7030f2737b7a41111c"
+    },
+    {
+      "line": 5859,
+      "title": "validator blocks incomplete routine product deep dive prose that omits the product",
+      "beforeSha256": "39f397804f6b485f42d441e0e335ef3076c21788327db17360f721b18affb031",
+      "afterSha256": "72edb2468914541d049b8eaf2f1ad95ce0d248d872ab7684a2bb4c938e851f79"
+    },
+    {
+      "line": 9722,
+      "title": "validator drops invalid session memory without blocking valid final answer",
+      "beforeSha256": "cbfac47cfd9666942d017d9481176743f039db36e7f9c7812c24da3d1a60238c",
+      "afterSha256": "f57af0893e4c9a94c3cbc7ee74d3f98b3c9ded6efa86b114ce3569333b7ceee3"
+    }
+  ]
+}

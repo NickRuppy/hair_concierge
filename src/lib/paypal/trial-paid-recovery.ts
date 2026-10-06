@@ -4,7 +4,6 @@ import {
   loadTrialPaidRecoveryOperation,
   guardTrialPaidRecoveryOperation,
   commitTrialPaidRecoveryOperation,
-  abandonTrialPaidRecoveryOperation,
   type TrialPaidRecoveryOperation,
 } from "../billing/trial-paid-recovery-operations"
 import type { TrialOfferSnapshot } from "../billing/trial-offer"
@@ -484,47 +483,6 @@ export async function reconcilePayPalTrialPaidRecovery(
   }
   await project(await loadTrialPaidRecoveryOperation(d.supabase, i), d)
   return result(o, "committed")
-}
-/** Browser cancellation alone is not proof. Cancel and reconcile the candidate before releasing its operation. */
-export async function abandonPayPalTrialPaidRecovery(
-  i: Input,
-  d: PayPalTrialPaidRecoveryDeps,
-): Promise<PayPalTrialPaidRecoveryResult> {
-  const o = await loadTrialPaidRecoveryOperation(d.supabase, i)
-  check(o, i)
-  if (o.status !== "pending") return result(o, o.status)
-  const r = await frozen(d, i)
-  if (r) {
-    await attest(r, d)
-    if (r.request_sent_at && !r.target_agreement_id) return result(o, "reconciliation_required")
-    if (r.target_agreement_id) {
-      const retrieve = d.retrieve ?? retrievePayPalTrialSubscription
-      let s = await retrieve(r.target_agreement_id)
-      if (s.id !== r.target_agreement_id || s.custom_id !== `trial-paid-recovery:${o.id}`)
-        throw new Error("PayPal recovery abandonment binding mismatch")
-      if (!["CANCELLED", "EXPIRED"].includes(s.status ?? "")) {
-        await (d.cancel ?? cancelPayPalSubscription)(s.id!, "Paid recovery approval abandoned")
-        s = await retrieve(s.id!)
-      }
-      if (!["CANCELLED", "EXPIRED"].includes(s.status ?? ""))
-        return result(o, "reconciliation_required")
-      if (
-        (await transactions(s, o, d)).some(
-          (t) => !["FAILED", "DENIED", "DECLINED"].includes(t.status ?? ""),
-        )
-      )
-        return result(o, "reconciliation_required")
-    }
-  }
-  return result(
-    o,
-    (await abandonTrialPaidRecoveryOperation(d.supabase, {
-      ...i,
-      reconciliationReference: `paypal:abandoned:${o.id}`,
-    }))
-      ? "abandoned"
-      : "reconciliation_required",
-  )
 }
 async function project(o: TrialPaidRecoveryOperation, d: PayPalTrialPaidRecoveryDeps) {
   const r = await frozen(d, { operationId: o.id, authenticatedUserId: o.userId })

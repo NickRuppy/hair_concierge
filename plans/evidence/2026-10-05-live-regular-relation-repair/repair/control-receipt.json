@@ -1,0 +1,11 @@
+{
+  "cleanBefore": 0,
+  "intendedRed": 1,
+  "cleanAfter": 0,
+  "restoredExactly": true,
+  "ownerOriginalSHA256": "1e9b1f458e6adb52ee76ecf725c3a6007e91aab6ccb5f89a6dd00232691c93a1",
+  "ownerMutantSHA256": "d292600b9709a4e4c9aed76cd725f2b6064c518e36b0fd4f449fe22ba2f3bda6",
+  "literalClassifierFalse": "real current enrollment propagates missing relation error, intended doesNotReject catches it",
+  "rootFullFaultReadPending": false,
+  "rootFullFaultRead": "ERR_ASSERTION, doesNotReject, complete rejection message, first outer enrollment496:3; actual42P01 regular relation. Source byte exact restored; canonical mode644 verified separately."
+}

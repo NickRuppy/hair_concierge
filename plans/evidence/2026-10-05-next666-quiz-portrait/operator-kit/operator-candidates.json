@@ -1,0 +1,88 @@
+[
+  {
+    "id": "C1",
+    "mark": "C",
+    "file": "tests/hair-length-option-card.test.tsx",
+    "donor": {
+      "name": "shared hair-length card keeps the complete decorative portrait composition inside one fixed media frame",
+      "body": "test(\"shared hair-length card keeps the complete decorative portrait composition inside one fixed media frame\", () => {\n  const html = renderToStaticMarkup(\n    <HairLengthOptionCard\n      config={portraitConfig}\n      description=\"Taille oder länger.\"\n      label=\"Sehr lang\"\n      onClick={() => {}}\n      selected={false}\n      selectionVariant=\"regular\"\n    />,\n  )\n\n  assert.match(html, /data-hair-length-card=\"true\" data-selection-variant=\"regular\"/)\n  assert.match(html, /h-\\[184px\\]/)\n  assert.match(html, /h-\\[140px\\]/)\n  assert.match(html, /\\[@media\\(max-height:700px\\)\\]:h-\\[152px\\]/)\n  assert.match(html, /data-hair-portrait-media=\"true\"/)\n  assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )\n  assert.match(html, /<svg aria-hidden=\"true\"/)\n  assert.match(html, /<img alt=\"\"/)\n  assert.match(html, /aria-pressed=\"false\"/)\n  assert.match(html, /aria-describedby=\"[^\"]+\"/)\n})",
+      "sha256": "278897d0470a38f733061620621718c8d470b85c5626b7cc19ba94968ac2406d"
+    },
+    "keeper": {
+      "file": "tests/quiz-option-card.test.tsx",
+      "name": "grid portrait cards fit the complete silhouette to the fixed media height",
+      "body": "test(\"grid portrait cards fit the complete silhouette to the fixed media height\", () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Sehr lang\"\n      description=\"Taille oder länger.\"\n      active={false}\n      onClick={() => {}}\n      visual={{\n        kind: \"portrait\",\n        alt: \"Haarlängen-Illustration\",\n        config: {\n          kind: \"personalized\",\n          density: \"medium\",\n          length: \"very_long\",\n          naturalRootPattern: \"wavy\",\n          treatedLengthPattern: \"wavy\",\n          treatmentState: \"none\",\n        },\n      }}\n      visualLayout=\"grid\"\n    />,\n  )\n\n  assert.match(html, /data-hair-length-card=\"true\"/)\n  assert.match(html, /data-hair-portrait-media=\"true\"/)\n  assert.match(html, /data-hair-portrait-art=\"true\"/)\n  assert.match(html, /class=\"relative block h-full w-full object-contain\"/)\n  assert.match(html, /alt=\"\"/)\n\n  assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )\n})",
+      "sha256": "da7bdde9c4321f9b129a9656caf79716f70e421b739e207bb1833ef2c1413162",
+      "after": "test(\"grid portrait cards fit the complete silhouette to the fixed media height\", () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Sehr lang\"\n      description=\"Taille oder länger.\"\n      active={false}\n      onClick={() => {}}\n      visual={{\n        kind: \"portrait\",\n        alt: \"Haarlängen-Illustration\",\n        config: {\n          kind: \"personalized\",\n          density: \"medium\",\n          length: \"very_long\",\n          naturalRootPattern: \"wavy\",\n          treatedLengthPattern: \"wavy\",\n          treatmentState: \"none\",\n        },\n      }}\n      visualLayout=\"grid\"\n    />,\n  )\n\n  assert.match(html, /data-hair-length-card=\"true\"/)\n  assert.match(html, /data-hair-portrait-media=\"true\"/)\n  assert.match(html, /data-hair-portrait-art=\"true\"/)\n  assert.match(html, /class=\"relative block h-full w-full object-contain\"/)\n  assert.match(html, /alt=\"\"/)\n\n  assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )\n  assert.match(html, /data-hair-length-card=\"true\" data-selection-variant=\"regular\"/)\n  assert.match(html, /h-\\[184px\\]/)\n  assert.match(html, /h-\\[140px\\]/)\n  assert.match(html, /\\[@media\\(max-height:700px\\)\\]:h-\\[152px\\]/)\n  assert.match(html, /<svg aria-hidden=\"true\"/)\n  assert.match(html, /<img alt=\"\"/)\n  assert.match(html, /aria-pressed=\"false\"/)\n  assert.match(html, /aria-describedby=\"[^\"]+\"/)\n})",
+      "reviewedEdits": [
+        {
+          "from": "test(\"grid portrait cards fit the complete silhouette to the fixed media height\", () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Sehr lang\"\n      description=\"Taille oder länger.\"\n      active={false}\n      onClick={() => {}}\n      visual={{\n        kind: \"portrait\",\n        alt: \"Haarlängen-Illustration\",\n        config: {\n          kind: \"personalized\",\n          density: \"medium\",\n          length: \"very_long\",\n          naturalRootPattern: \"wavy\",\n          treatedLengthPattern: \"wavy\",\n          treatmentState: \"none\",\n        },\n      }}\n      visualLayout=\"grid\"\n    />,\n  )\n\n  assert.match(html, /data-hair-length-card=\"true\"/)\n  assert.match(html, /data-hair-portrait-media=\"true\"/)\n  assert.match(html, /data-hair-portrait-art=\"true\"/)\n  assert.match(html, /class=\"relative block h-full w-full object-contain\"/)\n  assert.match(html, /alt=\"\"/)\n\n  assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )\n})",
+          "to": "test(\"grid portrait cards fit the complete silhouette to the fixed media height\", () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Sehr lang\"\n      description=\"Taille oder länger.\"\n      active={false}\n      onClick={() => {}}\n      visual={{\n        kind: \"portrait\",\n        alt: \"Haarlängen-Illustration\",\n        config: {\n          kind: \"personalized\",\n          density: \"medium\",\n          length: \"very_long\",\n          naturalRootPattern: \"wavy\",\n          treatedLengthPattern: \"wavy\",\n          treatmentState: \"none\",\n        },\n      }}\n      visualLayout=\"grid\"\n    />,\n  )\n\n  assert.match(html, /data-hair-length-card=\"true\"/)\n  assert.match(html, /data-hair-portrait-media=\"true\"/)\n  assert.match(html, /data-hair-portrait-art=\"true\"/)\n  assert.match(html, /class=\"relative block h-full w-full object-contain\"/)\n  assert.match(html, /alt=\"\"/)\n\n  assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )\n  assert.match(html, /data-hair-length-card=\"true\" data-selection-variant=\"regular\"/)\n  assert.match(html, /h-\\[184px\\]/)\n  assert.match(html, /h-\\[140px\\]/)\n  assert.match(html, /\\[@media\\(max-height:700px\\)\\]:h-\\[152px\\]/)\n  assert.match(html, /<svg aria-hidden=\"true\"/)\n  assert.match(html, /<img alt=\"\"/)\n  assert.match(html, /aria-pressed=\"false\"/)\n  assert.match(html, /aria-describedby=\"[^\"]+\"/)\n})"
+        }
+      ]
+    },
+    "assertionUnion": [
+      {
+        "donorText": "assert.match(html, /data-hair-length-card=\"true\" data-selection-variant=\"regular\"/)",
+        "keeperText": "assert.match(html, /data-hair-length-card=\"true\" data-selection-variant=\"regular\"/)",
+        "keeperIndex": 6,
+        "basis": "Original donor clause transferred, whitespace only"
+      },
+      {
+        "donorText": "assert.match(html, /h-\\[184px\\]/)",
+        "keeperText": "assert.match(html, /h-\\[184px\\]/)",
+        "keeperIndex": 7,
+        "basis": "Original donor clause transferred, whitespace only"
+      },
+      {
+        "donorText": "assert.match(html, /h-\\[140px\\]/)",
+        "keeperText": "assert.match(html, /h-\\[140px\\]/)",
+        "keeperIndex": 8,
+        "basis": "Original donor clause transferred, whitespace only"
+      },
+      {
+        "donorText": "assert.match(html, /\\[@media\\(max-height:700px\\)\\]:h-\\[152px\\]/)",
+        "keeperText": "assert.match(html, /\\[@media\\(max-height:700px\\)\\]:h-\\[152px\\]/)",
+        "keeperIndex": 9,
+        "basis": "Original donor clause transferred, whitespace only"
+      },
+      {
+        "donorText": "assert.match(html, /data-hair-portrait-media=\"true\"/)",
+        "keeperText": "assert.match(html, /data-hair-portrait-media=\"true\"/)",
+        "keeperIndex": 1,
+        "basis": "Exact original keeper clause already present"
+      },
+      {
+        "donorText": "assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )",
+        "keeperText": "assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )",
+        "keeperIndex": 5,
+        "basis": "Exact original keeper clause already present"
+      },
+      {
+        "donorText": "assert.match(html, /<svg aria-hidden=\"true\"/)",
+        "keeperText": "assert.match(html, /<svg aria-hidden=\"true\"/)",
+        "keeperIndex": 10,
+        "basis": "Original donor clause transferred, whitespace only"
+      },
+      {
+        "donorText": "assert.match(html, /<img alt=\"\"/)",
+        "keeperText": "assert.match(html, /<img alt=\"\"/)",
+        "keeperIndex": 11,
+        "basis": "Original donor clause transferred, whitespace only"
+      },
+      {
+        "donorText": "assert.match(html, /aria-pressed=\"false\"/)",
+        "keeperText": "assert.match(html, /aria-pressed=\"false\"/)",
+        "keeperIndex": 12,
+        "basis": "Original donor clause transferred, whitespace only"
+      },
+      {
+        "donorText": "assert.match(html, /aria-describedby=\"[^\"]+\"/)",
+        "keeperText": "assert.match(html, /aria-describedby=\"[^\"]+\"/)",
+        "keeperIndex": 13,
+        "basis": "Original donor clause transferred, whitespace only"
+      }
+    ],
+    "equivalence": "Same false selected, regular variant, very_long, medium density, no treatment, label Sehr lang and description Taille oder länger. Direct coily vs wrapper wavy selects a different unasserted src/markers record; both current manifest assets ownBody=false. Shared card never branches on texture; figure uses src and ownBody only. Keep wrapper existing render and all original inputs."
+  }
+]

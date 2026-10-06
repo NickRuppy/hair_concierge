@@ -3,7 +3,6 @@ import test from "node:test"
 
 import { discoveryStepDepth } from "../src/lib/discovery/load-ideal-routine"
 import {
-  deriveFrequencyDelta,
   deriveStepFrequencyDelta,
   IDEAL_CADENCE_LABELS,
   IDEAL_CADENCE_RULES,
@@ -159,9 +158,9 @@ test("a string the Idealroutine never prints gets no band (no guessing)", () => 
 function delta(
   cadenceLabel: string,
   frequency: string | null | undefined,
-  washFrequency: Parameters<typeof deriveFrequencyDelta>[0]["washFrequency"] = "weekly_2x",
+  washFrequency: Parameters<typeof deriveStepFrequencyDelta>[0]["washFrequency"] = "weekly_2x",
 ): FrequencyDelta | null {
-  return deriveFrequencyDelta({ cadenceLabel, frequency, washFrequency })
+  return deriveStepFrequencyDelta({ cadenceLabel, frequencies: [frequency], washFrequency })
 }
 
 test("no chip without her frequency: not asked, missing, „Weiß ich nicht“, garbage", () => {
@@ -281,35 +280,24 @@ test("step sum: any owned entry without a known frequency → no chip for the st
   )
 })
 
-test("step sum: a single entry is the single-product delta", () => {
-  assert.deepEqual(
-    deriveStepFrequencyDelta({
-      cadenceLabel: "nach jeder Haarwäsche",
-      frequencies: ["weekly_1x"],
-      washFrequency: "weekly_2x",
-    }),
-    delta("nach jeder Haarwäsche", "weekly_1x", "weekly_2x"),
-  )
-})
-
 const OILY_RANGE = { min: "weekly_2x", max: "weekly_5_6x" } as const
 
 test("wash target: the engine's allowed range is the band, not the printed target bucket", () => {
   assert.deepEqual(idealCadenceBand("3-4×/Woche", null, OILY_RANGE), { min: 2, max: 6 })
   // Oily route, target 3–4×, she washes 2× → inside the engine's tolerance.
   assert.equal(
-    deriveFrequencyDelta({
+    deriveStepFrequencyDelta({
       cadenceLabel: "3-4×/Woche",
-      frequency: "weekly_2x",
+      frequencies: ["weekly_2x"],
       washFrequency: "weekly_2x",
       allowedRange: OILY_RANGE,
     })?.status,
     "passt",
   )
   assert.equal(
-    deriveFrequencyDelta({
+    deriveStepFrequencyDelta({
       cadenceLabel: "3-4×/Woche",
-      frequency: "daily_1x",
+      frequencies: ["daily_1x"],
       washFrequency: "daily_1x",
       allowedRange: OILY_RANGE,
     })?.status,
@@ -395,7 +383,11 @@ test("wash anchor: one shampoo → both ends are its own band (unchanged behavio
     ["1× pro Woche", "weekly_2x"],
   ] as const) {
     assert.deepEqual(
-      deriveFrequencyDelta({ cadenceLabel: label, frequency, washFrequency: anchor }),
+      deriveStepFrequencyDelta({
+        cadenceLabel: label,
+        frequencies: [frequency],
+        washFrequency: anchor,
+      }),
       delta(label, frequency, "weekly_3_4x"),
       label,
     )
@@ -430,9 +422,9 @@ test("wash anchor: the ends disagree → no chip (the false „passt“ of two 1
   const anchor = runsheetWashAnchor([shampooEntry("weekly_1x"), shampooEntry("weekly_1x")])
   // Same days: 1 wash/week → „passt“; separate days: 2 washes/week → „zu selten“.
   assert.equal(
-    deriveFrequencyDelta({
+    deriveStepFrequencyDelta({
       cadenceLabel: "nach jeder Haarwäsche",
-      frequency: "weekly_1x",
+      frequencies: ["weekly_1x"],
       washFrequency: anchor,
     }),
     null,
@@ -442,18 +434,18 @@ test("wash anchor: the ends disagree → no chip (the false „passt“ of two 1
 test("wash anchor: both ends agree → a chip on the union band", () => {
   const anchor = runsheetWashAnchor([shampooEntry("weekly_1x"), shampooEntry("weekly_1x")])
   assert.deepEqual(
-    deriveFrequencyDelta({
+    deriveStepFrequencyDelta({
       cadenceLabel: "nach jeder Haarwäsche",
-      frequency: "weekly_3_4x",
+      frequencies: ["weekly_3_4x"],
       washFrequency: anchor,
     }),
     { status: "zu_oft", ideal: { min: 1, max: 2 }, actual: 3.5 },
   )
   // A fixed band does not depend on the anchor at all.
   assert.equal(
-    deriveFrequencyDelta({
+    deriveStepFrequencyDelta({
       cadenceLabel: "1× pro Woche",
-      frequency: "weekly_1x",
+      frequencies: ["weekly_1x"],
       washFrequency: anchor,
     })?.status,
     "passt",

@@ -1,0 +1,970 @@
+{
+  "readset": [
+    {
+      "file": "tests/recommendation-engine-shampoo-cadence.test.ts",
+      "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+      "bytes": 13821,
+      "lines": 401,
+      "depth": "fresh complete test, support and parameter tables",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "tests/care-balance-frequency-targets.test.ts",
+      "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+      "bytes": 10763,
+      "lines": 379,
+      "depth": "fresh complete test, support and parameter tables",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "sha256": "d1967063160af1b28843b08791ebebf80c9ad95f43bef60dedcc7198c56c5533",
+      "bytes": 28416,
+      "lines": 901,
+      "depth": "fresh complete test, support and parameter tables",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "tests/personal-plan-routine-cadence.test.ts",
+      "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+      "bytes": 11362,
+      "lines": 393,
+      "depth": "fresh complete test, support and parameter tables",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "tests/personal-plan/product-previews.test.ts",
+      "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+      "bytes": 43433,
+      "lines": 1195,
+      "depth": "recovered full per-declaration evidence with exact test-byte match",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "tests/personal-plan-exact-catalog-bundle.test.ts",
+      "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+      "bytes": 17041,
+      "lines": 496,
+      "depth": "fresh complete test, support and parameter tables",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "tests/personal-plan-stage3-contracts.test.ts",
+      "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+      "bytes": 21649,
+      "lines": 712,
+      "depth": "fresh complete test, support and parameter tables",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "src/lib/recommendation-engine/shampoo-cadence.ts",
+      "sha256": "5dff9e6d423e674e7e232bdfeece6e344dc6aa5fd64c158fa72ce8a7f5c317c9",
+      "bytes": 8783,
+      "lines": 311,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "src/lib/recommendation-engine/runtime.ts",
+      "sha256": "31edfca374f832a31e715583a1b49f8faddad002e2ee70a44c4512bda6aeea41",
+      "bytes": 8007,
+      "lines": 231,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "src/lib/recommendation-engine/effective-care-context.ts",
+      "sha256": "336150087c020583754bab880500a60c3526c79cfc9ba9810560fe0ee6796d88",
+      "bytes": 6470,
+      "lines": 212,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "src/lib/recommendation-engine/adapters/from-persistence.ts",
+      "sha256": "a65f81e45a0cc1576b64f4f20d7806cfe0fcfaddf2ac21df49459157ff34bb1e",
+      "bytes": 5962,
+      "lines": 199,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "src/lib/recommendation-engine/normalize.ts",
+      "sha256": "c4fe06f4325887972a8b2fee1f12680930d43eeef48a45c0c7de2aad5ba4e0a7",
+      "bytes": 2686,
+      "lines": 70,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/recommendation-engine/care-balance/index.ts",
+      "sha256": "17ccdaa839e57c0398058f4ceede06aa7c382bb5492b34ecc978d8c931e7d888",
+      "bytes": 84,
+      "lines": 1,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/recommendation-engine/care-balance/frequency-targets.ts",
+      "sha256": "8a7cf237fb19a1a74a02d53d7c52dcc9b2160732eee03c8b67d665d02b78f500",
+      "bytes": 4660,
+      "lines": 147,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "src/lib/recommendation-engine/care-balance/evaluators.ts",
+      "sha256": "a9dba468514a551ce2e5110b879dfdc1d293c608740be4b555428fd172521543",
+      "bytes": 24580,
+      "lines": 727,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/recommendation-engine/care-balance/shared.ts",
+      "sha256": "d51d7b1a9a084d40e268ad34c9ead7e1a68004c3e67d23b0d2afb9cdf8988e02",
+      "bytes": 3963,
+      "lines": 146,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/recommendation-engine/assessments/care-needs.ts",
+      "sha256": "dea3fdd77a5c6fa68d0300bb2ad1beac729567c48c381643e00da3fa685e5461",
+      "bytes": 3679,
+      "lines": 99,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/recommendation-engine/assessments/damage.ts",
+      "sha256": "b366d5c32e34329004b22db0a054beaec5eb6b1de2b3ee67b8eb5529568db5a7",
+      "bytes": 7241,
+      "lines": 242,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/recommendation-engine/assessments/reset.ts",
+      "sha256": "f1388c2f5778cb3406538bd5c63a42cb2113c2c2b9c2ffe494e847d465d159fe",
+      "bytes": 5298,
+      "lines": 168,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/recommendation-engine/utils/levels.ts",
+      "sha256": "48eb656d8cb96bcf98b858fb841fe525e296402ab812bb3a024927615c3f1371",
+      "bytes": 602,
+      "lines": 23,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/agent/tools/care-balance-context.ts",
+      "sha256": "b598f5d9073f03033b3f58fe6e128b43b3df784f8eb320189c63aa9c8afdb515",
+      "bytes": 6829,
+      "lines": 199,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/vocabulary/frequencies.ts",
+      "sha256": "d79bb3584473a8f6541feecff58a40633736f9376981ff190b645114dc0eb3a9",
+      "bytes": 6217,
+      "lines": 233,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/product-usage/shampoo-fallback.ts",
+      "sha256": "2480aea9af037a2217ffd5a6e3d3014a7d42e01c3a760a383680ee30a5ba3c07",
+      "bytes": 2676,
+      "lines": 79,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/product-usage/routine-identity.ts",
+      "sha256": "6883a04596d1376d1c6e4539dc77beebaae908fcebde0e2404742869d6945045",
+      "bytes": 2343,
+      "lines": 74,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/hair-profile/derived.ts",
+      "sha256": "407f9e87c1196cd8347c04aeded6ac2e897fd39e1b249321fff9adea667e9971",
+      "bytes": 3163,
+      "lines": 98,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/profile/chemical-treatment.ts",
+      "sha256": "b50c624c6955692ace304835c40632ce4176e5fda20603ec9170a9394ada9382",
+      "bytes": 2446,
+      "lines": 67,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/profile/brush-type.ts",
+      "sha256": "8fb3d151addf0d2a0a7cfa0dd4565f1d1792e3886606e33f7fa5d3407ed2529b",
+      "bytes": 2038,
+      "lines": 65,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/profile/signal-derivations.ts",
+      "sha256": "2e004b739a17b20065c86ca12968734cf36c5f60514f2991ad6866e7337c3cc5",
+      "bytes": 1441,
+      "lines": 48,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+      "bytes": 18511,
+      "lines": 525,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "src/lib/personal-plan/routine/canonicalize.ts",
+      "sha256": "e4121a385e6c86c957143147994132d9ec1695de1cc7d51d3801d0ad51b451ae",
+      "bytes": 642,
+      "lines": 17,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/personal-plan/routine/editor.ts",
+      "sha256": "456a2db8fe593d486457eba1c1297f52156fca89db465a96274181921894ddff",
+      "bytes": 6575,
+      "lines": 178,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/personal-plan/routine/diff.ts",
+      "sha256": "b893394ec965315d96689b1e56d097ae5651195d95d47138e5bbd2d09c470d59",
+      "bytes": 2357,
+      "lines": 57,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/personal-plan/routine/cadence.ts",
+      "sha256": "0bdcd8ba171ba21dff3570de738996adc65a415b982025a0cd0e7dfec1a3fa0c",
+      "bytes": 7951,
+      "lines": 233,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "src/lib/personal-plan/routine/cadence-authority.ts",
+      "sha256": "47963bd799293399568ebefed0eae54de58ff57c966fc6c69302200a689d558f",
+      "bytes": 1595,
+      "lines": 48,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "src/lib/personal-plan/products/contracts.ts",
+      "sha256": "bc4291e12db65a3e220c884344255403e4ea3c3eb19d24fb3c5a4605ae011366",
+      "bytes": 52077,
+      "lines": 1547,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "src/lib/personal-plan/products/authorities.ts",
+      "sha256": "46722afc73e14c5f10b83fd220bc4e5f82c3de001086881190cd1fb769b91e2b",
+      "bytes": 4532,
+      "lines": 137,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "src/lib/personal-plan/products/recovery-desired-state.ts",
+      "sha256": "556da32412ee4b65411600a0d7c87e8d556845cac2b5721a5f5c0b870937ff3b",
+      "bytes": 3667,
+      "lines": 108,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "src/lib/product-intake/catalog-enrichment/stage5-catalog-bundle.ts",
+      "sha256": "a79c452c01525c2e30903759dfc4e36238ef0e266c2cc1b2b377ed4285b1dae7",
+      "bytes": 13510,
+      "lines": 390,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts",
+      "sha256": "3e37fd254ec305710841f63f060cb7056b7d361fb7dbc6b9a250126d9a3f92b6",
+      "bytes": 12830,
+      "lines": 349,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/routines/personal-plan/application/contracts.ts",
+      "sha256": "752971bf0c26f18e8ef4ba9ec282b2652a96c25a20206d5467ea8f3751aecf68",
+      "bytes": 11744,
+      "lines": 360,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/routines/personal-plan/application/contracts-v2.ts",
+      "sha256": "9bbf61d129b7220dfeb8b980532a3b16443b371490b037e9333bb6a60f502b69",
+      "bytes": 10178,
+      "lines": 313,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/personal-plan/product-previews.ts",
+      "sha256": "7c0b484dcb14e2704c5b67aaca17c1e7b5e735c816ec1279530ce5b04f406f0c",
+      "bytes": 13677,
+      "lines": 337,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-1/previews/route.ts",
+      "sha256": "d3c200648e5c2f84456418e927b723c5ea108112ada5587f7afb131cdc902f68",
+      "bytes": 3797,
+      "lines": 95,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "scripts/product-intake/catalog-enrichment/stage5-catalog-bundle-client.ts",
+      "sha256": "6b400133090e3a2a27970e42527063e32a0b21b7a23aef6ef3074a3649addd47",
+      "bytes": 4221,
+      "lines": 110,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "supabase/migrations/20260811214000_personal_plan_exact_catalog_bundle_v1.sql",
+      "sha256": "35f6c4b8d29160fbec4881409494e43c4fc1699c682ea186577ba22f80ebfc43",
+      "bytes": 20973,
+      "lines": 193,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "supabase/migrations/20260812103000_personal_plan_exact_catalog_bundle_heat_protocol_mapping.sql",
+      "sha256": "c71b643d30785683f9f907322c101ea8acc550a20ca6b8ef9e607cbdc7109d19",
+      "bytes": 2476,
+      "lines": 26,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "supabase/migrations/20260812104000_personal_plan_exact_catalog_bundle_oil_specs_insert.sql",
+      "sha256": "ae561b056c1cd66052a4aa587a4ade9ed8450c41cdddbc30cb92d5014eed0c00",
+      "bytes": 1863,
+      "lines": 28,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/personal-plan/refinement-recompute/production-deps.ts",
+      "sha256": "27daa53197b22f2cc105473c7076c85429c31a2de4ca3b319b0b5fbac9567b33",
+      "bytes": 5693,
+      "lines": 140,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "tests/recommendation-engine-foundation.fixtures.ts",
+      "sha256": "35965fbf644bd05ce6d34bdceb867bb63aff571eb371604c37b4acb233d119d1",
+      "bytes": 2990,
+      "lines": 114,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": true
+    },
+    {
+      "file": "scripts/ci/run-personal-plan-nested.mjs",
+      "sha256": "25be2a1ac68687ae8e76baf40a0b1cfd189817951f4d0804cf2433c35c6be740",
+      "bytes": 1156,
+      "lines": 39,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+      "bytes": 391,
+      "lines": 10,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "tsconfig.json",
+      "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd",
+      "bytes": 770,
+      "lines": 35,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+      "bytes": 25353,
+      "lines": 275,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "node_modules/zod/v4/core/parse.js",
+      "sha256": "2578b8d1341c3882a6c089f9ec57ce1c1a16b8b2b477721d4d89ba3d3ee50c9c",
+      "bytes": 4444,
+      "lines": 93,
+      "depth": "complete human source read",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/personal-plan/routine-proposal-stager.ts",
+      "sha256": "d3c010b03572ef4a593484da0fb7f3463b2c1bd4d78e5bd6c8b41be42e57408b",
+      "bytes": 8666,
+      "lines": 245,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          1,
+          115
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "sha256": "ff627d68d5172015d33b6c049a8611a2155e4d79fff5bab4d7b88112379c161a",
+      "bytes": 66669,
+      "lines": 1754,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          950,
+          1040
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/personal-plan/products/state-machine.ts",
+      "sha256": "9f6180af77fcdb0decb53daa806d9f1e5330e63aa98839b2167637030ea6f6f3",
+      "bytes": 44624,
+      "lines": 1245,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          445,
+          488
+        ],
+        [
+          1044,
+          1075
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-3/complete/route.ts",
+      "sha256": "a0653505278aeeb0b59fd2d9088cb8fe984b14532aedc3e84ccd9d4c3560c13c",
+      "bytes": 9215,
+      "lines": 233,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          185,
+          245
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/app/api/personal-plan/accept-ideal-plan/route.ts",
+      "sha256": "d84506635617890e66e2e1d8b8e0d9fc59d730ed5e167cce7075a35f0638856e",
+      "bytes": 6633,
+      "lines": 179,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          142,
+          180
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/freemium/plan-provisioning-supabase.ts",
+      "sha256": "38f307e885e199f17ca35b5fbb4f6113fa36d942d62fc3715116185f80b6191f",
+      "bytes": 13582,
+      "lines": 324,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          220,
+          250
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/personal-plan/routine/source-sync-service.ts",
+      "sha256": "d9230024ea21d5add08e53c4e9365298f3789f2bae8956ddb21efe3c54b950e7",
+      "bytes": 28286,
+      "lines": 726,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          168,
+          208
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-item-card.tsx",
+      "sha256": "6f93d8d0073557e65964661275bc8acb520524d81bc8856a781b95d07c9aadda",
+      "bytes": 21951,
+      "lines": 551,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          132,
+          161
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/personal-plan/routine/application-adapter.ts",
+      "sha256": "b816eaec1fc6f054abce4222cda7889a13c9224f5a68afdb0218a0a1bf816424",
+      "bytes": 20968,
+      "lines": 539,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          238,
+          264
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/agent-v2/production/chat-pipeline.ts",
+      "sha256": "d3bef7860ac7be43e0ae42ed13bf9a7cf3148008ef87f27109884c5830cfa6c5",
+      "bytes": 61515,
+      "lines": 1703,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          565,
+          596
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/routines/planner.ts",
+      "sha256": "6a1ccaeec7c921163f1b12b56a6c11988c365a073b07a00db03c82aa4cc0e0ac",
+      "bytes": 86029,
+      "lines": 2540,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          1266,
+          1298
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/recommendation-engine/contracts.ts",
+      "sha256": "c057d4aa0c25c44bdb60432a11b1cda1521a0d59d533826f6383dfd639c4d30e",
+      "bytes": 6107,
+      "lines": 175,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          1,
+          120
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "src/lib/personal-plan/types.ts",
+      "sha256": "40297a7f5b93d2ae223603fe818111f8a546c21299579d4eaf1da3d6089e2389",
+      "bytes": 17171,
+      "lines": 545,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          1,
+          70
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+      "bytes": 17598,
+      "lines": 423,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          145,
+          172
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "plans/2026-08-12-personal-plan-routine-application-cadence.md",
+      "sha256": "7f38931525abaf0746bd8afd9c6b05b16901d42e6215059509cca3f853a2d764",
+      "bytes": 23868,
+      "lines": 339,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          52,
+          82
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "plans/2026-08-07-personal-plan-stage4-routine-implementation.md",
+      "sha256": "4118ba650a54a57c9c8e5d45f234f02ee3bb317b63db4df25d839b3f50ae5de9",
+      "bytes": 74096,
+      "lines": 860,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          72,
+          108
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "docs/personal-plan/categories/shampoo/decision.md",
+      "sha256": "155059d918d6ab6891e6e2292f7b7feac2ed5baa495dcf44589f03892d2d839a",
+      "bytes": 20953,
+      "lines": 263,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          52,
+          76
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "node_modules/zod/package.json",
+      "sha256": "c630bd10b52dcf71c112a2bf78dbf2734b9db58d62de663b8d86c2ec2c8cda2e",
+      "bytes": 3796,
+      "lines": 135,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          1,
+          55
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "node_modules/zod/v4/core/schemas.js",
+      "sha256": "09da9b0cb9b9d2d795c349bc47c7521d5aaffe241885f0c9728f2aa7de3834c9",
+      "bytes": 83322,
+      "lines": 2239,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          799,
+          865
+        ],
+        [
+          1019,
+          1089
+        ],
+        [
+          1122,
+          1195
+        ],
+        [
+          1655,
+          1700
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "node_modules/zod/v4/classic/schemas.js",
+      "sha256": "eb4af7946a092aff8678b9251728ea58dab40154920cd65ec4a2ca1d4df68393",
+      "bytes": 51378,
+      "lines": 1395,
+      "depth": "explicit source slices",
+      "ranges": [
+        [
+          55,
+          80
+        ],
+        [
+          744,
+          770
+        ]
+      ],
+      "notes": null,
+      "initialPin": false
+    },
+    {
+      "file": "data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-14-leave-in-exact-01.json",
+      "sha256": "84a93295477fa8084600e1ecaa5d227df773c6e619ab3ed376d310f07a66c4d1",
+      "bytes": 111389,
+      "lines": 3059,
+      "depth": "mechanical full JSON plus human complete identity/category/role/family projection; partial fact/step structure",
+      "ranges": null,
+      "notes": "No complete human source-text/evidence/copy audit; these artifacts are retained byte exact and cannot support a deletion claim.",
+      "initialPin": false
+    },
+    {
+      "file": "data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-15-leave-in-exact-02.json",
+      "sha256": "d209178624344d82b21a96cf5af1500b1d7c9fdc98858e90ebe0b31fb5ad061d",
+      "bytes": 70319,
+      "lines": 456,
+      "depth": "mechanical full JSON plus human complete identity/category/role/family projection; partial fact/step structure",
+      "ranges": null,
+      "notes": "No complete human source-text/evidence/copy audit; these artifacts are retained byte exact and cannot support a deletion claim.",
+      "initialPin": false
+    },
+    {
+      "file": "data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-16-oil-exact-01.json",
+      "sha256": "901261f333fc4ffb3f90ca5ed990cd676d5dee89619a04e95eaa403e75612e2a",
+      "bytes": 72326,
+      "lines": 1987,
+      "depth": "mechanical full JSON plus human complete identity/category/role/family projection; partial fact/step structure",
+      "ranges": null,
+      "notes": "No complete human source-text/evidence/copy audit; these artifacts are retained byte exact and cannot support a deletion claim.",
+      "initialPin": false
+    },
+    {
+      "file": "data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-17-oil-exact-02.json",
+      "sha256": "0688259dee04fc6b964309f90805ca3dc25a639a0abb0fed7522421bb93dcc10",
+      "bytes": 109532,
+      "lines": 2941,
+      "depth": "mechanical full JSON plus human complete identity/category/role/family projection; partial fact/step structure",
+      "ranges": null,
+      "notes": "No complete human source-text/evidence/copy audit; these artifacts are retained byte exact and cannot support a deletion claim.",
+      "initialPin": false
+    },
+    {
+      "file": "data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-18-mask-exact-01.json",
+      "sha256": "4d2cd48117aa05dc45df5f8ce52a1ba90ab5e1057a00ec292dd032c2017ce74b",
+      "bytes": 62918,
+      "lines": 1741,
+      "depth": "mechanical full JSON plus human complete identity/category/role/family projection; partial fact/step structure",
+      "ranges": null,
+      "notes": "No complete human source-text/evidence/copy audit; these artifacts are retained byte exact and cannot support a deletion claim.",
+      "initialPin": false
+    },
+    {
+      "file": "data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-19-mask-exact-02.json",
+      "sha256": "6e743f994c65873352c9e80e503de367718ddc75e20408ffec75ec3956fc5c84",
+      "bytes": 62127,
+      "lines": 1726,
+      "depth": "mechanical full JSON plus human complete identity/category/role/family projection; partial fact/step structure",
+      "ranges": null,
+      "notes": "No complete human source-text/evidence/copy audit; these artifacts are retained byte exact and cannot support a deletion claim.",
+      "initialPin": false
+    },
+    {
+      "file": "data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-20-deep-cleansing-repair.json",
+      "sha256": "7ac4fa3efa9534d6b5b5280f3dd5767093c840276ebc59d45c54c026eba1f102",
+      "bytes": 20801,
+      "lines": 558,
+      "depth": "mechanical full JSON plus human complete identity/category/role/family projection; partial fact/step structure",
+      "ranges": null,
+      "notes": "No complete human source-text/evidence/copy audit; these artifacts are retained byte exact and cannot support a deletion claim.",
+      "initialPin": false
+    },
+    {
+      "file": "data/catalog-enrichment/personal-plan-stage5-v1/curated-cohort-2026-08-11.json",
+      "sha256": "bae82a45dc14d4db5910b2a28a988297bc9b74b2a372a6a7cf08b8ef35d2346b",
+      "bytes": 88077,
+      "lines": 2753,
+      "depth": "mechanical JSON read and schema identity mapping only",
+      "ranges": null,
+      "notes": "No full human catalogue/provenance audit.",
+      "initialPin": false
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675",
+      "bytes": 9112572,
+      "lines": 200276,
+      "depth": "mechanical parser dependency pin; no semantic-read credit",
+      "ranges": null,
+      "notes": null,
+      "initialPin": false
+    }
+  ],
+  "limits": [
+    "85 declarations freshly read in full; product-preview17 reuse an exact-current-test-byte complete previous ledger, with fresh complete direct producer and route reads. Previous category authority and provider transport limits remain.",
+    "Catalog7 JSON bundles contain106 products. Complete bytes frozen; identity/category/role/family projection read for every product. All prose/source URLs, protocol step copy and evidence authenticity were not human re-audited. No catalog deletion proposed.",
+    "CareBalance operative cadence/needs/damage/reset/normalization owners fully read; runtime sibling category recommendation and intervention planner trees are not fully re-audited. Live runtime calling composition verified by slices.",
+    "Stage3 contracts and candidate compiler/cadence owners fully read. Persistence gateways/routes and consumers are explicit slices, not a complete auth/DB/SQL integration review. No DB runtime or global migration-lineage proof.",
+    "Three catalog executor/mapping migrations read complete as source. Other later migrations, real permissions and transaction behavior are not certified by text assertions; four F guards are held unchanged.",
+    "Installed Zod4.4.3 parse/object/union/discriminator/enum/literal and classic facade slices inspected. No complete library/Node/TypeScript implementation review. TypeScript parser used statically, never a product/test import or compiler.",
+    "All13 source control recipes are unrun. Syntax parsing and unique anchors establish only reproducible proposed mutation shape, not intended runtime red.",
+    "No repository files changed. Fresh TMP files only. No native tests, provider/network/DB, config writes, runtime owner imports or external reviewer."
+  ],
+  "recoveredEvidence": {
+    "original": "/tmp/test-audit-product-previews-complete-ledger.md",
+    "sha256": "7b0b410f1ba57327239a96160bb8fa1f372a0cc910d8533dda8a959a68448a80",
+    "testSHA256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+    "disposition": "reuse full17 retention record, not count17 fresh independent human audits"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "path": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-readonly-preload.cjs",
+  "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+  "scope": "Used only to prohibit writes/children/owner imports/network during static-check; no operator toolkit imported or invoked."
+}

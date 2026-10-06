@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: photo intake persists only server-derived uncertain validation state
+ok 1 - photo intake persists only server-derived uncertain validation state
+  ---
+  duration_ms: 3.231333
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 320.823375

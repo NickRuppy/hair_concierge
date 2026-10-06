@@ -1,0 +1,355 @@
+TAP version 13
+# Subtest: a cross-origin or origin-less request is refused before the admin gate
+ok 1 - a cross-origin or origin-less request is refused before the admin gate
+  ---
+  duration_ms: 4.594125
+  ...
+# Subtest: the kill switch hides the endpoint, and the shared admin gate's refusal is passed through
+ok 2 - the kill switch hides the endpoint, and the shared admin gate's refusal is passed through
+  ---
+  duration_ms: 1.387458
+  ...
+# Subtest: an unknown enrollment is a 404 and nothing is generated or written
+ok 3 - an unknown enrollment is a 404 and nothing is generated or written
+  ---
+  duration_ms: 0.363875
+  ...
+# Subtest: a malformed body is refused before any generation: no expected_state
+ok 4 - a malformed body is refused before any generation: no expected_state
+  ---
+  duration_ms: 1.181458
+  ...
+# Subtest: a malformed body is refused before any generation: expected_state not an object
+ok 5 - a malformed body is refused before any generation: expected_state not an object
+  ---
+  duration_ms: 0.478917
+  ...
+# Subtest: a malformed body is refused before any generation: force not a boolean
+ok 6 - a malformed body is refused before any generation: force not a boolean
+  ---
+  duration_ms: 1.212833
+  ...
+# Subtest: a malformed body is refused before any generation: unknown key
+ok 7 - a malformed body is refused before any generation: unknown key
+  ---
+  duration_ms: 0.441833
+  ...
+# Subtest: a malformed body is refused before any generation: unknown state key
+ok 8 - a malformed body is refused before any generation: unknown state key
+  ---
+  duration_ms: 0.55275
+  ...
+# Subtest: a malformed body is refused before any generation: state without saved_at
+ok 9 - a malformed body is refused before any generation: state without saved_at
+  ---
+  duration_ms: 0.484208
+  ...
+# Subtest: a malformed body is refused before any generation: not JSON
+ok 10 - a malformed body is refused before any generation: not JSON
+  ---
+  duration_ms: 0.5095
+  ...
+# Subtest: a first generation on a legacy enrollment (no row) writes a full row with the agent brief
+ok 11 - a first generation on a legacy enrollment (no row) writes a full row with the agent brief
+  ---
+  duration_ms: 1.978208
+  ...
+# Subtest: a regeneration keeps the other fields and moves the stored brief to `previous`
+ok 12 - a regeneration keeps the other fields and moves the stored brief to `previous`
+  ---
+  duration_ms: 0.609625
+  ...
+# Subtest: R15 end to end: generate, then a manual slice-1 save keeps the revision
+ok 13 - R15 end to end: generate, then a manual slice-1 save keeps the revision
+  ---
+  duration_ms: 2.586291
+  ...
+# Subtest: R14: a draft intake is refused (422 draft_intake) before any read or generation
+ok 14 - R14: a draft intake is refused (422 draft_intake) before any read or generation
+  ---
+  duration_ms: 0.246625
+  ...
+# Subtest: no freeze: a finalised call still generates
+ok 15 - no freeze: a finalised call still generates
+  ---
+  duration_ms: 0.257334
+  ...
+# Subtest: a stale expected_state is a 409 with the current state — before any LLM call
+ok 16 - a stale expected_state is a 409 with the current state — before any LLM call
+  ---
+  duration_ms: 1.180125
+  ...
+# Subtest: a brief stored before saved_at existed matches an expected_state with saved_at null
+ok 17 - a brief stored before saved_at existed matches an expected_state with saved_at null
+  ---
+  duration_ms: 0.240917
+  ...
+# Subtest: force overwrites a mismatching brief on purpose and keeps it as `previous`
+ok 18 - force overwrites a mismatching brief on purpose and keeps it as `previous`
+  ---
+  duration_ms: 0.230792
+  ...
+# Subtest: a manual save (unchanged generated_at/source_hash) while the LLM ran is a 409 at write time
+ok 19 - a manual save (unchanged generated_at/source_hash) while the LLM ran is a 409 at write time
+  ---
+  duration_ms: 0.746084
+  ...
+# Subtest: with force, a manual save made while the LLM ran becomes the revision (never lost)
+ok 20 - with force, a manual save made while the LLM ran becomes the revision (never lost)
+  ---
+  duration_ms: 0.453417
+  ...
+# Subtest: saved_at is server-owned: a PATCH that tries to set it is refused
+ok 21 - saved_at is server-owned: a PATCH that tries to set it is refused
+  ---
+  duration_ms: 0.229875
+  ...
+# Subtest: a generator error (llm_failed) is a 502 with a German message and no write
+ok 22 - a generator error (llm_failed) is a 502 with a German message and no write
+  ---
+  duration_ms: 0.282583
+  ...
+# Subtest: a generator error (invalid_json) is a 502 with a German message and no write
+ok 23 - a generator error (invalid_json) is a 502 with a German message and no write
+  ---
+  duration_ms: 0.243125
+  ...
+# Subtest: a generator error (invalid_schema) is a 502 with a German message and no write
+ok 24 - a generator error (invalid_schema) is a 502 with a German message and no write
+  ---
+  duration_ms: 0.193083
+  ...
+# Subtest: a generator error (lint_failed) is a 422 with a German message and no write
+ok 25 - a generator error (lint_failed) is a 422 with a German message and no write
+  ---
+  duration_ms: 0.200542
+  ...
+# Subtest: an unreadable source or a plan that cannot be read is a 503 without generation
+ok 26 - an unreadable source or a plan that cannot be read is a 503 without generation
+  ---
+  duration_ms: 0.636042
+  ...
+# Subtest: a failed write is a 503, never a silent success
+ok 27 - a failed write is a 503, never a silent success
+  ---
+  duration_ms: 0.223042
+  ...
+# Subtest: loadConsultBriefSource assembles exactly what the page's parts give consultBriefSource
+ok 28 - loadConsultBriefSource assembles exactly what the page's parts give consultBriefSource
+  ---
+  duration_ms: 3.145958
+  ...
+# Subtest: consultBriefSource: the quiz and the baseline move the hash; the rest of the sheet does not
+ok 29 - consultBriefSource: the quiz and the baseline move the hash; the rest of the sheet does not
+  ---
+  duration_ms: 0.660041
+  ...
+# Subtest: loadConsultBriefSource: a plan that cannot be read is a status; a failed read throws
+ok 30 - loadConsultBriefSource: a plan that cannot be read is a status; a failed read throws
+  ---
+  duration_ms: 0.324833
+  ...
+# Subtest: golden profiles assemble through consultBriefSource with valid heat answers
+ok 31 - golden profiles assemble through consultBriefSource with valid heat answers
+  ---
+  duration_ms: 3.965459
+  ...
+# Subtest: the recorded answer is not stale: same prompt version, same input hash — else re-record
+ok 32 - the recorded answer is not stale: same prompt version, same input hash — else re-record
+  ---
+  duration_ms: 0.277042
+  ...
+# Subtest: the recorded real answer passes the generator's parse, schema and lint path
+ok 33 - the recorded real answer passes the generator's parse, schema and lint path
+  ---
+  duration_ms: 175.833292
+  ...
+# Subtest: the eval's checks find nothing in the recorded answer (JSON mode: a bare object)
+ok 34 - the eval's checks find nothing in the recorded answer (JSON mode: a bare object)
+  ---
+  duration_ms: 5.947208
+  ...
+# Subtest: the eval's checks catch broken answers
+ok 35 - the eval's checks catch broken answers
+  ---
+  duration_ms: 18.268292
+  ...
+# Subtest: with a hair-loss trigger, a loss sentence naming a product is flagged
+ok 36 - with a hair-loss trigger, a loss sentence naming a product is flagged
+  ---
+  duration_ms: 18.829
+  ...
+# Subtest: a prompt-contract bump makes every stored brief stale (Codex review, v4)
+ok 37 - a prompt-contract bump makes every stored brief stale (Codex review, v4)
+  ---
+  duration_ms: 0.989708
+  ...
+# Subtest: snapshot facts: concerns, scalp concerns, heat tools, wash cadence, hair-loss boundary
+ok 38 - snapshot facts: concerns, scalp concerns, heat tools, wash cadence, hair-loss boundary
+  ---
+  duration_ms: 0.787333
+  ...
+# Subtest: snapshot facts: unreadable = unknown, heat absent = no tools
+ok 39 - snapshot facts: unreadable = unknown, heat absent = no tools
+  ---
+  duration_ms: 0.147625
+  ...
+# Subtest: Nomi: profile, main problem with recipe excerpt, fired entries, heat, wash change
+ok 40 - Nomi: profile, main problem with recipe excerpt, fired entries, heat, wash change
+  ---
+  duration_ms: 1.2335
+  ...
+# Subtest: seeding flags come from the snapshot profile: texture, scalp oiliness, scalp concerns
+ok 41 - seeding flags come from the snapshot profile: texture, scalp oiliness, scalp concerns
+  ---
+  duration_ms: 0.3375
+  ...
+# Subtest: unknown texture and scalp facts derive none of the seeding flags
+ok 42 - unknown texture and scalp facts derive none of the seeding flags
+  ---
+  duration_ms: 0.244125
+  ...
+# Subtest: products per entry: name, verdict, decisionKey, bucket — plus swap options and research
+ok 43 - products per entry: name, verdict, decisionKey, bucket — plus swap options and research
+  ---
+  duration_ms: 0.289541
+  ...
+# Subtest: no evidence or confidence grade reaches the text context
+ok 44 - no evidence or confidence grade reaches the text context
+  ---
+  duration_ms: 0.314459
+  ...
+# Subtest: hair loss concern or boundary assessment is a G2 trigger
+ok 45 - hair loss concern or boundary assessment is a G2 trigger
+  ---
+  duration_ms: 0.212292
+  ...
+# Subtest: without a quiz the concerns come from the plan snapshot; one concern is the main one
+ok 46 - without a quiz the concerns come from the plan snapshot; one concern is the main one
+  ---
+  duration_ms: 0.256916
+  ...
+# Subtest: a legacy model without the new facts assembles with unknowns, never throws
+ok 47 - a legacy model without the new facts assembles with unknowns, never throws
+  ---
+  duration_ms: 0.479458
+  ...
+# Subtest: identical inputs hash the same; key order is irrelevant
+ok 48 - identical inputs hash the same; key order is irrelevant
+  ---
+  duration_ms: 1.472625
+  ...
+# Subtest: a verdict change, a finished research, a score change each move the hash
+ok 49 - a verdict change, a finished research, a score change each move the hash
+  ---
+  duration_ms: 1.006667
+  ...
+# Subtest: the composition carries each printed product's packshot — and only where it prints
+ok 50 - the composition carries each printed product's packshot — and only where it prints
+  ---
+  duration_ms: 2.251625
+  ...
+# Subtest: no images → the exact hash of the composition without the image input (legacy-stable)
+ok 51 - no images → the exact hash of the composition without the image input (legacy-stable)
+  ---
+  duration_ms: 0.909
+  ...
+# Subtest: a printed image moves the fingerprint; an image nobody prints does not
+ok 52 - a printed image moves the fingerprint; an image nobody prints does not
+  ---
+  duration_ms: 0.914958
+  ...
+# Subtest: only http(s) packshots are printable
+ok 53 - only http(s) packshots are printable
+  ---
+  duration_ms: 0.422708
+  ...
+# Subtest: the PDF shows the packshot next to every product: routine, shelf and „Brauchst du nicht mehr“
+ok 54 - the PDF shows the packshot next to every product: routine, shelf and „Brauchst du nicht mehr“
+  ---
+  duration_ms: 8.410792
+  ...
+# Subtest: a product without a packshot gets a quiet placeholder, never a broken image
+ok 55 - a product without a packshot gets a quiet placeholder, never a broken image
+  ---
+  duration_ms: 1.487125
+  ...
+# Subtest: the kill switch and the admin gate hide the document rather than explain it
+ok 56 - the kill switch and the admin gate hide the document rather than explain it
+  ---
+  duration_ms: 2.317833
+  ...
+# Subtest: the render gate: only a finalised call has a document
+ok 57 - the render gate: only a finalised call has a document
+  ---
+  duration_ms: 2.555375
+  ...
+# Subtest: research gate (F1/F4): a product the runsheet shows inside its category still sends the PDF back
+ok 58 - research gate (F1/F4): a product the runsheet shows inside its category still sends the PDF back
+  ---
+  duration_ms: 1.264334
+  ...
+# Subtest: a brand-only catalog change after finalising trips the drift banner
+ok 59 - a brand-only catalog change after finalising trips the drift banner
+  ---
+  duration_ms: 14.497666
+  ...
+# Subtest: unreadable recommendation brands send the PDF back to the cockpit
+ok 60 - unreadable recommendation brands send the PDF back to the cockpit
+  ---
+  duration_ms: 0.3645
+  ...
+# Subtest: a brandless catalog name reads with its brand on the paper
+ok 61 - a brandless catalog name reads with its brand on the paper
+  ---
+  duration_ms: 2.154792
+  ...
+# Subtest: the shelf says what happens to every product she brought
+ok 62 - the shelf says what happens to every product she brought
+  ---
+  duration_ms: 4.121875
+  ...
+# Subtest: the date is the one she lived, not the one UTC stored
+ok 63 - the date is the one she lived, not the one UTC stored
+  ---
+  duration_ms: 1.892458
+  ...
+# Subtest: a routine that moved since the finalisation says so, and never re-derives in silence
+ok 64 - a routine that moved since the finalisation says so, and never re-derives in silence
+  ---
+  duration_ms: 6.319625
+  ...
+# Subtest: every print:hidden wrapper is a contents box with no responsive display utility
+ok 65 - every print:hidden wrapper is a contents box with no responsive display utility
+  ---
+  duration_ms: 1.540167
+  ...
+# Subtest: the paper names products with their line, and that label is the fingerprinted one
+ok 66 - the paper names products with their line, and that label is the fingerprinted one
+  ---
+  duration_ms: 4.182
+  ...
+# Subtest: F6: a kept conditioner used as a mask reads „als Haarmaske benutzt“ at its step and on the shelf
+ok 67 - F6: a kept conditioner used as a mask reads „als Haarmaske benutzt“ at its step and on the shelf
+  ---
+  duration_ms: 9.753459
+  ...
+# Subtest: F6: a legacy (tile) document prints no usage note at all
+ok 68 - F6: a legacy (tile) document prints no usage note at all
+  ---
+  duration_ms: 1.114417
+  ...
+# Subtest: a product with an open usage never vanishes from the paper — it is a follow-up
+ok 69 - a product with an open usage never vanishes from the paper — it is a follow-up
+  ---
+  duration_ms: 0.886791
+  ...
+1..69
+# tests 69
+# suites 0
+# pass 69
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2860.83525

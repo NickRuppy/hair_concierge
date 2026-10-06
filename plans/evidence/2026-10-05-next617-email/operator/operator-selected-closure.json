@@ -1,0 +1,352 @@
+{
+  "selectedTests": [
+    "tests/trial-reminders-delivery.test.ts",
+    "tests/meta-offer-view.test.ts"
+  ],
+  "localFiles": [
+    "src/app/api/analytics/meta-offer-view/route.ts",
+    "src/funnels/packages.json",
+    "src/funnels/quizzes/registry.json",
+    "src/funnels/quizzes/registry.ts",
+    "src/lib/analytics/meta-capi.ts",
+    "src/lib/analytics/meta-offer-view-id.ts",
+    "src/lib/analytics/page-url.ts",
+    "src/lib/billing/pricing-catalog.ts",
+    "src/lib/billing/trial-reminders-delivery.ts",
+    "src/lib/billing/trial-reminders.ts",
+    "src/lib/billing/trial-required-notices-terms.ts",
+    "src/lib/billing/trial-required-notices.ts",
+    "src/lib/billing/types.ts",
+    "src/lib/customerio/transactional.ts",
+    "src/lib/customerio/trial-reminder.ts",
+    "src/lib/funnel/cookie.ts",
+    "src/lib/funnel/flags.ts",
+    "src/lib/funnel/journey-kind.ts",
+    "src/lib/funnel/offer-presentation.ts",
+    "src/lib/funnel/organic-offer-media-experiment.ts",
+    "src/lib/funnel/packages.ts",
+    "src/lib/funnel/personal-plan-pricing-experiment.ts",
+    "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+    "src/lib/funnel/server.ts",
+    "src/lib/observability/offer-experiment.ts",
+    "src/lib/paypal/trial-collection-start.ts",
+    "src/lib/rate-limit.ts",
+    "src/lib/supabase/admin.ts",
+    "tests/meta-offer-view.test.ts",
+    "tests/server-only-register.cjs",
+    "tests/trial-reminders-delivery.test.ts"
+  ],
+  "edges": [
+    {
+      "from": "tests/trial-reminders-delivery.test.ts",
+      "to": "src/lib/billing/trial-reminders-delivery.ts",
+      "spec": "../src/lib/billing/trial-reminders-delivery",
+      "kind": "static"
+    },
+    {
+      "from": "tests/trial-reminders-delivery.test.ts",
+      "to": "src/lib/customerio/transactional.ts",
+      "spec": "../src/lib/customerio/transactional",
+      "kind": "static"
+    },
+    {
+      "from": "tests/meta-offer-view.test.ts",
+      "to": "src/app/api/analytics/meta-offer-view/route.ts",
+      "spec": "../src/app/api/analytics/meta-offer-view/route",
+      "kind": "static"
+    },
+    {
+      "from": "tests/meta-offer-view.test.ts",
+      "to": "src/lib/analytics/meta-offer-view-id.ts",
+      "spec": "../src/lib/analytics/meta-offer-view-id",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-reminders-delivery.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-reminders-delivery.ts",
+      "to": "src/lib/billing/trial-reminders.ts",
+      "spec": "@/lib/billing/trial-reminders",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-reminders-delivery.ts",
+      "to": "src/lib/customerio/trial-reminder.ts",
+      "spec": "@/lib/customerio/trial-reminder",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-reminders-delivery.ts",
+      "to": "src/lib/customerio/transactional.ts",
+      "spec": "@/lib/customerio/transactional",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/analytics/meta-offer-view/route.ts",
+      "to": "src/lib/funnel/cookie.ts",
+      "spec": "@/lib/funnel/cookie",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/analytics/meta-offer-view/route.ts",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "@/lib/funnel/flags",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/analytics/meta-offer-view/route.ts",
+      "to": "src/lib/funnel/server.ts",
+      "spec": "@/lib/funnel/server",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/analytics/meta-offer-view/route.ts",
+      "to": "src/lib/analytics/meta-capi.ts",
+      "spec": "@/lib/analytics/meta-capi",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/analytics/meta-offer-view/route.ts",
+      "to": "src/lib/analytics/meta-offer-view-id.ts",
+      "spec": "@/lib/analytics/meta-offer-view-id",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/analytics/meta-offer-view/route.ts",
+      "to": "src/lib/analytics/page-url.ts",
+      "spec": "@/lib/analytics/page-url",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/analytics/meta-offer-view/route.ts",
+      "to": "src/lib/rate-limit.ts",
+      "spec": "@/lib/rate-limit",
+      "kind": "static"
+    },
+    {
+      "from": "src/app/api/analytics/meta-offer-view/route.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-reminders.ts",
+      "to": "src/lib/billing/trial-required-notices.ts",
+      "spec": "./trial-required-notices",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-reminders.ts",
+      "to": "src/lib/paypal/trial-collection-start.ts",
+      "spec": "../paypal/trial-collection-start",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/customerio/trial-reminder.ts",
+      "to": "src/lib/billing/trial-reminders.ts",
+      "spec": "@/lib/billing/trial-reminders",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/customerio/trial-reminder.ts",
+      "to": "src/lib/customerio/transactional.ts",
+      "spec": "@/lib/customerio/transactional",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/cookie.ts",
+      "to": "src/lib/funnel/packages.ts",
+      "spec": "./packages",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/billing/types.ts",
+      "spec": "@/lib/billing/types",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/journey-kind.ts",
+      "spec": "@/lib/funnel/journey-kind",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/cookie.ts",
+      "spec": "./cookie",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "./flags",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/packages.ts",
+      "spec": "./packages",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/observability/offer-experiment.ts",
+      "spec": "@/lib/observability/offer-experiment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/personal-plan-pricing-experiment.ts",
+      "spec": "./personal-plan-pricing-experiment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/organic-offer-media-experiment.ts",
+      "spec": "./organic-offer-media-experiment",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/server.ts",
+      "to": "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+      "spec": "./personal-plan-pricing-qa-token",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/rate-limit.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "spec": "@/lib/supabase/admin",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-required-notices.ts",
+      "to": "src/lib/billing/trial-required-notices-terms.ts",
+      "spec": "./trial-required-notices-terms",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/trial-required-notices.ts",
+      "to": "src/lib/paypal/trial-collection-start.ts",
+      "spec": "../paypal/trial-collection-start",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/packages.ts",
+      "to": "src/funnels/packages.json",
+      "spec": "@/funnels/packages.json",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/packages.ts",
+      "to": "src/funnels/quizzes/registry.ts",
+      "spec": "@/funnels/quizzes/registry",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/packages.ts",
+      "to": "src/lib/funnel/offer-presentation.ts",
+      "spec": "@/lib/funnel/offer-presentation",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/funnel/packages.ts",
+      "to": "src/lib/funnel/offer-presentation.ts",
+      "spec": "@/lib/funnel/offer-presentation",
+      "kind": "static"
+    },
+    {
+      "from": "src/lib/billing/types.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "./pricing-catalog",
+      "kind": "type-only"
+    },
+    {
+      "from": "src/funnels/quizzes/registry.ts",
+      "to": "src/funnels/quizzes/registry.json",
+      "spec": "./registry.json",
+      "kind": "static"
+    }
+  ],
+  "runtimeExternals": [
+    "@sentry/nextjs",
+    "@supabase/supabase-js",
+    "next/headers",
+    "next/server",
+    "server-only",
+    "zod"
+  ],
+  "typeOnlyExternals": [
+    "@supabase/supabase-js",
+    "next/server"
+  ],
+  "externalPins": [
+    {
+      "specifier": "server-only",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/server-only/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/server-only/package.json"
+    },
+    {
+      "specifier": "next/headers",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/headers.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json"
+    },
+    {
+      "specifier": "next/server",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/server.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json"
+    },
+    {
+      "specifier": "zod",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/package.json"
+    },
+    {
+      "specifier": "@supabase/supabase-js",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/dist/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/package.json"
+    },
+    {
+      "specifier": "@sentry/nextjs",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/index.server.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/package.json"
+    },
+    {
+      "specifier": "tsx",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/loader.mjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/package.json"
+    },
+    {
+      "specifier": "typescript",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/typescript.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/package.json"
+    },
+    {
+      "specifier": "esbuild",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/lib/main.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/package.json"
+    },
+    {
+      "specifier": "get-tsconfig",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/dist/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/package.json"
+    },
+    {
+      "specifier": "resolve-pkg-maps",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/dist/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/package.json"
+    }
+  ],
+  "nonliteralImports": [],
+  "limits": "Static local import closure of two exact selected test files, including their top-level dependency graph. Bounded loader/transpiler trees plus parser and vendor entry/package/type pins. No all-vendor/source/data crawl; deeper Next/Supabase/Sentry and unselected full18-cohort third-party internals are not exhaustively pinned or runtime-verified. Server-only is erased by existing preload; actual product owners never stubbed by tooling."
+}

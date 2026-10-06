@@ -1,0 +1,7 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "method": "Read-only git rev-parse --show-toplevel HEAD and git branch --show-current; matched parent identity.",
+  "writes": 0
+}

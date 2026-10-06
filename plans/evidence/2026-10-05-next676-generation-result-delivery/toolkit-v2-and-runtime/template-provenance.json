@@ -1,0 +1,8 @@
+{
+  "directTemplate": "/tmp/test-audit-generation157-tools-xwq0stb7",
+  "pinsSHA256": "04fa5cb7e922f757827213f81d5eda7421e159408c146a11da8ea5e53a669a50",
+  "handoffSHA256": "19745fcb357658428450e5ce145fbf0d3fce9d68943992382b4b9a39e7566223",
+  "underlyingReviewedTemplate": "/tmp/test-audit-care102-tools-fz8_q695",
+  "catalogScalarDecoder": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-proof.cjs",
+  "changes": "Fresh version only. Typed complete reporter projections strengthen all literal controls; C4 keeps exact custom messages plus typed SSR witness. D1 source-backed complete projection with sole thickness omission and message witness. No source/test/call/input/row/control-recipe changes."
+}

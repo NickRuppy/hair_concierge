@@ -1,0 +1,982 @@
+[
+  {
+    "file": "tests/product-identity-normalize.test.ts",
+    "line": 16,
+    "name": "canonical category constants include supported and known unsupported keys",
+    "classification": "R",
+    "callbackSHA256": "8c6c4308e487858a9ce3d36eeb685f2c71c5f90fc12b284aba81eede0b1807fc",
+    "assertions": [
+      {
+        "line": 17,
+        "text": "assert.deepEqual(SUPPORTED_PRODUCT_CATEGORY_KEYS, [\n    \"shampoo\",\n    \"conditioner\",\n    \"leave_in\",\n    \"mask\",\n    \"oil\",\n    \"dry_shampoo\",\n    \"deep_cleansing_shampoo\",\n    \"bondbuilder\",\n    \"heat_protectant\",\n    \"scalp_care\",\n  ])"
+      },
+      {
+        "line": 30,
+        "text": "assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes(\"heat_protectant\"), true)"
+      },
+      {
+        "line": 31,
+        "text": "assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes(\"hairspray\"), true)"
+      },
+      {
+        "line": 32,
+        "text": "assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.leave_in, \"Leave-in\")"
+      },
+      {
+        "line": 33,
+        "text": "assert.equal(SUPPORTED_PRODUCT_CATEGORY_KEYS.includes(\"heat_protectant\"), true)"
+      },
+      {
+        "line": 34,
+        "text": "assert.equal(SUPPORTED_PRODUCT_CATEGORY_KEYS.includes(\"scalp_care\"), true)"
+      },
+      {
+        "line": 35,
+        "text": "assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.heat_protectant, \"Hitzeschutz\")"
+      },
+      {
+        "line": 36,
+        "text": "assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.scalp_care, \"Kopfhautpflege\")"
+      }
+    ],
+    "evidence": "Exact supported-key order, known unsupported hairspray and German labels are the public category/schema vocabulary, consumed by productIntakeCategorySchema and Discovery category registries. Dropping scalp_care/heat_protectant or exposing the wrong label fails these independent literals; category alias tests do not pin supported membership/order.",
+    "owner": "src/lib/product-identity/index.ts:6–96; src/lib/product-intake/schemas.ts:22"
+  },
+  {
+    "file": "tests/product-identity-normalize.test.ts",
+    "line": 39,
+    "name": "normalizeCategoryKey maps production labels, canonical keys, and simple oil aliases",
+    "classification": "R",
+    "callbackSHA256": "74fd331b916d361c02b071267bc79de983e73d1335dcab3604cb33d5f056c27e",
+    "assertions": [
+      {
+        "line": 40,
+        "text": "assert.equal(normalizeCategoryKey(\"Shampoo\"), \"shampoo\")"
+      },
+      {
+        "line": 41,
+        "text": "assert.equal(normalizeCategoryKey(\"Conditioner (Drogerie)\"), \"conditioner\")"
+      },
+      {
+        "line": 42,
+        "text": "assert.equal(normalizeCategoryKey(\"Leave-in\"), \"leave_in\")"
+      },
+      {
+        "line": 43,
+        "text": "assert.equal(normalizeCategoryKey(\"Maske\"), \"mask\")"
+      },
+      {
+        "line": 44,
+        "text": "assert.equal(normalizeCategoryKey(\"Öle\"), \"oil\")"
+      },
+      {
+        "line": 45,
+        "text": "assert.equal(normalizeCategoryKey(\"Trockenshampoo\"), \"dry_shampoo\")"
+      },
+      {
+        "line": 46,
+        "text": "assert.equal(normalizeCategoryKey(\"Tiefenreinigungsshampoo\"), \"deep_cleansing_shampoo\")"
+      },
+      {
+        "line": 47,
+        "text": "assert.equal(normalizeCategoryKey(\"Bondbuilder\"), \"bondbuilder\")"
+      },
+      {
+        "line": 48,
+        "text": "assert.equal(normalizeCategoryKey(\"Hitzeschutz\"), \"heat_protectant\")"
+      },
+      {
+        "line": 49,
+        "text": "assert.equal(normalizeCategoryKey(\"Kopfhautpflege\"), \"scalp_care\")"
+      },
+      {
+        "line": 50,
+        "text": "assert.equal(normalizeCategoryKey(\"Scalp Care\"), \"scalp_care\")"
+      },
+      {
+        "line": 51,
+        "text": "assert.equal(normalizeCategoryKey(\"Serum\"), \"serum\")"
+      },
+      {
+        "line": 52,
+        "text": "assert.equal(normalizeCategoryKey(\"Scrub\"), \"scrub\")"
+      },
+      {
+        "line": 53,
+        "text": "assert.equal(normalizeCategoryKey(\"Peeling\"), \"peeling\")"
+      },
+      {
+        "line": 54,
+        "text": "assert.equal(normalizeCategoryKey(\"Styling-Gel\"), \"styling_gel\")"
+      },
+      {
+        "line": 55,
+        "text": "assert.equal(normalizeCategoryKey(\"Styling Mousse\"), \"styling_mousse\")"
+      },
+      {
+        "line": 56,
+        "text": "assert.equal(normalizeCategoryKey(\"Styling-Creme\"), \"styling_cream\")"
+      },
+      {
+        "line": 57,
+        "text": "assert.equal(normalizeCategoryKey(\"Haarspray\"), \"hairspray\")"
+      },
+      {
+        "line": 58,
+        "text": "assert.equal(normalizeCategoryKey(\"dry_shampoo\"), \"dry_shampoo\")"
+      },
+      {
+        "line": 59,
+        "text": "assert.equal(normalizeCategoryKey(\"Deep Cleansing Shampoo\"), \"deep_cleansing_shampoo\")"
+      },
+      {
+        "line": 60,
+        "text": "assert.equal(normalizeCategoryKey(\"Öl\"), \"oil\")"
+      },
+      {
+        "line": 61,
+        "text": "assert.equal(normalizeCategoryKey(\"Oele\"), \"oil\")"
+      },
+      {
+        "line": 62,
+        "text": "assert.equal(normalizeCategoryKey(\"Ole\"), \"oil\")"
+      },
+      {
+        "line": 63,
+        "text": "assert.equal(normalizeCategoryKey(\"Unbekannt\"), null)"
+      }
+    ],
+    "evidence": "Each existing alias/canonical-key input drives the real map, including German/English and oil spellings and unknown→null. Removing only the Scalp Care or Oele alias can leave all direct vocabulary constants and unrelated intake fixtures green. No same-input composed keeper covers this full union.",
+    "owner": "src/lib/product-identity/index.ts:51–105"
+  },
+  {
+    "file": "tests/product-identity-normalize.test.ts",
+    "line": 66,
+    "name": "normalizeText folds accents, punctuation, case, and spacing",
+    "classification": "R",
+    "callbackSHA256": "b8ed8d473a998b61f481f8ae989a473a9cd84468677bfc3768f530f7657410fd",
+    "assertions": [
+      {
+        "line": 67,
+        "text": "assert.equal(normalizeText(\"  Öl / Leave-in -- Nº 5  \"), \"ol leave in no 5\")"
+      },
+      {
+        "line": 68,
+        "text": "assert.equal(normalizeText(\"Tiefenreinigungs-Shampoo\"), \"tiefenreinigungs shampoo\")"
+      }
+    ],
+    "evidence": "Actual normalizeText wrapper must fold the two exact punctuation/diacritic/number cases to fixed text. Returning raw text or dropping Nº normalization fails; the standalone normalizeIdentityText fixtures do not exercise this wrapper with these inputs. No new case is warranted just to retire it.",
+    "owner": "src/lib/product-identity/normalize.ts:1–26; scripts/product-identity/validate-normalization.ts:79–81,549–551"
+  },
+  {
+    "file": "tests/product-identity-normalize.test.ts",
+    "line": 71,
+    "name": "normalizeIdentityText is stable for case, whitespace, punctuation, and safe diacritics",
+    "classification": "R",
+    "callbackSHA256": "5011d4a1e73e0076d8068fc88fd2bd9bdebfdf28f19d5fcc686cf6d87073f3e7",
+    "assertions": [
+      {
+        "line": 72,
+        "text": "assert.equal(normalizeIdentityText(\"  OLAPLEX   Nº. 5 -- Leave-In  \"), \"olaplex no 5 leave in\")"
+      },
+      {
+        "line": 73,
+        "text": "assert.equal(\n    normalizeIdentityText(\"OLAPLEX N°5 Bond Maintenance\"),\n    \"olaplex no 5 bond maintenance\",\n  )"
+      },
+      {
+        "line": 77,
+        "text": "assert.equal(normalizeIdentityText(\"Olaplex No 5 Leave In\"), \"olaplex no 5 leave in\")"
+      },
+      {
+        "line": 78,
+        "text": "assert.equal(normalizeIdentityText(\"Garnier Fructis / Hair-Food\"), \"garnier fructis hair food\")"
+      }
+    ],
+    "evidence": "Four exact strings independently require case/spacing/hyphen/slash folding and º/° number handling while retaining word order. Removing the degree-symbol No rewrite fails the N°5 input even though plain No and apostrophe cases pass. Identity matching and prompt preparation use this shared normalizer.",
+    "owner": "src/lib/product-identity/normalize.ts:1–21; src/lib/product-identity/brand-resolution.ts:187–203"
+  },
+  {
+    "file": "tests/product-identity-normalize.test.ts",
+    "line": 81,
+    "name": "normalizeIdentityText matches L'Oreal variants without broad unsafe rewrites",
+    "classification": "R",
+    "callbackSHA256": "b34b89e572b633b7a3b902660444bfd1d1fb1cf3bb2c36027dd7f2568fdab6b5",
+    "assertions": [
+      {
+        "line": 82,
+        "text": "assert.equal(normalizeIdentityText(\"L'Oréal\"), \"loreal\")"
+      },
+      {
+        "line": 83,
+        "text": "assert.equal(normalizeIdentityText(\"L’Oréal\"), \"loreal\")"
+      },
+      {
+        "line": 84,
+        "text": "assert.equal(normalizeIdentityText(\"LʼOréal\"), \"loreal\")"
+      },
+      {
+        "line": 85,
+        "text": "assert.equal(normalizeIdentityText(\"Loreal\"), \"loreal\")"
+      }
+    ],
+    "evidence": "Straight, curly and modifier-letter apostrophes plus bare Loreal must coalesce to loreal. The resolver punctuation keeper exercises only straight apostrophe, and its token regex differs from the direct normalizer for U+02BC; treating all raw variants as equivalent coverage would lose that branch.",
+    "owner": "src/lib/product-identity/normalize.ts:10–17; src/lib/product-identity/brand-resolution.ts:187–191"
+  },
+  {
+    "file": "tests/product-identity-normalize.test.ts",
+    "line": 88,
+    "name": "normalizeIdentifier returns stable snake-case identifiers",
+    "classification": "R",
+    "callbackSHA256": "433e96b44137a770c957ee347fcadc98d1099eea504a8dcdfb8a16cbe567776d",
+    "assertions": [
+      {
+        "line": 89,
+        "text": "assert.equal(normalizeIdentifier(\"Deep Cleansing Shampoo\"), \"deep_cleansing_shampoo\")"
+      },
+      {
+        "line": 90,
+        "text": "assert.equal(normalizeIdentifier(\"  Öle + Pflege  \"), \"ole_pflege\")"
+      },
+      {
+        "line": 91,
+        "text": "assert.equal(normalizeIdentifier(\"leave_in\"), \"leave_in\")"
+      },
+      {
+        "line": 92,
+        "text": "assert.equal(normalizeIdentifier(null), \"\")"
+      },
+      {
+        "line": 93,
+        "text": "assert.equal(normalizeIdentifier(undefined), \"\")"
+      }
+    ],
+    "evidence": "Stable underscore encoding and both null/undefined→empty are independently observed at normalizeIdentifier. Dropping null handling or retaining spaces fails; category normalization short-circuits falsy inputs and cannot protect this direct nullable contract.",
+    "owner": "src/lib/product-identity/normalize.ts:28–31; src/lib/product-identity/index.ts:91–104"
+  },
+  {
+    "file": "tests/product-identity-normalize.test.ts",
+    "line": 96,
+    "name": "tokenizeProductName returns normalized searchable product-name tokens",
+    "classification": "R",
+    "callbackSHA256": "7d30b9ab0e7da16affeab1168dba301e2c4c52a909e2d3b13f88c519d5594bc2",
+    "assertions": [
+      {
+        "line": 97,
+        "text": "assert.deepEqual(tokenizeProductName(\"Garnier Fructis Hair-Food Aloe\"), [\n    \"garnier\",\n    \"fructis\",\n    \"hair\",\n    \"food\",\n    \"aloe\",\n  ])"
+      },
+      {
+        "line": 104,
+        "text": "assert.deepEqual(tokenizeProductName(\"L'Oréal Professionnel\"), [\"loreal\", \"professionnel\"])"
+      },
+      {
+        "line": 105,
+        "text": "assert.deepEqual(tokenizeProductName(\"OLAPLEX No. 5\"), [\"olaplex\", \"no\", \"5\"])"
+      }
+    ],
+    "evidence": "Exact normalized token arrays preserve search words/order and prevent empty-token leakage for hyphenated Garnier, apostrophe Loreal and numbered Olaplex. Returning one normalized string or dropping the numeric token fails independently of scalar-normalization equality tests. Matcher ranking uses these arrays.",
+    "owner": "src/lib/product-identity/normalize.ts:38–43; src/lib/product-intake/product-matching.ts:tokenizeProductName call sites"
+  },
+  {
+    "file": "tests/product-identity-normalize.test.ts",
+    "line": 108,
+    "name": "cleanProductDisplayName removes exact brand and product line prefixes conservatively",
+    "classification": "R",
+    "callbackSHA256": "debc7c37b4914b7c1ded8545eb022786bc27f75477fb2a2b157d808a126bf7ad",
+    "assertions": [
+      {
+        "line": 109,
+        "text": "assert.equal(\n    cleanProductDisplayName(\"Olaplex No. 5 Leave-In Conditioner\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Leave-In Conditioner\",\n  )"
+      },
+      {
+        "line": 117,
+        "text": "assert.equal(\n    cleanProductDisplayName(\"Olaplex Bond Maintenance Shampoo\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Bond Maintenance Shampoo\",\n  )"
+      },
+      {
+        "line": 125,
+        "text": "assert.equal(\n    cleanProductDisplayName(\"The Ordinary Ordinary Shampoo\", {\n      brand: \"Ordinary\",\n    }),\n    \"The Ordinary Ordinary Shampoo\",\n  )"
+      },
+      {
+        "line": 132,
+        "text": "assert.equal(\n    cleanProductDisplayName(\"Olaplexx No. 5 Leave-In Conditioner\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Olaplexx No. 5 Leave-In Conditioner\",\n  )"
+      },
+      {
+        "line": 140,
+        "text": "assert.equal(\n    cleanProductDisplayName(\"L'Oréal Paris Elvital Dream Length\", {\n      brand: \"Loreal Paris\",\n      productLine: \"Elvital\",\n    }),\n    \"Dream Length\",\n  )"
+      }
+    ],
+    "evidence": "Five full display-cleaning cases retain two successive exact-prefix removal, unmatched line preservation, middle-word nonremoval, no Olaplexx partial-token strip and accented brand equivalence. No single existing lookup keeper reproduces all of this union. Changing prefix equality to startsWith would strip Olaplexx.",
+    "owner": "src/lib/product-identity/index.ts:114–179; src/lib/product-intake/product-lookup.ts:539–542"
+  },
+  {
+    "file": "tests/product-identity-resolution.test.ts",
+    "line": 24,
+    "name": "resolveBrandFromText returns an exact brand and product line prefix match",
+    "classification": "R",
+    "callbackSHA256": "487cbe942d18c60b005ac5f1b13ae5dbf9a6ef84c9fb12a3b4626359ec167433",
+    "assertions": [
+      {
+        "line": 27,
+        "text": "assert.equal(resolution.match, \"brand_line\")"
+      },
+      {
+        "line": 28,
+        "text": "assert.equal(resolution.brand?.key, \"olaplex\")"
+      },
+      {
+        "line": 29,
+        "text": "assert.equal(resolution.productLine?.key, \"no_5\")"
+      },
+      {
+        "line": 30,
+        "text": "assert.equal(resolution.matchedText, \"Olaplex Nr. 5\")"
+      },
+      {
+        "line": 31,
+        "text": "assert.equal(resolution.confidence, \"high\")"
+      },
+      {
+        "line": 32,
+        "text": "assert.equal(resolution.reason, \"canonical_brand_with_line_inference\")"
+      }
+    ],
+    "evidence": "Legacy array/nested line aliases must resolve Nr.5 to no_5 with high confidence, exact matchedText boundary and canonical_brand_with_line_inference. Losing nested productLines or extending matchedText over product name fails; Phase0 relational fixtures do not cover this input adapter.",
+    "owner": "src/lib/product-identity/brand-resolution.ts:277–299,460–489"
+  },
+  {
+    "file": "tests/product-identity-resolution.test.ts",
+    "line": 35,
+    "name": "resolveBrandFromText returns an exact brand match without over-matching inside words",
+    "classification": "R",
+    "callbackSHA256": "fd8ab458d84aecc6dfdfe0788a74ccf594a36c30c4ad027596376aaa46bbf718",
+    "assertions": [
+      {
+        "line": 37,
+        "text": "assert.equal(resolution.match, \"brand\")"
+      },
+      {
+        "line": 38,
+        "text": "assert.equal(resolution.brand?.key, \"k18\")"
+      },
+      {
+        "line": 39,
+        "text": "assert.equal(resolution.productLine, null)"
+      },
+      {
+        "line": 40,
+        "text": "assert.equal(resolution.reason, \"brand_alias_exact\")"
+      },
+      {
+        "line": 43,
+        "text": "assert.equal(nonMatch.match, \"none\")"
+      },
+      {
+        "line": 44,
+        "text": "assert.equal(nonMatch.brand, null)"
+      },
+      {
+        "line": 45,
+        "text": "assert.equal(nonMatch.unresolvedRawText, \"SK18 Leave-in Molecular Repair Hair Oil\")"
+      }
+    ],
+    "evidence": "Canonical keeper C1: real alias K 18 resolves, while token SK18 cannot overmatch. Existing match/brand/raw assertions stay; proposed two extra assertions own the common unresolved receipt. An includes-based prefix regression still fails the negative.",
+    "owner": "src/lib/product-identity/brand-resolution.ts:208–246,377–387,389–454"
+  },
+  {
+    "file": "tests/product-identity-resolution.test.ts",
+    "line": 48,
+    "name": "resolveBrandFromText resolves Phase 0 aliases before canonical brand names",
+    "classification": "R",
+    "callbackSHA256": "3f78b2f953b0ee8ad45d9cca98a5be37fe41de012df62ae37dbffce5d5bd02a7",
+    "assertions": [
+      {
+        "line": 79,
+        "text": "assert.equal(proV.match, \"brand_line\")"
+      },
+      {
+        "line": 80,
+        "text": "assert.equal(proV.brand?.id, \"brand-pantene\")"
+      },
+      {
+        "line": 81,
+        "text": "assert.equal(proV.productLine?.id, \"line-pro-v\")"
+      },
+      {
+        "line": 82,
+        "text": "assert.equal(proV.reason, \"canonical_brand_with_line_inference\")"
+      },
+      {
+        "line": 85,
+        "text": "assert.equal(garnierFructis.match, \"brand_line\")"
+      },
+      {
+        "line": 86,
+        "text": "assert.equal(garnierFructis.brand?.id, \"brand-garnier\")"
+      },
+      {
+        "line": 87,
+        "text": "assert.equal(garnierFructis.productLine?.id, \"line-fructis\")"
+      },
+      {
+        "line": 88,
+        "text": "assert.equal(garnierFructis.reason, \"canonical_brand_with_line_inference\")"
+      },
+      {
+        "line": 91,
+        "text": "assert.equal(fructisAlias.match, \"brand_line\")"
+      },
+      {
+        "line": 92,
+        "text": "assert.equal(fructisAlias.brand?.id, \"brand-garnier\")"
+      },
+      {
+        "line": 93,
+        "text": "assert.equal(fructisAlias.productLine?.id, \"line-fructis\")"
+      },
+      {
+        "line": 94,
+        "text": "assert.equal(fructisAlias.reason, \"brand_line_alias_exact\")"
+      }
+    ],
+    "evidence": "Relational Phase0 catalog covers canonical Pantene+line, canonical Garnier+line and line-only Fructis alias. Removing alias-first resolution or relational brand_id linkage changes brand/line/reason on one of the actual existing calls. Other corrected aliases do not preserve all these reason assertions.",
+    "owner": "src/lib/product-identity/brand-resolution.ts:301–308,328–342,396–419,446–489"
+  },
+  {
+    "file": "tests/product-identity-resolution.test.ts",
+    "line": 97,
+    "name": "unknown brand returns unresolved raw text with no confidence",
+    "classification": "C",
+    "callbackSHA256": "355895870d4f6ac90c06f210033ba697942ac160d4e7f8f8d3198acf8f4c06dd",
+    "assertions": [
+      {
+        "line": 106,
+        "text": "assert.equal(resolution.match, \"none\")"
+      },
+      {
+        "line": 107,
+        "text": "assert.equal(resolution.confidence, \"none\")"
+      },
+      {
+        "line": 108,
+        "text": "assert.equal(resolution.reason, \"unresolved\")"
+      },
+      {
+        "line": 109,
+        "text": "assert.equal(resolution.unresolvedRawText, \"Unbekannte Pflegecreme\")"
+      }
+    ],
+    "evidence": "C1: ordinary unrelated unknown reaches the same none(rawText) receipt as keeper SK18 after both prefix searches miss. Transfer confidence=none and reason=unresolved to existing nonMatch; match and exact raw echo are already asserted there. Raw literals/catalog shapes differ and are explicitly qualified in layer plan.",
+    "owner": "src/lib/product-identity/brand-resolution.ts:377–387,446–450"
+  },
+  {
+    "file": "tests/product-identity-resolution.test.ts",
+    "line": 112,
+    "name": "conflicting aliases are reported and excluded from usable alias resolution",
+    "classification": "R",
+    "callbackSHA256": "7a5ad4e9696df95d10f8451232edd975fe7c5dfd520400d0ae35eebed6ecb182",
+    "assertions": [
+      {
+        "line": 135,
+        "text": "assert.deepEqual(\n    catalog.conflicts.map((conflict) => conflict.normalizedAlias),\n    [\"shared\"],\n  )"
+      },
+      {
+        "line": 141,
+        "text": "assert.equal(resolution.match, \"none\")"
+      },
+      {
+        "line": 142,
+        "text": "assert.equal(resolution.reason, \"unresolved\")"
+      }
+    ],
+    "evidence": "Two different brands claim Shared: preserve the concrete conflict list and exclusion from usable resolution. Removing conflicts filtering can wrongly choose a brand; a generic unknown with no conflicting rows cannot catch this.",
+    "owner": "src/lib/product-identity/brand-resolution.ts:344–371"
+  },
+  {
+    "file": "tests/product-identity-resolution.test.ts",
+    "line": 145,
+    "name": "resolver uses Phase 0 normalized brand and line fields for punctuation variants",
+    "classification": "R",
+    "callbackSHA256": "90fe7fcabbc8122807a97e0decef49a9c4ca22aeb8a716c56d7cf4b0ffe553ae",
+    "assertions": [
+      {
+        "line": 167,
+        "text": "assert.equal(resolution.match, \"brand_line\")"
+      },
+      {
+        "line": 168,
+        "text": "assert.equal(resolution.brand?.id, \"brand-loreal-paris\")"
+      },
+      {
+        "line": 169,
+        "text": "assert.equal(resolution.productLine?.id, \"line-elvital\")"
+      },
+      {
+        "line": 170,
+        "text": "assert.equal(resolution.matchedText, \"Loreal Paris Elvital\")"
+      },
+      {
+        "line": 171,
+        "text": "assert.equal(resolution.reason, \"canonical_brand_with_line_inference\")"
+      },
+      {
+        "line": 174,
+        "text": "assert.equal(apostropheResolution.match, \"brand_line\")"
+      },
+      {
+        "line": 175,
+        "text": "assert.equal(apostropheResolution.brand?.id, \"brand-loreal-paris\")"
+      },
+      {
+        "line": 176,
+        "text": "assert.equal(apostropheResolution.productLine?.id, \"line-elvital\")"
+      },
+      {
+        "line": 177,
+        "text": "assert.equal(apostropheResolution.matchedText, \"L'Oréal Paris Elvital\")"
+      },
+      {
+        "line": 178,
+        "text": "assert.equal(apostropheResolution.reason, \"canonical_brand_with_line_inference\")"
+      }
+    ],
+    "evidence": "Canonical DB normalized fields plus straight-apostrophe/diacritics must select the same exact brand/line and preserve each raw matchedText boundary. Ignoring normalized_name fallback or token offset miscalculation escapes other alias-only inputs.",
+    "owner": "src/lib/product-identity/brand-resolution.ts:107–116,167–173,187–226,465–489"
+  },
+  {
+    "file": "tests/product-identity-resolution.test.ts",
+    "line": 181,
+    "name": "alias collisions with canonical brand names are reported and excluded",
+    "classification": "R",
+    "callbackSHA256": "8aed896e1cf4bb208a5c7eb21898f487682fa1dd501e656e810db6f2474ae715",
+    "assertions": [
+      {
+        "line": 205,
+        "text": "assert.deepEqual(\n    catalog.conflicts.map((conflict) => conflict.normalizedAlias),\n    [\"fructis\"],\n  )"
+      },
+      {
+        "line": 211,
+        "text": "assert.equal(resolution.match, \"brand\")"
+      },
+      {
+        "line": 212,
+        "text": "assert.equal(resolution.brand?.id, \"brand-fructis\")"
+      },
+      {
+        "line": 213,
+        "text": "assert.equal(resolution.productLine, null)"
+      },
+      {
+        "line": 214,
+        "text": "assert.equal(resolution.reason, \"canonical_brand_exact\")"
+      }
+    ],
+    "evidence": "Alias Fructis collides with a real canonical Fructis brand: conflict reported, line alias excluded, canonical brand wins with null line and canonical_brand_exact. Dropping canonical names from conflict target map passes the alias-versus-alias test but fails here.",
+    "owner": "src/lib/product-identity/brand-resolution.ts:346–350,367–371,481–489"
+  },
+  {
+    "file": "tests/product-identity-resolution.test.ts",
+    "line": 217,
+    "name": "line-specific aliases with missing product lines are excluded",
+    "classification": "R",
+    "callbackSHA256": "49b880c67811a5aa0c2a956e78c7c21e03293e215c3fdd075a45c3f874bba361",
+    "assertions": [
+      {
+        "line": 237,
+        "text": "assert.equal(catalog.aliases.length, 0)"
+      },
+      {
+        "line": 240,
+        "text": "assert.equal(resolution.match, \"none\")"
+      },
+      {
+        "line": 241,
+        "text": "assert.equal(resolution.reason, \"unresolved\")"
+      }
+    ],
+    "evidence": "A line-specific alias referencing missing line must be excluded, not downgraded into brand-only alias. Pins aliases.length=0 and actual unresolved result. Removing the missing-line continue makes Elvital resolve wrongly; generic unknown does not exercise dangling identity data.",
+    "owner": "src/lib/product-identity/brand-resolution.ts:332–334"
+  },
+  {
+    "file": "tests/product-identity-resolution.test.ts",
+    "line": 244,
+    "name": "resolver handles corrected Phase A catalog aliases",
+    "classification": "R",
+    "callbackSHA256": "aa15e96f406812499fe82cf61bfc2d3d5aa101e7119456313017d2ca696f5351",
+    "assertions": [
+      {
+        "line": 369,
+        "text": "assert.equal(fructis.match, \"brand_line\")"
+      },
+      {
+        "line": 370,
+        "text": "assert.equal(fructis.brand?.id, \"brand-garnier\")"
+      },
+      {
+        "line": 371,
+        "text": "assert.equal(fructis.productLine?.id, \"line-fructis\")"
+      },
+      {
+        "line": 374,
+        "text": "assert.equal(wahre.match, \"brand_line\")"
+      },
+      {
+        "line": 375,
+        "text": "assert.equal(wahre.productLine?.id, \"line-wahre\")"
+      },
+      {
+        "line": 378,
+        "text": "assert.equal(gliss.match, \"brand\")"
+      },
+      {
+        "line": 379,
+        "text": "assert.equal(gliss.brand?.id, \"brand-gliss\")"
+      },
+      {
+        "line": 380,
+        "text": "assert.equal(gliss.productLine, null)"
+      },
+      {
+        "line": 383,
+        "text": "assert.equal(monday.match, \"brand\")"
+      },
+      {
+        "line": 384,
+        "text": "assert.equal(monday.brand?.id, \"brand-monday\")"
+      },
+      {
+        "line": 387,
+        "text": "assert.equal(elvital.match, \"brand_line\")"
+      },
+      {
+        "line": 388,
+        "text": "assert.equal(elvital.productLine?.id, \"line-elvital\")"
+      },
+      {
+        "line": 391,
+        "text": "assert.equal(metalDx.match, \"brand_line\")"
+      },
+      {
+        "line": 392,
+        "text": "assert.equal(metalDx.brand?.id, \"brand-loreal-professionnel\")"
+      },
+      {
+        "line": 393,
+        "text": "assert.equal(metalDx.productLine?.id, \"line-metal-dx\")"
+      },
+      {
+        "line": 396,
+        "text": "assert.equal(balea.match, \"brand_line\")"
+      },
+      {
+        "line": 397,
+        "text": "assert.equal(balea.productLine?.id, \"line-professional\")"
+      }
+    ],
+    "evidence": "Seven explicit corrected aliases preserve reviewed canonical targets: HairFood→Fructis, Wahre→line, Glisskur→brand/no-line, Monday→brand, Elvital, MetalDX, BaleaAqua→Professional. These are documented PhaseA operator decisions; no generic alias fixture protects all old-language compatibility mappings.",
+    "owner": "src/lib/product-identity/brand-resolution.ts:396–448; plans/2026-06-18-product-identity-canonical-correction.md:Canonical Decisions/Task2"
+  },
+  {
+    "file": "tests/product-identity-schema.test.ts",
+    "line": 20,
+    "name": "product identity migration creates the phase 0 identity tables",
+    "classification": "R",
+    "callbackSHA256": "b6d4d96d8cad177c24293423b171643aab158ba1a0a4a902ab266351fd6c8fbc",
+    "assertions": [],
+    "evidence": "Five physical tables must be created and have RLS enabled in this additive migration. Missing one enable statement is not covered by current TS matching or the later product-visibility migration. Static syntax guard, not a claim RLS was executed.",
+    "owner": "supabase/migrations/20260612120000_product_identity_normalization.sql:8–74,342–346"
+  },
+  {
+    "file": "tests/product-identity-schema.test.ts",
+    "line": 33,
+    "name": "product identity migration exposes only public-safe identity tables to public clients",
+    "classification": "R",
+    "callbackSHA256": "41621040685126f3988a805990f6cf3b66812bd4eb71eda24858dd1d8e869ca8",
+    "assertions": [
+      {
+        "line": 36,
+        "text": "assert.match(\n      normalizedSql,\n      new RegExp(\n        `create\\\\s+policy\\\\s+${table}_select_public\\\\s+on\\\\s+public\\\\.${table}\\\\s+for\\\\s+select\\\\s+to\\\\s+anon,\\\\s+authenticated\\\\s+using\\\\s+\\\\(true\\\\)`,\n        \"i\",\n      ),\n    )"
+      },
+      {
+        "line": 43,
+        "text": "assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(\n        `create\\\\s+policy\\\\s+\\\\w+\\\\s+on\\\\s+public\\\\.${table}\\\\s+for\\\\s+(insert|update|delete)`,\n        \"i\",\n      ),\n    )"
+      },
+      {
+        "line": 53,
+        "text": "assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`grant\\\\s+select\\\\s+on\\\\s+table\\\\s+public\\\\.${table}\\\\s+to\\\\s+anon`, \"i\"),\n    )"
+      },
+      {
+        "line": 57,
+        "text": "assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`create\\\\s+policy\\\\s+${table}_select_public\\\\s+on\\\\s+public\\\\.${table}`, \"i\"),\n    )"
+      }
+    ],
+    "evidence": "Phase0 grants/policies expose only brands/categories, forbid writes on those and premature public lines/aliases/identifiers. Later Phase5 intentionally opens product_lines; that later contract cannot replace the historical additive migration guard. Removing the old test would lose migration-stage separation.",
+    "owner": "supabase/migrations/20260612120000_product_identity_normalization.sql:348–379; successor 20260706120000:12,57–62"
+  },
+  {
+    "file": "tests/product-identity-schema.test.ts",
+    "line": 64,
+    "name": "product identity migration keeps non-recommended products out of public product reads",
+    "classification": "R",
+    "callbackSHA256": "bcf212eee60c8177aea3884d48a884a30355bdf776f12f491f2ceec238949da9",
+    "assertions": [
+      {
+        "line": 65,
+        "text": "assert.match(normalizedSql, /drop\\s+policy\\s+if\\s+exists\\s+\"products_select_active\"/)"
+      },
+      {
+        "line": 66,
+        "text": "assert.match(\n    normalizedSql,\n    /create\\s+policy\\s+\"products_select_active\"\\s+on\\s+public\\.products\\s+for\\s+select\\s+to\\s+authenticated\\s+using\\s+\\(\\s*is_active\\s+=\\s+true\\s+and\\s+is_chaarlie_recommended\\s+=\\s+true\\s+and\\s+auth\\.role\\(\\)\\s+=\\s+'authenticated'\\s+\\)/,\n  )"
+      }
+    ],
+    "evidence": "Exact authenticated recommended-only policy in Phase0 protects replay compatibility before Phase5. Current lifecycle test reads a different migration and adds owned-product exception; it does not execute or inspect this migration. Weakening this USING while leaving successor intact is an escaped intermediate schema fault.",
+    "owner": "supabase/migrations/20260612120000_product_identity_normalization.sql:351–361"
+  },
+  {
+    "file": "tests/product-identity-schema.test.ts",
+    "line": 72,
+    "name": "product identity migration keeps semantic product matching aligned with catalog visibility",
+    "classification": "R",
+    "callbackSHA256": "a5c7bf70fb642cea8f8c88c7d0f551fa962039fd11e4890006319231f9b9c4b7",
+    "assertions": [
+      {
+        "line": 73,
+        "text": "assert.match(normalizedSql, /drop\\s+function\\s+if\\s+exists\\s+public\\.match_products/)"
+      },
+      {
+        "line": 74,
+        "text": "assert.match(normalizedSql, /create\\s+or\\s+replace\\s+function\\s+public\\.match_products/)"
+      },
+      {
+        "line": 75,
+        "text": "assert.match(\n    normalizedSql,\n    /where\\s+p\\.is_active\\s+=\\s+true\\s+and\\s+p\\.is_chaarlie_recommended\\s+=\\s+true\\s+and\\s+p\\.lifecycle_status\\s+=\\s+'active'/,\n  )"
+      }
+    ],
+    "evidence": "match_products function replacement independently adds active/recommended/lifecycle filters to semantic retrieval. A correct table RLS policy does not protect SECURITY DEFINER matcher execution; omitting recommendation filter fails the literal contract.",
+    "owner": "supabase/migrations/20260612120000_product_identity_normalization.sql:203–316"
+  },
+  {
+    "file": "tests/product-identity-schema.test.ts",
+    "line": 81,
+    "name": "product identity migration extends products without contracting legacy fields",
+    "classification": "R",
+    "callbackSHA256": "13e6538f833e57940035131a6fc1037c7fc7a86193a7a91948a08d81786cb3db",
+    "assertions": [
+      {
+        "line": 93,
+        "text": "assert.match(normalizedSql, /origin\\s+=\\s+coalesce\\(origin,\\s+'curated'\\)/)"
+      },
+      {
+        "line": 96,
+        "text": "assert.match(normalizedSql, /check\\s+\\(origin\\s+in\\s+\\('curated',\\s+'user_submitted'\\)\\)/)"
+      },
+      {
+        "line": 101,
+        "text": "assert.doesNotMatch(normalizedSql, /drop\\s+column\\s+(if\\s+exists\\s+)?brand\\b/)"
+      },
+      {
+        "line": 102,
+        "text": "assert.doesNotMatch(normalizedSql, /drop\\s+column\\s+(if\\s+exists\\s+)?category\\b/)"
+      },
+      {
+        "line": 103,
+        "text": "assert.doesNotMatch(normalizedSql, /alter\\s+column\\s+(category_key|brand_id)\\s+set\\s+not\\s+null/)"
+      }
+    ],
+    "evidence": "Nullable additive identity keys, origin default/backfill/check and FK constraints must preserve legacy brand/category. Dropping old columns or forcing brand_id NOT NULL breaks historical compatibility even when modern DTO tests succeed. This whole positive/negative union stays.",
+    "owner": "supabase/migrations/20260612120000_product_identity_normalization.sql:107–157"
+  },
+  {
+    "file": "tests/product-identity-schema.test.ts",
+    "line": 106,
+    "name": "product identity migration keeps product lines and identifiers compatible",
+    "classification": "R",
+    "callbackSHA256": "605f39014516365f59cbf177d081eab835a152799f3500c83fc372112c670ff2",
+    "assertions": [
+      {
+        "line": 107,
+        "text": "assert.match(normalizedSql, /unique\\s+\\(id,\\s+brand_id\\)/)"
+      },
+      {
+        "line": 108,
+        "text": "assert.match(normalizedSql, /foreign\\s+key\\s+\\(product_line_id,\\s+brand_id\\)/)"
+      },
+      {
+        "line": 109,
+        "text": "assert.match(normalizedSql, /on\\s+delete\\s+set\\s+null\\s+\\(product_line_id\\)/)"
+      },
+      {
+        "line": 113,
+        "text": "assert.doesNotMatch(\n    normalizedSql,\n    /unique\\s+index\\s+\\w+\\s+on\\s+public\\.product_identifiers\\s+\\(identifier_type,\\s*normalized_identifier_value\\)/,\n  )"
+      }
+    ],
+    "evidence": "Composite line/brand FK and partial null delete semantics coexist with identifiers per product, not global uniqueness. A globally unique barcode index would reject ambiguous evidence; scalar GTIN tests do not exercise SQL indexes or FK contract.",
+    "owner": "supabase/migrations/20260612120000_product_identity_normalization.sql:27–53,149–179"
+  },
+  {
+    "file": "tests/product-identity-schema.test.ts",
+    "line": 119,
+    "name": "product identity migration stores script-normalized identity values",
+    "classification": "R",
+    "callbackSHA256": "7c9bad695f9c8f8e76e972c7efe7c2bfa823052be4cae74d94d0b5bab4bf9406",
+    "assertions": [
+      {
+        "line": 120,
+        "text": "assert.match(\n    normalizedSql,\n    /canonical_name\\s+text\\s+not\\s+null,\\s+normalized_name\\s+text\\s+not\\s+null/,\n  )"
+      },
+      {
+        "line": 124,
+        "text": "assert.match(normalizedSql, /alias\\s+text\\s+not\\s+null,\\s+normalized_alias\\s+text\\s+not\\s+null/)"
+      },
+      {
+        "line": 125,
+        "text": "assert.doesNotMatch(normalizedSql, /normalized_name\\s+text\\s+generated\\s+always/)"
+      },
+      {
+        "line": 126,
+        "text": "assert.doesNotMatch(normalizedSql, /normalized_alias\\s+text\\s+generated\\s+always/)"
+      }
+    ],
+    "evidence": "Brand/alias normalized columns stay ordinary script-normalized stored values, not generated rewrites; canonical and raw alias fields stay paired. Changing these to generated normalization would invalidate reviewed script authority independently of normalizer output tests.",
+    "owner": "supabase/migrations/20260612120000_product_identity_normalization.sql:19–45"
+  },
+  {
+    "file": "tests/product-identity-schema.test.ts",
+    "line": 129,
+    "name": "product identity migration seeds all phase 0 product categories",
+    "classification": "F",
+    "callbackSHA256": "3371f01ca674c61f8ce1e70a1d70f28ddf7e28aa3598f4cd99a0ec8237ce4890",
+    "assertions": [
+      {
+        "line": 148,
+        "text": "assert.match(normalizedSql, new RegExp(`'${categoryKey}'`))"
+      }
+    ],
+    "evidence": "Held F1: seed-membership contract is meaningful, but /'shampoo'/ scans all lowercased SQL and can match the display label after the tuple key is corrupted. No repair or deletion credit. Exact static counterexample and limits in held-findings.json.",
+    "owner": "tests/product-identity-schema.test.ts:129–150; migration tuple ('shampoo', 'Shampoo', true, true, 10)"
+  },
+  {
+    "file": "tests/product-identity-schema.test.ts",
+    "line": 152,
+    "name": "product identity migration stays inside the phase 0 boundary",
+    "classification": "R",
+    "callbackSHA256": "858205caa0269e24beebad80c1f34d22d5037c212ab2f8a9c0978ce3d8a1e2e9",
+    "assertions": [
+      {
+        "line": 153,
+        "text": "assert.doesNotMatch(normalizedSql, /product_submissions/)"
+      },
+      {
+        "line": 154,
+        "text": "assert.doesNotMatch(normalizedSql, /user_product_usage/)"
+      },
+      {
+        "line": 155,
+        "text": "assert.doesNotMatch(normalizedSql, /alter\\s+table\\s+public\\.product_\\w+_specs/)"
+      }
+    ],
+    "evidence": "Migration phase boundary forbids submissions/usage/spec-table alterations. Later migration tests cannot protect accidental expansion of this historical file; introducing a spec RLS ALTER or intake table here fails. Retain cheapest independent file-level boundary guard.",
+    "owner": "supabase/migrations/20260612120000_product_identity_normalization.sql; docs/product-identity-normalization.md:Phase0 Non-Goals"
+  },
+  {
+    "file": "tests/product-identity-title.test.ts",
+    "line": 6,
+    "name": "product identity title composes brand, line and name without visible duplication",
+    "classification": "R",
+    "callbackSHA256": "f28515ce89185fae7e08314d25dad834a27eef7594657de5e67fe77be6e1c32c",
+    "assertions": [
+      {
+        "line": 7,
+        "text": "assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Neqi\",\n      productLine: \"NEQI x @_the.beautiful.people\",\n      name: \"Leave-In Moisturizing Mist\",\n    }),\n    \"NEQI x @_the.beautiful.people Leave-In Moisturizing Mist\",\n  )"
+      },
+      {
+        "line": 15,
+        "text": "assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Garnier Wahre Schätze\",\n      productLine: \"Wahre Schätze\",\n      name: \"Honig Schätze Shampoo\",\n    }),\n    \"Garnier Wahre Schätze Honig Schätze Shampoo\",\n  )"
+      },
+      {
+        "line": 23,
+        "text": "assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Syoss\",\n      productLine: \"Intense Fullness\",\n      name: \"Syoss Intense Fullness Shampoo\",\n    }),\n    \"Syoss Intense Fullness Shampoo\",\n  )"
+      }
+    ],
+    "evidence": "Neqi and Syoss literals have existing actual consumers, but the third branch brand=Garnier Wahre Schätze with line=Wahre Schätze exercises existing.includes(candidate), not replacement of prior shorter parts. Product-card/line helpers use a different formatter. A duplicate line emitted by composeProductIdentityTitle could escape those keepers. Whole declaration stays; no relocating one input to get credit.",
+    "owner": "src/lib/product-identity/display-title.ts:9–24; tests/mobile-scan-search-identity.test.ts:7; tests/discovery-product-line-title.test.tsx:35"
+  },
+  {
+    "file": "tests/product-identity-title.test.ts",
+    "line": 33,
+    "name": "product identity title ignores blank identity parts",
+    "classification": "R",
+    "callbackSHA256": "4ed7cb5db9a7c4389c4a582fe5e9f26872364796b5bb6caca92e2078d0ec7d00",
+    "assertions": [
+      {
+        "line": 34,
+        "text": "assert.equal(\n    composeProductIdentityTitle({ brand: \"  \", productLine: null, name: \"Repair Shampoo\" }),\n    \"Repair Shampoo\",\n  )"
+      }
+    ],
+    "evidence": "Blank-space brand + null line must be omitted while preserving Repair Shampoo. Existing scanResultTitle(null-brand) has a result.name fallback that can hide an empty formatter return; missing/null versus whitespace also exercises trim. No fully equivalent stronger keeper established.",
+    "owner": "src/lib/product-identity/display-title.ts:9–12; src/components/scan/scan-search-sheet.tsx:111–123"
+  },
+  {
+    "file": "tests/product-identity-correction.test.ts",
+    "line": 10,
+    "name": "canonical correction apply guard requires the production project confirmation",
+    "classification": "R",
+    "callbackSHA256": "57c074a89a7439593faa0955cbf4f2d7c7b792c9ef0d9ecda8058714cd14c2db",
+    "assertions": [
+      {
+        "line": 11,
+        "text": "assert.doesNotThrow(() =>\n    assertCanonicalCorrectionApplyTarget({\n      apply: false,\n      confirmProject: null,\n      supabaseUrl: \"https://example.supabase.co\",\n    }),\n  )"
+      },
+      {
+        "line": 19,
+        "text": "assert.throws(\n    () =>\n      assertCanonicalCorrectionApplyTarget({\n        apply: true,\n        confirmProject: \"wrong\",\n        supabaseUrl: \"https://pqdkhefxsxkyeqelqegq.supabase.co\",\n      }),\n    /Writes require --confirm-project=pqdkhefxsxkyeqelqegq/,\n  )"
+      },
+      {
+        "line": 29,
+        "text": "assert.throws(\n    () =>\n      assertCanonicalCorrectionApplyTarget({\n        apply: true,\n        confirmProject: \"pqdkhefxsxkyeqelqegq\",\n        supabaseUrl: \"https://other.supabase.co\",\n      }),\n    /unexpected Supabase project/,\n  )"
+      }
+    ],
+    "evidence": "Actual registered correction operator refuses wrong confirmation and wrong exact hostname while dry-run skips apply guard. Generic apply-normalization uses a separate weaker includes guard; it cannot replace this exact correction safety test. No claims of positive DB apply or all guards tested.",
+    "owner": "scripts/product-identity/correct-canonical-identities.ts:230–247,862–869; package.json:87"
+  },
+  {
+    "file": "tests/product-identity-correction.test.ts",
+    "line": 40,
+    "name": "canonical correction product patch never writes live product names or legacy fields",
+    "classification": "R",
+    "callbackSHA256": "fc2859cdd4e9033c6b82efda6cc001b136e9e482355e62d965658f930bfd64df",
+    "assertions": [
+      {
+        "line": 46,
+        "text": "assert.deepEqual(patch, {\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n  })"
+      },
+      {
+        "line": 50,
+        "text": "assert.equal(\"name\" in patch, false)"
+      },
+      {
+        "line": 51,
+        "text": "assert.equal(\"brand\" in patch, false)"
+      },
+      {
+        "line": 52,
+        "text": "assert.equal(\"category\" in patch, false)"
+      }
+    ],
+    "evidence": "Actual updateProducts consumes exactly two FK columns from buildProductPatch; whole deep equality and legacy key negatives prohibit names/brand/category mutation. Returning live-name cleanup here violates explicit PhaseA constraint. No fake query runtime keeper exists for this union.",
+    "owner": "scripts/product-identity/correct-canonical-identities.ts:249–257,698–728"
+  },
+  {
+    "file": "tests/product-identity-correction.test.ts",
+    "line": 55,
+    "name": "canonical correction alias upsert rows only include database columns",
+    "classification": "R",
+    "callbackSHA256": "2759695dc620e99abfd60574716733dd5fd3a9fc159ffe18debf806f034572aa",
+    "assertions": [
+      {
+        "line": 66,
+        "text": "assert.deepEqual(row, {\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n    alias: \"Garnier Hair Food\",\n    normalized_alias: \"garnier hair food\",\n    source: \"curated\",\n  })"
+      }
+    ],
+    "evidence": "Actual retargetBrandAliases maps through brandAliasWriteRow before upsert; only five DB columns survive, excluding explanatory target_brand_name/target_product_line_name. Spreading the richer payload breaks DB writes despite correct display summary. Preserve pure projection contract at this registered operator boundary.",
+    "owner": "scripts/product-identity/correct-canonical-identities.ts:669–690"
+  }
+]

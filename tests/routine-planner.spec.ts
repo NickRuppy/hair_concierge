@@ -2,15 +2,12 @@ import { expect, test } from "@playwright/test"
 import {
   activateRoutineTopics,
   buildRoutinePlan,
-  buildRoutineRetrievalSubqueries,
   deriveRoutineContext,
   detectStylingProductKind,
-  getRoutineAutofillSlots,
   projectRoutinePlanForLayer,
 } from "../src/lib/routines/planner"
 import {
   getLengthCareIntensity,
-  hasLengthEndsZone,
   suppressLengthOnlyCare,
 } from "../src/lib/recommendation-engine/hair-length"
 import type { HairProfile } from "../src/lib/types"
@@ -53,13 +50,6 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
 
 test.describe("Routine planner", () => {
   test("hair length helper maps length zones and care intensity conservatively", () => {
-    expect(hasLengthEndsZone("very_short")).toBe(false)
-    expect(hasLengthEndsZone(null)).toBe(false)
-    expect(hasLengthEndsZone("short")).toBe(true)
-    expect(hasLengthEndsZone("medium")).toBe(true)
-    expect(hasLengthEndsZone("long")).toBe(true)
-    expect(hasLengthEndsZone("very_long")).toBe(true)
-
     expect(getLengthCareIntensity("very_short")).toBe("minimal")
     expect(getLengthCareIntensity("short")).toBe("light")
     expect(getLengthCareIntensity("medium")).toBe("standard")
@@ -913,16 +903,10 @@ test.describe("Routine planner", () => {
     })
 
     const plan = buildRoutinePlan(profile, "Was ist der Unterschied zwischen CWC und OWC?")
-    const subqueries = buildRoutineRetrievalSubqueries(
-      "Was ist der Unterschied zwischen CWC und OWC?",
-      plan,
-    )
 
     expect(plan.compare_cwc_owc).toBe(true)
     expect(plan.active_topics.map((topic) => topic.id)).toContain("owc")
     expect(plan.active_topics.map((topic) => topic.id)).not.toContain("cwc")
-    expect(subqueries).toContain("CWC")
-    expect(subqueries).toContain("OWC")
   })
 
   test("explicit CWC on healthy profile uses educational mode", () => {
@@ -1019,29 +1003,6 @@ test.describe("Routine planner", () => {
       .find((slot) => slot.label === "Maske / Kur")
 
     expect(maskSlot?.action).toBe("avoid")
-  })
-
-  test("retrieval hints keep exact topic names and autofill only add or upgrade slots", () => {
-    const plan = buildRoutinePlan(
-      createProfile({
-        concerns: ["frizz"],
-        goals: ["less_frizz"],
-        current_routine_products: ["shampoo", "conditioner"],
-      }),
-      "Welche Routine empfiehlst du fuer welliges Haar mit Frizz?",
-    )
-
-    const subqueries = buildRoutineRetrievalSubqueries(
-      "Welche Routine empfiehlst du fuer welliges Haar mit Frizz?",
-      plan,
-    )
-    const autofillSlots = getRoutineAutofillSlots(plan)
-
-    expect(subqueries.some((query) => query.includes("Locken & Wellen"))).toBe(true)
-    expect(autofillSlots.length).toBeGreaterThan(0)
-    expect(autofillSlots.every((slot) => slot.action === "add" || slot.action === "upgrade")).toBe(
-      true,
-    )
   })
 
   test("routine context keeps organizer and cadence signals independent from routine_preference", () => {

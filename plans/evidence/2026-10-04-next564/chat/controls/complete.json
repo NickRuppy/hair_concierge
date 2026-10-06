@@ -1,0 +1,23 @@
+{
+  "ok": true,
+  "phase": "transfer",
+  "results": [
+    {
+      "id": "C1-return-null",
+      "verdict": "before EXACT1 pass; intended EXACT1 assertion failure; restored EXACT1 pass"
+    },
+    {
+      "id": "C1-overwrite-id",
+      "verdict": "before EXACT1 pass; intended EXACT1 assertion failure; restored EXACT1 pass"
+    },
+    {
+      "id": "C2-leak-legacy-column",
+      "verdict": "before EXACT1 pass; intended EXACT1 assertion failure; restored EXACT1 pass"
+    },
+    {
+      "id": "C2-drop-preserved-id",
+      "verdict": "before EXACT1 pass; intended EXACT1 assertion failure; restored EXACT1 pass"
+    }
+  ],
+  "allOriginalGuardsMatch": true
+}

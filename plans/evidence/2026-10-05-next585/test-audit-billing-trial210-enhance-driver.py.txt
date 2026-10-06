@@ -1,0 +1,31 @@
+from pathlib import Path
+D=Path(Path('/tmp/test-audit-billing-trial210-tools-path.txt').read_text().strip());p=D/'operator-run-controls.cjs';s=p.read_text()
+s=s.replace("const phase=initial.phase,dir=", "for(const key of ['TRIAL_ADMISSION_MUTANT','TRIAL_ACCESS_MUTANT'])if(process.env[key])g.fail('Existing harness mutant is active: '+key)\nconst phase=initial.phase,dir=")
+s=s.replace("fail:number('fail')","fail:number('fail'),skipped:number('skipped'),cancelled:number('cancelled'),todo:number('todo')")
+a=s.index('function clean(');b=s.index('\nfunction compact(',a)
+s=s[:a]+r'''
+function named(control,run){return run.text.includes('# Subtest: '+control.test.name+'\n')}
+function clean(control,run){return run.status===0&&run.signal===null&&!run.timedOut&&!run.spawnError&&run.tests===1&&run.pass===1&&run.fail===0&&run.skipped===0&&run.cancelled===0&&run.todo===0&&named(control,run)}
+function intended(control,run){
+ const oracle=control.oracles[phase],stackToken=control.test.file+':'+oracle.startLine+':'
+ const stack=run.text.match(/\n\s+stack:\s*\|-?\n((?:\s{4,}[^\n]*\n?)*)/)
+ const frame=stack?.[1].split('\n').find(line=>/:\d+:\d+\)?\s*$/.test(line))||''
+ const operator=run.text.match(/^\s{2}operator:\s*['"]([^'"]+)['"]\s*$/m)?.[1]||''
+ const message=run.text.match(/\n  error: ([\s\S]*?)(?=\n  (?:code|name|expected|actual|operator|stack):)/)?.[1]||''
+ const diagnostics=control.errorMessageIncludes.every(token=>message.includes(token))
+ const codes=[...run.text.matchAll(/^\s{2}code:\s*['"]([^'"]+)['"]\s*$/gm)].map(m=>m[1])
+ return{accepted:run.status===1&&run.signal===null&&!run.timedOut&&!run.spawnError&&run.tests===1&&run.pass===0&&run.fail===1&&run.skipped===0&&run.cancelled===0&&run.todo===0&&codes.length===1&&codes[0]==='ERR_ASSERTION'&&named(control,run)&&operator===control.expectedOperator&&diagnostics&&frame.includes(stackToken),expected:oracle,expectedOperator:control.expectedOperator,operator,errorMessage:message,errorMessageMatches:diagnostics,firstAssertionFrame:frame,stackToken,named:named(control,run)}
+}
+''' +s[b:]
+s=s.replace('if(!clean(before))','if(!clean(control,before))').replace('clean(after)','clean(control,after)')
+s=s.replace(' try{\n  for(const control of controls){',r''' try{
+  // Snapshot ALL31 test originals and ALL unique mutant-owner originals before first child/write.
+  ensurePhase()
+  const originals=new Map(Object.entries(initial.bytes))
+  for(const control of context.controls)originals.set(control.file,prepared.get(control.id).original)
+  for(const[file,bytes]of originals){const dest=path.join(dir,'all-originals',file);fs.mkdirSync(path.dirname(dest),{recursive:true});fs.writeFileSync(dest,bytes,{flag:'wx'})}
+  fs.writeFileSync(path.join(dir,'intent.json'),JSON.stringify({phase,controls:controls.map(c=>c.id),originalHashes:Object.fromEntries([...originals].map(([f,b])=>[f,g.sha(b)])),pinsSHA:PIN_SHA},null,2)+'\n',{flag:'wx'})
+  ensurePhase()
+  for(const control of controls){''')
+p.write_text(s)
+print('Enhanced four-control diagnostics, all-original backup barrier and named clean checks')

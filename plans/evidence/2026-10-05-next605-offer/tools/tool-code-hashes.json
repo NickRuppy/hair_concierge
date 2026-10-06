@@ -1,0 +1,25 @@
+{
+  "files": {
+    "README.md": "b9aa42591ede7af164b8a7ea55e135514faca06fdfb7c7beec9a01ef82588fd3",
+    "controls-check.log": "f677b3e4b2a92062625e7fef61c91e45d9acd0a510d895164ae61f665b30016b",
+    "editor-check.log": "190ac665685a4bfd742152b59070d5081a30be1d9caea565155008f59d0ff1d4",
+    "operator-before.ts": "c2e6a44a32c5a6a983143d4417fdadd12a0d4ae93a4ee3d4b9ed5c36fa8c0ad8",
+    "operator-candidates.json": "6bc54ea77afa8572031c579af77c62a2a803106365f1689b29ec53266248b354",
+    "operator-controls-normalized.json": "02f609b451ab07842f771ceb85e6eaa01c04e3acbf1fede0370c4c6ea477244f",
+    "operator-cut.ts": "f996d4d961e0c744849017e3c82931c30d2ddc5713fc5595aa81e8d9b84e72ad",
+    "operator-edit.cjs": "e76a94efcf3de91be76a45c45075c11cb4918897f936c4f082d3a13375df59c5",
+    "operator-evidence.json": "3fedf6e88ff3afa01163c505c91ac6a03a00d995b0cd3a73e872e0dc84aeb43a",
+    "operator-guard.cjs": "b31738faf3e4e1f6d63430079631d85e75209f3e02d2d7d58f007dc866f0130e",
+    "operator-pins.json": "bad0288a008653b5714cbf3c1c3c32340fded754eda20eb468300c828ca18895",
+    "operator-proof.cjs": "aa6ecbf3e6549bbc5482fb75a39792393784fece06b3448ebc1b133f8fe41594",
+    "operator-readonly-preload.cjs": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "operator-run-controls.cjs": "72c3c5ee0a25bda3abfbca7a809be9b2cd5526aa34fd4db00a8c1cfce70b56aa",
+    "operator-selected-closure.json": "d4b9dcaa5318e39ffe6e5fedc61f4850f3915b31225bd09f945e37782f571b35",
+    "operator-transfer.ts": "637ba8ad5dbd1de05f92b862719929d899298bcd2f0d8ef5992df11b6c6a37f1",
+    "prepare-pins.cjs": "cdad5168b9a10d12365c99b862343c2371c53bdde57e8bfa74cf48fc2461d866"
+  },
+  "allJavaScriptParsed": true,
+  "ownerImports": 0,
+  "runtimeRuns": 0,
+  "repositoryWrites": 0
+}

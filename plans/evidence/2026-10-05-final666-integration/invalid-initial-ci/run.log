@@ -1,0 +1,79 @@
+
+> chaarlie@0.1.0 ci:verify
+> npm run typecheck && npm run lint && npm run build
+
+
+> chaarlie@0.1.0 typecheck
+> tsc --noEmit
+
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/src/lib/personal-plan/journey-access-loader.ts(4,52): error TS2307: Cannot find module './transition-performance' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/src/lib/personal-plan/journey-access-loader.ts(5,41): error TS2307: Cannot find module './products/stage2-entry-adapter' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/src/lib/personal-plan/journey-access-loader.ts(6,49): error TS2307: Cannot find module './products/authority/snapshot' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/src/lib/personal-plan/journey-access-loader.ts(7,68): error TS2307: Cannot find module './products/contracts' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/src/lib/personal-plan/journey-access-loader.ts(8,46): error TS2307: Cannot find module './types' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/src/lib/personal-plan/journey-access-loader.ts(16,45): error TS2307: Cannot find module './stage5-access' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/src/lib/personal-plan/journey-access-loader.ts(21,8): error TS2307: Cannot find module './journey-access' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/src/lib/personal-plan/journey-access-loader.ts(25,8): error TS2307: Cannot find module './enrollment' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/src/lib/personal-plan/journey-access-loader.ts(26,54): error TS2307: Cannot find module './migration-admission' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/admin-user-billing-summary.test.ts(6,8): error TS2307: Cannot find module '../src/lib/billing/admin-user-summary' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/admin-user-billing-summary.test.ts(7,45): error TS2307: Cannot find module '../src/lib/billing/types' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/billing-subscriptions-access-grace.test.ts(7,8): error TS2307: Cannot find module '../src/lib/billing/subscriptions' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/billing-subscriptions-access-grace.test.ts(8,45): error TS2307: Cannot find module '../src/lib/billing/types' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/freemium-enrollment-admission.test.ts(4,47): error TS2307: Cannot find module '../src/lib/personal-plan/direct-acceptance/accept' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/freemium-enrollment-admission.test.ts(9,8): error TS2307: Cannot find module '../src/lib/personal-plan/freemium-enrollment' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/freemium-enrollment-admission.test.ts(12,48): error TS2307: Cannot find module '../src/lib/personal-plan/products/authority/contracts' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/freemium-sheet-checkout-contract.test.ts(8,8): error TS2307: Cannot find module '../src/app/api/stripe/create-checkout-session/route' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/freemium-sheet-checkout-contract.test.ts(9,31): error TS2307: Cannot find module '../src/lib/auth/route-classification' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/freemium-sheet-checkout-contract.test.ts(10,42): error TS2307: Cannot find module '../src/lib/supabase/middleware' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/freemium-sheet-checkout-contract.test.ts(16,8): error TS2307: Cannot find module '../src/lib/freemium/checkout-return' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/freemium-sheet-checkout-contract.test.ts(20,8): error TS2307: Cannot find module '../src/lib/freemium/checkout-metadata' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/freemium-sheet-checkout-contract.test.ts(21,35): error TS2307: Cannot find module '../src/lib/premium-sheet/pricing' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/freemium-sheet-checkout-contract.test.ts(22,34): error TS2307: Cannot find module '../src/lib/stripe/client' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/freemium-sheet-checkout-contract.test.ts(23,50): error TS2307: Cannot find module '../src/lib/stripe/checkout-session-params' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/freemium-sheet-checkout-contract.test.ts(24,38): error TS2307: Cannot find module '../src/lib/stripe/pricing-plans' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/freemium-sheet-checkout-contract.test.ts(63,13): error TS7022: 'plan' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/freemium-sheet-checkout-contract.test.ts(73,13): error TS7022: 'submittedPriceId' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/freemium-sheet-checkout-contract.test.ts(81,30): error TS7006: Parameter 'row' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/payment-monitor-route.test.ts(12,8): error TS2307: Cannot find module '../src/app/api/billing/payment-monitor/route' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/payment-monitor-route.test.ts(13,45): error TS2307: Cannot find module '../src/lib/billing/payment-integrity' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/payment-monitor-route.test.ts(64,83): error TS7006: Parameter 'left' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/payment-monitor-route.test.ts(64,89): error TS7006: Parameter 'right' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/payment-monitor-route.test.ts(104,22): error TS7006: Parameter 'identifier' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/payment-monitor-route.test.ts(131,33): error TS7006: Parameter 'input' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/payment-monitor-route.test.ts(135,22): error TS7006: Parameter 'checkIn' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/payment-monitor-route.test.ts(141,26): error TS2339: Property 'now' does not exist on type '{}'.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/payment-monitor-route.test.ts(142,26): error TS2339: Property 'deadlineAt' does not exist on type '{}'.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/payment-monitor-route.test.ts(218,22): error TS7006: Parameter 'checkIn' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/payment-monitor-route.test.ts(222,28): error TS7006: Parameter 'failure' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/payment-monitor-route.test.ts(481,31): error TS7006: Parameter 'finding' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/payment-monitor-route.test.ts(547,31): error TS7006: Parameter 'finding' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-field-test-access.test.ts(4,51): error TS2307: Cannot find module '../src/lib/personal-plan/enrollment' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-field-test-access.test.ts(5,48): error TS2307: Cannot find module '../src/lib/personal-plan/persistence/stage1-service' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(4,43): error TS2307: Cannot find module '../src/app/plan-start/page' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(5,36): error TS2307: Cannot find module '../src/app/routine/page' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(6,40): error TS2307: Cannot find module '../src/lib/personal-plan/products/authorities' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(7,49): error TS2307: Cannot find module '../src/lib/personal-plan/products/authority/snapshot' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(11,8): error TS2307: Cannot find module '../src/lib/personal-plan/products/contracts' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(12,52): error TS2307: Cannot find module '../src/lib/personal-plan/products/product-load-resolution' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(13,41): error TS2307: Cannot find module '../src/lib/personal-plan/products/stage2-entry-adapter' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(20,46): error TS2307: Cannot find module '../src/lib/personal-plan/types' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(105,38): error TS7006: Parameter 'item' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(135,45): error TS7006: Parameter 'item' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(143,10): error TS7006: Parameter 'categories' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(143,22): error TS7006: Parameter 'requirement' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(226,13): error TS18046: 'policy' is of type 'unknown'.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(429,37): error TS7006: Parameter 'category' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(458,35): error TS7006: Parameter 'product' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(808,22): error TS7006: Parameter 'input' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(950,11): error TS18046: 'policy' is of type 'unknown'.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-journey-access-loader.test.ts(965,15): error TS18046: 'policy' is of type 'unknown'.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-stage3-release.test.ts(6,48): error TS2307: Cannot find module '../src/lib/labs/personal-plan-stage3-access' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-trial-stage1-journey.test.ts(4,48): error TS2307: Cannot find module '../src/app/plan-bereit/status/route' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-trial-stage1-journey.test.ts(8,8): error TS2307: Cannot find module '../src/lib/personal-plan/enrollment' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-trial-stage1-journey.test.ts(10,48): error TS2307: Cannot find module '../src/lib/personal-plan/persistence/stage1-service' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-trial-stage1-journey.test.ts(11,40): error TS2307: Cannot find module '../src/lib/personal-plan/persistence/stage1-service' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-trial-stage1-journey.test.ts(12,34): error TS2307: Cannot find module '../src/lib/quiz/types' or its corresponding type declarations.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-trial-stage1-journey.test.ts(155,28): error TS7006: Parameter 'ownerId' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-trial-stage1-journey.test.ts(155,37): error TS7006: Parameter 'sourceLeadId' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-trial-stage1-journey.test.ts(160,38): error TS7006: Parameter 'request' implicitly has an 'any' type.
+plans/evidence/2026-10-05-next648-dormant/post-cut-format/originals/tests/personal-plan-trial-stage1-journey.test.ts(208,38): error TS7006: Parameter 'request' implicitly has an 'any' type.

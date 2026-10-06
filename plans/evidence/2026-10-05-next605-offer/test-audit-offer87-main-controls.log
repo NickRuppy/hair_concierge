@@ -1,0 +1,10 @@
+C1 clean1 / intended red1 / exact restore / clean1
+C2 clean1 / intended red1 / exact restore / clean1
+C3 clean1 / intended red1 / exact restore / clean1
+C4 clean1 / intended red1 / exact restore / clean1
+{
+  "receiptDir": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-mutations-transfer-vVU3tW",
+  "completionSHA256": "69554870da01299a5ac84e7e3259e836737076e6b43b3231cf21429dde701bfc",
+  "verified": 4,
+  "eligibleForCut": true
+}

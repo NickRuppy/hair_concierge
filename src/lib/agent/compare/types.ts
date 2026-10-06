@@ -68,16 +68,6 @@ export interface CompareRunResult {
   error: string | null
 }
 
-export interface AgentCompareRequest {
-  scenarioId: string
-  prompt?: string
-  turns?: string[]
-  baseUrl?: string | null
-  blinded?: boolean
-  toolLoopVariant?: AgentCompareToolLoopVariant
-  systems?: CompareSystemInput[]
-}
-
 export interface AgentCompareUserOption {
   id: string
   label: string

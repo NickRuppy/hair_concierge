@@ -78,9 +78,21 @@ function mockPostHog(initial: Insight[]) {
   return { state, methods, bodies, fetch }
 }
 
-test("pure transforms move testimonials to B2 stage 4 and leave O4/reach unchanged", () => {
-  const before = initialResources()
-  const b2Result = transformInsight(before.find((item) => item.id === 5233190)!)
+test("dry-run only GETs the eight fixed resources", async () => {
+  const before = initialResources(),
+    after = before.map(transformInsight),
+    posthog = mockPostHog(before)
+  const result = await runMigration([], {
+    fetch: posthog.fetch,
+    output: () => {},
+    beforeFingerprints: fingerprints(before),
+    afterFingerprints: fingerprints(after),
+  })
+  assert.equal(result.mode, "dry-run")
+  assert.deepEqual(posthog.methods, Array(resourceIds.length).fill("GET"))
+  assert.ok("targets" in result)
+
+  const b2Result = result.targets.find((item) => item.id === 5233190)!
   const query = (b2Result.query.source as { query: string }).query
   assert.match(query, /03 Preis & Mitgliedschaft/)
   assert.match(query, /\x27pricing\x27 AS section_id, o3 AS sessions, o2 AS vorherige_sessions/)
@@ -102,22 +114,11 @@ test("pure transforms move testimonials to B2 stage 4 and leave O4/reach unchang
   assert.match(query, /notEmpty\(ifNull\(toString\(properties\.funnel_session_id\), ''\)\)/)
   for (const id of [5235351, 5033903]) {
     const current = before.find((item) => item.id === id)!
-    assert.deepEqual(transformInsight(current), current)
+    assert.deepEqual(
+      result.targets.find((item) => item.id === id),
+      current,
+    )
   }
-})
-
-test("dry-run only GETs the eight fixed resources", async () => {
-  const before = initialResources(),
-    after = before.map(transformInsight),
-    posthog = mockPostHog(before)
-  const result = await runMigration([], {
-    fetch: posthog.fetch,
-    output: () => {},
-    beforeFingerprints: fingerprints(before),
-    afterFingerprints: fingerprints(after),
-  })
-  assert.equal(result.mode, "dry-run")
-  assert.deepEqual(posthog.methods, Array(resourceIds.length).fill("GET"))
 })
 
 test("write confirmation and annotation SHA guards reject before API calls", async () => {

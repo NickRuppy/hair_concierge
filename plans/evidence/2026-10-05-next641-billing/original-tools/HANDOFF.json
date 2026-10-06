@@ -1,0 +1,47 @@
+{
+  "status": "READY_FOR_MAIN_REVIEW_ONLY_CONDITIONAL",
+  "directory": "/tmp/test-audit-billing125-tools-svsmm1u3",
+  "operatorPinsSHA256": "873f158cc84d4346588d02675130a9c33a5da5178536c744e106b1626affd09b",
+  "artifactHashesSHA256": "b5396396cd49542d8ca6ee49475d2440d7a8271d186147b4dd1ec585a51d2b82",
+  "README_SHA256": "0bf3bedbc8d9714cc06753171a05ae528bdb5906c79f22063d677f86d5d3d9fe",
+  "manifestSHA256": "53fbed371f43e577c3049f263ade5fcc920840fa74ed0b9eb56433a46d588b06",
+  "proposalHandoffSHA256": "a85f60016049990c636e0ea62e1cc63605360a7026e5d6807821b422f2c5947f",
+  "counts": {
+    "before": 125,
+    "transfer": 125,
+    "cut": 119
+  },
+  "heldFUnchanged": 5,
+  "exactSurvivingCallbacks": 119,
+  "unrelatedCallbacks": 114,
+  "uniqueControls": 5,
+  "originalGuards": 55,
+  "fixedReadsetGuards": 165,
+  "localClosure": 160,
+  "dependencyFiles": 3495,
+  "dependencyTrees": 28,
+  "sourceWrites": 0,
+  "testWrites": 0,
+  "runtimeRuns": 0,
+  "childrenStarted": 0,
+  "ownerImports": 0,
+  "removalCredit": 0,
+  "toolHashes": {
+    "operator-guard.cjs": "e2de31eeadd198ea09ae1e2dd9a4b2fe92d0c51b45cf3a30387801ab1a6e48bb",
+    "operator-edit.cjs": "69638d81b7a3c637209b42cc5db3081a71a2b53815aaf7877956ecd342f9e824",
+    "operator-proof.cjs": "031f5f9a818cd4649e150c5aca2b4b4cfed5b43ba77f5136bb2dc5c9b3265a23",
+    "operator-run-controls.cjs": "ea291c68f2ad3dd04c2d6d3ef73c9b4f4c3edd090bbde105f66da8d4b3f751a9",
+    "operator-readonly-preload.cjs": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "prepare-tools.py": "9c6415f865320b2ee9228984780b10b9a67b19c42be9bab22873dc75019d1523",
+    "prepare-pins.cjs": "43a4e2c5ab7ff4f25d06d419f66f5d95005f1fc67c954c3f964d61ae95eab750",
+    "operator-controls-normalized.json": "e37d7e96f2dd3055d360fbb985249b412432d0c949166bfcdd027b2f976b730c",
+    "template-delta.patch": "ff6125711826f68f2253dc521537f45c7dc98516fecf25f01ca10f6290dd1265",
+    "full-final-code.diff": "773ae5f4931fffb929604dbb78dd3d8595abc0964a3fde65988663d165d3849b",
+    "static-integrity.cjs": "d5e51a8ec28f74a0df670f509635ff465c7bdb7df07aa9e5bbcc9b160a28114f"
+  },
+  "semanticAddendum": {
+    "path": "/tmp/test-audit-billing125-tools-svsmm1u3/C3-semantic-addendum.md",
+    "sha256": "8638ea1e55ec7d7a91b44e549a9b09ac65738d89ac93613aab537ee1f0ccef5a",
+    "frozenProposalUnchanged": true
+  }
+}

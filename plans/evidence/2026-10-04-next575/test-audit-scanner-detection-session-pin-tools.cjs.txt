@@ -1,0 +1,25 @@
+'use strict'
+// Preparation only: reads repository/dependencies and writes /tmp artifacts. No tests or source writes.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto')
+const BASE='/tmp/test-audit-scanner-detection-session',ROOT='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex'),e=JSON.parse(fs.readFileSync(BASE+'-evidence.json')),originalControls=JSON.parse(fs.readFileSync(BASE+'-controls.json'))
+const esc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
+const controls=originalControls.map(c=>({...c,sourceSha256:c.sourceSHA256,command:['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-name-pattern=^'+esc(c.test.name)+'$',c.test.file],oracles:Object.fromEntries(Object.entries(c.oracles).map(([phase,o])=>[phase,{startLine:o.line,endLine:o.endLine,text:o.assertion,testFileSha256:o.testFileSha256}]))}))
+fs.writeFileSync(BASE+'-controls-normalized.json',JSON.stringify(controls,null,2)+'\n')
+const pin=file=>({path:file,sha:fs.existsSync(file)?sha(fs.readFileSync(file)):null,realpath:fs.existsSync(file)?fs.realpathSync(file):null})
+const gitPointer=fs.readFileSync(ROOT+'/.git','utf8').trim(),gitDir=path.resolve(ROOT,gitPointer.replace(/^gitdir: /,'')),commonDir=path.resolve(gitDir,fs.readFileSync(gitDir+'/commondir','utf8').trim()),branch=fs.readFileSync(gitDir+'/HEAD','utf8').trim().replace(/^ref: refs\/heads\//,'')
+if(branch!=='codex/test-audit-pruning')throw Error('Branch drift')
+const identityFiles=[ROOT+'/.git',gitDir+'/HEAD',gitDir+'/commondir',gitDir+'/gitdir',gitDir+'/config.worktree',commonDir+'/config',commonDir+'/refs/heads/'+branch,commonDir+'/packed-refs'].map(pin)
+const dependencies=[];function tree(dir){for(const d of fs.readdirSync(dir,{withFileTypes:true})){const f=path.join(dir,d.name);if(d.isDirectory())tree(f);else if(d.isFile()||d.isSymbolicLink())dependencies.push(pin(f))}}
+for(const name of['tsx','esbuild','get-tsconfig','resolve-pkg-maps'])tree(ROOT+'/node_modules/'+name)
+const binaryRoot=ROOT+'/node_modules/@esbuild';for(const d of fs.readdirSync(binaryRoot,{withFileTypes:true}))if(d.isDirectory())tree(path.join(binaryRoot,d.name))
+for(const file of['node_modules/typescript/package.json','node_modules/typescript/lib/typescript.js'])dependencies.push(pin(ROOT+'/'+file))
+const readset=e.readsets.map(r=>({file:r.file,sha:r.sha256}));for(const file of['.nvmrc','tsconfig.json'])readset.push({file,sha:sha(fs.readFileSync(ROOT+'/'+file))})
+for(const r of readset)if(sha(fs.readFileSync(ROOT+'/'+r.file))!==r.sha)throw Error('Readset drift '+r.file)
+const manifest=JSON.parse(fs.readFileSync(BASE+'-manifest.json')),artifactHashes=Object.fromEntries(manifest.artifacts.map(a=>[a.path,a.sha256]));artifactHashes[BASE+'-manifest.json']=sha(fs.readFileSync(BASE+'-manifest.json'))
+for(const suffix of['controls-normalized.json','guard.cjs'])artifactHashes[BASE+'-'+suffix]=sha(fs.readFileSync(BASE+'-'+suffix))
+const entrypointTemplateHashes=Object.fromEntries(['edit.cjs','run-controls.cjs'].map(s=>[BASE+'-'+s,sha(fs.readFileSync(BASE+'-'+s))]))
+const pins={root:ROOT,head:e.head,branch,gitDir,commonDir,identityFiles,node:{version:process.version,realpath:fs.realpathSync(process.execPath),sha:sha(fs.readFileSync(process.execPath))},typescriptVersion:require(ROOT+'/node_modules/typescript').version,readset,dependencies,artifactHashes,entrypointTemplateHashes,counts:{before:152,transfer:152,cut:143},untouched:137,heldF:3,controls:9,lock:'/tmp/test-audit-pruning-operator-lock'}
+const bytes=JSON.stringify(pins,null,2)+'\n';fs.writeFileSync(BASE+'-editor-pins.json',bytes);const hash=sha(bytes)
+for(const suffix of['edit.cjs','run-controls.cjs']){const f=BASE+'-'+suffix,s=fs.readFileSync(f,'utf8');if(s.split('PIN_SHA_PLACEHOLDER').length!==2)throw Error('Not an unpinned template');fs.writeFileSync(f,s.replace('PIN_SHA_PLACEHOLDER',hash))}
+console.log(JSON.stringify({pinSHA:hash,sourceReadsets:readset.length,dependencyFiles:dependencies.length,identityFiles:identityFiles.length}))

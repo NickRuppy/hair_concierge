@@ -1,7 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { buildAppValueStackHeroCopy } from "../src/lib/quiz/app-value-stack-copy"
 import { buildProfilePrimaryConcern } from "../src/lib/quiz/legacy-profile-projection"
 import { resolveQuizNeed } from "../src/lib/quiz/need-lane"
 import {
@@ -11,7 +10,6 @@ import {
 } from "../src/lib/quiz/normalization"
 import { buildQuizOfferPreview } from "../src/lib/quiz/offer-preview"
 import {
-  reconcilePrimaryConcern,
   requiresPrimaryConcernPick,
   resolveStatedPrimaryConcern,
   toLegacyQuizConcern,
@@ -111,12 +109,6 @@ test("a pick is asked for only with two or more concerns", () => {
   assert.equal(requiresPrimaryConcernPick(["breakage", "low_shine"]), true)
 })
 
-test("reconcilePrimaryConcern keeps a contained pick and drops a stale one", () => {
-  assert.equal(reconcilePrimaryConcern(["breakage", "low_shine"], "low_shine"), "low_shine")
-  assert.equal(reconcilePrimaryConcern(["breakage"], "low_shine"), undefined)
-  assert.equal(reconcilePrimaryConcern(["breakage", "low_shine"], undefined), undefined)
-})
-
 test("toLegacyQuizConcern maps aliases and leaves the four non-legacy codes out", () => {
   assert.equal(toLegacyQuizConcern("dry_lengths"), "dryness")
   assert.equal(toLegacyQuizConcern("frizz_flyaways"), "frizz")
@@ -146,12 +138,6 @@ test("need lane: the stated pick decides, not a weight ranking", () => {
   })
   assert.equal(resolution.primaryConcern, "frizz")
   assert.equal(resolution.lane, "surface_support")
-})
-
-test("need lane: several concerns without a pick run with no primary concern", () => {
-  const resolution = resolveQuizNeed({ ...COMPLETE, goals: [], concerns: ["breakage", "frizz"] })
-  assert.equal(resolution.primaryConcern, null)
-  assert.equal(resolution.lane, "base")
 })
 
 test("need lane: aliases map into the legacy vocabulary", () => {
@@ -233,6 +219,24 @@ test("narrative: legacy multi-concern answers without a pick and without goals s
     narrative.intro,
     "Wir sehen schon, was dein Haar gerade noch ausbremst und in welche Richtung wir dein Haar jetzt weiterentwickeln.",
   )
+  assert.equal(narrative.primaryConcern, null)
+  assert.equal(narrative.primaryGoal, null)
+  assert.equal(narrative.heroHeadline, "Deine Balance ist näher dran, als es sich gerade anfühlt.")
+  const firstRow = narrative.rows[0]
+  assert.deepEqual(
+    firstRow && {
+      scope: firstRow.scope,
+      before: firstRow.before,
+      after: firstRow.after,
+      currentPosition: firstRow.currentPosition,
+    },
+    {
+      scope: "KOPFHAUT",
+      before: "unruhig",
+      after: "ruhiger",
+      currentPosition: 18,
+    },
+  )
 })
 
 const NON_LEGACY_COPY: Record<string, { before: string }> = {
@@ -271,34 +275,6 @@ test("narrative: hair loss keeps the medical boundary and promises no product re
   assert.doesNotMatch(
     `${narrative.rows[1].after} ${narrative.needs.mainLeverProducts}`,
     /stopp|wächst|nachwachs|gegen haarausfall/i,
-  )
-})
-
-test("app value stack: a stated non-legacy concern gets its lead, hair loss and none stay neutral", () => {
-  const lowShine = buildQuizResultNarrative({
-    ...COMPLETE,
-    concerns: ["low_shine"],
-    goals: ["shine"],
-  })
-  const lowShineCopy = buildAppValueStackHeroCopy({ narrative: lowShine, lane: "base" })
-  assert.match(lowShineCopy.intro, /^Wenig Glanz ist dein wichtigster Pflegefokus\./)
-
-  const hairLoss = buildQuizResultNarrative({
-    ...COMPLETE,
-    concerns: ["hair_loss_or_thinning"],
-    goals: ["shine"],
-  })
-  const hairLossCopy = buildAppValueStackHeroCopy({ narrative: hairLoss, lane: "base" })
-  assert.match(hairLossCopy.intro, /^Dein Ziel: /)
-
-  const unstated = buildQuizResultNarrative({
-    ...COMPLETE,
-    concerns: ["breakage", "frizz"],
-    goals: ["shine"],
-  })
-  assert.match(
-    buildAppValueStackHeroCopy({ narrative: unstated, lane: "base" }).intro,
-    /^Dein Ziel: /,
   )
 })
 

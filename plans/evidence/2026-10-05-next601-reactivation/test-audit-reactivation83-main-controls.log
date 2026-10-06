@@ -1,0 +1,8 @@
+C1-retained-password-capability clean1 / intended red1 / exact restore / clean1
+C2-billing-before-profile clean1 / intended red1 / exact restore / clean1
+{
+  "receiptDir": "/tmp/test-audit-reactivation83-tools-huh910i2/operator-mutations-transfer-z3o17z",
+  "completionSHA256": "a67b07eec8846f9801e09ae11bd1ab100e9f76afb7dc2dccd843779b935919c1",
+  "verified": 2,
+  "eligibleForCut": true
+}

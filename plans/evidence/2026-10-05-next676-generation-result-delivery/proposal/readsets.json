@@ -1,0 +1,656 @@
+[
+  {
+    "file": "tests/personal-plan-email-precheck.test.ts",
+    "sha256": "dd5d72f1d9307e60237ecb1534a0b12ad3edc393a5044b65563956a39884037e",
+    "bytes": 5792,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-preparation-client.test.ts",
+    "sha256": "2a0baf0c0ab469da52d20c9a5b71272fd3126466c1abdb4f217ed347445dc2ab",
+    "bytes": 7342,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-prepare-idempotency-migration.test.ts",
+    "sha256": "a06512a49e79d98c56305529cde103d5f28de52e27b74a17c6890a3d0c9133f7",
+    "bytes": 6722,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-prepare-route.test.ts",
+    "sha256": "877b1044ca62b836f91c9b8b6fd68d907fb6d3b3964d435b2c8367712b0e0d85",
+    "bytes": 10299,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-prepared-plan.test.ts",
+    "sha256": "d169b5836d3744ee636fa0bb02b98e71dcbf93f2834b1d74b26e2a4b4c4ebad2",
+    "bytes": 8991,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-production-client.test.ts",
+    "sha256": "a76fa0ac115076c1bceb29455b131b70d7c444028788fe097ab0a556880e9d11",
+    "bytes": 10027,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-ready-server-first.test.tsx",
+    "sha256": "5d074f8212e9eaa8883d06ec1208198bbb7a4158b6ef91a0b4bf214c15bd74df",
+    "bytes": 11640,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-ready-transition.test.ts",
+    "sha256": "379a372b9c98fb7b6350332b12f0ba1f4ea7a96b4e3ab99a90988cdf9c9ec3df",
+    "bytes": 5967,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-result-artifact-email.test.ts",
+    "sha256": "7da1abc6bc8624e560051eb4d64316168dc405f5e59cd25ea4a66a37290b0c3f",
+    "bytes": 7923,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-result-artifact-route.test.ts",
+    "sha256": "f9cd9040a004d9716ef112f827e54b1314f7b49b186936d58624b34f4b507d1b",
+    "bytes": 3567,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-result-return-migration.test.ts",
+    "sha256": "93c7a6ed0f5e827ec930a5b7c959fa04f28225d536b764497a05174b92b44a72",
+    "bytes": 2598,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-result-return-reset.test.ts",
+    "sha256": "9d152d796a1510474c214339224b4f64ebdcea328a69b1e6cd7bb1f23d139780",
+    "bytes": 6128,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-result-return.test.ts",
+    "sha256": "92a7adace8d6f279faa164ca03107ee4cb79b42d8cb46004239e55f5b01ac9ed",
+    "bytes": 8116,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-result-reveal.test.ts",
+    "sha256": "f557697054fd90dba7d3aba22ff70845616717c38fbb49fda7c3b517dce1eb7e",
+    "bytes": 6672,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-return-artifact-repair-postgres.test.ts",
+    "sha256": "773e16e3130b7a1d64fca0f0bfc096815ac4694bb46e7c8d3f3123c163a0ea35",
+    "bytes": 6988,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-return-artifact-repair.test.ts",
+    "sha256": "88588a67df14f2c0dd6cc2d28be4d97a31196a3cb665e2f324bd24855cf2471f",
+    "bytes": 10410,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/quiz-result-artifact-email.test.ts",
+    "sha256": "715dead62a208b08843e150e2d6873b26ac82371f0fdef3a1c3664c2a924c6ab",
+    "bytes": 1754,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/quiz-result-artifact-route.test.ts",
+    "sha256": "0ce1dda16e9b89888c2e30d6b7873fa50479b1b6bdc4d58fd0a97fe8e915d6c8",
+    "bytes": 16993,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/quiz-result-artifact-trigger.test.ts",
+    "sha256": "2a4be3d570acbbe88ca902d21bcf6463b3860178f3705fa160a480e001906ed4",
+    "bytes": 1258,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-api-stage1.test.ts",
+    "sha256": "4aef3f35e04889d6ae1a415a972192ae5fc1d0c40da683ca1eca118a3ac93995",
+    "bytes": 2744,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan-stage1-source.test.ts",
+    "sha256": "9b0976ded838caafd51b0a29a79e8cb6a1cd56f05720c72195673110742d516e",
+    "bytes": 2592,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan/input.test.ts",
+    "sha256": "6709a9de62c09178694cc36b42d52c03515c54c4c1cab23fbdef1c3bee9a13cd",
+    "bytes": 3134,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan/needs.test.ts",
+    "sha256": "45d72732a8930751174a0d087856ca154dba0fc30e3596e963818f2c8d5e5952",
+    "bytes": 7511,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan/portfolio.test.ts",
+    "sha256": "d9954b10ffe2da2e88cbc8047a9b5c090003b062c06e529b31453c27ab446731",
+    "bytes": 6926,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan/reasons.test.ts",
+    "sha256": "548e5e1c2ba3be9ada1da2f7b003d8eb7435465dc62fa29ffb2258bd6f0d310d",
+    "bytes": 1139,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan/types.test.ts",
+    "sha256": "5c5347e83e0cfad5f54fb3af0a64109a50dd0b20cfd552dff533afa3ea143f23",
+    "bytes": 1075,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "tests/personal-plan/persistence/stage1-service.test.ts",
+    "sha256": "bd87dc699bd68081a0d76a3447b200978c63a6b932ea25cab9fcd240221864ef",
+    "bytes": 9902,
+    "readDepth": "full assigned test, callbacks/tables/helpers"
+  },
+  {
+    "file": "src/lib/personal-plan/input.ts",
+    "sha256": "22743980e01019fc9834a5a5f6ad3ef566def3757be3b17a2c5994f11ac95c6f",
+    "bytes": 9148,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan/compute-stage1.ts",
+    "sha256": "3618dbc5d3e1c035ea60b79dffe6a356ced57c3e19b8d591c512d688936a4bcc",
+    "bytes": 4272,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan/reasons.ts",
+    "sha256": "c631f3d70952947e3acf5cc0a5b93c394f8f57ad2ca1be8fde2c94b65008d3f4",
+    "bytes": 584,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan/needs.ts",
+    "sha256": "e79fb582f70dbd85f78c5771f3f32b350c503e365540e2f43e9a8d8541f1e1af",
+    "bytes": 9772,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan/portfolio.ts",
+    "sha256": "3ac73a406d694767684066bf9e3caa1c8d9eec7ab1279ddb3e0dc977c0917146",
+    "bytes": 6639,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan/types.ts",
+    "sha256": "40297a7f5b93d2ae223603fe818111f8a546c21299579d4eaf1da3d6089e2389",
+    "bytes": 17171,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan/persistence/stage1-service.ts",
+    "sha256": "aa383e1b9be24658a5b16bbfa817e6a3ff8c5ce2edd59c1701751e604b445438",
+    "bytes": 7504,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan/persistence/stage1-supabase.ts",
+    "sha256": "c5822578a28f1302335128ddd3d33fc5e70c3434a5d529b3de234654f3097699",
+    "bytes": 6481,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan/persistence/index.ts",
+    "sha256": "c8200edcb8b4ad98a218f659b44190227092b047c89ad3c7914e134a7e8eba5b",
+    "bytes": 3231,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/app/api/personal-plan/stage-1/route.ts",
+    "sha256": "137f11e14738d7622d0605fa98817647c71a66db3bf2d38ab6fd9b3a6b9de617",
+    "bytes": 3108,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan-quiz/preparation-client.ts",
+    "sha256": "7955e6d8b95bccc25b6c68bd98fa31ea477cf19fb4e01a61315a21bdf526bdfe",
+    "bytes": 6954,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/app/api/quiz/personal-plan-prepare/route.ts",
+    "sha256": "1c4b9507d665d79c6451a138e1237077bf1f8aaf9f2e6a94054dc019ad7ddf1f",
+    "bytes": 9822,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/app/api/quiz/personal-plan-email-precheck/route.ts",
+    "sha256": "12fabf0f85a7ce5f0d854e80219e8b87a70d88de3e171b54f25054788ef63597",
+    "bytes": 3855,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan-quiz/persistence.ts",
+    "sha256": "9783d531cfaf8ed1b8d91b133b030758fd2bf3c128b5eee10cd4b0e6f5883335",
+    "bytes": 6959,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan-quiz/prepared-plan.ts",
+    "sha256": "9dd47b8ccd7af0a1b2b82c22b1f279bb02f19d025b1fa4ceee3f077ff3fb0ba4",
+    "bytes": 12343,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan-quiz/offer-adapter.ts",
+    "sha256": "67cce9c3515c8bb2aff287131fda1be77c7c81188732b3fc9e66b1e3afefa6f4",
+    "bytes": 12530,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan-quiz/result-return.ts",
+    "sha256": "ffbd9e4e420e5b1a01bf2e489eabbda85ebe95d172dfb91e42fa588b9e2eb680",
+    "bytes": 7964,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/app/api/quiz/personal-plan-result-return/reset/route.ts",
+    "sha256": "beaebdab12552a05926430de94faae94f7e05a2dc9417b799f2e75791d76c4a3",
+    "bytes": 4512,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan-quiz/return-artifact-repair.ts",
+    "sha256": "00a0862020a5335eae09b49c44f04037b26e4d6dd7f9977547217e7088364ace",
+    "bytes": 3826,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/customerio/personal-plan-result-artifact-service.ts",
+    "sha256": "4b70e6e9789635a66e392ee19e0bc18c1aa56d094fb1e28f902b7dd292e25440",
+    "bytes": 2191,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/customerio/personal-plan-result-artifact.ts",
+    "sha256": "3baa0cb7cb2f0a8da27dfb0df946cb5c12de81e1d369f7169f96e219c645b587",
+    "bytes": 4304,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/customerio/quiz-result-artifact.ts",
+    "sha256": "15524dbe3d667ce1a880d45ed501dd8309bb1e7808036ae01283a969728d617c",
+    "bytes": 3482,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/customerio/scanner-result-artifact.ts",
+    "sha256": "65f0881a0652eb7b5a8d017ede32be35ef63a9078e9949e0d6b6750c229b8314",
+    "bytes": 1255,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/customerio/result-artifact-service.ts",
+    "sha256": "b86f1fe35d378513dc7c9ff4b4d2e9906ea50124dcb9dfd54a7635e72d7d7f47",
+    "bytes": 3543,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/customerio/transactional.ts",
+    "sha256": "5756d3bda21c0be6cbc1ed8885846a646edd8560f22c8b7fc5ac6601c62b95e2",
+    "bytes": 6178,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/app/api/quiz/result-artifact/route.ts",
+    "sha256": "8b24f4964d21d8c24359bbbdc9b102f740d3f5fe2c757c174a9f638466c797ba",
+    "bytes": 7794,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/app/api/quiz/personal-plan-result-artifact/route.ts",
+    "sha256": "bf2d4376cc8087020cd1d8757b1a7139e1fc43ab162a1bad44d8babc2b7fb579",
+    "bytes": 6681,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan-quiz/result-email-client.ts",
+    "sha256": "c9970130f604b4f877d436237735b83f2e69184112eea919c6df55a7d235d30f",
+    "bytes": 336,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/quiz/personal-plan-result-reveal.ts",
+    "sha256": "f1a8ecb774b1fe162e280aeebd8d9164189a8924631edb82969d48b88ca241cc",
+    "bytes": 4233,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan/refinement/http-gateway.ts",
+    "sha256": "c36add39ffde49ea10821ecf75143eed0e96dae76d29e4ea8f6bf69458d4ee33",
+    "bytes": 4793,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan/products/http-gateway.ts",
+    "sha256": "2e5ea138aadb944e6aa8e9b7a2055ce5dfeeb0dd009016e943009f27185fcbff",
+    "bytes": 8219,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/app/plan-bereit/personal-plan-ready-client.tsx",
+    "sha256": "c06111b4f92e188cc7eafab8d2e30c181a543b3049dfbc125f0a373bbdc6803b",
+    "bytes": 22505,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/app/plan-bereit/page.tsx",
+    "sha256": "3266d35f5b0a8f5312e6415d40bc52224dc660a830134dc44089600343d96289",
+    "bytes": 12344,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/app/plan-bereit/status/route.ts",
+    "sha256": "1b8f09e7bde788b2ec359a3d937fc84a58fa1ae1b14aa9c7d79c997260f22bff",
+    "bytes": 11440,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/app/plan-bereit/transition.ts",
+    "sha256": "59310c588efb4f4e944181e02c4faeb33c29044f8325e5d260e647c8a30a6183",
+    "bytes": 1466,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/app/plan-bereit/plan-ready-arrival.tsx",
+    "sha256": "3ffe8425b73ea809f4113cfb6326750b503aec5a3206a661614b992a56f9fd81",
+    "bytes": 11310,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/components/personal-plan-journey/journey-header.tsx",
+    "sha256": "82b306804db19852b829dbda63193db876abacf72db2b4f828c449c317d51bb6",
+    "bytes": 5588,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/components/personal-plan-journey/index.ts",
+    "sha256": "34545dbab0999bbe645bbd5f2fc53a1560ea38211f8d6b90da559abb9653159c",
+    "bytes": 852,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/app/result/[leadId]/reveal/personal-plan-result-reveal.tsx",
+    "sha256": "e51420f7f3ad2588174e5c0729cb4ba381c69cf39364ecd45629d0eae5e843f1",
+    "bytes": 6594,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/app/result/[leadId]/loading.tsx",
+    "sha256": "96137ff4784173ed0dd6d332a6a004702d2d128971ea9abd102118969493ae8d",
+    "bytes": 1363,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/rate-limit.ts",
+    "sha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "bytes": 5577,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/analytics/page-url.ts",
+    "sha256": "1cdde9d294fca5daf861b63bfb178a4458a6b8fd44d14b37b3d30d05a4551428",
+    "bytes": 3036,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/lib/personal-plan-quiz/draft-scope.ts",
+    "sha256": "80a330256ee55ca065fba088cb7973d0dd8694073aed9cc452282d9bbea0cd29",
+    "bytes": 1218,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "supabase/migrations/20260901170000_personal_plan_prepare_idempotency.sql",
+    "sha256": "ed55233e2801e9283323a2781695c19916ac01e3bccd5b286fe25698bec6f4bf",
+    "bytes": 2751,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "supabase/migrations/20260901170100_rate_limits_retention_schedule.sql",
+    "sha256": "f0bd1cc336f1728aa8a9925560a935707e0f1b5134a78a6614e221d12327e804",
+    "bytes": 604,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "supabase/migrations/20260808100536_add_personal_plan_result_returns.sql",
+    "sha256": "6201a67a968c19d39acaaa69656a83e33a9b33c45679deebf07fd9de11bc2caa",
+    "bytes": 3405,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "supabase/migrations/20260918182402_repair_return_personal_plan_artifact.sql",
+    "sha256": "98e6ddff1acd2b389aff9d5f336f07a6afbffb61dc4d1e7c60e0e136711f2630",
+    "bytes": 9584,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "supabase/migrations/20260728130000_add_personal_plan_prepared_artifacts.sql",
+    "sha256": "ace9b75c1f0af85bdbdc8b46d0ca68a94857ab421068a066ce21d868493b6783",
+    "bytes": 9134,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "supabase/migrations/20260812143000_personal_plan_legacy_quiz_source.sql",
+    "sha256": "6a01ead21b9bb705f08c9bf4ab8494ff1dcccc33242efd8b600c78b48cf396ce",
+    "bytes": 11903,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "scripts/ci/run-personal-plan-nested.mjs",
+    "sha256": "25be2a1ac68687ae8e76baf40a0b1cfd189817951f4d0804cf2433c35c6be740",
+    "bytes": 1156,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "tests/server-only-register.cjs",
+    "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+    "bytes": 391,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "tests/personal-plan/fixtures.ts",
+    "sha256": "39f439962a62f1f9f9d789d171f84cb2e951386d8b2a72c5a7a31549356d2890",
+    "bytes": 891,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "tests/personal-plan/compute-stage1.test.ts",
+    "sha256": "681d09b0dc054855af04e434749f06fa1392df61dfe35801eefb3a49d7c6f982",
+    "bytes": 5177,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "package.json",
+    "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    "bytes": 25353,
+    "readDepth": "full file read"
+  },
+  {
+    "file": "src/components/quiz/quiz-results.tsx",
+    "sha256": "836bf1a4b1e11f09b281f23dd7c045c1d331c07b94edc1d7ab88a0b6b3a9ae3b",
+    "bytes": 8678,
+    "readDepth": "1\u201360 and150\u2013230: complete trigger/redirect functions and mounted email effect; remainder not full read"
+  },
+  {
+    "file": "src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+    "sha256": "03c62d161ba8d95900b91307782de9cbd33ac786047e744adc1017cc08ec8ebd",
+    "bytes": 118811,
+    "readDepth": "2380\u20132450 preparation caller loop; not full component"
+  },
+  {
+    "file": "src/app/plan-start/page.tsx",
+    "sha256": "e6ebf8b770c94fe4be6b65b411bf0d1b5314fb88ea3fdcbdc0a1c89860ee89af",
+    "bytes": 17205,
+    "readDepth": "320\u2013385 actual loadStage1Plan dependency wiring; remainder supporting navigation only"
+  },
+  {
+    "file": "src/app/plan-bereit/readiness.ts",
+    "sha256": "aec3ee617b8d3eecc9e60116a00214d08a481b28981c20f707f342d299bea08e",
+    "bytes": 39365,
+    "readDepth": "825\u2013902 real provisioning defaults/package resolver/caller slice; remainder previously audited, not credited here"
+  },
+  {
+    "file": "src/app/result/[leadId]/page.tsx",
+    "sha256": "83ce34fd0d9d356a66b9e4201a3676236d11c7e06ec09563e0742ee91ca36ae1",
+    "bytes": 22548,
+    "readDepth": "205\u2013250 return trust and email-return eligibility; exit class grep; not full route"
+  },
+  {
+    "file": "src/app/lp/[slug]/page.tsx",
+    "sha256": "c986d0de667d792caf017dd92d97ea9a946d85812340af9006768da532b01cec",
+    "bytes": 7375,
+    "readDepth": "96\u2013146 result capability\u2192landing/resume resolution; not full route"
+  },
+  {
+    "file": "src/lib/personal-plan-quiz/server-draft.ts",
+    "sha256": "ab6b88fa762756c3af1bc4a15154b7d8335728644edca577859a53cad5d1a576",
+    "bytes": 11916,
+    "readDepth": "1\u2013176 and176\u2013340 read in overlapping outputs, initial long output truncated; complete operative cookie/HMAC/expiry/origin/no-store/reset dependency 176\u2013340 fully re-read; no blanket full-module credit"
+  },
+  {
+    "file": ".github/workflows/ci.yml",
+    "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "bytes": 17598,
+    "readDepth": "140\u2013166 native contract lane and grep of runner references; not whole workflow"
+  },
+  {
+    "file": "docs/personal-plan/categories/scalp-care/decision.md",
+    "sha256": "a3b8ea380c3ff471c96550e385f23a06571679147e09c2191dc858df6fdae2dd",
+    "bytes": 45838,
+    "readDepth": "244\u2013259 normative uncovered-job gate; other snippets by search only"
+  },
+  {
+    "file": "plans/2026-08-06-personal-plan-stage1-bedarf-implementation.md",
+    "sha256": "cd73415dd321d9766268fcfb91ec1e9eb053bbf22b3e7d0c9f7396ad7c25ddd4",
+    "bytes": 92808,
+    "readDepth": "matched INITIAL-05/portfolio normative lines127,181; not whole plan"
+  },
+  {
+    "file": "node_modules/react-dom/server.node.js",
+    "sha256": "f2dd93f6f91f983cd91232098d4ac55578596d33d680d7cb9438ea3b0a611b4b",
+    "bytes": 669,
+    "readDepth": "full entrypoint; installed runtime implementation only excerpted below"
+  },
+  {
+    "file": "node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js",
+    "sha256": "e0a591b81f983794366bbc8338df0ebbbc7add48fdcee772870e226eadcda9ce",
+    "bytes": 395194,
+    "readDepth": "9693\u20139722 hooks no-op effects;9850\u20139878 renderToStaticMarkup implementation entry. Not full React renderer."
+  },
+  {
+    "file": "node_modules/zod/v4/classic/schemas.cjs",
+    "sha256": "fbb612b8ec2f7408653908aec137a855e6763f92fbab19d4bd61c5be13341db5",
+    "bytes": 56344,
+    "readDepth": "195\u2013199 parse/safeParse method linkage search only"
+  },
+  {
+    "file": "node_modules/zod/v4/core/parse.cjs",
+    "sha256": "78c3851f57bfeb5e0f4464d3dfe62781ba8292e89692e52b4fc00195d4b02251",
+    "bytes": 6481,
+    "readDepth": "1\u201390 actual parse/safeParse successful/value vs issue result"
+  },
+  {
+    "file": "node_modules/next/dist/server/web/spec-extension/response.js",
+    "sha256": "68a5a07540d57a4beb3275fddd0502fd5ef9a42986b414c0bcee99a3f9033366",
+    "bytes": 4977,
+    "readDepth": "1\u2013135 NextResponse JSON/headers/cookie implementation; not dependency closure"
+  },
+  {
+    "file": "node_modules/@electric-sql/pglite/dist/index.d.ts",
+    "sha256": "cf15756708e9bd904e7982f4423a466786b439f14147c615ed8ec4e59ab83db6",
+    "bytes": 17310,
+    "readDepth": "exports/API declaration navigation only; no WASM engine read or execution"
+  },
+  {
+    "file": "node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts",
+    "sha256": "aa4bc50bc6ba80c59ad64dd2f58112b873b6b2f255e383dae69f3c4abb4a753b",
+    "bytes": 44697,
+    "readDepth": "query/exec signatures489\u2013524,819\u2013868 search only; no concurrency claim based on PGlite"
+  },
+  {
+    "file": "package-lock.json",
+    "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
+    "bytes": 590438,
+    "readDepth": "mechanical hash only; not semantic read"
+  },
+  {
+    "file": "tsconfig.json",
+    "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd",
+    "bytes": 770,
+    "readDepth": "mechanical hash only; not semantic read"
+  },
+  {
+    "file": ".nvmrc",
+    "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+    "bytes": 3,
+    "readDepth": "mechanical hash only; not semantic read"
+  },
+  {
+    "file": "node_modules/typescript/package.json",
+    "sha256": "822ef7ca6452205657b6288b066481ecf508bfbf43455d715cf7d3ec457561e6",
+    "bytes": 3620,
+    "readDepth": "mechanical hash only; not semantic read"
+  },
+  {
+    "file": "node_modules/typescript/lib/typescript.js",
+    "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675",
+    "bytes": 9112572,
+    "readDepth": "mechanical hash only; not semantic read"
+  },
+  {
+    "file": "node_modules/react/package.json",
+    "sha256": "ce01a280a6109d1a837e88ce99784f318785079dbffda086a870aad61adc94e1",
+    "bytes": 1248,
+    "readDepth": "mechanical hash only; not semantic read"
+  },
+  {
+    "file": "node_modules/react-dom/package.json",
+    "sha256": "92aa96480eaab724565c5bb8a4b1dd355114506e5babd36c48c783407ff9937d",
+    "bytes": 3063,
+    "readDepth": "mechanical hash only; not semantic read"
+  },
+  {
+    "file": "node_modules/tsx/package.json",
+    "sha256": "6e764b21991c21595441f82387c1451ccd10a3e7a3f0973cc5e3649a12dea7d2",
+    "bytes": 1624,
+    "readDepth": "mechanical hash only; not semantic read"
+  },
+  {
+    "file": "node_modules/zod/package.json",
+    "sha256": "c630bd10b52dcf71c112a2bf78dbf2734b9db58d62de663b8d86c2ec2c8cda2e",
+    "bytes": 3796,
+    "readDepth": "mechanical hash only; not semantic read"
+  },
+  {
+    "file": "node_modules/next/package.json",
+    "sha256": "006ccbc8816f40ace4307a6048c25ef3cdbe93598529d5dc85db9d19d912274d",
+    "bytes": 11243,
+    "readDepth": "mechanical hash only; not semantic read"
+  },
+  {
+    "file": "node_modules/@electric-sql/pglite/package.json",
+    "sha256": "a540c379fd1d820810793681d25fa7ad5dadfcee2b190d14a6553fdb469cfe3c",
+    "bytes": 5853,
+    "readDepth": "mechanical hash only; not semantic read"
+  }
+]

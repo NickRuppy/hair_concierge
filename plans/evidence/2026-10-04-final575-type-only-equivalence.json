@@ -1,0 +1,34 @@
+{
+  "receipt": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-scanner-typefix-b1hnxged/receipt.json",
+  "results": [
+    {
+      "format": "cjs",
+      "target": "esnext",
+      "before": "13ad5630e93e910b8bc92d5e600e0656a4ed856e867c6256cebee27db95f7327",
+      "after": "13ad5630e93e910b8bc92d5e600e0656a4ed856e867c6256cebee27db95f7327",
+      "sameRuntimeJavaScript": true
+    },
+    {
+      "format": "cjs",
+      "target": "node22",
+      "before": "13ad5630e93e910b8bc92d5e600e0656a4ed856e867c6256cebee27db95f7327",
+      "after": "13ad5630e93e910b8bc92d5e600e0656a4ed856e867c6256cebee27db95f7327",
+      "sameRuntimeJavaScript": true
+    },
+    {
+      "format": "esm",
+      "target": "esnext",
+      "before": "284a6057b0f759147dabea8dbc04433908e9d72d799ee51da540c3da63e9b707",
+      "after": "284a6057b0f759147dabea8dbc04433908e9d72d799ee51da540c3da63e9b707",
+      "sameRuntimeJavaScript": true
+    },
+    {
+      "format": "esm",
+      "target": "node22",
+      "before": "284a6057b0f759147dabea8dbc04433908e9d72d799ee51da540c3da63e9b707",
+      "after": "284a6057b0f759147dabea8dbc04433908e9d72d799ee51da540c3da63e9b707",
+      "sameRuntimeJavaScript": true
+    }
+  ],
+  "scope": "Generic assertion type is erased; emitted runtime code matches in CJS/ESM at both targets. Source-map bytes intentionally excluded; all source-owner maps unchanged."
+}

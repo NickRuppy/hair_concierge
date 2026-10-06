@@ -1,0 +1,12 @@
+receipt-email-leak clean1 / intended red1 / exact restore / clean1
+receipt-fixed-amount clean1 / intended red1 / exact restore / clean1
+receipt-fixed-currency clean1 / intended red1 / exact restore / clean1
+apply-mode clean1 / intended red1 / exact restore / clean1
+apply-guard-receipt clean1 / intended red1 / exact restore / clean1
+activation-after-receipt clean1 / intended red1 / exact restore / clean1
+{
+  "receiptDir": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC",
+  "completionSHA256": "88d97b7aefc110c9ca03e0d49f2e72d1ceacf811e565c1e2e87d28d171a682a5",
+  "verified": 6,
+  "eligibleForCut": true
+}

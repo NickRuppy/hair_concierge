@@ -1,0 +1,18 @@
+--- before/tests/personal-plan-refinement-status-route.test.ts
++++ transfer/tests/personal-plan-refinement-status-route.test.ts
+@@ -131,6 +131,7 @@
+       ["habits", "open"],
+     ],
+   )
++  assert.ok(body.modules[0].openQuestionCount > 0, "fresh products module must expose open questions")
+   assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })
+   assert.equal(body.module1HandedOff, false)
+   assert.deepEqual(body.banner, { visible: true, module: "products", dismissed: false })
+@@ -259,6 +260,7 @@
+ 
+   assert.equal(res.status, 200)
+   assert.deepEqual(body.banner, { visible: false, module: "products", dismissed: true })
++  assert.equal(body.modules.find((m: { module: string }) => m.module === "products").status, "open")
+ })
+ 
+ test("in_progress draft wins over a completed draft on the same initial need version", async () => {

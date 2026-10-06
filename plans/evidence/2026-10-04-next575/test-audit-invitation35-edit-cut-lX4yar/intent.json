@@ -1,0 +1,28 @@
+{
+  "from": "transfer",
+  "to": "cut",
+  "plan": "/tmp/test-audit-invitation35-main-imU8JS/plan.json",
+  "planSHA": "78bd8b073b523977c59989fa0d714e85030a331ffa54a92d3fa53ee07431b2fc",
+  "files": [
+    {
+      "file": "tests/discovery-admin-invites-api.test.ts",
+      "before": "a5151bf284f27e8684c5a16921a64943f0ae2de49c1506fc5a3043fdb355437b",
+      "after": "a5151bf284f27e8684c5a16921a64943f0ae2de49c1506fc5a3043fdb355437b"
+    },
+    {
+      "file": "tests/discovery-cli.test.ts",
+      "before": "a9d3333d4c6d75f32065e853f203bb49bd6c7392379a385874923b18a77287f7",
+      "after": "a9d3333d4c6d75f32065e853f203bb49bd6c7392379a385874923b18a77287f7"
+    },
+    {
+      "file": "tests/discovery-enrollment-token.test.ts",
+      "before": "c5998eb2b3da9f19d9742482b2890fe7bb26afd83be9efc9359592f1884fc3e5",
+      "after": "c5998eb2b3da9f19d9742482b2890fe7bb26afd83be9efc9359592f1884fc3e5"
+    },
+    {
+      "file": "tests/discovery-invitation-card.test.tsx",
+      "before": "356d7df6563686fd7016af742ec9972b77b98d887d8646ca5d55c110e18a8694",
+      "after": "4e5b7c6134c0c7348482349274f52401036bedaf22a8489cd795e1abedb445d2"
+    }
+  ]
+}

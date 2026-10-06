@@ -1,0 +1,33 @@
+[
+  {
+    "id": "C1",
+    "file": "tests/one-time-recovery-command.test.ts",
+    "donor": {
+      "file": "tests/one-time-recovery-command.test.ts",
+      "line": 471,
+      "name": "redacts provider, user, lead, consent, token, session, and email values from output",
+      "start": 14485,
+      "end": 15133,
+      "body": "test(\"redacts provider, user, lead, consent, token, session, and email values from output\", async () => {\n  const { deps } = fakeDeps()\n  const receipt = await runOneTimeRecoveryCommand(\n    parseOneTimeRecoveryArgs([\n      \"--provider=stripe\",\n      `--stripe-session=${sensitive.stripeSession}`,\n      \"--apply\",\n      `--confirm-session=${sensitive.stripeSession}`,\n    ]),\n    deps,\n  )\n  const output = JSON.stringify(receipt)\n\n  for (const value of Object.values(sensitive)) {\n    assert.equal(output.includes(value), false, `leaked ${value}`)\n  }\n  assert.equal(output.includes(\"29.99\"), true)\n  assert.equal(output.includes(\"EUR\"), true)\n})",
+      "sha256": "5cd3dab57321e50cee69c8951b3fd96660622ee8a159e223364c320a19ac9e26"
+    },
+    "keeper": {
+      "file": "tests/one-time-recovery-command.test.ts",
+      "line": 330,
+      "name": "applies only when confirmation exactly matches the target",
+      "start": 10021,
+      "end": 10626,
+      "body": "test(\"applies only when confirmation exactly matches the target\", async () => {\n  const { deps, calls } = fakeDeps()\n  const receipt = await runOneTimeRecoveryCommand(\n    parseOneTimeRecoveryArgs([\n      \"--provider=stripe\",\n      `--stripe-session=${sensitive.stripeSession}`,\n      \"--apply\",\n      `--confirm-session=${sensitive.stripeSession}`,\n    ]),\n    deps,\n  )\n\n  assert.equal(receipt.mode, \"apply\")\n  assert.equal(receipt.applyGuardSatisfied, true)\n  assert.deepEqual(calls, [\n    \"verifyStripe:stripe_checkout_session\",\n    \"activateStripe:stripe_checkout_session\",\n    \"readReceipt\",\n  ])\n})",
+      "sha256": "ea56a91aecdaf4319e915930a031ed7a157dda048f12255576b853690fa20c42"
+    },
+    "keeperAfter": "test(\"applies only when confirmation exactly matches the target\", async () => {\n  const { deps, calls } = fakeDeps()\n  const receipt = await runOneTimeRecoveryCommand(\n    parseOneTimeRecoveryArgs([\n      \"--provider=stripe\",\n      `--stripe-session=${sensitive.stripeSession}`,\n      \"--apply\",\n      `--confirm-session=${sensitive.stripeSession}`,\n    ]),\n    deps,\n  )\n\n  assert.equal(receipt.mode, \"apply\")\n  assert.equal(receipt.applyGuardSatisfied, true)\n  assert.deepEqual(calls, [\n    \"verifyStripe:stripe_checkout_session\",\n    \"activateStripe:stripe_checkout_session\",\n    \"readReceipt\",\n  ])\n\n  const output = JSON.stringify(receipt)\n\n  for (const value of Object.values(sensitive)) {\n    assert.equal(output.includes(value), false, `leaked ${value}`)\n  }\n  assert.equal(output.includes(\"29.99\"), true)\n  assert.equal(output.includes(\"EUR\"), true)\n})",
+    "transferredStatements": "  const output = JSON.stringify(receipt)\n\n  for (const value of Object.values(sensitive)) {\n    assert.equal(output.includes(value), false, `leaked ${value}`)\n  }\n  assert.equal(output.includes(\"29.99\"), true)\n  assert.equal(output.includes(\"EUR\"), true)",
+    "actualFailure": "CLI receipt leaks one of the original eight sensitive literals or loses the fixed amount/currency; keeper independently preserves apply/guard and exact verify→activate→read order.",
+    "sameInput": "Both callbacks call fakeDeps() with no overrides, then parse the identical ordered Stripe provider/session/apply/confirm-session argv, then call runOneTimeRecoveryCommand once. The donor omits destructuring calls only; fakeDeps still builds and records it. No input, call, table row or provider operation is added.",
+    "nonTestCaller": "scripts/billing/one-time-recover.ts main() calls parseOneTimeRecoveryArgs then runOneTimeRecoveryCommand with createLiveOneTimeRecoveryDependencies; package.json billing:one-time:recover and docs/runbooks/one-time-payment-recovery.md expose that operator entry.",
+    "history": "Both donor and keeper were introduced in 0d29b871 (#293), 2026-08-01. Guarded provider reset was added by 2518d54e (#303); no stopped-experiment retirement inferred.",
+    "seamCleanup": null,
+    "risk": "The command test executes the real parser/orchestrator/receipt constructor but uses injected verification/activation/receipt collaborators. It does not establish provider or SQL idempotence/default binding.",
+    "focusCommand": "node --import ./tests/server-only-register.cjs --import tsx --test tests/one-time-recovery-command.test.ts"
+  }
+]

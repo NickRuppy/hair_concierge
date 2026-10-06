@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: readPersistedMessageContext prefers message_context over the legacy column
+ok 1 - readPersistedMessageContext prefers message_context over the legacy column
+  ---
+  duration_ms: 0.575125
+  ...
+# Subtest: readPersistedMessageContext falls back to legacy rag_context
+ok 2 - readPersistedMessageContext falls back to legacy rag_context
+  ---
+  duration_ms: 0.069709
+  ...
+# Subtest: legacy fallback strips source payloads and their rendered markers
+ok 3 - legacy fallback strips source payloads and their rendered markers
+  ---
+  duration_ms: 0.116083
+  ...
+# Subtest: normalization keeps stripping markers after the source-free compatibility backfill
+ok 4 - normalization keeps stripping markers after the source-free compatibility backfill
+  ---
+  duration_ms: 0.052625
+  ...
+# Subtest: normalization preserves bracketed numbers when no legacy sources exist
+ok 5 - normalization preserves bracketed numbers when no legacy sources exist
+  ---
+  duration_ms: 0.043666
+  ...
+# Subtest: normalizeMessageContextRow exposes only the canonical client field
+ok 6 - normalizeMessageContextRow exposes only the canonical client field
+  ---
+  duration_ms: 0.099
+  ...
+# Subtest: buildMessageContextWriteColumns dual-writes the exact same object
+ok 7 - buildMessageContextWriteColumns dual-writes the exact same object
+  ---
+  duration_ms: 0.04725
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 226.2175

@@ -1,0 +1,36 @@
+TAP version 13
+# Subtest: ScanUnknownFlow: the bridge line sits under the headline, above the subline
+not ok 1 - ScanUnknownFlow: the bridge line sits under the headline, above the subline
+  ---
+  duration_ms: 11.64175
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-unknown-flow-ui.test.tsx:2:9109'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + [
+    +   {
+    +     '$$typeof': Symbol(react.transitional.element),
+    +     _owner: null,
+    +     _store: {},
+    +     key: '.0',
+    +     props: {
+    +       'aria-label': 'audit field'
+    +     },
+    +     type: 'input'
+    +   }
+    + ]
+    - []
+    
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 444.5245

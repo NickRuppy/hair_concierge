@@ -1,0 +1,42 @@
+{
+  "scanner119/operator-guard.cjs": {
+    "path": "/tmp/test-audit-scanner119-tools-e5gg36wq/operator-guard.cjs",
+    "sha256": "c717d889712ea25bd1d65249b60e14ebb2c43c6e9172b09f9a39156f7fabef0d"
+  },
+  "scanner119/operator-edit.cjs": {
+    "path": "/tmp/test-audit-scanner119-tools-e5gg36wq/operator-edit.cjs",
+    "sha256": "465be39962f79701f8f59d4a55bfd301789c840b94d490ef2c027f514b1407c1"
+  },
+  "scanner119/operator-run-controls.cjs": {
+    "path": "/tmp/test-audit-scanner119-tools-e5gg36wq/operator-run-controls.cjs",
+    "sha256": "5f75556b152053a4a6c8ab12fb280a8a5c833d4c484e16c46a29fb369f1681e0"
+  },
+  "scanner119/operator-proof.cjs": {
+    "path": "/tmp/test-audit-scanner119-tools-e5gg36wq/operator-proof.cjs",
+    "sha256": "8bf57575777342db25b87980f3fa408c9cb24db334b60505255c1875af106cc6"
+  },
+  "scanner119/operator-native-proof.cjs": {
+    "path": "/tmp/test-audit-scanner119-tools-e5gg36wq/operator-native-proof.cjs",
+    "sha256": "12a42b13f8f20091f6db09fb40774a066c216ce7d53a27d2ed8db77a782a3efc"
+  },
+  "scanner119/operator-readonly-preload.cjs": {
+    "path": "/tmp/test-audit-scanner119-tools-e5gg36wq/operator-readonly-preload.cjs",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e"
+  },
+  "scanner119/operator-pins.json": {
+    "path": "/tmp/test-audit-scanner119-tools-e5gg36wq/operator-pins.json",
+    "sha256": "b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f"
+  },
+  "scanner119/prepare-pins.cjs": {
+    "path": "/tmp/test-audit-scanner119-tools-e5gg36wq/prepare-pins.cjs",
+    "sha256": "946fc90748b75a657447c3c667ffbc98fde789038f1dd7c6c8cd8b2e985c5362"
+  },
+  "scanner119/HANDOFF.json": {
+    "path": "/tmp/test-audit-scanner119-tools-e5gg36wq/HANDOFF.json",
+    "sha256": "1361158887bae170f1231ec8f4c631c029b63a5242d7ba5a051327913ac8eab6"
+  },
+  "catalog99/operator-proof.cjs": {
+    "path": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-proof.cjs",
+    "sha256": "3ae1bda88ceca8c1dbcf14fa635eda9f9204f2561556730994eb7d74e2f86dc0"
+  }
+}

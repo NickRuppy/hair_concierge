@@ -1,0 +1,878 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "node": "v22.12.0",
+  "nodePath": "/usr/local/bin/node",
+  "nodeSha256": "9c40e9b16cacab464b63e45731ffd020830144a14c50d440b59b90e22709fe80",
+  "parser": "5.9.3",
+  "counts": {
+    "before": 163,
+    "transfer": 163,
+    "cut": 158,
+    "unrelatedCallbacksByteExact": 153,
+    "assertionsBefore": 573,
+    "assertionsTransfer": 589,
+    "assertionsCut": 573
+  },
+  "files": [
+    {
+      "file": "tests/discovery-call-toolkit-migration.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "1ee51c75306d8775ff4cee05dd02b3852da087b14c6a425dce4b70ac28946abf",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-call-toolkit-migration.test.ts"
+        },
+        "transfer": {
+          "sha256": "1ee51c75306d8775ff4cee05dd02b3852da087b14c6a425dce4b70ac28946abf",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-call-toolkit-migration.test.ts"
+        },
+        "cut": {
+          "sha256": "1ee51c75306d8775ff4cee05dd02b3852da087b14c6a425dce4b70ac28946abf",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-call-toolkit-migration.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-call-tracking.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "9c3ea13ed20f209f05bc169eb41a28e16b705a86ea79fb9854ec2f68373b0099",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-call-tracking.test.ts"
+        },
+        "transfer": {
+          "sha256": "9c3ea13ed20f209f05bc169eb41a28e16b705a86ea79fb9854ec2f68373b0099",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-call-tracking.test.ts"
+        },
+        "cut": {
+          "sha256": "9c3ea13ed20f209f05bc169eb41a28e16b705a86ea79fb9854ec2f68373b0099",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-call-tracking.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-checklist-categories.test.tsx",
+      "phases": {
+        "before": {
+          "sha256": "bc5834985d03ee1835737c3287af4f329ff59d6e5d24f5565667098da298569f",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-checklist-categories.test.tsx"
+        },
+        "transfer": {
+          "sha256": "bc5834985d03ee1835737c3287af4f329ff59d6e5d24f5565667098da298569f",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-checklist-categories.test.tsx"
+        },
+        "cut": {
+          "sha256": "bc5834985d03ee1835737c3287af4f329ff59d6e5d24f5565667098da298569f",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-checklist-categories.test.tsx"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-checklist-projection.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "b8c7060865a6e50ff49cd8ce318e973f7424c15e9fa79a841cdf0d097b21ee4b",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-checklist-projection.test.ts"
+        },
+        "transfer": {
+          "sha256": "b8c7060865a6e50ff49cd8ce318e973f7424c15e9fa79a841cdf0d097b21ee4b",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-checklist-projection.test.ts"
+        },
+        "cut": {
+          "sha256": "b8c7060865a6e50ff49cd8ce318e973f7424c15e9fa79a841cdf0d097b21ee4b",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-checklist-projection.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-cockpit-complexity-dom.test.tsx",
+      "phases": {
+        "before": {
+          "sha256": "22ab2c345408788bcfa34f0d20571f3b445305a008e40a6cba471d64417a5c3b",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-cockpit-complexity-dom.test.tsx"
+        },
+        "transfer": {
+          "sha256": "8d5b43ccf7a711bf8c866a19b00294f55b2897c06b7eac1f95f8f1d5032855cd",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-cockpit-complexity-dom.test.tsx"
+        },
+        "cut": {
+          "sha256": "63c655cac89d4336acc6fda7434466c7c772e7851ac48ae03b974611eb960b04",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-cockpit-complexity-dom.test.tsx"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-cockpit-depth.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "41ea1bfde884c29a287dd497cb76a8e9f70c4316db8ea55a6b3e91929436d6b3",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-cockpit-depth.test.ts"
+        },
+        "transfer": {
+          "sha256": "41ea1bfde884c29a287dd497cb76a8e9f70c4316db8ea55a6b3e91929436d6b3",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-cockpit-depth.test.ts"
+        },
+        "cut": {
+          "sha256": "41ea1bfde884c29a287dd497cb76a8e9f70c4316db8ea55a6b3e91929436d6b3",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-cockpit-depth.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-enrollment-optional-email-migration.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "5632475e27c720306b3e899e54f8166f1ab61bb74111c47175ca243cf13bc41b",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-enrollment-optional-email-migration.test.ts"
+        },
+        "transfer": {
+          "sha256": "5632475e27c720306b3e899e54f8166f1ab61bb74111c47175ca243cf13bc41b",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-enrollment-optional-email-migration.test.ts"
+        },
+        "cut": {
+          "sha256": "5632475e27c720306b3e899e54f8166f1ab61bb74111c47175ca243cf13bc41b",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-enrollment-optional-email-migration.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-frequency.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "b2d14aeccd279edbec7d90bd4cf9e8d8ed16c827a0284f3940d2ce2fb0c68a39",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-frequency.test.ts"
+        },
+        "transfer": {
+          "sha256": "b2d14aeccd279edbec7d90bd4cf9e8d8ed16c827a0284f3940d2ce2fb0c68a39",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-frequency.test.ts"
+        },
+        "cut": {
+          "sha256": "b2d14aeccd279edbec7d90bd4cf9e8d8ed16c827a0284f3940d2ce2fb0c68a39",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-frequency.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-heat-flow.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "117f0297375f6073bba712fedc432e5f6dbebd0fc3858df1bdd59f6513ef515a",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-heat-flow.test.ts"
+        },
+        "transfer": {
+          "sha256": "117f0297375f6073bba712fedc432e5f6dbebd0fc3858df1bdd59f6513ef515a",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-heat-flow.test.ts"
+        },
+        "cut": {
+          "sha256": "117f0297375f6073bba712fedc432e5f6dbebd0fc3858df1bdd59f6513ef515a",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-heat-flow.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-heat-styling.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "10e30cbd1d7485fc393d4cad449101fd581451a665b86da1fe4cba3914518286",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-heat-styling.test.ts"
+        },
+        "transfer": {
+          "sha256": "10e30cbd1d7485fc393d4cad449101fd581451a665b86da1fe4cba3914518286",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-heat-styling.test.ts"
+        },
+        "cut": {
+          "sha256": "10e30cbd1d7485fc393d4cad449101fd581451a665b86da1fe4cba3914518286",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-heat-styling.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-intake-item-image.test.tsx",
+      "phases": {
+        "before": {
+          "sha256": "fe2662597e5e5e7af21af338f2cbdd6fafd6431597fa28d5d8523ed5e18920da",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-intake-item-image.test.tsx"
+        },
+        "transfer": {
+          "sha256": "fe2662597e5e5e7af21af338f2cbdd6fafd6431597fa28d5d8523ed5e18920da",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-intake-item-image.test.tsx"
+        },
+        "cut": {
+          "sha256": "fe2662597e5e5e7af21af338f2cbdd6fafd6431597fa28d5d8523ed5e18920da",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-intake-item-image.test.tsx"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-middleware-gate.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "da83933377ce4bf204795e1d58e837d105e9df8ab520386076bbfc294f6dee70",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-middleware-gate.test.ts"
+        },
+        "transfer": {
+          "sha256": "da83933377ce4bf204795e1d58e837d105e9df8ab520386076bbfc294f6dee70",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-middleware-gate.test.ts"
+        },
+        "cut": {
+          "sha256": "da83933377ce4bf204795e1d58e837d105e9df8ab520386076bbfc294f6dee70",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-middleware-gate.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-participant-routing.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "b3d1dd51358ae192f933baf5a8dc77c0d753c5084af04aa5c787a68434af4d04",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-participant-routing.test.ts"
+        },
+        "transfer": {
+          "sha256": "b3d1dd51358ae192f933baf5a8dc77c0d753c5084af04aa5c787a68434af4d04",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-participant-routing.test.ts"
+        },
+        "cut": {
+          "sha256": "b3d1dd51358ae192f933baf5a8dc77c0d753c5084af04aa5c787a68434af4d04",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-participant-routing.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-product-label.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "1587b2aa9cc8a22ce8a1963aa836cfdd9416eb6fcfc6e547965cb955b7e60473",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-product-label.test.ts"
+        },
+        "transfer": {
+          "sha256": "1587b2aa9cc8a22ce8a1963aa836cfdd9416eb6fcfc6e547965cb955b7e60473",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-product-label.test.ts"
+        },
+        "cut": {
+          "sha256": "1587b2aa9cc8a22ce8a1963aa836cfdd9416eb6fcfc6e547965cb955b7e60473",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-product-label.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-products-loading.test.tsx",
+      "phases": {
+        "before": {
+          "sha256": "1099b32f2ca074920f61b00968061c4aff868ad0c213fbf8e183ed513af58d2d",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-products-loading.test.tsx"
+        },
+        "transfer": {
+          "sha256": "cc8b83d3e6e8d672417d9c04ae868bc89d0f8aeade78cf129fd804cff17086a2",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-products-loading.test.tsx"
+        },
+        "cut": {
+          "sha256": "2b8184eb0aa8ebf763f6f044a4f64fef47a5791db9b6230e2098df583965e5a0",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-products-loading.test.tsx"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-quiz-answers.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "f381faacfaaeec77e6052a7198dcde8b624a372326c17b6d4abb36b5bd0c63ba",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-quiz-answers.test.ts"
+        },
+        "transfer": {
+          "sha256": "f381faacfaaeec77e6052a7198dcde8b624a372326c17b6d4abb36b5bd0c63ba",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-quiz-answers.test.ts"
+        },
+        "cut": {
+          "sha256": "f381faacfaaeec77e6052a7198dcde8b624a372326c17b6d4abb36b5bd0c63ba",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-quiz-answers.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-quiz-identity.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "8a6275533ad9d6ebd61ba67c4672ad87f2f1c5e711e0166a9b12750e6c920aa3",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-quiz-identity.test.ts"
+        },
+        "transfer": {
+          "sha256": "8a6275533ad9d6ebd61ba67c4672ad87f2f1c5e711e0166a9b12750e6c920aa3",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-quiz-identity.test.ts"
+        },
+        "cut": {
+          "sha256": "8a6275533ad9d6ebd61ba67c4672ad87f2f1c5e711e0166a9b12750e6c920aa3",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-quiz-identity.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-reconcile.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "bae78027c1ea52bd3523aaac4fcd95c74cfc6f54d4950280ad281bef4eb4cdf9",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-reconcile.test.ts"
+        },
+        "transfer": {
+          "sha256": "bae78027c1ea52bd3523aaac4fcd95c74cfc6f54d4950280ad281bef4eb4cdf9",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-reconcile.test.ts"
+        },
+        "cut": {
+          "sha256": "bae78027c1ea52bd3523aaac4fcd95c74cfc6f54d4950280ad281bef4eb4cdf9",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-reconcile.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-refined-usage.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "de8e01d744a436c48cead5794d20f56357b42015e5ef41c761bd8e6ac1778b0c",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-refined-usage.test.ts"
+        },
+        "transfer": {
+          "sha256": "1a4965fd9db1aa6d8aca434bda2de4b65a4ef11fd2c13e29a80d82eb98a26815",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-refined-usage.test.ts"
+        },
+        "cut": {
+          "sha256": "55fbffd7795be751f465158b9d3927b5e2612fac4df8236d4845440d5d69f6c4",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-refined-usage.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-runsheet-locked-in-dom.test.tsx",
+      "phases": {
+        "before": {
+          "sha256": "1cf7c86ee20881ff829e4f3941193c24b04f67a0e1e94e2713518eb95f0851f5",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-runsheet-locked-in-dom.test.tsx"
+        },
+        "transfer": {
+          "sha256": "1cf7c86ee20881ff829e4f3941193c24b04f67a0e1e94e2713518eb95f0851f5",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-runsheet-locked-in-dom.test.tsx"
+        },
+        "cut": {
+          "sha256": "1cf7c86ee20881ff829e4f3941193c24b04f67a0e1e94e2713518eb95f0851f5",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-runsheet-locked-in-dom.test.tsx"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-search-sheet-props.test.tsx",
+      "phases": {
+        "before": {
+          "sha256": "b9cfcc0d1f2a641d36d249283c2bdc9f0e55970932cc27b39351b5111cf38ea1",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-search-sheet-props.test.tsx"
+        },
+        "transfer": {
+          "sha256": "b9cfcc0d1f2a641d36d249283c2bdc9f0e55970932cc27b39351b5111cf38ea1",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-search-sheet-props.test.tsx"
+        },
+        "cut": {
+          "sha256": "b9cfcc0d1f2a641d36d249283c2bdc9f0e55970932cc27b39351b5111cf38ea1",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-search-sheet-props.test.tsx"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-swap-sort.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "a4ecc1d9bd281ba636c1c6247dd24cb1cc6f19b31d3b813e1951fcd3a8b767cc",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-swap-sort.test.ts"
+        },
+        "transfer": {
+          "sha256": "a4ecc1d9bd281ba636c1c6247dd24cb1cc6f19b31d3b813e1951fcd3a8b767cc",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-swap-sort.test.ts"
+        },
+        "cut": {
+          "sha256": "a4ecc1d9bd281ba636c1c6247dd24cb1cc6f19b31d3b813e1951fcd3a8b767cc",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-swap-sort.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-unanswered-categories.test.tsx",
+      "phases": {
+        "before": {
+          "sha256": "530863ab6739a2d8109c2834f9bd527e4ebcb039f513ef6d96371652491e1866",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-unanswered-categories.test.tsx"
+        },
+        "transfer": {
+          "sha256": "0d6adadde489969f63e027e45aa890ccb85805320febd9ffa1b03133bd5c6537",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-unanswered-categories.test.tsx"
+        },
+        "cut": {
+          "sha256": "fa0775cf1524e0d8cba67ef6c81c1dce8f4b5d242d69fc5bc79dfc8a91825cdf",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-unanswered-categories.test.tsx"
+        }
+      }
+    },
+    {
+      "file": "tests/discovery-call-toolkit-sql-execution.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "49403f1fd2e947a6c9f0499632674a63c66b6a115c493c5fe706765113aa9bce",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/before/tests/discovery-call-toolkit-sql-execution.test.ts"
+        },
+        "transfer": {
+          "sha256": "49403f1fd2e947a6c9f0499632674a63c66b6a115c493c5fe706765113aa9bce",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/transfer/tests/discovery-call-toolkit-sql-execution.test.ts"
+        },
+        "cut": {
+          "sha256": "49403f1fd2e947a6c9f0499632674a63c66b6a115c493c5fe706765113aa9bce",
+          "path": "/private/tmp/test-audit-discovery-operational163/snapshots/cut/tests/discovery-call-toolkit-sql-execution.test.ts"
+        }
+      }
+    }
+  ],
+  "guards": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": ".nvmrc",
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "scripts/discovery.ts",
+      "sha256": "79122eb43385ba6ef138f3d4ac6b48b6f0afda0afb5704e59e1354ee9564a652",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/app/admin/beratung/[enrollmentId]/page.tsx",
+      "sha256": "586f0276c8add490377ab3340ce08c9045ea76b029ea7a07389a82fef0cc7eb5",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/app/api/beratung/quiz-context/route.ts",
+      "sha256": "b009a48203cf151673f61f9b56a8c9a6c3b663ac4442590e8b439335a27bbd22",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/app/api/quiz/lead/route.ts",
+      "sha256": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/app/api/scan/search-retailer/route.ts",
+      "sha256": "c5404803758fa829df9db3141eda2f6920876f26ec65aa84320b9c93314da156",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/app/api/scan/search/route.ts",
+      "sha256": "98cb7df79a80ae7ab18e3a85cbdceb1c8b48b7ac110d5b1c08adc2ff41f8ef2e",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/app/auth/confirm/route.ts",
+      "sha256": "00170301a97f17888e15dd83fd7e93dc45c98313878213a8953bd9c7042f15e2",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/app/beratung/produkte/loading.tsx",
+      "sha256": "740f4a80b796a766d1981dba5dd2b184f5f1ba769ffeee523a93463711347551",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/app/beratung/produkte/page.tsx",
+      "sha256": "b4d03e17d516bd59e7ddd96d4d7f2eab899066ccbd0563da580ba02147bd44fa",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/app/beratung/produkte/quiz-projection.ts",
+      "sha256": "32e11ee049c4de68955e4aafcc1ef0d21a19077cb471c17d8034d003f3803c72",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/discovery/cockpit/comparison-table.tsx",
+      "sha256": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/discovery/cockpit/decision-writes.ts",
+      "sha256": "4ebec3ee39db096975f63e8ee30f5773629fdb2cd105edc6e0c303af702d9736",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/discovery/cockpit/discovery-call-cockpit.tsx",
+      "sha256": "2d0adde32589464e10ba2b9a1bb9d13263ca40bbfada8b9d4ab82a1572d68071",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/discovery/cockpit/runsheet-locked-in.tsx",
+      "sha256": "6047e06b4f53f8632df23d79f2122a166bc5b8a491d3dc6870cde8338d2a949c",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/discovery/cockpit/runsheet-products.ts",
+      "sha256": "b88265f3d242eb2220fed5ef78e701e56e44b4200f3289242d949dc6633ab8c9",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/discovery/cockpit/runsheet-save.tsx",
+      "sha256": "a7e9f4418151132beb523b946682113cdd1db4a25a73310ac22402a00ea789e9",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/discovery/cockpit/swap-sort.ts",
+      "sha256": "e30f00a6fae65e0ca10c47d7f5ec0e0f7a80deabd79a39a02304e7fecad10942",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/discovery/intake/add-flow.ts",
+      "sha256": "e75bc0e87d52f2691e0f8f13517e97381c23cbd7865a97aa5a997e4000242df4",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/discovery/intake/categories.ts",
+      "sha256": "a10c09711d17600e6aa87a6f3a063d1c76b345abee29d5b10cc3c330462e0961",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/discovery/intake/discovery-intake-checklist.tsx",
+      "sha256": "4d8ce8828e3b00c23b3e8496e669305fee4810f829bc7f72aa0c2a4443905071",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/discovery/intake/discovery-motion.tsx",
+      "sha256": "d395d97f35d7cf9a44a02ecdcf0d903f6811739908b13db11e44c7795db878f2",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/discovery/intake/discovery-products-screen.tsx",
+      "sha256": "6fa504a0fe7e07cc56b6564c940c48c4fb3bb6d98c2e58faa050c7c311fafb23",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/discovery/intake/heat-flow.ts",
+      "sha256": "2ff572043a79473d0df8499c85420330f2e188fd0ad216f19d668ee1e79b4dde",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/discovery/intake/ui-classes.ts",
+      "sha256": "196a53a1cd36408ef16f1f01838951b40337b2040bfe71ff13ead9ff3fd26399",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/discovery/print/discovery-routine-document.tsx",
+      "sha256": "b4808e615d893256fc06b1f3d85eb3544241f740dca4b7979316ea0e3b2445b7",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/personal-plan-products/stage3-product-copy.ts",
+      "sha256": "e20722dc17605dbab0c49a7302f3f93691ed95cfda05596f3cc75e083cd868c2",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/quiz/quiz-preparation.tsx",
+      "sha256": "301aafc3cdd1b517a6c0ad6a41221ae99b8bcea07da36caf76c55b738e3bbc6f",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/quiz/quiz-scalp-question.tsx",
+      "sha256": "1fdb2a7ad5b48a7e05455fe09206dc2511047fa7efb2012b3ca6b6dfb8fb080f",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/scan/scan-search-sheet.tsx",
+      "sha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/components/ui/bottom-sheet.tsx",
+      "sha256": "373944ebf90fab3c4347599cba20ef2e162db35c43f722d1f190585817caa625",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/analytics/destinations/customerio.ts",
+      "sha256": "06847f20cd2c8c2e0f11947469c787cbb8d357eefc9b65a241efec5bc4c6543b",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/analytics/destinations/meta.ts",
+      "sha256": "5988b93df2bc11dba72bc719cc9d7b098190fa4d09267b5f12c6c2d2372227f0",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/analytics/routes.ts",
+      "sha256": "b1ea998155308a84bb64fe1a0c96469cb431dfc0992dbc29b9e2d7efdaa9acf2",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/analytics/scanner-quiz-view.ts",
+      "sha256": "07ebf5a6869d33b52110f7ffd969b012cdf955ff1e84c0b934dd8dba2534e9db",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/auth/discovery-return.ts",
+      "sha256": "fcfcc9be37c9cfd7e069ceb4baebc2104ed3a3574cb16a33faa32adf0f587f4a",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/auth/route-classification.ts",
+      "sha256": "6a5c8c0a283054ab108779a6a8f23764a4919b67adea2f0a94cb389abb4d57a6",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/auth/unauthenticated-redirect.ts",
+      "sha256": "bd6703ab7d835709100f2870c7ad950b1b66837f6e2f0b9f78836f8cdb6a1231",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/customerio-tracking.ts",
+      "sha256": "499afed0161ee2fabaae9d89d4b96934bb697258638b01261e91f20b58e0c93a",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/call-sheet.ts",
+      "sha256": "7bfb9a6a9d87c4548923045aa598a07df40a5c5b6f119a05e10fc127452e460e",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/cockpit-copy.ts",
+      "sha256": "95c11b928177a5ad66ca188883b660f517453b8bfc119553c4ef1fb86798f1df",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/cockpit.ts",
+      "sha256": "ce2975efba1d388ee27bb0724910dfa4aa3f17246033fe34e1033bb1ed081151",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/enrollment.ts",
+      "sha256": "f5174ac7c4a8c4fa9c7a78939d39c2c98b359ea5dbd68a7677ce27b6a1ec711a",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/frequency.ts",
+      "sha256": "42ecbb35dbbfbdba7257f8c2bec6a1ed560f707c59e1f37e193e854e1be9896e",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/heat-styling.ts",
+      "sha256": "3808829cb064b297dac810bc9e1fa594adc878148acb317dd75b4a9317939775",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/intake.ts",
+      "sha256": "c01b8984b5e2cb80e22b75bdda92ee7410611556a9911bd68c4b0f0f594497db",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/journey.ts",
+      "sha256": "2d1444476740ed8edd24394d6992fcc87d50cda46b911de138935a367f479883",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/load-ideal-routine.ts",
+      "sha256": "baf7fe27c9547b8e3cef33bb965060be48851e2cd867a8a31ec2358876b118f9",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/load-participant-verdicts.ts",
+      "sha256": "1c7c20e3747e82fc86ec7ed974bec92339532cc6ebee4786c7c8b09a758ebc28",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/participant.ts",
+      "sha256": "2e46130e2b8329f74873be55915632ca658a45c399e7b41e915b1cef053386c1",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/product-label.ts",
+      "sha256": "8d357c9064bde86270829baad10c17674ea312d9b4afdef0f239e5c30070e185",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/property-rows.ts",
+      "sha256": "8eb09e9962d573e8bccdd90413835beb44c8879e1f065063616f1328efaef3cc",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/quiz-answers.ts",
+      "sha256": "e9a83b8ce555cdd277e6cbaf6acd60e7fe47458bcbeaebf4839428fc24c85c55",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/reconcile.ts",
+      "sha256": "5066357bde33687758228938c9e6e1f983760d0fd666683eade5e9681e29493f",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/refined-routine.ts",
+      "sha256": "79a8321c4bb5c53a9594b0664cc708f326bca7ff058c6aeba4faa18cd821ee00",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/discovery/runsheet/index.ts",
+      "sha256": "9ae3297444143aadf3043300fe11ab9440c40d94c1c79c230d1c80402bd39fe4",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/meta-pixel.ts",
+      "sha256": "56bc9d532d658f0a2d9d8278d01a437b1ec10b9e781ec8ec4476396f3569016c",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/mobile/scan-contracts.ts",
+      "sha256": "e2d9e2304c63664c56b0490b8e82f36438b4331dd4a49a7e692f36ee79711517",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/personal-plan/compute-stage1.ts",
+      "sha256": "3618dbc5d3e1c035ea60b79dffe6a356ced57c3e19b8d591c512d688936a4bcc",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/personal-plan/decision-presentation.ts",
+      "sha256": "59f31da07e7dc79be68ef3f5ebe9bf66073ecdab6168559a25646616475edbf5",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/personal-plan/product-preview-contract.ts",
+      "sha256": "8e75e3be77b6ac7d61a1ea41b7aef280e9210b6fa271deb4d9f5cb57141e6995",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "sha256": "1f7ab06b6e33e59512d95d57c8de3b1ed73a165d4a8cdd86a7757f4a42d85a54",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/personal-plan/products/contracts.ts",
+      "sha256": "bc4291e12db65a3e220c884344255403e4ea3c3eb19d24fb3c5a4605ae011366",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/canonicalize.ts",
+      "sha256": "e4121a385e6c86c957143147994132d9ec1695de1cc7d51d3801d0ad51b451ae",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/labels.ts",
+      "sha256": "de38fea05833306169e902cbe73424bc78e0ebfc741c484800f0b37fe667cb90",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/personal-plan/types.ts",
+      "sha256": "40297a7f5b93d2ae223603fe818111f8a546c21299579d4eaf1da3d6089e2389",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/product-identity/index.ts",
+      "sha256": "fd7c23ab66221159b693d8f3c076ad1169160e1d2ed1cd1de7b923d1e3a82d46",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/quiz/lead-capture-mode.ts",
+      "sha256": "b7bc45bd5f06b200b15e746bd2619890e2e07735b0414c57fe07734057455c78",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/quiz/screen-order.ts",
+      "sha256": "78bc469add4d51a92b8b9e19b2d9376553453b5595c9ac1661e037c60630e204",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/scan/product-presentation.ts",
+      "sha256": "3ea93de572b145c43007b3bb28373f3056438ea71ba698c7fd8a9293899b0177",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/scan/profile-context.ts",
+      "sha256": "897769a982848d5b5ebb27b47502190be45a26fb85dc6c94a10f72e820774aea",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/scan/types.ts",
+      "sha256": "dce26c3380df9386a8296b52c79cb702c47fc9a6ab49fb4f04ea1a250d2e2c02",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "src/lib/supabase/middleware.ts",
+      "sha256": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "supabase/migrations/20260922120000_discovery_call_toolkit.sql",
+      "sha256": "e2b77705fdad330a2d584a909f1ca8286bfb1346fd5582a1610b35ffa8cee869",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "tests/helpers/dom.ts",
+      "sha256": "8169bd1722289f09f0f016bc3b674c96825a22f6889e721886a46a25454a1165",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "tests/personal-plan/fixtures.ts",
+      "sha256": "39f439962a62f1f9f9d789d171f84cb2e951386d8b2a72c5a7a31549356d2890",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd",
+      "scope": "Source dependency pin; semantic read depth is separately bounded in layer-plan, not implied by hash"
+    }
+  ],
+  "dependencies": [
+    {
+      "file": "node_modules/typescript/package.json",
+      "sha256": "822ef7ca6452205657b6288b066481ecf508bfbf43455d715cf7d3ec457561e6",
+      "version": "5.9.3"
+    },
+    {
+      "file": "node_modules/tsx/package.json",
+      "sha256": "6e764b21991c21595441f82387c1451ccd10a3e7a3f0973cc5e3649a12dea7d2",
+      "version": "4.21.0"
+    },
+    {
+      "file": "node_modules/react/package.json",
+      "sha256": "ce01a280a6109d1a837e88ce99784f318785079dbffda086a870aad61adc94e1",
+      "version": "19.2.5"
+    },
+    {
+      "file": "node_modules/react-dom/package.json",
+      "sha256": "92aa96480eaab724565c5bb8a4b1dd355114506e5babd36c48c783407ff9937d",
+      "version": "19.2.5"
+    },
+    {
+      "file": "node_modules/next/package.json",
+      "sha256": "006ccbc8816f40ace4307a6048c25ef3cdbe93598529d5dc85db9d19d912274d",
+      "version": "16.2.4"
+    },
+    {
+      "file": "node_modules/@testing-library/react/package.json",
+      "sha256": "8ec075b66acb20cf1705fc56c7bfeca0ba88eb62f354827c29d65afc25a3d967",
+      "version": "16.3.3"
+    },
+    {
+      "file": "node_modules/jsdom/package.json",
+      "sha256": "7b4faa168ac876ddfc1fc1dc2c20a2ba39ce4f8430949bdcd7110575aa82d2ea",
+      "version": "28.1.0"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/package.json",
+      "sha256": "a540c379fd1d820810793681d25fa7ad5dadfcee2b190d14a6553fdb469cfe3c",
+      "version": "0.3.14"
+    }
+  ],
+  "limitations": "Static proposal only. No owner imports, native/PW/DB execution, source changes or removal credit."
+}

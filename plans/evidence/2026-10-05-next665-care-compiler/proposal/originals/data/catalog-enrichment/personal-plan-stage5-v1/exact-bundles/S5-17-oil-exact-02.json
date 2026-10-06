@@ -1,0 +1,2941 @@
+{
+  "schema_version": "personal-plan-exact-catalog-bundle-v1",
+  "batch_id": "S5-17-oil-exact-02",
+  "items": [
+    {
+      "product_id": "663acf09-7090-40d8-9411-71154b9d60f3",
+      "product_name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "light",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish"
+          ]
+        },
+        "sources": [
+          {
+            "label": "Jolies Produktseite",
+            "url": "https://jolies.ae/products/shiseido-fino-premium-touch-penetration-essence-hair-oil-70-ml",
+            "text": "Produktanleitung: eine kleine Menge zwischen den Handflächen verteilen und auf handtuchtrockene oder trockene mittlere Längen und Spitzen geben; bei feinem Haar sehr sparsam starten.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "Jolies Produktseite",
+            "url": "https://jolies.ae/products/shiseido-fino-premium-touch-penetration-essence-hair-oil-70-ml",
+            "text": "Produktanleitung: eine kleine Menge zwischen den Handflächen verteilen und auf handtuchtrockene oder trockene mittlere Längen und Spitzen geben; bei feinem Haar sehr sparsam starten.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-663acf09-7090-40d8-9411-71154b9d60f3-damp",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "663acf09-7090-40d8-9411-71154b9d60f3"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Eine kleine Menge verwenden; bei feinem Haar sehr sparsam starten."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-fino-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Eine kleine Menge zwischen den Handflächen verteilen."
+              },
+              {
+                "stepKey": "apply-fino-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "In die handtuchtrockenen mittleren Längen und Spitzen geben, nicht ausspülen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://jolies.ae/products/shiseido-fino-premium-touch-penetration-essence-hair-oil-70-ml",
+                "sourceType": "retailer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "Jolies Produktseite",
+            "url": "https://jolies.ae/products/shiseido-fino-premium-touch-penetration-essence-hair-oil-70-ml",
+            "text": "Produktanleitung: eine kleine Menge zwischen den Handflächen verteilen und auf handtuchtrockene oder trockene mittlere Längen und Spitzen geben; bei feinem Haar sehr sparsam starten.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-663acf09-7090-40d8-9411-71154b9d60f3-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "663acf09-7090-40d8-9411-71154b9d60f3"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Eine kleine Menge verwenden; bei feinem Haar sehr sparsam starten."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-fino-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Eine kleine Menge zwischen den Handflächen verteilen."
+              },
+              {
+                "stepKey": "apply-fino-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Sparsam in trockene mittlere Längen und Spitzen geben."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://jolies.ae/products/shiseido-fino-premium-touch-penetration-essence-hair-oil-70-ml",
+                "sourceType": "retailer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "70ea52bc-2194-4bb3-82a8-3f4a2aede041",
+      "product_name": "Dr. Scheller Reines Arganöl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "medium",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish"
+          ]
+        },
+        "sources": [
+          {
+            "label": "Dr. Scheller Produktseite",
+            "url": "https://dr-scheller.de/en/products/reines-arganoel",
+            "text": "Hersteller beschreibt Reines Arganöl als Haaröl und empfiehlt 1 bis 2 Tropfen in trockene oder nasse Spitzen; es kann vor dem Föhnen verwendet werden.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "Dr. Scheller Produktseite",
+            "url": "https://dr-scheller.de/en/products/reines-arganoel",
+            "text": "Hersteller beschreibt Reines Arganöl als Haaröl und empfiehlt 1 bis 2 Tropfen in trockene oder nasse Spitzen; es kann vor dem Föhnen verwendet werden.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-70ea52bc-2194-4bb3-82a8-3f4a2aede041-damp",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "70ea52bc-2194-4bb3-82a8-3f4a2aede041"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "1 bis 2 Tropfen verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-dr-scheller-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "1 bis 2 Tropfen in den Händen verteilen."
+              },
+              {
+                "stepKey": "apply-dr-scheller-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "In die nassen Spitzen geben und im Haar lassen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://dr-scheller.de/en/products/reines-arganoel",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "Dr. Scheller Produktseite",
+            "url": "https://dr-scheller.de/en/products/reines-arganoel",
+            "text": "Hersteller beschreibt Reines Arganöl als Haaröl und empfiehlt 1 bis 2 Tropfen in trockene oder nasse Spitzen; es kann vor dem Föhnen verwendet werden.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-70ea52bc-2194-4bb3-82a8-3f4a2aede041-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "70ea52bc-2194-4bb3-82a8-3f4a2aede041"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "1 bis 2 Tropfen verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-dr-scheller-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "1 bis 2 Tropfen in den Händen verteilen."
+              },
+              {
+                "stepKey": "apply-dr-scheller-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Sparsam in die trockenen Spitzen geben."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://dr-scheller.de/en/products/reines-arganoel",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "78e6f1b2-7262-46af-b689-a92af6702739",
+      "product_name": "NUTREEOIL Cacay Öl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "medium",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish"
+          ]
+        },
+        "sources": [
+          {
+            "label": "NUTREEOIL Haarbehandlung",
+            "url": "https://www.nutreeoil.com/blogs/news/effektive-haarbehandlung",
+            "text": "Markeneigene Anleitung: Cacay-Öl in den Spitzen nach der Haarwäsche kann sprödem Haar und Spliss vorbeugen und Glanz ohne fettigen Film geben.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "NUTREEOIL Haarbehandlung",
+            "url": "https://www.nutreeoil.com/blogs/news/effektive-haarbehandlung",
+            "text": "Markeneigene Anleitung: Cacay-Öl in den Spitzen nach der Haarwäsche kann sprödem Haar und Spliss vorbeugen und Glanz ohne fettigen Film geben.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-78e6f1b2-7262-46af-b689-a92af6702739-damp",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "78e6f1b2-7262-46af-b689-a92af6702739"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Sehr sparsam in den Spitzen verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-nutreeoil-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Nach der Haarwäsche sehr sparsam in die Spitzen geben."
+              },
+              {
+                "stepKey": "leave-nutreeoil-damp",
+                "action": "dry",
+                "copyTemplateDe": "Nicht ausspülen und wie gewohnt trocknen oder stylen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.nutreeoil.com/blogs/news/effektive-haarbehandlung",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "NUTREEOIL Haarbehandlung",
+            "url": "https://www.nutreeoil.com/blogs/news/effektive-haarbehandlung",
+            "text": "Markeneigene Anleitung: Cacay-Öl in den Spitzen nach der Haarwäsche kann sprödem Haar und Spliss vorbeugen und Glanz ohne fettigen Film geben.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-78e6f1b2-7262-46af-b689-a92af6702739-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "78e6f1b2-7262-46af-b689-a92af6702739"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Sehr sparsam in den Spitzen verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-nutreeoil-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Sehr sparsam in die trockenen Spitzen geben."
+              },
+              {
+                "stepKey": "finish-nutreeoil-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Als Glanz-Finish verteilen, ohne den Ansatz zu ölen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.nutreeoil.com/blogs/news/effektive-haarbehandlung",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "7b5ff358-1b3b-411d-9220-5e6d30543235",
+      "product_name": "Maria Nila True Soft Argan Oil",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "light",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish",
+            "pre_heat_protection"
+          ]
+        },
+        "sources": [
+          {
+            "label": "Maria Nila Produktseite",
+            "url": "https://marianila.no/products/true-soft-argan-oil-100-ml",
+            "text": "Hersteller: kleine Menge auf feuchte oder trockene mittlere Längen bis Spitzen auftragen; spendet Feuchtigkeit, glättet Frizz, beschwert nicht und schützt bis 230 °C.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "Maria Nila Produktseite",
+            "url": "https://marianila.no/products/true-soft-argan-oil-100-ml",
+            "text": "Hersteller: kleine Menge auf feuchte oder trockene mittlere Längen bis Spitzen auftragen; spendet Feuchtigkeit, glättet Frizz, beschwert nicht und schützt bis 230 °C.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-7b5ff358-1b3b-411d-9220-5e6d30543235-damp",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "7b5ff358-1b3b-411d-9220-5e6d30543235"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Eine kleine Menge verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-maria-nila-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Eine kleine Menge in die feuchten mittleren Längen und Spitzen geben."
+              },
+              {
+                "stepKey": "style-maria-nila-damp",
+                "action": "dry",
+                "copyTemplateDe": "Nicht ausspülen; anschließend lufttrocknen oder stylen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://marianila.no/products/true-soft-argan-oil-100-ml",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "Maria Nila Produktseite",
+            "url": "https://marianila.no/products/true-soft-argan-oil-100-ml",
+            "text": "Hersteller: kleine Menge auf feuchte oder trockene mittlere Längen bis Spitzen auftragen; spendet Feuchtigkeit, glättet Frizz, beschwert nicht und schützt bis 230 °C.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-7b5ff358-1b3b-411d-9220-5e6d30543235-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "7b5ff358-1b3b-411d-9220-5e6d30543235"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Eine kleine Menge verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-maria-nila-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Eine kleine Menge in trockene mittlere Längen und Spitzen geben."
+              },
+              {
+                "stepKey": "finish-maria-nila-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Als glättendes Finish verteilen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://marianila.no/products/true-soft-argan-oil-100-ml",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "pre_heat_protection",
+          "cadence": null,
+          "source": {
+            "label": "Maria Nila Produktseite",
+            "url": "https://marianila.no/products/true-soft-argan-oil-100-ml",
+            "text": "Hersteller: kleine Menge auf feuchte oder trockene mittlere Längen bis Spitzen auftragen; spendet Feuchtigkeit, glättet Frizz, beschwert nicht und schützt bis 230 °C.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-7b5ff358-1b3b-411d-9220-5e6d30543235-heat",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "7b5ff358-1b3b-411d-9220-5e6d30543235"
+            },
+            "role": "heat_protection",
+            "applicationFamily": "either_state_protection",
+            "compatibleDayTypes": [
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_pre_heat",
+              "before": [
+                "heat_tool"
+              ],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "each_separate_heat_event",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Eine kleine Menge verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-maria-nila-heat",
+                "action": "apply_product",
+                "copyTemplateDe": "Vor Hitze-Styling eine kleine Menge in mittlere Längen und Spitzen geben."
+              },
+              {
+                "stepKey": "tool-maria-nila-heat",
+                "action": "tool",
+                "copyTemplateDe": "Danach mit dem Hitzetool stylen; der belegte Produktschutz reicht laut Hersteller bis 230 °C."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://marianila.no/products/true-soft-argan-oil-100-ml",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+      "product_name": "Olaplex No.7 Bonding Oil",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "light",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish",
+            "pre_heat_protection"
+          ]
+        },
+        "sources": [
+          {
+            "label": "OLAPLEX Herstelleranleitung",
+            "url": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+            "text": "Herstelleranleitung: 2 bis 3 Tropfen auf feuchtes oder trockenes Haar auftragen; vor Hitze-Styling und nach dem Styling für Glanz verwenden; Hitzeschutz bis 232 °C.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "OLAPLEX Herstelleranleitung",
+            "url": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+            "text": "Herstelleranleitung: 2 bis 3 Tropfen auf feuchtes oder trockenes Haar auftragen; vor Hitze-Styling und nach dem Styling für Glanz verwenden; Hitzeschutz bis 232 °C.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-7d8c0150-778d-4cb9-abf5-bfc16ad93b12-damp",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Mit 2 bis 3 Tropfen starten."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-olaplex-7-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "2 bis 3 Tropfen in den Händen verteilen."
+              },
+              {
+                "stepKey": "apply-olaplex-7-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "In das feuchte Haar geben, besonders in Längen und Spitzen, und anschließend wie gewünscht stylen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "OLAPLEX Herstelleranleitung",
+            "url": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+            "text": "Herstelleranleitung: 2 bis 3 Tropfen auf feuchtes oder trockenes Haar auftragen; vor Hitze-Styling und nach dem Styling für Glanz verwenden; Hitzeschutz bis 232 °C.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-7d8c0150-778d-4cb9-abf5-bfc16ad93b12-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Mit 2 bis 3 Tropfen starten."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-olaplex-7-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "2 bis 3 Tropfen in den Händen verteilen."
+              },
+              {
+                "stepKey": "apply-olaplex-7-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Sparsam in die trockenen Längen und Spitzen geben und als Finish verteilen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "pre_heat_protection",
+          "cadence": null,
+          "source": {
+            "label": "OLAPLEX Herstelleranleitung",
+            "url": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+            "text": "Herstelleranleitung: 2 bis 3 Tropfen auf feuchtes oder trockenes Haar auftragen; vor Hitze-Styling und nach dem Styling für Glanz verwenden; Hitzeschutz bis 232 °C.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-7d8c0150-778d-4cb9-abf5-bfc16ad93b12-heat",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12"
+            },
+            "role": "heat_protection",
+            "applicationFamily": "either_state_protection",
+            "compatibleDayTypes": [
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_pre_heat",
+              "before": [
+                "heat_tool"
+              ],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "each_separate_heat_event",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Mit 2 bis 3 Tropfen starten."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-olaplex-7-heat",
+                "action": "apply_product",
+                "copyTemplateDe": "Vor dem Hitze-Styling 2 bis 3 Tropfen in Längen und Spitzen verteilen."
+              },
+              {
+                "stepKey": "tool-olaplex-7-heat",
+                "action": "tool",
+                "copyTemplateDe": "Danach mit dem Hitzetool stylen; der belegte Produktschutz reicht laut Hersteller bis 232 °C."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+      "product_name": "Innersense Harmonic Treatment Oil",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "medium",
+          "role_support": [
+            "dry_finish"
+          ]
+        },
+        "sources": [
+          {
+            "label": "Niche Beauty Produktseite",
+            "url": "https://www.niche-beauty.com/en-se/products/innersense-harmonic-treatment-oil/624-011",
+            "text": "Retailer-Anleitung zum exakten Produkt: für Glanz 1 bis 2 Tropfen durch mittlere Längen bis Spitzen geben; separate Herstellerseite belegt das exakte Produkt, aber primär mit Körper- und Kopfhaut-Anwendung.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "Niche Beauty Produktseite",
+            "url": "https://www.niche-beauty.com/en-se/products/innersense-harmonic-treatment-oil/624-011",
+            "text": "Retailer-Anleitung zum exakten Produkt: für Glanz 1 bis 2 Tropfen durch mittlere Längen bis Spitzen geben; separate Herstellerseite belegt das exakte Produkt, aber primär mit Körper- und Kopfhaut-Anwendung.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-7f5207e6-d281-416e-922c-3135dd9a8cc8-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "7f5207e6-d281-416e-922c-3135dd9a8cc8"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "1 bis 2 Tropfen verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-innersense-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "1 bis 2 Tropfen in den Händen verteilen."
+              },
+              {
+                "stepKey": "apply-innersense-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Durch die mittleren Längen und Spitzen geben, um Glanz als Finish zu ergänzen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.niche-beauty.com/en-se/products/innersense-harmonic-treatment-oil/624-011",
+                "sourceType": "retailer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+      "product_name": "OGX Argan weightless Öl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "light",
+          "role_support": [
+            "dry_finish"
+          ]
+        },
+        "sources": [
+          {
+            "label": "OGX Produktseite",
+            "url": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-weightless-healing-dry-oil",
+            "text": "Hersteller: weightless healing dry oil spray; Styling durch Aufsprühen für Glanz und Frizz-Kontrolle abschließen.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "OGX Produktseite",
+            "url": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-weightless-healing-dry-oil",
+            "text": "Hersteller: weightless healing dry oil spray; Styling durch Aufsprühen für Glanz und Frizz-Kontrolle abschließen.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-aa349c07-1add-44d4-9161-d99190182e5c-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "aa349c07-1add-44d4-9161-d99190182e5c"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "all_hair",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Leicht aufsprühen."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "mist-ogx-argan-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Nach dem Styling leicht über das Haar sprühen."
+              },
+              {
+                "stepKey": "finish-ogx-argan-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Als Glanz- und Frizz-Finish verteilen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-weightless-healing-dry-oil",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "b916efff-8b80-47d4-82cf-d8148d1eff53",
+      "product_name": "HASK Argan Oil Repairing Shine Oil",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "medium",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish"
+          ]
+        },
+        "sources": [
+          {
+            "label": "HASK Produktseite",
+            "url": "https://haskbeauty.com/products/repair-arganoil-hair-oil-3-3-oz",
+            "text": "Hersteller: eine münzgroße Menge in nassem oder trockenem Haar verteilen und die Ansätze vermeiden; Ergebnis ist ein glattes, glänzendes Finish.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "HASK Produktseite",
+            "url": "https://haskbeauty.com/products/repair-arganoil-hair-oil-3-3-oz",
+            "text": "Hersteller: eine münzgroße Menge in nassem oder trockenem Haar verteilen und die Ansätze vermeiden; Ergebnis ist ein glattes, glänzendes Finish.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-b916efff-8b80-47d4-82cf-d8148d1eff53-damp",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "b916efff-8b80-47d4-82cf-d8148d1eff53"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Eine münzgroße Menge verwenden und die Ansätze vermeiden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-hask-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Eine münzgroße Menge im nassen Haar verteilen."
+              },
+              {
+                "stepKey": "avoid-hask-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Ansätze vermeiden und das Produkt in Längen und Spitzen lassen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://haskbeauty.com/products/repair-arganoil-hair-oil-3-3-oz",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "HASK Produktseite",
+            "url": "https://haskbeauty.com/products/repair-arganoil-hair-oil-3-3-oz",
+            "text": "Hersteller: eine münzgroße Menge in nassem oder trockenem Haar verteilen und die Ansätze vermeiden; Ergebnis ist ein glattes, glänzendes Finish.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-b916efff-8b80-47d4-82cf-d8148d1eff53-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "b916efff-8b80-47d4-82cf-d8148d1eff53"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Eine münzgroße Menge verwenden und die Ansätze vermeiden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-hask-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Eine münzgroße Menge im trockenen Haar verteilen."
+              },
+              {
+                "stepKey": "finish-hask-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Ansätze vermeiden und als glattes, glänzendes Finish nutzen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://haskbeauty.com/products/repair-arganoil-hair-oil-3-3-oz",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "c05773dd-9656-4381-a0ab-8e9fc310c520",
+      "product_name": "L’Oréal Elvital Öl Magique Jojoba",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "medium",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish"
+          ]
+        },
+        "sources": [
+          {
+            "label": "L’Oréal Paris Produktseite",
+            "url": "https://www.loreal-paris.de/elvital/oel-magique-jojoba/veredelndes-haaroel",
+            "text": "Hersteller: Öl für trockenes bis sehr trockenes Haar; kann auf nassem oder trockenem Haar genutzt werden, nährt, stärkt, glättet Frizz und verleiht Glanz.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "L’Oréal Paris Produktseite",
+            "url": "https://www.loreal-paris.de/elvital/oel-magique-jojoba/veredelndes-haaroel",
+            "text": "Hersteller: Öl für trockenes bis sehr trockenes Haar; kann auf nassem oder trockenem Haar genutzt werden, nährt, stärkt, glättet Frizz und verleiht Glanz.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-c05773dd-9656-4381-a0ab-8e9fc310c520-damp",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "c05773dd-9656-4381-a0ab-8e9fc310c520"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Wenige Tropfen verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-loreal-jojoba-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Wenige Tropfen auf nassem Haar in Längen und Spitzen verteilen."
+              },
+              {
+                "stepKey": "leave-loreal-jojoba-damp",
+                "action": "dry",
+                "copyTemplateDe": "Nicht ausspülen und wie gewohnt trocknen oder stylen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.loreal-paris.de/elvital/oel-magique-jojoba/veredelndes-haaroel",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "L’Oréal Paris Produktseite",
+            "url": "https://www.loreal-paris.de/elvital/oel-magique-jojoba/veredelndes-haaroel",
+            "text": "Hersteller: Öl für trockenes bis sehr trockenes Haar; kann auf nassem oder trockenem Haar genutzt werden, nährt, stärkt, glättet Frizz und verleiht Glanz.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-c05773dd-9656-4381-a0ab-8e9fc310c520-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "c05773dd-9656-4381-a0ab-8e9fc310c520"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Wenige Tropfen verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-loreal-jojoba-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Wenige Tropfen auf trockenem Haar in Längen und Spitzen verteilen."
+              },
+              {
+                "stepKey": "finish-loreal-jojoba-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Als Glanz- und Frizz-Finish nutzen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.loreal-paris.de/elvital/oel-magique-jojoba/veredelndes-haaroel",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "c320750f-6a1e-420d-8594-409f04e05319",
+      "product_name": "OGX Bond Protein Repair",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "light",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish"
+          ]
+        },
+        "sources": [
+          {
+            "label": "OGX Produktseite",
+            "url": "https://www.ogxbeauty.com/products/bond-protein-repair-oil-mist",
+            "text": "Hersteller: 3-in-1 Oil Mist auf feuchtes oder trockenes Haar sprühen; stärkt, hilft gegen Frizz und erhält Glanz.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "OGX Produktseite",
+            "url": "https://www.ogxbeauty.com/products/bond-protein-repair-oil-mist",
+            "text": "Hersteller: 3-in-1 Oil Mist auf feuchtes oder trockenes Haar sprühen; stärkt, hilft gegen Frizz und erhält Glanz.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-c320750f-6a1e-420d-8594-409f04e05319-damp",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "c320750f-6a1e-420d-8594-409f04e05319"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "all_hair",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Eine kleine Menge aufsprühen."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "shake-ogx-bond-damp",
+                "action": "section",
+                "copyTemplateDe": "Vor Gebrauch schütteln."
+              },
+              {
+                "stepKey": "spray-ogx-bond-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Eine kleine Menge auf feuchtes Haar sprühen und im Haar lassen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.ogxbeauty.com/products/bond-protein-repair-oil-mist",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "OGX Produktseite",
+            "url": "https://www.ogxbeauty.com/products/bond-protein-repair-oil-mist",
+            "text": "Hersteller: 3-in-1 Oil Mist auf feuchtes oder trockenes Haar sprühen; stärkt, hilft gegen Frizz und erhält Glanz.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-c320750f-6a1e-420d-8594-409f04e05319-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "c320750f-6a1e-420d-8594-409f04e05319"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "all_hair",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Eine kleine Menge aufsprühen."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "shake-ogx-bond-dry",
+                "action": "section",
+                "copyTemplateDe": "Vor Gebrauch schütteln."
+              },
+              {
+                "stepKey": "spray-ogx-bond-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Eine kleine Menge auf trockenes Haar sprühen und als Glanz- und Frizz-Finish nutzen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.ogxbeauty.com/products/bond-protein-repair-oil-mist",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "c574ee6f-ad22-45c0-b936-57b847d93433",
+      "product_name": "Garnier Fructis Sleek & Stay Heat-Activated Serum",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "light",
+          "role_support": [
+            "pre_heat_protection"
+          ]
+        },
+        "sources": [
+          {
+            "label": "Garnier USA Produktseite",
+            "url": "https://www.garnierusa.com/about-our-brands/fructis/sleek-and-shine/sleek-and-shine-sleek-and-stay",
+            "text": "Hersteller: Heat-Activated Serum auf feuchtes Haar in mittlere Längen und Spitzen geben; Dosierung 1 Pumpstoß bei feinem/kurzem Haar, 2 bei mittlerem, 3 bis 4 bei langem oder dickem Haar.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "label": "Garnier Australia Produktseite",
+            "url": "https://www.garnier.com.au/about-our-brands/fructis/sleek-and-shine/sleek-and-shine-sleek-and-stay",
+            "text": "Herstellerregionale Seite beschreibt die Formel als hitzeschützenden Film bis 230 °C und verbindet die Anwendung mit Hitze-Styling.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "pre_heat_protection",
+          "cadence": null,
+          "source": {
+            "label": "Garnier USA Produktseite",
+            "url": "https://www.garnierusa.com/about-our-brands/fructis/sleek-and-shine/sleek-and-shine-sleek-and-stay",
+            "text": "Hersteller: Heat-Activated Serum auf feuchtes Haar in mittlere Längen und Spitzen geben; Dosierung 1 Pumpstoß bei feinem/kurzem Haar, 2 bei mittlerem, 3 bis 4 bei langem oder dickem Haar.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-c574ee6f-ad22-45c0-b936-57b847d93433-heat",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "c574ee6f-ad22-45c0-b936-57b847d93433"
+            },
+            "role": "heat_protection",
+            "applicationFamily": "pre_heat_damp",
+            "compatibleDayTypes": [
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [
+                "heat_tool"
+              ],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "each_separate_heat_event",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "1 Pumpstoß bei feinem/kurzem Haar, 2 bei mittlerem, 3 bis 4 bei langem oder dickem Haar."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-garnier-sleek-heat",
+                "action": "apply_product",
+                "copyTemplateDe": "Auf feuchtem Haar dosieren: 1 Pumpstoß bei feinem/kurzem Haar, 2 bei mittlerem, 3 bis 4 bei langem oder dickem Haar."
+              },
+              {
+                "stepKey": "apply-garnier-sleek-heat",
+                "action": "apply_product",
+                "copyTemplateDe": "In mittlere Längen und Spitzen geben."
+              },
+              {
+                "stepKey": "tool-garnier-sleek-heat",
+                "action": "tool",
+                "copyTemplateDe": "Danach mit Hitze stylen; die regionale Herstellerseite belegt Hitzeschutz bis 230 °C."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.garnierusa.com/about-our-brands/fructis/sleek-and-shine/sleek-and-shine-sleek-and-stay",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              },
+              {
+                "sourceUrl": "https://www.garnier.com.au/about-our-brands/fructis/sleek-and-shine/sleek-and-shine-sleek-and-stay",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "e6b87909-6104-4a9a-a3ef-e1c64a1b15b1",
+      "product_name": "Garnier Fructis Wunderöl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "light",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish",
+            "pre_heat_protection"
+          ]
+        },
+        "sources": [
+          {
+            "label": "Garnier Deutschland Produktseite",
+            "url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/schaden-loescher/wunder-oel-hitzeschutz",
+            "text": "Hersteller: wenige Tropfen in nasses, feuchtes oder trockenes Haar geben, besonders in die Spitzen; nicht ausspülen; schützt bis 230 °C und gibt Glanz und Geschmeidigkeit.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "Garnier Deutschland Produktseite",
+            "url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/schaden-loescher/wunder-oel-hitzeschutz",
+            "text": "Hersteller: wenige Tropfen in nasses, feuchtes oder trockenes Haar geben, besonders in die Spitzen; nicht ausspülen; schützt bis 230 °C und gibt Glanz und Geschmeidigkeit.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-e6b87909-6104-4a9a-a3ef-e1c64a1b15b1-damp",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "e6b87909-6104-4a9a-a3ef-e1c64a1b15b1"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Wenige Tropfen verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-garnier-wunderoel-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Wenige Tropfen in das nasse oder feuchte Haar geben, besonders in die Spitzen."
+              },
+              {
+                "stepKey": "leave-garnier-wunderoel-damp",
+                "action": "dry",
+                "copyTemplateDe": "Nicht ausspülen und wie gewohnt trocknen oder stylen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/schaden-loescher/wunder-oel-hitzeschutz",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "Garnier Deutschland Produktseite",
+            "url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/schaden-loescher/wunder-oel-hitzeschutz",
+            "text": "Hersteller: wenige Tropfen in nasses, feuchtes oder trockenes Haar geben, besonders in die Spitzen; nicht ausspülen; schützt bis 230 °C und gibt Glanz und Geschmeidigkeit.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-e6b87909-6104-4a9a-a3ef-e1c64a1b15b1-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "e6b87909-6104-4a9a-a3ef-e1c64a1b15b1"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Wenige Tropfen verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-garnier-wunderoel-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Wenige Tropfen in das trockene Haar geben, besonders in die Spitzen."
+              },
+              {
+                "stepKey": "finish-garnier-wunderoel-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Als Glanz- und Geschmeidigkeits-Finish verteilen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/schaden-loescher/wunder-oel-hitzeschutz",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "pre_heat_protection",
+          "cadence": null,
+          "source": {
+            "label": "Garnier Deutschland Produktseite",
+            "url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/schaden-loescher/wunder-oel-hitzeschutz",
+            "text": "Hersteller: wenige Tropfen in nasses, feuchtes oder trockenes Haar geben, besonders in die Spitzen; nicht ausspülen; schützt bis 230 °C und gibt Glanz und Geschmeidigkeit.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-e6b87909-6104-4a9a-a3ef-e1c64a1b15b1-heat",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "e6b87909-6104-4a9a-a3ef-e1c64a1b15b1"
+            },
+            "role": "heat_protection",
+            "applicationFamily": "either_state_protection",
+            "compatibleDayTypes": [
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_pre_heat",
+              "before": [
+                "heat_tool"
+              ],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "each_separate_heat_event",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Wenige Tropfen verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-garnier-wunderoel-heat",
+                "action": "apply_product",
+                "copyTemplateDe": "Vor Hitze-Styling wenige Tropfen in das Haar geben, besonders in die Spitzen."
+              },
+              {
+                "stepKey": "tool-garnier-wunderoel-heat",
+                "action": "tool",
+                "copyTemplateDe": "Danach mit Hitze stylen; der belegte Produktschutz reicht laut Hersteller bis 230 °C."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/schaden-loescher/wunder-oel-hitzeschutz",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "ea9d38a1-25ce-4c01-868b-960cc5ee4397",
+      "product_name": "Garnier Wahre Schätze Curl Revival Öl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "rich",
+          "role_support": [
+            "pre_wash_fibre_treatment",
+            "leave_on_fibre_conditioning",
+            "dry_finish"
+          ]
+        },
+        "sources": [
+          {
+            "label": "Garnier Deutschland Produktseite",
+            "url": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/avocado/elixir",
+            "text": "Hersteller: für sehr trockenes, lockiges und dickes Haar; als Öl-Treatment, Maske, Curl Refresh oder finales Glanz- und Anti-Frizz-Finish verwendbar.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "label": "Müller Produktseite",
+            "url": "https://www.mueller.de/p/garnier-wahre-schaetze-curl-revival-haaroel-2940644/",
+            "text": "Retailer-Anleitung zum exakten Produkt: als Ölkur vor dem Waschen von Kopfhaut bis Spitzen einmassieren und mindestens eine Stunde oder über Nacht einwirken lassen.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "pre_wash_fibre_treatment",
+          "cadence": null,
+          "source": {
+            "label": "Müller Produktseite",
+            "url": "https://www.mueller.de/p/garnier-wahre-schaetze-curl-revival-haaroel-2940644/",
+            "text": "Retailer-Anleitung zum exakten Produkt: als Ölkur vor dem Waschen von Kopfhaut bis Spitzen einmassieren und mindestens eine Stunde oder über Nacht einwirken lassen.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-ea9d38a1-25ce-4c01-868b-960cc5ee4397-pre-wash",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "ea9d38a1-25ce-4c01-868b-960cc5ee4397"
+            },
+            "role": "intensive_care",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "compatibleDayTypes": [
+              "intensive_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "pre_wash",
+              "before": [
+                "wet_cleanse"
+              ],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "all_hair",
+              "rinse": "rinse_out",
+              "contactTimeSeconds": 3600,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Als Ölkur von Kopfhaut bis Spitzen einmassieren."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-garnier-curl-pre-wash",
+                "action": "apply_product",
+                "copyTemplateDe": "Als Ölkur vor der Wäsche von Kopfhaut bis Spitzen einmassieren."
+              },
+              {
+                "stepKey": "wait-garnier-curl-pre-wash",
+                "action": "wait",
+                "copyTemplateDe": "Mindestens eine Stunde oder über Nacht einwirken lassen."
+              },
+              {
+                "stepKey": "wash-garnier-curl-pre-wash",
+                "action": "rinse",
+                "copyTemplateDe": "Danach auswaschen und mit der geplanten Reinigung fortfahren."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.mueller.de/p/garnier-wahre-schaetze-curl-revival-haaroel-2940644/",
+                "sourceType": "retailer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "Garnier Deutschland Produktseite",
+            "url": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/avocado/elixir",
+            "text": "Hersteller: für sehr trockenes, lockiges und dickes Haar; als Öl-Treatment, Maske, Curl Refresh oder finales Glanz- und Anti-Frizz-Finish verwendbar.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-ea9d38a1-25ce-4c01-868b-960cc5ee4397-damp",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "ea9d38a1-25ce-4c01-868b-960cc5ee4397"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Sparsam als Öl-Treatment oder Curl Refresh verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-garnier-curl-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Sparsam als Öl-Treatment oder Curl Refresh in Längen und Spitzen geben."
+              },
+              {
+                "stepKey": "leave-garnier-curl-damp",
+                "action": "dry",
+                "copyTemplateDe": "Nicht ausspülen und die Locken wie geplant trocknen oder auffrischen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/avocado/elixir",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "Garnier Deutschland Produktseite",
+            "url": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/avocado/elixir",
+            "text": "Hersteller: für sehr trockenes, lockiges und dickes Haar; als Öl-Treatment, Maske, Curl Refresh oder finales Glanz- und Anti-Frizz-Finish verwendbar.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-ea9d38a1-25ce-4c01-868b-960cc5ee4397-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "ea9d38a1-25ce-4c01-868b-960cc5ee4397"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Sparsam als finales Finish verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-garnier-curl-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Sparsam in trockene Längen und Spitzen geben."
+              },
+              {
+                "stepKey": "finish-garnier-curl-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Als finales Glanz- und Anti-Frizz-Finish verteilen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/avocado/elixir",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "fd83b493-f7be-4071-9642-3d5b92e30dc2",
+      "product_name": "Balea Traumlocken Öl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "medium",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish"
+          ]
+        },
+        "sources": [
+          {
+            "label": "dm Produktseite",
+            "url": "https://www.dm.at/p/d/1635760/balea-professional-haaroel-traumlocken",
+            "text": "Retailer/Markenseite: ein paar Tropfen in den Handflächen verreiben und in feuchte Längen und Spitzen kneten; bei feinem Haar nur in trockene Spitzen geben, Ansatz vermeiden.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "dm Produktseite",
+            "url": "https://www.dm.at/p/d/1635760/balea-professional-haaroel-traumlocken",
+            "text": "Retailer/Markenseite: ein paar Tropfen in den Handflächen verreiben und in feuchte Längen und Spitzen kneten; bei feinem Haar nur in trockene Spitzen geben, Ansatz vermeiden.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-fd83b493-f7be-4071-9642-3d5b92e30dc2-damp",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "fd83b493-f7be-4071-9642-3d5b92e30dc2"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Ein paar Tropfen verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-balea-traumlocken-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Ein paar Tropfen in den Handflächen verreiben."
+              },
+              {
+                "stepKey": "apply-balea-traumlocken-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "In die feuchten Längen und Spitzen kneten."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.dm.at/p/d/1635760/balea-professional-haaroel-traumlocken",
+                "sourceType": "retailer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "dm Produktseite",
+            "url": "https://www.dm.at/p/d/1635760/balea-professional-haaroel-traumlocken",
+            "text": "Retailer/Markenseite: ein paar Tropfen in den Handflächen verreiben und in feuchte Längen und Spitzen kneten; bei feinem Haar nur in trockene Spitzen geben, Ansatz vermeiden.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-fd83b493-f7be-4071-9642-3d5b92e30dc2-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "fd83b493-f7be-4071-9642-3d5b92e30dc2"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Bei feinem Haar nur wenige Tropfen in trockene Spitzen geben."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-balea-traumlocken-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Ein paar Tropfen in den Handflächen verreiben."
+              },
+              {
+                "stepKey": "apply-balea-traumlocken-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Bei feinem Haar nur in die trockenen Spitzen geben und den Ansatz vermeiden."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.dm.at/p/d/1635760/balea-professional-haaroel-traumlocken",
+                "sourceType": "retailer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "fe974387-b487-470e-9799-69bb4249070b",
+      "product_name": "Pantene Pro-V Keratin Protect Öl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "light",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish"
+          ]
+        },
+        "sources": [
+          {
+            "label": "dm Produktseite",
+            "url": "https://www.dm.de/p/d/1395948/pantene-pro-v-trocken-oel-mit-vitamin-e-keratin-protect-oil-repair-und-care",
+            "text": "Exact product directions: nach der Haarwäsche eine kleine Menge in die mittleren Längen und Spitzen des Haars geben; nicht ausspülen. Wirkung: Pflege, Feuchtigkeit, Glanz.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "label": "Müller Produktseite",
+            "url": "https://www.mueller.de/p/pantene-pro-v-haaroel-keratin-protect-oil-72292/",
+            "text": "Exact product directions: eine kleine Menge in die Längen des nassen oder trockenen Haars verteilen; nicht ausspülen. Product type Haaröl.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "label": "Pantene/ForMe Produktseite",
+            "url": "https://www.for-me-online.de/marken/pantene/pantene-pro-v-keratin-protect-repair-care-haaroel",
+            "text": "P&G brand page: Pantene Pro-V Keratin Protect Repair & Care Haaröl für die tägliche Pflege; verleiht weiches und glänzendes Haar; Haaröle von Pantene Pro-V verleihen mit nur einem Tropfen fließendes Haar.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "leave_on_fibre_conditioning",
+          "cadence": null,
+          "source": {
+            "label": "dm Produktseite",
+            "url": "https://www.dm.de/p/d/1395948/pantene-pro-v-trocken-oel-mit-vitamin-e-keratin-protect-oil-repair-und-care",
+            "text": "Exact product directions: nach der Haarwäsche eine kleine Menge in die mittleren Längen und Spitzen des Haars geben; nicht ausspülen. Wirkung: Pflege, Feuchtigkeit, Glanz.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-fe974387-b487-470e-9799-69bb4249070b-damp",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "fe974387-b487-470e-9799-69bb4249070b"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": [
+                "post_rinse_towel_dry"
+              ],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Eine kleine Menge verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-pantene-keratin-damp",
+                "action": "apply_product",
+                "copyTemplateDe": "Nach der Haarwäsche eine kleine Menge in die mittleren Längen und Spitzen geben."
+              },
+              {
+                "stepKey": "leave-pantene-keratin-damp",
+                "action": "dry",
+                "copyTemplateDe": "Nicht ausspülen und wie gewohnt trocknen oder stylen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.dm.de/p/d/1395948/pantene-pro-v-trocken-oel-mit-vitamin-e-keratin-protect-oil-repair-und-care",
+                "sourceType": "retailer",
+                "checkedAt": "2026-08-11"
+              },
+              {
+                "sourceUrl": "https://www.for-me-online.de/marken/pantene/pantene-pro-v-keratin-protect-repair-care-haaroel",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        },
+        {
+          "role": "dry_finish",
+          "cadence": null,
+          "source": {
+            "label": "Müller Produktseite",
+            "url": "https://www.mueller.de/p/pantene-pro-v-haaroel-keratin-protect-oil-72292/",
+            "text": "Exact product directions: eine kleine Menge in die Längen des nassen oder trockenen Haars verteilen; nicht ausspülen. Product type Haaröl.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-fe974387-b487-470e-9799-69bb4249070b-dry",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "fe974387-b487-470e-9799-69bb4249070b"
+            },
+            "role": "finish",
+            "applicationFamily": "dry_finish",
+            "compatibleDayTypes": [
+              "wash_day",
+              "intensive_care_day",
+              "styling_day",
+              "between_wash_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "dry_finish",
+              "before": [],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Eine kleine Menge verwenden."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-pantene-keratin-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Eine kleine Menge in trockene Längen und Spitzen geben."
+              },
+              {
+                "stepKey": "finish-pantene-keratin-dry",
+                "action": "apply_product",
+                "copyTemplateDe": "Nicht ausspülen und als Pflege- und Glanz-Finish verteilen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://www.mueller.de/p/pantene-pro-v-haaroel-keratin-protect-oil-72292/",
+                "sourceType": "retailer",
+                "checkedAt": "2026-08-11"
+              },
+              {
+                "sourceUrl": "https://www.for-me-online.de/marken/pantene/pantene-pro-v-keratin-protect-repair-care-haaroel",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "ff13bc3a-8bc6-49df-85a0-7a67add26926",
+      "product_name": "NANOIL Avocadoöl",
+      "expected_current_category": "oil",
+      "target_category": "oil",
+      "facts": {
+        "category": "oil",
+        "values": {
+          "weight": "rich",
+          "role_support": [
+            "pre_wash_fibre_treatment"
+          ]
+        },
+        "sources": [
+          {
+            "label": "NANOIL Avocadoöl Anleitung",
+            "url": "https://nanoil.de/blog/post/multivitaminelixier-fuers-haar-also-avoca",
+            "text": "Markeneigene Anleitung zum Avocadoöl: auf Haar und Kopfhaut auftragen und mindestens 15 Minuten einwirken lassen; danach waschen.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          {
+            "label": "Rossmann Produktseite",
+            "url": "https://www.rossmann.de/de/pflege-und-duft-nanoil-avocadooel/p/5905669547130",
+            "text": "Retailer-Seite bestätigt das exakte Produkt als Nanoil Avocadoöl für Haar, Körper, Gesicht und Nägel.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "pre_wash_fibre_treatment",
+          "cadence": null,
+          "source": {
+            "label": "NANOIL Avocadoöl Anleitung",
+            "url": "https://nanoil.de/blog/post/multivitaminelixier-fuers-haar-also-avoca",
+            "text": "Markeneigene Anleitung zum Avocadoöl: auf Haar und Kopfhaut auftragen und mindestens 15 Minuten einwirken lassen; danach waschen.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-oil-ff13bc3a-8bc6-49df-85a0-7a67add26926-pre-wash",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "oil",
+              "productId": "ff13bc3a-8bc6-49df-85a0-7a67add26926"
+            },
+            "role": "intensive_care",
+            "applicationFamily": "pre_wash_lengths_treatment",
+            "compatibleDayTypes": [
+              "intensive_care_day"
+            ],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "pre_wash",
+              "before": [
+                "wet_cleanse"
+              ],
+              "after": [],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": [
+                "oil.v2.weight",
+                "oil.v2.role_support"
+              ],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "all_hair",
+              "rinse": "rinse_out",
+              "contactTimeSeconds": 900,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": {
+                "kind": "qualitative",
+                "copyDe": "Auf Haar und Kopfhaut auftragen."
+              },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "apply-nanoil-avocado-pre-wash",
+                "action": "apply_product",
+                "copyTemplateDe": "Vor der Wäsche auf Haar und Kopfhaut auftragen."
+              },
+              {
+                "stepKey": "wait-nanoil-avocado-pre-wash",
+                "action": "wait",
+                "copyTemplateDe": "Mindestens 15 Minuten einwirken lassen."
+              },
+              {
+                "stepKey": "wash-nanoil-avocado-pre-wash",
+                "action": "rinse",
+                "copyTemplateDe": "Danach auswaschen und mit der geplanten Reinigung fortfahren."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://nanoil.de/blog/post/multivitaminelixier-fuers-haar-also-avoca",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

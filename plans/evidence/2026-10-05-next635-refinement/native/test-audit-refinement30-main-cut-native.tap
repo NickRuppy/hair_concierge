@@ -1,0 +1,160 @@
+TAP version 13
+# Subtest: the provenance backfill labels a synthetic draft on a CLEARED-flag plan 'assumed'
+ok 1 - the provenance backfill labels a synthetic draft on a CLEARED-flag plan 'assumed'
+  ---
+  duration_ms: 544.147084
+  ...
+# Subtest: the provenance backfill still labels a synthetic draft on a flagged plan 'assumed'
+ok 2 - the provenance backfill still labels a synthetic draft on a flagged plan 'assumed'
+  ---
+  duration_ms: 390.239292
+  ...
+# Subtest: the provenance backfill leaves a plan without direct-acceptance evidence entirely 'user'
+ok 3 - the provenance backfill leaves a plan without direct-acceptance evidence entirely 'user'
+  ---
+  duration_ms: 397.676166
+  ...
+# Subtest: the provenance backfill splits a reopened, partially refined draft per answer
+ok 4 - the provenance backfill splits a reopened, partially refined draft per answer
+  ---
+  duration_ms: 390.635541
+  ...
+# Subtest: the provenance backfill keeps an assumed-valued heat event 'assumed' inside the cohort
+ok 5 - the provenance backfill keeps an assumed-valued heat event 'assumed' inside the cohort
+  ---
+  duration_ms: 389.092875
+  ...
+# Subtest: the provenance backfill errs to 'assumed' for a draft indistinguishable from the defaults
+ok 6 - the provenance backfill errs to 'assumed' for a draft indistinguishable from the defaults
+  ---
+  duration_ms: 380.970625
+  ...
+# Subtest: the provenance backfill writes an empty map for a draft with no completed answers
+ok 7 - the provenance backfill writes an empty map for a draft with no completed answers
+  ---
+  duration_ms: 372.233417
+  ...
+# Subtest: the save RPC keeps a 5-argument compatibility overload for the migrate-then-deploy window
+ok 8 - the save RPC keeps a 5-argument compatibility overload for the migrate-then-deploy window
+  ---
+  duration_ms: 386.533791
+  ...
+# Subtest: the 5-argument compatibility overload preserves backfilled provenance instead of wiping it
+ok 9 - the 5-argument compatibility overload preserves backfilled provenance instead of wiping it
+  ---
+  duration_ms: 384.981708
+  ...
+# Subtest: the 6-argument save RPC still rejects a non-object provenance payload
+ok 10 - the 6-argument save RPC still rejects a non-object provenance payload
+  ---
+  duration_ms: 377.706125
+  ...
+# Subtest: returns the refinement answers bound to the current refined need version
+ok 11 - returns the refinement answers bound to the current refined need version
+  ---
+  duration_ms: 2.383
+  ...
+# Subtest: returns null answers when no complete draft matches the pointer
+ok 12 - returns null answers when no complete draft matches the pointer
+  ---
+  duration_ms: 0.334833
+  ...
+# Subtest: returns included routine products of the active version
+ok 13 - returns included routine products of the active version
+  ---
+  duration_ms: 3.178958
+  ...
+# Subtest: routineProducts is null when the active routine is authority_repair_required
+ok 14 - routineProducts is null when the active routine is authority_repair_required
+  ---
+  duration_ms: 0.490375
+  ...
+# Subtest: refinement presentation API rejects unauthenticated reads
+ok 15 - refinement presentation API rejects unauthenticated reads
+  ---
+  duration_ms: 0.422584
+  ...
+# Subtest: fresh plan with no refinement draft: both modules open, progress 2/4
+ok 16 - fresh plan with no refinement draft: both modules open, progress 2/4
+  ---
+  duration_ms: 3.992709
+  ...
+# Subtest: partial products user-answers: products open with the correct open-question count
+ok 17 - partial products user-answers: products open with the correct open-question count
+  ---
+  duration_ms: 0.524084
+  ...
+# Subtest: products module complete via lineage: 3/4 and the handoff marker is set
+ok 18 - products module complete via lineage: 3/4 and the handoff marker is set
+  ---
+  duration_ms: 0.527292
+  ...
+# Subtest: both modules complete: 4/4
+ok 19 - both modules complete: 4/4
+  ---
+  duration_ms: 0.639167
+  ...
+# Subtest: banner reflects a stored dismissal for the current open module
+ok 20 - banner reflects a stored dismissal for the current open module
+  ---
+  duration_ms: 0.69875
+  ...
+# Subtest: in_progress draft wins over a completed draft on the same initial need version
+ok 21 - in_progress draft wins over a completed draft on the same initial need version
+  ---
+  duration_ms: 0.316167
+  ...
+# Subtest: initial need version with neither a Stage-1 lead nor a prepared-artifact source degrades to 503
+ok 22 - initial need version with neither a Stage-1 lead nor a prepared-artifact source degrades to 503
+  ---
+  duration_ms: 0.121333
+  ...
+# Subtest: no personal plan: typed 404
+ok 23 - no personal plan: typed 404
+  ---
+  duration_ms: 0.205333
+  ...
+# Subtest: rejects unauthenticated reads
+ok 24 - rejects unauthenticated reads
+  ---
+  duration_ms: 0.352625
+  ...
+# Subtest: a fully auto-accepted draft leaves both modules open and assumptions active
+ok 25 - a fully auto-accepted draft leaves both modules open and assumptions active
+  ---
+  duration_ms: 1.305708
+  ...
+# Subtest: a draft the user answered end to end has no open module and no assumptions
+ok 26 - a draft the user answered end to end has no open module and no assumptions
+  ---
+  duration_ms: 0.202208
+  ...
+# Subtest: one user-answered module keeps assumptions active while the other stays open
+ok 27 - one user-answered module keeps assumptions active while the other stays open
+  ---
+  duration_ms: 0.162333
+  ...
+# Subtest: legacy answers without a provenance entry count as user answers
+ok 28 - legacy answers without a provenance entry count as user answers
+  ---
+  duration_ms: 0.074708
+  ...
+# Subtest: assumed-only answers (no user provenance) count as open, matching direct-accept semantics
+ok 29 - assumed-only answers (no user provenance) count as open, matching direct-accept semantics
+  ---
+  duration_ms: 2.231708
+  ...
+# Subtest: banner reappears once a different module becomes the next open one, even if the old dismissal is still stored
+ok 30 - banner reappears once a different module becomes the next open one, even if the old dismissal is still stored
+  ---
+  duration_ms: 0.261625
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5557.096625

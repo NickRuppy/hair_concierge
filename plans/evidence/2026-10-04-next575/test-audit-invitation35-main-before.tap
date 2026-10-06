@@ -1,0 +1,187 @@
+TAP version 13
+# Subtest: create with just a name returns the invite and its signed fragment link
+ok 1 - create with just a name returns the invite and its signed fragment link
+  ---
+  duration_ms: 3.910125
+  ...
+# Subtest: create normalises an optional e-mail and treats a blank one as none
+ok 2 - create normalises an optional e-mail and treats a blank one as none
+  ---
+  duration_ms: 0.939375
+  ...
+# Subtest: create refuses a missing name or a malformed e-mail before any write
+ok 3 - create refuses a missing name or a malformed e-mail before any write
+  ---
+  duration_ms: 1.343291
+  ...
+# Subtest: create refuses an address another current invite owns
+ok 4 - create refuses an address another current invite owns
+  ---
+  duration_ms: 0.526292
+  ...
+# Subtest: rotate bumps the version: the answer carries the NEW link, the old one no longer matches
+ok 5 - rotate bumps the version: the answer carries the NEW link, the old one no longer matches
+  ---
+  duration_ms: 0.603375
+  ...
+# Subtest: revoke runs the stamp-clearing service revoke and hands out no link
+ok 6 - revoke runs the stamp-clearing service revoke and hands out no link
+  ---
+  duration_ms: 0.618542
+  ...
+# Subtest: an unknown or already revoked invite answers 409, a bad action 400
+ok 7 - an unknown or already revoked invite answers 409, a bad action 400
+  ---
+  duration_ms: 0.514916
+  ...
+# Subtest: non-admins, signed-out visitors and a switched-off flag reach no write
+ok 8 - non-admins, signed-out visitors and a switched-off flag reach no write
+  ---
+  duration_ms: 0.388083
+  ...
+# Subtest: a missing signing secret is a 503 before any write
+ok 9 - a missing signing secret is a 503 before any write
+  ---
+  duration_ms: 0.214792
+  ...
+# Subtest: the copied link is a pure projection of (id, version) — the CLI's link, byte for byte
+ok 10 - the copied link is a pure projection of (id, version) — the CLI's link, byte for byte
+  ---
+  duration_ms: 18.865708
+  ...
+# Subtest: a cross-origin or origin-less write is refused before the admin gate and any write
+ok 11 - a cross-origin or origin-less write is refused before the admin gate and any write
+  ---
+  duration_ms: 0.357416
+  ...
+# Subtest: the discovery CLI parses its four subcommands and normalizes identity
+ok 12 - the discovery CLI parses its four subcommands and normalizes identity
+  ---
+  duration_ms: 1.038125
+  ...
+# Subtest: the production gate needs --apply, the env gate, the project confirmation and a matching URL
+ok 13 - the production gate needs --apply, the env gate, the project confirmation and a matching URL
+  ---
+  duration_ms: 0.133875
+  ...
+# Subtest: a half-gated mutation reaches no write path at all
+ok 14 - a half-gated mutation reaches no write path at all
+  ---
+  duration_ms: 0.332917
+  ...
+# Subtest: without --apply the CLI is a dry run that touches nothing
+ok 15 - without --apply the CLI is a dry run that touches nothing
+  ---
+  duration_ms: 0.181208
+  ...
+# Subtest: an unusable signing secret neither breaks a dry run nor masks the gate refusal
+ok 16 - an unusable signing secret neither breaks a dry run nor masks the gate refusal
+  ---
+  duration_ms: 0.096875
+  ...
+# Subtest: a fully gated mutation runs, and list stays a read
+ok 17 - a fully gated mutation runs, and list stays a read
+  ---
+  duration_ms: 0.635958
+  ...
+# Subtest: create prints a WhatsApp-ready German invite with the token in the fragment
+ok 18 - create prints a WhatsApp-ready German invite with the token in the fragment
+  ---
+  duration_ms: 0.78275
+  ...
+# Subtest: invite links are reproducible per token version and statuses read off the row
+ok 19 - invite links are reproducible per token version and statuses read off the row
+  ---
+  duration_ms: 0.233208
+  ...
+# Subtest: create without --email makes a name-only invite whose receipt says so
+ok 20 - create without --email makes a name-only invite whose receipt says so
+  ---
+  duration_ms: 0.363042
+  ...
+# Subtest: a discovery credential round-trips through its signature
+ok 21 - a discovery credential round-trips through its signature
+  ---
+  duration_ms: 1.087709
+  ...
+# Subtest: tampered, foreign-signed and malformed credentials are rejected
+ok 22 - tampered, foreign-signed and malformed credentials are rejected
+  ---
+  duration_ms: 0.178541
+  ...
+# Subtest: a short signing secret can neither sign nor verify
+ok 23 - a short signing secret can neither sign nor verify
+  ---
+  duration_ms: 0.2615
+  ...
+# Subtest: an unsigned payload shape is refused at projection time
+ok 24 - an unsigned payload shape is refused at projection time
+  ---
+  duration_ms: 0.063708
+  ...
+# (node:39695) ExperimentalWarning: The MockTimers API is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a signed-in-elsewhere refusal tells the participant how to get out of it
+ok 25 - a signed-in-elsewhere refusal tells the participant how to get out of it
+  ---
+  duration_ms: 9.661959
+  ...
+# Subtest: other refusals keep their own copy without the session hint
+ok 26 - other refusals keep their own copy without the session hint
+  ---
+  duration_ms: 0.505125
+  ...
+# Subtest: the invite CTA uses the coral funnel CTA, not plum
+ok 27 - the invite CTA uses the coral funnel CTA, not plum
+  ---
+  duration_ms: 0.490458
+  ...
+# Subtest: the claim response's code decides whether the session hint appears
+ok 28 - the claim response's code decides whether the session hint appears
+  ---
+  duration_ms: 0.126542
+  ...
+# Subtest: the invite always shows an editable e-mail field, prefilled when the admin entered one
+ok 29 - the invite always shows an editable e-mail field, prefilled when the admin entered one
+  ---
+  duration_ms: 0.857625
+  ...
+# Subtest: the magic-link screen names the address the link went to
+ok 30 - the magic-link screen names the address the link went to
+  ---
+  duration_ms: 0.186291
+  ...
+# Subtest: the invite page checks the address before it claims
+ok 31 - the invite page checks the address before it claims
+  ---
+  duration_ms: 0.133792
+  ...
+# Subtest: while the invite resolves, the card stands at its final size and says nothing yet
+ok 32 - while the invite resolves, the card stands at its final size and says nothing yet
+  ---
+  duration_ms: 0.630833
+  ...
+# Subtest: the ready card fades its content in
+ok 33 - the ready card fades its content in
+  ---
+  duration_ms: 0.459959
+  ...
+# Subtest: the magic-link landing keeps its card but shows its line only after 300 ms
+ok 34 - the magic-link landing keeps its card but shows its line only after 300 ms
+  ---
+  duration_ms: 0.827916
+  ...
+# Subtest: once „Wird geöffnet …“ has shown, the loading card stays for the loader minimum
+ok 35 - once „Wird geöffnet …“ has shown, the loading card stays for the loader minimum
+  ---
+  duration_ms: 0.944083
+  ...
+1..35
+# tests 35
+# suites 0
+# pass 35
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 475.275833

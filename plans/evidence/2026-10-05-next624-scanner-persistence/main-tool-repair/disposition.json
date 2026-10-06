@@ -1,0 +1,26 @@
+{
+  "originalPinsSHA256": "1ed2961886a7dbc44def2cf72d3592f09d200c2f99266b4c5ee7395e85d460e4",
+  "currentPinsSHA256": "dbfb119c5495d133879823ddd8636ca5829ccee5a2efa4619328cae28cfb6f6a",
+  "changed": {
+    "operator-proof.cjs": {
+      "before": "c49ee44a3bdf85b8a71a6087189bccdd224340c44086a850488abdda78abd2fd",
+      "after": "ccb2967f1b8ebb1cf11321f54239872cac7ff344470c56e0480c9269d54194c9"
+    },
+    "operator-pins.json": {
+      "before": "1ed2961886a7dbc44def2cf72d3592f09d200c2f99266b4c5ee7395e85d460e4",
+      "after": "dbfb119c5495d133879823ddd8636ca5829ccee5a2efa4619328cae28cfb6f6a"
+    },
+    "operator-edit.cjs": {
+      "before": "16e0205ce808a2e83cb353262d15c4ba9e7efa9cba149f420e1b0726b3548224",
+      "after": "f38903d609f7a4788ea2532c7c60f5697b936d4ee64f6b54170be8508af01ba4"
+    },
+    "operator-run-controls.cjs": {
+      "before": "f2e4c3a30b129a38f9bb45d68be7c62d4c4b17e6d0cf0fb6be3638ec013889b7",
+      "after": "343a3940f63bc7a5ba8af648c6e00e1f276ad5e4aa9b2d76d69b3b913a281320"
+    }
+  },
+  "reason": "Node native doesNotReject TAP includes nested actual Error stack before operator. Select assertion stack immediately after its operator, then require its FIRST frame; no second-frame allowance or source/test/assertion changes.",
+  "sourceWrites": 0,
+  "runtimeRuns": 0,
+  "originals": "/tmp/test-audit-scanner46-main-stack-proof-b8afrpth"
+}

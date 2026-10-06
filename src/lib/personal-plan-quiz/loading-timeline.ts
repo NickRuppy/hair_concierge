@@ -13,16 +13,3 @@ export const PERSONAL_PLAN_LOADING_STAGES = [
 ] as const
 
 export type PersonalPlanLoadingStageId = (typeof PERSONAL_PLAN_LOADING_STAGES)[number]["id"]
-
-export function getPersonalPlanLoadingProgress(
-  completedStages: readonly PersonalPlanLoadingStageId[],
-  activeProgress = 0,
-): number {
-  const completedCount = PERSONAL_PLAN_LOADING_STAGES.filter((stage) =>
-    completedStages.includes(stage.id),
-  ).length
-  const completedProgress =
-    completedCount === 0 ? 0 : PERSONAL_PLAN_LOADING_STAGES[completedCount - 1].endProgress
-  const nextLimit = PERSONAL_PLAN_LOADING_STAGES[completedCount]?.endProgress ?? 100
-  return Math.max(completedProgress, Math.min(nextLimit, Math.max(0, activeProgress)))
-}

@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: batch 9: the legacy fixture's third oil joins the first oil step — its hash moves on purpose
+ok 1 - batch 9: the legacy fixture's third oil joins the first oil step — its hash moves on purpose
+  ---
+  duration_ms: 10.251167
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 303.587625

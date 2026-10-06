@@ -1,0 +1,329 @@
+--- before/tests/personal-plan-prepare-route.test.ts
++++ cut/tests/personal-plan-prepare-route.test.ts
+@@ -53,6 +53,7 @@
+ function dependencies(overrides: Partial<PersonalPlanPrepareRouteDeps> = {}) {
+   const order: string[] = []
+   const rateCalls: Array<{ identifier: string; prefix: string }> = []
++  const rateConfigs: Array<{ prefix: string; limit: number; windowMs: number }> = []
+   const preparations: PersonalPlanPrepareArtifactInput[] = []
+   const warnings: string[] = []
+   const deps: PersonalPlanPrepareRouteDeps = {
+@@ -60,6 +61,7 @@
+     checkRateLimit: async (identifier, config) => {
+       order.push(`rate:${config.prefix}`)
+       rateCalls.push({ identifier, prefix: config.prefix })
++      rateConfigs.push({ ...config })
+       return { allowed: true }
+     },
+     retryAfterSeconds: () => 7,
+@@ -81,23 +83,10 @@
+     warnRateLimited: (scope) => warnings.push(scope),
+     ...overrides,
+   }
+-  return { deps, order, rateCalls, preparations, warnings }
++  return { deps, order, rateCalls, rateConfigs, preparations, warnings }
+ }
+ 
+-test("prepare protection has dedicated short-window journey and IP budgets", () => {
+-  assert.deepEqual(PERSONAL_PLAN_PREPARE_JOURNEY_RATE_LIMIT, {
+-    prefix: "personal-plan-prepare-journey",
+-    limit: 10,
+-    windowMs: 10_000,
+-  })
+-  assert.deepEqual(PERSONAL_PLAN_PREPARE_IP_RATE_LIMIT, {
+-    prefix: "personal-plan-prepare-ip",
+-    limit: 100,
+-    windowMs: 10_000,
+-  })
+-  assert.notEqual(PERSONAL_PLAN_PREPARE_JOURNEY_RATE_LIMIT.prefix, QUIZ_LEAD_RATE_LIMIT.prefix)
+-  assert.notEqual(PERSONAL_PLAN_PREPARE_IP_RATE_LIMIT.prefix, QUIZ_LEAD_RATE_LIMIT.prefix)
+-})
++
+ 
+ test("prepare preserves disabled and unavailable context boundaries", async () => {
+   const disabled = dependencies({ enabled: () => false })
+@@ -155,6 +144,12 @@
+   ])
+   assert.equal(fixture.preparations[0].preparationId, body.preparationId)
+   assert.match(fixture.preparations[0].claimTokenHash, /^[0-9a-f]{64}$/)
++  assert.deepEqual(fixture.rateConfigs, [
++    { prefix: "personal-plan-prepare-ip", limit: 100, windowMs: 10_000 },
++    { prefix: "personal-plan-prepare-journey", limit: 10, windowMs: 10_000 },
++  ])
++  assert.notEqual(fixture.rateConfigs[0].prefix, QUIZ_LEAD_RATE_LIMIT.prefix)
++  assert.notEqual(fixture.rateConfigs[1].prefix, QUIZ_LEAD_RATE_LIMIT.prefix)
+ })
+ 
+ test("prepare skips the journey bucket when no verified identity resolves", async () => {
+--- before/tests/personal-plan-ready-server-first.test.tsx
++++ cut/tests/personal-plan-ready-server-first.test.tsx
+@@ -96,6 +96,9 @@
+   assert.doesNotMatch(html, /lucide-loader-circle/)
+   assert.doesNotMatch(html, /Deine Zahlung/)
+   assert.doesNotMatch(html, /Bedarfsplan ansehen/)
++  assert.doesNotMatch(html, /role="progressbar"/, "non-ready header must omit the stage progressbar")
++  assert.doesNotMatch(html, /Personal-Plan-Stufen/, "non-ready header must omit retired stage labels")
++  assert.match(html, />chaarlie</, "non-ready header must retain the chaarlie wordmark")
+ })
+ 
+ test("server-first ready envelope renders the signed-off arrival screen (Variante B)", () => {
+@@ -181,6 +184,9 @@
+   assert.match(html, /Wie lang sind deine Haare aktuell?/)
+   assert.doesNotMatch(html, /Du musst nichts tun/)
+   assert.doesNotMatch(html, /Haarplan wird geprüft/)
++  assert.doesNotMatch(html, /role="progressbar"/, "non-ready header must omit the stage progressbar")
++  assert.doesNotMatch(html, /Personal-Plan-Stufen/, "non-ready header must omit retired stage labels")
++  assert.match(html, />chaarlie</, "non-ready header must retain the chaarlie wordmark")
+ })
+ 
+ test("forbidden and invalid states show support without waiting or payment claims", () => {
+@@ -204,6 +210,9 @@
+     assert.match(html, /Support kontaktieren/)
+     assert.doesNotMatch(html, /Haarplan wird geprüft/)
+     assert.doesNotMatch(html, /Zahlung/)
++    assert.doesNotMatch(html, /role="progressbar"/, "non-ready header must omit the stage progressbar")
++    assert.doesNotMatch(html, /Personal-Plan-Stufen/, "non-ready header must omit retired stage labels")
++    assert.match(html, />chaarlie</, "non-ready header must retain the chaarlie wordmark")
+   }
+ })
+ 
+@@ -230,6 +239,9 @@
+     assert.match(html, /Erneut prüfen/)
+     assert.doesNotMatch(html, /Du musst nichts tun/)
+     assert.doesNotMatch(html, /Haarplan wird geprüft/)
++    assert.doesNotMatch(html, /role="progressbar"/, "non-ready header must omit the stage progressbar")
++    assert.doesNotMatch(html, /Personal-Plan-Stufen/, "non-ready header must omit retired stage labels")
++    assert.match(html, />chaarlie</, "non-ready header must retain the chaarlie wordmark")
+   }
+ })
+ 
+@@ -245,70 +257,7 @@
+   assert.doesNotMatch(clientSource, /Zahlung bleibt sicher erfasst/)
+ })
+ 
+-test("non-ready /plan-bereit states also retire the 5-stage bar (same relic as the arrival screen, founder field test 27.08.2026)", () => {
+-  const waitingHtml = renderToStaticMarkup(
+-    React.createElement(PersonalPlanReadyClient, {
+-      leadId: "lead-legacy",
+-      initialReadiness: {
+-        status: "checking",
+-        leadId: "lead-legacy",
+-        quizSourceKind: "legacy",
+-        sourceVersion: "2026-08-12T08:00:00.000Z",
+-        missingFacts: [],
+-        initialAction: "link",
+-        funnelPackageKey: null,
+-      },
+-    }),
+-  )
+-  const missingFactHtml = renderToStaticMarkup(
+-    React.createElement(PersonalPlanReadyClient, {
+-      leadId: "lead-legacy",
+-      initialReadiness: {
+-        status: "missing_source_facts",
+-        leadId: "lead-legacy",
+-        quizSourceKind: "legacy",
+-        sourceVersion: "2026-08-12T08:00:00.000Z",
+-        initialAction: "none",
+-        funnelPackageKey: null,
+-        missingFacts: [
+-          {
+-            field: "hair_length",
+-            question: "Wie lang sind deine Haare aktuell?",
+-            helper: "Wähle die passende Länge.",
+-            options: HAIR_LENGTH_OPTIONS,
+-          },
+-        ],
+-      },
+-    }),
+-  )
+-  const supportHtml = renderToStaticMarkup(
+-    React.createElement(PersonalPlanReadyClient, {
+-      leadId: "lead-legacy",
+-      initialReadiness: {
+-        status: "forbidden",
+-        leadId: "lead-legacy",
+-        quizSourceKind: "legacy",
+-        sourceVersion: null,
+-        missingFacts: [],
+-        initialAction: "none",
+-        funnelPackageKey: null,
+-      },
+-    }),
+-  )
+-  const retryHtml = renderToStaticMarkup(
+-    React.createElement(PersonalPlanReadyClient, {
+-      leadId: "lead-legacy",
+-      initialStatus: "timeout",
+-    }),
+-  )
+-
+-  for (const html of [waitingHtml, missingFactHtml, supportHtml, retryHtml]) {
+-    assert.doesNotMatch(html, /role="progressbar"/)
+-    assert.doesNotMatch(html, /Personal-Plan-Stufen/)
+-    // Wordmark-only, centered — same fix as the arrival screen, no Back control.
+-    assert.match(html, />chaarlie</)
+-  }
+-})
++
+ 
+ test("page passes the server-first readiness envelope into the client", () => {
+   assert.match(pageSource, /loadPlanBereitInitialReadiness/)
+--- before/tests/personal-plan-result-artifact-email.test.ts
++++ cut/tests/personal-plan-result-artifact-email.test.ts
+@@ -139,23 +139,7 @@
+   )
+ })
+ 
+-test("supports a numeric personal-plan transactional message id", () => {
+-  const previous = process.env[PERSONAL_PLAN_RESULT_ARTIFACT_MESSAGE_ID_ENV]
+-  process.env[PERSONAL_PLAN_RESULT_ARTIFACT_MESSAGE_ID_ENV] = "42"
+-  try {
+-    const artifact = prepared()
+-    const payload = buildPersonalPlanResultArtifactEmailPayload({
+-      email: "mia@example.com",
+-      leadId,
+-      priorities: artifact.priorities,
+-      publicOfferModel: artifact.publicOfferModel,
+-      siteUrl: "https://chaarlie.de",
+-    })
+-    assert.equal(payload.transactionalMessageId, 42)
+-  } finally {
+-    restoreEnv(previous)
+-  }
+-})
++
+ 
+ function createStore(artifact = prepared()): PersonalPlanResultArtifactStore & {
+   sent: string[]
+--- before/tests/quiz-result-artifact-route.test.ts
++++ cut/tests/quiz-result-artifact-route.test.ts
+@@ -349,25 +349,7 @@
+   assert.equal(sends.length, 0)
+ })
+ 
+-test("skips when the result artifact email was already sent or is sending", async () => {
+-  for (const status of ["sent", "sending"] as const) {
+-    const sends: CustomerIoTransactionalEmailPayload[] = []
+-    const store = createStore({
+-      id: leadId,
+-      quiz_kind: "legacy",
+-      name: "Lea Beispiel",
+-      email: "lea@example.com",
+-      quiz_answers: completeAnswers,
+-      artifact_email_status: status,
+-    })
+-
+-    const response = await handleQuizResultArtifactRequest({ leadId }, createDeps(store, sends))
+-
+-    assert.equal(response.status, 200)
+-    assert.deepEqual(response.body, { sent: false, skipped: true })
+-    assert.equal(sends.length, 0)
+-  }
+-})
++
+ 
+ test("skips a failed result artifact email until manual retry resets it", async () => {
+   const sends: CustomerIoTransactionalEmailPayload[] = []
+--- before/tests/personal-plan/input.test.ts
++++ cut/tests/personal-plan/input.test.ts
+@@ -25,6 +25,17 @@
+   assert.deepEqual(profile.scalp.concerns, [])
+   assert.equal(profile.routine.shampooFrequency.state, "unknown")
+   assert.equal(profile.routine.heatToolUse.state, "unknown")
++  assert.deepEqual(profile.routine, {
++    currentProductLoad: { state: "unknown", reason: "current_product_load" },
++    shampooFrequency: { state: "unknown", reason: "shampoo_frequency" },
++    heatToolUse: { state: "unknown", reason: "heat_tool_use" },
++    mechanicalExposureSignals: [],
++    dryShampooBridgePreference: {
++      state: "unknown",
++      reason: "dry_shampoo_bridge_preference",
++    },
++    scalpIrritationState: { state: "unknown", reason: "scalp_irritation_detail" },
++  })
+ })
+ 
+ test("INITIAL-12: V2 concerns normalize once without inventing breakage", () => {
+@@ -55,17 +66,7 @@
+   })
+ })
+ 
+-test("malformed mandatory quiz facts return a typed incomplete input", () => {
+-  const parsed = parseSupportedPersonalPlanQuizEnvelope({
+-    ...COMPLETE_V3_PLAN_ENVELOPE,
+-    answers: { ...COMPLETE_V3_PLAN_ENVELOPE.answers, thickness: undefined },
+-  })
+ 
+-  assert.deepEqual(parsed, {
+-    ok: false,
+-    error: { code: "invalid_quiz_envelope", quizVersion: 3 },
+-  })
+-})
+ 
+ for (const field of ["thickness", "elasticResponse"] as const) {
+   test(`mask-missing-${field}: required Mask target input fails closed at the shared parser`, () => {
+--- before/tests/personal-plan/needs.test.ts
++++ cut/tests/personal-plan/needs.test.ts
+@@ -36,6 +36,12 @@
+     maximum: "weekly_3_4x",
+     current: { state: "unknown", reason: "shampoo_frequency" },
+   })
++  assert.deepEqual(assessment.heatExposure, {
++    knowledgeState: "unknown",
++    state: "unknown",
++    events: [],
++    sourceFacts: [],
++  })
+ })
+ 
+ test("INITIAL-04: oily scalp contributes one Reset point while product load stays deferred", () => {
+@@ -63,15 +69,7 @@
+   assert.ok(assessment.resetLoad.sourceFacts.includes("shampoo_frequency:weekly_2x"))
+ })
+ 
+-test("INITIAL-05: absent Hair Tools input is unknown rather than no Heat exposure", () => {
+-  const assessment = assess()
+-  assert.deepEqual(assessment.heatExposure, {
+-    knowledgeState: "unknown",
+-    state: "unknown",
+-    events: [],
+-    sourceFacts: [],
+-  })
+-})
++
+ 
+ test("lightened hair preserves the quiz fact and drives high shared repair priority", () => {
+   const assessment = assess({
+--- before/tests/personal-plan/types.test.ts
++++ cut/tests/personal-plan/types.test.ts
+@@ -1,10 +1,7 @@
+ import assert from "node:assert/strict"
+ import test from "node:test"
+ 
+-import {
+-  INITIAL_UNKNOWN_ROUTINE_CONTEXT,
+-  STAGE1_CATEGORY_ORDER,
+-} from "../../src/lib/personal-plan/types"
++import { STAGE1_CATEGORY_ORDER } from "../../src/lib/personal-plan/types"
+ 
+ test("Stage 1 keeps the approved stable category order", () => {
+   assert.deepEqual(STAGE1_CATEGORY_ORDER, [
+@@ -21,16 +18,4 @@
+   ])
+ })
+ 
+-test("the initial routine context represents later facts as typed unknowns", () => {
+-  assert.deepEqual(INITIAL_UNKNOWN_ROUTINE_CONTEXT, {
+-    currentProductLoad: { state: "unknown", reason: "current_product_load" },
+-    shampooFrequency: { state: "unknown", reason: "shampoo_frequency" },
+-    heatToolUse: { state: "unknown", reason: "heat_tool_use" },
+-    mechanicalExposureSignals: [],
+-    dryShampooBridgePreference: {
+-      state: "unknown",
+-      reason: "dry_shampoo_bridge_preference",
+-    },
+-    scalpIrritationState: { state: "unknown", reason: "scalp_irritation_detail" },
+-  })
+-})
++

@@ -1,0 +1,108 @@
+[
+  {
+    "id": "C1-launch-false",
+    "candidate": "C1",
+    "file": "src/app/api/stripe/create-checkout-session/route.ts",
+    "sourceSha256": "fc8db1376b2825ae31976913eaab2e963175e8ee3c643aea93dd3165e4027a79",
+    "mutatedSha256": "88bf87c47548a2f946108ddb1f00a2b3981632e681018255bd289cdf9a7822e0",
+    "anchor": {
+      "kind": "function",
+      "scope": "resolveCheckoutPricingCatalog",
+      "scopeSha256": "dcebb5df0eb740db793c57f1157aabf1e186c95b44b041648ac6e2802a02e014",
+      "expectedOccurrences": 1
+    },
+    "from": "if (source === \"premium_sheet\") return STANDARD_PRICING_CATALOG",
+    "to": "if (source === \"premium_sheet\") return launchPricingEnabled ? STANDARD_PRICING_CATALOG : \"personal_plan_launch_v1\"",
+    "test": {
+      "file": "tests/freemium-sheet-checkout-contract.test.ts",
+      "name": "the submitted price id equals the price the sheet rendered, both flag states"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^the submitted price id equals the price the sheet rendered, both flag states$",
+      "tests/freemium-sheet-checkout-contract.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 67,
+        "text": "assert.equal(\n      catalog,\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )",
+        "keeperSha256": "4df01926ed61cba0a502a674261d4c4dc14274446c53e3f53d00e76b447644c6",
+        "testFileSha256": "57cd08ca5255928d35b7ec719132f0d7cf33bcf4edd96759f2170d17ae30ba43"
+      },
+      "cut": {
+        "startLine": 57,
+        "text": "assert.equal(\n      catalog,\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )",
+        "keeperSha256": "4df01926ed61cba0a502a674261d4c4dc14274446c53e3f53d00e76b447644c6",
+        "testFileSha256": "2a863fd1dd1fd38ec45ea361505b1be6034b61e61cdb1521f13801c6be55a8b5"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": "standard",
+    "actualValue": "personal_plan_launch_v1",
+    "errorMessageIncludes": [
+      "premium_sheet must submit the standard catalog (launch flag: false)\n+ actual - expected\n\n+ 'personal_plan_launch_v1'\n- 'standard'",
+      "premium_sheet must submit the standard catalog (launch flag: false)"
+    ],
+    "intendedAssertion": "assert.equal(\n      catalog,\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )",
+    "limits": "Full pinned Node AssertionError message from exact proposed values, plus header/explicit fragment. Actual runtime error and FIRST assertion frame remain unproved until main runs."
+  },
+  {
+    "id": "C1-launch-true",
+    "candidate": "C1",
+    "file": "src/app/api/stripe/create-checkout-session/route.ts",
+    "sourceSha256": "fc8db1376b2825ae31976913eaab2e963175e8ee3c643aea93dd3165e4027a79",
+    "mutatedSha256": "bf538b9422cb6080571849e5e2aebe87ab12a151ecd87b67b5fd3f49fdcb0b82",
+    "anchor": {
+      "kind": "function",
+      "scope": "resolveCheckoutPricingCatalog",
+      "scopeSha256": "dcebb5df0eb740db793c57f1157aabf1e186c95b44b041648ac6e2802a02e014",
+      "expectedOccurrences": 1
+    },
+    "from": "if (source === \"premium_sheet\") return STANDARD_PRICING_CATALOG",
+    "to": "if (source === \"premium_sheet\") return launchPricingEnabled ? \"personal_plan_launch_v1\" : STANDARD_PRICING_CATALOG",
+    "test": {
+      "file": "tests/freemium-sheet-checkout-contract.test.ts",
+      "name": "the submitted price id equals the price the sheet rendered, both flag states"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^the submitted price id equals the price the sheet rendered, both flag states$",
+      "tests/freemium-sheet-checkout-contract.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 67,
+        "text": "assert.equal(\n      catalog,\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )",
+        "keeperSha256": "4df01926ed61cba0a502a674261d4c4dc14274446c53e3f53d00e76b447644c6",
+        "testFileSha256": "57cd08ca5255928d35b7ec719132f0d7cf33bcf4edd96759f2170d17ae30ba43"
+      },
+      "cut": {
+        "startLine": 57,
+        "text": "assert.equal(\n      catalog,\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )",
+        "keeperSha256": "4df01926ed61cba0a502a674261d4c4dc14274446c53e3f53d00e76b447644c6",
+        "testFileSha256": "2a863fd1dd1fd38ec45ea361505b1be6034b61e61cdb1521f13801c6be55a8b5"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": "standard",
+    "actualValue": "personal_plan_launch_v1",
+    "errorMessageIncludes": [
+      "premium_sheet must submit the standard catalog (launch flag: true)\n+ actual - expected\n\n+ 'personal_plan_launch_v1'\n- 'standard'",
+      "premium_sheet must submit the standard catalog (launch flag: true)"
+    ],
+    "intendedAssertion": "assert.equal(\n      catalog,\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )",
+    "limits": "Full pinned Node AssertionError message from exact proposed values, plus header/explicit fragment. Actual runtime error and FIRST assertion frame remain unproved until main runs."
+  }
+]

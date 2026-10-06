@@ -379,6 +379,15 @@ test("oil reversals extend the exact ready cohort to 14 without deleting unrelat
   assert.equal(third.rows.length, 1)
   assert.ok(third.rows.every(({ removed, replay }) => removed && !replay))
 
+  const returnedProductIds = [...first.rows, ...second.rows, ...third.rows].map(
+    ({ product_id }) => product_id,
+  )
+  assert.equal(returnedProductIds.length, 14)
+  assert.equal(new Set(returnedProductIds).size, 14)
+  assert.ok(!returnedProductIds.includes("c574ee6f-ad22-45c0-b936-57b847d93433"))
+  assert.ok(returnedProductIds.includes("1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf"))
+  assert.ok(!returnedProductIds.includes("4f373d4f-fef8-4434-91c7-055133d8427f"))
+
   const counts = await pg.query<{
     dispositions: number
     batches: number

@@ -1,0 +1,164 @@
+[
+  {
+    "id": "mobile1-credential-tag-lost",
+    "lane": "mobile",
+    "phase": "new",
+    "intended": "Transferred exact RPC tag assertion receives push_provider_retry, while actual in-memory stats still see credential code and remain retry1/terminal0. Fake persisted state may subsequently differ; tag assertion precedes it.",
+    "source": "src/lib/mobile/research-delivery-worker.ts",
+    "selectedTest": {
+      "file": "tests/mobile-research-delivery-worker.test.ts",
+      "name": "a fifth APNs credential fault reports the refunded retry rather than a terminal failure"
+    },
+    "originalHash": "22b92c21d4e708390a2afec1d4feb3418292c5923dc95eb510b3e7b1b51a59ce",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-mobile-mutations-new/mobile1-credential-tag-lost-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-mobile-mutations-new/mobile1-credential-tag-lost-fault.tap"
+    },
+    "restoredHash": "22b92c21d4e708390a2afec1d4feb3418292c5923dc95eb510b3e7b1b51a59ce",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-mobile-mutations-new/mobile1-credential-tag-lost-after.tap"
+    },
+    "keeperAssertionLines": [
+      269,
+      270,
+      272,
+      273,
+      274
+    ],
+    "assertionStacks": [
+      272
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "mobile1-credential-delay-too-short",
+    "lane": "mobile",
+    "phase": "new",
+    "intended": "Transferred actual RPC next-attempt delta equals300000 instead of3600000; earlier stats/state remain retry.",
+    "source": "src/lib/mobile/research-delivery-worker.ts",
+    "selectedTest": {
+      "file": "tests/mobile-research-delivery-worker.test.ts",
+      "name": "a fifth APNs credential fault reports the refunded retry rather than a terminal failure"
+    },
+    "originalHash": "22b92c21d4e708390a2afec1d4feb3418292c5923dc95eb510b3e7b1b51a59ce",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-mobile-mutations-new/mobile1-credential-delay-too-short-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-mobile-mutations-new/mobile1-credential-delay-too-short-fault.tap"
+    },
+    "restoredHash": "22b92c21d4e708390a2afec1d4feb3418292c5923dc95eb510b3e7b1b51a59ce",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-mobile-mutations-new/mobile1-credential-delay-too-short-after.tap"
+    },
+    "keeperAssertionLines": [
+      269,
+      270,
+      272,
+      273,
+      274
+    ],
+    "assertionStacks": [
+      273
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "mobile1-credential-refund-stat-counted-terminal",
+    "lane": "mobile",
+    "phase": "new",
+    "intended": "Existing keeper retry1 and terminal0 detect actual owner stats treating fifth credential attempt as terminal; preserves SQL and fake state behavior.",
+    "source": "src/lib/mobile/research-delivery-worker.ts",
+    "selectedTest": {
+      "file": "tests/mobile-research-delivery-worker.test.ts",
+      "name": "a fifth APNs credential fault reports the refunded retry rather than a terminal failure"
+    },
+    "originalHash": "22b92c21d4e708390a2afec1d4feb3418292c5923dc95eb510b3e7b1b51a59ce",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-mobile-mutations-new/mobile1-credential-refund-stat-counted-terminal-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-mobile-mutations-new/mobile1-credential-refund-stat-counted-terminal-fault.tap"
+    },
+    "restoredHash": "22b92c21d4e708390a2afec1d4feb3418292c5923dc95eb510b3e7b1b51a59ce",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-mobile-mutations-new/mobile1-credential-refund-stat-counted-terminal-after.tap"
+    },
+    "keeperAssertionLines": [
+      269,
+      270,
+      272,
+      273,
+      274
+    ],
+    "assertionStacks": [
+      269
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  }
+]

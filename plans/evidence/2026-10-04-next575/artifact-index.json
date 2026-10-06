@@ -1,0 +1,1226 @@
+[
+  {
+    "original": "/tmp/test-audit-discovery-intake-claim-before.tsx",
+    "archive": "test-audit-discovery-intake-claim-before.tsx.txt",
+    "sha256": "6de1eeb4107f4458e767362cfd459c2b1788461712780870de05e4ffdf5bca8c",
+    "bytes": 8480
+  },
+  {
+    "original": "/tmp/test-audit-discovery-intake-claim-candidates.json",
+    "archive": "test-audit-discovery-intake-claim-candidates.json",
+    "sha256": "4a969b4cfef72d3208736daa7039582de7e6c9f769d77e010564b4f48f199613",
+    "bytes": 7495
+  },
+  {
+    "original": "/tmp/test-audit-discovery-intake-claim-controls.json",
+    "archive": "test-audit-discovery-intake-claim-controls.json",
+    "sha256": "1a32161223ca42b81219d89d3d6e0a0f35f1116ccad0fe8fbdabae149026675d",
+    "bytes": 2417
+  },
+  {
+    "original": "/tmp/test-audit-discovery-intake-claim-cut.diff",
+    "archive": "test-audit-discovery-intake-claim-cut.diff",
+    "sha256": "95894c93346fa7cf23b70c6780d33c5bf1a0e4a11e41fcdb3c4425c368345c64",
+    "bytes": 1186
+  },
+  {
+    "original": "/tmp/test-audit-discovery-intake-claim-cut.tsx",
+    "archive": "test-audit-discovery-intake-claim-cut.tsx.txt",
+    "sha256": "4e5b7c6134c0c7348482349274f52401036bedaf22a8489cd795e1abedb445d2",
+    "bytes": 8186
+  },
+  {
+    "original": "/tmp/test-audit-discovery-intake-claim-layer-plan.md",
+    "archive": "test-audit-discovery-intake-claim-layer-plan.md",
+    "sha256": "b3816f1d5f13dc5bb991b5ddf7b308b386f44efad1a5c0fc8794bc4c63f90380",
+    "bytes": 9112
+  },
+  {
+    "original": "/tmp/test-audit-discovery-intake-claim-ledger.json",
+    "archive": "test-audit-discovery-intake-claim-ledger.json",
+    "sha256": "f59eda82eac2afae1969fc3302d174a36d34702d84451a3c8ed33035f95026e6",
+    "bytes": 40599
+  },
+  {
+    "original": "/tmp/test-audit-discovery-intake-claim-ledger.md",
+    "archive": "test-audit-discovery-intake-claim-ledger.md",
+    "sha256": "359e2d22c294a7b5cb398b3cefbf3ad95b4c0a44f728c2c0a1a45c47c0d3f890",
+    "bytes": 8398
+  },
+  {
+    "original": "/tmp/test-audit-discovery-intake-claim-manifest.json",
+    "archive": "test-audit-discovery-intake-claim-manifest.json",
+    "sha256": "f60c8d2b4906bdf191631266bef69f1b35298326b67e735f5501a95962622c0f",
+    "bytes": 3470
+  },
+  {
+    "original": "/tmp/test-audit-discovery-intake-claim-transfer.diff",
+    "archive": "test-audit-discovery-intake-claim-transfer.diff",
+    "sha256": "5b942c87c84f1bb0ec717661274b383e80278d30d342fe73380c816e62bcf278",
+    "bytes": 861
+  },
+  {
+    "original": "/tmp/test-audit-discovery-intake-claim-transfer.tsx",
+    "archive": "test-audit-discovery-intake-claim-transfer.tsx.txt",
+    "sha256": "356d7df6563686fd7016af742ec9972b77b98d887d8646ca5d55c110e18a8694",
+    "bytes": 8756
+  },
+  {
+    "original": "/tmp/test-audit-invitation33-main-cut.tap",
+    "archive": "test-audit-invitation33-main-cut.tap",
+    "sha256": "3f8622dcf7efebe659378b666d1a8b7e2246ba0f30b5f9e53e4114bd2b299608",
+    "bytes": 6650
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum/originals/src/app/beratung/einladung/discovery-invitation-client.tsx",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum/originals/src/app/beratung/einladung/discovery-invitation-client.tsx.txt",
+    "sha256": "4e19b7d712515d1abd2d04c8008526843c203cdc5fa15f92fbbccde531013edc",
+    "bytes": 12165
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum-after-command.json",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum-after-command.json",
+    "sha256": "0a58654fb02c92e048b49ca2f5a75eefb6a07081ff887a4460d6a1e29748e1de",
+    "bytes": 479
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum-after.tap",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum-after.tap",
+    "sha256": "18a74ca8c0f1eb56a0acf0db5bd9af8334e5c66458a35dd9caf0afa5b376eb30",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum-before-command.json",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum-before-command.json",
+    "sha256": "0a58654fb02c92e048b49ca2f5a75eefb6a07081ff887a4460d6a1e29748e1de",
+    "bytes": 479
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum-before.tap",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum-before.tap",
+    "sha256": "47f794dbaa3e5ca7bc9082459f7e563f148261408de624d212e5c38c9ad2d846",
+    "bytes": 348
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum-fault-command.json",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum-fault-command.json",
+    "sha256": "0a58654fb02c92e048b49ca2f5a75eefb6a07081ff887a4460d6a1e29748e1de",
+    "bytes": 479
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum-fault.tap",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C1-extra-plum-fault.tap",
+    "sha256": "bf7310915b962ccb032faece85c1909b2768aa1495946a96fe2093aae04bfddb",
+    "bytes": 1038
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral/originals/src/app/beratung/einladung/discovery-invitation-client.tsx",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral/originals/src/app/beratung/einladung/discovery-invitation-client.tsx.txt",
+    "sha256": "4e19b7d712515d1abd2d04c8008526843c203cdc5fa15f92fbbccde531013edc",
+    "bytes": 12165
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral-after-command.json",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral-after-command.json",
+    "sha256": "0a58654fb02c92e048b49ca2f5a75eefb6a07081ff887a4460d6a1e29748e1de",
+    "bytes": 479
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral-after.tap",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral-after.tap",
+    "sha256": "f14fafd835dd2ada868c4fa9dc688739b0200de19d4409a533ff01a5a8369d57",
+    "bytes": 348
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral-before-command.json",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral-before-command.json",
+    "sha256": "0a58654fb02c92e048b49ca2f5a75eefb6a07081ff887a4460d6a1e29748e1de",
+    "bytes": 479
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral-before.tap",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral-before.tap",
+    "sha256": "4d6f46edfebc90e94afdce736db2c01e2eaf68266831dbb1fe1033570d52de43",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral-fault-command.json",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral-fault-command.json",
+    "sha256": "0a58654fb02c92e048b49ca2f5a75eefb6a07081ff887a4460d6a1e29748e1de",
+    "bytes": 479
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral-fault.tap",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C1-no-coral-fault.tap",
+    "sha256": "7b7baea0e90c5895584c5633b639c6ca60c559d5dd900821f5a897b695b66011",
+    "bytes": 1036
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade/originals/src/app/beratung/einladung/discovery-invitation-client.tsx",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade/originals/src/app/beratung/einladung/discovery-invitation-client.tsx.txt",
+    "sha256": "4e19b7d712515d1abd2d04c8008526843c203cdc5fa15f92fbbccde531013edc",
+    "bytes": 12165
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade-after-command.json",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade-after-command.json",
+    "sha256": "0a58654fb02c92e048b49ca2f5a75eefb6a07081ff887a4460d6a1e29748e1de",
+    "bytes": 479
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade-after.tap",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade-after.tap",
+    "sha256": "5e50e2661b147da5221108f0c1bca6a778de5fd106c307a707d4d665eff34ca9",
+    "bytes": 347
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade-before-command.json",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade-before-command.json",
+    "sha256": "0a58654fb02c92e048b49ca2f5a75eefb6a07081ff887a4460d6a1e29748e1de",
+    "bytes": 479
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade-before.tap",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade-before.tap",
+    "sha256": "af4d4397a18b2370a1df234f535a057ca1c40eed828f7d0d8e70fec3364cdd82",
+    "bytes": 348
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade-fault-command.json",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade-fault-command.json",
+    "sha256": "0a58654fb02c92e048b49ca2f5a75eefb6a07081ff887a4460d6a1e29748e1de",
+    "bytes": 479
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade-fault.tap",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/C2-no-fade-fault.tap",
+    "sha256": "20dccc92032955341a28b653edd6af3215b58fe35a0108098ef4381fc9e58e4e",
+    "bytes": 4731
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/complete.json",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/complete.json",
+    "sha256": "77afc6ec4e69204efcf0d5ff15a90d72c226c66f94eb43e185cbb0da9a3342f9",
+    "bytes": 201
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-controls-transfer-2X2GlX/receipt.json",
+    "archive": "test-audit-invitation35-controls-transfer-2X2GlX/receipt.json",
+    "sha256": "89e07f7d7687f811a7e4e29fed54fe55eaf39175b5a70a3aa561a932ffd228c7",
+    "bytes": 7422
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-driver-static.json",
+    "archive": "test-audit-invitation35-driver-static.json",
+    "sha256": "912d47d9c08e3044562615b97cdd178d9ca928f96d23e6736d0b1b0249b7eb8e",
+    "bytes": 147
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-edit-cut-lX4yar/intent.json",
+    "archive": "test-audit-invitation35-edit-cut-lX4yar/intent.json",
+    "sha256": "12b455b026a32214bffe24e5f82124ad0ada0f9331bc37fe4ab604328aeeac82",
+    "bytes": 1137
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-edit-cut-lX4yar/originals/tests/discovery-admin-invites-api.test.ts",
+    "archive": "test-audit-invitation35-edit-cut-lX4yar/originals/tests/discovery-admin-invites-api.test.ts.txt",
+    "sha256": "a5151bf284f27e8684c5a16921a64943f0ae2de49c1506fc5a3043fdb355437b",
+    "bytes": 8761
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-edit-cut-lX4yar/originals/tests/discovery-cli.test.ts",
+    "archive": "test-audit-invitation35-edit-cut-lX4yar/originals/tests/discovery-cli.test.ts.txt",
+    "sha256": "a9d3333d4c6d75f32065e853f203bb49bd6c7392379a385874923b18a77287f7",
+    "bytes": 10106
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-edit-cut-lX4yar/originals/tests/discovery-enrollment-token.test.ts",
+    "archive": "test-audit-invitation35-edit-cut-lX4yar/originals/tests/discovery-enrollment-token.test.ts.txt",
+    "sha256": "c5998eb2b3da9f19d9742482b2890fe7bb26afd83be9efc9359592f1884fc3e5",
+    "bytes": 3168
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-edit-cut-lX4yar/originals/tests/discovery-invitation-card.test.tsx",
+    "archive": "test-audit-invitation35-edit-cut-lX4yar/originals/tests/discovery-invitation-card.test.tsx.txt",
+    "sha256": "356d7df6563686fd7016af742ec9972b77b98d887d8646ca5d55c110e18a8694",
+    "bytes": 8756
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-edit-cut-lX4yar/receipt.json",
+    "archive": "test-audit-invitation35-edit-cut-lX4yar/receipt.json",
+    "sha256": "b47648a3567c15b8bf5d7fac3a0c4544258523bb10f77cf66d2493e4a98840ec",
+    "bytes": 196
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-edit-transfer-xjr466/intent.json",
+    "archive": "test-audit-invitation35-edit-transfer-xjr466/intent.json",
+    "sha256": "d739071d14e0ebbb835de0b20ff4872b09af2d37fbe42d85b6fdc9cd4c053508",
+    "bytes": 1140
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-edit-transfer-xjr466/originals/tests/discovery-admin-invites-api.test.ts",
+    "archive": "test-audit-invitation35-edit-transfer-xjr466/originals/tests/discovery-admin-invites-api.test.ts.txt",
+    "sha256": "a5151bf284f27e8684c5a16921a64943f0ae2de49c1506fc5a3043fdb355437b",
+    "bytes": 8761
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-edit-transfer-xjr466/originals/tests/discovery-cli.test.ts",
+    "archive": "test-audit-invitation35-edit-transfer-xjr466/originals/tests/discovery-cli.test.ts.txt",
+    "sha256": "a9d3333d4c6d75f32065e853f203bb49bd6c7392379a385874923b18a77287f7",
+    "bytes": 10106
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-edit-transfer-xjr466/originals/tests/discovery-enrollment-token.test.ts",
+    "archive": "test-audit-invitation35-edit-transfer-xjr466/originals/tests/discovery-enrollment-token.test.ts.txt",
+    "sha256": "c5998eb2b3da9f19d9742482b2890fe7bb26afd83be9efc9359592f1884fc3e5",
+    "bytes": 3168
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-edit-transfer-xjr466/originals/tests/discovery-invitation-card.test.tsx",
+    "archive": "test-audit-invitation35-edit-transfer-xjr466/originals/tests/discovery-invitation-card.test.tsx.txt",
+    "sha256": "6de1eeb4107f4458e767362cfd459c2b1788461712780870de05e4ffdf5bca8c",
+    "bytes": 8480
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-edit-transfer-xjr466/receipt.json",
+    "archive": "test-audit-invitation35-edit-transfer-xjr466/receipt.json",
+    "sha256": "8610a8e90ce4f08ab2ab454a26b009235c7192fe9d16f889939d26ebdbfb0d98",
+    "bytes": 201
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-edit.cjs",
+    "archive": "test-audit-invitation35-edit.cjs.txt",
+    "sha256": "fe048b48f7f4d93f1b6c997af5651af21840b540ea3ceac76b19327cf67de190",
+    "bytes": 2540
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-editor-static.json",
+    "archive": "test-audit-invitation35-editor-static.json",
+    "sha256": "d4254668fb2feaebbdfa41aac9aca436da301770640a976f7e6082247630deca",
+    "bytes": 190
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-guard.cjs",
+    "archive": "test-audit-invitation35-guard.cjs.txt",
+    "sha256": "8dd842200032cfe44796f066f2bbdf12c17eccfde3a50607cc95777918b3125a",
+    "bytes": 7942
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-independent-preservation.md",
+    "archive": "test-audit-invitation35-independent-preservation.md",
+    "sha256": "5697fe95501f730ce90b035f378f3962848633b92d4263383e011ccc273405d4",
+    "bytes": 9967
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-independent-static.json",
+    "archive": "test-audit-invitation35-independent-static.json",
+    "sha256": "b304b832dda0de1d0589b8b48420f13e8e195b747af34f675a2b045dfcab38d6",
+    "bytes": 1904
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-location.json",
+    "archive": "test-audit-invitation35-location.json",
+    "sha256": "eae13ebd3867df1e47f0775937a99e4e0bfefa1f62d8396106cf37717d21a7d2",
+    "bytes": 201
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-GJxLWu/before/tests/discovery-admin-invites-api.test.ts",
+    "archive": "test-audit-invitation35-main-GJxLWu/before/tests/discovery-admin-invites-api.test.ts.txt",
+    "sha256": "a5151bf284f27e8684c5a16921a64943f0ae2de49c1506fc5a3043fdb355437b",
+    "bytes": 8761
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-GJxLWu/before/tests/discovery-cli.test.ts",
+    "archive": "test-audit-invitation35-main-GJxLWu/before/tests/discovery-cli.test.ts.txt",
+    "sha256": "a9d3333d4c6d75f32065e853f203bb49bd6c7392379a385874923b18a77287f7",
+    "bytes": 10106
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-GJxLWu/before/tests/discovery-enrollment-token.test.ts",
+    "archive": "test-audit-invitation35-main-GJxLWu/before/tests/discovery-enrollment-token.test.ts.txt",
+    "sha256": "c5998eb2b3da9f19d9742482b2890fe7bb26afd83be9efc9359592f1884fc3e5",
+    "bytes": 3168
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-GJxLWu/before/tests/discovery-invitation-card.test.tsx",
+    "archive": "test-audit-invitation35-main-GJxLWu/before/tests/discovery-invitation-card.test.tsx.txt",
+    "sha256": "6de1eeb4107f4458e767362cfd459c2b1788461712780870de05e4ffdf5bca8c",
+    "bytes": 8480
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-GJxLWu/cut/tests/discovery-admin-invites-api.test.ts",
+    "archive": "test-audit-invitation35-main-GJxLWu/cut/tests/discovery-admin-invites-api.test.ts.txt",
+    "sha256": "a5151bf284f27e8684c5a16921a64943f0ae2de49c1506fc5a3043fdb355437b",
+    "bytes": 8761
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-GJxLWu/cut/tests/discovery-cli.test.ts",
+    "archive": "test-audit-invitation35-main-GJxLWu/cut/tests/discovery-cli.test.ts.txt",
+    "sha256": "a9d3333d4c6d75f32065e853f203bb49bd6c7392379a385874923b18a77287f7",
+    "bytes": 10106
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-GJxLWu/cut/tests/discovery-enrollment-token.test.ts",
+    "archive": "test-audit-invitation35-main-GJxLWu/cut/tests/discovery-enrollment-token.test.ts.txt",
+    "sha256": "c5998eb2b3da9f19d9742482b2890fe7bb26afd83be9efc9359592f1884fc3e5",
+    "bytes": 3168
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-GJxLWu/cut/tests/discovery-invitation-card.test.tsx",
+    "archive": "test-audit-invitation35-main-GJxLWu/cut/tests/discovery-invitation-card.test.tsx.txt",
+    "sha256": "4e5b7c6134c0c7348482349274f52401036bedaf22a8489cd795e1abedb445d2",
+    "bytes": 8186
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-GJxLWu/transfer/tests/discovery-admin-invites-api.test.ts",
+    "archive": "test-audit-invitation35-main-GJxLWu/transfer/tests/discovery-admin-invites-api.test.ts.txt",
+    "sha256": "a5151bf284f27e8684c5a16921a64943f0ae2de49c1506fc5a3043fdb355437b",
+    "bytes": 8761
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-GJxLWu/transfer/tests/discovery-cli.test.ts",
+    "archive": "test-audit-invitation35-main-GJxLWu/transfer/tests/discovery-cli.test.ts.txt",
+    "sha256": "a9d3333d4c6d75f32065e853f203bb49bd6c7392379a385874923b18a77287f7",
+    "bytes": 10106
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-GJxLWu/transfer/tests/discovery-enrollment-token.test.ts",
+    "archive": "test-audit-invitation35-main-GJxLWu/transfer/tests/discovery-enrollment-token.test.ts.txt",
+    "sha256": "c5998eb2b3da9f19d9742482b2890fe7bb26afd83be9efc9359592f1884fc3e5",
+    "bytes": 3168
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-GJxLWu/transfer/tests/discovery-invitation-card.test.tsx",
+    "archive": "test-audit-invitation35-main-GJxLWu/transfer/tests/discovery-invitation-card.test.tsx.txt",
+    "sha256": "356d7df6563686fd7016af742ec9972b77b98d887d8646ca5d55c110e18a8694",
+    "bytes": 8756
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-before.tap",
+    "archive": "test-audit-invitation35-main-before.tap",
+    "sha256": "2c0e16f3df1d0e9b4ed1fbcb1a3d4e37fbbf4337ecf5597f22f8aa20707f176b",
+    "bytes": 6943
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-handback.md",
+    "archive": "test-audit-invitation35-main-handback.md",
+    "sha256": "604a861890e4ed6889b51872350dc329fda8e61a55b6a98eabcdc17a85dc8cca",
+    "bytes": 5924
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/before/tests/discovery-admin-invites-api.test.ts",
+    "archive": "test-audit-invitation35-main-imU8JS/before/tests/discovery-admin-invites-api.test.ts.txt",
+    "sha256": "a5151bf284f27e8684c5a16921a64943f0ae2de49c1506fc5a3043fdb355437b",
+    "bytes": 8761
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/before/tests/discovery-cli.test.ts",
+    "archive": "test-audit-invitation35-main-imU8JS/before/tests/discovery-cli.test.ts.txt",
+    "sha256": "a9d3333d4c6d75f32065e853f203bb49bd6c7392379a385874923b18a77287f7",
+    "bytes": 10106
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/before/tests/discovery-enrollment-token.test.ts",
+    "archive": "test-audit-invitation35-main-imU8JS/before/tests/discovery-enrollment-token.test.ts.txt",
+    "sha256": "c5998eb2b3da9f19d9742482b2890fe7bb26afd83be9efc9359592f1884fc3e5",
+    "bytes": 3168
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/before/tests/discovery-invitation-card.test.tsx",
+    "archive": "test-audit-invitation35-main-imU8JS/before/tests/discovery-invitation-card.test.tsx.txt",
+    "sha256": "6de1eeb4107f4458e767362cfd459c2b1788461712780870de05e4ffdf5bca8c",
+    "bytes": 8480
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/candidates.json",
+    "archive": "test-audit-invitation35-main-imU8JS/candidates.json",
+    "sha256": "4a969b4cfef72d3208736daa7039582de7e6c9f769d77e010564b4f48f199613",
+    "bytes": 7495
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/controls.json",
+    "archive": "test-audit-invitation35-main-imU8JS/controls.json",
+    "sha256": "b4a79c620c5ae04c40a4a8e2d33878b2b4f445fd0b654ec6999570ec249d96d4",
+    "bytes": 4174
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/cut/tests/discovery-admin-invites-api.test.ts",
+    "archive": "test-audit-invitation35-main-imU8JS/cut/tests/discovery-admin-invites-api.test.ts.txt",
+    "sha256": "a5151bf284f27e8684c5a16921a64943f0ae2de49c1506fc5a3043fdb355437b",
+    "bytes": 8761
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/cut/tests/discovery-cli.test.ts",
+    "archive": "test-audit-invitation35-main-imU8JS/cut/tests/discovery-cli.test.ts.txt",
+    "sha256": "a9d3333d4c6d75f32065e853f203bb49bd6c7392379a385874923b18a77287f7",
+    "bytes": 10106
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/cut/tests/discovery-enrollment-token.test.ts",
+    "archive": "test-audit-invitation35-main-imU8JS/cut/tests/discovery-enrollment-token.test.ts.txt",
+    "sha256": "c5998eb2b3da9f19d9742482b2890fe7bb26afd83be9efc9359592f1884fc3e5",
+    "bytes": 3168
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/cut/tests/discovery-invitation-card.test.tsx",
+    "archive": "test-audit-invitation35-main-imU8JS/cut/tests/discovery-invitation-card.test.tsx.txt",
+    "sha256": "4e5b7c6134c0c7348482349274f52401036bedaf22a8489cd795e1abedb445d2",
+    "bytes": 8186
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/cut.diff",
+    "archive": "test-audit-invitation35-main-imU8JS/cut.diff",
+    "sha256": "95894c93346fa7cf23b70c6780d33c5bf1a0e4a11e41fcdb3c4425c368345c64",
+    "bytes": 1186
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/layer-plan.md",
+    "archive": "test-audit-invitation35-main-imU8JS/layer-plan.md",
+    "sha256": "b3816f1d5f13dc5bb991b5ddf7b308b386f44efad1a5c0fc8794bc4c63f90380",
+    "bytes": 9112
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/plan.json",
+    "archive": "test-audit-invitation35-main-imU8JS/plan.json",
+    "sha256": "78bd8b073b523977c59989fa0d714e85030a331ffa54a92d3fa53ee07431b2fc",
+    "bytes": 295187
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/transfer/tests/discovery-admin-invites-api.test.ts",
+    "archive": "test-audit-invitation35-main-imU8JS/transfer/tests/discovery-admin-invites-api.test.ts.txt",
+    "sha256": "a5151bf284f27e8684c5a16921a64943f0ae2de49c1506fc5a3043fdb355437b",
+    "bytes": 8761
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/transfer/tests/discovery-cli.test.ts",
+    "archive": "test-audit-invitation35-main-imU8JS/transfer/tests/discovery-cli.test.ts.txt",
+    "sha256": "a9d3333d4c6d75f32065e853f203bb49bd6c7392379a385874923b18a77287f7",
+    "bytes": 10106
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/transfer/tests/discovery-enrollment-token.test.ts",
+    "archive": "test-audit-invitation35-main-imU8JS/transfer/tests/discovery-enrollment-token.test.ts.txt",
+    "sha256": "c5998eb2b3da9f19d9742482b2890fe7bb26afd83be9efc9359592f1884fc3e5",
+    "bytes": 3168
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/transfer/tests/discovery-invitation-card.test.tsx",
+    "archive": "test-audit-invitation35-main-imU8JS/transfer/tests/discovery-invitation-card.test.tsx.txt",
+    "sha256": "356d7df6563686fd7016af742ec9972b77b98d887d8646ca5d55c110e18a8694",
+    "bytes": 8756
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-imU8JS/transfer.diff",
+    "archive": "test-audit-invitation35-main-imU8JS/transfer.diff",
+    "sha256": "5b942c87c84f1bb0ec717661274b383e80278d30d342fe73380c816e62bcf278",
+    "bytes": 861
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-main-transfer.tap",
+    "archive": "test-audit-invitation35-main-transfer.tap",
+    "sha256": "13ebc7ec23ddef88b16a279a22011962b6ee6757cd086395806c07eac04a9321",
+    "bytes": 6934
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-prepare.cjs",
+    "archive": "test-audit-invitation35-prepare.cjs.txt",
+    "sha256": "2f32a6bc7f3ede6d3504afeced07d1402fea7bb4f0a4d187de68a10161fe9e7f",
+    "bytes": 5050
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-run-controls.cjs",
+    "archive": "test-audit-invitation35-run-controls.cjs.txt",
+    "sha256": "10e58f9802f968ded8b38378dc1daf5c18a27642b716268bb191cdbfc1ef8379",
+    "bytes": 6605
+  },
+  {
+    "original": "/tmp/test-audit-invitation35-tools-pins.json",
+    "archive": "test-audit-invitation35-tools-pins.json",
+    "sha256": "a078225df22648140ab626428c7eb48e45a0e6a8529ddefd9958a59e679a35d8",
+    "bytes": 3368
+  },
+  {
+    "original": "/tmp/test-audit-next575-formatted-cut-verification.json",
+    "archive": "test-audit-next575-formatted-cut-verification.json",
+    "sha256": "54d944105a456c046949ae9dd00cd9ecf9a48576cbf5bcd6378a847b0bf3efb8",
+    "bytes": 1583
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-C1-prospective-owner.ts",
+    "archive": "test-audit-scanner-detection-session-C1-prospective-owner.ts.txt",
+    "sha256": "9e3976f0cb7aad7f9c786fcf7dbc7180983a078af8750a6b523254d15a2b9b4c",
+    "bytes": 24502
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-C2-prospective-owner.ts",
+    "archive": "test-audit-scanner-detection-session-C2-prospective-owner.ts.txt",
+    "sha256": "a8b1ccb00d559faaec2ea04280783e2e237ce584361172b46c4faf6a7c9a9427",
+    "bytes": 24506
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-C3-prospective-owner.ts",
+    "archive": "test-audit-scanner-detection-session-C3-prospective-owner.ts.txt",
+    "sha256": "f00587b1b588cbf82ca125e27ff49552fb930fee008de81ed426f1b3bcbf5507",
+    "bytes": 24535
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-C4-prospective-owner.ts",
+    "archive": "test-audit-scanner-detection-session-C4-prospective-owner.ts.txt",
+    "sha256": "cb2950acbb323200f25484272dec950e9bd130c313faa7410f44aec1b447cc1e",
+    "bytes": 7239
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-C5-prospective-owner.ts",
+    "archive": "test-audit-scanner-detection-session-C5-prospective-owner.ts.txt",
+    "sha256": "70a0413c6d8526bce42fa3fadbbe49ff27bb4d3a9ff99b231c1855514b13addc",
+    "bytes": 29516
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-C6-prospective-owner.ts",
+    "archive": "test-audit-scanner-detection-session-C6-prospective-owner.ts.txt",
+    "sha256": "2bbae6affd118558669b7f678cf703cf027dd20903b969f64dcf745a8f5582d8",
+    "bytes": 24527
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-D1-prospective-owner.ts",
+    "archive": "test-audit-scanner-detection-session-D1-prospective-owner.ts.txt",
+    "sha256": "e4b9063b354b0a2834d2656ea9b4b860b2508b69db618ef57dd3cee6ac5fb991",
+    "bytes": 24497
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-D2-prospective-owner.ts",
+    "archive": "test-audit-scanner-detection-session-D2-prospective-owner.ts.txt",
+    "sha256": "90998e8bd81c5d9365e3fb234f77b10c477dac9337a999f539e5608f55ccda1c",
+    "bytes": 7198
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-D3-prospective-owner.ts",
+    "archive": "test-audit-scanner-detection-session-D3-prospective-owner.ts.txt",
+    "sha256": "071db0c322963942d85e587488e4c849bf45cdc699559f3ef75a226074377e44",
+    "bytes": 24510
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-apply-cut-rnyTE4/intent.json",
+    "archive": "test-audit-scanner-detection-session-apply-cut-rnyTE4/intent.json",
+    "sha256": "02c5bad473359f7975bf2c1b42d5be33aae4d46069a42bbb493b30fab2b6ca4c",
+    "bytes": 3516
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-apply-cut-rnyTE4/originals/tests/scan-detection-state.test.ts",
+    "archive": "test-audit-scanner-detection-session-apply-cut-rnyTE4/originals/tests/scan-detection-state.test.ts.txt",
+    "sha256": "25243105288867ebf0412c520f6a3c2708df886ec6db910595e5cf9531ca4519",
+    "bytes": 18556
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-apply-cut-rnyTE4/originals/tests/scan-flow-state.test.ts",
+    "archive": "test-audit-scanner-detection-session-apply-cut-rnyTE4/originals/tests/scan-flow-state.test.ts.txt",
+    "sha256": "f8f3a4cc56a21862147cf01cac568cc7fd1b7084feb60bff981ca001f0b0750a",
+    "bytes": 36902
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-apply-cut-rnyTE4/originals/tests/scan-scanner-loop.test.ts",
+    "archive": "test-audit-scanner-detection-session-apply-cut-rnyTE4/originals/tests/scan-scanner-loop.test.ts.txt",
+    "sha256": "415b34c381a9c596ae6ab7c606fa422af9c7e07faa37db6590cdde4b739b6742",
+    "bytes": 15851
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-apply-cut-rnyTE4/originals/tests/scan-scanner-session.test.ts",
+    "archive": "test-audit-scanner-detection-session-apply-cut-rnyTE4/originals/tests/scan-scanner-session.test.ts.txt",
+    "sha256": "94bc4f49335b080dbb5948569600b97ed7cb7f753f959071700d68966b635d11",
+    "bytes": 19533
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-apply-cut-rnyTE4/receipt.json",
+    "archive": "test-audit-scanner-detection-session-apply-cut-rnyTE4/receipt.json",
+    "sha256": "a4ceb358b3866a6c811abe23f702d271a70511945fcf8d71be4168309b0d9c55",
+    "bytes": 895
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-apply-transfer-4hgDFI/intent.json",
+    "archive": "test-audit-scanner-detection-session-apply-transfer-4hgDFI/intent.json",
+    "sha256": "97d78cbf9d2a8c1278455db29c026ec6bdf212b6c9112ebcfe4c265a30ceb78b",
+    "bytes": 3519
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-apply-transfer-4hgDFI/originals/tests/scan-detection-state.test.ts",
+    "archive": "test-audit-scanner-detection-session-apply-transfer-4hgDFI/originals/tests/scan-detection-state.test.ts.txt",
+    "sha256": "78a451323848138c8e0b4ed5510905ba5681da131b8a5e2d3a20b8fa5397dba8",
+    "bytes": 18497
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-apply-transfer-4hgDFI/originals/tests/scan-flow-state.test.ts",
+    "archive": "test-audit-scanner-detection-session-apply-transfer-4hgDFI/originals/tests/scan-flow-state.test.ts.txt",
+    "sha256": "c0e9cc2bdcb1e3fdc53c337c28a7c8e7dbe9bdcc7157a8a57750b589c79904da",
+    "bytes": 36723
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-apply-transfer-4hgDFI/originals/tests/scan-scanner-loop.test.ts",
+    "archive": "test-audit-scanner-detection-session-apply-transfer-4hgDFI/originals/tests/scan-scanner-loop.test.ts.txt",
+    "sha256": "86640b8ea10146d39ef37d83ac05cf68e44703c8e96e766b854d887508bdafac",
+    "bytes": 15695
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-apply-transfer-4hgDFI/originals/tests/scan-scanner-session.test.ts",
+    "archive": "test-audit-scanner-detection-session-apply-transfer-4hgDFI/originals/tests/scan-scanner-session.test.ts.txt",
+    "sha256": "32f015813d7449fe768b06aa2ff018e80ed1d7fb98e3993bf8101cb39e5eb699",
+    "bytes": 18650
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-apply-transfer-4hgDFI/receipt.json",
+    "archive": "test-audit-scanner-detection-session-apply-transfer-4hgDFI/receipt.json",
+    "sha256": "8a01a07a8e6c1de83b25ac80c1361f9fb18d73e221fbfed7129a20aeec8409ed",
+    "bytes": 908
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-build.cjs",
+    "archive": "test-audit-scanner-detection-session-build.cjs.txt",
+    "sha256": "422cce83f7525a66f90f8daf74b3e9309d837307ad7954b6e3aeb13ee1124732",
+    "bytes": 19648
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-candidates.json",
+    "archive": "test-audit-scanner-detection-session-candidates.json",
+    "sha256": "a89295c9be401042dc8f21967dd33966246f854168d861cc045caca0f6ece770",
+    "bytes": 114826
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-controls-normalized.json",
+    "archive": "test-audit-scanner-detection-session-controls-normalized.json",
+    "sha256": "f7200485743c2f2dd7575cf4b81df6a48c3ced17701027fc3eddaa12d896673b",
+    "bytes": 17385
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-controls.json",
+    "archive": "test-audit-scanner-detection-session-controls.json",
+    "sha256": "32b511701a3569d3826b3189f509ccb43d1911d88708c1b90e315d64c1b62df9",
+    "bytes": 13853
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-edit.cjs",
+    "archive": "test-audit-scanner-detection-session-edit.cjs.txt",
+    "sha256": "7c99ad90d900f3166f73ae61a7027d837b329b2f003cb4ea26667dd14f0e08a2",
+    "bytes": 3447
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-editor-pins.json",
+    "archive": "test-audit-scanner-detection-session-editor-pins.json",
+    "sha256": "872e5b3c82fa15355ae0b76b04e9c54c9bd87cc4268073b92d4d536c82add255",
+    "bytes": 38295
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-evidence.json",
+    "archive": "test-audit-scanner-detection-session-evidence.json",
+    "sha256": "fb6fcb891691f2b34613717c323d0710cf3513e12e6618e3f3fbd5fd2bc08c20",
+    "bytes": 826505
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-finalize.cjs",
+    "archive": "test-audit-scanner-detection-session-finalize.cjs.txt",
+    "sha256": "edd7c10a3d757337304e194a0257ba50c32618a7ad2f1d07f48a9f6d0f923e1e",
+    "bytes": 7483
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-fullbodies.md",
+    "archive": "test-audit-scanner-detection-session-fullbodies.md",
+    "sha256": "7f2d5b228ba91b703dfc72f8772fb3f43eed1bfd6d14db1c3148062738c7c6ff",
+    "bytes": 23471
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-guard.cjs",
+    "archive": "test-audit-scanner-detection-session-guard.cjs.txt",
+    "sha256": "cf4e156e3d3f3a22b7b25bcb81b74db7da158e05384174fcf8d646b55612bfb5",
+    "bytes": 9099
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-handoff-receipt.json",
+    "archive": "test-audit-scanner-detection-session-handoff-receipt.json",
+    "sha256": "c0c85f0ad4c3035834ab97919fc40101376e91535a69953e6655e4d109308aef",
+    "bytes": 1028
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-ledger.md",
+    "archive": "test-audit-scanner-detection-session-ledger.md",
+    "sha256": "45541450ac3b4d8399844d4115aae540e1a109aff9057271d735b36e9353f019",
+    "bytes": 35416
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-manifest.json",
+    "archive": "test-audit-scanner-detection-session-manifest.json",
+    "sha256": "470201a0c562e21c92e8624b4687bc6b47d1c8c04de28845163d33e7b8910f97",
+    "bytes": 8016
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C1/originals/src/lib/scan/scanner-session.ts",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C1/originals/src/lib/scan/scanner-session.ts.txt",
+    "sha256": "6c29563e103ef08423ec0b4591a2fc48c614af2591718ea31010cedb4fa295ed",
+    "bytes": 24502
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C1-after.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C1-after.tap",
+    "sha256": "ee86580c47e2e9f47acbc4b02f34244a77573d6460a292e660e009e0b2ee17ba",
+    "bytes": 377
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C1-before.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C1-before.tap",
+    "sha256": "8f767286c5d8e74089af6b82791874124e1bcb92fefa6d67070ab542c32d16a8",
+    "bytes": 377
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C1-fault.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C1-fault.tap",
+    "sha256": "32b152838c5b26cb2048e61bb573c09fbbcda0df73ce4541812e4ba476c2a26a",
+    "bytes": 2320
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C2/originals/src/lib/scan/scanner-session.ts",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C2/originals/src/lib/scan/scanner-session.ts.txt",
+    "sha256": "6c29563e103ef08423ec0b4591a2fc48c614af2591718ea31010cedb4fa295ed",
+    "bytes": 24502
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C2-after.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C2-after.tap",
+    "sha256": "5260cd377cec88c04800750c4f23e2249b0a2f4ccfa80123874967607bace67c",
+    "bytes": 309
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C2-before.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C2-before.tap",
+    "sha256": "3ac17dee0531a2df0a79b88f92ae83fcf9d095c690a1604132303d2b63ef5340",
+    "bytes": 307
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C2-fault.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C2-fault.tap",
+    "sha256": "4cfe9c1e8288851f8c16df9f526d060a9b152c23bca00d3b004e74710f10b91f",
+    "bytes": 1035
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C3/originals/src/lib/scan/scanner-session.ts",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C3/originals/src/lib/scan/scanner-session.ts.txt",
+    "sha256": "6c29563e103ef08423ec0b4591a2fc48c614af2591718ea31010cedb4fa295ed",
+    "bytes": 24502
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C3-after.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C3-after.tap",
+    "sha256": "29140c4f04b2bfc51cacb604408a94b7543c5644a0d4aa53a618e48543472e4c",
+    "bytes": 298
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C3-before.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C3-before.tap",
+    "sha256": "526888ea49fb9bbf208475bafa16da4a313b8ea5e867fdc56479ba3b17a15722",
+    "bytes": 299
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C3-fault.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C3-fault.tap",
+    "sha256": "f2cb95a7fa2daaa0516248174ba29aff27a7bdf8153390d3cc2314760daf8fe8",
+    "bytes": 1027
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C4/originals/src/lib/scan/scanner-loop.ts",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C4/originals/src/lib/scan/scanner-loop.ts.txt",
+    "sha256": "7fb27faa9e2edbd8bcddac03a589a90eb02f661b5441455acc38e1c0584b83a0",
+    "bytes": 7218
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C4-after.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C4-after.tap",
+    "sha256": "c4e1b1d365346327b6cec0e5c7cde36fa69ce233d6e6f89adb7d73dedab798eb",
+    "bytes": 309
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C4-before.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C4-before.tap",
+    "sha256": "368219f29191a8788b7db0cba923dbe580d70c88ea8f3d5be88406ef18580466",
+    "bytes": 309
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C4-fault.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C4-fault.tap",
+    "sha256": "7223bd628e98561d2ff583bf1cd5d79ad4cab3419f3c009170d216f653836228",
+    "bytes": 1036
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C5/originals/src/lib/scan/scan-flow-state.ts",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C5/originals/src/lib/scan/scan-flow-state.ts.txt",
+    "sha256": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "bytes": 29517
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C5-after.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C5-after.tap",
+    "sha256": "ecf7d57af03cb0089326b651472679c4fad256958abf4967d681be5b44a55f90",
+    "bytes": 390
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C5-before.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C5-before.tap",
+    "sha256": "16e73b1bda691d0c761a11bfec456242bcc8604253d6351500648f5633767414",
+    "bytes": 391
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C5-fault.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C5-fault.tap",
+    "sha256": "885b90347547a803b6d8a8bf5e0504fd8d2e17127906bc8eb8428e45a52b83b0",
+    "bytes": 1112
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C6/originals/src/lib/scan/scanner-session.ts",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C6/originals/src/lib/scan/scanner-session.ts.txt",
+    "sha256": "6c29563e103ef08423ec0b4591a2fc48c614af2591718ea31010cedb4fa295ed",
+    "bytes": 24502
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C6-after.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C6-after.tap",
+    "sha256": "aa06ee652afc27c76900265e75dafbb90f78bde8b1e70f7d0ba09443cce86a35",
+    "bytes": 423
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C6-before.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C6-before.tap",
+    "sha256": "4878680c5858afd09a4f24e657f8ad5ab299f4d28203cf841ddeaaf364d266ea",
+    "bytes": 423
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C6-fault.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/C6-fault.tap",
+    "sha256": "427dad0898ee9407a66881baaf567168f85aa43fac06273d2a4738d9608f5b35",
+    "bytes": 1157
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D1/originals/src/lib/scan/scanner-session.ts",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D1/originals/src/lib/scan/scanner-session.ts.txt",
+    "sha256": "6c29563e103ef08423ec0b4591a2fc48c614af2591718ea31010cedb4fa295ed",
+    "bytes": 24502
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D1-after.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D1-after.tap",
+    "sha256": "fbd0755f8929f9334a1f214929af187248ea077ff1145ef8877e7548a82b9e10",
+    "bytes": 323
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D1-before.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D1-before.tap",
+    "sha256": "58e165c394d3b611a971092d06753ed59fb3ed43a3180c4247178e0c0f476d89",
+    "bytes": 319
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D1-fault.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D1-fault.tap",
+    "sha256": "82652da3d1f18dd395b25bbafa5ae2088b7e3e8f0d0e26176e8e059aa7429f8e",
+    "bytes": 1101
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D2/originals/src/lib/scan/scanner-loop.ts",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D2/originals/src/lib/scan/scanner-loop.ts.txt",
+    "sha256": "7fb27faa9e2edbd8bcddac03a589a90eb02f661b5441455acc38e1c0584b83a0",
+    "bytes": 7218
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D2-after.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D2-after.tap",
+    "sha256": "38667b802fb7ea9be9d7179205d55b3d6dd3b96f5321106c3a232534c052ac61",
+    "bytes": 336
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D2-before.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D2-before.tap",
+    "sha256": "66cc7ede510fcf333043571ae813eeab82290e586ee128755c310c458be2d586",
+    "bytes": 339
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D2-fault.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D2-fault.tap",
+    "sha256": "1ee99aea4d68789aec61475874f788bb82825687bc6f2f559d3fa6f7bae4a3bb",
+    "bytes": 1277
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D3/originals/src/lib/scan/scanner-session.ts",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D3/originals/src/lib/scan/scanner-session.ts.txt",
+    "sha256": "6c29563e103ef08423ec0b4591a2fc48c614af2591718ea31010cedb4fa295ed",
+    "bytes": 24502
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D3-after.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D3-after.tap",
+    "sha256": "7346e03d752c1fe4f642c44206d6b8085b96f2729e2e0639ab625e892b644495",
+    "bytes": 344
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D3-before.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D3-before.tap",
+    "sha256": "8cd5eb8224a72a402fd1a4d1d956454804247b5557da7f3f2b2ca0237a8cfe6b",
+    "bytes": 343
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D3-fault.tap",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/D3-fault.tap",
+    "sha256": "241a6f0fbea359c42bd55f6fa64c9bf1b8d33eec8c59ba95b4f91a4164c15f2c",
+    "bytes": 1091
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/complete.json",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/complete.json",
+    "sha256": "37925e52201d759acbd3bcc913cdec78205592ea7193ab9e2af9eee74ef69966",
+    "bytes": 2563
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-mutations-transfer-yrqHDT/receipt.json",
+    "archive": "test-audit-scanner-detection-session-mutations-transfer-yrqHDT/receipt.json",
+    "sha256": "c19faa3a1271f21cb880a7d7ec602f5fa6d3299e76175efcba0cbde2363e9f5b",
+    "bytes": 54619
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-owner-plan.md",
+    "archive": "test-audit-scanner-detection-session-owner-plan.md",
+    "sha256": "d9eb2ac392bc403366c3619d1a2e54102556ba887fe4e5a68fb115853780bbba",
+    "bytes": 11597
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-owner-snapshots/.github/workflows/ci.yml",
+    "archive": "test-audit-scanner-detection-session-owner-snapshots/.github/workflows/ci.yml",
+    "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "bytes": 17598
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-owner-snapshots/package-lock.json",
+    "archive": "test-audit-scanner-detection-session-owner-snapshots/package-lock.json",
+    "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
+    "bytes": 590438
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-owner-snapshots/package.json",
+    "archive": "test-audit-scanner-detection-session-owner-snapshots/package.json",
+    "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    "bytes": 25353
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-owner-snapshots/src/app/labs/scan/scan-lab-client.tsx",
+    "archive": "test-audit-scanner-detection-session-owner-snapshots/src/app/labs/scan/scan-lab-client.tsx.txt",
+    "sha256": "9c9f8d5e8a6850a8ade4cebde8139aae5fab5fb41608f3fcbe4636db19011a49",
+    "bytes": 16515
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-owner-snapshots/src/app/scan/scan-page-client.tsx",
+    "archive": "test-audit-scanner-detection-session-owner-snapshots/src/app/scan/scan-page-client.tsx.txt",
+    "sha256": "8ce5c49efe2a9cf3454b4b52f8ddea2c0d8bfe2203ec2feaa01ff3f9b1e859d6",
+    "bytes": 5661
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-owner-snapshots/src/components/scan/scan-flow.tsx",
+    "archive": "test-audit-scanner-detection-session-owner-snapshots/src/components/scan/scan-flow.tsx.txt",
+    "sha256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "bytes": 64026
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-owner-snapshots/src/components/scan/scanner.tsx",
+    "archive": "test-audit-scanner-detection-session-owner-snapshots/src/components/scan/scanner.tsx.txt",
+    "sha256": "18966588763154b4565247ac2895299246cddfc280dd160a25f0ac2515b3aba5",
+    "bytes": 11676
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-owner-snapshots/src/components/scan/use-scanner-loop.ts",
+    "archive": "test-audit-scanner-detection-session-owner-snapshots/src/components/scan/use-scanner-loop.ts.txt",
+    "sha256": "0f9df6e695ea332c923be7af0c8467158214698beb1e31022b80dd3bb52a9a80",
+    "bytes": 36362
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-owner-snapshots/src/lib/scan/guidance.ts",
+    "archive": "test-audit-scanner-detection-session-owner-snapshots/src/lib/scan/guidance.ts.txt",
+    "sha256": "807963d407fb8aec5a657be687ee5ea4a0de16a600d145c63d9e7d11a87f8138",
+    "bytes": 3669
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-owner-snapshots/src/lib/scan/scan-flow-state.ts",
+    "archive": "test-audit-scanner-detection-session-owner-snapshots/src/lib/scan/scan-flow-state.ts.txt",
+    "sha256": "d83d211d7f00baae9b92688a94b8d17cdbe3e48046934479754e4c99e5f963d8",
+    "bytes": 29517
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-owner-snapshots/src/lib/scan/scanner-loop.ts",
+    "archive": "test-audit-scanner-detection-session-owner-snapshots/src/lib/scan/scanner-loop.ts.txt",
+    "sha256": "7fb27faa9e2edbd8bcddac03a589a90eb02f661b5441455acc38e1c0584b83a0",
+    "bytes": 7218
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-owner-snapshots/src/lib/scan/scanner-session.ts",
+    "archive": "test-audit-scanner-detection-session-owner-snapshots/src/lib/scan/scanner-session.ts.txt",
+    "sha256": "6c29563e103ef08423ec0b4591a2fc48c614af2591718ea31010cedb4fa295ed",
+    "bytes": 24502
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-owner-snapshots/src/lib/scan/triggers/trigger-rules.ts",
+    "archive": "test-audit-scanner-detection-session-owner-snapshots/src/lib/scan/triggers/trigger-rules.ts.txt",
+    "sha256": "3fd155b1aec9fe6a7cd2d2f037e6d68c1f015a5f62e31e967f217794823014f2",
+    "bytes": 9981
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-owner-snapshots/src/lib/scan/verdict-access.ts",
+    "archive": "test-audit-scanner-detection-session-owner-snapshots/src/lib/scan/verdict-access.ts.txt",
+    "sha256": "7807e27e8048b6fb8ed8cf7d7e111025ee69692e8d2171ed3496ff9659519ab2",
+    "bytes": 2828
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-owner-snapshots/tests/server-only-register.cjs",
+    "archive": "test-audit-scanner-detection-session-owner-snapshots/tests/server-only-register.cjs.txt",
+    "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+    "bytes": 391
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-pin-tools.cjs",
+    "archive": "test-audit-scanner-detection-session-pin-tools.cjs.txt",
+    "sha256": "c47d88c166cc1aa07c02db80e25d42aaee6451b4b80a8d21679a66c2a44e2e6c",
+    "bytes": 4089
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-prospective.diff",
+    "archive": "test-audit-scanner-detection-session-prospective.diff",
+    "sha256": "7e8f2789cfae2ef72aaf3a5484c38f3b35421f6548e3b080ba911d5300dcf9d7",
+    "bytes": 8484
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-readonly-preload.cjs",
+    "archive": "test-audit-scanner-detection-session-readonly-preload.cjs.txt",
+    "sha256": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "bytes": 1276
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-run-controls.cjs",
+    "archive": "test-audit-scanner-detection-session-run-controls.cjs.txt",
+    "sha256": "53328061b1d1f86d9106f18f9fb814bcf2b78cc16f4d4dff005bab85e4a6bccf",
+    "bytes": 7307
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-scan-detection-state-before.ts",
+    "archive": "test-audit-scanner-detection-session-scan-detection-state-before.ts.txt",
+    "sha256": "78a451323848138c8e0b4ed5510905ba5681da131b8a5e2d3a20b8fa5397dba8",
+    "bytes": 18497
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-scan-detection-state-cut.ts",
+    "archive": "test-audit-scanner-detection-session-scan-detection-state-cut.ts.txt",
+    "sha256": "29e30198444141775f21ab30c9a43ba3d464f103c82047e86cca247ab52ac5b7",
+    "bytes": 17729
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-scan-detection-state-transfer.ts",
+    "archive": "test-audit-scanner-detection-session-scan-detection-state-transfer.ts.txt",
+    "sha256": "25243105288867ebf0412c520f6a3c2708df886ec6db910595e5cf9531ca4519",
+    "bytes": 18556
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-scan-flow-state-before.ts",
+    "archive": "test-audit-scanner-detection-session-scan-flow-state-before.ts.txt",
+    "sha256": "c0e9cc2bdcb1e3fdc53c337c28a7c8e7dbe9bdcc7157a8a57750b589c79904da",
+    "bytes": 36723
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-scan-flow-state-cut.ts",
+    "archive": "test-audit-scanner-detection-session-scan-flow-state-cut.ts.txt",
+    "sha256": "bab06d984760e52026dec5de3de1c869489afd760d02af355bfc8d9aaa454c45",
+    "bytes": 36407
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-scan-flow-state-transfer.ts",
+    "archive": "test-audit-scanner-detection-session-scan-flow-state-transfer.ts.txt",
+    "sha256": "f8f3a4cc56a21862147cf01cac568cc7fd1b7084feb60bff981ca001f0b0750a",
+    "bytes": 36902
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-scan-scanner-loop-before.ts",
+    "archive": "test-audit-scanner-detection-session-scan-scanner-loop-before.ts.txt",
+    "sha256": "86640b8ea10146d39ef37d83ac05cf68e44703c8e96e766b854d887508bdafac",
+    "bytes": 15695
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-scan-scanner-loop-cut.ts",
+    "archive": "test-audit-scanner-detection-session-scan-scanner-loop-cut.ts.txt",
+    "sha256": "9c0b680ffc7584c966263016a1ca988d7d283d6c488d88dba5c16c9fe5ada911",
+    "bytes": 14975
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-scan-scanner-loop-transfer.ts",
+    "archive": "test-audit-scanner-detection-session-scan-scanner-loop-transfer.ts.txt",
+    "sha256": "415b34c381a9c596ae6ab7c606fa422af9c7e07faa37db6590cdde4b739b6742",
+    "bytes": 15851
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-scan-scanner-session-before.ts",
+    "archive": "test-audit-scanner-detection-session-scan-scanner-session-before.ts.txt",
+    "sha256": "32f015813d7449fe768b06aa2ff018e80ed1d7fb98e3993bf8101cb39e5eb699",
+    "bytes": 18650
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-scan-scanner-session-cut.ts",
+    "archive": "test-audit-scanner-detection-session-scan-scanner-session-cut.ts.txt",
+    "sha256": "55bdc4cf8f17ded461cb685a5d836e54de91b16627c5099651ce21228c5b1c7e",
+    "bytes": 17563
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-scan-scanner-session-transfer.ts",
+    "archive": "test-audit-scanner-detection-session-scan-scanner-session-transfer.ts.txt",
+    "sha256": "94bc4f49335b080dbb5948569600b97ed7cb7f753f959071700d68966b635d11",
+    "bytes": 19533
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-static-receipt.json",
+    "archive": "test-audit-scanner-detection-session-static-receipt.json",
+    "sha256": "553b5a0e5e606a44d1dfb66d805a88c197b4a1245a19a3dbf0b7cce37f6f3e6f",
+    "bytes": 1434
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-static-tools.cjs",
+    "archive": "test-audit-scanner-detection-session-static-tools.cjs.txt",
+    "sha256": "5c97e5d6b38d4141ce8f636d4f43840a1a0c8931bdd4fe8bfc318453b43f3583",
+    "bytes": 2387
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-tools-receipt.json",
+    "archive": "test-audit-scanner-detection-session-tools-receipt.json",
+    "sha256": "3cdf163ea68bb736699c2a598d451ad054296abec99fafb5b781c56958c49c3f",
+    "bytes": 1919
+  },
+  {
+    "original": "/tmp/test-audit-scanner-detection-session-tools.md",
+    "archive": "test-audit-scanner-detection-session-tools.md",
+    "sha256": "4871113e892cbfe3fe48be4f43d6b0b431d15b4d80d375e7d74683a688c6bdf0",
+    "bytes": 8119
+  },
+  {
+    "original": "/tmp/test-audit-scanner143-main-cut.tap",
+    "archive": "test-audit-scanner143-main-cut.tap",
+    "sha256": "7be6c450c51ab29f977b3dc49e2d3d5c36a02d8a67448825a9f9fbac6ab51234",
+    "bytes": 29826
+  },
+  {
+    "original": "/tmp/test-audit-scanner152-independent-preservation.md",
+    "archive": "test-audit-scanner152-independent-preservation.md",
+    "sha256": "5e746afa19b2110eefd5406ab7e6bb1b88872db07b63fb40d00df8da69fb8af1",
+    "bytes": 15253
+  },
+  {
+    "original": "/tmp/test-audit-scanner152-independent-static.json",
+    "archive": "test-audit-scanner152-independent-static.json",
+    "sha256": "17cdfc6d3c23d0629058ce12f3070ad139a8f225f1daa5775f0f0c3ae2728f3d",
+    "bytes": 4565
+  },
+  {
+    "original": "/tmp/test-audit-scanner152-main-before.tap",
+    "archive": "test-audit-scanner152-main-before.tap",
+    "sha256": "1c790c2cdfbc1aa33dde685df59b13d1bb8874fa0fa8ac775646182061105f6e",
+    "bytes": 31776
+  },
+  {
+    "original": "/tmp/test-audit-scanner152-main-transfer.tap",
+    "archive": "test-audit-scanner152-main-transfer.tap",
+    "sha256": "9c24bcfcd105a46b53283eaf9611a6107407992911b2d173b3113c85e001b4ae",
+    "bytes": 31770
+  }
+]

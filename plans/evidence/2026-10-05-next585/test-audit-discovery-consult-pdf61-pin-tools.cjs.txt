@@ -1,0 +1,24 @@
+'use strict'
+// Preparation only. Writes /tmp. No repository mutation, child or runtime test.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto')
+const BASE='/tmp/test-audit-discovery-consult-pdf61',ROOT='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',sha=b=>crypto.createHash('sha256').update(b).digest('hex')
+const manifest=JSON.parse(fs.readFileSync(BASE+'-manifest.json')),sourceControls=JSON.parse(fs.readFileSync(BASE+'-controls.json')),readsetJSON=JSON.parse(fs.readFileSync(BASE+'-readset.json'))
+const controls=sourceControls.map(c=>{const bytes=fs.readFileSync(ROOT+'/'+c.owner),mutated=Buffer.from(bytes.toString().replace(c.find,c.replace));return{id:c.id,file:c.owner,sourceSha256:c.ownerSha256,mutatedSha256:sha(mutated),anchor:{kind:'top-level-const',scope:'OPEN_STEP',expectedOccurrences:1},from:c.find,to:c.replace,test:{file:c.file,name:c.selectedTitle},command:['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-name-pattern=^'+c.selectedTitle+'$',c.file],oracles:Object.fromEntries(['transfer','cut'].map(phase=>[phase,{startLine:c.oracleLine[phase],text:c.oracle,testFileSha256:manifest.files.find(f=>f.file===c.file)[phase].sha256}])),intendedAssertion:'Exact printed open-step count: actual 0, expected 2; ERR_ASSERTION at selected keeper first frame',limitation:c.limitation}})
+fs.writeFileSync(BASE+'-controls-normalized.json',JSON.stringify(controls,null,2)+'\n')
+const pin=file=>({path:file,sha:fs.existsSync(file)?sha(fs.readFileSync(file)):null,realpath:fs.existsSync(file)?fs.realpathSync(file):null})
+const gitDir=path.resolve(ROOT,fs.readFileSync(ROOT+'/.git','utf8').trim().replace(/^gitdir: /,'')),commonDir=path.resolve(gitDir,fs.readFileSync(gitDir+'/commondir','utf8').trim()),branch=fs.readFileSync(gitDir+'/HEAD','utf8').trim().replace(/^ref: refs\/heads\//,'')
+if(branch!=='codex/test-audit-pruning')throw Error('Branch drift')
+const identityFiles=[ROOT+'/.git',gitDir+'/HEAD',gitDir+'/commondir',gitDir+'/gitdir',gitDir+'/config.worktree',commonDir+'/config',commonDir+'/refs/heads/'+branch,commonDir+'/packed-refs'].map(pin)
+const dependencies=[];function tree(dir){for(const d of fs.readdirSync(dir,{withFileTypes:true})){const f=path.join(dir,d.name);if(d.isDirectory())tree(f);else if(d.isFile()||d.isSymbolicLink())dependencies.push(pin(f))}}
+for(const name of['tsx','esbuild','get-tsconfig','resolve-pkg-maps','react','react-dom','zod'])tree(ROOT+'/node_modules/'+name)
+for(const d of fs.readdirSync(ROOT+'/node_modules/@esbuild',{withFileTypes:true}))if(d.isDirectory())tree(ROOT+'/node_modules/@esbuild/'+d.name)
+for(const f of['node_modules/typescript/package.json','node_modules/typescript/lib/typescript.js'])dependencies.push(pin(ROOT+'/'+f))
+const readset=readsetJSON.readset.map(r=>({file:r.file,sha:r.sha256}))
+for(const r of readset)if(sha(fs.readFileSync(ROOT+'/'+r.file))!==r.sha)throw Error('Readset drift '+r.file)
+const artifactHashes={...JSON.parse(fs.readFileSync(BASE+'-static-receipt.json')).artifacts}
+for(const suffix of['static-receipt.json','controls-normalized.json','guard.cjs','readonly-preload.cjs','pin-tools.cjs'])artifactHashes[BASE+'-'+suffix]=sha(fs.readFileSync(BASE+'-'+suffix))
+const entrypointTemplateHashes=Object.fromEntries(['edit.cjs','run-controls.cjs'].map(s=>[BASE+'-'+s,sha(fs.readFileSync(BASE+'-'+s))]))
+const pins={root:ROOT,head:manifest.expectedHead,branch,gitDir,commonDir,identityFiles,node:{version:process.version,realpath:fs.realpathSync(process.execPath),sha:sha(fs.readFileSync(process.execPath))},typescriptVersion:require(ROOT+'/node_modules/typescript').version,readset,dependencies,artifactHashes,entrypointTemplateHashes,counts:{before:61,transfer:61,cut:60},untouched:59,controls:1,lock:'/tmp/test-audit-pruning-operator-lock'}
+const bytes=JSON.stringify(pins,null,2)+'\n';fs.writeFileSync(BASE+'-editor-pins.json',bytes);const hash=sha(bytes)
+for(const suffix of['edit.cjs','run-controls.cjs']){const f=BASE+'-'+suffix,s=fs.readFileSync(f,'utf8');if(s.split('PIN_SHA_PLACEHOLDER').length!==2)throw Error('Not an unpinned template');fs.writeFileSync(f,s.replace('PIN_SHA_PLACEHOLDER',hash))}
+console.log(JSON.stringify({pinSHA:hash,sourceReadsets:readset.length,dependencyFiles:dependencies.length,identityFiles:identityFiles.length}))

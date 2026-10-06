@@ -1,0 +1,395 @@
+--- a/tests/scan-dm-mcp-client.test.ts
++++ b/tests/scan-dm-mcp-client.test.ts
+@@ -146,6 +146,19 @@
+         deadlineMs: 1000,
+       }).getProductDetails(["04001638530378"])
+       assert.equal(rows.length, 10)
++      assert.equal(rows.filter((row) => row.found === "true").length, 6)
++      assert.equal(rows.find((row) => row.gtin === "4006381333931")?.found, "false")
++      const balea = rows.find((row) => row.gtin === "4066447982695")!
++      assert.equal(balea.productName, "Shampoo Pure Frische, 300 ml")
++      assert.equal(balea.brand, "Balea")
++      assert.equal(
++        balea.productUrl,
++        "https://www.dm.de/applink/p/d/1703587/balea-shampoo-pure-frische?appPageType=productdetails&appProductId=1703587&wt_mc=dm-mcp",
++      )
++      assert.equal(
++        balea.nonFoodIngredients,
++        "Ingredients: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Panthenol, Menthol, Niacinamide, Parfum, Glycerin, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Laureth-4, Sodium Benzoate, Potassium Sorbate, Citric Acid, Sodium Hydroxide, Lactic Acid",
++      )
+       assert.deepEqual(
+         server.requests.map((r) => r.method),
+         ["initialize", "notifications/initialized", "tools/call"],
+@@ -189,33 +202,7 @@
+     reason("timeout"),
+   )
+ })
+-test(
+-  "a stalled initialized notification aborts at deadline and never issues tools/call",
+-  { timeout: 10_000 },
+-  async (t) => {
+-    t.mock.timers.enable({ apis: ["setTimeout"] })
+-    let clock = 0
+-    let notificationStarted!: () => void
+-    const ready = new Promise<void>((resolve) => {
+-      notificationStarted = resolve
+-    })
+-    const server = fakeServer({ stall: "notifications/initialized", onStall: notificationStarted })
+-    const lookup = createDmMcpClient({
+-      fetch: server.fetch,
+-      deadlineMs: 30,
+-      now: () => clock,
+-    }).getProductDetails(["4001638530378"])
+-    const rejected = assert.rejects(lookup, reason("timeout"))
+-    await ready
+-    assert.equal(server.counts().active, 1)
+-    clock = 30
+-    t.mock.timers.tick(30)
+-    await rejected
+-    assert.equal(server.counts().active, 0)
+-    assert.equal(server.counts().aborted, 1)
+-    assert.equal(server.counts().calls, 0)
+-  },
+-)
++
+ test("retry shares the original budget", async () => {
+   const server = fakeServer({ expire: 1, delays: [20, 20, 90] })
+   await assert.rejects(
+@@ -282,6 +269,27 @@
+     "OGX Argan Oil Shampoo",
+   )
+   assert.equal(rows.length, 15)
++  const ogx = rows[0]
++  assert.equal(ogx.dan, "1442074")
++  assert.equal(ogx.title, "Shampoo renewing, Argan Oil of marocco, 385 ml")
++  assert.equal(ogx.details, "")
++  assert.equal(ogx.price, "6,95 €")
++  assert.equal(
++    ogx.appLink,
++    "https://www.dm.de/applink/p/d/1442074/ogx-shampoo-renewing-argan-oil-of-marocco?appPageType=productdetails&appProductId=1442074&wt_mc=dm-mcp",
++  )
++  assert.equal(ogx.category, "Shampoo > Haarpflege")
++  assert.equal(
++    ogx.highlights,
++    "Haarshampoo, Mit marrokanischem Arganöl, Nährt und belebt das Haar, Feuchtigkeitsspendend, Mit LipiPro Shield Technologi",
++  )
++  assert.equal(ogx.alcoholFree, "true")
++  assert.equal(ogx.sulfateFree, "false")
++  assert.equal(ogx.purchasable, "true")
++  const last = rows[14]
++  assert.equal(last.gtin, "4072600282281")
++  assert.equal(last.brand, "GUHL")
++  assert.equal(last.title, "Shampoo Farbglanz Blond Faszination, 250 ml")
+   assert.equal(rows[0].gtin, "3574661799438")
+   assert.equal(rows[0].brand, "OGX")
+   assert.deepEqual(
+--- a/tests/scan-dm-toon.test.ts
++++ b/tests/scan-dm-toon.test.ts
+@@ -1,5 +1,4 @@
+ import assert from "node:assert/strict"
+-import { readFileSync } from "node:fs"
+ import test from "node:test"
+ import {
+   parseSearchToonTables,
+@@ -7,31 +6,6 @@
+   ToonParseError,
+ } from "../src/lib/scan/enrichment/toon"
+ 
+-const fixture = readFileSync(
+-  new URL("./fixtures/dm-mcp/details-all-gtins.txt", import.meta.url),
+-  "utf8",
+-)
+-const searchFixture = readFileSync(
+-  new URL("./fixtures/dm-mcp/search-ogx-argan-oil-shampoo.json", import.meta.url),
+-  "utf8",
+-)
+-test("dm probe parses all ten rows without losing identity, URLs or ingredient text", () => {
+-  const rows = parseToonTable(fixture)
+-  assert.equal(rows.length, 10)
+-  assert.equal(rows.filter((row) => row.found === "true").length, 6)
+-  assert.equal(rows.find((row) => row.gtin === "4006381333931")?.found, "false")
+-  const balea = rows.find((row) => row.gtin === "4066447982695")!
+-  assert.equal(balea.productName, "Shampoo Pure Frische, 300 ml")
+-  assert.equal(balea.brand, "Balea")
+-  assert.equal(
+-    balea.productUrl,
+-    "https://www.dm.de/applink/p/d/1703587/balea-shampoo-pure-frische?appPageType=productdetails&appProductId=1703587&wt_mc=dm-mcp",
+-  )
+-  assert.equal(
+-    balea.nonFoodIngredients,
+-    "Ingredients: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Panthenol, Menthol, Niacinamide, Parfum, Glycerin, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Laureth-4, Sodium Benzoate, Potassium Sorbate, Citric Acid, Sodium Hydroxide, Lactic Acid",
+-  )
+-})
+ test("quoted pipes, quotes, escapes, empty cells and CRLF stay intact", () => {
+   assert.deepEqual(
+     parseToonTable('[2]{a|b|c}:\r\n  "a|b"|"say \\"hi\\""|\r\n  |"line\\nnext"|["x|y";z]'),
+@@ -54,33 +28,7 @@
+   }
+   assert.deepEqual(parseToonTable("[0]{a}:"), [])
+ })
+-test("dm search probe parses all 15 rows from a name-prefixed, comma-delimited table", () => {
+-  const rows = parseSearchToonTables(searchFixture)
+-  assert.equal(rows.length, 15)
+-  const ogx = rows[0]
+-  assert.equal(ogx.gtin, "3574661799438")
+-  assert.equal(ogx.dan, "1442074")
+-  assert.equal(ogx.brand, "OGX")
+-  assert.equal(ogx.title, "Shampoo renewing, Argan Oil of marocco, 385 ml")
+-  assert.equal(ogx.details, "")
+-  assert.equal(ogx.price, "6,95 €")
+-  assert.equal(
+-    ogx.appLink,
+-    "https://www.dm.de/applink/p/d/1442074/ogx-shampoo-renewing-argan-oil-of-marocco?appPageType=productdetails&appProductId=1442074&wt_mc=dm-mcp",
+-  )
+-  assert.equal(ogx.category, "Shampoo > Haarpflege")
+-  assert.equal(
+-    ogx.highlights,
+-    "Haarshampoo, Mit marrokanischem Arganöl, Nährt und belebt das Haar, Feuchtigkeitsspendend, Mit LipiPro Shield Technologi",
+-  )
+-  assert.equal(ogx.alcoholFree, "true")
+-  assert.equal(ogx.sulfateFree, "false")
+-  assert.equal(ogx.purchasable, "true")
+-  const last = rows[14]
+-  assert.equal(last.gtin, "4072600282281")
+-  assert.equal(last.brand, "GUHL")
+-  assert.equal(last.title, "Shampoo Farbglanz Blond Faszination, 250 ml")
+-})
++
+ test("empty search result yields no rows", () => {
+   assert.deepEqual(parseSearchToonTables("[]"), [])
+ })
+--- a/tests/scan-identifier-lookup.test.ts
++++ b/tests/scan-identifier-lookup.test.ts
+@@ -42,11 +42,8 @@
+   return { client, callsByTable }
+ }
+ 
+-test("validateEanInput: valid EAN-13 passes checksum", () => {
+-  const result = validateEanInput("4006381333931")
+-  assert.deepEqual(result, { ok: true, type: "ean", value: "4006381333931" })
+-})
+ 
++
+ test("validateEanInput: valid EAN-8 passes checksum", () => {
+   // 7 digits + check digit computed with the same GS1 mod-10 algorithm.
+   const result = validateEanInput("40170725")
+@@ -143,18 +140,8 @@
+   assert.deepEqual(result, { productId: "prod-1", category: "conditioner" })
+ })
+ 
+-test("lookupCatalogProductByIdentifier: inactive-only match is a miss", async () => {
+-  const { client } = stubClient({
+-    product_identifiers: () => ({ data: [{ product_id: "prod-inactive" }], error: null }),
+-    products: () => ({ data: [], error: null }), // filtered out by is_active=true upstream
+-  })
+-  const result = await lookupCatalogProductByIdentifier(client as never, {
+-    type: "ean",
+-    value: "4006381333931",
+-  })
+-  assert.equal(result, null)
+-})
+ 
++
+ test("lookupCatalogProductByIdentifier: a discontinued product is filtered out too", async () => {
+   const seen: Array<Map<string, unknown>> = []
+   const { client } = stubClient({
+--- a/tests/scan-search-retailer-route.test.ts
++++ b/tests/scan-search-retailer-route.test.ts
+@@ -44,13 +44,7 @@
+   assert.equal(response.status, 401)
+ })
+ 
+-test("scan search-retailer: rate limited returns 429", async () => {
+-  const handler = createScanRetailerSearchRouteHandler(
+-    baseDeps({ checkRateLimit: async () => ({ allowed: false }) }),
+-  )
+-  const response = await handler(request("?q=ogx"))
+-  assert.equal(response.status, 429)
+-})
++
+ 
+ test("scan search-retailer: consumes only its own retailer bucket, never the shared scan bucket", async () => {
+   const checked: RateLimitConfig[] = []
+@@ -316,26 +310,7 @@
+   assert.equal(result.retailer.length, 0)
+ })
+ 
+-test("partitionDmSearchRows: a leading-zero-lost 11-digit gtin maps after padding", async () => {
+-  const client = stubClient({
+-    identifierRows: [{ product_id: "p2", canonical_gtin14: "00071164341469" }],
+-    productRows: [
+-      {
+-        id: "p2",
+-        name: "Repair Shampoo",
+-        brand: "HASK",
+-        category_key: "shampoo",
+-        image_url: null,
+-        sort_order: 1,
+-      },
+-    ],
+-  })
+-  const result = await partitionDmSearchRows(client, [
+-    dmRow({ gtin: "71164341469", title: "Shampoo repair + argan oil, 473 ml" }),
+-  ])
+-  assert.equal(result.catalog.length, 1)
+-  assert.equal(result.catalog[0].id, "p2")
+-})
++
+ 
+ test("partitionDmSearchRows: a bad-checksum gtin is dropped", async () => {
+   const client = stubClient()
+@@ -351,16 +326,8 @@
+   assert.deepEqual(result, { catalog: [], retailer: [] })
+ })
+ 
+-test("partitionDmSearchRows: a duplicate canonical gtin keeps the first (best-ranked) row", async () => {
+-  const client = stubClient()
+-  const result = await partitionDmSearchRows(client, [
+-    dmRow({ gtin: "3574661799438", title: "First Ranked Shampoo" }),
+-    dmRow({ gtin: "3574661799438", title: "Second Ranked Shampoo" }),
+-  ])
+-  assert.equal(result.retailer.length, 1)
+-  assert.equal(result.retailer[0].name, "First Ranked Shampoo")
+-})
+ 
++
+ test("partitionDmSearchRows: dedupe is keyed on the canonical form, not the raw string", async () => {
+   const client = stubClient()
+   // Two distinct raw spellings of the same barcode (13-digit vs. explicit 14-digit) —
+@@ -411,37 +378,8 @@
+   assert.deepEqual(result, { catalog: [], retailer: [] })
+ })
+ 
+-test("partitionDmSearchRows: an active mapped product goes to catalog via toScanSearchResult", async () => {
+-  const client = stubClient({
+-    identifierRows: [{ product_id: "p-active", canonical_gtin14: "03574661818450" }],
+-    productRows: [
+-      {
+-        id: "p-active",
+-        name: "Bond Protein Repair Shampoo",
+-        brand: "OGX",
+-        category_key: "shampoo",
+-        image_url: null,
+-        sort_order: 3,
+-      },
+-    ],
+-  })
+-  const result = await partitionDmSearchRows(client, [
+-    dmRow({ gtin: "3574661818450", title: "Shampoo Bond Protein Repair, 385 ml" }),
+-  ])
+-  assert.deepEqual(result.catalog, [
+-    {
+-      id: "p-active",
+-      name: "Bond Protein Repair Shampoo",
+-      brand: "OGX",
+-      category: "shampoo",
+-      categoryLabel: "Shampoo",
+-      imageUrl: null,
+-      productLine: null,
+-    },
+-  ])
+-  assert.equal(result.retailer.length, 0)
+-})
+ 
++
+ test("partitionDmSearchRows: an inactive/discontinued mapped product presents as dm-only", async () => {
+   const client = stubClient({
+     identifierRows: [{ product_id: "p-inactive", canonical_gtin14: "08700216212847" }],
+@@ -498,20 +436,8 @@
+   assert.deepEqual(result, { catalog: [], retailer: [] })
+ })
+ 
+-test("partitionDmSearchRows: a hair-relevant dm-only row keeps a suggested categoryLabel", async () => {
+-  const client = stubClient({ identifierRows: [] })
+-  const result = await partitionDmSearchRows(client, [
+-    dmRow({
+-      gtin: "3574661800202",
+-      title: "Conditioner Repair, 385 ml",
+-      brand: "OGX",
+-      category: "Conditioner > Haarpflege",
+-    }),
+-  ])
+-  assert.equal(result.retailer.length, 1)
+-  assert.equal(result.retailer[0].categoryLabel, "Conditioner")
+-})
+ 
++
+ test("partitionDmSearchRows: caps dm-only retailer rows at 8, preserving dm order", async () => {
+   const gtins = [
+     "9000000000001",
+@@ -568,6 +494,23 @@
+       category: "Conditioner > Haarpflege",
+     }),
+   ])
++  assert.deepEqual(result.catalog, [
++    {
++      id: "p-active",
++      name: "Bond Protein Repair Shampoo",
++      brand: "OGX",
++      category: "shampoo",
++      categoryLabel: "Shampoo",
++      imageUrl: null,
++      productLine: null,
++    },
++  ])
++  assert.equal(
++    result.retailer.some((row) => row.gtin === "3574661818450"),
++    false,
++    "mapped catalog product must not also enter the retailer lane",
++  )
++  assert.equal(result.retailer[0].categoryLabel, "Conditioner")
+   assert.equal(result.catalog.length, 1)
+   assert.equal(result.retailer.length, 1)
+   assert.deepEqual(Object.keys(result.catalog[0]).sort(), [
+--- a/tests/scan-search-route.test.ts
++++ b/tests/scan-search-route.test.ts
+@@ -173,7 +173,8 @@
+       sort_order: 1,
+     },
+   ])
+-  const { results } = await searchScanCatalog(client as never, "EINHORN")
++  const { results, truncated } = await searchScanCatalog(client as never, "EINHORN")
++  assert.equal(truncated, false)
+   assert.equal(results.length, 1)
+   assert.equal(results[0].id, "1")
+   assert.equal(results[0].categoryLabel, "Shampoo")
+@@ -202,19 +203,7 @@
+   assert.equal(results[0].id, "2")
+ })
+ 
+-test("searchScanCatalog: caps results at 8", async () => {
+-  const rows = Array.from({ length: 12 }, (_, index) => ({
+-    id: `p${index}`,
+-    name: `Shampoo ${index}`,
+-    brand: "Marke",
+-    category_key: "shampoo",
+-    image_url: null,
+-    sort_order: index,
+-  }))
+-  const { client } = stubProductsClient(rows)
+-  const { results } = await searchScanCatalog(client as never, "shampoo")
+-  assert.equal(results.length, 8)
+-})
++
+ 
+ test("searchScanCatalog: a query load error throws a stable error", async () => {
+   const { client } = stubProductsClient([], { productsError: { message: "boom" } })
+@@ -306,17 +295,4 @@
+   })
+ })
+ 
+-test("searchScanCatalog: a partial candidate page is not truncated", async () => {
+-  const { client } = stubProductsClient([
+-    {
+-      id: "1",
+-      name: "Shampoo Deluxe",
+-      brand: "Marke",
+-      category_key: "shampoo",
+-      image_url: null,
+-      sort_order: 0,
+-    },
+-  ])
+-  const { truncated } = await searchScanCatalog(client as never, "shampoo")
+-  assert.equal(truncated, false)
+-})
++

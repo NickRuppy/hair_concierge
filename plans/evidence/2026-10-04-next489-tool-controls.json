@@ -1,0 +1,552 @@
+[
+  {
+    "id": "C1-curly-signal-removed",
+    "file": "src/lib/agent/orchestrator/current-turn-context.ts",
+    "sourceSha256": "b8babd8e383fed60587d0e4c7ffd117af40b7d27a25951e34163f1eea173d869",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "extractActiveConcerns",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    add(\"hair_texture\", \"curly\", \"override\", \"lockiges Haar\")",
+    "to": "    void 0",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool-loop current frizz and tangling signals steer routine priority away from reset"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Captured current_turn_context must include hair_texture=curly.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C1-frizz-signal-removed",
+    "file": "src/lib/agent/orchestrator/current-turn-context.ts",
+    "sourceSha256": "b8babd8e383fed60587d0e4c7ffd117af40b7d27a25951e34163f1eea173d869",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "extractActiveConcerns",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    add(\"concerns\", \"frizz\", \"augment\", \"Frizz\")",
+    "to": "    void 0",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool-loop current frizz and tangling signals steer routine priority away from reset"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Captured current_turn_context must include concerns=frizz.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C1-tangling-signal-removed",
+    "file": "src/lib/agent/orchestrator/current-turn-context.ts",
+    "sourceSha256": "b8babd8e383fed60587d0e4c7ffd117af40b7d27a25951e34163f1eea173d869",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "extractActiveConcerns",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    add(\"concerns\", \"tangling\", \"augment\", \"verknotete Spitzen\")",
+    "to": "    void 0",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool-loop current frizz and tangling signals steer routine priority away from reset"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Captured current_turn_context must include concerns=tangling.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C1-false-scalp-overlay",
+    "file": "src/lib/agent/orchestrator/current-turn-context.ts",
+    "sourceSha256": "b8babd8e383fed60587d0e4c7ffd117af40b7d27a25951e34163f1eea173d869",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "extractSafetyOverlayIds",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "  return ids\n}\n\nfunction hasExplicitResetSignal",
+    "to": "  return [...ids, \"overlay:sensitive_scalp\"]\n}\n\nfunction hasExplicitResetSignal",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool-loop current frizz and tangling signals steer routine priority away from reset"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Exact safety_overlay_ids=[] rejects false positive scalp overlay, even if routine priority stays leave_in.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C2-missing-charter",
+    "file": "src/lib/agent/orchestrator/agentic-consultation-brief.ts",
+    "sourceSha256": "1c15c95af825d05caf2e5240f1d755891d934a66c91ad04fd090678406fcb7b4",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "buildAgenticConsultationBrief",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    charter: [...CHARTER],",
+    "to": "    charter: [],",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool-loop sends consultation brief before the model chooses tools"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Actual deliveredBrief.charter nonempty.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C2-missing-education",
+    "file": "src/lib/agent/orchestrator/agentic-consultation-brief.ts",
+    "sourceSha256": "1c15c95af825d05caf2e5240f1d755891d934a66c91ad04fd090678406fcb7b4",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "buildAgenticConsultationBrief",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    product_vs_education: [...PRODUCT_VS_EDUCATION],",
+    "to": "    product_vs_education: [],",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool-loop sends consultation brief before the model chooses tools"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Actual deliveredBrief.product_vs_education nonempty.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C2-missing-topic",
+    "file": "src/lib/agent/orchestrator/agentic-consultation-brief.ts",
+    "sourceSha256": "1c15c95af825d05caf2e5240f1d755891d934a66c91ad04fd090678406fcb7b4",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "deriveCandidateGuidanceIds",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "  return unique(ids)",
+    "to": "  return unique(ids).filter((id) => id !== \"topic:leave_in\")",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool-loop sends consultation brief before the model chooses tools"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Actual sent candidate_guidance contains topic:leave_in.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C2-missing-overlay",
+    "file": "src/lib/agent/orchestrator/agentic-consultation-brief.ts",
+    "sourceSha256": "1c15c95af825d05caf2e5240f1d755891d934a66c91ad04fd090678406fcb7b4",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "buildAgenticConsultationBrief",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    profile_overlays: profileOverlays.items.map(compactGuidanceItem),",
+    "to": "    profile_overlays: [],",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool-loop sends consultation brief before the model chooses tools"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Actual sent profile_overlays contains overlay:fine_hair.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C2-unbounded-guidance",
+    "file": "src/lib/agent/orchestrator/agentic-consultation-brief.ts",
+    "sourceSha256": "1c15c95af825d05caf2e5240f1d755891d934a66c91ad04fd090678406fcb7b4",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "compactGuidanceItem",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    content: item.content.trim().slice(0, MAX_GUIDANCE_CHARS),",
+    "to": "    content: item.content.trim(),",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool-loop sends consultation brief before the model chooses tools"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Existing leave-in concatenated guidance is >1200 chars; actual sent candidate bound fails. No synthetic oversized input.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C3-no-routine-playbook",
+    "file": "src/lib/agent/orchestrator/agentic-consultation-brief.ts",
+    "sourceSha256": "1c15c95af825d05caf2e5240f1d755891d934a66c91ad04fd090678406fcb7b4",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "deriveCandidateGuidanceIds",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    ids.push(\"playbook:build_or_fix_routine\")",
+    "to": "    void 0",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool loop normalizes routine basics state after build_or_fix_routine basics"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Sent candidate_guidance must include playbook:build_or_fix_routine.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C3-staging-shampoo",
+    "file": "src/lib/agent/orchestrator/agentic-consultation-brief.ts",
+    "sourceSha256": "1c15c95af825d05caf2e5240f1d755891d934a66c91ad04fd090678406fcb7b4",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "ROUTINE_STAGING",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "shampoo, conditioner, and one highest-impact extra lever.",
+    "to": "cleanser, conditioner, and one highest-impact extra lever.",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool loop normalizes routine basics state after build_or_fix_routine basics"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Corresponding exact routine_staging regex must fail, preserving each original literal staging constraint.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C3-staging-conditioner",
+    "file": "src/lib/agent/orchestrator/agentic-consultation-brief.ts",
+    "sourceSha256": "1c15c95af825d05caf2e5240f1d755891d934a66c91ad04fd090678406fcb7b4",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "ROUTINE_STAGING",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "shampoo, conditioner, and one highest-impact extra lever.",
+    "to": "shampoo, rinse, and one highest-impact extra lever.",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool loop normalizes routine basics state after build_or_fix_routine basics"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Corresponding exact routine_staging regex must fail, preserving each original literal staging constraint.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C3-staging-extra",
+    "file": "src/lib/agent/orchestrator/agentic-consultation-brief.ts",
+    "sourceSha256": "1c15c95af825d05caf2e5240f1d755891d934a66c91ad04fd090678406fcb7b4",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "ROUTINE_STAGING",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "one highest-impact extra lever.",
+    "to": "one additional option.",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool loop normalizes routine basics state after build_or_fix_routine basics"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Corresponding exact routine_staging regex must fail, preserving each original literal staging constraint.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C3-staging-goals",
+    "file": "src/lib/agent/orchestrator/agentic-consultation-brief.ts",
+    "sourceSha256": "1c15c95af825d05caf2e5240f1d755891d934a66c91ad04fd090678406fcb7b4",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "ROUTINE_STAGING",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "toward goals or problems.",
+    "to": "toward preferences.",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool loop normalizes routine basics state after build_or_fix_routine basics"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Corresponding exact routine_staging regex must fail, preserving each original literal staging constraint.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C3-routine-message-branch",
+    "file": "src/lib/agent/orchestrator/agentic-consultation-brief.ts",
+    "sourceSha256": "1c15c95af825d05caf2e5240f1d755891d934a66c91ad04fd090678406fcb7b4",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "deriveCandidateGuidanceIds",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    ROUTINE_RE.test(normalizedText) ||",
+    "to": "    false ||",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool loop normalizes routine basics state after build_or_fix_routine basics"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Message-based routine playbook must remain present with null conversationState; no state fallback masks the assertion.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C4-broad-add-prompt",
+    "file": "src/lib/agent/orchestrator/prompt.ts",
+    "sourceSha256": "a040315f02bd4e5bd0342fd21f1bd87c1686cc1735fd15813cbed373ce5b2b7e",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "AGENTIC_TOOL_LOOP_TOOL_SECTION",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "\"what else should I add?\"",
+    "to": "\"what additional choice?\"",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool-loop sends consultation brief before the model chooses tools"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Delivered systemPrompt /what else should I add/i fails.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C5-rendering-prompt",
+    "file": "src/lib/agent/orchestrator/prompt.ts",
+    "sourceSha256": "a040315f02bd4e5bd0342fd21f1bd87c1686cc1735fd15813cbed373ce5b2b7e",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "AGENTIC_TOOL_LOOP_ANSWER_SECTION",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "Struktur: kurze Einordnung, dann",
+    "to": "Struktur: Auftakt, dann",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool-loop sends consultation brief before the model chooses tools"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Delivered systemPrompt /kurze Einordnung/i fails.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C6-comparison-prompt",
+    "file": "src/lib/agent/orchestrator/prompt.ts",
+    "sourceSha256": "a040315f02bd4e5bd0342fd21f1bd87c1686cc1735fd15813cbed373ce5b2b7e",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "AGENTIC_TOOL_LOOP_TOOL_SECTION",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "mit categories[] fuer alle explizit genannten Kategorien",
+    "to": "mit categories[] fuer eine Kategorie",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool-loop sends consultation brief before the model chooses tools"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Delivered systemPrompt categories[] all explicit categories regex fails.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C2-brief-not-delivered",
+    "file": "src/lib/agent/orchestrator/run-agentic-tool-turn.ts",
+    "sourceSha256": "0b681d54fecf3f35d83873cf5c1ffc9d508a762fdbeefcc5f262f6fd9c326b5a",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "buildInitialMessages",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "        consultation_brief: consultationBrief,",
+    "to": "        consultation_brief: null,",
+    "test": {
+      "file": "tests/agentic-tool-loop.spec.ts",
+      "name": "tool-loop sends consultation brief before the model chooses tools"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Real request deliveredBrief must be present; trace still has constructed brief so this is actual transport proof.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C7-wrong-shampoo-reason",
+    "file": "src/lib/agent/tools/select-products.ts",
+    "sourceSha256": "3e06705dc6defbb7f0d1b7fe67d3c3a0f0bf3351fd5359874b71c65fc3cc0922",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "buildProductResponsePolicy",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "\"Shampoo wird prim\u00e4r \u00fcber Kopfhaut-Fokus und Haardicke entschieden.\"",
+    "to": "\"Allgemeine Produktauswahl.\"",
+    "test": {
+      "file": "tests/agent-select-products-tool.spec.ts",
+      "name": "projectSelectedProducts does not let profile length concerns veto direct shampoo picks"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Transferred /Shampoo|Kopfhaut/i policy reason assertion fails while recommend policy still passes.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C8-product-warning-dropped",
+    "file": "src/lib/agent/tools/select-products.ts",
+    "sourceSha256": "3e06705dc6defbb7f0d1b7fe67d3c3a0f0bf3351fd5359874b71c65fc3cc0922",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "projectDisplayableProduct",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    unsupported_requested_signals: unsupportedRequestedSignals,",
+    "to": "    unsupported_requested_signals: [],",
+    "test": {
+      "file": "tests/agent-select-products-tool.spec.ts",
+      "name": "projectSelectedProducts keeps unsupported color requests out of conditioner claims"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Transferred per-product exact chemical/color/no_structured triple fails; aggregate warning remains intact, proving nonredundant transfer.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C8-false-color-claim",
+    "file": "src/lib/agent/tools/select-products.ts",
+    "sourceSha256": "3e06705dc6defbb7f0d1b7fe67d3c3a0f0bf3351fd5359874b71c65fc3cc0922",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "buildConditionerSupportedProductClaims",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "function buildConditionerSupportedProductClaims(\n  meta: ConditionerRecommendationMetadata,\n): SupportedProductClaim[] {\n  return uniqueClaims([",
+    "to": "function buildConditionerSupportedProductClaims(\n  meta: ConditionerRecommendationMetadata,\n): SupportedProductClaim[] {\n  return uniqueClaims([\n    buildClaim(\"chemical_treatment\", \"colored\", \"product_spec\", \"Farbschutz\"),",
+    "test": {
+      "file": "tests/agent-select-products-tool.spec.ts",
+      "name": "projectSelectedProducts keeps unsupported color requests out of conditioner claims"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Existing retained false chemical supported-claim assertion fails.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C9-wrong-guidance",
+    "file": "src/lib/agent/tools/select-products.ts",
+    "sourceSha256": "3e06705dc6defbb7f0d1b7fe67d3c3a0f0bf3351fd5359874b71c65fc3cc0922",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "buildCategoryGuidance",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "return \"Shampoo ist f\u00fcr diese Anfrage gerade nicht der wichtigste Hebel.\"",
+    "to": "return \"Shampoo kann verwendet werden.\"",
+    "test": {
+      "file": "tests/agent-select-products-tool.spec.ts",
+      "name": "projectSelectedProducts suppresses shampoo products when the category is not recommended"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Transferred exact not-important-lever guidance regex fails.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "C9-only-empty-suppression",
+    "file": "src/lib/agent/tools/select-products.ts",
+    "sourceSha256": "3e06705dc6defbb7f0d1b7fe67d3c3a0f0bf3351fd5359874b71c65fc3cc0922",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "deriveDecision",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "    category === \"shampoo\" &&\n    categoryDecision &&\n    !categoryDecision.relevant &&",
+    "to": "    category === \"shampoo\" &&\n    products.length === 0 &&\n    categoryDecision &&\n    !categoryDecision.relevant &&",
+    "test": {
+      "file": "tests/agent-select-products-tool.spec.ts",
+      "name": "projectSelectedProducts suppresses shampoo products when the category is not recommended"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Retained populated-candidate keeper must remain not_recommended; faulty empty-only guard lets missing-info handling win. Removed empty donor would still pass.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  },
+  {
+    "id": "D1-mask-gap-copy",
+    "file": "src/lib/agent/tools/select-products.ts",
+    "sourceSha256": "3e06705dc6defbb7f0d1b7fe67d3c3a0f0bf3351fd5359874b71c65fc3cc0922",
+    "anchor": {
+      "kind": "function-or-constant",
+      "scope": "buildMaskMissingInfo",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "\"Es fehlt noch deine Protein-/Feuchtigkeitsbalance f\u00fcr die Masken-Auswahl.\"",
+    "to": "\"Es fehlt noch deine Protein-/Feuchtigkeitsbalance f\u00fcr die Conditioner-Auswahl.\"",
+    "test": {
+      "file": "tests/agent-select-products-tool.spec.ts",
+      "name": "projectSelectedProducts blocks mask products when protein balance is missing"
+    },
+    "phase": "cut",
+    "intendedAssertion": "Existing exact mask missing_info detail fails; other suppression assertions remain preserved.",
+    "sensitivityLimit": "Require native assertion failure for the intended result, not import/type/parse/provider failure; no fault executed by this lane.",
+    "staticFileOccurrences": 1,
+    "restoration": "Main only: require pinned hash and unique scope/anchor; save byte-exact original; apply one source fault; run only named native keeper; finally restore exact bytes and verify SHA256 before any next control. Never concurrent source writers."
+  }
+]

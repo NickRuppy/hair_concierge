@@ -48,18 +48,10 @@ test("findOpenScanSubmission: open submission found", async () => {
   ])
 })
 
-test("findOpenScanSubmission: no open submission is null", async () => {
-  const { client } = stubClient({ data: null, error: null })
-
-  const result = await findOpenScanSubmission(client as never, "user-1", "4006381333931")
-
-  assert.equal(result, null)
-})
-
 test("findOpenScanSubmission: queries every GTIN spelling of the same number", async () => {
   const { client, filters } = stubClient({ data: null, error: null })
 
-  await findOpenScanSubmission(client as never, "user-1", "0022796976116")
+  assert.equal(await findOpenScanSubmission(client as never, "user-1", "0022796976116"), null)
 
   assert.deepEqual(filters.get("scanned_identifier_value"), [
     "0022796976116",

@@ -1,0 +1,31 @@
+{
+  "mode": "cut",
+  "from": "before",
+  "phase": "cut",
+  "counts": {
+    "before": 14,
+    "cut": 12
+  },
+  "pinsSHA": "693f7db9ff92ae74f9541de924803d5c98322d38e9ddf3c5d9e4f7ba5ab0147f",
+  "prerequisite": {
+    "dir": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-mutations-before-eO3xTh",
+    "completionSHA": "cd78bd22e6efdbd2582a04230b0742a3aafede90e1054b71410f04f3e63e0c04",
+    "verified": 1,
+    "logFiles": 3,
+    "phase": "before"
+  },
+  "changed": [
+    "src/lib/funnel/server.ts",
+    "src/app/api/stripe/create-checkout-session/route.ts",
+    "tests/personal-plan-pricing-experiment.test.ts"
+  ],
+  "allPhaseHashes": {
+    "src/lib/funnel/server.ts": "aec7ac4e2ec1c193f1d5e8145e76e58084c0c779c04aaef16f3223e232bcd3ba",
+    "src/app/api/stripe/create-checkout-session/route.ts": "2b4d0e46ea8558bcd54b04124bf57ccf9b6d6b2eb6afe6aacb140c63c8400946",
+    "tests/personal-plan-pricing-experiment.test.ts": "bb971461b6198bbff84b75885d43c8dd492322521f74d72ad02c7065a8d0ae7f"
+  },
+  "sourceWrites": 2,
+  "testWrites": 1,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-apply-cut-ooU7Pz/originals"
+}

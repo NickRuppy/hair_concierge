@@ -1,0 +1,11 @@
+{
+  "authority": "Main reviewed exact shared config byte diff: only unrelated codex/central-profile-pr3.merge changes main to its own branch. Adopt narrow shared-config validation excluding ONLY plain-name unrelated branch sections; entire target-branch section, core, all remote sections, every other section/byte, real path and other five identity refs remain pinned. Escaped/unknown headers retained. No source/test/dependency repin or repository writes. Raw hashes preserved as diagnostic provenance.",
+  "targetBranch": "codex/test-audit-pruning",
+  "rawBefore": "fa8f253ad47c8a699de1f682fe6c4198b11441933be1bd66cfd998863bbf0986",
+  "rawCurrent": "9d462871e5b71b3f1397b33b76b4a6abf8119c52dcdeea6064d4190a6dc4bbe6",
+  "relevantSHA256": "1ffae91f2e0ffc3d2fc37c4824e9128809295f477f1ee227343aed6c41255fc3",
+  "guardDiff": {
+    "before": "  if (!fs.existsSync(pin.path) || fs.realpathSync(pin.path) !== pin.realpath || sha(fs.readFileSync(pin.path)) !== pin.sha) fail('Pinned file drift: ' + pin.path)",
+    "after": "  if (!fs.existsSync(pin.path) || fs.realpathSync(pin.path) !== pin.realpath) fail('Pinned path drift: ' + pin.path)\n  const bytes = fs.readFileSync(pin.path)\n  if (pin.sharedConfigRelevantSHA) {\n    if (pin.path !== '/Users/nick/AI_work/hair_conscierge/.git/config' || pin.sharedConfigTargetBranch !== 'codex/test-audit-pruning') fail('Config exception outside exact shared metadata')\n    const text = bytes.toString('utf8'); if (!Buffer.from(text).equals(bytes)) fail('Non-UTF8 config')\n    let keep = true; const lines = []\n    for (const line of text.match(/[^\\n]*\\n|[^\\n]+$/g) || []) {\n      if (line.startsWith('[')) {\n        const branch = line.match(/^\\[branch \"([^\"\\\\]+)\"\\]\\r?\\n?$/)\n        keep = !branch || branch[1] === pin.sharedConfigTargetBranch\n      }\n      if (keep) lines.push(line)\n    }\n    if (sha(lines.join('')) !== pin.sharedConfigRelevantSHA) fail('Relevant shared config drift')\n  } else if (sha(bytes) !== pin.sha) fail('Pinned file drift: ' + pin.path)"
+  }
+}

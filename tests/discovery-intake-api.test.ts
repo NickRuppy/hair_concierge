@@ -282,13 +282,20 @@ test("a submitted intake cannot be submitted twice", async () => {
 test("a product write clears only a standing „benutze ich nicht“, never the other products", async () => {
   const order: string[] = []
   const cleared: unknown[] = []
+  const inserted: unknown[] = []
+  const catalogReads: unknown[] = []
   const response = await createDiscoveryIntakeItemsHandler(
     baseDeps({
       clearCategory: async (input: unknown) => {
         order.push("clear")
         cleared.push(input)
       },
-      insertItem: async () => {
+      loadCatalogProductType: async (...args: unknown[]) => {
+        catalogReads.push(args)
+        return "shampoo"
+      },
+      insertItem: async (row: unknown) => {
+        inserted.push(row)
         order.push("insert")
         return storedItem
       },
@@ -298,6 +305,19 @@ test("a product write clears only a standing „benutze ich nicht“, never the 
   // The insert comes FIRST: a clear that ran first and an insert that then failed
   // would leave the category with no answer at all.
   assert.deepEqual(order, ["insert", "clear"])
+  assert.deepEqual(inserted, [
+    {
+      intake_id: ids.intake,
+      category: "shampoo",
+      source: "catalog_search",
+      brand_text: "Elvital",
+      product_name_text: "Hyaluron Pure",
+      barcode_identifier: null,
+      product_id: ids.product,
+      product_submission_id: null,
+    },
+  ])
+  assert.deepEqual(catalogReads, [])
   assert.equal(response.status, 201)
   // The response is the browser projection, not the stored row: the identity columns
   // the checklist never renders do not leave the server.
@@ -619,14 +639,6 @@ test("„benutze ich nicht“ carries no ids, so it asks the catalog nothing", a
   assert.equal(response.status, 201)
 })
 
-test("a resolved, correctly-filed product is stored exactly as before", async () => {
-  const response = await createDiscoveryIntakeItemsHandler(
-    baseDeps({ clearCategory: async () => {}, insertItem: async () => storedItem }),
-  )(itemsRequest(validCapture))
-  assert.equal(response.status, 201)
-  assert.deepEqual((await response.json()).item.id, storedItem.id)
-})
-
 test("a malformed capture is a 400 and never reaches the table", async () => {
   const deps = baseDeps({
     clearCategory: async () => {
@@ -698,21 +710,6 @@ test("one answered category is enough — the untouched ones stay unanswered, no
     baseDeps({
       loadItems: async () => [storedItem],
       clearCoexistingNone: async () => [],
-      submitIntake: async (intakeId: string) => {
-        submittedId = intakeId
-        return submittedIntake
-      },
-    }),
-  )()
-  assert.equal(response.status, 200)
-  assert.equal(submittedId, ids.intake)
-})
-
-test("the „at least one“ rule is decided from the stored rows, not from the client", async () => {
-  let submittedId: string | null = null
-  const response = await createDiscoveryIntakeSubmitHandler(
-    baseDeps({
-      loadItems: async () => everyCategory,
       submitIntake: async (intakeId: string) => {
         submittedId = intakeId
         return submittedIntake

@@ -1,0 +1,707 @@
+{
+  "receipt": {
+    "ok": true,
+    "phase": "transfer",
+    "completed": [
+      "C1-task-fresh-head",
+      "C2-root-sync",
+      "C2-finished-receipt",
+      "C3-output-absence",
+      "D1-unwanted-success-issue"
+    ],
+    "allOriginalGuardsMatch": true
+  },
+  "mainInspectedIntendedFailures": true,
+  "controls": [
+    {
+      "id": "C1-task-fresh-head",
+      "restoration": {
+        "restored": true,
+        "source": "scripts/worktree-new.mjs",
+        "originalSha256": "69013c6eec27d52a3c7307c8cf842aa0b699ff8fda54e7aebe3e615084fba476",
+        "allPinnedGuardsMatch": true
+      },
+      "before": {
+        "process": {
+          "code": 0,
+          "signal": null,
+          "spawnError": null,
+          "timeout": false,
+          "stopReason": null,
+          "dir": "/tmp/test-audit-tooling-controls-bJndKZ/C1-task-fresh-head/before",
+          "durationMs": 1697,
+          "command": {
+            "executable": "/usr/local/bin/node",
+            "argv": [
+              "--import",
+              "./tests/server-only-register.cjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-reporter=tap",
+              "--test-name-pattern=^ignores unavailable remotes unrelated to origin$",
+              "tests/worktree-new.test.ts"
+            ],
+            "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+            "timeoutMs": 90000,
+            "killGraceMs": 2000,
+            "envOverrides": {
+              "FORCE_COLOR": "0",
+              "NO_COLOR": "1"
+            },
+            "envRemoved": [
+              "NODE_V8_COVERAGE"
+            ],
+            "outputDirectory": "/tmp/test-audit-tooling-controls-bJndKZ/C1-task-fresh-head/before"
+          }
+        },
+        "verdict": {
+          "ok": true,
+          "exactSelected": 1,
+          "expected": "pass",
+          "line": null
+        },
+        "stdout": "TAP version 13\n# Subtest: ignores unavailable remotes unrelated to origin\nok 1 - ignores unavailable remotes unrelated to origin\n  ---\n  duration_ms: 1490.040084\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 1648.495791\n",
+        "stderr": ""
+      },
+      "mutant": {
+        "process": {
+          "code": 1,
+          "signal": null,
+          "spawnError": null,
+          "timeout": false,
+          "stopReason": null,
+          "dir": "/tmp/test-audit-tooling-controls-bJndKZ/C1-task-fresh-head/mutant",
+          "durationMs": 1642,
+          "command": {
+            "executable": "/usr/local/bin/node",
+            "argv": [
+              "--import",
+              "./tests/server-only-register.cjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-reporter=tap",
+              "--test-name-pattern=^ignores unavailable remotes unrelated to origin$",
+              "tests/worktree-new.test.ts"
+            ],
+            "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+            "timeoutMs": 90000,
+            "killGraceMs": 2000,
+            "envOverrides": {
+              "FORCE_COLOR": "0",
+              "NO_COLOR": "1"
+            },
+            "envRemoved": [
+              "NODE_V8_COVERAGE"
+            ],
+            "outputDirectory": "/tmp/test-audit-tooling-controls-bJndKZ/C1-task-fresh-head/mutant"
+          }
+        },
+        "verdict": {
+          "ok": true,
+          "exactSelected": 1,
+          "expected": "intended ERR_ASSERTION at pinned keeper line",
+          "line": 144
+        },
+        "stdout": "TAP version 13\n# Subtest: ignores unavailable remotes unrelated to origin\nnot ok 1 - ignores unavailable remotes unrelated to origin\n  ---\n  duration_ms: 1435.769166\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/worktree-new.test.ts:4:4803'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + '8dacc2b268e1afb5b4232036b2cdc9cc3df2e566'\n    - 'fdf8b4a6b47ef058bee851d24391733e43f76a41'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 'fdf8b4a6b47ef058bee851d24391733e43f76a41'\n  actual: '8dacc2b268e1afb5b4232036b2cdc9cc3df2e566'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/worktree-new.test.ts:144:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 1593.83825\n",
+        "stderr": ""
+      },
+      "after": {
+        "process": {
+          "code": 0,
+          "signal": null,
+          "spawnError": null,
+          "timeout": false,
+          "stopReason": null,
+          "dir": "/tmp/test-audit-tooling-controls-bJndKZ/C1-task-fresh-head/after",
+          "durationMs": 1650,
+          "command": {
+            "executable": "/usr/local/bin/node",
+            "argv": [
+              "--import",
+              "./tests/server-only-register.cjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-reporter=tap",
+              "--test-name-pattern=^ignores unavailable remotes unrelated to origin$",
+              "tests/worktree-new.test.ts"
+            ],
+            "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+            "timeoutMs": 90000,
+            "killGraceMs": 2000,
+            "envOverrides": {
+              "FORCE_COLOR": "0",
+              "NO_COLOR": "1"
+            },
+            "envRemoved": [
+              "NODE_V8_COVERAGE"
+            ],
+            "outputDirectory": "/tmp/test-audit-tooling-controls-bJndKZ/C1-task-fresh-head/after"
+          }
+        },
+        "verdict": {
+          "ok": true,
+          "exactSelected": 1,
+          "expected": "pass",
+          "line": null
+        },
+        "stdout": "TAP version 13\n# Subtest: ignores unavailable remotes unrelated to origin\nok 1 - ignores unavailable remotes unrelated to origin\n  ---\n  duration_ms: 1440.331958\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 1603.328208\n",
+        "stderr": ""
+      }
+    },
+    {
+      "id": "C2-root-sync",
+      "restoration": {
+        "restored": true,
+        "source": "scripts/worktree-finish.mjs",
+        "originalSha256": "0afa221d109dd08b3557c8050e2e5ca16a01092b867a0fb97fbbe267503f383e",
+        "allPinnedGuardsMatch": true
+      },
+      "before": {
+        "process": {
+          "code": 0,
+          "signal": null,
+          "spawnError": null,
+          "timeout": false,
+          "stopReason": null,
+          "dir": "/tmp/test-audit-tooling-controls-bJndKZ/C2-root-sync/before",
+          "durationMs": 3635,
+          "command": {
+            "executable": "/usr/local/bin/node",
+            "argv": [
+              "--import",
+              "./tests/server-only-register.cjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-reporter=tap",
+              "--test-name-pattern=^an unrelated detached worktree is preserved without blocking exact cleanup$",
+              "tests/worktree-finish.test.ts"
+            ],
+            "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+            "timeoutMs": 90000,
+            "killGraceMs": 2000,
+            "envOverrides": {
+              "FORCE_COLOR": "0",
+              "NO_COLOR": "1"
+            },
+            "envRemoved": [
+              "NODE_V8_COVERAGE"
+            ],
+            "outputDirectory": "/tmp/test-audit-tooling-controls-bJndKZ/C2-root-sync/before"
+          }
+        },
+        "verdict": {
+          "ok": true,
+          "exactSelected": 1,
+          "expected": "pass",
+          "line": null
+        },
+        "stdout": "TAP version 13\n# Subtest: an unrelated detached worktree is preserved without blocking exact cleanup\nok 1 - an unrelated detached worktree is preserved without blocking exact cleanup\n  ---\n  duration_ms: 3427.598833\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 3588.398\n",
+        "stderr": ""
+      },
+      "mutant": {
+        "process": {
+          "code": 1,
+          "signal": null,
+          "spawnError": null,
+          "timeout": false,
+          "stopReason": null,
+          "dir": "/tmp/test-audit-tooling-controls-bJndKZ/C2-root-sync/mutant",
+          "durationMs": 3524,
+          "command": {
+            "executable": "/usr/local/bin/node",
+            "argv": [
+              "--import",
+              "./tests/server-only-register.cjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-reporter=tap",
+              "--test-name-pattern=^an unrelated detached worktree is preserved without blocking exact cleanup$",
+              "tests/worktree-finish.test.ts"
+            ],
+            "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+            "timeoutMs": 90000,
+            "killGraceMs": 2000,
+            "envOverrides": {
+              "FORCE_COLOR": "0",
+              "NO_COLOR": "1"
+            },
+            "envRemoved": [
+              "NODE_V8_COVERAGE"
+            ],
+            "outputDirectory": "/tmp/test-audit-tooling-controls-bJndKZ/C2-root-sync/mutant"
+          }
+        },
+        "verdict": {
+          "ok": true,
+          "exactSelected": 1,
+          "expected": "intended ERR_ASSERTION at pinned keeper line",
+          "line": 418
+        },
+        "stdout": "TAP version 13\n# Subtest: an unrelated detached worktree is preserved without blocking exact cleanup\nnot ok 1 - an unrelated detached worktree is preserved without blocking exact cleanup\n  ---\n  duration_ms: 3264.53875\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/worktree-finish.test.ts:17:8792'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + '089e2d95b2b7aa249cfd1f7561ca21339db7f43a'\n    - 'ef068a237445e00848011b32ba69b16234f7e044'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 'ef068a237445e00848011b32ba69b16234f7e044'\n  actual: '089e2d95b2b7aa249cfd1f7561ca21339db7f43a'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/worktree-finish.test.ts:418:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 3457.756834\n",
+        "stderr": ""
+      },
+      "after": {
+        "process": {
+          "code": 0,
+          "signal": null,
+          "spawnError": null,
+          "timeout": false,
+          "stopReason": null,
+          "dir": "/tmp/test-audit-tooling-controls-bJndKZ/C2-root-sync/after",
+          "durationMs": 3516,
+          "command": {
+            "executable": "/usr/local/bin/node",
+            "argv": [
+              "--import",
+              "./tests/server-only-register.cjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-reporter=tap",
+              "--test-name-pattern=^an unrelated detached worktree is preserved without blocking exact cleanup$",
+              "tests/worktree-finish.test.ts"
+            ],
+            "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+            "timeoutMs": 90000,
+            "killGraceMs": 2000,
+            "envOverrides": {
+              "FORCE_COLOR": "0",
+              "NO_COLOR": "1"
+            },
+            "envRemoved": [
+              "NODE_V8_COVERAGE"
+            ],
+            "outputDirectory": "/tmp/test-audit-tooling-controls-bJndKZ/C2-root-sync/after"
+          }
+        },
+        "verdict": {
+          "ok": true,
+          "exactSelected": 1,
+          "expected": "pass",
+          "line": null
+        },
+        "stdout": "TAP version 13\n# Subtest: an unrelated detached worktree is preserved without blocking exact cleanup\nok 1 - an unrelated detached worktree is preserved without blocking exact cleanup\n  ---\n  duration_ms: 3281.579583\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 3450.706958\n",
+        "stderr": ""
+      }
+    },
+    {
+      "id": "C2-finished-receipt",
+      "restoration": {
+        "restored": true,
+        "source": "scripts/worktree-finish.mjs",
+        "originalSha256": "0afa221d109dd08b3557c8050e2e5ca16a01092b867a0fb97fbbe267503f383e",
+        "allPinnedGuardsMatch": true
+      },
+      "before": {
+        "process": {
+          "code": 0,
+          "signal": null,
+          "spawnError": null,
+          "timeout": false,
+          "stopReason": null,
+          "dir": "/tmp/test-audit-tooling-controls-bJndKZ/C2-finished-receipt/before",
+          "durationMs": 3499,
+          "command": {
+            "executable": "/usr/local/bin/node",
+            "argv": [
+              "--import",
+              "./tests/server-only-register.cjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-reporter=tap",
+              "--test-name-pattern=^an unrelated detached worktree is preserved without blocking exact cleanup$",
+              "tests/worktree-finish.test.ts"
+            ],
+            "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+            "timeoutMs": 90000,
+            "killGraceMs": 2000,
+            "envOverrides": {
+              "FORCE_COLOR": "0",
+              "NO_COLOR": "1"
+            },
+            "envRemoved": [
+              "NODE_V8_COVERAGE"
+            ],
+            "outputDirectory": "/tmp/test-audit-tooling-controls-bJndKZ/C2-finished-receipt/before"
+          }
+        },
+        "verdict": {
+          "ok": true,
+          "exactSelected": 1,
+          "expected": "pass",
+          "line": null
+        },
+        "stdout": "TAP version 13\n# Subtest: an unrelated detached worktree is preserved without blocking exact cleanup\nok 1 - an unrelated detached worktree is preserved without blocking exact cleanup\n  ---\n  duration_ms: 3288.365792\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 3452.577834\n",
+        "stderr": ""
+      },
+      "mutant": {
+        "process": {
+          "code": 1,
+          "signal": null,
+          "spawnError": null,
+          "timeout": false,
+          "stopReason": null,
+          "dir": "/tmp/test-audit-tooling-controls-bJndKZ/C2-finished-receipt/mutant",
+          "durationMs": 3452,
+          "command": {
+            "executable": "/usr/local/bin/node",
+            "argv": [
+              "--import",
+              "./tests/server-only-register.cjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-reporter=tap",
+              "--test-name-pattern=^an unrelated detached worktree is preserved without blocking exact cleanup$",
+              "tests/worktree-finish.test.ts"
+            ],
+            "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+            "timeoutMs": 90000,
+            "killGraceMs": 2000,
+            "envOverrides": {
+              "FORCE_COLOR": "0",
+              "NO_COLOR": "1"
+            },
+            "envRemoved": [
+              "NODE_V8_COVERAGE"
+            ],
+            "outputDirectory": "/tmp/test-audit-tooling-controls-bJndKZ/C2-finished-receipt/mutant"
+          }
+        },
+        "verdict": {
+          "ok": true,
+          "exactSelected": 1,
+          "expected": "intended ERR_ASSERTION at pinned keeper line",
+          "line": 417
+        },
+        "stdout": "TAP version 13\n# Subtest: an unrelated detached worktree is preserved without blocking exact cleanup\nnot ok 1 - an unrelated detached worktree is preserved without blocking exact cleanup\n  ---\n  duration_ms: 3243.344125\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/worktree-finish.test.ts:17:8792'\n  failureType: 'testCodeFailure'\n  error: |-\n    The input did not match the regular expression /FINISHED/. Input:\n    \n    'Mode: APPLY\\n' +\n      'PR: #42\\n' +\n      'Task branch: codex/finish-fixture\\n' +\n      'Root main: fast-forward to origin/main\\n' +\n      'Remote branch: lease-delete exact PR head\\n' +\n      'Worktree: remove /private/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/chaarlie-worktree-finish-3T0BvY/task-worktree\\n' +\n      'Local branch: delete exact PR head\\n' +\n      'CLEANED \u2014 PR #42 merged-task artifacts are clean\\n'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: |-\n    Mode: APPLY\n    PR: #42\n    Task branch: codex/finish-fixture\n    Root main: fast-forward to origin/main\n    Remote branch: lease-delete exact PR head\n    Worktree: remove /private/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/chaarlie-worktree-finish-3T0BvY/task-worktree\n    Local branch: delete exact PR head\n    CLEANED \u2014 PR #42 merged-task artifacts are clean\n    \n  operator: 'match'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/worktree-finish.test.ts:417:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 3405.9305\n",
+        "stderr": ""
+      },
+      "after": {
+        "process": {
+          "code": 0,
+          "signal": null,
+          "spawnError": null,
+          "timeout": false,
+          "stopReason": null,
+          "dir": "/tmp/test-audit-tooling-controls-bJndKZ/C2-finished-receipt/after",
+          "durationMs": 3523,
+          "command": {
+            "executable": "/usr/local/bin/node",
+            "argv": [
+              "--import",
+              "./tests/server-only-register.cjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-reporter=tap",
+              "--test-name-pattern=^an unrelated detached worktree is preserved without blocking exact cleanup$",
+              "tests/worktree-finish.test.ts"
+            ],
+            "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+            "timeoutMs": 90000,
+            "killGraceMs": 2000,
+            "envOverrides": {
+              "FORCE_COLOR": "0",
+              "NO_COLOR": "1"
+            },
+            "envRemoved": [
+              "NODE_V8_COVERAGE"
+            ],
+            "outputDirectory": "/tmp/test-audit-tooling-controls-bJndKZ/C2-finished-receipt/after"
+          }
+        },
+        "verdict": {
+          "ok": true,
+          "exactSelected": 1,
+          "expected": "pass",
+          "line": null
+        },
+        "stdout": "TAP version 13\n# Subtest: an unrelated detached worktree is preserved without blocking exact cleanup\nok 1 - an unrelated detached worktree is preserved without blocking exact cleanup\n  ---\n  duration_ms: 3313.180167\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 3477.465209\n",
+        "stderr": ""
+      }
+    },
+    {
+      "id": "C3-output-absence",
+      "restoration": {
+        "restored": true,
+        "source": "scripts/ci/path-rules.mjs",
+        "originalSha256": "e74b1ea820f04881ede4b5140251af7b456d327c57137ae72f2a48ad94d4d7f5",
+        "allPinnedGuardsMatch": true
+      },
+      "before": {
+        "process": {
+          "code": 0,
+          "signal": null,
+          "spawnError": null,
+          "timeout": false,
+          "stopReason": null,
+          "dir": "/tmp/test-audit-tooling-controls-bJndKZ/C3-output-absence/before",
+          "durationMs": 221,
+          "command": {
+            "executable": "/usr/local/bin/node",
+            "argv": [
+              "--import",
+              "./tests/server-only-register.cjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-reporter=tap",
+              "--test-name-pattern=^Personal Plan journey scope remains targeted to runtime and presentation changes$",
+              "tests/ci-path-rules.test.ts"
+            ],
+            "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+            "timeoutMs": 90000,
+            "killGraceMs": 2000,
+            "envOverrides": {
+              "FORCE_COLOR": "0",
+              "NO_COLOR": "1"
+            },
+            "envRemoved": [
+              "NODE_V8_COVERAGE"
+            ],
+            "outputDirectory": "/tmp/test-audit-tooling-controls-bJndKZ/C3-output-absence/before"
+          }
+        },
+        "verdict": {
+          "ok": true,
+          "exactSelected": 1,
+          "expected": "pass",
+          "line": null
+        },
+        "stdout": "TAP version 13\n# Subtest: Personal Plan journey scope remains targeted to runtime and presentation changes\nok 1 - Personal Plan journey scope remains targeted to runtime and presentation changes\n  ---\n  duration_ms: 0.668542\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 173.685291\n",
+        "stderr": ""
+      },
+      "mutant": {
+        "process": {
+          "code": 1,
+          "signal": null,
+          "spawnError": null,
+          "timeout": false,
+          "stopReason": null,
+          "dir": "/tmp/test-audit-tooling-controls-bJndKZ/C3-output-absence/mutant",
+          "durationMs": 243,
+          "command": {
+            "executable": "/usr/local/bin/node",
+            "argv": [
+              "--import",
+              "./tests/server-only-register.cjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-reporter=tap",
+              "--test-name-pattern=^Personal Plan journey scope remains targeted to runtime and presentation changes$",
+              "tests/ci-path-rules.test.ts"
+            ],
+            "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+            "timeoutMs": 90000,
+            "killGraceMs": 2000,
+            "envOverrides": {
+              "FORCE_COLOR": "0",
+              "NO_COLOR": "1"
+            },
+            "envRemoved": [
+              "NODE_V8_COVERAGE"
+            ],
+            "outputDirectory": "/tmp/test-audit-tooling-controls-bJndKZ/C3-output-absence/mutant"
+          }
+        },
+        "verdict": {
+          "ok": true,
+          "exactSelected": 1,
+          "expected": "intended ERR_ASSERTION at pinned keeper line",
+          "line": 119
+        },
+        "stdout": "TAP version 13\n# Subtest: Personal Plan journey scope remains targeted to runtime and presentation changes\nnot ok 1 - Personal Plan journey scope remains targeted to runtime and presentation changes\n  ---\n  duration_ms: 1.695208\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/ci-path-rules.test.ts:2:5708'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    true !== false\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: false\n  actual: true\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/ci-path-rules.test.ts:119:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:934:25)\n    Test.start (node:internal/test_runner/test:833:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 195.671875\n",
+        "stderr": ""
+      },
+      "after": {
+        "process": {
+          "code": 0,
+          "signal": null,
+          "spawnError": null,
+          "timeout": false,
+          "stopReason": null,
+          "dir": "/tmp/test-audit-tooling-controls-bJndKZ/C3-output-absence/after",
+          "durationMs": 224,
+          "command": {
+            "executable": "/usr/local/bin/node",
+            "argv": [
+              "--import",
+              "./tests/server-only-register.cjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-reporter=tap",
+              "--test-name-pattern=^Personal Plan journey scope remains targeted to runtime and presentation changes$",
+              "tests/ci-path-rules.test.ts"
+            ],
+            "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+            "timeoutMs": 90000,
+            "killGraceMs": 2000,
+            "envOverrides": {
+              "FORCE_COLOR": "0",
+              "NO_COLOR": "1"
+            },
+            "envRemoved": [
+              "NODE_V8_COVERAGE"
+            ],
+            "outputDirectory": "/tmp/test-audit-tooling-controls-bJndKZ/C3-output-absence/after"
+          }
+        },
+        "verdict": {
+          "ok": true,
+          "exactSelected": 1,
+          "expected": "pass",
+          "line": null
+        },
+        "stdout": "TAP version 13\n# Subtest: Personal Plan journey scope remains targeted to runtime and presentation changes\nok 1 - Personal Plan journey scope remains targeted to runtime and presentation changes\n  ---\n  duration_ms: 0.709208\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 176.311375\n",
+        "stderr": ""
+      }
+    },
+    {
+      "id": "D1-unwanted-success-issue",
+      "restoration": {
+        "restored": true,
+        "source": "src/lib/stripe/webhook-config-check.ts",
+        "originalSha256": "f81b72111ab1e2592a60515cc008cbfad254149f207b0b6dc70e5a9772cef58b",
+        "allPinnedGuardsMatch": true
+      },
+      "before": {
+        "process": {
+          "code": 0,
+          "signal": null,
+          "spawnError": null,
+          "timeout": false,
+          "stopReason": null,
+          "dir": "/tmp/test-audit-tooling-controls-bJndKZ/D1-unwanted-success-issue/before",
+          "durationMs": 553,
+          "command": {
+            "executable": "/usr/local/bin/node",
+            "argv": [
+              "--import",
+              "./tests/server-only-register.cjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-reporter=tap",
+              "--test-name-pattern=^verifyStripeWebhookConfig reports ok when the matching endpoint covers every required event$",
+              "tests/stripe-webhook-config-check.test.ts"
+            ],
+            "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+            "timeoutMs": 90000,
+            "killGraceMs": 2000,
+            "envOverrides": {
+              "FORCE_COLOR": "0",
+              "NO_COLOR": "1"
+            },
+            "envRemoved": [
+              "NODE_V8_COVERAGE"
+            ],
+            "outputDirectory": "/tmp/test-audit-tooling-controls-bJndKZ/D1-unwanted-success-issue/before"
+          }
+        },
+        "verdict": {
+          "ok": true,
+          "exactSelected": 1,
+          "expected": "pass",
+          "line": null
+        },
+        "stdout": "TAP version 13\n# Subtest: verifyStripeWebhookConfig reports ok when the matching endpoint covers every required event\nok 1 - verifyStripeWebhookConfig reports ok when the matching endpoint covers every required event\n  ---\n  duration_ms: 0.810875\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 505.115667\n",
+        "stderr": ""
+      },
+      "mutant": {
+        "process": {
+          "code": 1,
+          "signal": null,
+          "spawnError": null,
+          "timeout": false,
+          "stopReason": null,
+          "dir": "/tmp/test-audit-tooling-controls-bJndKZ/D1-unwanted-success-issue/mutant",
+          "durationMs": 554,
+          "command": {
+            "executable": "/usr/local/bin/node",
+            "argv": [
+              "--import",
+              "./tests/server-only-register.cjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-reporter=tap",
+              "--test-name-pattern=^verifyStripeWebhookConfig reports ok when the matching endpoint covers every required event$",
+              "tests/stripe-webhook-config-check.test.ts"
+            ],
+            "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+            "timeoutMs": 90000,
+            "killGraceMs": 2000,
+            "envOverrides": {
+              "FORCE_COLOR": "0",
+              "NO_COLOR": "1"
+            },
+            "envRemoved": [
+              "NODE_V8_COVERAGE"
+            ],
+            "outputDirectory": "/tmp/test-audit-tooling-controls-bJndKZ/D1-unwanted-success-issue/mutant"
+          }
+        },
+        "verdict": {
+          "ok": true,
+          "exactSelected": 1,
+          "expected": "intended ERR_ASSERTION at pinned keeper line",
+          "line": 30
+        },
+        "stdout": "TAP version 13\n# Subtest: verifyStripeWebhookConfig reports ok when the matching endpoint covers every required event\nnot ok 1 - verifyStripeWebhookConfig reports ok when the matching endpoint covers every required event\n  ---\n  duration_ms: 1.926125\n  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/stripe-webhook-config-check.test.ts:2:1058'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    1 !== 0\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 0\n  actual: 1\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/stripe-webhook-config-check.test.ts:30:10)\n    async Test.run (node:internal/test_runner/test:935:9)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 507.465\n",
+        "stderr": ""
+      },
+      "after": {
+        "process": {
+          "code": 0,
+          "signal": null,
+          "spawnError": null,
+          "timeout": false,
+          "stopReason": null,
+          "dir": "/tmp/test-audit-tooling-controls-bJndKZ/D1-unwanted-success-issue/after",
+          "durationMs": 528,
+          "command": {
+            "executable": "/usr/local/bin/node",
+            "argv": [
+              "--import",
+              "./tests/server-only-register.cjs",
+              "--import",
+              "tsx",
+              "--test",
+              "--test-reporter=tap",
+              "--test-name-pattern=^verifyStripeWebhookConfig reports ok when the matching endpoint covers every required event$",
+              "tests/stripe-webhook-config-check.test.ts"
+            ],
+            "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+            "timeoutMs": 90000,
+            "killGraceMs": 2000,
+            "envOverrides": {
+              "FORCE_COLOR": "0",
+              "NO_COLOR": "1"
+            },
+            "envRemoved": [
+              "NODE_V8_COVERAGE"
+            ],
+            "outputDirectory": "/tmp/test-audit-tooling-controls-bJndKZ/D1-unwanted-success-issue/after"
+          }
+        },
+        "verdict": {
+          "ok": true,
+          "exactSelected": 1,
+          "expected": "pass",
+          "line": null
+        },
+        "stdout": "TAP version 13\n# Subtest: verifyStripeWebhookConfig reports ok when the matching endpoint covers every required event\nok 1 - verifyStripeWebhookConfig reports ok when the matching endpoint covers every required event\n  ---\n  duration_ms: 0.797\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 479.689833\n",
+        "stderr": ""
+      }
+    }
+  ]
+}

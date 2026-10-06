@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: night protection options include length tip accessory and remove tight hairstyles
+not ok 1 - night protection options include length tip accessory and remove tight hairstyles
+  ---
+  duration_ms: 1.64325
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/onboarding-care-vocabulary.test.ts:2:2944'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'silk_satin_pillow',
+        'silk_satin_bonnet',
+        'loose_tied',
+        'pineapple',
+        'length_tip_accessory',
+    +   'loose_braid'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'silk_satin_pillow'
+    1: 'silk_satin_bonnet'
+    2: 'loose_tied'
+    3: 'pineapple'
+    4: 'length_tip_accessory'
+  actual:
+    0: 'silk_satin_pillow'
+    1: 'silk_satin_bonnet'
+    2: 'loose_tied'
+    3: 'pineapple'
+    4: 'length_tip_accessory'
+    5: 'loose_braid'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/onboarding-care-vocabulary.test.ts:51:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 203.361917

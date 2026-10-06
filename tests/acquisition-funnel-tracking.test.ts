@@ -123,7 +123,6 @@ test("landing quiz CTAs do not prefetch checkout-heavy quiz bundles", () => {
 test("shared loader may warm Stripe.js, but pricing starts checkout only on explicit open", () => {
   const source = read("src/components/quiz/result-offer-pricing.tsx")
   const loaderSource = read("src/lib/stripe/offer-client-loader.ts")
-  const supportSource = read("src/components/quiz/guided-story-support.tsx")
 
   assert.match(loaderSource, /from "@stripe\/stripe-js\/pure"/)
   assert.match(source, /getOfferStripePromise/)
@@ -132,8 +131,6 @@ test("shared loader may warm Stripe.js, but pricing starts checkout only on expl
     source,
     /const openCheckout = useCallback\(\(\) => \{[\s\S]*const stripePromise = getOfferStripePromise\(\)/,
   )
-  assert.match(supportSource, /useEffect\(\(\) => \{\s*warmOfferStripe\(\)/)
-  assert.doesNotMatch(supportSource, /ResultOfferPricing|pricingSlot/)
 })
 
 test("offer and profile reactivation pricing views keep funnel attribution with fresh event ids", () => {

@@ -1,0 +1,216 @@
+{
+  "frozen": true,
+  "scopeRechecked": true,
+  "artifacts": [
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/before/personal-plan-frontier-routing.test.ts",
+      "sha256": "7cfe19b45599878767a08e392abe67c1d3960cea03ba3ef151b0367f18ca8fd4",
+      "bytes": 13187
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/before/personal-plan-journey-access.test.ts",
+      "sha256": "eedb424d8f33b026201dffd82d1ae88156dc2b155822e57790f7d650f6366b60",
+      "bytes": 5765
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/before/personal-plan-legacy-cutover-eligibility.test.ts",
+      "sha256": "e197f33ddafa8f540d8d651a43c7ee9ae4715082a88dffef10eded71b05248ad",
+      "bytes": 3132
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/before/personal-plan-legacy-prefill.test.ts",
+      "sha256": "91a6551169f9a5edcaadc867a66993a8fcf0a33491c1caf48df215a6cf339e02",
+      "bytes": 8058
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/before/personal-plan-migration-admission-migration.test.ts",
+      "sha256": "c26ebf96d26182a3b01de26e22ae6e144b21d295e582c78d12ea1ca8a926bad2",
+      "bytes": 29859
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/before/personal-plan-migration-admission.test.ts",
+      "sha256": "01061d1a164b91b1f45eb92d8220c18f093376594a9aafe4da6560a5a85ac6b0",
+      "bytes": 6866
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/before/personal-plan-migration-quiz-context.test.ts",
+      "sha256": "2d5e7ff20088d45e2b30f88ece972e798b03d83e25b9a10a4a2362df89d64c98",
+      "bytes": 2406
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/before/personal-plan-migration-quiz-prefill.test.ts",
+      "sha256": "30929d9613f95597bb2cb77b7606548839d48cedc9fac87402b4240abd229ff4",
+      "bytes": 21689
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/before/personal-plan-migration-ready-route.test.ts",
+      "sha256": "396ec7d84d0b9b1832cf50b84604e13ff6743b004fec4661263ad2efe7c71a46",
+      "bytes": 7539
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/before/personal-plan-rollout-access.test.ts",
+      "sha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+      "bytes": 6398
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/build-packet.cjs",
+      "sha256": "a8bededa3c4cdfea9c2cb8a4ed6469857214928a7d7e5a52f0b6ce3fa31150c7",
+      "bytes": 9328
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/candidates.json",
+      "sha256": "926429276775ce7cd1eef41fc71b45f1d05b6b372c280e0fabd67e7071adcc6a",
+      "bytes": 199
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/complete.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/controls.json",
+      "sha256": "9c81cd93f5ca5a4b68cd80f973f14cd7198c5ebfd4b1fd30526d3eb0ba313941",
+      "bytes": 132
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/cut/personal-plan-frontier-routing.test.ts",
+      "sha256": "7cfe19b45599878767a08e392abe67c1d3960cea03ba3ef151b0367f18ca8fd4",
+      "bytes": 13187
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/cut/personal-plan-journey-access.test.ts",
+      "sha256": "eedb424d8f33b026201dffd82d1ae88156dc2b155822e57790f7d650f6366b60",
+      "bytes": 5765
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/cut/personal-plan-legacy-cutover-eligibility.test.ts",
+      "sha256": "e197f33ddafa8f540d8d651a43c7ee9ae4715082a88dffef10eded71b05248ad",
+      "bytes": 3132
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/cut/personal-plan-legacy-prefill.test.ts",
+      "sha256": "91a6551169f9a5edcaadc867a66993a8fcf0a33491c1caf48df215a6cf339e02",
+      "bytes": 8058
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/cut/personal-plan-migration-admission-migration.test.ts",
+      "sha256": "c26ebf96d26182a3b01de26e22ae6e144b21d295e582c78d12ea1ca8a926bad2",
+      "bytes": 29859
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/cut/personal-plan-migration-admission.test.ts",
+      "sha256": "01061d1a164b91b1f45eb92d8220c18f093376594a9aafe4da6560a5a85ac6b0",
+      "bytes": 6866
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/cut/personal-plan-migration-quiz-context.test.ts",
+      "sha256": "2d5e7ff20088d45e2b30f88ece972e798b03d83e25b9a10a4a2362df89d64c98",
+      "bytes": 2406
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/cut/personal-plan-migration-quiz-prefill.test.ts",
+      "sha256": "30929d9613f95597bb2cb77b7606548839d48cedc9fac87402b4240abd229ff4",
+      "bytes": 21689
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/cut/personal-plan-migration-ready-route.test.ts",
+      "sha256": "396ec7d84d0b9b1832cf50b84604e13ff6743b004fec4661263ad2efe7c71a46",
+      "bytes": 7539
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/cut/personal-plan-rollout-access.test.ts",
+      "sha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+      "bytes": 6398
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/dormant-rollout-followup-pins.json",
+      "sha256": "a2c1e9db6f745551dd1a225d34a25777391757bc7e5bfd54c5df450ef27ab16a",
+      "bytes": 1695
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/dormant-rollout-followup.md",
+      "sha256": "0ffe473a7aca73140044ea9a05d97260a57f3d230c878456f9440c2d052004d7",
+      "bytes": 6883
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/judgment-input.json",
+      "sha256": "1e2425e1b5067b2410552e279d94650297a55c24e2c3f2dbd6ac7ee44265cb84",
+      "bytes": 18235
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/layer-plan.md",
+      "sha256": "b681315fdbb93f45d1fae25595d2e5a1ae29695c6326ea75de3aa2462afcfd26",
+      "bytes": 10347
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/ledger.md",
+      "sha256": "86a69e46954092ad95bad2b70fb793b99070b509f724480a94547be90cd8055e",
+      "bytes": 32710
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/manifest.json",
+      "sha256": "ee68549e14ef387a6ae4176a3a3f7047a3798edf2ace4459be08f47d28d59065",
+      "bytes": 19433
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/sites.json",
+      "sha256": "e9092f6a458aae97389c8f200f9f2780c40cf9fdc09435316f4beb8092d12504",
+      "bytes": 339244
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/static-receipt.json",
+      "sha256": "eabc049c10d9ec5604bf1f3ba79fb58bb306ccb61e6de11cfd1079e514d0bdb5",
+      "bytes": 465
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/transfer/personal-plan-frontier-routing.test.ts",
+      "sha256": "7cfe19b45599878767a08e392abe67c1d3960cea03ba3ef151b0367f18ca8fd4",
+      "bytes": 13187
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/transfer/personal-plan-journey-access.test.ts",
+      "sha256": "eedb424d8f33b026201dffd82d1ae88156dc2b155822e57790f7d650f6366b60",
+      "bytes": 5765
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/transfer/personal-plan-legacy-cutover-eligibility.test.ts",
+      "sha256": "e197f33ddafa8f540d8d651a43c7ee9ae4715082a88dffef10eded71b05248ad",
+      "bytes": 3132
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/transfer/personal-plan-legacy-prefill.test.ts",
+      "sha256": "91a6551169f9a5edcaadc867a66993a8fcf0a33491c1caf48df215a6cf339e02",
+      "bytes": 8058
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/transfer/personal-plan-migration-admission-migration.test.ts",
+      "sha256": "c26ebf96d26182a3b01de26e22ae6e144b21d295e582c78d12ea1ca8a926bad2",
+      "bytes": 29859
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/transfer/personal-plan-migration-admission.test.ts",
+      "sha256": "01061d1a164b91b1f45eb92d8220c18f093376594a9aafe4da6560a5a85ac6b0",
+      "bytes": 6866
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/transfer/personal-plan-migration-quiz-context.test.ts",
+      "sha256": "2d5e7ff20088d45e2b30f88ece972e798b03d83e25b9a10a4a2362df89d64c98",
+      "bytes": 2406
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/transfer/personal-plan-migration-quiz-prefill.test.ts",
+      "sha256": "30929d9613f95597bb2cb77b7606548839d48cedc9fac87402b4240abd229ff4",
+      "bytes": 21689
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/transfer/personal-plan-migration-ready-route.test.ts",
+      "sha256": "396ec7d84d0b9b1832cf50b84604e13ff6743b004fec4661263ad2efe7c71a46",
+      "bytes": 7539
+    },
+    {
+      "path": "/tmp/test-audit-migration-admission-prefill76/transfer/personal-plan-rollout-access.test.ts",
+      "sha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+      "bytes": 6398
+    }
+  ]
+}

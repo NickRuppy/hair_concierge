@@ -1,0 +1,42 @@
+{
+  "expectedSHA256": "e1c4bf1d8f62deff84b449eff0e35459de5e13d9936e881f71b1162d61c12d28",
+  "namedSnapshotFound": false,
+  "actualPackedHeaderContentSearch": {
+    "roots": "/tmp/test-audit-* and current worktree plans/evidence",
+    "pattern": "# pack-refs with:",
+    "matches": [],
+    "exit": 1
+  },
+  "topLevelJSONFilesScanned": 1062,
+  "historicalHashOnlyMatches": [
+    "/tmp/test-audit-email94-tools-c435q0q0/operator-pins.json",
+    "/tmp/test-audit-email94-tools-c435q0q0/metadata-disposition.json",
+    "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-pins.json",
+    "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-pins.json",
+    "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-moderator183-tools-p18tq7i2-alias-pin-before.json",
+    "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-email94-tools-c435q0q0-alias-pin-before.json",
+    "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/test-audit-discovery163-tools-70q2q9t7-alias-pin-before.json",
+    "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-pins.json",
+    "/tmp/test-audit-billing125-tools-1tykldhs/operator-pins.json",
+    "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-pins.json",
+    "/tmp/test-audit-fulfillment75-tools-7ouif76e/metadata-prior-pins.json",
+    "/tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-pins.json",
+    "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-pins.json",
+    "/tmp/test-audit-scanner46-main-stack-proof-b8afrpth/pre-alias-pins.json",
+    "/tmp/test-audit-scanner46-main-stack-proof-b8afrpth/operator-pins.json",
+    "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-pins.json",
+    "/tmp/test-audit-free67-tools-phkvfcm3/identity-block-receipt.json",
+    "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-pins.json",
+    "/tmp/test-audit-billing125-tools-svsmm1u3/operator-pins.json",
+    "/tmp/test-audit-reactivation83-tools-huh910i2/operator-pins.json",
+    "/tmp/test-audit-refinement37-tools-5ce9vx77/pre-finalization-pins.json",
+    "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-pins.json",
+    "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/pre-finalization-pins.json",
+    "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-pins.json",
+    "/tmp/test-audit-scanner-intake26-tools-y8mclofg/operator-pins.json",
+    "/tmp/test-audit-partner84-tools-5qofnelt/operator-pins.json",
+    "/tmp/test-audit-partner84-tools-5qofnelt/static-receipt.json",
+    "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-pins.json"
+  ],
+  "limits": "No actual original packed-refs bytes recovered in bounded campaign evidence. Historical SHA pins cannot establish an exact line-level diff. Did not inspect unrelated app/tmp content or Git object history for shared metadata reconstruction."
+}

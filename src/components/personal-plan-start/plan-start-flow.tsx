@@ -259,18 +259,6 @@ export function planStartRefinementExitDestination(
   return isPostAcceptModuleEntry(initialJourney) ? "routine" : "stage1"
 }
 
-/**
- * Whether the post-accept loop's chapter screens must stay suppressed for this
- * journey (field test 26.08.2026). Keyed on SCOPE alone: an explicit module
- * deep link is a directed request in both cohorts, and the escape-hatch arrival
- * must not regain the retired ceremony just because its plan is not live yet.
- */
-export function planStartSuppressesChapterCeremony(
-  initialJourney: PlanStartInitialJourney,
-): boolean {
-  return isExplicitModuleRefinementEntry(initialJourney)
-}
-
 export type PlanStartStage3BootstrapSource = "initial" | "stage2_handoff" | "correction"
 export type PlanStartStage3BootstrapMode = "baseline" | "optional_inventory"
 

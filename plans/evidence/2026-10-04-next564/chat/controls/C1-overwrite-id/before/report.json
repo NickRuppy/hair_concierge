@@ -1,0 +1,115 @@
+{
+  "config": {
+    "configFile": "/tmp/test-audit-chat18-main-R6uLyX/playwright.config.cjs",
+    "rootDir": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/tmp/test-audit-chat18-controls-q0Mukt/C1-overwrite-id/before/browser-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "isolated-contract",
+        "name": "isolated-contract",
+        "testDir": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "user-memory.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.59.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "user-memory.spec.ts",
+      "file": "user-memory.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "User memory persistence with fake Supabase",
+          "file": "user-memory.spec.ts",
+          "line": 344,
+          "column": 6,
+          "specs": [
+            {
+              "title": "manual edits clear hidden product metadata and rebuild cache",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "isolated-contract",
+                  "projectName": "isolated-contract",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-04T11:28:45.046Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "640d24558c904660d2b3-719f7a0362f943877c35",
+              "file": "user-memory.spec.ts",
+              "line": 418,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-04T11:28:44.091Z",
+    "duration": 979.8530000000001,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

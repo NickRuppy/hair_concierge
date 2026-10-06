@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing
+not ok 1 - Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing
+  ---
+  duration_ms: 3.454625
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-journey-access-loader.test.ts:2:8665'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + [
+    +   {
+    +     durationMs: 0.3810829999999896,
+    +     operation: 'stage3_access_entitlement',
+    +     outcome: 'eligible'
+    +   },
+    +   {
+    +     durationMs: 0.025583999999980733,
+    +     operation: 'stage3_access_artifact_plan',
+    +     outcome: 'ready'
+    +   }
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      operation: 'stage3_access_entitlement'
+      outcome: 'eligible'
+      durationMs: 0.3810829999999896
+    1:
+      operation: 'stage3_access_artifact_plan'
+      outcome: 'ready'
+      durationMs: 0.025583999999980733
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-journey-access-loader.test.ts:327:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 885.958625

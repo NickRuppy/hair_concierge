@@ -1,0 +1,11 @@
+# Quiz portrait: one verified consolidation, cumulative666
+
+Nine files43→43→42 AST declaration sites; native46 original,46 transfer and45 cut, all closed exit0, no skipped/cancelled/todo. Ten donor assertions survive at the existing real QuizOptionCard SSR keeper: eight additions and two pre-existing clauses.41 unrelated callbacks, both held F findings and seven whole files remain exact. No new input/call/row/helper or surviving production change. Direct coily and delegated wavy same very_long/default description/selection share the consumed card framing contract; different asset paths remain independently protected, not silently declared identical.
+
+Root inspected the full assertion union, operative shared card/figure/resolver, complete independent review and bounded kit delta. Independent528 read-only checks/82 guards are static preservation evidence only. Four root preload checks passed with no write, child, owner import or network attempt;258 synthetic shapes are parser evidence only. All5129 installed dependency hashes and38 memberships are bounded guards, not semantic reads.
+
+All3 actual production faults in transfer and again after cut proved clean1→intended ERR_ASSERTION match→owned exact restoration→clean1. Root read all six complete actual fault TAPs: FIRST keeper lines104 (both h/min-h184→183),110 (description association absent),107 (decorative body aria-hidden false). Exact decoded regex headers, empty-RegExp expected and complete typed untruncated actual HTML preserve intended diagnostic. All12 surrounding clean runs passed. Transfer completion64f52928de3d0607efc16d073059943c07199cf67067cb5c6c11af7f44ed614b; postcutc9323f0ef5539e9dd11fa43d7a4d59704e35fced39bebfd22919ac2745142f5b. All sources restored before any subsequent edit.
+
+Native checker was separately closed0 in each phase. Root compared actual argv/cwd receipt to the kit command, and actual closed subprocess result0; the checker alone cannot attest exit. Full46/45 includes the changed-file subset rather than claiming a separate focused12/11 process.
+
+284 archived files17,633,106bytes; artifact-index SHA25638ce0192233bf1a42bfc0ed8d32cd17687ee0323a57a115079140218100a53d2. This receipt is postindex. Archived before formatting. Whole campaign coverage/CI on latest666 is pending; historical648 does not validate current changes. No publication/production writes.

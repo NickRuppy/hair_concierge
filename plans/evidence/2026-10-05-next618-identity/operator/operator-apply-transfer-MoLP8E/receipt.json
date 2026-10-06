@@ -1,0 +1,25 @@
+{
+  "mode": "transfer",
+  "from": "before",
+  "phase": "transfer",
+  "counts": {
+    "before": 31,
+    "transfer": 31,
+    "cut": 30
+  },
+  "pinsSHA": "132c346bff375008376b55eb0499f0701fcf11dfa905ad34c0842e29c2d19e0a",
+  "prerequisite": null,
+  "changed": [
+    "tests/product-identity-resolution.test.ts"
+  ],
+  "allTestHashes": {
+    "tests/product-identity-normalize.test.ts": "512c74fa5948366cf8249991fe58a6ac490b3f537398d17ef18301a58b2e4e4f",
+    "tests/product-identity-resolution.test.ts": "7b9c4752c20736e753132490431e577c614536537f10ddbb9eb26276d5ce4d58",
+    "tests/product-identity-schema.test.ts": "392cad4a08642b04c4bc4a2e660adad2a25b821b6648fee8c207090d56023f57",
+    "tests/product-identity-title.test.ts": "c9e2616cdbb7ee31cf47c7f1f739ac26db03cd9e1882c855d8d1b943cbc709bd",
+    "tests/product-identity-correction.test.ts": "7a47c34d36387609bd4eac938b6b6dd8c188b88d0ffff1e5856a9e8667e85a46"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-apply-transfer-MoLP8E/originals"
+}

@@ -1,0 +1,133 @@
+scripts/audit-product-metadata.ts:8:  checkStoredLinkBuyability,
+scripts/audit-product-metadata.ts:12:  auditProductMetadata,
+scripts/audit-product-metadata.ts:186:    const checkedStatus = await checkStoredLinkBuyability(product)
+scripts/audit-product-metadata.ts:214:    const findings = auditProductMetadata(product, knownPriceChecksById.get(product.id))
+scripts/ingest-products.ts:36:  mergeCommercialFields,
+scripts/ingest-products.ts:38:  resolveProductIdentity,
+scripts/ingest-products.ts:262:  const resolution = await resolveProductIdentity(product, identityAliases, {
+scripts/ingest-products.ts:652:    const commercialFields = mergeCommercialFields(
+scripts/product-intake/expansion/preflight.ts:9:  buildExpansionApplyBatch,
+scripts/product-intake/expansion/preflight.ts:131:  const result = buildExpansionApplyBatch({
+scripts/product-intake/catalog-enrichment/stage5-v2-generate.ts:9:import { catalogAuthorityRepairReviewFingerprint } from "../../../src/lib/catalog-authority/repair"
+scripts/product-intake/catalog-enrichment/stage5-v2-generate.ts:258:    manifest.review.reviewedContentFingerprint !== catalogAuthorityRepairReviewFingerprint(manifest)
+tests/scan-expansion-batch-postgres.test.ts:9:import { buildExpansionProtocolRow } from "@/lib/product-intake/expansion-apply-templates"
+tests/scan-expansion-batch-postgres.test.ts:11:  buildExpansionApplyBatch,
+tests/scan-expansion-batch-postgres.test.ts:422:  parked: ReturnType<typeof buildExpansionApplyBatch>["parked"]
+tests/scan-expansion-batch-postgres.test.ts:465:  const built = buildExpansionApplyBatch({ manifest, supplement: supplementFor(manifest) })
+tests/scan-expansion-batch-postgres.test.ts:1102:  const seedProtocol = buildExpansionProtocolRow("TPL-SHAMPOO-STD", {
+tests/scan-expansion-batch-postgres.test.ts:1192:  const built = buildExpansionApplyBatch({
+tests/scan-expansion-batch-postgres.test.ts:1237:  const built = buildExpansionApplyBatch({
+tests/scan-expansion-batch-postgres.test.ts:1265:  const built = buildExpansionApplyBatch({
+tests/product-metadata-health.test.ts:5:  auditProductMetadata,
+tests/product-metadata-health.test.ts:41:test("auditProductMetadata reports known metadata issues", () => {
+tests/product-metadata-health.test.ts:42:  const findings = auditProductMetadata(
+tests/admin-product-category-write-policy.test.ts:4:import { requiresGuardedProductRecategorization } from "../src/lib/admin/product-category-write-policy"
+tests/admin-product-category-write-policy.test.ts:7:  assert.equal(requiresGuardedProductRecategorization("conditioner", "Conditioner Profi"), false)
+tests/admin-product-category-write-policy.test.ts:8:  assert.equal(requiresGuardedProductRecategorization("oil", "Oil"), false)
+tests/admin-product-category-write-policy.test.ts:12:  assert.equal(requiresGuardedProductRecategorization("mask", "Conditioner"), true)
+tests/admin-product-category-write-policy.test.ts:13:  assert.equal(requiresGuardedProductRecategorization(null, "Maske"), true)
+tests/admin-product-category-write-policy.test.ts:14:  assert.equal(requiresGuardedProductRecategorization("mask", "unmapped"), true)
+tests/expansion-apply-templates.test.ts:11:  buildExpansionProtocolRow,
+tests/expansion-apply-templates.test.ts:61:    const row = buildExpansionProtocolRow(templateId, defaultSlots(templateId))
+tests/expansion-apply-templates.test.ts:102:  const row = buildExpansionProtocolRow("TPL-OIL-LEAVEON", defaultSlots("TPL-OIL-LEAVEON"))
+tests/expansion-apply-templates.test.ts:115:    const row = buildExpansionProtocolRow(templateId, defaultSlots(templateId))
+tests/expansion-apply-templates.test.ts:123:  const maskRow = buildExpansionProtocolRow(MASK_TEMPLATE_ID, defaultSlots(MASK_TEMPLATE_ID))
+tests/expansion-apply-templates.test.ts:130:    const row = buildExpansionProtocolRow(templateId, defaultSlots(templateId))
+tests/expansion-apply-templates.test.ts:178:    const row = buildExpansionProtocolRow(templateId, defaultSlots(templateId))
+tests/expansion-apply-templates.test.ts:204:    const row = buildExpansionProtocolRow(templateId, defaultSlots(templateId))
+tests/expansion-apply-templates.test.ts:231:  const conditionerRow = buildExpansionProtocolRow(
+tests/expansion-apply-templates.test.ts:257:    const row = buildExpansionProtocolRow(MASK_TEMPLATE_ID, {
+tests/expansion-apply-templates.test.ts:276:    const dampRow = buildExpansionProtocolRow(templateId, {
+tests/expansion-apply-templates.test.ts:287:    const eitherRow = buildExpansionProtocolRow(templateId, {
+tests/expansion-apply-templates.test.ts:326:      buildExpansionProtocolRow(MASK_TEMPLATE_ID, {
+tests/expansion-apply-templates.test.ts:335:      buildExpansionProtocolRow(MASK_TEMPLATE_ID, {
+tests/expansion-apply-templates.test.ts:345:      buildExpansionProtocolRow(MASK_TEMPLATE_ID, {
+tests/expansion-apply-templates.test.ts:356:      buildExpansionProtocolRow(MASK_TEMPLATE_ID, {
+tests/expansion-apply-templates.test.ts:368:      () => buildExpansionProtocolRow(templateId, { productId: PRODUCT_ID, evidence: EVIDENCE }),
+tests/expansion-apply-templates.test.ts:378:      () => buildExpansionProtocolRow(templateId, slots),
+tests/expansion-apply-templates.test.ts:387:    () => buildExpansionProtocolRow("TPL-SHAMPOO-STD", { productId: "", evidence: EVIDENCE }),
+tests/expansion-apply-templates.test.ts:392:      buildExpansionProtocolRow("TPL-SHAMPOO-STD", { productId: "not-a-uuid", evidence: EVIDENCE }),
+tests/expansion-apply-templates.test.ts:399:      buildExpansionProtocolRow("TPL-CONDITIONER", {
+tests/expansion-apply-templates.test.ts:408:      buildExpansionProtocolRow("TPL-LEAVEIN-DAMP", {
+tests/expansion-apply-templates.test.ts:418:      buildExpansionProtocolRow("TPL-SHAMPOO-STD", {
+tests/expansion-apply-templates.test.ts:428:      buildExpansionProtocolRow("TPL-SHAMPOO-STD", {
+tests/expansion-apply-templates.test.ts:441:      buildExpansionProtocolRow("TPL-NOT-A-TEMPLATE" as ExpansionTemplateId, {
+src/lib/admin/product-category-write-policy.ts:6:export function requiresGuardedProductRecategorization(
+tests/catalog-authority-oil-repair.test.ts:11:  catalogAuthorityRepairReviewFingerprint,
+tests/catalog-authority-oil-repair.test.ts:59:  assert.equal(catalogAuthorityRepairReviewFingerprint(value), EXPECTED_FINGERPRINT)
+tests/catalog-authority-repair.test.ts:5:  assertCatalogAuthorityRepairReady,
+tests/catalog-authority-repair.test.ts:6:  catalogAuthorityRepairReviewFingerprint,
+tests/catalog-authority-repair.test.ts:43:  manifest.review.reviewedContentFingerprint = catalogAuthorityRepairReviewFingerprint(manifest)
+tests/catalog-authority-repair.test.ts:49:  const ready = assertCatalogAuthorityRepairReady(manifest, [
+tests/catalog-authority-repair.test.ts:56:      assertCatalogAuthorityRepairReady(manifest, [
+tests/catalog-authority-repair.test.ts:73:      assertCatalogAuthorityRepairReady(manifest, [
+tests/catalog-authority-repair.test.ts:83:  duplicate.review.reviewedContentFingerprint = catalogAuthorityRepairReviewFingerprint(duplicate)
+tests/catalog-authority-repair.test.ts:87:      assertCatalogAuthorityRepairReady(duplicate, [
+tests/catalog-authority-repair.test.ts:95:    () => assertCatalogAuthorityRepairReady(manifest, []),
+tests/catalog-authority-repair.test.ts:111:      assertCatalogAuthorityRepairReady(manifest, [
+tests/catalog-authority-repair.test.ts:121:  manifest.review.reviewedContentFingerprint = catalogAuthorityRepairReviewFingerprint(manifest)
+tests/catalog-authority-repair.test.ts:125:      assertCatalogAuthorityRepairReady(manifest, [
+tests/catalog-authority-repair.test.ts:184:    assertCatalogAuthorityRepairReady(broken, [
+tests/catalog-authority-repair.test.ts:196:  manifest.review.reviewedContentFingerprint = catalogAuthorityRepairReviewFingerprint(manifest)
+tests/catalog-authority-repair.test.ts:200:      assertCatalogAuthorityRepairReady(manifest, [
+tests/oil-day-type-rulings-migration-postgres.test.ts:7:import { buildExpansionProtocolRow } from "@/lib/product-intake/expansion-apply-templates"
+tests/oil-day-type-rulings-migration-postgres.test.ts:84:  const row = buildExpansionProtocolRow(template, {
+tests/expansion-apply-batch.test.ts:6:  buildExpansionApplyBatch,
+tests/expansion-apply-batch.test.ts:108:  const result = buildExpansionApplyBatch({ manifest, supplement: supplementFor(manifest) })
+tests/expansion-apply-batch.test.ts:133:  const result = buildExpansionApplyBatch({
+tests/expansion-apply-batch.test.ts:155:  const result = buildExpansionApplyBatch({ manifest, supplement })
+tests/expansion-apply-batch.test.ts:170:  const result = buildExpansionApplyBatch({ manifest, supplement })
+tests/expansion-apply-batch.test.ts:195:  const result = buildExpansionApplyBatch({ manifest, supplement })
+tests/expansion-apply-batch.test.ts:215:  const result = buildExpansionApplyBatch({
+tests/expansion-apply-batch.test.ts:245:  const result = buildExpansionApplyBatch({ manifest: quoted, supplement: empty })
+tests/expansion-apply-batch.test.ts:292:  const clean = buildExpansionApplyBatch({ manifest, supplement, existingProducts })
+tests/expansion-apply-batch.test.ts:295:  const quarantined = buildExpansionApplyBatch({
+tests/expansion-apply-batch.test.ts:318:  const result = buildExpansionApplyBatch({
+tests/expansion-apply-batch.test.ts:343:  const result = buildExpansionApplyBatch({
+tests/expansion-apply-batch.test.ts:374:  const result = buildExpansionApplyBatch({ manifest, supplement: supplementFor(manifest) })
+tests/expansion-apply-batch.test.ts:399:  const result = buildExpansionApplyBatch({
+tests/expansion-apply-batch.test.ts:423:  const result = buildExpansionApplyBatch({ manifest, supplement: supplementFor(manifest) })
+tests/expansion-apply-batch.test.ts:440:  const result = buildExpansionApplyBatch({ manifest, supplement: supplementFor(manifest) })
+tests/product-metadata-ingest-identity.test.ts:5:  mergeCommercialFields,
+tests/product-metadata-ingest-identity.test.ts:7:  resolveProductIdentity,
+tests/product-metadata-ingest-identity.test.ts:19:test("resolveProductIdentity fails closed when explicit id is missing", async () => {
+tests/product-metadata-ingest-identity.test.ts:21:    resolveProductIdentity(
+tests/product-metadata-ingest-identity.test.ts:33:test("resolveProductIdentity fails closed when alias points to a missing row", async () => {
+tests/product-metadata-ingest-identity.test.ts:44:    resolveProductIdentity({ name: "Alias Product", category: "Conditioner" }, aliases, {
+tests/product-metadata-ingest-identity.test.ts:52:test("resolveProductIdentity falls back to name/category when no explicit id or alias exists", async () => {
+tests/product-metadata-ingest-identity.test.ts:53:  const resolution = await resolveProductIdentity(
+tests/product-metadata-ingest-identity.test.ts:68:test("mergeCommercialFields preserves existing commercial fields unless force overwrite is set", () => {
+tests/product-metadata-ingest-identity.test.ts:70:    mergeCommercialFields(
+tests/product-metadata-ingest-identity.test.ts:83:    mergeCommercialFields(
+tests/audit-product-metadata-script.test.ts:4:import { checkStoredLinkBuyability } from "../src/lib/product-metadata/buyability"
+tests/audit-product-metadata-script.test.ts:22:test("checkStoredLinkBuyability returns unavailable for missing or unusable links", async () => {
+tests/audit-product-metadata-script.test.ts:24:    await checkStoredLinkBuyability(buildProduct({ affiliate_link: null })),
+tests/audit-product-metadata-script.test.ts:28:    await checkStoredLinkBuyability(buildProduct({ affiliate_link: "kein-link" })),
+tests/audit-product-metadata-script.test.ts:33:test("checkStoredLinkBuyability classifies known retailer content", async () => {
+tests/audit-product-metadata-script.test.ts:39:    const status = await checkStoredLinkBuyability(
+tests/audit-product-metadata-script.test.ts:48:test("checkStoredLinkBuyability lets unavailable dm text win over cart markup", async () => {
+tests/audit-product-metadata-script.test.ts:54:    const status = await checkStoredLinkBuyability(
+tests/audit-product-metadata-script.test.ts:63:test("checkStoredLinkBuyability lets unavailable Mueller text win over cart markup", async () => {
+tests/audit-product-metadata-script.test.ts:69:    const status = await checkStoredLinkBuyability(
+tests/audit-product-metadata-script.test.ts:78:test("checkStoredLinkBuyability lets generic unavailable Rossmann text win over cart markup", async () => {
+tests/audit-product-metadata-script.test.ts:84:    const status = await checkStoredLinkBuyability(
+tests/audit-product-metadata-script.test.ts:93:test("checkStoredLinkBuyability returns manual-review null for inconclusive fetch results", async () => {
+tests/audit-product-metadata-script.test.ts:99:    const status = await checkStoredLinkBuyability(
+src/lib/product-intake/expansion-apply.ts:15:  buildExpansionProtocolRow,
+src/lib/product-intake/expansion-apply.ts:243:export function buildExpansionApplyBatch(
+src/lib/product-intake/expansion-apply.ts:401:        const row = buildExpansionProtocolRow(manifestProtocol.template_id, {
+src/lib/product-intake/expansion-apply-templates.ts:1004:export function buildExpansionProtocolRow(
+src/lib/product-metadata/health.ts:80:export function auditProductMetadata(
+src/lib/product-metadata/ingest-identity.ts:62:export function mergeCommercialFields(
+src/lib/product-metadata/ingest-identity.ts:85:export async function resolveProductIdentity(
+src/lib/catalog-authority/repair.ts:79:export function catalogAuthorityRepairReviewFingerprint(
+src/lib/catalog-authority/repair.ts:89:export function assertCatalogAuthorityRepairReady(
+src/lib/catalog-authority/repair.ts:147:    manifest.review.reviewedContentFingerprint !== catalogAuthorityRepairReviewFingerprint(manifest)
+src/lib/product-metadata/buyability.ts:94:export async function checkStoredLinkBuyability(row: {
+src/lib/catalog-authority/oil-repair.ts:6:  assertCatalogAuthorityRepairReady,
+src/lib/catalog-authority/oil-repair.ts:8:  catalogAuthorityRepairReviewFingerprint,
+src/lib/catalog-authority/oil-repair.ts:174:    contentFingerprint: catalogAuthorityRepairReviewFingerprint(manifest),
+src/lib/catalog-authority/oil-repair.ts:184:export function assertOilAuthorityRepairReady(
+src/lib/catalog-authority/oil-repair.ts:189:  return assertCatalogAuthorityRepairReady(manifest, currentStates)
+src/app/api/admin/products/[id]/route.ts:15:  requiresGuardedProductRecategorization,
+src/app/api/admin/products/[id]/route.ts:119:  if (requiresGuardedProductRecategorization(existing.category_key, parsed.data.category)) {

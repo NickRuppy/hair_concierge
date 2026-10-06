@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: initial Routine compilation is deterministic and excludes volatile portfolio metadata
+ok 1 - initial Routine compilation is deterministic and excludes volatile portfolio metadata
+  ---
+  duration_ms: 10.79675
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 619.634333

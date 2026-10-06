@@ -1,0 +1,128 @@
+[
+  {
+    "phase": "before",
+    "file": "tests/recommendation-engine-shampoo-cadence.test.ts",
+    "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+    "bytes": 13821
+  },
+  {
+    "phase": "before",
+    "file": "tests/care-balance-frequency-targets.test.ts",
+    "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+    "bytes": 10763
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+    "sha256": "d1967063160af1b28843b08791ebebf80c9ad95f43bef60dedcc7198c56c5533",
+    "bytes": 28416
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-routine-cadence.test.ts",
+    "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+    "bytes": 11362
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan/product-previews.test.ts",
+    "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+    "bytes": 43433
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-exact-catalog-bundle.test.ts",
+    "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+    "bytes": 17041
+  },
+  {
+    "phase": "before",
+    "file": "tests/personal-plan-stage3-contracts.test.ts",
+    "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+    "bytes": 21649
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/recommendation-engine-shampoo-cadence.test.ts",
+    "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+    "bytes": 13821
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/care-balance-frequency-targets.test.ts",
+    "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+    "bytes": 10763
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+    "sha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3",
+    "bytes": 30639
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-routine-cadence.test.ts",
+    "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+    "bytes": 11362
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan/product-previews.test.ts",
+    "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+    "bytes": 43433
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-exact-catalog-bundle.test.ts",
+    "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+    "bytes": 17041
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/personal-plan-stage3-contracts.test.ts",
+    "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+    "bytes": 21649
+  },
+  {
+    "phase": "cut",
+    "file": "tests/recommendation-engine-shampoo-cadence.test.ts",
+    "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+    "bytes": 13821
+  },
+  {
+    "phase": "cut",
+    "file": "tests/care-balance-frequency-targets.test.ts",
+    "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+    "bytes": 10763
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+    "sha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d",
+    "bytes": 28228
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-routine-cadence.test.ts",
+    "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+    "bytes": 11362
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan/product-previews.test.ts",
+    "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+    "bytes": 43433
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-exact-catalog-bundle.test.ts",
+    "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+    "bytes": 17041
+  },
+  {
+    "phase": "cut",
+    "file": "tests/personal-plan-stage3-contracts.test.ts",
+    "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+    "bytes": 21649
+  }
+]

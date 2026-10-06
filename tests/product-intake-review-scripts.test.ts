@@ -194,7 +194,13 @@ test("destructive review scripts default to dry-run and require explicit confirm
   assert.match(reviewActionsScript, /saveResearchedPayload/)
   assert.match(reviewActionsScript, /dryRunResearchedPayload/)
   assert.match(prepareResearchScript, /statusFilter:\s*"pending_review"/)
+  assert.doesNotMatch(prepareResearchScript, /flagBool\(args,\s*["']apply["']/)
   assert.doesNotMatch(prepareResearchScript, /\.update\(/)
+  assert.doesNotMatch(prepareResearchScript, /\.insert\(/)
+  assert.doesNotMatch(prepareResearchScript, /\.upsert\(/)
+  assert.doesNotMatch(prepareResearchScript, /\.delete\(/)
+  assert.doesNotMatch(prepareResearchScript, /\.rpc\(/)
+  assert.doesNotMatch(prepareResearchScript, /--apply/)
   assert.doesNotMatch(researchQueueScript, /flagBool\(args,\s*["']apply["']/)
   assert.doesNotMatch(researchQueueScript, /\.update\(/)
   assert.doesNotMatch(researchQueueScript, /\.insert\(/)
@@ -1011,14 +1017,6 @@ function notificationSubmission(
     ...patch,
   }
 }
-
-test("review notifications explain approved products in user-facing German", () => {
-  const message = buildProductIntakeReviewMessage(notificationSubmission({}))
-
-  assert.match(message ?? "", /Gute Nachrichten/)
-  assert.match(message ?? "", /Garnier Hair Food Aloe/)
-  assert.match(message ?? "", /Routine/)
-})
 
 test("approved review notifications resolve stale AgentV2 product intake context", () => {
   const previousState: AgentV2ConversationStateV2 = {

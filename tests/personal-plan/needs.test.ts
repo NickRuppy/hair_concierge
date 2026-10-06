@@ -36,6 +36,12 @@ test("INITIAL-02: quiz-led Shampoo cadence keeps current behavior unknown", () =
     maximum: "weekly_3_4x",
     current: { state: "unknown", reason: "shampoo_frequency" },
   })
+  assert.deepEqual(assessment.heatExposure, {
+    knowledgeState: "unknown",
+    state: "unknown",
+    events: [],
+    sourceFacts: [],
+  })
 })
 
 test("INITIAL-04: oily scalp contributes one Reset point while product load stays deferred", () => {
@@ -61,16 +67,6 @@ test("known Shampoo frequency is preserved as known within the partial Reset ass
   assert.deepEqual(assessment.resetLoad.missingInputs, ["current_product_load"])
   assert.ok(!assessment.resetLoad.unknownSignals.includes("shampoo_frequency"))
   assert.ok(assessment.resetLoad.sourceFacts.includes("shampoo_frequency:weekly_2x"))
-})
-
-test("INITIAL-05: absent Hair Tools input is unknown rather than no Heat exposure", () => {
-  const assessment = assess()
-  assert.deepEqual(assessment.heatExposure, {
-    knowledgeState: "unknown",
-    state: "unknown",
-    events: [],
-    sourceFacts: [],
-  })
 })
 
 test("lightened hair preserves the quiz fact and drives high shared repair priority", () => {

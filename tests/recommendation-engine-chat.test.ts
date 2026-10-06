@@ -1,10 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import {
-  getShampooMissingProfileFields,
-  getShampooProfileCompleteness,
-} from "../src/lib/recommendation-engine/chat"
+import { getShampooMissingProfileFields } from "../src/lib/recommendation-engine/chat"
 import type { HairProfile } from "../src/lib/types"
 
 function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
@@ -51,11 +48,6 @@ test("nullable scalp condition is treated as complete when scalp type is present
   })
 
   assert.deepEqual(getShampooMissingProfileFields(profile), [])
-  assert.deepEqual(getShampooProfileCompleteness(profile), {
-    filledCount: 2,
-    totalCount: 2,
-    score: 1,
-  })
 })
 
 test("shampoo completeness still asks both scalp answers when neither route is known", () => {
@@ -66,9 +58,4 @@ test("shampoo completeness still asks both scalp answers when neither route is k
   })
 
   assert.deepEqual(getShampooMissingProfileFields(profile), ["scalp_type", "scalp_condition"])
-  assert.deepEqual(getShampooProfileCompleteness(profile), {
-    filledCount: 1,
-    totalCount: 3,
-    score: 1 / 3,
-  })
 })

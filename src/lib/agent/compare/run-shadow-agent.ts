@@ -26,27 +26,7 @@ import {
 } from "@/lib/agent/orchestrator/route-packet"
 import { createDefaultConversationState } from "@/lib/chat-runtime/conversation-state"
 import type { ConversationState, RoutineLayer, RoutineProductCategory } from "@/lib/types"
-import { createTestSession, upsertHairProfile } from "../../../../scripts/eval-chat/client"
-import type {
-  AgentCompareScenario,
-  AgentCompareTurnResult,
-  AgentCompareUserRequest,
-  CompareRunResult,
-} from "./types"
-
-function getRequiredCompareEnv() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-  if (!supabaseUrl || !serviceRoleKey || !anonKey) {
-    throw new Error(
-      "Missing env vars: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, NEXT_PUBLIC_SUPABASE_ANON_KEY",
-    )
-  }
-
-  return { supabaseUrl, serviceRoleKey, anonKey }
-}
+import type { AgentCompareTurnResult, AgentCompareUserRequest, CompareRunResult } from "./types"
 
 function normalizeMatchedProducts(
   projection: SelectedProductsProjection | null,
@@ -184,34 +164,6 @@ function normalizeActiveProfileSignals(value: unknown): AgentActiveProfileSignal
       },
     ]
   })
-}
-
-export async function runShadowAgentComparison(params: {
-  scenario: AgentCompareScenario
-  prompt?: string
-  turns?: string[]
-  baseUrl?: string | null
-}): Promise<CompareRunResult> {
-  const { supabaseUrl, serviceRoleKey, anonKey } = getRequiredCompareEnv()
-  const session = await createTestSession(supabaseUrl, serviceRoleKey, anonKey)
-
-  try {
-    await upsertHairProfile(
-      session.admin,
-      session.userId,
-      params.scenario.hair_profile,
-      params.scenario.routine_inventory ?? [],
-    )
-
-    return runShadowAgentComparisonForUser({
-      userId: session.userId,
-      prompt: params.prompt,
-      turns: params.turns,
-      baseUrl: params.baseUrl,
-    })
-  } finally {
-    await session.cleanup()
-  }
 }
 
 function deriveNextClassicState(params: {
@@ -359,6 +311,4 @@ export async function runShadowAgentComparisonForUser(
     error: null,
   }
 }
-
-export const runClassicAgentComparison = runShadowAgentComparison
 export const runClassicAgentComparisonForUser = runShadowAgentComparisonForUser

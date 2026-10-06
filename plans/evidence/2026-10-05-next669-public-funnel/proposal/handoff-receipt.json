@@ -1,0 +1,24 @@
+{
+  "packet": "/tmp/test-audit-public-funnel66-c69uzpx6",
+  "manifestSHA256": "152177b98efeb7dd05c261323a8eaec59f1bf6cabb690a122c1e645414552b9a",
+  "artifactCount": 196,
+  "status": "READY_FOR_INDEPENDENT_STATIC_REVIEW_ONLY",
+  "declarationCounts": [
+    66,
+    66,
+    63
+  ],
+  "nativeCounts": [
+    79,
+    79,
+    74
+  ],
+  "controls": 20,
+  "distinctMutantByteContents": 14,
+  "readsetPins": 97,
+  "testFiles": 12,
+  "runtimeProof": false,
+  "removalCredit": 0,
+  "sourceCleanup": false,
+  "repoWrites": 0
+}

@@ -1,0 +1,13 @@
+{
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "beforeTestHashMismatches": [],
+  "readsetHashMismatches": [],
+  "manifestDeclaredCounts": {
+    "before": 99,
+    "transfer": 99,
+    "cut": 87
+  },
+  "manifestRetainedCallbackShapeIssues": [],
+  "runtimeExecuted": false,
+  "note": "Static manifest and live byte comparisons only; not independent AST recount or source-read credit."
+}

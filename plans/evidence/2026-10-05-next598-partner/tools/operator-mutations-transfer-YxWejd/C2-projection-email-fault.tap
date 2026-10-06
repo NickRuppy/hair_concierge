@@ -1,0 +1,51 @@
+TAP version 13
+# Subtest: the default getUser path carries app_metadata through to the hint check
+not ok 1 - the default getUser path carries app_metadata through to the hint check
+  ---
+  duration_ms: 2.491917
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/partner-access-journey.test.ts:2:6629'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   email: 'audit-wrong-email',
+    -   email: 'lea@example.test',
+        funnelSessionId: '30000000-0000-4000-8000-000000000003',
+        invitationId: '10000000-0000-4000-8000-000000000001',
+        kind: 'authorized',
+        name: 'Lea Sommer',
+        userId: 'creator-user'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    kind: 'authorized'
+    invitationId: '10000000-0000-4000-8000-000000000001'
+    userId: 'creator-user'
+    name: 'Lea Sommer'
+    email: 'lea@example.test'
+    funnelSessionId: '30000000-0000-4000-8000-000000000003'
+  actual:
+    kind: 'authorized'
+    invitationId: '10000000-0000-4000-8000-000000000001'
+    userId: 'creator-user'
+    name: 'Lea Sommer'
+    email: 'audit-wrong-email'
+    funnelSessionId: '30000000-0000-4000-8000-000000000003'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/partner-access-journey.test.ts:238:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 277.611791

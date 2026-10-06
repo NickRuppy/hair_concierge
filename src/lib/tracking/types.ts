@@ -37,14 +37,6 @@ export function isValidCustomActivityName(value: string | null | undefined): boo
   )
 }
 
-export function hasValidTrackerDayTypeDetails(input: {
-  dayType: TrackerDayType
-  customActivityName?: string | null
-}): boolean {
-  if (input.dayType === "custom") return isValidCustomActivityName(input.customActivityName)
-  return input.customActivityName == null
-}
-
 export interface TrackerLogProduct {
   category: string
   productName: string | null

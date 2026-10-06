@@ -1,0 +1,2708 @@
+[
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/candidates.json",
+    "archived": "proposal/candidates.json",
+    "sha256": "eda3a07d46903a9d3e126cf49e7b70be711c0a632f4d0afe58eb2f798e5ff601",
+    "bytes": 5076
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/catalog-consumed-structure.json",
+    "archived": "proposal/catalog-consumed-structure.json",
+    "sha256": "24caea4fd960924c2495ba1a5403e646d491346fcc1a99fe87fca85041b40f0a",
+    "bytes": 167612
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/complete-ledger.md",
+    "archived": "proposal/complete-ledger.md",
+    "sha256": "551e5f581d73ecd3008f8476b3b134ee96d294338ec5d6765574a94724baea51",
+    "bytes": 40823
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/complete.diff",
+    "archived": "proposal/complete.diff",
+    "sha256": "5a98da594685f5e4ebe2dad5a8fc61589a7ae3cebf1ae60b75024cd6ab3e0d31",
+    "bytes": 6314
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/controls.json",
+    "archived": "proposal/controls.json",
+    "sha256": "4d720607e62772e9c829959c515e09fbfefcdbd8b737ba65c2bdf42b8dc1ffc1",
+    "bytes": 45148
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/cut.diff",
+    "archived": "proposal/cut.diff",
+    "sha256": "ad629ad2e05d59b0d1eebaaeb49ce3e8ce4734ba2520245a524b8e667d556d72",
+    "bytes": 2802
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/freeze-evidence.py",
+    "archived": "proposal/freeze-evidence.py.txt",
+    "sha256": "ac1945694889e760aca30d0f90f04f9fe858f7d44a496e9f4f906fd12e0e8d63",
+    "bytes": 7686
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/handoff-receipt.json",
+    "archived": "proposal/handoff-receipt.json",
+    "sha256": "d926359a52cb978c073d649af31c99a2ca5ca3c5d6f9c54d8839a0355f8a6000",
+    "bytes": 985
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/inventory.cjs",
+    "archived": "proposal/inventory.cjs.txt",
+    "sha256": "f160a5aac2c235da207166e3ec1555207ba8c4b1049ef470e5703402a267af4b",
+    "bytes": 3342
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/inventory.json",
+    "archived": "proposal/inventory.json",
+    "sha256": "9b04a5fd24a6f6ac0286cf03af3aedd805fe735b79e2073f514f4f22c115a683",
+    "bytes": 442506
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/layer-plan.md",
+    "archived": "proposal/layer-plan.md",
+    "sha256": "f92849aa2e164dd15c818730e7243e7b2b5d108e218df34f35c685acb21a6912",
+    "bytes": 11122
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/ledger.json",
+    "archived": "proposal/ledger.json",
+    "sha256": "632a31a7ddeb97110365675bbf20793a1215c867d92a501493d4bbd8b266e034",
+    "bytes": 351580
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/main-commands.json",
+    "archived": "proposal/main-commands.json",
+    "sha256": "7bd0a885bbfb666ad0960146040c7ac73ba4a7b0983e03815197dc304478e94c",
+    "bytes": 1364
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/manifest.json",
+    "archived": "proposal/manifest.json",
+    "sha256": "946a680f03ce84419ba6e3dc31e6c155cbecb2d96d10f36b2ee3a1dc6cec1a9b",
+    "bytes": 9318
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/old-evidence.json",
+    "archived": "proposal/old-evidence.json",
+    "sha256": "2e20468ba54c6f90237f9b6d05c3f4e2a9b5ef370f87b3213b2424d4c1c9e3ae",
+    "bytes": 1034
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/data/catalog-enrichment/personal-plan-stage5-v1/curated-cohort-2026-08-11.json",
+    "archived": "proposal/originals/data/catalog-enrichment/personal-plan-stage5-v1/curated-cohort-2026-08-11.json",
+    "sha256": "bae82a45dc14d4db5910b2a28a988297bc9b74b2a372a6a7cf08b8ef35d2346b",
+    "bytes": 88077
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-14-leave-in-exact-01.json",
+    "archived": "proposal/originals/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-14-leave-in-exact-01.json",
+    "sha256": "84a93295477fa8084600e1ecaa5d227df773c6e619ab3ed376d310f07a66c4d1",
+    "bytes": 111389
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-15-leave-in-exact-02.json",
+    "archived": "proposal/originals/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-15-leave-in-exact-02.json",
+    "sha256": "d209178624344d82b21a96cf5af1500b1d7c9fdc98858e90ebe0b31fb5ad061d",
+    "bytes": 70319
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-16-oil-exact-01.json",
+    "archived": "proposal/originals/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-16-oil-exact-01.json",
+    "sha256": "901261f333fc4ffb3f90ca5ed990cd676d5dee89619a04e95eaa403e75612e2a",
+    "bytes": 72326
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-17-oil-exact-02.json",
+    "archived": "proposal/originals/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-17-oil-exact-02.json",
+    "sha256": "0688259dee04fc6b964309f90805ca3dc25a639a0abb0fed7522421bb93dcc10",
+    "bytes": 109532
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-18-mask-exact-01.json",
+    "archived": "proposal/originals/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-18-mask-exact-01.json",
+    "sha256": "4d2cd48117aa05dc45df5f8ce52a1ba90ab5e1057a00ec292dd032c2017ce74b",
+    "bytes": 62918
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-19-mask-exact-02.json",
+    "archived": "proposal/originals/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-19-mask-exact-02.json",
+    "sha256": "6e743f994c65873352c9e80e503de367718ddc75e20408ffec75ec3956fc5c84",
+    "bytes": 62127
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-20-deep-cleansing-repair.json",
+    "archived": "proposal/originals/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-20-deep-cleansing-repair.json",
+    "sha256": "7ac4fa3efa9534d6b5b5280f3dd5767093c840276ebc59d45c54c026eba1f102",
+    "bytes": 20801
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/src/app/api/personal-plan/stage-1/previews/route.ts",
+    "archived": "proposal/originals/src/app/api/personal-plan/stage-1/previews/route.ts.txt",
+    "sha256": "d3c200648e5c2f84456418e927b723c5ea108112ada5587f7afb131cdc902f68",
+    "bytes": 3797
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/src/lib/personal-plan/product-previews.ts",
+    "archived": "proposal/originals/src/lib/personal-plan/product-previews.ts.txt",
+    "sha256": "7c0b484dcb14e2704c5b67aaca17c1e7b5e735c816ec1279530ce5b04f406f0c",
+    "bytes": 13677
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/src/lib/personal-plan/products/authorities.ts",
+    "archived": "proposal/originals/src/lib/personal-plan/products/authorities.ts.txt",
+    "sha256": "46722afc73e14c5f10b83fd220bc4e5f82c3de001086881190cd1fb769b91e2b",
+    "bytes": 4532
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/src/lib/personal-plan/products/contracts.ts",
+    "archived": "proposal/originals/src/lib/personal-plan/products/contracts.ts.txt",
+    "sha256": "bc4291e12db65a3e220c884344255403e4ea3c3eb19d24fb3c5a4605ae011366",
+    "bytes": 52077
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/src/lib/personal-plan/products/recovery-desired-state.ts",
+    "archived": "proposal/originals/src/lib/personal-plan/products/recovery-desired-state.ts.txt",
+    "sha256": "556da32412ee4b65411600a0d7c87e8d556845cac2b5721a5f5c0b870937ff3b",
+    "bytes": 3667
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/src/lib/personal-plan/routine/cadence-authority.ts",
+    "archived": "proposal/originals/src/lib/personal-plan/routine/cadence-authority.ts.txt",
+    "sha256": "47963bd799293399568ebefed0eae54de58ff57c966fc6c69302200a689d558f",
+    "bytes": 1595
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/src/lib/personal-plan/routine/cadence.ts",
+    "archived": "proposal/originals/src/lib/personal-plan/routine/cadence.ts.txt",
+    "sha256": "0bdcd8ba171ba21dff3570de738996adc65a415b982025a0cd0e7dfec1a3fa0c",
+    "bytes": 7951
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "proposal/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/src/lib/product-intake/catalog-enrichment/stage5-catalog-bundle.ts",
+    "archived": "proposal/originals/src/lib/product-intake/catalog-enrichment/stage5-catalog-bundle.ts.txt",
+    "sha256": "a79c452c01525c2e30903759dfc4e36238ef0e266c2cc1b2b377ed4285b1dae7",
+    "bytes": 13510
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/src/lib/recommendation-engine/adapters/from-persistence.ts",
+    "archived": "proposal/originals/src/lib/recommendation-engine/adapters/from-persistence.ts.txt",
+    "sha256": "a65f81e45a0cc1576b64f4f20d7806cfe0fcfaddf2ac21df49459157ff34bb1e",
+    "bytes": 5962
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/src/lib/recommendation-engine/care-balance/frequency-targets.ts",
+    "archived": "proposal/originals/src/lib/recommendation-engine/care-balance/frequency-targets.ts.txt",
+    "sha256": "8a7cf237fb19a1a74a02d53d7c52dcc9b2160732eee03c8b67d665d02b78f500",
+    "bytes": 4660
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/src/lib/recommendation-engine/effective-care-context.ts",
+    "archived": "proposal/originals/src/lib/recommendation-engine/effective-care-context.ts.txt",
+    "sha256": "336150087c020583754bab880500a60c3526c79cfc9ba9810560fe0ee6796d88",
+    "bytes": 6470
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/src/lib/recommendation-engine/runtime.ts",
+    "archived": "proposal/originals/src/lib/recommendation-engine/runtime.ts.txt",
+    "sha256": "31edfca374f832a31e715583a1b49f8faddad002e2ee70a44c4512bda6aeea41",
+    "bytes": 8007
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/src/lib/recommendation-engine/shampoo-cadence.ts",
+    "archived": "proposal/originals/src/lib/recommendation-engine/shampoo-cadence.ts.txt",
+    "sha256": "5dff9e6d423e674e7e232bdfeece6e344dc6aa5fd64c158fa72ce8a7f5c317c9",
+    "bytes": 8783
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/tests/care-balance-frequency-targets.test.ts",
+    "archived": "proposal/originals/tests/care-balance-frequency-targets.test.ts.txt",
+    "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+    "bytes": 10763
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/tests/personal-plan/product-previews.test.ts",
+    "archived": "proposal/originals/tests/personal-plan/product-previews.test.ts.txt",
+    "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+    "bytes": 43433
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/tests/personal-plan-exact-catalog-bundle.test.ts",
+    "archived": "proposal/originals/tests/personal-plan-exact-catalog-bundle.test.ts.txt",
+    "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+    "bytes": 17041
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/tests/personal-plan-routine-cadence.test.ts",
+    "archived": "proposal/originals/tests/personal-plan-routine-cadence.test.ts.txt",
+    "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+    "bytes": 11362
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/tests/personal-plan-routine-candidate-compiler.test.ts",
+    "archived": "proposal/originals/tests/personal-plan-routine-candidate-compiler.test.ts.txt",
+    "sha256": "d1967063160af1b28843b08791ebebf80c9ad95f43bef60dedcc7198c56c5533",
+    "bytes": 28416
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/tests/personal-plan-stage3-contracts.test.ts",
+    "archived": "proposal/originals/tests/personal-plan-stage3-contracts.test.ts.txt",
+    "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+    "bytes": 21649
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/tests/recommendation-engine-foundation.fixtures.ts",
+    "archived": "proposal/originals/tests/recommendation-engine-foundation.fixtures.ts.txt",
+    "sha256": "35965fbf644bd05ce6d34bdceb867bb63aff571eb371604c37b4acb233d119d1",
+    "bytes": 2990
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/originals/tests/recommendation-engine-shampoo-cadence.test.ts",
+    "archived": "proposal/originals/tests/recommendation-engine-shampoo-cadence.test.ts.txt",
+    "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+    "bytes": 13821
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/phase-hashes.json",
+    "archived": "proposal/phase-hashes.json",
+    "sha256": "09c2c6dd41d0c91e219903b4a981bb7614fd292e33789188e0e77d67cf477406",
+    "bytes": 4109
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/phase-inventory.json",
+    "archived": "proposal/phase-inventory.json",
+    "sha256": "4e19a1dd25f6742e07811abe29187ef189eb94c36758f67585ffc3b37872ce7e",
+    "bytes": 1329665
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/prepare-proposal.py",
+    "archived": "proposal/prepare-proposal.py.txt",
+    "sha256": "5aa3f2ccc7cc12d4bc2d436d9d6fd271c6d220d3047c1d439e9d82f5a6126601",
+    "bytes": 6639
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-scope.json",
+    "archived": "proposal/read-scope.json",
+    "sha256": "7c04bdb4c7afc6056755501e62e4c86782d065f4e0917d3ab6fe841723a5de45",
+    "bytes": 31800
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/.github/workflows/ci.yml",
+    "archived": "proposal/read-snapshots/.github/workflows/ci.yml",
+    "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "bytes": 17598
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/data/catalog-enrichment/personal-plan-stage5-v1/curated-cohort-2026-08-11.json",
+    "archived": "proposal/read-snapshots/data/catalog-enrichment/personal-plan-stage5-v1/curated-cohort-2026-08-11.json",
+    "sha256": "bae82a45dc14d4db5910b2a28a988297bc9b74b2a372a6a7cf08b8ef35d2346b",
+    "bytes": 88077
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-14-leave-in-exact-01.json",
+    "archived": "proposal/read-snapshots/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-14-leave-in-exact-01.json",
+    "sha256": "84a93295477fa8084600e1ecaa5d227df773c6e619ab3ed376d310f07a66c4d1",
+    "bytes": 111389
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-15-leave-in-exact-02.json",
+    "archived": "proposal/read-snapshots/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-15-leave-in-exact-02.json",
+    "sha256": "d209178624344d82b21a96cf5af1500b1d7c9fdc98858e90ebe0b31fb5ad061d",
+    "bytes": 70319
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-16-oil-exact-01.json",
+    "archived": "proposal/read-snapshots/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-16-oil-exact-01.json",
+    "sha256": "901261f333fc4ffb3f90ca5ed990cd676d5dee89619a04e95eaa403e75612e2a",
+    "bytes": 72326
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-17-oil-exact-02.json",
+    "archived": "proposal/read-snapshots/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-17-oil-exact-02.json",
+    "sha256": "0688259dee04fc6b964309f90805ca3dc25a639a0abb0fed7522421bb93dcc10",
+    "bytes": 109532
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-18-mask-exact-01.json",
+    "archived": "proposal/read-snapshots/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-18-mask-exact-01.json",
+    "sha256": "4d2cd48117aa05dc45df5f8ce52a1ba90ab5e1057a00ec292dd032c2017ce74b",
+    "bytes": 62918
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-19-mask-exact-02.json",
+    "archived": "proposal/read-snapshots/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-19-mask-exact-02.json",
+    "sha256": "6e743f994c65873352c9e80e503de367718ddc75e20408ffec75ec3956fc5c84",
+    "bytes": 62127
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-20-deep-cleansing-repair.json",
+    "archived": "proposal/read-snapshots/data/catalog-enrichment/personal-plan-stage5-v1/exact-bundles/S5-20-deep-cleansing-repair.json",
+    "sha256": "7ac4fa3efa9534d6b5b5280f3dd5767093c840276ebc59d45c54c026eba1f102",
+    "bytes": 20801
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/docs/personal-plan/categories/shampoo/decision.md",
+    "archived": "proposal/read-snapshots/docs/personal-plan/categories/shampoo/decision.md",
+    "sha256": "155059d918d6ab6891e6e2292f7b7feac2ed5baa495dcf44589f03892d2d839a",
+    "bytes": 20953
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/node_modules/typescript/lib/typescript.js",
+    "archived": "proposal/read-snapshots/node_modules/typescript/lib/typescript.js.txt",
+    "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675",
+    "bytes": 9112572
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/node_modules/zod/package.json",
+    "archived": "proposal/read-snapshots/node_modules/zod/package.json",
+    "sha256": "c630bd10b52dcf71c112a2bf78dbf2734b9db58d62de663b8d86c2ec2c8cda2e",
+    "bytes": 3796
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/node_modules/zod/v4/classic/schemas.js",
+    "archived": "proposal/read-snapshots/node_modules/zod/v4/classic/schemas.js.txt",
+    "sha256": "eb4af7946a092aff8678b9251728ea58dab40154920cd65ec4a2ca1d4df68393",
+    "bytes": 51378
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/node_modules/zod/v4/core/parse.js",
+    "archived": "proposal/read-snapshots/node_modules/zod/v4/core/parse.js.txt",
+    "sha256": "2578b8d1341c3882a6c089f9ec57ce1c1a16b8b2b477721d4d89ba3d3ee50c9c",
+    "bytes": 4444
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/node_modules/zod/v4/core/schemas.js",
+    "archived": "proposal/read-snapshots/node_modules/zod/v4/core/schemas.js.txt",
+    "sha256": "09da9b0cb9b9d2d795c349bc47c7521d5aaffe241885f0c9728f2aa7de3834c9",
+    "bytes": 83322
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/package.json",
+    "archived": "proposal/read-snapshots/package.json",
+    "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    "bytes": 25353
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/plans/2026-08-07-personal-plan-stage4-routine-implementation.md",
+    "archived": "proposal/read-snapshots/plans/2026-08-07-personal-plan-stage4-routine-implementation.md",
+    "sha256": "4118ba650a54a57c9c8e5d45f234f02ee3bb317b63db4df25d839b3f50ae5de9",
+    "bytes": 74096
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/plans/2026-08-12-personal-plan-routine-application-cadence.md",
+    "archived": "proposal/read-snapshots/plans/2026-08-12-personal-plan-routine-application-cadence.md",
+    "sha256": "7f38931525abaf0746bd8afd9c6b05b16901d42e6215059509cca3f853a2d764",
+    "bytes": 23868
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/scripts/ci/run-personal-plan-nested.mjs",
+    "archived": "proposal/read-snapshots/scripts/ci/run-personal-plan-nested.mjs.txt",
+    "sha256": "25be2a1ac68687ae8e76baf40a0b1cfd189817951f4d0804cf2433c35c6be740",
+    "bytes": 1156
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/scripts/product-intake/catalog-enrichment/stage5-catalog-bundle-client.ts",
+    "archived": "proposal/read-snapshots/scripts/product-intake/catalog-enrichment/stage5-catalog-bundle-client.ts.txt",
+    "sha256": "6b400133090e3a2a27970e42527063e32a0b21b7a23aef6ef3074a3649addd47",
+    "bytes": 4221
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/app/api/personal-plan/accept-ideal-plan/route.ts",
+    "archived": "proposal/read-snapshots/src/app/api/personal-plan/accept-ideal-plan/route.ts.txt",
+    "sha256": "d84506635617890e66e2e1d8b8e0d9fc59d730ed5e167cce7075a35f0638856e",
+    "bytes": 6633
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/app/api/personal-plan/stage-1/previews/route.ts",
+    "archived": "proposal/read-snapshots/src/app/api/personal-plan/stage-1/previews/route.ts.txt",
+    "sha256": "d3c200648e5c2f84456418e927b723c5ea108112ada5587f7afb131cdc902f68",
+    "bytes": 3797
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/app/api/personal-plan/stage-3/complete/route.ts",
+    "archived": "proposal/read-snapshots/src/app/api/personal-plan/stage-3/complete/route.ts.txt",
+    "sha256": "a0653505278aeeb0b59fd2d9088cb8fe984b14532aedc3e84ccd9d4c3560c13c",
+    "bytes": 9215
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/components/routine/personal-plan/routine-item-card.tsx",
+    "archived": "proposal/read-snapshots/src/components/routine/personal-plan/routine-item-card.tsx.txt",
+    "sha256": "6f93d8d0073557e65964661275bc8acb520524d81bc8856a781b95d07c9aadda",
+    "bytes": 21951
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/agent/tools/care-balance-context.ts",
+    "archived": "proposal/read-snapshots/src/lib/agent/tools/care-balance-context.ts.txt",
+    "sha256": "b598f5d9073f03033b3f58fe6e128b43b3df784f8eb320189c63aa9c8afdb515",
+    "bytes": 6829
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/agent-v2/production/chat-pipeline.ts",
+    "archived": "proposal/read-snapshots/src/lib/agent-v2/production/chat-pipeline.ts.txt",
+    "sha256": "d3bef7860ac7be43e0ae42ed13bf9a7cf3148008ef87f27109884c5830cfa6c5",
+    "bytes": 61515
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/freemium/plan-provisioning-supabase.ts",
+    "archived": "proposal/read-snapshots/src/lib/freemium/plan-provisioning-supabase.ts.txt",
+    "sha256": "38f307e885e199f17ca35b5fbb4f6113fa36d942d62fc3715116185f80b6191f",
+    "bytes": 13582
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/hair-profile/derived.ts",
+    "archived": "proposal/read-snapshots/src/lib/hair-profile/derived.ts.txt",
+    "sha256": "407f9e87c1196cd8347c04aeded6ac2e897fd39e1b249321fff9adea667e9971",
+    "bytes": 3163
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/product-previews.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/product-previews.ts.txt",
+    "sha256": "7c0b484dcb14e2704c5b67aaca17c1e7b5e735c816ec1279530ce5b04f406f0c",
+    "bytes": 13677
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/products/authorities.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/products/authorities.ts.txt",
+    "sha256": "46722afc73e14c5f10b83fd220bc4e5f82c3de001086881190cd1fb769b91e2b",
+    "bytes": 4532
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/products/contracts.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/products/contracts.ts.txt",
+    "sha256": "bc4291e12db65a3e220c884344255403e4ea3c3eb19d24fb3c5a4605ae011366",
+    "bytes": 52077
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/products/production-persistence-gateway.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/products/production-persistence-gateway.ts.txt",
+    "sha256": "ff627d68d5172015d33b6c049a8611a2155e4d79fff5bab4d7b88112379c161a",
+    "bytes": 66669
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/products/recovery-desired-state.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/products/recovery-desired-state.ts.txt",
+    "sha256": "556da32412ee4b65411600a0d7c87e8d556845cac2b5721a5f5c0b870937ff3b",
+    "bytes": 3667
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/products/state-machine.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/products/state-machine.ts.txt",
+    "sha256": "9f6180af77fcdb0decb53daa806d9f1e5330e63aa98839b2167637030ea6f6f3",
+    "bytes": 44624
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/refinement-recompute/production-deps.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/refinement-recompute/production-deps.ts.txt",
+    "sha256": "27daa53197b22f2cc105473c7076c85429c31a2de4ca3b319b0b5fbac9567b33",
+    "bytes": 5693
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/routine/application-adapter.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/routine/application-adapter.ts.txt",
+    "sha256": "b816eaec1fc6f054abce4222cda7889a13c9224f5a68afdb0218a0a1bf816424",
+    "bytes": 20968
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/routine/cadence-authority.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/routine/cadence-authority.ts.txt",
+    "sha256": "47963bd799293399568ebefed0eae54de58ff57c966fc6c69302200a689d558f",
+    "bytes": 1595
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/routine/cadence.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/routine/cadence.ts.txt",
+    "sha256": "0bdcd8ba171ba21dff3570de738996adc65a415b982025a0cd0e7dfec1a3fa0c",
+    "bytes": 7951
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/routine/canonicalize.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/routine/canonicalize.ts.txt",
+    "sha256": "e4121a385e6c86c957143147994132d9ec1695de1cc7d51d3801d0ad51b451ae",
+    "bytes": 642
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/routine/diff.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/routine/diff.ts.txt",
+    "sha256": "b893394ec965315d96689b1e56d097ae5651195d95d47138e5bbd2d09c470d59",
+    "bytes": 2357
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/routine/editor.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/routine/editor.ts.txt",
+    "sha256": "456a2db8fe593d486457eba1c1297f52156fca89db465a96274181921894ddff",
+    "bytes": 6575
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/routine/source-sync-service.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/routine/source-sync-service.ts.txt",
+    "sha256": "d9230024ea21d5add08e53c4e9365298f3789f2bae8956ddb21efe3c54b950e7",
+    "bytes": 28286
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/routine-proposal-stager.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/routine-proposal-stager.ts.txt",
+    "sha256": "d3c010b03572ef4a593484da0fb7f3463b2c1bd4d78e5bd6c8b41be42e57408b",
+    "bytes": 8666
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/personal-plan/types.ts",
+    "archived": "proposal/read-snapshots/src/lib/personal-plan/types.ts.txt",
+    "sha256": "40297a7f5b93d2ae223603fe818111f8a546c21299579d4eaf1da3d6089e2389",
+    "bytes": 17171
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/product-intake/catalog-enrichment/stage5-catalog-bundle.ts",
+    "archived": "proposal/read-snapshots/src/lib/product-intake/catalog-enrichment/stage5-catalog-bundle.ts.txt",
+    "sha256": "a79c452c01525c2e30903759dfc4e36238ef0e266c2cc1b2b377ed4285b1dae7",
+    "bytes": 13510
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts",
+    "archived": "proposal/read-snapshots/src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts.txt",
+    "sha256": "3e37fd254ec305710841f63f060cb7056b7d361fb7dbc6b9a250126d9a3f92b6",
+    "bytes": 12830
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/product-usage/routine-identity.ts",
+    "archived": "proposal/read-snapshots/src/lib/product-usage/routine-identity.ts.txt",
+    "sha256": "6883a04596d1376d1c6e4539dc77beebaae908fcebde0e2404742869d6945045",
+    "bytes": 2343
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/product-usage/shampoo-fallback.ts",
+    "archived": "proposal/read-snapshots/src/lib/product-usage/shampoo-fallback.ts.txt",
+    "sha256": "2480aea9af037a2217ffd5a6e3d3014a7d42e01c3a760a383680ee30a5ba3c07",
+    "bytes": 2676
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/profile/brush-type.ts",
+    "archived": "proposal/read-snapshots/src/lib/profile/brush-type.ts.txt",
+    "sha256": "8fb3d151addf0d2a0a7cfa0dd4565f1d1792e3886606e33f7fa5d3407ed2529b",
+    "bytes": 2038
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/profile/chemical-treatment.ts",
+    "archived": "proposal/read-snapshots/src/lib/profile/chemical-treatment.ts.txt",
+    "sha256": "b50c624c6955692ace304835c40632ce4176e5fda20603ec9170a9394ada9382",
+    "bytes": 2446
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/profile/signal-derivations.ts",
+    "archived": "proposal/read-snapshots/src/lib/profile/signal-derivations.ts.txt",
+    "sha256": "2e004b739a17b20065c86ca12968734cf36c5f60514f2991ad6866e7337c3cc5",
+    "bytes": 1441
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/recommendation-engine/adapters/from-persistence.ts",
+    "archived": "proposal/read-snapshots/src/lib/recommendation-engine/adapters/from-persistence.ts.txt",
+    "sha256": "a65f81e45a0cc1576b64f4f20d7806cfe0fcfaddf2ac21df49459157ff34bb1e",
+    "bytes": 5962
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/recommendation-engine/assessments/care-needs.ts",
+    "archived": "proposal/read-snapshots/src/lib/recommendation-engine/assessments/care-needs.ts.txt",
+    "sha256": "dea3fdd77a5c6fa68d0300bb2ad1beac729567c48c381643e00da3fa685e5461",
+    "bytes": 3679
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/recommendation-engine/assessments/damage.ts",
+    "archived": "proposal/read-snapshots/src/lib/recommendation-engine/assessments/damage.ts.txt",
+    "sha256": "b366d5c32e34329004b22db0a054beaec5eb6b1de2b3ee67b8eb5529568db5a7",
+    "bytes": 7241
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/recommendation-engine/assessments/reset.ts",
+    "archived": "proposal/read-snapshots/src/lib/recommendation-engine/assessments/reset.ts.txt",
+    "sha256": "f1388c2f5778cb3406538bd5c63a42cb2113c2c2b9c2ffe494e847d465d159fe",
+    "bytes": 5298
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/recommendation-engine/care-balance/evaluators.ts",
+    "archived": "proposal/read-snapshots/src/lib/recommendation-engine/care-balance/evaluators.ts.txt",
+    "sha256": "a9dba468514a551ce2e5110b879dfdc1d293c608740be4b555428fd172521543",
+    "bytes": 24580
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/recommendation-engine/care-balance/frequency-targets.ts",
+    "archived": "proposal/read-snapshots/src/lib/recommendation-engine/care-balance/frequency-targets.ts.txt",
+    "sha256": "8a7cf237fb19a1a74a02d53d7c52dcc9b2160732eee03c8b67d665d02b78f500",
+    "bytes": 4660
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/recommendation-engine/care-balance/index.ts",
+    "archived": "proposal/read-snapshots/src/lib/recommendation-engine/care-balance/index.ts.txt",
+    "sha256": "17ccdaa839e57c0398058f4ceede06aa7c382bb5492b34ecc978d8c931e7d888",
+    "bytes": 84
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/recommendation-engine/care-balance/shared.ts",
+    "archived": "proposal/read-snapshots/src/lib/recommendation-engine/care-balance/shared.ts.txt",
+    "sha256": "d51d7b1a9a084d40e268ad34c9ead7e1a68004c3e67d23b0d2afb9cdf8988e02",
+    "bytes": 3963
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/recommendation-engine/contracts.ts",
+    "archived": "proposal/read-snapshots/src/lib/recommendation-engine/contracts.ts.txt",
+    "sha256": "c057d4aa0c25c44bdb60432a11b1cda1521a0d59d533826f6383dfd639c4d30e",
+    "bytes": 6107
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/recommendation-engine/effective-care-context.ts",
+    "archived": "proposal/read-snapshots/src/lib/recommendation-engine/effective-care-context.ts.txt",
+    "sha256": "336150087c020583754bab880500a60c3526c79cfc9ba9810560fe0ee6796d88",
+    "bytes": 6470
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/recommendation-engine/normalize.ts",
+    "archived": "proposal/read-snapshots/src/lib/recommendation-engine/normalize.ts.txt",
+    "sha256": "c4fe06f4325887972a8b2fee1f12680930d43eeef48a45c0c7de2aad5ba4e0a7",
+    "bytes": 2686
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/recommendation-engine/runtime.ts",
+    "archived": "proposal/read-snapshots/src/lib/recommendation-engine/runtime.ts.txt",
+    "sha256": "31edfca374f832a31e715583a1b49f8faddad002e2ee70a44c4512bda6aeea41",
+    "bytes": 8007
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/recommendation-engine/shampoo-cadence.ts",
+    "archived": "proposal/read-snapshots/src/lib/recommendation-engine/shampoo-cadence.ts.txt",
+    "sha256": "5dff9e6d423e674e7e232bdfeece6e344dc6aa5fd64c158fa72ce8a7f5c317c9",
+    "bytes": 8783
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/recommendation-engine/utils/levels.ts",
+    "archived": "proposal/read-snapshots/src/lib/recommendation-engine/utils/levels.ts.txt",
+    "sha256": "48eb656d8cb96bcf98b858fb841fe525e296402ab812bb3a024927615c3f1371",
+    "bytes": 602
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/routines/personal-plan/application/contracts-v2.ts",
+    "archived": "proposal/read-snapshots/src/lib/routines/personal-plan/application/contracts-v2.ts.txt",
+    "sha256": "9bbf61d129b7220dfeb8b980532a3b16443b371490b037e9333bb6a60f502b69",
+    "bytes": 10178
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/routines/personal-plan/application/contracts.ts",
+    "archived": "proposal/read-snapshots/src/lib/routines/personal-plan/application/contracts.ts.txt",
+    "sha256": "752971bf0c26f18e8ef4ba9ec282b2652a96c25a20206d5467ea8f3751aecf68",
+    "bytes": 11744
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/routines/planner.ts",
+    "archived": "proposal/read-snapshots/src/lib/routines/planner.ts.txt",
+    "sha256": "6a1ccaeec7c921163f1b12b56a6c11988c365a073b07a00db03c82aa4cc0e0ac",
+    "bytes": 86029
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/src/lib/vocabulary/frequencies.ts",
+    "archived": "proposal/read-snapshots/src/lib/vocabulary/frequencies.ts.txt",
+    "sha256": "d79bb3584473a8f6541feecff58a40633736f9376981ff190b645114dc0eb3a9",
+    "bytes": 6217
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/supabase/migrations/20260811214000_personal_plan_exact_catalog_bundle_v1.sql",
+    "archived": "proposal/read-snapshots/supabase/migrations/20260811214000_personal_plan_exact_catalog_bundle_v1.sql",
+    "sha256": "35f6c4b8d29160fbec4881409494e43c4fc1699c682ea186577ba22f80ebfc43",
+    "bytes": 20973
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/supabase/migrations/20260812103000_personal_plan_exact_catalog_bundle_heat_protocol_mapping.sql",
+    "archived": "proposal/read-snapshots/supabase/migrations/20260812103000_personal_plan_exact_catalog_bundle_heat_protocol_mapping.sql",
+    "sha256": "c71b643d30785683f9f907322c101ea8acc550a20ca6b8ef9e607cbdc7109d19",
+    "bytes": 2476
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/supabase/migrations/20260812104000_personal_plan_exact_catalog_bundle_oil_specs_insert.sql",
+    "archived": "proposal/read-snapshots/supabase/migrations/20260812104000_personal_plan_exact_catalog_bundle_oil_specs_insert.sql",
+    "sha256": "ae561b056c1cd66052a4aa587a4ade9ed8450c41cdddbc30cb92d5014eed0c00",
+    "bytes": 1863
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/tests/care-balance-frequency-targets.test.ts",
+    "archived": "proposal/read-snapshots/tests/care-balance-frequency-targets.test.ts.txt",
+    "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+    "bytes": 10763
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/tests/personal-plan/product-previews.test.ts",
+    "archived": "proposal/read-snapshots/tests/personal-plan/product-previews.test.ts.txt",
+    "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+    "bytes": 43433
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/tests/personal-plan-exact-catalog-bundle.test.ts",
+    "archived": "proposal/read-snapshots/tests/personal-plan-exact-catalog-bundle.test.ts.txt",
+    "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+    "bytes": 17041
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/tests/personal-plan-routine-cadence.test.ts",
+    "archived": "proposal/read-snapshots/tests/personal-plan-routine-cadence.test.ts.txt",
+    "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+    "bytes": 11362
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/tests/personal-plan-routine-candidate-compiler.test.ts",
+    "archived": "proposal/read-snapshots/tests/personal-plan-routine-candidate-compiler.test.ts.txt",
+    "sha256": "d1967063160af1b28843b08791ebebf80c9ad95f43bef60dedcc7198c56c5533",
+    "bytes": 28416
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/tests/personal-plan-stage3-contracts.test.ts",
+    "archived": "proposal/read-snapshots/tests/personal-plan-stage3-contracts.test.ts.txt",
+    "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+    "bytes": 21649
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/tests/recommendation-engine-foundation.fixtures.ts",
+    "archived": "proposal/read-snapshots/tests/recommendation-engine-foundation.fixtures.ts.txt",
+    "sha256": "35965fbf644bd05ce6d34bdceb867bb63aff571eb371604c37b4acb233d119d1",
+    "bytes": 2990
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/tests/recommendation-engine-shampoo-cadence.test.ts",
+    "archived": "proposal/read-snapshots/tests/recommendation-engine-shampoo-cadence.test.ts.txt",
+    "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+    "bytes": 13821
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/tests/server-only-register.cjs",
+    "archived": "proposal/read-snapshots/tests/server-only-register.cjs.txt",
+    "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+    "bytes": 391
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/tsconfig.json",
+    "archived": "proposal/read-snapshots/tsconfig.json",
+    "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd",
+    "bytes": 770
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/readset-current-check.json",
+    "archived": "proposal/readset-current-check.json",
+    "sha256": "de5f8023501dc1716a77a9ecf3980b631691347b03944fcd142a818fa87b7e30",
+    "bytes": 127
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/recovered-product-previews-ledger.md",
+    "archived": "proposal/recovered-product-previews-ledger.md",
+    "sha256": "7b0b410f1ba57327239a96160bb8fa1f372a0cc910d8533dda8a959a68448a80",
+    "bytes": 4268
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/before/tests/care-balance-frequency-targets.test.ts",
+    "archived": "proposal/snapshots/before/tests/care-balance-frequency-targets.test.ts.txt",
+    "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+    "bytes": 10763
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/before/tests/personal-plan/product-previews.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan/product-previews.test.ts.txt",
+    "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+    "bytes": 43433
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/before/tests/personal-plan-exact-catalog-bundle.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-exact-catalog-bundle.test.ts.txt",
+    "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+    "bytes": 17041
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/before/tests/personal-plan-routine-cadence.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-routine-cadence.test.ts.txt",
+    "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+    "bytes": 11362
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/before/tests/personal-plan-routine-candidate-compiler.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-routine-candidate-compiler.test.ts.txt",
+    "sha256": "d1967063160af1b28843b08791ebebf80c9ad95f43bef60dedcc7198c56c5533",
+    "bytes": 28416
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/before/tests/personal-plan-stage3-contracts.test.ts",
+    "archived": "proposal/snapshots/before/tests/personal-plan-stage3-contracts.test.ts.txt",
+    "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+    "bytes": 21649
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/before/tests/recommendation-engine-shampoo-cadence.test.ts",
+    "archived": "proposal/snapshots/before/tests/recommendation-engine-shampoo-cadence.test.ts.txt",
+    "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+    "bytes": 13821
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/cut/tests/care-balance-frequency-targets.test.ts",
+    "archived": "proposal/snapshots/cut/tests/care-balance-frequency-targets.test.ts.txt",
+    "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+    "bytes": 10763
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/cut/tests/personal-plan/product-previews.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan/product-previews.test.ts.txt",
+    "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+    "bytes": 43433
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/cut/tests/personal-plan-exact-catalog-bundle.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-exact-catalog-bundle.test.ts.txt",
+    "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+    "bytes": 17041
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/cut/tests/personal-plan-routine-cadence.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-routine-cadence.test.ts.txt",
+    "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+    "bytes": 11362
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/cut/tests/personal-plan-routine-candidate-compiler.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-routine-candidate-compiler.test.ts.txt",
+    "sha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d",
+    "bytes": 28228
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/cut/tests/personal-plan-stage3-contracts.test.ts",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-stage3-contracts.test.ts.txt",
+    "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+    "bytes": 21649
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/cut/tests/recommendation-engine-shampoo-cadence.test.ts",
+    "archived": "proposal/snapshots/cut/tests/recommendation-engine-shampoo-cadence.test.ts.txt",
+    "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+    "bytes": 13821
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/transfer/tests/care-balance-frequency-targets.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/care-balance-frequency-targets.test.ts.txt",
+    "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+    "bytes": 10763
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/transfer/tests/personal-plan/product-previews.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan/product-previews.test.ts.txt",
+    "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+    "bytes": 43433
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/transfer/tests/personal-plan-exact-catalog-bundle.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-exact-catalog-bundle.test.ts.txt",
+    "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+    "bytes": 17041
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/transfer/tests/personal-plan-routine-cadence.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-routine-cadence.test.ts.txt",
+    "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+    "bytes": 11362
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/transfer/tests/personal-plan-routine-candidate-compiler.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-routine-candidate-compiler.test.ts.txt",
+    "sha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3",
+    "bytes": 30639
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/transfer/tests/personal-plan-stage3-contracts.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-stage3-contracts.test.ts.txt",
+    "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+    "bytes": 21649
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/snapshots/transfer/tests/recommendation-engine-shampoo-cadence.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/recommendation-engine-shampoo-cadence.test.ts.txt",
+    "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+    "bytes": 13821
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/start-pins.json",
+    "archived": "proposal/start-pins.json",
+    "sha256": "4ea1f9044e072394223a5082236b50f101e70bfa303913cbfbcc3d8cad69febc",
+    "bytes": 4569
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/static-check.cjs",
+    "archived": "proposal/static-check.cjs.txt",
+    "sha256": "3dd7c36551fd1167bf8b218af4529a1dc991fa2c15fd4bc2f7d1ec4affc4ca53",
+    "bytes": 5590
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/static-check.json",
+    "archived": "proposal/static-check.json",
+    "sha256": "9f52b5b58b65c642e2735d43a0800393f23e43f8e5ff4d3b1b853f3afd1ac546",
+    "bytes": 21046
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/support-and-tables.json",
+    "archived": "proposal/support-and-tables.json",
+    "sha256": "aab2da728649b8192614dd1f71db509b1bedfdd256ca33c7d9e08518ab85ce9b",
+    "bytes": 51772
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/transfer.diff",
+    "archived": "proposal/transfer.diff",
+    "sha256": "fa9becad1c891fe9e20b2cb3b61f5abff369f4d8f143f7c70980382596984d9e",
+    "bytes": 2668
+  },
+  {
+    "original": "/tmp/test-audit-residual-care102-ezeu563r/write-ledger.py",
+    "archived": "proposal/write-ledger.py.txt",
+    "sha256": "2504bd256fd84d459f241245ff02036cde5a96a921c1257f352efbe6e1bc7a1b",
+    "bytes": 15347
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/HANDOFF.json",
+    "archived": "operator-kit/HANDOFF.json",
+    "sha256": "5f496e05b462bcfc4dfa5ef403bcae49ba2840e5f8a2cb58ec603e9ef642cab4",
+    "bytes": 601
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/README.md",
+    "archived": "operator-kit/README.md",
+    "sha256": "f48a373ba52588c2180204ba5237d746cc39d6d6a6c1da2795954b16b706e969",
+    "bytes": 4815
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/artifact-hashes.json",
+    "archived": "operator-kit/artifact-hashes.json",
+    "sha256": "d0d013104651fda9b1a785a994e3215e7cb1020a1f5642d1e1e8a63a97e73c15",
+    "bytes": 5290
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/controls-check.txt",
+    "archived": "operator-kit/controls-check.txt",
+    "sha256": "2e33ccea54166de58dacf135959f6e0e203f79e3e140bf4efd186b397e477a9b",
+    "bytes": 435
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/edit-check.txt",
+    "archived": "operator-kit/edit-check.txt",
+    "sha256": "5a2735daf0bb00bda1bfa68ef885ccd601419c99884c4703ccdfdd1eaa180397",
+    "bytes": 467
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/final-template-delta.patch",
+    "archived": "operator-kit/final-template-delta.patch",
+    "sha256": "2469dd088d47149016146fd2d8ba8183241b43568c69876cf8d99c4529b37184",
+    "bytes": 17041
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/freeze-handoff.py",
+    "archived": "operator-kit/freeze-handoff.py.txt",
+    "sha256": "8096f629969fabc1f0748eb8826a9ac3d70867667d1d07538b7140e51525d205",
+    "bytes": 3727
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/full-native-command.json",
+    "archived": "operator-kit/full-native-command.json",
+    "sha256": "6200c974c3a17df685914332f38739b84a21b10fe09ca4ac1469a9de8fffecc7",
+    "bytes": 645
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-01/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/mutants/C1-01/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "5754c37ee9cda70aac3f1f3611c5bb03b2c18306ad00c9b96365977ca9f329f2",
+    "bytes": 18536
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-02/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/mutants/C1-02/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "12fca0f5ad8ae965f648be074d976212a4fc4528311516e45c865e38da2aa122",
+    "bytes": 18541
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-03/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/mutants/C1-03/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "81a2c91ad3572ed6ab3a5b0cfeaf454569664d8bb07c8e4b75366f73ac08e724",
+    "bytes": 18538
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-04/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/mutants/C1-04/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "263f57d08309655d065b96d43282f483ee55ee4e91a81fdd79149e2c2be3142b",
+    "bytes": 18602
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-05/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/mutants/C1-05/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "952d85e556fa74516eb05f36c49909ebdcfc61767c775aa958992ea180a6be13",
+    "bytes": 18638
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-06/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/mutants/C1-06/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "4498fe1de07a7a46f21901330f1cb7567f13f38abdcf9f8cc59836590752586e",
+    "bytes": 18631
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-07/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/mutants/C1-07/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "ce31b2e53e3bf9ca8c204dd9a21e734a9664bfa503ed76a5d8336b876e96b288",
+    "bytes": 18630
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-08/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/mutants/C1-08/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "7144d8215a4430d9a49f4b9c932145164c7813bb3e14d07e5dc1e420b2018bdd",
+    "bytes": 18633
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-09/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/mutants/C1-09/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "0d1bffae272a4dc5fd9b0527e140db62f1e961f1964374ce2ed1ba95dfed9962",
+    "bytes": 18592
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-10/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/mutants/C1-10/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "7e9ed1ec0862bf9dabb44561f6f935c0f67f38d57f207139f9b39dc0cdd8ca2c",
+    "bytes": 18628
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-11/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/mutants/C1-11/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "e96d3e815debf55a3815864a724f99c7a2eee85e59a427eba9c69eb43febfab7",
+    "bytes": 18580
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-12/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/mutants/C1-12/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "46bd28f84a26e0cd1e7e8f8f893b9728d54d403b8b7930eba3df54590477a0c0",
+    "bytes": 18572
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-13/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/mutants/C1-13/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "f7b81ef4f4ec2557966a0b7dfed518bdba58028c273ad49c950c76bd7f7efae9",
+    "bytes": 18582
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-cut-iWGwPE/intent.json",
+    "archived": "operator-kit/operator-apply-cut-iWGwPE/intent.json",
+    "sha256": "d8f2aed2985f9847f363c06eb4b8dd0a3efa317f0458548f7859739caf583934",
+    "bytes": 2286
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-cut-iWGwPE/originals/tests/care-balance-frequency-targets.test.ts",
+    "archived": "operator-kit/operator-apply-cut-iWGwPE/originals/tests/care-balance-frequency-targets.test.ts.txt",
+    "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+    "bytes": 10763
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-cut-iWGwPE/originals/tests/personal-plan/product-previews.test.ts",
+    "archived": "operator-kit/operator-apply-cut-iWGwPE/originals/tests/personal-plan/product-previews.test.ts.txt",
+    "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+    "bytes": 43433
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-cut-iWGwPE/originals/tests/personal-plan-exact-catalog-bundle.test.ts",
+    "archived": "operator-kit/operator-apply-cut-iWGwPE/originals/tests/personal-plan-exact-catalog-bundle.test.ts.txt",
+    "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+    "bytes": 17041
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-cut-iWGwPE/originals/tests/personal-plan-routine-cadence.test.ts",
+    "archived": "operator-kit/operator-apply-cut-iWGwPE/originals/tests/personal-plan-routine-cadence.test.ts.txt",
+    "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+    "bytes": 11362
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-cut-iWGwPE/originals/tests/personal-plan-routine-candidate-compiler.test.ts",
+    "archived": "operator-kit/operator-apply-cut-iWGwPE/originals/tests/personal-plan-routine-candidate-compiler.test.ts.txt",
+    "sha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3",
+    "bytes": 30639
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-cut-iWGwPE/originals/tests/personal-plan-stage3-contracts.test.ts",
+    "archived": "operator-kit/operator-apply-cut-iWGwPE/originals/tests/personal-plan-stage3-contracts.test.ts.txt",
+    "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+    "bytes": 21649
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-cut-iWGwPE/originals/tests/recommendation-engine-shampoo-cadence.test.ts",
+    "archived": "operator-kit/operator-apply-cut-iWGwPE/originals/tests/recommendation-engine-shampoo-cadence.test.ts.txt",
+    "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+    "bytes": 13821
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-cut-iWGwPE/receipt.json",
+    "archived": "operator-kit/operator-apply-cut-iWGwPE/receipt.json",
+    "sha256": "c866f5f30f10f10134af99bd069dacb5cf19c5cfdbcf65e99e3a21d53b4cd9ad",
+    "bytes": 1578
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-transfer-DOMRTb/intent.json",
+    "archived": "operator-kit/operator-apply-transfer-DOMRTb/intent.json",
+    "sha256": "4e21ebab66aa94071e5bed0251fef12b9c612485c570ea2f72e64c8aa728a5fa",
+    "bytes": 2047
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-transfer-DOMRTb/originals/tests/care-balance-frequency-targets.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-DOMRTb/originals/tests/care-balance-frequency-targets.test.ts.txt",
+    "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+    "bytes": 10763
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-transfer-DOMRTb/originals/tests/personal-plan/product-previews.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-DOMRTb/originals/tests/personal-plan/product-previews.test.ts.txt",
+    "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+    "bytes": 43433
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-transfer-DOMRTb/originals/tests/personal-plan-exact-catalog-bundle.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-DOMRTb/originals/tests/personal-plan-exact-catalog-bundle.test.ts.txt",
+    "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+    "bytes": 17041
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-transfer-DOMRTb/originals/tests/personal-plan-routine-cadence.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-DOMRTb/originals/tests/personal-plan-routine-cadence.test.ts.txt",
+    "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+    "bytes": 11362
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-transfer-DOMRTb/originals/tests/personal-plan-routine-candidate-compiler.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-DOMRTb/originals/tests/personal-plan-routine-candidate-compiler.test.ts.txt",
+    "sha256": "d1967063160af1b28843b08791ebebf80c9ad95f43bef60dedcc7198c56c5533",
+    "bytes": 28416
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-transfer-DOMRTb/originals/tests/personal-plan-stage3-contracts.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-DOMRTb/originals/tests/personal-plan-stage3-contracts.test.ts.txt",
+    "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+    "bytes": 21649
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-transfer-DOMRTb/originals/tests/recommendation-engine-shampoo-cadence.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-DOMRTb/originals/tests/recommendation-engine-shampoo-cadence.test.ts.txt",
+    "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+    "bytes": 13821
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-transfer-DOMRTb/receipt.json",
+    "archived": "operator-kit/operator-apply-transfer-DOMRTb/receipt.json",
+    "sha256": "cb9028b6af42da73f37164f666755f004887d6cd2585289c6f3676725963375d",
+    "bytes": 1349
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-candidates.json",
+    "archived": "operator-kit/operator-candidates.json",
+    "sha256": "44152afba58584660c9f8fd6bbbcbde8978c24a8015e7cbf34e4a3f0ad260323",
+    "bytes": 18971
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-controls-normalized.json",
+    "archived": "operator-kit/operator-controls-normalized.json",
+    "sha256": "46d7e7f846b0eda11a51d40afd8e8c47e156ea155205dbd2d2d414158ec9a09d",
+    "bytes": 87241
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-edit.cjs",
+    "archived": "operator-kit/operator-edit.cjs.txt",
+    "sha256": "92c835a871a8e013246cfba68df079815be2dd30cb2e9ad37fd120ef1cad42a3",
+    "bytes": 3640
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-evidence.json",
+    "archived": "operator-kit/operator-evidence.json",
+    "sha256": "9c378a11a70ef2cc599de47561db59f67901142f678b1b2bb076a8bb19857103",
+    "bytes": 33443
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-guard.cjs",
+    "archived": "operator-kit/operator-guard.cjs.txt",
+    "sha256": "afdd88d29d49aca99a0444c721f7e0e3a116ec67b73781beed90c9f91c2eff7d",
+    "bytes": 15652
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-01/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-01/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-01-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-01-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-01-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-01-after.tap",
+    "sha256": "9811289ba2e6bd7e45e5354c8350c72c1ddac2a4b194915df51b6b6f19caad28",
+    "bytes": 344
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-01-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-01-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-01-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-01-before.tap",
+    "sha256": "14228c0316a61b1091f3fcf8345ceb248c3c6d057b0de016fc8174ae2c7a6a5b",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-01-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-01-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-01-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-01-fault.tap",
+    "sha256": "2acba18958b2138d03a2c8f9f46af6471b3cb9215c9f22a5aa28e9b0bbc03dff",
+    "bytes": 2149
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-02/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-02/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-02-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-02-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-02-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-02-after.tap",
+    "sha256": "a1b5900c2e4d88f9041f221c2f857d20d8ed12b9b73316854bc62cdb1b83f0a0",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-02-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-02-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-02-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-02-before.tap",
+    "sha256": "310a50ed95008924df37cb8aede5193011435c761db1682704881467890266f4",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-02-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-02-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-02-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-02-fault.tap",
+    "sha256": "a02009f94b24e1d8e72032cadc14c1f3436b9f8404da7b8a8643c5239260dddd",
+    "bytes": 1266
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-03/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-03/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-03-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-03-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-03-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-03-after.tap",
+    "sha256": "42af8888f09a84aad4aed223c94bf2e5310eb33847f8c9c7a173ed7dedebea53",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-03-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-03-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-03-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-03-before.tap",
+    "sha256": "83fb78026ae4fcc926251e8089a000637a185a7991c8931f063b68fc41e54d17",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-03-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-03-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-03-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-03-fault.tap",
+    "sha256": "5be8d9ceb20ab572a16fe4764dc3c133b74e0c0900c4246e2cb55cbeddd795c5",
+    "bytes": 1266
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-04/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-04/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-04-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-04-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-04-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-04-after.tap",
+    "sha256": "5836214178cab7380af4fb52116a8a22c5c31136411ab5b32ca03df1eebe97f3",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-04-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-04-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-04-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-04-before.tap",
+    "sha256": "ccf82ae0c3a4cea0cb07910098586135ea8d62c1b078b1f1178f4babc2307fa9",
+    "bytes": 343
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-04-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-04-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-04-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-04-fault.tap",
+    "sha256": "6d6d202f7cc934b59ab3844cc4d09d722dbf089f82806d5cf2e70f5a50147d4b",
+    "bytes": 3322
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-05/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-05/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-05-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-05-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-05-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-05-after.tap",
+    "sha256": "96b87a4835eecbfaeca59dee4e96770a43a733b6aef6781ddd71293617950ba9",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-05-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-05-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-05-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-05-before.tap",
+    "sha256": "13b0bba7f06d742027d93827d8bf6945ed754dad2b43009126e1f32b46d38104",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-05-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-05-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-05-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-05-fault.tap",
+    "sha256": "2b84a6e0242922ea9e21a3e9bc0db148e5ecf2f239660cd1d44c6720aed1df60",
+    "bytes": 3236
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-06/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-06/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-06-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-06-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-06-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-06-after.tap",
+    "sha256": "0689d96ee427613510c677a691a0cb4d6595e91f0e0e0b5b16df1be8db03833d",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-06-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-06-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-06-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-06-before.tap",
+    "sha256": "3798ae766c18d2fcf66fa03f04dfe22a39a3a7dfea14afd4a53cbcdf45e67608",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-06-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-06-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-06-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-06-fault.tap",
+    "sha256": "9d88f722da1f761228bd5fe6140d2d1569e715b71379d537fcdfe9e26214d229",
+    "bytes": 3318
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-07/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-07/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-07-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-07-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-07-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-07-after.tap",
+    "sha256": "8eacd45db2de2fa5f1efbc2bb9c6eb5fbfeb62214d6869b96428abd9e3947f85",
+    "bytes": 343
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-07-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-07-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-07-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-07-before.tap",
+    "sha256": "25f18ab6cfca3bd3e06b79ebe48233d583e77811f75942c0661fbbc45f94de2a",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-07-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-07-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-07-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-07-fault.tap",
+    "sha256": "45f37567972253376f197524d01ae59979c58a89a5f07148e6c43dc7043d4e62",
+    "bytes": 3261
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-08/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-08/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-08-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-08-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-08-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-08-after.tap",
+    "sha256": "aff5c1f37ac26b1594c01242d8d90428ed9c072858db752b17b69e530ae5609c",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-08-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-08-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-08-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-08-before.tap",
+    "sha256": "a6e2bbe1f40fb4084c5e2a4657afd1ce512d3ed017e65e18b854a12951f63897",
+    "bytes": 344
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-08-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-08-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-08-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-08-fault.tap",
+    "sha256": "8e243a0f08f12da5e02254c4859070178c8d3bae0d44d4363e77b5856541c3d8",
+    "bytes": 3277
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-09/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-09/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-09-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-09-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-09-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-09-after.tap",
+    "sha256": "918bc5068b0e6062bc394f3f3a5d98513fa971b3418b502d0899fde661f2517f",
+    "bytes": 344
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-09-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-09-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-09-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-09-before.tap",
+    "sha256": "21e6307d24a9b800dc39e788410810eddccb17b78015d6d5eee520b38964d12b",
+    "bytes": 343
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-09-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-09-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-09-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-09-fault.tap",
+    "sha256": "939217973b54d0402243f810039d626b20429802075932703aae677a1ed517b8",
+    "bytes": 3271
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-10/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-10/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-10-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-10-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-10-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-10-after.tap",
+    "sha256": "254f4ab87ee348b6b9604706cc174120cb82d048c4687a0a62fce18635bf3a13",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-10-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-10-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-10-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-10-before.tap",
+    "sha256": "18244ade1940443385c09e7606af813234df0bd63df52853592d930fd06efce8",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-10-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-10-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-10-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-10-fault.tap",
+    "sha256": "9e3ebd15ad16236cde4859fb1ff9147a0e79679dd4f9ee7ec21b5224466d001f",
+    "bytes": 3331
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-11/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-11/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-11-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-11-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-11-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-11-after.tap",
+    "sha256": "f2845acd0b2de1832ea2ea4cfdc6e35477e6743afd362e6926b43051650fe052",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-11-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-11-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-11-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-11-before.tap",
+    "sha256": "573b966e49b41778bbfcddd98eb211a93f6d3f4e4f0297bf0dd0f0e7cdb90003",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-11-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-11-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-11-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-11-fault.tap",
+    "sha256": "e397bd7474a6071f82a13a4e505af4628fbaa987c073a63c321c8f2f24866e05",
+    "bytes": 1023
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-12/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-12/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-12-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-12-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-12-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-12-after.tap",
+    "sha256": "370da1c1381d55142215abf976ac39341488dc3983db53be9c6aed848327bf3c",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-12-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-12-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-12-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-12-before.tap",
+    "sha256": "54f3e7cafb2f0c8b9a4037de47695897155eff6d5059f4a981e7b3af77fcc10e",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-12-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-12-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-12-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-12-fault.tap",
+    "sha256": "e93c014963cca8fa5a5c82e063ef20c39d6a325b6f9d33b2cd6faeefb3003c99",
+    "bytes": 1023
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-13/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-13/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-13-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-13-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-13-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-13-after.tap",
+    "sha256": "3a65b85f56755de2cc86149dc71050fa7de49c5ac8b44c27af6fa5fb702d3759",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-13-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-13-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-13-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-13-before.tap",
+    "sha256": "0c953f69b0b1b6f13be0c6176476d88cf15ebf16dc7e7f7210743b9a60e962c1",
+    "bytes": 344
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-13-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-13-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/C1-13-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/C1-13-fault.tap",
+    "sha256": "4a3b89de5dd50891f3ed799ab6c63b140ee8edf32d06f063925d9a9812dceda7",
+    "bytes": 1023
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/all-originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/all-originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/all-originals/tests/care-balance-frequency-targets.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/all-originals/tests/care-balance-frequency-targets.test.ts.txt",
+    "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+    "bytes": 10763
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/all-originals/tests/personal-plan/product-previews.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/all-originals/tests/personal-plan/product-previews.test.ts.txt",
+    "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+    "bytes": 43433
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/all-originals/tests/personal-plan-exact-catalog-bundle.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/all-originals/tests/personal-plan-exact-catalog-bundle.test.ts.txt",
+    "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+    "bytes": 17041
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/all-originals/tests/personal-plan-routine-cadence.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/all-originals/tests/personal-plan-routine-cadence.test.ts.txt",
+    "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+    "bytes": 11362
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/all-originals/tests/personal-plan-routine-candidate-compiler.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/all-originals/tests/personal-plan-routine-candidate-compiler.test.ts.txt",
+    "sha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d",
+    "bytes": 28228
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/all-originals/tests/personal-plan-stage3-contracts.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/all-originals/tests/personal-plan-stage3-contracts.test.ts.txt",
+    "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+    "bytes": 21649
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/all-originals/tests/recommendation-engine-shampoo-cadence.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/all-originals/tests/recommendation-engine-shampoo-cadence.test.ts.txt",
+    "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+    "bytes": 13821
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/complete.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/complete.json",
+    "sha256": "5a4bee58846df2f36f96b28d5bf1529db2c2443cbc35ef438ff6b783084e972a",
+    "bytes": 32265
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/intent.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/intent.json",
+    "sha256": "b97175258b38dad7b34b0fda52472f8f5fd633b46576556d60a5052db756cd42",
+    "bytes": 1304
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-cut-o8ne4f/receipt.json",
+    "archived": "operator-kit/operator-mutations-cut-o8ne4f/receipt.json",
+    "sha256": "2b2d3a8c48f7f730da561260019e2adb58e062a9249e543fa6462c9f77b30aaa",
+    "bytes": 713360
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-01/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-01/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-01-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-01-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-01-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-01-after.tap",
+    "sha256": "d29ccdf0270eb3dd32235150f238475fe2a5528b054711bc1ed1d7ffcd42985f",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-01-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-01-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-01-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-01-before.tap",
+    "sha256": "b531c57c9bf0921618fe33e34a3da249387ebea73169a8c695acfd2ebea149b6",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-01-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-01-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-01-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-01-fault.tap",
+    "sha256": "e0a61ed36c8aa426871320e621f098e42c358256edde937c091e1249c54cc3c3",
+    "bytes": 2150
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-02/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-02/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-02-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-02-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-02-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-02-after.tap",
+    "sha256": "fe5d2c138eb0ab64463bbb08df323491ddc566ed83ab68f7fc5b8f963bb83444",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-02-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-02-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-02-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-02-before.tap",
+    "sha256": "288f362a17b5a413dac164af084347e8fbada8e4d70928dda18f344c1da08453",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-02-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-02-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-02-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-02-fault.tap",
+    "sha256": "3e31c8eea959e69b5ae1705fffe70280d2a12efb437f4747904134c82770a48a",
+    "bytes": 1266
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-03/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-03/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-03-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-03-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-03-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-03-after.tap",
+    "sha256": "ec3a94c94497c98dde88e65efaf6ba4ebe36b89e8fdb05573d243291b03d51f5",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-03-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-03-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-03-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-03-before.tap",
+    "sha256": "d45ea1c61929a41ee68da27254ae49ed5fb4291fd2cedd299b6aaf2cf3535ea8",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-03-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-03-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-03-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-03-fault.tap",
+    "sha256": "24cd1cdd16035a3cf8ee96595317b667376fd439abe9b421df62df272a89b5b7",
+    "bytes": 1266
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-04/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-04/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-04-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-04-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-04-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-04-after.tap",
+    "sha256": "a4932aea8437eb0c46baa4b1b29273f379ef997a7073d8dd6edaa489911a25b5",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-04-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-04-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-04-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-04-before.tap",
+    "sha256": "b62368ad72d25028a6fdb0115845c9aab26e71e661794892c459887d48595242",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-04-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-04-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-04-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-04-fault.tap",
+    "sha256": "18a5087f7d3cdaa09c817e099bdb8a35c724fe47300dfd26f528bf1679db87c8",
+    "bytes": 3322
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-05/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-05/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-05-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-05-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-05-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-05-after.tap",
+    "sha256": "87dcec6b427c210cd9e5ddfc8299504cc2f8abb5202513389546761355e431de",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-05-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-05-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-05-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-05-before.tap",
+    "sha256": "92d3e8f7ca72a0614a06553c776c043bf563ebfb7888267f5e37f5bacc847c7c",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-05-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-05-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-05-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-05-fault.tap",
+    "sha256": "1d695e9adc160064f641dc5e048c33666992191ad8455fd191abf0071cedff0a",
+    "bytes": 3236
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-06/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-06/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-06-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-06-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-06-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-06-after.tap",
+    "sha256": "aa2d1dee9efd74920c4f662a29005d48c2ddc0e462d1ce6c2c9b27837ae4a218",
+    "bytes": 343
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-06-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-06-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-06-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-06-before.tap",
+    "sha256": "632ef7768c287bf6896d177a113a157fcf41db81515e1dc927f231e0bf32ebff",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-06-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-06-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-06-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-06-fault.tap",
+    "sha256": "de70e4c608ae5b0b7856b2eee6f7b0ee897c7ef934fa449af023213d28cb19b3",
+    "bytes": 3316
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-07/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-07/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-07-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-07-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-07-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-07-after.tap",
+    "sha256": "835ec865655d427a88d1e85d0ac79c837ae1ad429a0686353962bbc88b15ec56",
+    "bytes": 344
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-07-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-07-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-07-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-07-before.tap",
+    "sha256": "fb571b84a0b74338adaae268099a035ccb988d81ee83a4ae2fde0176cada771b",
+    "bytes": 343
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-07-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-07-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-07-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-07-fault.tap",
+    "sha256": "23687de1c15265acbf9c13cd161379c8c447c8111282753c661c249bf6f07c5a",
+    "bytes": 3261
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-08/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-08/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-08-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-08-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-08-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-08-after.tap",
+    "sha256": "7d2ade367a7940b863bf58e2c95599e048af663d3d33fd9fcf197f63eeaccdc2",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-08-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-08-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-08-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-08-before.tap",
+    "sha256": "fa26fc2e96742e6857d99ce892f0b26770e7d51d63b42b7248dca00f7c22644b",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-08-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-08-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-08-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-08-fault.tap",
+    "sha256": "07e0011373e900dfb3491d85ee10ef4bd54f8c26e1c94ad7e3f0781f95428abb",
+    "bytes": 3277
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-09/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-09/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-09-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-09-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-09-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-09-after.tap",
+    "sha256": "ead74e3b2f90e5e33179ecd74fd2889bdebfffd50cf786fbf3c7c9ee70c55484",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-09-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-09-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-09-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-09-before.tap",
+    "sha256": "7ddb5e048468da2b9813354d13ed4a80b955a4cc7359e932b39b24f9a3bee63b",
+    "bytes": 345
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-09-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-09-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-09-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-09-fault.tap",
+    "sha256": "6d3ead08e75183ec22b80ad47a16edf5796f7032ef1bb2f610f835082641794f",
+    "bytes": 3271
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-10/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-10/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-10-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-10-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-10-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-10-after.tap",
+    "sha256": "fe0ed9c535395ab131c9c4500ca3811b808d3ad9116113c3e2b7742de7f0487a",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-10-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-10-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-10-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-10-before.tap",
+    "sha256": "a623057c3159d724ab97c850b389a7aff09a2c240e91c09ee0ff7a7e2a642f00",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-10-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-10-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-10-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-10-fault.tap",
+    "sha256": "a2962ffc80b5bc8d3e5ea1095f8f0179c64038ca45ecd0c330995215e220e19a",
+    "bytes": 3332
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-11/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-11/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-11-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-11-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-11-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-11-after.tap",
+    "sha256": "f807b797859e1ac14e571eabb081a3b6aaf87355fb260049872b94b36e50d347",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-11-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-11-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-11-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-11-before.tap",
+    "sha256": "8cc3ee8f0d4aefba41e97f58836131fefd17565bdfb59a5891f4ba5a095299fe",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-11-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-11-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-11-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-11-fault.tap",
+    "sha256": "662ee80bb887fd33ef7879ae400f299cce76cedfcd6705c6074b65e201282014",
+    "bytes": 1023
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-12/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-12/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-12-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-12-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-12-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-12-after.tap",
+    "sha256": "c40ad53335b378810834797268ee21dedbe7baa0bc78f705b93d2834d957aa58",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-12-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-12-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-12-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-12-before.tap",
+    "sha256": "85661537bd55c4f8d945fe0221f30fb0f62e7bcab15ff01087a18b88ede27a19",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-12-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-12-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-12-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-12-fault.tap",
+    "sha256": "8f4e1947f2563ea1a075eb2beb788de5a2deac4e5d04947d91fea0d4c6a2eef7",
+    "bytes": 1023
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-13/originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-13/originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-13-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-13-after.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-13-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-13-after.tap",
+    "sha256": "aaf1d59f157b919132909d095dc6c2784477ef348ee21fd2ef3573aa44a3566f",
+    "bytes": 341
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-13-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-13-before.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-13-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-13-before.tap",
+    "sha256": "e076070107db22fc35cdf4004fc8a91849f728811fb2ef886f6062e6682d4523",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-13-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-13-fault.command.json",
+    "sha256": "2573f29e048fd086dee77d79ca3919338eb74c43717b4391c36582fa9580cfa8",
+    "bytes": 480
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/C1-13-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/C1-13-fault.tap",
+    "sha256": "33d6c8040d0ffd1fa19a3aa0ef8c6f7cd61abec4275a1258225e35121078a6f5",
+    "bytes": 1023
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/all-originals/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/all-originals/src/lib/personal-plan/routine-candidate-compiler.ts.txt",
+    "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "bytes": 18511
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/all-originals/tests/care-balance-frequency-targets.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/all-originals/tests/care-balance-frequency-targets.test.ts.txt",
+    "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+    "bytes": 10763
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/all-originals/tests/personal-plan/product-previews.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/all-originals/tests/personal-plan/product-previews.test.ts.txt",
+    "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+    "bytes": 43433
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/all-originals/tests/personal-plan-exact-catalog-bundle.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/all-originals/tests/personal-plan-exact-catalog-bundle.test.ts.txt",
+    "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+    "bytes": 17041
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/all-originals/tests/personal-plan-routine-cadence.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/all-originals/tests/personal-plan-routine-cadence.test.ts.txt",
+    "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+    "bytes": 11362
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/all-originals/tests/personal-plan-routine-candidate-compiler.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/all-originals/tests/personal-plan-routine-candidate-compiler.test.ts.txt",
+    "sha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3",
+    "bytes": 30639
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/all-originals/tests/personal-plan-stage3-contracts.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/all-originals/tests/personal-plan-stage3-contracts.test.ts.txt",
+    "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+    "bytes": 21649
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/all-originals/tests/recommendation-engine-shampoo-cadence.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/all-originals/tests/recommendation-engine-shampoo-cadence.test.ts.txt",
+    "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+    "bytes": 13821
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/complete.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/complete.json",
+    "sha256": "a2c7cf5fc0c18065e80fef7d18968f1eed90d475e5d2e654ea7543973ccf68c0",
+    "bytes": 32270
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/intent.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/intent.json",
+    "sha256": "3cde554cc97fc59417eb2ad3fb78eb6c9dae06d9ab2647ba681ebf1fe2ad3dd0",
+    "bytes": 1309
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-mutations-transfer-qxE2sk/receipt.json",
+    "archived": "operator-kit/operator-mutations-transfer-qxE2sk/receipt.json",
+    "sha256": "48d7699b46ad06e826b691032ad34d88ae0e324967e3b81a72f537e72a0266aa",
+    "bytes": 713620
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-native-proof.cjs",
+    "archived": "operator-kit/operator-native-proof.cjs.txt",
+    "sha256": "a9e2988ad4fe424a9ccc7b1070e5d24ed7435ed77416e87f78c38545a37387db",
+    "bytes": 1879
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-pins.json",
+    "archived": "operator-kit/operator-pins.json",
+    "sha256": "67f792bcbb94f1a2f6f807cddd4403c08da414aeec3748c71ad49d5bd28ccb89",
+    "bytes": 2246169
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-proof.cjs",
+    "archived": "operator-kit/operator-proof.cjs.txt",
+    "sha256": "10c4e9e55aa0f9f20c16802b612519a65923e424f38222a6f83dd99cfd9c1b91",
+    "bytes": 5736
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-readonly-preload.cjs",
+    "archived": "operator-kit/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-run-controls.cjs",
+    "archived": "operator-kit/operator-run-controls.cjs.txt",
+    "sha256": "0d46b1f26f65b7fd9eb5826bd0fe18fc629534a1decfba7db6799488a59021e5",
+    "bytes": 8070
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/operator-selected-closure.json",
+    "archived": "operator-kit/operator-selected-closure.json",
+    "sha256": "11c51f4ccf4dc859aa39aac5a1fa84054c5f5149eb739f61a861c32097a15751",
+    "bytes": 131718
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/preparation-result.json",
+    "archived": "operator-kit/preparation-result.json",
+    "sha256": "bbf8df06863ec3a78ad416f8f62f905f68e0b226e780bff703d03c9554c4e0a4",
+    "bytes": 592
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/prepare-pins.cjs",
+    "archived": "operator-kit/prepare-pins.cjs.txt",
+    "sha256": "640f267ae55df32cc17b92fc8affb5060a9eea40b33cad2b2c7696732d3beccb",
+    "bytes": 15886
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/prepare-tools.py",
+    "archived": "operator-kit/prepare-tools.py.txt",
+    "sha256": "d767d29bf8f24987c216ce16b4230e951db904d4661d18f3ad45be5a3b526003",
+    "bytes": 4944
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/proof-attestation.cjs",
+    "archived": "operator-kit/proof-attestation.cjs.txt",
+    "sha256": "51ea98b2c3c258bd0cd6539c7f281c8d4475dc2211865a34ac190fe0be9b683d",
+    "bytes": 4012
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/proof-attestation.txt",
+    "archived": "operator-kit/proof-attestation.txt",
+    "sha256": "3d660219f82af88dbbb7101bc22e995d679af87fe2d675b157e52d7e734cb24b",
+    "bytes": 423
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/static-integrity.cjs",
+    "archived": "operator-kit/static-integrity.cjs.txt",
+    "sha256": "3e07dc1baf769e3cbbd077f03d4b4cfdc480f6cfefd586542c1016f5dd04dd8c",
+    "bytes": 2035
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/static-integrity.txt",
+    "archived": "operator-kit/static-integrity.txt",
+    "sha256": "7bc93dfc0e204d2b327d5928f0a04d2dc1ba56d49d788a62eaced51edafd3efb",
+    "bytes": 778
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/static-receipt.json",
+    "archived": "operator-kit/static-receipt.json",
+    "sha256": "c2aa779fa0506b17131a56ee828f36f1b8d71246175db94463eb02b65db89112",
+    "bytes": 5629
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/template-delta.patch",
+    "archived": "operator-kit/template-delta.patch",
+    "sha256": "0b47206bce661ae6d4d75e3460dc0772e52325b3520692982f87aacd29564069",
+    "bytes": 16906
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/template-originals/operator-edit.cjs",
+    "archived": "operator-kit/template-originals/operator-edit.cjs.txt",
+    "sha256": "465be39962f79701f8f59d4a55bfd301789c840b94d490ef2c027f514b1407c1",
+    "bytes": 3640
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/template-originals/operator-guard.cjs",
+    "archived": "operator-kit/template-originals/operator-guard.cjs.txt",
+    "sha256": "c717d889712ea25bd1d65249b60e14ebb2c43c6e9172b09f9a39156f7fabef0d",
+    "bytes": 16492
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/template-originals/operator-native-proof.cjs",
+    "archived": "operator-kit/template-originals/operator-native-proof.cjs.txt",
+    "sha256": "12a42b13f8f20091f6db09fb40774a066c216ce7d53a27d2ed8db77a782a3efc",
+    "bytes": 1879
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/template-originals/operator-pins.json",
+    "archived": "operator-kit/template-originals/operator-pins.json",
+    "sha256": "b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f",
+    "bytes": 2233874
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/template-originals/operator-proof.cjs",
+    "archived": "operator-kit/template-originals/operator-proof.cjs.txt",
+    "sha256": "8bf57575777342db25b87980f3fa408c9cb24db334b60505255c1875af106cc6",
+    "bytes": 5737
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/template-originals/operator-readonly-preload.cjs",
+    "archived": "operator-kit/template-originals/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/template-originals/operator-run-controls.cjs",
+    "archived": "operator-kit/template-originals/operator-run-controls.cjs.txt",
+    "sha256": "5f75556b152053a4a6c8ab12fb280a8a5c833d4c484e16c46a29fb369f1681e0",
+    "bytes": 8071
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/template-originals/proof-attestation.cjs",
+    "archived": "operator-kit/template-originals/proof-attestation.cjs.txt",
+    "sha256": "ca8af9a7f477930554c86e4bc91c22fee7a9f4ffbd446fa8679465caa2cf3d9f",
+    "bytes": 4012
+  },
+  {
+    "original": "/tmp/test-audit-care102-tools-fz8_q695/template-provenance.json",
+    "archived": "operator-kit/template-provenance.json",
+    "sha256": "663224e2fc760a5d9b71e8d4f39ecb043b7dc5893b713671d2804a543f325ea8",
+    "bytes": 2524
+  },
+  {
+    "original": "/tmp/test-audit-care102-independent-preservation.md",
+    "archived": "independent-test-audit-care102-independent-preservation.md/test-audit-care102-independent-preservation.md",
+    "sha256": "729706c0645cb85acc54971c91db2ad8c843d91f56a89c6ebb85d26137f4e2ea",
+    "bytes": 12869
+  },
+  {
+    "original": "/tmp/test-audit-care102-independent-read-depth.json",
+    "archived": "independent-test-audit-care102-independent-read-depth.json/test-audit-care102-independent-read-depth.json",
+    "sha256": "f76f4e6ab3a5de28a67131ad9428bce86f88b78de9168d9f5c41932c6a487f59",
+    "bytes": 5080
+  },
+  {
+    "original": "/tmp/test-audit-care102-independent-receipt.json",
+    "archived": "independent-test-audit-care102-independent-receipt.json/test-audit-care102-independent-receipt.json",
+    "sha256": "527169053e16b96d9676f6e3344f79b0b7c8d81a31a5c3818fdfc8ec90e7a95c",
+    "bytes": 1495
+  },
+  {
+    "original": "/tmp/test-audit-care102-independent-static.cjs",
+    "archived": "independent-test-audit-care102-independent-static.cjs/test-audit-care102-independent-static.cjs.txt",
+    "sha256": "b3e3f2850e4fe3b7f2d34cb42b0875d98bb28c597fb22336cd843e0b88f7cc44",
+    "bytes": 9612
+  },
+  {
+    "original": "/tmp/test-audit-care102-independent-static.json",
+    "archived": "independent-test-audit-care102-independent-static.json/test-audit-care102-independent-static.json",
+    "sha256": "ffd215bdda9fc4aa571f47a9aec885c030c347a6b70a8456453979805745571c",
+    "bytes": 118645
+  },
+  {
+    "original": "/tmp/test-audit-care102-main-before-native.command.json",
+    "archived": "main-native-test-audit-care102-main-before-native.command.json/test-audit-care102-main-before-native.command.json",
+    "sha256": "1d67b1cdf6ad81dfc32c7c088fe64ef5e9972db24e19a0534919e7f906951835",
+    "bytes": 633
+  },
+  {
+    "original": "/tmp/test-audit-care102-main-before-native.result.json",
+    "archived": "main-native-test-audit-care102-main-before-native.result.json/test-audit-care102-main-before-native.result.json",
+    "sha256": "2eff088f296ba93b8a6d830e2b5c6f87a9660c6b32d1b75b04be6fd99bb88072",
+    "bytes": 173
+  },
+  {
+    "original": "/tmp/test-audit-care102-main-before-native.tap",
+    "archived": "main-native-test-audit-care102-main-before-native.tap/test-audit-care102-main-before-native.tap",
+    "sha256": "d7f8f16d39d8d2d6cd290959e16b384b1fba75ecbe65aa1994470f0cd247c896",
+    "bytes": 21586
+  },
+  {
+    "original": "/tmp/test-audit-care102-main-before-native.tool-command.json",
+    "archived": "main-native-test-audit-care102-main-before-native.tool-command.json/test-audit-care102-main-before-native.tool-command.json",
+    "sha256": "6200c974c3a17df685914332f38739b84a21b10fe09ca4ac1469a9de8fffecc7",
+    "bytes": 645
+  },
+  {
+    "original": "/tmp/test-audit-care102-main-transfer-native.command.json",
+    "archived": "main-native-test-audit-care102-main-transfer-native.command.json/test-audit-care102-main-transfer-native.command.json",
+    "sha256": "1d67b1cdf6ad81dfc32c7c088fe64ef5e9972db24e19a0534919e7f906951835",
+    "bytes": 633
+  },
+  {
+    "original": "/tmp/test-audit-care102-main-transfer-native.result.json",
+    "archived": "main-native-test-audit-care102-main-transfer-native.result.json/test-audit-care102-main-transfer-native.result.json",
+    "sha256": "2eff088f296ba93b8a6d830e2b5c6f87a9660c6b32d1b75b04be6fd99bb88072",
+    "bytes": 173
+  },
+  {
+    "original": "/tmp/test-audit-care102-main-transfer-native.tap",
+    "archived": "main-native-test-audit-care102-main-transfer-native.tap/test-audit-care102-main-transfer-native.tap",
+    "sha256": "4ae7ee62ca1edd5ada6ae51891ab4c8d53b7d320cbb9cc61b0bb134559061891",
+    "bytes": 21579
+  },
+  {
+    "original": "/tmp/test-audit-care102-main-transfer-native.tool-command.json",
+    "archived": "main-native-test-audit-care102-main-transfer-native.tool-command.json/test-audit-care102-main-transfer-native.tool-command.json",
+    "sha256": "6200c974c3a17df685914332f38739b84a21b10fe09ca4ac1469a9de8fffecc7",
+    "bytes": 645
+  },
+  {
+    "original": "/tmp/test-audit-care101-main-cut-native.command.json",
+    "archived": "main-native-test-audit-care101-main-cut-native.command.json/test-audit-care101-main-cut-native.command.json",
+    "sha256": "1d67b1cdf6ad81dfc32c7c088fe64ef5e9972db24e19a0534919e7f906951835",
+    "bytes": 633
+  },
+  {
+    "original": "/tmp/test-audit-care101-main-cut-native.result.json",
+    "archived": "main-native-test-audit-care101-main-cut-native.result.json/test-audit-care101-main-cut-native.result.json",
+    "sha256": "4998a5809a8af2a42f91b573c9f697871d642b6d6908ca87c2b23eefefec043a",
+    "bytes": 173
+  },
+  {
+    "original": "/tmp/test-audit-care101-main-cut-native.tap",
+    "archived": "main-native-test-audit-care101-main-cut-native.tap/test-audit-care101-main-cut-native.tap",
+    "sha256": "7a4069b1a6a4addbe000ac9140e312ac3c1a755c5663a813ab5cf37019c18231",
+    "bytes": 21351
+  },
+  {
+    "original": "/tmp/test-audit-care101-main-cut-native.tool-command.json",
+    "archived": "main-native-test-audit-care101-main-cut-native.tool-command.json/test-audit-care101-main-cut-native.tool-command.json",
+    "sha256": "6200c974c3a17df685914332f38739b84a21b10fe09ca4ac1469a9de8fffecc7",
+    "bytes": 645
+  },
+  {
+    "original": "/tmp/test-audit-care102-main-native-command.json",
+    "archived": "main-argv/test-audit-care102-main-native-command.json",
+    "sha256": "1d67b1cdf6ad81dfc32c7c088fe64ef5e9972db24e19a0534919e7f906951835",
+    "bytes": 633
+  }
+]

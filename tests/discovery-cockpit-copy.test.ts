@@ -9,7 +9,6 @@ import {
   COCKPIT_NOT_NEEDED_REASONS,
   COCKPIT_VOICE_MAP,
   cockpitVoice,
-  cockpitVoiceOrNull,
 } from "../src/lib/discovery/cockpit-copy"
 import type { PersonalPlanCategory } from "../src/lib/personal-plan/products/contracts"
 import { scanReasonsLabel } from "../src/lib/scan/result-presentation"
@@ -159,9 +158,6 @@ test("unknown strings pass through untouched — no blind pronoun rewriting", ()
   ]) {
     assert.equal(cockpitVoice(text), text)
   }
-  assert.equal(cockpitVoiceOrNull(null), null)
-  assert.equal(cockpitVoiceOrNull(undefined), null)
-  assert.equal(cockpitVoiceOrNull("Passt zu deinem Haar"), "Passt zum Haarprofil")
 })
 
 test("the participant's copy objects are not mutated by building the map", () => {

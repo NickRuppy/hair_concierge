@@ -1,0 +1,79 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "files": [
+    {
+      "file": "tests/funnel-api.test.ts",
+      "sha256": "1cdb0c5a2551075e530f4b85a1f2f38c1757fff69f5b9090f01a6f63684e0e1e",
+      "bytes": 2082,
+      "lines": 73
+    },
+    {
+      "file": "tests/funnel-client.test.ts",
+      "sha256": "5e5ee42b9f87a309364f3eaa2335976eb7104ddf34c0eb05795c93cebcbf1cbc",
+      "bytes": 5711,
+      "lines": 166
+    },
+    {
+      "file": "tests/funnel-cookie.test.ts",
+      "sha256": "e75f3d09b2cf7fab486ba164ad68dfcb18a19dc24d6a4fd178e30b4dab283df5",
+      "bytes": 2181,
+      "lines": 60
+    },
+    {
+      "file": "tests/funnel-migration.test.ts",
+      "sha256": "f1f36110b05d3131c0d6af146962471d7969b142ddb73dc3695a973b6bbb1127",
+      "bytes": 4109,
+      "lines": 94
+    },
+    {
+      "file": "tests/funnel-rate-limit.test.ts",
+      "sha256": "e848153ff3c80ff0d429ca7f3a50e42aa6d3b87a85e1d5ec28d14db83077a6dd",
+      "bytes": 1381,
+      "lines": 44
+    },
+    {
+      "file": "tests/funnel-route.test.ts",
+      "sha256": "9afe9dfc97c2d708ca882d823926eb6ce36237c9df25d287a9a58b35d3cd46d1",
+      "bytes": 2874,
+      "lines": 77
+    },
+    {
+      "file": "tests/funnel-server.test.ts",
+      "sha256": "84aec887c25617e6504b6e574b3dac815c03b96aac69f74556ce73abb956c8fc",
+      "bytes": 5812,
+      "lines": 173
+    },
+    {
+      "file": "tests/gated-example-pages.test.tsx",
+      "sha256": "c888368cd901c4fa0cad2051260efffb382c04040a693625a50d8ded344f996e",
+      "bytes": 15383,
+      "lines": 320
+    },
+    {
+      "file": "tests/gated-pages-zero-mutation.test.tsx",
+      "sha256": "b67ca2dd7e813e042a5f680e70e234454ecbdc5c89a86df289ea8ea2e7f662f9",
+      "bytes": 12556,
+      "lines": 317
+    },
+    {
+      "file": "tests/gated-preview-component.test.tsx",
+      "sha256": "d545763a922c5c82e31fdd2a81489adadbe94ccb1c5c54e80496e0c2e2caf950",
+      "bytes": 8349,
+      "lines": 209
+    },
+    {
+      "file": "tests/editorial-pages.test.tsx",
+      "sha256": "96ce7c5f2eee468668c4581b58aeb8a69ee959c593ab1059c20d9b3b0c48091e",
+      "bytes": 11121,
+      "lines": 217
+    },
+    {
+      "file": "tests/landing-client-import-boundary.test.ts",
+      "sha256": "67d144b38b889ebfcb4900a2d4357eea894eeabcf3af65e7d935f3525e742dfd",
+      "bytes": 5225,
+      "lines": 161
+    }
+  ]
+}

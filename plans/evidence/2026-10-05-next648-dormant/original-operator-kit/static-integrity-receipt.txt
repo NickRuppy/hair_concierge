@@ -1,0 +1,19 @@
+{
+  "status": "PASS_STATIC_ONLY",
+  "phase": "transfer",
+  "parsedTools": 11,
+  "original56GuardsPreserved": 56,
+  "nonArtifactPinsUnchanged": true,
+  "reviewedIdentityLockCASTextExact": true,
+  "strictDecoderAndFirstOuterAssertionPredicateTextExact": true,
+  "controls": 14,
+  "phaseMutants": 28,
+  "syntheticCohortCases": 20,
+  "sourceWrites": 0,
+  "children": 0,
+  "ownerImports": 0,
+  "nativeRuns": 0,
+  "semanticAuditCredit": 0
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

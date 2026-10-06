@@ -1,0 +1,27 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "68a3621c1a438274ec566d261ee5087b84f0a8d54424d85fc5ed81c8ffdd44bb",
+  "prerequisite": {
+    "dir": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-mutations-transfer-NF5TPK",
+    "completionSHA": "ccf42a7cb72984a5266b71a25080756613b67013282ae2e1b101bfcfbdb00be7",
+    "verified": 14,
+    "logFiles": 42,
+    "phase": "transfer"
+  },
+  "files": [
+    {
+      "file": "tests/scan-unknown-flow-ui.test.tsx",
+      "before": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965",
+      "after": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf"
+    },
+    {
+      "file": "tests/scan-research-intake-form-ui.test.tsx",
+      "before": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb",
+      "after": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+    }
+  ]
+}

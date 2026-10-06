@@ -3,8 +3,6 @@ import test from "node:test"
 
 import {
   buildActiveResolvedProductContext,
-  buildActiveResolvedProductContextFromLookup,
-  buildNextActiveResolvedProductContext,
   buildPrimaryResolvedProductContext,
   buildStoredProjectionForTrustedSelectedProduct,
   buildTrustedSelectedProductContext,
@@ -156,104 +154,6 @@ test("preserves routine inventory provenance when deriving resolved context", ()
     category: "shampoo",
     original_user_message: "Weißt du welches Shampoo ich gerade benutze?",
   })
-})
-
-test("builds active context from found-exact lookup result without trusting unknown results", () => {
-  assert.deepEqual(
-    buildActiveResolvedProductContextFromLookup({
-      result: {
-        status: "found_exact",
-        product: {
-          id: "syoss-intense-volume-shampoo",
-          name: "Syoss Intense Volume Shampoo",
-          category_key: "shampoo",
-        },
-      },
-      inputCategory: "conditioner",
-      originalUserMessage: "Passt Syoss Intense Volume?",
-      displayName: "Syoss Intense Volume",
-    }),
-    {
-      source: "product_lookup_selection",
-      product_id: "syoss-intense-volume-shampoo",
-      name: "Syoss Intense Volume",
-      category: "shampoo",
-      original_user_message: "Passt Syoss Intense Volume?",
-    },
-  )
-
-  assert.equal(
-    buildActiveResolvedProductContextFromLookup({
-      result: { status: "not_found" },
-      inputCategory: "shampoo",
-      originalUserMessage: "Passt das?",
-      displayName: null,
-    }),
-    null,
-  )
-})
-
-test("chooses the next active resolved product context by explicit precedence", () => {
-  const previous = {
-    source: "product_lookup_selection" as const,
-    product_id: "previous-product",
-    name: "Previous Product",
-    category: "conditioner",
-    original_user_message: "Und wie oft?",
-  }
-  const deterministic = {
-    source: "product_lookup_selection" as const,
-    product_id: "deterministic-product",
-    name: "Deterministic Product",
-    category: "shampoo",
-    original_user_message: "Passt das Shampoo?",
-  }
-
-  assert.deepEqual(
-    buildNextActiveResolvedProductContext({
-      previous,
-      trustedSelectedProductContext: trustedContext,
-      deterministicResolvedProductContext: deterministic,
-      latestMessageNamesActionableProduct: true,
-    }),
-    {
-      source: "product_lookup_selection",
-      product_id: "syoss-intense-volume-shampoo",
-      name: "Syoss Intense Volume Shampoo",
-      category: "shampoo",
-      original_user_message: "Passt Syoss Intense Volume Shampoo zu mir?",
-    },
-  )
-
-  assert.equal(
-    buildNextActiveResolvedProductContext({
-      previous,
-      trustedSelectedProductContext: null,
-      deterministicResolvedProductContext: deterministic,
-      latestMessageNamesActionableProduct: true,
-    }),
-    deterministic,
-  )
-
-  assert.equal(
-    buildNextActiveResolvedProductContext({
-      previous,
-      trustedSelectedProductContext: null,
-      deterministicResolvedProductContext: null,
-      latestMessageNamesActionableProduct: true,
-    }),
-    null,
-  )
-
-  assert.equal(
-    buildNextActiveResolvedProductContext({
-      previous,
-      trustedSelectedProductContext: null,
-      deterministicResolvedProductContext: null,
-      latestMessageNamesActionableProduct: false,
-    }),
-    previous,
-  )
 })
 
 test("skips pending entries when selecting the primary resolved product context", () => {

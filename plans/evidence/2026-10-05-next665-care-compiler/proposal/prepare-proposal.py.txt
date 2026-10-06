@@ -1,0 +1,46 @@
+from pathlib import Path
+import json,hashlib,difflib,shutil
+D=Path(__file__).parent; start=json.loads((D/'start-pins.json').read_text()); ROOT=Path(start['root'])
+sha=lambda b:hashlib.sha256(b.encode() if isinstance(b,str) else b).hexdigest()
+def dump(n,v): (D/n).write_text(json.dumps(v,indent=2,ensure_ascii=False)+'\n')
+for pin in start['pins']:
+ if sha((ROOT/pin['file']).read_bytes())!=pin['sha256']:raise RuntimeError('drift '+pin['file'])
+inv=json.loads((D/'inventory.json').read_text()); file='tests/personal-plan-routine-candidate-compiler.test.ts'; entry=next(x for x in inv if x['file']==file); keeper,donor=entry['rows'][0],entry['rows'][2]
+src=(D/'originals'/file).read_text(); donorbody=donor['callback']; block=donorbody[donorbody.index('  const payload ='):donorbody.rindex('\n}')];block=block.replace('const payload = candidate.payload','const payload = first.payload',1)
+old=keeper['callback'];new=old[:-2]+'\n\n'+block+'\n}'
+assert src.count(old)==1
+transfer=src.replace(old,new,1)
+lines=src.splitlines(keepends=True);registration=''.join(lines[donor['line']-1:donor['endLine']])
+assert transfer.count(registration)==1
+cut=transfer.replace(registration+'\n','',1)
+phasepins=[]
+for phase in ['before','transfer','cut']:
+ for f in start['testFiles']:
+  s=(D/'originals'/f).read_bytes()
+  if f==file and phase!='before':s=(transfer if phase=='transfer' else cut).encode()
+  p=D/'snapshots'/phase/f;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(s)
+  phasepins.append(dict(phase=phase,file=f,sha256=sha(s),bytes=len(s)))
+for n,a,b in [('transfer.diff',src,transfer),('cut.diff',transfer,cut),('complete.diff',src,cut)]:
+ (D/n).write_text(''.join(difflib.unified_diff(a.splitlines(True),b.splitlines(True),fromfile='a/'+file,tofile='b/'+file)))
+shutil.copyfile('/tmp/test-audit-product-previews-complete-ledger.md',D/'recovered-product-previews-ledger.md')
+candidate=dict(id='C1',classification='C',status='conditional; main and independent preservation acceptance plus actual native/owner-fault proof required',file=file,donor={k:donor[k] for k in ['title','line','endLine','callbackSHA256']},keeper={k:keeper[k] for k in ['title','line','endLine','callbackSHA256']},transfer='Complete donor payload declaration and seven assertion calls, byte exact except candidate.payload -> first.payload, appended after existing keeper assertions; original donor retained during transfer.',inputEquivalence='Both existing calls are compileInitialRoutineCandidate(compilerInput()) with no arguments to compilerInput. Identical default source revision 7, draft revision 12, plan-a, portfolio schema 1, createdAt 2026-08-08T08:00:00.000Z, same shared immutable refinedNeedSnapshot, absent cadenceAuthorityFacts. Fresh portfolio created on each call; no input mutation or global mutable owner state. Keeper second call changes only createdAt to 09:00 and cannot change first returned object.',owner='src/lib/personal-plan/routine-candidate-compiler.ts:384-525',readset='Compiler input fields and shared CATEGORY_ROLE_POLICIES/STAGE1_CATEGORY_ORDER, canonical hash and pure cadence formatter. No I/O, provider, auth, DB, time or cache read in compileInitialRoutineCandidate; imported editor/diff are not called by this export.',assertionUnion=donor['assertions'],supportDeletion=None,productionDeletion=None,addedOwnerCalls=0,addedFixtureRows=0,addedInputs=0,expectedCounts=[102,102,101],unchangedUnrelatedCallbacks=100)
+dump('candidates.json',[candidate])
+dump('phase-hashes.json',phasepins)
+owner='src/lib/personal-plan/routine-candidate-compiler.ts';s=(D/'originals'/owner).read_text();controls=[]
+def control(id,label,needle,replacement,ordinal,fragments):
+ assert s.count(needle)==1,(id,s.count(needle))
+ m=s.replace(needle,replacement,1)
+ controls.append(dict(id=id,candidate='C1',contract=label,source=owner,originalSourceSHA256=sha(s),find=needle,replace=replacement,matchCount=1,mutantSHA256=sha(m),oracle={'keeperTitle':keeper['title'][1:-1],'testFile':file,'transferredAssertionOrdinal':ordinal,'code':'ERR_ASSERTION','operator':'deepStrictEqual' if ordinal<5 else 'strictEqual','decodedMessageIncludes':fragments,'firstFrame':'exact selected keeper at statically derived assertion line; do not accept helper/setup/import failure'},phaseRequirement=['transfer','cut'],runtimeStatus='UNRUN'))
+needle='    intent: { schemaVersion: 1, categories },\n    sections,\n    items,\n    createdAt: "pending-sql-assignment",'
+control('C1-01','Basis/Optional section order and item assignments',needle,needle.replace('    sections,','    sections: [...sections].reverse(),'),1,['basis','optional'])
+needleOrder='      authorityVersions,\n      renderedOrder,\n    },\n    intent: { schemaVersion: 1, categories },'
+control('C1-02','source rendered category order',needleOrder,needleOrder.replace('      renderedOrder,','      renderedOrder: [...renderedOrder].reverse(),'),2,['conditioner','heat_protectant'])
+control('C1-03','intent category order',needle,needle.replace('categories },','categories: [...categories].reverse() },'),3,['conditioner','heat_protectant'])
+changes=[('itemKey: "wrong-assignment"','stable item identity',['wrong-assignment','item:conditioner']),('state: { ...item.state, systemAssessment: "optional" as const }','basis system assessment',['assessment','optional','basis']),('state: { ...item.state, inclusion: "excluded" as const }','owned inclusion',['inclusion','excluded','included']),('state: { ...item.state, availability: "none" as const }','owned availability',['availability','none','owned']),('state: { ...item.state, fitDecision: "standard" as const }','informed override provenance',['fitDecision','standard','informed_override']),('executable: false','owned executability',['executable','false','true']),('product: { kind: "none" as const, displayName: null }','owned product reference kind',['productKind','none','owned'])]
+for i,(change,label,fragments) in enumerate(changes,4):control(f'C1-{i:02}',label,needle,needle.replace('    items,','    items: items.map((item, index) => index === 0 ? { ...item, '+change+' } : item),'),4,fragments)
+for i,key in enumerate(['applicationOrder','dayTypes','user_product_usage'],11):
+ # Add property outside satisfies check to avoid a type-only rejection; this mutates the returned actual owner payload, not setup.
+ anchor='    payload,\n    proposalDelta: {'
+ control(f'C1-{i:02}','absence of '+key,anchor,'    payload: { ...(payload as Record<string, JsonValue>), '+key+': [] },\n    proposalDelta: {',i-6,['true !== false'])
+dump('controls.json',controls)
+print('prepared',len(phasepins),'whole phase files;',len(controls),'unrun source controls')

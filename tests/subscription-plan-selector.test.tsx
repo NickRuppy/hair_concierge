@@ -59,6 +59,10 @@ test("idle selector keeps the selected plan action label", () => {
   assert.match(html, />Jetzt starten — €34,99 im Quartal</)
   assert.doesNotMatch(html, /disabled=""/)
   assert.doesNotMatch(html, /aria-disabled="true"/)
+  assert.doesNotMatch(html, /<s[\s>]/)
+  assert.doesNotMatch(html, /Vergleichspreis/)
+  assert.doesNotMatch(html, /Regulärer Vergleichspreis/)
+  assert.equal(Array.from(html.matchAll(/<s[^>]*>([^<]+)<\/s>/g)).length, 0)
 })
 
 test("selector exposes stable motion hooks without changing selected plan layout", () => {
@@ -77,43 +81,19 @@ test("selector exposes stable motion hooks without changing selected plan layout
   assert.match(html, /data-offer-plan-cta-content/)
   assert.match(selectorSource, /key=\{busy \? "busy" : selectedInterval\}/)
   assert.match(selectorSource, /personal-plan-pricing-cta-content/)
-})
-
-test("quiz-result selector displays the three reference prices as comparison prices", () => {
-  const html = renderSelector(QUIZ_RESULT_REFERENCE_PRICES)
-
   assert.equal((html.match(/<s[\s>]/g) ?? []).length, 3)
   assert.deepEqual(
     Array.from(html.matchAll(/<s[^>]*>([^<]+)<\/s>/g), ([, label]) => label),
     Object.values(QUIZ_RESULT_REFERENCE_PRICES).map(formatQuizResultReferencePrice),
   )
-})
-
-test("flag-off quiz-result selector preserves the existing discount copy", () => {
-  const html = renderSelector(QUIZ_RESULT_REFERENCE_PRICES)
-
   assert.match(html, /JETZT MIND\. 20 % RABATT SICHERN/)
   assert.match(html, /Jetzt mindestens 20 Prozent Rabatt sichern/)
   assert.doesNotMatch(html, /Regulärer Vergleichspreis/)
-})
-
-test("quiz-result reference prices use the approved readable styling", () => {
-  const html = renderSelector(QUIZ_RESULT_REFERENCE_PRICES)
-
   assert.equal(
     (html.match(/class="text-\[14px\] font-medium leading-none text-muted-foreground"/g) ?? [])
       .length,
     3,
   )
-})
-
-test("selector without reference prices does not render comparison prices", () => {
-  const html = renderSelector()
-
-  assert.doesNotMatch(html, /<s[\s>]/)
-  assert.doesNotMatch(html, /Vergleichspreis/)
-  assert.doesNotMatch(html, /Regulärer Vergleichspreis/)
-  assert.equal(Array.from(html.matchAll(/<s[^>]*>([^<]+)<\/s>/g)).length, 0)
 })
 
 test("personal-plan launch selector keeps the comparison prices and approved trust copy", () => {

@@ -1,0 +1,50 @@
+from pathlib import Path
+import json,hashlib,re
+D=Path(__file__).parent
+review=Path('/tmp/test-audit-email94-independent-static.json')
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+rc=json.loads(review.read_text());mp={x['id']:x for x in rc['controls']}
+f=D/'operator-controls-normalized.json';cs=json.loads(f.read_text())
+for c in cs:
+ r=mp[c['id']];assert c['mutatedSha256']==r['mutantSha256'] and c['expectedOperator']==r['operator']
+ c['errorMessageIncludes']=r['proposedExpectedMessageAllSubstrings']
+ c['messageMatcherProvenance']='Independent review T1; decoded Node22 error.message substrings, statically inferred and not runtime proven.'
+f.write_text(json.dumps(cs,indent=2,ensure_ascii=False)+'\n')
+f=D/'operator-proof.cjs';s=f.read_text();start=s.index('function intended(')
+s=s[:start]+'''// Decode only the scalar styles emitted by Node TAP; unknown syntax fails closed.
+function errorMessage(text){
+ const lines=text.split('\\n'),i=lines.findIndex(x=>/^  error: /.test(x));if(i<0)return null
+ const scalar=lines[i].slice('  error: '.length)
+ if(['|-','|','|+'].includes(scalar)){
+  const body=[];for(let k=i+1;k<lines.length;k++){if(lines[k].startsWith('    '))body.push(lines[k].slice(4));else if(lines[k]==='')body.push('');else break}
+  return body.join('\\n')
+ }
+ if(scalar.startsWith('"')){try{const value=JSON.parse(scalar);return typeof value==='string'?value:null}catch{return null}}
+ if(scalar.startsWith("'")){if(!scalar.endsWith("'"))return null;return scalar.slice(1,-1).replaceAll("''", "'")}
+ if(!scalar||/^[>|&*!{[]/.test(scalar))return null
+ return scalar
+}
+''' +s[start:]
+a=s.index(' const message=run.text.match(');b=s.index('\n const codes=',a)
+s=s[:a]+' const message=errorMessage(run.text)'+s[b:]
+s=s.replace('const messageMatches=control.errorMessageIncludes.every(t=>message.includes(t))','const messageMatches=typeof message===\'string\'&&control.errorMessageIncludes.length>=2&&control.errorMessageIncludes.every(t=>message.includes(t))')
+s=s.replace('module.exports={parseTAP,named,clean,intended,validateTransferReceipt}','module.exports={parseTAP,named,clean,errorMessage,intended,validateTransferReceipt}')
+f.write_text(s)
+# Authoring provenance is updated, but not rerun against fresh source/dependencies.
+f=D/'prepare-pins.cjs';s=f.read_text();s=s.replace("const fragments={", "const fragments={")
+s=s.replace("errorMessageIncludes:fragments[c.id]", "errorMessageIncludes:read('/tmp/test-audit-email94-independent-static.json').controls.find(r=>r.id===c.id).proposedExpectedMessageAllSubstrings")
+s=s.replace("const artifactHashes={};", "const artifactHashes={};for(const f of ['/tmp/test-audit-email94-independent-preservation.md','/tmp/test-audit-email94-independent-static.json'])artifactHashes[f]=sha(fs.readFileSync(f));")
+f.write_text(s)
+# Artifact-only repin: identity/source/test/dependency snapshots remain byte-for-byte as first prepared.
+f=D/'operator-pins.json';pins=json.loads(f.read_text());original_guard_fields={k:pins[k] for k in ['identityFiles','node','readset','originalReadset76','dependencies','dependencyTrees','head','branch','root']}
+for p in list(pins['artifactHashes']):
+ if str(D.resolve()) in p or str(D) in p:pins['artifactHashes'][p]=sha(Path(p))
+for p in ['/tmp/test-audit-email94-independent-preservation.md','/tmp/test-audit-email94-independent-static.json']:pins['artifactHashes'][p]=sha(Path(p))
+for p in pins['entrypointTemplateHashes']:
+ body=Path(p).read_text();body=re.sub("const PIN_SHA='[a-f0-9]{64}'","const PIN_SHA='PIN_SHA_PLACEHOLDER'",body);pins['entrypointTemplateHashes'][p]=hashlib.sha256(body.encode()).hexdigest()
+f.write_text(json.dumps(pins,indent=2)+'\n');newsha=sha(f)
+for n in ['operator-edit.cjs','operator-run-controls.cjs']:
+ p=D/n;p.write_text(re.sub("const PIN_SHA='[a-f0-9]{64}'","const PIN_SHA='"+newsha+"'",p.read_text()))
+assert original_guard_fields=={k:pins[k] for k in original_guard_fields}
+(D/'message-hardening-receipt.json').write_text(json.dumps({'pinsSHA':newsha,'controls':20,'changedOnly':'normalized message predicates; TAP error scalar decoding; dependent tool artifact pins','unchangedIdentitySourceTestDependencyPins':True,'independentReportSHA':sha(Path('/tmp/test-audit-email94-independent-preservation.md')),'independentStaticSHA':sha(review),'proposalManifestSHA':sha(Path('/tmp/test-audit-email-delivery94/manifest.json')),'runtimeProof':False},indent=2)+'\n')
+print(newsha)

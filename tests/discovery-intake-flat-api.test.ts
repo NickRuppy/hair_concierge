@@ -419,33 +419,6 @@ test("a failing insert is a 503", async () => {
   assert.equal(result.status, 503)
 })
 
-test("the legacy tile shape still writes exactly the row it wrote before", async () => {
-  const rec = recorder()
-  const result = await addProduct(baseDeps(rec), {
-    category: "shampoo",
-    capture: {
-      source: "catalog_search",
-      productId: ids.product,
-      brandText: "Elvital",
-      productNameText: "Hyaluron Pure",
-    },
-  })
-  assert.equal(result.status, 201)
-  assert.deepEqual(rec.inserted, [
-    {
-      intake_id: ids.intake,
-      category: "shampoo",
-      source: "catalog_search",
-      brand_text: "Elvital",
-      product_name_text: "Hyaluron Pure",
-      barcode_identifier: null,
-      product_id: ids.product,
-      product_submission_id: null,
-    },
-  ])
-  assert.deepEqual(rec.catalogReads, [])
-})
-
 // --- PATCH: her usage -------------------------------------------------------------
 
 const typedItem: DiscoveryIntakeItem = {

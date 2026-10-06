@@ -275,18 +275,6 @@ test("deriveViewfinderPresentation: searching draws no outline at all", () => {
   assert.equal(presentation.outlineBox, null)
 })
 
-test("deriveViewfinderPresentation: the confirm window holds the read look over a fresh spot", () => {
-  // The bottle has not moved, so the loop keeps reporting raw hits behind the confirm.
-  const presentation = deriveViewfinderPresentation({
-    detection: { kind: "spotted", box: boxA },
-    confirmBox: boxA,
-    confirmActive: true,
-    detectionPaused: false,
-  })
-
-  assert.equal(presentation.visual, "read")
-})
-
 test("deriveViewfinderPresentation: a sheet over a spotted barcode goes static searching", () => {
   const presentation = deriveViewfinderPresentation({
     detection: { kind: "spotted", box: boxA },
@@ -403,15 +391,6 @@ test("nextViewfinderAnnouncement: a situational hint announces even after the fl
   assert.deepEqual(spoken, [SCAN_HINT_SPOTTED, SCAN_HINT_DEFAULT, SCAN_HINT_MORE_LIGHT])
 })
 
-test("nextViewfinderAnnouncement: a fresh attempt re-arms both flips", () => {
-  const { state } = announcements([{ visual: "spotted" }, { visual: "searching" }])
-  assert.equal(state.spottedAnnounced, true)
-  assert.equal(state.searchingAnnounced, true)
-
-  const restarted = announcements([{ visual: "spotted" }], INITIAL_VIEWFINDER_ANNOUNCEMENT)
-  assert.deepEqual(restarted.spoken, [SCAN_HINT_SPOTTED])
-})
-
 test("nextViewfinderAnnouncement: the mount publish does not spend the searching budget, so a later return-to-idle still announces", () => {
   // Step 1: the very first publish a mounted scanner ever runs — searching + the default
   // hint, which is exactly the text the live region already starts with. Nothing actually
@@ -440,6 +419,7 @@ test("nextViewfinderAnnouncement: the mount publish does not spend the searching
   })
   assert.equal(afterSearchingAgain.announcement, SCAN_HINT_DEFAULT)
   assert.equal(afterSearchingAgain.searchingAnnounced, true)
+  assert.equal(afterSearchingAgain.spottedAnnounced, true)
 
   // Step 4: still searching within the same attempt — the budget is spent now, so the
   // live region holds its text instead of being asked to say the same thing twice. This

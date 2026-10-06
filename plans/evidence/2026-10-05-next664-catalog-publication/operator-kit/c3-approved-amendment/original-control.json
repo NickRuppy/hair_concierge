@@ -1,0 +1,50 @@
+{
+  "id": "C3-recommendation-serialization",
+  "candidate": "C3",
+  "owner": "src/lib/product-intake/expansion-apply.ts",
+  "old": "  const batchJson = JSON.stringify(batch)",
+  "new": "  const batchJson = JSON.stringify({ ...batch, is_chaarlie_recommended: false })",
+  "file": "tests/expansion-apply-batch.test.ts",
+  "title": "the reviewed mask manifest parks only its excluded-identifier product",
+  "assertion": "assert.doesNotMatch(result.batchJson, /is_chaarlie_recommended/)",
+  "operator": "doesNotMatch",
+  "expectedRegex": "/is_chaarlie_recommended/",
+  "actualPredicate": "decoded actual string contains the literal JSON property \"is_chaarlie_recommended\":false; not a nested exception",
+  "messagePredicate": "Node generated doesNotMatch diagnostic specifically names /is_chaarlie_recommended/; operator and FIRST keeper frame must also match",
+  "ownerSHA256": "d1b710c3b9ff424fbb09984451d3695d701ea1f90fdbdf12bd7d711295b8c618",
+  "mutantSHA256": "e0cdcd5302b1d29e66e7ffc0dcb74d9705f5417aface954f11c35c5cfe496984",
+  "oracles": {
+    "transfer": {
+      "keeperSHA256": "5061af609676f79f4c8be63fea997b7d6530cad2e6304200689ff76c6adeb129",
+      "fileSHA256": "b88065bfeeeba0bc6a2391b88f336c66829d796bf9db259b80353c708502bee0",
+      "firstKeeperAssertionFrame": {
+        "file": "tests/expansion-apply-batch.test.ts",
+        "line": 120
+      },
+      "assertion": "assert.doesNotMatch(result.batchJson, /is_chaarlie_recommended/)"
+    },
+    "cut": {
+      "keeperSHA256": "5061af609676f79f4c8be63fea997b7d6530cad2e6304200689ff76c6adeb129",
+      "fileSHA256": "bcbe4a6111c1ba2e7d30d2de1834910f19adc0ad7ce6d4d12060c90b469df6f5",
+      "firstKeeperAssertionFrame": {
+        "file": "tests/expansion-apply-batch.test.ts",
+        "line": 120
+      },
+      "assertion": "assert.doesNotMatch(result.batchJson, /is_chaarlie_recommended/)"
+    }
+  },
+  "command": [
+    "/usr/local/bin/node",
+    "--experimental-test-isolation=none",
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern",
+    "^the reviewed mask manifest parks only its excluded-identifier product$",
+    "tests/expansion-apply-batch.test.ts"
+  ],
+  "proof": "Main only: selected clean 1 pass -> single owner mutant 1 named ERR_ASSERTION with exact operator/decoded values and FIRST keeper assertion frame -> owned CAS byte restore -> same selected clean 1 pass; reject zero selection, skips, cancellations, setup/import/SQL errors, signals/timeouts. No fault executed."
+}

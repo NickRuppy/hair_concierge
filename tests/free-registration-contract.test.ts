@@ -3,13 +3,11 @@ import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import {
-  buildAddressRateLimitKey,
   buildFreeRegistrationEmailRedirect,
   buildFreeRegistrationRecoveryPath,
   isFreeRegistrationConfirmRequest,
   requestFreeRegistrationLink,
   resolveQuizCompletionDestination,
-  resolveFreeRegistrationBind,
   resolveFreeRegistrationConfirmContext,
   type FreeRegistrationDependencies,
   type FreeRegistrationLead,
@@ -124,17 +122,6 @@ test("flag off keeps the quiz-completion destination byte-identical; flag on rou
   )
 })
 
-test("a first send goes to the lead's own address and never rewrites the lead", async () => {
-  const { deps, recorder } = createDeps()
-  const result = await requestFreeRegistrationLink({ leadId: LEAD_ID }, deps)
-
-  assert.deepEqual(result, { outcome: "sent", email: "lena@example.com", corrected: false })
-  assert.equal(recorder.sent.length, 1)
-  assert.equal(recorder.sent[0].email, "lena@example.com")
-  assert.equal(recorder.leadEmailWrites.length, 0)
-  assert.deepEqual(recorder.rateLimitKeys, [LEAD_ID])
-})
-
 test("resend re-sends to the same address (rate limit consulted every time)", async () => {
   const { deps, recorder } = createDeps()
   await requestFreeRegistrationLink({ leadId: LEAD_ID }, deps)
@@ -190,15 +177,6 @@ test("ATTACK W1a: the refusal never leaks whether the deliverability check would
   assert.equal(deliverabilityCalls, 0)
 })
 
-test("W1a: a resend to the lead's OWN address still needs no capability", async () => {
-  const { deps, recorder } = createDeps()
-  const result = await requestFreeRegistrationLink({ leadId: LEAD_ID }, deps)
-
-  assert.equal(result.outcome, "sent")
-  assert.equal(recorder.capabilityChecks.length, 0)
-  assert.equal(recorder.sent[0].email, "lena@example.com")
-})
-
 test("W1a: the capability is signed, lead-bound and expires", () => {
   const secret = "test-signing-secret-that-is-long-enough"
   const other = "22222222-2222-4222-8222-222222222222"
@@ -244,36 +222,6 @@ test("W1a: the capability is signed, lead-bound and expires", () => {
   assert.equal(verifyFreeRegistrationCapability(token, LEAD_ID, { now, secret: "" }), false)
 })
 
-test("ATTACK W1b: the free confirm branch never binds a foreign lead into an established account", () => {
-  // The victim already has a hair profile; the attacker's lead is not theirs.
-  assert.equal(
-    resolveFreeRegistrationBind({
-      leadOwnedByAccount: false,
-      hasEstablishedProfile: true,
-      leadIsFreeRegistration: true,
-    }),
-    "skip",
-  )
-  // A brand-new free account has nothing to lose.
-  assert.equal(
-    resolveFreeRegistrationBind({
-      leadOwnedByAccount: false,
-      hasEstablishedProfile: false,
-      leadIsFreeRegistration: true,
-    }),
-    "bind",
-  )
-  // Re-clicking one's OWN link keeps the same-user retry `canLinkDirectQuizLead` allows.
-  assert.equal(
-    resolveFreeRegistrationBind({
-      leadOwnedByAccount: true,
-      hasEstablishedProfile: true,
-      leadIsFreeRegistration: true,
-    }),
-    "bind",
-  )
-})
-
 test("re-submitting the same address is a resend, not a correction", async () => {
   const { deps, recorder } = createDeps()
   const result = await requestFreeRegistrationLink(
@@ -301,25 +249,6 @@ test("an undeliverable correction address is rejected before the lead is rewritt
     reason: "no_mx",
     suggestion: "lena@example.com",
   })
-  assert.equal(recorder.leadEmailWrites.length, 0)
-  assert.equal(recorder.sent.length, 0)
-})
-
-test("a lead that already belongs to an account can no longer be re-pointed", async () => {
-  const { deps, recorder } = createDeps({
-    lead: {
-      id: LEAD_ID,
-      email: "lena@example.com",
-      quizKind: "personal_plan",
-      userId: "99999999-9999-4999-8999-999999999999",
-    },
-  })
-  const result = await requestFreeRegistrationLink(
-    { leadId: LEAD_ID, email: "angreifer@example.com", capability: VALID_CAPABILITY },
-    deps,
-  )
-
-  assert.deepEqual(result, { outcome: "lead_claimed" })
   assert.equal(recorder.leadEmailWrites.length, 0)
   assert.equal(recorder.sent.length, 0)
 })
@@ -371,23 +300,6 @@ test("W4: every send is bounded per lead, per caller IP and per destination addr
   })
 })
 
-// --- N1 (fix round 2): the address rate-limit KEY is alias-canonicalized ---
-
-test("N1: buildAddressRateLimitKey strips a +suffix for every domain", () => {
-  assert.equal(buildAddressRateLimitKey("opfer@example.com"), "opfer@example.com")
-  assert.equal(buildAddressRateLimitKey("opfer+1@example.com"), "opfer@example.com")
-  assert.equal(buildAddressRateLimitKey("opfer+2@example.com"), "opfer@example.com")
-  assert.equal(buildAddressRateLimitKey("opfer+anything-here@example.com"), "opfer@example.com")
-})
-
-test("N1: buildAddressRateLimitKey additionally collapses dots for Gmail-family domains only", () => {
-  assert.equal(buildAddressRateLimitKey("o.p.fer@gmail.com"), "opfer@gmail.com")
-  assert.equal(buildAddressRateLimitKey("o.p.fer+x@gmail.com"), "opfer@gmail.com")
-  assert.equal(buildAddressRateLimitKey("o.p.fer@googlemail.com"), "opfer@googlemail.com")
-  // Dots are significant everywhere else — never collapsed for a non-Gmail domain.
-  assert.equal(buildAddressRateLimitKey("o.p.fer@example.com"), "o.p.fer@example.com")
-})
-
 test("N1: opfer+1@, opfer+2@, ... all hit the SAME address rate-limit bucket", async () => {
   // This is the exact attack N1 closes: without canonicalization, each
   // plus-alias correction got its own untouched 5/60min bucket, degrading the
@@ -410,6 +322,31 @@ test("N1: opfer+1@, opfer+2@, ... all hit the SAME address rate-limit bucket", a
   }
 
   assert.deepEqual(new Set(aliasKeys), new Set(["opfer@gmail.com"]))
+
+  for (const [email, expectedKey] of [
+    ["opfer@example.com", "opfer@example.com"],
+    ["opfer+1@example.com", "opfer@example.com"],
+    ["opfer+2@example.com", "opfer@example.com"],
+    ["opfer+anything-here@example.com", "opfer@example.com"],
+    ["o.p.fer@gmail.com", "opfer@gmail.com"],
+    ["o.p.fer+x@gmail.com", "opfer@gmail.com"],
+    ["o.p.fer@googlemail.com", "opfer@googlemail.com"],
+    ["o.p.fer@example.com", "o.p.fer@example.com"],
+  ]) {
+    const { deps: ownAddressDeps, recorder } = createDeps({
+      lead: { id: LEAD_ID, email, quizKind: "personal_plan", userId: null },
+    })
+    const result = await requestFreeRegistrationLink({ leadId: LEAD_ID, email }, ownAddressDeps)
+    assert.equal(result.outcome, "sent", email)
+    assert.deepEqual(
+      recorder.rateLimitCalls.filter((call) => call.dimension === "address"),
+      [{ dimension: "address", identifier: expectedKey }],
+      email,
+    )
+    assert.equal(recorder.sent.length, 1, email)
+    assert.equal(recorder.sent[0]?.email, email, email)
+    assert.deepEqual(recorder.leadEmailWrites, [], email)
+  }
 })
 
 test("N1: the canonicalized key never touches the address that gets written or mailed", async () => {
@@ -479,7 +416,13 @@ test("legacy-quiz leads and missing leads are indistinguishable to the caller", 
 })
 
 test("malformed input never reaches the rate limiter or the lead lookup", async () => {
-  const { deps, recorder } = createDeps()
+  let loadLeadCalls = 0
+  const { deps, recorder } = createDeps({
+    loadLead: async () => {
+      loadLeadCalls += 1
+      return { id: LEAD_ID, email: "lena@example.com", quizKind: "personal_plan", userId: null }
+    },
+  })
   for (const request of [
     { leadId: "nope" },
     { leadId: 42 },
@@ -490,6 +433,7 @@ test("malformed input never reaches the rate limiter or the lead lookup", async 
       outcome: "invalid_request",
     })
   }
+  assert.equal(loadLeadCalls, 0)
   assert.equal(recorder.rateLimitKeys.length, 0)
   assert.equal(recorder.sent.length, 0)
 })
@@ -527,7 +471,7 @@ test("a failed OTP send surfaces as send_failed", async () => {
 })
 
 test("the endpoint is dark while the flag is off and speaks HTTP codes when on", async () => {
-  const { deps } = createDeps()
+  const { deps, recorder } = createDeps()
 
   const dark = createFreeRegistrationPostHandler({ ...deps, isEnabled: () => false })
   const darkResponse = await dark(
@@ -547,6 +491,11 @@ test("the endpoint is dark while the flag is off and speaks HTTP codes when on",
   )
   assert.equal(ok.status, 200)
   assert.deepEqual(await ok.json(), { ok: true, email: "lena@example.com", corrected: false })
+  assert.equal(recorder.sent.length, 1)
+  assert.equal(recorder.sent[0]?.email, "lena@example.com")
+  assert.deepEqual(recorder.leadEmailWrites, [])
+  assert.deepEqual(recorder.rateLimitKeys, [LEAD_ID])
+  assert.deepEqual(recorder.capabilityChecks, [])
 
   const badJson = await live(
     new Request("https://app.test/api/auth/free-registration", { method: "POST", body: "{" }),
@@ -636,33 +585,6 @@ test("the payment-activation magic-link route stays payment-only and untouched b
   assert.ok(!source.includes("free-registration"))
   assert.ok(!source.includes("provisionFreeInitialSnapshot"))
   assert.ok(source.includes("verifyCheckoutSessionForActivation"))
-})
-
-// --- PR6 Codex review, finding V2 -------------------------------------------
-
-test("V2: the confirm context is resolved through the nesting the real builder produces", () => {
-  const origin = SITE_URL
-  const callback = buildFreeRegistrationEmailRedirect(SITE_URL, LEAD_ID)
-  const nested = (key: "next" | "redirect_to") => {
-    const url = new URL("/auth/confirm", origin)
-    url.searchParams.set("token_hash", "hash")
-    url.searchParams.set("type", key === "next" ? "email" : "magiclink")
-    url.searchParams.set(key, callback)
-    return url.searchParams
-  }
-
-  // The signup shape (`next=<callback>`) and the magic-link shape
-  // (`redirect_to=<callback>`) both resolve the lead.
-  assert.deepEqual(resolveFreeRegistrationConfirmContext(nested("next"), origin), {
-    leadId: LEAD_ID,
-  })
-  assert.deepEqual(resolveFreeRegistrationConfirmContext(nested("redirect_to"), origin), {
-    leadId: LEAD_ID,
-  })
-  // The direct/hand-built shape keeps working.
-  assert.deepEqual(resolveFreeRegistrationConfirmContext(new URL(callback).searchParams, origin), {
-    leadId: LEAD_ID,
-  })
 })
 
 test("V2: the nested resolver is a whitelist — no new redirect sink, no unbounded walk", () => {

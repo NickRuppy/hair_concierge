@@ -1,0 +1,37 @@
+TAP version 13
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'auth.createCheckoutUser', durationMs: 0 }
+# Subtest: read-only Stripe return recovery sends outstanding cleanup and unsafe replay bindings to reconciliation
+not ok 1 - read-only Stripe return recovery sends outstanding cleanup and unsafe replay bindings to reconciliation
+  ---
+  duration_ms: 6.607125
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/stripe-trial-account-activation.test.ts:2:18580'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /provider timeout/. Input:
+    
+    'Error: lost provider cause'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: 'Error: lost provider cause'
+  operator: 'match'
+  stack: |-
+    Object.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/stripe-trial-account-activation.test.ts:529:12)
+    expectedException (node:assert:466:17)
+    expectsError (node:assert:589:3)
+    Function.rejects (node:assert:654:3)
+    async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/stripe-trial-account-activation.test.ts:526:3)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 784.633625

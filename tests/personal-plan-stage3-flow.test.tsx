@@ -266,23 +266,6 @@ test("an exact saved identity missing frequency is selected only after current c
   assert.equal(capture.props.capturedProducts.length, 0)
 })
 
-test("the journey header labels local review choices without claiming a server save", () => {
-  const html = renderToStaticMarkup(
-    <Stage3Shell
-      title="Produkte"
-      currentStepLabel="Prüfen"
-      completedSteps={2}
-      totalSteps={5}
-      saveState={{ status: "local", label: "Auswahl gemerkt" }}
-    >
-      <div>Review</div>
-    </Stage3Shell>,
-  )
-
-  assert.match(html, /Auswahl gemerkt/)
-  assert.doesNotMatch(html, />Gespeichert</)
-})
-
 test("Stage 3 primary actions stay viewport-sticky and align to the desktop content column", () => {
   const html = renderToStaticMarkup(
     <Stage3StickyAction className="grid gap-2">
@@ -2262,71 +2245,6 @@ test("editing from a server decision reopens that category through the persisted
   )
 })
 
-test("two-product Shampoo submits one complete category assignment replacement", async () => {
-  const recordedMutationTypes: string[] = []
-  const gateway = createAuthorityTestGateway()
-  const originalMutate = gateway.mutate.bind(gateway)
-  gateway.mutate = async (input) => {
-    recordedMutationTypes.push(input.mutation.type)
-    return originalMutate(input)
-  }
-  const entryContext: Stage3EntryContext = {
-    schemaVersion: 1,
-    personalPlanId: "plan-shampoo-atomic-roles",
-    refinedVersionId: "refined-shampoo-atomic-roles",
-    orderedCategories: [
-      {
-        category: "shampoo",
-        requiredRoles: ["shampoo_everyday"],
-        needSummary: "Sanfte Reinigung",
-        authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
-      },
-    ],
-    inventoryPrompts: [{ category: "shampoo", allowsMultiple: true, allowsExplicitNone: true }],
-  }
-  const harness = createClientStateHarness(() =>
-    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
-  )
-
-  let tree = await renderSettled(harness)
-  await captureCatalogProduct(harness, "Shampoo", "shampoo")
-  tree = await renderSettled(harness)
-  const firstCapture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
-    tree,
-    ProductCaptureScreen,
-  )
-  assert.equal(firstCapture?.props.showAddAnotherProduct, true)
-  firstCapture?.props.onAddAnotherProduct()
-  await captureCatalogProduct(harness, "Shampoo", "shampoo", 1)
-  tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
-    tree,
-    ProductCaptureScreen,
-  )?.props.onContinue()
-  tree = await renderSettled(harness)
-  const roleScreen = findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
-    tree,
-    SemanticRoleAssignment,
-  )
-  assert.ok(roleScreen)
-  roleScreen.props.onToggleRole(
-    roleScreen.props.products[0]!.capturedProductId,
-    "shampoo_everyday",
-    true,
-  )
-  tree = await renderSettled(harness)
-  await findByType<React.ComponentProps<typeof SemanticRoleAssignment>>(
-    tree,
-    SemanticRoleAssignment,
-  )?.props.onContinue()
-  tree = await renderSettled(harness)
-
-  assert.ok(
-    findByType<React.ComponentProps<typeof ProductFitComparison>>(tree, ProductFitComparison),
-  )
-  assert.deepEqual(recordedMutationTypes.slice(-1), ["replace_capture_category"])
-})
-
 test("submitting an unchecked role deliberately records an open not-ready gap", async () => {
   let finalization:
     | Extract<
@@ -2666,6 +2584,7 @@ test("an uncovered role saves the explicitly selected third strict recommendatio
 })
 
 test("role finalization shows saving immediately and suppresses duplicate actions", async () => {
+  const recordedMutationTypes: string[] = []
   let finalizationCalls = 0
   let blockMutations = false
   let release: () => void = () => {}
@@ -2675,6 +2594,7 @@ test("role finalization shows saving immediately and suppresses duplicate action
   const gateway = createAuthorityTestGateway()
   const originalMutate = gateway.mutate.bind(gateway)
   gateway.mutate = async (input) => {
+    recordedMutationTypes.push(input.mutation.type)
     if (blockMutations) {
       finalizationCalls += 1
       await blocker
@@ -2702,10 +2622,12 @@ test("role finalization shows saving immediately and suppresses duplicate action
   await renderSettled(harness)
   await captureCatalogProduct(harness, "Shampoo", "shampoo")
   let tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
+  const firstCapture = findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
     tree,
     ProductCaptureScreen,
-  )?.props.onAddAnotherProduct()
+  )
+  assert.equal(firstCapture?.props.showAddAnotherProduct, true)
+  firstCapture?.props.onAddAnotherProduct()
   await captureCatalogProduct(harness, "Shampoo", "shampoo", 1)
   tree = await renderSettled(harness)
   findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
@@ -2739,7 +2661,12 @@ test("role finalization shows saving immediately and suppresses duplicate action
   assert.equal(findByType(tree, Stage3SystemState), null)
   assert.equal(saving.props.products.length, 2)
   release()
-  await renderSettled(harness)
+  tree = await renderSettled(harness)
+  assert.ok(
+    findByType<React.ComponentProps<typeof ProductFitComparison>>(tree, ProductFitComparison),
+    "expected the settled Shampoo fit comparison",
+  )
+  assert.deepEqual(recordedMutationTypes.slice(-1), ["replace_capture_category"])
 })
 
 test("uncertain decision save confirms canonical state before showing manual recovery", async () => {
@@ -3306,6 +3233,7 @@ test("uncertain decision save does not resend when canonical state has a differe
 
 test("global inventory review keeps server-authored no-owned gaps local without client mutation", async () => {
   const recordedMutationTypes: string[] = []
+  let correctionCalls = 0
   const gateway = createAuthorityTestGateway()
   const originalMutate = gateway.mutate.bind(gateway)
   gateway.mutate = async (input) => {
@@ -3366,76 +3294,6 @@ test("global inventory review keeps server-authored no-owned gaps local without 
     authorityEvaluations: [],
   }
   const harness = createClientStateHarness(() =>
-    Stage3ProductsFlow({ bootstrap, gateway, searchDebounceMs: 0 }),
-  )
-
-  const tree = await renderSettled(harness)
-  assert.equal(findByType(tree, ProductKindReviewScreen), null)
-  assert.deepEqual(recordedMutationTypes, [])
-  assert.equal(findByType(tree, ProductCaptureScreen), null)
-})
-
-test("global no-owned-category review suppresses duplicate confirmation while staying on server state", async () => {
-  let correctionCalls = 0
-  const gateway = createAuthorityTestGateway()
-  const originalMutate = gateway.mutate.bind(gateway)
-  gateway.mutate = async (input) => {
-    return originalMutate(input)
-  }
-  const requirements: Stage3EntryContext["orderedCategories"] = [
-    {
-      category: "heat_protectant",
-      requiredRoles: ["pre_heat_protection"],
-      qualifyingRoutes: ["direct_contact_heat"],
-      needSummary: "Schutz vor Hitze",
-      authorityVersion: CATEGORY_ROLE_POLICIES.heat_protectant.authorityVersion,
-    },
-  ]
-  const authoritySnapshot: Stage3AuthoritySnapshotV1 = {
-    schemaVersion: 1,
-    refinedNeedVersionId: "refined-no-product-saving",
-    refinedInputHash: "hash-no-product-saving",
-    categoryDecisions: [],
-    coverage: [],
-    orderedCategories: ["heat_protectant"],
-    authorityVersions: Object.fromEntries(
-      requirements.map(({ category, authorityVersion }) => [category, authorityVersion]),
-    ) as Stage3AuthoritySnapshotV1["authorityVersions"],
-    productLoadContext: {
-      schemaVersion: 1,
-      scalpOiliness: "balanced",
-      deepCleansingScalpPause: false,
-      hasLowVolumeOrWeighedDown: false,
-      shampooFrequency: "weekly_2x",
-      oilPurposes: [],
-      ownedCategories: [],
-    },
-  }
-  const draft = createStage3Draft({
-    draftId: "draft-no-product-saving",
-    userId: "user-no-product-saving",
-    personalPlanId: "plan-no-product-saving",
-    refinedVersionId: "refined-no-product-saving",
-    requirements,
-    authoritySnapshot,
-    now: "2026-08-11T00:00:00.000Z",
-  })
-  const bootstrap: Stage3Bootstrap = {
-    entryContext: {
-      schemaVersion: 1,
-      personalPlanId: draft.personalPlanId,
-      refinedVersionId: draft.refinedVersionId,
-      orderedCategories: requirements,
-      inventoryPrompts: [
-        { category: "heat_protectant", allowsMultiple: true, allowsExplicitNone: true },
-      ],
-      authoritySnapshot,
-    },
-    draft,
-    requirements,
-    authorityEvaluations: [],
-  }
-  const harness = createClientStateHarness(() =>
     Stage3ProductsFlow({
       bootstrap,
       gateway,
@@ -3446,17 +3304,16 @@ test("global no-owned-category review suppresses duplicate confirmation while st
     }),
   )
 
-  let tree = await renderSettled(harness)
-  const review = findByType<React.ComponentProps<typeof ProductKindReviewScreen>>(
-    tree,
-    ProductKindReviewScreen,
-  )
-  review?.props.onContinue()
-  review?.props.onContinue()
-
-  tree = await renderSettled(harness)
-  assert.equal(correctionCalls, 0)
+  const tree = await renderSettled(harness)
+  assert.equal(findByType(tree, ProductKindReviewScreen), null)
+  assert.deepEqual(recordedMutationTypes, [])
   assert.equal(findByType(tree, ProductCaptureScreen), null)
+
+  const settledTree = await renderSettled(harness)
+  assert.equal(correctionCalls, 0)
+  assert.equal(findByType(settledTree, ProductKindReviewScreen), null)
+  assert.equal(findByType(settledTree, ProductCaptureScreen), null)
+  assert.deepEqual(recordedMutationTypes, [])
 })
 
 test("catalog selection and frequency stay editable until one explicit category save", async () => {
@@ -5250,72 +5107,6 @@ test("multiple individual reviews progress to one direct Routine handoff", async
   assert.equal(handoffs.length, 1, "re-rendering the completed handoff must not navigate twice")
 })
 
-test("an explicit products module completion lands on the Routine directly", async () => {
-  // Field test 26.08.2026: the user reached Stage 3 from a Feinschliff module
-  // with the full app nav on screen. "Deine Produktauswahl steht." is creation
-  // funnel ceremony there — the Routine's own toast carries the feedback.
-  const events: string[] = []
-  const analytics = {
-    track(eventName: string) {
-      events.push(eventName)
-    },
-  } as Stage3AnalyticsPort
-  const handoffs: Stage3RoutineHandoff[] = []
-  const gateway = createAuthorityTestGateway()
-  const entryContext: Stage3EntryContext = {
-    schemaVersion: 1,
-    personalPlanId: "plan-direct-routine-handoff",
-    refinedVersionId: "refined-direct-routine-handoff",
-    orderedCategories: [
-      {
-        category: "oil",
-        requiredRoles: ["leave_on_fibre_conditioning", "dry_finish"],
-        needSummary: "Pflege und Finish für deine Längen",
-        authorityVersion: CATEGORY_ROLE_POLICIES.oil.authorityVersion,
-      },
-    ],
-    inventoryPrompts: [{ category: "oil", allowsMultiple: true, allowsExplicitNone: true }],
-  }
-  const harness = createClientStateHarness(() =>
-    Stage3ProductsFlow({
-      entryContext,
-      gateway,
-      searchDebounceMs: 0,
-      onOpenRoutine: (handoff) => handoffs.push(handoff),
-      analytics,
-    }),
-  )
-
-  await captureCatalogProduct(harness, "Öl", "oil")
-  let tree = await renderSettled(harness)
-  findByType<React.ComponentProps<typeof ProductCaptureScreen>>(
-    tree,
-    ProductCaptureScreen,
-  )?.props.onContinue()
-  await assignEveryRoleToFirstProduct(harness)
-
-  for (let index = 0; index < 2; index += 1) {
-    tree = await renderSettled(harness)
-    const review = findByType<React.ComponentProps<typeof ProductFitComparison>>(
-      tree,
-      ProductFitComparison,
-    )
-    assert.ok(review)
-    review.props.onAction("keep_owned")
-    tree = await renderSettled(harness)
-  }
-  await waitForReviewedChoicesToSubmit(harness)
-  await new Promise((resolve) => setImmediate(resolve))
-  const completedTree = await renderSettled(harness)
-
-  // No tap needed; every post-payment entry now uses the same direct Routine handoff.
-  assert.equal(handoffs.length, 1)
-  assert.ok(events.includes("personal_plan_stage3_routine_opened"))
-  assert.equal(systemStateTitle(completedTree), "Deine Routine wird geöffnet.")
-  await renderSettled(harness)
-  assert.equal(handoffs.length, 1, "a settled direct handoff must remain single-shot")
-})
-
 test("assigning an Oil use to another product moves the exclusive checkbox", () => {
   const assignments = updateStage3RoleAssignments(
     { "oil-1": ["dry_finish", "pre_wash_fibre_treatment"], "oil-2": [] },
@@ -5622,6 +5413,9 @@ test("the grouped Öl screen lists every named use case pre-checked under one co
     /^<div class="min-w-0 pb-40"/,
     "the fixed commit bar needs bottom clearance or it covers the last use case",
   )
+
+  assert.match(html, /role="group"/)
+  assert.match(html, /role="group"[^>]*aria-labelledby="oil-group-use-cases-title"/)
 })
 
 test("a review composed into the grouped Öl screen defers its sticky-bar clearance", () => {
@@ -5676,37 +5470,6 @@ test("the grouped Öl commit action counts the checked use cases and names diver
   assert.equal(oilGroupCommitLabel(1, 3, true), "Für diesen Einsatz einplanen")
 })
 
-test("three oil use cases render as one grouped screen with pre-checked cases", async () => {
-  const gateway = createAuthorityTestGateway()
-  const entryContext = threeUseCaseOilEntryContext("oil-group")
-  const harness = createClientStateHarness(() =>
-    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
-  )
-
-  const tree = await reachOilReview(harness)
-
-  const grouped = oilGroupScreen(tree)
-  assert.ok(grouped, "the three pending oil use cases share one review screen")
-  assert.deepEqual(
-    grouped.props.group.map((useCase) => useCase.roleTitle),
-    ["Vor der Haarwäsche", "Im feuchten Haar", "Im trockenen Haar"],
-  )
-  assert.equal(grouped.props.checkedKeys.size, 3)
-  assert.equal(grouped.props.uniformProposition, true)
-  const anchor = findByType<React.ComponentProps<typeof ProductFitComparison>>(
-    tree,
-    ProductFitComparison,
-  )
-  assert.ok(anchor)
-  assert.equal(anchor.props.reviewPosition, 1)
-  assert.equal(anchor.props.reviewTotal, 1, "the grouped use cases count as one review step")
-  assert.equal(
-    anchor.props.roleLabel,
-    null,
-    "the grouped screen covers every use case, so its kicker names none of them",
-  )
-})
-
 test("committing the full group records one local choice per member and advances past all oil subjects", async () => {
   const intents: Stage3AuthoritySemanticIntent[] = []
   const gateway = createAuthorityTestGateway({ onIntent: (intent) => intents.push(intent) })
@@ -5718,6 +5481,28 @@ test("committing the full group records one local choice per member and advances
   let tree = await reachOilReview(harness)
   const grouped = oilGroupScreen(tree)
   assert.ok(grouped)
+  assert.deepEqual(
+    grouped.props.group.map((useCase) => useCase.roleTitle),
+    ["Vor der Haarwäsche", "Im feuchten Haar", "Im trockenen Haar"],
+  )
+  assert.equal(grouped.props.checkedKeys.size, 3)
+  assert.equal(grouped.props.uniformProposition, true)
+  const anchor = findByType<React.ComponentProps<typeof ProductFitComparison>>(
+    tree,
+    ProductFitComparison,
+  )
+  assert.ok(anchor, "expected the group anchor comparison")
+  assert.equal(anchor.props.headingOverride, undefined)
+  assert.equal(anchor.props.scopeContextLine, undefined)
+  assert.equal(anchor.props.primaryActionLabelOverride, undefined)
+  assert.equal(anchor.props.reviewPosition, 1)
+  assert.equal(anchor.props.reviewTotal, 1, "the grouped use cases count as one review step")
+  assert.equal(
+    anchor.props.roleLabel,
+    null,
+    "the grouped screen covers every use case, so its kicker names none of them",
+  )
+
   const memberKeys = grouped.props.group.map((useCase) => useCase.decisionKey)
   grouped.props.onCommit()
   tree = await renderUntil(
@@ -5779,24 +5564,6 @@ test("deselecting one case commits two and surfaces the third as a scoped follow
     "the follow-up plans a product with the app's universal planning CTA",
   )
   assert.deepEqual(intents, [], "the deselected case keeps the batch open")
-})
-
-test("the anchor's own screen carries no follow-up overrides", async () => {
-  const gateway = createAuthorityTestGateway()
-  const entryContext = threeUseCaseOilEntryContext("oil-group-anchor-plain")
-  const harness = createClientStateHarness(() =>
-    Stage3ProductsFlow({ entryContext, gateway, searchDebounceMs: 0 }),
-  )
-
-  const tree = await reachOilReview(harness)
-  const anchor = findByType<React.ComponentProps<typeof ProductFitComparison>>(
-    tree,
-    ProductFitComparison,
-  )
-  assert.ok(anchor)
-  assert.equal(anchor.props.headingOverride, undefined)
-  assert.equal(anchor.props.scopeContextLine, undefined)
-  assert.equal(anchor.props.primaryActionLabelOverride, undefined)
 })
 
 test("diverging recommendations relabel the grouped commit action", async () => {
@@ -6141,31 +5908,6 @@ test("the grouped Öl use cases render their selected state in the app's plum to
       `${token} must be defined in globals.css`,
     )
   }
-})
-
-test("the grouped Öl use cases are exposed as one labelled checkbox group", () => {
-  const html = renderToStaticMarkup(
-    <OilGroupReview
-      group={[
-        {
-          role: "dry_finish",
-          roleTitle: "Im trockenen Haar",
-          roleSubtitle: "Für Glanz und Finish",
-          decisionKey: "oil-1",
-          productName: null,
-        },
-      ]}
-      uniformProposition
-      checkedKeys={new Set(["oil-1"])}
-      onToggle={() => undefined}
-      onCommit={() => undefined}
-    >
-      <div>Vergleich</div>
-    </OilGroupReview>,
-  )
-
-  assert.match(html, /role="group"/)
-  assert.match(html, /role="group"[^>]*aria-labelledby="oil-group-use-cases-title"/)
 })
 
 test("a kicker without a role segment keeps category and counter", () => {

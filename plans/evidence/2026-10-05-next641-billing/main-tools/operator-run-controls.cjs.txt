@@ -1,0 +1,98 @@
+'use strict'
+// Main-only serial actual-owner faults. --check never starts a child or writes repository bytes.
+const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process')
+const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+const PIN_SHA='7482abb73c692ef3ba51f19850ff33da6eef0ea8630fd056590a75315cd1b92c'
+const mode=(process.argv[2]||'check').replace(/^--/,'')
+const selectedId=process.argv[3]
+if(!['check','run'].includes(mode)||process.argv.length>4)g.fail('Use --check [control-id] | run [control-id]')
+const context=g.load(PIN_SHA),controls=selectedId?context.controls.filter(c=>c.id===selectedId):context.controls
+if(!controls.length)g.fail('Unknown control ID')
+const prepared=new Map(context.controls.map(c=>[c.id,g.fault(context,c)])),initial=context.current()
+if(mode==='check'){
+  console.log(JSON.stringify({mode,phase:initial.phase,equivalentPhases:initial.equivalentPhases,controls:controls.length,tsMutantsParsed:5,allControlsPrepared:prepared.size===5,phaseOracles:'exact assertion startLine and text in transfer/cut',selectedTestCount:1,repositoryWrites:0,runtimeRuns:0,childrenStarted:0},null,2));process.exit(0)
+}
+if(!['transfer','cut'].includes(initial.phase))g.fail('Transfer/cut phase required; no original false-pass claim')
+for(const key of ['TRIAL_ADMISSION_MUTANT','TRIAL_ACCESS_MUTANT','NODE_OPTIONS','TSX_TSCONFIG_PATH'])if(process.env[key])g.fail('Existing harness mutant is active: '+key)
+const phase=initial.phase,unlock=g.lock(),receipts=[]
+let dir=null
+let activeChild=null,interrupted=null
+function killOwnedGroup(signal){if(activeChild?.pid){try{process.kill(-activeChild.pid,signal)}catch(error){if(error.code!=='ESRCH')throw error}}}
+function stop(signal){interrupted=signal;killOwnedGroup('SIGKILL')}
+process.on('SIGINT',stop);process.on('SIGTERM',stop)
+function ensurePhase(overrides={}){if(interrupted)g.fail('Operator interrupted: '+interrupted);const state=context.current(overrides);if(state.phase!==phase)g.fail('Test phase changed');return state}
+function observedReadsets(){return Object.fromEntries(context.pins.readset.map(guard=>[guard.file,g.sha(fs.readFileSync(path.join(g.ROOT,guard.file)))]))}
+function record(){if(!dir)return;fs.writeFileSync(path.join(dir,'receipt.json'),JSON.stringify(receipts,null,2)+'\n')}
+async function run(control,label){
+  const log=path.join(dir,control.id+'-'+label+'.tap'),args=control.command.slice(1)
+  const commandPath=path.join(dir,control.id+'-'+label+'.command.json')
+  const commandBytes=JSON.stringify({executable:process.execPath,args,cwd:g.ROOT,timeoutMs:45000,detached:true},null,2)+'\n'
+  fs.writeFileSync(commandPath,commandBytes,{flag:'wx'})
+  const fd=fs.openSync(log,'wx')
+  let timer,child,timedOut=false,result,spawnError
+  try{
+    if(interrupted)g.fail('Interrupted before child')
+    child=cp.spawn(process.execPath,args,{cwd:g.ROOT,stdio:['ignore',fd,fd],detached:true,env:{...process.env,FORCE_COLOR:'0',NODE_DISABLE_COLORS:'1'}});activeChild=child
+    timer=setTimeout(()=>{timedOut=true;killOwnedGroup('SIGKILL')},45000)
+    result=await new Promise(resolve=>{child.once('error',error=>{spawnError=String(error);resolve({status:null,signal:null})});child.once('close',(status,signal)=>resolve({status,signal}))})
+  }finally{
+    clearTimeout(timer)
+    // Only the group created by this detached child is eligible for cleanup, including
+    // a descendant left after a failing resource-abort assertion. Never enumerate/kill peers.
+    killOwnedGroup('SIGKILL');activeChild=null;fs.closeSync(fd)
+  }
+  const text=fs.readFileSync(log,'utf8')
+  return{...result,...proof.parseTAP(text),timedOut,spawnError:spawnError||null,log,logSHA256:g.sha(fs.readFileSync(log)),commandSHA256:g.sha(commandBytes),text}
+}
+
+const clean=proof.clean
+const intended=(control,run)=>proof.intended(control,run,phase)
+
+function compact(run){const{text,...receipt}=run;return receipt}
+;(async()=>{
+ try{
+  dir=fs.mkdtempSync(g.BASE+'-mutations-'+phase+'-')
+  // Snapshot ALL13 test originals and ALL unique mutant-owner originals before first child/write.
+  ensurePhase()
+  const originals=new Map(Object.entries(initial.bytes))
+  for(const control of context.controls)originals.set(control.file,prepared.get(control.id).original)
+  for(const[file,bytes]of originals){const dest=path.join(dir,'all-originals',file);fs.mkdirSync(path.dirname(dest),{recursive:true});fs.writeFileSync(dest,bytes,{flag:'wx',mode:0o444})}
+  fs.writeFileSync(path.join(dir,'intent.json'),JSON.stringify({phase,controls:controls.map(c=>c.id),originalHashes:Object.fromEntries([...originals].map(([f,b])=>[f,g.sha(b)])),pinsSHA:PIN_SHA},null,2)+'\n',{flag:'wx'})
+  ensurePhase()
+  for(const control of controls){
+    ensurePhase();const bytes=prepared.get(control.id),recordEntry={id:control.id,phase,source:control.file,test:control.test,intended:control.oracles[phase],expectedFailure:control.intendedAssertion,sourceBefore:g.sha(bytes.original),sourceFault:g.sha(bytes.mutated),readsetBefore:observedReadsets()}
+    receipts.push(recordEntry);record()
+    const backup=path.join(dir,control.id,'originals',control.file);fs.mkdirSync(path.dirname(backup),{recursive:true});fs.writeFileSync(backup,bytes.original,{flag:'wx'})
+    const before=await run(control,'before');recordEntry.before=compact(before);record()
+    if(!clean(control,before))g.fail('Clean-one baseline failed: '+control.id)
+    let faultRun,restored=false
+    try{
+      ensurePhase();g.atomicCAS(control.file,bytes.original,bytes.mutated)
+      ensurePhase({[control.file]:g.sha(bytes.mutated)})
+      recordEntry.actualSourceFault=g.sha(fs.readFileSync(path.join(g.ROOT,control.file)))
+      faultRun=await run(control,'fault');recordEntry.fault=compact(faultRun)
+      recordEntry.assertion=intended(control,faultRun)
+    }finally{
+      // A fault may assert, time out, fail import, or be interrupted. Only our exact
+      // mutated bytes may be rolled back; preserve concurrent bytes and backups otherwise.
+      const current=fs.readFileSync(path.join(g.ROOT,control.file))
+      if(current.equals(bytes.mutated)){g.atomicCAS(control.file,bytes.mutated,bytes.original);restored=true}
+      else if(current.equals(bytes.original))restored=true
+      recordEntry.sourceRestored=g.sha(fs.readFileSync(path.join(g.ROOT,control.file)))
+      recordEntry.byteExactRestored=restored&&recordEntry.sourceRestored===recordEntry.sourceBefore
+      record()
+    }
+    if(!recordEntry.byteExactRestored)g.fail('Owned restore refused; inspect backup: '+control.id)
+    ensurePhase()
+    const after=await run(control,'after');recordEntry.after=compact(after);recordEntry.cleanAfter=clean(control,after);recordEntry.readsetAfter=observedReadsets();ensurePhase();record()
+    if(!clean(control,after))g.fail('Clean-one after failed: '+control.id)
+    if(!recordEntry.assertion?.accepted)g.fail('Intended assertion not proved: '+control.id+'; timeout/import/harness failures rejected')
+    recordEntry.verified=true;record();console.log(control.id+' clean1 / intended red1 / exact restore / clean1')
+  }
+  const final=ensurePhase()
+  const complete={phase,verified:receipts.length,controlIds:receipts.map(r=>r.id),cleanRuns:receipts.length*2,root:g.ROOT,head:context.pins.head,branch:context.pins.branch,pinsSHA:PIN_SHA,receiptSHA256:g.sha(fs.readFileSync(path.join(dir,'receipt.json'))),allTestHashes:Object.fromEntries(Object.entries(final.bytes).map(([f,b])=>[f,g.sha(b)])),sourceGuards:context.pins.readset}
+  const completeBytes=JSON.stringify(complete,null,2)+'\n'
+  fs.writeFileSync(path.join(dir,'complete.json'),completeBytes,{flag:'wx'})
+  console.log(JSON.stringify({receiptDir:dir,completionSHA256:g.sha(completeBytes),verified:receipts.length,eligibleForCut:phase==='transfer'&&receipts.length===5},null,2))
+ }finally{killOwnedGroup('SIGKILL');process.off('SIGINT',stop);process.off('SIGTERM',stop);unlock()}
+})().catch(error=>{record();if(dir)fs.writeFileSync(path.join(dir,'failure.json'),JSON.stringify({error:String(error),interrupted},null,2)+'\n',{flag:'wx'});console.error(error);process.exitCode=1})

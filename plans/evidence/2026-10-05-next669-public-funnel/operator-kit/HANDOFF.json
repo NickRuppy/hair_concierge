@@ -1,0 +1,50 @@
+{
+  "status": "PREPARED_NOT_APPROVED_OR_EXECUTED",
+  "directory": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m",
+  "pinsSHA256": "3be17f0d28861a6791fb575d3550eed571275aaae9b7c5f7c295002bfe87cecd",
+  "artifactSealSHA256": "31796212ba5a1b95aadeaf02a22809363c210cbe4b36b2420a8005414b6bd6aa",
+  "staticReceiptSHA256": "92de2af959e6027f80ff0f40278f50dad9866e750de09f9204f69facd9ec5db6",
+  "proposal": {
+    "directory": "/tmp/test-audit-public-funnel66-c69uzpx6",
+    "manifestSHA256": "152177b98efeb7dd05c261323a8eaec59f1bf6cabb690a122c1e645414552b9a",
+    "handoffSHA256": "c4a22b53082fc6edf7c06d7781f788af9dce0d0767ce1c365bdcdeb60450cf85",
+    "unchanged": true
+  },
+  "keyHashes": {
+    "operator-guard.cjs": "e9bf274f86ad62db7dec408df5435e2f4bb5675c6537e47b889cf951d5644993",
+    "operator-edit.cjs": "0012153372ec433192532e98444f6de92a3f63367695d26af3cc2c9195379467",
+    "operator-run-controls.cjs": "0d18017a423893c007d10aa294c2c581cbcbc21141b598fcc6373b400532fcc6",
+    "operator-proof.cjs": "996da201c6dbdfe632d429eb02fb932aa4d62af2d944b6c0c5c76232742870d9",
+    "operator-readonly-preload.cjs": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "operator-native-proof.cjs": "d55ea240501282e074f94dbcda13699ef5a392b8abbc03d077a5b810f4f257ce",
+    "prepare-pins.cjs": "dfa602459b91487777327f6438879462907c16c84169fee70b80b687a87bcf5b",
+    "proof-attestation.cjs": "4453cecaa522bc686c7b5f0d1e28a4844a7d3197a4ea18338be3547d726bd821",
+    "control-amendments.json": "bba299a21bd63ec6681b86a3ae4b681a817f74be8fa57243d2d9085628e87ca0",
+    "control-amendments.diff": "317e25a7aa4dda53b7759298a8e3c54c8811a96e10ea02ff9008b1ebea83bd10",
+    "final-template-delta.patch": "55e8851004bcdcbc2ff5a074dda8ecff107ac6f99bd62c048829896d33bcadc2",
+    "README.md": "1b805f60101ad8b7af52c23c4a8476ebbb91f3e710618d562dc8317af7060c01",
+    "main-commands.json": "2a5912821bad14aef9fcf56dbfc90a44a1bb51c4f4bf487a1541d58af9f0279a"
+  },
+  "counts": {
+    "originalGuards": 97,
+    "phaseFiles": 36,
+    "AST": [
+      66,
+      66,
+      63
+    ],
+    "native": [
+      79,
+      79,
+      74
+    ],
+    "unrelated": 60,
+    "heldF": 9,
+    "controls": 20,
+    "uniqueMutants": 14
+  },
+  "verification": "Four final readonly checks closed0;1200 synthetic diagnostic shape checks; zero writes/children/owner imports/network in enforced preloads. No native execution.",
+  "requiredNext": "Root code/control-amendment inspection, independent preservation verdict, then root-only whole-cohort and serial actual-owner proof; all20 transfer before cut and all20 again after cut.",
+  "prefixLimit": "Printed typed SSR prefix witnesses prohibited markup only; no unseen tail or fullSSR equality claim.",
+  "noAutomaticExecution": true
+}

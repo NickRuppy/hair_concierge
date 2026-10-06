@@ -7,21 +7,6 @@ import {
 } from "../src/lib/agent-v2/runtime/product-tool-context"
 import { inferOilPurposeFromMessage } from "../src/lib/oil/purpose"
 
-test("direct product messages are passed through unchanged", () => {
-  const latestMessage = "Welches Öl passt für Glanz und Frizz?"
-
-  assert.equal(
-    buildAgentV2ProductToolMessage({
-      latestMessage,
-      recentMessages: [
-        { role: "user", content: "Ich suche etwas für die Längen." },
-        { role: "assistant", content: "Dann schauen wir auf Finish-Produkte." },
-      ],
-    }),
-    latestMessage,
-  )
-})
-
 test("direct asks with a named object stay unchanged even with referential wording", () => {
   const latestMessage = "Welches Tiefenreinigungsshampoo passt dann?"
 

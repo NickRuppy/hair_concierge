@@ -1,0 +1,53 @@
+'use strict';
+// TMP-only proposal author. Reads source text and parses it; never imports product modules or spawns children.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const OUT='/tmp/test-audit-dormant-rollout-closure';
+const pin=JSON.parse(fs.readFileSync(path.join(OUT,'start-pins.json'),'utf8'));
+const ROOT=pin.root;const ts=require(path.join(ROOT,'node_modules/typescript/lib/typescript.js'));
+const sha=s=>crypto.createHash('sha256').update(s).digest('hex');
+const write=(rel,s)=>{const p=path.join(OUT,rel);fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,s)};
+const json=(rel,o)=>write(rel,JSON.stringify(o,null,2)+'\n');
+const parse=(file,text)=>{const sf=ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true,file.endsWith('tsx')?ts.ScriptKind.TSX:ts.ScriptKind.TS);if(sf.parseDiagnostics.length)throw Error('parse: '+file);return sf};
+const once=(s,a,b)=>{if(s.split(a).length!==2)throw Error('nonunique anchor '+a.slice(0,100));return s.replace(a,b)};
+const calls=(sf,node)=>{let a=[];function visit(n){if(ts.isCallExpression(n))a.push({callee:n.expression.getText(sf),text:n.getText(sf),line:sf.getLineAndCharacterOfPosition(n.getStart(sf)).line+1});ts.forEachChild(n,visit)}visit(node);return a};
+function tests(file,text){const sf=parse(file,text);return sf.statements.filter(n=>ts.isExpressionStatement(n)&&ts.isCallExpression(n.expression)&&n.expression.expression.getText(sf)==='test').map(n=>{const c=n.expression,b=c.arguments.find(ts.isArrowFunction);return{title:c.arguments[0].text,start:n.getStart(sf),end:n.end,line:sf.getLineAndCharacterOfPosition(n.getStart(sf)).line+1,body:b.getText(sf),bodySHA:sha(b.getText(sf)),assertions:calls(sf,b).filter(c=>c.callee.startsWith('assert.')),calls:calls(sf,b)}})}
+let sources={};for(const p of pin.files){const live=fs.readFileSync(path.join(ROOT,p.file),'utf8');if(sha(live)!==p.sha256)throw Error('DRIFT '+p.file);const before=fs.readFileSync(p.snapshot,'utf8');if(before!==live)throw Error('snapshot mismatch');sources[p.file]={before,transfer:before,cut:before};}
+const change=(f,fn)=>{sources[f].cut=fn(sources[f].cut)};
+const D=new Set([
+'an active tester grant admits a field-test owner without an email allowlist',
+'an active regular-quiz tester grant is also an internal field-test owner',
+'an unapplied field-test relation is not an internal-owner signal',
+'field-test owner reads still fail closed on unrelated database errors',
+'internal app rollout excludes non-internal users before plan data is read',
+'internal app rollout admits the internal owner to the regular journey']);
+for(const f of ['tests/personal-plan-rollout-access.test.ts','tests/personal-plan-journey-access-loader.test.ts'])change(f,s=>{for(const t of tests(f,s).filter(t=>D.has(t.title)).reverse()){s=s.slice(0,t.start)+s.slice(t.end).replace(/^\n\n/,'')}return s});
+change('src/lib/personal-plan/rollout-access.ts',s=>'import "server-only"\n\n'+s.slice(s.indexOf('export async function isPersonalPlanAppV1AllowedForUser')).replace('_client?: PersonalPlanInternalUserClient','_client?: unknown'));
+change('src/lib/personal-plan/release.ts',s=>{s=once(s,'  PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS?: string\n','');s=once(s,'export type PersonalPlanAppV1Rollout = "off" | "internal" | "all"\n\n','');s=once(s,'): PersonalPlanAppV1Rollout {','): "all" {');return s.slice(0,s.indexOf('export function canAccessPersonalPlanAppV1Rollout'))+s.slice(s.indexOf('export function isPersonalPlanStage2Enabled'))});
+change('src/lib/personal-plan/journey-access-loader.ts',s=>{
+ for(const a of ['  canAccessPersonalPlanAppV1Rollout,\n','  resolvePersonalPlanAppV1Rollout,\n','  type PersonalPlanAppV1Rollout,\n','import { isPersonalPlanInternalUser, type PersonalPlanInternalUserClient } from "./rollout-access"\n','  appRollout: () => PersonalPlanAppV1Rollout\n','  loadIsInternal: (userId: string) => Promise<boolean>\n','    appRollout: resolvePersonalPlanAppV1Rollout,\n','  if (prefix.excludedByAppRollout) return { allowed: false }\n','  if (prefix.excludedByAppRollout) return { kind: "legacy" }\n'])s=once(s,a,'');
+ const start=s.indexOf('type JourneyAuthorizationPrefix ='),end=s.indexOf('type JourneyAccessPhaseReporter');
+ s=s.slice(0,start)+'type JourneyAuthorizationPrefix = {\n  appEnabled: boolean\n  accessState: AccessState\n  isNewBuyerCohort: boolean\n  preparedSourceReady: boolean\n  plan: JourneyPlanRow | null\n}\n\n'+s.slice(end);
+ const bs=s.indexOf('  const appRollout = deps.appRollout()'),be=s.indexOf('\n  const entitlementStartedAt',bs);s=s.slice(0,bs)+s.slice(be);
+ s=s.replace(/^\s*excludedByAppRollout: false,\n/gm,'');
+ return once(s,'    async loadIsInternal(userId) {\n      return isPersonalPlanInternalUser(userId, admin as unknown as PersonalPlanInternalUserClient)\n    },\n','');
+});
+change('tests/personal-plan-rollout-access.test.ts',s=>once(s,'  isActivePersonalPlanFieldTestOwner,\n',''));
+change('tests/personal-plan-stage3-release.test.ts',s=>{for(const a of ['  canAccessPersonalPlanAppV1Rollout,\n','  resolvePersonalPlanAppV1InternalEmails,\n'])s=once(s,a,'');
+ const a=s.indexOf('  assert.deepEqual(\n    [\n      ...resolvePersonalPlanAppV1InternalEmails('),b=s.indexOf('  assert.equal(\n    resolvePersonalPlanAppV1Rollout(',a);s=s.slice(0,a)+s.slice(b);
+ const a2=s.indexOf('\n  assert.equal(\n    canAccessPersonalPlanAppV1Rollout('),b2=s.indexOf('\n})',a2);return s.slice(0,a2)+s.slice(b2);
+});
+change('tests/personal-plan-journey-access-loader.test.ts',s=>{const title='Stage 2 access keeps the app rollout gate and stops before later-stage authority reads';const i=s.indexOf('test("'+title);const a=s.indexOf('  let entitlementReads = 0',i),b=s.indexOf('  const timings:',a);s=s.slice(0,a)+s.slice(b);s=once(s,title,'Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing');return s});
+for(const f of ['tests/personal-plan-journey-access-loader.test.ts','tests/freemium-enrollment-admission.test.ts','tests/personal-plan-trial-stage1-journey.test.ts','tests/personal-plan-field-test-access.test.ts'])change(f,s=>s.replace(/^\s*appRollout: \(\) => "all"(?: as const)?,\n/gm,'').replace(/^\s*loadIsInternal: async \(\) => false,\n/gm,''));
+let manifest={schema:1,root:ROOT,head:'21e0e41fa996ec6a725c258ab3766971f0edb94d',branch:'codex/test-audit-pruning',kind:'prospective source retirement; conditional; no repository writes or runtime',phases:{before:[],transfer:[],cut:[]},counts:{before:0,transfer:0,cut:0},testMapping:[],noNewCalls:true,allParse:true};
+for(const [file,phases] of Object.entries(sources)){
+ for(const [phase,s] of Object.entries(phases)){parse(file,s);const p=`snapshots/${phase}/${file}.txt`;write(p,s);manifest.phases[phase].push({file,path:path.join(OUT,p),sha256:sha(s),bytes:Buffer.byteLength(s)});if(file.startsWith('tests/'))manifest.counts[phase]+=tests(file,s).length;}
+ if(!file.startsWith('tests/'))continue;
+ const before=tests(file,phases.before),after=tests(file,phases.cut);for(const b of before){const a=after.find(a=>a.title===b.title||(b.title==='Stage 2 access keeps the app rollout gate and stops before later-stage authority reads'&&a.title==='Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing'));if(!a&&!D.has(b.title))throw Error('unexpected missing '+b.title);
+  let removedAssertions=[],addedAssertions=[];if(a){let pool=b.assertions.map(a=>a.text);for(const x of a.assertions){const ix=pool.indexOf(x.text);if(ix<0)addedAssertions.push(x.text);else pool.splice(ix,1)}removedAssertions=pool;if(addedAssertions.length)throw Error('added assertion');
+  // Every surviving non-assert call retains exactly an existing callee; payload-level continuity reviewed by complete diff.
+  const pc=b.calls.map(c=>c.callee);for(const x of a.calls){const ix=pc.indexOf(x.callee);if(ix<0)throw Error('added call '+x.callee);pc.splice(ix,1)}}
+  manifest.testMapping.push({file,title:b.title,beforeLine:b.line,beforeBodySHA:b.bodySHA,cutTitle:a?.title??null,cutLine:a?.line??null,cutBodySHA:a?.bodySHA??null,decision:a?'R':'D-conditional',unchangedCallback:a?.bodySHA===b.bodySHA,removedAssertions:a?removedAssertions:b.assertions.map(a=>a.text),addedAssertions,originalAssertions:b.assertions.map(a=>({line:a.line,callee:a.callee,text:a.text})),cutAssertions:a?.assertions.map(a=>({line:a.line,callee:a.callee,text:a.text}))??[]});
+ }
+}
+manifest.unchangedCallbacks=manifest.testMapping.filter(x=>x.unchangedCallback).length;manifest.modifiedRetainedCallbacks=manifest.testMapping.filter(x=>x.cutTitle&&!x.unchangedCallback).length;manifest.removedCallbacks=manifest.testMapping.filter(x=>!x.cutTitle).length;
+if(manifest.removedCallbacks!==6)throw Error('D count');json('manifest.json',manifest);json('assertion-accounting.json',manifest.testMapping);json('static-check.json',{runtime:false,productImports:false,repositoryWrites:false,children:false,parser:'TypeScript.createSourceFile only',typescriptSHA:sha(fs.readFileSync(path.join(ROOT,'node_modules/typescript/lib/typescript.js'))),manifestSHA:sha(JSON.stringify(manifest,null,2)+'\n'),counts:manifest.counts,unchangedCallbacks:manifest.unchangedCallbacks,modifiedRetainedCallbacks:manifest.modifiedRetainedCallbacks,removedCallbacks:manifest.removedCallbacks,parseDiagnostics:0,addedTestCalls:0,addedAssertions:0,liveOriginalHashesMatch:true});console.log(JSON.stringify({counts:manifest.counts,unchangedCallbacks:manifest.unchangedCallbacks,modifiedRetainedCallbacks:manifest.modifiedRetainedCallbacks,removedCallbacks:manifest.removedCallbacks}));

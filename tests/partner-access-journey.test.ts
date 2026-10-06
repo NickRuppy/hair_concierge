@@ -77,18 +77,6 @@ function fakeInvitationsAdminClient(rows: FakeInvitationDbRow[]) {
   return client as unknown as Parameters<typeof defaultLoadInvitation>[1]
 }
 
-test("a signed-out visitor gets an ordinary journey with zero lookups", async () => {
-  const resolution = await resolvePartnerJourney(
-    dependencies({
-      getUser: async () => null,
-      loadInvitation: async () => {
-        throw new Error("must not look up an invitation without a signed-in user")
-      },
-    }),
-  )
-  assert.deepEqual(resolution, { kind: "none" })
-})
-
 test("a signed-in user with no claimed invitation gets an ordinary journey", async () => {
   const resolution = await resolvePartnerJourney(
     dependencies({
@@ -96,18 +84,6 @@ test("a signed-in user with no claimed invitation gets an ordinary journey", asy
     }),
   )
   assert.deepEqual(resolution, { kind: "none" })
-})
-
-test("a claimed, unrevoked invitation authorizes the partner journey from the user alone", async () => {
-  const resolution = await resolvePartnerJourney(dependencies())
-  assert.deepEqual(resolution, {
-    kind: "authorized",
-    invitationId: invitationRow.id,
-    userId: "creator-user",
-    name: invitationRow.display_name,
-    email: invitationRow.normalized_email,
-    funnelSessionId: invitationRow.funnel_session_id,
-  })
 })
 
 test("a revoked invitation makes the account an ordinary user again, never blocked", async () => {
@@ -157,20 +133,6 @@ test("a read error is unavailable, not none or a thrown exception", async () => 
     dependencies({
       loadInvitation: async () => {
         throw new Error("database unavailable")
-      },
-    }),
-  )
-  assert.deepEqual(resolution, { kind: "unavailable" })
-})
-
-test("an auth-service error on getUser() is unavailable, not none", async () => {
-  const resolution = await resolvePartnerJourney(
-    dependencies({
-      getUser: async () => {
-        throw new Error("auth service blip")
-      },
-      loadInvitation: async () => {
-        throw new Error("must not look up an invitation when getUser() failed")
       },
     }),
   )
@@ -235,7 +197,14 @@ test("the default getUser path carries app_metadata through to the hint check", 
       ),
     loadInvitation: async () => invitationRow,
   })
-  assert.equal(resolution.kind, "authorized")
+  assert.deepEqual(resolution, {
+    kind: "authorized",
+    invitationId: invitationRow.id,
+    userId: "creator-user",
+    name: invitationRow.display_name,
+    email: invitationRow.normalized_email,
+    funnelSessionId: invitationRow.funnel_session_id,
+  })
 })
 
 test("a signed-in user without the claim stamp never reads the invitation table", async () => {
@@ -251,27 +220,6 @@ test("a signed-in user without the claim stamp never reads the invitation table"
   )
   assert.deepEqual(resolution, { kind: "none" })
   assert.equal(lookups, 0)
-})
-
-test("only a stamped account can be made unavailable by an invitation read error", async () => {
-  const unstamped = await resolvePartnerJourney(
-    dependencies({
-      getUser: async () => ({ id: "ordinary-user", app_metadata: {} }),
-      loadInvitation: async () => {
-        throw new Error("database unavailable")
-      },
-    }),
-  )
-  assert.deepEqual(unstamped, { kind: "none" })
-
-  const stamped = await resolvePartnerJourney(
-    dependencies({
-      loadInvitation: async () => {
-        throw new Error("database unavailable")
-      },
-    }),
-  )
-  assert.deepEqual(stamped, { kind: "unavailable" })
 })
 
 test("an invitation row without a funnel session stays an ordinary journey", async () => {

@@ -1,0 +1,104 @@
+[
+  {
+    "id": "C1-current-turn-hair-loss-detector-false",
+    "lane": "guidance",
+    "phase": "new",
+    "intended": "current-turn separated hair-loss wording must select the safety overlay without model focus",
+    "source": "src/lib/agent/tools/load-advisor-guidance.ts",
+    "selectedTest": {
+      "file": "tests/agent-guidance.spec.ts",
+      "name": "current-turn separated hair-loss wording loads safety overlay without model focus"
+    },
+    "originalHash": "48afec6c7a5f36cae965bb318e001d517df50658b09de21ff8b7684fd103eaab",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next494-guidance-mutations-new/C1-current-turn-hair-loss-detector-false-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next494-guidance-mutations-new/C1-current-turn-hair-loss-detector-false-fault.tap"
+    },
+    "restoredHash": "48afec6c7a5f36cae965bb318e001d517df50658b09de21ff8b7684fd103eaab",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next494-guidance-mutations-new/C1-current-turn-hair-loss-detector-false-after.tap"
+    },
+    "keeperAssertionLines": [
+      713,
+      717
+    ],
+    "assertionStacks": [
+      713
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "C2-parsed-avoidance-receipt-empty",
+    "lane": "guidance",
+    "phase": "new",
+    "intended": "selected hair-loss guardrail must retain its parsed avoidance receipt",
+    "source": "src/lib/agent/tools/load-advisor-guidance.ts",
+    "selectedTest": {
+      "file": "tests/agent-guidance.spec.ts",
+      "name": "current-turn separated hair-loss wording loads safety overlay without model focus"
+    },
+    "originalHash": "48afec6c7a5f36cae965bb318e001d517df50658b09de21ff8b7684fd103eaab",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next494-guidance-mutations-new/C2-parsed-avoidance-receipt-empty-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next494-guidance-mutations-new/C2-parsed-avoidance-receipt-empty-fault.tap"
+    },
+    "restoredHash": "48afec6c7a5f36cae965bb318e001d517df50658b09de21ff8b7684fd103eaab",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next494-guidance-mutations-new/C2-parsed-avoidance-receipt-empty-after.tap"
+    },
+    "keeperAssertionLines": [
+      713,
+      717
+    ],
+    "assertionStacks": [
+      717
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  }
+]

@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: an unapplied regular-quiz field-test relation preserves ordinary enrollment
+ok 1 - an unapplied regular-quiz field-test relation preserves ordinary enrollment
+  ---
+  duration_ms: 3.183167
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 295.910625

@@ -1,0 +1,97 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "6380a72d33c51970b590adf15f647a859747d87fb4092661c19999394ed7c00b",
+  "prerequisite": {
+    "dir": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd",
+    "completionSHA": "2fa2455efefaeede6f93cc7190e675c2ac7a71c2e66b0fe04a3c66768c23d083",
+    "verified": 20,
+    "logFiles": 60,
+    "phase": "transfer"
+  },
+  "files": [
+    {
+      "file": "tests/partner-access-sql-execution.test.ts",
+      "before": "4e1315f83f9df9f14304cda42c591f421a6f95c6a092f212753f51f5486f1ff9",
+      "after": "4e1315f83f9df9f14304cda42c591f421a6f95c6a092f212753f51f5486f1ff9"
+    },
+    {
+      "file": "tests/partner-access-journey.test.ts",
+      "before": "fef75b4b53499b42c3c27aa86966b2aa48132c736c300c62d5ab9d8e83a8aa84",
+      "after": "d17395421bb3572ab6d3b1ef09fde594e2f9faab6dcad5b44b64897dcbdbd689"
+    },
+    {
+      "file": "tests/partner-access-claim-route.test.ts",
+      "before": "47daff78b59b56f64f1d4525b3e090e681ff615f166bc246afb5ad1d8b389fff",
+      "after": "e9fe8be4f1ef650ce44b58a9cf6b3f1abb533e0d30f73b366bb99c765d7dda6b"
+    },
+    {
+      "file": "tests/partner-access-quiz-context.test.ts",
+      "before": "2e468aa3c52c715d2a3646c3cfafe70de7f5a08d50cf9840a47071a53dfb6961",
+      "after": "2e468aa3c52c715d2a3646c3cfafe70de7f5a08d50cf9840a47071a53dfb6961"
+    },
+    {
+      "file": "tests/partner-access-service.test.ts",
+      "before": "dc5de9837541222717c5f48277bfc87ef8d53009c4b8f2038853c132239f771a",
+      "after": "dc5de9837541222717c5f48277bfc87ef8d53009c4b8f2038853c132239f771a"
+    },
+    {
+      "file": "tests/partner-access-ui.test.tsx",
+      "before": "60bb4d0575be8472da12b4aeeaebe5b7a8099b72bbd81097326eb89c538030be",
+      "after": "e9668625ee1d8260aa961234fa9478e8f266bf1b7622223b200d955048eb112f"
+    },
+    {
+      "file": "tests/partner-access-activation-route.test.ts",
+      "before": "46bba2d372476b5fd58b2257cd2726e31a90c7ac7cb21a78fb643051039a91fe",
+      "after": "46bba2d372476b5fd58b2257cd2726e31a90c7ac7cb21a78fb643051039a91fe"
+    },
+    {
+      "file": "tests/partner-access-journey.spec.ts",
+      "before": "889805f45dc1af0a8cd39f7db77167060e1e9f31fab02023d7de4ba5a40b12a1",
+      "after": "889805f45dc1af0a8cd39f7db77167060e1e9f31fab02023d7de4ba5a40b12a1"
+    },
+    {
+      "file": "tests/partner-access-resolve-route.test.ts",
+      "before": "9e6ebb7689610dbbf2fc21dd01372acc8bcd66d6dff81b5127abdd0b4576ddf9",
+      "after": "9e6ebb7689610dbbf2fc21dd01372acc8bcd66d6dff81b5127abdd0b4576ddf9"
+    },
+    {
+      "file": "tests/partner-access-schema.test.ts",
+      "before": "b9ea53fb0e822199871d43965d658a563570b12404c7c3f866db6afed3ba7997",
+      "after": "b9ea53fb0e822199871d43965d658a563570b12404c7c3f866db6afed3ba7997"
+    },
+    {
+      "file": "tests/partner-access-email-change-routes.test.ts",
+      "before": "b303e7a40a1ffa5916c228e1f2817abc4ad9aef4b0749b2c37066c57280c3c99",
+      "after": "b303e7a40a1ffa5916c228e1f2817abc4ad9aef4b0749b2c37066c57280c3c99"
+    },
+    {
+      "file": "tests/partner-access-token.test.ts",
+      "before": "2c7259dc669c710c1b7df5623477be023e211388a73b3649c50dff80e48479d5",
+      "after": "2c7259dc669c710c1b7df5623477be023e211388a73b3649c50dff80e48479d5"
+    },
+    {
+      "file": "tests/partner-access-cli.test.ts",
+      "before": "d77afad18dcba58bef7b691892016648805b7901faab860aa327fd27681346c9",
+      "after": "d77afad18dcba58bef7b691892016648805b7901faab860aa327fd27681346c9"
+    },
+    {
+      "file": "tests/admin-partner-access-page.test.tsx",
+      "before": "32f63e0dd983775226b8d8c2660d4e8aa8b03196f7817a0f83a7083a0b959605",
+      "after": "32f63e0dd983775226b8d8c2660d4e8aa8b03196f7817a0f83a7083a0b959605"
+    },
+    {
+      "file": "tests/partner-access-email.test.ts",
+      "before": "039d7e4625cd87438e406ad27189c8b2dd28ff4b50a0ceb18595a9d830fe81c9",
+      "after": "039d7e4625cd87438e406ad27189c8b2dd28ff4b50a0ceb18595a9d830fe81c9"
+    },
+    {
+      "file": "tests/partner-access-intent.test.ts",
+      "before": "087bcce92cdb44d6d1b008f1b2bad897a31c0914099f377cc69f8efdfdb02065",
+      "after": "087bcce92cdb44d6d1b008f1b2bad897a31c0914099f377cc69f8efdfdb02065"
+    }
+  ]
+}

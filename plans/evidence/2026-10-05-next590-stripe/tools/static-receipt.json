@@ -1,0 +1,54 @@
+{
+  "proposalManifestSHA256": "bf1a7c25fb6d176ddee7270fab6d03c27686cc778ad75a9d7678ee6403742129",
+  "pinsSHA256": "2b8a775ac83ec817b274a8e881aa782e011f7109065645b947208414b53eff8c",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "counts": {
+    "before": 128,
+    "transfer": 128,
+    "cut": 123,
+    "unrelated": 118,
+    "retainedByteIdentical": 119,
+    "phaseFiles": 39,
+    "controls": 9
+  },
+  "guards": {
+    "repositoryReadsets": 276,
+    "phaseTests": 13,
+    "selectedInstalledFiles": 2921,
+    "selectedDistributionTrees": 23,
+    "identityFiles": 8
+  },
+  "verification": {
+    "jsToolsSyntaxParsed": 6,
+    "readonlyEditorCheck": "passed",
+    "readonlyDriverCheck": "passed",
+    "attemptedWrites": 0,
+    "attemptedChildren": 0,
+    "repositoryMutations": 0,
+    "productRuntimeRuns": 0
+  },
+  "files": {
+    "C1-clock-prospective-owner.ts": "dd103bfec496ae2b65e9a6b048f4d27f54c04390c89f0d7987fcc2c26c367b57",
+    "C1-fingerprint-prospective-owner.ts": "8c54d49930c44b10b0960cd9dd48ecab6470aa2820997618c403b048c053f155",
+    "C2-error-code-prospective-owner.ts": "5b4ed65c880a910746f88d47e3687e824ac8d5522dec8c307436977ef0be8927",
+    "C2-no-invoice-prospective-owner.ts": "f27ef34a855b722cf8847fb6cd647be69bf721e689565016169c36d9a1b3c713",
+    "C2-release-prospective-owner.ts": "109f804e1c14c59eca65d80b6632891fdf394b66c8f10ab39348a7ea75cb0517",
+    "C3-cause-prospective-owner.ts": "614157be317aae437eeba09d36beda72e1671f33af38812f3c9bdf49b5f9d266",
+    "C4-outcome-prospective-owner.ts": "37a8ac7bbca0161388426b96c3bc2c898b2870142bb6877669ea732554a861f8",
+    "C4-phase-prospective-owner.ts": "1a6fa569bdbe96a7e60e9305b0672b3af1dbd7001310ba84094f170208475d48",
+    "C5-no-intent-prospective-owner.ts": "49e7f9acbad31b670a7ed4cb0194f4e55f4ceb8f4816ac5f808f4af658b90c54",
+    "README.md": "2da12ea9066b83a30dbea5ddd27a2ea6e0bc9327c87e4713ed068264159d1099",
+    "bounded-readset-evidence.json": "c9034e09c99c972c76da05b6f6b7292e6c9c8c93d0a42fd6b973624f581ad9e7",
+    "bounded-scope.diff": "380acf39808b6ab075685c4c6deed42090f43523262dd0682f93d2a30bd8c98b",
+    "driver-static-check.log": "4a6c835a02fdc26ce46e36886270bea621f7b8e3d46f1e4ea9931bc45c4bf655",
+    "editor-static-check.log": "052742f297846c2ff22e79a0052b40fd8857b7eaff8404ea9caa81246f138e55",
+    "operator-controls-normalized.json": "82b7a6a7cfa45cd55c87d2ad8afc51f3b8451ea47ae394c5afcabdce5a4c06fc",
+    "operator-edit.cjs": "73400bac76200b2a91a0119190f8f2ed3a2670364e2a66030fe1d67fd945a602",
+    "operator-guard.cjs": "d37772838b504902df690b86beeea1f13614ed642f610bd3126747e3e14010ab",
+    "operator-pins.json": "2b8a775ac83ec817b274a8e881aa782e011f7109065645b947208414b53eff8c",
+    "operator-proof.cjs": "e95ab4a73297c219a54822a02ab048cd5d5b4ad468d9476885df72b7447802c5",
+    "operator-readonly-preload.cjs": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "operator-run-controls.cjs": "34ff235452d8ed5ce4d0bd3143f87fe368b8c179bf0a8d7efb8cd05623aff910",
+    "prepare-pins.cjs": "b9a5e64e4ed35e3336479252b76b3e1d251627d1ce0453881d7a964e83eba2ae"
+  }
+}

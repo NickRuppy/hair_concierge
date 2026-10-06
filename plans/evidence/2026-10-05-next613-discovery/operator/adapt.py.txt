@@ -1,0 +1,63 @@
+from pathlib import Path
+D=Path(__file__).parent
+p=D/'operator-guard.cjs';s=p.read_text();start=s.index("  if(evidence.root!==ROOT");end=s.index('  function guards(overrides={})',start)
+s=s[:start]+'''  if(evidence.root!==ROOT||evidence.head!==pins.head||evidence.branch!==pins.branch||candidates.length!==5||controls.length!==5||ts.version!==pins.typescriptVersion)fail('Proposal identity/count mismatch')
+  const snapshots={},counts={before:0,transfer:0,cut:0};let unrelated=0
+  const keeperKey=c=>c.file+'\\0'+c.keeper.name
+  const keepers=new Map(candidates.map(c=>[keeperKey(c),c]));if(keepers.size!==5)fail('Five distinct keepers required')
+  function assertionTokens(text){const scan=ts.createScanner(ts.ScriptTarget.Latest,true,ts.LanguageVariant.Standard,text),out=[];let t;while((t=scan.scan())!==ts.SyntaxKind.EndOfFileToken)out.push(scan.getTokenText());return out.join('\\0')}
+  function assertionConditions(file,statement){const sf=parse(ts,file,statement),out=[];function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf).startsWith('assert.')){const name=n.expression.getText(sf),arity=name==='assert.ok'?1:2;out.push(name+'('+n.arguments.slice(0,arity).map(a=>assertionTokens(a.getText(sf).replace(/textSequence\\(real\\)/g,'textSequence(realEmptyScreen())'))).join(',')+')')}ts.forEachChild(n,walk)}walk(sf);return out.sort()}
+  for(const file of Object.keys(evidence.phases.before)){
+    snapshots[file]={}
+    for(const phase of Object.keys(counts)){
+      const bytes=fs.readFileSync(evidence.snapshotPaths[phase][file]),rows=registrations(ts,file,bytes.toString())
+      if(sha(bytes)!==evidence.phases[phase][file])fail('Phase bytes: '+file)
+      snapshots[file][phase]={bytes,rows};counts[phase]+=rows.size
+    }
+    const {before,transfer,cut}=snapshots[file];let reconstructed=before.bytes.toString()
+    const local=candidates.filter(c=>c.file===file)
+    for(const c of local){if(before.rows.get(c.keeper.name)?.statement!==c.keeper.body||sha(c.keeper.body)!==c.keeper.sha256||before.rows.get(c.donor.name)?.statement!==c.donor.body||sha(c.donor.body)!==c.donor.sha256)fail('Original callback identity');reconstructed=replaceOnce(reconstructed,c.keeper.body,c.keeperAfter,'keeper union')}
+    if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated bytes')
+    for(const c of local)reconstructed=replaceOnce(reconstructed,c.donor.body,'',c.id)
+    if(reconstructed!==cut.bytes.toString())fail('Cut changed unrelated bytes')
+    for(const [name,row]of before.rows){const t=transfer.rows.get(name),k=cut.rows.get(name)
+      if(local.some(c=>c.donor.name===name)){if(k||t?.statement!==row.statement)fail('Donor phase mismatch');continue}
+      const candidate=keepers.get(file+'\\0'+name)
+      if(candidate){if(t?.statement!==candidate.keeperAfter||k?.statement!==candidate.keeperAfter)fail('Keeper phase mismatch');continue}
+      if(t?.statement!==row.statement||k?.statement!==row.statement)fail('Unrelated callback changed');unrelated++
+    }
+  }
+  if(Object.keys(snapshots).length!==24||JSON.stringify(counts)!=='{"before":163,"transfer":163,"cut":158}'||unrelated!==153)fail('Phase conservation mismatch')
+  for(const c of candidates){const b=snapshots[c.file].before.rows,k=b.get(c.keeper.name),d=b.get(c.donor.name);const expected=[...assertionConditions(c.file,k.statement),...assertionConditions(c.file,d.statement)].sort();for(const phase of ['transfer','cut']){const actual=assertionConditions(c.file,snapshots[c.file][phase].rows.get(c.keeper.name).statement);if(JSON.stringify(actual)!==JSON.stringify(expected))fail('Complete assertion condition union lost')}}
+  const held=readJSON(PROPOSAL+'/ledger.json').filter(j=>j.classification==='F');if(held.length!==1)fail('Held F count')
+  for(const j of held)for(const phase of Object.keys(counts))if(sha(snapshots[j.file][phase].rows.get(JSON.parse(j.title))?.statement||'')!==j.sha256)fail('Held F changed')
+  const unchangedRetained=unrelated
+''' +s[end:]
+start=s.index('  const text=original.toString()');end=s.index('  return {original,mutated}',start)
+s=s[:start]+'''  const text=original.toString(),sf=parse(ctx.ts,c.file,text)
+  let mutated
+  if(c.anchor.kind==='function'){
+    const found=[];function walk(n){if(ctx.ts.isFunctionDeclaration(n)&&n.name?.text===c.anchor.scope)found.push(n);ctx.ts.forEachChild(n,walk)}walk(sf)
+    if(found.length!==1||sha(found[0].getText(sf))!==c.anchor.scopeSha256||found[0].getText(sf).split(c.from).length!==2)fail('Unique function anchor drift')
+    const n=found[0];mutated=Buffer.from(text.slice(0,n.getStart(sf))+replaceOnce(n.getText(sf),c.from,c.to,c.id)+text.slice(n.end))
+  }else if(c.anchor.kind==='file'&&c.anchor.scopeSha256===sha(original))mutated=Buffer.from(replaceOnce(text,c.from,c.to,c.id))
+  else fail('Unsupported source anchor')
+  parse(ctx.ts,c.file,mutated.toString())
+  if(sha(mutated)!==c.mutatedSha256)fail('Prospective fault hash mismatch')
+  for(const phase of ['transfer','cut']){
+    const row=ctx.snapshots[c.test.file][phase].rows.get(c.test.name),o=c.oracles[phase]
+    const matches=row?.assertions.filter(a=>a.text===o.text)||[]
+    if(sha(row?.statement||'')!==o.keeperSha256||matches.length!==1||matches[0].startLine!==o.startLine)fail('Callback-scoped fault oracle drift')
+  }
+''' +s[end:]
+p.write_text(s)
+p=D/'operator-edit.cjs';s=p.read_text().replace("if(dir)fs.writeFileSync(path.join(dir,'failure.json'),JSON.stringify({error:String(error),rollback},null,2)","let restoredGuardError=null;try{context.current()}catch(e){restoredGuardError=String(e)}\n if(dir)fs.writeFileSync(path.join(dir,'failure.json'),JSON.stringify({error:String(error),rollback,restoredGuardError},null,2)")
+p.write_text(s)
+# Extend static attestation to prohibit accidental owner loading and network calls as well.
+p=D/'operator-readonly-preload.cjs';s=p.read_text();s+='''\nconst Module=require('node:module'),load=Module._load
+let ownerImports=0,networkCalls=0
+Module._load=function(request,parent,isMain){const resolved=Module._resolveFilename(request,parent,isMain);if(typeof resolved==='string'&&/^\\/Users\\/nick\\/AI_work\\/hair_conscierge\\/\\.worktrees\\/test-audit-pruning\\/(?:src|tests|scripts)\\//.test(resolved)){ownerImports++;throw Error('Read-only check attempted product/test import')}return load.call(this,request,parent,isMain)}
+for(const name of ['node:http','node:https'])for(const method of ['request','get'])require(name)[method]=()=>{networkCalls++;throw Error('Read-only check attempted network')}
+globalThis.fetch=()=>{networkCalls++;throw Error('Read-only check attempted fetch')}
+process.on('exit',()=>process.stdout.write(JSON.stringify({attemptedOwnerImports:ownerImports,attemptedNetworkCalls:networkCalls})+'\\n'))
+''';p.write_text(s)

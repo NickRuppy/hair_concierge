@@ -1,0 +1,106 @@
+TAP version 13
+# Subtest: initial Routine compilation is deterministic and excludes volatile portfolio metadata
+not ok 1 - initial Routine compilation is deterministic and excludes volatile portfolio metadata
+  ---
+  duration_ms: 19.325416
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-routine-candidate-compiler.test.ts:2:4869'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        {
+          assessment: 'basis',
+          availability: 'owned',
+    +     executable: false,
+    -     executable: true,
+          fitDecision: 'informed_override',
+          inclusion: 'included',
+          key: 'item:conditioner:conditioner_rinse_out:captured-a',
+          productKind: 'owned'
+        },
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      key: 'item:conditioner:conditioner_rinse_out:captured-a'
+      assessment: 'basis'
+      inclusion: 'included'
+      availability: 'owned'
+      fitDecision: 'informed_override'
+      executable: true
+      productKind: 'owned'
+    1:
+      key: 'item:oil:dry_finish:planned-a'
+      assessment: 'optional'
+      inclusion: 'included'
+      availability: 'planned'
+      fitDecision: 'standard'
+      executable: false
+      productKind: 'planned'
+    2:
+      key: 'item:heat_protectant:pre_heat_protection:captured-pending-a'
+      assessment: 'optional'
+      inclusion: 'included'
+      availability: 'pending_review'
+      fitDecision: 'standard'
+      executable: false
+      productKind: 'pending_review'
+    3:
+      key: 'item:mask:intensive_conditioning_mask:none'
+      assessment: 'not_recommended'
+      inclusion: 'excluded'
+      availability: 'none'
+      fitDecision: 'standard'
+      executable: false
+      productKind: 'none'
+  actual:
+    0:
+      key: 'item:conditioner:conditioner_rinse_out:captured-a'
+      assessment: 'basis'
+      inclusion: 'included'
+      availability: 'owned'
+      fitDecision: 'informed_override'
+      executable: false
+      productKind: 'owned'
+    1:
+      key: 'item:oil:dry_finish:planned-a'
+      assessment: 'optional'
+      inclusion: 'included'
+      availability: 'planned'
+      fitDecision: 'standard'
+      executable: false
+      productKind: 'planned'
+    2:
+      key: 'item:heat_protectant:pre_heat_protection:captured-pending-a'
+      assessment: 'optional'
+      inclusion: 'included'
+      availability: 'pending_review'
+      fitDecision: 'standard'
+      executable: false
+      productKind: 'pending_review'
+    3:
+      key: 'item:mask:intensive_conditioning_mask:none'
+      assessment: 'not_recommended'
+      inclusion: 'excluded'
+      availability: 'none'
+      fitDecision: 'standard'
+      executable: false
+      productKind: 'none'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-routine-candidate-compiler.test.ts:216:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 840.031125

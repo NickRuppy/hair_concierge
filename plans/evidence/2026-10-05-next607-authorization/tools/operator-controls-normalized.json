@@ -1,0 +1,47 @@
+[
+  {
+    "id": "retirement-response-status",
+    "candidate": "D2-source-retirement",
+    "file": "src/app/api/stripe/create-checkout-session/route.ts",
+    "sourceSha256": "0808a083b02a9611deab703bf9fc7a9b3cecb5dce2b5be1889003a0cd06a9bd8",
+    "from": "return NextResponse.json({ error: \"one_time_purchase_retired\" }, { status: 410 })",
+    "to": "return NextResponse.json({ error: \"one_time_purchase_retired\" }, { status: 409 })",
+    "mutatedSha256": "a0bdb74c4318390be5f9d258a2599c0910bd37d5adb06828d7aaa6f1dec12ff8",
+    "anchor": {
+      "kind": "function",
+      "scope": "POST",
+      "scopeSha256": "23c1e585baf5fe0422d5b9a31cf14b898d10103842bf9a14a602c21944a69a1d",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/stripe-checkout-session-route-contract.test.ts",
+      "name": "retired one-time purchase requests stop before account or provider work"
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^retired one-time purchase requests stop before account or provider work$",
+      "tests/stripe-checkout-session-route-contract.test.ts"
+    ],
+    "oracles": {
+      "before": {
+        "startLine": 117,
+        "text": "assert.equal(response.status, 410)",
+        "keeperSha256": "61e3aaa9ed9d373bd4152f9dc45bad82d8d816b5cf7a1c724fa3276539a5010c",
+        "testFileSha256": "b966b1716f13172213e841b6a3528154579c2fde3bdc63e0758f7734860e12b2"
+      }
+    },
+    "intendedAssertion": "assert.equal(response.status, 410)",
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:",
+      "409 !== 410"
+    ]
+  }
+]

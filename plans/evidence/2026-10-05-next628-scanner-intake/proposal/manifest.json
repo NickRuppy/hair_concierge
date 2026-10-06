@@ -1,0 +1,377 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "HEAD": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "scope": [
+    "tests/scan-unknown-flow-ui.test.tsx",
+    "tests/scan-research-intake-form-ui.test.tsx"
+  ],
+  "classification": {
+    "R": 21,
+    "F": 1,
+    "C": 4,
+    "D": 0
+  },
+  "counts": {
+    "before": 26,
+    "transfer": 26,
+    "cut": 22
+  },
+  "phaseFiles": [
+    {
+      "phase": "before",
+      "file": "tests/scan-unknown-flow-ui.test.tsx",
+      "sha256": "9201c4c4005b18032d98f4c6001233658399cbac1a10e37d7b14f18cf429e590",
+      "lines": 414
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/scan-unknown-flow-ui.test.tsx",
+      "sha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965",
+      "lines": 422
+    },
+    {
+      "phase": "cut",
+      "file": "tests/scan-unknown-flow-ui.test.tsx",
+      "sha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf",
+      "lines": 404
+    },
+    {
+      "phase": "before",
+      "file": "tests/scan-research-intake-form-ui.test.tsx",
+      "sha256": "9db0097395601502f01946177a42861342cd4e7082712975753a44ae2564f78f",
+      "lines": 309
+    },
+    {
+      "phase": "transfer",
+      "file": "tests/scan-research-intake-form-ui.test.tsx",
+      "sha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb",
+      "lines": 317
+    },
+    {
+      "phase": "cut",
+      "file": "tests/scan-research-intake-form-ui.test.tsx",
+      "sha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a",
+      "lines": 300
+    }
+  ],
+  "readSet": [
+    {
+      "file": "AGENTS.md",
+      "sha256": "9072f0e4ef99aef972395aab4b26e4718be6ab7cac755a0fc303746d8ee162f8",
+      "readScope": "routing read; current provided instructions",
+      "lineCount": 135
+    },
+    {
+      "file": "tests/scan-unknown-flow-ui.test.tsx",
+      "sha256": "9201c4c4005b18032d98f4c6001233658399cbac1a10e37d7b14f18cf429e590",
+      "readScope": "FULL 414 lines all13 registrations and every helper",
+      "lineCount": 414
+    },
+    {
+      "file": "tests/scan-research-intake-form-ui.test.tsx",
+      "sha256": "9db0097395601502f01946177a42861342cd4e7082712975753a44ae2564f78f",
+      "readScope": "FULL309 lines all13 registrations and every helper",
+      "lineCount": 309
+    },
+    {
+      "file": "src/components/scan/scan-unknown-flow.tsx",
+      "sha256": "a4c0e6d23c85476d17016dcb488641ca10e3c3059fab53596f1f8f5fd95b5754",
+      "readScope": "FULL200 lines actual owner",
+      "lineCount": 200
+    },
+    {
+      "file": "src/components/scan/scan-search-sheet.tsx",
+      "sha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+      "readScope": "FULL1065 lines actual form and parent sheet, read in slices",
+      "lineCount": 1065
+    },
+    {
+      "file": "src/components/scan/scan-product-thumb.tsx",
+      "sha256": "879f42afc873074cb547bcaa90e98acb44273694e18cb635ed9883cad5af5962",
+      "readScope": "FULL70 lines owner",
+      "lineCount": 70
+    },
+    {
+      "file": "src/components/personal-plan-products/stage3-product-copy.ts",
+      "sha256": "e20722dc17605dbab0c49a7302f3f93691ed95cfda05596f3cc75e083cd868c2",
+      "readScope": "FULL category/role copy",
+      "lineCount": 137
+    },
+    {
+      "file": "src/lib/utils.ts",
+      "sha256": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d",
+      "readScope": "FULL cn adapter",
+      "lineCount": 6
+    },
+    {
+      "file": "src/lib/scan/verdict-labels.ts",
+      "sha256": "badd8bce5f663a04afd98b11c8c3d30883d4d449bc6747cb18f95ad7be6d1b0c",
+      "readScope": "1-160; operative unknown copy/brand formatting fully read, rest out of scope",
+      "lineCount": 169
+    },
+    {
+      "file": "src/lib/personal-plan/products/contracts.ts",
+      "sha256": "bc4291e12db65a3e220c884344255403e4ea3c3eb19d24fb3c5a4605ae011366",
+      "readScope": "1-145; category array/type and module imports; rest not semantically read",
+      "lineCount": 1547
+    },
+    {
+      "file": "src/lib/scan/types.ts",
+      "sha256": "dce26c3380df9386a8296b52c79cb702c47fc9a6ab49fb4f04ea1a250d2e2c02",
+      "readScope": "1-208; unknown render DTO fully read",
+      "lineCount": 201
+    },
+    {
+      "file": "src/components/scan/scan-flow.tsx",
+      "sha256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+      "readScope": "787-940,1115-1235 plus imports/search; actual submit adapters and rendering props only, no complete ScanFlow re-audit",
+      "lineCount": 1327
+    },
+    {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "sha256": "f5484cc86b14501866f9fb1aecb78904ab7d27a6ea9cee55ec2fa93558122122",
+      "readScope": "1-230,1300-1435,1720-2050; complete relevant harness plus cross-copy/parent intake registrations, rest not reread",
+      "lineCount": 3446
+    },
+    {
+      "file": "src/app/scan/scan-page-client.tsx",
+      "sha256": "8ce5c49efe2a9cf3454b4b52f8ddea2c0d8bfe2203ec2feaa01ff3f9b1e859d6",
+      "readScope": "125-157 production entry caller",
+      "lineCount": 150
+    },
+    {
+      "file": "src/app/labs/scan/scan-lab-client.tsx",
+      "sha256": "9c9f8d5e8a6850a8ade4cebde8139aae5fab5fb41608f3fcbe4636db19011a49",
+      "readScope": "420-448 lab caller only",
+      "lineCount": 440
+    },
+    {
+      "file": "src/components/discovery/intake/discovery-add-sheet.tsx",
+      "sha256": "2de3e61f36f21cd79ec46f8c4547c1114f434def03faf899a34fcd85eb59cfd9",
+      "readScope": "720-770 sibling caller, does not enable research intake",
+      "lineCount": 756
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+      "readScope": "FULL plain Node marker loader",
+      "lineCount": 10
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+      "readScope": "scripts49-73 and relevant searched lines only",
+      "lineCount": 275
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+      "readScope": "143-165 quality-node routing and searched browser job lines only",
+      "lineCount": 423
+    },
+    {
+      "file": "plans/scan-public-launch.md",
+      "sha256": "0b7cc3b05b5617cae538d3299688b00fd254cc3239851d08126cce84c20f61fb",
+      "readScope": "54,62,88-103 signed-off Task9 copy/one-tap",
+      "lineCount": 99
+    },
+    {
+      "file": "node_modules/react/cjs/react.development.js",
+      "sha256": "4325e6263375459503858c0982d50bbc25bc33e66676954698c67221d2ee8b72",
+      "readScope": "268-280,451-464,515-530,774-789,1252-1270 element/Children/dispatcher semantics",
+      "lineCount": 1284
+    },
+    {
+      "file": "node_modules/react-dom/server.node.js",
+      "sha256": "f2dd93f6f91f983cd91232098d4ac55578596d33d680d7cb9438ea3b0a611b4b",
+      "readScope": "FULL selector; no environment read",
+      "lineCount": 18
+    },
+    {
+      "file": "node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js",
+      "sha256": "e0a591b81f983794366bbc8338df0ebbbc7add48fdcee772870e226eadcda9ce",
+      "readScope": "1155-1182,5042-5076,9850-9878 SSR attribute/function/render entry semantics",
+      "lineCount": 9877
+    },
+    {
+      "file": "node_modules/next/dist/client/image-component.js",
+      "sha256": "7dcd5a10f44f1b52100554e2a2537dfe3d04083e310858d9a92c61a7db302753",
+      "readScope": "135-164,190-210 onError forwarding inspected; real network/optimizer not proved",
+      "lineCount": 311
+    },
+    {
+      "file": "node_modules/clsx/dist/clsx.mjs",
+      "sha256": "d949e5cdbfebc76a6642b1901095e900fc3f2262d8dc0373aa44850a9bc75522",
+      "readScope": "FULL classname flattening",
+      "lineCount": 1
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "before-ast.json",
+      "sha256": "75dca4da9255f1688040f8674e51780550f5f6b229e3bdbdba537917ff98cbb7"
+    },
+    {
+      "path": "build.py",
+      "sha256": "5f51f5394955e607d1071c3641969fc6196de4b3f102b9148255ddf52defcb5a"
+    },
+    {
+      "path": "candidates.json",
+      "sha256": "ca3f0758269118bac0bb8258a86f52cfc7ef436c64b37d08eea9d0bf37a0fcde"
+    },
+    {
+      "path": "check.cjs",
+      "sha256": "a2c71f446631ac4925101631d96524cbe139481e834d3c45641ed107f46484ba"
+    },
+    {
+      "path": "complete-ledger.json",
+      "sha256": "bc3d95a704b1045ea3110bc5de884c84cac86317c8d2d8395970c85ec94c4eaa"
+    },
+    {
+      "path": "complete-ledger.md",
+      "sha256": "c85ac624f51b14f7637499c72818fdb334e1ab33b65f43c835aecc7858adfbea"
+    },
+    {
+      "path": "complete.diff",
+      "sha256": "c1df6c106974c818cc3c96d82c4095526570b92a7eb77b2f62076be9a4c3ccad"
+    },
+    {
+      "path": "controls.json",
+      "sha256": "1fca0c0c654b1089fa35c58c9e7ffe5709a7f043ee1c3163a630c4e97dfd1745"
+    },
+    {
+      "path": "cut-ast.json",
+      "sha256": "9319f9f79c7236197e2fd72f7fde5e6d73d05bb91a3117bd6d3cad9faebd9036"
+    },
+    {
+      "path": "cut.diff",
+      "sha256": "8dcd1813828c1ab4a820bdcfe0870de2cc9b890447b6131b3f09a150d182f83a"
+    },
+    {
+      "path": "finalize.py",
+      "sha256": "da3b5b4986efea0f74a8593c49f974af3fefed5efdf6c7000f22f476a06ca2c9"
+    },
+    {
+      "path": "judgments.json",
+      "sha256": "bc3d95a704b1045ea3110bc5de884c84cac86317c8d2d8395970c85ec94c4eaa"
+    },
+    {
+      "path": "layer-plan.md",
+      "sha256": "d0502dd23a6d33330f192c85ffc2c4aef79991470e6a699b5001e46e6ea54c78"
+    },
+    {
+      "path": "main-commands.json",
+      "sha256": "4085a55441d7e7aa08fdb7a36f7513a255ba53e67be690359b261d36d55436ca"
+    },
+    {
+      "path": "parse.cjs",
+      "sha256": "f8644c83decdecea719ce6b5d1105aaf95c411ed95353b650d654d0bbcdfc901"
+    },
+    {
+      "path": "parser-check.log",
+      "sha256": "a6b6d2e423b03df905c1a87b6c17e373b3dc18b093ad468d9fa1a77fef2b82f6"
+    },
+    {
+      "path": "phase-hashes.json",
+      "sha256": "8203368c511aed569fbc7ce63024834fe3384e29af4e3b7564e5a479389f518f"
+    },
+    {
+      "path": "prospective-mutants/C1-headline/src/lib/scan/verdict-labels.ts",
+      "sha256": "2f45c1f4c7ae7209e13dd8bc0b908d4757496f0ee14494ecd9ad78e6e86fce95"
+    },
+    {
+      "path": "prospective-mutants/C1-question/src/lib/scan/verdict-labels.ts",
+      "sha256": "42643ae9b66a7b1380338f4f693b7b1555cdb1d4dfda8ee594116fee5c4eca63"
+    },
+    {
+      "path": "prospective-mutants/C1-subline/src/lib/scan/verdict-labels.ts",
+      "sha256": "2334d916d86fdcab442c8177b6171b4a1ee40ea8d416a9dc97c530917afe85bf"
+    },
+    {
+      "path": "prospective-mutants/C2-brand/src/components/scan/scan-unknown-flow.tsx",
+      "sha256": "f67f4e606a76c6aa78a4848e5b0004ec1ab60a22e90184d6070b6ab5992cde57"
+    },
+    {
+      "path": "prospective-mutants/C2-input/src/components/scan/scan-unknown-flow.tsx",
+      "sha256": "a4feff5810bae356ececbcf535030c3865536143dfb53ceb16762f1c485701c5"
+    },
+    {
+      "path": "prospective-mutants/C2-product/src/components/scan/scan-unknown-flow.tsx",
+      "sha256": "55343044f87d5dab9243616a60944b8b62f4ba13253cfc45958d85e81e5a3584"
+    },
+    {
+      "path": "prospective-mutants/C2-submit/src/components/scan/scan-unknown-flow.tsx",
+      "sha256": "0db019a1271ead6105d2be8d36fbfe4694fabfc2e5c663ec3bead92d1e355f4d"
+    },
+    {
+      "path": "prospective-mutants/C3-back/src/components/scan/scan-search-sheet.tsx",
+      "sha256": "f154f43f446a86f8623c049671ec64e419547339074f534f4b19c2774e8b3234"
+    },
+    {
+      "path": "prospective-mutants/C3-brand/src/components/scan/scan-search-sheet.tsx",
+      "sha256": "0b6a70280366371e245a99e488219f41f41aca308b034172e34e70075ec27abd"
+    },
+    {
+      "path": "prospective-mutants/C3-helper/src/components/scan/scan-search-sheet.tsx",
+      "sha256": "6ef0ff9dfc75df41706cf61bb108c65d33b7c2a3fb4917b5ebe276cfce9b9ddb"
+    },
+    {
+      "path": "prospective-mutants/C3-product/src/components/scan/scan-search-sheet.tsx",
+      "sha256": "f185dcd6e4c128715de90a0d09b8ef79d6fa3a2c411bf380fd9aec752184c0fb"
+    },
+    {
+      "path": "prospective-mutants/C3-question/src/components/scan/scan-search-sheet.tsx",
+      "sha256": "ce7d06dfd0c75ad289014cbc91294c6309f3a76efef14473f71a0b1b8e0596d0"
+    },
+    {
+      "path": "prospective-mutants/C3-retailer/src/components/scan/scan-search-sheet.tsx",
+      "sha256": "7eb9860089002ed9856bd151a477292e8b32ece019e9473b565cba3ae78e11dc"
+    },
+    {
+      "path": "prospective-mutants/C4-alert/src/components/scan/scan-search-sheet.tsx",
+      "sha256": "66249551640d6a49b753a4c6c1ce139197d14c9a162a24a4273db196f300f93e"
+    },
+    {
+      "path": "read-scope.json",
+      "sha256": "986e52a219d0d415f616e95c77b47d071572c3efe738cc8ccef1b1629e2f7425"
+    },
+    {
+      "path": "snapshots/before/tests/scan-research-intake-form-ui.test.tsx",
+      "sha256": "9db0097395601502f01946177a42861342cd4e7082712975753a44ae2564f78f"
+    },
+    {
+      "path": "snapshots/before/tests/scan-unknown-flow-ui.test.tsx",
+      "sha256": "9201c4c4005b18032d98f4c6001233658399cbac1a10e37d7b14f18cf429e590"
+    },
+    {
+      "path": "snapshots/cut/tests/scan-research-intake-form-ui.test.tsx",
+      "sha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+    },
+    {
+      "path": "snapshots/cut/tests/scan-unknown-flow-ui.test.tsx",
+      "sha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf"
+    },
+    {
+      "path": "snapshots/transfer/tests/scan-research-intake-form-ui.test.tsx",
+      "sha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+    },
+    {
+      "path": "snapshots/transfer/tests/scan-unknown-flow-ui.test.tsx",
+      "sha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965"
+    },
+    {
+      "path": "static-check.json",
+      "sha256": "6d2da1710ea7a5386dc7ea1dfa778ff1e0fc1c345e5735786583d272f183b8e3"
+    },
+    {
+      "path": "transfer-ast.json",
+      "sha256": "f5dfd4773e4e55da26736d71f175b82a581689ab65accab38b8e652888daa0ba"
+    },
+    {
+      "path": "transfer.diff",
+      "sha256": "84ff626c71b86a74bcdabf30163de2041be139623cccae16aa6d65388bc1666d"
+    }
+  ],
+  "runtime": "NOT RUN; main-only prospective handoff"
+}

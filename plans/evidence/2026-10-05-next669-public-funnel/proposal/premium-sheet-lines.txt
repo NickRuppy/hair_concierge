@@ -1,0 +1,734 @@
+
+FILE src/components/premium-sheet/premium-sheet.tsx
+1: "use client"
+2: 
+3: import { usePathname, useRouter } from "next/navigation"
+4: import { useCallback, useEffect, useReducer, useRef, useState } from "react"
+5: 
+6: import { usePlanSelection } from "@/components/checkout/use-plan-selection"
+7: import { PremiumSheetCheckout } from "@/components/premium-sheet/premium-sheet-checkout"
+8: import {
+9:   BottomSheet,
+10:   BottomSheetContent,
+11:   BottomSheetDescription,
+12:   BottomSheetTitle,
+13: } from "@/components/ui/bottom-sheet"
+14: import { Button } from "@/components/ui/button"
+15: import {
+16:   FREEMIUM_CHECKOUT_RETURN_PARAM,
+17:   sanitizeFreemiumCheckoutReturnPath,
+18: } from "@/lib/freemium/checkout-return"
+19: import {
+20:   clearPremiumSheetCheckoutMemo,
+21:   persistPremiumSheetCheckoutContext,
+22:   persistPremiumSheetPendingSession,
+23:   readPremiumSheetCheckoutContext,
+24:   readPremiumSheetPendingSession,
+25: } from "@/lib/premium-sheet/checkout-context-storage"
+26: import { PREMIUM_FEATURES, type PremiumSheetContext } from "@/lib/premium-sheet/context"
+27: import { premiumSheetDismissLabel } from "@/lib/premium-sheet/dismiss-label"
+28: import { orderedBenefits } from "@/lib/premium-sheet/ordered-benefits"
+29: import {
+30:   premiumSheetPlan,
+31:   premiumSheetPlans,
+32:   PREMIUM_SHEET_DEFAULT_INTERVAL,
+33:   PREMIUM_SHEET_RECOMMENDED_BADGE,
+34: } from "@/lib/premium-sheet/pricing"
+35: import {
+36:   PREMIUM_SHEET_PURCHASE_COPY,
+37:   premiumSheetPurchaseFailureCopy,
+38: } from "@/lib/premium-sheet/purchase-copy"
+39: import { premiumSheetPollDelayMs } from "@/lib/premium-sheet/purchase-poll"
+40: import { premiumSheetCompletionBody } from "@/lib/premium-sheet/purchase-reference"
+41: import {
+42:   initialPremiumSheetPurchaseState,
+43:   isPremiumSheetPlanSelectionActive,
+44:   isPremiumSheetPurchaseTerminal,
+45:   premiumSheetPollableSessionId,
+46:   premiumSheetPurchaseReducer,
+47:   premiumSheetShowsCheckout,
+48:   type PremiumSheetPurchaseFailure,
+49: } from "@/lib/premium-sheet/purchase-state"
+50: import { cn } from "@/lib/utils"
+51: import { useToast } from "@/providers/toast-provider"
+52: 
+53: /**
+54:  * The Premium sheet (T13, freemium-scanner-first PR4) — the program's one conversion
+55:  * surface. It replaces T5's stub in place: same opener contract (`open` / `context` /
+56:  * `onClose`), so every gate that already opens it — the scan verdict (T9), the trigger
+57:  * cards (T10), the gated „Beispiel" pages (T12) — is untouched.
+58:  *
+59:  * Three things, in this order:
+60:  *  1. what the user just bumped into, explained — `orderedBenefits` puts that feature
+61:  *     first (plum, the repo's selected/accent colour) and fills the other two slots from
+62:  *     the core order, so the sheet never reads as a single-feature paywall;
+63:  *  2. the three plans at standard-catalog prices (`@/lib/premium-sheet/pricing` — never
+64:  *     the launch catalog, whatever the launch-pricing flag says), Vierteljährlich
+65:  *     preselected and marked „Beliebteste Wahl" (docket rework R2, ruling A3);
+66:  *  3. one coral CTA, and an escape that is always one tap away. Declining costs nothing:
+67:  *     the free scanner keeps working exactly as before.
+68:  *
+69:  * **T14 — contextual purchase completion.** The CTA no longer dismisses: it swaps the
+70:  * sheet's body for Stripe embedded checkout plus the offer page's native PayPal button
+71:  * (docket rework R1), in place. The whole purchase happens inside this component, which is
+72:  * why the opener contract still does not change — no navigation, no `/welcome`, no lost
+73:  * scan state, whichever provider the buyer picks.
+74:  *
+75:  * What this component may and may not conclude:
+76:  *  - Stripe's `onComplete` moves it to „prüfen", never to unlocked. Only
+77:  *    `POST /api/freemium/purchase/complete` — which re-reads the Session from Stripe —
+78:  *    unlocks anything. The state machine (`lib/premium-sheet/purchase-state.ts`) makes that
+79:  *    the only reachable path.
+80:  *  - On unlock it refreshes the router, tells the opener (`onUnlocked`) and closes. The
+81:  *    gates are server-rendered from the entitlement tier, so the refresh is what turns the
+82:  *    „Beispiel" frame into the buyer's real content — but a surface that holds its own
+83:  *    client-side tier state (the scanner's Merken bookmark) cannot learn from a refresh,
+84:  *    which is why the callback exists (fix round 1, F1).
+85:  *  - Every failure lands back on the plan rows inside the same open sheet. Nothing is
+86:  *    navigated and nothing about the free session is touched.
+87:  */
+88: export function PremiumSheet({
+89:   open,
+90:   context,
+91:   onClose,
+92:   onUnlocked,
+93:   onRequestOpen,
+94: }: {
+95:   open: boolean
+96:   context: PremiumSheetContext | null
+97:   onClose: () => void
+98:   /**
+99:    * Fired once, on VERIFIED unlock, before the router refresh. The opener uses it to flip
+100:    * whatever tier state it holds itself — `router.refresh()` re-serves the server props of
+101:    * a mounted client component but cannot touch its reducer, so without this the gate the
+102:    * purchase started from stays locked until a hard reload (fix round 1, F1).
+103:    */
+104:   onUnlocked?: () => void
+105:   /**
+106:    * Asks the opener to open the sheet. Used by the redirect return and the resume lane,
+107:    * where the buyer comes back on a fresh page load with the sheet closed: a pending or
+108:    * failed payment must be visible, not silently dispatched into a closed sheet (fix round
+109:    * 1, F2). Carries the context the purchase started from, so the reopened sheet is the
+110:    * gate they left, not the surface's default.
+111:    *
+112:    * Not PayPal's path any more (docket rework R1): the sheet's PayPal button approves in a
+113:    * popup and calls back into the live component, so it never leaves the page. It still
+114:    * reaches this when the buyer reloads mid-settlement.
+115:    */
+116:   onRequestOpen?: (context: PremiumSheetContext | null) => void
+117: }) {
+118:   const router = useRouter()
+119:   const pathname = usePathname()
+120:   const { toast } = useToast()
+121:   const [purchase, dispatchPurchase] = useReducer(
+122:     premiumSheetPurchaseReducer,
+123:     initialPremiumSheetPurchaseState,
+124:   )
+125:   // BottomSheetContent keeps rendering through the ~200-250ms exit animation
+126:   // (see bottom-sheet.tsx `closing`), but openers null out `context` the moment
+127:   // they set `open` to false. Hold the last non-null context in state so the
+128:   // benefit order, plum accent and escape label stay put while the sheet
+129:   // animates out instead of flipping mid-exit (T13 fix round 1, F1). Adjusting
+130:   // state during render (not a ref) keeps this compatible with the
+131:   // react-hooks/refs rule, which forbids reading/writing refs during render.
+132:   const [heldContext, setHeldContext] = useState<PremiumSheetContext | null>(context)
+133:   if (context !== null && context !== heldContext) setHeldContext(context)
+134:   const renderedContext = context ?? heldContext
+135: 
+136:   const benefits = orderedBenefits(renderedContext)
+137:   const plans = premiumSheetPlans()
+138:   const { selectedInterval, selectPlan } = usePlanSelection({
+139:     defaultInterval: PREMIUM_SHEET_DEFAULT_INTERVAL,
+140:   })
+141:   const selectedPlan = premiumSheetPlan(selectedInterval)
+142:   const dismissLabel = premiumSheetDismissLabel(renderedContext)
+143:   const returnPath = sanitizeFreemiumCheckoutReturnPath(pathname)
+144:   const planSelectionActive = isPremiumSheetPlanSelectionActive(purchase)
+145:   const showsCheckout = premiumSheetShowsCheckout(purchase)
+146:   /**
+147:    * Terminal-Abo state (final cleanup batch, Nick-approved): the duplicate guard already
+148:    * cancelled this attempt and the buyer keeps the subscription they had — retrying only
+149:    * re-hits the same guard. The CTA becomes a plain dismiss instead of another attempt.
+150:    */
+151:   const isSubscriptionAlreadyActiveFailure =
+152:     purchase.phase === "failed" && purchase.reason === "subscription_already_active"
+153: 
+154:   /**
+155:    * Verification. The only path to an unlocked state — and the only place the server is
+156:    * asked whether money actually moved.
+157:    *
+158:    * `silentOnError` is what makes polling safe: a network blip on poll 3 must not demote a
+159:    * paid `pending` purchase to a failure screen. A verdict the SERVER gave (`failed`) always
+160:    * applies; an error on our side only ends the first, user-initiated attempt.
+161:    *
+162:    * `treatErrorAsPending` is the RESUME lane's variant (Codex fix wave round 2, R1): a
+163:    * resumed purchase is not a fresh, user-initiated attempt, so a transport/5xx error here
+164:    * must not read as the server's own "we could not confirm your payment" — it moves the
+165:    * machine to `pending` instead, the same phase a genuine async settlement reaches, so the
+166:    * poll below keeps trying and the resume handle (`clearPremiumSheetCheckoutMemo` only runs
+167:    * on a TERMINAL phase) survives.
+168:    *
+169:    * Returns whether the call settled normally or was rate-limited, so pollers can surface a
+170:    * brief notice instead of silently swallowing a 429 (Codex fix wave round 2, R3).
+171:    */
+172:   const verify = useCallback(
+173:     async (
+174:       sessionId: string,
+175:       options: { silentOnError?: boolean; treatErrorAsPending?: boolean } = {},
+176:     ): Promise<"settled" | "rate_limited"> => {
+177:       type CompletionPayload = {
+178:         status?: unknown
+179:         routineReady?: unknown
+180:         retryable?: unknown
+181:         reason?: unknown
+182:       } | null
+183:       let payload: CompletionPayload = null
+184:       let rateLimited = false
+185:       try {
+186:         const response = await fetch("/api/freemium/purchase/complete", {
+187:           method: "POST",
+188:           headers: { "Content-Type": "application/json" },
+189:           // Stripe or PayPal, decided by the reference itself (docket rework R1) — the only
+190:           // place the two lanes differ on this side of the purchase.
+191:           body: JSON.stringify(premiumSheetCompletionBody(sessionId)),
+192:         })
+193:         if (response.status === 429) {
+194:           rateLimited = true
+195:         } else {
+196:           payload = (await response.json().catch(() => null)) as CompletionPayload
+197:           if (!response.ok) payload = null
+198:         }
+199:       } catch {
+200:         payload = null
+201:       }
+202:       if (payload?.status === "complete") {
+203:         dispatchPurchase({
+204:           type: "verification_complete",
+205:           sessionId,
+206:           routineReady: payload.routineReady === true,
+207:         })
+208:         return "settled"
+209:       }
+210:       if (payload?.status === "provisioning") {
+211:         // Paid and entitled, plan not built. `retryable: false` stops the poll.
+212:         dispatchPurchase({
+213:           type: "verification_provisioning",
+214:           sessionId,
+215:           retryable: payload.retryable !== false,
+216:         })
+217:         return "settled"
+218:       }
+219:       if (payload?.status === "pending") {
+220:         dispatchPurchase({ type: "verification_pending", sessionId })
+221:         return "settled"
+222:       }
+223:       if (payload?.status === "failed") {
+224:         dispatchPurchase({
+225:           type: "verification_failed",
+226:           sessionId,
+227:           reason: verificationFailureReason(payload.reason),
+228:         })
+229:         return "settled"
+230:       }
+231:       if (rateLimited) {
+232:         // Never an authoritative verdict, from any phase this is called from (a fresh
+233:         // attempt, the resume lane, a poll, or a manual recheck) — always parks the purchase
+234:         // at `pending` so the poll or the next manual tap can retry it, instead of leaving a
+235:         // first-attempt call stuck in `verifying` with no dispatch at all (Codex fix wave
+236:         // round 2, R3).
+237:         dispatchPurchase({ type: "verification_pending", sessionId })
+238:         return "rate_limited"
+239:       }
+240:       if (options.treatErrorAsPending) {
+241:         dispatchPurchase({ type: "verification_pending", sessionId })
+242:         return "settled"
+243:       }
+244:       if (options.silentOnError) return "settled"
+245:       dispatchPurchase({ type: "verification_failed", sessionId, reason: "verification_failed" })
+246:       return "settled"
+247:     },
+248:     [dispatchPurchase],
+249:   )
+250: 
+251:   // Set only by the RESUME lane below, to the exact Session id it resumed — the one case
+252:   // where the first verify call is not the buyer's first, user-initiated attempt (R1).
+253:   const resumedVerificationSessionRef = useRef<string | null>(null)
+254:   const verifyingSessionId = purchase.phase === "verifying" ? purchase.sessionId : null
+255:   useEffect(() => {
+256:     if (!verifyingSessionId) return
+257:     // Remembered BEFORE the request, for both lanes: a refresh mid-verification (the buyer
+258:     // is impatient, the tab reloads, the redirect return already stripped the parameter)
+259:     // would otherwise lose the only handle on the Session (Codex fix wave, Y3).
+260:     persistPremiumSheetPendingSession(verifyingSessionId)
+261:     const isResume = resumedVerificationSessionRef.current === verifyingSessionId
+262:     void verify(verifyingSessionId, isResume ? { treatErrorAsPending: true } : undefined)
+263:   }, [verifyingSessionId, verify])
+264: 
+265:   /**
+266:    * The contextual return for redirect-based payment methods (a bank redirect, 3DS on a
+267:    * separate page). Stripe navigates back to the ORIGINATING surface — never `/welcome` —
+268:    * carrying the Session id, and this sheet, which is mounted on every gate, picks it up
+269:    * and finishes exactly the same verification the in-place completion runs.
+270:    */
+271:   const consumedReturnRef = useRef<string | null>(null)
+272:   const returnedContextRef = useRef<PremiumSheetContext | null>(null)
+273:   const returnedRef = useRef(false)
+274:   const resumeCheckedRef = useRef(false)
+275:   useEffect(() => {
+276:     // Read from `window.location` rather than `useSearchParams`: this component is mounted
+277:     // on every gate, and `useSearchParams` would force a Suspense boundary (and a client
+278:     // bailout) onto all of them for a parameter that only ever exists on a redirect return.
+279:     if (typeof window === "undefined") return
+280:     const returnedSessionId = new URLSearchParams(window.location.search).get(
+281:       FREEMIUM_CHECKOUT_RETURN_PARAM,
+282:     )
+283:     if (returnedSessionId) {
+284:       if (consumedReturnRef.current === returnedSessionId) return
+285:       consumedReturnRef.current = returnedSessionId
+286:       returnedRef.current = true
+287:       // READ, not consume (Codex fix wave, Y3). The memo is dropped only once the purchase
+288:       // reaches a terminal outcome — clearing it here meant a refresh while the payment was
+289:       // still settling reopened the sheet on the surface's default gate, or not at all.
+290:       returnedContextRef.current = readPremiumSheetCheckoutContext()
+291:       persistPremiumSheetPendingSession(returnedSessionId)
+292:       dispatchPurchase({ type: "provider_completed", sessionId: returnedSessionId })
+293:       // Drop the parameter so a refresh (or a shared link) cannot replay the return.
+294:       router.replace(pathname ?? returnPath)
+295:       return
+296:     }
+297: 
+298:     // No parameter: this may still be a reload DURING an unsettled payment, whose parameter
+299:     // the first return already stripped. `sessionStorage` is then the only handle left, and
+300:     // resuming from it is what keeps a pending verification alive across a refresh.
+301:     if (resumeCheckedRef.current) return
+302:     resumeCheckedRef.current = true
+303:     const resumedSessionId = readPremiumSheetPendingSession()
+304:     if (!resumedSessionId) return
+305:     returnedRef.current = true
+306:     returnedContextRef.current = readPremiumSheetCheckoutContext()
+307:     // Marks this Session as a RESUME for the verifying effect above (R1): its first verify
+308:     // call is not a fresh attempt, so a transport error must not fail it outright.
+309:     resumedVerificationSessionRef.current = resumedSessionId
+310:     dispatchPurchase({ type: "provider_completed", sessionId: resumedSessionId })
+311:   }, [router, pathname, returnPath])
+312: 
+313:   /**
+314:    * The redirect return's visible half (fix round 1, F2). The buyer came back on a fresh
+315:    * page load, so the sheet is CLOSED: a `pending` panel or a `failed` alert would render
+316:    * into nothing. Ask the opener to open it for every outcome that has something to say — a
+317:    * verified completion needs no sheet, it unlocks the surface and toasts.
+318:    */
+319:   const reopenForPhase =
+320:     purchase.phase === "pending" || purchase.phase === "failed" || purchase.phase === "provisioning"
+321:       ? purchase.phase
+322:       : null
+323:   const reopenRequestedRef = useRef<string | null>(null)
+324:   useEffect(() => {
+325:     if (!reopenForPhase || !returnedRef.current) return
+326:     if (reopenRequestedRef.current === reopenForPhase) return
+327:     reopenRequestedRef.current = reopenForPhase
+328:     onRequestOpen?.(returnedContextRef.current)
+329:   }, [reopenForPhase, onRequestOpen])
+330: 
+331:   /**
+332:    * The poll (Codex fix wave, Y3). A `pending` payment and a retryable `provisioning`
+333:    * failure are both finished somewhere else — in the webhook lane, seconds to minutes
+334:    * later. Before this the sheet asked once and then sat there: a buyer whose payment
+335:    * settled while the sheet was still mounted stayed gated until they reloaded the page.
+336:    *
+337:    * Bounded by `premiumSheetPollDelayMs`; when the schedule runs out the „Status prüfen"
+338:    * button below is the way on, so the buyer is never left with nothing to press.
+339:    *
+340:    * Self-scheduling (Codex fix wave round 2, R3): each attempt is timed only from the moment
+341:    * the PREVIOUS one settles, not from when it was fired. The earlier version drove this off
+342:    * a `{sessionId, attempt}` state pair — bumping `attempt` re-ran the effect and armed the
+343:    * next timer in the same tick as the in-flight `fetch`, so a slow response and the
+344:    * following poll's own call could overlap. A plain closure loop inside one effect removes
+345:    * the extra render round-trip entirely.
+346:    */
+347:   const pollableSessionId = premiumSheetPollableSessionId(purchase)
+348:   const [rechecking, setRechecking] = useState(false)
+349:   // Keyed to the Session it was raised for, and DERIVED against the current one below —
+350:   // rather than reset imperatively at the top of the poll effect (a synchronous `setState`
+351:   // in an effect body, which cascades an extra render for every purchase and trips
+352:   // `react-hooks/set-state-in-effect`). A later purchase simply carries a different
+353:   // `pollableSessionId`, so a stale notice from an earlier one stops rendering on its own.
+354:   const [rateLimitState, setRateLimitState] = useState<{ sessionId: string; notice: boolean }>({
+355:     sessionId: "",
+356:     notice: false,
+357:   })
+358:   const rateLimitNotice = rateLimitState.sessionId === pollableSessionId && rateLimitState.notice
+359:   useEffect(() => {
+360:     if (!pollableSessionId) return
+361:     let cancelled = false
+362:     let timer: ReturnType<typeof setTimeout> | null = null
+363: 
+364:     const schedule = (attempt: number) => {
+365:       const delayMs = premiumSheetPollDelayMs(attempt)
+366:       if (delayMs === null) return
+367:       timer = setTimeout(() => {
+368:         void verify(pollableSessionId, { silentOnError: true }).then((outcome) => {
+369:           if (cancelled) return
+370:           setRateLimitState({ sessionId: pollableSessionId, notice: outcome === "rate_limited" })
+371:           schedule(attempt + 1)
+372:         })
+373:       }, delayMs)
+374:     }
+375:     schedule(0)
+376: 
+377:     return () => {
+378:       cancelled = true
+379:       if (timer) clearTimeout(timer)
+380:     }
+381:   }, [pollableSessionId, verify])
+382: 
+383:   const recheck = useCallback(() => {
+384:     if (!pollableSessionId || rechecking) return
+385:     setRechecking(true)
+386:     // A single immediate check. It does not touch the automatic schedule above in any way —
+387:     // no attempt counter to reset, no new timer armed — so repeated taps can only ever have
+388:     // one manual verify in flight at a time instead of stacking a second poll loop on top of
+389:     // the running one (Codex fix wave round 2, R3).
+390:     void verify(pollableSessionId, { silentOnError: true })
+391:       .then((outcome) =>
+392:         setRateLimitState({ sessionId: pollableSessionId, notice: outcome === "rate_limited" }),
+393:       )
+394:       .finally(() => setRechecking(false))
+395:   }, [pollableSessionId, rechecking, verify])
+396: 
+397:   /**
+398:    * The memo (remembered gate + resumable Session id) lives exactly as long as the purchase
+399:    * can still change on its own, and is dropped the moment it cannot.
+400:    */
+401:   const purchaseIsTerminal = isPremiumSheetPurchaseTerminal(purchase)
+402:   useEffect(() => {
+403:     if (!purchaseIsTerminal) return
+404:     clearPremiumSheetCheckoutMemo()
+405:   }, [purchaseIsTerminal])
+406: 
+407:   /**
+408:    * Paid, entitled, plan not built (Codex fix wave, Y1). The ACCESS half of the unlock is
+409:    * true and is applied — client-held tier locks flip, the server-rendered gates refresh —
+410:    * but the „Alles freigeschaltet" toast and the close are not: they belong to a purchase
+411:    * whose content actually exists, and the sheet keeps saying so until it does.
+412:    */
+413:   const provisioningActive = purchase.phase === "provisioning"
+414:   const accessAppliedRef = useRef(false)
+415:   useEffect(() => {
+416:     if (!provisioningActive || accessAppliedRef.current) return
+417:     accessAppliedRef.current = true
+418:     onUnlocked?.()
+419:     router.refresh()
+420:   }, [provisioningActive, onUnlocked, router])
+421: 
+422:   /**
+423:    * Unlock: tell the opener (so client-held locks flip too — F1), refresh the
+424:    * server-rendered gates so the originating surface shows the buyer's real content, raise
+425:    * the toast, then close the sheet into it.
+426:    *
+427:    * The toast goes through the app-wide `ToastProvider`, which every surface that mounts
+428:    * this sheet has above it in its route layout (`AppRouteProviders`). That provider
+429:    * survives the refresh; a portal owned by this component does not, because the refresh
+430:    * replaces the whole gated subtree this sheet lives in — which used to kill the toast a
+431:    * few hundred ms in (fix round 1, F3).
+432:    */
+433:   const unlockedRoutineReady = purchase.phase === "unlocked" ? purchase.routineReady : null
+434:   // Once, ever. Openers pass inline callbacks, so every re-render changes this effect's
+435:   // deps — and `router.refresh()` itself causes one, which would make the unlock a refresh
+436:   // loop raising a new toast each time.
+437:   const unlockHandledRef = useRef(false)
+438:   useEffect(() => {
+439:     if (unlockedRoutineReady === null || unlockHandledRef.current) return
+440:     unlockHandledRef.current = true
+441:     onUnlocked?.()
+442:     router.refresh()
+443:     toast({
+444:       title: PREMIUM_SHEET_PURCHASE_COPY.unlockToast,
+445:       ...(unlockedRoutineReady
+446:         ? {}
+447:         : { description: PREMIUM_SHEET_PURCHASE_COPY.unlockToastRoutinePending }),
+448:     })
+449:     onClose()
+450:   }, [unlockedRoutineReady, router, onClose, onUnlocked, toast])
+451: 
+452:   const startCheckout = useCallback(() => {
+453:     // A fresh attempt owns the memo: any Session id left over from an abandoned one must not
+454:     // be resumable, or a later mount would verify the wrong purchase.
+455:     clearPremiumSheetCheckoutMemo()
+456:     // Remembered for a redirect method only; a card payment never leaves this component.
+457:     persistPremiumSheetCheckoutContext(renderedContext)
+458:     dispatchPurchase({
+459:       type: "checkout_requested",
+460:       interval: selectedInterval,
+461:       attemptId: crypto.randomUUID(),
+462:     })
+463:   }, [renderedContext, selectedInterval])
+464: 
+465:   // Every checkout callback names its attempt (Codex fix wave, Y5) — the reducer drops the
+466:   // ones whose attempt the buyer has already replaced.
+467:   const onCheckoutReady = useCallback(
+468:     (attemptId: string) => dispatchPurchase({ type: "checkout_ready", attemptId }),
+469:     [],
+470:   )
+471:   const onCheckoutFailed = useCallback(
+472:     (attemptId: string) =>
+473:       dispatchPurchase({ type: "checkout_failed", reason: "checkout_unavailable", attemptId }),
+474:     [],
+475:   )
+476:   const onCheckoutCompleted = useCallback(
+477:     (sessionId: string, attemptId: string) =>
+478:       dispatchPurchase({ type: "provider_completed", sessionId, attemptId }),
+479:     [],
+480:   )
+481:   const backToPlans = useCallback(() => dispatchPurchase({ type: "returned_to_plans" }), [])
+482: 
+483:   return (
+484:     <BottomSheet
+485:       open={open}
+486:       onOpenChange={(next) => {
+487:         if (!next) onClose()
+488:       }}
+489:     >
+490:       <BottomSheetContent
+491:         className="max-h-[88dvh]"
+492:         contentClassName="px-5 pb-5"
+493:         header={
+494:           <div className="px-5 pb-1 pt-1">
+495:             <p className="text-xs font-semibold uppercase tracking-wide text-[var(--brand-plum-dark)]">
+496:               Chaarlie Premium
+497:             </p>
+498:             <BottomSheetTitle className="mt-1 text-[19px]">Alles für dein Haar.</BottomSheetTitle>
+499:           </div>
+500:         }
+501:         footer={
+502:           <div className="flex flex-col gap-1">
+503:             {planSelectionActive ? (
+504:               <Button
+505:                 variant="cta"
+506:                 className="w-full"
+507:                 data-premium-sheet-cta="true"
+508:                 data-premium-sheet-selected-interval={selectedInterval}
+509:                 onClick={isSubscriptionAlreadyActiveFailure ? onClose : startCheckout}
+510:               >
+511:                 {/* After a failure the CTA is a retry, not a fresh offer — the repo-wide
+512:                     „Erneut versuchen" (fix round 1, F2) — except `subscription_already_active`,
+513:                     where retrying only re-hits the duplicate guard: the CTA closes the sheet
+514:                     instead (final cleanup batch). */}
+515:                 {isSubscriptionAlreadyActiveFailure
+516:                   ? PREMIUM_SHEET_PURCHASE_COPY.close
+517:                   : purchase.phase === "failed"
+518:                     ? PREMIUM_SHEET_PURCHASE_COPY.retry
+519:                     : selectedPlan.ctaLabel}
+520:               </Button>
+521:             ) : null}
+522:             {/* One escape, always present and always one tap away — including mid-payment,
+523:                 where it returns to the plan rows instead of closing the sheet. */}
+524:             <button
+525:               type="button"
+526:               data-premium-sheet-dismiss="true"
+527:               onClick={showsCheckout ? backToPlans : onClose}
+528:               className="min-h-[44px] w-full text-[13px] font-semibold text-muted-foreground"
+529:             >
+530:               {showsCheckout ? PREMIUM_SHEET_PURCHASE_COPY.backToPlans : dismissLabel}
+531:             </button>
+532:           </div>
+533:         }
+534:       >
+535:         {/* The payment step replaces the sheet's BODY, never the sheet: the header, the
+536:             escape and the buyer's place in the app all stay exactly where they were. */}
+537:         {purchase.phase === "starting" || purchase.phase === "paying" ? (
+538:           <PremiumSheetCheckout
+539:             interval={purchase.interval}
+540:             attemptId={purchase.attemptId}
+541:             returnPath={returnPath}
+542:             onReady={onCheckoutReady}
+543:             onFailed={onCheckoutFailed}
+544:             onCompleted={onCheckoutCompleted}
+545:           />
+546:         ) : purchase.phase === "verifying" ? (
+547:           <p
+548:             data-premium-sheet-purchase-phase="verifying"
+549:             aria-live="polite"
+550:             className="py-10 text-center text-sm font-semibold text-[var(--brand-plum-darkest)]"
+551:           >
+552:             {PREMIUM_SHEET_PURCHASE_COPY.verifying}
+553:           </p>
+554:         ) : purchase.phase === "pending" || purchase.phase === "provisioning" ? (
+555:           <div
+556:             data-premium-sheet-purchase-phase={purchase.phase}
+557:             aria-live="polite"
+558:             className="rounded-[14px] bg-[var(--brand-plum-ice)] px-4 py-5 text-center"
+559:           >
+560:             <p className="text-sm font-bold text-[var(--brand-plum-darkest)]">
+561:               {purchase.phase === "pending"
+562:                 ? PREMIUM_SHEET_PURCHASE_COPY.pendingTitle
+563:                 : PREMIUM_SHEET_PURCHASE_COPY.provisioningTitle}
+564:             </p>
+565:             <p className="mt-1 text-[13px] leading-snug text-muted-foreground">
+566:               {purchase.phase === "pending"
+567:                 ? PREMIUM_SHEET_PURCHASE_COPY.pendingBody
+568:                 : purchase.retryable
+569:                   ? PREMIUM_SHEET_PURCHASE_COPY.provisioningBody
+570:                   : PREMIUM_SHEET_PURCHASE_COPY.provisioningStalledBody}
+571:             </p>
+572:             {/* The manual way on, always available — the automatic poll is bounded, and a
+573:                 buyer watching a spinner must never be left with nothing to press. */}
+574:             {pollableSessionId ? (
+575:               <button
+576:                 type="button"
+577:                 data-premium-sheet-recheck="true"
+578:                 onClick={recheck}
+579:                 disabled={rechecking}
+580:                 className="mt-3 min-h-[44px] w-full text-[13px] font-semibold text-[var(--brand-plum-dark)] disabled:opacity-60"
+581:               >
+582:                 {rechecking
+583:                   ? PREMIUM_SHEET_PURCHASE_COPY.verifying
+584:                   : PREMIUM_SHEET_PURCHASE_COPY.recheck}
+585:               </button>
+586:             ) : null}
+587:             {/* Non-terminal: the endpoint is rate-limited (20/min), not refusing the
+588:                 purchase — the schedule (or the next manual tap) tries again on its own
+589:                 (Codex fix wave round 2, R3). */}
+590:             {rateLimitNotice ? (
+591:               <p
+592:                 data-premium-sheet-rate-limit-notice="true"
+593:                 className="mt-2 text-[11px] text-muted-foreground"
+594:               >
+595:                 {PREMIUM_SHEET_PURCHASE_COPY.rateLimited}
+596:               </p>
+597:             ) : null}
+598:           </div>
+599:         ) : (
+600:           <>
+601:             {purchase.phase === "failed" ? (
+602:               <div
+603:                 data-premium-sheet-purchase-phase="failed"
+604:                 role="alert"
+605:                 className="mb-3 rounded-[12px] border border-destructive/30 bg-destructive/10 px-3 py-2"
+606:               >
+607:                 <p className="text-[13px] font-semibold text-destructive">
+608:                   {premiumSheetPurchaseFailureCopy(purchase.reason)}
+609:                 </p>
+610:               </div>
+611:             ) : null}
+612:             {/* One tinted block for what the user just tapped, two quiet rows behind it —
+613:                 the sheet has enough boxes with the plan rows below. */}
+614:             <ul className="flex flex-col">
+615:               {benefits.map((featureId, index) => {
+616:                 const feature = PREMIUM_FEATURES[featureId]
+617:                 const accented = index === 0
+618:                 return (
+619:                   <li
+620:                     key={featureId}
+621:                     data-premium-sheet-benefit={featureId}
+622:                     data-premium-sheet-benefit-accent={accented ? "true" : "false"}
+623:                     className={cn(
+624:                       "px-3 py-2.5",
+625:                       accented
+626:                         ? "rounded-[12px] bg-[var(--brand-plum-ice)]"
+627:                         : "border-b border-border last:border-b-0",
+628:                     )}
+629:                   >
+630:                     <p
+631:                       className={cn(
+632:                         "text-sm font-bold",
+633:                         accented ? "text-[var(--brand-plum-darkest)]" : "text-foreground",
+634:                       )}
+635:                     >
+636:                       {feature.name}
+637:                     </p>
+638:                     <BottomSheetDescription className="mt-0.5 leading-snug">
+639:                       {feature.benefit}
+640:                     </BottomSheetDescription>
+641:                   </li>
+642:                 )
+643:               })}
+644:             </ul>
+645: 
+646:             <div className="mt-4 grid gap-2" data-premium-sheet-plans="true">
+647:               {plans.map((plan) => {
+648:                 const isSelected = plan.interval === selectedInterval
+649:                 return (
+650:                   <button
+651:                     key={plan.interval}
+652:                     type="button"
+653:                     aria-pressed={isSelected}
+654:                     data-premium-sheet-plan={plan.interval}
+655:                     data-premium-sheet-plan-selected={isSelected ? "true" : "false"}
+656:                     onClick={() => selectPlan(plan.interval)}
+657:                     className={cn(
+658:                       "relative flex min-h-[60px] items-center gap-3 rounded-[14px] border bg-card px-4 py-3 text-left transition-colors",
+659:                       isSelected
+660:                         ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]"
+661:                         : "border-border",
+662:                     )}
+663:                   >
+664:                     <span
+665:                       aria-hidden="true"
+666:                       className={cn(
+667:                         "grid size-[18px] shrink-0 place-items-center rounded-full border-2",
+668:                         isSelected
+669:                           ? "border-[var(--brand-plum)] bg-[var(--brand-plum)]"
+670:                           : "border-border bg-background",
+671:                       )}
+672:                     >
+673:                       {isSelected ? <span className="size-1.5 rounded-full bg-white" /> : null}
+674:                     </span>
+675:                     <span className="min-w-0 flex-1">
+676:                       <span className="block text-[15px] font-bold text-[var(--brand-plum-darkest)]">
+677:                         {plan.name}
+678:                         {plan.recommended ? (
+679:                           /* `whitespace-nowrap` + `inline-block`: „Beliebteste Wahl" is
+680:                              twice the length of the „empfohlen" it replaced (R2), and an
+681:                              inline pill that long breaks INSIDE itself into two half-pills.
+682:                              It now moves to the next line whole, or not at all. */
+683:                           <span className="ml-2 inline-block whitespace-nowrap rounded-full bg-[var(--brand-plum)] px-2 py-0.5 align-middle font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-white">
+684:                             {PREMIUM_SHEET_RECOMMENDED_BADGE}
+685:                           </span>
+686:                         ) : null}
+687:                       </span>
+688:                       {plan.detail ? (
+689:                         <span className="mt-0.5 block text-[11px] leading-snug text-muted-foreground">
+690:                           {plan.detail}
+691:                         </span>
+692:                       ) : null}
+693:                     </span>
+694:                     <span
+695:                       data-premium-sheet-plan-price={plan.interval}
+696:                       className="shrink-0 text-[17px] font-bold leading-none text-[var(--brand-plum-darkest)]"
+697:                     >
+698:                       {plan.price}
+699:                     </span>
+700:                   </button>
+701:                 )
+702:               })}
+703:               <p className="mt-1 text-center text-[11px] text-[var(--text-caption)]">
+704:                 Jederzeit kündbar
+705:               </p>
+706:             </div>
+707:           </>
+708:         )}
+709:       </BottomSheetContent>
+710:     </BottomSheet>
+711:   )
+712: }
+713: 
+714: /**
+715:  * The server's failure reason, narrowed to something the sheet can say in German (Codex fix
+716:  * wave, Y4). Only the two lifecycle outcomes get their own line — a Session the buyer
+717:  * abandoned and one that expired are different sentences, and both are different from „Wir
+718:  * konnten deine Zahlung nicht bestätigen.", which is what every other reason falls back to.
+719:  */
+720: function verificationFailureReason(reason: unknown): PremiumSheetPurchaseFailure {
+721:   if (reason === "checkout_session_expired") return "checkout_expired"
+722:   if (reason === "checkout_session_abandoned") return "checkout_abandoned"
+723:   // PayPal's equivalent of an expired Session: the checkout intent outlived its 24h TTL
+724:   // (docket rework R1). Same sentence, because it is the same thing to the buyer.
+725:   if (reason === "paypal_checkout_intent_expired") return "checkout_expired"
+726:   // The duplicate guard already cancelled the second subscription and the buyer keeps the
+727:   // access they had — a generic „nicht bestätigt" would misstate what happened (copy
+728:   // polish wave): the payment was stopped on purpose, not left unverified.
+729:   if (reason === "paypal_duplicate_checkout") return "subscription_already_active"
+730:   return "verification_failed"
+731: }
+

@@ -12,7 +12,6 @@ import {
   buildPeelingCategoryDecision,
   buildRecommendationRequestContext,
   buildResetAssessment,
-  buildShampooCategoryDecision,
   buildInterventionPlan,
   emptyRecommendationRequestContext,
   evaluateBondbuilderFit,
@@ -71,61 +70,6 @@ function createMaskDecision(
     notes: [],
   }
 }
-
-test("category set turns severe shared signals into conditioner, mask, and leave-in targets", () => {
-  const { normalized, damage, careNeeds, plan } = buildEngineState()
-  const categories = buildCategoryRecommendationSet(
-    normalized,
-    damage,
-    careNeeds,
-    plan,
-    emptyRecommendationRequestContext(),
-  )
-
-  assert.equal(categories.shampoo.relevant, true)
-  assert.equal(categories.shampoo.action, "add")
-  assert.deepEqual(categories.shampoo.targetProfile, {
-    scalpRoute: "balanced",
-    shampooBucket: "normal",
-    secondaryBucket: null,
-    cleansingIntensity: "regular",
-  })
-
-  assert.equal(categories.conditioner.relevant, true)
-  assert.equal(categories.conditioner.action, "add")
-  assert.deepEqual(categories.conditioner.targetProfile, {
-    balance: "moisture",
-    repairLevel: "high",
-    weight: "medium",
-    thickness: "fine",
-    activeDamageDrivers: damage.activeDamageDrivers,
-  })
-
-  assert.equal(categories.mask.relevant, true)
-  assert.equal(categories.mask.action, "add")
-  assert.deepEqual(categories.mask.targetProfile, {
-    balance: "moisture",
-    repairLevel: "high",
-    weight: "light",
-    needStrength: 3,
-    role: "fixed",
-    intensityRequest: null,
-    thickness: "fine",
-    density: "medium",
-  })
-
-  assert.equal(categories.leaveIn.relevant, true)
-  assert.equal(categories.leaveIn.action, "add")
-  assert.equal(categories.leaveIn.targetProfile?.needBucket, "heat_protect")
-  assert.equal(categories.leaveIn.targetProfile?.stylingContext, "heat_style")
-  assert.equal(categories.leaveIn.targetProfile?.conditionerRelationship, "replacement_capable")
-  assert.deepEqual(categories.leaveIn.targetProfile?.careBenefits, [
-    "heat_protect",
-    "repair",
-    "detangle_smooth",
-  ])
-  assert.equal(categories.oil.relevant, false)
-})
 
 test("mask target weight is light for fine hair even with medium density", () => {
   const { normalized, damage, careNeeds, plan } = buildEngineState(
@@ -207,6 +151,7 @@ test("straight natural texture with perm and definition goal routes leave-in to 
   const decision = buildLeaveInCategoryDecision(normalized, damage, careNeeds, plan)
 
   assert.equal(careNeeds.definitionSupportNeed, "moderate")
+  assert.equal(careNeeds.detanglingNeed, "none")
   assert.equal(decision.relevant, true)
   assert.equal(decision.targetProfile?.needBucket, "curl_definition")
   assert.equal(decision.targetProfile?.stylingPrepNeed, "definition")
@@ -236,6 +181,9 @@ test("perm maintenance can route leave-in to gentle support without curl definit
   })
   const decision = buildLeaveInCategoryDecision(normalized, damage, careNeeds, plan)
 
+  assert.equal(careNeeds.hydrationNeed, "low")
+  assert.equal(careNeeds.smoothingNeed, "low")
+  assert.equal(careNeeds.detanglingNeed, "none")
   assert.equal(careNeeds.definitionSupportNeed, "none")
   assert.equal(decision.relevant, true)
   assert.equal(decision.targetProfile?.needBucket, "detangle_smooth")
@@ -403,28 +351,6 @@ test("explicit mask requests keep real mask need fixed", () => {
   assert.ok(categories.mask.planReasonCodes.includes("explicit_mask_request"))
 })
 
-test("explicit intensive low-need mask requests uplift concentration target one step", () => {
-  const { normalized, damage, careNeeds, plan } = buildEngineState(LOW_DAMAGE_PROFILE, [])
-  const requestContext = buildRecommendationRequestContext({
-    requestedCategory: "mask",
-    message: "Welche intensive Maske passt zu mir?",
-  })
-  const categories = buildCategoryRecommendationSet(
-    normalized,
-    damage,
-    careNeeds,
-    plan,
-    requestContext,
-  )
-
-  assert.equal(requestContext.maskIntensityRequest, "intensive")
-  assert.equal(categories.mask.relevant, true)
-  assert.equal(categories.mask.targetProfile?.role, "optional")
-  assert.equal(categories.mask.targetProfile?.repairLevel, "medium")
-  assert.equal(categories.mask.targetProfile?.intensityRequest, "intensive")
-  assert.ok(categories.mask.notes.includes("mask_explicit_intensive_request_uplift"))
-})
-
 test("conditioner stays baseline core care for low-need profiles with existing conditioner", () => {
   const { normalized, damage, careNeeds, plan } = buildEngineState(LOW_DAMAGE_PROFILE, [
     {
@@ -546,24 +472,6 @@ test("mask fit uses concentration as a temporary repair proxy but still needs ba
   assert.equal(exactFit.status, "ideal")
 })
 
-test("mask fit keeps high concentration for medium need as a caveated support path", () => {
-  const decision = createMaskDecision({
-    balance: "protein",
-    repairLevel: "medium",
-    weight: "medium",
-    needStrength: 2,
-  })
-
-  const fit = evaluateMaskFit(decision, {
-    weight: "medium",
-    concentration: "high",
-    balance_direction: "protein",
-  })
-
-  assert.equal(fit.status, "supportive")
-  assert.ok(fit.reasonCodes.includes("mask_high_intensity_use_sparingly_caveat"))
-})
-
 test("mask fit rejects high concentration for low optional need", () => {
   const decision = createMaskDecision({
     balance: "balanced",
@@ -640,22 +548,6 @@ test("mask fit treats rich-on-fine as riskier than light-on-coarse", () => {
   assert.ok(lightCoarseFit.reasonCodes.includes("mask_light_weight_may_be_underpowered_caveat"))
 })
 
-test("leave-in fit derives canonical targets from the current leave-in schema", () => {
-  const { normalized, damage, careNeeds, plan } = buildEngineState()
-  const decision = buildLeaveInCategoryDecision(normalized, damage, careNeeds, plan)
-
-  const fit = evaluateLeaveInFit(decision, {
-    weight: "medium",
-    roles: ["replacement_conditioner", "styling_prep"],
-    provides_heat_protection: true,
-    care_benefits: ["repair", "anti_frizz"],
-    application_stage: ["towel_dry", "pre_heat"],
-    suitable_thicknesses: ["fine"],
-  })
-
-  assert.equal(fit.status, "supportive")
-})
-
 test("leave-in fit calls a heat-activated product a mismatch for a no-heat profile instead of blaming data", () => {
   const airDryProfile = {
     ...SEVERE_DAMAGE_PROFILE,
@@ -704,26 +596,6 @@ test("leave-in fit mismatches when heat styling support is missing", () => {
   assert.ok(fit.reasonCodes.includes("leave_in_benefits_mismatch"))
 })
 
-test("leave-in target splits blow-dry heat protection from high-heat styling prep", () => {
-  const blowDryProfile = {
-    ...SEVERE_DAMAGE_PROFILE,
-    hair_texture: "straight" as const,
-    thickness: "normal" as const,
-    density: "medium" as const,
-    drying_method: "blow_dry" as const,
-    heat_styling: "never" as const,
-    styling_tools: ["blow_dryer" as const],
-    uses_heat_protection: false,
-  }
-  const { normalized, damage, careNeeds, plan } = buildEngineState(blowDryProfile, [])
-  const decision = buildLeaveInCategoryDecision(normalized, damage, careNeeds, plan)
-  const target = decision.targetProfile
-
-  assert.equal(target?.heatProtectionNeed, "moderate")
-  assert.equal(target?.stylingPrepNeed, "none")
-  assert.equal(target?.needBucket, "heat_protect")
-})
-
 test("leave-in target treats thermal rollers as moderate heat exposure", () => {
   const thermalRollerProfile = {
     ...SEVERE_DAMAGE_PROFILE,
@@ -757,6 +629,10 @@ test("leave-in fit treats missing moderate blow-dry heat protection as a caveate
   }
   const { normalized, damage, careNeeds, plan } = buildEngineState(blowDryProfile, [])
   const decision = buildLeaveInCategoryDecision(normalized, damage, careNeeds, plan)
+
+  assert.equal(decision.targetProfile?.heatProtectionNeed, "moderate")
+  assert.equal(decision.targetProfile?.stylingPrepNeed, "none")
+  assert.equal(decision.targetProfile?.needBucket, "heat_protect")
 
   const fit = evaluateLeaveInFit(decision, {
     weight: "medium",
@@ -807,25 +683,6 @@ test("leave-in fit hard-gates thickness and opposite protein-moisture direction"
 
   assert.equal(balanceFit.status, "mismatch")
   assert.ok(balanceFit.reasonCodes.includes("leave_in_balance_mismatch"))
-})
-
-test("shampoo decision keeps treatment and rotation buckets explicit for dandruff routines", () => {
-  const dandruffProfile = {
-    ...LOW_DAMAGE_PROFILE,
-    scalp_type: "oily" as const,
-    scalp_condition: "dandruff" as const,
-  }
-  const { normalized, damage, careNeeds, plan } = buildEngineState(dandruffProfile, [])
-  const decision = buildShampooCategoryDecision(normalized, plan)
-
-  assert.equal(careNeeds.thermalProtectionNeed, "none")
-  assert.equal(decision.relevant, true)
-  assert.deepEqual(decision.targetProfile, {
-    scalpRoute: "dandruff",
-    shampooBucket: "schuppen",
-    secondaryBucket: "dehydriert-fettig",
-    cleansingIntensity: "regular",
-  })
 })
 
 test("oil decision resolves normalized request purpose before category logic runs", () => {
@@ -1337,37 +1194,4 @@ test("peeling fit rejects physical scrub when the target route is dryness-safe",
     peeling_type: "physical_scrub",
   })
   assert.equal(mismatchFit.status, "mismatch")
-})
-
-test("category set keeps only baseline conditioner active when shared layers are quiet", () => {
-  const { normalized, damage, careNeeds, plan } = buildEngineState(LOW_DAMAGE_PROFILE, [
-    {
-      category: "shampoo",
-      product_name: "Gentle Shampoo",
-      frequency_range: "weekly_3_4x",
-    },
-    {
-      category: "conditioner",
-      product_name: "Daily Conditioner",
-      frequency_range: "weekly_3_4x",
-    },
-  ])
-
-  const categories = buildCategoryRecommendationSet(
-    normalized,
-    damage,
-    careNeeds,
-    plan,
-    emptyRecommendationRequestContext(),
-  )
-
-  assert.equal(categories.conditioner.relevant, true)
-  assert.equal(categories.conditioner.action, "keep")
-  assert.equal(categories.mask.relevant, false)
-  assert.equal(categories.leaveIn.relevant, false)
-  assert.equal(categories.oil.relevant, false)
-  assert.equal(categories.bondbuilder.relevant, false)
-  assert.equal(categories.deepCleansingShampoo.relevant, false)
-  assert.equal(categories.dryShampoo.relevant, false)
-  assert.equal(categories.peeling.relevant, false)
 })

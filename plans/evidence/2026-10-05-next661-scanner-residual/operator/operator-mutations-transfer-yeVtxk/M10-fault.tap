@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree
+not ok 1 - anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree
+  ---
+  duration_ms: 22.81325
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-anti-leak.test.ts:2:7635'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'comparison',
+    +   'debug',
+        'label',
+        'rowId',
+        'rows',
+        'state',
+        'summaryScore',
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'comparison'
+    1: 'label'
+    2: 'rowId'
+    3: 'rows'
+    4: 'state'
+    5: 'summaryScore'
+    6: 'verdict'
+    7: 'verdictLabel'
+  actual:
+    0: 'comparison'
+    1: 'debug'
+    2: 'label'
+    3: 'rowId'
+    4: 'rows'
+    5: 'state'
+    6: 'summaryScore'
+    7: 'verdict'
+    8: 'verdictLabel'
+  operator: 'deepStrictEqual'
+  stack: |-
+    <anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-anti-leak.test.ts:325:12)
+    async withFlag (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-anti-leak.test.ts:215:12)
+    async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-anti-leak.test.ts:285:3)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1501.772959

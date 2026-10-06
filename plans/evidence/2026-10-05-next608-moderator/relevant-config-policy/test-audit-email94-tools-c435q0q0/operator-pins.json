@@ -1,0 +1,1273 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "gitDir": "/Users/nick/AI_work/hair_conscierge/.git/worktrees/test-audit-pruning",
+  "commonDir": "/Users/nick/AI_work/hair_conscierge/.git",
+  "identityFiles": [
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/.git",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/.git",
+      "sha": "69e02fc729005e92d3757e955eb4f5055ea0caed30ed863b1b6d231fee910d84"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.git/worktrees/test-audit-pruning/HEAD",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.git/worktrees/test-audit-pruning/HEAD",
+      "sha": "24bd58e4073c4e8dc40d79db6c3953fd44021496ab5c29f29ed07f9df2049037"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.git/worktrees/test-audit-pruning/commondir",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.git/worktrees/test-audit-pruning/commondir",
+      "sha": "340ddcb67a6204f742cd1e28e5b462622dde7daaa8ee36001897196aacdc6d47"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.git/config",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.git/config",
+      "sha": "fa8f253ad47c8a699de1f682fe6c4198b11441933be1bd66cfd998863bbf0986"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.git/refs/heads/codex/test-audit-pruning",
+      "realpath": null,
+      "sha": null
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.git/packed-refs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.git/packed-refs",
+      "sha": "e1c4bf1d8f62deff84b449eff0e35459de5e13d9936e881f71b1162d61c12d28"
+    }
+  ],
+  "node": {
+    "version": "v22.12.0",
+    "realpath": "/usr/local/bin/node",
+    "sha": "9c40e9b16cacab464b63e45731ffd020830144a14c50d440b59b90e22709fe80"
+  },
+  "typescriptVersion": "5.9.3",
+  "originalReadset76": [
+    {
+      "file": "tests/customerio-funnel-attribution.test.ts",
+      "sha256": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442"
+    },
+    {
+      "file": "tests/customerio-page-view.test.ts",
+      "sha256": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8"
+    },
+    {
+      "file": "tests/customerio-quiz-traits.test.ts",
+      "sha256": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed"
+    },
+    {
+      "file": "tests/customerio-server.test.ts",
+      "sha256": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8"
+    },
+    {
+      "file": "tests/customerio-stripe-lifecycle.test.ts",
+      "sha256": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88"
+    },
+    {
+      "file": "tests/customerio-transactional.test.ts",
+      "sha256": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623"
+    },
+    {
+      "file": "tests/customerio-trial-reminder.test.ts",
+      "sha256": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969"
+    },
+    {
+      "file": "tests/email-deliverability.test.ts",
+      "sha256": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714"
+    },
+    {
+      "file": "tests/personal-plan-customerio-backfill.test.ts",
+      "sha256": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0"
+    },
+    {
+      "file": "tests/personal-plan-customerio-outbox-migration.test.ts",
+      "sha256": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab"
+    },
+    {
+      "file": "tests/personal-plan-customerio-outbox.test.ts",
+      "sha256": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522"
+    },
+    {
+      "file": "tests/personal-plan-customerio-reconcile-route.test.ts",
+      "sha256": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d"
+    },
+    {
+      "file": "tests/personal-plan-customerio-sync.test.ts",
+      "sha256": "ebfe19864a6d6104aa15772ab7735689dfe2bb09cb4cd982dba8def74dd52f3c"
+    },
+    {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "sha256": "4d038a49993c52a0e3b05d97eb2b3ef0e58f6a38051ef344c184944c6b539883"
+    },
+    {
+      "file": "tests/trial-reminders-route.test.ts",
+      "sha256": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b"
+    },
+    {
+      "file": "tests/trial-reminders-sql.test.ts",
+      "sha256": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540"
+    },
+    {
+      "file": "tests/trial-reminders.test.ts",
+      "sha256": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10"
+    },
+    {
+      "file": "src/lib/customerio/transactional.ts",
+      "sha256": "5756d3bda21c0be6cbc1ed8885846a646edd8560f22c8b7fc5ac6601c62b95e2"
+    },
+    {
+      "file": "src/lib/customerio/server.ts",
+      "sha256": "5df6d419fb8cfbed3c302c748eb0742cd6811fe6dda3b4e6736fba4f8a87f23e"
+    },
+    {
+      "file": "src/lib/customerio/quiz-traits.ts",
+      "sha256": "8eb957ee9e24b32554457ed009dd14430e332acf56102220e7d65f1b4ed8b00f"
+    },
+    {
+      "file": "src/lib/customerio/stripe-lifecycle.ts",
+      "sha256": "325bd2eb69e69cb265b973f7e44f7ef98d6defd2dc95d1dd0fa72e30ac07454f"
+    },
+    {
+      "file": "src/lib/customerio/quiz-sync.ts",
+      "sha256": "13db19ec5b21b848d22325eee735ffa99b1c6be07656de035890e7cab4eead55"
+    },
+    {
+      "file": "src/lib/customerio/trial-reminder.ts",
+      "sha256": "bbe1cbd96fc1ece097764e1250786ef1b0551c65e01acea77ca971fbf9c647d6"
+    },
+    {
+      "file": "src/lib/billing/trial-reminders.ts",
+      "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c"
+    },
+    {
+      "file": "src/lib/billing/trial-reminders-delivery.ts",
+      "sha256": "16417ecc3d002d9905e93302f8e09208d3e3bebaa3c46578d994e7a6f13eaf0e"
+    },
+    {
+      "file": "src/lib/billing/trial-required-notices.ts",
+      "sha256": "c7b2d3f9b9818a2cd5d72839f6c772c8ceb48b7a5aa4442c0eefdc200837a7fa"
+    },
+    {
+      "file": "src/lib/billing/trial-offer.ts",
+      "sha256": "14083f0eb5677db3063e22ab585ca9779a51fac4e04ab8852ee2e11f087d4725"
+    },
+    {
+      "file": "src/lib/paypal/trial-collection-start.ts",
+      "sha256": "d22659e8282e0f18b69971b8948ba5afc4b284774aa1d2330f434ed3358513bc"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/customerio.ts",
+      "sha256": "fb1a2ed1d913687beb8472949da09a123c439221bfc4779228012b9244bbd6ff"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/customerio-outbox.ts",
+      "sha256": "be501ee02a15bc7305c09012a711521fb6f40405de4298419ad710ee8061faed"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/persistence.ts",
+      "sha256": "9783d531cfaf8ed1b8d91b133b030758fd2bf3c128b5eee10cd4b0e6f5883335"
+    },
+    {
+      "file": "scripts/backfill-personal-plan-customerio.ts",
+      "sha256": "6b8d7cd05a8baa695dbc7856b0578fba5ed0269d9670a762c58bc282a9fc1c85"
+    },
+    {
+      "file": "src/app/api/customerio/profile-sync/reconcile/route.ts",
+      "sha256": "e47fed079e844354b69c4f33e53ff7894e8510e97e3c21f7ce7eb037d1eb4b50"
+    },
+    {
+      "file": "src/app/api/billing/trial-reminders/reconcile/route.ts",
+      "sha256": "45faf78ceff54f56a33794ba99ed498e78388ce85389c07d59abb9068d95611e"
+    },
+    {
+      "file": "src/lib/email-deliverability.ts",
+      "sha256": "f35a1b208f18b3550fd21d26f9cddee290b706761e9ad54c5f24a40c712f337c"
+    },
+    {
+      "file": "src/lib/email-deliverability-shared.ts",
+      "sha256": "97928eee799f71cb6a2fc3b01f9506e410d31b630bcb29f633f7c45e067a2afa"
+    },
+    {
+      "file": "src/providers/customerio-provider.tsx",
+      "sha256": "ddc197887bcec171a241375343f66620349b4831e2930ce2d0eb09eaeb77520e"
+    },
+    {
+      "file": "src/lib/analytics/page-url.ts",
+      "sha256": "1cdde9d294fca5daf861b63bfb178a4458a6b8fd44d14b37b3d30d05a4551428"
+    },
+    {
+      "file": "src/lib/analytics/destinations/customerio.ts",
+      "sha256": "06847f20cd2c8c2e0f11947469c787cbb8d357eefc9b65a241efec5bc4c6543b"
+    },
+    {
+      "file": "src/lib/customerio-tracking.ts",
+      "sha256": "499afed0161ee2fabaae9d89d4b96934bb697258638b01261e91f20b58e0c93a"
+    },
+    {
+      "file": "src/app/api/analytics/meta-offer-view/route.ts",
+      "sha256": "8b2008675f27a002eea4d9ff2ae61d5733dad963185b3d2baf240e287af0f927"
+    },
+    {
+      "file": "tests/helpers/customerio-liquid.ts",
+      "sha256": "8d3d288cc309fed2a4b9d4347db8da6fac37dd5a405aef15a7c426bad72bfb6d"
+    },
+    {
+      "file": "supabase/migrations/20260801100000_customerio_profile_sync_outbox.sql",
+      "sha256": "91a8385f3a6edb1bda31f1b095a15c7aeec67f73a59c500c053b286a8e52bcbb"
+    },
+    {
+      "file": "supabase/migrations/20260915050225_trial_reminders_outbox.sql",
+      "sha256": "02023d1db19fd62394420d4a9e82683806d83b062440711e618c549cecc78ae5"
+    },
+    {
+      "file": "src/lib/quiz/normalization.ts",
+      "sha256": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/types.ts",
+      "sha256": "19565073dbad675141bcbbb94a796a73da7727569164a01e0622a4e471736c46"
+    },
+    {
+      "file": "src/lib/analytics/runtime/bounded-fifo.ts",
+      "sha256": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4"
+    },
+    {
+      "file": "tests/customerio-quiz-sync.test.ts",
+      "sha256": "835e97a0974ab870361553c28754a55eb78d495d1badd3c9884b992ca3f88b78"
+    },
+    {
+      "file": "src/lib/funnel/client.ts",
+      "sha256": "9c3728cffff3810d829afd198c2406e35cf6edb3d4c68dbfc5a1cfa845e100a8"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-lead/route.ts",
+      "sha256": "305fda288afd763743b050c9a5f620ad3742286d4397f49ea657bf7939c52595"
+    },
+    {
+      "file": "src/app/api/quiz/lead/route.ts",
+      "sha256": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e"
+    },
+    {
+      "file": "src/app/api/stripe/webhook/route.ts",
+      "sha256": "83c74462ffda261d3a044467d68a918b034febbefca9f6aad4ae131dd84f35ab"
+    },
+    {
+      "file": "supabase/migrations/20260914141036_trial_required_notice_revisions.sql",
+      "sha256": "b2ac556ee86803e31acab647a8303c5aa885ca33300f3a1629867840ff303d94"
+    },
+    {
+      "file": "docs/customerio-data-contract.md",
+      "sha256": "47dcb24a7e0c413f341f509cbfea15d6874496441ad8e21b40a52b8596abb618"
+    },
+    {
+      "file": "docs/trial-notices-and-claims-operations.md",
+      "sha256": "965c7d487f796c49b3b92c65874cccaa583b7340dbd508459d29561b2077ab04"
+    },
+    {
+      "file": "src/providers/tracking-providers.tsx",
+      "sha256": "ec3c299954567436bba370c07d44b7d666898cdc2364e83cfe3b2fc5e14e5444"
+    },
+    {
+      "file": "src/lib/supabase/middleware.ts",
+      "sha256": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "vercel.json",
+      "sha256": "cb38b0cd0013dc1dff9a5bc2bafc4a9ccb5e6646bdcf6dcf0bfcebc4b676c55a"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    },
+    {
+      "file": "tests/meta-offer-view.test.ts",
+      "sha256": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6"
+    },
+    {
+      "file": "node_modules/typescript/package.json",
+      "sha256": "822ef7ca6452205657b6288b066481ecf508bfbf43455d715cf7d3ec457561e6"
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675"
+    },
+    {
+      "file": "node_modules/zod/package.json",
+      "sha256": "c630bd10b52dcf71c112a2bf78dbf2734b9db58d62de663b8d86c2ec2c8cda2e"
+    },
+    {
+      "file": "node_modules/zod/v3/types.d.ts",
+      "sha256": "7941f67bd576a61bb48f46cf55c5eb0292c8ee3eb2db621815eb1d02b1aa09fb"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/package.json",
+      "sha256": "a540c379fd1d820810793681d25fa7ad5dadfcee2b190d14a6553fdb469cfe3c"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/index.d.ts",
+      "sha256": "cf15756708e9bd904e7982f4423a466786b439f14147c615ed8ec4e59ab83db6"
+    },
+    {
+      "file": "src/lib/quiz/diagnostic-input.ts",
+      "sha256": "964652bf5d3e3d8cd9bc233b18977e59e3cf7264a97ec7de5d5c4ac6cea7149e"
+    },
+    {
+      "file": "src/lib/vocabulary/concerns-goals.ts",
+      "sha256": "f588c309f78685855551f8270f8dec4fc5e046d5c1165d734a63f168315f28e8"
+    },
+    {
+      "file": "src/lib/vocabulary/index.ts",
+      "sha256": "5e011545b7a6a94b96720af7b225dc12c025dbf0509f8b20cdd352bbcfa3109b"
+    },
+    {
+      "file": "src/lib/vocabulary/hair-length.ts",
+      "sha256": "3dd675892cb15b6021d7365203bdc225e86805bfb15beec305cc90e83d74c9e4"
+    },
+    {
+      "file": "node_modules/zod/v3/types.js",
+      "sha256": "2faaeed1150d0d7126f6aa85b01594fabdd06771a0b7cb5df2d13f725e175ef1"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts",
+      "sha256": "aa4bc50bc6ba80c59ad64dd2f58112b873b6b2f255e383dae69f3c4abb4a753b"
+    }
+  ],
+  "readset": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": "docs/customerio-data-contract.md",
+      "sha": "47dcb24a7e0c413f341f509cbfea15d6874496441ad8e21b40a52b8596abb618"
+    },
+    {
+      "file": "docs/trial-notices-and-claims-operations.md",
+      "sha": "965c7d487f796c49b3b92c65874cccaa583b7340dbd508459d29561b2077ab04"
+    },
+    {
+      "file": "package-lock.json",
+      "sha": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "package.json",
+      "sha": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "scripts/backfill-personal-plan-customerio.ts",
+      "sha": "6b8d7cd05a8baa695dbc7856b0578fba5ed0269d9670a762c58bc282a9fc1c85"
+    },
+    {
+      "file": "src/app/api/analytics/meta-offer-view/route.ts",
+      "sha": "8b2008675f27a002eea4d9ff2ae61d5733dad963185b3d2baf240e287af0f927"
+    },
+    {
+      "file": "src/app/api/billing/trial-reminders/reconcile/route.ts",
+      "sha": "45faf78ceff54f56a33794ba99ed498e78388ce85389c07d59abb9068d95611e"
+    },
+    {
+      "file": "src/app/api/customerio/profile-sync/reconcile/route.ts",
+      "sha": "e47fed079e844354b69c4f33e53ff7894e8510e97e3c21f7ce7eb037d1eb4b50"
+    },
+    {
+      "file": "src/app/api/quiz/lead/route.ts",
+      "sha": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-lead/route.ts",
+      "sha": "305fda288afd763743b050c9a5f620ad3742286d4397f49ea657bf7939c52595"
+    },
+    {
+      "file": "src/app/api/stripe/webhook/route.ts",
+      "sha": "83c74462ffda261d3a044467d68a918b034febbefca9f6aad4ae131dd84f35ab"
+    },
+    {
+      "file": "src/funnels/packages.json",
+      "sha": "fd299fc9fd61f06531fcc9b66fd497fd14c25a38214f8db241dab4e3a0131811"
+    },
+    {
+      "file": "src/funnels/quizzes/registry.json",
+      "sha": "4dce2f7f0eaf19ba28dc063b8a9cd70884a8a468bb401b8ff214853601c44947"
+    },
+    {
+      "file": "src/funnels/quizzes/registry.ts",
+      "sha": "225fa3638b4406aa711b4afda77ef748e24dd35e6b29bcd46f4d3ac6fe320bbe"
+    },
+    {
+      "file": "src/lib/analytics/destinations/customerio.ts",
+      "sha": "06847f20cd2c8c2e0f11947469c787cbb8d357eefc9b65a241efec5bc4c6543b"
+    },
+    {
+      "file": "src/lib/analytics/meta-capi.ts",
+      "sha": "1219f337cca4e3c7141a2048f022f8f1c913dd16094a0d69d75e11e9e3c7e5cd"
+    },
+    {
+      "file": "src/lib/analytics/meta-offer-view-id.ts",
+      "sha": "3456cc669f5cdf679cc7192c7b02a2ccec6383e303f5e827b662d08aaec6d127"
+    },
+    {
+      "file": "src/lib/analytics/page-url.ts",
+      "sha": "1cdde9d294fca5daf861b63bfb178a4458a6b8fd44d14b37b3d30d05a4551428"
+    },
+    {
+      "file": "src/lib/analytics/runtime/bounded-fifo.ts",
+      "sha": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4"
+    },
+    {
+      "file": "src/lib/billing/pricing-catalog.ts",
+      "sha": "bf01815cb824ef9cd3346be051d8f94868c9b916c593b2d2cd8e1140bc8dfae7"
+    },
+    {
+      "file": "src/lib/billing/trial-offer.ts",
+      "sha": "14083f0eb5677db3063e22ab585ca9779a51fac4e04ab8852ee2e11f087d4725"
+    },
+    {
+      "file": "src/lib/billing/trial-reminders-delivery.ts",
+      "sha": "16417ecc3d002d9905e93302f8e09208d3e3bebaa3c46578d994e7a6f13eaf0e"
+    },
+    {
+      "file": "src/lib/billing/trial-reminders.ts",
+      "sha": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c"
+    },
+    {
+      "file": "src/lib/billing/trial-required-notices-terms.ts",
+      "sha": "266b22ba746208ead6de85b15a2bddb63c7f1111680d782cc22be35d6724197a"
+    },
+    {
+      "file": "src/lib/billing/trial-required-notices.ts",
+      "sha": "c7b2d3f9b9818a2cd5d72839f6c772c8ceb48b7a5aa4442c0eefdc200837a7fa"
+    },
+    {
+      "file": "src/lib/billing/types.ts",
+      "sha": "f99c6f799c5c79a4218a2425fbd1b4ad4565c7f0592d1419b45ae6cb09e5047b"
+    },
+    {
+      "file": "src/lib/customerio-tracking.ts",
+      "sha": "499afed0161ee2fabaae9d89d4b96934bb697258638b01261e91f20b58e0c93a"
+    },
+    {
+      "file": "src/lib/customerio/quiz-sync.ts",
+      "sha": "13db19ec5b21b848d22325eee735ffa99b1c6be07656de035890e7cab4eead55"
+    },
+    {
+      "file": "src/lib/customerio/quiz-traits.ts",
+      "sha": "8eb957ee9e24b32554457ed009dd14430e332acf56102220e7d65f1b4ed8b00f"
+    },
+    {
+      "file": "src/lib/customerio/server.ts",
+      "sha": "5df6d419fb8cfbed3c302c748eb0742cd6811fe6dda3b4e6736fba4f8a87f23e"
+    },
+    {
+      "file": "src/lib/customerio/stripe-lifecycle.ts",
+      "sha": "325bd2eb69e69cb265b973f7e44f7ef98d6defd2dc95d1dd0fa72e30ac07454f"
+    },
+    {
+      "file": "src/lib/customerio/transactional.ts",
+      "sha": "5756d3bda21c0be6cbc1ed8885846a646edd8560f22c8b7fc5ac6601c62b95e2"
+    },
+    {
+      "file": "src/lib/customerio/trial-reminder.ts",
+      "sha": "bbe1cbd96fc1ece097764e1250786ef1b0551c65e01acea77ca971fbf9c647d6"
+    },
+    {
+      "file": "src/lib/email-deliverability-shared.ts",
+      "sha": "97928eee799f71cb6a2fc3b01f9506e410d31b630bcb29f633f7c45e067a2afa"
+    },
+    {
+      "file": "src/lib/email-deliverability.ts",
+      "sha": "f35a1b208f18b3550fd21d26f9cddee290b706761e9ad54c5f24a40c712f337c"
+    },
+    {
+      "file": "src/lib/funnel/client.ts",
+      "sha": "9c3728cffff3810d829afd198c2406e35cf6edb3d4c68dbfc5a1cfa845e100a8"
+    },
+    {
+      "file": "src/lib/funnel/cookie.ts",
+      "sha": "522741b96f60560c02f92a5445428380de02231b2b3724b4143dfc6da14f7b48"
+    },
+    {
+      "file": "src/lib/funnel/flags.ts",
+      "sha": "981bd9436dae7c1fc7cbd8d6dc60e3d6bbaa9dc3bea994e0a33fac525f02528d"
+    },
+    {
+      "file": "src/lib/funnel/journey-kind.ts",
+      "sha": "6088e7e2554b37b0d2da5231dd5361fdeed8cd2ebf1dae5286e107d7543efe88"
+    },
+    {
+      "file": "src/lib/funnel/offer-presentation.ts",
+      "sha": "e38f85f885a9e94b35abef31ed3a73368fb24a8c23bcebe3ba88e5d6602eb4f4"
+    },
+    {
+      "file": "src/lib/funnel/organic-offer-media-experiment.ts",
+      "sha": "8e0882803faa756e7c103c53a16b857a73db8ac9e5f9c261ea013743f7902887"
+    },
+    {
+      "file": "src/lib/funnel/packages.ts",
+      "sha": "66cab34518f29604a37c7a32721f74ca5c930f82a12dcf293db69e3b90a080be"
+    },
+    {
+      "file": "src/lib/funnel/personal-plan-pricing-experiment.ts",
+      "sha": "2df4e53841c87e421524c1cbaaeb0daeed9ac6d2a467cd8ae4da849faf2af516"
+    },
+    {
+      "file": "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+      "sha": "ac0fce778e1594083573a8b4fdb1f8ed5aa00e8d9427338856f8ae22781a0cf4"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "sha": "775feb24b57ae2c7d71c4dec2f5ef4a8781fefaf355699331718fc44f92380dd"
+    },
+    {
+      "file": "src/lib/observability/offer-experiment.ts",
+      "sha": "9c0d5f6b8038b8dcbeafa3ac0efd7de126965e50022dbed7d2117e606ea20487"
+    },
+    {
+      "file": "src/lib/paypal/trial-collection-start.ts",
+      "sha": "d22659e8282e0f18b69971b8948ba5afc4b284774aa1d2330f434ed3358513bc"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/customerio-outbox.ts",
+      "sha": "be501ee02a15bc7305c09012a711521fb6f40405de4298419ad710ee8061faed"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/customerio.ts",
+      "sha": "fb1a2ed1d913687beb8472949da09a123c439221bfc4779228012b9244bbd6ff"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/persistence.ts",
+      "sha": "9783d531cfaf8ed1b8d91b133b030758fd2bf3c128b5eee10cd4b0e6f5883335"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/types.ts",
+      "sha": "19565073dbad675141bcbbb94a796a73da7727569164a01e0622a4e471736c46"
+    },
+    {
+      "file": "src/lib/quiz/diagnostic-input.ts",
+      "sha": "964652bf5d3e3d8cd9bc233b18977e59e3cf7264a97ec7de5d5c4ac6cea7149e"
+    },
+    {
+      "file": "src/lib/quiz/normalization.ts",
+      "sha": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239"
+    },
+    {
+      "file": "src/lib/rate-limit.ts",
+      "sha": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08"
+    },
+    {
+      "file": "src/lib/supabase/admin.ts",
+      "sha": "bd6ec1538d65a01f82b3f55b2839f0ac347d617c6de29d13cea4b0eff737386a"
+    },
+    {
+      "file": "src/lib/supabase/middleware.ts",
+      "sha": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7"
+    },
+    {
+      "file": "src/lib/vocabulary/concerns-goals.ts",
+      "sha": "f588c309f78685855551f8270f8dec4fc5e046d5c1165d734a63f168315f28e8"
+    },
+    {
+      "file": "src/lib/vocabulary/hair-length.ts",
+      "sha": "3dd675892cb15b6021d7365203bdc225e86805bfb15beec305cc90e83d74c9e4"
+    },
+    {
+      "file": "src/lib/vocabulary/index.ts",
+      "sha": "5e011545b7a6a94b96720af7b225dc12c025dbf0509f8b20cdd352bbcfa3109b"
+    },
+    {
+      "file": "src/providers/customerio-provider.tsx",
+      "sha": "ddc197887bcec171a241375343f66620349b4831e2930ce2d0eb09eaeb77520e"
+    },
+    {
+      "file": "src/providers/tracking-providers.tsx",
+      "sha": "ec3c299954567436bba370c07d44b7d666898cdc2364e83cfe3b2fc5e14e5444"
+    },
+    {
+      "file": "supabase/migrations/20260801100000_customerio_profile_sync_outbox.sql",
+      "sha": "91a8385f3a6edb1bda31f1b095a15c7aeec67f73a59c500c053b286a8e52bcbb"
+    },
+    {
+      "file": "supabase/migrations/20260914141036_trial_required_notice_revisions.sql",
+      "sha": "b2ac556ee86803e31acab647a8303c5aa885ca33300f3a1629867840ff303d94"
+    },
+    {
+      "file": "supabase/migrations/20260915050225_trial_reminders_outbox.sql",
+      "sha": "02023d1db19fd62394420d4a9e82683806d83b062440711e618c549cecc78ae5"
+    },
+    {
+      "file": "tests/customerio-quiz-sync.test.ts",
+      "sha": "835e97a0974ab870361553c28754a55eb78d495d1badd3c9884b992ca3f88b78"
+    },
+    {
+      "file": "tests/helpers/customerio-liquid.ts",
+      "sha": "8d3d288cc309fed2a4b9d4347db8da6fac37dd5a405aef15a7c426bad72bfb6d"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    },
+    {
+      "file": "vercel.json",
+      "sha": "cb38b0cd0013dc1dff9a5bc2bafc4a9ccb5e6646bdcf6dcf0bfcebc4b676c55a"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@electric-sql/pglite/dist/index.d.ts",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@electric-sql/pglite/dist/index.d.ts",
+      "sha": "cf15756708e9bd904e7982f4423a466786b439f14147c615ed8ec4e59ab83db6"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts",
+      "sha": "aa4bc50bc6ba80c59ad64dd2f58112b873b6b2f255e383dae69f3c4abb4a753b"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@electric-sql/pglite/package.json",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@electric-sql/pglite/package.json",
+      "sha": "a540c379fd1d820810793681d25fa7ad5dadfcee2b190d14a6553fdb469cfe3c"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@esbuild/darwin-arm64/bin/esbuild",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@esbuild/darwin-arm64/bin/esbuild",
+      "sha": "b82c6243eb58d520d0bc55cddcf6993dd0f5572f3ab8dc2ba6d77058be043e62"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/index.server.js",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/index.server.js",
+      "sha": "56984f681e6d5d63924ff38f95ce9a805c167e41d1f15c3d813b9fe652c3b2cb"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/package.json",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/package.json",
+      "sha": "fc6e1e8c15c462de8ad33d396d29389ebf30497800248aa148a1810773d0713d"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/dist/index.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/dist/index.cjs",
+      "sha": "64f612acfbf8fdb41d7f5e423156ccad3b8a1b82c6a13aa5fdf102b615375486"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/package.json",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/package.json",
+      "sha": "d17fb698c70f7ad0cf000a9c46dcffe8944dcc3248e15f5ca2f6b661a22bb791"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/bin/esbuild",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/bin/esbuild",
+      "sha": "b82c6243eb58d520d0bc55cddcf6993dd0f5572f3ab8dc2ba6d77058be043e62"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/lib/main.d.ts",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/lib/main.d.ts",
+      "sha": "161c8e0690c46021506e32fda85956d785b70f309ae97011fd27374c065cac9b"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/lib/main.js",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/lib/main.js",
+      "sha": "bce772de103e1cbb118f1b7313916caa81f0e85461b3b6e3531607e7ed75ec85"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/package.json",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/package.json",
+      "sha": "9ce21c976ffbbb95001f460e9e8af7c6d719f748eb70441e617a14dd0b68a5b8"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/dist/index.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/dist/index.cjs",
+      "sha": "e0fa469d35b49f98b80f49519c01c771b3f5373a2a4596ecb804a9c6e7bab8d1"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/dist/index.d.cts",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/dist/index.d.cts",
+      "sha": "83de03c3bc0bf6247fa576dd1ffaade6a2a4703d367b634fab0b81de0d89a9d1"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/dist/index.d.mts",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/dist/index.d.mts",
+      "sha": "83de03c3bc0bf6247fa576dd1ffaade6a2a4703d367b634fab0b81de0d89a9d1"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/dist/index.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/dist/index.mjs",
+      "sha": "7cdce9683d453d72d8c2d3b4434a645525fb10b621cfb76b4009cd078d8c343d"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/package.json",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/package.json",
+      "sha": "456bb5c6f81bab2db264e81a4cc85e80e133c86fd0b03bfa120649ba47a4fdc8"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/headers.js",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/headers.js",
+      "sha": "02f369940f45251aab7a8cacf678349e0bb26f99c5f32ff56d85d1e7575ac6ac"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/package.json",
+      "sha": "006ccbc8816f40ace4307a6048c25ef3cdbe93598529d5dc85db9d19d912274d"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/server.js",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/server.js",
+      "sha": "27af9ff1b48943de6597072ec7dc563edafbc33833f5e8f030e50459d6de862c"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/dist/index.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/dist/index.cjs",
+      "sha": "dc0ffaba25e180745bb1ce1622be094bbc97d07dc275c52413eb546580d9ff49"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/dist/index.d.cts",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/dist/index.d.cts",
+      "sha": "f21fca4c17af045586afdcd64c029379b52374b28f7a0bdebf04abffe708c1a2"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/dist/index.d.mts",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/dist/index.d.mts",
+      "sha": "f21fca4c17af045586afdcd64c029379b52374b28f7a0bdebf04abffe708c1a2"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/dist/index.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/dist/index.mjs",
+      "sha": "5472eb24afa47c614e7edaccb0ccb4c6259f897d875c27057ee00b7c2cdc3672"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/package.json",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/package.json",
+      "sha": "e372f809865bc3fc6ad75be76a90b031eece36e9d12d283de9955aca6be8537d"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/server-only/index.js",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/server-only/index.js",
+      "sha": "2c4720b71eb03e5f75a83d43e6fd83c0446aa172a58a4d6ffbd74ecad72ba7b5"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/server-only/package.json",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/server-only/package.json",
+      "sha": "e4b0cc01e2e0349c51c694fa97d8a642eb8322521ca1444b20bd1842594b4339"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cjs/api/index.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cjs/api/index.cjs",
+      "sha": "b396a280df2ea1de64a7fa989db0d46cf1b90fc07f12e4dc5e57d5e5a99d4feb"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cjs/api/index.d.cts",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cjs/api/index.d.cts",
+      "sha": "8c2b1a98cc24f9efb1d8705b3c3c1929d3a4f42273466da97df62c7b253eaeee"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cjs/api/index.d.mts",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cjs/api/index.d.mts",
+      "sha": "8c2b1a98cc24f9efb1d8705b3c3c1929d3a4f42273466da97df62c7b253eaeee"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cjs/api/index.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cjs/api/index.mjs",
+      "sha": "685c2a23306b7bba191e8f4f123382fa380fdcb2a58bbb1cc46a1f0a6d2255ff"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cjs/index.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cjs/index.cjs",
+      "sha": "a6d966dff90f93d5a9cb22206d9a37f05eb3f66f004a07424bd96aebfeda9acf"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cjs/index.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cjs/index.mjs",
+      "sha": "940bf50aae38d11425db038dfacd2102e469eca6b6e896879c927611e593f6cf"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cli.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cli.cjs",
+      "sha": "c2553d91855f764f54abd5959973fb2359028678eb3cf4e598b7babe0d404e46"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cli.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/cli.mjs",
+      "sha": "8729ecfb90d9d568939e4190e6f1d3317c946583b7d37a776e0c23a21c021cf8"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/client-BQVF1NaW.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/client-BQVF1NaW.mjs",
+      "sha": "334ad3dbfaf820eeb08dd2fa40750c8316e6f8a61311bdf99defd3c361fbece4"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/client-D6NvIMSC.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/client-D6NvIMSC.cjs",
+      "sha": "af10790d58385f62c205140c3f7c25dae26638c2961fa24eb958f888d8995a40"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/esm/api/index.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/esm/api/index.cjs",
+      "sha": "b97d8aa5122372689e759de9a7c30e6d1f29eb683a7a714beaab953cc8eceaa7"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/esm/api/index.d.cts",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/esm/api/index.d.cts",
+      "sha": "eb9096c517da313cbedce8818d9cadb82bbf02cd6f4a65db4cee42ac01f4272c"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/esm/api/index.d.mts",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/esm/api/index.d.mts",
+      "sha": "eb9096c517da313cbedce8818d9cadb82bbf02cd6f4a65db4cee42ac01f4272c"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/esm/api/index.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/esm/api/index.mjs",
+      "sha": "477bed5ef167ef825ec4cb99ed010ac6d70833d1b4e8b46e23825cc6de543d8e"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/esm/index.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/esm/index.cjs",
+      "sha": "a95457ef5fea5e06d56c8bafbb96f4ce86c651fa0bfcc4ccb90b740f126f4863"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/esm/index.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/esm/index.mjs",
+      "sha": "9fab711543eb155d50fb147f8984e104db348a73b74daee4e3974bec109aa381"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/get-pipe-path-BHW2eJdv.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/get-pipe-path-BHW2eJdv.mjs",
+      "sha": "307483caa22c2406677b4bd513bf602b4de3986f3e23eac7724e99c0d7ddc8d6"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/get-pipe-path-BoR10qr8.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/get-pipe-path-BoR10qr8.cjs",
+      "sha": "70a7fd0d550d1df1336946c504b36dcf97658a7c3328e02a69834ae0c4bfee91"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/index-7AaEi15b.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/index-7AaEi15b.mjs",
+      "sha": "47851348bc3bbc11413edd4bf44758b7a85e28419847583231d74a182b044e22"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/index-BWFBUo6r.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/index-BWFBUo6r.cjs",
+      "sha": "fe29b97b254312970fceb8995a519abc8751f26972c221281959a7d77858a464"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/index-gbaejti9.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/index-gbaejti9.mjs",
+      "sha": "76febbe946957c96066d1d59293c4a26fc874c05876394cf4c178e4f4d0b6ba8"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/index-gckBtVBf.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/index-gckBtVBf.cjs",
+      "sha": "49ad679be79684c7706ad7ca495f0afa7bfa361b354eb77e6389cf19df91c524"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/lexer-DQCqS3nf.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/lexer-DQCqS3nf.mjs",
+      "sha": "6b77bebaee2dd7741177e287a78ef4329d9ef91f6939d09cfcf0029b3859f883"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/lexer-DgIbo0BU.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/lexer-DgIbo0BU.cjs",
+      "sha": "9b92935847bf0f6daade96b21c8271139ed8b48ef3fa59647af0ef1d36770db0"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/loader.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/loader.cjs",
+      "sha": "ff33128961cec9865a3c8ffb37f4edaecfd1ba960cc9a0a249f816594972dcf9"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/loader.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/loader.mjs",
+      "sha": "0b1c5b86192772fe9257710e739959cee5947c11ae1f93b61abfaa9b80c6def1"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/node-features-_8ZFwP_x.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/node-features-_8ZFwP_x.mjs",
+      "sha": "dbf95f05cce9b129a9a89f33f43b7804ab641aa8b256e7cf64ad9f92b880cecc"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/node-features-roYmp9jK.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/node-features-roYmp9jK.cjs",
+      "sha": "18c0185390eec5bb60600ecb503a933673a77832bb93db3a258933f4ab051768"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/package-CeBgXWuR.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/package-CeBgXWuR.mjs",
+      "sha": "81246f1169deb713dd5bae44fc39d68bd876395e99b6ce1560d4882e2dd70dd4"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/package-Dxt5kIHw.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/package-Dxt5kIHw.cjs",
+      "sha": "a6f7dc15288c2e5dc03394061d16945e42190e43cb1cf6422a93d064c1fc1377"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/patch-repl.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/patch-repl.cjs",
+      "sha": "33f5f6755270054783f4c568d0d48d4a79fecde965ec6f91ca27f0f949ba6da6"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/patch-repl.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/patch-repl.mjs",
+      "sha": "3850acac507aa554620693d272bed6b7ac1e1b8ab5af406581c632522ad8c872"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/preflight.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/preflight.cjs",
+      "sha": "a088ad17ad4151c1a9f2ad7090fcdbc422fe26c8f4e5fdc53a489dcb0b21ae69"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/preflight.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/preflight.mjs",
+      "sha": "cf384c149f11748fb8497b2118d58e21ea884ae2848e4b4c81298927f268c3bb"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/register-2sWVXuRQ.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/register-2sWVXuRQ.cjs",
+      "sha": "583b65c6caaec95e71e73fa65617c95162428aacd845394689f690b48a9328d5"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/register-B7jrtLTO.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/register-B7jrtLTO.mjs",
+      "sha": "10184ddf4354bab38743d80a5844796f26ffc4589d2820781da90c6a67507aaf"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/register-CFH5oNdT.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/register-CFH5oNdT.mjs",
+      "sha": "7c7d2d4f757a1a35610b483e0348aee2eb1140968631f4b2105c4b4ad9ffbf0a"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/register-D46fvsV_.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/register-D46fvsV_.cjs",
+      "sha": "7f0e410a859fadcc75a452160e69c860543f5e13e2321b934c0bc4e3d14c01f6"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/repl.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/repl.cjs",
+      "sha": "1dcdd7c363bbedd2f93062a838f5800651b9a432d91f081031bb2856faede47c"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/repl.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/repl.mjs",
+      "sha": "061e45ad7e989290e5ee79c6b36848d2a9dc818fd695b6387655e74380f7617b"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/require-D4F1Lv60.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/require-D4F1Lv60.cjs",
+      "sha": "468f626104c0572958b7944fbce075777efa2f4ef1577c9fa0c89499cb9e100b"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/require-DQxpCAr4.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/require-DQxpCAr4.mjs",
+      "sha": "dc1b6944ffaa8f4d70e5007116b9aeac77c1cdf80a62526763eab34a123fa902"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/suppress-warnings.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/suppress-warnings.cjs",
+      "sha": "028063d20bd49083f03a0b1ed4f7a3d55fac1f64f5aca0e58e1ec61601f20ee7"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/suppress-warnings.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/suppress-warnings.mjs",
+      "sha": "4c7d8eb24f7c16282453bc18d649c310028a63d3850e6590338932cdd896017f"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/temporary-directory-B83uKxJF.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/temporary-directory-B83uKxJF.cjs",
+      "sha": "da189099aba4a7aff1e0ca337cd71410a0f96abc66298403db041cb812cbd24c"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/temporary-directory-CwHp0_NW.mjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/temporary-directory-CwHp0_NW.mjs",
+      "sha": "e0771b7d9b216d438ff2ade7494a7a3ac6202c66cb752f2cd99bffb3d78226fe"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/types-Cxp8y2TL.d.ts",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/types-Cxp8y2TL.d.ts",
+      "sha": "f462b6fc33bc3f82d1551ac0678834dfff89192ce1e848eb0bb8ca5bfe8bc76f"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/package.json",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/package.json",
+      "sha": "6e764b21991c21595441f82387c1451ccd10a3e7a3f0973cc5e3649a12dea7d2"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/typescript.js",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/typescript.js",
+      "sha": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/package.json",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/package.json",
+      "sha": "822ef7ca6452205657b6288b066481ecf508bfbf43455d715cf7d3ec457561e6"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/index.cjs",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/index.cjs",
+      "sha": "2a3455cecff4f7021c92d0a3e2e5fc170c0448dc5cc261160127e08f4888a9c2"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/package.json",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/package.json",
+      "sha": "c630bd10b52dcf71c112a2bf78dbf2734b9db58d62de663b8d86c2ec2c8cda2e"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/v3/types.d.ts",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/v3/types.d.ts",
+      "sha": "7941f67bd576a61bb48f46cf55c5eb0292c8ee3eb2db621815eb1d02b1aa09fb"
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/v3/types.js",
+      "realpath": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/v3/types.js",
+      "sha": "2faaeed1150d0d7126f6aa85b01594fabdd06771a0b7cb5df2d13f725e175ef1"
+    }
+  ],
+  "dependencyTrees": [
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist",
+      "names": [
+        "cjs/api/index.cjs",
+        "cjs/api/index.d.cts",
+        "cjs/api/index.d.mts",
+        "cjs/api/index.mjs",
+        "cjs/index.cjs",
+        "cjs/index.mjs",
+        "cli.cjs",
+        "cli.mjs",
+        "client-BQVF1NaW.mjs",
+        "client-D6NvIMSC.cjs",
+        "esm/api/index.cjs",
+        "esm/api/index.d.cts",
+        "esm/api/index.d.mts",
+        "esm/api/index.mjs",
+        "esm/index.cjs",
+        "esm/index.mjs",
+        "get-pipe-path-BHW2eJdv.mjs",
+        "get-pipe-path-BoR10qr8.cjs",
+        "index-7AaEi15b.mjs",
+        "index-BWFBUo6r.cjs",
+        "index-gbaejti9.mjs",
+        "index-gckBtVBf.cjs",
+        "lexer-DQCqS3nf.mjs",
+        "lexer-DgIbo0BU.cjs",
+        "loader.cjs",
+        "loader.mjs",
+        "node-features-_8ZFwP_x.mjs",
+        "node-features-roYmp9jK.cjs",
+        "package-CeBgXWuR.mjs",
+        "package-Dxt5kIHw.cjs",
+        "patch-repl.cjs",
+        "patch-repl.mjs",
+        "preflight.cjs",
+        "preflight.mjs",
+        "register-2sWVXuRQ.cjs",
+        "register-B7jrtLTO.mjs",
+        "register-CFH5oNdT.mjs",
+        "register-D46fvsV_.cjs",
+        "repl.cjs",
+        "repl.mjs",
+        "require-D4F1Lv60.cjs",
+        "require-DQxpCAr4.mjs",
+        "suppress-warnings.cjs",
+        "suppress-warnings.mjs",
+        "temporary-directory-B83uKxJF.cjs",
+        "temporary-directory-CwHp0_NW.mjs",
+        "types-Cxp8y2TL.d.ts"
+      ]
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/lib",
+      "names": [
+        "main.d.ts",
+        "main.js"
+      ]
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/bin",
+      "names": [
+        "esbuild"
+      ]
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@esbuild/darwin-arm64/bin",
+      "names": [
+        "esbuild"
+      ]
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/dist",
+      "names": [
+        "index.cjs",
+        "index.d.cts",
+        "index.d.mts",
+        "index.mjs"
+      ]
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/dist",
+      "names": [
+        "index.cjs",
+        "index.d.cts",
+        "index.d.mts",
+        "index.mjs"
+      ]
+    }
+  ],
+  "repositoryTrees": [],
+  "artifactHashes": {
+    "/tmp/test-audit-email-delivery94/README.md": "b57c332bcae8a6678416ba032aec494929afc0817d5733c4936415cecbc47a8a",
+    "/tmp/test-audit-email-delivery94/before/tests/customerio-funnel-attribution.test.ts": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+    "/tmp/test-audit-email-delivery94/before/tests/customerio-page-view.test.ts": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8",
+    "/tmp/test-audit-email-delivery94/before/tests/customerio-quiz-traits.test.ts": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+    "/tmp/test-audit-email-delivery94/before/tests/customerio-server.test.ts": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+    "/tmp/test-audit-email-delivery94/before/tests/customerio-stripe-lifecycle.test.ts": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+    "/tmp/test-audit-email-delivery94/before/tests/customerio-transactional.test.ts": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+    "/tmp/test-audit-email-delivery94/before/tests/customerio-trial-reminder.test.ts": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+    "/tmp/test-audit-email-delivery94/before/tests/email-deliverability.test.ts": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+    "/tmp/test-audit-email-delivery94/before/tests/personal-plan-customerio-backfill.test.ts": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+    "/tmp/test-audit-email-delivery94/before/tests/personal-plan-customerio-outbox-migration.test.ts": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+    "/tmp/test-audit-email-delivery94/before/tests/personal-plan-customerio-outbox.test.ts": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+    "/tmp/test-audit-email-delivery94/before/tests/personal-plan-customerio-reconcile-route.test.ts": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+    "/tmp/test-audit-email-delivery94/before/tests/personal-plan-customerio-sync.test.ts": "ebfe19864a6d6104aa15772ab7735689dfe2bb09cb4cd982dba8def74dd52f3c",
+    "/tmp/test-audit-email-delivery94/before/tests/trial-reminders-delivery.test.ts": "4d038a49993c52a0e3b05d97eb2b3ef0e58f6a38051ef344c184944c6b539883",
+    "/tmp/test-audit-email-delivery94/before/tests/trial-reminders-route.test.ts": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+    "/tmp/test-audit-email-delivery94/before/tests/trial-reminders-sql.test.ts": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+    "/tmp/test-audit-email-delivery94/before/tests/trial-reminders.test.ts": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10",
+    "/tmp/test-audit-email-delivery94/candidates.json": "c3b510722101c5c2a22b314abbae014b82061869ed8f4eeb18e9ef55d2950812",
+    "/tmp/test-audit-email-delivery94/check.cjs": "a3e1833647d61f0d38cd73d3166ae9c68fb8e010c3a79804307104084c12cd8d",
+    "/tmp/test-audit-email-delivery94/commands.json": "00b3bc71b884f66c20d25e0dcb1b47e0d09fab82de7644f3b7121ea6b5269d61",
+    "/tmp/test-audit-email-delivery94/complete-ledger.md": "03f2d6ca4231edad45438d63a0458737dd8dd37877bbe20e66a4aee5855a66ae",
+    "/tmp/test-audit-email-delivery94/complete.diff": "4e0efa7cb7c930bb2cbd34fd34fbfce0d14cad2a0d073184128378a573ce7941",
+    "/tmp/test-audit-email-delivery94/conditional-pp-complete.diff": "5f91950c88152d639fa991a3a0bdf35b1900008a52d3879a5db4e08f2c2f322d",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-funnel-attribution.test.ts": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-page-view.test.ts": "f7cbeff8443b65be033cb5d39ae83a227dea8e9602ff23bfc57bf42601caeffe",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-quiz-traits.test.ts": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-server.test.ts": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-stripe-lifecycle.test.ts": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-transactional.test.ts": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-trial-reminder.test.ts": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/email-deliverability.test.ts": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/personal-plan-customerio-backfill.test.ts": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/personal-plan-customerio-outbox-migration.test.ts": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/personal-plan-customerio-outbox.test.ts": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/personal-plan-customerio-reconcile-route.test.ts": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/personal-plan-customerio-sync.test.ts": "94cbf3ae1d264c071610c164673790acc1349fd155a1c1d4a8b2f44ef26b0f57",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/trial-reminders-delivery.test.ts": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/trial-reminders-route.test.ts": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/trial-reminders-sql.test.ts": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+    "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/trial-reminders.test.ts": "f74cf7c1a16d2bbdb6d13c152f3a13b626bc5bb579ad7c70750a107a2a0a0c2f",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-funnel-attribution.test.ts": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-page-view.test.ts": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-quiz-traits.test.ts": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-server.test.ts": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-stripe-lifecycle.test.ts": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-transactional.test.ts": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-trial-reminder.test.ts": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/email-deliverability.test.ts": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/personal-plan-customerio-backfill.test.ts": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/personal-plan-customerio-outbox-migration.test.ts": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/personal-plan-customerio-outbox.test.ts": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/personal-plan-customerio-reconcile-route.test.ts": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/personal-plan-customerio-sync.test.ts": "37b875d0de42f2c6a11ee510e73326ee1f5e5b62aadb6ef20b04cdb693a747e7",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/trial-reminders-delivery.test.ts": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/trial-reminders-route.test.ts": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/trial-reminders-sql.test.ts": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+    "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/trial-reminders.test.ts": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10",
+    "/tmp/test-audit-email-delivery94/conditional-pp.json": "99d068005cfc6f81eadff36beea25a926549305ccd752308d0bc453aed9693a2",
+    "/tmp/test-audit-email-delivery94/conditional-pp.md": "f246db5283bdbe8110c77eb50b6c7ba7eaa9c5bdb0a45bc74ad88f12ee5630aa",
+    "/tmp/test-audit-email-delivery94/controls-prepare.cjs": "f34d11917328ccd95fbf7d042b81e14a06c0b919025b95b8beaad9318e47cb24",
+    "/tmp/test-audit-email-delivery94/controls.json": "5ba306e627bd4580f4d5ad2f6ed36e933566a487cf2b67e670de4734abfe77af",
+    "/tmp/test-audit-email-delivery94/cut/tests/customerio-funnel-attribution.test.ts": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+    "/tmp/test-audit-email-delivery94/cut/tests/customerio-page-view.test.ts": "f7cbeff8443b65be033cb5d39ae83a227dea8e9602ff23bfc57bf42601caeffe",
+    "/tmp/test-audit-email-delivery94/cut/tests/customerio-quiz-traits.test.ts": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+    "/tmp/test-audit-email-delivery94/cut/tests/customerio-server.test.ts": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+    "/tmp/test-audit-email-delivery94/cut/tests/customerio-stripe-lifecycle.test.ts": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+    "/tmp/test-audit-email-delivery94/cut/tests/customerio-transactional.test.ts": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+    "/tmp/test-audit-email-delivery94/cut/tests/customerio-trial-reminder.test.ts": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+    "/tmp/test-audit-email-delivery94/cut/tests/email-deliverability.test.ts": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+    "/tmp/test-audit-email-delivery94/cut/tests/personal-plan-customerio-backfill.test.ts": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+    "/tmp/test-audit-email-delivery94/cut/tests/personal-plan-customerio-outbox-migration.test.ts": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+    "/tmp/test-audit-email-delivery94/cut/tests/personal-plan-customerio-outbox.test.ts": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+    "/tmp/test-audit-email-delivery94/cut/tests/personal-plan-customerio-reconcile-route.test.ts": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+    "/tmp/test-audit-email-delivery94/cut/tests/personal-plan-customerio-sync.test.ts": "ebfe19864a6d6104aa15772ab7735689dfe2bb09cb4cd982dba8def74dd52f3c",
+    "/tmp/test-audit-email-delivery94/cut/tests/trial-reminders-delivery.test.ts": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+    "/tmp/test-audit-email-delivery94/cut/tests/trial-reminders-route.test.ts": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+    "/tmp/test-audit-email-delivery94/cut/tests/trial-reminders-sql.test.ts": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+    "/tmp/test-audit-email-delivery94/cut/tests/trial-reminders.test.ts": "f74cf7c1a16d2bbdb6d13c152f3a13b626bc5bb579ad7c70750a107a2a0a0c2f",
+    "/tmp/test-audit-email-delivery94/history.json": "cba65a8064bd09c2077bd5f3f5dab4a201c998a2134281ccd5719c02b6d95170",
+    "/tmp/test-audit-email-delivery94/inventory.cjs": "ab68dbc98d04a146f121282b59825c7f45b32b3a62bde5103e18ec4efb15b40e",
+    "/tmp/test-audit-email-delivery94/inventory.json": "bbde796b6bd3577fc92c978f460b0d6e115574b4139ce2dc25dc9c94c347fde8",
+    "/tmp/test-audit-email-delivery94/judgments.py": "37bebd85f49ce5e55c051d8c5aa512f250019b24181ad34894f6df8de9e0aaab",
+    "/tmp/test-audit-email-delivery94/layer-plan.md": "ab3a4a24914dffdab7a402f6aa34e577dd33d1027db8508351ebf09237374a17",
+    "/tmp/test-audit-email-delivery94/ledger.json": "039d4b36610aae16370be4877de16af1e59ccbce46d74186857ef6fabe8b6fc1",
+    "/tmp/test-audit-email-delivery94/manifest.json": "682498b63ba6b141d5a88ce476fa824e0a2e623156d8d1cefb94f24459b627ea",
+    "/tmp/test-audit-email-delivery94/prepare.cjs": "6237465feddc04a816f43411244da936b6bb8bb649771e08e2bb6a9eaa0962f0",
+    "/tmp/test-audit-email-delivery94/readonly-preload.cjs": "bfb7ec75255342c619a8cd6698412d3279a86a80a04785cbc4a9fe0f1ce17f3d",
+    "/tmp/test-audit-email-delivery94/static-receipt.json": "bd35509c2d28e523e3cc703d52b7aea6baa7204c162f5ec7fea65932b4255eb0",
+    "/tmp/test-audit-email-delivery94/transfer/tests/customerio-funnel-attribution.test.ts": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+    "/tmp/test-audit-email-delivery94/transfer/tests/customerio-page-view.test.ts": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8",
+    "/tmp/test-audit-email-delivery94/transfer/tests/customerio-quiz-traits.test.ts": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+    "/tmp/test-audit-email-delivery94/transfer/tests/customerio-server.test.ts": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+    "/tmp/test-audit-email-delivery94/transfer/tests/customerio-stripe-lifecycle.test.ts": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+    "/tmp/test-audit-email-delivery94/transfer/tests/customerio-transactional.test.ts": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+    "/tmp/test-audit-email-delivery94/transfer/tests/customerio-trial-reminder.test.ts": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+    "/tmp/test-audit-email-delivery94/transfer/tests/email-deliverability.test.ts": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+    "/tmp/test-audit-email-delivery94/transfer/tests/personal-plan-customerio-backfill.test.ts": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+    "/tmp/test-audit-email-delivery94/transfer/tests/personal-plan-customerio-outbox-migration.test.ts": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+    "/tmp/test-audit-email-delivery94/transfer/tests/personal-plan-customerio-outbox.test.ts": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+    "/tmp/test-audit-email-delivery94/transfer/tests/personal-plan-customerio-reconcile-route.test.ts": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+    "/tmp/test-audit-email-delivery94/transfer/tests/personal-plan-customerio-sync.test.ts": "ebfe19864a6d6104aa15772ab7735689dfe2bb09cb4cd982dba8def74dd52f3c",
+    "/tmp/test-audit-email-delivery94/transfer/tests/trial-reminders-delivery.test.ts": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+    "/tmp/test-audit-email-delivery94/transfer/tests/trial-reminders-route.test.ts": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+    "/tmp/test-audit-email-delivery94/transfer/tests/trial-reminders-sql.test.ts": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+    "/tmp/test-audit-email-delivery94/transfer/tests/trial-reminders.test.ts": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10",
+    "/tmp/test-audit-email-delivery94/transfer.diff": "d6934e135b56306a9a95cbce1f7bd5d74836fc89eed7904234b2743e09d80599",
+    "/tmp/test-audit-email-delivery94/handoff.json": "8d36c62f094b9503825e060dac55b51b540bfa8d599111564bc8ead1f0405afb",
+    "/tmp/test-audit-next607-shared-config-disposition.json": "38f962fed8680aaa75a2723158c25d37669e4042e44164d878a6556463143705",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/operator-guard.cjs": "263f44b7e738dd8a3858e7e55ea7414a94b1fb20f875df049fc5fed35892df8f",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/operator-proof.cjs": "7358f9d79d532f9c7b01a7a31d3f2a4b91d29d4e4d07f5cb7c67ad984eee71d1",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/operator-readonly-preload.cjs": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/operator-candidates.json": "c3b510722101c5c2a22b314abbae014b82061869ed8f4eeb18e9ef55d2950812",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/operator-controls-normalized.json": "4e86ca053561c6b5de3a5bf37cf16c7f431602a3abd7f4bca228be7f9976b270",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/operator-evidence.json": "8268fa7dd80fd7fa86f14ffc9e8364a11f1d7fbe9208a50c5b42b28cf2dc6710",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/operator-selected-closure.json": "80000582f4f34f9a8e8f538ade290ad8245360aa3ed2e80b2e6fe13ffb7d21b3",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/metadata-disposition.json": "38f962fed8680aaa75a2723158c25d37669e4042e44164d878a6556463143705",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/snapshots/before/tests/customerio-page-view.test.ts": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/snapshots/before/tests/trial-reminders-delivery.test.ts": "4d038a49993c52a0e3b05d97eb2b3ef0e58f6a38051ef344c184944c6b539883",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/snapshots/before/tests/trial-reminders.test.ts": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/snapshots/transfer/tests/customerio-page-view.test.ts": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/snapshots/transfer/tests/trial-reminders-delivery.test.ts": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/snapshots/transfer/tests/trial-reminders.test.ts": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/snapshots/cut/tests/customerio-page-view.test.ts": "f7cbeff8443b65be033cb5d39ae83a227dea8e9602ff23bfc57bf42601caeffe",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/snapshots/cut/tests/trial-reminders-delivery.test.ts": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/snapshots/cut/tests/trial-reminders.test.ts": "f74cf7c1a16d2bbdb6d13c152f3a13b626bc5bb579ad7c70750a107a2a0a0c2f",
+    "/tmp/test-audit-email94-independent-preservation.md": "36d9d5a315092a9ec20fd37b5cadd3b89979d8c67de317c69bfc4c6f5e4d7060",
+    "/tmp/test-audit-email94-independent-static.json": "c05fced3159d54ea9f164da7c83002d64b0386051f55de1218cdda14df698d66",
+    "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-main-metadata-refresh2-cy95wbmi/disposition.json": "d658f93994ddd07c87832ae2600c18111a2fb9aa31d3199b7bf129afa80534fa"
+  },
+  "entrypointTemplateHashes": {
+    "/private/tmp/test-audit-email94-tools-c435q0q0/operator-edit.cjs": "379fc31b182ffcc8e00feff7b14d67d0655e1d89bf5ee217a803e86fb4e19111",
+    "/private/tmp/test-audit-email94-tools-c435q0q0/operator-run-controls.cjs": "fe18e4505d4f672a868f0932876796938ffb9f2eae99153e237bc115784b4358"
+  },
+  "limits": "Static local import closure of two exact selected test files, including their top-level dependency graph. Bounded loader/transpiler trees plus parser and vendor entry/package/type pins. No all-vendor/source/data crawl; deeper Next/Supabase/Sentry and unselected full18-cohort third-party internals are not exhaustively pinned or runtime-verified. Server-only is erased by existing preload; actual product owners never stubbed by tooling.",
+  "mainMetadataRefresh2": {
+    "path": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-main-metadata-refresh2-cy95wbmi/disposition.json",
+    "sha256": "d658f93994ddd07c87832ae2600c18111a2fb9aa31d3199b7bf129afa80534fa",
+    "priorPinsSha256": "d78a79b4a1411f0b004711bf14e2a7793a190b85221467d1489bf36ad1f41e90"
+  }
+}

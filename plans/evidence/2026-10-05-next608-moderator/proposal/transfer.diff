@@ -1,0 +1,11 @@
+--- a/tests/personal-plan-field-test-ui.test.tsx
++++ b/tests/personal-plan-field-test-ui.test.tsx
+@@ -90,6 +90,8 @@
+   assert.match(html, /Dein Testzugang ist nicht mehr verfügbar/)
+   assert.match(html, /Chaarlie-Team/)
+   assert.doesNotMatch(html, /Stripe|PayPal|Plan sichern|reactivate|checkout/i)
++  assert.match(html, /Testzeitraum ist beendet oder der Zugang wurde geschlossen/)
++  assert.doesNotMatch(html, /Abo|Zahlung|Stripe|PayPal|Preis/)
+ })
+ 
+ test("dedicated field-test end surface stays concise and payment-free", () => {

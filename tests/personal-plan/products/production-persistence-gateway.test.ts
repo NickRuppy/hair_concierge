@@ -14,7 +14,6 @@ import {
   completeCaptureCategory,
   createStage3Draft,
   recordProductDecision,
-  replaceCaptureCategorySnapshot,
 } from "../../../src/lib/personal-plan/products/state-machine"
 import { createProposedProductPortfolio } from "../../../src/lib/personal-plan/products/portfolio"
 import type {
@@ -480,13 +479,20 @@ test("mixed final-role and current-only inventory reviews skip fit authority for
 })
 
 test("atomic category replacement swaps the full category in one acknowledged revision", async () => {
-  const base = authorityDraft()
+  const base = readyDraft()
   const initial: Stage3ProductDraft = {
     ...base,
     pass: "product_capture",
     categoryCursor: "conditioner",
     completedCaptureCategories: [],
   }
+  assert.deepEqual(
+    initial.decisions.map((decision) => decision.decisionKey),
+    ["decision:conditioner:conditioner_rinse_out:capture-a"],
+  )
+  assert.deepEqual(initial.completedDecisionKeys, [
+    "decision:conditioner:conditioner_rinse_out:capture-a",
+  ])
   let saves = 0
   const gateway = createProductionStage3ProductsGateway({
     userId: "owner-a",
@@ -506,13 +512,21 @@ test("atomic category replacement swaps the full category in one acknowledged re
       },
     },
   })
-  await gateway.loadOrCreate({
+  const loaded = await gateway.loadOrCreate({
     draftId: "server-derived",
     userId: "owner-a",
     personalPlanId: "plan-a",
     refinedVersionId: "refined-a",
     requirements: [],
   })
+
+  assert.deepEqual(
+    loaded.draft.decisions.map((decision) => decision.decisionKey),
+    ["decision:conditioner:conditioner_rinse_out:capture-a"],
+  )
+  assert.deepEqual(loaded.draft.completedDecisionKeys, [
+    "decision:conditioner:conditioner_rinse_out:capture-a",
+  ])
 
   const result = await gateway.mutate({
     draftId: initial.draftId,
@@ -539,6 +553,15 @@ test("atomic category replacement swaps the full category in one acknowledged re
   assert.equal(saves, 1)
   if (result.status !== "saved") return
   assert.equal(result.draft.revision, initial.revision + 1)
+  assert.equal(result.draft.pass, "product_decisions")
+  assert.equal(result.draft.categoryCursor, null)
+  assert.deepEqual(result.draft.completedCaptureCategories, ["conditioner"])
+  assert.deepEqual(
+    result.draft.products.map((product) => product.capturedProductId),
+    ["owned-catalog-replaced"],
+  )
+  assert.deepEqual(result.draft.decisions, [])
+  assert.deepEqual(result.draft.completedDecisionKeys, [])
   assert.deepEqual(
     result.draft.products.map((product) =>
       product.identity.kind === "catalog_product" ? product.identity.productId : "pending",
@@ -670,63 +693,6 @@ test("atomic category replacement preserves an owner-bound pending product for l
   assert.equal(result.draft.products[0]?.identity.kind, "pending_submission")
 })
 
-test("canonical category snapshot replacement prunes stale decisions and finalizes capture once", () => {
-  const base = readyDraft()
-  const draft: Stage3ProductDraft = {
-    ...base,
-    pass: "product_capture",
-    categoryCursor: "conditioner",
-    completedCaptureCategories: [],
-  }
-
-  const replaced = replaceCaptureCategorySnapshot(
-    draft,
-    "conditioner",
-    [
-      {
-        capturedProductId: "capture-replacement",
-        userProductId: "owned-replacement",
-        identity: {
-          kind: "catalog_product",
-          productId: "catalog-replacement",
-          displayName: "Ersatzpflege",
-          category: "conditioner",
-        },
-        frequencyRange: "weekly_2x",
-        ownership: "owned",
-        source: "catalog_search",
-      },
-    ],
-    [
-      {
-        capturedProductId: "capture-replacement",
-        category: "conditioner",
-        roles: ["conditioner_rinse_out"],
-      },
-    ],
-    [],
-    requirements,
-  )
-
-  assert.equal(replaced.revision, draft.revision + 1)
-  assert.equal(replaced.pass, "product_decisions")
-  assert.equal(replaced.categoryCursor, null)
-  assert.deepEqual(replaced.completedCaptureCategories, ["conditioner"])
-  assert.deepEqual(
-    replaced.products.map((product) => product.capturedProductId),
-    ["capture-replacement"],
-  )
-  assert.deepEqual(replaced.roleAssignments, [
-    {
-      capturedProductId: "capture-replacement",
-      category: "conditioner",
-      roles: ["conditioner_rinse_out"],
-    },
-  ])
-  assert.deepEqual(replaced.decisions, [])
-  assert.deepEqual(replaced.completedDecisionKeys, [])
-})
-
 test("catalog capture replay verifies the current refined source before returning its receipt", async () => {
   const initial = createStage3Draft({
     draftId: "draft-catalog-replay-stale",
@@ -837,31 +803,6 @@ test("loadOrCreate CAS-repairs a persisted cursorless capture draft", async () =
   assert.equal(result.draft.pass, "product_decisions")
   assert.equal(result.draft.categoryCursor, null)
   assert.equal(result.draft.revision, stranded.revision + 1)
-})
-
-test("loadOrCreate propagates a refined-source restart without caching an obsolete draft", async () => {
-  const gateway = createProductionStage3ProductsGateway({
-    userId: "owner-a",
-    persistence: {
-      ...persistence(),
-      loadOrCreate: async () => {
-        throw new Stage3AuthoritySnapshotError("stale_refined_source")
-      },
-    },
-  })
-
-  await assert.rejects(
-    () =>
-      gateway.loadOrCreate({
-        draftId: "server-derived",
-        userId: "owner-a",
-        personalPlanId: "plan-a",
-        refinedVersionId: "refined-a",
-        requirements: [],
-      }),
-    (error: unknown) =>
-      error instanceof Stage3AuthoritySnapshotError && error.code === "stale_refined_source",
-  )
 })
 
 function authorityDraft(): Stage3ProductDraft {
@@ -1001,71 +942,6 @@ test("catalog search translates Shampoo constraints into stored route semantics"
   assert.deepEqual(received[0]?.assessmentContext.shampooTargets, [
     { thickness: "normal", shampooBucket: "irritationen", scalpRoute: "irritated" },
   ])
-})
-
-test("catalog search consistently preserves the derived Shampoo target route", async () => {
-  const base = authorityDraft()
-  const shampooRequirement: Stage3CategoryRequirement = {
-    category: "shampoo",
-    requiredRoles: ["shampoo_everyday"],
-    needSummary: "Sanfte Reinigung für gereizte Kopfhaut",
-    authorityVersion: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
-  }
-  const draft: Stage3ProductDraft = {
-    ...base,
-    authorityVersions: {
-      ...base.authorityVersions,
-      shampoo: CATEGORY_ROLE_POLICIES.shampoo.authorityVersion,
-    },
-    orderedCategories: ["shampoo"],
-    categoryCursor: "shampoo",
-    authoritySnapshot: {
-      ...base.authoritySnapshot!,
-      orderedCategories: ["shampoo"],
-      categoryDecisions: [
-        {
-          category: "shampoo",
-          resolution: "resolved",
-          needTier: "basis",
-          roles: ["shampoo_everyday"],
-          target: {
-            category: "shampoo",
-            roles: ["shampoo_everyday"],
-            scalpRoute: "balanced",
-            everydayConstraint: "irritation_compatible",
-            requiresTargetedDandruffCapability: false,
-          },
-          frequency: null,
-          reasons: [],
-          executionState: "available",
-          executionPauseReason: null,
-          deferredFacts: [],
-        },
-      ],
-    },
-  }
-  const received: Array<Parameters<Stage3ProductionPersistence["search"]>[0]> = []
-  const gateway = createProductionStage3ProductsGateway({
-    userId: "owner-a",
-    persistence: {
-      ...persistence(draft),
-      loadOrCreate: async () => ({ draft, requirements: [shampooRequirement] }),
-      loadRequirements: async () => [shampooRequirement],
-      search: async (input) => {
-        received.push(input)
-        return { query: input.query, category: input.category, candidates: [], totalCapped: false }
-      },
-    },
-  })
-
-  await gateway.search({
-    draftId: draft.draftId,
-    category: "shampoo",
-    query: "shampoo",
-    requestToken: 1,
-  })
-
-  assert.equal(received[0]?.assessmentContext.shampooTargets[0]?.scalpRoute, "irritated")
 })
 
 test("catalog search permits signed inventory-only categories while heat retains its refined decision", async () => {
@@ -1836,13 +1712,24 @@ test("production gateway persists complete category assignments atomically and r
       source: "catalog_search",
     })
   }
-  let saves = 0
+  // Persisted input: A owns the exclusive role before the replacement request.
+  shampooDraft = {
+    ...shampooDraft,
+    roleAssignments: [
+      {
+        capturedProductId: "shampoo-a",
+        category: "shampoo",
+        roles: ["shampoo_everyday"],
+      },
+    ],
+  }
+  const saves: Array<Parameters<Stage3ProductionPersistence["save"]>[0]> = []
   const atomicPersistence: Stage3ProductionPersistence = {
-    ...persistence(),
+    ...persistence(shampooDraft),
     loadDraft: async () => shampooDraft,
     loadRequirements: async () => shampooRequirements,
     save: async (input) => {
-      saves += 1
+      saves.push(input)
       return { outcome: "saved", draft: input.draft }
     },
   }
@@ -1866,34 +1753,57 @@ test("production gateway persists complete category assignments atomically and r
     },
   })
 
-  assert.equal(result.status, "saved")
-  assert.equal(saves, 1)
-  if (result.status === "saved") {
-    assert.deepEqual(result.draft.roleAssignments, [
-      {
-        capturedProductId: "shampoo-b",
-        category: "shampoo",
-        roles: ["shampoo_everyday"],
-      },
-    ])
-  }
-
-  let invalidSaves = 0
-  const invalidGateway = createProductionStage3ProductsGateway({
-    userId: "owner-a",
-    persistence: {
-      ...atomicPersistence,
-      save: async (input) => {
-        invalidSaves += 1
-        return { outcome: "saved", draft: input.draft }
-      },
+  assert.ok(result.status === "saved")
+  assert.equal(saves.length, 1)
+  assert.equal(saves[0]!.expectedRevision, shampooDraft.revision)
+  assert.deepEqual(saves[0]!.draft.roleAssignments, [
+    {
+      capturedProductId: "shampoo-b",
+      category: "shampoo",
+      roles: ["shampoo_everyday"],
     },
-  })
+  ])
+  assert.deepEqual(result.draft.roleAssignments, [
+    {
+      capturedProductId: "shampoo-b",
+      category: "shampoo",
+      roles: ["shampoo_everyday"],
+    },
+  ])
+  assert.equal(result.draft.revision, shampooDraft.revision + 1)
+
+  // Both invalid proposals target the committed revision, so rejection must
+  // come from the role contract rather than a stale request or missing product.
   await assert.rejects(
     () =>
-      invalidGateway.mutate({
-        draftId: shampooDraft.draftId,
-        expectedRevision: shampooDraft.revision,
+      gateway.mutate({
+        draftId: result.draft.draftId,
+        expectedRevision: result.draft.revision,
+        mutation: {
+          type: "replace_category_role_assignments",
+          category: "shampoo",
+          assignments: [
+            {
+              capturedProductId: "shampoo-a",
+              category: "shampoo",
+              roles: ["shampoo_everyday"],
+            },
+            {
+              capturedProductId: "shampoo-b",
+              category: "shampoo",
+              roles: ["shampoo_everyday"],
+            },
+          ],
+        },
+      }),
+    /role shampoo_everyday already assigned/,
+  )
+  assert.equal(saves.length, 1)
+  await assert.rejects(
+    () =>
+      gateway.mutate({
+        draftId: result.draft.draftId,
+        expectedRevision: result.draft.revision,
         mutation: {
           type: "replace_category_role_assignments",
           category: "shampoo",
@@ -1902,7 +1812,7 @@ test("production gateway persists complete category assignments atomically and r
       }),
     /required role shampoo_everyday is uncovered/,
   )
-  assert.equal(invalidSaves, 0)
+  assert.equal(saves.length, 1)
 })
 
 test("production gateway finalizes category assignments and gaps with one CAS save", async () => {

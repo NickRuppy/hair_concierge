@@ -1,0 +1,2 @@
+/tmp/test-audit-stripe-trial128-tools-ptnotcxj
+Adapted final bounded Stripe runtime operator, no upstream files changed.

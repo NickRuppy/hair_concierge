@@ -106,45 +106,6 @@ export function normalizeAgentV2ConversationState(value: unknown): AgentV2Conver
   })
 }
 
-export function summarizeAgentV2ConversationState(state: AgentV2ConversationStateV2): {
-  version: 2
-  engine: typeof AGENT_V2_PRODUCTION_ENGINE
-  routine_thread: {
-    active: boolean
-    current_layer: string | null
-    visible_step_count: number
-  }
-  prior_product_projection_count: number
-  active_product_context_count: number
-  active_resolved_product: {
-    product_id: string | null
-    category: string | null
-  }
-  session_memory_count: number
-} {
-  const routineThread = state.agent_v2.routine_thread_context
-  return {
-    version: 2,
-    engine: AGENT_V2_PRODUCTION_ENGINE,
-    routine_thread: {
-      active: routineThread?.active === true,
-      current_layer: routineThread?.current_layer ?? null,
-      visible_step_count: routineThread?.visible_steps.length ?? 0,
-    },
-    prior_product_projection_count: state.agent_v2.prior_selected_product_projections.length,
-    active_product_context_count: state.agent_v2.active_product_contexts.length,
-    active_resolved_product: {
-      product_id:
-        buildPrimaryResolvedProductContext(state.agent_v2.active_product_contexts)?.product_id ??
-        null,
-      category:
-        buildPrimaryResolvedProductContext(state.agent_v2.active_product_contexts)?.category ??
-        null,
-    },
-    session_memory_count: state.agent_v2.session_memory.length,
-  }
-}
-
 function buildAgentV2State(params: {
   routineThreadContext: unknown
   priorSelectedProductProjections: unknown

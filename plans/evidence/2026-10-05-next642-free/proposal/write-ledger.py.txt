@@ -1,0 +1,100 @@
+from pathlib import Path
+import json
+D=Path('/tmp/test-audit-free-provisioning67');sites=json.loads((D/'sites.json').read_text());files=json.loads((D/'files.json').read_text())
+# Each row records the complete declaration's independent observable scope, not just its title.
+groups=[
+[
+('Default inbox, known lena@example.com; state, heading, address-bearing body, resend and correction labels.', 'Lose either action or interpolate the wrong address; other screen rows change phase or email.'),
+('Inbox email null; generic body and absence of an interpolated null address.', 'Render the known-address branch for null; default inbox cannot expose this default/null branch.'),
+('Sending phase with idle props; sending state/body and absence of inbox hint.', 'Expose the clickable-mail hint before a send completes; inbox and resolving inputs differ.'),
+('Inbox cooldownSeconds 42; literal countdown and disabled attribute.', 'Remove cooldown disable or countdown formatting; other default renders have zero cooldown. Disabled regex is global but only resend is disabled in this exact fixture.'),
+('Inbox notice Link gesendet.; role=status and notice text.', 'Drop the announcement region or message. Does not independently assert aria-live=polite; status is the asserted semantic role.'),
+('Correct phase with a populated draft; labelled form, explicit field linkage/value, send and cancel controls.', 'Lose correction input label/value or cancel option; validation-error row has different input and fewer assertions.'),
+('Correct phase with validation error; describedby field binding, invalid=true and role=alert.', 'Render visual error without assistive linkage; valid correction render cannot reach this branch.'),
+('Correction_blocked; honest immutable-address explanation, quiz link and no retry form.', 'Offer address correction without browser capability or omit recovery; no_lead has different copy/phase.'),
+('Expired; expired state/heading/body and fresh-link CTA.', 'Fall back to generic failure copy or omit resend. Failed phase is a distinct conditional branch.'),
+('No_lead; missing-analysis copy and quiz entry link.', 'Render inbox or dead-end missing lead. Same quiz URL elsewhere does not imply this state branch.'),
+('Failed plus claimed; claimed state, own heading and auth link.', 'Treat an already-claimed lead as a retryable send or lose login destination.'),
+('Failed send with explicit server reason; generic heading, exactly one reason occurrence and retry.', 'Duplicate server reason in heading and body; claimed/expired branches cannot prove cardinality.'),
+('Resolving; shell exists and neither inbox nor missing-analysis copy flashes.', 'Render a guessed terminal state before bootstrap; no other phase exercises early shell return.')
+],
+[
+('Nonterminal no-need account; one no_quiz_artifact attempt, report outcome+scan_retry stage, durable marker userId+outcome.', 'Drop marker user binding or report stage; two-render test captures only outcome, not stage/userId.'),
+('Nonterminal invalid_source is marked terminal and returns attempted.', 'Recognize no_quiz_artifact alone as terminal; different enum branch from first row.'),
+('Already-terminal no_quiz_artifact; provision/report/marker all throw if invoked; terminal return.', 'Re-mark or report an existing terminal account; replay row does not forbid repeat marker calls.'),
+('Two sequential renders share marker state; attempted then terminal, exactly one provision and one report.', 'Consult a stale/null marker or retry every render; one-call terminal tests lack persistence-across-calls behavior. Fake marker storage is not a DB durability test.'),
+('Three transient-outage renders; every result attempted, three provisions/reports, no terminal suppression.', 'Persist a transient result as terminal; terminal-only rows cannot reach this retry policy.'),
+('Terminal marker write throws; attempted still resolves.', 'Propagate best-effort marker write failure into page failure; happy marker rows do not throw.'),
+('Literal outcome rows provisioned and paid_user; neither writes terminal marker.', 'Broaden terminal marking to every outcome. Complete provisioned payload is a collaborator fixture, not compute proof.'),
+('Already has initial need; returns not_needed before terminal lookup/provision/report.', 'Read terminal state or reprovision a healthy account; terminal rows first report no need.')
+],
+[
+('Attached complete V3 artifact plus independently seeded projected hair profile; pre-null read, real service+Supabase adapter then scanner initial/fine context, stable publication identity and cardinality.', 'Miswire free initial need RPC payload or fail to make its output consumable by scanner. Fake RPC owns storage/clock semantics; this is not SQL/CAS or HTTP409 proof.'),
+('Attached artifact without diagnostics; provisioned need still yields null scanner context and zero publication.', 'Let a need alone bypass required diagnostics; happy fixture explicitly seeds them.'),
+('Two literal rows corrupt_need_hash and stale_publication; real validation/publication adapter rejects with profile-context error and publishes zero.', 'Accept inconsistent need hash or treat stale publish outcome as ready. Fake transport manufactures revision conflict, so actual SQL concurrency remains a separate owner.'),
+('Same service provisioned twice from one attached artifact; stable plan/need IDs, one fake need row and null enrollment.', 'Change request hash/enrollment/returned identity between calls; fake itself implements row dedup. Retain service-to-adapter consistency, not a claim of real database idempotency.'),
+('No attached artifact; real adapter service returns no_quiz_artifact and scanner context remains null.', 'Map absent attached artifact to a success or usable scanner source. Does not count or forbid all storage calls; pure service row still independently protects zero writes.'),
+('Existing plan pinned to non-null different enrollment; free adapter returns invalid_source/enrollment_mismatch.', 'Lose propagation of RPC reasonCode/outcome at free adapter/service boundary. Fake supplies mismatch; does not prove database enforcement.'),
+('Activated moderator roster/enrollment with no artifact; full paid-access composite returns paid_user and scanner null.', 'Wire only billing access or omit moderator branch. Pure allowed guard row supplies rather than resolves access; its no-read contract remains independent.'),
+('Email-only manual grant; supplied email returns paid_user; omitted email is not paid_user; scanner null.', 'Drop email when resolving real composite or filter grant only by user_id; not equivalent to a generic allowed collaborator.'),
+('Attached source plus unreadable moderator roster; full composite yields temporarily_unavailable and no scanner context.', 'Collapse unreadable roster to denied and provision free; pure unavailable case cannot prove adapter/composite wiring.')
+],
+[
+('Premium-sheet source with literal launch flags false,true; exact standard catalog with per-flag diagnostic.', 'C1: existing price-comparison callback already calls same pure owner once for each identical input; transfer the complete assertion before the existing row loop.'),
+('pricing_page and quiz_result_offer, each flags false/true; standard versus launch literal values.', 'Accidentally pin all sources to standard; premium_sheet owner input cannot prove legacy fallthrough.'),
+('Premium-sheet false/true catalog feeding all three existing premiumSheetPlans rows; amount, analyticsId and configured price-ID equality.', 'Diverge UI price rows from submitted pricing family/interval; C1 adds the literal catalog oracle before any row iteration. Empty price IDs can be equal; literal numeric row guard stays separate.'),
+('Exact ordered rendered numeric amounts [99.99,34.99,14.99].', 'Both derived UI and submitted catalog drift together while equality stays green, or row order changes. Moving to price loop would require new aggregation/map call or weaken ordered-array contract.'),
+('Valid sheet request accepted; seven complete legacy-protocol variants rejected.', 'Admit one-time/Elements/prepare/lead/funnel/reactivation/returnDestination into sheet. Some refusals also trip other schema clauses; only final protocol rejection is claimed.'),
+('pricing_page with returnPath /scan is rejected.', 'Permit contextual return on legacy source; accepted sheet input cannot prove this exclusion.'),
+('Premium-sheet checkoutAttemptId with non-prepared/non-one-time flags gives exact idempotency key object.', 'Drop prefix/key or return undefined; no actual Stripe Session reuse is claimed by this pure option assertion.'),
+('Contextual subscription params for /routine; if_required redirect, exact tokenized return URL, no welcome.', 'Force welcome/always or remove redirect-based method support field. Provider enum/type support read; no live provider proof.'),
+('Default subscription params with no completion override; exact welcome URL and absence of redirect_on_completion key.', 'Make contextual behavior/default field apply to historical callers. Key absence differs from assigning undefined.'),
+('Contextual completion with missing URL throws.', 'Silently construct incomplete Stripe params or fallback welcome; normal contextual input supplies URL.'),
+('Five allowed paths; ten malformed/external/traversal/unknown/nonstring inputs; query/hash stripping.', 'Open redirect or parameter smuggling, or reject an application surface. Every literal row retained unchanged.'),
+('Exact completion API is protected in production route classification but excluded from subscription gate.', 'Make purchasing require already-paid access or expose unauthenticated admission. This is route policy, not live middleware/provider proof.'),
+('Null/unmarked/marked metadata; user ID absent versus trimmed string.', 'Infer sheet admission from standard catalog, fail marker match, or lose trim/null semantics. Marker-only true is explicitly expected; title does not mean marker helper requires identity.')
+],
+[
+('Fresh existing free plan null pin; successful provision returns admission ID/routine ready and produces one need with moved pin.', 'Skip/misreport null-pin upgrade or routine acceptance. Not consolidated into held replay registration; first-call state is checked before another call can conceal it.'),
+('Same fake free plan but pin collaborator returns no_plan without moving pin; service maps enrollment_mismatch and creates no need.', 'Treat rejected create-need outcome as success. Fake provides mismatch; this is service error mapping, not actual SQL enforcement or a production mutation.'),
+('Two calls with shared fake storage; both success, IDs stable, one admission/need, second routine ready.', 'F1 held: title promises no second accept, but fakeDeps increments acceptCalls twice and returns already_accepted on second; no assertion forbids second acceptance or reaches persisted activation. Keep all actual stable-identity/readiness assertions and do not repair/count here.'),
+('Plan pinned to field-test-enrollment; conflict reason, original pin unchanged, no need.', 'Overwrite another enrollment or proceed after pin conflict. Distinct ownership/security branch from null-pin conversion.'),
+('No existing plan; service accepts no_plan pin result and create-need creates admission-pinned plan.', 'Reject new buyer without precreated plan. Existing-null plan test reaches pinned instead.'),
+('No linked artifact; no_quiz_artifact, zero admission writes and null pin.', 'Write admission before verifying attached quiz source; error-stage cases still possess source.'),
+('Routine collaborator throws; entitlement-bearing plan/need persist, success envelope has routineAccepted=false.', 'Undo purchase state or report routine ready on failure. In_progress nonthrowing outcome is separate.'),
+('Admission collaborator throws; retryable admission stage and pin stays null.', 'Proceed to pin or report success after admission failure; no-artifact and acceptance faults differ.'),
+('DirectAcceptanceError conflict with readiness false; in_progress and exactly one confirming read.', 'Treat conflict as completed without persisted readiness check. Service mock outcomes cannot reach this classifier.'),
+('Conflict with readiness true; already_accepted.', 'Keep completed winner stuck pending; false/null readiness inputs deliberately separate.'),
+('refinement_in_progress with readiness null; in_progress.', 'Optimistically accept an unreadable readiness signal or omit refinement conflict branch.'),
+('plan_already_accepted; already_accepted with zero confirming reads.', 'Introduce a read dependency or downgrade established active routine under lookup error.'),
+('recommendation_unavailable DirectAcceptanceError plus generic Error; unavailable for both.', 'Treat arbitrary failure as concurrency/success; maintains typed and untyped error distinction.'),
+('Provisioning with acceptInitialRoutine=in_progress; successful plan but routineAccepted=false.', 'Treat any nonthrowing acceptance result as ready; throwing case cannot prove value classification.')
+],
+[
+('Flag on, fresh legacy user/denied access; /registrierung destination, scan admission/no redirect, free five-tab nav, three legacy public paths.', 'Mismatch independently deployed cutover decisions, free nav/route or public legacy fallback. This stitches pure functions, not actual browser transport; no direct claim of full journey.'),
+('Flag off, fresh legacy user and paid-access collaborator true; reveal destination, scan redirect, legacy nav and legacy public paths.', 'Apply freemium change when disabled. Flag boolean and nav dependency values differ from on case; do not pack both into one site for quota.'),
+('Actual personal_plan stage4 journey; both flag values with contrary hasAppAccess collaborator; always premium.', 'Allow freemium flag or fallback access resolver to downgrade established paid plan. No transport or paid gate claim beyond real navigation owner.')
+],
+[
+('Denied paid access, complete attached V3 fixture, fixed clock; exactly one request with user/artifact IDs, 64hex hash, complete input snapshot and absent enrollment property.', 'Lose source/user binding, malformed hash/input, or include enrollment field. Acceptance fake maps/adapter do not preserve every exact request and absent-property oracle.'),
+('Two same-user calls to one service; persistence invoked twice, both provisioned and entire result equal.', 'Add local cache or stop resubmitting; fake stable IDs alone in acceptance cannot detect a missing second persistence invocation.'),
+('Artifact loader null; typed no_quiz_artifact and zero create-need calls.', 'Attempt storage with absent source; acceptance result/null scanner alone does not count hidden writes.'),
+('Invalid empty artifact, throwing artifact load, and retryable persistence response; three exact typed outcomes.', 'Allow malformed quiz or leak storage exception/wrong failure type. Distinct stages already in one original site; no new packing.'),
+('Paid access allowed; paid_user before any artifact read or write.', 'Read private artifact or write free state before refusing paid owner; acceptance moderator result alone cannot prohibit an unnecessary read.'),
+('Paid access unavailable; temporarily_unavailable before any artifact read/write.', 'Treat uncertain entitlement as free or read source before failing closed; throwing and resolved unavailable branches differ.'),
+('Paid-access collaborator throws; temporarily_unavailable.', 'Let entitlement error escape or continue provisioning; resolved unavailable row does not reach catch.')
+]]
+owners=[['src/app/registrierung/free-registration-client.tsx','src/components/ui/button.tsx','src/components/ui/input.tsx'],['src/lib/auth/free-registration-recovery.ts'],['src/lib/personal-plan/persistence/free-snapshot-service.ts','src/lib/personal-plan/persistence/free-snapshot-supabase.ts','src/lib/entitlements/access.ts','src/lib/scan/scanner-context.ts','src/lib/scan/scanner-context-supabase.ts','tests/helpers/scanner-context-rpc.ts'],['src/app/api/stripe/create-checkout-session/route.ts','src/lib/premium-sheet/pricing.ts','src/lib/stripe/pricing-plans.ts','src/lib/stripe/client.ts','src/lib/freemium/checkout-return.ts','src/lib/freemium/checkout-metadata.ts','src/lib/stripe/checkout-session-params.ts','src/lib/auth/route-classification.ts','src/lib/supabase/middleware.ts'],['src/lib/freemium/plan-provisioning.ts','src/lib/freemium/plan-provisioning-supabase.ts'],['src/lib/auth/free-registration.ts','src/lib/auth/route-classification.ts','src/lib/supabase/middleware.ts','src/lib/personal-plan/navigation-access.ts'],['src/lib/personal-plan/persistence/free-snapshot-service.ts','src/lib/personal-plan/compute-stage1.ts','src/lib/personal-plan/persistence/index.ts']]
+rows=[]
+for s in sites:
+ g=files.index(s['file']);contract,reason=groups[g][s['index']-1];mark='C' if(g,s['index'])==(3,1) else 'F' if(g,s['index'])==(4,3) else 'R'
+ rows.append({**s,'id':f'{g+1}.{s["index"]}','mark':mark,'contractAndConsumedInputs':contract,'credibleFaultOrSecondLayerJudgment':reason,'operativeOwners':owners[g],'completeBodyRead':True,'runtimeStatus':'NOT_RUN','repairCredit':0})
+assert len(rows)==67
+(D/'ledger.json').write_text(json.dumps(rows,indent=2,ensure_ascii=False)+'\n')
+md='# Free/provisioning67 complete semantic declaration ledger\n\n67 AST sites / 68 literal runtime registrations: 65 R, 1 F held, 1 conditional C. No runtime or removal credit. All original callback bodies and assertion lists are in ledger.json; helper/fixture bytes are frozen. No D/source retirement.\n\n'
+for f in files:
+ md+='## '+f+'\n\n| Site / line | Mark | Complete observable scope / inputs | Credible regression / second-layer judgment |\n|---|---|---|---|\n'
+ for x in rows:
+  if x['file']==f:md+=f'| {x["id"]} :{x["line"]} — {x["title"].replace("|","/")} | {x["mark"]} | {x["contractAndConsumedInputs"].replace("|","/")} | {x["credibleFaultOrSecondLayerJudgment"].replace("|","/")} |\n'
+ md+='\n'
+(D/'complete-ledger.md').write_text(md)

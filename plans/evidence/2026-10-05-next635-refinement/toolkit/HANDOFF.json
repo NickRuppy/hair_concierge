@@ -1,0 +1,31 @@
+{
+  "status": "READY_FOR_MAIN_REVIEW_ONLY",
+  "directory": "/tmp/test-audit-refinement37-tools-5ce9vx77",
+  "operatorPinsSHA256": "ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd",
+  "artifactHashesSHA256": "0daa5074590bcc3b2d87d1d779f3e2014642fb2290b7886804c10704537ef148",
+  "README_SHA256": "f54567f125154d4c685110480e5494050df735e70bebfad5d089160caab5c5c8",
+  "proposalManifestSHA256": "20e860ff28dbf2fed2d9fdfd07482242f66a18988ab2dc4bc5514edf243f2ce6",
+  "proposalHandoffSHA256": "9bf451758eab49e3b0593eae2a96dfcf969c771bbb829da1b5c407438fd11789",
+  "counts": {
+    "before": 37,
+    "transfer": 37,
+    "cut": 30
+  },
+  "controls": 13,
+  "repositoryWrites": 0,
+  "runtimeRuns": 0,
+  "childrenStarted": 0,
+  "ownerImports": 0,
+  "removalCredit": 0,
+  "toolHashes": {
+    "operator-guard.cjs": "fc5f27d3c7f0c9f6e226b91e542c6db5d3e3e746af454aeacf2415c20e01f168",
+    "operator-edit.cjs": "a5a57635cbbef3a27fc3ea9d4abb78e8f99db142ff900979f3942e827187c67c",
+    "operator-run-controls.cjs": "1bc3271bd6a646e60482390708f7571c27b5201d8729d050ef5937a124b2f8fd",
+    "operator-proof.cjs": "6aec16c6468794c9d3b87d69b21b4661e3082a3d48ed44caaaf7c4cf7346eecf",
+    "operator-readonly-preload.cjs": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "prepare-tools.py": "67d1e2946f17a5e1bf82c187d39ebb9d8f07ebc57ce48b7660d5b6a484139184",
+    "prepare-pins.cjs": "fa00ebe6d04616d0433f8e9007c2d0ba492ba4dcf780486ec804e7e78be0c019",
+    "finalize-static.cjs": "d81274105b0cd9f162aa186699245335183f8ff621e9d0969cd2271842b513d5",
+    "template-delta.patch": "8955ffd7ce3241617ccc2612777ceecb85fcf5d4a97cf508d109df8a1f6ebd75"
+  }
+}

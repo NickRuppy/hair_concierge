@@ -291,19 +291,6 @@ export function settlePayPalOneTimeRecoveryRequest(
   }
 }
 
-export function cancelPayPalOneTimeRecovery(state: PayPalOneTimeRecoveryState): {
-  state: PayPalOneTimeRecoveryState
-  effects: PayPalOneTimeRecoveryEffect[]
-} {
-  return {
-    state: { ...state, phase: "cancelled", inFlight: false, inFlightRequestId: null },
-    effects:
-      state.inFlight && state.inFlightRequestId !== null
-        ? [{ type: "abort_status_check", requestId: state.inFlightRequestId }]
-        : [],
-  }
-}
-
 export function settlePayPalOneTimeRecoveryWindow(
   state: PayPalOneTimeRecoveryState,
   input: { now: number },

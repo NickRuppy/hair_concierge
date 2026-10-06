@@ -1,0 +1,677 @@
+[
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 106,
+    "title": "renders Basis before Optional and groups multiple roles into one Bedarfsplan category card",
+    "sha256": "fd53844b09012e2bef353670bcbcf66e65b8a430e66e0bb188407ccfa0dee813",
+    "classification": "R",
+    "reason": "Three items and repeated category roles: Basis precedes Optional, grouping/card counts and routine overview labels. Single-item banner/toast renders cannot detect a broken grouping map.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 174,
+    "title": "Routine has no journey header — Bottom-Nav carries orientation (Task 2.7)",
+    "sha256": "94dda91b241ebb84301e32d4343c47da7560b9592f8874f4f62b87175babbd11",
+    "classification": "R",
+    "reason": "Proposal/no-active header excludes journey-header/progress orientation. Retain: other proposal fixtures exercise different item/status subtrees; no ready transfer to an unchanged exact fixture established.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 183,
+    "title": "a basis slot with a planned ref but no chosen product blocks the Anwendung",
+    "sha256": "ee90392ad87f127ef7dd81f9b1f49facddba064ffc3f902a9cf4468f5cbdf448",
+    "classification": "R",
+    "reason": "Planned reference without productId remains a blocking Basis gap. Chosen-product positive tests take the opposite hasChosenPlannedProduct branch.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 211,
+    "title": "a planned item with a chosen catalog product is a full routine member",
+    "sha256": "a4ac1019a296a716a80a92618cb403e837cf01df28e4c2993016e3ec961439fa",
+    "classification": "R",
+    "reason": "Chosen catalog product is a full routine member despite planned availability. Null-product gap keeper cannot catch accidental provisional/readiness regressions.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 245,
+    "title": "uses proposal copy initially and never offers an Anwendung hero button",
+    "sha256": "ac72c3c33eca3b25979ba0b1f6c12537d7fc7e05c466a474549126d416b5718e",
+    "classification": "R",
+    "reason": "Initial proposal versus active copy and absence of Anwendung hero destination; distinct status/activeVersion branches, not merely different product text.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 283,
+    "title": "the edit affordance is a quiet link in the heading row, not a hero button",
+    "sha256": "730e2543b92841a464527f75b442d7ed0e07906fa49c818a1b95a7c939ee2279",
+    "classification": "R",
+    "reason": "Actual edit affordance placement/type and handler propagation; banner callbacks do not exercise the global edit control.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 317,
+    "title": "uses presentation-only catalog image and name facts outside the Routine payload",
+    "sha256": "8b53020982a60305ee27146aa7b7bf1c68ee7fb4b97b2502817a7f129478b812",
+    "classification": "R",
+    "reason": "External catalog presentation overrides display facts without mutating frozen payload. Ordinary payload-only renders cannot catch identity/source-precedence errors.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 353,
+    "title": "shows verified Oil heat capability in the existing Stage 4 metadata line only",
+    "sha256": "fe3918fdbb94f2d330f7db5c0e38f60fdce7e5f066a3951114cbfa66e7793a6a",
+    "classification": "R",
+    "reason": "Oil heat capability metadata plus counterexamples controls verified leaf facts; generic product-ready assertion cannot detect incorrectly inferred heat protection.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 410,
+    "title": "renders active routine as product-led result with separated later additions",
+    "sha256": "5d42ac899d8bcd9686e093cae75e8d50c74ae3264a77d92c24dd0c82fb0660e6",
+    "classification": "R",
+    "reason": "Active product-led layout with included, excluded, later and informed-override products. The single default Shampoo renders do not traverse these partitions or legacy fit fallback.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 505,
+    "title": "shows v3 replacement labels and retained owned products without adding them to Routine items",
+    "sha256": "b2da97f6c8fb0f5107b851daae7358f403600864f285743b1d75a20e82e8aec4",
+    "classification": "R",
+    "reason": "v3 replacement presentation, current Aktiv/no Noch kaufen, retained old product exactly once, detail gating and empty-retained variant. Keep actual current UI replacing dormant acquisition label semantics.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 579,
+    "title": "shows v4 retained inventory as stored, non-executable product context",
+    "sha256": "81e6a7edde0440262fa917e0eda69cca3a2d17b809781a36c5753298dbe0cd8b",
+    "classification": "R",
+    "reason": "v4 retained inventory must display stored non-executable context, distinct schema/version field from v3 retained owned products.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 619,
+    "title": "explains confirmed unnecessary heat protection in the not-planned routine section",
+    "sha256": "6f3e7a65e0e837c83aa335fc77b668833276c527eee2685ff66da2bf00b6252b",
+    "classification": "R",
+    "reason": "Confirmed unnecessary heat protection renders the specific explanation in not-planned section. This is a current positive category/reason branch absent in default cards.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 651,
+    "title": "keeps required Basis gaps explicit and renders a named recovery state without payload",
+    "sha256": "3ab935e9c826fe6bd12c8042dbb0ea9c0f35ad08638f8a538f33c45583492dab",
+    "classification": "R",
+    "reason": "Basis gap and no-payload recovery are different executable/readiness paths; no-banner/toast negatives do not prove either.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 699,
+    "title": "states non-executable conditions plainly and keeps editing global",
+    "sha256": "7392150d5d4e0a3bab406bf15d2cb124bb7a481f74460ced566fcd2aca907baa",
+    "classification": "R",
+    "reason": "Non-executable pending/planned/excluded conditions and global edit semantics; preserve each existing input rather than fold the multi-state cases into an unrelated keeper.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 781,
+    "title": "renders a quiet, reason-specific placeholder step per deferral reason (Task 2.2)",
+    "sha256": "da6b13851562ecf171157edf74c965e21729eabb3d751dd3a829ba576439154d",
+    "classification": "R",
+    "reason": "Each server deferral reason produces its own visible recovery text/link; category-only placeholder render cannot distinguish reasons.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 833,
+    "title": "an excluded item with no matching server deferral reason keeps the generic excluded copy",
+    "sha256": "e8163637d7cddf88074d74a8c914e69d10fd74dcfd58abf96166c3b4d6cf095d",
+    "classification": "R",
+    "reason": "Excluded item with missing matching decision key retains generic copy. Reason-positive fixtures cannot catch accidental category-based lookup.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 855,
+    "title": "a role a later recompute resolved is no longer excluded, so its placeholder disappears with no extra clearing logic",
+    "sha256": "1ad08960bc671710b27ad9f8e0df815d10020a6af1a5661ffb5c7596d76d2f1d",
+    "classification": "R",
+    "reason": "Already resolved included item ignores stale server deferral metadata. This is a renderer test, not actual recompute lifecycle coverage; keep the different inclusion readset.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 888,
+    "title": "the all-deferred shape (zero-recommendation accept) renders only placeholders",
+    "sha256": "e624fe71404c4b1818ee98f378b8eddd73ba17a7bd5f20b6ac0bac71543cf173",
+    "classification": "R",
+    "reason": "All-deferred zero-product payload gives honest subtitle, two recovery links, no readiness/application CTA. Mixed active/pending cards cannot establish zero-product branch.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 937,
+    "title": "translates structured Personal Plan cadence without exposing internal keys",
+    "sha256": "1168aba1b8d6180b9ccccf496224cff3a8de45f259757b333f5784f249cd5d65",
+    "classification": "R",
+    "reason": "Mask biweekly cadence and prewash Oil role produce exact composed cadence+timing text with no internal keys. Scalar helper table uses other intervals/roles and no composed card output.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 990,
+    "title": "presents every structured cadence kind and keeps a user override authoritative",
+    "sha256": "d2acc77019a3758a56fc48cab4c967ab0297d5024c53b23d1c14fb7196ac6f17",
+    "classification": "R",
+    "reason": "Nine distinct structured cadence variants plus authoritative user override; no exact existing render set establishes every fallback/interval/event/protocol output. Do not regroup cases for credit.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 1076,
+    "title": "fresh state (products open, 2 von 4): banner renders above the routine blocks",
+    "sha256": "1bad565cd5215d597972aa58d80d61e7bf3e164c7d1e317ec91359994037009a",
+    "classification": "R",
+    "reason": "Products-module 2/4 copy, 2-minute CTA, placement plus actual leaf button callbacks. Habits 3/4 coexistence keeper does not establish module-specific copy or these callback counters.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 1129,
+    "title": "post-module-1 state (habits open, 3 von 4): banner renders above the routine blocks too",
+    "sha256": "33e6ad51f4bb3b3528de0f1ff62c12de8df75ef9e44da54e1b85574e7e9701dd",
+    "classification": "C",
+    "reason": "C6: same habits banner readset as existing coexistence render; transfer progress, CTA duration and before-Basis ordering.",
+    "readyCut": true
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 1149,
+    "title": "dismissed state: refinementBanner absent renders no banner",
+    "sha256": "bc49cb3cbb39ff3c9655ad593238394aef38e6b5b709fe2aedef3380f29ba6bd",
+    "classification": "C",
+    "reason": "C3: null refinementBanner equals default null; same active payload and absent handlers. Transfer all three negative copy assertions to existing withoutFlag SSR.",
+    "readyCut": true
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 1159,
+    "title": "all-done state: no refinementBanner prop at all renders no banner",
+    "sha256": "7e192fb8cf192ced6ccd931e74c569719c4183ac1527500cf9540ac73344ba75",
+    "classification": "C",
+    "reason": "C4: byte-equivalent effective props to existing withoutFlag SSR. Transfer no-dismiss and no-progress assertions (deduplicate identical no-dismiss assertion).",
+    "readyCut": true
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 1168,
+    "title": "Task 2.6: the plan-updated toast renders with the exact signed-off copy above the routine blocks",
+    "sha256": "26c91922083f1655169bb1492f962e05b130a546a5ab1b43d283b9af218a4afa",
+    "classification": "C",
+    "reason": "C5: toast receives only same onDismiss; optional banner does not affect toast props/slot. Transfer role=status and before-Basis ordering to existing coexistence SSR.",
+    "readyCut": true
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 1180,
+    "title": "Task 2.6: the plan-updated toast is absent without the signal",
+    "sha256": "9211ea1df6ecd0719fd70a3cb84673bd4740cd4b2b30342545a0b920c655a838",
+    "classification": "R",
+    "reason": "Canonical existing three renders independently cover missing signal, explicit false signal, and missing dismiss callback; keep these inputs and add C3/C4 negatives only to withoutFlag.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-ui.test.tsx",
+    "line": 1200,
+    "title": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit",
+    "sha256": "c4ea21364d6742162f89fe01a9462b81ab5c77d5e94d05dac115f204200d6228",
+    "classification": "R",
+    "reason": "Canonical existing coexistence render proves both live slots; C5/C6 union adds public status/progress/duration/ordering without another render.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "line": 49,
+    "title": "Routine resolver preserves legacy only for people without a Personal Plan",
+    "sha256": "cbeb33cb29cf53a10cee9eea7ecf289955abba55cb2b4e6aa19cd531e7e554de",
+    "classification": "R",
+    "reason": "Legacy/no-plan, paid stage4 disabled and stage5 access exercise distinct route resolver gates; stage4-enabled recovery cannot catch legacy demotion or stage5 reachability coupling.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "line": 91,
+    "title": "Routine resolver shows scoped recovery instead of legacy on a Personal Plan read failure",
+    "sha256": "7de9ddf2d1e5fbb4839a8fada4830f6bda51b5079515da442cee2c2e2c20d719",
+    "classification": "R",
+    "reason": "Actual readView throw must produce unavailable, never legacy. Healthy resolver keeper cannot catch fail-open legacy substitution.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "line": 103,
+    "title": "Routine resolver loads v3 presentation from an initial proposal candidate",
+    "sha256": "efd9092417031398f4f1d5acf819c9f5850f889c8b87acbc795f211fd3265103",
+    "classification": "R",
+    "reason": "No active version + initial candidate resolves portfolio source from candidate payload; active portfolio API keeper selects active version and cannot catch this source-choice branch.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "line": 131,
+    "title": "Routine resolver threads the refinement banner view model through from readRefinementBanner",
+    "sha256": "7097831b0846c480c4380a7f889ef59d1703f85503607775f470a9a160d8ae21",
+    "classification": "R",
+    "reason": "Actual resolver forwards same user to banner dependency and returns complete products 2/4 view model. Rendering a supplied model cannot catch missing route delivery.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "line": 152,
+    "title": "Routine resolver degrades to no banner when readRefinementBanner is absent or fails",
+    "sha256": "19ed6f0d3f80cae067e58e9d1879f381d28614d24ef702352fcae3f54554047a",
+    "classification": "R",
+    "reason": "Missing optional dependency and thrown banner lookup degrade to null while preserving plan. Success-path banner keeper cannot catch presentation failure taking down route.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "line": 177,
+    "title": "Routine unavailable recovery offers an explicit reload action",
+    "sha256": "a1bb5a4329d56e6420d7f267ba8685e6a671427a94039133390119b26ce6ecc0",
+    "classification": "R",
+    "reason": "Existing identical recovery SSR plus retry callback and router.refresh source binding; retain and add exact forward link from C1.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "line": 198,
+    "title": "Routine unavailable recovery also offers a forward CTA out of the dead end",
+    "sha256": "71dcbc9d38d3af5517fa9f8a20df8813cdd02a4642927afa51aaf245237d26d6",
+    "classification": "C",
+    "reason": "C1: identical recovery SSR and retry props; forward-link regex is sole unique assertion, transferred into existing html.",
+    "readyCut": true
+  },
+  {
+    "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+    "line": 212,
+    "title": "Routine resolver does not construct a Personal Plan Routine view before Stage 4 is reachable",
+    "sha256": "b7f215bd446612cf3db3afef96adfcb46d70f80efd8a91728dbe75f2b8b37c46",
+    "classification": "R",
+    "reason": "Stage3 frontier denies view construction and observes no read. Healthy stage4 view and rendered unavailable state cannot prove acquisition gate.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "line": 204,
+    "title": "global editor renders the complete Routine and submits a local operation batch",
+    "sha256": "22000c5e60e7f8dee05a566946c78fe392796b6ddc0ab759f454493b8e46d263",
+    "classification": "R",
+    "reason": "Manual hook harness edits actual complete editor; selected replacement plus category/role operations reach submit callback as exact batch. SSR-only card layouts cannot prove handler composition.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "line": 274,
+    "title": "global editor blocks invalid controls and asks before discarding dirty edits",
+    "sha256": "901e3b56294ff46104b1ed9964fa82e07c097c10c1a91eb5a46516fc7d8c0f27",
+    "classification": "R",
+    "reason": "Unsupported roles/cadences disable controls and dirty cancel requires explicit discard; verifies callback count before/after discard. Clean editor keeper omits this state transition.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "line": 327,
+    "title": "Routine discard confirmation uses the reviewed visible actions",
+    "sha256": "227eb4ae8c104af6fc9049ba29912355efe1be9c7ef547f14a0377bee49a6a6e",
+    "classification": "R",
+    "reason": "Rendered discard dialog copy/actions/safe-area styling; dirty-handler keeper invokes body callbacks but does not render this exact confirmation output.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "line": 338,
+    "title": "global editor starts at the recommendation and can clear a cadence override",
+    "sha256": "559e9790fbb95ed6b15784ee0a861c7f7bec8430206522443a4d9c2bc8015077",
+    "classification": "R",
+    "reason": "Actual cadence select starts at recommendation, captures explicit override then clears to null; replacement batch keeper cannot catch empty-select normalization.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "line": 385,
+    "title": "routine client never renders raw server error tokens",
+    "sha256": "9dc3ff379f79e0afb6342488eefabcac184e5274a768ed1bb69b7d26b8bba4ff",
+    "classification": "R",
+    "reason": "Actual friendlyError sanitizes unauthorized and raw internal errors consumed by client catches; no current mounted catch-path keeper with those same error inputs established.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "line": 396,
+    "title": "Routine entry never blocks actions and defers reconciliation behind a pending proposal",
+    "sha256": "cfa742477cd188861945aa92abc6eebbdb4e223633e1c5c5071ece1fb31dd4e8",
+    "classification": "R",
+    "reason": "Actual sync timing predicate preserves immediate interaction and pending-proposal delay; effect is a current caller. This direct helper does not prove mounted scheduling, retained as bounded timing policy.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "line": 405,
+    "title": "the entry sync reloads for a healed module recompute, not only for a staged proposal",
+    "sha256": "4783845be5300531c9142c279e1ac407155569ad7c83c0be6d9e4601a48fa85d",
+    "classification": "R",
+    "reason": "Sync result healed-module/changed-proposal booleans and legacy empty result control reload. Existing acceptance refresh helper exercises another return protocol.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "line": 428,
+    "title": "successor proposals are available from the overview but never auto-open on entry",
+    "sha256": "3214a5bf751f54f7aefc462c5bfee3b138c85bd7548bd4b866a198edee7243ea",
+    "classification": "R",
+    "reason": "Initial proposal sheet-open policy evaluates active/pending combinations; live state initializer calls helper. No current mounted initialization keeper established; no auto-open lifecycle claim.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "line": 452,
+    "title": "proposal sheet body separates initial confirmation from successor review callbacks",
+    "sha256": "035a9f79ca06c52b1cabed37570be345d230debe3b57878d95ed25ef50232d02",
+    "classification": "R",
+    "reason": "Actual initial/successor body buttons route distinct accept/reject callbacks and labels. Busy-button fixture never exercises these handler choices.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "line": 505,
+    "title": "proposal acceptance reload distinguishes lost response, same pending, and supersession",
+    "sha256": "2ad01d47c35a20d264048738461276361e753b16d2318335e954f560b304b2e6",
+    "classification": "R",
+    "reason": "Reload classifier differentiates same proposal, disappearance/lost response and supersession identities; provider-free visual proposal tests cannot detect wrong identity classification.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "line": 537,
+    "title": "every Routine acceptance refreshes server-owned navigation and portfolio presentation",
+    "sha256": "dae93fc9d8100780041098299660dfa5c137af4309776aa1c3fcacfa3ab8e45d",
+    "classification": "R",
+    "reason": "Actual accept refresh helper performs server navigation/presentation refresh with independent accept versus reject paths. SSR sheet callback counters stop before this owner.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "line": 557,
+    "title": "proposal sheet blocks duplicate requests only while a request is running",
+    "sha256": "63d689da2f3d894f64f126d26d988f1908619b64beb23642276fb7ba29c025db",
+    "classification": "F",
+    "reason": "F1: only disabled submit and progress text under isSubmitting=true are asserted. Removing actual client duplicate-request guard while leaving prop rendering intact survives; narrow title, no deletion or new quota.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "line": 575,
+    "title": "proposal deltas render frozen consumer labels instead of internal item keys",
+    "sha256": "6ee658a97354402e9020982aabe7124e20272fa5dfcb8ba51708a34ccc9a01a3",
+    "classification": "R",
+    "reason": "Frozen delta labels map item keys to consumer names/categories including null-active added path. Ordinary item cards do not render direct/consequential delta lists.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+    "line": 653,
+    "title": "product detail keeps fit frozen while commerce and explicit actions stay caller-owned",
+    "sha256": "719c8e451a4110b9d8d491c3f431195b45be9189596cb300c026a56c571f73e4",
+    "classification": "R",
+    "reason": "Actual detail body exposes frozen fit plus supplied commerce and explicit action callback; owned detail suppresses purchase CTA. Item overview tests do not exercise detail commerce boundary.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-stage4-attention-ui.test.tsx",
+    "line": 8,
+    "title": "renders an accessible, layout-independent dot only for a pending Routine proposal",
+    "sha256": "dfc036fee641ab8bca13ccbe0d4e48b34c08baa92edbe98a8309a6426b463e7e",
+    "classification": "R",
+    "reason": "Visible accessible pending-proposal attention dot and absent false state, layout-independent position. Client proposal state helpers do not render this navigation marker.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "line": 57,
+    "title": "loads a strict owner, plan, and portfolio-scoped v3 snapshot for downstream presentation",
+    "sha256": "a020e632201fa829ca79352cc40a5c44e786e44e76fd2ca73cb99318bf73ea46",
+    "classification": "C",
+    "reason": "C2: exact same v3Snapshot/id triple is loaded by existing real GET. Transfer ordered portfolio-table eq receipt and schemaVersion; retained name is already asserted as exact one-element array.",
+    "readyCut": true
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "line": 85,
+    "title": "uses v3-only labels for a replacement and an informed override, preserving legacy wording",
+    "sha256": "7a698f5fc464d38cd8c8ef8a14b9ebc7af8747a0c18ca692031751a01b43f664",
+    "classification": "R",
+    "reason": "Keep live fitLabelFor v3 informed_override and null legacy contracts pending optional dormant-method decision; if plannedLabelFor is retired, remove only its two obsolete assertions. Current actual card calls fitLabelFor.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "line": 99,
+    "title": "presents v4 replacement metadata while leaving retained inventory display-only",
+    "sha256": "4c7bb24894b4d60b0a405cf95f467f0efc956d306649f2bc60b05c084ee5a49e",
+    "classification": "R",
+    "reason": "v4 parser/presentation preserves retained inventory as display-only exact data and schema4; v3 GET cannot prove v4 branch. Remove only obsolete plannedLabelFor assertion if optional retirement accepted.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "line": 140,
+    "title": "fails closed when a stored portfolio snapshot is not strict",
+    "sha256": "b3ba40d31fac7e2e1bfad95ae070700a0a11c37c45e2edd6b314a8e6f2048d7e",
+    "classification": "R",
+    "reason": "Strict unknown-field stored snapshot rejects. Healthy API fake returning valid v3 schema cannot prove malformed-storage fail-closed behavior.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "line": 154,
+    "title": "marks a v3 pending-source replacement as Noch kaufen even without a retained catalog product",
+    "sha256": "64bc4c7c2a4ffcd93f3e823b2cd8e2c2afc04f1b5067ebfa419764baa63532f6",
+    "classification": "D",
+    "reason": "D1 conditional: entire sole assertion is unused plannedLabelFor acquisition copy. categoryResolutions is validated structurally but not read by this label projection; no separate current pending-to-ready business oracle here. History explicitly retained this future seam, so excluded from six ready cuts.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "line": 185,
+    "title": "marks a v3 planned purchase without an owned source as Noch kaufen",
+    "sha256": "03bccca8781d511d2c4cd3eab5653bba669c86e964550a0cf84fff2190482d93",
+    "classification": "R",
+    "reason": "Preserve exact live plannedPurchaseDecisionKeys JSON projection for no-owned-source planned purchase. Retiring unused label must not delete live field assertion or this distinct parser input.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "line": 220,
+    "title": "carries a server-derived deferral reason keyed by its decision, dropping capture-level reasons without one",
+    "sha256": "307f0d29ff8d02dc83b4ba98f9483143cc104d8db0bcefb175052c3e0121c7ef",
+    "classification": "R",
+    "reason": "Three server deferral reasons map by decision key; ordinary planned gap without reason is excluded. Card fixture directly supplies map and cannot catch reader dropping or miskeying it.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "line": 272,
+    "title": "presents one retained owned product when the same product filled multiple replaced roles",
+    "sha256": "5369934d6e275e68d54ec266a395add4f948899d6c43c326ebd21780f737d382",
+    "classification": "R",
+    "reason": "One userProductId serving two replaced roles deduplicates retained products while retaining both decision keys; default single-role GET cannot catch deduplication regression.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "line": 304,
+    "title": "profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays",
+    "sha256": "86a0a378d306167a7e3b660b60668ea61a2523be190cf0d09932c992dab5223b",
+    "classification": "R",
+    "reason": "Existing actual authenticated GET obtains active plan→version→portfolio and returns no-store JSON; transfer C2 scope receipts into existing query observations, no new load calls.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/personal-plan-portfolio-presentation.test.ts",
+    "line": 351,
+    "title": "profile presentation API rejects unauthenticated reads",
+    "sha256": "7b467be752dcbed9a38f134b256a3c4b7f27db0390426f085f837d65826fc728",
+    "classification": "R",
+    "reason": "Unauthenticated GET returns401 and throws if client construction attempted; authenticated keeper cannot detect unauthorized DB acquisition.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "line": 46,
+    "title": "routine card visuals map every shaped card kind to a state action",
+    "sha256": "1da9748eb6d87d9f74aab71184ef4d2a42b430f6f913ef9148c8ef698748a0f1",
+    "classification": "R",
+    "reason": "Live RoutineCard uses visual action map; six kinds and legacy text-only exception produce distinct actions/labels/dot. Stage4 cards use another component/model.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "line": 69,
+    "title": "routine card status descriptions stay German per kind",
+    "sha256": "6997eeda86cd25e52e1dc949be7b5b1303b9807f9da370cc2ae993ff14b2719b",
+    "classification": "R",
+    "reason": "Live chat trigger consumes German reason descriptions; pending and suggestion text are protocol payloads as well as display strings, not unused presentation exports.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "line": 74,
+    "title": "frequency model exposes stable slider stops, target band, and compact Chaarlie marker",
+    "sha256": "5e0ead3d5d6c582a9caf1a6d9e4abd91c6a04fd7d55bfa2084208b98e363160b",
+    "classification": "R",
+    "reason": "Live frequency control uses exact slider stops/band/preferred coordinates and below-target label; scalar cadence UI uses different model and cannot catch geometry regression.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "line": 99,
+    "title": "frequency model falls back to the preferred target when the user has no current value",
+    "sha256": "0731da250332c330d6ef2e3287292f73f27b50ad26692cbf598cf9b113c71ffd",
+    "classification": "R",
+    "reason": "Missing current frequency falls back to preferred value while preserving Nicht gesetzt current label; positive current frequency branch cannot catch misleading ownership of recommendation.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "line": 118,
+    "title": "routine product drawer receives loaded profile context",
+    "sha256": "8b59f663155d4d5f5d87ff24643d10ef32ad47700e286af97e6dc40b89de22bc",
+    "classification": "R",
+    "reason": "Source guard pins loaded profile prop rather than literal null at real legacy drawer caller. Limited wiring oracle, not proof that loaded profile is non-null; no same-input mounted keeper located.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "line": 145,
+    "title": "Gemerkt section: defaults to hidden (flag-off byte-identity) and fetches only when merklisteEnabled",
+    "sha256": "94a651296c4528b11c6b39a210a94295869d037a7940fb30761cc9e24c93f3be",
+    "classification": "R",
+    "reason": "Current Gemerkt effect has flag-off early return and no-store endpoint contract. Static guard is rename-sensitive and does not prove actual no-fetch; no supported stronger same-input mounted observation established.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "line": 152,
+    "title": "Gemerkt section: the section anchor matches the scanner bookmark's deep-link target",
+    "sha256": "daae94bf002dee0bf5465deb7f43c71e0ed61479ba719844e9628745a352374c",
+    "classification": "R",
+    "reason": "Current scanner navigation destination and real section id must match; these two files own separate halves. No mounted deep-link keeper in audited cohort establishes both.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "line": 160,
+    "title": "Gemerkt section: graduation hands off to the EXISTING save/move sheet — no direct write from this section",
+    "sha256": "f9ed23fbe2ac4ad6587738af04f9bd7aa7b0032ced85e2d12e5aa428fa44deed",
+    "classification": "R",
+    "reason": "Current save-sheet delegation and DELETE-only direct save boundary; direct route tests cannot catch component accidentally issuing a POST before user selection. Static limitation retained explicitly.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "line": 177,
+    "title": "Gemerkt section: a routine graduation (not a plain removal) tells the caller WHICH product graduated (F6, Z3)",
+    "sha256": "0ce45716bba30dca40df5e05ba5ca61063014700a8516ae495381933a8da0f30",
+    "classification": "R",
+    "reason": "Actual graduation condition sends productId/name only for routine destination; plain removal must not notify. Existing lower route storage tests cannot prove client identity handoff.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "line": 201,
+    "title": "PersonalPlanRoutineClient: graduation hands off into the existing sync/proposal/editor flow, with an honest in-progress state (Z3)",
+    "sha256": "4ccfb0828313d34dfca11b0cc186d4c00317d31e147b737cbeeda99623fba397",
+    "classification": "R",
+    "reason": "Current graduation sync, proposal/unchanged/pending presentation and editor entry. Static guard can miss runtime order but protects distinct caller wiring not exercised by direct helpers.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "line": 235,
+    "title": "RoutinePageClient (legacy): wires the shared Gemerkt section with the server-derived flag and refreshes the routine list on graduation (F6)",
+    "sha256": "bd56994f2bbbb98f4d4d709adc64a039d0b59dfe32d3c1fdc4ac2788efde776e",
+    "classification": "R",
+    "reason": "Legacy caller passes flag and refresh callback to shared section. Personal Plan caller is separate, so its test cannot catch legacy omission.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "line": 244,
+    "title": "PersonalPlanRoutineClient: wires the shared Gemerkt section too — this is the branch every freemium/subscriber premium user actually resolves to (F1)",
+    "sha256": "8625f25cfce12d6adcc842beeff505ad188b7317b76d3fbba0a985c0209152cf",
+    "classification": "R",
+    "reason": "Personal Plan client/page chain passes flag, actual graduation callback and keepsake readOnly. Legacy call cannot catch dropped prop in this chain.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "line": 258,
+    "title": "RoutinePage: BOTH the legacy and personal-plan branches pass the server-derived flag, not a client-side read (F1)",
+    "sha256": "fc1ff78982fcba873c8e46a72543e4e4080ae690d3513fb16c38a26768f77c12",
+    "classification": "F",
+    "reason": "F2: BOTH branch claim is false-pass prone: unscoped merklisteEnabled regex can match legacy call (or keepsake branch) if premium PersonalPlan prop is removed. Retain declaration pending scoped oracle repair; no new quota.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "line": 269,
+    "title": "routine trigger seeds are sent from session storage with the route conversation id",
+    "sha256": "aa654ea86cb0912c7d1d5b648065af0e367e394291ba8d6bf6b8380d2a609dbe",
+    "classification": "R",
+    "reason": "Chat route seed uses sessionStorage, explicit conversation id, load-before-clear wiring and updates hook target id; Routine SSR does not exercise chat protocol. Source-only limit acknowledged.",
+    "readyCut": false
+  },
+  {
+    "file": "tests/routine-page-ui.test.tsx",
+    "line": 289,
+    "title": "chat product drawer hydrates routine membership before rendering the action",
+    "sha256": "1c88c264902b9917d4798c853020ac9211bf9eae0fba96b2f85fdb23ad23ac14",
+    "classification": "R",
+    "reason": "Chat drawer maps productId to existing usage and membership after routine read. Routine drawer callback is another caller; source guard does not prove effect completion timing.",
+    "readyCut": false
+  }
+]

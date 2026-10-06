@@ -1,0 +1,704 @@
+[
+  {
+    "original": "/tmp/test-audit-canonical-identity31/candidates.json",
+    "archived": "proposal/candidates.json",
+    "sha256": "75b382bc0e6ee0a78e2eed5c049a0e117ef6feddc5ee9bbfe110646124e3029b",
+    "bytes": 7488
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/commands.json",
+    "archived": "proposal/commands.json",
+    "sha256": "a070c2e51cdbdce79a0f62008dad7f45677aea8e5033a45008893c7e47d9cc02",
+    "bytes": 566
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/complete-ledger.md",
+    "archived": "proposal/complete-ledger.md",
+    "sha256": "3d099a443796f41c3f49e40fee8f14c302b932546c06795d013d2723589cc3f0",
+    "bytes": 21407
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/complete.diff",
+    "archived": "proposal/complete.diff",
+    "sha256": "e99e88e5a235da8dfd0eb3d46b152b890e14271982b888d3d9b224f9ddc14471",
+    "bytes": 1347
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/controls.json",
+    "archived": "proposal/controls.json",
+    "sha256": "07cdc56ee7cb985fbbe1d5d379eca533984c89ff5795c5d3a73fe70d60f4f00f",
+    "bytes": 7512
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/handoff.json",
+    "archived": "proposal/handoff.json",
+    "sha256": "33b7bbe5e4a4f149c0418bdc4482df976fc871279d56593a05052da438bee097",
+    "bytes": 2074
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/held-findings.json",
+    "archived": "proposal/held-findings.json",
+    "sha256": "173560bb7fc31c51a6e83e7c8949ca67bcccc3ec95faa50fe504a7ff419cb469",
+    "bytes": 1051
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/layer-plan.md",
+    "archived": "proposal/layer-plan.md",
+    "sha256": "983eb7dddc9cedeb63c2ad066200dbde46fc5073d59447b30838944101752edd",
+    "bytes": 7001
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/ledger.json",
+    "archived": "proposal/ledger.json",
+    "sha256": "2fda0119c97a903abb3ec023ab2b898654b6a056f917eb3abcb6390992d47672",
+    "bytes": 44899
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/manifest.json",
+    "archived": "proposal/manifest.json",
+    "sha256": "0c952af62b35a52af39802a34879f5a697d9e26cfdcea38369e6602d334966b7",
+    "bytes": 20360
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/prepare.cjs",
+    "archived": "proposal/prepare.cjs.txt",
+    "sha256": "b97c80eb9bc09cc5c48e5353e7b9bcbc8e3443449905b45d56efee68871776d9",
+    "bytes": 12245
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/sites.json",
+    "archived": "proposal/sites.json",
+    "sha256": "1cf561de059c615f937876e4e76506ca4abb8be2caaec99665794d67c5b68c11",
+    "bytes": 186411
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/snapshots/before/tests/product-identity-correction.test.ts",
+    "archived": "proposal/snapshots/before/tests/product-identity-correction.test.ts.txt",
+    "sha256": "7a47c34d36387609bd4eac938b6b6dd8c188b88d0ffff1e5856a9e8667e85a46",
+    "bytes": 2004
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/snapshots/before/tests/product-identity-normalize.test.ts",
+    "archived": "proposal/snapshots/before/tests/product-identity-normalize.test.ts.txt",
+    "sha256": "512c74fa5948366cf8249991fe58a6ac490b3f537398d17ef18301a58b2e4e4f",
+    "bytes": 5760
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/snapshots/before/tests/product-identity-resolution.test.ts",
+    "archived": "proposal/snapshots/before/tests/product-identity-resolution.test.ts.txt",
+    "sha256": "ada0ab7f7149b4bdf5a44d09069e3667677d9395d6385ebb3a3d89ce6f4cdfb7",
+    "bytes": 12635
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/snapshots/before/tests/product-identity-schema.test.ts",
+    "archived": "proposal/snapshots/before/tests/product-identity-schema.test.ts.txt",
+    "sha256": "392cad4a08642b04c4bc4a2e660adad2a25b821b6648fee8c207090d56023f57",
+    "bytes": 6059
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/snapshots/before/tests/product-identity-title.test.ts",
+    "archived": "proposal/snapshots/before/tests/product-identity-title.test.ts.txt",
+    "sha256": "c9e2616cdbb7ee31cf47c7f1f739ac26db03cd9e1882c855d8d1b943cbc709bd",
+    "bytes": 1143
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/snapshots/cut/tests/product-identity-correction.test.ts",
+    "archived": "proposal/snapshots/cut/tests/product-identity-correction.test.ts.txt",
+    "sha256": "7a47c34d36387609bd4eac938b6b6dd8c188b88d0ffff1e5856a9e8667e85a46",
+    "bytes": 2004
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/snapshots/cut/tests/product-identity-normalize.test.ts",
+    "archived": "proposal/snapshots/cut/tests/product-identity-normalize.test.ts.txt",
+    "sha256": "512c74fa5948366cf8249991fe58a6ac490b3f537398d17ef18301a58b2e4e4f",
+    "bytes": 5760
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/snapshots/cut/tests/product-identity-resolution.test.ts",
+    "archived": "proposal/snapshots/cut/tests/product-identity-resolution.test.ts.txt",
+    "sha256": "edbf3f82a925f46eed9e85104ac8f283ed13192de8e8784d516bc4f9b9927dfb",
+    "bytes": 12168
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/snapshots/cut/tests/product-identity-schema.test.ts",
+    "archived": "proposal/snapshots/cut/tests/product-identity-schema.test.ts.txt",
+    "sha256": "392cad4a08642b04c4bc4a2e660adad2a25b821b6648fee8c207090d56023f57",
+    "bytes": 6059
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/snapshots/cut/tests/product-identity-title.test.ts",
+    "archived": "proposal/snapshots/cut/tests/product-identity-title.test.ts.txt",
+    "sha256": "c9e2616cdbb7ee31cf47c7f1f739ac26db03cd9e1882c855d8d1b943cbc709bd",
+    "bytes": 1143
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/snapshots/transfer/tests/product-identity-correction.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/product-identity-correction.test.ts.txt",
+    "sha256": "7a47c34d36387609bd4eac938b6b6dd8c188b88d0ffff1e5856a9e8667e85a46",
+    "bytes": 2004
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/snapshots/transfer/tests/product-identity-normalize.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/product-identity-normalize.test.ts.txt",
+    "sha256": "512c74fa5948366cf8249991fe58a6ac490b3f537398d17ef18301a58b2e4e4f",
+    "bytes": 5760
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/snapshots/transfer/tests/product-identity-resolution.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/product-identity-resolution.test.ts.txt",
+    "sha256": "7b9c4752c20736e753132490431e577c614536537f10ddbb9eb26276d5ce4d58",
+    "bytes": 12725
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/snapshots/transfer/tests/product-identity-schema.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/product-identity-schema.test.ts.txt",
+    "sha256": "392cad4a08642b04c4bc4a2e660adad2a25b821b6648fee8c207090d56023f57",
+    "bytes": 6059
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/snapshots/transfer/tests/product-identity-title.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/product-identity-title.test.ts.txt",
+    "sha256": "c9e2616cdbb7ee31cf47c7f1f739ac26db03cd9e1882c855d8d1b943cbc709bd",
+    "bytes": 1143
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/static-receipt.json",
+    "archived": "proposal/static-receipt.json",
+    "sha256": "d2e51ffda9b99b44af92b14c7bb9e89aae2097d3f8d5de360f4f62979841d33d",
+    "bytes": 697
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/transfer.diff",
+    "archived": "proposal/transfer.diff",
+    "sha256": "07c8961c979568cc42276e5bea0898a253925f9ee579e5e3daf59ab834c82440",
+    "bytes": 481
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31/write-report.py",
+    "archived": "proposal/write-report.py.txt",
+    "sha256": "755b6ddc2a2d5624b5a291dc8d02d6575d559157d0bd3e4b5d97ad909c17ca97",
+    "bytes": 25155
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/README.md",
+    "archived": "operator/README.md",
+    "sha256": "10acccfa05cbfc4e976c92dcaf8f697a74a6c9c7138ef5d169d88a91702733a9",
+    "bytes": 8262
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/controls-check.log",
+    "archived": "operator/controls-check.log",
+    "sha256": "f677b3e4b2a92062625e7fef61c91e45d9acd0a510d895164ae61f665b30016b",
+    "bytes": 363
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/editor-check.log",
+    "archived": "operator/editor-check.log",
+    "sha256": "a6a8dee99a52faf8a486d1957008954954f74d344f008336a9f5538a18203453",
+    "bytes": 405
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-apply-cut-xrmJJf/intent.json",
+    "archived": "operator/operator-apply-cut-xrmJJf/intent.json",
+    "sha256": "321124b0f5277111df693b5c2483c5c8d9008a863435aa9f1c0f55356b886556",
+    "bytes": 1771
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-apply-cut-xrmJJf/originals/tests/product-identity-correction.test.ts",
+    "archived": "operator/operator-apply-cut-xrmJJf/originals/tests/product-identity-correction.test.ts.txt",
+    "sha256": "7a47c34d36387609bd4eac938b6b6dd8c188b88d0ffff1e5856a9e8667e85a46",
+    "bytes": 2004
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-apply-cut-xrmJJf/originals/tests/product-identity-normalize.test.ts",
+    "archived": "operator/operator-apply-cut-xrmJJf/originals/tests/product-identity-normalize.test.ts.txt",
+    "sha256": "512c74fa5948366cf8249991fe58a6ac490b3f537398d17ef18301a58b2e4e4f",
+    "bytes": 5760
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-apply-cut-xrmJJf/originals/tests/product-identity-resolution.test.ts",
+    "archived": "operator/operator-apply-cut-xrmJJf/originals/tests/product-identity-resolution.test.ts.txt",
+    "sha256": "7b9c4752c20736e753132490431e577c614536537f10ddbb9eb26276d5ce4d58",
+    "bytes": 12725
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-apply-cut-xrmJJf/originals/tests/product-identity-schema.test.ts",
+    "archived": "operator/operator-apply-cut-xrmJJf/originals/tests/product-identity-schema.test.ts.txt",
+    "sha256": "392cad4a08642b04c4bc4a2e660adad2a25b821b6648fee8c207090d56023f57",
+    "bytes": 6059
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-apply-cut-xrmJJf/originals/tests/product-identity-title.test.ts",
+    "archived": "operator/operator-apply-cut-xrmJJf/originals/tests/product-identity-title.test.ts.txt",
+    "sha256": "c9e2616cdbb7ee31cf47c7f1f739ac26db03cd9e1882c855d8d1b943cbc709bd",
+    "bytes": 1143
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-apply-cut-xrmJJf/receipt.json",
+    "archived": "operator/operator-apply-cut-xrmJJf/receipt.json",
+    "sha256": "dbca3da689f563c22cd78e75b379df47e85218eb67fca50d81a2509b345962b1",
+    "bytes": 1302
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-apply-transfer-MoLP8E/intent.json",
+    "archived": "operator/operator-apply-transfer-MoLP8E/intent.json",
+    "sha256": "f2032db24e060f5d78c30ae6345253e64e841386291fc96bcdc304a060a83fed",
+    "bytes": 1520
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-apply-transfer-MoLP8E/originals/tests/product-identity-correction.test.ts",
+    "archived": "operator/operator-apply-transfer-MoLP8E/originals/tests/product-identity-correction.test.ts.txt",
+    "sha256": "7a47c34d36387609bd4eac938b6b6dd8c188b88d0ffff1e5856a9e8667e85a46",
+    "bytes": 2004
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-apply-transfer-MoLP8E/originals/tests/product-identity-normalize.test.ts",
+    "archived": "operator/operator-apply-transfer-MoLP8E/originals/tests/product-identity-normalize.test.ts.txt",
+    "sha256": "512c74fa5948366cf8249991fe58a6ac490b3f537398d17ef18301a58b2e4e4f",
+    "bytes": 5760
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-apply-transfer-MoLP8E/originals/tests/product-identity-resolution.test.ts",
+    "archived": "operator/operator-apply-transfer-MoLP8E/originals/tests/product-identity-resolution.test.ts.txt",
+    "sha256": "ada0ab7f7149b4bdf5a44d09069e3667677d9395d6385ebb3a3d89ce6f4cdfb7",
+    "bytes": 12635
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-apply-transfer-MoLP8E/originals/tests/product-identity-schema.test.ts",
+    "archived": "operator/operator-apply-transfer-MoLP8E/originals/tests/product-identity-schema.test.ts.txt",
+    "sha256": "392cad4a08642b04c4bc4a2e660adad2a25b821b6648fee8c207090d56023f57",
+    "bytes": 6059
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-apply-transfer-MoLP8E/originals/tests/product-identity-title.test.ts",
+    "archived": "operator/operator-apply-transfer-MoLP8E/originals/tests/product-identity-title.test.ts.txt",
+    "sha256": "c9e2616cdbb7ee31cf47c7f1f739ac26db03cd9e1882c855d8d1b943cbc709bd",
+    "bytes": 1143
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-apply-transfer-MoLP8E/receipt.json",
+    "archived": "operator/operator-apply-transfer-MoLP8E/receipt.json",
+    "sha256": "c6f6dcd73a3ee3176fe52c3cc03c85011478069979bdf82f1f2e147277bf33be",
+    "bytes": 1061
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-candidates.json",
+    "archived": "operator/operator-candidates.json",
+    "sha256": "60a56ae286fcfa92798961a44625addb7c04eebb1b5386a393d01a3290b7ad77",
+    "bytes": 5405
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-controls-normalized.json",
+    "archived": "operator/operator-controls-normalized.json",
+    "sha256": "f98083a8833f9bcbde9a92fbfeefd24dcabdd6cbf1d3beeeefda2a2fe651e406",
+    "bytes": 7909
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-edit.cjs",
+    "archived": "operator/operator-edit.cjs.txt",
+    "sha256": "493d3c6899932ec61e4d6ac27f87185467b84dad4951c14fc99d4154f5d69794",
+    "bytes": 3530
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-evidence.json",
+    "archived": "operator/operator-evidence.json",
+    "sha256": "bd68b81d9ccd00e65b6c1c759f933aed2f578a6f07c0480328dbd11bc8269a33",
+    "bytes": 2014
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-guard.cjs",
+    "archived": "operator/operator-guard.cjs.txt",
+    "sha256": "9b17aeba408d676155dce866907ffa7f8b62eba4c2cdc02a59235369ad63fc38",
+    "bytes": 13050
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/all-originals/src/lib/product-identity/brand-resolution.ts",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/all-originals/src/lib/product-identity/brand-resolution.ts.txt",
+    "sha256": "5182615a8419b477e73b0a00e05e78bb9436d8b7ad9c3c7f2d35850f65e48b8a",
+    "bytes": 13993
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/all-originals/tests/product-identity-correction.test.ts",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/all-originals/tests/product-identity-correction.test.ts.txt",
+    "sha256": "7a47c34d36387609bd4eac938b6b6dd8c188b88d0ffff1e5856a9e8667e85a46",
+    "bytes": 2004
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/all-originals/tests/product-identity-normalize.test.ts",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/all-originals/tests/product-identity-normalize.test.ts.txt",
+    "sha256": "512c74fa5948366cf8249991fe58a6ac490b3f537398d17ef18301a58b2e4e4f",
+    "bytes": 5760
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/all-originals/tests/product-identity-resolution.test.ts",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/all-originals/tests/product-identity-resolution.test.ts.txt",
+    "sha256": "7b9c4752c20736e753132490431e577c614536537f10ddbb9eb26276d5ce4d58",
+    "bytes": 12725
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/all-originals/tests/product-identity-schema.test.ts",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/all-originals/tests/product-identity-schema.test.ts.txt",
+    "sha256": "392cad4a08642b04c4bc4a2e660adad2a25b821b6648fee8c207090d56023f57",
+    "bytes": 6059
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/all-originals/tests/product-identity-title.test.ts",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/all-originals/tests/product-identity-title.test.ts.txt",
+    "sha256": "c9e2616cdbb7ee31cf47c7f1f739ac26db03cd9e1882c855d8d1b943cbc709bd",
+    "bytes": 1143
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/complete.json",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/complete.json",
+    "sha256": "bbd13ed9e0a98e2994c40d01cecfeefda181524d2c35020b4e3898d76cf14653",
+    "bytes": 7987
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/intent.json",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/intent.json",
+    "sha256": "e92d6915f980edb3705daab9d2462aae66dfa491613eba27df1d1879887f4d63",
+    "bytes": 937
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-confidence/originals/src/lib/product-identity/brand-resolution.ts",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-confidence/originals/src/lib/product-identity/brand-resolution.ts.txt",
+    "sha256": "5182615a8419b477e73b0a00e05e78bb9436d8b7ad9c3c7f2d35850f65e48b8a",
+    "bytes": 13993
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-confidence-after.command.json",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-confidence-after.command.json",
+    "sha256": "f0353e3401c580e201e20a9a21880fb6c57ee712fb4bcac76d3e329eed0c0dcb",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-confidence-after.tap",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-confidence-after.tap",
+    "sha256": "f29ace9bd92e3c88d73320006e8a322778f7a699dd0ce5194e5b8641a7cd4689",
+    "bytes": 343
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-confidence-before.command.json",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-confidence-before.command.json",
+    "sha256": "f0353e3401c580e201e20a9a21880fb6c57ee712fb4bcac76d3e329eed0c0dcb",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-confidence-before.tap",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-confidence-before.tap",
+    "sha256": "e2b0b1eb41d86b4684d5c2604754868850460590b30db140f8444914d72e6fa4",
+    "bytes": 342
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-confidence-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-confidence-fault.command.json",
+    "sha256": "f0353e3401c580e201e20a9a21880fb6c57ee712fb4bcac76d3e329eed0c0dcb",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-confidence-fault.tap",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-confidence-fault.tap",
+    "sha256": "0e0d5e86430b2389987d68426c95d70720d3167f7890e59fca78250029e1a73f",
+    "bytes": 1095
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-match/originals/src/lib/product-identity/brand-resolution.ts",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-match/originals/src/lib/product-identity/brand-resolution.ts.txt",
+    "sha256": "5182615a8419b477e73b0a00e05e78bb9436d8b7ad9c3c7f2d35850f65e48b8a",
+    "bytes": 13993
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-match-after.command.json",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-match-after.command.json",
+    "sha256": "f0353e3401c580e201e20a9a21880fb6c57ee712fb4bcac76d3e329eed0c0dcb",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-match-after.tap",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-match-after.tap",
+    "sha256": "6403b37f3ea5b28545ce1e3ca6f12f0cd9d7748d865f5223e75a32f43ffe8a99",
+    "bytes": 343
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-match-before.command.json",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-match-before.command.json",
+    "sha256": "f0353e3401c580e201e20a9a21880fb6c57ee712fb4bcac76d3e329eed0c0dcb",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-match-before.tap",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-match-before.tap",
+    "sha256": "a94014c2f68ee96d757810b6cd9f322a8bf0cd845c047fa83a73cf378a372c6e",
+    "bytes": 343
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-match-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-match-fault.command.json",
+    "sha256": "f0353e3401c580e201e20a9a21880fb6c57ee712fb4bcac76d3e329eed0c0dcb",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-match-fault.tap",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-match-fault.tap",
+    "sha256": "90112c6193835c97eeced546eb63fef80ee6ef0e6237cf354a56298f394091a7",
+    "bytes": 1097
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-raw-preservation/originals/src/lib/product-identity/brand-resolution.ts",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-raw-preservation/originals/src/lib/product-identity/brand-resolution.ts.txt",
+    "sha256": "5182615a8419b477e73b0a00e05e78bb9436d8b7ad9c3c7f2d35850f65e48b8a",
+    "bytes": 13993
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-raw-preservation-after.command.json",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-raw-preservation-after.command.json",
+    "sha256": "f0353e3401c580e201e20a9a21880fb6c57ee712fb4bcac76d3e329eed0c0dcb",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-raw-preservation-after.tap",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-raw-preservation-after.tap",
+    "sha256": "c53e9545a99af916e9167b16ee70caafc1542768f60c082d9a8276e0f40bbabb",
+    "bytes": 343
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-raw-preservation-before.command.json",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-raw-preservation-before.command.json",
+    "sha256": "f0353e3401c580e201e20a9a21880fb6c57ee712fb4bcac76d3e329eed0c0dcb",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-raw-preservation-before.tap",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-raw-preservation-before.tap",
+    "sha256": "51b04d46f3d3fc9999f1906d8ac5af2f925b4dd6bc913fc16c1f78bb57299cfa",
+    "bytes": 339
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-raw-preservation-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-raw-preservation-fault.command.json",
+    "sha256": "f0353e3401c580e201e20a9a21880fb6c57ee712fb4bcac76d3e329eed0c0dcb",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-raw-preservation-fault.tap",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-raw-preservation-fault.tap",
+    "sha256": "6259261e818b6bf1c315708f490d3a6788cbeea46fceb1c1462b93684773955e",
+    "bytes": 1263
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-reason/originals/src/lib/product-identity/brand-resolution.ts",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-reason/originals/src/lib/product-identity/brand-resolution.ts.txt",
+    "sha256": "5182615a8419b477e73b0a00e05e78bb9436d8b7ad9c3c7f2d35850f65e48b8a",
+    "bytes": 13993
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-reason-after.command.json",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-reason-after.command.json",
+    "sha256": "f0353e3401c580e201e20a9a21880fb6c57ee712fb4bcac76d3e329eed0c0dcb",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-reason-after.tap",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-reason-after.tap",
+    "sha256": "522e74feab6ec5e5dc63d1e20ef3f6ae24d73aaddfe06b0d00986877566974b4",
+    "bytes": 343
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-reason-before.command.json",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-reason-before.command.json",
+    "sha256": "f0353e3401c580e201e20a9a21880fb6c57ee712fb4bcac76d3e329eed0c0dcb",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-reason-before.tap",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-reason-before.tap",
+    "sha256": "4cc79c35dd2a580c0057858e565383f59fca19bff544e460d709d42579d9c6a8",
+    "bytes": 343
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-reason-fault.command.json",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-reason-fault.command.json",
+    "sha256": "f0353e3401c580e201e20a9a21880fb6c57ee712fb4bcac76d3e329eed0c0dcb",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/none-reason-fault.tap",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/none-reason-fault.tap",
+    "sha256": "f2a8435524c332aee989ab7a56d2f1ce2855390f1e7ad606022f5964ad7c8176",
+    "bytes": 1166
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-mutations-transfer-LcVTdb/receipt.json",
+    "archived": "operator/operator-mutations-transfer-LcVTdb/receipt.json",
+    "sha256": "c94d4468241ab560fb62914cb7decce0931a50c8048dd4f9daedcb7d2af40d39",
+    "bytes": 56532
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-pins.json",
+    "archived": "operator/operator-pins.json",
+    "sha256": "132c346bff375008376b55eb0499f0701fcf11dfa905ad34c0842e29c2d19e0a",
+    "bytes": 239376
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-proof.cjs",
+    "archived": "operator/operator-proof.cjs.txt",
+    "sha256": "dce1bd197a4a49b298ab4cb575994462aeabd47dc21c1f2c26537d43c5a9c670",
+    "bytes": 6029
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-readonly-preload.cjs",
+    "archived": "operator/operator-readonly-preload.cjs.txt",
+    "sha256": "e1d17e207ee830cae3197a07bb0c142ba1288dc972958cefac0951abbfda4d6c",
+    "bytes": 2054
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-run-controls.cjs",
+    "archived": "operator/operator-run-controls.cjs.txt",
+    "sha256": "321c89cea7f6dc796d1cf7e14ffaa3237e346b7b3bacdd790ada4308f4ce5fe2",
+    "bytes": 8057
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/operator-selected-closure.json",
+    "archived": "operator/operator-selected-closure.json",
+    "sha256": "be98473cf36d952c9139290bb7f6299ab8343db09892cdf743fadbad8a0a99e1",
+    "bytes": 14009
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/prepare-data-pins.cjs",
+    "archived": "operator/prepare-data-pins.cjs.txt",
+    "sha256": "7700625c42dbb80871cd6987e03356353d39ff6e38477ac76c83f689819c76c5",
+    "bytes": 11682
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/static-receipt.json",
+    "archived": "operator/static-receipt.json",
+    "sha256": "88c430c78d666bf48f5010b1a2d65720483ad70387e307131221ae97b5122389",
+    "bytes": 3327
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/syntax-check.log",
+    "archived": "operator/syntax-check.log",
+    "sha256": "0725a985643eae034a3e43f92b5e28bd8369c197e4bf465736dc6f066a14a036",
+    "bytes": 295
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/template-delta.patch",
+    "archived": "operator/template-delta.patch",
+    "sha256": "b5eef4adb372ae06a98185d3ea93cfe2d64d984135e244780c6256c7e57555ce",
+    "bytes": 16825
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/template-originals/operator-edit.cjs",
+    "archived": "operator/template-originals/operator-edit.cjs.txt",
+    "sha256": "4d0d57e7627d4887d9674c9144eec6dadec654e3535fb1d69f7e94d1fef6e116",
+    "bytes": 3530
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/template-originals/operator-guard.cjs",
+    "archived": "operator/template-originals/operator-guard.cjs.txt",
+    "sha256": "138b98bcc23fb557728710eda4bfa40d187db09c57a441faf06603719cf01066",
+    "bytes": 13803
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/template-originals/operator-proof.cjs",
+    "archived": "operator/template-originals/operator-proof.cjs.txt",
+    "sha256": "ac2caa50115e31e56bad616e602cdeda204544042bbe2529e49c399c3506d0d5",
+    "bytes": 5725
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/template-originals/operator-readonly-preload.cjs",
+    "archived": "operator/template-originals/operator-readonly-preload.cjs.txt",
+    "sha256": "e1d17e207ee830cae3197a07bb0c142ba1288dc972958cefac0951abbfda4d6c",
+    "bytes": 2054
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/template-originals/operator-run-controls.cjs",
+    "archived": "operator/template-originals/operator-run-controls.cjs.txt",
+    "sha256": "1e9282a217065bdd1fa3a1627ddc0227ade4f213d35430a224c74c4db7440fee",
+    "bytes": 8059
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/template-originals/reviewed-policy-pins.json",
+    "archived": "operator/template-originals/reviewed-policy-pins.json",
+    "sha256": "37dcec58febab9809b5a64510fd18a288f6b3756c9a19bb7a00cfadfbba8c20f",
+    "bytes": 1024924
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/template-provenance.json",
+    "archived": "operator/template-provenance.json",
+    "sha256": "f0d9d11d0155270de9f60910dca1fe94129942642830d1661361ae8a72285588",
+    "bytes": 976
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-tools-c38x2kgl/tool-code-hashes.json",
+    "archived": "operator/tool-code-hashes.json",
+    "sha256": "44264ea82f5482017392f602224fbfca74fe3479c2510d4b64b410ea37cccc5d",
+    "bytes": 1712
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-independent-preservation.md",
+    "archived": "independent/test-audit-canonical-identity31-independent-preservation.md",
+    "sha256": "7ffbc61b3addd637c995f65070ae24a068344485535761aafd2e84cc3999c9c8",
+    "bytes": 10748
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-independent-receipt.json",
+    "archived": "independent/test-audit-canonical-identity31-independent-receipt.json",
+    "sha256": "bad4b835bd2e3222dc4a56e9062cd3a8c595b39df7ac08f8d6557a7ce152478a",
+    "bytes": 25780
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-main-before-native.tap",
+    "archived": "native/test-audit-canonical-identity31-main-before-native.tap",
+    "sha256": "26ac0ea9f2a889c90a4dc72b5660dc09608bf5cc33a3f031e6921d4812922ccb",
+    "bytes": 6331
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-main-before-native.command.json",
+    "archived": "native/test-audit-canonical-identity31-main-before-native.command.json",
+    "sha256": "220ab80987bd4064ea7e137eb9756f393add2c9ba06dd058ed88680a07208c23",
+    "bytes": 469
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-main-before-native.result.json",
+    "archived": "native/test-audit-canonical-identity31-main-before-native.result.json",
+    "sha256": "66175276374fff3f7459d8c34f5e3a7c3b839cb8ce1f6a21270286b0c3d9b3dd",
+    "bytes": 170
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-main-transfer.tap",
+    "archived": "native/test-audit-canonical-identity31-main-transfer.tap",
+    "sha256": "548d0b86979ac53bec269667cc63e91f0f9f962e958caea014a587771565959d",
+    "bytes": 6336
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-main-transfer.command.json",
+    "archived": "native/test-audit-canonical-identity31-main-transfer.command.json",
+    "sha256": "220ab80987bd4064ea7e137eb9756f393add2c9ba06dd058ed88680a07208c23",
+    "bytes": 469
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity31-main-transfer.result.json",
+    "archived": "native/test-audit-canonical-identity31-main-transfer.result.json",
+    "sha256": "66175276374fff3f7459d8c34f5e3a7c3b839cb8ce1f6a21270286b0c3d9b3dd",
+    "bytes": 170
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity30-main-cut.tap",
+    "archived": "native/test-audit-canonical-identity30-main-cut.tap",
+    "sha256": "fe71ed6a70aa377052edb80cd17c9f9e66587c11120f6bb1ff1c7a9d002c88c8",
+    "bytes": 6165
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity30-main-cut.command.json",
+    "archived": "native/test-audit-canonical-identity30-main-cut.command.json",
+    "sha256": "220ab80987bd4064ea7e137eb9756f393add2c9ba06dd058ed88680a07208c23",
+    "bytes": 469
+  },
+  {
+    "original": "/tmp/test-audit-canonical-identity30-main-cut.result.json",
+    "archived": "native/test-audit-canonical-identity30-main-cut.result.json",
+    "sha256": "5eb6211ecef464a8305ee7cf35fbb3cf2d8bc7a2218552599a239a9c5e2f2170",
+    "bytes": 170
+  }
+]

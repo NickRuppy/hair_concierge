@@ -1,0 +1,2 @@
+ee11a80b63e7005ca32e8d460650198e70895c6a 2026-09-24 feat(beratung): iOS comparison table in cockpit; packshots + „So wendest du es an" on the PDF (#609)
+224c0d4752d129ddf7a1e1a66a2308381186d239 2026-09-24 feat(beratung): cockpit depth — product list, research start, step reasoning, property rows (#607)

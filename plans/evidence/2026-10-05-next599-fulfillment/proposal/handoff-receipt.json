@@ -1,0 +1,33 @@
+{
+  "status": "conditional C1 ready for main-only runtime proof; ten F held, zero source cleanup",
+  "files": {
+    "layer-plan.md": "903b17b31a8f4dd5e3ebe907b17f6e0ec96f52fa36918e7f74a455fdafe33a8c",
+    "complete-ledger.md": "7431cc419539b660a5deb454ffd311a10e38ad91c2151e9bdcc0f8cf750eb3c4",
+    "judgments.json": "85c6ca48d445719d2f632eab30ec5d1db65722cf27bfa8832001f36dc5810314",
+    "sites.json": "dcc86cdb00ea30fed278df4bff3bf894c28cccecb536452d63bec8c2945600b7",
+    "candidates.json": "6173bc1dbbe92887932bf530b14e1df3e50357b381791e04dc9e9c298f7570fb",
+    "manifest.json": "d99a84f33b1df17782ecf58aded698d6409927718e962f3920ef28605878dfa7",
+    "controls.json": "c8cade28cfffb0443ca8ea1a4e0287051db7d3223aa3f88f6dc858b35eb9109e",
+    "complete.diff": "a026af30d2bdfd77c3425b88483c38cf6f7e3932e3be14b6805c11f6c3bfa922",
+    "static-check.cjs": "0b39feefbb10b9cc88c09481e2a6e7ef6f5308f17394139e42689c858a53c5cf",
+    "static-check.json": "6f07b57071219b5ba40544c7d042a3666a5e82b3eee21a29e8b98ca3027f943a"
+  },
+  "static": {
+    "ok": true,
+    "counts": {
+      "before": 75,
+      "transfer": 75,
+      "cut": 74
+    },
+    "phaseSnapshots": 24,
+    "unchangedRetainedCallbacks": 73,
+    "changedKeeperCallbacks": 1,
+    "controls": 6,
+    "readsetGuards": 49,
+    "ownerExecution": false,
+    "repositoryWrites": false,
+    "runtimeProof": false
+  },
+  "repositoryEdits": 0,
+  "runtimeRuns": 0
+}

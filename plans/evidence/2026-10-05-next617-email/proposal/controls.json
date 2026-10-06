@@ -1,0 +1,1104 @@
+{
+  "status": "STATIC_ONLY_UNEXECUTED",
+  "controls": [
+    {
+      "id": "annual-subject",
+      "candidate": "C1",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: \"Reminder\", receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData: messageData }",
+        "mutatedSHA256": "d9276a5e482a37c5402537def5e5b21d51492da3d0ea925683bc68f151bf4d08"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.equal(message.subject,",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "strictEqual",
+        "phaseOracles": {
+          "transfer": {
+            "line": 86,
+            "text": "assert.equal(message.subject, \"Dein kostenloser Test endet am 21. September 2026\")",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 86,
+            "text": "assert.equal(message.subject, \"Dein kostenloser Test endet am 21. September 2026\")",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "annual-trial-time",
+      "candidate": "C1",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText.replace(\"12:00 Uhr MESZ\", \"10:00 Uhr UTC\"), htmlBody: renderHtml(messageData), messageData: messageData }",
+        "mutatedSHA256": "7f96f67b6f0cb63671d07263998ead6df33e042c48789de1c9f08fb2ab415d31"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.match(message.receipt_text, /Testende:",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "match",
+        "phaseOracles": {
+          "transfer": {
+            "line": 87,
+            "text": "assert.match(message.receipt_text, /Testende: 21\\. September 2026 um 12:00 Uhr MESZ/)",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 87,
+            "text": "assert.match(message.receipt_text, /Testende: 21\\. September 2026 um 12:00 Uhr MESZ/)",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "annual-first-amount",
+      "candidate": "C1",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText.replace(\"69,99\", \"0,00\"), htmlBody: renderHtml(messageData), messageData: messageData }",
+        "mutatedSHA256": "48bd410cb1ea5bf0cea2b6d87fe846c3e082efe1d43d48c99dc03e9c006a9fb6"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.match(message.receipt_text, /Erste Zahlung:",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "match",
+        "phaseOracles": {
+          "transfer": {
+            "line": 88,
+            "text": "assert.match(message.receipt_text, /Erste Zahlung: 69,99\\s*€ am 21\\. September 2026/)",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 88,
+            "text": "assert.match(message.receipt_text, /Erste Zahlung: 69,99\\s*€ am 21\\. September 2026/)",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "annual-renewal",
+      "candidate": "C1",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText.replace(\"99,99\", \"0,00\"), htmlBody: renderHtml(messageData), messageData: messageData }",
+        "mutatedSHA256": "a15d43c982f30873e7deee0126b08daf1122cf7557a9794cd1a0b974f4ae0206"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.match(message.receipt_text, /Jahresmitgliedschaft:",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "match",
+        "phaseOracles": {
+          "transfer": {
+            "line": 89,
+            "text": "assert.match(message.receipt_text, /Jahresmitgliedschaft: danach 99,99\\s*€ jährlich\\./)",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 89,
+            "text": "assert.match(message.receipt_text, /Jahresmitgliedschaft: danach 99,99\\s*€ jährlich\\./)",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "annual-automatic-copy",
+      "candidate": "C1",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText.replace(\"Nach dem Test beginnt dein gewählter Tarif automatisch\", \"Dein Tarif startet später\"), htmlBody: renderHtml(messageData), messageData: messageData }",
+        "mutatedSHA256": "489fc356af1046d96ac94a4d18a30147dae107de81e001a4551788b7c79415a5"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.match(message.receipt_text, /Nach dem Test",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "match",
+        "phaseOracles": {
+          "transfer": {
+            "line": 90,
+            "text": "assert.match(message.receipt_text, /Nach dem Test beginnt dein gewählter Tarif automatisch/)",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 90,
+            "text": "assert.match(message.receipt_text, /Nach dem Test beginnt dein gewählter Tarif automatisch/)",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "annual-cancel-copy-link",
+      "candidate": "C1",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText.replace(\"Vor Testende kündigen: https://chaarlie.de/kuendigen\", \"Vor Testende kündigen: https://chaarlie.de/profile\"), htmlBody: renderHtml(messageData), messageData: messageData }",
+        "mutatedSHA256": "6f3eff80200635c1a22e5b0cce9b6a1221e005452422bd39cb660f4e7f30fea5"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.match(message.receipt_text, /Vor Testende",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "match",
+        "phaseOracles": {
+          "transfer": {
+            "line": 91,
+            "text": "assert.match(message.receipt_text, /Vor Testende kündigen: https:\\/\\/chaarlie\\.de\\/kuendigen/)",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 91,
+            "text": "assert.match(message.receipt_text, /Vor Testende kündigen: https:\\/\\/chaarlie\\.de\\/kuendigen/)",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "annual-marketing-contamination",
+      "candidate": "C1",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText + \" Rabatt\", htmlBody: renderHtml(messageData), messageData: messageData }",
+        "mutatedSHA256": "6694288f89f53c9862faa80ecadfd8b80db5def45d01e9a9d4b77813ab90a5dd"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.doesNotMatch(message.receipt_text,",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "doesNotMatch",
+        "phaseOracles": {
+          "transfer": {
+            "line": 92,
+            "text": "assert.doesNotMatch(message.receipt_text, /Rabatt|Angebot|scanner|quiz/i)",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 92,
+            "text": "assert.doesNotMatch(message.receipt_text, /Rabatt|Angebot|scanner|quiz/i)",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "annual-management-data",
+      "candidate": "C1",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData: { ...messageData, management_url: CANCELLATION_URL as typeof MANAGEMENT_URL } }",
+        "mutatedSHA256": "825655cee78695f927c08780ca9f4ce446307d509a4a0b46323668078ad61871"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.equal(message.messageData.management_url,",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "strictEqual",
+        "phaseOracles": {
+          "transfer": {
+            "line": 93,
+            "text": "assert.equal(message.messageData.management_url, \"https://chaarlie.de/profile\")",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 93,
+            "text": "assert.equal(message.messageData.management_url, \"https://chaarlie.de/profile\")",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "annual-cancel-data",
+      "candidate": "C1",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData: { ...messageData, cancellation_url: MANAGEMENT_URL as typeof CANCELLATION_URL } }",
+        "mutatedSHA256": "cc529cdf41192f2a72cf92870f43d1287bfe388070c1a126cf8f7bff48065e9b"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.equal(message.messageData.cancellation_url,",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "strictEqual",
+        "phaseOracles": {
+          "transfer": {
+            "line": 94,
+            "text": "assert.equal(message.messageData.cancellation_url, \"https://chaarlie.de/kuendigen\")",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 94,
+            "text": "assert.equal(message.messageData.cancellation_url, \"https://chaarlie.de/kuendigen\")",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "annual-html-amount",
+      "candidate": "C1",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData).replace(\"69,99\", \"0,00\"), messageData: messageData }",
+        "mutatedSHA256": "d468b279db853742120f44eb46fa5df69f270b5df731eec741eb978010ab5d80"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.match(message.htmlBody, /69,99",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "match",
+        "phaseOracles": {
+          "transfer": {
+            "line": 95,
+            "text": "assert.match(message.htmlBody, /69,99\\s*€/)",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 95,
+            "text": "assert.match(message.htmlBody, /69,99\\s*€/)",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "annual-html-cancel",
+      "candidate": "C1",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData).replace('href=\"https://chaarlie.de/kuendigen\"', 'href=\"https://chaarlie.de/profile\"'), messageData: messageData }",
+        "mutatedSHA256": "9e2c9ebe3bdc34894f346ca262cd9706bd8f554989aaf3f4114c24f4783760a1"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.match(message.htmlBody, /href=",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "match",
+        "phaseOracles": {
+          "transfer": {
+            "line": 96,
+            "text": "assert.match(message.htmlBody, /href=\"https:\\/\\/chaarlie\\.de\\/kuendigen\"/)",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 96,
+            "text": "assert.match(message.htmlBody, /href=\"https:\\/\\/chaarlie\\.de\\/kuendigen\"/)",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "annual-html-postal",
+      "candidate": "C1",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData).replace(\"1111B S Governors Ave # 84075\", \"ADDRESS OMITTED\"), messageData: messageData }",
+        "mutatedSHA256": "20324af9576ec80f1996bdb39daccc61a19c02b07194334df967f5ddd85415d8"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.match(message.htmlBody, /1111B",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "match",
+        "phaseOracles": {
+          "transfer": {
+            "line": 97,
+            "text": "assert.match(message.htmlBody, /1111B S Governors Ave # 84075/)",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 97,
+            "text": "assert.match(message.htmlBody, /1111B S Governors Ave # 84075/)",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "annual-html-script",
+      "candidate": "C2",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData) + \"<script></script>\", messageData: messageData }",
+        "mutatedSHA256": "0a56b0e8e546dc50ddf1efefe7f090c6d79609987b4ebc3a0c45c115196b8d65"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.doesNotMatch(message.htmlBody, /<script",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "doesNotMatch",
+        "phaseOracles": {
+          "transfer": {
+            "line": 99,
+            "text": "assert.doesNotMatch(message.htmlBody, /<script|onerror=/i)",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 99,
+            "text": "assert.doesNotMatch(message.htmlBody, /<script|onerror=/i)",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "annual-html-unresolved-trigger",
+      "candidate": "C2",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData) + \"{{ trigger.subject }}\", messageData: messageData }",
+        "mutatedSHA256": "d009522bae08504bf8ca16c8dcb09d0128fb80748cd65f84bf1b5dc24409de52"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.doesNotMatch(message.htmlBody, /\\{\\{",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "doesNotMatch",
+        "phaseOracles": {
+          "transfer": {
+            "line": 100,
+            "text": "assert.doesNotMatch(message.htmlBody, /\\{\\{\\s*trigger\\./)",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 100,
+            "text": "assert.doesNotMatch(message.htmlBody, /\\{\\{\\s*trigger\\./)",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "annual-html-link-inventory",
+      "candidate": "C2",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData).replace('href=\"https://chaarlie.de/profile\"', 'href=\"https://chaarlie.de/removed\"'), messageData: messageData }",
+        "mutatedSHA256": "8279301b9373bc8db345630283b0e42b050a588b45d40cb971b2a6c60d54f37a"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.deepEqual(\n    Array.from(message.htmlBody.matchAll",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "deepStrictEqual",
+        "phaseOracles": {
+          "transfer": {
+            "line": 101,
+            "text": "assert.deepEqual(",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 101,
+            "text": "assert.deepEqual(",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "annual-trial-data",
+      "candidate": "C2",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData: { ...messageData, trial_end_date: \"wrong date\" } }",
+        "mutatedSHA256": "29e75e181390665e3ba6ea8acbe5f54ebfd825f5c09ae13291e525dbcda93301"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.equal(message.messageData.trial_end_date,",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "strictEqual",
+        "phaseOracles": {
+          "transfer": {
+            "line": 111,
+            "text": "assert.equal(message.messageData.trial_end_date, \"21. September 2026 um 12:00 Uhr MESZ\")",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 111,
+            "text": "assert.equal(message.messageData.trial_end_date, \"21. September 2026 um 12:00 Uhr MESZ\")",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "stripe-charge-data",
+      "candidate": "C3",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData: { ...messageData, first_charge_date: \"22. September 2026\" } }",
+        "mutatedSHA256": "f0956bbd1c84ff62f04cb6bffd4dc9dae40d856e9525412381f171689c27edd7"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.equal(message.messageData.first_charge_date,",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "strictEqual",
+        "phaseOracles": {
+          "transfer": {
+            "line": 113,
+            "text": "assert.equal(message.messageData.first_charge_date, \"21. September 2026\")",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 113,
+            "text": "assert.equal(message.messageData.first_charge_date, \"21. September 2026\")",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "stripe-subject-data",
+      "candidate": "C3",
+      "source": {
+        "file": "src/lib/billing/trial-reminders.ts",
+        "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c",
+        "anchor": {
+          "kind": "function",
+          "name": "buildTrialReminderMessage",
+          "text": "export function buildTrialReminderMessage(value: unknown): TrialReminderMessage {\n  const snapshot = parseTrialRequiredNoticeSnapshot(value, \"contract_confirmation\")\n  if (!snapshot) throw new Error(\"Invalid trial reminder snapshot\")\n\n  const plan = trialPlan(snapshot)\n  const trialEndDate = date(snapshot.trialEndAt)\n  // PayPal collects in a daily batch on the day after the trial end; Stripe\n  // charges at the exact trial-end moment.\n  const firstChargeDate =\n    snapshot.provider === \"paypal\"\n      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))\n      : dateOnly(snapshot.trialEndAt)\n  const firstAmount = money(snapshot.firstAmountMinor)\n  const renewalAmount = money(snapshot.renewalAmountMinor)\n  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`\n  const receiptText = `Dein kostenloser Test endet bald.\\n\\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\\n\\nTestende: ${trialEndDate}\\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\\n\\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\\n\\nMein Abo ansehen: ${MANAGEMENT_URL}\\n\\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\\nDann beginnt kein bezahlter Zeitraum.\\n\\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\\n\\nFragen? Antworte einfach auf diese E-Mail.\\n\\nChaarlie · Haarmony LLC\\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`\n  const messageData: TrialReminderMessageData = {\n    subject,\n    receipt_text: receiptText,\n    trial_end_date: trialEndDate,\n    first_charge_date: firstChargeDate,\n    first_charge_amount: firstAmount,\n    plan_label: plan.label,\n    renewal_amount: renewalAmount,\n    billing_interval_label: plan.intervalLabel,\n    management_url: MANAGEMENT_URL,\n    cancellation_url: CANCELLATION_URL,\n  }\n\n  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }\n}",
+          "sha256": "06cf1f9dc8e650a9a0f39d4cbb739bbae809c6d8aa4792c3641c31951fdd759c"
+        },
+        "from": "  return { subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData }",
+        "to": "  return { subject: subject, receipt_text: receiptText, htmlBody: renderHtml(messageData), messageData: { ...messageData, subject: \"22. September 2026\" } }",
+        "mutatedSHA256": "8c6364a8ebed2ae29053cacd22c7db9213f0c4eb9d91ad5eed6015193d0a5d79"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.match(message.messageData.subject,",
+      "oldDonorExpected": "The corresponding original donor fails its same literal assertion; no old donor runs performed.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "match",
+        "phaseOracles": {
+          "transfer": {
+            "line": 114,
+            "text": "assert.match(message.messageData.subject, /21\\. September 2026/)",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 114,
+            "text": "assert.match(message.messageData.subject, /21\\. September 2026/)",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "meta-aggregate-url",
+      "candidate": "C4",
+      "source": {
+        "file": "src/lib/analytics/page-url.ts",
+        "sha256": "1cdde9d294fca5daf861b63bfb178a4458a6b8fd44d14b37b3d30d05a4551428",
+        "anchor": {
+          "kind": "file",
+          "sha256": "1cdde9d294fca5daf861b63bfb178a4458a6b8fd44d14b37b3d30d05a4551428"
+        },
+        "from": "export const META_OFFER_EVENT_SOURCE_URL = \"https://chaarlie.de/result\"",
+        "to": "export const META_OFFER_EVENT_SOURCE_URL = \"https://chaarlie.de/result/lead-123\"",
+        "mutatedSHA256": "ad8425c5e9ccb988d6fe400592b9dcd62bef912346eb4f0d32521d9bf60f314d"
+      },
+      "keeper": {
+        "file": "tests/meta-offer-view.test.ts",
+        "name": "Meta offer delivery requires recent quiz evidence and constructs the canonical event"
+      },
+      "oraclePrefix": "assert.deepEqual(conversions, [",
+      "oldDonorExpected": "Original exact URL assertion fails; includes literal lead-123 is also false-to-true. Existing actual conversion keeper catches identical value corruption.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "deepStrictEqual",
+        "phaseOracles": {
+          "transfer": {
+            "line": 190,
+            "text": "assert.deepEqual(conversions, [",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 190,
+            "text": "assert.deepEqual(conversions, [",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^Meta offer delivery requires recent quiz evidence and constructs the canonical event$",
+          "tests/meta-offer-view.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    },
+    {
+      "id": "dispatcher-message-substitution",
+      "candidate": "C1-C3-extra-delivery-strength",
+      "source": {
+        "file": "src/lib/billing/trial-reminders-delivery.ts",
+        "sha256": "16417ecc3d002d9905e93302f8e09208d3e3bebaa3c46578d994e7a6f13eaf0e",
+        "anchor": {
+          "kind": "function",
+          "name": "dispatchTrialReminders",
+          "text": "export async function dispatchTrialReminders(overrides: Partial<TrialReminderDependencies> = {}) {\n  const d: TrialReminderDependencies = {\n    enabled: process.env[TRIAL_REMINDERS_ENABLED_ENV] === \"true\",\n    rolloutAt: process.env[TRIAL_REMINDERS_ROLLOUT_AT_ENV],\n    messageId: process.env[TRIAL_REMINDER_MESSAGE_ID_ENV],\n    sender: process.env[TRIAL_REMINDER_FROM_ENV] ?? DEFAULT_TRIAL_REMINDER_SENDER,\n    apiKeyPresent: Boolean(process.env.CUSTOMERIO_APP_API_KEY?.trim()),\n    ...storage,\n    send: sendTrialReminder,\n    ...overrides,\n  }\n  const stats = {\n    claimed: 0,\n    queued: 0,\n    supportRequired: 0,\n    skipped: 0,\n    blocked: false,\n    disabled: false,\n  }\n  if (!d.enabled) return { ...stats, disabled: true }\n  const cutoff = rolloutInstant(d.rolloutAt)\n  if (\n    !cutoff ||\n    !d.messageId?.trim() ||\n    d.messageId.length > 200 ||\n    !d.apiKeyPresent ||\n    !d.sender?.trim() ||\n    /[\\r\\n]/.test(d.sender)\n  )\n    return { ...stats, blocked: true }\n  await d.enqueue(cutoff)\n  const claims = await d.claim()\n  stats.claimed = claims.length\n  for (const claim of claims) {\n    let message: TrialReminderMessage | null = null\n    let outcome: TrialReminderOutcome\n    let sendStarted = false\n    try {\n      if (!validClaim(claim)) throw new Error(\"Malformed reminder claim\")\n      const email = await d.recipient(claim.user_id)\n      if (!email) {\n        outcome = { status: \"support_required\", errorCode: \"recipient_owner_unavailable\" }\n      } else {\n        // Auth lookup may be slow. Recheck DB state/lease after it, immediately\n        // before rendering and the provider boundary. SQL atomically suppresses\n        // ineligible rows and fences this send attempt.\n        const fresh = await d.prepare(claim)\n        if (!fresh) {\n          stats.skipped++\n          continue\n        }\n        if (\n          !validClaim(fresh) ||\n          fresh.reminder_id !== claim.reminder_id ||\n          fresh.attempt_id !== claim.attempt_id ||\n          fresh.user_id !== claim.user_id\n        )\n          throw new Error(\"Reminder preparation identity mismatch\")\n        message = buildTrialReminderMessage(fresh.snapshot)\n        sendStarted = true\n        const receipt = await d.send({\n          email,\n          messageId: d.messageId.trim(),\n          sender: d.sender.trim(),\n          message,\n        })\n        if (!receipt.deliveryId?.trim())\n          throw new CustomerIoAmbiguousDeliveryError(\"Missing queue identifier\")\n        outcome = {\n          status: \"queued\",\n          deliveryId: receipt.deliveryId,\n          queuedAt: acknowledgementTime(receipt.queuedAt),\n        }\n      }\n    } catch (error) {\n      outcome = {\n        status: \"support_required\",\n        errorCode:\n          error instanceof CustomerIoAmbiguousDeliveryError\n            ? \"customerio_delivery_ambiguous\"\n            : error instanceof CustomerIoHttpError\n              ? \"customerio_http_unconfirmed\"\n              : sendStarted\n                ? \"customerio_delivery_unconfirmed\"\n                : \"reminder_preparation_failed\",\n      }\n    }\n    // If this fails after send, the expired lease parks. Never repeat the email.\n    await d.settle(claim, outcome, message)\n    if (outcome.status === \"queued\") stats.queued++\n    else stats.supportRequired++\n  }\n  return stats\n}",
+          "sha256": "add5fd269f6eba8621acf27ff0a784e58474f870000722e42c4a95b44cfd1eb4"
+        },
+        "from": "          sender: d.sender.trim(),\n          message,",
+        "to": "          sender: d.sender.trim(),\n          message: { ...message, subject: \"Reminder\" },",
+        "mutatedSHA256": "0dd182c3f2606c2b49f7edeffdad9701d7407fcd269135dbfddaa8c13c2448d1"
+      },
+      "keeper": {
+        "file": "tests/trial-reminders-delivery.test.ts",
+        "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner"
+      },
+      "oraclePrefix": "assert.equal(message.subject,",
+      "oldDonorExpected": "Original direct renderer donors survive this delivery-only fault; control proves new boundary strength, not original donor sensitivity.",
+      "expected": {
+        "code": "ERR_ASSERTION",
+        "operator": "strictEqual",
+        "phaseOracles": {
+          "transfer": {
+            "line": 86,
+            "text": "assert.equal(message.subject, \"Dein kostenloser Test endet am 21. September 2026\")",
+            "firstKeeperFrameMustEqual": true
+          },
+          "cut": {
+            "line": 86,
+            "text": "assert.equal(message.subject, \"Dein kostenloser Test endet am 21. September 2026\")",
+            "firstKeeperFrameMustEqual": true
+          }
+        }
+      },
+      "command": {
+        "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+        "executable": "/usr/local/bin/node",
+        "argv": [
+          "--import",
+          "./tests/server-only-register.cjs",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "--test-name-pattern=^enabled reminder enqueues cutoff and revalidates just before sending once to verified owner$",
+          "tests/trial-reminders-delivery.test.ts"
+        ],
+        "selectedExpected": 1
+      },
+      "protocol": "Main only: all phase/source guards; before selected1 green; apply unique mutation; selected1 fails with ERR_ASSERTION + exact operator + first keeper frame line; restore source byte-exact in finally; after selected1 green. Reject setup/import/type/runtime exception/timeout/other-test failure. No execution here."
+    }
+  ],
+  "limit": "18 individual transferred literal oracles, one unchanged Meta union oracle, one stronger delivery-only control. Faults mutate output projections in actual owner function; they do not claim exhaustive policy/transport/provider sensitivity."
+}

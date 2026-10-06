@@ -197,6 +197,7 @@ test("R28: the question sits at the top of Phase 3 with exactly two options, see
 test("R28: a click saves {complexity} to the call sheet at once; a refusal rolls back with a line", async () => {
   const request = deferredFetch()
   renderCockpit()
+  assert.equal(document.getElementById("runsheet-complexity-folded"), null)
   fireEvent.click(option("Super essenziell"))
 
   assert.deepEqual(request.calls, [
@@ -208,6 +209,10 @@ test("R28: a click saves {complexity} to the call sheet at once; a refusal rolls
   ])
   // Optimistic.
   assert.equal(option("Super essenziell").getAttribute("aria-pressed"), "true")
+  assert.ok(
+    document.getElementById("runsheet-complexity-folded"),
+    "optional steps fold before the save settles",
+  )
 
   await act(async () => {
     request.settle(new Response(JSON.stringify({ code: "nope" }), { status: 500 }))
@@ -273,13 +278,6 @@ test("R28: „Neu dazu“ steps say Essenziell / Optional with the step's benefi
   assert.ok(within(oil).getByText("Schützt das Haar vor passender Hitze-Anwendung."))
   // The old lowercase tag is replaced on these entries.
   assert.ok(!oil.textContent?.includes("· optional"))
-})
-
-// --- F1: the recommendation's comparison table -----------------------------------------
-
-test("F1: the recommendation shows „Empfohlenes Produkt | Ziel“ — two columns, no owned column", () => {
-  renderCockpit()
-  const mask = entryOf("Maske")
   const table = mask.querySelector("[data-comparison]") as HTMLElement
   assert.equal(table.getAttribute("data-comparison"), "compact")
   const header = table.firstElementChild?.textContent ?? ""
@@ -292,8 +290,11 @@ test("F1: the recommendation shows „Empfohlenes Produkt | Ziel“ — two colu
       .querySelector("li")
       ?.getAttribute("aria-label")
       ?.includes("Empfohlenes Produkt: fettig, Ziel: fettig"),
+    "recommended comparison row names product and target",
   )
 })
+
+// --- F1: the recommendation's comparison table -----------------------------------------
 
 test("F1: no rows, no table — nothing is invented", () => {
   renderCockpit({ steps: addSteps(null) })
@@ -321,14 +322,6 @@ test("Iteration 3: „Super essenziell“ klappt optionale Neu-Schritte ein, „
   cleanup()
   renderCockpit()
   assert.equal(document.getElementById("runsheet-complexity-folded"), null)
-})
-
-test("Iteration 3: choosing „Super essenziell“ folds at once — optimistic, before the save lands", () => {
-  deferredFetch()
-  renderCockpit()
-  assert.equal(document.getElementById("runsheet-complexity-folded"), null)
-  fireEvent.click(option("Super essenziell"))
-  assert.ok(document.getElementById("runsheet-complexity-folded"))
 })
 
 test("Iteration 3: a step without her product shows no „Bisheriges Produkt“-panel, but keeps the unanswered honesty line", () => {

@@ -1,0 +1,195 @@
+TAP version 13
+# Subtest: the provenance backfill labels a synthetic draft on a CLEARED-flag plan 'assumed'
+ok 1 - the provenance backfill labels a synthetic draft on a CLEARED-flag plan 'assumed'
+  ---
+  duration_ms: 513.796709
+  ...
+# Subtest: the provenance backfill still labels a synthetic draft on a flagged plan 'assumed'
+ok 2 - the provenance backfill still labels a synthetic draft on a flagged plan 'assumed'
+  ---
+  duration_ms: 379.340208
+  ...
+# Subtest: the provenance backfill leaves a plan without direct-acceptance evidence entirely 'user'
+ok 3 - the provenance backfill leaves a plan without direct-acceptance evidence entirely 'user'
+  ---
+  duration_ms: 357.933791
+  ...
+# Subtest: the provenance backfill splits a reopened, partially refined draft per answer
+ok 4 - the provenance backfill splits a reopened, partially refined draft per answer
+  ---
+  duration_ms: 366.884125
+  ...
+# Subtest: the provenance backfill keeps an assumed-valued heat event 'assumed' inside the cohort
+ok 5 - the provenance backfill keeps an assumed-valued heat event 'assumed' inside the cohort
+  ---
+  duration_ms: 347.136708
+  ...
+# Subtest: the provenance backfill errs to 'assumed' for a draft indistinguishable from the defaults
+ok 6 - the provenance backfill errs to 'assumed' for a draft indistinguishable from the defaults
+  ---
+  duration_ms: 350.906584
+  ...
+# Subtest: the provenance backfill writes an empty map for a draft with no completed answers
+ok 7 - the provenance backfill writes an empty map for a draft with no completed answers
+  ---
+  duration_ms: 309.301375
+  ...
+# Subtest: the save RPC keeps a 5-argument compatibility overload for the migrate-then-deploy window
+ok 8 - the save RPC keeps a 5-argument compatibility overload for the migrate-then-deploy window
+  ---
+  duration_ms: 316.691666
+  ...
+# Subtest: the 5-argument compatibility overload preserves backfilled provenance instead of wiping it
+ok 9 - the 5-argument compatibility overload preserves backfilled provenance instead of wiping it
+  ---
+  duration_ms: 316.268041
+  ...
+# Subtest: the 6-argument save RPC still rejects a non-object provenance payload
+ok 10 - the 6-argument save RPC still rejects a non-object provenance payload
+  ---
+  duration_ms: 331.684583
+  ...
+# Subtest: returns the refinement answers bound to the current refined need version
+ok 11 - returns the refinement answers bound to the current refined need version
+  ---
+  duration_ms: 2.307125
+  ...
+# Subtest: returns null answers when no complete draft matches the pointer
+ok 12 - returns null answers when no complete draft matches the pointer
+  ---
+  duration_ms: 0.319667
+  ...
+# Subtest: returns included routine products of the active version
+ok 13 - returns included routine products of the active version
+  ---
+  duration_ms: 3.22575
+  ...
+# Subtest: routineProducts is null without an active routine
+ok 14 - routineProducts is null without an active routine
+  ---
+  duration_ms: 0.263458
+  ...
+# Subtest: routineProducts is null when the active routine is authority_repair_required
+ok 15 - routineProducts is null when the active routine is authority_repair_required
+  ---
+  duration_ms: 0.613625
+  ...
+# Subtest: refinement presentation API rejects unauthenticated reads
+ok 16 - refinement presentation API rejects unauthenticated reads
+  ---
+  duration_ms: 0.107709
+  ...
+# Subtest: fresh plan with no refinement draft: both modules open, progress 2/4
+ok 17 - fresh plan with no refinement draft: both modules open, progress 2/4
+  ---
+  duration_ms: 4.083833
+  ...
+# Subtest: partial products user-answers: products open with the correct open-question count
+ok 18 - partial products user-answers: products open with the correct open-question count
+  ---
+  duration_ms: 0.572916
+  ...
+# Subtest: products module complete via lineage: 3/4 and the handoff marker is set
+ok 19 - products module complete via lineage: 3/4 and the handoff marker is set
+  ---
+  duration_ms: 0.522917
+  ...
+# Subtest: both modules complete: 4/4
+ok 20 - both modules complete: 4/4
+  ---
+  duration_ms: 0.429166
+  ...
+# Subtest: banner reflects a stored dismissal for the current open module
+ok 21 - banner reflects a stored dismissal for the current open module
+  ---
+  duration_ms: 0.587459
+  ...
+# Subtest: in_progress draft wins over a completed draft on the same initial need version
+ok 22 - in_progress draft wins over a completed draft on the same initial need version
+  ---
+  duration_ms: 0.292709
+  ...
+# Subtest: initial need version with neither a Stage-1 lead nor a prepared-artifact source degrades to 503
+ok 23 - initial need version with neither a Stage-1 lead nor a prepared-artifact source degrades to 503
+  ---
+  duration_ms: 0.111292
+  ...
+# Subtest: no personal plan: typed 404
+ok 24 - no personal plan: typed 404
+  ---
+  duration_ms: 0.191333
+  ...
+# Subtest: rejects unauthenticated reads
+ok 25 - rejects unauthenticated reads
+  ---
+  duration_ms: 0.370875
+  ...
+# Subtest: a fully auto-accepted draft leaves both modules open and assumptions active
+ok 26 - a fully auto-accepted draft leaves both modules open and assumptions active
+  ---
+  duration_ms: 1.309917
+  ...
+# Subtest: a draft the user answered end to end has no open module and no assumptions
+ok 27 - a draft the user answered end to end has no open module and no assumptions
+  ---
+  duration_ms: 0.257416
+  ...
+# Subtest: one user-answered module keeps assumptions active while the other stays open
+ok 28 - one user-answered module keeps assumptions active while the other stays open
+  ---
+  duration_ms: 0.208125
+  ...
+# Subtest: an untouched draft runs on assumptions
+ok 29 - an untouched draft runs on assumptions
+  ---
+  duration_ms: 0.071167
+  ...
+# Subtest: legacy answers without a provenance entry count as user answers
+ok 30 - legacy answers without a provenance entry count as user answers
+  ---
+  duration_ms: 0.135125
+  ...
+# Subtest: a fresh plan with no draft: both modules open, progress 2/4, banner points at products
+ok 31 - a fresh plan with no draft: both modules open, progress 2/4, banner points at products
+  ---
+  duration_ms: 2.326
+  ...
+# Subtest: partial products answers: products stays open with the correct open-question count
+ok 32 - partial products answers: products stays open with the correct open-question count
+  ---
+  duration_ms: 0.396083
+  ...
+# Subtest: products module complete via lineage: 3/4 and the handoff marker is surfaced
+ok 33 - products module complete via lineage: 3/4 and the handoff marker is surfaced
+  ---
+  duration_ms: 0.152875
+  ...
+# Subtest: both modules complete: 4/4, no open module left, banner not visible
+ok 34 - both modules complete: 4/4, no open module left, banner not visible
+  ---
+  duration_ms: 0.24625
+  ...
+# Subtest: assumed-only answers (no user provenance) count as open, matching direct-accept semantics
+ok 35 - assumed-only answers (no user provenance) count as open, matching direct-accept semantics
+  ---
+  duration_ms: 0.139959
+  ...
+# Subtest: banner: dismissing the current open module hides it without affecting the module list
+ok 36 - banner: dismissing the current open module hides it without affecting the module list
+  ---
+  duration_ms: 0.101166
+  ...
+# Subtest: banner reappears once a different module becomes the next open one, even if the old dismissal is still stored
+ok 37 - banner reappears once a different module becomes the next open one, even if the old dismissal is still stored
+  ---
+  duration_ms: 0.14025
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5241.91425

@@ -1,0 +1,125 @@
+--- transfer/tests/welcome-email-display.test.tsx
++++ cut/tests/welcome-email-display.test.tsx
+@@ -39,25 +39,6 @@
+     /\}, \[isOneTimePurchase, mode, paypalActivationToken, paypalLive, recoveryCode\]\)/,
+   )
+   assert.doesNotMatch(welcomeClientSource, /\}, \[activationSource, mode\]\)/)
+-})
+-
+-test("terminal PayPal activation polling reports a typed payment failure without the token", () => {
+-  assert.match(
+-    welcomeClientSource,
+-    /capturePaymentFailure\(\{[\s\S]*signal: "customer_payment_error_observed"[\s\S]*stage: "paypal_activation_status_poll"[\s\S]*errorFamily: "timeout"/,
+-  )
+-  assert.match(welcomeClientSource, /providerReferencePresent: true/)
+-  const paymentFailureCall = welcomeClientSource.match(
+-    /capturePaymentFailure\(\{[\s\S]*?providerReferencePresent: true,[\s\S]*?\n\s*\}\)/,
+-  )?.[0]
+-  assert.ok(paymentFailureCall)
+-  assert.doesNotMatch(paymentFailureCall, /token:/)
+-  assert.doesNotMatch(paymentFailureCall, /paypalActivationToken/)
+-})
+-
+-test("welcome labels the account email as Chaarlie-E-Mail", () => {
+-  assert.match(welcomeClientSource, /Chaarlie-E-Mail/)
+-  assert.doesNotMatch(welcomeClientSource, /E-Mail aus deinem Checkout/)
+ })
+ 
+ test("welcome only shows PayPal-E-Mail when it differs from Chaarlie email", () => {
+@@ -169,14 +150,6 @@
+   )
+ })
+ 
+-test("a paid Stripe verification failure preserves the revoked return state", () => {
+-  assert.match(
+-    welcomePageSource,
+-    /oneTimeReturnStateFromError\(error: unknown\): "revoked" \| "support_needed"/,
+-  )
+-  assert.match(welcomePageSource, /error\.code === "checkout_one_time_charge_revoked"/)
+-})
+-
+ test("unpaid or non-payment Stripe verification failures expose safe recovery without repricing", () => {
+   const verificationStart = welcomePageSource.indexOf(
+     "session = await verifyCheckoutSessionForActivation(session_id, stripe)",
+--- transfer/tests/welcome-activation-return.test.ts
++++ cut/tests/welcome-activation-return.test.ts
+@@ -17,7 +17,6 @@
+   recoveredStripeSession?: unknown
+   paypalActivation?: unknown
+   paypalError?: unknown | ((RecoveryError: new (code: string) => Error) => unknown)
+-  bypassStripePreflight?: boolean
+ }
+ 
+ function loadWelcome(options: Options = {}) {
+@@ -143,12 +142,7 @@
+   const filename = path.resolve("src/app/welcome/page.tsx")
+   const source = readFileSync(filename, "utf8")
+   const code = ts.transpileModule(
+-    options.bypassStripePreflight
+-      ? source.replace(
+-          "if (recoveryCode) return <CheckoutRecoveryPanel code={recoveryCode} />",
+-          "if (false) return <CheckoutRecoveryPanel code={recoveryCode} />",
+-        )
+-      : source,
++    source,
+     {
+       compilerOptions: {
+         module: ts.ModuleKind.CommonJS,
+@@ -194,13 +188,6 @@
+   }
+ })
+ 
+-test("the preflight guard is sensitive to an in-memory bypass", async () => {
+-  const f = loadWelcome({ stripeRecoveryCode: "trial_unavailable", bypassStripePreflight: true })
+-  const page = await f.render({ session_id: "cs_trial" })
+-  assert.notEqual(page.type, f.CheckoutRecoveryPanel)
+-  assert.deepEqual(f.calls, ["firstDestination", "createClient"])
+-})
+-
+ test("Stripe verification failures keep paid one-time returns pending and classify terminal failures", async () => {
+   const paid = loadWelcome({
+     stripeVerifyError: (CheckoutActivationError: new (code: string, message: string) => Error) =>
+--- before/tests/welcome-activation-outcomes.spec.ts
++++ transfer/tests/welcome-activation-outcomes.spec.ts
+@@ -40,7 +40,7 @@
+               contents: `export const useRouter=()=>({replace:p=>location.assign(p)});
+         export const usePaymentRuntime=()=>({paypalLive:false});
+         export const createClient=()=>({auth:{signInWithPassword:async()=>({error:new URLSearchParams(location.search).has('signinFail')?new Error('fixture failure'):null})}});
+-        export const captureCheckoutException=()=>{}; export const addCheckoutBreadcrumb=()=>{}; export const capturePaymentFailure=()=>{};
++        export const captureCheckoutException=()=>{}; export const addCheckoutBreadcrumb=()=>{}; export const capturePaymentFailure=(event)=>{(globalThis.__welcomePaymentFailures??=[]).push(event)};
+         export const CheckoutReturnAnalytics=()=>null; export const markPlanOpeningStart=()=>{};
+         export const markPersonalPlanStageNavigation=()=>{}; export const PlanBereitArrival=()=>null; export const PlanStartOpening=()=>null;`,
+             }))
+@@ -123,6 +123,8 @@
+       )
+     })
+     await page.goto(`${origin}/welcome`)
++    await expect(page.getByLabel("Chaarlie-E-Mail", { exact: true })).toHaveValue("alex@example.com")
++    await expect(page.getByText("E-Mail aus deinem Checkout", { exact: true })).toHaveCount(0)
+     await page.getByLabel("Passwort", { exact: true }).fill("Example123")
+     await page.getByRole("button", { name: "Login-Link senden" }).click()
+     await expect(page.getByRole("alert")).toContainText("Dein Konto ist bereit.")
+@@ -250,5 +252,23 @@
+     expect(polls).toBe(15)
+     await page.clock.runFor(6000)
+     expect(polls).toBe(15)
++    const failures = await page.evaluate(
++      () => (globalThis as typeof globalThis & { __welcomePaymentFailures?: unknown[] }).__welcomePaymentFailures ?? [],
++    )
++    expect(failures).toEqual([{
++      signal: "customer_payment_error_observed",
++      provider: "paypal",
++      stage: "paypal_activation_status_poll",
++      errorFamily: "timeout",
++      commerceKind: "subscription",
++      origin: "browser",
++      method: "paypal",
++      truth: "unknown",
++      live: false,
++      isInternalTest: false,
++      retryable: "true",
++      source: "welcome",
++      providerReferencePresent: true,
++    }])
+   })
+ })

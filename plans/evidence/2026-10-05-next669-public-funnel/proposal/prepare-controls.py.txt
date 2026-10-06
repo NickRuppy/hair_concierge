@@ -1,0 +1,38 @@
+from pathlib import Path
+import json,hashlib
+P=Path('/tmp/test-audit-public-funnel66-c69uzpx6'); cs=json.loads((P/'candidates.json').read_text());h=lambda x:hashlib.sha256(x.encode()).hexdigest(); out=[]
+def control(cid,desc,source,find,repl,assertion,op,msg,title=None):
+ c=next(c for c in cs if c['id']==cid);s=(P/'read-snapshots'/source).read_text();assert s.count(find)==1,(desc,s.count(find));mut=s.replace(find,repl)
+ o={'keeperTitle':title or json.loads(c['keeper']['title']),'testFile':c['file'],'code':'ERR_ASSERTION','operator':op,'decodedMessageIncludes':msg,'firstFrame':'FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.'}
+ for phase in ['transfer','cut']:
+  a=[a for a in c['assertionUnion'][phase+'Keeper'] if a['text']==assertion];assert len(a)==1,(desc,a)
+  o[phase]={'line':a[0]['line'],'assertion':assertion,'keeperRegistrationLine':c['keeperPhaseLines'][phase],'firstFrameFile':c['file']}
+ ident=f'{cid}-{1+sum(x["candidate"]==cid for x in out):02}'
+ dest=P/'mutants'/ident/source;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_text(mut)
+ out.append({'id':ident,'candidate':cid,'contract':desc,'source':source,'originalSourceSHA256':h(s),'find':find,'replace':repl,'matchCount':1,'mutantSHA256':h(mut),'snapshot':str(dest.relative_to(P)),'oracle':o,'phaseRequirement':['transfer','cut'],'runtimeStatus':'UNRUN'})
+s='src/components/gated-preview/gated-preview.tsx'; c1=next(c for c in cs if c['id']=='C1');a=c1['assertionUnion']['originalDonor'];A=[x['text'] for x in a]
+control('C1','scroll container remains vertically scrollable',s,'min-h-0 flex-1 overflow-y-auto overscroll-contain','min-h-0 flex-1 overscroll-contain',A[0],'match',['overflow-y-auto','min-h-0 flex-1 overscroll-contain'])
+control('C1','flex scroller may shrink',s,'min-h-0 flex-1 overflow-y-auto overscroll-contain','flex-1 overflow-y-auto overscroll-contain',A[1],'match',['min-h-0','flex-1 overflow-y-auto overscroll-contain'])
+control('C1','keyboard scroll region role',s,'          role="region"','          role="presentation"',A[2],'strictEqual',['presentation','region'])
+control('C1','no duplicate accessible label',s,'          aria-labelledby={exampleLabelId}','          aria-labelledby={exampleLabelId}\n          aria-label="duplicate"',A[3],'strictEqual',['duplicate','undefined'])
+control('C1','region references actual visible label',s,'          aria-labelledby={exampleLabelId}','          aria-labelledby="wrong-label"',A[4],'strictEqual',['wrong-label','gated-preview-label-routine'])
+control('C1','nonempty label id prevents equal-empty false green',s,'  const exampleLabelId = `gated-preview-label-${feature}`','  const exampleLabelId = ""',A[5],'==',['the band needs an id for the region to reference'])
+control('C1','keyboard tab stop retained',s,'          tabIndex={0}','          tabIndex={-1}',A[6],'strictEqual',['-1','0'])
+control('C1','child is inside scroll container',s,'          {children}','          {null}',A[7],'strictEqual',['children render inside the scroll container, not beside it'])
+control('C1','exactly one vertical scroller',s,'className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[20px]','className="overflow-y-auto flex min-h-0 flex-1 flex-col overflow-hidden rounded-[20px]',A[8],'strictEqual',['2','1'])
+c2=next(c for c in cs if c['id']=='C2');a=c2['assertionUnion']['originalDonor'];A=[x['text'] for x in a]
+control('C2','all four shared transcript rows keep empty timestamps','src/lib/gated-preview/fixtures/chat-example.ts','    created_at: "",','    created_at: "2026-07-11T10:05:00.000Z",',A[0],'strictEqual',['2026-07-11T10:05:00.000Z',"''"])
+f='''        {message.created_at && (
+          <div className="flex min-w-0 items-center gap-2 px-1">
+            <span className="type-caption text-muted-foreground">
+              {format(new Date(message.created_at), "HH:mm")}'''
+r='''        {true && (
+          <div className="flex min-w-0 items-center gap-2 px-1">
+            <span className="type-caption text-muted-foreground">
+              {"12:34"}'''
+control('C2','actual ChatMessage renderer must suppress timestamp markup for empty fixtures','src/components/chat/chat-message.tsx',f,r,A[1].replace('render(GatedChatExample)','html'),'doesNotMatch',['type-caption text-muted-foreground','12:34'])
+c3=next(c for c in cs if c['id']=='C3');A=[x['text'] for x in c3['assertionUnion']['originalDonor']]
+for name in ['routine','anwendung','chat']:
+ for i,(node,fragment) in enumerate([('<form />','<form'),('<button type="submit" />','type="submit"'),('<button formAction="/forbidden" />','/forbidden')]):
+  control('C3',name+': no '+['form','submit control','form action'][i]+' in existing trapped SSR output',s,'      <PremiumSheet\n','      '+node+'\n      <PremiumSheet\n',A[i],'doesNotMatch',[fragment],f'gated {name} renders without touching the network')
+(P/'controls.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n');print(len(out),'static actual-owner controls; all unrun')

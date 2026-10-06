@@ -160,37 +160,78 @@ function restoreGlobalDescriptor(
 
 test("locks body on first layer and restores exact scroll on final release", () => {
   const document = installFakeDom(20, 640)
-  const appRoot = new FakeElement("app")
-  const sheetRoot = new FakeElement("sheet")
-  appendToBody(appRoot, sheetRoot)
+  const observerDescriptor = Object.getOwnPropertyDescriptor(globalThis, "MutationObserver")
+  const observerPort: {
+    callback: (() => void) | null
+    observed: { target: unknown; options: unknown } | null
+    disconnects: number
+    constructions: number
+  } = { callback: null, observed: null, disconnects: 0, constructions: 0 }
+  Object.defineProperty(globalThis, "MutationObserver", {
+    configurable: true,
+    value: class {
+      constructor(next: () => void) {
+        observerPort.constructions += 1
+        observerPort.callback = next
+      }
+      observe(target: unknown, options: unknown) {
+        observerPort.observed = { target, options }
+      }
+      disconnect() {
+        observerPort.disconnects += 1
+      }
+    },
+  })
+  try {
+    const appRoot = new FakeElement("app")
+    const sheetRoot = new FakeElement("sheet")
+    appendToBody(appRoot, sheetRoot)
 
-  const sheet = registerModalLayer({ root: modalRoot(sheetRoot) })
+    const sheet = registerModalLayer({ root: modalRoot(sheetRoot) })
 
-  assert.equal(document.body.style.position, "fixed")
-  assert.equal(document.body.style.top, "-640px")
-  assert.equal(document.body.style.left, "-20px")
-  assert.equal(document.body.style.right, "0")
-  assert.equal(document.body.style.width, "100%")
-  assert.equal(document.body.style.overflow, "hidden")
-  assert.equal(appRoot.getAttribute("aria-hidden"), "true")
-  assert.equal(appRoot.inert, true)
-  assert.equal(sheetRoot.getAttribute("aria-hidden"), null)
+    assert.equal(document.body.style.position, "fixed")
+    assert.equal(document.body.style.top, "-640px")
+    assert.equal(document.body.style.left, "-20px")
+    assert.equal(document.body.style.right, "0")
+    assert.equal(document.body.style.width, "100%")
+    assert.equal(document.body.style.overflow, "hidden")
+    assert.equal(appRoot.getAttribute("aria-hidden"), "true")
+    assert.equal(appRoot.inert, true)
+    assert.equal(sheetRoot.getAttribute("aria-hidden"), null)
 
-  sheet.release()
+    const lateSibling = new FakeElement("late")
+    appendToBody(lateSibling)
+    assert.equal(observerPort.constructions, 1)
+    assert.deepEqual(observerPort.observed, { target: document.body, options: { childList: true } })
+    const callback = observerPort.callback
+    assert.ok(callback)
+    callback()
+    assert.equal(lateSibling.inert, true)
+    assert.equal(lateSibling.getAttribute("aria-hidden"), "true")
 
-  assert.equal(document.body.style.position, "")
-  assert.equal(document.body.style.top, "")
-  assert.equal(document.body.style.left, "")
-  assert.equal(document.body.style.right, "")
-  assert.equal(document.body.style.width, "")
-  assert.equal(document.body.style.overflow, "")
-  assert.deepEqual(scrollToCalls, [[20, 640]])
-  assert.equal(appRoot.getAttribute("aria-hidden"), null)
-  assert.equal(appRoot.inert, false)
+    sheet.release()
+
+    assert.equal(document.body.style.position, "")
+    assert.equal(document.body.style.top, "")
+    assert.equal(document.body.style.left, "")
+    assert.equal(document.body.style.right, "")
+    assert.equal(document.body.style.width, "")
+    assert.equal(document.body.style.overflow, "")
+    assert.deepEqual(scrollToCalls, [[20, 640]])
+    assert.equal(appRoot.getAttribute("aria-hidden"), null)
+    assert.equal(appRoot.inert, false)
+    assert.equal(lateSibling.inert, false)
+    assert.equal(lateSibling.getAttribute("aria-hidden"), null)
+    assert.equal(observerPort.disconnects, 1)
+  } finally {
+    if (observerDescriptor)
+      Object.defineProperty(globalThis, "MutationObserver", observerDescriptor)
+    else Reflect.deleteProperty(globalThis, "MutationObserver")
+  }
 })
 
 test("uses priority and registration order to isolate only the top layer", () => {
-  installFakeDom()
+  const document = installFakeDom(0, 222)
   const appRoot = new FakeElement("app")
   const sheetRoot = new FakeElement("sheet")
   const dialogRoot = new FakeElement("dialog")
@@ -224,30 +265,10 @@ test("uses priority and registration order to isolate only the top layer", () =>
   assert.equal(sheetRoot.getAttribute("aria-hidden"), null)
   assert.equal(sheetRoot.inert, false)
   assert.equal(appRoot.getAttribute("aria-hidden"), "true")
-
-  sheet.release()
-})
-
-test("keeps the body locked while a nested layer releases", () => {
-  const document = installFakeDom(0, 222)
-  const appRoot = new FakeElement("app")
-  const sheetRoot = new FakeElement("sheet")
-  const dialogRoot = new FakeElement("dialog")
-  appendToBody(appRoot, sheetRoot, dialogRoot)
-
-  const sheet = registerModalLayer({ root: modalRoot(sheetRoot) })
-  const dialog = registerModalLayer({
-    root: modalRoot(dialogRoot),
-    priority: MODAL_LAYER_PRIORITIES.dialog,
-  })
-
-  dialog.release()
-
   assert.equal(document.body.style.position, "fixed")
   assert.deepEqual(scrollToCalls, [])
 
   sheet.release()
-
   assert.equal(document.body.style.position, "")
   assert.deepEqual(scrollToCalls, [[0, 222]])
 })
@@ -371,17 +392,6 @@ test("routes Escape to the top layer only and releases the listener with the las
 
   lowerLayer.release()
   assert.equal(fakeDocument.listeners.get("keydown")?.size ?? 0, 0)
-})
-
-test("modal manager observes newly inserted body siblings while a layer is active", () => {
-  const managerSource = readFileSync(
-    new URL("../src/lib/ui/modal-layer-manager.ts", import.meta.url),
-    "utf8",
-  )
-
-  assert.match(managerSource, /new MutationObserver/)
-  assert.match(managerSource, /observe\(document\.body, \{ childList: true \}\)/)
-  assert.match(managerSource, /releaseBodyChildrenObserver\(\)/)
 })
 
 test("existing dialog consumers provide the title required by the shared aria label", () => {

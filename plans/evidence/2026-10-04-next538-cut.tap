@@ -1,0 +1,861 @@
+TAP version 13
+# Subtest: towel technique canonicalizes legacy German values
+ok 1 - towel technique canonicalizes legacy German values
+  ---
+  duration_ms: 0.85775
+  ...
+# Subtest: towel technique options expose language-independent data keys
+ok 2 - towel technique options expose language-independent data keys
+  ---
+  duration_ms: 0.316
+  ...
+# Subtest: towel material options include no towel as the final explicit option
+ok 3 - towel material options include no towel as the final explicit option
+  ---
+  duration_ms: 0.068166
+  ...
+# Subtest: night protection canonicalizes legacy loose braid and bun values
+ok 4 - night protection canonicalizes legacy loose braid and bun values
+  ---
+  duration_ms: 0.134417
+  ...
+# Subtest: night protection options include length tip accessory and remove tight hairstyles
+ok 5 - night protection options include length tip accessory and remove tight hairstyles
+  ---
+  duration_ms: 0.075291
+  ...
+# Subtest: night protection normalization drops legacy tight hairstyles
+ok 6 - night protection normalization drops legacy tight hairstyles
+  ---
+  duration_ms: 0.039958
+  ...
+# personal_plan_nav_surface_visit_write_failed { surface: 'profile', error: { code: '42P01' } }
+# Subtest: Personal Plan navigation always exposes the same five tabs in the signed order, regardless of stage access
+ok 7 - Personal Plan navigation always exposes the same five tabs in the signed order, regardless of stage access
+  ---
+  duration_ms: 0.983708
+  ...
+# Subtest: Personal Plan navigation carries the already-authoritative routine-attention state
+ok 8 - Personal Plan navigation carries the already-authoritative routine-attention state
+  ---
+  duration_ms: 0.075833
+  ...
+# Subtest: an unvisited tab dots, a visited one doesn't, and routine never dots even when unvisited
+ok 9 - an unvisited tab dots, a visited one doesn't, and routine never dots even when unvisited
+  ---
+  duration_ms: 0.195792
+  ...
+# Subtest: an unavailable nav-visited read (pre-migration) renders zero dots, never all of them
+ok 10 - an unavailable nav-visited read (pre-migration) renders zero dots, never all of them
+  ---
+  duration_ms: 0.051125
+  ...
+# Subtest: resolveAuthenticatedAppNavigationAccess wires the nav-visited read through for a Personal Plan destination
+ok 11 - resolveAuthenticatedAppNavigationAccess wires the nav-visited read through for a Personal Plan destination
+  ---
+  duration_ms: 0.120125
+  ...
+# Subtest: resolveAuthenticatedAppNavigationAccess skips the nav-visited read entirely for legacy destinations
+ok 12 - resolveAuthenticatedAppNavigationAccess skips the nav-visited read entirely for legacy destinations
+  ---
+  duration_ms: 0.066458
+  ...
+# Subtest: the rendered nav shows a dot only on an unvisited, non-routine tab
+ok 13 - the rendered nav shows a dot only on an unvisited, non-routine tab
+  ---
+  duration_ms: 9.202083
+  ...
+# Subtest: fix round 1: the active tab never dots even when it's still in unvisitedNavSurfaces (the deferred after() write hasn't landed yet)
+ok 14 - fix round 1: the active tab never dots even when it's still in unvisitedNavSurfaces (the deferred after() write hasn't landed yet)
+  ---
+  duration_ms: 2.116958
+  ...
+# Subtest: legacy, paid-pending, and navigation read failures keep exactly one legacy Header
+ok 15 - legacy, paid-pending, and navigation read failures keep exactly one legacy Header
+  ---
+  duration_ms: 0.478916
+  ...
+# Subtest: the signed navigation marks the current destination and the shell owns its bottom clearance
+ok 16 - the signed navigation marks the current destination and the shell owns its bottom clearance
+  ---
+  duration_ms: 2.063084
+  ...
+# Subtest: the server shell owns Header presentation without changing the shared Header
+ok 17 - the server shell owns Header presentation without changing the shared Header
+  ---
+  duration_ms: 2.897458
+  ...
+# Subtest: journey access is request-cached for shell and guarded page composition
+ok 18 - journey access is request-cached for shell and guarded page composition
+  ---
+  duration_ms: 0.201
+  ...
+# Subtest: regular Chat consumes Personal Plan clearance in the viewport once and keeps its own safe area
+ok 19 - regular Chat consumes Personal Plan clearance in the viewport once and keeps its own safe area
+  ---
+  duration_ms: 0.651958
+  ...
+# Subtest: visiting an already-visited surface never schedules a write
+ok 20 - visiting an already-visited surface never schedules a write
+  ---
+  duration_ms: 0.121583
+  ...
+# Subtest: visiting a legacy (non-Personal-Plan) destination never schedules a write
+ok 21 - visiting a legacy (non-Personal-Plan) destination never schedules a write
+  ---
+  duration_ms: 0.044458
+  ...
+# Subtest: visiting an unvisited surface schedules exactly one deferred write that records the visit
+ok 22 - visiting an unvisited surface schedules exactly one deferred write that records the visit
+  ---
+  duration_ms: 0.158458
+  ...
+# Subtest: a pre-migration write failure inside the deferred task is swallowed, not thrown
+ok 23 - a pre-migration write failure inside the deferred task is swallowed, not thrown
+  ---
+  duration_ms: 1.366292
+  ...
+# Subtest: no user id resolves to a no-op: nothing is scheduled
+ok 24 - no user id resolves to a no-op: nothing is scheduled
+  ---
+  duration_ms: 0.071958
+  ...
+# Subtest: flag off: a legacy-kind authenticated user with no paid access stays on the legacy shell, and the paid-access signal is never even consulted (byte-identical)
+ok 25 - flag off: a legacy-kind authenticated user with no paid access stays on the legacy shell, and the paid-access signal is never even consulted (byte-identical)
+  ---
+  duration_ms: 0.115416
+  ...
+# Subtest: flag on but no loadHasAppAccess dep wired: never promotes to free tier (safe default)
+ok 26 - flag on but no loadHasAppAccess dep wired: never promotes to free tier (safe default)
+  ---
+  duration_ms: 0.068625
+  ...
+# Subtest: flag on, legacy journey kind, no paid app access: promotes to the free-tier five-tab nav
+ok 27 - flag on, legacy journey kind, no paid app access: promotes to the free-tier five-tab nav
+  ---
+  duration_ms: 0.149458
+  ...
+# Subtest: flag on, legacy journey kind, but WITH paid app access (a premium legacy state): keeps exactly today's legacy shell
+ok 28 - flag on, legacy journey kind, but WITH paid app access (a premium legacy state): keeps exactly today's legacy shell
+  ---
+  duration_ms: 0.082042
+  ...
+# Subtest: flag on, paid_pending journey kind: left untouched, never promoted to free tier
+ok 29 - flag on, paid_pending journey kind: left untouched, never promoted to free tier
+  ---
+  duration_ms: 0.068667
+  ...
+# Subtest: flag on, a real Personal Plan journey: tier is always premium and the paid-access signal is never consulted
+ok 30 - flag on, a real Personal Plan journey: tier is always premium and the paid-access signal is never consulted
+  ---
+  duration_ms: 0.066625
+  ...
+# Subtest: the shell picks the five-tab nav (with locks) for a free-tier navigation object, exactly like a real Personal Plan owner
+ok 31 - the shell picks the five-tab nav (with locks) for a free-tier navigation object, exactly like a real Personal Plan owner
+  ---
+  duration_ms: 2.740625
+  ...
+# Subtest: direct Anwendung route stays compact and non-exposing without an eligible owner
+ok 32 - direct Anwendung route stays compact and non-exposing without an eligible owner
+  ---
+  duration_ms: 6.236292
+  ...
+# Subtest: application compute timing is exposed only behind the diagnostic marker
+ok 33 - application compute timing is exposed only behind the diagnostic marker
+  ---
+  duration_ms: 1.112875
+  ...
+# Subtest: route source composes the accepted Stage 4 Routine adapter
+ok 34 - route source composes the accepted Stage 4 Routine adapter
+  ---
+  duration_ms: 0.094167
+  ...
+# Subtest: Anwendung page has no production fixture import or sample product path
+ok 35 - Anwendung page has no production fixture import or sample product path
+  ---
+  duration_ms: 0.217
+  ...
+# Subtest: retained portfolio presentation data cannot create an Anwendung item
+ok 36 - retained portfolio presentation data cannot create an Anwendung item
+  ---
+  duration_ms: 0.40175
+  ...
+# Subtest: journey denial happens before any Routine, profile, catalog, or content read
+ok 37 - journey denial happens before any Routine, profile, catalog, or content read
+  ---
+  duration_ms: 0.1555
+  ...
+# Subtest: authorized Stage 5 overlaps the active Routine and shared content reads
+ok 38 - authorized Stage 5 overlaps the active Routine and shared content reads
+  ---
+  duration_ms: 6.138875
+  ...
+# Subtest: route has explicit no-active recovery, active success, unavailable direct day, and database recovery
+ok 39 - route has explicit no-active recovery, active success, unavailable direct day, and database recovery
+  ---
+  duration_ms: 1.288416
+  ...
+# Subtest: only our own stable throw codes reach the failure-code tag
+ok 40 - only our own stable throw codes reach the failure-code tag
+  ---
+  duration_ms: 0.756541
+  ...
+# Subtest: a degraded catalog product keeps the page ready and reports one per-item warning
+ok 41 - a degraded catalog product keeps the page ready and reports one per-item warning
+  ---
+  duration_ms: 1.179333
+  ...
+# Subtest: a rendered partial day is usable and does not emit a route failure
+ok 42 - a rendered partial day is usable and does not emit a route failure
+  ---
+  duration_ms: 0.388167
+  ...
+# Subtest: V2 route uses one generation for product and family reads and ignores V1 exact prose
+ok 43 - V2 route uses one generation for product and family reads and ignores V1 exact prose
+  ---
+  duration_ms: 0.461708
+  ...
+# Subtest: route composes a planned Heat item with its canonical family instructions
+ok 44 - route composes a planned Heat item with its canonical family instructions
+  ---
+  duration_ms: 2.500083
+  ...
+# Subtest: direct day route validates the canonical key and never renders an arbitrary segment
+ok 45 - direct day route validates the canonical key and never renders an arbitrary segment
+  ---
+  duration_ms: 0.261
+  ...
+# Subtest: adapts compiler output into the product-led Anwendung view
+ok 46 - adapts compiler output into the product-led Anwendung view
+  ---
+  duration_ms: 10.874375
+  ...
+# Subtest: retains Pausentag as the recovery route when no complete product day exists
+ok 47 - retains Pausentag as the recovery route when no complete product day exists
+  ---
+  duration_ms: 0.08075
+  ...
+# Subtest: renders an unresolved-only day as explicitly partial rather than claiming complete guidance
+ok 48 - renders an unresolved-only day as explicitly partial rather than claiming complete guidance
+  ---
+  duration_ms: 2.25925
+  ...
+# Subtest: names a demoted catalog product as temporarily unavailable, not as an open decision
+ok 49 - names a demoted catalog product as temporarily unavailable, not as an open decision
+  ---
+  duration_ms: 2.325166
+  ...
+# Subtest: fails closed when a compiled day has no active canonical definition
+ok 50 - fails closed when a compiled day has no active canonical definition
+  ---
+  duration_ms: 0.221583
+  ...
+# Subtest: passes a provisional-status block through the adapter without special visual treatment, plus a local unresolved product gap
+ok 51 - passes a provisional-status block through the adapter without special visual treatment, plus a local unresolved product gap
+  ---
+  duration_ms: 3.638292
+  ...
+# Subtest: uses a neutral shelf fallback when a confirmed catalog image is missing
+ok 52 - uses a neutral shelf fallback when a confirmed catalog image is missing
+  ---
+  duration_ms: 2.670791
+  ...
+# Subtest: keeps the provisional status data hook accessible for nonstandard product imagery
+ok 53 - keeps the provisional status data hook accessible for nonstandard product imagery
+  ---
+  duration_ms: 1.186292
+  ...
+# Subtest: renders the ten approved category-specific product silhouettes
+ok 54 - renders the ten approved category-specific product silhouettes
+  ---
+  duration_ms: 3.397417
+  ...
+# Subtest: counts open placeholders toward the five-slot shelf row cap
+ok 55 - counts open placeholders toward the five-slot shelf row cap
+  ---
+  duration_ms: 2.801541
+  ...
+# Subtest: Plan-bereit lädt als Opening-Frame statt als neutrale Schale
+ok 56 - Plan-bereit lädt als Opening-Frame statt als neutrale Schale
+  ---
+  duration_ms: 9.915542
+  ...
+# Subtest: Plan-start lädt als geteilte Opening-Schale statt als neutrale Schale
+ok 57 - Plan-start lädt als geteilte Opening-Schale statt als neutrale Schale
+  ---
+  duration_ms: 0.665959
+  ...
+# Subtest: Phase-3-Routen zeigen neutrale, statische Ladeschalen
+ok 58 - Phase-3-Routen zeigen neutrale, statische Ladeschalen
+  ---
+  duration_ms: 2.614208
+  ...
+# Subtest: user-visible lookup does not return exact hits for non-Chaarlie-recommended products
+ok 59 - user-visible lookup does not return exact hits for non-Chaarlie-recommended products
+  ---
+  duration_ms: 3.029125
+  ...
+# Subtest: intake-dedupe lookup can find active non-Chaarlie-recommended products
+ok 60 - intake-dedupe lookup can find active non-Chaarlie-recommended products
+  ---
+  duration_ms: 0.384875
+  ...
+# Subtest: user-visible lookup can find active non-Chaarlie-recommended products owned by the user
+ok 61 - user-visible lookup can find active non-Chaarlie-recommended products owned by the user
+  ---
+  duration_ms: 0.283875
+  ...
+# Subtest: user-visible lookup does not return exact hits for non-active-lifecycle products
+ok 62 - user-visible lookup does not return exact hits for non-active-lifecycle products
+  ---
+  duration_ms: 0.147834
+  ...
+# Subtest: lookup asks for more product identity when category is omitted and product text is generic
+ok 63 - lookup asks for more product identity when category is omitted and product text is generic
+  ---
+  duration_ms: 0.238667
+  ...
+# Subtest: lookup offers intake when category and concrete product text are present but brand is unsplit
+ok 64 - lookup offers intake when category and concrete product text are present but brand is unsplit
+  ---
+  duration_ms: 0.080334
+  ...
+# Subtest: category-less lookup prefers explicit product type over oil ingredient wording
+ok 65 - category-less lookup prefers explicit product type over oil ingredient wording
+  ---
+  duration_ms: 0.473958
+  ...
+# Subtest: category-less lookup does not let oil wording override conditioner identity
+ok 66 - category-less lookup does not let oil wording override conditioner identity
+  ---
+  duration_ms: 0.386958
+  ...
+# Subtest: lookup recognizes reviewed product title aliases for renamed catalog products
+ok 67 - lookup recognizes reviewed product title aliases for renamed catalog products
+  ---
+  duration_ms: 0.855666
+  ...
+# Subtest: lookup rejects unsupported categories without offering intake
+ok 68 - lookup rejects unsupported categories without offering intake
+  ---
+  duration_ms: 0.282375
+  ...
+# Subtest: lookup asks the user to select a variant when same-category catalog neighbors exist
+ok 69 - lookup asks the user to select a variant when same-category catalog neighbors exist
+  ---
+  duration_ms: 7.461167
+  ...
+# Subtest: lookup treats a unique canonical product name as an exact product match
+ok 70 - lookup treats a unique canonical product name as an exact product match
+  ---
+  duration_ms: 0.197584
+  ...
+# Subtest: lookup asks for variant selection instead of exact match for a weak partial name
+ok 71 - lookup asks for variant selection instead of exact match for a weak partial name
+  ---
+  duration_ms: 0.35475
+  ...
+# Subtest: lookup can find unique No/Nr numbered products without a category hint
+ok 72 - lookup can find unique No/Nr numbered products without a category hint
+  ---
+  duration_ms: 1.448042
+  ...
+# Subtest: category-less lookup asks for variant selection when identity is still ambiguous
+ok 73 - category-less lookup asks for variant selection when identity is still ambiguous
+  ---
+  duration_ms: 0.31175
+  ...
+# Subtest: user-visible lookup can include current user's verified non-recommended products
+ok 74 - user-visible lookup can include current user's verified non-recommended products
+  ---
+  duration_ms: 0.264417
+  ...
+# Subtest: lookup still shows a single same-category candidate for variant confirmation
+ok 75 - lookup still shows a single same-category candidate for variant confirmation
+  ---
+  duration_ms: 0.231916
+  ...
+# Subtest: lookup asks for confirmation instead of intake when generic oil text has one same-brand oil
+ok 76 - lookup asks for confirmation instead of intake when generic oil text has one same-brand oil
+  ---
+  duration_ms: 0.237916
+  ...
+# Subtest: lookup ignores weak wrong-category token overlap and offers intake
+ok 77 - lookup ignores weak wrong-category token overlap and offers intake
+  ---
+  duration_ms: 0.202834
+  ...
+# Subtest: lookup surfaces strong identity matches in another category as category mismatch
+ok 78 - lookup surfaces strong identity matches in another category as category mismatch
+  ---
+  duration_ms: 0.2475
+  ...
+# Subtest: lookup offers product intake only for a precise supported product not found in catalog
+ok 79 - lookup offers product intake only for a precise supported product not found in catalog
+  ---
+  duration_ms: 0.155958
+  ...
+# Subtest: lookup treats unresolved brand plus generic category name as enough identity for intake
+ok 80 - lookup treats unresolved brand plus generic category name as enough identity for intake
+  ---
+  duration_ms: 0.130417
+  ...
+# Subtest: lookup asks for more identity before offering intake for generic brand category mentions
+ok 81 - lookup asks for more identity before offering intake for generic brand category mentions
+  ---
+  duration_ms: 0.28625
+  ...
+# Subtest: GTIN/EAN plus selected canonical category returns exact matched product when one active row exists
+ok 82 - GTIN/EAN plus selected canonical category returns exact matched product when one active row exists
+  ---
+  duration_ms: 2.515584
+  ...
+# Subtest: GTIN/EAN without category or with a different category returns review candidates only
+ok 83 - GTIN/EAN without category or with a different category returns review candidates only
+  ---
+  duration_ms: 0.588125
+  ...
+# Subtest: identifier path ignores inactive products
+ok 84 - identifier path ignores inactive products
+  ---
+  duration_ms: 7.621792
+  ...
+# Subtest: text matching uses snake_case clean_name rows from the repository boundary
+ok 85 - text matching uses snake_case clean_name rows from the repository boundary
+  ---
+  duration_ms: 0.186833
+  ...
+# Subtest: GTIN/EAN with mixed-category exact evidence stays review-only
+ok 86 - GTIN/EAN with mixed-category exact evidence stays review-only
+  ---
+  duration_ms: 0.116708
+  ...
+# Subtest: ambiguous GTIN/EAN review candidates include cross-category exact evidence
+ok 87 - ambiguous GTIN/EAN review candidates include cross-category exact evidence
+  ---
+  duration_ms: 0.177125
+  ...
+# Subtest: retailer identifiers do not collapse punctuation into false exact matches
+ok 88 - retailer identifiers do not collapse punctuation into false exact matches
+  ---
+  duration_ms: 0.129541
+  ...
+# Subtest: retailer identifiers preserve diacritics for exact matching
+ok 89 - retailer identifiers preserve diacritics for exact matching
+  ---
+  duration_ms: 0.065792
+  ...
+# Subtest: brand plus line plus clean name plus canonical category exact match returns matched
+ok 90 - brand plus line plus clean name plus canonical category exact match returns matched
+  ---
+  duration_ms: 0.229292
+  ...
+# Subtest: brand plus name fallback does not auto-link a different product line
+ok 91 - brand plus name fallback does not auto-link a different product line
+  ---
+  duration_ms: 0.293833
+  ...
+# Subtest: brand plus line plus name with mixed-category exact evidence stays review-only
+ok 92 - brand plus line plus name with mixed-category exact evidence stays review-only
+  ---
+  duration_ms: 0.082375
+  ...
+# Subtest: ambiguous brand plus line plus name candidates include cross-category exact evidence
+ok 93 - ambiguous brand plus line plus name candidates include cross-category exact evidence
+  ---
+  duration_ms: 0.144916
+  ...
+# Subtest: existing non-recommended active product can match
+ok 94 - existing non-recommended active product can match
+  ---
+  duration_ms: 0.104417
+  ...
+# Subtest: brand plus clean name and category can match when no line exists
+ok 95 - brand plus clean name and category can match when no line exists
+  ---
+  duration_ms: 0.047083
+  ...
+# Subtest: brand plus name with mixed-category exact evidence stays review-only
+ok 96 - brand plus name with mixed-category exact evidence stays review-only
+  ---
+  duration_ms: 0.054792
+  ...
+# Subtest: ambiguous brand plus name candidates include cross-category exact evidence
+ok 97 - ambiguous brand plus name candidates include cross-category exact evidence
+  ---
+  duration_ms: 0.061791
+  ...
+# Subtest: multiple close candidates return ambiguous review without auto-linking
+ok 98 - multiple close candidates return ambiguous review without auto-linking
+  ---
+  duration_ms: 0.063958
+  ...
+# Subtest: cross-category fuzzy candidates remain visible for review
+ok 99 - cross-category fuzzy candidates remain visible for review
+  ---
+  duration_ms: 0.097208
+  ...
+# Subtest: retailer SKU matching requires matching source before auto-linking
+ok 100 - retailer SKU matching requires matching source before auto-linking
+  ---
+  duration_ms: 0.089625
+  ...
+# Subtest: missing category cannot match for usage from brand and name alone
+ok 101 - missing category cannot match for usage from brand and name alone
+  ---
+  duration_ms: 0.03425
+  ...
+# Subtest: category mismatch does not auto-link text matches
+ok 102 - category mismatch does not auto-link text matches
+  ---
+  duration_ms: 0.038875
+  ...
+# Subtest: barcode identifiers match across UPC-A / EAN-13 / GTIN-14 spellings of the same number
+ok 103 - barcode identifiers match across UPC-A / EAN-13 / GTIN-14 spellings of the same number
+  ---
+  duration_ms: 0.056333
+  ...
+# Subtest: manual and photo intake accept the supported heat-protectant and scalp-care categories
+ok 104 - manual and photo intake accept the supported heat-protectant and scalp-care categories
+  ---
+  duration_ms: 2.149959
+  ...
+# Subtest: product intake feature flag defaults production off and preview/dev on
+ok 105 - product intake feature flag defaults production off and preview/dev on
+  ---
+  duration_ms: 0.087833
+  ...
+# Subtest: manual intake schemas require category, frequency, brand identity, and product name
+ok 106 - manual intake schemas require category, frequency, brand identity, and product name
+  ---
+  duration_ms: 0.470917
+  ...
+# Subtest: scan intake schema keeps brand and product name optional, requires category, and validates the scanned identifier shape
+ok 107 - scan intake schema keeps brand and product name optional, requires category, and validates the scanned identifier shape
+  ---
+  duration_ms: 0.788042
+  ...
+# Subtest: matched manual intake links user usage to the existing product without creating a submission
+ok 108 - matched manual intake links user usage to the existing product without creating a submission
+  ---
+  duration_ms: 2.497166
+  ...
+# Subtest: matched photo intake verifies and clears tmp uploads without creating a submission
+ok 109 - matched photo intake verifies and clears tmp uploads without creating a submission
+  ---
+  duration_ms: 0.581375
+  ...
+# Subtest: matched photo intake keeps tmp uploads if matched usage write fails
+ok 110 - matched photo intake keeps tmp uploads if matched usage write fails
+  ---
+  duration_ms: 0.423042
+  ...
+# Subtest: unknown manual intake creates a pending submission and pending usage slot
+ok 111 - unknown manual intake creates a pending submission and pending usage slot
+  ---
+  duration_ms: 0.6345
+  ...
+# Subtest: photo intake cleans committed front image and does not create review row if barcode commit fails
+ok 112 - photo intake cleans committed front image and does not create review row if barcode commit fails
+  ---
+  duration_ms: 0.563167
+  ...
+# Subtest: photo intake cleans rows/images without mutating usage if pending replacement RPC fails
+ok 113 - photo intake cleans rows/images without mutating usage if pending replacement RPC fails
+  ---
+  duration_ms: 0.538042
+  ...
+# Subtest: photo intake persists only server-derived uncertain validation state
+ok 114 - photo intake persists only server-derived uncertain validation state
+  ---
+  duration_ms: 0.374083
+  ...
+# Subtest: photo intake rejects stale committed image paths instead of reusing old submission photos
+ok 115 - photo intake rejects stale committed image paths instead of reusing old submission photos
+  ---
+  duration_ms: 0.131375
+  ...
+# Subtest: empty onboarding placeholder usage can be claimed without replacement confirmation
+ok 116 - empty onboarding placeholder usage can be claimed without replacement confirmation
+  ---
+  duration_ms: 1.082875
+  ...
+# Subtest: tracked usage requires explicit replacement confirmation
+ok 117 - tracked usage requires explicit replacement confirmation
+  ---
+  duration_ms: 0.236834
+  ...
+# Subtest: onboarding same usage id can update a tracked slot without replacement confirmation
+ok 118 - onboarding same usage id can update a tracked slot without replacement confirmation
+  ---
+  duration_ms: 0.476083
+  ...
+# Subtest: onboarding same pending photo usage can be saved again without reuploading the front image
+ok 119 - onboarding same pending photo usage can be saved again without reuploading the front image
+  ---
+  duration_ms: 0.635875
+  ...
+# Subtest: needs-more-info submission can be completed in place and reopened for review
+ok 120 - needs-more-info submission can be completed in place and reopened for review
+  ---
+  duration_ms: 0.451292
+  ...
+# Subtest: chat needs-more-info follow-up can update the pending submission in place
+ok 121 - chat needs-more-info follow-up can update the pending submission in place
+  ---
+  duration_ms: 0.570208
+  ...
+# Subtest: stale chat follow-up card cannot update a different pending submission
+ok 122 - stale chat follow-up card cannot update a different pending submission
+  ---
+  duration_ms: 0.14025
+  ...
+# Subtest: onboarding same pending photo usage updates the current reference when a new front image is uploaded
+ok 123 - onboarding same pending photo usage updates the current reference when a new front image is uploaded
+  ---
+  duration_ms: 0.328
+  ...
+# Subtest: onboarding mismatched usage id still requires replacement confirmation
+ok 124 - onboarding mismatched usage id still requires replacement confirmation
+  ---
+  duration_ms: 0.090042
+  ...
+# Subtest: chat still requires replacement confirmation for a tracked slot
+ok 125 - chat still requires replacement confirmation for a tracked slot
+  ---
+  duration_ms: 0.10075
+  ...
+# Subtest: confirmed unknown replacement stores previous slot state and cancels old pending submission
+ok 126 - confirmed unknown replacement stores previous slot state and cancels old pending submission
+  ---
+  duration_ms: 0.241958
+  ...
+# Subtest: failed pending replacement leaves old pending usage untouched
+ok 127 - failed pending replacement leaves old pending usage untouched
+  ---
+  duration_ms: 0.232291
+  ...
+# Subtest: cancelling an onboarding usage deletes the slot before closing the linked pending submission
+ok 128 - cancelling an onboarding usage deletes the slot before closing the linked pending submission
+  ---
+  duration_ms: 0.194208
+  ...
+# Subtest: chat intake verifies source conversation ownership and preserves owned conversation id
+ok 129 - chat intake verifies source conversation ownership and preserves owned conversation id
+  ---
+  duration_ms: 0.228792
+  ...
+# Subtest: OPEN_SUBMISSION_STATUSES is exported for src/lib/scan/pending-submission.ts to share (no duplicated literal set)
+ok 130 - OPEN_SUBMISSION_STATUSES is exported for src/lib/scan/pending-submission.ts to share (no duplicated literal set)
+  ---
+  duration_ms: 0.039834
+  ...
+# Subtest: scan submit with a cataloged EAN resolves already_in_catalog and touches zero user_product_usage rows
+ok 131 - scan submit with a cataloged EAN resolves already_in_catalog and touches zero user_product_usage rows
+  ---
+  duration_ms: 0.574292
+  ...
+# Subtest: a catalog match that fails the scan eligibility gate (quarantined/inactive) falls through to a pending submission, same as a miss
+ok 132 - a catalog match that fails the scan eligibility gate (quarantined/inactive) falls through to a pending submission, same as a miss
+  ---
+  duration_ms: 0.262792
+  ...
+# Subtest: unknown scanned EAN creates an anchorless pending submission with the normalized identifier persisted, touching zero user_product_usage rows
+ok 133 - unknown scanned EAN creates an anchorless pending submission with the normalized identifier persisted, touching zero user_product_usage rows
+  ---
+  duration_ms: 0.198958
+  ...
+# Subtest: scan submission persists the explicit retailer match decision as privacy-safe provenance
+ok 134 - scan submission persists the explicit retailer match decision as privacy-safe provenance
+  ---
+  duration_ms: 0.121375
+  ...
+# Subtest: dm enrichment prefills absent scan text only after original scan matching falls through, and is staging provenance
+ok 135 - dm enrichment prefills absent scan text only after original scan matching falls through, and is staging provenance
+  ---
+  duration_ms: 0.240083
+  ...
+# Subtest: dm enrichment preserves user-supplied scan text while retaining dm provenance
+ok 136 - dm enrichment preserves user-supplied scan text while retaining dm provenance
+  ---
+  duration_ms: 0.16625
+  ...
+# Subtest: a mismatched dm GTIN cannot prefill or enter scan submission provenance
+ok 137 - a mismatched dm GTIN cannot prefill or enter scan submission provenance
+  ---
+  duration_ms: 0.161
+  ...
+# Subtest: a lost race on the one-open-scan-submission index returns the submission that won it
+ok 138 - a lost race on the one-open-scan-submission index returns the submission that won it
+  ---
+  duration_ms: 0.221041
+  ...
+# Subtest: a unique violation with no reloadable open submission still surfaces as an error
+ok 139 - a unique violation with no reloadable open submission still surfaces as an error
+  ---
+  duration_ms: 0.207792
+  ...
+# Subtest: scan submission normalizes the scanned identifier once before it is matched and persisted
+ok 140 - scan submission normalizes the scanned identifier once before it is matched and persisted
+  ---
+  duration_ms: 0.1205
+  ...
+# Subtest: scan submission omits scanned_identifier columns and matchProductIntake's identifier when no identifier was scanned
+ok 141 - scan submission omits scanned_identifier columns and matchProductIntake's identifier when no identifier was scanned
+  ---
+  duration_ms: 0.120209
+  ...
+# Subtest: route handler returns controlled disabled response before auth or persistence
+ok 142 - route handler returns controlled disabled response before auth or persistence
+  ---
+  duration_ms: 4.364542
+  ...
+# Subtest: chat route persists pending product context after product intake submission
+ok 143 - chat route persists pending product context after product intake submission
+  ---
+  duration_ms: 0.932917
+  ...
+# Subtest: chat route upgrades a legacy offer row with atomic dual-written submission linkage
+ok 144 - chat route upgrades a legacy offer row with atomic dual-written submission linkage
+  ---
+  duration_ms: 0.852125
+  ...
+# Subtest: route handler returns controlled client error for wrong-user upload paths
+ok 145 - route handler returns controlled client error for wrong-user upload paths
+  ---
+  duration_ms: 0.5985
+  ...
+# Subtest: route handler returns controlled expired response for missing tmp uploads
+ok 146 - route handler returns controlled expired response for missing tmp uploads
+  ---
+  duration_ms: 1.42975
+  ...
+# Subtest: route handler keeps storage verification failures as persistence errors
+ok 147 - route handler keeps storage verification failures as persistence errors
+  ---
+  duration_ms: 0.539042
+  ...
+# Subtest: storage upload verification classifies only missing objects as expired user uploads
+ok 148 - storage upload verification classifies only missing objects as expired user uploads
+  ---
+  duration_ms: 0.088916
+  ...
+# Subtest: image validation accepts image signatures and rejects non-images
+ok 149 - image validation accepts image signatures and rejects non-images
+  ---
+  duration_ms: 0.275542
+  ...
+# Subtest: towel material falls back to plan answer
+ok 150 - towel material falls back to plan answer
+  ---
+  duration_ms: 0.550083
+  ...
+# Subtest: legacy value wins over plan answer
+ok 151 - legacy value wins over plan answer
+  ---
+  duration_ms: 0.059209
+  ...
+# Subtest: empty additionalHeatTools reads as answered none
+ok 152 - empty additionalHeatTools reads as answered none
+  ---
+  duration_ms: 0.08925
+  ...
+# Subtest: empty nightProtection reads as answered none
+ok 153 - empty nightProtection reads as answered none
+  ---
+  duration_ms: 0.048916
+  ...
+# Subtest: drying routes join labels
+ok 154 - drying routes join labels
+  ---
+  duration_ms: 0.055458
+  ...
+# Subtest: present-but-empty drying routes reads as answered none
+ok 155 - present-but-empty drying routes reads as answered none
+  ---
+  duration_ms: 0.036417
+  ...
+# Subtest: unanswered plan leaves value null
+ok 156 - unanswered plan leaves value null
+  ---
+  duration_ms: 0.105167
+  ...
+# Subtest: towel technique falls back to plan answer
+ok 157 - towel technique falls back to plan answer
+  ---
+  duration_ms: 0.048208
+  ...
+# Subtest: towel material and technique resolve as a unit — legacy technique signal blocks plan material
+ok 158 - towel material and technique resolve as a unit — legacy technique signal blocks plan material
+  ---
+  duration_ms: 0.170541
+  ...
+# Subtest: towel material and technique resolve as a unit — pure plan no_towel
+ok 159 - towel material and technique resolve as a unit — pure plan no_towel
+  ---
+  duration_ms: 0.239625
+  ...
+# Subtest: plan additional heat tools map to Alltag/Styling labels
+ok 160 - plan additional heat tools map to Alltag/Styling labels
+  ---
+  duration_ms: 0.30975
+  ...
+# Subtest: plan night protection maps to existing labels
+ok 161 - plan night protection maps to existing labels
+  ---
+  duration_ms: 0.044209
+  ...
+# Subtest: selectPlanProductRows falls back to routine products when legacy rows are empty
+ok 162 - selectPlanProductRows falls back to routine products when legacy rows are empty
+  ---
+  duration_ms: 0.045
+  ...
+# Subtest: selectPlanProductRows stays null when legacy rows exist
+ok 163 - selectPlanProductRows stays null when legacy rows exist
+  ---
+  duration_ms: 0.026084
+  ...
+# Subtest: selectPlanProductRows stays null without an active routine
+ok 164 - selectPlanProductRows stays null without an active routine
+  ---
+  duration_ms: 0.024375
+  ...
+# Subtest: selectPlanProductRows falls through to the empty state for a present-but-empty routine
+ok 165 - selectPlanProductRows falls through to the empty state for a present-but-empty routine
+  ---
+  duration_ms: 0.026792
+  ...
+# Subtest: profile shows no towel technique as an answered editable value
+ok 166 - profile shows no towel technique as an answered editable value
+  ---
+  duration_ms: 1.005
+  ...
+# Subtest: profile quiz section includes editable hair length after density
+ok 167 - profile quiz section includes editable hair length after density
+  ---
+  duration_ms: 0.164791
+  ...
+# Subtest: profile routine section shows length tip accessory night protection label
+ok 168 - profile routine section shows length tip accessory night protection label
+  ---
+  duration_ms: 0.10125
+  ...
+# Subtest: profile routine section distinguishes unanswered brush type from explicit none
+ok 169 - profile routine section distinguishes unanswered brush type from explicit none
+  ---
+  duration_ms: 0.119333
+  ...
+# Subtest: goals edit derives persisted desired volume from selected goals
+ok 170 - goals edit derives persisted desired volume from selected goals
+  ---
+  duration_ms: 0.1255
+  ...
+1..170
+# tests 170
+# suites 0
+# pass 170
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1909.579834

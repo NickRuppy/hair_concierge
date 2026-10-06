@@ -1,0 +1,86 @@
+[
+  {
+    "id": "mobile1-credential-tag-lost",
+    "file": "src/lib/mobile/research-delivery-worker.ts",
+    "sourceSha256": "22b92c21d4e708390a2afec1d4feb3418292c5923dc95eb510b3e7b1b51a59ce",
+    "mutatedSha256": "0f0bb8ff26a2018aec5c0452f8b1b309b80777df854951dde3666e479dc41d80",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "from": "p_error_code: result.error ?? null,",
+    "to": "p_error_code: result.error === \"push_provider_credentials\" ? \"push_provider_retry\" : result.error ?? null,",
+    "test": {
+      "file": "tests/mobile-research-delivery-worker.test.ts",
+      "name": "a fifth APNs credential fault reports the refunded retry rather than a terminal failure"
+    },
+    "intendedAssertion": "Transferred exact RPC tag assertion receives push_provider_retry, while actual in-memory stats still see credential code and remain retry1/terminal0. Fake persisted state may subsequently differ; tag assertion precedes it.",
+    "oracles": {
+      "transfer": {
+        "assertion": "assert.equal(settled?.args.p_error_code, \"push_provider_credentials\")",
+        "line": 272
+      },
+      "cut": {
+        "assertion": "assert.equal(settled?.args.p_error_code, \"push_provider_credentials\")",
+        "line": 257
+      }
+    },
+    "execution": "STATIC ONLY; main generic runner must inspect intended assertion, not accept any ERR_ASSERTION"
+  },
+  {
+    "id": "mobile1-credential-delay-too-short",
+    "file": "src/lib/mobile/research-delivery-worker.ts",
+    "sourceSha256": "22b92c21d4e708390a2afec1d4feb3418292c5923dc95eb510b3e7b1b51a59ce",
+    "mutatedSha256": "61024d1735c6628d183eb50241d65afcabb57dd77ef50d40a83ebfea196f5e18",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "from": "retrySeconds: Math.min(86400, Math.max(60, receipt.retryAfterSeconds ?? 300)),",
+    "to": "retrySeconds: 300,",
+    "test": {
+      "file": "tests/mobile-research-delivery-worker.test.ts",
+      "name": "a fifth APNs credential fault reports the refunded retry rather than a terminal failure"
+    },
+    "intendedAssertion": "Transferred actual RPC next-attempt delta equals300000 instead of3600000; earlier stats/state remain retry.",
+    "oracles": {
+      "transfer": {
+        "assertion": "assert.equal(Date.parse(String(settled?.args.p_next_attempt_at)) - f.deps.now(), 3600 * 1000)",
+        "line": 273
+      },
+      "cut": {
+        "assertion": "assert.equal(Date.parse(String(settled?.args.p_next_attempt_at)) - f.deps.now(), 3600 * 1000)",
+        "line": 258
+      }
+    },
+    "execution": "STATIC ONLY; main generic runner must inspect intended assertion, not accept any ERR_ASSERTION"
+  },
+  {
+    "id": "mobile1-credential-refund-stat-counted-terminal",
+    "file": "src/lib/mobile/research-delivery-worker.ts",
+    "sourceSha256": "22b92c21d4e708390a2afec1d4feb3418292c5923dc95eb510b3e7b1b51a59ce",
+    "mutatedSha256": "eeba524775b1c6786c1c8dc2516cd6aa82fffadcda9fd8c974941bf4341ae0d0",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "from": "      result.error !== \"push_provider_credentials\" &&\n",
+    "to": "      true &&\n",
+    "test": {
+      "file": "tests/mobile-research-delivery-worker.test.ts",
+      "name": "a fifth APNs credential fault reports the refunded retry rather than a terminal failure"
+    },
+    "intendedAssertion": "Existing keeper retry1 and terminal0 detect actual owner stats treating fifth credential attempt as terminal; preserves SQL and fake state behavior.",
+    "oracles": {
+      "transfer": {
+        "assertion": "assert.equal(result.retry, 1)",
+        "line": 269
+      },
+      "cut": {
+        "assertion": "assert.equal(result.retry, 1)",
+        "line": 254
+      }
+    },
+    "execution": "STATIC ONLY; main generic runner must inspect intended assertion, not accept any ERR_ASSERTION"
+  }
+]

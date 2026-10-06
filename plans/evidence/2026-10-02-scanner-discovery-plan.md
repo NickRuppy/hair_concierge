@@ -1,0 +1,27 @@
+# Scanner and Discovery redundant-layer cutover
+
+Status: applied, current tree 172 removed declarations; latest completed whole-tree proof 144, final 172 proof running.
+
+Decision coverage confirmed: Nick explicitly requested 20% pruning within 2% coverage and production reachability investigation. Inherited: test-audit retention/preservation gates, existing uncommitted worktree ownership, pinned original 11,892 denominator, native Node/c8 gates, no changes during any test/report runner. Routine defaults: retire only 16 named scanner lower-outcome declarations after five exact assertion transfers and two no-call-oracle repairs; consolidate five Discovery declarations after preserving exact HTTP/storage/key assertions. Open consequential assumptions: none. No user-flow, payment/access, schema, rollout or architectural choice changes. Internal revalidation: main read owner paths, assertion gaps and independent revised layer plans.
+
+Owning exact edit and mutation plans:
+- [Scanner 16](2026-10-02-scanner-cutover.md); [full layer evidence](2026-10-02-scanner-layer-judgment.md).
+- [Discovery 5](2026-10-02-discovery-cutover.md); [91-declaration ledger](2026-10-02-discovery-intake-layer-ledger.md).
+
+Source edits limited to removing never-dispatched camera_live action and privatizing isSheetOpen. All actual camera retry, unknown/pending ownership, stale resolve defenses, saved-state guards, fatigue identity and optional-reason default stay. Two fake-fetch exceptions were swallowed by real code: retain and repair those assertions with external counters, without deletion credit. Existing source data attributes allow exact status/reason checks; do not add introspection seams.
+
+Execute in place in existing task worktree, preserving earlier pending edits. Main integrates and inspects every diff. Before source edits, focused scanner c8 baseline has completed on current 151 tree; Discovery baseline runs before its own changes. Run transfer-only tree first, then exact cuts, after every prior runner exits. Actual-owner mutations must produce intended assertion failures, with byte-exact restoration. Independent post-cut preservation review compares lost assertions to concrete keepers. Typecheck/lint/build, full fixed-source c8 with unchanged named baseline failures, and whole-diff review govern final handoff. Native commands are in child plans; source-set c8 command args are saved in /tmp command.json. Target remains 2,379; expected 172 is still far short. No claim of fresh-main proof/publication readiness; no commit/push/PR/merge/deploy/provider writes authorized.
+
+## Counterpart plan review disposition
+
+Claude read-only review verified every technical claim and found no execution blocker. Main accepts the child-presence concern as a transfer-only green gate: the existing keeper explicitly requires ScanUnknownFlow, and transferred receipt assertion is checked before cutting. Main retains target 2,379; the reviewer correctly highlights that small slices alone cannot establish 20%, so independent broader layer/orphan/operator/shared-guard discovery continues. No revised smaller target is accepted.
+
+Main rejects renewed approval for two settled internal/scope matters: user asked the imported skill to prune tests, whose Edit shape explicitly couples removal of unused production seams/dead paths; Nick additionally directed production reachability determination. This does not authorize changing an available product feature, and none is changed. The user's 2% coverage request governs global coverage; raw per-file 2pp was an additional orchestrator diagnostic, refined transparently after structural deletion and synthetic mappings. Both actual and stricter original-denominator global gates remain required; unique lost contracts are restored. This is not a waiver of a user-specified per-file threshold. Publication remains unauthorized independently of advisory review.
+
+## Applied local receipt
+
+Declaration inventory: 11,892→11,720, net 172 removed (1.4464%), 11,186 Node + 534 Playwright. Source/tooling +33/−5,673, net −5,640 across 64 paths; tests +278/−4,591, net −4,313 across 78 paths. 25 whole source modules and 18 whole test files retired; new slice deletes no whole test file. All counts are measured against original HEAD and preserve original 8 cuts without recounting.
+
+Focused c8: Compare 53→46, scanner 186→170, Discovery 252→247, all pass. Transfer-only trees were green before cuts. Scanner preservation found one additional false-pass risk: session 1/3 absence could pass after caught reducer exception. Added positive rendered p-a result controls before both negative assertions; focused keeper passes, actual session-specific throw mutation fails requireByType(ScanResultCard), then source restored exactly. Nine other scanner mutations, five Discovery mutations and the Compare route-catch mutation all fail designated keepers, byte-exact restore. Independent [scanner review](2026-10-02-scanner-layer-preservation.md) and [Discovery review](2026-10-02-discovery-layer-preservation.md) find zero open gaps.
+
+Typecheck/lint/build pass on the formatted 172 tree; lint retains five existing warnings. Whole 172 all-source c8/failure comparison is running on `/tmp/test-audit-final 172-tested-tree.json`; no source/test edits until it exits. Whole-diff Claude review running independently, no duplicate runners. This is still an intermediate checkpoint; target 2,379 unchanged; 2,207 removals remain, no publication/fresh-main readiness claim.

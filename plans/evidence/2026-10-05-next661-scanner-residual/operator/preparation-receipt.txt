@@ -1,0 +1,27 @@
+{
+  "directory": "/private/tmp/test-audit-scanner119-tools-e5gg36wq",
+  "pinSHA": "1f67eb774e13aa797f0b65bf2afe59982b58aec827dc944f4c4f06774d848045",
+  "originalGuards": 76,
+  "phases": {
+    "before": 119,
+    "transfer": 119,
+    "cut": 105
+  },
+  "nativeCounts": {
+    "before": 128,
+    "transfer": 128,
+    "cut": 114
+  },
+  "readset": 230,
+  "localClosure": 236,
+  "dependencies": 5020,
+  "dependencyTrees": 32,
+  "controls": 18,
+  "tsMutants": 16,
+  "sqlRecipes": 2,
+  "nonliteralImports": [],
+  "attemptedRepositoryWrites": 0,
+  "attemptedChildren": 0,
+  "attemptedOwnerImports": 0,
+  "attemptedNetworkCalls": 0
+}

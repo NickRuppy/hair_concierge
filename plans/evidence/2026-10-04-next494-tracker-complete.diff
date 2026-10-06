@@ -1,0 +1,87 @@
+--- before/tests/tracker-aggregation.test.ts
++++ transfer/tests/tracker-aggregation.test.ts
+@@ -311,6 +311,8 @@
+   const cadences = computeObservedCadences(withCustom, null, CADENCE_POLICIES)
+   const mask = cadences.find((cadence) => cadence.category === "mask")
+   assert.ok(mask)
++  assert.equal(mask.basis, "day_level")
++  assert.equal(mask.anchorSource, null)
+   assert.equal(mask.usageDays, 2)
+   assert.equal(mask.weeklyCadence, 1)
+   assert.equal(estimateObservedWashCadencePerWeek(withCustom), 2)
+--- transfer/tests/tracker-aggregation.test.ts
++++ cut/tests/tracker-aggregation.test.ts
+@@ -99,14 +99,6 @@
+   noneDay("2026-06-20"),
+ ]
+ 
+-test("observed wash cadence: 4 washes over 2 observed weeks -> 2/week", () => {
+-  assert.equal(estimateObservedWashCadencePerWeek(DENSE_WEEKS), 2)
+-})
+-
+-test("observed wash cadence: null with fewer than 2 observed weeks", () => {
+-  assert.equal(estimateObservedWashCadencePerWeek([washDay("2026-06-10", ["shampoo"])]), null)
+-})
+-
+ test("shampoo cadence is the measured wash rhythm, not the self-report", () => {
+   const cadences = computeObservedCadences(DENSE_WEEKS, 5, CADENCE_POLICIES)
+   const shampoo = cadences.find((c) => c.category === "shampoo")
+@@ -122,15 +114,6 @@
+     cadences.find((c) => c.category === "shampoo"),
+     undefined,
+   )
+-})
+-
+-test("need-based policy: mask uses observed-week cadence instead of wash share", () => {
+-  const cadences = computeObservedCadences(DENSE_WEEKS, null, CADENCE_POLICIES)
+-  const mask = cadences.find((c) => c.category === "mask")
+-  assert.ok(mask)
+-  assert.equal(mask.basis, "day_level")
+-  assert.equal(mask.anchorSource, null)
+-  assert.equal(mask.weeklyCadence, 1)
+ })
+ 
+ test("match-shampoo policy falls back to self-reported anchor for sparse loggers", () => {
+--- before/tests/tracker-nudges.test.ts
++++ transfer/tests/tracker-nudges.test.ts
+@@ -125,14 +125,13 @@
+     }).length,
+     0,
+   )
+-  assert.equal(
+-    computeNudges({
+-      cadences: [cadence("mask", 5)],
+-      targets: [MASK_TARGET],
+-      dismissed,
+-    }).length,
+-    1,
+-  )
++  const otherDirection = computeNudges({
++    cadences: [cadence("mask", 5)],
++    targets: [MASK_TARGET],
++    dismissed,
++  })
++  assert.equal(otherDirection.length, 1)
++  assert.equal(otherDirection[0].direction, "decrease")
+ })
+ 
+ test("no target for category -> no nudge", () => {
+--- transfer/tests/tracker-nudges.test.ts
++++ cut/tests/tracker-nudges.test.ts
+@@ -105,16 +105,6 @@
+   assert.ok(!nudges[0].message.includes("Shampoo"))
+ })
+ 
+-test("observed clearly above band -> decrease nudge", () => {
+-  const nudges = computeNudges({
+-    cadences: [cadence("mask", 5)],
+-    targets: [MASK_TARGET],
+-    dismissed: [],
+-  })
+-  assert.equal(nudges.length, 1)
+-  assert.equal(nudges[0].direction, "decrease")
+-})
+-
+ test("dismissed direction stays hidden; other direction still fires", () => {
+   const dismissed = [{ category: "mask", direction: "increase" }]
+   assert.equal(

@@ -1,0 +1,67 @@
+TAP version 13
+# Subtest: Meta offer delivery requires recent quiz evidence and constructs the canonical event
+not ok 1 - Meta offer delivery requires recent quiz evidence and constructs the canonical event
+  ---
+  duration_ms: 3.441459
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/meta-offer-view.test.ts:2:5640'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        {
+          customData: {
+            content_name: 'quiz_result_offer_view'
+          },
+          eventId: '30000000-0000-4000-8000-000000000001',
+          eventName: 'ViewContent',
+    +     eventSourceUrl: 'https://chaarlie.de/result/lead-123',
+    -     eventSourceUrl: 'https://chaarlie.de/result',
+          user: {
+            clientIpAddress: '203.0.113.7',
+            clientUserAgent: undefined,
+            email: 'person@example.com',
+            externalId: '10000000-0000-4000-8000-000000000001',
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      eventName: 'ViewContent'
+      eventId: '30000000-0000-4000-8000-000000000001'
+      eventSourceUrl: 'https://chaarlie.de/result'
+      user:
+        clientIpAddress: '203.0.113.7'
+        email: 'person@example.com'
+        externalId: '10000000-0000-4000-8000-000000000001'
+        name: 'Änne Müller'
+      customData:
+        content_name: 'quiz_result_offer_view'
+  actual:
+    0:
+      eventName: 'ViewContent'
+      eventId: '30000000-0000-4000-8000-000000000001'
+      eventSourceUrl: 'https://chaarlie.de/result/lead-123'
+      user:
+        email: 'person@example.com'
+        name: 'Änne Müller'
+        externalId: '10000000-0000-4000-8000-000000000001'
+        clientIpAddress: '203.0.113.7'
+      customData:
+        content_name: 'quiz_result_offer_view'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/meta-offer-view.test.ts:190:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 721.949125

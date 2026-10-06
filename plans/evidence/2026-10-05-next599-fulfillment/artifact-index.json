@@ -1,0 +1,842 @@
+[
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/candidates.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/candidates.json",
+    "sha256": "6173bc1dbbe92887932bf530b14e1df3e50357b381791e04dc9e9c298f7570fb",
+    "bytes": 4671
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/complete-ledger.md",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/complete-ledger.md",
+    "sha256": "7431cc419539b660a5deb454ffd311a10e38ad91c2151e9bdcc0f8cf750eb3c4",
+    "bytes": 24771
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/complete.diff",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/complete.diff",
+    "sha256": "a026af30d2bdfd77c3425b88483c38cf6f7e3932e3be14b6805c11f6c3bfa922",
+    "bytes": 1328
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/controls.cjs",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/controls.cjs.txt",
+    "sha256": "d89d8fabf1e9db136878f2129c9304265e7189e57ccc1ef225a5bdb04706ff7e",
+    "bytes": 4007
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/controls.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/controls.json",
+    "sha256": "c8cade28cfffb0443ca8ea1a4e0287051db7d3223aa3f88f6dc858b35eb9109e",
+    "bytes": 10756
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/handoff-receipt.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/handoff-receipt.json",
+    "sha256": "c15732ddc41bcb203b858a91701bb9704a83b9e3f259ffcf7a063fc1475050b9",
+    "bytes": 1406
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/inventory.cjs",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/inventory.cjs.txt",
+    "sha256": "e33ad2254dd07b25b18fd0afb49972becce4b10bc54545b8d248d9b6d09a094b",
+    "bytes": 1450
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/judgments.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/judgments.json",
+    "sha256": "85c6ca48d445719d2f632eab30ec5d1db65722cf27bfa8832001f36dc5810314",
+    "bytes": 112776
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/layer-plan.md",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/layer-plan.md",
+    "sha256": "903b17b31a8f4dd5e3ebe907b17f6e0ec96f52fa36918e7f74a455fdafe33a8c",
+    "bytes": 14919
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/ledger.py",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/ledger.py.txt",
+    "sha256": "a8137f7ab8df06cc7ac51e551fd3c32225b30256c8869418aa84634c2e65ae95",
+    "bytes": 18650
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/manifest.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/manifest.json",
+    "sha256": "d99a84f33b1df17782ecf58aded698d6409927718e962f3920ef28605878dfa7",
+    "bytes": 19324
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/prepare.py",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/prepare.py.txt",
+    "sha256": "2656a233052e2d4a95042b84b92662c0405799c3161c80a3ccd6c7771853b3d2",
+    "bytes": 6605
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/sites.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/sites.json",
+    "sha256": "dcc86cdb00ea30fed278df4bff3bf894c28cccecb536452d63bec8c2945600b7",
+    "bytes": 93436
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/before/tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/before/tests/billing-one-time-fulfillment-reconcile.test.ts.txt",
+    "sha256": "3d01c66a46f500c9bbd009e770dd1fa0a3488fc0ababc180a9deb129e5fd44c9",
+    "bytes": 19796
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/before/tests/one-time-activation-status-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/before/tests/one-time-activation-status-route.test.ts.txt",
+    "sha256": "61d712bc3a6d4b9111d212b8ef7c9d01f2c5aee3f8812ef7fe20a423b84cb2cf",
+    "bytes": 14005
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/before/tests/one-time-paid-pending-ux.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/before/tests/one-time-paid-pending-ux.test.ts.txt",
+    "sha256": "3857082e8351d940879673c987371b453255bf9826845d4b4ec3f32c350959bf",
+    "bytes": 3627
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/before/tests/one-time-payment-recovery-migration.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/before/tests/one-time-payment-recovery-migration.test.ts.txt",
+    "sha256": "06b7eaf062f916f8e421104b3cdb7361fbd38a3a7165aa4f228f080845e9e5d0",
+    "bytes": 3053
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/before/tests/one-time-recovery-command.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/before/tests/one-time-recovery-command.test.ts.txt",
+    "sha256": "69887834dd8e2df03dd0a5ebe426f02951d55acecfe2749d4e5cdfbe3e194d05",
+    "bytes": 16865
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/before/tests/personal-plan-one-time-confirmation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/before/tests/personal-plan-one-time-confirmation.test.ts.txt",
+    "sha256": "afa54c5c0a9463490daccc8809ff267cb0f13cd9e7bb60132fa38376700a5594",
+    "bytes": 4490
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/before/tests/personal-plan-one-time-first-access.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/before/tests/personal-plan-one-time-first-access.test.ts.txt",
+    "sha256": "f389506fb70cfe3e5dba2f7fefdad84d9145dd2233278af54e1f0f20c0a37b78",
+    "bytes": 6949
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/before/tests/stripe-one-time-confirmation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/before/tests/stripe-one-time-confirmation.test.ts.txt",
+    "sha256": "ca1de738e9ac257063c23524d6f1d8d56c27cf64f70ce5fa7f939d20a497e42c",
+    "bytes": 24862
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/cut/tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/cut/tests/billing-one-time-fulfillment-reconcile.test.ts.txt",
+    "sha256": "3d01c66a46f500c9bbd009e770dd1fa0a3488fc0ababc180a9deb129e5fd44c9",
+    "bytes": 19796
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/cut/tests/one-time-activation-status-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/cut/tests/one-time-activation-status-route.test.ts.txt",
+    "sha256": "61d712bc3a6d4b9111d212b8ef7c9d01f2c5aee3f8812ef7fe20a423b84cb2cf",
+    "bytes": 14005
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/cut/tests/one-time-paid-pending-ux.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/cut/tests/one-time-paid-pending-ux.test.ts.txt",
+    "sha256": "3857082e8351d940879673c987371b453255bf9826845d4b4ec3f32c350959bf",
+    "bytes": 3627
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/cut/tests/one-time-payment-recovery-migration.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/cut/tests/one-time-payment-recovery-migration.test.ts.txt",
+    "sha256": "06b7eaf062f916f8e421104b3cdb7361fbd38a3a7165aa4f228f080845e9e5d0",
+    "bytes": 3053
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/cut/tests/one-time-recovery-command.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/cut/tests/one-time-recovery-command.test.ts.txt",
+    "sha256": "b0ef567977d3953a99cf3c36f2836a947003e577ab0a84aa61fb08f3bd8e29d4",
+    "bytes": 16471
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/cut/tests/personal-plan-one-time-confirmation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/cut/tests/personal-plan-one-time-confirmation.test.ts.txt",
+    "sha256": "afa54c5c0a9463490daccc8809ff267cb0f13cd9e7bb60132fa38376700a5594",
+    "bytes": 4490
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/cut/tests/personal-plan-one-time-first-access.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/cut/tests/personal-plan-one-time-first-access.test.ts.txt",
+    "sha256": "f389506fb70cfe3e5dba2f7fefdad84d9145dd2233278af54e1f0f20c0a37b78",
+    "bytes": 6949
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/cut/tests/stripe-one-time-confirmation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/cut/tests/stripe-one-time-confirmation.test.ts.txt",
+    "sha256": "ca1de738e9ac257063c23524d6f1d8d56c27cf64f70ce5fa7f939d20a497e42c",
+    "bytes": 24862
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/transfer/tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/transfer/tests/billing-one-time-fulfillment-reconcile.test.ts.txt",
+    "sha256": "3d01c66a46f500c9bbd009e770dd1fa0a3488fc0ababc180a9deb129e5fd44c9",
+    "bytes": 19796
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/transfer/tests/one-time-activation-status-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/transfer/tests/one-time-activation-status-route.test.ts.txt",
+    "sha256": "61d712bc3a6d4b9111d212b8ef7c9d01f2c5aee3f8812ef7fe20a423b84cb2cf",
+    "bytes": 14005
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/transfer/tests/one-time-paid-pending-ux.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/transfer/tests/one-time-paid-pending-ux.test.ts.txt",
+    "sha256": "3857082e8351d940879673c987371b453255bf9826845d4b4ec3f32c350959bf",
+    "bytes": 3627
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/transfer/tests/one-time-payment-recovery-migration.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/transfer/tests/one-time-payment-recovery-migration.test.ts.txt",
+    "sha256": "06b7eaf062f916f8e421104b3cdb7361fbd38a3a7165aa4f228f080845e9e5d0",
+    "bytes": 3053
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/transfer/tests/one-time-recovery-command.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/transfer/tests/one-time-recovery-command.test.ts.txt",
+    "sha256": "65dbdc081adbad4392c95dccb9908585525f2e859236bc96a481cc11875f0a6b",
+    "bytes": 17121
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/transfer/tests/personal-plan-one-time-confirmation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/transfer/tests/personal-plan-one-time-confirmation.test.ts.txt",
+    "sha256": "afa54c5c0a9463490daccc8809ff267cb0f13cd9e7bb60132fa38376700a5594",
+    "bytes": 4490
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/transfer/tests/personal-plan-one-time-first-access.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/transfer/tests/personal-plan-one-time-first-access.test.ts.txt",
+    "sha256": "f389506fb70cfe3e5dba2f7fefdad84d9145dd2233278af54e1f0f20c0a37b78",
+    "bytes": 6949
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/snapshots/transfer/tests/stripe-one-time-confirmation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/snapshots/transfer/tests/stripe-one-time-confirmation.test.ts.txt",
+    "sha256": "ca1de738e9ac257063c23524d6f1d8d56c27cf64f70ce5fa7f939d20a497e42c",
+    "bytes": 24862
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/static-check.cjs",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/static-check.cjs.txt",
+    "sha256": "0b39feefbb10b9cc88c09481e2a6e7ef6f5308f17394139e42689c858a53c5cf",
+    "bytes": 2761
+  },
+  {
+    "source": "/tmp/test-audit-one-time-fulfillment75/static-check.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/proposal/static-check.json",
+    "sha256": "6f07b57071219b5ba40544c7d042a3666a5e82b3eee21a29e8b98ca3027f943a",
+    "bytes": 300
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/README.md",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/README.md",
+    "sha256": "334905f2ba7eadfc310353b11bf7631ef015130c98eb96c58cc385bc8bb8c620",
+    "bytes": 7345
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/controls-check.log",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/controls-check.log",
+    "sha256": "6d35ad11e44064af7f8bddf08dfabffa64f53554093e9b68dcda0b43863d697f",
+    "bytes": 363
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/editor-check.log",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/editor-check.log",
+    "sha256": "a3dc76b187be51a2a65d846f8c7a8848c24446c8bfbe0105f694e9c44fbf5ace",
+    "bytes": 405
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/metadata-disposition.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/metadata-disposition.json",
+    "sha256": "d3db02a31682800f63ef7f67a271481cad2eac4d483d273bc657f1703b06a97f",
+    "bytes": 773
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/metadata-prior-pins.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/metadata-prior-pins.json",
+    "sha256": "c90b62d704a00aabbe3c482e1e89ae9051a3a62151b358fc73a577ae145ff6f5",
+    "bytes": 70100
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-cut-mwEsEG/intent.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-cut-mwEsEG/intent.json",
+    "sha256": "308f4316706b97cb29d7aeb0d6e8e53e94c58e4384a37802a614dcb3ba138dac",
+    "bytes": 2524
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-cut-mwEsEG/originals/tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-cut-mwEsEG/originals/tests/billing-one-time-fulfillment-reconcile.test.ts.txt",
+    "sha256": "3d01c66a46f500c9bbd009e770dd1fa0a3488fc0ababc180a9deb129e5fd44c9",
+    "bytes": 19796
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-cut-mwEsEG/originals/tests/one-time-activation-status-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-cut-mwEsEG/originals/tests/one-time-activation-status-route.test.ts.txt",
+    "sha256": "61d712bc3a6d4b9111d212b8ef7c9d01f2c5aee3f8812ef7fe20a423b84cb2cf",
+    "bytes": 14005
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-cut-mwEsEG/originals/tests/one-time-paid-pending-ux.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-cut-mwEsEG/originals/tests/one-time-paid-pending-ux.test.ts.txt",
+    "sha256": "3857082e8351d940879673c987371b453255bf9826845d4b4ec3f32c350959bf",
+    "bytes": 3627
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-cut-mwEsEG/originals/tests/one-time-payment-recovery-migration.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-cut-mwEsEG/originals/tests/one-time-payment-recovery-migration.test.ts.txt",
+    "sha256": "06b7eaf062f916f8e421104b3cdb7361fbd38a3a7165aa4f228f080845e9e5d0",
+    "bytes": 3053
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-cut-mwEsEG/originals/tests/one-time-recovery-command.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-cut-mwEsEG/originals/tests/one-time-recovery-command.test.ts.txt",
+    "sha256": "65dbdc081adbad4392c95dccb9908585525f2e859236bc96a481cc11875f0a6b",
+    "bytes": 17121
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-cut-mwEsEG/originals/tests/personal-plan-one-time-confirmation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-cut-mwEsEG/originals/tests/personal-plan-one-time-confirmation.test.ts.txt",
+    "sha256": "afa54c5c0a9463490daccc8809ff267cb0f13cd9e7bb60132fa38376700a5594",
+    "bytes": 4490
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-cut-mwEsEG/originals/tests/personal-plan-one-time-first-access.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-cut-mwEsEG/originals/tests/personal-plan-one-time-first-access.test.ts.txt",
+    "sha256": "f389506fb70cfe3e5dba2f7fefdad84d9145dd2233278af54e1f0f20c0a37b78",
+    "bytes": 6949
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-cut-mwEsEG/originals/tests/stripe-one-time-confirmation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-cut-mwEsEG/originals/tests/stripe-one-time-confirmation.test.ts.txt",
+    "sha256": "ca1de738e9ac257063c23524d6f1d8d56c27cf64f70ce5fa7f939d20a497e42c",
+    "bytes": 24862
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-cut-mwEsEG/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-cut-mwEsEG/receipt.json",
+    "sha256": "14ea104fa0a79a7fe8d72a9344cec7698cc925c9a8b8eedf9fcc5a4a641008ab",
+    "bytes": 1683
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-transfer-iuDB0X/intent.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-transfer-iuDB0X/intent.json",
+    "sha256": "46bf652b40b606e440bc7c4defa95d482c8c3ddbcf66e16d084593fb9f138a5d",
+    "bytes": 2280
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-transfer-iuDB0X/originals/tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-transfer-iuDB0X/originals/tests/billing-one-time-fulfillment-reconcile.test.ts.txt",
+    "sha256": "3d01c66a46f500c9bbd009e770dd1fa0a3488fc0ababc180a9deb129e5fd44c9",
+    "bytes": 19796
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-transfer-iuDB0X/originals/tests/one-time-activation-status-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-transfer-iuDB0X/originals/tests/one-time-activation-status-route.test.ts.txt",
+    "sha256": "61d712bc3a6d4b9111d212b8ef7c9d01f2c5aee3f8812ef7fe20a423b84cb2cf",
+    "bytes": 14005
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-transfer-iuDB0X/originals/tests/one-time-paid-pending-ux.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-transfer-iuDB0X/originals/tests/one-time-paid-pending-ux.test.ts.txt",
+    "sha256": "3857082e8351d940879673c987371b453255bf9826845d4b4ec3f32c350959bf",
+    "bytes": 3627
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-transfer-iuDB0X/originals/tests/one-time-payment-recovery-migration.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-transfer-iuDB0X/originals/tests/one-time-payment-recovery-migration.test.ts.txt",
+    "sha256": "06b7eaf062f916f8e421104b3cdb7361fbd38a3a7165aa4f228f080845e9e5d0",
+    "bytes": 3053
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-transfer-iuDB0X/originals/tests/one-time-recovery-command.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-transfer-iuDB0X/originals/tests/one-time-recovery-command.test.ts.txt",
+    "sha256": "69887834dd8e2df03dd0a5ebe426f02951d55acecfe2749d4e5cdfbe3e194d05",
+    "bytes": 16865
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-transfer-iuDB0X/originals/tests/personal-plan-one-time-confirmation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-transfer-iuDB0X/originals/tests/personal-plan-one-time-confirmation.test.ts.txt",
+    "sha256": "afa54c5c0a9463490daccc8809ff267cb0f13cd9e7bb60132fa38376700a5594",
+    "bytes": 4490
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-transfer-iuDB0X/originals/tests/personal-plan-one-time-first-access.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-transfer-iuDB0X/originals/tests/personal-plan-one-time-first-access.test.ts.txt",
+    "sha256": "f389506fb70cfe3e5dba2f7fefdad84d9145dd2233278af54e1f0f20c0a37b78",
+    "bytes": 6949
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-transfer-iuDB0X/originals/tests/stripe-one-time-confirmation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-transfer-iuDB0X/originals/tests/stripe-one-time-confirmation.test.ts.txt",
+    "sha256": "ca1de738e9ac257063c23524d6f1d8d56c27cf64f70ce5fa7f939d20a497e42c",
+    "bytes": 24862
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-apply-transfer-iuDB0X/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-apply-transfer-iuDB0X/receipt.json",
+    "sha256": "bc8b8028df43fc510c5a48b4b2da3b2aba65fa6a87dd3faeafec5dc9a93ef10a",
+    "bytes": 1449
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-before.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-before.ts.txt",
+    "sha256": "69887834dd8e2df03dd0a5ebe426f02951d55acecfe2749d4e5cdfbe3e194d05",
+    "bytes": 16865
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-controls-normalized.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-controls-normalized.json",
+    "sha256": "3e579d81a96cc1b5e843aec3edcf4fc1eaa6c5d25f557b437d5b7a527883f18b",
+    "bytes": 12096
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-cut.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-cut.ts.txt",
+    "sha256": "b0ef567977d3953a99cf3c36f2836a947003e577ab0a84aa61fb08f3bd8e29d4",
+    "bytes": 16471
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-edit.cjs",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-edit.cjs.txt",
+    "sha256": "fe142eecf525a10a1976d1bdf654302d5a9c6d1c047dda52ac8fc4f1f9674071",
+    "bytes": 3530
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-evidence.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-evidence.json",
+    "sha256": "c90deafb69cc4be59284351ea0b39e3c68d81ac79bfb72be1b72aca896f15fc6",
+    "bytes": 3223
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-guard.cjs",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-guard.cjs.txt",
+    "sha256": "e0ba8f46c380d43ecb04a6f08a443fb59fd3977ca8668bcfba658284f970132c",
+    "bytes": 11347
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/activation-after-receipt/originals/scripts/billing/one-time-recover.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/activation-after-receipt/originals/scripts/billing/one-time-recover.ts.txt",
+    "sha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "bytes": 24818
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/activation-after-receipt-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/activation-after-receipt-after.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/activation-after-receipt-after.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/activation-after-receipt-after.tap",
+    "sha256": "4104dccdf7f4b837190a1ad81cf505d9440e6c4fc228c52703b8fde3752dda09",
+    "bytes": 288
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/activation-after-receipt-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/activation-after-receipt-before.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/activation-after-receipt-before.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/activation-after-receipt-before.tap",
+    "sha256": "e86ef316c322766c1002bfc1ee44d6d118c273d09b535d996a43cb4444cdb6c4",
+    "bytes": 287
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/activation-after-receipt-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/activation-after-receipt-fault.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/activation-after-receipt-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/activation-after-receipt-fault.tap",
+    "sha256": "867d72dcf3ae3cfbcab1ee5e7adc224d97f3fe14cbc24137cb5299a0c2d6ab56",
+    "bytes": 1328
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/all-originals/scripts/billing/one-time-recover.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/all-originals/scripts/billing/one-time-recover.ts.txt",
+    "sha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "bytes": 24818
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/all-originals/tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/all-originals/tests/billing-one-time-fulfillment-reconcile.test.ts.txt",
+    "sha256": "3d01c66a46f500c9bbd009e770dd1fa0a3488fc0ababc180a9deb129e5fd44c9",
+    "bytes": 19796
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/all-originals/tests/one-time-activation-status-route.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/all-originals/tests/one-time-activation-status-route.test.ts.txt",
+    "sha256": "61d712bc3a6d4b9111d212b8ef7c9d01f2c5aee3f8812ef7fe20a423b84cb2cf",
+    "bytes": 14005
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/all-originals/tests/one-time-paid-pending-ux.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/all-originals/tests/one-time-paid-pending-ux.test.ts.txt",
+    "sha256": "3857082e8351d940879673c987371b453255bf9826845d4b4ec3f32c350959bf",
+    "bytes": 3627
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/all-originals/tests/one-time-payment-recovery-migration.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/all-originals/tests/one-time-payment-recovery-migration.test.ts.txt",
+    "sha256": "06b7eaf062f916f8e421104b3cdb7361fbd38a3a7165aa4f228f080845e9e5d0",
+    "bytes": 3053
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/all-originals/tests/one-time-recovery-command.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/all-originals/tests/one-time-recovery-command.test.ts.txt",
+    "sha256": "65dbdc081adbad4392c95dccb9908585525f2e859236bc96a481cc11875f0a6b",
+    "bytes": 17121
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/all-originals/tests/personal-plan-one-time-confirmation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/all-originals/tests/personal-plan-one-time-confirmation.test.ts.txt",
+    "sha256": "afa54c5c0a9463490daccc8809ff267cb0f13cd9e7bb60132fa38376700a5594",
+    "bytes": 4490
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/all-originals/tests/personal-plan-one-time-first-access.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/all-originals/tests/personal-plan-one-time-first-access.test.ts.txt",
+    "sha256": "f389506fb70cfe3e5dba2f7fefdad84d9145dd2233278af54e1f0f20c0a37b78",
+    "bytes": 6949
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/all-originals/tests/stripe-one-time-confirmation.test.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/all-originals/tests/stripe-one-time-confirmation.test.ts.txt",
+    "sha256": "ca1de738e9ac257063c23524d6f1d8d56c27cf64f70ce5fa7f939d20a497e42c",
+    "bytes": 24862
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/apply-guard-receipt/originals/scripts/billing/one-time-recover.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/apply-guard-receipt/originals/scripts/billing/one-time-recover.ts.txt",
+    "sha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "bytes": 24818
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/apply-guard-receipt-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/apply-guard-receipt-after.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/apply-guard-receipt-after.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/apply-guard-receipt-after.tap",
+    "sha256": "c73cd817e08bf93c2fca913248aa4f52813a1f9b4cfe1632799d9b3247b944c1",
+    "bytes": 288
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/apply-guard-receipt-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/apply-guard-receipt-before.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/apply-guard-receipt-before.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/apply-guard-receipt-before.tap",
+    "sha256": "7436c7df1404c81e7925fd191f8376e3be188e9df48bb393183365993bf78916",
+    "bytes": 287
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/apply-guard-receipt-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/apply-guard-receipt-fault.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/apply-guard-receipt-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/apply-guard-receipt-fault.tap",
+    "sha256": "280d4a4d2df7c51e3065a56e58a3dd8c7ae0c855a775222e967f8c09f45770d6",
+    "bytes": 936
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/apply-mode/originals/scripts/billing/one-time-recover.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/apply-mode/originals/scripts/billing/one-time-recover.ts.txt",
+    "sha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "bytes": 24818
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/apply-mode-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/apply-mode-after.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/apply-mode-after.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/apply-mode-after.tap",
+    "sha256": "2d264c7be68ca4bebb96be6f82df4d4a38d23fcf05188a405a7fc2d33f8e86ce",
+    "bytes": 288
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/apply-mode-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/apply-mode-before.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/apply-mode-before.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/apply-mode-before.tap",
+    "sha256": "beafe18c133d6cc8ec379550e83de2872173a4dd2b115fb541a7c4bbc0a92b09",
+    "bytes": 289
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/apply-mode-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/apply-mode-fault.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/apply-mode-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/apply-mode-fault.tap",
+    "sha256": "ce433d08d7fecf5284b923a337f4b6da272c6dc62d8ee177e214edcb12fc2c5c",
+    "bytes": 950
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/complete.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/complete.json",
+    "sha256": "88d97b7aefc110c9ca03e0d49f2e72d1ceacf811e565c1e2e87d28d171a682a5",
+    "bytes": 22171
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/intent.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/intent.json",
+    "sha256": "5f0df09a12406e996abaed885525f1a33f87ca6ae0d879b0d3360eb4531d7544",
+    "bytes": 1397
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-email-leak/originals/scripts/billing/one-time-recover.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-email-leak/originals/scripts/billing/one-time-recover.ts.txt",
+    "sha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "bytes": 24818
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-email-leak-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-email-leak-after.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-email-leak-after.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-email-leak-after.tap",
+    "sha256": "20d616bb0a420736997cb7f91a14439d8605c0a189680765a747186307fb1bcb",
+    "bytes": 289
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-email-leak-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-email-leak-before.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-email-leak-before.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-email-leak-before.tap",
+    "sha256": "d8ecbb1a23ae8529926fae598cf307d7dd2b434b35c133b04f762efa537ba914",
+    "bytes": 290
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-email-leak-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-email-leak-fault.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-email-leak-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-email-leak-fault.tap",
+    "sha256": "95880d563739946aa5a4af7ae08423970c8153a4e4fb37500792fe1280acdc21",
+    "bytes": 923
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-fixed-amount/originals/scripts/billing/one-time-recover.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-fixed-amount/originals/scripts/billing/one-time-recover.ts.txt",
+    "sha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "bytes": 24818
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-fixed-amount-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-fixed-amount-after.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-fixed-amount-after.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-fixed-amount-after.tap",
+    "sha256": "3a5065705f87bdd3744495792676ae8cb068b60818e0955b820f2126e55d1e04",
+    "bytes": 289
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-fixed-amount-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-fixed-amount-before.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-fixed-amount-before.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-fixed-amount-before.tap",
+    "sha256": "fd47b1f28cea637a023f5868917f2b3c1d7af2915603fed7ffb42d0b7498f527",
+    "bytes": 289
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-fixed-amount-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-fixed-amount-fault.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-fixed-amount-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-fixed-amount-fault.tap",
+    "sha256": "95988b1ace51bd78e9465515f1720cb50f1b27694c9b8f8c76202e40b77a6685",
+    "bytes": 934
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-fixed-currency/originals/scripts/billing/one-time-recover.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-fixed-currency/originals/scripts/billing/one-time-recover.ts.txt",
+    "sha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "bytes": 24818
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-fixed-currency-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-fixed-currency-after.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-fixed-currency-after.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-fixed-currency-after.tap",
+    "sha256": "490e5c787e913d5aa757812a7e88fff43fde5028bbfa8ed7211210ae63f5c6c1",
+    "bytes": 289
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-fixed-currency-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-fixed-currency-before.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-fixed-currency-before.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-fixed-currency-before.tap",
+    "sha256": "a0ef342471b3ef0822ffb69074e7983a389109c32dc5d1a31dddbb9a05f95ccc",
+    "bytes": 289
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-fixed-currency-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-fixed-currency-fault.command.json",
+    "sha256": "522d28c77141467d751bdca1ac01245deb4e20e29f8cc64d198fc1b8f3c38f8c",
+    "bytes": 409
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt-fixed-currency-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt-fixed-currency-fault.tap",
+    "sha256": "5b51c8318dacb24cb38bda9a2cc4848851becad091e45d91a4a3074bbddabc6a",
+    "bytes": 935
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-mutations-transfer-XBxcmC/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-mutations-transfer-XBxcmC/receipt.json",
+    "sha256": "a8c31271af7c323fbd75f2d707c1470d730dcc8f52f7d1bb25f617b17c1e6cf7",
+    "bytes": 212674
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-pins.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-pins.json",
+    "sha256": "c03eb01e9d76ae5743ec83f15a64de8a486803caf7f1ce4e0dc37478be4f59d9",
+    "bytes": 70100
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-proof.cjs",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-proof.cjs.txt",
+    "sha256": "e690f74786c7ed7e209b112997d0f28b51c7db6fbce41d7e3a359e9387444531",
+    "bytes": 4926
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-readonly-preload.cjs",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-readonly-preload.cjs.txt",
+    "sha256": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "bytes": 1276
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-run-controls.cjs",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-run-controls.cjs.txt",
+    "sha256": "90a6bd62a67bc052ee4a5fcd0be124c9912394886ce977b55ee738778d07af2a",
+    "bytes": 8057
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-selected-closure.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-selected-closure.json",
+    "sha256": "01045a1e337ceedca5dee2922dd811aad3c1c00723e9aadc223f5641d093761e",
+    "bytes": 59765
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/operator-transfer.ts",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/operator-transfer.ts.txt",
+    "sha256": "65dbdc081adbad4392c95dccb9908585525f2e859236bc96a481cc11875f0a6b",
+    "bytes": 17121
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/prepare-pins.cjs",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/prepare-pins.cjs.txt",
+    "sha256": "e0048c7064693f04fb8a8fc9f6ec9c1a28229d77fa5269149e0ac0a5d9a24755",
+    "bytes": 9210
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/static-receipt.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/static-receipt.json",
+    "sha256": "5ae5aebbab302dcdcee586d855dd246ae2bf3fe04ac4d5aa33712f0fa42e8fbc",
+    "bytes": 2160
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-tools-7ouif76e/tool-code-hashes.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/tools/tool-code-hashes.json",
+    "sha256": "6b3707b23ca18e72585fbb699294f0594ea857ccd22203cc2c193ae8056f4d99",
+    "bytes": 1468
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-main-before.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/test-audit-fulfillment75-main-before.tap",
+    "sha256": "cb4fa81800bf27648ad8a866a042677bbfd9d17754a00d248ad4f4796646e519",
+    "bytes": 17201
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-main-transfer.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/test-audit-fulfillment75-main-transfer.tap",
+    "sha256": "6b5a777c251b9dc4e072e7dfb8cc8d10cd3b6f29a339dd60732a9dc17e9615b0",
+    "bytes": 17224
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-main-cut.tap",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/test-audit-fulfillment75-main-cut.tap",
+    "sha256": "03b639cce9792fd43c1a95d38e3f731c41913e87550d2dca7dcf50d11036fb50",
+    "bytes": 16995
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-main-controls.log",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/test-audit-fulfillment75-main-controls.log",
+    "sha256": "f54fe8bce53b5c5181515f1cecd528603c17587810c8d0cc10549b890ae4f175",
+    "bytes": 642
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-main-formatted-verification.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/test-audit-fulfillment75-main-formatted-verification.json",
+    "sha256": "915b7633e13832efc3f0dbc298f8f3e058f5af9b29115ee9b42bc4cb88183dce",
+    "bytes": 1127
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-independent-preservation.md",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/test-audit-fulfillment75-independent-preservation.md",
+    "sha256": "1bddc01af659fc57d4acdb2e7d7f59a20a863fb4f9a75d9cde586f95889d4a80",
+    "bytes": 10499
+  },
+  {
+    "source": "/tmp/test-audit-fulfillment75-independent-static.json",
+    "archive": "plans/evidence/2026-10-05-next599-fulfillment/test-audit-fulfillment75-independent-static.json",
+    "sha256": "7c48e73924d50d6f560e7b9d3f6f2eb4e0ebd12243af0965c3f452bcd886aae8",
+    "bytes": 71048
+  }
+]

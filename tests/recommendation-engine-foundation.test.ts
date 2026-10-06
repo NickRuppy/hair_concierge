@@ -12,26 +12,6 @@ import {
 } from "./recommendation-engine-foundation.fixtures"
 import { UNSELECTED_SHAMPOO_PRODUCT_NAME } from "../src/lib/product-usage/shampoo-fallback"
 
-test("persistence adapter maps supported routine categories and reports unsupported ones", () => {
-  const adapted = adaptRecommendationInputFromPersistence(
-    SEVERE_DAMAGE_PROFILE,
-    ADAPTER_ROUTINE_ITEMS,
-  )
-
-  assert.equal(adapted.input.routineInventory.length, 4)
-  assert.deepEqual(adapted.unsupportedRoutineCategories, ["styling_gel"])
-  assert.equal(adapted.input.profile.cuticle_condition, "rough")
-  assert.equal(adapted.input.profile.uses_heat_protection, false)
-  assert.equal(
-    adapted.input.routineInventory.find((item) => item.category === "peeling")?.product_name,
-    "Scalp Serum",
-  )
-  assert.equal(
-    adapted.input.routineInventory.find((item) => item.category === "peeling")?.frequency_range,
-    "weekly_1x",
-  )
-})
-
 test("persistence adapter merges duplicate category identity as one coherent state", () => {
   const adapted = adaptRecommendationInputFromPersistence(LOW_DAMAGE_PROFILE, [
     {
@@ -58,22 +38,6 @@ test("persistence adapter merges duplicate category identity as one coherent sta
   assert.equal(conditioner?.product_id, "product-conditioner")
   assert.equal(conditioner?.product_submission_id, null)
   assert.equal(conditioner?.frequency_range, "weekly_3_4x")
-})
-
-test("normalization produces a full inventory map keyed by V1 inventory categories", () => {
-  const adapted = adaptRecommendationInputFromPersistence(
-    SEVERE_DAMAGE_PROFILE,
-    ADAPTER_ROUTINE_ITEMS,
-  )
-  const normalized = normalizeRecommendationInput(adapted.input)
-
-  assert.equal(normalized.routineInventory.conditioner?.present, true)
-  assert.equal(normalized.routineInventory.conditioner?.productName, "Repair Conditioner")
-  assert.equal(normalized.routineInventory.mask?.frequencyBand, "weekly_1x")
-  assert.equal(normalized.routineInventory.heat_protectant?.frequencyBand, "weekly_5_6x")
-  assert.equal(normalized.routineInventory.peeling?.productName, "Scalp Serum")
-  assert.equal(normalized.routineInventory.shampoo, null)
-  assert.equal(normalized.routineInventory.deep_cleansing_shampoo, null)
 })
 
 test("normalization treats unselected shampoo fallback as cadence but not present inventory", () => {
@@ -157,24 +121,6 @@ test("normalization keeps real unnamed less-than-monthly shampoo present", () =>
   assert.equal(normalized.routineInventory.shampoo?.present, true)
 })
 
-test("low-damage fixture yields low repair need with protective factors", () => {
-  const adapted = adaptRecommendationInputFromPersistence(LOW_DAMAGE_PROFILE, [])
-  const normalized = normalizeRecommendationInput(adapted.input)
-  const damage = buildDamageAssessment(normalized)
-
-  assert.equal(damage.overallLevel, "none")
-  assert.equal(damage.structuralLevel, "none")
-  assert.equal(damage.heatLevel, "none")
-  assert.equal(damage.mechanicalLevel, "none")
-  assert.equal(damage.repairPriority, "low")
-  assert.equal(damage.balanceDirection, "balanced")
-  assert.equal(damage.bondBuilderPriority, "none")
-  assert.equal(damage.confidence, "high")
-  assert.ok(damage.activeProtectiveFactors.includes("cuticle_smooth"))
-  assert.ok(damage.activeProtectiveFactors.includes("balanced_pull_test"))
-  assert.ok(damage.activeProtectiveFactors.includes("night_protection_present"))
-})
-
 test("length tip accessory counts as present night protection", () => {
   const adapted = adaptRecommendationInputFromPersistence(
     {
@@ -243,89 +189,24 @@ test("low-damage fixture keeps care needs conservative", () => {
   const damage = buildDamageAssessment(normalized)
   const careNeeds = buildCareNeedAssessment(normalized, damage)
 
+  assert.equal(damage.overallLevel, "none")
+  assert.equal(damage.structuralLevel, "none")
+  assert.equal(damage.heatLevel, "none")
+  assert.equal(damage.mechanicalLevel, "none")
+  assert.equal(damage.repairPriority, "low")
+  assert.equal(damage.balanceDirection, "balanced")
+  assert.equal(damage.bondBuilderPriority, "none")
+  assert.equal(damage.confidence, "high")
+  assert.ok(damage.activeProtectiveFactors.includes("cuticle_smooth"))
+  assert.ok(damage.activeProtectiveFactors.includes("balanced_pull_test"))
+  assert.ok(damage.activeProtectiveFactors.includes("night_protection_present"))
+
   assert.equal(careNeeds.hydrationNeed, "none")
   assert.equal(careNeeds.smoothingNeed, "none")
   assert.equal(careNeeds.detanglingNeed, "none")
   assert.equal(careNeeds.definitionSupportNeed, "none")
   assert.equal(careNeeds.thermalProtectionNeed, "none")
   assert.equal(careNeeds.volumeDirection, "neutral")
-})
-
-test("straight natural texture plus perm supports explicit curl definition goal only", () => {
-  const permedDefinition = normalizeRecommendationInput(
-    adaptRecommendationInputFromPersistence(
-      {
-        ...LOW_DAMAGE_PROFILE,
-        hair_texture: "straight",
-        chemical_treatment: ["permed"],
-        goals: ["curl_definition"],
-      },
-      [],
-    ).input,
-  )
-  const permedDamage = buildDamageAssessment(permedDefinition)
-  const permedCareNeeds = buildCareNeedAssessment(permedDefinition, permedDamage)
-
-  assert.equal(permedCareNeeds.definitionSupportNeed, "moderate")
-  assert.equal(permedCareNeeds.detanglingNeed, "none")
-
-  const straightenedDefinition = normalizeRecommendationInput(
-    adaptRecommendationInputFromPersistence(
-      {
-        ...LOW_DAMAGE_PROFILE,
-        hair_texture: "straight",
-        chemical_treatment: ["chemically_straightened"],
-        goals: ["curl_definition"],
-      },
-      [],
-    ).input,
-  )
-  const straightenedDamage = buildDamageAssessment(straightenedDefinition)
-  const straightenedCareNeeds = buildCareNeedAssessment(straightenedDefinition, straightenedDamage)
-
-  assert.equal(straightenedCareNeeds.definitionSupportNeed, "none")
-})
-
-test("perm alone creates mild maintenance needs without curl definition", () => {
-  const normalized = normalizeRecommendationInput(
-    adaptRecommendationInputFromPersistence(
-      {
-        ...LOW_DAMAGE_PROFILE,
-        hair_texture: "straight",
-        chemical_treatment: ["permed"],
-        goals: [],
-      },
-      [],
-    ).input,
-  )
-  const damage = buildDamageAssessment(normalized)
-  const careNeeds = buildCareNeedAssessment(normalized, damage)
-
-  assert.equal(careNeeds.hydrationNeed, "low")
-  assert.equal(careNeeds.smoothingNeed, "low")
-  assert.equal(careNeeds.detanglingNeed, "none")
-  assert.equal(careNeeds.definitionSupportNeed, "none")
-})
-
-test("severe-damage fixture yields severe structural load and bond builder recommendation", () => {
-  const adapted = adaptRecommendationInputFromPersistence(
-    SEVERE_DAMAGE_PROFILE,
-    ADAPTER_ROUTINE_ITEMS,
-  )
-  const normalized = normalizeRecommendationInput(adapted.input)
-  const damage = buildDamageAssessment(normalized)
-
-  assert.equal(damage.overallLevel, "severe")
-  assert.equal(damage.structuralLevel, "severe")
-  assert.equal(damage.heatLevel, "high")
-  assert.equal(damage.mechanicalLevel, "high")
-  assert.equal(damage.repairPriority, "high")
-  assert.equal(damage.balanceDirection, "moisture")
-  assert.equal(damage.bondBuilderPriority, "recommend")
-  assert.equal(damage.confidence, "high")
-  assert.ok(damage.activeDamageDrivers.includes("bleached_hair"))
-  assert.ok(damage.activeDamageDrivers.includes("missing_heat_protection"))
-  assert.ok(damage.activeDamageDrivers.includes("towel_rubbing"))
 })
 
 test("chemical treatments contribute capped structural damage with accumulating drivers", () => {
@@ -387,6 +268,39 @@ test("severe-damage fixture drives high care needs and heat protection urgency",
   const normalized = normalizeRecommendationInput(adapted.input)
   const damage = buildDamageAssessment(normalized)
   const careNeeds = buildCareNeedAssessment(normalized, damage)
+
+  assert.equal(adapted.input.routineInventory.length, 4)
+  assert.deepEqual(adapted.unsupportedRoutineCategories, ["styling_gel"])
+  assert.equal(adapted.input.profile.cuticle_condition, "rough")
+  assert.equal(adapted.input.profile.uses_heat_protection, false)
+  assert.equal(
+    adapted.input.routineInventory.find((item) => item.category === "peeling")?.product_name,
+    "Scalp Serum",
+  )
+  assert.equal(
+    adapted.input.routineInventory.find((item) => item.category === "peeling")?.frequency_range,
+    "weekly_1x",
+  )
+
+  assert.equal(normalized.routineInventory.conditioner?.present, true)
+  assert.equal(normalized.routineInventory.conditioner?.productName, "Repair Conditioner")
+  assert.equal(normalized.routineInventory.mask?.frequencyBand, "weekly_1x")
+  assert.equal(normalized.routineInventory.heat_protectant?.frequencyBand, "weekly_5_6x")
+  assert.equal(normalized.routineInventory.peeling?.productName, "Scalp Serum")
+  assert.equal(normalized.routineInventory.shampoo, null)
+  assert.equal(normalized.routineInventory.deep_cleansing_shampoo, null)
+
+  assert.equal(damage.overallLevel, "severe")
+  assert.equal(damage.structuralLevel, "severe")
+  assert.equal(damage.heatLevel, "high")
+  assert.equal(damage.mechanicalLevel, "high")
+  assert.equal(damage.repairPriority, "high")
+  assert.equal(damage.balanceDirection, "moisture")
+  assert.equal(damage.bondBuilderPriority, "recommend")
+  assert.equal(damage.confidence, "high")
+  assert.ok(damage.activeDamageDrivers.includes("bleached_hair"))
+  assert.ok(damage.activeDamageDrivers.includes("missing_heat_protection"))
+  assert.ok(damage.activeDamageDrivers.includes("towel_rubbing"))
 
   assert.equal(careNeeds.hydrationNeed, "severe")
   assert.equal(careNeeds.smoothingNeed, "high")

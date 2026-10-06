@@ -1,0 +1,27 @@
+{
+  "mode": "transfer",
+  "from": "before",
+  "phase": "transfer",
+  "counts": {
+    "before": 90,
+    "transfer": 90,
+    "cut": 84
+  },
+  "pinsSHA": "1ed2961886a7dbc44def2cf72d3592f09d200c2f99266b4c5ee7395e85d460e4",
+  "prerequisite": null,
+  "changed": [
+    "tests/scan-resolve-event-log.test.ts",
+    "tests/scan-resolve-route.test.ts"
+  ],
+  "allTestHashes": {
+    "tests/scan-resolve-event-log.test.ts": "8c6cdd84752d9ba41ca0d0879271796a838b602a23b4927874838df0e8e8aeba",
+    "tests/scan-resolve-events-migration.test.ts": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189",
+    "tests/scan-resolve-auto-save.test.ts": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf",
+    "tests/scan-wishlist-auto-save-postgres.test.ts": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+    "tests/scan-wishlist-route.test.ts": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+    "tests/scan-resolve-route.test.ts": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-apply-transfer-OddzcP/originals"
+}

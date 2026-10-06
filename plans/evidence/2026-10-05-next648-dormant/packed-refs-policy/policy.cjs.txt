@@ -1,0 +1,23 @@
+"use strict";
+const crypto=require('node:crypto');
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+const target='refs/heads/codex/test-audit-pruning';
+const header='# pack-refs with: peeled fully-peeled sorted \n';
+const expected='21e0e41fa996ec6a725c258ab3766971f0edb94d '+target+'\n';
+function relevant(bytes){
+ const text=bytes.toString('utf8');if(!Buffer.from(text).equals(bytes)||!text.startsWith(header))throw Error('Packed refs encoding/header drift');
+ const lines=text.slice(header.length).split('\n');if(lines.pop()!=='')throw Error('Packed refs missing newline');
+ let prior=null,found=null,lastRef=null;const seen=new Set();
+ for(const line of lines){
+  if(/^\^[a-f0-9]{40}$/.test(line)){if(!lastRef||lastRef===target)throw Error('Unexpected peeled target/orphan');lastRef=null;continue}
+  const m=line.match(/^([a-f0-9]{40}) (refs\/[A-Za-z0-9_./-]+)$/);if(!m||m[2].includes('..')||m[2].includes('//')||m[2].endsWith('/')||seen.has(m[2])||prior&&m[2]<=prior)throw Error('Malformed/duplicate/unsorted packed refs');
+  seen.add(m[2]);prior=m[2];lastRef=m[2];if(m[2]===target)found=line+'\n';
+ }
+ if(found!==expected)throw Error('Target packed ref missing/drift');
+ return header+found;
+}
+function check(pin,bytes){
+ if(pin.path!=='/Users/nick/AI_work/hair_conscierge/.git/packed-refs'||pin.sharedPackedTargetRef!==target||pin.sharedPackedRelevantSHA!==sha(header+expected))throw Error('Packed policy outside exact target');
+ if(sha(relevant(bytes))!==pin.sharedPackedRelevantSHA)throw Error('Relevant packed refs drift');
+}
+module.exports={relevant,check};

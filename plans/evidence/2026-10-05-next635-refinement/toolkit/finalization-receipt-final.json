@@ -1,0 +1,8 @@
+{
+  "originalPinsSHA": "217ed9c232bfa6de76730c77f3c32f991b71ea06a6b84dbb21685256df71ec1b",
+  "pinSHA": "ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd",
+  "amendment": "Synthetic diagnostic fixtures only: multiline indent and scalar eligibility; nested actual-stack negatives. Production proof parser unchanged.",
+  "repositoryWrites": 0,
+  "children": 0,
+  "ownerImports": 0
+}

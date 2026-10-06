@@ -1,0 +1,33 @@
+{
+  "phase": "transfer",
+  "controls": [
+    "C1-oil-day-types",
+    "C2-row-role",
+    "C2-row-category",
+    "C2-mask-role-literal",
+    "C2-mask-payload-role-literal",
+    "C3-recommendation-serialization"
+  ],
+  "originalHashes": {
+    "tests/expansion-apply-batch.test.ts": "b88065bfeeeba0bc6a2391b88f336c66829d796bf9db259b80353c708502bee0",
+    "tests/expansion-apply-templates.test.ts": "c3fa72a4020d1986c003f22fd95a6ac6b70b13353c90a0bb3c7ec5757a0850a5",
+    "tests/admin-product-category-write-policy.test.ts": "d514f46097b447fe1b5dcbd3b295278faef6171b913a67984a72d56671f0ad9d",
+    "tests/admin-product-support-specs.test.ts": "0a699fb0d2bc8dc18029e9cdc870fd99c296525f3247c89bc944a5f2af0ec7e8",
+    "tests/catalog-authority-historical-repair-migration.test.ts": "fe9ad82db99a589fdd2efd8a616303a06a7ee1cb6ff98943765d599f80b34182",
+    "tests/catalog-authority-legacy-sync-retirement-migration.test.ts": "8d275f1272daeae6368df33db91edb717dbe0e3d09ce1cdb655aa275b932789b",
+    "tests/catalog-authority-lifecycle-repair.test.ts": "6d39e19cf0bcd141b8d331825d95d809d8bfdf47ff2c1dc06aeb9b81921f11d9",
+    "tests/catalog-authority-product-spec-relationship-verification.test.ts": "ea17f620d4a5eee9c4c4dea903d155982f1ac64da19d231dc1e48a1360b78309",
+    "tests/catalog-authority-relationship-convergence-migration.test.ts": "60e55dba47fc6cf284c8dec4af3dea6f36e635465ded021d00294f6653bb9b05",
+    "tests/catalog-authority-repair.test.ts": "122cb85071c3d033e087698fed73b50d62bdb72a19d64bec5aabc1041f8be27e",
+    "tests/catalog-authority-schema-foundations-migration.test.ts": "38c4775d77780e01c516e60bf2e7ec7678a9941fb7b425b0f3bfe3ef840302d4",
+    "tests/catalog-apply-executor-hardening-postgres.test.ts": "1d3ebeb58c69d1822e05dc192d278eb03ffe5c9d05671b3c5a8108b70ab1ca49",
+    "tests/product-identifier-global-ownership-migration.test.ts": "b31189e4db4f3a4be4092aa308239377b0cc5948c84e746804bf67d42e0b7d15",
+    "tests/audit-product-metadata-script.test.ts": "e5512246eb5bd26b0a50c5fd44cfc9c1030c38a8fb0aa3a38766df22745d268c",
+    "tests/product-metadata-health.test.ts": "a7901948598a66553af2ce65ca81076c8b11fcab46a5d34eb3b9bdadfce4c5eb",
+    "tests/product-metadata-ingest-identity.test.ts": "b7eef8effe81bdafa8c0101eae8184242ae781a9eb98b7cfd842cefda4cd9635",
+    "src/lib/product-intake/expansion-apply-templates.ts": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "src/lib/product-intake/expansion-manifest.ts": "c82e49e141cb7912bff2c4720fd8468b0d337cf458b59f66fae5e13cb76093c9",
+    "src/lib/product-intake/expansion-apply.ts": "d1b710c3b9ff424fbb09984451d3695d701ea1f90fdbdf12bd7d711295b8c618"
+  },
+  "pinsSHA": "4ac6d1b4344d4296e8c91668d9c62bc352869ce8636f4d2c54f42612bf118a3d"
+}

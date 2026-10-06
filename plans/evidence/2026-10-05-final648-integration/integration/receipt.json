@@ -1,0 +1,86 @@
+{
+  "files": [
+    {
+      "file": "src/lib/personal-plan/journey-access-loader.ts",
+      "beforeSHA256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+      "afterSHA256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+      "changed": false
+    },
+    {
+      "file": "src/lib/personal-plan/release.ts",
+      "beforeSHA256": "7fff03697221fa4281c0a3756c3cfab618460c536e60cb05e060e38d2693fdd0",
+      "afterSHA256": "7fff03697221fa4281c0a3756c3cfab618460c536e60cb05e060e38d2693fdd0",
+      "changed": false
+    },
+    {
+      "file": "src/lib/personal-plan/rollout-access.ts",
+      "beforeSHA256": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c",
+      "afterSHA256": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c",
+      "changed": false
+    },
+    {
+      "file": "tests/admin-user-billing-summary.test.ts",
+      "beforeSHA256": "c8c7e0b03e300f1aada3ffb9bd3cf4ee7a598ac4d87bce7b02ecfaffccf6d23a",
+      "afterSHA256": "c8c7e0b03e300f1aada3ffb9bd3cf4ee7a598ac4d87bce7b02ecfaffccf6d23a",
+      "changed": false
+    },
+    {
+      "file": "tests/billing-subscriptions-access-grace.test.ts",
+      "beforeSHA256": "312b51252842994dca7e9588f58ab03852ab99de537966374a862c5b8184b06d",
+      "afterSHA256": "312b51252842994dca7e9588f58ab03852ab99de537966374a862c5b8184b06d",
+      "changed": false
+    },
+    {
+      "file": "tests/freemium-enrollment-admission.test.ts",
+      "beforeSHA256": "30e53eaa8a77054424780676bd341ea6aeb7821c652d36ea69faa8440c20b3e1",
+      "afterSHA256": "30e53eaa8a77054424780676bd341ea6aeb7821c652d36ea69faa8440c20b3e1",
+      "changed": false
+    },
+    {
+      "file": "tests/freemium-sheet-checkout-contract.test.ts",
+      "beforeSHA256": "2a863fd1dd1fd38ec45ea361505b1be6034b61e61cdb1521f13801c6be55a8b5",
+      "afterSHA256": "2a863fd1dd1fd38ec45ea361505b1be6034b61e61cdb1521f13801c6be55a8b5",
+      "changed": false
+    },
+    {
+      "file": "tests/payment-monitor-route.test.ts",
+      "beforeSHA256": "28bcd568bf5119c64c2d105f7c872f1bd54e300c43144e0b8f64d40d81d67771",
+      "afterSHA256": "28bcd568bf5119c64c2d105f7c872f1bd54e300c43144e0b8f64d40d81d67771",
+      "changed": false
+    },
+    {
+      "file": "tests/personal-plan-field-test-access.test.ts",
+      "beforeSHA256": "0701492072d7229a19c832017a5d46b708be3785a7839e9325eee3e5d1a7e963",
+      "afterSHA256": "0701492072d7229a19c832017a5d46b708be3785a7839e9325eee3e5d1a7e963",
+      "changed": false
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "beforeSHA256": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8",
+      "afterSHA256": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8",
+      "changed": false
+    },
+    {
+      "file": "tests/personal-plan-rollout-access.test.ts",
+      "beforeSHA256": "3f9f358536dc36b6197100414281d55315a8c0d65b098c1433676edf925a1d18",
+      "afterSHA256": "3b31206ad1a972394f025b903003488b2b4b19d465f535c538d4c4f80383d0ed",
+      "changed": true
+    },
+    {
+      "file": "tests/personal-plan-stage3-release.test.ts",
+      "beforeSHA256": "b875712849799021f740e63ef79e82e8eadd355b09df66a62d12031c605a7bec",
+      "afterSHA256": "7d620c83865a8b4e3aa2cf4e9efd4940ddbc45040c0b192480a07ac7cc3914d9",
+      "changed": true
+    },
+    {
+      "file": "tests/personal-plan-trial-stage1-journey.test.ts",
+      "beforeSHA256": "1af6fcb04a9e0d8e864fdcd1760bb325130fa3bea7f8104bb44996933679feb2",
+      "afterSHA256": "1af6fcb04a9e0d8e864fdcd1760bb325130fa3bea7f8104bb44996933679feb2",
+      "changed": false
+    }
+  ],
+  "allASTShapesEqual": true,
+  "sourceWrites": 0,
+  "newInputsCallsOrTestRegistrations": 0,
+  "phaseProof": "Earlier native/fault proof was on archived preformat cut bytes. Fresh whole native/c8 checks these formatted bytes."
+}

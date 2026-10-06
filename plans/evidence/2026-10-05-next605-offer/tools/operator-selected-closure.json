@@ -1,0 +1,56 @@
+{
+  "selectedTest": "tests/free-reveal.test.ts",
+  "localFiles": [
+    "src/lib/entitlements/free-reveal.ts",
+    "tests/free-reveal.test.ts",
+    "tests/server-only-register.cjs"
+  ],
+  "edges": [
+    {
+      "from": "tests/free-reveal.test.ts",
+      "to": "src/lib/entitlements/free-reveal.ts",
+      "spec": "../src/lib/entitlements/free-reveal",
+      "kind": "static"
+    }
+  ],
+  "runtimeExternals": [
+    "server-only"
+  ],
+  "typeOnlyExternals": [
+    "@supabase/supabase-js"
+  ],
+  "externalPins": [
+    {
+      "specifier": "server-only",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/server-only/index.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/server-only/package.json"
+    },
+    {
+      "specifier": "tsx",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/dist/loader.mjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tsx/package.json"
+    },
+    {
+      "specifier": "typescript",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/typescript.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/package.json"
+    },
+    {
+      "specifier": "esbuild",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/lib/main.js",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/esbuild/package.json"
+    },
+    {
+      "specifier": "get-tsconfig",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/dist/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/get-tsconfig/package.json"
+    },
+    {
+      "specifier": "resolve-pkg-maps",
+      "entry": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/dist/index.cjs",
+      "package": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/resolve-pkg-maps/package.json"
+    }
+  ],
+  "nonliteralImports": [],
+  "limits": "Selected exact native keeper imports only its actual free-reveal owner, server-only marker and Node builtins. Supabase import is type-only. Pin bounded loader/transpiler trees, parser and entry/package metadata; unrelated six-file native/PW transitive dependency trees are not crawled or claimed runtime-verified."
+}

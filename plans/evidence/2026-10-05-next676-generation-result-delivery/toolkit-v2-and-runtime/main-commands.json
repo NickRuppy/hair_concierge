@@ -1,0 +1,63 @@
+{
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "node": {
+    "version": "v22.12.0",
+    "realpath": "/usr/local/bin/node",
+    "sha": "9c40e9b16cacab464b63e45731ffd020830144a14c50d440b59b90e22709fe80"
+  },
+  "readOnly": [
+    "/usr/local/bin/node --require /tmp/test-audit-generation157-tools-v2-orjded8b/operator-readonly-preload.cjs /tmp/test-audit-generation157-tools-v2-orjded8b/operator-edit.cjs --check",
+    "/usr/local/bin/node --require /tmp/test-audit-generation157-tools-v2-orjded8b/operator-readonly-preload.cjs /tmp/test-audit-generation157-tools-v2-orjded8b/operator-run-controls.cjs --check",
+    "/usr/local/bin/node --require /tmp/test-audit-generation157-tools-v2-orjded8b/operator-readonly-preload.cjs /tmp/test-audit-generation157-tools-v2-orjded8b/proof-attestation.cjs",
+    "/usr/local/bin/node --require /tmp/test-audit-generation157-tools-v2-orjded8b/operator-readonly-preload.cjs /tmp/test-audit-generation157-tools-v2-orjded8b/static-integrity.cjs"
+  ],
+  "reuseClosedRootBaseline": "/usr/local/bin/node /tmp/test-audit-generation157-tools-v2-orjded8b/operator-native-proof.cjs before /tmp/test-audit-generation158-main-before.tap /tmp/test-audit-generation158-main-before.command.json",
+  "baselineReuseReason": "Canonical argv, Node, original109/operative280/source/runtime pins and before test phase are unchanged; root separately owns closed0 result receipt. Do not rerun merely for diagnostic tool changes.",
+  "fullNative": {
+    "executable": "/usr/local/bin/node",
+    "args": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "tests/personal-plan-email-precheck.test.ts",
+      "tests/personal-plan-preparation-client.test.ts",
+      "tests/personal-plan-prepare-idempotency-migration.test.ts",
+      "tests/personal-plan-prepare-route.test.ts",
+      "tests/personal-plan-prepared-plan.test.ts",
+      "tests/personal-plan-production-client.test.ts",
+      "tests/personal-plan-ready-server-first.test.tsx",
+      "tests/personal-plan-ready-transition.test.ts",
+      "tests/personal-plan-result-artifact-email.test.ts",
+      "tests/personal-plan-result-artifact-route.test.ts",
+      "tests/personal-plan-result-return-migration.test.ts",
+      "tests/personal-plan-result-return-reset.test.ts",
+      "tests/personal-plan-result-return.test.ts",
+      "tests/personal-plan-result-reveal.test.ts",
+      "tests/personal-plan-return-artifact-repair-postgres.test.ts",
+      "tests/personal-plan-return-artifact-repair.test.ts",
+      "tests/quiz-result-artifact-email.test.ts",
+      "tests/quiz-result-artifact-route.test.ts",
+      "tests/quiz-result-artifact-trigger.test.ts",
+      "tests/personal-plan-api-stage1.test.ts",
+      "tests/personal-plan-stage1-source.test.ts",
+      "tests/personal-plan/input.test.ts",
+      "tests/personal-plan/needs.test.ts",
+      "tests/personal-plan/portfolio.test.ts",
+      "tests/personal-plan/reasons.test.ts",
+      "tests/personal-plan/types.test.ts",
+      "tests/personal-plan/persistence/stage1-service.test.ts"
+    ],
+    "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning"
+  },
+  "fullNativeShell": "/usr/local/bin/node --import ./tests/server-only-register.cjs --import tsx --test --test-concurrency=1 tests/personal-plan-email-precheck.test.ts tests/personal-plan-preparation-client.test.ts tests/personal-plan-prepare-idempotency-migration.test.ts tests/personal-plan-prepare-route.test.ts tests/personal-plan-prepared-plan.test.ts tests/personal-plan-production-client.test.ts tests/personal-plan-ready-server-first.test.tsx tests/personal-plan-ready-transition.test.ts tests/personal-plan-result-artifact-email.test.ts tests/personal-plan-result-artifact-route.test.ts tests/personal-plan-result-return-migration.test.ts tests/personal-plan-result-return-reset.test.ts tests/personal-plan-result-return.test.ts tests/personal-plan-result-reveal.test.ts tests/personal-plan-return-artifact-repair-postgres.test.ts tests/personal-plan-return-artifact-repair.test.ts tests/quiz-result-artifact-email.test.ts tests/quiz-result-artifact-route.test.ts tests/quiz-result-artifact-trigger.test.ts tests/personal-plan-api-stage1.test.ts tests/personal-plan-stage1-source.test.ts tests/personal-plan/input.test.ts tests/personal-plan/needs.test.ts tests/personal-plan/portfolio.test.ts tests/personal-plan/reasons.test.ts tests/personal-plan/types.test.ts tests/personal-plan/persistence/stage1-service.test.ts",
+  "transfer": "/usr/local/bin/node /tmp/test-audit-generation157-tools-v2-orjded8b/operator-edit.cjs transfer",
+  "serialControlsBothPhases": "/usr/local/bin/node /tmp/test-audit-generation157-tools-v2-orjded8b/operator-run-controls.cjs run",
+  "cut": "/usr/local/bin/node /tmp/test-audit-generation157-tools-v2-orjded8b/operator-edit.cjs cut <eligible-transfer-receipt-dir> <completion-sha256>",
+  "nativeProof": "/usr/local/bin/node /tmp/test-audit-generation157-tools-v2-orjded8b/operator-native-proof.cjs <before|transfer|cut> <closed-native.tap> <exact-command.json>",
+  "sequence": "Root code review/fresh read-only checks; reuse baseline; transfer/full-native;18 actual-owner controls; gated cut/full-native;18 postcut controls; fresh whole CI/coverage. Root closes all other runners first.",
+  "postgresLimit": "Keep existing opt-in gate disabled; exact single unchanged PostgreSQL skip only. No Docker/DB enablement or execution here.",
+  "automaticProbes": false
+}

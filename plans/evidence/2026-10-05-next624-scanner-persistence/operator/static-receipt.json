@@ -1,0 +1,37 @@
+{
+  "status": "STATIC_ONLY_PASS",
+  "pinsSHA256": "1ed2961886a7dbc44def2cf72d3592f09d200c2f99266b4c5ee7395e85d460e4",
+  "proposalManifestSHA256": "a9367b8fe81c65ebedd648184a6b09c5f1783b702fd6d3457d08925133919a43",
+  "snapshots": 18,
+  "counts": [
+    90,
+    90,
+    84
+  ],
+  "ownedCounts": [
+    46,
+    46,
+    40
+  ],
+  "unchangedSurvivors": 82,
+  "heldF": 5,
+  "controls": 7,
+  "tsMutantsParsed": 5,
+  "sqlByteMutants": 2,
+  "parserSyntheticChecks": 252,
+  "repositoryWrites": 0,
+  "childrenStarted": 0,
+  "ownerImports": 0,
+  "nativeRuns": 0,
+  "faultRuns": 0,
+  "files": {
+    "editor-check.log": "92e1352181d5e53befe3516938f22a7f2dece99dfe0eea4fa9828e63d66d6bf0",
+    "controls-check.log": "6df55d52a41c95728c0226dd32a2d7f5cd012a0987ba54711686201bae5386f4",
+    "proof-attestation.log": "e07ed4a1426954762b436b62d91b4fe1cbc380287e81813d85d24b9ed06e36a7",
+    "preparation-receipt.json": "49a97e50891598da82e6f582b997851a70217abc26eaab0841100f00f3f9e1e9",
+    "tool-code-hashes.json": "193be87629153243949cee4539a1a4f0e127b8845861381a6c7ef83c75cb7a90",
+    "README.md": "1a7402969262197f7b83c73f568c58dabc86002b0be30589696dd42c1122a3e0",
+    "template-delta.patch": "ff7ac27a4429d26c765d6bac7e0541f4764299dd69d420106f94ba98fbfbdec2",
+    "template-provenance.json": "628ea87ba9be41273af3040069de6547f270a513507329dca44d523641ac4d21"
+  }
+}

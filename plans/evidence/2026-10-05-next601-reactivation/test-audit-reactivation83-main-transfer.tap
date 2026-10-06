@@ -1,0 +1,682 @@
+TAP version 13
+# Subtest: reauthentication preserves each plan and an allowlisted member destination
+ok 1 - reauthentication preserves each plan and an allowlisted member destination
+  ---
+  duration_ms: 1.607292
+  ...
+# Subtest: reauthentication validates interval and rejects external or recursive destinations
+ok 2 - reauthentication validates interval and rejects external or recursive destinations
+  ---
+  duration_ms: 0.218292
+  ...
+# Subtest: only our welcome verifier is accepted as a status destination
+ok 3 - only our welcome verifier is accepted as a status destination
+  ---
+  duration_ms: 0.077167
+  ...
+# Subtest: the real server page retains the plan for signed-out users and redirects current access before rendering checkout
+ok 4 - the real server page retains the plan for signed-out users and redirects current access before rendering checkout
+  ---
+  duration_ms: 879.219792
+  ...
+# Subtest: reactivation Stripe checkout carries only server-validated routing metadata
+ok 5 - reactivation Stripe checkout carries only server-validated routing metadata
+  ---
+  duration_ms: 0.881959
+  ...
+# Subtest: onboarding overrides saved reactivation return destinations
+ok 6 - onboarding overrides saved reactivation return destinations
+  ---
+  duration_ms: 0.087584
+  ...
+# Subtest: a resumed PayPal reactivation returns its stored launch plan after the flag changes
+ok 7 - a resumed PayPal reactivation returns its stored launch plan after the flag changes
+  ---
+  duration_ms: 0.182834
+  ...
+# Subtest: a resumed PayPal reactivation fails closed for missing or mismatched stored plan metadata
+ok 8 - a resumed PayPal reactivation fails closed for missing or mismatched stored plan metadata
+  ---
+  duration_ms: 0.312583
+  ...
+# Subtest: same-attempt, same-provider claims can recover reconciliation reservations
+ok 9 - same-attempt, same-provider claims can recover reconciliation reservations
+  ---
+  duration_ms: 0.129833
+  ...
+# Subtest: cross-provider recovery claims remain conflicts
+ok 10 - cross-provider recovery claims remain conflicts
+  ---
+  duration_ms: 0.120292
+  ...
+# Subtest: provider binding and completion reject zero-row state transitions
+ok 11 - provider binding and completion reject zero-row state transitions
+  ---
+  duration_ms: 1.585208
+  ...
+# Subtest: provider reference binding is compare-and-set and idempotent for the canonical reference
+ok 12 - provider reference binding is compare-and-set and idempotent for the canonical reference
+  ---
+  duration_ms: 0.271125
+  ...
+# Subtest: PayPal reactivation intent creation adopts the canonical row after a unique race
+ok 13 - PayPal reactivation intent creation adopts the canonical row after a unique race
+  ---
+  duration_ms: 0.486
+  ...
+# Subtest: reactivation retries preserve the attempt and provider start locks plan changes
+ok 14 - reactivation retries preserve the attempt and provider start locks plan changes
+  ---
+  duration_ms: 0.697375
+  ...
+# Subtest: a locked provider checkout hides fallback providers and disables plan changes
+ok 15 - a locked provider checkout hides fallback providers and disables plan changes
+  ---
+  duration_ms: 9.827792
+  ...
+# Subtest: reservation SQL permits same-provider reconciliation but rejects provider switching
+ok 16 - reservation SQL permits same-provider reconciliation but rejects provider switching
+  ---
+  duration_ms: 0.161
+  ...
+# Subtest: reservation acquisition adopts compatible authoritative attempts across reloads
+ok 17 - reservation acquisition adopts compatible authoritative attempts across reloads
+  ---
+  duration_ms: 0.188333
+  ...
+# Subtest: reservation acquisition rechecks compatible parameters after insert races
+ok 18 - reservation acquisition rechecks compatible parameters after insert races
+  ---
+  duration_ms: 0.073792
+  ...
+# Subtest: PayPal reactivation intents have a dedicated foreign key and one canonical row
+ok 19 - PayPal reactivation intents have a dedicated foreign key and one canonical row
+  ---
+  duration_ms: 0.3585
+  ...
+# Subtest: saved canonical hair-profile values map back to quiz answers
+ok 20 - saved canonical hair-profile values map back to quiz answers
+  ---
+  duration_ms: 1.605458
+  ...
+# Subtest: every canonical reverse mapping is explicit
+ok 21 - every canonical reverse mapping is explicit
+  ---
+  duration_ms: 0.96825
+  ...
+# Subtest: scalp issue flag follows mapped stored condition
+ok 22 - scalp issue flag follows mapped stored condition
+  ---
+  duration_ms: 0.095667
+  ...
+# Subtest: missing and legacy profile values do not invent quiz precision
+ok 23 - missing and legacy profile values do not invent quiz precision
+  ---
+  duration_ms: 0.713125
+  ...
+# Subtest: reactivation return destination accepts only allowlisted member pages
+ok 24 - reactivation return destination accepts only allowlisted member pages
+  ---
+  duration_ms: 0.299375
+  ...
+# Subtest: reactivation return destination rejects external, recursive, escaped and unknown paths
+ok 25 - reactivation return destination rejects external, recursive, escaped and unknown paths
+  ---
+  duration_ms: 0.127583
+  ...
+# Subtest: reactivation restores the saved main-problem pick (F1); older profiles stay neutral
+ok 26 - reactivation restores the saved main-problem pick (F1); older profiles stay neutral
+  ---
+  duration_ms: 0.232208
+  ...
+# Subtest: the reactivation page reads the saved main-problem pick
+ok 27 - the reactivation page reads the saved main-problem pick
+  ---
+  duration_ms: 4.051208
+  ...
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'efc96b584968',
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   profileLinkMode: 'await',
+#   durationMs: 2
+# }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'efc96b584968',
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   profileLinkMode: 'await',
+#   durationMs: 1
+# }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'efc96b584968',
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   profileLinkMode: 'await',
+#   durationMs: 0
+# }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'efc96b584968',
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   profileLinkMode: 'await',
+#   durationMs: 0
+# }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'efc96b584968',
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   profileLinkMode: 'await',
+#   durationMs: 0
+# }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'efc96b584968',
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   profileLinkMode: 'await',
+#   durationMs: 0
+# }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'efc96b584968',
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   profileLinkMode: 'await',
+#   durationMs: 1
+# }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'efc96b584968',
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   profileLinkMode: 'await',
+#   durationMs: 0
+# }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'efc96b584968',
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   profileLinkMode: 'await',
+#   durationMs: 0
+# }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'efc96b584968',
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   profileLinkMode: 'await',
+#   durationMs: 1
+# }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'efc96b584968',
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   profileLinkMode: 'await',
+#   durationMs: 0
+# }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'efc96b584968',
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   profileLinkMode: 'await',
+#   durationMs: 0
+# }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# Subtest: Stripe webhook completes a paid reactivation without browser return and no longer offers the old attempt
+ok 28 - Stripe webhook completes a paid reactivation without browser return and no longer offers the old attempt
+  ---
+  duration_ms: 3.317209
+  ...
+# Subtest: Stripe duplicate webhook safely repeats completion of the same bound reservation
+ok 29 - Stripe duplicate webhook safely repeats completion of the same bound reservation
+  ---
+  duration_ms: 1.159708
+  ...
+# Subtest: Stripe completion persistence failure rejects webhook processing and the retry closes the attempt
+ok 30 - Stripe completion persistence failure rejects webhook processing and the retry closes the attempt
+  ---
+  duration_ms: 0.720875
+  ...
+# Subtest: Stripe activation cannot complete a reservation whose provider binding changed during activation
+ok 31 - Stripe activation cannot complete a reservation whose provider binding changed during activation
+  ---
+  duration_ms: 0.262
+  ...
+# Subtest: versioned reactivation keeps login account/email even if Stripe billing email belongs to another account
+ok 32 - versioned reactivation keeps login account/email even if Stripe billing email belongs to another account
+  ---
+  duration_ms: 0.255458
+  ...
+# Subtest: webhook before provider binding remains retryable and never creates another account
+ok 33 - webhook before provider binding remains retryable and never creates another account
+  ---
+  duration_ms: 0.784417
+  ...
+# Subtest: duplicate completed webhook retains account and never grants initial-password capability
+ok 34 - duplicate completed webhook retains account and never grants initial-password capability
+  ---
+  duration_ms: 0.621667
+  ...
+# Subtest: versioned reactivation fails closed without writes for customer owner
+ok 35 - versioned reactivation fails closed without writes for customer owner
+  ---
+  duration_ms: 0.174666
+  ...
+# Subtest: versioned reactivation fails closed without writes for subscription owner
+ok 36 - versioned reactivation fails closed without writes for subscription owner
+  ---
+  duration_ms: 0.286666
+  ...
+# Subtest: versioned reactivation fails closed without writes for missing auth
+ok 37 - versioned reactivation fails closed without writes for missing auth
+  ---
+  duration_ms: 0.336417
+  ...
+# Subtest: versioned reactivation fails closed without writes for missing profile
+ok 38 - versioned reactivation fails closed without writes for missing profile
+  ---
+  duration_ms: 0.148
+  ...
+# Subtest: versioned reactivation fails closed without writes for different session
+ok 39 - versioned reactivation fails closed without writes for different session
+  ---
+  duration_ms: 0.079833
+  ...
+# Subtest: versioned reactivation fails closed without writes for wrong provider
+ok 40 - versioned reactivation fails closed without writes for wrong provider
+  ---
+  duration_ms: 0.144916
+  ...
+# Subtest: versioned reactivation fails closed without writes for wrong mode
+ok 41 - versioned reactivation fails closed without writes for wrong mode
+  ---
+  duration_ms: 0.069667
+  ...
+# Subtest: versioned reactivation fails closed without writes for wrong account
+ok 42 - versioned reactivation fails closed without writes for wrong account
+  ---
+  duration_ms: 0.114708
+  ...
+# Subtest: versioned reactivation fails closed without writes for context owner
+ok 43 - versioned reactivation fails closed without writes for context owner
+  ---
+  duration_ms: 0.106708
+  ...
+# Subtest: versioned reactivation fails closed without writes for unknown version
+ok 44 - versioned reactivation fails closed without writes for unknown version
+  ---
+  duration_ms: 0.076
+  ...
+# Subtest: versioned reactivation fails closed without writes for missing context
+ok 45 - versioned reactivation fails closed without writes for missing context
+  ---
+  duration_ms: 0.145709
+  ...
+# Subtest: versioned reactivation fails closed without writes for changed profile customer
+ok 46 - versioned reactivation fails closed without writes for changed profile customer
+  ---
+  duration_ms: 0.149541
+  ...
+# Subtest: a profile customer changed after ownership reads is not overwritten
+ok 47 - a profile customer changed after ownership reads is not overwritten
+  ---
+  duration_ms: 0.204875
+  ...
+# Subtest: versioned reactivation needs no Stripe billing email when canonical login identity exists
+ok 48 - versioned reactivation needs no Stripe billing email when canonical login identity exists
+  ---
+  duration_ms: 0.178334
+  ...
+# Subtest: initial request reuses its valid customer and a null snapshot can adopt a newly created customer
+ok 49 - initial request reuses its valid customer and a null snapshot can adopt a newly created customer
+  ---
+  duration_ms: 0.336541
+  ...
+# Subtest: different frozen metadata or customer prevents activation
+ok 50 - different frozen metadata or customer prevents activation
+  ---
+  duration_ms: 0.138584
+  ...
+# Subtest: concurrent login email change cannot be overwritten by a stale activation
+ok 51 - concurrent login email change cannot be overwritten by a stale activation
+  ---
+  duration_ms: 0.171
+  ...
+# Subtest: competing subscription insert is adopted only for the same immutable account
+ok 52 - competing subscription insert is adopted only for the same immutable account
+  ---
+  duration_ms: 0.439125
+  ...
+# Subtest: late conflicting billing owner cannot grant access through the profile mirror
+ok 53 - late conflicting billing owner cannot grant access through the profile mirror
+  ---
+  duration_ms: 0.17625
+  ...
+# Subtest: reactivation requires authentication but deliberately not a subscription
+ok 54 - reactivation requires authentication but deliberately not a subscription
+  ---
+  duration_ms: 0.583
+  ...
+# Subtest: all membership surfaces remain subscription gated
+ok 55 - all membership surfaces remain subscription gated
+  ---
+  duration_ms: 0.081375
+  ...
+# Subtest: field-test guest identity is server-owned and cannot be inferred from email
+ok 56 - field-test guest identity is server-owned and cannot be inferred from email
+  ---
+  duration_ms: 0.0805
+  ...
+# Subtest: stripe completed payment releases the old reservation for later repurchase and duplicate completion leaves the new attempt alone
+ok 57 - stripe completed payment releases the old reservation for later repurchase and duplicate completion leaves the new attempt alone
+  ---
+  duration_ms: 961.879625
+  ...
+# Subtest: paypal completed payment releases the old reservation for later repurchase and duplicate completion leaves the new attempt alone
+ok 58 - paypal completed payment releases the old reservation for later repurchase and duplicate completion leaves the new attempt alone
+  ---
+  duration_ms: 4.80325
+  ...
+# Subtest: completion refuses wrong owner, provider, reference, missing binding and terminal-expired state
+ok 59 - completion refuses wrong owner, provider, reference, missing binding and terminal-expired state
+  ---
+  duration_ms: 4.166333
+  ...
+# Subtest: prepare atomically freezes one request and retries ignore changed profile, email and price
+ok 60 - prepare atomically freezes one request and retries ignore changed profile, email and price
+  ---
+  duration_ms: 9.62625
+  ...
+# Subtest: recovery changes only customer to immutable account email and converges across retries
+ok 61 - recovery changes only customer to immutable account email and converges across retries
+  ---
+  duration_ms: 6.140042
+  ...
+# Subtest: wrong provider, legacy selected and terminal attempts cannot adopt new keys
+ok 62 - wrong provider, legacy selected and terminal attempts cannot adopt new keys
+  ---
+  duration_ms: 3.574583
+  ...
+# Subtest: prepare rejects mismatched ownership, metadata, mixed identity and mutable recovery input
+ok 63 - prepare rejects mismatched ownership, metadata, mixed identity and mutable recovery input
+  ---
+  duration_ms: 3.090166
+  ...
+# Subtest: email-first creation preserves original profile snapshot and cannot enter missing-customer retry
+ok 64 - email-first creation preserves original profile snapshot and cannot enter missing-customer retry
+  ---
+  duration_ms: 1.511
+  ...
+# Subtest: bound sessions and terminal rows reject recovery; last creation window and 24-hour maximum are enforced
+ok 65 - bound sessions and terminal rows reject recovery; last creation window and 24-hour maximum are enforced
+  ---
+  duration_ms: 5.229459
+  ...
+# Subtest: time cannot release an uncertain context, even after binding changed status to provider_created
+ok 66 - time cannot release an uncertain context, even after binding changed status to provider_created
+  ---
+  duration_ms: 3.440209
+  ...
+# Subtest: issued PayPal SDK creation stays locked beyond 24 hours, including after provider binding
+ok 67 - issued PayPal SDK creation stays locked beyond 24 hours, including after provider binding
+  ---
+  duration_ms: 4.537458
+  ...
+# Subtest: unissued PayPal same-provider reconciliation remains available without reopening its status
+ok 68 - unissued PayPal same-provider reconciliation remains available without reopening its status
+  ---
+  duration_ms: 1.319667
+  ...
+# Subtest: unmarked legacy PayPal expiry stays unchanged
+ok 69 - unmarked legacy PayPal expiry stays unchanged
+  ---
+  duration_ms: 1.375
+  ...
+# Subtest: PayPal issuance atomically claims one token and preserves metadata across submitted competitors
+ok 70 - PayPal issuance atomically claims one token and preserves metadata across submitted competitors
+  ---
+  duration_ms: 2.282042
+  ...
+# Subtest: PayPal issuance refuses a closed, expired, wrong-owner or wrong-provider reservation without minting a token
+ok 71 - PayPal issuance refuses a closed, expired, wrong-owner or wrong-provider reservation without minting a token
+  ---
+  duration_ms: 5.090292
+  ...
+# Subtest: PayPal issuance rejects a completed, expired, bound or differently owned intent
+ok 72 - PayPal issuance rejects a completed, expired, bound or differently owned intent
+  ---
+  duration_ms: 6.128
+  ...
+# Subtest: RPC privileges and private ledger refuse public roles and use service-role invoker with empty search path
+ok 73 - RPC privileges and private ledger refuse public roles and use service-role invoker with empty search path
+  ---
+  duration_ms: 3.349667
+  ...
+# Subtest: rollback claim cannot enter a Stripe reservation with frozen request state
+ok 74 - rollback claim cannot enter a Stripe reservation with frozen request state
+  ---
+  duration_ms: 1.116875
+  ...
+# Subtest: legacy claim cannot reopen a completed attempt
+ok 75 - legacy claim cannot reopen a completed attempt
+  ---
+  duration_ms: 0.822125
+  ...
+# Subtest: provider retries retain original request despite mutable profile/caller objects and use fixed keys
+ok 76 - provider retries retain original request despite mutable profile/caller objects and use fixed keys
+  ---
+  duration_ms: 4.056209
+  ...
+# Subtest: persisted recovery always wins and only frozen email may replace the missing customer
+ok 77 - persisted recovery always wins and only frozen email may replace the missing customer
+  ---
+  duration_ms: 0.302709
+  ...
+# Subtest: freezes the complete server-built trial request and only recovers its missing customer
+ok 78 - freezes the complete server-built trial request and only recovers its missing customer
+  ---
+  duration_ms: 1.248666
+  ...
+# Subtest: trial-shaped fields cannot hide in an otherwise legacy reactivation request
+ok 79 - trial-shaped fields cannot hide in an otherwise legacy reactivation request
+  ---
+  duration_ms: 0.303042
+  ...
+# Subtest: creation boundary never rolls expiry or creates beyond idempotency retention; known-session retrieval stays caller-owned
+ok 80 - creation boundary never rolls expiry or creates beyond idempotency retention; known-session retrieval stays caller-owned
+  ---
+  duration_ms: 0.10425
+  ...
+# Subtest: context refuses malformed identity, mixed customer/email and payment detail fields
+ok 81 - context refuses malformed identity, mixed customer/email and payment detail fields
+  ---
+  duration_ms: 0.103291
+  ...
+# Subtest: prepare uses returned persisted context rather than submitted candidate; conflicts remain typed
+ok 82 - prepare uses returned persisted context rather than submitted candidate; conflicts remain typed
+  ---
+  duration_ms: 0.344167
+  ...
+# Subtest: recover only transmits verified identity; malformed or relinked database response never reaches provider
+ok 83 - recover only transmits verified identity; malformed or relinked database response never reaches provider
+  ---
+  duration_ms: 0.201791
+  ...
+# Subtest: a late reconciliation failure cannot reopen a completed payment
+ok 84 - a late reconciliation failure cannot reopen a completed payment
+  ---
+  duration_ms: 0.732333
+  ...
+# [reactivate] trial membership unavailable Error: lookup unavailable
+#     at Object.maybeSingle (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/reactivation-trial-management.test.ts:105:40)
+#     at Object.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/reactivate/page.tsx:123:30)
+#     at step (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/reactivate/page.tsx:44:23)
+#     at Object.next (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/reactivate/page.tsx:25:53)
+#     at fulfilled (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/reactivate/page.tsx:16:58)
+# [reactivate] trial membership unavailable Error: Trial contract unavailable
+#     at readTrialEffectiveContract (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/billing/trial-effective-contract.ts:36:11)
+# [reactivate] trial membership unavailable Error: Trial contract unavailable
+#     at readTrialEffectiveContract (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/billing/trial-effective-contract.ts:23:11)
+# [reactivate] trial membership unavailable Error: Trial contract unavailable
+#     at readTrialEffectiveContract (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/billing/trial-effective-contract.ts:36:11)
+# [reactivate] app access check failed Error: access unavailable
+#     at hasCurrentAppAccess (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/reactivation-trial-management.test.ts:122:40)
+#     at Object.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/reactivate/page.tsx:92:82)
+#     at step (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/reactivate/page.tsx:44:23)
+#     at Object.next (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/reactivate/page.tsx:25:53)
+#     at fulfilled (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/reactivate/page.tsx:16:58)
+# Subtest: expired trial branches before private profile reads and receives immutable management facts
+ok 85 - expired trial branches before private profile reads and receives immutable management facts
+  ---
+  duration_ms: 265.908083
+  ...
+# Subtest: expired trial uses the current verified offer revision while retaining the original trial deadline
+ok 86 - expired trial uses the current verified offer revision while retaining the original trial deadline
+  ---
+  duration_ms: 17.376416
+  ...
+# Subtest: unknown enrollment and access failures never expose a private preview or paid checkout
+ok 87 - unknown enrollment and access failures never expose a private preview or paid checkout
+  ---
+  duration_ms: 225.58075
+  ...
+# Subtest: legacy expired users retain profile preview and selected paid reactivation
+ok 88 - legacy expired users retain profile preview and selected paid reactivation
+  ---
+  duration_ms: 30.140333
+  ...
+# Subtest: active and signed-out redirects run before trial or private-data queries
+ok 89 - active and signed-out redirects run before trial or private-data queries
+  ---
+  duration_ms: 17.969334
+  ...
+1..89
+# tests 89
+# suites 0
+# pass 89
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1956.748583

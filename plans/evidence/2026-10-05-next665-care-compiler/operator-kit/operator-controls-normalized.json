@@ -1,0 +1,1292 @@
+[
+  {
+    "id": "C1-01",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+    "sourceSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "mutatedSha256": "5754c37ee9cda70aac3f1f3611c5bb03b2c18306ad00c9b96365977ca9f329f2",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "scopeSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+      "expectedOccurrences": 1
+    },
+    "from": "    intent: { schemaVersion: 1, categories },\n    sections,\n    items,\n    createdAt: \"pending-sql-assignment\",",
+    "to": "    intent: { schemaVersion: 1, categories },\n    sections: [...sections].reverse(),\n    items,\n    createdAt: \"pending-sql-assignment\",",
+    "fullMutantPath": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-01/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "test": {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "name": "initial Routine compilation is deterministic and excludes volatile portfolio metadata"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^initial Routine compilation is deterministic and excludes volatile portfolio metadata$",
+      "tests/personal-plan-routine-candidate-compiler.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 201,
+        "text": "assert.deepEqual(payload.sections, [\n    { key: \"basis\", itemKeys: [\"item:conditioner:conditioner_rinse_out:captured-a\"] },\n    {\n      key: \"optional\",\n      itemKeys: [\n        \"item:oil:dry_finish:planned-a\",\n        \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n      ],\n    },\n  ])",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3"
+      },
+      "cut": {
+        "startLine": 201,
+        "text": "assert.deepEqual(payload.sections, [\n    { key: \"basis\", itemKeys: [\"item:conditioner:conditioner_rinse_out:captured-a\"] },\n    {\n      key: \"optional\",\n      itemKeys: [\n        \"item:oil:dry_finish:planned-a\",\n        \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n      ],\n    },\n  ])",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      {
+        "key": "basis",
+        "itemKeys": [
+          "item:conditioner:conditioner_rinse_out:captured-a"
+        ]
+      },
+      {
+        "key": "optional",
+        "itemKeys": [
+          "item:oil:dry_finish:planned-a",
+          "item:heat_protectant:pre_heat_protection:captured-pending-a"
+        ]
+      }
+    ],
+    "actualValue": [
+      {
+        "key": "optional",
+        "itemKeys": [
+          "item:oil:dry_finish:planned-a",
+          "item:heat_protectant:pre_heat_protection:captured-pending-a"
+        ]
+      },
+      {
+        "key": "basis",
+        "itemKeys": [
+          "item:conditioner:conditioner_rinse_out:captured-a"
+        ]
+      }
+    ],
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n      itemKeys: [\n+       'item:oil:dry_finish:planned-a',\n+       'item:heat_protectant:pre_heat_protection:captured-pending-a'\n-       'item:conditioner:conditioner_rinse_out:captured-a'\n      ],\n+     key: 'optional'\n-     key: 'basis'\n    },\n    {\n      itemKeys: [\n+       'item:conditioner:conditioner_rinse_out:captured-a'\n-       'item:oil:dry_finish:planned-a',\n-       'item:heat_protectant:pre_heat_protection:captured-pending-a'\n      ],\n+     key: 'basis'\n-     key: 'optional'\n    }\n  ]",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(payload.sections, [\n    { key: \"basis\", itemKeys: [\"item:conditioner:conditioner_rinse_out:captured-a\"] },\n    {\n      key: \"optional\",\n      itemKeys: [\n        \"item:oil:dry_finish:planned-a\",\n        \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n      ],\n    },\n  ])",
+    "limits": "Static literal-value diagnostic prediction only; actual owner sensitivity requires main clean/red/byte-restored/clean runs and first outer assertion frame."
+  },
+  {
+    "id": "C1-02",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+    "sourceSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "mutatedSha256": "12fca0f5ad8ae965f648be074d976212a4fc4528311516e45c865e38da2aa122",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "scopeSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+      "expectedOccurrences": 1
+    },
+    "from": "      authorityVersions,\n      renderedOrder,\n    },\n    intent: { schemaVersion: 1, categories },",
+    "to": "      authorityVersions,\n      renderedOrder: [...renderedOrder].reverse(),\n    },\n    intent: { schemaVersion: 1, categories },",
+    "fullMutantPath": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-02/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "test": {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "name": "initial Routine compilation is deterministic and excludes volatile portfolio metadata"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^initial Routine compilation is deterministic and excludes volatile portfolio metadata$",
+      "tests/personal-plan-routine-candidate-compiler.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 211,
+        "text": "assert.deepEqual(payload.source.renderedOrder, [\"conditioner\", \"oil\", \"heat_protectant\"])",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3"
+      },
+      "cut": {
+        "startLine": 211,
+        "text": "assert.deepEqual(payload.source.renderedOrder, [\"conditioner\", \"oil\", \"heat_protectant\"])",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      "conditioner",
+      "oil",
+      "heat_protectant"
+    ],
+    "actualValue": [
+      "heat_protectant",
+      "oil",
+      "conditioner"
+    ],
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   'heat_protectant',\n+   'oil',\n    'conditioner',\n-   'oil',\n-   'heat_protectant'\n  ]",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(payload.source.renderedOrder, [\"conditioner\", \"oil\", \"heat_protectant\"])",
+    "limits": "Static literal-value diagnostic prediction only; actual owner sensitivity requires main clean/red/byte-restored/clean runs and first outer assertion frame."
+  },
+  {
+    "id": "C1-03",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+    "sourceSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "mutatedSha256": "81a2c91ad3572ed6ab3a5b0cfeaf454569664d8bb07c8e4b75366f73ac08e724",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "scopeSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+      "expectedOccurrences": 1
+    },
+    "from": "    intent: { schemaVersion: 1, categories },\n    sections,\n    items,\n    createdAt: \"pending-sql-assignment\",",
+    "to": "    intent: { schemaVersion: 1, categories: [...categories].reverse() },\n    sections,\n    items,\n    createdAt: \"pending-sql-assignment\",",
+    "fullMutantPath": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-03/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "test": {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "name": "initial Routine compilation is deterministic and excludes volatile portfolio metadata"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^initial Routine compilation is deterministic and excludes volatile portfolio metadata$",
+      "tests/personal-plan-routine-candidate-compiler.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 212,
+        "text": "assert.deepEqual(\n    payload.intent.categories.map((entry: Record<string, unknown>) => entry.category),\n    [\"conditioner\", \"oil\", \"heat_protectant\"],\n  )",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3"
+      },
+      "cut": {
+        "startLine": 212,
+        "text": "assert.deepEqual(\n    payload.intent.categories.map((entry: Record<string, unknown>) => entry.category),\n    [\"conditioner\", \"oil\", \"heat_protectant\"],\n  )",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      "conditioner",
+      "oil",
+      "heat_protectant"
+    ],
+    "actualValue": [
+      "heat_protectant",
+      "oil",
+      "conditioner"
+    ],
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   'heat_protectant',\n+   'oil',\n    'conditioner',\n-   'oil',\n-   'heat_protectant'\n  ]",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(\n    payload.intent.categories.map((entry: Record<string, unknown>) => entry.category),\n    [\"conditioner\", \"oil\", \"heat_protectant\"],\n  )",
+    "limits": "Static literal-value diagnostic prediction only; actual owner sensitivity requires main clean/red/byte-restored/clean runs and first outer assertion frame."
+  },
+  {
+    "id": "C1-04",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+    "sourceSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "mutatedSha256": "263f57d08309655d065b96d43282f483ee55ee4e91a81fdd79149e2c2be3142b",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "scopeSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+      "expectedOccurrences": 1
+    },
+    "from": "    intent: { schemaVersion: 1, categories },\n    sections,\n    items,\n    createdAt: \"pending-sql-assignment\",",
+    "to": "    intent: { schemaVersion: 1, categories },\n    sections,\n    items: items.map((item, index) => index === 0 ? { ...item, itemKey: \"wrong-assignment\" } : item),\n    createdAt: \"pending-sql-assignment\",",
+    "fullMutantPath": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-04/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "test": {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "name": "initial Routine compilation is deterministic and excludes volatile portfolio metadata"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^initial Routine compilation is deterministic and excludes volatile portfolio metadata$",
+      "tests/personal-plan-routine-candidate-compiler.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 216,
+        "text": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3"
+      },
+      "cut": {
+        "startLine": 216,
+        "text": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      {
+        "key": "item:conditioner:conditioner_rinse_out:captured-a",
+        "assessment": "basis",
+        "inclusion": "included",
+        "availability": "owned",
+        "fitDecision": "informed_override",
+        "executable": true,
+        "productKind": "owned"
+      },
+      {
+        "key": "item:oil:dry_finish:planned-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "planned",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "planned"
+      },
+      {
+        "key": "item:heat_protectant:pre_heat_protection:captured-pending-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "pending_review",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "pending_review"
+      },
+      {
+        "key": "item:mask:intensive_conditioning_mask:none",
+        "assessment": "not_recommended",
+        "inclusion": "excluded",
+        "availability": "none",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "none"
+      }
+    ],
+    "actualValue": [
+      {
+        "key": "wrong-assignment",
+        "assessment": "basis",
+        "inclusion": "included",
+        "availability": "owned",
+        "fitDecision": "informed_override",
+        "executable": true,
+        "productKind": "owned"
+      },
+      {
+        "key": "item:oil:dry_finish:planned-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "planned",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "planned"
+      },
+      {
+        "key": "item:heat_protectant:pre_heat_protection:captured-pending-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "pending_review",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "pending_review"
+      },
+      {
+        "key": "item:mask:intensive_conditioning_mask:none",
+        "assessment": "not_recommended",
+        "inclusion": "excluded",
+        "availability": "none",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "none"
+      }
+    ],
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n      assessment: 'basis',\n      availability: 'owned',\n      executable: true,\n      fitDecision: 'informed_override',\n      inclusion: 'included',\n+     key: 'wrong-assignment',\n-     key: 'item:conditioner:conditioner_rinse_out:captured-a',\n      productKind: 'owned'\n    },\n    {\n      assessment: 'optional',\n      availability: 'planned',",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+    "limits": "Static literal-value diagnostic prediction only; actual owner sensitivity requires main clean/red/byte-restored/clean runs and first outer assertion frame."
+  },
+  {
+    "id": "C1-05",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+    "sourceSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "mutatedSha256": "952d85e556fa74516eb05f36c49909ebdcfc61767c775aa958992ea180a6be13",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "scopeSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+      "expectedOccurrences": 1
+    },
+    "from": "    intent: { schemaVersion: 1, categories },\n    sections,\n    items,\n    createdAt: \"pending-sql-assignment\",",
+    "to": "    intent: { schemaVersion: 1, categories },\n    sections,\n    items: items.map((item, index) => index === 0 ? { ...item, state: { ...item.state, systemAssessment: \"optional\" as const } } : item),\n    createdAt: \"pending-sql-assignment\",",
+    "fullMutantPath": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-05/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "test": {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "name": "initial Routine compilation is deterministic and excludes volatile portfolio metadata"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^initial Routine compilation is deterministic and excludes volatile portfolio metadata$",
+      "tests/personal-plan-routine-candidate-compiler.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 216,
+        "text": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3"
+      },
+      "cut": {
+        "startLine": 216,
+        "text": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      {
+        "key": "item:conditioner:conditioner_rinse_out:captured-a",
+        "assessment": "basis",
+        "inclusion": "included",
+        "availability": "owned",
+        "fitDecision": "informed_override",
+        "executable": true,
+        "productKind": "owned"
+      },
+      {
+        "key": "item:oil:dry_finish:planned-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "planned",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "planned"
+      },
+      {
+        "key": "item:heat_protectant:pre_heat_protection:captured-pending-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "pending_review",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "pending_review"
+      },
+      {
+        "key": "item:mask:intensive_conditioning_mask:none",
+        "assessment": "not_recommended",
+        "inclusion": "excluded",
+        "availability": "none",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "none"
+      }
+    ],
+    "actualValue": [
+      {
+        "key": "item:conditioner:conditioner_rinse_out:captured-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "owned",
+        "fitDecision": "informed_override",
+        "executable": true,
+        "productKind": "owned"
+      },
+      {
+        "key": "item:oil:dry_finish:planned-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "planned",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "planned"
+      },
+      {
+        "key": "item:heat_protectant:pre_heat_protection:captured-pending-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "pending_review",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "pending_review"
+      },
+      {
+        "key": "item:mask:intensive_conditioning_mask:none",
+        "assessment": "not_recommended",
+        "inclusion": "excluded",
+        "availability": "none",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "none"
+      }
+    ],
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n+     assessment: 'optional',\n-     assessment: 'basis',\n      availability: 'owned',\n      executable: true,\n      fitDecision: 'informed_override',\n      inclusion: 'included',\n      key: 'item:conditioner:conditioner_rinse_out:captured-a',",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+    "limits": "Static literal-value diagnostic prediction only; actual owner sensitivity requires main clean/red/byte-restored/clean runs and first outer assertion frame."
+  },
+  {
+    "id": "C1-06",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+    "sourceSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "mutatedSha256": "4498fe1de07a7a46f21901330f1cb7567f13f38abdcf9f8cc59836590752586e",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "scopeSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+      "expectedOccurrences": 1
+    },
+    "from": "    intent: { schemaVersion: 1, categories },\n    sections,\n    items,\n    createdAt: \"pending-sql-assignment\",",
+    "to": "    intent: { schemaVersion: 1, categories },\n    sections,\n    items: items.map((item, index) => index === 0 ? { ...item, state: { ...item.state, inclusion: \"excluded\" as const } } : item),\n    createdAt: \"pending-sql-assignment\",",
+    "fullMutantPath": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-06/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "test": {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "name": "initial Routine compilation is deterministic and excludes volatile portfolio metadata"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^initial Routine compilation is deterministic and excludes volatile portfolio metadata$",
+      "tests/personal-plan-routine-candidate-compiler.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 216,
+        "text": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3"
+      },
+      "cut": {
+        "startLine": 216,
+        "text": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      {
+        "key": "item:conditioner:conditioner_rinse_out:captured-a",
+        "assessment": "basis",
+        "inclusion": "included",
+        "availability": "owned",
+        "fitDecision": "informed_override",
+        "executable": true,
+        "productKind": "owned"
+      },
+      {
+        "key": "item:oil:dry_finish:planned-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "planned",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "planned"
+      },
+      {
+        "key": "item:heat_protectant:pre_heat_protection:captured-pending-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "pending_review",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "pending_review"
+      },
+      {
+        "key": "item:mask:intensive_conditioning_mask:none",
+        "assessment": "not_recommended",
+        "inclusion": "excluded",
+        "availability": "none",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "none"
+      }
+    ],
+    "actualValue": [
+      {
+        "key": "item:conditioner:conditioner_rinse_out:captured-a",
+        "assessment": "basis",
+        "inclusion": "excluded",
+        "availability": "owned",
+        "fitDecision": "informed_override",
+        "executable": true,
+        "productKind": "owned"
+      },
+      {
+        "key": "item:oil:dry_finish:planned-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "planned",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "planned"
+      },
+      {
+        "key": "item:heat_protectant:pre_heat_protection:captured-pending-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "pending_review",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "pending_review"
+      },
+      {
+        "key": "item:mask:intensive_conditioning_mask:none",
+        "assessment": "not_recommended",
+        "inclusion": "excluded",
+        "availability": "none",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "none"
+      }
+    ],
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n      assessment: 'basis',\n      availability: 'owned',\n      executable: true,\n      fitDecision: 'informed_override',\n+     inclusion: 'excluded',\n-     inclusion: 'included',\n      key: 'item:conditioner:conditioner_rinse_out:captured-a',\n      productKind: 'owned'\n    },\n    {\n      assessment: 'optional',",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+    "limits": "Static literal-value diagnostic prediction only; actual owner sensitivity requires main clean/red/byte-restored/clean runs and first outer assertion frame."
+  },
+  {
+    "id": "C1-07",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+    "sourceSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "mutatedSha256": "ce31b2e53e3bf9ca8c204dd9a21e734a9664bfa503ed76a5d8336b876e96b288",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "scopeSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+      "expectedOccurrences": 1
+    },
+    "from": "    intent: { schemaVersion: 1, categories },\n    sections,\n    items,\n    createdAt: \"pending-sql-assignment\",",
+    "to": "    intent: { schemaVersion: 1, categories },\n    sections,\n    items: items.map((item, index) => index === 0 ? { ...item, state: { ...item.state, availability: \"none\" as const } } : item),\n    createdAt: \"pending-sql-assignment\",",
+    "fullMutantPath": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-07/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "test": {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "name": "initial Routine compilation is deterministic and excludes volatile portfolio metadata"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^initial Routine compilation is deterministic and excludes volatile portfolio metadata$",
+      "tests/personal-plan-routine-candidate-compiler.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 216,
+        "text": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3"
+      },
+      "cut": {
+        "startLine": 216,
+        "text": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      {
+        "key": "item:conditioner:conditioner_rinse_out:captured-a",
+        "assessment": "basis",
+        "inclusion": "included",
+        "availability": "owned",
+        "fitDecision": "informed_override",
+        "executable": true,
+        "productKind": "owned"
+      },
+      {
+        "key": "item:oil:dry_finish:planned-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "planned",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "planned"
+      },
+      {
+        "key": "item:heat_protectant:pre_heat_protection:captured-pending-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "pending_review",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "pending_review"
+      },
+      {
+        "key": "item:mask:intensive_conditioning_mask:none",
+        "assessment": "not_recommended",
+        "inclusion": "excluded",
+        "availability": "none",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "none"
+      }
+    ],
+    "actualValue": [
+      {
+        "key": "item:conditioner:conditioner_rinse_out:captured-a",
+        "assessment": "basis",
+        "inclusion": "included",
+        "availability": "none",
+        "fitDecision": "informed_override",
+        "executable": true,
+        "productKind": "owned"
+      },
+      {
+        "key": "item:oil:dry_finish:planned-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "planned",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "planned"
+      },
+      {
+        "key": "item:heat_protectant:pre_heat_protection:captured-pending-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "pending_review",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "pending_review"
+      },
+      {
+        "key": "item:mask:intensive_conditioning_mask:none",
+        "assessment": "not_recommended",
+        "inclusion": "excluded",
+        "availability": "none",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "none"
+      }
+    ],
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n      assessment: 'basis',\n+     availability: 'none',\n-     availability: 'owned',\n      executable: true,\n      fitDecision: 'informed_override',\n      inclusion: 'included',\n      key: 'item:conditioner:conditioner_rinse_out:captured-a',\n      productKind: 'owned'",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+    "limits": "Static literal-value diagnostic prediction only; actual owner sensitivity requires main clean/red/byte-restored/clean runs and first outer assertion frame."
+  },
+  {
+    "id": "C1-08",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+    "sourceSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "mutatedSha256": "7144d8215a4430d9a49f4b9c932145164c7813bb3e14d07e5dc1e420b2018bdd",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "scopeSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+      "expectedOccurrences": 1
+    },
+    "from": "    intent: { schemaVersion: 1, categories },\n    sections,\n    items,\n    createdAt: \"pending-sql-assignment\",",
+    "to": "    intent: { schemaVersion: 1, categories },\n    sections,\n    items: items.map((item, index) => index === 0 ? { ...item, state: { ...item.state, fitDecision: \"standard\" as const } } : item),\n    createdAt: \"pending-sql-assignment\",",
+    "fullMutantPath": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-08/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "test": {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "name": "initial Routine compilation is deterministic and excludes volatile portfolio metadata"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^initial Routine compilation is deterministic and excludes volatile portfolio metadata$",
+      "tests/personal-plan-routine-candidate-compiler.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 216,
+        "text": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3"
+      },
+      "cut": {
+        "startLine": 216,
+        "text": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      {
+        "key": "item:conditioner:conditioner_rinse_out:captured-a",
+        "assessment": "basis",
+        "inclusion": "included",
+        "availability": "owned",
+        "fitDecision": "informed_override",
+        "executable": true,
+        "productKind": "owned"
+      },
+      {
+        "key": "item:oil:dry_finish:planned-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "planned",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "planned"
+      },
+      {
+        "key": "item:heat_protectant:pre_heat_protection:captured-pending-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "pending_review",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "pending_review"
+      },
+      {
+        "key": "item:mask:intensive_conditioning_mask:none",
+        "assessment": "not_recommended",
+        "inclusion": "excluded",
+        "availability": "none",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "none"
+      }
+    ],
+    "actualValue": [
+      {
+        "key": "item:conditioner:conditioner_rinse_out:captured-a",
+        "assessment": "basis",
+        "inclusion": "included",
+        "availability": "owned",
+        "fitDecision": "standard",
+        "executable": true,
+        "productKind": "owned"
+      },
+      {
+        "key": "item:oil:dry_finish:planned-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "planned",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "planned"
+      },
+      {
+        "key": "item:heat_protectant:pre_heat_protection:captured-pending-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "pending_review",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "pending_review"
+      },
+      {
+        "key": "item:mask:intensive_conditioning_mask:none",
+        "assessment": "not_recommended",
+        "inclusion": "excluded",
+        "availability": "none",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "none"
+      }
+    ],
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n      assessment: 'basis',\n      availability: 'owned',\n      executable: true,\n+     fitDecision: 'standard',\n-     fitDecision: 'informed_override',\n      inclusion: 'included',\n      key: 'item:conditioner:conditioner_rinse_out:captured-a',\n      productKind: 'owned'\n    },\n    {",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+    "limits": "Static literal-value diagnostic prediction only; actual owner sensitivity requires main clean/red/byte-restored/clean runs and first outer assertion frame."
+  },
+  {
+    "id": "C1-09",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+    "sourceSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "mutatedSha256": "0d1bffae272a4dc5fd9b0527e140db62f1e961f1964374ce2ed1ba95dfed9962",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "scopeSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+      "expectedOccurrences": 1
+    },
+    "from": "    intent: { schemaVersion: 1, categories },\n    sections,\n    items,\n    createdAt: \"pending-sql-assignment\",",
+    "to": "    intent: { schemaVersion: 1, categories },\n    sections,\n    items: items.map((item, index) => index === 0 ? { ...item, executable: false } : item),\n    createdAt: \"pending-sql-assignment\",",
+    "fullMutantPath": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-09/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "test": {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "name": "initial Routine compilation is deterministic and excludes volatile portfolio metadata"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^initial Routine compilation is deterministic and excludes volatile portfolio metadata$",
+      "tests/personal-plan-routine-candidate-compiler.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 216,
+        "text": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3"
+      },
+      "cut": {
+        "startLine": 216,
+        "text": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      {
+        "key": "item:conditioner:conditioner_rinse_out:captured-a",
+        "assessment": "basis",
+        "inclusion": "included",
+        "availability": "owned",
+        "fitDecision": "informed_override",
+        "executable": true,
+        "productKind": "owned"
+      },
+      {
+        "key": "item:oil:dry_finish:planned-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "planned",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "planned"
+      },
+      {
+        "key": "item:heat_protectant:pre_heat_protection:captured-pending-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "pending_review",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "pending_review"
+      },
+      {
+        "key": "item:mask:intensive_conditioning_mask:none",
+        "assessment": "not_recommended",
+        "inclusion": "excluded",
+        "availability": "none",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "none"
+      }
+    ],
+    "actualValue": [
+      {
+        "key": "item:conditioner:conditioner_rinse_out:captured-a",
+        "assessment": "basis",
+        "inclusion": "included",
+        "availability": "owned",
+        "fitDecision": "informed_override",
+        "executable": false,
+        "productKind": "owned"
+      },
+      {
+        "key": "item:oil:dry_finish:planned-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "planned",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "planned"
+      },
+      {
+        "key": "item:heat_protectant:pre_heat_protection:captured-pending-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "pending_review",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "pending_review"
+      },
+      {
+        "key": "item:mask:intensive_conditioning_mask:none",
+        "assessment": "not_recommended",
+        "inclusion": "excluded",
+        "availability": "none",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "none"
+      }
+    ],
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n      assessment: 'basis',\n      availability: 'owned',\n+     executable: false,\n-     executable: true,\n      fitDecision: 'informed_override',\n      inclusion: 'included',\n      key: 'item:conditioner:conditioner_rinse_out:captured-a',\n      productKind: 'owned'\n    },",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+    "limits": "Static literal-value diagnostic prediction only; actual owner sensitivity requires main clean/red/byte-restored/clean runs and first outer assertion frame."
+  },
+  {
+    "id": "C1-10",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+    "sourceSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "mutatedSha256": "7e9ed1ec0862bf9dabb44561f6f935c0f67f38d57f207139f9b39dc0cdd8ca2c",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "scopeSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+      "expectedOccurrences": 1
+    },
+    "from": "    intent: { schemaVersion: 1, categories },\n    sections,\n    items,\n    createdAt: \"pending-sql-assignment\",",
+    "to": "    intent: { schemaVersion: 1, categories },\n    sections,\n    items: items.map((item, index) => index === 0 ? { ...item, product: { kind: \"none\" as const, displayName: null } } : item),\n    createdAt: \"pending-sql-assignment\",",
+    "fullMutantPath": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-10/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "test": {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "name": "initial Routine compilation is deterministic and excludes volatile portfolio metadata"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^initial Routine compilation is deterministic and excludes volatile portfolio metadata$",
+      "tests/personal-plan-routine-candidate-compiler.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 216,
+        "text": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3"
+      },
+      "cut": {
+        "startLine": 216,
+        "text": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      {
+        "key": "item:conditioner:conditioner_rinse_out:captured-a",
+        "assessment": "basis",
+        "inclusion": "included",
+        "availability": "owned",
+        "fitDecision": "informed_override",
+        "executable": true,
+        "productKind": "owned"
+      },
+      {
+        "key": "item:oil:dry_finish:planned-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "planned",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "planned"
+      },
+      {
+        "key": "item:heat_protectant:pre_heat_protection:captured-pending-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "pending_review",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "pending_review"
+      },
+      {
+        "key": "item:mask:intensive_conditioning_mask:none",
+        "assessment": "not_recommended",
+        "inclusion": "excluded",
+        "availability": "none",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "none"
+      }
+    ],
+    "actualValue": [
+      {
+        "key": "item:conditioner:conditioner_rinse_out:captured-a",
+        "assessment": "basis",
+        "inclusion": "included",
+        "availability": "owned",
+        "fitDecision": "informed_override",
+        "executable": true,
+        "productKind": "none"
+      },
+      {
+        "key": "item:oil:dry_finish:planned-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "planned",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "planned"
+      },
+      {
+        "key": "item:heat_protectant:pre_heat_protection:captured-pending-a",
+        "assessment": "optional",
+        "inclusion": "included",
+        "availability": "pending_review",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "pending_review"
+      },
+      {
+        "key": "item:mask:intensive_conditioning_mask:none",
+        "assessment": "not_recommended",
+        "inclusion": "excluded",
+        "availability": "none",
+        "fitDecision": "standard",
+        "executable": false,
+        "productKind": "none"
+      }
+    ],
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  [\n    {\n      assessment: 'basis',\n      availability: 'owned',\n      executable: true,\n...\n      key: 'item:conditioner:conditioner_rinse_out:captured-a',\n+     productKind: 'none'\n-     productKind: 'owned'\n    },\n    {\n      assessment: 'optional',\n      availability: 'planned',\n      executable: false,",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(\n    payload.items.map((item: Record<string, any>) => ({\n      key: item.itemKey,\n      assessment: item.state.systemAssessment,\n      inclusion: item.state.inclusion,\n      availability: item.state.availability,\n      fitDecision: item.state.fitDecision,\n      executable: item.executable,\n      productKind: item.product.kind,\n    })),\n    [\n      {\n        key: \"item:conditioner:conditioner_rinse_out:captured-a\",\n        assessment: \"basis\",\n        inclusion: \"included\",\n        availability: \"owned\",\n        fitDecision: \"informed_override\",\n        executable: true,\n        productKind: \"owned\",\n      },\n      {\n        key: \"item:oil:dry_finish:planned-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"planned\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"planned\",\n      },\n      {\n        key: \"item:heat_protectant:pre_heat_protection:captured-pending-a\",\n        assessment: \"optional\",\n        inclusion: \"included\",\n        availability: \"pending_review\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"pending_review\",\n      },\n      {\n        key: \"item:mask:intensive_conditioning_mask:none\",\n        assessment: \"not_recommended\",\n        inclusion: \"excluded\",\n        availability: \"none\",\n        fitDecision: \"standard\",\n        executable: false,\n        productKind: \"none\",\n      },\n    ],\n  )",
+    "limits": "Static literal-value diagnostic prediction only; actual owner sensitivity requires main clean/red/byte-restored/clean runs and first outer assertion frame."
+  },
+  {
+    "id": "C1-11",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+    "sourceSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "mutatedSha256": "e96d3e815debf55a3815864a724f99c7a2eee85e59a427eba9c69eb43febfab7",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "scopeSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+      "expectedOccurrences": 1
+    },
+    "from": "    payload,\n    proposalDelta: {",
+    "to": "    payload: { ...(payload as Record<string, JsonValue>), applicationOrder: [] },\n    proposalDelta: {",
+    "fullMutantPath": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-11/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "test": {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "name": "initial Routine compilation is deterministic and excludes volatile portfolio metadata"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^initial Routine compilation is deterministic and excludes volatile portfolio metadata$",
+      "tests/personal-plan-routine-candidate-compiler.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 265,
+        "text": "assert.equal(\"applicationOrder\" in payload, false)",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3"
+      },
+      "cut": {
+        "startLine": 265,
+        "text": "assert.equal(\"applicationOrder\" in payload, false)",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": false,
+    "actualValue": true,
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\ntrue !== false",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(\"applicationOrder\" in payload, false)",
+    "limits": "Static literal-value diagnostic prediction only; actual owner sensitivity requires main clean/red/byte-restored/clean runs and first outer assertion frame."
+  },
+  {
+    "id": "C1-12",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+    "sourceSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "mutatedSha256": "46bd28f84a26e0cd1e7e8f8f893b9728d54d403b8b7930eba3df54590477a0c0",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "scopeSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+      "expectedOccurrences": 1
+    },
+    "from": "    payload,\n    proposalDelta: {",
+    "to": "    payload: { ...(payload as Record<string, JsonValue>), dayTypes: [] },\n    proposalDelta: {",
+    "fullMutantPath": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-12/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "test": {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "name": "initial Routine compilation is deterministic and excludes volatile portfolio metadata"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^initial Routine compilation is deterministic and excludes volatile portfolio metadata$",
+      "tests/personal-plan-routine-candidate-compiler.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 266,
+        "text": "assert.equal(\"dayTypes\" in payload, false)",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3"
+      },
+      "cut": {
+        "startLine": 266,
+        "text": "assert.equal(\"dayTypes\" in payload, false)",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": false,
+    "actualValue": true,
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\ntrue !== false",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(\"dayTypes\" in payload, false)",
+    "limits": "Static literal-value diagnostic prediction only; actual owner sensitivity requires main clean/red/byte-restored/clean runs and first outer assertion frame."
+  },
+  {
+    "id": "C1-13",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+    "sourceSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+    "mutatedSha256": "f7b81ef4f4ec2557966a0b7dfed518bdba58028c273ad49c950c76bd7f7efae9",
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "scopeSha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+      "expectedOccurrences": 1
+    },
+    "from": "    payload,\n    proposalDelta: {",
+    "to": "    payload: { ...(payload as Record<string, JsonValue>), user_product_usage: [] },\n    proposalDelta: {",
+    "fullMutantPath": "/tmp/test-audit-care102-tools-fz8_q695/mutants/C1-13/src/lib/personal-plan/routine-candidate-compiler.ts",
+    "test": {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "name": "initial Routine compilation is deterministic and excludes volatile portfolio metadata"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^initial Routine compilation is deterministic and excludes volatile portfolio metadata$",
+      "tests/personal-plan-routine-candidate-compiler.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 267,
+        "text": "assert.equal(\"user_product_usage\" in payload, false)",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3"
+      },
+      "cut": {
+        "startLine": 267,
+        "text": "assert.equal(\"user_product_usage\" in payload, false)",
+        "keeperSha256": "759f139d90dad1c14d380e48f1a90766e3b95814ef6eb900349bbe2e9e6a66ed",
+        "testFileSha256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": false,
+    "actualValue": true,
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\ntrue !== false",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(\"user_product_usage\" in payload, false)",
+    "limits": "Static literal-value diagnostic prediction only; actual owner sensitivity requires main clean/red/byte-restored/clean runs and first outer assertion frame."
+  }
+]

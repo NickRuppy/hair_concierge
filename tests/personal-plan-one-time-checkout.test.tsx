@@ -170,10 +170,6 @@ test("one-time Express containment renders PayPal without mounting Stripe", () =
 })
 
 test("a PayPal-owned checkout stays usable without presenting a generic Stripe failure", () => {
-  assert.match(
-    stripeCheckoutRouteSource,
-    /error: "payment provider already selected", provider_locked: "paypal"/,
-  )
   assert.match(checkoutSource, /provider_locked_paypal/)
   assert.match(checkoutSource, /preparedStripeCheckoutState\.kind === "provider_locked_paypal"/)
   assert.match(checkoutSource, /Dieser Zahlungsversuch läuft bereits über PayPal/)

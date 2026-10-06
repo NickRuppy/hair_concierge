@@ -107,15 +107,6 @@ const NOW = "2026-08-25T12:00:00.000Z"
 
 // --- Module banner dismissal ------------------------------------------------
 
-test("recording a module banner dismissal and reading it back reports that module dismissed", async () => {
-  const { client } = createInMemoryLifecycleClient()
-
-  await recordModuleBannerDismissal(client, { userId: USER, module: "products", dismissedAt: NOW })
-  const state = await loadModuleBannerDismissals(client, USER)
-
-  assert.equal(isModuleBannerDismissed(state, "products"), true)
-})
-
 test("dismissing one module leaves the other module's banner un-dismissed (per-module independence, i.e. the reappear-once mechanism)", async () => {
   const { client } = createInMemoryLifecycleClient()
 
@@ -156,11 +147,6 @@ test("dismissals are scoped per user: another user's dismissal never hides this 
   const state = await loadModuleBannerDismissals(client, USER)
 
   assert.equal(isModuleBannerDismissed(state, "products"), false)
-})
-
-test("a user with no dismissals reads as no modules dismissed", async () => {
-  const { client } = createInMemoryLifecycleClient()
-  const state = await loadModuleBannerDismissals(client, USER)
   assert.deepEqual([...state.dismissedModules], [])
 })
 
@@ -197,17 +183,6 @@ test("recording a module banner dismissal surfaces a write error to the caller",
 })
 
 // --- Nav-surface visited -----------------------------------------------------
-
-test("recording a nav surface visit and reading it back reports that surface visited", async () => {
-  const { client } = createInMemoryLifecycleClient()
-
-  await recordNavSurfaceVisited(client, { userId: USER, surface: "profile", visitedAt: NOW })
-  const state = await loadVisitedNavSurfaces(client, USER)
-
-  assert.equal(state.available, true)
-  assert.equal(isNavSurfaceVisited(state, "profile"), true)
-  assert.equal(isNavSurfaceVisited(state, "application"), false)
-})
 
 test("a user with no visits reads as available with nothing visited (every non-routine tab dots)", async () => {
   const { client } = createInMemoryLifecycleClient()
@@ -266,6 +241,9 @@ test("nav-visited state is independent per module-banner state: the two kinds ne
 
   assert.deepEqual([...dismissals.dismissedModules], ["products"])
   assert.deepEqual([...visited.visitedSurfaces], ["profile"])
+  assert.equal(visited.available, true)
+  assert.equal(isNavSurfaceVisited(visited, "profile"), true)
+  assert.equal(isNavSurfaceVisited(visited, "application"), false)
 })
 
 test("nav-visited read degrades to unavailable — no dots anywhere, NOT a dot on every tab — when the table is absent", async () => {

@@ -15,35 +15,6 @@ import {
 } from "../src/lib/discovery/classify"
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "../src/lib/product-identity"
 
-/**
- * Batch 7 (plan plans/discovery-refinement-b7/plan.md Rev. 3, §2.4): D1 — a conditioner used
- * „Vor der Haarwäsche" (usage role `pre_wash_conditioner`, conditioner only); D2 — a spray
- * without a clear type is asked „Wofür nutzt du das Spray?", and „Styling & Halt" files it as
- * the non-evaluated product type `styling`. Every fixture names its rule.
- */
-
-// --- D1 ----------------------------------------------------------------------------
-
-test("D1: the care question's 4th option is the pre-wash conditioner", () => {
-  const care = DISCOVERY_USAGE_QUESTIONS.care_use
-  assert.equal(care.options.length, 4)
-  const last = care.options[3]
-  assert.equal(last.key, "conditioner_pre_wash")
-  assert.equal(last.label, "Vor der Haarwäsche")
-  assert.deepEqual(last.usage, { category: "conditioner", role: "pre_wash_conditioner" })
-})
-
-test("D1: pre_wash_conditioner is a usage role valid only with the conditioner category", () => {
-  assert.ok((DISCOVERY_USAGE_ROLES as readonly string[]).includes("pre_wash_conditioner"))
-  for (const category of SUPPORTED_PRODUCT_CATEGORY_KEYS) {
-    assert.equal(
-      isValidDiscoveryUsage({ category, role: "pre_wash_conditioner" }),
-      category === "conditioner",
-      category,
-    )
-  }
-})
-
 // --- D2: product type ----------------------------------------------------------------
 
 test("D2: `styling` is a discovery product type, but not one of the ten categories", () => {
@@ -68,7 +39,6 @@ const SPRAY_TYPE_FIXTURES: SprayTypeFixture[] = [
   { rule: "T13_spray", input: { name: "Overnight Repair Spray" }, expected: null },
   { rule: "T13_spray", input: { name: "Glossy Spray" }, expected: null },
   // A clear type keeps its rule — the spray question is only for the unclear ones.
-  { rule: "T5_name", input: { name: "Hitzeschutz Spray" }, expected: "heat_protectant" },
   { rule: "T5_name", input: { name: "Leave-in Spray" }, expected: "leave_in" },
   { rule: "T5_name", input: { name: "Trockenshampoo Spray" }, expected: "dry_shampoo" },
   // The catalog stays authoritative.

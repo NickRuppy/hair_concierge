@@ -1,0 +1,1310 @@
+{
+  "schema": 1,
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "scope": [
+    "tests/funnel-api.test.ts",
+    "tests/funnel-client.test.ts",
+    "tests/funnel-cookie.test.ts",
+    "tests/funnel-migration.test.ts",
+    "tests/funnel-rate-limit.test.ts",
+    "tests/funnel-route.test.ts",
+    "tests/funnel-server.test.ts",
+    "tests/gated-example-pages.test.tsx",
+    "tests/gated-pages-zero-mutation.test.tsx",
+    "tests/gated-preview-component.test.tsx",
+    "tests/editorial-pages.test.tsx",
+    "tests/landing-client-import-boundary.test.ts"
+  ],
+  "originalTests": [
+    {
+      "file": "tests/funnel-api.test.ts",
+      "sha256": "1cdb0c5a2551075e530f4b85a1f2f38c1757fff69f5b9090f01a6f63684e0e1e",
+      "bytes": 2082,
+      "lines": 73
+    },
+    {
+      "file": "tests/funnel-client.test.ts",
+      "sha256": "5e5ee42b9f87a309364f3eaa2335976eb7104ddf34c0eb05795c93cebcbf1cbc",
+      "bytes": 5711,
+      "lines": 166
+    },
+    {
+      "file": "tests/funnel-cookie.test.ts",
+      "sha256": "e75f3d09b2cf7fab486ba164ad68dfcb18a19dc24d6a4fd178e30b4dab283df5",
+      "bytes": 2181,
+      "lines": 60
+    },
+    {
+      "file": "tests/funnel-migration.test.ts",
+      "sha256": "f1f36110b05d3131c0d6af146962471d7969b142ddb73dc3695a973b6bbb1127",
+      "bytes": 4109,
+      "lines": 94
+    },
+    {
+      "file": "tests/funnel-rate-limit.test.ts",
+      "sha256": "e848153ff3c80ff0d429ca7f3a50e42aa6d3b87a85e1d5ec28d14db83077a6dd",
+      "bytes": 1381,
+      "lines": 44
+    },
+    {
+      "file": "tests/funnel-route.test.ts",
+      "sha256": "9afe9dfc97c2d708ca882d823926eb6ce36237c9df25d287a9a58b35d3cd46d1",
+      "bytes": 2874,
+      "lines": 77
+    },
+    {
+      "file": "tests/funnel-server.test.ts",
+      "sha256": "84aec887c25617e6504b6e574b3dac815c03b96aac69f74556ce73abb956c8fc",
+      "bytes": 5812,
+      "lines": 173
+    },
+    {
+      "file": "tests/gated-example-pages.test.tsx",
+      "sha256": "c888368cd901c4fa0cad2051260efffb382c04040a693625a50d8ded344f996e",
+      "bytes": 15383,
+      "lines": 320
+    },
+    {
+      "file": "tests/gated-pages-zero-mutation.test.tsx",
+      "sha256": "b67ca2dd7e813e042a5f680e70e234454ecbdc5c89a86df289ea8ea2e7f662f9",
+      "bytes": 12556,
+      "lines": 317
+    },
+    {
+      "file": "tests/gated-preview-component.test.tsx",
+      "sha256": "d545763a922c5c82e31fdd2a81489adadbe94ccb1c5c54e80496e0c2e2caf950",
+      "bytes": 8349,
+      "lines": 209
+    },
+    {
+      "file": "tests/editorial-pages.test.tsx",
+      "sha256": "96ce7c5f2eee468668c4581b58aeb8a69ee959c593ab1059c20d9b3b0c48091e",
+      "bytes": 11121,
+      "lines": 217
+    },
+    {
+      "file": "tests/landing-client-import-boundary.test.ts",
+      "sha256": "67d144b38b889ebfcb4900a2d4357eea894eeabcf3af65e7d935f3525e742dfd",
+      "bytes": 5225,
+      "lines": 161
+    }
+  ],
+  "counts": {
+    "before": {
+      "declarations": 66,
+      "native": 79
+    },
+    "transfer": {
+      "declarations": 66,
+      "native": 79
+    },
+    "cut": {
+      "declarations": 63,
+      "native": 74
+    }
+  },
+  "judgments": {
+    "R": 54,
+    "F": 9,
+    "C": 3,
+    "D": 0
+  },
+  "allFsHeld": true,
+  "unrelatedCallbacks": 60,
+  "wholeUnchangedTests": 9,
+  "readset": [
+    {
+      "file": "src/lib/funnel/api.ts",
+      "sha256": "b1180f5324e78983f63b1a73b1f98f7cd02aabacba1271165446588370356679",
+      "lines": 53,
+      "bytes": 1843,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/funnel/client.ts",
+      "sha256": "9c3728cffff3810d829afd198c2406e35cf6edb3d4c68dbfc5a1cfa845e100a8",
+      "lines": 213,
+      "bytes": 7950,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/funnel/cookie.ts",
+      "sha256": "522741b96f60560c02f92a5445428380de02231b2b3724b4143dfc6da14f7b48",
+      "lines": 165,
+      "bytes": 4798,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/app/api/funnel/session/route.ts",
+      "sha256": "da657d3e0ab9db46f2c569ae06c08d4a10d98ca64e7dcb8eb336d3513f11ea3d",
+      "lines": 78,
+      "bytes": 3149,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "sha256": "775feb24b57ae2c7d71c4dec2f5ef4a8781fefaf355699331718fc44f92380dd",
+      "lines": 632,
+      "bytes": 21865,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/funnel/packages.ts",
+      "sha256": "66cab34518f29604a37c7a32721f74ca5c930f82a12dcf293db69e3b90a080be",
+      "lines": 94,
+      "bytes": 3650,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/funnel/flags.ts",
+      "sha256": "981bd9436dae7c1fc7cbd8d6dc60e3d6bbaa9dc3bea994e0a33fac525f02528d",
+      "lines": 75,
+      "bytes": 2498,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/funnel/journey-kind.ts",
+      "sha256": "6088e7e2554b37b0d2da5231dd5361fdeed8cd2ebf1dae5286e107d7543efe88",
+      "lines": 9,
+      "bytes": 295,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/rate-limit.ts",
+      "sha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+      "lines": 176,
+      "bytes": 5577,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/gated-preview/gated-preview.tsx",
+      "sha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "lines": 118,
+      "bytes": 5331,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/gated-preview/inert-example.tsx",
+      "sha256": "cda657ac78bf346c137cc43b51944d0764f4a71a1b2ec33b15d5624288e805ee",
+      "lines": 62,
+      "bytes": 2644,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/gated-preview/gated-routine-example.tsx",
+      "sha256": "15342e414e066d4fb72698550324e3003bf1441b958486d9dda81c1590a6d342",
+      "lines": 38,
+      "bytes": 1639,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/gated-preview/gated-anwendung-example.tsx",
+      "sha256": "faeefb505f1adb7f54ba73f08f0211e1a1bd8c0d01ae767b0f80d0be536d23ae",
+      "lines": 36,
+      "bytes": 1464,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/gated-preview/gated-chat-example.tsx",
+      "sha256": "5c0b7225c892d458d9319378300fe08eb945bc813c999b3272368b001ac1cdaa",
+      "lines": 58,
+      "bytes": 2558,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/gated-preview/example-copy.ts",
+      "sha256": "fc1b9a2002676f39a87bd277f3d570ea5ada45e720d03dcb3d816bd1fe513280",
+      "lines": 42,
+      "bytes": 1442,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/gated-preview/fixtures/chat-example.ts",
+      "sha256": "a9f885d12e7a828d68eaafecf8af9365d99d0dfaed6e8577cf905b3f07f692b3",
+      "lines": 65,
+      "bytes": 2446,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/gated-preview/fixtures/example-products.ts",
+      "sha256": "458dc1afd9ba6c1b130412c09931b7b2f8f1455311dc2e4caafad82a102dd06b",
+      "lines": 59,
+      "bytes": 3032,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/gated-preview/fixtures/routine-example.ts",
+      "sha256": "b5bd102c62e62fa59cf07362dbe7cf2eb80dbbbf8e3006f3b37a06ca79c55cb0",
+      "lines": 145,
+      "bytes": 4503,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/gated-preview/fixtures/anwendung-example.ts",
+      "sha256": "5bdc4e724d1010fa3553013ac1d9a2f8274934ce816977723b5436316f08be15",
+      "lines": 161,
+      "bytes": 5372,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-page.tsx",
+      "sha256": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+      "lines": 328,
+      "bytes": 15157,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/application/application-page.tsx",
+      "sha256": "df15aabce70ed7ff6d7e5c803e23bbd08ec9860f600ee115d6e9a5b7cb0da1d9",
+      "lines": 207,
+      "bytes": 7907,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/gated-preview/gate.ts",
+      "sha256": "26cbca953a542d67d0043b9c9bc87673829cf5e6784831681fd1f6b2c8d54d86",
+      "lines": 34,
+      "bytes": 1350,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/chat/chat-message.tsx",
+      "sha256": "2fcdfc1d4ab769afeb8e801a6db8c07df34486c70851f2154bcd6476bd87f476",
+      "lines": 401,
+      "bytes": 15021,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/chat/chat-input.tsx",
+      "sha256": "6bf471ce1c014b48ab7cbe9cc7e75045629024fb52f7e9c3689f02a3a1456b3a",
+      "lines": 72,
+      "bytes": 2349,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/ui/button.tsx",
+      "sha256": "7328a21e4aa02dad2cb657ae7af61280b71288b16ae4d38c5d31895c9d6535df",
+      "lines": 62,
+      "bytes": 3199,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/auth/authenticated-app-route-access.ts",
+      "sha256": "1c29afa7beb170c72e628560261dca22c1ae08c981d4ca0be917cccd79e8c49a",
+      "lines": 227,
+      "bytes": 9768,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/app/chat/page.tsx",
+      "sha256": "c3ccc038893d98234ca9fde9b46b898a4908c6d3c40b27a9012317955095d030",
+      "lines": 67,
+      "bytes": 3929,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/app/chat/[conversationId]/page.tsx",
+      "sha256": "d6440e82a28a43e4cb6160982721f5156df1d6be28ef583b2db739fa7d7c3090",
+      "lines": 60,
+      "bytes": 3008,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/editorial/editorial-shell.tsx",
+      "sha256": "26379edae2261383233d362f856ffdecdca4bd64d935cdc197602c50e9530f05",
+      "lines": 26,
+      "bytes": 725,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/providers/public-funnel-context-bootstrap.tsx",
+      "sha256": "f7b1177dede682659bdcbd0ee88d81cd5cd5f014efd3c3261856903dc7066b32",
+      "lines": 13,
+      "bytes": 240,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/app/not-found.tsx",
+      "sha256": "bfa1409ff8500f138b3cb2cd3955f5e1805d8219977f982b0aa4441093efbfb6",
+      "lines": 46,
+      "bytes": 2155,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/app/methodik/page.tsx",
+      "sha256": "0cb407936caf978fdff1caeb433899466a7b127290002afe01b7e848ef70197e",
+      "lines": 221,
+      "bytes": 10171,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "supabase/migrations/20260711120000_funnel_attribution.sql",
+      "sha256": "d7e781615bbe79f8985afdf1005d634905e3cf9bc78989482b8a01a55441176e",
+      "lines": 304,
+      "bytes": 11094,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "supabase/migrations/20260730120000_add_funnel_session_quiz_variant.sql",
+      "sha256": "ff87373fc5aa24c05615dfbc85e8264eeaf3f44aa1f4c86baca32f16f81cf131",
+      "lines": 254,
+      "bytes": 7723,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/funnels/packages.json",
+      "sha256": "fd299fc9fd61f06531fcc9b66fd497fd14c25a38214f8db241dab4e3a0131811",
+      "lines": 65,
+      "bytes": 1582,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/funnels/quizzes/registry.ts",
+      "sha256": "225fa3638b4406aa711b4afda77ef748e24dd35e6b29bcd46f4d3ac6fe320bbe",
+      "lines": 121,
+      "bytes": 4306,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/premium-sheet/premium-sheet.tsx",
+      "sha256": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+      "lines": 731,
+      "bytes": 34867,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/app/routine/page.tsx",
+      "sha256": "298522d8399b3638fdd03d1d4605df4e3b74d766e7b2947ea71e01331ca0b8de",
+      "lines": 362,
+      "bytes": 16040,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/app/anwendung/page.tsx",
+      "sha256": "020e5be38ea8b1f00652265897430669c44c647f571f57a35a359bfc61c5e1f6",
+      "lines": 333,
+      "bytes": 14583,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/landing/site-footer.tsx",
+      "sha256": "3bd99615296e036976359c3d712ce345679213537d99d6fc529b61a15672b2b6",
+      "lines": 37,
+      "bytes": 1410,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/landing/landing-header.tsx",
+      "sha256": "874b56aa42af824ea0d045f1088cc478df7da05ab76decd1b8066e0c6a8c1326",
+      "lines": 34,
+      "bytes": 1511,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/seo/site-identity.ts",
+      "sha256": "c7eff1e148b78a41a77f23d9c4f8ae74f49dab1c2485f9f8fd9c0dd819a34c84",
+      "lines": 176,
+      "bytes": 4967,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "tests/helpers/browser-storage-shim.ts",
+      "sha256": "3d7db8f60dc5f144ccd959f7eb1629af1d84f1ac99980daa07174924e166e0b8",
+      "lines": 27,
+      "bytes": 534,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/providers/funnel-context-bootstrap.tsx",
+      "sha256": "da6193acc2cd80e9f21e54eae280b18fc24a3a4604d93242716394920bf01f7d",
+      "lines": 15,
+      "bytes": 563,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/funnel.ts",
+      "sha256": "7c6d71e7eeb0ec6af41020df967b0126e6ced1436c715d9914674e8dda4ef6bb",
+      "lines": 64,
+      "bytes": 2174,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/proxy.ts",
+      "sha256": "a309a92a1b3a6f420a3739690babd3bc371beb2daf441aa94da2977f5ee82bfa",
+      "lines": 387,
+      "bytes": 13680,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/app/agb/page.tsx",
+      "sha256": "2c9c6db1d8abf2aec9afcaf70d318aec9d58e6c93948c871d7f2fbb2b785c78f",
+      "lines": 227,
+      "bytes": 11847,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/app/widerruf/page.tsx",
+      "sha256": "667da42168fe70a3a4485f126290256a3d9975673ebd239308db43fba955a34a",
+      "lines": 124,
+      "bytes": 6061,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/app/datenschutz/page.tsx",
+      "sha256": "c9c354d8d421817fc0eb1fade7aa63395dadc17b11f3049ae409d17b89587b2f",
+      "lines": 418,
+      "bytes": 23505,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/ui/bottom-sheet.tsx",
+      "sha256": "373944ebf90fab3c4347599cba20ef2e162db35c43f722d1f190585817caa625",
+      "lines": 621,
+      "bytes": 22039,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/personal-plan-quiz/personal-plan-quiz-continuation.ts",
+      "sha256": "c1f1a78eb4812605cd6ae2f3c551ffd02ae13d3d6775706549a6bd0d2e16d1d8",
+      "lines": 51,
+      "bytes": 1830,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "instrumentation-client.ts",
+      "sha256": "eaf8eb5c5435bc522e723c0efb5f7b82376b23bb2a4b7689b5eab43e495cb156",
+      "lines": 91,
+      "bytes": 3190,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/app/global-error.tsx",
+      "sha256": "b8f1790b8b2581120172ac526a5a3f500afeccd453987bb41ebbb15cb3cae74b",
+      "lines": 83,
+      "bytes": 2176,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/landing/hero.tsx",
+      "sha256": "3c7f09162f3d0ef85f97cbe732d327b078aa7de1ff41bb1d33d8a88236ffc7f7",
+      "lines": 61,
+      "bytes": 3158,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/landing/final-cta.tsx",
+      "sha256": "f2f64d9243c912580a2140c06b10cd767d11456bc37c46b663a8d7e3f62666c7",
+      "lines": 30,
+      "bytes": 1268,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/landing/what-you-get.tsx",
+      "sha256": "b42830cb6aa72f519d3be10009354f23a95ecff96a64d4359b1ac0b190cff829",
+      "lines": 71,
+      "bytes": 2445,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/landing/faq.tsx",
+      "sha256": "dd18a099f2d827ef2f053d1114517aa09cac07ec3bcd0a616a4f689b236d791d",
+      "lines": 86,
+      "bytes": 3572,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/quiz/funnel-copy.ts",
+      "sha256": "ed098df5602b1f10b6e9820a91b28719b255ed56c2cb626b93ebaf40f9658f2f",
+      "lines": 75,
+      "bytes": 3145,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/checkout/subscription-plan-selector.tsx",
+      "sha256": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+      "lines": 174,
+      "bytes": 7447,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/app/layout.tsx",
+      "sha256": "cb59fbca704acc3352087e1dc3057b43690f510f8d40fc7c01319249b9846466",
+      "lines": 61,
+      "bytes": 1817,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/app/page.tsx",
+      "sha256": "bf1fd321a0cc3c00920ea5b7b95b58907efc5873ceeedae9665ba4b5eac06b5d",
+      "lines": 18,
+      "bytes": 589,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/quiz/quiz-analysis.tsx",
+      "sha256": "ed0e7284d9ea231ee17ad03c7096102b51cb2590eda99beb61722e4df4edd1ab",
+      "lines": 230,
+      "bytes": 6838,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/quiz/quiz-results.tsx",
+      "sha256": "836bf1a4b1e11f09b281f23dd7c045c1d331c07b94edc1d7ab88a0b6b3a9ae3b",
+      "lines": 278,
+      "bytes": 8678,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/app/lp/[slug]/page.tsx",
+      "sha256": "c986d0de667d792caf017dd92d97ea9a946d85812340af9006768da532b01cec",
+      "lines": 193,
+      "bytes": 7375,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/app/opengraph-image.tsx",
+      "sha256": "c8524d277d23d7acdb4813a3378ea166103d2af437bb4d0c4dce655b3ac94a9c",
+      "lines": 204,
+      "bytes": 5705,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-section.tsx",
+      "sha256": "5ddfc9757d16494eac2162b89b422e9588f660df22c006b53e4bc481574413a2",
+      "lines": 63,
+      "bytes": 2077,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-item-card.tsx",
+      "sha256": "6f93d8d0073557e65964661275bc8acb520524d81bc8856a781b95d07c9aadda",
+      "lines": 551,
+      "bytes": 21951,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/application/application-overview.tsx",
+      "sha256": "eb6da9b0d4a9a7a89f75b8089ab10ca10e4f7d3d1d1e5bd1c32170ee4d2e4d13",
+      "lines": 67,
+      "bytes": 2321,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/checkout/use-plan-selection.ts",
+      "sha256": "0146c5bbe05892ab2b74305a0530f64c02c2ab0b4ee129f264a7fbb270052884",
+      "lines": 56,
+      "bytes": 2321,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/premium-sheet/ordered-benefits.ts",
+      "sha256": "ca43fea17931ebfab41a86a119f18673d8e1b65396f9c799df7dec0ebb4c164a",
+      "lines": 16,
+      "bytes": 771,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/personal-plan-quiz/personal-plan-quiz-entry.tsx",
+      "sha256": "b37707a35509abb85ab0f44e2d43cd290f36372063cb0ea668e8d16244612bb6",
+      "lines": 288,
+      "bytes": 9535,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/application/application-day-card.tsx",
+      "sha256": "979c1bab81e4b8a44161cf18cc6413a2a53e152f49c9fb2e3f2747a060699e50",
+      "lines": 356,
+      "bytes": 12092,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/funnels/landing/default.tsx",
+      "sha256": "fa7a60d08fe55b493f1e6194a2cc4a47a314d9197c3671c9bd2e103af1d1c338",
+      "lines": 29,
+      "bytes": 944,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/funnels/landing/registry.ts",
+      "sha256": "72967737c0d013538f3c9d9e6fd966e482b896f35391f1719abdd42da3b7ed9e",
+      "lines": 9,
+      "bytes": 442,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/utils.ts",
+      "sha256": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d",
+      "lines": 6,
+      "bytes": 166,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/premium-sheet/purchase-state.ts",
+      "sha256": "19f77813d0c7e261f02ca3321ab772504dca91a011f55ff54637cf49c707b43e",
+      "lines": 201,
+      "bytes": 10588,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/premium-sheet/context.ts",
+      "sha256": "6b42505f8b3e5ad10411d7586f6133b1a1fefba238109948bc7f73622a37a6ae",
+      "lines": 55,
+      "bytes": 1777,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/lib/supabase/admin.ts",
+      "sha256": "bd6ec1538d65a01f82b3f55b2839f0ac347d617c6de29d13cea4b0eff737386a",
+      "lines": 14,
+      "bytes": 307,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+      "lines": 10,
+      "bytes": 391,
+      "readDepth": "full human source read; stitched numbered ranges where necessary",
+      "scope": "operative source/support; no execution"
+    },
+    {
+      "file": "src/components/quiz/result-offer-pricing.tsx",
+      "sha256": "461bf77fd54505e7fdcaa10c0630bfc942803fdb13ddc546ba7c745c6e91d33a",
+      "bytes": 62172,
+      "lines": 1720,
+      "readDepth": "selected ranges only",
+      "humanReadRanges": [
+        "374-468",
+        "684-776",
+        "1625-1720",
+        "literal search for Kein Risiko (zero matches); no full payment-handler audit"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": "src/lib/types.ts",
+      "sha256": "80ce0439bebeb683290f086cc1bab20f3d03a29c577e750ceaa8f73d48243d93",
+      "bytes": 40494,
+      "lines": 1366,
+      "readDepth": "selected ranges only",
+      "humanReadRanges": [
+        "1243-1257 Message shape only"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": "src/components/application/application-types.ts",
+      "sha256": "6fe7d17e52a6b78523d090287e9cea6fd5731d017342729eb35236558d0c5caa",
+      "bytes": 2324,
+      "lines": 89,
+      "readDepth": "full",
+      "humanReadRanges": [
+        "full"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": "src/funnels/landing/registry.generated.ts",
+      "sha256": "65f0783c1c3df689eee6e1efb45af8fe7190c2f490ed01abf6a040c3b17ba5f3",
+      "bytes": 516,
+      "lines": 14,
+      "readDepth": "full",
+      "humanReadRanges": [
+        "full"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": "src/funnels/quizzes/registry.json",
+      "sha256": "4dce2f7f0eaf19ba28dc063b8a9cd70884a8a468bb401b8ff214853601c44947",
+      "bytes": 378,
+      "lines": 14,
+      "readDepth": "full",
+      "humanReadRanges": [
+        "full"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+      "bytes": 25353,
+      "lines": 275,
+      "readDepth": "selected ranges only",
+      "humanReadRanges": [
+        "40-61 native runner routing only"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+      "bytes": 17598,
+      "lines": 423,
+      "readDepth": "selected ranges only",
+      "humanReadRanges": [
+        "135-177 quality-node and adjacent jobs only"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": "plans/freemium-scanner-first/plan.md",
+      "sha256": "a5a795fabb557e03aed778067b75cb06b7039f4e991cc4ef072872e34ce4894b",
+      "bytes": 28900,
+      "lines": 158,
+      "readDepth": "selected ranges only",
+      "humanReadRanges": [
+        "37,109-110,127,153 via exact bounded search; supporting T11/T12 contracts only"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": "node_modules/react/cjs/react.development.js",
+      "sha256": "4325e6263375459503858c0982d50bbc25bc33e66676954698c67221d2ee8b72",
+      "bytes": 47219,
+      "lines": 1284,
+      "readDepth": "selected ranges only",
+      "humanReadRanges": [
+        "515-524 resolveDispatcher",
+        "1259-1268 useState delegates to dispatcher"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": "node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js",
+      "sha256": "e0a591b81f983794366bbc8338df0ebbbc7add48fdcee772870e226eadcda9ce",
+      "bytes": 395194,
+      "lines": 9877,
+      "readDepth": "selected ranges only",
+      "humanReadRanges": [
+        "1551-1587 host generic serializer",
+        "3870-3955 SSR useReducer initial state",
+        "9696-9735 SSR hook dispatch including no-op effects"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": "node_modules/next/dist/server/web/spec-extension/request.js",
+      "sha256": "2490a352d271fb39e1fccce06ee6887999dffa7909ccfd5ca0cc8bab8008065b",
+      "bytes": 3168,
+      "lines": 99,
+      "readDepth": "full",
+      "humanReadRanges": [
+        "full"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": "node_modules/next/dist/server/web/spec-extension/response.js",
+      "sha256": "68a5a07540d57a4beb3275fddd0502fd5ef9a42986b414c0bcee99a3f9033366",
+      "bytes": 4977,
+      "lines": 136,
+      "readDepth": "selected ranges only",
+      "humanReadRanges": [
+        "42-104 constructor/cookies/json"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": "node_modules/next/dist/client/components/navigation.js",
+      "sha256": "286fe318119b013fd381da93c328a332b6668e03638d1647d7aedf53c421d7bc",
+      "bytes": 10514,
+      "lines": 225,
+      "readDepth": "selected ranges only",
+      "humanReadRanges": [
+        "117-159 pathname/router context consumption"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": "node_modules/date-fns/format.js",
+      "sha256": "3bcb2a92b32ca514a1034b8a4a15067eae44cbe4c449bf8325fc6bcd7ad46cfa",
+      "bytes": 25019,
+      "lines": 434,
+      "readDepth": "selected ranges only",
+      "humanReadRanges": [
+        "329-360 valid date precondition; formatter not invoked by clean empty-timestamp SSR"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": "node_modules/@supabase/supabase-js/src/SupabaseClient.ts",
+      "sha256": "6471325c10145a7a6c4f92d1e332fc6d51203ef0c2e7cf022ade5511217c2a60",
+      "bytes": 22465,
+      "lines": 619,
+      "readDepth": "selected ranges only",
+      "humanReadRanges": [
+        "432-474 RPC forwarding, source/types only"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/src/PostgrestClient.ts",
+      "sha256": "50121d8145aa9fd4b4f6b9382270db0343a6fdd6e2f56b5f0e8c872dc683d9c8",
+      "bytes": 13797,
+      "lines": 447,
+      "readDepth": "selected ranges only",
+      "humanReadRanges": [
+        "374-457 actual RPC POST/default argument serialization; no invocation"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": "node_modules/@types/node/crypto.d.ts",
+      "sha256": "4c829ab315f57c5442c6667b53769975acbf92003a66aef19bce151987675bd1",
+      "bytes": 192007,
+      "lines": 4545,
+      "readDepth": "selected ranges only",
+      "humanReadRanges": [
+        "4385-4440 raw HMAC import/sign",
+        "4489-4511 HMAC verify boolean contract"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.d.ts",
+      "sha256": "e134052a6b1ded61693b4037f615dc72f14e2881e79c1ddbff6c514c8a516b05",
+      "bytes": 588085,
+      "lines": 11437,
+      "readDepth": "selected ranges only",
+      "humanReadRanges": [
+        "9084,9098,9192 parser/import/export API signatures only"
+      ],
+      "scope": "selected dependency/source contract; whole-byte pin is not full semantic credit"
+    }
+  ],
+  "phaseHashes": {
+    "before": [
+      {
+        "file": "tests/funnel-api.test.ts",
+        "sha256": "1cdb0c5a2551075e530f4b85a1f2f38c1757fff69f5b9090f01a6f63684e0e1e"
+      },
+      {
+        "file": "tests/funnel-client.test.ts",
+        "sha256": "5e5ee42b9f87a309364f3eaa2335976eb7104ddf34c0eb05795c93cebcbf1cbc"
+      },
+      {
+        "file": "tests/funnel-cookie.test.ts",
+        "sha256": "e75f3d09b2cf7fab486ba164ad68dfcb18a19dc24d6a4fd178e30b4dab283df5"
+      },
+      {
+        "file": "tests/funnel-migration.test.ts",
+        "sha256": "f1f36110b05d3131c0d6af146962471d7969b142ddb73dc3695a973b6bbb1127"
+      },
+      {
+        "file": "tests/funnel-rate-limit.test.ts",
+        "sha256": "e848153ff3c80ff0d429ca7f3a50e42aa6d3b87a85e1d5ec28d14db83077a6dd"
+      },
+      {
+        "file": "tests/funnel-route.test.ts",
+        "sha256": "9afe9dfc97c2d708ca882d823926eb6ce36237c9df25d287a9a58b35d3cd46d1"
+      },
+      {
+        "file": "tests/funnel-server.test.ts",
+        "sha256": "84aec887c25617e6504b6e574b3dac815c03b96aac69f74556ce73abb956c8fc"
+      },
+      {
+        "file": "tests/gated-example-pages.test.tsx",
+        "sha256": "c888368cd901c4fa0cad2051260efffb382c04040a693625a50d8ded344f996e"
+      },
+      {
+        "file": "tests/gated-pages-zero-mutation.test.tsx",
+        "sha256": "b67ca2dd7e813e042a5f680e70e234454ecbdc5c89a86df289ea8ea2e7f662f9"
+      },
+      {
+        "file": "tests/gated-preview-component.test.tsx",
+        "sha256": "d545763a922c5c82e31fdd2a81489adadbe94ccb1c5c54e80496e0c2e2caf950"
+      },
+      {
+        "file": "tests/editorial-pages.test.tsx",
+        "sha256": "96ce7c5f2eee468668c4581b58aeb8a69ee959c593ab1059c20d9b3b0c48091e"
+      },
+      {
+        "file": "tests/landing-client-import-boundary.test.ts",
+        "sha256": "67d144b38b889ebfcb4900a2d4357eea894eeabcf3af65e7d935f3525e742dfd"
+      }
+    ],
+    "transfer": [
+      {
+        "file": "tests/funnel-api.test.ts",
+        "sha256": "1cdb0c5a2551075e530f4b85a1f2f38c1757fff69f5b9090f01a6f63684e0e1e"
+      },
+      {
+        "file": "tests/funnel-client.test.ts",
+        "sha256": "5e5ee42b9f87a309364f3eaa2335976eb7104ddf34c0eb05795c93cebcbf1cbc"
+      },
+      {
+        "file": "tests/funnel-cookie.test.ts",
+        "sha256": "e75f3d09b2cf7fab486ba164ad68dfcb18a19dc24d6a4fd178e30b4dab283df5"
+      },
+      {
+        "file": "tests/funnel-migration.test.ts",
+        "sha256": "f1f36110b05d3131c0d6af146962471d7969b142ddb73dc3695a973b6bbb1127"
+      },
+      {
+        "file": "tests/funnel-rate-limit.test.ts",
+        "sha256": "e848153ff3c80ff0d429ca7f3a50e42aa6d3b87a85e1d5ec28d14db83077a6dd"
+      },
+      {
+        "file": "tests/funnel-route.test.ts",
+        "sha256": "9afe9dfc97c2d708ca882d823926eb6ce36237c9df25d287a9a58b35d3cd46d1"
+      },
+      {
+        "file": "tests/funnel-server.test.ts",
+        "sha256": "84aec887c25617e6504b6e574b3dac815c03b96aac69f74556ce73abb956c8fc"
+      },
+      {
+        "file": "tests/gated-example-pages.test.tsx",
+        "sha256": "0e6038435de0e3fde13c7199eed1337002a17e42d78b8973a562194ad2f1891c"
+      },
+      {
+        "file": "tests/gated-pages-zero-mutation.test.tsx",
+        "sha256": "6fe2d119cc61f31a89bab936a644a307182624fcd1d9b7b696ea47ab21d6cdde"
+      },
+      {
+        "file": "tests/gated-preview-component.test.tsx",
+        "sha256": "587f2dd2b1f1e05f0f8cafeca3d7f547a29e35aca7d0546614249d83c668530a"
+      },
+      {
+        "file": "tests/editorial-pages.test.tsx",
+        "sha256": "96ce7c5f2eee468668c4581b58aeb8a69ee959c593ab1059c20d9b3b0c48091e"
+      },
+      {
+        "file": "tests/landing-client-import-boundary.test.ts",
+        "sha256": "67d144b38b889ebfcb4900a2d4357eea894eeabcf3af65e7d935f3525e742dfd"
+      }
+    ],
+    "cut": [
+      {
+        "file": "tests/funnel-api.test.ts",
+        "sha256": "1cdb0c5a2551075e530f4b85a1f2f38c1757fff69f5b9090f01a6f63684e0e1e"
+      },
+      {
+        "file": "tests/funnel-client.test.ts",
+        "sha256": "5e5ee42b9f87a309364f3eaa2335976eb7104ddf34c0eb05795c93cebcbf1cbc"
+      },
+      {
+        "file": "tests/funnel-cookie.test.ts",
+        "sha256": "e75f3d09b2cf7fab486ba164ad68dfcb18a19dc24d6a4fd178e30b4dab283df5"
+      },
+      {
+        "file": "tests/funnel-migration.test.ts",
+        "sha256": "f1f36110b05d3131c0d6af146962471d7969b142ddb73dc3695a973b6bbb1127"
+      },
+      {
+        "file": "tests/funnel-rate-limit.test.ts",
+        "sha256": "e848153ff3c80ff0d429ca7f3a50e42aa6d3b87a85e1d5ec28d14db83077a6dd"
+      },
+      {
+        "file": "tests/funnel-route.test.ts",
+        "sha256": "9afe9dfc97c2d708ca882d823926eb6ce36237c9df25d287a9a58b35d3cd46d1"
+      },
+      {
+        "file": "tests/funnel-server.test.ts",
+        "sha256": "84aec887c25617e6504b6e574b3dac815c03b96aac69f74556ce73abb956c8fc"
+      },
+      {
+        "file": "tests/gated-example-pages.test.tsx",
+        "sha256": "1247d9a7a781a1c34e68302b2bd83ad9a9b58ef6e9689f43fd004d6df1f205ec"
+      },
+      {
+        "file": "tests/gated-pages-zero-mutation.test.tsx",
+        "sha256": "96461917c03f9a4463632798e4a20a2a88251e41c5e938121c897bc94d72baa6"
+      },
+      {
+        "file": "tests/gated-preview-component.test.tsx",
+        "sha256": "772de4c84214cd563954810307c35041d0ca540f1f974cff8a9b2e49a6fec7fb"
+      },
+      {
+        "file": "tests/editorial-pages.test.tsx",
+        "sha256": "96ce7c5f2eee468668c4581b58aeb8a69ee959c593ab1059c20d9b3b0c48091e"
+      },
+      {
+        "file": "tests/landing-client-import-boundary.test.ts",
+        "sha256": "67d144b38b889ebfcb4900a2d4357eea894eeabcf3af65e7d935f3525e742dfd"
+      }
+    ]
+  },
+  "artifactHashes": {
+    "README.md": "62aa58e7c6875bb59124cc2cef4d2df1460ce5ddba5456b423ab9a5f0c74ccb0",
+    "before-cut.diff": "058fc21e271acb8ccd0e4a626d14a2a5f31a3604a9000767c0e78ebd4ec1204c",
+    "before-transfer.diff": "f294b77feafa43436bbf416f58ed39b17d0f8966b5802ae964cd6a134a531ba2",
+    "caller-search.txt": "8c1d32481a0491c1a78f25cd708b7cd409e3ba18bf34be7cb40ff089f3a0cf8b",
+    "candidates.json": "6b33663a2a97c550060a0ef2b3a738659de59d072d1932bcff528e18ed230475",
+    "complete-ledger.json": "7df37c0aa06ebc104daa0b06b1da9bce6440782db49579875a9af75dc6dc41c3",
+    "complete-ledger.md": "09e5976efa00e7a18f9f76ca2f35cbd97207e4f209021808a83ee121f4950862",
+    "controls.json": "1e424075f2af42a5f65e65d63a38d3dcaa662778a82f97d70af33392f978d712",
+    "freeze-read-scope.py": "782c0a789374d18c852487db6cc08b025409b5d9d78ba7f4a30b4e4df7368c9b",
+    "gated-route-lines.txt": "da6d6911c8a47fd837308951c9ac54c3b3ff929c791bb14ac7444cef87becea3",
+    "history-client.txt": "d7184e6f692822f1be435539436e7de4fe2b30580b817e6638dc6e00bdae460d",
+    "history-gated.txt": "5adf3bf26d23b7af6a7e47425af78ba5ed8e805b740e74715f6ab8d3bf3bbf46",
+    "history-import-boundary.txt": "fb2116ecf3594264707a29d5bc60d30ca63513014fe511d8590a110a1ad6f6c2",
+    "inventory.cjs": "ab44beaee612c3066f4b366484ae2fee1551e8257895d36f4af2885d0d8525e4",
+    "inventory.json": "9bd1d98c78c3401b0ae07e3c5cda32b5b4699284e67f7681923d7848e4d74f15",
+    "layer-plan.md": "2e51bd03d1abdaffc2aebf8a76f7f42e0546ac80c99a9ea361f8db5d6d747477",
+    "main-commands.json": "a6820c34c7384af127c9aadc7d95c3e40810eb057b78e85f8952028f1c5bd43e",
+    "mutants/C1-01/src/components/gated-preview/gated-preview.tsx": "08bf8508afc64f2cc8ab11f70ea5563293e14246878b0a2b9a1d70d35ea5f082",
+    "mutants/C1-02/src/components/gated-preview/gated-preview.tsx": "824901464aeb426a972465ae2eb6fd091cb91aa282c670c03f2fdb1bd6640ea2",
+    "mutants/C1-03/src/components/gated-preview/gated-preview.tsx": "5cb149609e584fbf3893fd4c6211e1935ae7b6de72d2164140a146a38f6d89bb",
+    "mutants/C1-04/src/components/gated-preview/gated-preview.tsx": "0a3384a6fe5ff6eeb1f94d0d0e0091989b142b91b5056f12d22a351f663f0852",
+    "mutants/C1-05/src/components/gated-preview/gated-preview.tsx": "765c3e08761eddd4c8278491725070a396cca116fcdd41e888b3a7c002582c67",
+    "mutants/C1-06/src/components/gated-preview/gated-preview.tsx": "163de29953fbbb06b1bc1597a1bf610aab1c2d9fa11c572523690ca4dcf518df",
+    "mutants/C1-07/src/components/gated-preview/gated-preview.tsx": "119119c982689dcd96520a6c8493169f5babf27750395343632f839ed8b269e6",
+    "mutants/C1-08/src/components/gated-preview/gated-preview.tsx": "15e6cc01a69f22a3103622b61a0548d06915ac170dd8f9638c220649b8a6811f",
+    "mutants/C1-09/src/components/gated-preview/gated-preview.tsx": "6dfd1cbdeab96158e47cd8a05ecdc7c8f1938a766f20917207594a61356a268c",
+    "mutants/C2-01/src/lib/gated-preview/fixtures/chat-example.ts": "f01e7abb1f27dba360e51e54c677eb407f32ea26efd75ef188d89cab1fef612d",
+    "mutants/C2-02/src/components/chat/chat-message.tsx": "fa78532866da4d8c04bd785cb833dd4a98577c6023cb7bdab19dad482ac0cd50",
+    "mutants/C3-01/src/components/gated-preview/gated-preview.tsx": "06dbdb10b8a3ad5055c1fbc357d7b2ae6a9a0cbe102d997ff5d39a83f21ff44e",
+    "mutants/C3-02/src/components/gated-preview/gated-preview.tsx": "ba25e679ca8e46ff6dac3c36745a80a0b2d5d73d56932d348f5f50db48b60e5d",
+    "mutants/C3-03/src/components/gated-preview/gated-preview.tsx": "592e88ecaaf5af854a4e44936aeca2e214e010cfaee681d073519194b73acdfa",
+    "mutants/C3-04/src/components/gated-preview/gated-preview.tsx": "06dbdb10b8a3ad5055c1fbc357d7b2ae6a9a0cbe102d997ff5d39a83f21ff44e",
+    "mutants/C3-05/src/components/gated-preview/gated-preview.tsx": "ba25e679ca8e46ff6dac3c36745a80a0b2d5d73d56932d348f5f50db48b60e5d",
+    "mutants/C3-06/src/components/gated-preview/gated-preview.tsx": "592e88ecaaf5af854a4e44936aeca2e214e010cfaee681d073519194b73acdfa",
+    "mutants/C3-07/src/components/gated-preview/gated-preview.tsx": "06dbdb10b8a3ad5055c1fbc357d7b2ae6a9a0cbe102d997ff5d39a83f21ff44e",
+    "mutants/C3-08/src/components/gated-preview/gated-preview.tsx": "ba25e679ca8e46ff6dac3c36745a80a0b2d5d73d56932d348f5f50db48b60e5d",
+    "mutants/C3-09/src/components/gated-preview/gated-preview.tsx": "592e88ecaaf5af854a4e44936aeca2e214e010cfaee681d073519194b73acdfa",
+    "originals/tests/editorial-pages.test.tsx": "96ce7c5f2eee468668c4581b58aeb8a69ee959c593ab1059c20d9b3b0c48091e",
+    "originals/tests/funnel-api.test.ts": "1cdb0c5a2551075e530f4b85a1f2f38c1757fff69f5b9090f01a6f63684e0e1e",
+    "originals/tests/funnel-client.test.ts": "5e5ee42b9f87a309364f3eaa2335976eb7104ddf34c0eb05795c93cebcbf1cbc",
+    "originals/tests/funnel-cookie.test.ts": "e75f3d09b2cf7fab486ba164ad68dfcb18a19dc24d6a4fd178e30b4dab283df5",
+    "originals/tests/funnel-migration.test.ts": "f1f36110b05d3131c0d6af146962471d7969b142ddb73dc3695a973b6bbb1127",
+    "originals/tests/funnel-rate-limit.test.ts": "e848153ff3c80ff0d429ca7f3a50e42aa6d3b87a85e1d5ec28d14db83077a6dd",
+    "originals/tests/funnel-route.test.ts": "9afe9dfc97c2d708ca882d823926eb6ce36237c9df25d287a9a58b35d3cd46d1",
+    "originals/tests/funnel-server.test.ts": "84aec887c25617e6504b6e574b3dac815c03b96aac69f74556ce73abb956c8fc",
+    "originals/tests/gated-example-pages.test.tsx": "c888368cd901c4fa0cad2051260efffb382c04040a693625a50d8ded344f996e",
+    "originals/tests/gated-pages-zero-mutation.test.tsx": "b67ca2dd7e813e042a5f680e70e234454ecbdc5c89a86df289ea8ea2e7f662f9",
+    "originals/tests/gated-preview-component.test.tsx": "d545763a922c5c82e31fdd2a81489adadbe94ccb1c5c54e80496e0c2e2caf950",
+    "originals/tests/landing-client-import-boundary.test.ts": "67d144b38b889ebfcb4900a2d4357eea894eeabcf3af65e7d935f3525e742dfd",
+    "phase-check.cjs": "38321b2d4e7bd9fa63c52bcc465b2c0eee8dfe00131046438c424fb98874c23e",
+    "phase-check.json": "507130c8daa991aa049ec0fe72f43e950b9ed055c6a2365bb147ddf1ade201a7",
+    "phase-inventory.json": "57d79530ad1f0767065aa2343491854fe6156ef14c76500b5b24585834251748",
+    "premium-sheet-lines.txt": "1ee7f85d51b59d2a51d033fa8429c71d16e57f62419e46eb24a6555b8520e11a",
+    "prepare-controls.py": "5483599915d9982cf377cfd8b3a691b54692b507f5145dd9ddc073728f26e507",
+    "prepare-ledger.py": "c760a75136c3c5eb825bbec0e50829ded1319b12e6fcb7bb0e7c4871a3218734",
+    "prepare-phases.py": "615dee2c85216f1ef52cce8cb337263ecda59132e3fbe0018463e885d321c48e",
+    "read-pins.json": "ae79841da616e70378d8ff615029349eb9547cfcd04363f9611eb8d8d85280c9",
+    "read-scope.json": "434a283fdb4b936a1faa83dab202955072a64bf867b4bcda1fb5aca4a3ea37df",
+    "read-snapshots/instrumentation-client.ts": "eaf8eb5c5435bc522e723c0efb5f7b82376b23bb2a4b7689b5eab43e495cb156",
+    "read-snapshots/src/app/agb/page.tsx": "2c9c6db1d8abf2aec9afcaf70d318aec9d58e6c93948c871d7f2fbb2b785c78f",
+    "read-snapshots/src/app/anwendung/page.tsx": "020e5be38ea8b1f00652265897430669c44c647f571f57a35a359bfc61c5e1f6",
+    "read-snapshots/src/app/api/funnel/session/route.ts": "da657d3e0ab9db46f2c569ae06c08d4a10d98ca64e7dcb8eb336d3513f11ea3d",
+    "read-snapshots/src/app/chat/[conversationId]/page.tsx": "d6440e82a28a43e4cb6160982721f5156df1d6be28ef583b2db739fa7d7c3090",
+    "read-snapshots/src/app/chat/page.tsx": "c3ccc038893d98234ca9fde9b46b898a4908c6d3c40b27a9012317955095d030",
+    "read-snapshots/src/app/datenschutz/page.tsx": "c9c354d8d421817fc0eb1fade7aa63395dadc17b11f3049ae409d17b89587b2f",
+    "read-snapshots/src/app/global-error.tsx": "b8f1790b8b2581120172ac526a5a3f500afeccd453987bb41ebbb15cb3cae74b",
+    "read-snapshots/src/app/layout.tsx": "cb59fbca704acc3352087e1dc3057b43690f510f8d40fc7c01319249b9846466",
+    "read-snapshots/src/app/lp/[slug]/page.tsx": "c986d0de667d792caf017dd92d97ea9a946d85812340af9006768da532b01cec",
+    "read-snapshots/src/app/methodik/page.tsx": "0cb407936caf978fdff1caeb433899466a7b127290002afe01b7e848ef70197e",
+    "read-snapshots/src/app/not-found.tsx": "bfa1409ff8500f138b3cb2cd3955f5e1805d8219977f982b0aa4441093efbfb6",
+    "read-snapshots/src/app/opengraph-image.tsx": "c8524d277d23d7acdb4813a3378ea166103d2af437bb4d0c4dce655b3ac94a9c",
+    "read-snapshots/src/app/page.tsx": "bf1fd321a0cc3c00920ea5b7b95b58907efc5873ceeedae9665ba4b5eac06b5d",
+    "read-snapshots/src/app/routine/page.tsx": "298522d8399b3638fdd03d1d4605df4e3b74d766e7b2947ea71e01331ca0b8de",
+    "read-snapshots/src/app/widerruf/page.tsx": "667da42168fe70a3a4485f126290256a3d9975673ebd239308db43fba955a34a",
+    "read-snapshots/src/components/application/application-day-card.tsx": "979c1bab81e4b8a44161cf18cc6413a2a53e152f49c9fb2e3f2747a060699e50",
+    "read-snapshots/src/components/application/application-overview.tsx": "eb6da9b0d4a9a7a89f75b8089ab10ca10e4f7d3d1d1e5bd1c32170ee4d2e4d13",
+    "read-snapshots/src/components/application/application-page.tsx": "df15aabce70ed7ff6d7e5c803e23bbd08ec9860f600ee115d6e9a5b7cb0da1d9",
+    "read-snapshots/src/components/chat/chat-input.tsx": "6bf471ce1c014b48ab7cbe9cc7e75045629024fb52f7e9c3689f02a3a1456b3a",
+    "read-snapshots/src/components/chat/chat-message.tsx": "2fcdfc1d4ab769afeb8e801a6db8c07df34486c70851f2154bcd6476bd87f476",
+    "read-snapshots/src/components/checkout/subscription-plan-selector.tsx": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "read-snapshots/src/components/checkout/use-plan-selection.ts": "0146c5bbe05892ab2b74305a0530f64c02c2ab0b4ee129f264a7fbb270052884",
+    "read-snapshots/src/components/editorial/editorial-shell.tsx": "26379edae2261383233d362f856ffdecdca4bd64d935cdc197602c50e9530f05",
+    "read-snapshots/src/components/gated-preview/gated-anwendung-example.tsx": "faeefb505f1adb7f54ba73f08f0211e1a1bd8c0d01ae767b0f80d0be536d23ae",
+    "read-snapshots/src/components/gated-preview/gated-chat-example.tsx": "5c0b7225c892d458d9319378300fe08eb945bc813c999b3272368b001ac1cdaa",
+    "read-snapshots/src/components/gated-preview/gated-preview.tsx": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "read-snapshots/src/components/gated-preview/gated-routine-example.tsx": "15342e414e066d4fb72698550324e3003bf1441b958486d9dda81c1590a6d342",
+    "read-snapshots/src/components/gated-preview/inert-example.tsx": "cda657ac78bf346c137cc43b51944d0764f4a71a1b2ec33b15d5624288e805ee",
+    "read-snapshots/src/components/landing/faq.tsx": "dd18a099f2d827ef2f053d1114517aa09cac07ec3bcd0a616a4f689b236d791d",
+    "read-snapshots/src/components/landing/final-cta.tsx": "f2f64d9243c912580a2140c06b10cd767d11456bc37c46b663a8d7e3f62666c7",
+    "read-snapshots/src/components/landing/hero.tsx": "3c7f09162f3d0ef85f97cbe732d327b078aa7de1ff41bb1d33d8a88236ffc7f7",
+    "read-snapshots/src/components/landing/landing-header.tsx": "874b56aa42af824ea0d045f1088cc478df7da05ab76decd1b8066e0c6a8c1326",
+    "read-snapshots/src/components/landing/site-footer.tsx": "3bd99615296e036976359c3d712ce345679213537d99d6fc529b61a15672b2b6",
+    "read-snapshots/src/components/landing/what-you-get.tsx": "b42830cb6aa72f519d3be10009354f23a95ecff96a64d4359b1ac0b190cff829",
+    "read-snapshots/src/components/personal-plan-quiz/personal-plan-quiz-continuation.ts": "c1f1a78eb4812605cd6ae2f3c551ffd02ae13d3d6775706549a6bd0d2e16d1d8",
+    "read-snapshots/src/components/personal-plan-quiz/personal-plan-quiz-entry.tsx": "b37707a35509abb85ab0f44e2d43cd290f36372063cb0ea668e8d16244612bb6",
+    "read-snapshots/src/components/premium-sheet/premium-sheet.tsx": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "read-snapshots/src/components/quiz/quiz-analysis.tsx": "ed0e7284d9ea231ee17ad03c7096102b51cb2590eda99beb61722e4df4edd1ab",
+    "read-snapshots/src/components/quiz/quiz-results.tsx": "836bf1a4b1e11f09b281f23dd7c045c1d331c07b94edc1d7ab88a0b6b3a9ae3b",
+    "read-snapshots/src/components/routine/personal-plan/routine-item-card.tsx": "6f93d8d0073557e65964661275bc8acb520524d81bc8856a781b95d07c9aadda",
+    "read-snapshots/src/components/routine/personal-plan/routine-page.tsx": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "read-snapshots/src/components/routine/personal-plan/routine-section.tsx": "5ddfc9757d16494eac2162b89b422e9588f660df22c006b53e4bc481574413a2",
+    "read-snapshots/src/components/ui/bottom-sheet.tsx": "373944ebf90fab3c4347599cba20ef2e162db35c43f722d1f190585817caa625",
+    "read-snapshots/src/components/ui/button.tsx": "7328a21e4aa02dad2cb657ae7af61280b71288b16ae4d38c5d31895c9d6535df",
+    "read-snapshots/src/funnels/landing/default.tsx": "fa7a60d08fe55b493f1e6194a2cc4a47a314d9197c3671c9bd2e103af1d1c338",
+    "read-snapshots/src/funnels/landing/registry.ts": "72967737c0d013538f3c9d9e6fd966e482b896f35391f1719abdd42da3b7ed9e",
+    "read-snapshots/src/funnels/packages.json": "fd299fc9fd61f06531fcc9b66fd497fd14c25a38214f8db241dab4e3a0131811",
+    "read-snapshots/src/funnels/quizzes/registry.ts": "225fa3638b4406aa711b4afda77ef748e24dd35e6b29bcd46f4d3ac6fe320bbe",
+    "read-snapshots/src/lib/auth/authenticated-app-route-access.ts": "1c29afa7beb170c72e628560261dca22c1ae08c981d4ca0be917cccd79e8c49a",
+    "read-snapshots/src/lib/billing/analytics-destinations/funnel.ts": "7c6d71e7eeb0ec6af41020df967b0126e6ced1436c715d9914674e8dda4ef6bb",
+    "read-snapshots/src/lib/funnel/api.ts": "b1180f5324e78983f63b1a73b1f98f7cd02aabacba1271165446588370356679",
+    "read-snapshots/src/lib/funnel/client.ts": "9c3728cffff3810d829afd198c2406e35cf6edb3d4c68dbfc5a1cfa845e100a8",
+    "read-snapshots/src/lib/funnel/cookie.ts": "522741b96f60560c02f92a5445428380de02231b2b3724b4143dfc6da14f7b48",
+    "read-snapshots/src/lib/funnel/flags.ts": "981bd9436dae7c1fc7cbd8d6dc60e3d6bbaa9dc3bea994e0a33fac525f02528d",
+    "read-snapshots/src/lib/funnel/journey-kind.ts": "6088e7e2554b37b0d2da5231dd5361fdeed8cd2ebf1dae5286e107d7543efe88",
+    "read-snapshots/src/lib/funnel/packages.ts": "66cab34518f29604a37c7a32721f74ca5c930f82a12dcf293db69e3b90a080be",
+    "read-snapshots/src/lib/funnel/server.ts": "775feb24b57ae2c7d71c4dec2f5ef4a8781fefaf355699331718fc44f92380dd",
+    "read-snapshots/src/lib/gated-preview/example-copy.ts": "fc1b9a2002676f39a87bd277f3d570ea5ada45e720d03dcb3d816bd1fe513280",
+    "read-snapshots/src/lib/gated-preview/fixtures/anwendung-example.ts": "5bdc4e724d1010fa3553013ac1d9a2f8274934ce816977723b5436316f08be15",
+    "read-snapshots/src/lib/gated-preview/fixtures/chat-example.ts": "a9f885d12e7a828d68eaafecf8af9365d99d0dfaed6e8577cf905b3f07f692b3",
+    "read-snapshots/src/lib/gated-preview/fixtures/example-products.ts": "458dc1afd9ba6c1b130412c09931b7b2f8f1455311dc2e4caafad82a102dd06b",
+    "read-snapshots/src/lib/gated-preview/fixtures/routine-example.ts": "b5bd102c62e62fa59cf07362dbe7cf2eb80dbbbf8e3006f3b37a06ca79c55cb0",
+    "read-snapshots/src/lib/gated-preview/gate.ts": "26cbca953a542d67d0043b9c9bc87673829cf5e6784831681fd1f6b2c8d54d86",
+    "read-snapshots/src/lib/premium-sheet/context.ts": "6b42505f8b3e5ad10411d7586f6133b1a1fefba238109948bc7f73622a37a6ae",
+    "read-snapshots/src/lib/premium-sheet/ordered-benefits.ts": "ca43fea17931ebfab41a86a119f18673d8e1b65396f9c799df7dec0ebb4c164a",
+    "read-snapshots/src/lib/premium-sheet/purchase-state.ts": "19f77813d0c7e261f02ca3321ab772504dca91a011f55ff54637cf49c707b43e",
+    "read-snapshots/src/lib/quiz/funnel-copy.ts": "ed098df5602b1f10b6e9820a91b28719b255ed56c2cb626b93ebaf40f9658f2f",
+    "read-snapshots/src/lib/rate-limit.ts": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "read-snapshots/src/lib/seo/site-identity.ts": "c7eff1e148b78a41a77f23d9c4f8ae74f49dab1c2485f9f8fd9c0dd819a34c84",
+    "read-snapshots/src/lib/supabase/admin.ts": "bd6ec1538d65a01f82b3f55b2839f0ac347d617c6de29d13cea4b0eff737386a",
+    "read-snapshots/src/lib/utils.ts": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d",
+    "read-snapshots/src/providers/funnel-context-bootstrap.tsx": "da6193acc2cd80e9f21e54eae280b18fc24a3a4604d93242716394920bf01f7d",
+    "read-snapshots/src/providers/public-funnel-context-bootstrap.tsx": "f7b1177dede682659bdcbd0ee88d81cd5cd5f014efd3c3261856903dc7066b32",
+    "read-snapshots/src/proxy.ts": "a309a92a1b3a6f420a3739690babd3bc371beb2daf441aa94da2977f5ee82bfa",
+    "read-snapshots/supabase/migrations/20260711120000_funnel_attribution.sql": "d7e781615bbe79f8985afdf1005d634905e3cf9bc78989482b8a01a55441176e",
+    "read-snapshots/supabase/migrations/20260730120000_add_funnel_session_quiz_variant.sql": "ff87373fc5aa24c05615dfbc85e8264eeaf3f44aa1f4c86baca32f16f81cf131",
+    "read-snapshots/tests/helpers/browser-storage-shim.ts": "3d7db8f60dc5f144ccd959f7eb1629af1d84f1ac99980daa07174924e166e0b8",
+    "read-snapshots/tests/server-only-register.cjs": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+    "read.py": "7546fe6c2672c0666bb620a40d0bc3afda1a0baedd2f0e80ee22b9435c2cd2cb",
+    "selected-read-snapshots/.github/workflows/ci.yml": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "selected-read-snapshots/node_modules/@supabase/postgrest-js/src/PostgrestClient.ts": "50121d8145aa9fd4b4f6b9382270db0343a6fdd6e2f56b5f0e8c872dc683d9c8",
+    "selected-read-snapshots/node_modules/@supabase/supabase-js/src/SupabaseClient.ts": "6471325c10145a7a6c4f92d1e332fc6d51203ef0c2e7cf022ade5511217c2a60",
+    "selected-read-snapshots/node_modules/@types/node/crypto.d.ts": "4c829ab315f57c5442c6667b53769975acbf92003a66aef19bce151987675bd1",
+    "selected-read-snapshots/node_modules/date-fns/format.js": "3bcb2a92b32ca514a1034b8a4a15067eae44cbe4c449bf8325fc6bcd7ad46cfa",
+    "selected-read-snapshots/node_modules/next/dist/client/components/navigation.js": "286fe318119b013fd381da93c328a332b6668e03638d1647d7aedf53c421d7bc",
+    "selected-read-snapshots/node_modules/next/dist/server/web/spec-extension/request.js": "2490a352d271fb39e1fccce06ee6887999dffa7909ccfd5ca0cc8bab8008065b",
+    "selected-read-snapshots/node_modules/next/dist/server/web/spec-extension/response.js": "68a5a07540d57a4beb3275fddd0502fd5ef9a42986b414c0bcee99a3f9033366",
+    "selected-read-snapshots/node_modules/react/cjs/react.development.js": "4325e6263375459503858c0982d50bbc25bc33e66676954698c67221d2ee8b72",
+    "selected-read-snapshots/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js": "e0a591b81f983794366bbc8338df0ebbbc7add48fdcee772870e226eadcda9ce",
+    "selected-read-snapshots/node_modules/typescript/lib/typescript.d.ts": "e134052a6b1ded61693b4037f615dc72f14e2881e79c1ddbff6c514c8a516b05",
+    "selected-read-snapshots/package.json": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    "selected-read-snapshots/plans/freemium-scanner-first/plan.md": "a5a795fabb557e03aed778067b75cb06b7039f4e991cc4ef072872e34ce4894b",
+    "selected-read-snapshots/src/components/application/application-types.ts": "6fe7d17e52a6b78523d090287e9cea6fd5731d017342729eb35236558d0c5caa",
+    "selected-read-snapshots/src/components/quiz/result-offer-pricing.tsx": "461bf77fd54505e7fdcaa10c0630bfc942803fdb13ddc546ba7c745c6e91d33a",
+    "selected-read-snapshots/src/funnels/landing/registry.generated.ts": "65f0783c1c3df689eee6e1efb45af8fe7190c2f490ed01abf6a040c3b17ba5f3",
+    "selected-read-snapshots/src/funnels/quizzes/registry.json": "4dce2f7f0eaf19ba28dc063b8a9cd70884a8a468bb401b8ff214853601c44947",
+    "selected-read-snapshots/src/lib/types.ts": "80ce0439bebeb683290f086cc1bab20f3d03a29c577e750ceaa8f73d48243d93",
+    "snapshots/before/tests/editorial-pages.test.tsx": "96ce7c5f2eee468668c4581b58aeb8a69ee959c593ab1059c20d9b3b0c48091e",
+    "snapshots/before/tests/funnel-api.test.ts": "1cdb0c5a2551075e530f4b85a1f2f38c1757fff69f5b9090f01a6f63684e0e1e",
+    "snapshots/before/tests/funnel-client.test.ts": "5e5ee42b9f87a309364f3eaa2335976eb7104ddf34c0eb05795c93cebcbf1cbc",
+    "snapshots/before/tests/funnel-cookie.test.ts": "e75f3d09b2cf7fab486ba164ad68dfcb18a19dc24d6a4fd178e30b4dab283df5",
+    "snapshots/before/tests/funnel-migration.test.ts": "f1f36110b05d3131c0d6af146962471d7969b142ddb73dc3695a973b6bbb1127",
+    "snapshots/before/tests/funnel-rate-limit.test.ts": "e848153ff3c80ff0d429ca7f3a50e42aa6d3b87a85e1d5ec28d14db83077a6dd",
+    "snapshots/before/tests/funnel-route.test.ts": "9afe9dfc97c2d708ca882d823926eb6ce36237c9df25d287a9a58b35d3cd46d1",
+    "snapshots/before/tests/funnel-server.test.ts": "84aec887c25617e6504b6e574b3dac815c03b96aac69f74556ce73abb956c8fc",
+    "snapshots/before/tests/gated-example-pages.test.tsx": "c888368cd901c4fa0cad2051260efffb382c04040a693625a50d8ded344f996e",
+    "snapshots/before/tests/gated-pages-zero-mutation.test.tsx": "b67ca2dd7e813e042a5f680e70e234454ecbdc5c89a86df289ea8ea2e7f662f9",
+    "snapshots/before/tests/gated-preview-component.test.tsx": "d545763a922c5c82e31fdd2a81489adadbe94ccb1c5c54e80496e0c2e2caf950",
+    "snapshots/before/tests/landing-client-import-boundary.test.ts": "67d144b38b889ebfcb4900a2d4357eea894eeabcf3af65e7d935f3525e742dfd",
+    "snapshots/cut/tests/editorial-pages.test.tsx": "96ce7c5f2eee468668c4581b58aeb8a69ee959c593ab1059c20d9b3b0c48091e",
+    "snapshots/cut/tests/funnel-api.test.ts": "1cdb0c5a2551075e530f4b85a1f2f38c1757fff69f5b9090f01a6f63684e0e1e",
+    "snapshots/cut/tests/funnel-client.test.ts": "5e5ee42b9f87a309364f3eaa2335976eb7104ddf34c0eb05795c93cebcbf1cbc",
+    "snapshots/cut/tests/funnel-cookie.test.ts": "e75f3d09b2cf7fab486ba164ad68dfcb18a19dc24d6a4fd178e30b4dab283df5",
+    "snapshots/cut/tests/funnel-migration.test.ts": "f1f36110b05d3131c0d6af146962471d7969b142ddb73dc3695a973b6bbb1127",
+    "snapshots/cut/tests/funnel-rate-limit.test.ts": "e848153ff3c80ff0d429ca7f3a50e42aa6d3b87a85e1d5ec28d14db83077a6dd",
+    "snapshots/cut/tests/funnel-route.test.ts": "9afe9dfc97c2d708ca882d823926eb6ce36237c9df25d287a9a58b35d3cd46d1",
+    "snapshots/cut/tests/funnel-server.test.ts": "84aec887c25617e6504b6e574b3dac815c03b96aac69f74556ce73abb956c8fc",
+    "snapshots/cut/tests/gated-example-pages.test.tsx": "1247d9a7a781a1c34e68302b2bd83ad9a9b58ef6e9689f43fd004d6df1f205ec",
+    "snapshots/cut/tests/gated-pages-zero-mutation.test.tsx": "96461917c03f9a4463632798e4a20a2a88251e41c5e938121c897bc94d72baa6",
+    "snapshots/cut/tests/gated-preview-component.test.tsx": "772de4c84214cd563954810307c35041d0ca540f1f974cff8a9b2e49a6fec7fb",
+    "snapshots/cut/tests/landing-client-import-boundary.test.ts": "67d144b38b889ebfcb4900a2d4357eea894eeabcf3af65e7d935f3525e742dfd",
+    "snapshots/transfer/tests/editorial-pages.test.tsx": "96ce7c5f2eee468668c4581b58aeb8a69ee959c593ab1059c20d9b3b0c48091e",
+    "snapshots/transfer/tests/funnel-api.test.ts": "1cdb0c5a2551075e530f4b85a1f2f38c1757fff69f5b9090f01a6f63684e0e1e",
+    "snapshots/transfer/tests/funnel-client.test.ts": "5e5ee42b9f87a309364f3eaa2335976eb7104ddf34c0eb05795c93cebcbf1cbc",
+    "snapshots/transfer/tests/funnel-cookie.test.ts": "e75f3d09b2cf7fab486ba164ad68dfcb18a19dc24d6a4fd178e30b4dab283df5",
+    "snapshots/transfer/tests/funnel-migration.test.ts": "f1f36110b05d3131c0d6af146962471d7969b142ddb73dc3695a973b6bbb1127",
+    "snapshots/transfer/tests/funnel-rate-limit.test.ts": "e848153ff3c80ff0d429ca7f3a50e42aa6d3b87a85e1d5ec28d14db83077a6dd",
+    "snapshots/transfer/tests/funnel-route.test.ts": "9afe9dfc97c2d708ca882d823926eb6ce36237c9df25d287a9a58b35d3cd46d1",
+    "snapshots/transfer/tests/funnel-server.test.ts": "84aec887c25617e6504b6e574b3dac815c03b96aac69f74556ce73abb956c8fc",
+    "snapshots/transfer/tests/gated-example-pages.test.tsx": "0e6038435de0e3fde13c7199eed1337002a17e42d78b8973a562194ad2f1891c",
+    "snapshots/transfer/tests/gated-pages-zero-mutation.test.tsx": "6fe2d119cc61f31a89bab936a644a307182624fcd1d9b7b696ea47ab21d6cdde",
+    "snapshots/transfer/tests/gated-preview-component.test.tsx": "587f2dd2b1f1e05f0f8cafeca3d7f547a29e35aca7d0546614249d83c668530a",
+    "snapshots/transfer/tests/landing-client-import-boundary.test.ts": "67d144b38b889ebfcb4900a2d4357eea894eeabcf3af65e7d935f3525e742dfd",
+    "start-pins.json": "a06f2eaa5aa838dc11661fc004cbc057bc7a4f6ead1fd061f2ef93c6100fac61",
+    "static-check.json": "f31db0c49f4fb4571f2e2ba4b2f890fbd73b5d7ad871bc89aa396559833ddc24",
+    "static-final.cjs": "f0db7b40d6eb1789ec35b1fa09ad1729fedd75da73c1a25a74b55973b527de73",
+    "transfer-cut.diff": "843df14a9f9a864d15e21ea11a91c20c5f4b37322eb1dad334655b23ae0a43f0"
+  },
+  "runtime": "UNRUN",
+  "repositoryWrites": 0,
+  "testOwnerImports": 0,
+  "proposalStatus": "CONDITIONAL, main and independent acceptance plus native/control proof pending"
+}

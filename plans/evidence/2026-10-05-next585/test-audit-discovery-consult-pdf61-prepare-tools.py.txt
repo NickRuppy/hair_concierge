@@ -1,0 +1,81 @@
+import pathlib
+P='/tmp/test-audit-discovery-consult-pdf61';S='/tmp/test-audit-scanner-detection-session'
+old=pathlib.Path(S+'-guard.cjs').read_text()
+g=old[:old.index('function registrations(')]
+g+=r'''
+function registrations(ts,file,text){
+ const sf=parse(ts,file,text),rows=new Map()
+ function walk(n){
+  if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){
+   const cb=n.arguments.at(-1),name=ts.isStringLiteral(n.arguments[0])?n.arguments[0].text:n.arguments[0].getText(sf)
+   if(!ts.isArrowFunction(cb)||!cb.body||rows.has(name))fail('Unexpected registration: '+file)
+   const assertions=[],calls=[]
+   function visit(x){if(ts.isCallExpression(x)){if(x.expression.getText(sf).startsWith('assert.'))assertions.push({startLine:sf.getLineAndCharacterOfPosition(x.getStart(sf)).line+1,text:x.getText(sf)});else calls.push(x.getText(sf))}ts.forEachChild(x,visit)}visit(cb)
+   rows.set(name,{name,statement:n.getText(sf),start:n.getStart(sf),end:n.end,callback:cb.getText(sf),assertions,calls:calls.sort()})
+  }
+  ts.forEachChild(n,walk)
+ }
+ walk(sf);return rows
+}
+function replaceOnce(text,from,to,label){if(text.split(from).length!==2)fail('Non-unique anchor: '+label);return text.replace(from,()=>to)}
+function load(pinSHA){
+ const raw=fs.readFileSync(BASE+'-editor-pins.json');if(sha(raw)!==pinSHA)fail('Pins changed');const pins=JSON.parse(raw);identity(pins)
+ for(const pin of pins.dependencies)checkFile(pin)
+ for(const[file,hash]of Object.entries(pins.artifactHashes))if(sha(fs.readFileSync(file))!==hash)fail('Artifact drift: '+file)
+ for(const[file,hash]of Object.entries(pins.entrypointTemplateHashes)){const s=fs.readFileSync(file,'utf8').replace(/const PIN_SHA='[a-f0-9]{64}'/,"const PIN_SHA='PIN_SHA_PLACEHOLDER'");if(sha(s)!==hash)fail('Operator drift')}
+ const evidence=JSON.parse(fs.readFileSync(BASE+'-manifest.json')),candidates=JSON.parse(fs.readFileSync(BASE+'-candidates.json')),controls=JSON.parse(fs.readFileSync(BASE+'-controls-normalized.json')),ts=require(ROOT+'/node_modules/typescript')
+ if(evidence.root!==ROOT||evidence.expectedHead!==pins.head||candidates.length!==1||controls.length!==1||ts.version!==pins.typescriptVersion)fail('Identity/count mismatch')
+ const snapshots={},counts={before:0,transfer:0,cut:0},assertionCounts={before:0,transfer:0,cut:0};let untouched=0
+ for(const f of evidence.files){
+  snapshots[f.file]={}
+  for(const phase of Object.keys(counts)){
+   const bytes=fs.readFileSync(BASE+'-snapshots/'+phase+'/'+path.basename(f.file)),rows=registrations(ts,f.file,bytes.toString()),assertions=[...rows.values()].reduce((sum,r)=>sum+r.assertions.length,0)
+   if(sha(bytes)!==f[phase].sha256||rows.size!==f[phase].declarations)fail('Phase bytes/count')
+   snapshots[f.file][phase]={bytes,rows};counts[phase]+=rows.size;assertionCounts[phase]+=assertions
+  }
+  const {before,transfer,cut}=snapshots[f.file];let reconstructed=before.bytes.toString()
+  for(const c of candidates.filter(c=>c.file===f.file)){
+   const d=before.rows.get(c.donor.title),k=before.rows.get(c.keeper.title),t=transfer.rows.get(c.keeper.title)
+   if(d?.statement!==c.donor.full||sha(d.callback)!==c.donor.bodyHash||k?.statement!==c.keeper.full||sha(k.callback)!==c.keeper.bodyHash)fail('Donor/keeper original')
+   const setup='  const markup = await renderPdf()'
+   const block=d.statement.slice(d.statement.indexOf(setup)+setup.length,d.statement.lastIndexOf('\n})'))
+   if(block!==c.transferredBlock||c.keeperAfter!==replaceOnce(k.statement,setup,setup+block,c.id))fail('Assertion union reconstruction')
+   if(c.transferredAssertions!==22||d.assertions.length!==22||k.assertions.length!==11||t?.assertions.length!==33)fail('Assertion union count')
+   const allowedCalls=[...k.calls,...d.calls.filter(x=>x!=='renderPdf()')].sort()
+   if(d.calls.filter(x=>x==='renderPdf()').length!==1||JSON.stringify(allowedCalls)!==JSON.stringify(t.calls))fail('Added owner/input/observer call')
+   if(JSON.stringify([...d.assertions,...k.assertions].map(a=>a.text).sort())!==JSON.stringify(t.assertions.map(a=>a.text).sort()))fail('Exact assertion union')
+   reconstructed=replaceOnce(reconstructed,k.statement,c.keeperAfter,c.id)
+  }
+  if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated support')
+  for(const c of candidates.filter(c=>c.file===f.file))reconstructed=replaceOnce(reconstructed,c.donor.full+'\n\n','',c.id)
+  if(reconstructed!==cut.bytes.toString())fail('Cut changed unrelated support')
+  for(const[name,row]of before.rows){
+   const donor=candidates.some(c=>c.file===f.file&&c.donor.title===name),keeper=candidates.some(c=>c.file===f.file&&c.keeper.title===name),t=transfer.rows.get(name),after=cut.rows.get(name)
+   if(!keeper&&t?.statement!==row.statement)fail('Unrelated transfer callback changed')
+   if(donor){if(after)fail('Donor survived')}else{if(after?.statement!==t?.statement)fail('Retained bytes changed');if(!keeper)untouched++}
+  }
+ }
+ if(Object.keys(snapshots).length!==6||JSON.stringify(counts)!=='{"before":61,"transfer":61,"cut":60}'||JSON.stringify(assertionCounts)!=='{"before":290,"transfer":312,"cut":290}'||untouched!==59)fail('Conservation mismatch '+JSON.stringify({counts,assertionCounts,untouched}))
+ // 12 assertion calls inside test-support helpers are also pinned byte-exact by reconstruction:
+ // total whole-file assertion call sites 302/324/302; callbacks alone 290/312/290.
+ function current(overrides={}){identity(pins);for(const p of pins.dependencies)checkFile(p);for(const r of pins.readset)if(sha(fs.readFileSync(path.join(ROOT,r.file)))!==(overrides[r.file]||r.sha))fail('Readset drift/fault active: '+r.file);const bytes=Object.fromEntries(Object.keys(snapshots).map(f=>[f,fs.readFileSync(path.join(ROOT,f))]));const phases=Object.keys(counts).filter(p=>Object.entries(bytes).every(([f,b])=>b.equals(snapshots[f][p].bytes)));if(phases.length!==1)fail('Mixed/unrecognized phase');return{phase:phases[0],bytes}}
+ return{pins,evidence,candidates,controls,ts,snapshots,counts,untouched,current}
+}
+function fault(ctx,c){
+ const original=fs.readFileSync(path.join(ROOT,c.file));if(sha(original)!==c.sourceSha256)fail('Fault owner drift')
+ const text=original.toString(),sf=parse(ctx.ts,c.file,text),found=[]
+ for(const n of sf.statements)if(ctx.ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>ctx.ts.isIdentifier(d.name)&&d.name.text===c.anchor.scope))found.push(n)
+ if(found.length!==1||c.anchor.kind!=='top-level-const'||c.anchor.expectedOccurrences!==1||!(found[0].declarationList.flags&ctx.ts.NodeFlags.Const))fail('Unique const anchor')
+ const n=found[0],mutated=Buffer.from(text.slice(0,n.getStart(sf))+replaceOnce(n.getText(sf),c.from,c.to,c.id)+text.slice(n.end))
+ parse(ctx.ts,c.file,mutated.toString());if(sha(mutated)!==c.mutatedSha256)fail('Fault hash mismatch')
+ for(const phase of['transfer','cut']){const row=ctx.snapshots[c.test.file][phase].rows.get(c.test.name),o=c.oracles[phase];if(!row?.assertions.some(a=>a.startLine===o.startLine&&a.text===o.text))fail('Oracle drift')}
+ return{original,mutated}
+}
+'''
+g+=old[old.index('function atomicCAS('):]
+g=g.replace(S,P);pathlib.Path(P+'-guard.cjs').write_text(g)
+for suffix in ['edit.cjs','run-controls.cjs','readonly-preload.cjs']:
+ s=pathlib.Path(S+'-'+suffix).read_text().replace(S,P).replace("872e5b3c82fa15355ae0b76b04e9c54c9bd87cc4268073b92d4d536c82add255","PIN_SHA_PLACEHOLDER")
+ s=s.replace('parsedPhaseFiles:12','parsedPhaseFiles:18').replace('ALL12 outputs','ALL18 outputs').replace('all4 originals','all6 originals').replace('allNineControlsParsed:prepared.size===9','allControlsParsed:prepared.size===1')
+ pathlib.Path(P+'-'+suffix).write_text(s)
+print('Prepared source tools; pins pending')

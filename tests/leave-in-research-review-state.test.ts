@@ -7,7 +7,6 @@ import test from "node:test"
 import {
   leaveInReviewFingerprint,
   readLeaveInLabReviewState,
-  readLeaveInReworkQueue,
   saveLeaveInLabReviewState,
   updateLeaveInReworkQueue,
 } from "../src/lib/leave-in-research/review-state"
@@ -107,10 +106,13 @@ test("Leave-In rework queue opens one entry per property and resolves it again",
       entry: { ...entry, comment: "Nochmal." },
       now: new Date("2026-09-04T09:00:00.000Z"),
     })
-    let queue = readLeaveInReworkQueue(filePath)
+    let queue = JSON.parse(readFileSync(filePath, "utf8"))
     assert.ok(queue)
     assert.equal(queue.entries.length, 2)
-    assert.equal(queue.entries.filter((item) => item.status === "open").length, 1)
+    assert.equal(
+      queue.entries.filter((item: { status: string }) => item.status === "open").length,
+      1,
+    )
 
     updateLeaveInReworkQueue({
       filePath,
@@ -118,8 +120,11 @@ test("Leave-In rework queue opens one entry per property and resolves it again",
       productId: PRODUCT_ID,
       now: new Date("2026-09-04T10:00:00.000Z"),
     })
-    queue = readLeaveInReworkQueue(filePath)
+    queue = JSON.parse(readFileSync(filePath, "utf8"))
     assert.ok(queue)
-    assert.equal(queue.entries.filter((item) => item.status === "open").length, 0)
+    assert.equal(
+      queue.entries.filter((item: { status: string }) => item.status === "open").length,
+      0,
+    )
     assert.ok(JSON.parse(readFileSync(filePath, "utf8")).updatedAt)
   }))

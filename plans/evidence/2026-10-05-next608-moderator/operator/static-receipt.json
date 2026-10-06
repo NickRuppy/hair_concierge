@@ -1,0 +1,85 @@
+{
+  "status": "STATIC CHECK PASS; MAIN RUNTIME PENDING",
+  "directory": "/tmp/test-audit-moderator183-tools-p18tq7i2",
+  "approvedTemplate": "/tmp/test-audit-offer87-tools-j3gv5ax6",
+  "pinsSHA256": "40b28a91dfe702eb9b16efdd9fef248075a84be66444db1312ae701928b07d61",
+  "codeHashManifestSHA256": "d84873706a686eaf4dd33b8f05213a09e1cead2f8a2081ab9246b25c05e054f1",
+  "proposalManifestSHA256": "736ce42f2cc6dcb915680facd3c0e0b52bb2c22a4fe5616a4abfe53425089288",
+  "proposalHandoffSHA256": "baabc8f3a6c49edfa848a1b99915929a34bec147f96283682470cf3e588d3dab",
+  "counts": {
+    "before": 183,
+    "transfer": 183,
+    "cut": 182,
+    "phaseFiles": 81,
+    "cohortFiles": 27,
+    "unrelatedCallbacks": 181,
+    "heldF": 13,
+    "controls": 2
+  },
+  "guards": {
+    "originalReadsets": 111,
+    "fixedReadsets": 249,
+    "selectedLocalClosure": 184,
+    "dependencyFiles": 2192,
+    "dependencyTrees": 30
+  },
+  "metadataDisposition": {
+    "path": "/tmp/test-audit-next607-shared-config-disposition.json",
+    "sha256": "38f962fed8680aaa75a2723158c25d37669e4042e44164d878a6556463143705",
+    "changedFile": "/Users/nick/AI_work/hair_conscierge/.git/config",
+    "oldSha256": "2253b6840e7873e8035e82d6176ab2b7eec30374199874b551cc70fc77bbdeb1",
+    "newSha256": "0c8e95adf438f1a7ff98d364731136030b301dc9b96d949904ed64520b12fcb0",
+    "authority": "Main explicitly approved this single shared config metadata change after verifying other five identity pins and exact task branch/HEAD/root; prior config bytes unavailable, no exact provenance claim."
+  },
+  "checks": {
+    "editor-check.log": {
+      "exit": 0,
+      "sha256": "bc47f71e43e37b085dd96cfc93a665b33ce29378a012fcbef37c28ab035ddfca",
+      "enforcedAttemptedWrites": 0,
+      "enforcedAttemptedChildren": 0
+    },
+    "controls-check.log": {
+      "exit": 0,
+      "sha256": "87d432eb3aeaefb195f490287ff7f0f7ab3ab9ece47c61f45fbbd885e4fbc96a",
+      "enforcedAttemptedWrites": 0,
+      "enforcedAttemptedChildren": 0
+    },
+    "syntax-check.log": {
+      "exit": 0,
+      "sha256": "723cf1857cd1eaffd8e63eef65f7df52073289e0b5938aa982ebcc65e5ef49cf",
+      "enforcedAttemptedWrites": 0,
+      "enforcedAttemptedChildren": 0
+    }
+  },
+  "initialRefusal": "Driver --check initially ran from primary checkout and refused Exact real checkout required; corrected exact task cwd check passed. No repository write or child occurred.",
+  "workerActivity": {
+    "repositoryWrites": 0,
+    "runtimeTests": 0,
+    "sourceFaultRuns": 0,
+    "productImports": 0,
+    "childrenStartedByTooling": 0,
+    "providerOrDatabaseOperations": 0
+  },
+  "mainBaseline": {
+    "tap": "/tmp/test-audit-moderator183-main-before.tap",
+    "tapSHA256": "64ce995adfd98804450624b28b2d92f5887b635b3dc7cd113140def31041c8a8",
+    "command": "/tmp/test-audit-moderator183-main-before.command.json",
+    "commandSHA256": "395e9da0a75f9f03b4763b618dc4cdeeb39b39d39a7148fe7f41af72a97a15b7",
+    "tests": 183,
+    "pass": 183,
+    "fail": 0,
+    "skip": 0,
+    "cancel": 0,
+    "todo": 0,
+    "durationMs": 115318.891958,
+    "execution": "Main only; worker read existing receipts"
+  },
+  "runtimePending": [
+    "full transfer cohort",
+    "both actual source controls with intended first assertion",
+    "receipt-gated cut",
+    "full cut cohort",
+    "main changed/repository/campaign verification"
+  ],
+  "limits": "Static selected keeper import closure includes conservatively followed local type imports and literal dynamic imports. Hashes are not human read credit. Selected runtime distribution/type/loader trees only, no whole node_modules crawl. Nonliteral imports are disclosed; unrelated26-file runtime closure and all transitive third-party runtime code are not exhaustively certified."
+}

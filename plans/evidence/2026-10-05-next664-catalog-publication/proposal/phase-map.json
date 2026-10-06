@@ -1,0 +1,274 @@
+{
+  "tests/expansion-apply-batch.test.ts": {
+    "before": {
+      "sha256": "2d12291a8386f0c9633aa641d6258d10c1decb59bd88d83976db0ec5c73b84b9",
+      "sites": 18,
+      "assertions": 41
+    },
+    "transfer": {
+      "sha256": "b88065bfeeeba0bc6a2391b88f336c66829d796bf9db259b80353c708502bee0",
+      "sites": 18,
+      "assertions": 43
+    },
+    "cut": {
+      "sha256": "bcbe4a6111c1ba2e7d30d2de1834910f19adc0ad7ce6d4d12060c90b469df6f5",
+      "sites": 17,
+      "assertions": 41
+    }
+  },
+  "tests/expansion-apply-templates.test.ts": {
+    "before": {
+      "sha256": "27145efd09abaffd8f57fdb232e02ca2e9e778321f4a3066392057af674ca1d4",
+      "sites": 10,
+      "assertions": 72
+    },
+    "transfer": {
+      "sha256": "c3fa72a4020d1986c003f22fd95a6ac6b70b13353c90a0bb3c7ec5757a0850a5",
+      "sites": 10,
+      "assertions": 77
+    },
+    "cut": {
+      "sha256": "a590852fd6258fb798e7781131a6e07307049e3c0b6b093cf658a041bb6b77d4",
+      "sites": 8,
+      "assertions": 72
+    }
+  },
+  "tests/admin-product-category-write-policy.test.ts": {
+    "before": {
+      "sha256": "d514f46097b447fe1b5dcbd3b295278faef6171b913a67984a72d56671f0ad9d",
+      "sites": 2,
+      "assertions": 5
+    },
+    "transfer": {
+      "sha256": "d514f46097b447fe1b5dcbd3b295278faef6171b913a67984a72d56671f0ad9d",
+      "sites": 2,
+      "assertions": 5
+    },
+    "cut": {
+      "sha256": "d514f46097b447fe1b5dcbd3b295278faef6171b913a67984a72d56671f0ad9d",
+      "sites": 2,
+      "assertions": 5
+    }
+  },
+  "tests/admin-product-support-specs.test.ts": {
+    "before": {
+      "sha256": "0a699fb0d2bc8dc18029e9cdc870fd99c296525f3247c89bc944a5f2af0ec7e8",
+      "sites": 13,
+      "assertions": 22
+    },
+    "transfer": {
+      "sha256": "0a699fb0d2bc8dc18029e9cdc870fd99c296525f3247c89bc944a5f2af0ec7e8",
+      "sites": 13,
+      "assertions": 22
+    },
+    "cut": {
+      "sha256": "0a699fb0d2bc8dc18029e9cdc870fd99c296525f3247c89bc944a5f2af0ec7e8",
+      "sites": 13,
+      "assertions": 22
+    }
+  },
+  "tests/catalog-authority-historical-repair-migration.test.ts": {
+    "before": {
+      "sha256": "fe9ad82db99a589fdd2efd8a616303a06a7ee1cb6ff98943765d599f80b34182",
+      "sites": 5,
+      "assertions": 16
+    },
+    "transfer": {
+      "sha256": "fe9ad82db99a589fdd2efd8a616303a06a7ee1cb6ff98943765d599f80b34182",
+      "sites": 5,
+      "assertions": 16
+    },
+    "cut": {
+      "sha256": "fe9ad82db99a589fdd2efd8a616303a06a7ee1cb6ff98943765d599f80b34182",
+      "sites": 5,
+      "assertions": 16
+    }
+  },
+  "tests/catalog-authority-legacy-sync-retirement-migration.test.ts": {
+    "before": {
+      "sha256": "8d275f1272daeae6368df33db91edb717dbe0e3d09ce1cdb655aa275b932789b",
+      "sites": 4,
+      "assertions": 15
+    },
+    "transfer": {
+      "sha256": "8d275f1272daeae6368df33db91edb717dbe0e3d09ce1cdb655aa275b932789b",
+      "sites": 4,
+      "assertions": 15
+    },
+    "cut": {
+      "sha256": "8d275f1272daeae6368df33db91edb717dbe0e3d09ce1cdb655aa275b932789b",
+      "sites": 4,
+      "assertions": 15
+    }
+  },
+  "tests/catalog-authority-lifecycle-repair.test.ts": {
+    "before": {
+      "sha256": "6d39e19cf0bcd141b8d331825d95d809d8bfdf47ff2c1dc06aeb9b81921f11d9",
+      "sites": 2,
+      "assertions": 14
+    },
+    "transfer": {
+      "sha256": "6d39e19cf0bcd141b8d331825d95d809d8bfdf47ff2c1dc06aeb9b81921f11d9",
+      "sites": 2,
+      "assertions": 14
+    },
+    "cut": {
+      "sha256": "6d39e19cf0bcd141b8d331825d95d809d8bfdf47ff2c1dc06aeb9b81921f11d9",
+      "sites": 2,
+      "assertions": 14
+    }
+  },
+  "tests/catalog-authority-product-spec-relationship-verification.test.ts": {
+    "before": {
+      "sha256": "ea17f620d4a5eee9c4c4dea903d155982f1ac64da19d231dc1e48a1360b78309",
+      "sites": 2,
+      "assertions": 8
+    },
+    "transfer": {
+      "sha256": "ea17f620d4a5eee9c4c4dea903d155982f1ac64da19d231dc1e48a1360b78309",
+      "sites": 2,
+      "assertions": 8
+    },
+    "cut": {
+      "sha256": "ea17f620d4a5eee9c4c4dea903d155982f1ac64da19d231dc1e48a1360b78309",
+      "sites": 2,
+      "assertions": 8
+    }
+  },
+  "tests/catalog-authority-relationship-convergence-migration.test.ts": {
+    "before": {
+      "sha256": "60e55dba47fc6cf284c8dec4af3dea6f36e635465ded021d00294f6653bb9b05",
+      "sites": 2,
+      "assertions": 9
+    },
+    "transfer": {
+      "sha256": "60e55dba47fc6cf284c8dec4af3dea6f36e635465ded021d00294f6653bb9b05",
+      "sites": 2,
+      "assertions": 9
+    },
+    "cut": {
+      "sha256": "60e55dba47fc6cf284c8dec4af3dea6f36e635465ded021d00294f6653bb9b05",
+      "sites": 2,
+      "assertions": 9
+    }
+  },
+  "tests/catalog-authority-repair.test.ts": {
+    "before": {
+      "sha256": "122cb85071c3d033e087698fed73b50d62bdb72a19d64bec5aabc1041f8be27e",
+      "sites": 10,
+      "assertions": 16
+    },
+    "transfer": {
+      "sha256": "122cb85071c3d033e087698fed73b50d62bdb72a19d64bec5aabc1041f8be27e",
+      "sites": 10,
+      "assertions": 16
+    },
+    "cut": {
+      "sha256": "122cb85071c3d033e087698fed73b50d62bdb72a19d64bec5aabc1041f8be27e",
+      "sites": 10,
+      "assertions": 16
+    }
+  },
+  "tests/catalog-authority-schema-foundations-migration.test.ts": {
+    "before": {
+      "sha256": "38c4775d77780e01c516e60bf2e7ec7678a9941fb7b425b0f3bfe3ef840302d4",
+      "sites": 8,
+      "assertions": 14
+    },
+    "transfer": {
+      "sha256": "38c4775d77780e01c516e60bf2e7ec7678a9941fb7b425b0f3bfe3ef840302d4",
+      "sites": 8,
+      "assertions": 14
+    },
+    "cut": {
+      "sha256": "38c4775d77780e01c516e60bf2e7ec7678a9941fb7b425b0f3bfe3ef840302d4",
+      "sites": 8,
+      "assertions": 14
+    }
+  },
+  "tests/catalog-apply-executor-hardening-postgres.test.ts": {
+    "before": {
+      "sha256": "1d3ebeb58c69d1822e05dc192d278eb03ffe5c9d05671b3c5a8108b70ab1ca49",
+      "sites": 4,
+      "assertions": 18
+    },
+    "transfer": {
+      "sha256": "1d3ebeb58c69d1822e05dc192d278eb03ffe5c9d05671b3c5a8108b70ab1ca49",
+      "sites": 4,
+      "assertions": 18
+    },
+    "cut": {
+      "sha256": "1d3ebeb58c69d1822e05dc192d278eb03ffe5c9d05671b3c5a8108b70ab1ca49",
+      "sites": 4,
+      "assertions": 18
+    }
+  },
+  "tests/product-identifier-global-ownership-migration.test.ts": {
+    "before": {
+      "sha256": "b31189e4db4f3a4be4092aa308239377b0cc5948c84e746804bf67d42e0b7d15",
+      "sites": 5,
+      "assertions": 30
+    },
+    "transfer": {
+      "sha256": "b31189e4db4f3a4be4092aa308239377b0cc5948c84e746804bf67d42e0b7d15",
+      "sites": 5,
+      "assertions": 30
+    },
+    "cut": {
+      "sha256": "b31189e4db4f3a4be4092aa308239377b0cc5948c84e746804bf67d42e0b7d15",
+      "sites": 5,
+      "assertions": 30
+    }
+  },
+  "tests/audit-product-metadata-script.test.ts": {
+    "before": {
+      "sha256": "e5512246eb5bd26b0a50c5fd44cfc9c1030c38a8fb0aa3a38766df22745d268c",
+      "sites": 6,
+      "assertions": 7
+    },
+    "transfer": {
+      "sha256": "e5512246eb5bd26b0a50c5fd44cfc9c1030c38a8fb0aa3a38766df22745d268c",
+      "sites": 6,
+      "assertions": 7
+    },
+    "cut": {
+      "sha256": "e5512246eb5bd26b0a50c5fd44cfc9c1030c38a8fb0aa3a38766df22745d268c",
+      "sites": 6,
+      "assertions": 7
+    }
+  },
+  "tests/product-metadata-health.test.ts": {
+    "before": {
+      "sha256": "a7901948598a66553af2ce65ca81076c8b11fcab46a5d34eb3b9bdadfce4c5eb",
+      "sites": 4,
+      "assertions": 7
+    },
+    "transfer": {
+      "sha256": "a7901948598a66553af2ce65ca81076c8b11fcab46a5d34eb3b9bdadfce4c5eb",
+      "sites": 4,
+      "assertions": 7
+    },
+    "cut": {
+      "sha256": "a7901948598a66553af2ce65ca81076c8b11fcab46a5d34eb3b9bdadfce4c5eb",
+      "sites": 4,
+      "assertions": 7
+    }
+  },
+  "tests/product-metadata-ingest-identity.test.ts": {
+    "before": {
+      "sha256": "b7eef8effe81bdafa8c0101eae8184242ae781a9eb98b7cfd842cefda4cd9635",
+      "sites": 4,
+      "assertions": 6
+    },
+    "transfer": {
+      "sha256": "b7eef8effe81bdafa8c0101eae8184242ae781a9eb98b7cfd842cefda4cd9635",
+      "sites": 4,
+      "assertions": 6
+    },
+    "cut": {
+      "sha256": "b7eef8effe81bdafa8c0101eae8184242ae781a9eb98b7cfd842cefda4cd9635",
+      "sites": 4,
+      "assertions": 6
+    }
+  }
+}

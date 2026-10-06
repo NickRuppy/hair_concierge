@@ -69,16 +69,6 @@ function runNew(primary: string, slug: string) {
   return command(primary, process.execPath, [newWorktreeScript, slug, "--no-install"], true)
 }
 
-test("fetches and fast-forwards clean root main before creating from fresh origin/main", (t) => {
-  const fixture = createFixture(t)
-  const result = runNew(fixture.primary, "fresh-task")
-  const taskWorktree = join(fixture.primary, ".worktrees", "fresh-task")
-
-  assert.equal(result.status, 0, result.stderr)
-  assert.equal(git(fixture.primary, ["rev-parse", "HEAD"]).stdout.trim(), fixture.freshSha)
-  assert.equal(git(taskWorktree, ["rev-parse", "HEAD"]).stdout.trim(), fixture.freshSha)
-})
-
 test("refuses a fully dirty root without creating task artifacts", (t) => {
   const fixture = createFixture(t)
   writeFileSync(join(fixture.primary, "local-plan.md"), "keep me\n")
@@ -141,4 +131,8 @@ test("ignores unavailable remotes unrelated to origin", (t) => {
 
   assert.equal(result.status, 0, result.stderr)
   assert.equal(git(fixture.primary, ["rev-parse", "HEAD"]).stdout.trim(), fixture.freshSha)
+  assert.equal(
+    git(join(fixture.primary, ".worktrees", "origin-only"), ["rev-parse", "HEAD"]).stdout.trim(),
+    fixture.freshSha,
+  )
 })

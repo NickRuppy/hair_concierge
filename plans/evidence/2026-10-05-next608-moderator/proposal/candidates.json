@@ -1,0 +1,117 @@
+[
+  {
+    "id": "C1",
+    "classification": "conditional_consolidation",
+    "file": "tests/personal-plan-field-test-ui.test.tsx",
+    "donor": {
+      "title": "dedicated field-test end surface stays concise and payment-free",
+      "line": 95,
+      "callbackSha256": "610cb419acae6d41de5878ffd3936b85514f1d65daa976d1b4cac83abc66f0d4"
+    },
+    "keeper": {
+      "title": "lost field-test authorization renders a dedicated non-commercial end state",
+      "line": 76,
+      "callbackSha256": "7ce3f9fd4409b403f50969d90052925850cde91ca62acba0ec9bf8c1c47eef20"
+    },
+    "assertionUnion": {
+      "originalKeeper": [
+        {
+          "line": 90,
+          "text": "assert.match(html, /Dein Testzugang ist nicht mehr verfügbar/)",
+          "sha256": "e205e204fbced0a293c44a564d92a36bc73c75ec395bc754de670173ab8a557c"
+        },
+        {
+          "line": 91,
+          "text": "assert.match(html, /Chaarlie-Team/)",
+          "sha256": "c935feda6afaf35ef1364c116d31c07985a4ccf33945bf305de3fd76fda31efa"
+        },
+        {
+          "line": 92,
+          "text": "assert.doesNotMatch(html, /Stripe|PayPal|Plan sichern|reactivate|checkout/i)",
+          "sha256": "a43d303c358eef54003825f0a21de1ff809b4203b7b9da597748912026867858"
+        }
+      ],
+      "donor": [
+        {
+          "line": 97,
+          "text": "assert.match(html, /Testzeitraum ist beendet oder der Zugang wurde geschlossen/)",
+          "sha256": "3900b551c7a16cfda87fc2bca264bec1bcf179076bddef0000ef0b1602e15ca0"
+        },
+        {
+          "line": 98,
+          "text": "assert.doesNotMatch(html, /Abo|Zahlung|Stripe|PayPal|Preis/)",
+          "sha256": "378f7656307636d64c81930293c2f64006aae6123354328afc8bd21fc4564fcc"
+        }
+      ],
+      "transferKeeper": [
+        {
+          "line": 90,
+          "text": "assert.match(html, /Dein Testzugang ist nicht mehr verfügbar/)",
+          "sha256": "e205e204fbced0a293c44a564d92a36bc73c75ec395bc754de670173ab8a557c"
+        },
+        {
+          "line": 91,
+          "text": "assert.match(html, /Chaarlie-Team/)",
+          "sha256": "c935feda6afaf35ef1364c116d31c07985a4ccf33945bf305de3fd76fda31efa"
+        },
+        {
+          "line": 92,
+          "text": "assert.doesNotMatch(html, /Stripe|PayPal|Plan sichern|reactivate|checkout/i)",
+          "sha256": "a43d303c358eef54003825f0a21de1ff809b4203b7b9da597748912026867858"
+        },
+        {
+          "line": 93,
+          "text": "assert.match(html, /Testzeitraum ist beendet oder der Zugang wurde geschlossen/)",
+          "sha256": "3900b551c7a16cfda87fc2bca264bec1bcf179076bddef0000ef0b1602e15ca0"
+        },
+        {
+          "line": 94,
+          "text": "assert.doesNotMatch(html, /Abo|Zahlung|Stripe|PayPal|Preis/)",
+          "sha256": "378f7656307636d64c81930293c2f64006aae6123354328afc8bd21fc4564fcc"
+        }
+      ],
+      "cutKeeper": [
+        {
+          "line": 89,
+          "text": "assert.match(html, /Dein Testzugang ist nicht mehr verfügbar/)",
+          "sha256": "e205e204fbced0a293c44a564d92a36bc73c75ec395bc754de670173ab8a557c"
+        },
+        {
+          "line": 90,
+          "text": "assert.match(html, /Chaarlie-Team/)",
+          "sha256": "c935feda6afaf35ef1364c116d31c07985a4ccf33945bf305de3fd76fda31efa"
+        },
+        {
+          "line": 91,
+          "text": "assert.doesNotMatch(html, /Stripe|PayPal|Plan sichern|reactivate|checkout/i)",
+          "sha256": "a43d303c358eef54003825f0a21de1ff809b4203b7b9da597748912026867858"
+        },
+        {
+          "line": 92,
+          "text": "assert.match(html, /Testzeitraum ist beendet oder der Zugang wurde geschlossen/)",
+          "sha256": "3900b551c7a16cfda87fc2bca264bec1bcf179076bddef0000ef0b1602e15ca0"
+        },
+        {
+          "line": 93,
+          "text": "assert.doesNotMatch(html, /Abo|Zahlung|Stripe|PayPal|Preis/)",
+          "sha256": "378f7656307636d64c81930293c2f64006aae6123354328afc8bd21fc4564fcc"
+        }
+      ]
+    },
+    "equivalence": "ResultPageClient personal_plan + hasAccess=false + fieldTestUnavailable=true returns <PersonalPlanFieldTestEnded /> without props; donor directly renders same element. Default unavailable=false, no hooks/I/O in leaf. Actual React SSR executes it in both.",
+    "productionEvidence": [
+      "src/app/result/[leadId]/result-client.tsx:130-138",
+      "src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx:1-19"
+    ],
+    "inputExpansion": false,
+    "ownerCallExpansion": false,
+    "rowExpansion": false,
+    "seamDeletion": null,
+    "cleanup": "Remove donor and now-unused direct leaf test import only.",
+    "controls": [
+      "C1-copy",
+      "C1-payment"
+    ],
+    "decision": "Main acceptance, independent preservation and runtime intended-oracle proof pending"
+  }
+]

@@ -3,20 +3,15 @@ import test from "node:test"
 
 import {
   candidateProactiveTriggers,
-  firesErsterPasstNicht,
   firesFrustSerie,
   firesKategorienLuecke,
-  firesMerkenTap,
   firesPasstGutMoment,
-  firesUnbekanntesProdukt,
-  firesWasPasstStattdessen,
   firesWiederkehrer,
   firesZweiScansGleicheKategorie,
   resolveGatedProactiveScanTrigger,
   resolveProactiveScanTrigger,
   scanTriggerSheetContext,
   scanTriggersEnabled,
-  SCAN_TRIGGER_CLASS,
   type ScanProactiveTriggerInput,
   type ScanTriggerGate,
 } from "../src/lib/scan/triggers/trigger-rules"
@@ -30,50 +25,6 @@ import {
 const FREE_ON: ScanTriggerGate = { freemiumScannerFirstEnabled: true, tier: "free" }
 const PREMIUM_ON: ScanTriggerGate = { freemiumScannerFirstEnabled: true, tier: "premium" }
 const FREE_FLAG_OFF: ScanTriggerGate = { freemiumScannerFirstEnabled: false, tier: "free" }
-
-// --- trigger classification ---------------------------------------------------
-
-test("classification: 4 user-initiated gates never fatigue-limited, 4 proactive pitches are", () => {
-  assert.deepEqual(SCAN_TRIGGER_CLASS, {
-    erster_passt_nicht: "user_initiated",
-    zwei_scans_gleiche_kategorie: "user_initiated",
-    merken_tap: "user_initiated",
-    unbekanntes_produkt: "user_initiated",
-    kategorien_luecke: "proactive",
-    passt_gut_moment: "proactive",
-    frust_serie: "proactive",
-    wiederkehrer: "proactive",
-  })
-})
-
-// --- 1. Erster "passt nicht" ---------------------------------------------------
-
-test("erster_passt_nicht fires exactly on a mismatch verdict with the free reveal still available", () => {
-  assert.equal(firesErsterPasstNicht({ isMismatchVerdict: true, freeRevealAvailable: true }), true)
-  assert.equal(
-    firesErsterPasstNicht({ isMismatchVerdict: true, freeRevealAvailable: false }),
-    false,
-  )
-  assert.equal(
-    firesErsterPasstNicht({ isMismatchVerdict: false, freeRevealAvailable: true }),
-    false,
-  )
-})
-
-test('"was passt stattdessen" is the exact complement for a later passt-nicht', () => {
-  assert.equal(
-    firesWasPasstStattdessen({ isMismatchVerdict: true, freeRevealAvailable: false }),
-    true,
-  )
-  assert.equal(
-    firesWasPasstStattdessen({ isMismatchVerdict: true, freeRevealAvailable: true }),
-    false,
-  )
-  assert.equal(
-    firesWasPasstStattdessen({ isMismatchVerdict: false, freeRevealAvailable: false }),
-    false,
-  )
-})
 
 // --- 2. Zwei Scans, gleiche Kategorie ------------------------------------------
 
@@ -96,20 +47,6 @@ test("zwei_scans_gleiche_kategorie fires when the scanned category already appea
     firesZweiScansGleicheKategorie({ category: "shampoo", categoriesScannedBeforeThisScan: [] }),
     false,
   )
-})
-
-// --- 3. Merken-Taps -------------------------------------------------------------
-
-test("merken_tap fires exactly when the bookmark is locked", () => {
-  assert.equal(firesMerkenTap({ merkenLocked: true }), true)
-  assert.equal(firesMerkenTap({ merkenLocked: false }), false)
-})
-
-// --- 4. Unbekanntes Produkt: never pitches -------------------------------------
-
-test("unbekanntes_produkt never pitches, for every input including one that looks pitchable", () => {
-  assert.equal(firesUnbekanntesProdukt({ isUnknownProduct: true }), false)
-  assert.equal(firesUnbekanntesProdukt({ isUnknownProduct: false }), false)
 })
 
 // --- 5. Kategorien-Lücke --------------------------------------------------------
@@ -233,19 +170,6 @@ test("F4: a genuine tie on session 2 is broken by PROACTIVE_PRIORITY, not by Wie
   assert.equal(resolveProactiveScanTrigger(input, false), "frust_serie")
 })
 
-test("fatigue does not touch user-initiated gates: they fire regardless of alreadyFiredThisSession", () => {
-  // User-initiated predicates take no fatigue flag at all — asserting the shape here
-  // documents that omission is deliberate, not an oversight.
-  assert.equal(firesMerkenTap({ merkenLocked: true }), true)
-  assert.equal(
-    firesZweiScansGleicheKategorie({
-      category: "shampoo",
-      categoriesScannedBeforeThisScan: ["shampoo"],
-    }),
-    true,
-  )
-})
-
 test("no proactive candidate yields no winner", () => {
   assert.equal(
     resolveProactiveScanTrigger(
@@ -303,20 +227,9 @@ test("resolveGatedProactiveScanTrigger fires for a genuinely free, flag-on sessi
 // --- sheet-opening contract: correct PremiumSheetContext per trigger -------------
 
 test("scanTriggerSheetContext maps scan-context gates to empfehlungen", () => {
-  assert.deepEqual(scanTriggerSheetContext("erster_passt_nicht"), {
-    feature: "empfehlungen",
-    source: "trigger:erster-passt-nicht",
-  })
   assert.deepEqual(scanTriggerSheetContext("zwei_scans_gleiche_kategorie"), {
     feature: "empfehlungen",
     source: "trigger:zwei-scans-gleiche-kategorie",
-  })
-})
-
-test("scanTriggerSheetContext maps Merken to merkliste", () => {
-  assert.deepEqual(scanTriggerSheetContext("merken_tap"), {
-    feature: "merkliste",
-    source: "trigger:merken-tap",
   })
 })
 
@@ -331,8 +244,4 @@ test("scanTriggerSheetContext maps the 3 sheet-opening proactive pitches to rout
 
 test("scanTriggerSheetContext is null for kategorien_luecke (links into the gated Routine page instead)", () => {
   assert.equal(scanTriggerSheetContext("kategorien_luecke"), null)
-})
-
-test("scanTriggerSheetContext is null for unbekanntes_produkt (never pitches, no sheet)", () => {
-  assert.equal(scanTriggerSheetContext("unbekanntes_produkt"), null)
 })

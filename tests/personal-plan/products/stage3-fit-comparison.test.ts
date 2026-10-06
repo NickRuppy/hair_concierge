@@ -15,7 +15,6 @@ import type {
 } from "../../../src/lib/personal-plan/products/contracts"
 import {
   buildStage3FitComparison,
-  findStage3SelectedComparisonCandidate,
   stage3CriterionEvidenceRelation,
   STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
 } from "../../../src/lib/personal-plan/products/fit-comparison"
@@ -259,35 +258,20 @@ test("comparison orders current product first, then current recommendation, idea
     comparison.alternatives.map((alternative) => alternative.factFingerprint),
     ["facts-ideal-a", "facts-ideal-b", "facts-supportive-1"],
   )
-})
 
-test("selected candidate lookup returns exact current data for alternative number three", () => {
-  const input = authorityInput("conditioner", "conditioner_rinse_out", {
-    productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned", {
-      recommendable: false,
-      weight: "rich",
-    }),
-    candidates: [
-      factsFor("conditioner", "conditioner_rinse_out", "ideal-1", { sortOrder: 1 }),
-      factsFor("conditioner", "conditioner_rinse_out", "ideal-2", { sortOrder: 2 }),
-      factsFor("conditioner", "conditioner_rinse_out", "supportive-3", {
-        fingerprint: "facts-supportive-3",
-        sortOrder: 3,
-        weight: "medium",
-      }),
-    ],
-  })
-
-  const selected = findStage3SelectedComparisonCandidate(input, "supportive-3")
-
+  // The actual transported third alternative owns the public selected-candidate projection.
+  const selected = comparison.alternatives[2]
   assert.ok(selected)
-  assert.equal(selected.productId, "supportive-3")
-  assert.equal(selected.factFingerprint, "facts-supportive-3")
+  assert.equal(selected.productId, "supportive-sort-1")
+  assert.equal(selected.factFingerprint, "facts-supportive-1")
   assert.equal(selected.verdict, "supportive")
-  assert.equal(selected.recommendation.productId, "supportive-3")
+  assert.equal(selected.recommendation.productId, "supportive-sort-1")
   assert.equal(selected.recommendation.role, "conditioner_rinse_out")
   assert.ok(selected.criteria.length > 0)
-  assert.equal(findStage3SelectedComparisonCandidate(input, "owned"), null)
+  assert.equal(
+    comparison.alternatives.find((candidate) => candidate.productId === "owned") ?? null,
+    null,
+  )
   assert.deepEqual(Object.keys(selected).sort(), [
     "category",
     "criteria",
@@ -318,7 +302,9 @@ for (const [category, role] of [
     })
 
     const comparison = buildStage3FitComparison(input)
-    const selected = findStage3SelectedComparisonCandidate(input, "supportive-uncovered")
+    const selected =
+      comparison.alternatives.find((candidate) => candidate.productId === "supportive-uncovered") ??
+      null
 
     assert.deepEqual(
       comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
@@ -366,7 +352,8 @@ test("uncovered roles rank ideal verdict above tied supportive candidates, then 
     ],
   )
   assert.equal(
-    findStage3SelectedComparisonCandidate(input, "supportive-1")?.productId,
+    (comparison.alternatives.find((candidate) => candidate.productId === "supportive-1") ?? null)
+      ?.productId,
     "supportive-1",
   )
 })
@@ -461,7 +448,7 @@ test("a stale or missing check date never blanks the stored price; a missing pri
   )
 })
 
-test("selected candidate lookup rejects eligible candidates outside the transported allowlist", () => {
+test("comparison rejects eligible candidates outside the transported allowlist", () => {
   const input = authorityInput("conditioner", "conditioner_rinse_out", {
     productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned", {
       recommendable: false,
@@ -480,7 +467,10 @@ test("selected candidate lookup rejects eligible candidates outside the transpor
     comparison.alternatives.map((candidate) => candidate.productId),
     ["candidate-1", "candidate-2", "candidate-3"],
   )
-  assert.equal(findStage3SelectedComparisonCandidate(input, "candidate-4"), null)
+  assert.equal(
+    comparison.alternatives.find((candidate) => candidate.productId === "candidate-4") ?? null,
+    null,
+  )
 })
 
 test("Deep Cleansing preserves the exact mineral-reset role in selectable recommendations", () => {
@@ -505,12 +495,17 @@ test("Deep Cleansing preserves the exact mineral-reset role in selectable recomm
     [["mineral-alternative", "mineral_reset"]],
   )
   assert.equal(
-    findStage3SelectedComparisonCandidate(input, "mineral-alternative")?.recommendation.role,
+    (
+      comparison.alternatives.find((candidate) => candidate.productId === "mineral-alternative") ??
+      null
+    )?.recommendation.role,
     "mineral_reset",
   )
   assert.equal(
-    findStage3SelectedComparisonCandidate(input, "mineral-alternative")?.recommendation
-      .recommendationId,
+    (
+      comparison.alternatives.find((candidate) => candidate.productId === "mineral-alternative") ??
+      null
+    )?.recommendation.recommendationId,
     "recommendation:deep-cleansing:mineral_reset:mineral-alternative",
   )
 })
@@ -729,7 +724,9 @@ for (const scenario of [
     })
 
     const comparison = buildStage3FitComparison(input)
-    const selected = findStage3SelectedComparisonCandidate(input, "supportive-candidate")
+    const selected =
+      comparison.alternatives.find((candidate) => candidate.productId === "supportive-candidate") ??
+      null
 
     assert.deepEqual(
       comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
@@ -758,8 +755,14 @@ for (const scenario of [
       ],
     })
 
-    assert.deepEqual(buildStage3FitComparison(input).alternatives, [])
-    assert.equal(findStage3SelectedComparisonCandidate(input, "supportive-candidate"), null)
+    const comparison = buildStage3FitComparison(input)
+
+    assert.equal(
+      comparison.alternatives.find((candidate) => candidate.productId === "supportive-candidate") ??
+        null,
+      null,
+    )
+    assert.deepEqual(comparison.alternatives, [])
   })
 }
 
@@ -776,7 +779,9 @@ test("uncovered Shampoo now ranks in a supportive candidate for the everyday rol
   })
 
   const comparison = buildStage3FitComparison(input)
-  const selected = findStage3SelectedComparisonCandidate(input, "supportive-candidate")
+  const selected =
+    comparison.alternatives.find((candidate) => candidate.productId === "supportive-candidate") ??
+    null
 
   assert.deepEqual(
     comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
@@ -801,8 +806,14 @@ test("uncovered Shampoo dandruff role remains strict for the same supportive can
     ],
   })
 
-  assert.deepEqual(buildStage3FitComparison(input).alternatives, [])
-  assert.equal(findStage3SelectedComparisonCandidate(input, "supportive-candidate"), null)
+  const comparison = buildStage3FitComparison(input)
+
+  assert.equal(
+    comparison.alternatives.find((candidate) => candidate.productId === "supportive-candidate") ??
+      null,
+    null,
+  )
+  assert.deepEqual(comparison.alternatives, [])
 })
 
 test("uncovered Mask now ranks in the best-available supportive candidate for a required tier", () => {
@@ -816,7 +827,9 @@ test("uncovered Mask now ranks in the best-available supportive candidate for a 
   })
 
   const comparison = buildStage3FitComparison(input)
-  const selected = findStage3SelectedComparisonCandidate(input, "supportive-candidate")
+  const selected =
+    comparison.alternatives.find((candidate) => candidate.productId === "supportive-candidate") ??
+    null
 
   assert.deepEqual(
     comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
@@ -838,7 +851,9 @@ test("uncovered Oil now ranks in an adjacent-weight supportive candidate", () =>
   })
 
   const comparison = buildStage3FitComparison(input)
-  const selected = findStage3SelectedComparisonCandidate(input, "supportive-candidate")
+  const selected =
+    comparison.alternatives.find((candidate) => candidate.productId === "supportive-candidate") ??
+    null
 
   assert.deepEqual(
     comparison.alternatives.map((candidate) => [candidate.productId, candidate.verdict]),
@@ -861,8 +876,14 @@ test("complete comparison excludes a two-step Oil weight gap from supportive alt
     ],
   })
 
-  assert.deepEqual(buildStage3FitComparison(input).alternatives, [])
-  assert.equal(findStage3SelectedComparisonCandidate(input, "far-weight-candidate"), null)
+  const comparison = buildStage3FitComparison(input)
+
+  assert.equal(
+    comparison.alternatives.find((candidate) => candidate.productId === "far-weight-candidate") ??
+      null,
+    null,
+  )
+  assert.deepEqual(comparison.alternatives, [])
 })
 
 for (const scenario of [
@@ -886,8 +907,15 @@ for (const scenario of [
       ],
     })
 
-    assert.deepEqual(buildStage3FitComparison(input).alternatives, [])
-    assert.equal(findStage3SelectedComparisonCandidate(input, "wrong-thickness-candidate"), null)
+    const comparison = buildStage3FitComparison(input)
+
+    assert.equal(
+      comparison.alternatives.find(
+        (candidate) => candidate.productId === "wrong-thickness-candidate",
+      ) ?? null,
+      null,
+    )
+    assert.deepEqual(comparison.alternatives, [])
   })
 }
 
@@ -1018,7 +1046,10 @@ test("uncovered Conditioner ranks the candidate covering the confirmed thickness
     ],
   )
   assert.equal(
-    findStage3SelectedComparisonCandidate(input, "covers-thickness")?.recommendation.productId,
+    (
+      comparison.alternatives.find((candidate) => candidate.productId === "covers-thickness") ??
+      null
+    )?.recommendation.productId,
     "covers-thickness",
   )
 })
@@ -1661,7 +1692,8 @@ test("comparison ranks target coverage before recommendation and verdict tie-bre
     ["two-of-three-a", "two-of-three-b", "one-of-three"],
   )
   assert.equal(
-    findStage3SelectedComparisonCandidate(input, "two-of-three-a")?.productId,
+    (comparison.alternatives.find((candidate) => candidate.productId === "two-of-three-a") ?? null)
+      ?.productId,
     "two-of-three-a",
   )
 })
@@ -1691,7 +1723,10 @@ test("comparison excludes a known Leave-in candidate with zero displayed target 
     comparison.alternatives.map((candidate) => candidate.productId),
     ["one-of-three"],
   )
-  assert.equal(findStage3SelectedComparisonCandidate(input, "zero-of-three"), null)
+  assert.equal(
+    comparison.alternatives.find((candidate) => candidate.productId === "zero-of-three") ?? null,
+    null,
+  )
 })
 
 // Regression: production bug where an uncovered leave-in role pinned the authority's

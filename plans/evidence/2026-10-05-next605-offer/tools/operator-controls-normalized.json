@@ -1,0 +1,196 @@
+[
+  {
+    "id": "C1",
+    "file": "src/lib/entitlements/free-reveal.ts",
+    "sourceSha256": "9e0adf219ce1576f080bcf959a7d7c5b47d8a7a29bac3dae4a9ba5ca168ff93e",
+    "mutatedSha256": "4c22ccd65f92a8fdb22e8543cd8d89679f3a1505cb3b40efaab773aa65caac01",
+    "anchor": {
+      "kind": "function",
+      "scope": "hasUsedFreeReveal",
+      "scopeSha256": "7a889c07395a2dd9c9f5f8684f38ddb7f01ae9291f114afd87e27e76484fdaf2",
+      "expectedOccurrences": 1
+    },
+    "from": "  return data !== null",
+    "to": "  return false",
+    "test": {
+      "file": "tests/free-reveal.test.ts",
+      "name": "hasUsedFreeReveal: does not leak across users"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^hasUsedFreeReveal: does not leak across users$",
+      "tests/free-reveal.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 102,
+        "text": "assert.equal(await hasUsedFreeReveal(client as never, \"user-1\"), true)",
+        "keeperSha256": "4619faf6cb82579e473cdb4b0cfe71df452c2767bc93f9fa1c08e3d3a5bdecee",
+        "testFileSha256": "637ba8ad5dbd1de05f92b862719929d899298bcd2f0d8ef5992df11b6c6a37f1"
+      },
+      "cut": {
+        "startLine": 95,
+        "text": "assert.equal(await hasUsedFreeReveal(client as never, \"user-1\"), true)",
+        "keeperSha256": "4619faf6cb82579e473cdb4b0cfe71df452c2767bc93f9fa1c08e3d3a5bdecee",
+        "testFileSha256": "f996d4d961e0c744849017e3c82931c30d2ddc5713fc5595aa81e8d9b84e72ad"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "false !== true"
+    ],
+    "intendedAssertion": "assert.equal(await hasUsedFreeReveal(client as never, \"user-1\"), true)",
+    "proofKind": "existing prefix oracle"
+  },
+  {
+    "id": "C2",
+    "file": "src/lib/entitlements/free-reveal.ts",
+    "sourceSha256": "9e0adf219ce1576f080bcf959a7d7c5b47d8a7a29bac3dae4a9ba5ca168ff93e",
+    "mutatedSha256": "64e7a1deee8ea966e653dc713e0c7a6725598cf9187bc7b6141dfb1f0f9474bf",
+    "anchor": {
+      "kind": "function",
+      "scope": "consumeFreeReveal",
+      "scopeSha256": "2052f7aaffd7fa6d8fb82e75b657ed2e7e30cc50e2fdaff06187ad07c6145b6e",
+      "expectedOccurrences": 1
+    },
+    "from": ".insert({ user_id: userId, product_id: productId })",
+    "to": ".insert({ user_id: userId, product_id: productId === \"product-a\" ? \"wrong-product\" : productId })",
+    "test": {
+      "file": "tests/free-reveal.test.ts",
+      "name": "consumeFreeReveal: second consume for the same user returns already_used"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^consumeFreeReveal: second consume for the same user returns already_used$",
+      "tests/free-reveal.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 126,
+        "text": "assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })",
+        "keeperSha256": "1c6b76bf71e43793d7d72d7692c594651f77f6c8f8ca40c28a2d039d328e188d",
+        "testFileSha256": "637ba8ad5dbd1de05f92b862719929d899298bcd2f0d8ef5992df11b6c6a37f1"
+      },
+      "cut": {
+        "startLine": 109,
+        "text": "assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })",
+        "keeperSha256": "1c6b76bf71e43793d7d72d7692c594651f77f6c8f8ca40c28a2d039d328e188d",
+        "testFileSha256": "f996d4d961e0c744849017e3c82931c30d2ddc5713fc5595aa81e8d9b84e72ad"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "wrong-product",
+      "product-a"
+    ],
+    "intendedAssertion": "assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })",
+    "proofKind": "transferred first-insert state oracle"
+  },
+  {
+    "id": "C3",
+    "file": "src/lib/entitlements/free-reveal.ts",
+    "sourceSha256": "9e0adf219ce1576f080bcf959a7d7c5b47d8a7a29bac3dae4a9ba5ca168ff93e",
+    "mutatedSha256": "63ffe5cf452f8e58ff28f93c94d52f273739e8f8f8379e366fe01e3817df6146",
+    "anchor": {
+      "kind": "function",
+      "scope": "consumeFreeReveal",
+      "scopeSha256": "2052f7aaffd7fa6d8fb82e75b657ed2e7e30cc50e2fdaff06187ad07c6145b6e",
+      "expectedOccurrences": 1
+    },
+    "from": "): Promise<ConsumeFreeRevealResult> {\n  const { error }",
+    "to": "): Promise<ConsumeFreeRevealResult> {\n  await client.from(\"scan_free_reveals\").select(\"user_id\").eq(\"user_id\", userId).maybeSingle()\n  const { error }",
+    "test": {
+      "file": "tests/free-reveal.test.ts",
+      "name": "consumeFreeReveal: second consume for the same user returns already_used"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^consumeFreeReveal: second consume for the same user returns already_used$",
+      "tests/free-reveal.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 139,
+        "text": "assert.equal(fake.selectCalls, 0)",
+        "keeperSha256": "1c6b76bf71e43793d7d72d7692c594651f77f6c8f8ca40c28a2d039d328e188d",
+        "testFileSha256": "637ba8ad5dbd1de05f92b862719929d899298bcd2f0d8ef5992df11b6c6a37f1"
+      },
+      "cut": {
+        "startLine": 122,
+        "text": "assert.equal(fake.selectCalls, 0)",
+        "keeperSha256": "1c6b76bf71e43793d7d72d7692c594651f77f6c8f8ca40c28a2d039d328e188d",
+        "testFileSha256": "f996d4d961e0c744849017e3c82931c30d2ddc5713fc5595aa81e8d9b84e72ad"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "2 !== 0"
+    ],
+    "intendedAssertion": "assert.equal(fake.selectCalls, 0)",
+    "proofKind": "transferred no-preread counter oracle"
+  },
+  {
+    "id": "C4",
+    "file": "src/lib/entitlements/free-reveal.ts",
+    "sourceSha256": "9e0adf219ce1576f080bcf959a7d7c5b47d8a7a29bac3dae4a9ba5ca168ff93e",
+    "mutatedSha256": "2d35fb145fa5368fcd65ee04971b206141f70aec47161e1679564bce04e7fa18",
+    "anchor": {
+      "kind": "function",
+      "scope": "loadFreeRevealRecord",
+      "scopeSha256": "36702e2738e291cbd3488a9e314f6b58d9180db0a46e10e50c739b84f4c56e75",
+      "expectedOccurrences": 1
+    },
+    "from": "  return row ? { productId: row.product_id } : null",
+    "to": "  return row ? { productId: \"wrong-product\" } : null",
+    "test": {
+      "file": "tests/free-reveal.test.ts",
+      "name": "loadFreeRevealRecord: does not leak across users"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^loadFreeRevealRecord: does not leak across users$",
+      "tests/free-reveal.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 207,
+        "text": "assert.deepEqual(await loadFreeRevealRecord(client as never, \"user-1\"), {\n    productId: \"product-a\",\n  })",
+        "keeperSha256": "fbb163102d0817dcb665302df9f0ec7876b35e35bbb8682ccec75861e3f50b73",
+        "testFileSha256": "637ba8ad5dbd1de05f92b862719929d899298bcd2f0d8ef5992df11b6c6a37f1"
+      },
+      "cut": {
+        "startLine": 175,
+        "text": "assert.deepEqual(await loadFreeRevealRecord(client as never, \"user-1\"), {\n    productId: \"product-a\",\n  })",
+        "keeperSha256": "fbb163102d0817dcb665302df9f0ec7876b35e35bbb8682ccec75861e3f50b73",
+        "testFileSha256": "f996d4d961e0c744849017e3c82931c30d2ddc5713fc5595aa81e8d9b84e72ad"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "wrong-product",
+      "product-a"
+    ],
+    "intendedAssertion": "assert.deepEqual(await loadFreeRevealRecord(client as never, \"user-1\"), {",
+    "proofKind": "existing prefix oracle"
+  }
+]

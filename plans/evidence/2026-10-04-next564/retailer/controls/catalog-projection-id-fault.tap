@@ -1,0 +1,59 @@
+TAP version 13
+# Subtest: anti-leak: catalog and retailer rows carry exactly the contract's keys
+not ok 1 - anti-leak: catalog and retailer rows carry exactly the contract's keys
+  ---
+  duration_ms: 7.653792
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-search-retailer-route.test.ts:2:18732'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        {
+          brand: 'OGX',
+          category: 'shampoo',
+          categoryLabel: 'Shampoo',
+    +     id: '__audit',
+    -     id: 'p-active',
+          imageUrl: null,
+          name: 'Bond Protein Repair Shampoo',
+          productLine: null
+        }
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      id: 'p-active'
+      name: 'Bond Protein Repair Shampoo'
+      brand: 'OGX'
+      category: 'shampoo'
+      categoryLabel: 'Shampoo'
+      imageUrl: ~
+      productLine: ~
+  actual:
+    0:
+      id: '__audit'
+      name: 'Bond Protein Repair Shampoo'
+      brand: 'OGX'
+      category: 'shampoo'
+      categoryLabel: 'Shampoo'
+      imageUrl: ~
+      productLine: ~
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-search-retailer-route.test.ts:571:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 710.589916
