@@ -28,11 +28,11 @@
     "placementConjunctNote": "Placement stated ('Haarlängen'). The words 'nach der Haarwäsche' are not verbatim, but 'feuchten Haarlängen' plus the mask form carry it (AP-05-AFTERCLEANSING)."
   },
   "tailMarker": {
-    "ingredient": "Potassium Sorbate",
-    "rank": 18,
-    "index": 18,
+    "ingredient": "Leuconostoc/Radish Root Ferment Filtrate",
+    "rank": 15,
+    "index": 15,
     "plausible": true,
-    "anomalyNote": "The marker is a PRESERVATIVE at rank 18, one rank ahead of Parfum @19, in a 21-entry list. That gives the cohort's second-longest above-tail segment and demotes almost nothing — only Parfum and its two declared allergens sit in the tail. No §3.1 anomaly. Consequence worth noting: a Naturkosmetik formula with a short preservative system and a short fragrance block gets nearly its whole list credited, while conventional formulas with early Parfum lose theirs. The tail rule is not weight-neutral across formulation philosophies (AP-08-NATURKOSMETIK).  ||  PLAUSIBILITY ASSESSMENT (R2, §3.1.1, added under v0.2): PLAUSIBLE. Seventeen above-tail entries carry the entire architecture (CETEARYL ALCOHOL @2, DISTEAROYLETHYL DIMONIUM CHLORIDE @4, BEHENYL ALCOHOL @5, the protein block @7/@8/@9, the humectant cluster @3/@6/@12/@13/@14) and all outrank POTASSIUM SORBATE @18; conventional O/W emulsion. Neither limb fires. HELIANTHUS ANNUUS SEED OIL @17 is the tail_index - 1 species and is excluded from carrying a structural signal (R3) - it is the formula's only lipid, so S3 fails either way."
+    "anomalyNote": "CORRECTED 2026-10-06 (round-2 gate consistency check): the record previously named Potassium Sorbate @18 as the marker, but Leuconostoc/Radish Root Ferment Filtrate @15 is on the standard's R8 marker-class list and is the EARLIEST marker-class species, so tail_index = 15. Annotation-only correction — every stored value is unchanged and was verified against the @15 cut (Sunflower Oil @17 falls in the tail, so the E14 mid-band rule does not reach it and weight `low` stands; the round-2 blind lane independently read the marker at @15). Previous annotation kept for provenance: Potassium Sorbate @18."
   },
   "aboveTailSegment": [
     "1 Aqua (Water)",

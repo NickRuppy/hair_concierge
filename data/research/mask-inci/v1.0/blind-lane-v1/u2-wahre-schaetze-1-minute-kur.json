@@ -3,6 +3,24 @@
   "lane": "blind-v1-unseen",
   "standardVersion": "mask-inci-v0.5",
   "classifiedAt": "2026-10-06",
+  "rederivedUnder": "mask-inci-v0.6 (E13-E17)",
+  "rederivation": {
+    "rederivedAt": "2026-10-06",
+    "rulingsApplied": [
+      "E13",
+      "E14",
+      "E15",
+      "E16",
+      "E17"
+    ],
+    "changes": [
+      "weight_potential high -> moderate (E14: GLYCINE SOJA OIL @6 is mid band; blocks low, cannot make high)",
+      "hair_thickness_fit [normal, coarse] -> [fine, normal, coarse] (echo of weight moderate)",
+      "hinweise: boundary note reworded (moderate vs low); candidate_below_tail added for COCOS NUCIFERA OIL @10 (E13)",
+      "reviewTriggers: candidate_below_tail_review added (E13)"
+    ],
+    "verifiedAgainstPacket": "blind-packets-round2/u2-wahre-schaetze-1-minute-kur.json rawInci: GLYCINE SOJA OIL / SOYBEAN OIL @6, PARFUM / FRAGRANCE @7, COCOS NUCIFERA OIL / COCONUT OIL @10"
+  },
   "attestation": {
     "prohibitedFilesAccessed": false,
     "inputsRead": [
@@ -35,7 +53,7 @@
     "ingredient": "PARFUM / FRAGRANCE",
     "index": 7,
     "status": "plausible",
-    "note": "Earliest tail-class species is PARFUM @7. The declared allergens (LINALOOL @17, LIMONENE @18, BENZYL SALICYLATE @20) and the preservatives (BENZOIC ACID @16, BENZYL ALCOHOL @19) all follow it, so the class order is consistent and this is not the 'Parfum at the end behind its allergens' convention. The base (CETEARYL ALCOHOL @2, ISOPROPYL MYRISTATE @4, STEARAMIDOPROPYL DIMETHYLAMINE @5, GLYCINE SOJA OIL @6) outranks the marker. Coconut oil @10 and the guar polymer @12 sit in the tail as secondary species. CAPRYLYL GLYCOL @13 (a booster) sits above BENZOIC ACID @16, but both are below the marker, where order is arbitrary; that does not touch the marker species. tail_index-1 = GLYCINE SOJA OIL @6."
+    "note": "Earliest tail-class species is PARFUM @7. The declared allergens (LINALOOL @17, LIMONENE @18, BENZYL SALICYLATE @20) and the preservatives (BENZOIC ACID @16, BENZYL ALCOHOL @19) all follow it, so the class order is consistent and this is not the 'Parfum at the end behind its allergens' convention. The base (CETEARYL ALCOHOL @2, ISOPROPYL MYRISTATE @4, STEARAMIDOPROPYL DIMETHYLAMINE @5, GLYCINE SOJA OIL @6) outranks the marker. Coconut oil @10 and the guar polymer @12 sit in the tail as secondary species. CAPRYLYL GLYCOL @13 (a booster) sits above BENZOIC ACID @16, but both are below the marker, where order is arbitrary; that does not touch the marker species. tail_index-1 = GLYCINE SOJA OIL @6. (v0.6, E13) The establishing species for conditioning_level/weight_potential (CETEARYL ALCOHOL @2, ISOPROPYL MYRISTATE @4, SAPDMA @5, GLYCINE SOJA OIL @6) all outrank the marker, so it is plausible; the tail oils and the guar polymer are below-marker extras and never flip it. The CAPRYLYL GLYCOL @13 / BENZOIC ACID @16 ordering lies wholly inside the tail and does not engage the booster limb (round-2 triage note)."
   },
   "bondRoute": "none",
   "profile": {
@@ -43,7 +61,7 @@
       "value": "moderate",
       "confidence": "moderate",
       "evidenceLevel": "E2",
-      "rationale": "S2 fires (CETEARYL ALCOHOL @2). S3 fires (ISOPROPYL MYRISTATE @4, R4a, plus GLYCINE SOJA OIL @6). S1 fails, because STEARAMIDOPROPYL DIMETHYLAMINE @5 is the only cationic surfactant above the tail. S2+S3 without S1 is moderate (R3). The boundary oil is not load-bearing for the value, which would still be moderate on S2 alone.",
+      "rationale": "S2 fires (CETEARYL ALCOHOL @2). S3 fires (ISOPROPYL MYRISTATE @4, R4a light, plus GLYCINE SOJA OIL @6, mid band; S3 counts all three lipid bands, E14). S1 fails, because STEARAMIDOPROPYL DIMETHYLAMINE @5 is the only cationic surfactant above the tail. S2+S3 without S1 is moderate (R3). The boundary oil is not load-bearing for the value, which would still be moderate on S2 alone.",
       "evidenceSignals": [
         "S2 CETEARYL ALCOHOL @2",
         "S3 ISOPROPYL MYRISTATE @4 + GLYCINE SOJA OIL @6"
@@ -54,17 +72,18 @@
       ]
     },
     "weight_potential": {
-      "value": "high",
+      "value": "moderate",
       "confidence": "moderate",
       "evidenceLevel": "E2",
-      "rationale": "Heavy-lipid core: GLYCINE SOJA OIL @6 is above PARFUM @7. It is read as R4b because the standard's R4b examples include olive and argan, and the lexicon puts both in the same conventional plant-triglyceride band as soy. Completer: CETEARYL ALCOHOL is a cetearyl-class alcohol in the top three ranks. No lightness positioning conflicts. The value hinges on the tail_index-1 oil (E1), so confidence is capped at moderate. Without the oil all three leanness conjuncts hold (no R4b above the marker, no silicone, SAPDMA the only cationic on the full list), so the value would be low.",
+      "rationale": "Re-derived under v0.6 (E14, 2026-10-06). GLYCINE SOJA OIL @6 is the only lipid above PARFUM @7 apart from the light ester ISOPROPYL MYRISTATE @4, and soy is a MID-band liquid plant triglyceride, not R4b. High is unavailable: the heavy-lipid core needs an R4b species above the marker and none is present (COCOS NUCIFERA OIL @10 is heavy but sits in the tail), so the dense base (CETEARYL ALCOHOL @2, top three) has no core to complete. Low is unavailable too: above the marker the mid-band soy oil defeats leanness conjunct 1 (no R4b and no mid-band triglyceride above the marker), even though conjunct 2 (no silicone at all) and conjunct 3 (STEARAMIDOPROPYL DIMETHYLAMINE the only cationic on the full list) hold. A mid-band oil blocks low and never makes high, so the value is moderate. The soy oil sits at tail_index-1 and is load-bearing (without it all three leanness conjuncts hold and the value would be low), so confidence stays capped at moderate under E1; the counterfactual is now one step (moderate vs low), no longer extreme-to-extreme.",
       "evidenceSignals": [
-        "R4b GLYCINE SOJA OIL @6 (boundary position)",
-        "dense base CETEARYL ALCOHOL @2"
+        "mid-band GLYCINE SOJA OIL @6 above the marker (boundary position): blocks low, cannot make high (E14)",
+        "no R4b heavy lipid above PARFUM @7 (no high core)",
+        "dense base CETEARYL ALCOHOL @2 present but has no R4b core to complete"
       ],
       "counterSignals": [
-        "the whole high call rests on one species at tail_index-1 whose R4b band is itself a mapping question (lexicon 'mid' band)",
-        "without it the formula would satisfy the low leanness test"
+        "the moderate call rests on one species at tail_index-1: without GLYCINE SOJA OIL @6 the formula would satisfy the low leanness test",
+        "COCOS NUCIFERA OIL @10 (heavy band) sits in the tail: no credit; would have completed a high core above the marker (candidate_below_tail, E13)"
       ]
     },
     "care_direction": {
@@ -92,7 +111,7 @@
       "value": "general",
       "confidence": "moderate",
       "evidenceLevel": "E2",
-      "rationale": "Repair, curl and colour have no route. Moisture fails criterion 1 (only GLYCERIN @3 is above the tail; CAPRYLYL GLYCOL @13 is a tail booster). Shine fails criterion 1: there is no above-tail silicone or polymer and an R4b lipid is present. Smoothing would only reuse the rich R1+R4 base, which §6 rule 1 counts as one M1 observation, and detangling has no distinctive slip route. The verdict is nonspecific, which resolves to general. Claim role is not_applicable.",
+      "rationale": "Repair, curl and colour have no route. Moisture fails criterion 1 (only GLYCERIN @3 is above the tail; CAPRYLYL GLYCOL @13 is a tail booster). Shine fails criterion 1: there is no above-tail silicone or polymer route (the guar polymer @12 is in the tail). The mid-band soy oil is not R4b (E14), so the low-lipid-load half of criterion 1 would hold, but the optical-route half does not. Smoothing would only reuse the rich R1+R4 base, which §6 rule 1 counts as one M1 observation, and detangling has no distinctive slip route. The verdict is nonspecific, which resolves to general. Claim role is not_applicable.",
       "evidenceSignals": [
         "focus_care_verdict: nonspecific"
       ],
@@ -111,6 +130,7 @@
   },
   "echoFields": {
     "hair_thickness_fit": [
+      "fine",
       "normal",
       "coarse"
     ],
@@ -123,16 +143,26 @@
       "wavy",
       "curly"
     ],
-    "note": "texture_fit takes the moderate row because no coherent high-slip R1/R3 route is recorded above the tail (§9.8 caveat)."
+    "note": "Re-derived under v0.6: weight_potential moderate -> hair_thickness_fit fine/normal/coarse (§9.6 moderate row) and texture_fit straight/wavy/curly (§9.8 balanced row). damage_fit follows conditioning_level moderate (unchanged)."
   },
   "hinweise": {
     "fired": [
       {
         "flag": "boundary_position_ingredient",
-        "value": "GLYCINE SOJA OIL @6, tail_index 7 -> weight_potential high (would be low without it)",
-        "note": "weight_potential hinges on a boundary-position ingredient; confidence capped at moderate, value unchanged."
+        "value": "GLYCINE SOJA OIL @6, tail_index 7 -> weight_potential moderate (would be low without it)",
+        "note": "weight_potential hinges on a boundary-position ingredient; confidence capped at moderate, value unchanged. Under E14 the mid-band oil only decides moderate vs low, never high vs low."
+      },
+      {
+        "flag": "candidate_below_tail",
+        "value": "COCOS NUCIFERA OIL @10 (heavy band, R4b), marker PARFUM @7 -> would have formed the weight_potential high core with the dense base CETEARYL ALCOHOL @2",
+        "note": "Below-marker extra (E13): earns no credit and does not make the marker implausible; weight_potential holds its rank-supported moderate; routed to review."
       }
     ]
   },
-  "reviewTriggers": []
+  "reviewTriggers": [
+    {
+      "trigger": "candidate_below_tail_review",
+      "note": "Heavy-band COCOS NUCIFERA OIL @10 sits three ranks below PARFUM @7; above the marker it would have formed a weight_potential high core with the dense base CETEARYL ALCOHOL @2 (E13)."
+    }
+  ]
 }

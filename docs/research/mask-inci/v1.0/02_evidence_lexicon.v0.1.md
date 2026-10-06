@@ -540,6 +540,19 @@ supplier- or blog-tier, and hair-fibre hydration endpoints are rarely measured i
   botanical extract, treat the solvent role as the more likely one and **discount it in cluster
   counting** unless it appears in `head`. `Caprylyl Glycol` and `1,2-Hexanediol` should be
   discounted by default (near-always antimicrobial boosters).
+- **Carrier/solvent glycols are solvents, not humectant-leg species `(E15, 2026-10-06 — ruled by
+  Nick; supersedes the "unless it appears in head" discount above for these species)`.**
+  `Dipropylene Glycol` and `Pentylene Glycol` — and `Butylene Glycol` / `Propanediol` **when
+  positioned as a carrier** (immediately preceding or inside a run of botanical extracts, or
+  adjacent to the preservative/booster block) — **never count as a humectant leg** for the
+  standard's §9.3 care-direction tests (reading (a)'s cluster, reading (b)'s clauses 3–4) or §9.5.3's
+  moisture cluster, **at any rank, including `head`**. They are recorded as solvents and earn
+  nothing. **Scope is narrow:** `Glycerin`, `Propylene Glycol`, `Panthenol`, `Betaine`,
+  `Sodium PCA`, `Urea` and the hyaluronates **remain** humectant-leg species wherever they sit
+  above the tail; a non-carrier-positioned `Butylene Glycol` / `Propanediol` stays countable under
+  the discount rule above. Worked case: John Frieda Wunder-Kur, `Dipropylene Glycol` @6 inside a
+  silicone-film formula — a solvent, so the formula has no humectant leg and the standard's
+  reading (b) holds (calibration round 2, seam S3).
 - **Aloe is usually reconstituted powder at trace level.** `Aloe Barbadensis Leaf Juice` derived
   from `... Juice Powder` is unquantifiable from the list. Count at most once, never as a strong
   member.

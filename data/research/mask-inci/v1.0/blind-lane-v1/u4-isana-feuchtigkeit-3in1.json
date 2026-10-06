@@ -22,7 +22,10 @@
     "value": "in_category",
     "modeScoped": true,
     "coveredMode": "post_shampoo_rinse_out_mask (\"für intensive Pflege\": nasses Haar, 3-5 Minuten einwirken, mit warmem Wasser ausspülen)",
-    "uncoveredModes": ["leave_in (\"für leichte Kämmbarkeit\": handtuchtrockenes Haar, ohne Ausspülen)", "leave_in_styling (\"zum Bändigen\": trockenes Haar, ohne Ausspülen)"],
+    "uncoveredModes": [
+      "leave_in (\"für leichte Kämmbarkeit\": handtuchtrockenes Haar, ohne Ausspülen)",
+      "leave_in_styling (\"zum Bändigen\": trockenes Haar, ohne Ausspülen)"
+    ],
     "identityState": "verified",
     "rationale": "Three modes were tested one by one (§2.2). Only the 'intensive Pflege' mode is rinse-out, and it states wet hair, a 3-5 minute contact time and a rinse, so it clears the three conjuncts. The other two are leave-on modes. Exactly one mode qualifies, so the product is eligible mode-scoped. The charter lists Isana 3in1 among the multi-use products to be read as eligible and mode-scoped.",
     "evidenceSignals": [
@@ -45,31 +48,49 @@
       "confidence": "moderate",
       "evidenceLevel": "E2",
       "rationale": "S2 fires (Cetearyl Alcohol @2). S3 fires (Dicaprylyl Ether @3 and Coco-Caprylate @4, both R4a light emollients). S1 fails, because Behentrimonium Chloride @5 is the only above-tail cationic. S2+S3 without S1 is moderate (R3). BTAC @5 is at the boundary but not load-bearing, since S1 fails either way.",
-      "evidenceSignals": ["S2 Cetearyl Alcohol @2", "S3 Dicaprylyl Ether @3 + Coco-Caprylate @4"],
-      "counterSignals": ["single above-tail cationic", "shea butter @10 and coconut oil @14 are tail (no credit)"]
+      "evidenceSignals": [
+        "S2 Cetearyl Alcohol @2",
+        "S3 Dicaprylyl Ether @3 + Coco-Caprylate @4"
+      ],
+      "counterSignals": [
+        "single above-tail cationic",
+        "shea butter @10 and coconut oil @14 are tail (no credit)"
+      ]
     },
     "weight_potential": {
       "value": "moderate",
       "confidence": "moderate",
       "evidenceLevel": "E2",
       "rationale": "High is unavailable: no R4b lipid sits above Parfum @6 (Butyrospermum Parkii Butter @10 and Cocos Nucifera Oil @14 are tail). Low fails conjunct 3 (E7 full list), because two distinct cationic species are declared: Behentrimonium Chloride @5 and Stearamidopropyl Dimethylamine @12. The guar @16 is a polymer and is not counted. The value hinges on BTAC @5 at tail_index-1 in the §9.2 'single-cationic count' sense, so the boundary note fires and confidence is capped at moderate.",
-      "evidenceSignals": ["no R4b above tail", "no silicone above tail", "full-list cationics: BTAC @5, SAPDMA @12"],
-      "counterSignals": ["the leanness test fails only on a second cationic at @12 in the tail"]
+      "evidenceSignals": [
+        "no R4b above tail",
+        "no silicone above tail",
+        "full-list cationics: BTAC @5, SAPDMA @12"
+      ],
+      "counterSignals": [
+        "the leanness test fails only on a second cationic at @12 in the tail"
+      ]
     },
     "care_direction": {
       "value": "moisture",
       "confidence": "moderate",
       "evidenceLevel": "E2",
       "rationale": "No R5 species appears anywhere on the list. The care result comes from a coherent fatty-alcohol/quat/light-ester emollient base, which is the moisture default. Reading (b) does not apply: there is no R2, R3 or R6a species above the tail, and an R4 stack is present. Every humectant (Glycerin @7, Panthenol @8, Propylene Glycol @11) is in the tail. Confidence is held at moderate rather than high because the marker plausibility rests on reading the tail cationic and butter as secondary.",
-      "evidenceSignals": ["emollient base: Cetearyl Alcohol @2, Dicaprylyl Ether @3, Coco-Caprylate @4, BTAC @5"],
-      "counterSignals": ["'Feuchtigkeit' naming with zero above-tail humectants (recorded, not decisive)"]
+      "evidenceSignals": [
+        "emollient base: Cetearyl Alcohol @2, Dicaprylyl Ether @3, Coco-Caprylate @4, BTAC @5"
+      ],
+      "counterSignals": [
+        "'Feuchtigkeit' naming with zero above-tail humectants (recorded, not decisive)"
+      ]
     },
     "repair_support_level": {
       "value": "low",
       "confidence": "moderate",
       "evidenceLevel": "E2",
       "rationale": "No protein, peptide or bond token appears, so only ordinary conditioning and lubrication remain. Niacinamide @17 is a zero-credit vitamin token.",
-      "evidenceSignals": ["no R5 / R7 species"],
+      "evidenceSignals": [
+        "no R5 / R7 species"
+      ],
       "counterSignals": []
     },
     "primary_focus": {
@@ -77,8 +98,12 @@
       "confidence": "moderate",
       "evidenceLevel": "E2",
       "rationale": "Repair, curl and colour have no route. Moisture fails criterion 1 with zero humectants above the tail. Shine fails, with no above-tail silicone or polymer. Smoothing was considered on the two light esters @3-4 but rejected: they are part of the one M1 base observation (§6 rule 1), with no distinct silicone or polymer route. The verdict is nonspecific, which resolves to general. Claim role is not_applicable ('Feuchtigkeit' cannot create a route).",
-      "evidenceSignals": ["focus_care_verdict: nonspecific"],
-      "counterSignals": ["competing smoothing (light esters @3-4) lost: baseline M1 only"]
+      "evidenceSignals": [
+        "focus_care_verdict: nonspecific"
+      ],
+      "counterSignals": [
+        "competing smoothing (light esters @3-4) lost: baseline M1 only"
+      ]
     },
     "secondary_focus": {
       "value": [],
@@ -90,16 +115,47 @@
     }
   },
   "echoFields": {
-    "hair_thickness_fit": ["fine", "normal", "coarse"],
-    "damage_fit": ["healthy", "moderately_damaged"],
-    "texture_fit": ["straight", "wavy", "curly"]
+    "hair_thickness_fit": [
+      "fine",
+      "normal",
+      "coarse"
+    ],
+    "damage_fit": [
+      "healthy",
+      "moderately_damaged"
+    ],
+    "texture_fit": [
+      "straight",
+      "wavy",
+      "curly"
+    ]
   },
   "hinweise": {
     "fired": [
-      { "flag": "multi_use", "value": "covered: post_shampoo_rinse_out_mask; uncovered: [leave_in, leave_in_styling]", "note": "Profile describes only the 3-5 minute rinse-out 'intensive Pflege' mode." },
-      { "flag": "claim_formula_mismatch", "value": "'Feuchtigkeit' naming vs no qualifying humectant cluster (all humectants in the tail)", "note": "Claim recorded; moves no value." },
-      { "flag": "boundary_position_ingredient", "value": "Behentrimonium Chloride @5, tail_index 6 -> weight_potential moderate (would be low without it: single cationic SAPDMA)", "note": "weight_potential hinges on a boundary-position ingredient via the full-list single-cationic count; confidence capped at moderate, value unchanged." }
+      {
+        "flag": "multi_use",
+        "value": "covered: post_shampoo_rinse_out_mask; uncovered: [leave_in, leave_in_styling]",
+        "note": "Profile describes only the 3-5 minute rinse-out 'intensive Pflege' mode."
+      },
+      {
+        "flag": "claim_formula_mismatch",
+        "value": "'Feuchtigkeit' naming vs no qualifying humectant cluster (all humectants in the tail)",
+        "note": "Claim recorded; moves no value."
+      },
+      {
+        "flag": "boundary_position_ingredient",
+        "value": "Behentrimonium Chloride @5, tail_index 6 -> weight_potential moderate (would be low without it: single cationic SAPDMA)",
+        "note": "weight_potential hinges on a boundary-position ingredient via the full-list single-cationic count; confidence capped at moderate, value unchanged."
+      },
+      {
+        "flag": "candidate_below_tail",
+        "value": "BUTYROSPERMUM PARKII BUTTER @10 (heavy band), STEARAMIDOPROPYL DIMETHYLAMINE @12 (second cationic), COCOS NUCIFERA OIL @14 (heavy band); tail_index 6 (PARFUM)",
+        "note": "E13 (2026-10-06): below-marker species that would otherwise have qualified an anchor — shea or coconut above the marker would form a weight-high core, and the second cationic would complete S1 for conditioning. They earn no architecture credit; the marker stays plausible (the establishing base sits above it). Routed to review per E13."
+      }
     ]
   },
-  "reviewTriggers": []
+  "reviewTriggers": [
+    "candidate_below_tail_review"
+  ],
+  "rederivedUnder": "mask-inci-v0.6 (E13-E17; flags-only update, no value change)"
 }

@@ -3,6 +3,26 @@
   "lane": "blind-v1-unseen",
   "standardVersion": "mask-inci-v0.5",
   "classifiedAt": "2026-10-06",
+  "rederivedUnder": "mask-inci-v0.6 (E13-E17)",
+  "rederivation": {
+    "rederivedAt": "2026-10-06",
+    "rulingsApplied": [
+      "E13",
+      "E14",
+      "E15",
+      "E16",
+      "E17"
+    ],
+    "changes": [
+      "primary_focus repair -> general (E16: single plain HYDROLYZED PEA PROTEIN @6, no quaternized derivative, bond_route none)",
+      "focus_care_verdict repair_supported -> nonspecific; claim_role corroborating -> candidate",
+      "secondary_focus re-run under general: still [] (moisture fails criterion 1; no repair slot)",
+      "hinweise: candidate_below_tail added for tail co-quats @16/@18/@25 (E13)",
+      "reviewTriggers: candidate_below_tail_review added (E13)",
+      "unchanged: care_direction protein (moderate, E12 cap), repair_support_level medium, weight_potential high (coconut is heavy band under E14), conditioning_level moderate"
+    ],
+    "verifiedAgainstPacket": "blind-packets-round2/u1-balea-plex-care-2in1.json rawInci: HYDROLYZED PEA PROTEIN @6 is the only hydrolysate above PARFUM @10; HYDROLYZED KERATIN @21, HYDROLYZED VEGETABLE PROTEIN @23, HYDROLYZED SILK @29 in the tail; no *dimonium/*trimonium hydrolyzed derivative on the list"
+  },
   "attestation": {
     "prohibitedFilesAccessed": false,
     "inputsRead": [
@@ -22,7 +42,9 @@
     "value": "in_category",
     "modeScoped": true,
     "coveredMode": "post_shampoo_rinse_out_mask (\"Als Maske\": nasses Haar, ca. 3 Minuten einwirken, gründlich ausspülen)",
-    "uncoveredModes": ["pre_wash_treatment (\"Als Pre-Wash-Kur\": handtuchtrockenes Haar, mind. 10 Minuten, danach Shampoo + Conditioner)"],
+    "uncoveredModes": [
+      "pre_wash_treatment (\"Als Pre-Wash-Kur\": handtuchtrockenes Haar, mind. 10 Minuten, danach Shampoo + Conditioner)"
+    ],
     "identityState": "verified_with_minor_source_difference",
     "rationale": "Two stated modes, tested one by one (§2.2). The Pre-Wash-Kur mode is applied before shampooing, so it fails the 'after cleansing' conjunct and is the charter's pre-shampoo exclusion; it is not covered. The Maske mode states wet hair, a 3-minute contact time and a rinse, so it clears the three G0 conjuncts and is the only qualifying mode. The product is a drugstore Plex mask (charter F3 names Balea Plex Care as in scope), not a bondbuilder-catalog specialist protocol, and it is not pre-shampoo-only, so the pre-wash exclusion does not reach the whole product.",
     "evidenceSignals": [
@@ -31,13 +53,13 @@
       "charter F3 lists Balea Plex Care as an in-scope bond-claim drugstore mask",
       "placement unstated in the Maske mode -> P5 default (Längen und Spitzen) per R8"
     ],
-    "notes": "The Maske mode says 'nasses Haar' rather than 'nach der Haarwäsche'; read as after cleansing because the sibling mode is explicitly the pre-wash alternative. packet formulaSource is null (frozen capture only), so identity is not 'verified'."
+    "notes": "The Maske mode says 'nasses Haar' rather than 'nach der Haarwäsche'; it states a rinse-out and carries no pre-wash positioning (the sibling mode is the explicit pre-wash alternative), so it satisfies the after-cleansing conjunct — now codified as the v0.6 operational note (round-2 triage, 2026-10-06, §2.1). packet formulaSource is null (frozen capture only), so identity is not 'verified'."
   },
   "tailMarker": {
     "ingredient": "PARFUM",
     "index": 10,
     "status": "plausible",
-    "note": "Earliest tail-class species is PARFUM @10 (no allergens declared; preservatives SODIUM BENZOATE/POTASSIUM SORBATE/PHENOXYETHANOL @35-37, consistent order, E2 third limb does not fire). The base architecture (CETEARYL ALCOHOL @3, esterquat DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE @4, COCOS NUCIFERA OIL @9) outranks the marker. Further cationics sit in the tail (BEHENTRIMONIUM CHLORIDE @16, CETRIMONIUM CHLORIDE @18, PALMITAMIDOPROPYLTRIMONIUM CHLORIDE @25); read as sub-1% co-quats (E7 expressly contemplates tail cationics), not as the marker preceding the base. Above-tail segment = ranks 1-9; tail_index-1 = COCOS NUCIFERA OIL @9."
+    "note": "Earliest tail-class species is PARFUM @10 (no allergens declared; preservatives SODIUM BENZOATE/POTASSIUM SORBATE/PHENOXYETHANOL @35-37, consistent order, E2 third limb does not fire). The base architecture (CETEARYL ALCOHOL @3, esterquat DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE @4, COCOS NUCIFERA OIL @9) outranks the marker. Further cationics sit in the tail (BEHENTRIMONIUM CHLORIDE @16, CETRIMONIUM CHLORIDE @18, PALMITAMIDOPROPYLTRIMONIUM CHLORIDE @25); read as sub-1% co-quats (E7 expressly contemplates tail cationics), not as the marker preceding the base. Above-tail segment = ranks 1-9; tail_index-1 = COCOS NUCIFERA OIL @9. (v0.6, E13) The establishing species (CETEARYL ALCOHOL @3, esterquat @4, COCOS NUCIFERA OIL @9) all outrank the marker, so it is plausible; the tail co-quats are below-marker extras and can never flip it (candidate_below_tail recorded)."
   },
   "bondRoute": "none",
   "profile": {
@@ -46,66 +68,142 @@
       "confidence": "moderate",
       "evidenceLevel": "E2",
       "rationale": "Only S2 fires: CETEARYL ALCOHOL at rank 3. S1 fails (one cationic above the tail: the esterquat @4; the other quats are at @16/@18/@25, in the tail). S3 fails (one non-fatty-alcohol lipid above the tail: COCOS NUCIFERA OIL @9). One signal gives moderate.",
-      "evidenceSignals": ["S2: CETEARYL ALCOHOL @3", "single above-tail cationic DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE @4"],
-      "counterSignals": ["three further cationics in the tail earn no S1 credit", "long ingredient list (41) is not payload"]
+      "evidenceSignals": [
+        "S2: CETEARYL ALCOHOL @3",
+        "single above-tail cationic DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE @4"
+      ],
+      "counterSignals": [
+        "three further cationics in the tail earn no S1 credit",
+        "long ingredient list (41) is not payload"
+      ]
     },
     "weight_potential": {
       "value": "high",
       "confidence": "moderate",
       "evidenceLevel": "E2",
-      "rationale": "Heavy-lipid core: COCOS NUCIFERA OIL @9 is R4b (§5 R4 lists it as a heavy triglyceride) and sits above PARFUM @10. The completer is a dense fatty-alcohol base: CETEARYL ALCOHOL is a cetearyl-class alcohol in the top three ranks. No positioning claims lightness, so the §9.2 conflict fallback does not apply. The oil is at tail_index-1 and the high value depends on it, so confidence is capped at moderate under E1. Without it, the value would be moderate: four cationics on the full list block the low path.",
-      "evidenceSignals": ["R4b COCOS NUCIFERA OIL @9 (boundary position)", "dense base: CETEARYL ALCOHOL @3 (top three)"],
-      "counterSignals": ["the heavy-lipid core rests on one species at tail_index-1", "no occlusive silicone stack above the tail (SILICONE QUATERNIUM-22 @17 is in the tail)"]
+      "rationale": "Heavy-lipid core: COCOS NUCIFERA OIL @9 is R4b (coconut is explicitly heavy band under E14, 2026-10-06) and sits above PARFUM @10. The completer is a dense fatty-alcohol base: CETEARYL ALCOHOL is a cetearyl-class alcohol in the top three ranks. No positioning claims lightness, so the §9.2 conflict fallback does not apply. The oil is at tail_index-1 and the high value depends on it, so confidence is capped at moderate under E1. Without it, the value would be moderate: four cationics on the full list block the low path.",
+      "evidenceSignals": [
+        "R4b COCOS NUCIFERA OIL @9 (boundary position)",
+        "dense base: CETEARYL ALCOHOL @3 (top three)"
+      ],
+      "counterSignals": [
+        "the heavy-lipid core rests on one species at tail_index-1",
+        "no occlusive silicone stack above the tail (SILICONE QUATERNIUM-22 @17 is in the tail)"
+      ]
     },
     "care_direction": {
       "value": "protein",
       "confidence": "moderate",
       "evidenceLevel": "E2",
       "rationale": "Material R5 route: HYDROLYZED PEA PROTEIN @6 is a qualifying hydrolysed protein inside the first eight above-tail ranks. ARGININE @7 and SERINE @8 are free amino acids and do not qualify. The humectant leg is only GLYCERIN @2 and PANTHENOL @5 above the tail, two species against criterion 1's three, so balanced reading (a) fails and the protein leg leads. Confidence is capped at moderate by E12, because three distinct tail proteins fire tail_protein_cluster.",
-      "evidenceSignals": ["R5 HYDROLYZED PEA PROTEIN @6 (single species, within first eight above-tail ranks)"],
-      "counterSignals": ["humectant pair GLYCERIN @2 + PANTHENOL @5 (below cluster bar)", "tail_protein_cluster: HYDROLYZED KERATIN @21, HYDROLYZED VEGETABLE PROTEIN @23, HYDROLYZED SILK @29 (no credit, confidence cap)", "single-token protein route: it rests on one species"]
+      "evidenceSignals": [
+        "R5 HYDROLYZED PEA PROTEIN @6 (single species, within first eight above-tail ranks)"
+      ],
+      "counterSignals": [
+        "humectant pair GLYCERIN @2 + PANTHENOL @5 (below cluster bar)",
+        "tail_protein_cluster: HYDROLYZED KERATIN @21, HYDROLYZED VEGETABLE PROTEIN @23, HYDROLYZED SILK @29 (no credit, confidence cap)",
+        "single-token protein route: it rests on one species"
+      ]
     },
     "repair_support_level": {
       "value": "medium",
       "confidence": "moderate",
       "evidenceLevel": "E2",
       "rationale": "This uses the same material-R5 test as care_direction (HYDROLYZED PEA PROTEIN @6), so the value is medium. No named maleate, gluconamide or peptide token appears anywhere above the tail, so high is unavailable. 'Plex' naming is E0 and an explicit non-qualifier. This is comparative formula potential only, not a repair statement.",
-      "evidenceSignals": ["R5 HYDROLYZED PEA PROTEIN @6"],
-      "counterSignals": ["'Plex Care' positioning with bond_route none (claim-formula mismatch)", "free amino acids ARGININE @7, SERINE @8 and tail amino acids earn nothing", "CITRIC ACID @38 / LACTIC ACID @41 never bond evidence"]
+      "evidenceSignals": [
+        "R5 HYDROLYZED PEA PROTEIN @6"
+      ],
+      "counterSignals": [
+        "'Plex Care' positioning with bond_route none (claim-formula mismatch)",
+        "free amino acids ARGININE @7, SERINE @8 and tail amino acids earn nothing",
+        "CITRIC ACID @38 / LACTIC ACID @41 never bond evidence"
+      ]
     },
     "primary_focus": {
-      "value": "repair",
+      "value": "general",
       "confidence": "moderate",
       "evidenceLevel": "E2",
-      "rationale": "Step 3 repair needs a distinct R5 film route. One exists through the material-R5 test (pea protein @6), so focus_care_verdict is repair_supported and claim_role is corroborating ('Plex Care' only). Moisture fails §9.5.3 criterion 1 with two humectants above the tail. Shine and smoothing have no above-tail silicone or polymer route. Confidence is moderate because the route rests on one protein token, and §9.5.1 warns against single-token repair.",
-      "evidenceSignals": ["R5 HYDROLYZED PEA PROTEIN @6", "focus_care_verdict: repair_supported", "claim_role: corroborating"],
-      "counterSignals": ["route carried by a single protein species", "competing moisture: GLYCERIN @2 + PANTHENOL @5 only, fails cluster size"]
+      "rationale": "Re-derived under v0.6 (E16, 2026-10-06). Step 3 repair now needs a qualifying bond_route or a protein route that is strong on the label: at least two distinct qualifying hydrolyzed-protein species above the marker, or one quaternized/cationic protein derivative above the marker. Above PARFUM @10 there is exactly one plain hydrolysate, HYDROLYZED PEA PROTEIN @6; ARGININE @7 and SERINE @8 are free amino acids and do not qualify; no quaternized derivative appears anywhere; bond_route is none. The gate fails, so the headline falls through. The pea protein still carries care_direction protein and repair_support_level medium (unchanged). Curl and colour have no route. Moisture fails §9.5.3 criterion 1 (GLYCERIN @2 + PANTHENOL @5 only). Shine and smoothing have no above-tail silicone or polymer route (SILICONE QUATERNIUM-22 @17 is in the tail), and the lipid/fatty base is the single M1 observation. Detangling has no distinctive slip route. focus_care_verdict: nonspecific (a single plain hydrolysate does not reach repair_supported for focus purposes); the 'Plex Care' claim identified repair as the candidate job but may not upgrade nonspecific evidence. Resolves to general (step 8).",
+      "evidenceSignals": [
+        "focus_care_verdict: nonspecific",
+        "claim_role: candidate ('Plex Care' positioning; cannot upgrade nonspecific)",
+        "E16 gate: one plain hydrolysate (HYDROLYZED PEA PROTEIN @6) above the marker, no quaternized derivative, bond_route none -> fails"
+      ],
+      "counterSignals": [
+        "competing repair lost at the E16 headline gate (single plain hydrolysate; species count is not a dose argument, the gate is about the label backing the headline)",
+        "competing moisture: GLYCERIN @2 + PANTHENOL @5 only, fails cluster size",
+        "tail proteins HYDROLYZED KERATIN @21, HYDROLYZED VEGETABLE PROTEIN @23, HYDROLYZED SILK @29 never count toward the gate (tail rule; E12 flag only)"
+      ]
     },
     "secondary_focus": {
       "value": [],
       "confidence": "moderate",
       "evidenceLevel": "E2",
-      "rationale": "No second route clears its own threshold. Moisture fails criterion 1 (two above-tail humectants; PCA @13, DIPROPYLENE GLYCOL @20, SODIUM PCA @24 and PROPYLENE GLYCOL @26 are in the tail). There is no above-tail silicone or polymer for shine or smoothing, and the lipid richness is the single M1 observation.",
+      "rationale": "Re-run under the v0.6 general primary (E10 keeps the secondary path open under general). Moisture fails criterion 1: only GLYCERIN @2 and PANTHENOL @5 sit above the tail; PCA @13, DIPROPYLENE GLYCOL @20 (a carrier solvent under E15 in any case), SODIUM PCA @24 and PROPYLENE GLYCOL @26 are in the tail. There is no above-tail silicone or polymer route for shine or smoothing, and the lipid richness is the single M1 observation. Repair is not attached as a secondary: the single plain hydrolysate fails the same E16 label test, and the protein route it carries is already reported by care_direction protein and repair_support_level medium, so a repair slot would add no distinct matching information.",
       "evidenceSignals": [],
-      "counterSignals": ["tail humectants earn nothing"]
+      "counterSignals": [
+        "tail humectants earn nothing",
+        "single plain hydrolysate: no repair slot (E16 gate; already carried by fields 3-4)"
+      ]
     }
   },
   "echoFields": {
-    "hair_thickness_fit": ["normal", "coarse"],
-    "damage_fit": ["healthy", "moderately_damaged"],
-    "texture_fit": ["straight", "wavy", "curly"],
+    "hair_thickness_fit": [
+      "normal",
+      "coarse"
+    ],
+    "damage_fit": [
+      "healthy",
+      "moderately_damaged"
+    ],
+    "texture_fit": [
+      "straight",
+      "wavy",
+      "curly"
+    ],
     "note": "texture_fit takes the moderate row because no coherent high-slip R1/R3 route is recorded above the tail (§9.8 caveat). damage_fit follows conditioning_level moderate."
   },
   "hinweise": {
     "fired": [
-      { "flag": "multi_use", "value": "covered: post_shampoo_rinse_out_mask; uncovered: [pre_wash_treatment]", "note": "Profile describes only the 3-minute post-wash Maske mode; scope declaration, not a quality signal." },
-      { "flag": "tail_protein_cluster", "value": "HYDROLYZED KERATIN @21, HYDROLYZED VEGETABLE PROTEIN @23, HYDROLYZED SILK @29; tail_index 10", "note": "Three distinct tail proteins: no value moves, care_direction confidence capped at moderate, review triggered (E12)." },
-      { "flag": "claim_formula_mismatch", "value": "'Plex Care' positioning vs bond_route none", "note": "No nameable bond-chemistry INCI token anywhere on the list; the Plex claim is E0 and moves nothing." },
-      { "flag": "boundary_position_ingredient", "value": "COCOS NUCIFERA OIL @9, tail_index 10 -> weight_potential high (would be moderate without it)", "note": "weight_potential hinges on a boundary-position ingredient; confidence capped at moderate, value unchanged." }
+      {
+        "flag": "multi_use",
+        "value": "covered: post_shampoo_rinse_out_mask; uncovered: [pre_wash_treatment]",
+        "note": "Profile describes only the 3-minute post-wash Maske mode; scope declaration, not a quality signal."
+      },
+      {
+        "flag": "tail_protein_cluster",
+        "value": "HYDROLYZED KERATIN @21, HYDROLYZED VEGETABLE PROTEIN @23, HYDROLYZED SILK @29; tail_index 10",
+        "note": "Three distinct tail proteins: no value moves, care_direction confidence capped at moderate, review triggered (E12)."
+      },
+      {
+        "flag": "claim_formula_mismatch",
+        "value": "'Plex Care' positioning vs bond_route none",
+        "note": "No nameable bond-chemistry INCI token anywhere on the list; the Plex claim is E0 and moves nothing."
+      },
+      {
+        "flag": "boundary_position_ingredient",
+        "value": "COCOS NUCIFERA OIL @9, tail_index 10 -> weight_potential high (would be moderate without it)",
+        "note": "weight_potential hinges on a boundary-position ingredient; confidence capped at moderate, value unchanged."
+      },
+      {
+        "flag": "candidate_below_tail",
+        "value": "BEHENTRIMONIUM CHLORIDE @16, CETRIMONIUM CHLORIDE @18, PALMITAMIDOPROPYLTRIMONIUM CHLORIDE @25; marker PARFUM @10 -> any one of them above the marker would complete S1 with the above-tail esterquat @4, and with S2 (CETEARYL ALCOHOL @3) conditioning_level would read high",
+        "note": "Below-marker co-quats (E13): no S1 credit, never make the marker implausible; conditioning_level holds its rank-supported moderate; routed to review."
+      }
     ]
   },
   "reviewTriggers": [
-    { "trigger": "bond_claim_review", "note": "Plex positioning with no nameable bond token above the tail." },
-    { "trigger": "tail_protein_cluster_review", "note": "≥3 distinct tail protein species (E12)." }
+    {
+      "trigger": "bond_claim_review",
+      "note": "Plex positioning with no nameable bond token above the tail."
+    },
+    {
+      "trigger": "tail_protein_cluster_review",
+      "note": "≥3 distinct tail protein species (E12)."
+    },
+    {
+      "trigger": "candidate_below_tail_review",
+      "note": "Three tail co-quats would have completed S1 and moved conditioning_level moderate -> high had any sat above PARFUM @10 (E13)."
+    }
   ]
 }

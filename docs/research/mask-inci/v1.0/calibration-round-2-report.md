@@ -38,32 +38,68 @@ classification retry.
 
 ## 3. Seam triage (combined ambiguity flags from both lanes)
 
-Open for ruling before freeze (presented to Nick 2026-10-06):
+Presented to Nick 2026-10-06 — **all five RULED the same day (E13–E17, Standard v0.6; ledger `plans/mask-inci/round1-rule-rulings.md`, "Escalation rulings (round-3, 2026-10-06)")**:
 
 - **S1 — Marker-plausibility scope.** Which species make a marker implausible under §3.1.1's
   architecture clause? Both lanes independently chose the "primary base" reading (tail-side
   co-quats/oils don't flip the marker); a strict reading would flip u3 (chelator above three
   heavy oils → weight could become high) and would have flipped cohort #07/#09/#08/#12.
+  **RULED — E13:** leave-in T16 wording; only species *establishing* conditioning/weight can make
+  the marker implausible; below-marker extras earn nothing, carry `candidate_below_tail`, and route
+  to review where they would have qualified an anchor. No value moves.
 - **S2 — Oil band mapping.** Lexicon "mid" band (soy/sunflower/apricot) vs the standard's
   R4a/R4b split is unmapped; on u2 a single boundary-position soy oil decides weight
   high-vs-low.
+  **RULED — E14:** three bands; heavy (butters, lanolin, coconut, castor) = R4b; mid (olive, argan,
+  soy, apricot, sunflower, macadamia …) blocks `low`, never makes `high`; light = R4a. u2 weight
+  `high` → **`moderate`**. Cohort near-miss recorded: reference-key-v1 #08 places
+  `Helianthus Annuus Seed Oil` @17 *above* its marker (Potassium Sorbate @18); under E14 that
+  reading would block #08's `low`. The blind lane's marker (`Leuconostoc/Radish Root Ferment
+  Filtrate` @15, an R8 tail-class preservative) puts the oil in the tail and keeps `low`. The key's
+  value stands but its marker reading should be checked against §3.1's R8 list before freeze
+  (key not edited here).
 - **S3 — Balanced reading (b) clause-4 text + DPG class.** §9.3 says reading (b) "requires all
   four" clauses while its confidence rule contemplates clause-4 failure; and whether
   Dipropylene Glycol counts as humectant leg or solvent decides u3's care_direction
   (moisture vs the shelf's first real neither_dominant candidate).
+  **RULED — E15:** DPG and carrier/solvent glycols of its class are solvents, never humectant legs
+  (lexicon family 7 note); reading (b) requires all four clauses and is unavailable when any fails.
+  u3 `care_direction` `moisture` (low) → **`balanced` / `neither_dominant` (moderate)** — reading
+  (b)'s first reached case.
 - **S4 — Single-token repair headline.** u1's `repair` primary rests on one above-tail protein
   species; the focus-verdict text says "not merely one protein token".
+  **RULED — E16:** the `repair` headline needs `bond_route ≠ none` or a label-strong protein route
+  (≥ 2 distinct hydrolysates, or one quaternized protein derivative, above the marker); one plain
+  hydrolysate keeps its care route and `repair_support_level` but not the headline. u1
+  `primary_focus` `repair` → **`general`** (secondary stays empty). Cohort #05/#08 pass the gate.
 - **S5 — Mode scoping vs product-form exclusions.** u6's Kur mode clears the mode test, but
   the lane excluded the whole product because the pigment acts in every mode; the standard
   should state that form exclusions are mode-independent.
+  **RULED — E17:** formula-level exclusions (pigment, bond-builder chemistry-plus-protocol) apply
+  to the whole product in every mode. u6 unchanged.
 
-Codified-by-triage (lane readings adopted as operational notes, no value impact): "nasses
+Codified-by-triage (lane readings adopted as operational notes in v0.6, marked "round-2 triage,
+2026-10-06", no value impact): "nasses
 Haar" post-wash reading; booster-above-preservative ordering only tests the marker species
 itself; G0 needs an `insufficient_information` stop value distinct from charter exclusions;
 E1 boundary note on full-list conjuncts is informational.
 
 ## 4. Status
 
-Cohort gate: **PASS**. Freeze of v1.0 proceeds once S1–S5 are ruled and (if any ruling moves
-an unseen value) the affected unseen records are re-derived. The cohort reference key is
-untouched by S1–S5 (no cohort value depends on an open seam).
+Cohort gate: **PASS**. **All seams S1–S5 ruled (E13–E17, 2026-10-06); Standard v0.6.** Three
+unseen values moved and the affected records were re-derived under v0.6
+(`rederivedUnder: "mask-inci-v0.6 (E13-E17)"`), not patched:
+
+| Record | Field | v0.5 lane | v0.6 |
+|---|---|---|---|
+| u1 Balea Plex Care 2in1 | primary_focus | repair | **general** (E16) |
+| u2 Wahre Schätze 1-Minute-Kur | weight_potential | high | **moderate** (E14); thickness echo gains `fine` |
+| u3 John Frieda Wunder-Kur | care_direction | moisture (low) | **balanced / neither_dominant (moderate)** (E15) |
+
+All three also gain an E13 `candidate_below_tail` note + `candidate_below_tail_review` (tail
+co-quats on u1; tail coconut oil on u2; tail coconut + castor on u3) — review routing only, no
+value moves. u4 (not re-derived here) has the same E13 exposure (Shea Butter @10, SAPDMA @12 in the
+tail) and its BTAC @5 boundary note is now informational (full-list conjunct); neither moves a
+value. u5/u6 unchanged. Cohort records with tail-side extras that would have qualified an anchor would likewise carry the E13 note and review routing when next regenerated (hinweise/review surface only). The cohort reference key is untouched by E13–E17 (no cohort value moves;
+the #08 marker-reading near-miss under E14 is noted in §3 S2 for a pre-freeze key check).
+**Freeze of v1.0 can proceed.**
