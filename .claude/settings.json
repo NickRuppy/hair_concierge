@@ -6,7 +6,7 @@
       "Bash(curl * | *)",
       "Bash(wget *)",
       "Bash(nc *)",
-      "Bash(ssh *)",
+      "Bash(ssh -*)",
       "Bash(eval *)",
       "Bash(rm -rf *)",
       "Bash(git push --force *)",
