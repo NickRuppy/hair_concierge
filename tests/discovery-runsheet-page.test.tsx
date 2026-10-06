@@ -1,5 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+
+import { JSDOM } from "jsdom"
 import { AppRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
@@ -1524,9 +1526,9 @@ test("frequency chips: a product whose frequency was never asked gets none", asy
 
 // --- the „Wie oft" row: her answer next to the Idealplan's rhythm, on every product ----
 
-/** An entry's visible text (tags and React's text separators stripped). */
+/** An entry's visible text, as a parser reads it (React's text separators drop out). */
 function entryTextOf(markup: string, categoryLabel: string): string {
-  return entryOf(markup, categoryLabel).replace(/<[^>]+>/g, "")
+  return JSDOM.fragment(entryOf(markup, categoryLabel)).textContent ?? ""
 }
 
 test("frequency row: every product of hers shows her answer next to the Idealplan's rhythm", async () => {
