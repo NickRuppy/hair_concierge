@@ -28,10 +28,12 @@ import { formatDiscoveryTimestamp } from "./format"
 import { RunsheetLockedInSection } from "./runsheet-locked-in"
 import { discoveryCallSheetWriteOutcome, RUNSHEET_SAVE_COPY } from "./runsheet-save"
 import {
+  FREQUENCY_ROW_NOT_COMPARABLE,
   RunsheetCard,
   RunsheetCategoryChip,
   RunsheetChip,
   RunsheetFrequencyChip,
+  RunsheetFrequencyRow,
   RunsheetPhase,
 } from "./runsheet-parts"
 import {
@@ -465,9 +467,6 @@ export function DiscoveryCallCockpit({
           <RunsheetCategoryChip category={step.category} label={step.categoryLabel} />
           <span className="text-[15px] font-bold text-foreground">{entryTitle(entry)}</span>
           <span className="text-xs text-muted-foreground">{step.roleLabel}</span>
-          {stepEntries.length > 1 && step.ownedFrequencyLabel ? (
-            <span className="text-xs text-muted-foreground">{step.ownedFrequencyLabel}</span>
-          ) : null}
           {addStep ? (
             // R28: deterministic from the Idealplan's need tier — no engine call.
             <RunsheetChip tone="neutral">{SECTION_LABEL[step.section]}</RunsheetChip>
@@ -475,17 +474,28 @@ export function DiscoveryCallCockpit({
             <span className="text-xs text-muted-foreground">· optional</span>
           ) : null}
           {entry.kind === "owned" ? <VerdictChip step={step} /> : null}
-          {entry.kind === "owned" && ownedInStep[0] && entryKey(ownedInStep[0]) === key ? (
-            // One chip per step (fix round 1), on her first product in it: the sum of all
-            // her products in the step against the step's band.
-            <RunsheetFrequencyChip
-              cadenceLabel={step.frequencyLabel}
-              frequencies={ownedInStep.map((owned) => owned.ownedFrequency)}
-              washFrequency={washFrequency}
-              allowedRange={step.idealAllowedRange}
+          <DecisionChip entry={entry} bucket={bucket} selection={selection} />
+          {entry.kind === "owned" ? (
+            <RunsheetFrequencyRow
+              ownedFrequencyLabel={step.ownedFrequencyLabel}
+              idealFrequencyLabel={step.frequencyLabel}
+              verdict={
+                ownedInStep[0] && entryKey(ownedInStep[0]) === key ? (
+                  // One chip per step (fix round 1), on her first product in it: the sum of
+                  // all her products in the step against the step's band.
+                  <RunsheetFrequencyChip
+                    cadenceLabel={step.frequencyLabel}
+                    frequencies={ownedInStep.map((owned) => owned.ownedFrequency)}
+                    washFrequency={washFrequency}
+                    allowedRange={step.idealAllowedRange}
+                    noVerdict={
+                      <RunsheetChip tone="neutral">{FREQUENCY_ROW_NOT_COMPARABLE}</RunsheetChip>
+                    }
+                  />
+                ) : null
+              }
             />
           ) : null}
-          <DecisionChip entry={entry} bucket={bucket} selection={selection} />
           {addStep && step.roleDescription ? (
             // R28: the step's one-sentence benefit, in the cockpit's voice.
             <span className="w-full text-[12px] leading-5 text-muted-foreground">
