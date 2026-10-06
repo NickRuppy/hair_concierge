@@ -1,0 +1,213 @@
+# Plan: Product Intake cloud research — production-grade
+
+Status: Rev. 3 (2026-10-05) — Rev. 2 + Nick's direction "one clean architecture across all categories" (§3a), D5/D6/D7/D8a settled; D8b (onboarding free text) open.
+Source: [HANDOVER.md](./HANDOVER.md) (prior agent, 2026-10-05), reviewed against repo HEAD `9eac2085` and live Supabase `pqdkhefxsxkyeqelqegq` on 2026-10-05.
+Worktree for this plan: `.worktrees/hetzner-research-handover` (`codex/hetzner-research-handover`). Each slice below ships from its own `codex/<slug>` worktree created with `npm run worktree:new -- <slug>`.
+
+## 1. Outcome
+
+When Nick opens a new product in the admin area, it is already a coherent review package: identity, sources, price/link, image (raw/magenta/neutral), protocols, the category engine's projected DB values with engine name + version, the judge verdicts, and at most 1–3 explicit open questions. He gets one email per product when it is ready or genuinely needs him. Machine-fixable defects are repaired automatically (≤ 2 rounds). Nothing is ever published, linked to a user, or announced to a user without Nick's explicit action. A dead worker, a growing queue, repeated failures, disk pressure, and Codex auth expiry are detected.
+
+## 2. Review of the handover (verified 2026-10-05)
+
+The handover's direction holds (one submission record, durable queue, engine → deterministic adapter, human final gate). These facts were wrong or stale and change the plan:
+
+| #   | Handover claim                            | Verified reality                                                                                                                                                                                                                                                                                                                              | Evidence                                                                                                                                             |
+| --- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| H1  | Worker deployment still to be created     | Worker and review app **already run as systemd units** (`chaarlie-product-intake-worker.service` + review app) on the server; claims since 2026-09-25, last today. **No product-intake deploy artifact exists in the repo** — only `deploy/price-audit/`.                                                                                     | `locked_by` values `codex-worker:ubuntu-4gb-nbg1-1:*`; `.claude/worktrees/vigilant-chandrasekhar-fffb22/plans/price-audit-rollout-handover.md:20-21` |
+| H2  | Frankfurt server                          | Host `ubuntu-4gb-nbg1-1` = **Nuremberg**, ~3.7 GiB RAM, shared with the weekly price-audit job (Mon 04:30, MemoryMax 1G, Codex fallback budget 100). rembg peaks ~1.9 GiB.                                                                                                                                                                    | same handover:18-21                                                                                                                                  |
+| H3  | Worker supervised and healthy             | ≥ 9 distinct server PIDs since 2026-09-25 (restarts). No idle heartbeat, no Sentry cron; an empty queue cannot prove uptime. 11 failed jobs: 7× `spawnSync codex ETIMEDOUT`, 2× stdin trap, 2× JSON parse ("non-whitespace after JSON"). One job `queued` since 2026-06-30 with attempts=3 is never claimed (zombie).                         | live SQL; `codex-research-worker.ts:343-381,491-498`                                                                                                 |
+| H4  | Shampoo engine = v1.4                     | Nick ruled **v1.6** (v1.4 core + v1.5 focus), calibration in a separate program; Production Light still pins v1.4 hashes.                                                                                                                                                                                                                     | `src/lib/shampoo/production-light-adapter.ts:19,82`; memory `handover_shampoo_engine_activation`                                                     |
+| H5  | Leave-in "v1.0 + overlay"                 | Concretely methodology **v1.1** (v1.0 + T20), envelope id still `leave-in-research-envelope-v1.0`.                                                                                                                                                                                                                                            | `src/lib/leave-in-research/production-adapter.ts:25-28`                                                                                              |
+| H6  | All channels converge on `pending_review` | True for web scan, iOS scan, chat, onboarding (intake on), Personal Plan Stage 3, Beratung. Exceptions: onboarding free-text when intake disabled → `user_product_usage` only; Discovery items without identity / failed submission; catalog expansion inserts `ready_for_review` by design. No cross-user dedupe (0 duplicate groups today). | Codex channel lane; `submissions.ts:749-910`; `onboarding-flow.tsx:388-400`; `discovery/intake-research.ts:55-80`                                    |
+| H7  | Final handoff from the cockpit            | Cockpit publish returns **409**; publishing is CLI-only (`approve-package.ts`), and the CLI **does not enforce** cockpit decisions/preflight. Upload → RPC → user notification is not atomic.                                                                                                                                                 | `apps/product-intake-review/app/api/submissions/[submissionId]/publish/route.ts:13-24`; `scripts/product-intake/approve-package.ts:213-259`          |
+| H8  | Judge is telemetry                        | Correct, and it judges **raw drafts before projection**; 10/10 shadow judgments are collected, so the Luna low-vs-medium evaluation can run now.                                                                                                                                                                                              | `codex-research-worker.ts:513-894`; 10 `model_judgment` artifacts                                                                                    |
+| H9  | — (not mentioned)                         | **The bottleneck is human review, not compute.** 88 open submissions (shampoo 26, leave-in 18, conditioner 12, mask 11, other 21); 46 older than 14 days; 77 jobs `blocked`, 23 `waiting_for_review`. Most frequent machine blocker: canonical brand not resolved (`resolved_brand` null) — largely mechanical. Intake volume 4–31/week.      | live SQL                                                                                                                                             |
+
+## 3. Chosen direction
+
+Six slices, each its own PR and worktree, shipped in dependency order. Codex CLI workers implement; the main session orchestrates, reviews every diff, runs the checks, and drives verification.
+
+```text
+S0 Ops truth + hygiene ──┬─> S1 Engine router ──┬─> S3 Judge + bounded auto-rework ─┬─> S4b Email per product
+                         │                      └─> S2 Shampoo (waits for v1.6 lock)  └─> S5 Bounded rollout + evaluation
+                         └─> S4a Admin review surface (parallel to S1/S3) ─> S4c Publish in admin + retire cockpit
+```
+
+## 3a. Architecture: shared stages + category modules
+
+Nick (2026-10-05): the architecture must be clean across categories — work that is the same for every category (e.g. image cleanup, cutout, background removal) is built once in the pipeline, not per category.
+
+The worker becomes a fixed sequence of **shared stages**; only one stage varies by category, through a **category module**.
+
+| #   | Stage                                                                                                               | Shared or per category                                             | Today                                                            | Change                                                                                                                                                                                                                                          |
+| --- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Identity: exact product, GTIN(s), package size, canonical brand, existing-product match                             | shared                                                             | inside the generic model prompt; brand left `null` → top blocker | deterministic brand resolution + catalog match before/after the model; package size + GTIN recorded as their own facts so the product-packages proposal (`.worktrees/product-package-architecture`) can consume them without re-research        |
+| 2   | Commerce: shop link, price, availability                                                                            | shared                                                             | free model text                                                  | confirmed through the **same host adapters + URL gate as the price-audit lane** (`src/lib/price-audit/`), so intake and the weekly audit cannot disagree about a price                                                                          |
+| 3   | Formula: canonical German INCI + fingerprint                                                                        | shared                                                             | per category, only where an engine needs it                      | one INCI stage for every category; it is the precondition for any engine and is useful even without one                                                                                                                                         |
+| 4   | **Category module**                                                                                                 | per category                                                       | conditioner/leave-in branches inside the worker                  | registry entry = {category validators, engine state + id + version, prompt contract, deterministic adapter, protocol template}. Categories without an engine still have a module (validators + protocol template, state `engine_not_available`) |
+| 5   | Protocol: application instructions                                                                                  | shared stage, category template                                    | per prompt                                                       | shared stage filling the category's normative protocol template                                                                                                                                                                                 |
+| 6   | Image: candidate choice, alpha passthrough / rembg, crop + normalize, magenta + neutral QA, thumbnail, visual judge | shared                                                             | already category-agnostic code inside the worker                 | extracted into its own module and run identically for every category                                                                                                                                                                            |
+| 7   | Judge + bounded rework                                                                                              | shared                                                             | telemetry only                                                   | §5 defect codes; judges the projected values                                                                                                                                                                                                    |
+| 8   | Review package, email, publish handoff                                                                              | shared shell; category tables written by the existing approval RPC | cockpit + CLI                                                    | admin page (S4)                                                                                                                                                                                                                                 |
+
+Rule: adding a category engine later = adding one registry entry (stage 4). No other stage changes. Stages 1, 2, 3, 6 are extracted from `scripts/product-intake/codex-research-worker.ts` into `src/lib/product-intake/pipeline/<stage>.ts` only as far as the slices below need them — no rewrite of working code for its own sake.
+
+## 4. Scope and non-goals
+
+In scope: worker reliability + supervision codified in the repo; observability; category-engine router; Shampoo slot; judge on projected values; bounded auto-rework; admin review surface fully replacing the cockpit; email per product; bounded rollout + metrics; backlog triage report.
+
+Non-goals: new category engines (mask/oil/…: separate calibrated projects per `docs/research/category-classification-engine-template.md`); Shampoo v1.6 calibration itself (owned by the shampoo activation program); cross-user research dedupe (0 cases today — parked); changing live matching logic; any model decision that approves, publishes, links, or notifies a user; changing the price-audit lane.
+
+## 5. Shared exact values (authoritative — tasks reference these)
+
+**Engine registry (S1)** — `src/lib/product-intake/category-research-router.ts`
+
+| category key  | state                  | engine id              | methodology                                         | adapter                                           |
+| ------------- | ---------------------- | ---------------------- | --------------------------------------------------- | ------------------------------------------------- |
+| `conditioner` | `active`               | `conditioner-standard` | `v1.6`                                              | `conditioner-production-adapter-v1`               |
+| `leave_in`    | `active`               | `leave-in-standard`    | `v1.1` (envelope `leave-in-research-envelope-v1.0`) | `leave-in-production-adapter-v1`                  |
+| `shampoo`     | `pending_lock`         | `shampoo-standard`     | target `v1.6`                                       | `shampoo-production-light-v1` (re-pinned at lock) |
+| all others    | `engine_not_available` | —                      | —                                                   | —                                                 |
+
+**Job outcomes (S3)** — every finished pass ends in exactly one:
+
+- `ready_for_human_review` → job `waiting_for_review`
+- `needs_bounded_rework` → job `waiting_for_rework`, stage `rework`, `auto_rework_count + 1` (only if `< 2`, else escalate)
+- `blocked_needs_human` → job `blocked`, with ≤ 3 German open questions
+
+**Defect codes (S3)** — machine-fixable (auto-rework allowed): `brand_unmatched_resolvable`, `source_missing_for_field`, `image_candidate_missing_or_lowres`, `image_residue` (shadow/reflection, outer packaging, extra object, halo/edge, rectangular remnant, jagged cut, removed product content), `schema_or_adapter_invalid`, `inci_missing_first_pass` (one targeted INCI search only).
+Human (escalate immediately): `identity_conflict`, `category_doubt`, `brand_new_needs_creation`, `inci_unavailable`, `scalp_or_medical_adjacent`, `conflicts_live_catalog`, `engine_pending_lock`, `user_info_needed`.
+
+**Notification kinds (S4b)**: `ready_for_review`, `needs_nick`. One email per (submission, kind, outcome-transition id). Ops failures (dead worker, queue age, repeated failure, auth expiry, disk) → Sentry, not email.
+
+**Budgets (S3, defaults)**: ≤ 2 automatic rework rounds per human cycle (Nick's explicit rework starts a new cycle); ≤ 6 Codex model runs and ≤ 45 min wall time per product per cycle; concurrency 1 on the 4 GB host.
+
+## 6. Ordered tasks
+
+### Slice 0 — Ops truth + hygiene (this worktree, `codex/hetzner-research-handover` — it carries the ssh permission and the plan)
+
+- **0.1 Server audit (read-only).** Host, type, RAM/disk/swap, OS + patch level, both `chaarlie-product-intake-*` units verbatim (secrets redacted — variable _names_ only), release layout under `/opt/chaarlie/product-intake`, deployed git SHA, effective concurrency/poll/model env, server Codex version + `codex login status` + noninteractive smoke as service user, Docker + pinned rembg digest + model cache, disk headroom next to price-audit, journald retention, backup/snapshot policy. _Needs D5._ Done when: `docs/product-intake-cloud-ops.md` "Current server state" section with date + commands used.
+- **0.2 Codify deployment in the repo.** `deploy/product-intake/chaarlie-product-intake-worker.service` and `chaarlie-product-intake-review.service` matching the server's real units (User=nick, `/usr/local/bin/npm`, `EnvironmentFile=/opt/chaarlie/product-intake/shared/worker.env`, `UMask=0027`), plus `Restart=on-failure`, `StartLimitBurst`, `MemoryMax`, `Nice`, explicit `--concurrency=1`, PATH incl. the Codex binary dir, `PRODUCT_INTAKE_CODEX_WORKER_EXTERNAL=true` on the review unit; release/rollback runbook in `docs/product-intake-cloud-ops.md` (same release pattern as price-audit, separate tree — inherited). Done when: units lint with `systemd-analyze verify` on the server and a diff against installed units is empty or explained.
+- **0.3 Worker reliability fixes** (TDD, `tests/product-intake-worker-*.test.ts`): spawn Codex with stdin closed (`stdio: ["ignore", …]`); replace `spawnSync` timeout path with async spawn + explicit timeout that marks the job retryable, not failed; parse the model answer from the `-o` last-message file with a strict single-JSON extractor (fixture: the two failing outputs' shape); classify Codex auth errors as `infra_auth` (no attempt consumed, Sentry error); run rembg as a **named** container (`chaarlie-rembg-<job>`) with `docker rm -f` on timeout, worker shutdown, and worker start (F8). Done when: regression tests reproduce each of the 11 recorded failure classes and pass.
+- **0.4 Liveness + monitoring.** Migration: `product_intake_worker_heartbeats(worker_id pk, host, pid, release_sha, started_at, last_seen_at, current_job_id)`; worker upserts on an **independent timer** (every 60 s) that also runs during job execution, renews the job lease, propagates the refreshed `locked_at`, and aborts the job on lease loss; image subprocesses become async so they cannot block it (F2). Sentry cron monitor `product-intake-worker` (check-in each poll cycle, margin 10 min). Worker-side Sentry alerts: oldest claimable job > 2 h, ≥ 3 consecutive job failures, free disk < 15 %, `infra_auth`. Done when: stopping the service on the server fires the Sentry missed check-in (live check, gated with S0 deploy).
+- **0.5 Queue hygiene + attempt accounting.** Root cause verified: `claim_product_intake_research_jobs` requires `attempt_count < max_attempts` (`20260630120000_product_intake_research_jobs.sql:229-231`) while research, image processing and rework all consume the same counter, so a job can sit `queued` forever. Migration: separate `infra_attempt_count` (crashes/timeouts, capped) from pipeline passes; any job reaching the cap transitions to `failed` with a reason instead of staying claimable-looking; claim skips submissions in terminal/human-disposition states (F3, F6). Tests: real-SQL PGlite suite (new `tests/product-intake-research-jobs-postgres.test.ts`; the existing jobs suite only reads migration text — F9). Zombie data cleanup = separate gated prod write.
+- **0.7 Host resource budget (F8).** Before any new deploy: measured budget for node worker + rembg container (today `--memory=2500m`) + price-audit (1 G) on 3.7 GiB. Default: a shared host lock (`flock /run/chaarlie/heavy-work.lock`) taken by the image stage and by the price-audit unit, and rembg memory lowered to the measured peak + margin (~2 G). Qualify with both workloads present on the server.
+- **0.6 Backlog triage report (read-only).** Classify all 88 open submissions: smoke/test rows, brand-only blockers, image-only blockers, true human decisions, engine-pending (shampoo). Output `plans/product-intake-cloud-research/backlog-triage-2026-10.md` with counts and a proposed action per bucket. Any cancel/requeue is a gated prod write after Nick reads it.
+
+- **0.8 Onboarding products to research (D8b, revised 2026-10-05).** No code change: legacy `/onboarding` is being retired (Nick, 2026-09-13) and Feinschliff already routes products through Personal Plan Stage 3 into research. Done as data: 10 real onboarding text-only products were submitted for research on 2026-10-05 via `product_intake_replace_usage_with_pending_submission` (3 others were already covered by open submissions). Stragglers until retirement are handled the same way.
+
+### Slice 1 — Shared stages + category modules (worktree `intake-engine-router`)
+
+- **1.0 Shared stages extraction** (behaviour-preserving, TDD on each extracted module): identity (incl. deterministic brand resolution moved here from 3.1), INCI, image (existing image code moved as-is), commerce (price/link confirmation via `src/lib/price-audit/` adapters, LLM fallback keeps the lane's price-only write policy — intake never auto-writes availability). Each stage writes its own artifact kind; the frozen-input oracle from 1.1 guards the refactor.
+
+- **1.1 Registry + dispatch** (TDD). New `src/lib/product-intake/category-research-router.ts` with the §5 registry; `categoryApprovalContract` and `normalizeResearchOutputForCategory` in `scripts/product-intake/codex-research-worker.ts` dispatch through it. Conditioner/Leave-in wrappers stay unchanged. Regression guard (F9): capture complete normalization inputs (raw worker output, brand context, decisions) for ≥ 10 recent submissions per engine category into a frozen fixture _before_ the refactor, then assert the adapter-owned projected fields through the router equal the frozen baseline.
+- **1.2 Engine binding per submission.** Migration adds `engine_key`, `engine_version` to `product_intake_research_jobs`, set at first engine run; a later pass with a different version is rejected unless the rework instruction carries `engine_upgrade: true` (explicit, recorded). Engine envelope + projection persisted as `property_synthesis` with `payload.engine = {id, methodology, adapter, input_hash, projection_hash}`. PGlite test for the binding; unit test that a mixed-version rework blocks.
+- **1.3 Honest gates.** Universal canonical-INCI precondition for `active` engines: missing → defect `inci_missing_first_pass` (S3 will retry once) else blocker `inci_unavailable`. Categories `engine_not_available` and `pending_lock` record that marker in the draft and continue the ordinary category contract. Done when: tests for each registry state; the review payload shows the marker.
+
+- **1.4 Validator gaps found in the 2026-10-05 backlog run (TDD).** (a) `dryRunProductIntakeReadyForReview` accepts empty category arrays (a leave-in passed with `product_leave_in_specs: []`, fit, eligibility and protocols all empty) — every engine/non-engine category must require its specs rows; (b) protocol rows in the legacy short format (English free text, object-valued `contact_time_seconds`, `guidance_payload` without `role/scope/steps/protocolFacts/guidanceKey/protocolVersion/locale`) pass for some categories and fail for others — one shared protocol validator for all categories (shared stage 5). Fixtures: the real payloads of c3fcd12d (Pantene Sunkiss) and 301c4f7b (Chroma ID) from 2026-10-05.
+
+### Slice 2 — Shampoo slot (worktree `intake-shampoo-engine`) — **starts after Shampoo v1.6 lock**
+
+Consumes: locked v1.6 package + Production Light re-pinned to v1.6 (from the shampoo activation program). Produces: `shampoo-research-prompt-contract.ts` + `shampoo-research-adapter.ts` mirroring the conditioner wrapper; registry state `shampoo → active v1.6`; `routed_deep_cleansing` outcome → defect `category_doubt` (human); `needs_research` → `inci_missing_first_pass`/human per §5. Re-running the open shampoo submissions is a gated prod action. Until then shampoos show "Engine folgt (v1.6)" and keep today's path.
+
+### Slice 3 — Judge on projected values + bounded auto-rework (worktree `intake-judge-rework`)
+
+- **3.1 Deterministic pre-judge checks** (TDD): brand resolution against the brands table (normalized + alias match) → auto-fills `resolved_brand` when unique (`brand_unmatched_resolvable`), else `brand_new_needs_creation` with the proposed spelling; schema/adapter validation → `schema_or_adapter_invalid`.
+- **3.2 Structured research judge** (Sol/medium, existing config): judges the **projected** payload + adapter warnings + evidence, returns defect codes from §5 only (unknown code → `blocked_needs_human`). Image judge defects map to `image_residue` / `image_candidate_missing_or_lowres`.
+- **3.3 Outcome + loop.** Migration: per-job `review_cycle_id`, `auto_rework_count`, `reserved_model_runs`, `cycle_deadline_at`, set **before** dispatch so budgets prevent runs rather than judge them afterwards (F3); a new cycle starts only on Nick's explicit rework. One RPC `product_intake_commit_research_pass` writes artifacts, payload, comment resolution (only the decision IDs captured at claim time) and the §5 outcome in a single transaction, rejected unless `locked_by`/`locked_at`/`review_cycle_id` still match (F1). New rework instructions supersede stale blockers while old artifacts stay (provenance). Tests: PGlite budget/idempotency incl. two-session reclaim-vs-rework race and crash mid-pass, unit tests per defect code → outcome, "no judge output can set approved/published" negative test.
+- **3.4 Shadow challenger.** Stays measurement-only behind `PRODUCT_INTAKE_CODEX_SHADOW_ENABLED`; no production change before S5's evaluation.
+
+### Slice 4a — Admin review surface (worktree `intake-admin-review`) — parallel to S1/S3
+
+- **4a.0 Mockup + journey sign-off (gate for 4a.2+).** Wireframes in German for the list and the detail page, mobile + desktop, from real data of 3 current submissions (one ready, one brand-blocked, one image-residue). Minimal-first. Nick approves once.
+- **4a.1 Review images reachable from Vercel.** Private bucket `product-intake-review` (migration, service-role only); worker uploads raw/magenta/neutral renditions **and the finalized asset + search thumbnail** with bytes SHA-256 recorded, under immutable `<submission>/<payload_revision>/<sha>` keys (F7); admin server code generates short-lived signed URLs after the admin check. Finalized images on the Hetzner disk stay the publish source until 4c.
+- **4a.2 Admin pages.** Nav item in `src/app/admin/layout.tsx` (label per mockup, e.g. "Neue Produkte" with open count); `src/app/admin/produkt-intake/page.tsx` (queue: status, age, category, engine state, open questions count) and `[submissionId]/page.tsx` (identity, sources, commerce, protocols, engine id + version + envelope, exact projected DB values, images, both judge verdicts, ≤ 3 open questions). Auth: existing `profiles.is_admin` middleware + server-side re-check in every route.
+- **4a.3 Review actions** in admin server routes (no second review database). Migration: `payload_revision` on submissions, incremented on every research write; every decision row stores the revision + asset SHA it approves, and preflight ignores decisions for an older revision (F5). Actions: answer open question, approve final image, approve properties/handoff, request rework (free text), request info from user, reject, link to existing product. Link/request-info/reject currently live in `scripts/product-intake/review-actions.ts` RPC wrappers, not core — extract server-safe wrappers into `packages/product-intake-core`, including user-notification recovery, and atomically pause/cancel the job on a human disposition (F6). Tests per route: non-admin 403; happy path; stale-revision approval rejected.
+
+### Slice 4b — Email per product (worktree `intake-review-email`) — after S3
+
+Migration: `product_intake_admin_notifications(id, submission_id, kind, transition_key unique, status pending|sending|sent|failed, attempts, sent_at, error)`. The ledger row is written inside `product_intake_commit_research_pass` (same transaction as the outcome); the worker claims `pending` rows, marks `sending`, sends via `sendCustomerIoTransactionalEmail` to `PRODUCT_INTAKE_REVIEW_ALERT_EMAIL`, marks `sent`. Delivery is deliberately **at-least-once** (F4 tradeoff, see ledger): a row stuck in `sending` after a crash is resent once; the only recipient is Nick and the admin inbox stays authoritative, so a rare duplicate is acceptable while a lost alert is not. German subject/body: product, category, outcome, up to 3 open questions, deep link to `/admin/produkt-intake/<id>`. No end-user personal data in the email. Needs a Customer.io transactional message template (external setup, see §8). Tests: idempotency across restart, one email per transition, none for intermediate auto-rework rounds.
+
+### Slice 4c — Publish in admin + retire cockpit (worktree `intake-admin-publish`)
+
+Port the guarded handoff (`approve-package.ts` semantics) to an admin server action that **requires** a recorded Nick image approval + passing `buildPublishPreflight` + ready status (closes H7), reads the finalized image from the review bucket, and keeps user notification idempotent with a recoverable post-commit failure path. The CLI publish path calls the same guarded validation; legacy packages without a research job get a bridge that records Nick's exact package approvals at the current revision first (F10; test with one existing legacy package). Then remove the review unit from the server and archive `apps/product-intake-review` (gated). Done when: one real product is published end-to-end from admin by Nick.
+
+### Slice 5 — Bounded rollout + evaluation (no new worktree unless code changes)
+
+Feature switches: `PRODUCT_INTAKE_ENGINE_ROUTER`, `PRODUCT_INTAKE_AUTO_REWORK`, `PRODUCT_INTAKE_REVIEW_EMAILS` (plus existing image switches). Enable on a bounded subset (first 10 new submissions), measure: queue wait, research/image/total duration, model runs, failures, rework rounds, Nick's corrections, judge agreement, cost. Luna/low vs Luna/medium report from the 10 collected judgments + rollout data → decision for Nick (parked until data). Then backlog re-run per the triage buckets (gated).
+
+## 7. Execution model (Codex workers, main session orchestrates)
+
+- Per task: main session writes a self-contained brief (objective, owned files, constraints, tests to write first, acceptance checks, evidence to return) → `codex exec -s workspace-write -c model_reasoning_effort="high" -o <last-msg> "$(cat brief)" < /dev/null` inside the slice worktree → main session reads the full diff, runs the named tests + `npm run ci:verify`, rejects/iterates.
+- Parallel only with disjoint write scopes: S0.2/S0.6 alongside S0.3–0.5; S4a alongside S1/S3. `codex-research-worker.ts` is touched by S0.3, S1, S3 → strictly sequential.
+- Main session keeps: decomposition, migrations review, German copy sign-off, final integration, every server and prod step.
+- Counterpart review per slice: because Codex is the author, the independent whole-branch review is Claude-side (one read-only Opus reviewer, precedent: central-profile PR3), one pass per slice; a confirm pass only after a non-trivial P0/P1 logic fix.
+
+## 8. Decision coverage
+
+Decision coverage: **confirmed** (2026-10-05)
+
+**Confirmed with Nick (2026-10-05, this session):**
+
+- D1 Review surface = the admin page, replacing the cockpit (built stepwise; cockpit is a temporary fallback until parity, then retired). Nick: "Ideally, they are part of the admin page, so put it in there."
+- D2 Notifications = email per product (not digest).
+- D3 Auto-rework = max 2 rounds, machine-fixable defects only; identity, category, missing INCI after one search, scalp/medical → Nick.
+- D4 Shampoo = router slot waits for the v1.6 lock; no v1.4 interim wiring.
+- Earlier (per handover §2): Hetzner worker; one canonical submission per channel; dm lookup is an optional lead; Luna/low research, Luna/medium bounded comparison, Sol/medium judge, Astra excluded; standard tier default; concurrency 1; visual judge advisory only; device-code Codex login.
+
+**Inherited from evidence or contract:** release pattern = separate `/opt/chaarlie/product-intake` tree mirroring price-audit (already the server convention); email provider = Customer.io (only provider in repo); admin auth = `profiles.is_admin`; no model decision is approval/publication (product-intake skill + handover); production writes, migrations, deploys, publication are separate gates (CLAUDE.md).
+
+**Implementation defaults:** heartbeat table vs progress column; defect code names; budget numbers within D3 (≤ 6 runs, ≤ 45 min); Sentry thresholds; bucket name; feature-switch names.
+
+**Open consequential assumptions:**
+
+- D5 settled 2026-10-05: Nick allows ssh to the server for Claude. Prepared in this branch: `Bash(ssh *)` removed from `.claude/settings.json`, `Bash(ssh chaarlie-hetzner *)` allowed in the (gitignored) `.claude/settings.local.json`; takes effect in a new session rooted in this worktree, reaches `main` with the first slice PR.
+- D6 settled 2026-10-05: the Customer.io transactional template is created by a Codex worker through browser use, authorized by Nick ("customer io works via codex"); main session drafts the German content, Codex creates it, main session verifies the template id before S4b ships.
+- D7 settled 2026-10-05: keep Luna/low for research and switch the Luna/medium challenger off (`PRODUCT_INTAKE_CODEX_SHADOW_ENABLED=false`) — the Sol judge preferred Luna/low in 9 of 10 blind comparisons. Nick: "luna is ok". Applied with the S0 server deploy.
+- D8a Same product from two users — `parked out of scope`, acknowledged by Nick ("very rare").
+- D8b settled 2026-10-05 (Nick: "a, go ahead"): onboarding products always go to research. Path: `/onboarding` product step (`src/components/onboarding/onboarding-flow.tsx:388-400`) stored the typed name as text only whenever `isProductIntakeEnabled()` is false, the production default (`src/lib/product-intake/config.ts:8-17`). 60 days: 13 products from 3 real customers (plus 38 test/internal rows, 1 system placeholder). Implemented in Slice 0 (task 0.8); re-submitting the 13 real products is a separate gated prod write.
+
+Undiscussed consequential assumptions affecting this handoff: none.
+Coverage acknowledgement: Nick's request 2026-10-05 ("review and then let's make a plan how we can properly implement this — use codex subagents via codex cli where possible and act as orchestrator") + his answers to D1–D4.
+Internal revalidation: Rev. 1 against HEAD `9eac2085` and live DB counts of 2026-10-05.
+
+## 9. Designed journey (Nick, operator)
+
+1. A user confirms an unknown product (scan/chat/plan) → submission `pending_review` → job enqueued. User experience unchanged.
+2. Worker researches; engine router projects category values; judge classifies; up to 2 automatic fixes.
+3. Outcome `ready_for_human_review` or `blocked_needs_human` → one email: "Neues Produkt bereit: Balea Hydra Volume Shampoo — 1 offene Frage" with a link.
+4. Nick opens "Neue Produkte" in admin → detail page shows everything incl. exact DB values; answers the open question or approves the image, or requests rework (one more cycle, new email when done).
+5. Nick presses publish (S4c) → preflight must pass → product live, user linked, user notified in chat. Failure states: preflight fails → the exact failing checks are shown, nothing written; notification failure after commit → retryable, visible in the detail page.
+
+Planning evidence: user-facing artifacts (admin list/detail, email) are produced in 4a.0 and gate 4a.2+ / 4b; S0, S1, S3 change no user-facing surface, copy, or timing.
+
+## 10. Verification
+
+- Automated: per-task tests named above; `npm run ci:verify` per slice; PGlite migration tests for every SQL change; golden replay for S1.
+- Live/server (each gated): S0 — unit diff + missed-check-in drill + restart/stale-lock reclaim drill; S1/S3 — first 10 submissions under switches, artifacts carry engine id/version; S4 — Playwright run of the admin journey on the dev server (`localhost`) + one real email received; S4c — one real publish by Nick.
+- Acceptance = handover §9 criteria, plus: zero `failed` jobs from the three known failure classes over the first two weeks; review queue age reported.
+
+## 11. Counterpart review ledger (Codex, read-only, 2026-10-05)
+
+| ID  | Type     | Evidence (verified)                                                                                              | Decision         | Plan change                                                                                  |
+| --- | -------- | ---------------------------------------------------------------------------------------------------------------- | ---------------- | -------------------------------------------------------------------------------------------- |
+| F1  | defect   | `codex-research-worker.ts:1298-1327`; `repository.ts:159-179,241-255` — artifact/preview/comment writes unfenced | accepted         | 3.3 single-transaction commit RPC                                                            |
+| F2  | defect   | `codex-research-worker.ts:365-367,491-497,3337-3342` — lease renewed only after model runs                       | accepted         | 0.4 independent heartbeat + lease renewal                                                    |
+| F3  | defect   | `20260630120000…:229-231` shared `attempt_count` (also root cause of the June zombie)                            | accepted         | 0.5 attempt split; 3.3 pre-dispatch budget                                                   |
+| F4  | tradeoff | `customerio/transactional.ts:123-200` — no idempotency on interrupted sends                                      | accepted in part | at-least-once with ledger states; exactly-once rejected as unnecessary for a Nick-only alert |
+| F5  | defect   | `repository.ts:274-291` — latest decision, no revision binding                                                   | accepted         | 4a.3 `payload_revision` binding                                                              |
+| F6  | defect   | `review-actions.ts:213-304` — actions not in core; claim ignores submission status                               | accepted         | 4a.3 wrappers; 0.5 claim filter                                                              |
+| F7  | defect   | `final-image-handoff.ts:98-125,277-304` — thumbnail handled separately                                           | accepted         | 4a.1 thumbnail + immutable keys                                                              |
+| F8  | defect   | `codex-research-worker.ts:3298-3307` `docker --memory=2500m` outside unit cgroup                                 | accepted         | 0.3 named-container cleanup; 0.7 host budget                                                 |
+| F9  | defect   | `conditioner-research-adapter.ts:34-44`; jobs test reads migration text                                          | accepted         | 1.1 frozen-input oracle; 0.5 real PGlite suite                                               |
+| F10 | defect   | `approve-package.ts:213-259` legacy packages lack job/decisions                                                  | accepted         | 4c bridge                                                                                    |
+
+Decision coverage after review: no finding changes D1–D4; F4's delivery semantics is an implementation default within D2 (flagged to Nick). Coverage remains `pending` only on D5–D8.
+
+## 12. Gates, risks, artifacts
+
+Gates (each separate, Nick): server access (D5); every migration apply; every server deploy/restart; backlog cleanup writes; switch flips in prod; Customer.io template; publish; cockpit retirement.
+Risks: 4 GB RAM shared with price-audit (mitigation: MemoryMax per unit, price-audit runs Mon 04:30 — worker pauses image work while price-audit runs if the audit shows contention); Shampoo v1.6 timing (S2 is decoupled); `codex-research-worker.ts` size (~3.5k lines) makes sequential edits mandatory.
+Artifacts: `HANDOVER.md` + this plan → commit with the first slice PR; Codex discovery reports → discard (summarised in §2); backlog triage → commit; mockups → commit with S4a.
+Stop point: this plan ends at Nick's approval; implementation starts with Slice 0 after D5.
