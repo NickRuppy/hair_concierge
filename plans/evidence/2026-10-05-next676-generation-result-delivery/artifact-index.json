@@ -547,7 +547,7 @@
   },
   {
     "original": "/tmp/test-audit-plan-generation157-R7hJl1/original-readsets/node_modules/@electric-sql/pglite/package.json",
-    "archived": "proposal/original-readsets/node_modules/@electric-sql/pglite/package.json",
+    "archived": "proposal/original-readsets/node_modules/@electric-sql/pglite/package.json.txt",
     "sha256": "a540c379fd1d820810793681d25fa7ad5dadfcee2b190d14a6553fdb469cfe3c",
     "bytes": 5853
   },
@@ -559,13 +559,13 @@
   },
   {
     "original": "/tmp/test-audit-plan-generation157-R7hJl1/original-readsets/node_modules/next/package.json",
-    "archived": "proposal/original-readsets/node_modules/next/package.json",
+    "archived": "proposal/original-readsets/node_modules/next/package.json.txt",
     "sha256": "006ccbc8816f40ace4307a6048c25ef3cdbe93598529d5dc85db9d19d912274d",
     "bytes": 11243
   },
   {
     "original": "/tmp/test-audit-plan-generation157-R7hJl1/original-readsets/node_modules/react/package.json",
-    "archived": "proposal/original-readsets/node_modules/react/package.json",
+    "archived": "proposal/original-readsets/node_modules/react/package.json.txt",
     "sha256": "ce01a280a6109d1a837e88ce99784f318785079dbffda086a870aad61adc94e1",
     "bytes": 1248
   },
@@ -577,7 +577,7 @@
   },
   {
     "original": "/tmp/test-audit-plan-generation157-R7hJl1/original-readsets/node_modules/react-dom/package.json",
-    "archived": "proposal/original-readsets/node_modules/react-dom/package.json",
+    "archived": "proposal/original-readsets/node_modules/react-dom/package.json.txt",
     "sha256": "92aa96480eaab724565c5bb8a4b1dd355114506e5babd36c48c783407ff9937d",
     "bytes": 3063
   },
@@ -589,19 +589,19 @@
   },
   {
     "original": "/tmp/test-audit-plan-generation157-R7hJl1/original-readsets/node_modules/tsx/package.json",
-    "archived": "proposal/original-readsets/node_modules/tsx/package.json",
+    "archived": "proposal/original-readsets/node_modules/tsx/package.json.txt",
     "sha256": "6e764b21991c21595441f82387c1451ccd10a3e7a3f0973cc5e3649a12dea7d2",
     "bytes": 1624
   },
   {
     "original": "/tmp/test-audit-plan-generation157-R7hJl1/original-readsets/node_modules/typescript/package.json",
-    "archived": "proposal/original-readsets/node_modules/typescript/package.json",
+    "archived": "proposal/original-readsets/node_modules/typescript/package.json.txt",
     "sha256": "822ef7ca6452205657b6288b066481ecf508bfbf43455d715cf7d3ec457561e6",
     "bytes": 3620
   },
   {
     "original": "/tmp/test-audit-plan-generation157-R7hJl1/original-readsets/node_modules/zod/package.json",
-    "archived": "proposal/original-readsets/node_modules/zod/package.json",
+    "archived": "proposal/original-readsets/node_modules/zod/package.json.txt",
     "sha256": "c630bd10b52dcf71c112a2bf78dbf2734b9db58d62de663b8d86c2ec2c8cda2e",
     "bytes": 3796
   },
@@ -619,13 +619,13 @@
   },
   {
     "original": "/tmp/test-audit-plan-generation157-R7hJl1/original-readsets/package-lock.json",
-    "archived": "proposal/original-readsets/package-lock.json",
+    "archived": "proposal/original-readsets/package-lock.json.txt",
     "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
     "bytes": 590438
   },
   {
     "original": "/tmp/test-audit-plan-generation157-R7hJl1/original-readsets/package.json",
-    "archived": "proposal/original-readsets/package.json",
+    "archived": "proposal/original-readsets/package.json.txt",
     "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
     "bytes": 25353
   },

@@ -361,7 +361,7 @@
   },
   {
     "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/node_modules/zod/package.json",
-    "archived": "proposal/read-snapshots/node_modules/zod/package.json",
+    "archived": "proposal/read-snapshots/node_modules/zod/package.json.txt",
     "sha256": "c630bd10b52dcf71c112a2bf78dbf2734b9db58d62de663b8d86c2ec2c8cda2e",
     "bytes": 3796
   },
@@ -385,7 +385,7 @@
   },
   {
     "original": "/tmp/test-audit-residual-care102-ezeu563r/read-snapshots/package.json",
-    "archived": "proposal/read-snapshots/package.json",
+    "archived": "proposal/read-snapshots/package.json.txt",
     "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
     "bytes": 25353
   },

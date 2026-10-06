@@ -265,13 +265,13 @@
   },
   {
     "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/next/package.json",
-    "archived": "proposal/snapshots/readset/node_modules/next/package.json",
+    "archived": "proposal/snapshots/readset/node_modules/next/package.json.txt",
     "sha256": "006ccbc8816f40ace4307a6048c25ef3cdbe93598529d5dc85db9d19d912274d",
     "bytes": 11243
   },
   {
     "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/react/package.json",
-    "archived": "proposal/snapshots/readset/node_modules/react/package.json",
+    "archived": "proposal/snapshots/readset/node_modules/react/package.json.txt",
     "sha256": "ce01a280a6109d1a837e88ce99784f318785079dbffda086a870aad61adc94e1",
     "bytes": 1248
   },
@@ -283,7 +283,7 @@
   },
   {
     "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/react-dom/package.json",
-    "archived": "proposal/snapshots/readset/node_modules/react-dom/package.json",
+    "archived": "proposal/snapshots/readset/node_modules/react-dom/package.json.txt",
     "sha256": "92aa96480eaab724565c5bb8a4b1dd355114506e5babd36c48c783407ff9937d",
     "bytes": 3063
   },
@@ -313,7 +313,7 @@
   },
   {
     "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/node_modules/sharp/package.json",
-    "archived": "proposal/snapshots/readset/node_modules/sharp/package.json",
+    "archived": "proposal/snapshots/readset/node_modules/sharp/package.json.txt",
     "sha256": "e6be69319929151be3aa240bf1485f25a3477cb6d2286f92510b9fceb3cbef26",
     "bytes": 7478
   },
@@ -331,13 +331,13 @@
   },
   {
     "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/package-lock.json",
-    "archived": "proposal/snapshots/readset/package-lock.json",
+    "archived": "proposal/snapshots/readset/package-lock.json.txt",
     "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
     "bytes": 590438
   },
   {
     "original": "/tmp/test-audit-quiz-portrait43-ygKLUS/snapshots/readset/package.json",
-    "archived": "proposal/snapshots/readset/package.json",
+    "archived": "proposal/snapshots/readset/package.json.txt",
     "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
     "bytes": 25353
   },

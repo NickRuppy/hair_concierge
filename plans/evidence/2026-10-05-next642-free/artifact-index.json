@@ -1591,13 +1591,13 @@
   },
   {
     "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/package-lock.json",
-    "archived": "proposal/readset-snapshots/package-lock.json",
+    "archived": "proposal/readset-snapshots/package-lock.json.txt",
     "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
     "bytes": 590438
   },
   {
     "original": "/tmp/test-audit-free-provisioning67/readset-snapshots/package.json",
-    "archived": "proposal/readset-snapshots/package.json",
+    "archived": "proposal/readset-snapshots/package.json.txt",
     "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
     "bytes": 25353
   },

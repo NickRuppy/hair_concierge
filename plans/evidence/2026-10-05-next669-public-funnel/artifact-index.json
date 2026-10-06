@@ -907,7 +907,7 @@
   },
   {
     "original": "/tmp/test-audit-public-funnel66-c69uzpx6/selected-read-snapshots/package.json",
-    "archived": "proposal/selected-read-snapshots/package.json",
+    "archived": "proposal/selected-read-snapshots/package.json.txt",
     "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
     "bytes": 25353
   },

@@ -343,7 +343,7 @@
   },
   {
     "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zod/package.json",
-    "archived": "audit/read-snapshots/node_modules/zod/package.json",
+    "archived": "audit/read-snapshots/node_modules/zod/package.json.txt",
     "sha256": "c630bd10b52dcf71c112a2bf78dbf2734b9db58d62de663b8d86c2ec2c8cda2e",
     "bytes": 3796
   },

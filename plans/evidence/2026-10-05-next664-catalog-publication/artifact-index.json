@@ -409,13 +409,13 @@
   },
   {
     "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/package-lock.json",
-    "archived": "proposal/snapshots/readset/package-lock.json",
+    "archived": "proposal/snapshots/readset/package-lock.json.txt",
     "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
     "bytes": 590438
   },
   {
     "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/package.json",
-    "archived": "proposal/snapshots/readset/package.json",
+    "archived": "proposal/snapshots/readset/package.json.txt",
     "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
     "bytes": 25353
   },

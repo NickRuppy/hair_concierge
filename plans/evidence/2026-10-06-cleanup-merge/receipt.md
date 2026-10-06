@@ -30,3 +30,7 @@ Deleted routine retrieval/autofill and product-attachment helpers have only test
 Commit: existing chosen plans, audit evidence and this compact fresh-main receipt. Archive: full fresh canonical TAP, coverage JSON/LCOV, commands, freezes, comparison scripts, CI and reviewer output outside Git at the archive path above; all copies hash checked. 278 ignored proof JSON files were archived and verified before removing duplicate worktree copies. Discard: only owned raw V8 caches, invalid partial-run caches and reproducible build outputs. Historical accepted evidence remains committed; invalid attempts retain diagnostic records outside the repository and receive no acceptance credit. Bulk evidence is separate from the 20,133-line implementation reduction.
 
 Publication remains gated by required GitHub checks and exact-head merge validation. Deployment and provider changes are separate.
+
+### Archive manifest repair before merge
+
+GitHub dependency review interpreted historical `package-lock.json`/`package.json` snapshots as new installable dependency manifests. All 25 archived manifests were renamed with `.txt`, preserving every byte and SHA-256; affected archive indexes now identify the inert paths. The root application lockfile and all implementation paths remain unchanged. No security gate is weakened; CI reruns on this metadata repair. See `inert-manifest-renames.json`.
