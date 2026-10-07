@@ -1,0 +1,28 @@
+import pathlib,json,hashlib,subprocess
+root=pathlib.Path('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning');p=pathlib.Path('/tmp/test-audit-recompute-integration42')
+def h(b):return hashlib.sha256(b).hexdigest()
+def j(n):return json.loads((p/n).read_text())
+m=j('manifest.json');cs=j('candidates.json');sites=j('sites.json');controls=j('controls.json');judgments=j('judgments.json');checks={}
+checks['head']=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip()==m['head']
+ph={z:{f:(p/'snapshots'/z/f).read_text() for f in fs} for z,fs in m['phases'].items()}
+checks['34_manifest_readset_hashes']=len(m['readset'])==34 and all(h((root/f).read_bytes())==v for f,v in m['readset'].items())
+checks['21_phase_hashes']=all(h(ph[z][f].encode())==v for z,fs in m['phases'].items() for f,v in fs.items())
+checks['7_live_equals_before']=all((root/f).read_text()==s for f,s in ph['before'].items())
+checks['58_site_records']=sum(map(len,sites.values()))==58 and all(ph['before'][f].count(s['body'])==1 and h(s['body'].encode())==s['sha256'] for f,ss in sites.items() for s in ss)
+checks['four_exact_donors']=len(cs)==4 and all(ph['before'][c['donor']['file']].count(c['donor']['body'])==1 and h(c['donor']['body'].encode())==c['donor']['sha256'] for c in cs)
+x=dict(ph['before']);changes={}
+for c in cs:
+ k=c['keeper'];a=c['keeperAfter'];assert h(k['body'].encode())==k['sha256'];assert h(a['body'].encode())==a['sha256']
+ if k['body']!=a['body']:changes[(k['file'],k['body'])]=a['body']
+for (f,b),a in changes.items():x[f]=x[f].replace(b,a,1)
+checks['one_strengthened_keeper']=len(changes)==1
+checks['exact_transfer_reconstruction']=x==ph['transfer']
+for c in cs:x[c['donor']['file']]=x[c['donor']['file']].replace(c['donor']['body'],'',1)
+checks['exact_cut_reconstruction']=x==ph['cut']
+donors={(c['donor']['file'],c['donor']['body']) for c in cs};changed=set(changes);unchanged=[(f,s) for f,ss in sites.items() for s in ss if (f,s['body']) not in donors|changed]
+checks['53_untouched_callbacks']=len(unchanged)==53 and all(ph[z][f].count(s['body'])==1 for f,s in unchanged for z in ph)
+fs=[x for x in judgments if x['verdict']=='F'];checks['eight_held_F_unchanged']=len(fs)==8 and all(ph[z][v['file']].count(v['body'])==1 for v in fs for z in ph)
+checks['seven_unique_controls_pinned']=len(controls)==7 and all(h((root/c['file']).read_bytes())==c['sourceSha256'] and (root/c['file']).read_text().count(c['from'])==1 and h((root/c['file']).read_text().replace(c['from'],c['to'],1).encode())==c['mutantSha256'] for c in controls)
+extra=['supabase/migrations/20260825130000_personal_plan_complete_stage2_module.sql','supabase/migrations/20260808062602_personal_plan_stage1_3_foundation.sql','tests/server-only-register.cjs','node_modules/@electric-sql/pglite/dist/index.cjs.map']
+out={'scope':'Independent preservation review of four C candidates only; no full42 semantic ledger claim, runner, compiler, source mutation or DB instantiation. Hashes do not imply full human read credit.','root':str(root),'head':m['head'],'checks':checks,'all_checks_pass':all(checks.values()),'verdicts':{c['id']:'CONDITIONAL PASS pending native and intended-oracle fault proof' for c in cs},'target_counts':m['targetCounts'],'proof_counts':m['proofCohortCounts'],'phase_hashes':m['phases'],'author_readset_hashes':m['readset'],'additional_readset_hashes':{f:h((root/f).read_bytes()) for f in extra},'artifact_hashes':{str(q):h(q.read_bytes()) for q in p.iterdir() if q.is_file() and q.suffix in ['.json','.md','.diff']},'controls':controls}
+pathlib.Path('/tmp/test-audit-recompute42-independent-static.json').write_text(json.dumps(out,indent=2)+'\n');print(json.dumps(checks,indent=2))

@@ -1,0 +1,8 @@
+{
+  "ok": true,
+  "kind": "pw",
+  "exactSelected": 1,
+  "expectedOutcome": "pass",
+  "stdout": "/tmp/test-audit-chat18-controls-q0Mukt/C1-return-null/before/stdout.txt",
+  "stderr": "/tmp/test-audit-chat18-controls-q0Mukt/C1-return-null/before/stderr.txt"
+}

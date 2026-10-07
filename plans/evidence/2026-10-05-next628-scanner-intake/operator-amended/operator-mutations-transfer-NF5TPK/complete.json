@@ -1,0 +1,240 @@
+{
+  "phase": "transfer",
+  "verified": 14,
+  "controlIds": [
+    "C1-headline",
+    "C1-subline",
+    "C1-question",
+    "C2-input",
+    "C2-brand",
+    "C2-product",
+    "C2-submit",
+    "C3-brand",
+    "C3-product",
+    "C3-question",
+    "C3-helper",
+    "C3-back",
+    "C3-retailer",
+    "C4-alert"
+  ],
+  "cleanRuns": 28,
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "68a3621c1a438274ec566d261ee5087b84f0a8d54424d85fc5ed81c8ffdd44bb",
+  "receiptSHA256": "fcbac4dec853a0a9748daebfd49a6502c18b6758ee560beec78d32d46e2fa888",
+  "allTestHashes": {
+    "tests/scan-unknown-flow-ui.test.tsx": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965",
+    "tests/scan-research-intake-form-ui.test.tsx": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+  },
+  "sourceGuards": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": ".nvmrc",
+      "sha": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "file": "AGENTS.md",
+      "sha": "9072f0e4ef99aef972395aab4b26e4718be6ab7cac755a0fc303746d8ee162f8"
+    },
+    {
+      "file": "node_modules/clsx/dist/clsx.mjs",
+      "sha": "d949e5cdbfebc76a6642b1901095e900fc3f2262d8dc0373aa44850a9bc75522"
+    },
+    {
+      "file": "node_modules/next/dist/client/image-component.js",
+      "sha": "7dcd5a10f44f1b52100554e2a2537dfe3d04083e310858d9a92c61a7db302753"
+    },
+    {
+      "file": "node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js",
+      "sha": "e0a591b81f983794366bbc8338df0ebbbc7add48fdcee772870e226eadcda9ce"
+    },
+    {
+      "file": "node_modules/react-dom/server.node.js",
+      "sha": "f2dd93f6f91f983cd91232098d4ac55578596d33d680d7cb9438ea3b0a611b4b"
+    },
+    {
+      "file": "node_modules/react/cjs/react.development.js",
+      "sha": "4325e6263375459503858c0982d50bbc25bc33e66676954698c67221d2ee8b72"
+    },
+    {
+      "file": "package-lock.json",
+      "sha": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "package.json",
+      "sha": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "plans/scan-public-launch.md",
+      "sha": "0b7cc3b05b5617cae538d3299688b00fd254cc3239851d08126cce84c20f61fb"
+    },
+    {
+      "file": "src/app/labs/scan/scan-lab-client.tsx",
+      "sha": "9c9f8d5e8a6850a8ade4cebde8139aae5fab5fb41608f3fcbe4636db19011a49"
+    },
+    {
+      "file": "src/app/scan/scan-page-client.tsx",
+      "sha": "8ce5c49efe2a9cf3454b4b52f8ddea2c0d8bfe2203ec2feaa01ff3f9b1e859d6"
+    },
+    {
+      "file": "src/components/discovery/intake/discovery-add-sheet.tsx",
+      "sha": "2de3e61f36f21cd79ec46f8c4547c1114f434def03faf899a34fcd85eb59cfd9"
+    },
+    {
+      "file": "src/components/personal-plan-products/stage3-product-copy.ts",
+      "sha": "e20722dc17605dbab0c49a7302f3f93691ed95cfda05596f3cc75e083cd868c2"
+    },
+    {
+      "file": "src/components/scan/scan-flow.tsx",
+      "sha": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876"
+    },
+    {
+      "file": "src/components/scan/scan-product-thumb.tsx",
+      "sha": "879f42afc873074cb547bcaa90e98acb44273694e18cb635ed9883cad5af5962"
+    },
+    {
+      "file": "src/components/scan/scan-search-sheet.tsx",
+      "sha": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa"
+    },
+    {
+      "file": "src/components/scan/scan-unknown-flow.tsx",
+      "sha": "a4c0e6d23c85476d17016dcb488641ca10e3c3059fab53596f1f8f5fd95b5754"
+    },
+    {
+      "file": "src/components/ui/bottom-sheet.tsx",
+      "sha": "373944ebf90fab3c4347599cba20ef2e162db35c43f722d1f190585817caa625"
+    },
+    {
+      "file": "src/components/ui/skeleton.tsx",
+      "sha": "86c5d03a629aa2cc59988e68c952810d88ea3ecaa9d466ce3790c103c518f425"
+    },
+    {
+      "file": "src/lib/analytics/destinations/customerio.ts",
+      "sha": "06847f20cd2c8c2e0f11947469c787cbb8d357eefc9b65a241efec5bc4c6543b"
+    },
+    {
+      "file": "src/lib/analytics/destinations/meta.ts",
+      "sha": "5988b93df2bc11dba72bc719cc9d7b098190fa4d09267b5f12c6c2d2372227f0"
+    },
+    {
+      "file": "src/lib/analytics/destinations/posthog.ts",
+      "sha": "50a10cb0bdebec1ae539d8fbf83e1987b632995758d6a7bc5b1f3bd6d49db766"
+    },
+    {
+      "file": "src/lib/analytics/page-url.ts",
+      "sha": "1cdde9d294fca5daf861b63bfb178a4458a6b8fd44d14b37b3d30d05a4551428"
+    },
+    {
+      "file": "src/lib/analytics/routes.ts",
+      "sha": "b1ea998155308a84bb64fe1a0c96469cb431dfc0992dbc29b9e2d7efdaa9acf2"
+    },
+    {
+      "file": "src/lib/analytics/runtime/bounded-fifo.ts",
+      "sha": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4"
+    },
+    {
+      "file": "src/lib/analytics/runtime/environment.ts",
+      "sha": "ff05a8672de300fddd0779669947a4ee0f2b0e62276c881fa94d525d48f11a4f"
+    },
+    {
+      "file": "src/lib/analytics/runtime/posthog.ts",
+      "sha": "0d2152292c62cec544e5bcb44f07f5c28238684ef1d1272826cf14f575c04591"
+    },
+    {
+      "file": "src/lib/analytics/track-app-event.ts",
+      "sha": "d72b4009f31a5f4fbbfc953956e46a5962282d72bf9d9daf0382500eadf4969d"
+    },
+    {
+      "file": "src/lib/cookie-consent.ts",
+      "sha": "d5759e5e356628f91ffc58a37cd8ad25720078f60499c5a260bfd4c14094161c"
+    },
+    {
+      "file": "src/lib/customerio-tracking.ts",
+      "sha": "499afed0161ee2fabaae9d89d4b96934bb697258638b01261e91f20b58e0c93a"
+    },
+    {
+      "file": "src/lib/funnel/client.ts",
+      "sha": "9c3728cffff3810d829afd198c2406e35cf6edb3d4c68dbfc5a1cfa845e100a8"
+    },
+    {
+      "file": "src/lib/funnel/flags.ts",
+      "sha": "981bd9436dae7c1fc7cbd8d6dc60e3d6bbaa9dc3bea994e0a33fac525f02528d"
+    },
+    {
+      "file": "src/lib/funnel/journey-kind.ts",
+      "sha": "6088e7e2554b37b0d2da5231dd5361fdeed8cd2ebf1dae5286e107d7543efe88"
+    },
+    {
+      "file": "src/lib/meta-pixel.ts",
+      "sha": "56bc9d532d658f0a2d9d8278d01a437b1ec10b9e781ec8ec4476396f3569016c"
+    },
+    {
+      "file": "src/lib/motion-loader.ts",
+      "sha": "2468e6540fc046ac63080ddee1d3ebcb82aa74cccd3111399ca136c8053ff64b"
+    },
+    {
+      "file": "src/lib/motion.ts",
+      "sha": "ad6d8c7f8243297762beade95101fd15fc607c5ca3bc02b2512055d3a54cebdd"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authorities.ts",
+      "sha": "46722afc73e14c5f10b83fd220bc4e5f82c3de001086881190cd1fb769b91e2b"
+    },
+    {
+      "file": "src/lib/personal-plan/products/contracts.ts",
+      "sha": "bc4291e12db65a3e220c884344255403e4ea3c3eb19d24fb3c5a4605ae011366"
+    },
+    {
+      "file": "src/lib/product-identity/display-title.ts",
+      "sha": "b3227a1c978a5e704bba7413087b75e97cd0b99b62aed25d05a3d6100e23c5cf"
+    },
+    {
+      "file": "src/lib/scan/catalog-search.ts",
+      "sha": "12d36f3026d9c7d711e89fda9e2fabcbcf86f3c2f3922d456252b7f349f547b6"
+    },
+    {
+      "file": "src/lib/scan/scan-analytics.ts",
+      "sha": "f77c83e97d469283c053f6273c47799300f04d5eef005cd5b44a2efbf1ae8328"
+    },
+    {
+      "file": "src/lib/scan/types.ts",
+      "sha": "dce26c3380df9386a8296b52c79cb702c47fc9a6ab49fb4f04ea1a250d2e2c02"
+    },
+    {
+      "file": "src/lib/scan/use-latest-request.ts",
+      "sha": "ff7431bbce6bf021e7ebbd6a4fe802740cb94cf926d25494a82aa97c6113e268"
+    },
+    {
+      "file": "src/lib/scan/verdict-labels.ts",
+      "sha": "badd8bce5f663a04afd98b11c8c3d30883d4d449bc6747cb18f95ad7be6d1b0c"
+    },
+    {
+      "file": "src/lib/ui/modal-layer-manager.ts",
+      "sha": "91279f8beb6559de02df719111dbaf523985f20f28dfc228ae4001e8965cf7c2"
+    },
+    {
+      "file": "src/lib/utils.ts",
+      "sha": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d"
+    },
+    {
+      "file": "src/lib/vocabulary/frequencies.ts",
+      "sha": "d79bb3584473a8f6541feecff58a40633736f9376981ff190b645114dc0eb3a9"
+    },
+    {
+      "file": "tests/scan-flow-ui.test.tsx",
+      "sha": "f5484cc86b14501866f9fb1aecb78904ab7d27a6ea9cee55ec2fa93558122122"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    }
+  ]
+}

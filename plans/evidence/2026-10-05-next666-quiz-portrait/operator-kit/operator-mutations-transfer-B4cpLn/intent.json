@@ -1,0 +1,22 @@
+{
+  "phase": "transfer",
+  "controls": [
+    "C1-fixed-responsive-frame",
+    "C1-description-association",
+    "C1-decorative-body"
+  ],
+  "originalHashes": {
+    "tests/hair-length-option-card.test.tsx": "b307f3f8d1e96f269a6649d955cd3aa50aa2a5a6988e7c226458ca6050e74965",
+    "tests/hair-portrait-assets.test.ts": "f189a64c78f7bfb6880897359b26ba7da173b419921308e6566b4c2b68664eb7",
+    "tests/hair-portrait-gallery.test.tsx": "cbc6afdfe40668f1a3e498123430fb0b274a2532c40e4e517d16242351b7ff66",
+    "tests/hair-portrait-length-progression.test.ts": "c77890aaddfe133a6ea5a565bff5e92997c942c78566de34bb4810947a44b50f",
+    "tests/hair-portrait.test.tsx": "c67863f7c0a983129b6d7d77658d7b0bf5670c8acecd41b1873e2c3615c57c9c",
+    "tests/portrait-config.test.ts": "daef86d9c37d63eac194eec571d0913eb36633c89b1fe3f0804655a415a154d8",
+    "tests/quiz-option-card.test.tsx": "d6087e2170a0afa7c535ad98f19c670c15462366e107527c2bd801e2f3acfb8b",
+    "tests/quiz-motion-tokens.test.ts": "02811647eb7af64d199919a8bb419f41ec900eab04de1ea05b3c9cb8cf2adf9c",
+    "tests/personal-plan-option-card-layout.test.ts": "3f5b791dd3f39a8c77678d5226ffee6d3de1cf76351609083f654c26496a2b32",
+    "src/components/quiz/hair-length-option-card.tsx": "76884c108303c0e08dbfd58edec3492e321a7be4d7fad38204352d2297f450b2",
+    "src/components/quiz/hair-portrait-figure.tsx": "7a782bfc42c3de2d640462da3da463e70f5ba039ff0e7b8364ced4c0569c8495"
+  },
+  "pinsSHA": "f834e22d29ca38c7105a3723a4aad845ef6ed96ee367b9ddfc78dac28308c396"
+}

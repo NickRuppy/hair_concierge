@@ -1385,10 +1385,24 @@ test("owned-product search delegates active identity and assessment readiness to
   }
 
   const persistence = createSupabaseStage3ProductionPersistence(client as never)
+  for (const query of [" ", "x".repeat(121)]) {
+    await assert.rejects(
+      () =>
+        persistence.search({
+          userId: "owner-1",
+          category: "shampoo",
+          query,
+          requestToken: 3,
+          assessmentContext: shampooSearchContext,
+        }),
+      { code: "invalid_query" },
+    )
+  }
+  assert.deepEqual(calls, [])
   const result = await persistence.search({
     userId: "owner-1",
     category: "shampoo",
-    query: "ogx",
+    query: "  ogx  ",
     requestToken: 4,
     assessmentContext: shampooSearchContext,
   })
@@ -3913,44 +3927,6 @@ test("authority facts select a contextual Shampoo row without PGRST116", async (
 })
 
 test("authority facts translate an irritation need into the stored irritated route", async () => {
-  const bundle = await loadStage3AuthorityFactBundle(
-    shampooAuthorityFactClient([
-      {
-        thickness: "normal",
-        shampoo_bucket: "irritationen",
-        scalp_route: "irritated",
-        cleansing_intensity: "gentle",
-      },
-    ]) as never,
-    {
-      draft: shampooAuthorityDraft({
-        scalpRoute: "balanced",
-        everydayConstraint: "irritation_compatible",
-      }),
-      subject: {
-        decisionKey: "decision:shampoo:shampoo_everyday:owned-shampoo-1",
-        category: "shampoo",
-        role: "shampoo_everyday",
-        capturedProductId: "owned-shampoo-1",
-        subjectKind: "captured_product",
-      },
-      heatRoutes: [],
-      context: normalRefinedContext,
-    } as never,
-  )
-
-  assert.equal(bundle.productFacts?.category, "shampoo")
-  if (bundle.productFacts?.category !== "shampoo") return
-  assert.deepEqual(bundle.productFacts.spec, {
-    thickness: "normal",
-    shampooBucket: "irritationen",
-    scalpRoute: "irritated",
-    cleansingIntensity: "gentle",
-    targetFit: "matched",
-  })
-})
-
-test("authority facts consistently use the derived irritation route", async () => {
   const bundle = await loadStage3AuthorityFactBundle(
     shampooAuthorityFactClient([
       {

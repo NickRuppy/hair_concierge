@@ -1,0 +1,820 @@
+{
+  "symbols": [
+    "isPersonalPlanInternalUser",
+    "isActivePersonalPlanFieldTestOwner",
+    "canAccessPersonalPlanAppV1Rollout",
+    "resolvePersonalPlanAppV1InternalEmails",
+    "PersonalPlanInternalUserClient",
+    "PersonalPlanAppV1Rollout",
+    "loadIsInternal",
+    "appRollout",
+    "createSupabasePersonalPlanJourneyAccessLoader",
+    "loadPersonalPlanJourneyAccessWithDeps",
+    "loadPersonalPlanStage2AccessWithDeps"
+  ],
+  "hits": [
+    {
+      "file": "src/lib/personal-plan/rollout-access.ts",
+      "sha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+      "matches": [
+        {
+          "line": 7,
+          "text": "import { resolvePersonalPlanAppV1InternalEmails } from \"./release\"",
+          "symbols": [
+            "resolvePersonalPlanAppV1InternalEmails"
+          ]
+        },
+        {
+          "line": 9,
+          "text": "export type PersonalPlanInternalUserClient = {",
+          "symbols": [
+            "PersonalPlanInternalUserClient"
+          ]
+        },
+        {
+          "line": 76,
+          "text": "export async function isActivePersonalPlanFieldTestOwner(",
+          "symbols": [
+            "isActivePersonalPlanFieldTestOwner"
+          ]
+        },
+        {
+          "line": 140,
+          "text": "export async function isPersonalPlanInternalUser(",
+          "symbols": [
+            "isPersonalPlanInternalUser"
+          ]
+        },
+        {
+          "line": 142,
+          "text": "  client: PersonalPlanInternalUserClient,",
+          "symbols": [
+            "PersonalPlanInternalUserClient"
+          ]
+        },
+        {
+          "line": 153,
+          "text": "    await isActivePersonalPlanFieldTestOwner(userId, client as unknown as FieldTestEnrollmentClient)",
+          "symbols": [
+            "isActivePersonalPlanFieldTestOwner"
+          ]
+        },
+        {
+          "line": 158,
+          "text": "  const allowedEmails = resolvePersonalPlanAppV1InternalEmails()",
+          "symbols": [
+            "resolvePersonalPlanAppV1InternalEmails"
+          ]
+        },
+        {
+          "line": 168,
+          "text": "  _client?: PersonalPlanInternalUserClient,",
+          "symbols": [
+            "PersonalPlanInternalUserClient"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan/journey-access-loader.ts",
+      "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+      "matches": [
+        {
+          "line": 11,
+          "text": "  canAccessPersonalPlanAppV1Rollout,",
+          "symbols": [
+            "canAccessPersonalPlanAppV1Rollout"
+          ]
+        },
+        {
+          "line": 17,
+          "text": "  type PersonalPlanAppV1Rollout,",
+          "symbols": [
+            "PersonalPlanAppV1Rollout"
+          ]
+        },
+        {
+          "line": 20,
+          "text": "import { isPersonalPlanInternalUser, type PersonalPlanInternalUserClient } from \"./rollout-access\"",
+          "symbols": [
+            "isPersonalPlanInternalUser",
+            "PersonalPlanInternalUserClient"
+          ]
+        },
+        {
+          "line": 49,
+          "text": "  appRollout: () => PersonalPlanAppV1Rollout",
+          "symbols": [
+            "PersonalPlanAppV1Rollout",
+            "appRollout"
+          ]
+        },
+        {
+          "line": 69,
+          "text": "  loadIsInternal: (userId: string) => Promise<boolean>",
+          "symbols": [
+            "loadIsInternal"
+          ]
+        },
+        {
+          "line": 205,
+          "text": "  const appRollout = deps.appRollout()",
+          "symbols": [
+            "appRollout"
+          ]
+        },
+        {
+          "line": 206,
+          "text": "  if (appEnabled && appRollout !== \"all\") {",
+          "symbols": [
+            "appRollout"
+          ]
+        },
+        {
+          "line": 207,
+          "text": "    const isInternal = appRollout === \"internal\" ? await deps.loadIsInternal(userId) : false",
+          "symbols": [
+            "loadIsInternal",
+            "appRollout"
+          ]
+        },
+        {
+          "line": 208,
+          "text": "    if (!canAccessPersonalPlanAppV1Rollout({ appEnabled, rollout: appRollout, isInternal })) {",
+          "symbols": [
+            "canAccessPersonalPlanAppV1Rollout",
+            "appRollout"
+          ]
+        },
+        {
+          "line": 317,
+          "text": "export async function loadPersonalPlanStage2AccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanStage2AccessWithDeps"
+          ]
+        },
+        {
+          "line": 339,
+          "text": "export async function loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 448,
+          "text": "export function createSupabasePersonalPlanJourneyAccessLoader(",
+          "symbols": [
+            "createSupabasePersonalPlanJourneyAccessLoader"
+          ]
+        },
+        {
+          "line": 472,
+          "text": "    appRollout: resolvePersonalPlanAppV1Rollout,",
+          "symbols": [
+            "appRollout"
+          ]
+        },
+        {
+          "line": 590,
+          "text": "    async loadIsInternal(userId) {",
+          "symbols": [
+            "loadIsInternal"
+          ]
+        },
+        {
+          "line": 591,
+          "text": "      return isPersonalPlanInternalUser(userId, admin as unknown as PersonalPlanInternalUserClient)",
+          "symbols": [
+            "isPersonalPlanInternalUser",
+            "PersonalPlanInternalUserClient"
+          ]
+        },
+        {
+          "line": 599,
+          "text": "  return loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 600,
+          "text": "    createSupabasePersonalPlanJourneyAccessLoader(",
+          "symbols": [
+            "createSupabasePersonalPlanJourneyAccessLoader"
+          ]
+        },
+        {
+          "line": 610,
+          "text": "  return loadPersonalPlanStage2AccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanStage2AccessWithDeps"
+          ]
+        },
+        {
+          "line": 611,
+          "text": "    createSupabasePersonalPlanJourneyAccessLoader(",
+          "symbols": [
+            "createSupabasePersonalPlanJourneyAccessLoader"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan/release.ts",
+      "sha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+      "matches": [
+        {
+          "line": 10,
+          "text": "export type PersonalPlanAppV1Rollout = \"off\" | \"internal\" | \"all\"",
+          "symbols": [
+            "PersonalPlanAppV1Rollout"
+          ]
+        },
+        {
+          "line": 14,
+          "text": "): PersonalPlanAppV1Rollout {",
+          "symbols": [
+            "PersonalPlanAppV1Rollout"
+          ]
+        },
+        {
+          "line": 19,
+          "text": "export function canAccessPersonalPlanAppV1Rollout(input: {",
+          "symbols": [
+            "canAccessPersonalPlanAppV1Rollout"
+          ]
+        },
+        {
+          "line": 21,
+          "text": "  rollout: PersonalPlanAppV1Rollout",
+          "symbols": [
+            "PersonalPlanAppV1Rollout"
+          ]
+        },
+        {
+          "line": 28,
+          "text": "export function resolvePersonalPlanAppV1InternalEmails(",
+          "symbols": [
+            "resolvePersonalPlanAppV1InternalEmails"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-stage3-release.test.ts",
+      "sha256": "d25fd6ac50e6ba5a09c3870b83ae55cbc729a72b55cb0329b2d6c414b4dc2f1e",
+      "matches": [
+        {
+          "line": 8,
+          "text": "  canAccessPersonalPlanAppV1Rollout,",
+          "symbols": [
+            "canAccessPersonalPlanAppV1Rollout"
+          ]
+        },
+        {
+          "line": 16,
+          "text": "  resolvePersonalPlanAppV1InternalEmails,",
+          "symbols": [
+            "resolvePersonalPlanAppV1InternalEmails"
+          ]
+        },
+        {
+          "line": 47,
+          "text": "      ...resolvePersonalPlanAppV1InternalEmails({",
+          "symbols": [
+            "resolvePersonalPlanAppV1InternalEmails"
+          ]
+        },
+        {
+          "line": 70,
+          "text": "    canAccessPersonalPlanAppV1Rollout({ appEnabled: true, rollout: \"internal\", isInternal: true }),",
+          "symbols": [
+            "canAccessPersonalPlanAppV1Rollout"
+          ]
+        },
+        {
+          "line": 74,
+          "text": "    canAccessPersonalPlanAppV1Rollout({ appEnabled: true, rollout: \"internal\", isInternal: false }),",
+          "symbols": [
+            "canAccessPersonalPlanAppV1Rollout"
+          ]
+        },
+        {
+          "line": 78,
+          "text": "    canAccessPersonalPlanAppV1Rollout({ appEnabled: false, rollout: \"all\", isInternal: true }),",
+          "symbols": [
+            "canAccessPersonalPlanAppV1Rollout"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-trial-stage1-journey.test.ts",
+      "sha256": "ce32342ee184872e96bc13191d0f5dc25d0d863a8acaa477e4ccd8df62bf9fc0",
+      "matches": [
+        {
+          "line": 9,
+          "text": "import { loadPersonalPlanJourneyAccessWithDeps } from \"../src/lib/personal-plan/journey-access-loader\"",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 282,
+          "text": "    appRollout: () => \"all\" as const,",
+          "symbols": [
+            "appRollout"
+          ]
+        },
+        {
+          "line": 294,
+          "text": "    loadIsInternal: async () => false,",
+          "symbols": [
+            "loadIsInternal"
+          ]
+        },
+        {
+          "line": 297,
+          "text": "  const active = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 317,
+          "text": "  const expired = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-rollout-access.test.ts",
+      "sha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+      "matches": [
+        {
+          "line": 5,
+          "text": "  isActivePersonalPlanFieldTestOwner,",
+          "symbols": [
+            "isActivePersonalPlanFieldTestOwner"
+          ]
+        },
+        {
+          "line": 118,
+          "text": "    await isActivePersonalPlanFieldTestOwner(",
+          "symbols": [
+            "isActivePersonalPlanFieldTestOwner"
+          ]
+        },
+        {
+          "line": 171,
+          "text": "    await isActivePersonalPlanFieldTestOwner(",
+          "symbols": [
+            "isActivePersonalPlanFieldTestOwner"
+          ]
+        },
+        {
+          "line": 213,
+          "text": "  assert.equal(await isActivePersonalPlanFieldTestOwner(\"user-1\", client as never), false)",
+          "symbols": [
+            "isActivePersonalPlanFieldTestOwner"
+          ]
+        },
+        {
+          "line": 243,
+          "text": "    isActivePersonalPlanFieldTestOwner(\"user-1\", client as never),",
+          "symbols": [
+            "isActivePersonalPlanFieldTestOwner"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-field-test-access.test.ts",
+      "sha256": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a",
+      "matches": [
+        {
+          "line": 6,
+          "text": "import { loadPersonalPlanJourneyAccessWithDeps } from \"../src/lib/personal-plan/journey-access-loader\"",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 154,
+          "text": "  const journey = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 165,
+          "text": "      appRollout: () => \"all\",",
+          "symbols": [
+            "appRollout"
+          ]
+        },
+        {
+          "line": 173,
+          "text": "      loadIsInternal: async () => false,",
+          "symbols": [
+            "loadIsInternal"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "sha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67",
+      "matches": [
+        {
+          "line": 15,
+          "text": "  createSupabasePersonalPlanJourneyAccessLoader,",
+          "symbols": [
+            "createSupabasePersonalPlanJourneyAccessLoader"
+          ]
+        },
+        {
+          "line": 16,
+          "text": "  loadPersonalPlanStage2AccessWithDeps,",
+          "symbols": [
+            "loadPersonalPlanStage2AccessWithDeps"
+          ]
+        },
+        {
+          "line": 17,
+          "text": "  loadPersonalPlanJourneyAccessWithDeps,",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 179,
+          "text": "  return createSupabasePersonalPlanJourneyAccessLoader(admin).loadCurrentProductDraft(",
+          "symbols": [
+            "createSupabasePersonalPlanJourneyAccessLoader"
+          ]
+        },
+        {
+          "line": 198,
+          "text": "    appRollout: () => \"all\",",
+          "symbols": [
+            "appRollout"
+          ]
+        },
+        {
+          "line": 235,
+          "text": "    loadIsInternal: async () => false,",
+          "symbols": [
+            "loadIsInternal"
+          ]
+        },
+        {
+          "line": 242,
+          "text": "    const access = await loadPersonalPlanStage2AccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanStage2AccessWithDeps"
+          ]
+        },
+        {
+          "line": 260,
+          "text": "    const disabled = await loadPersonalPlanStage2AccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanStage2AccessWithDeps"
+          ]
+        },
+        {
+          "line": 287,
+          "text": "    assert.deepEqual(await loadPersonalPlanStage2AccessWithDeps(enabledDeps, \"owner-1\"), {",
+          "symbols": [
+            "loadPersonalPlanStage2AccessWithDeps"
+          ]
+        },
+        {
+          "line": 291,
+          "text": "    const access = await loadPersonalPlanJourneyAccessWithDeps(enabledDeps, \"owner-1\")",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 298,
+          "text": "  const excluded = await loadPersonalPlanStage2AccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanStage2AccessWithDeps"
+          ]
+        },
+        {
+          "line": 300,
+          "text": "      appRollout: () => \"internal\",",
+          "symbols": [
+            "appRollout"
+          ]
+        },
+        {
+          "line": 301,
+          "text": "      loadIsInternal: async () => false,",
+          "symbols": [
+            "loadIsInternal"
+          ]
+        },
+        {
+          "line": 317,
+          "text": "  const access = await loadPersonalPlanStage2AccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanStage2AccessWithDeps"
+          ]
+        },
+        {
+          "line": 349,
+          "text": "    await loadPersonalPlanStage2AccessWithDeps(deps({ appEnabled: () => false }), \"owner-1\"),",
+          "symbols": [
+            "loadPersonalPlanStage2AccessWithDeps"
+          ]
+        },
+        {
+          "line": 355,
+          "text": "      await loadPersonalPlanStage2AccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanStage2AccessWithDeps"
+          ]
+        },
+        {
+          "line": 369,
+          "text": "    await loadPersonalPlanStage2AccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanStage2AccessWithDeps"
+          ]
+        },
+        {
+          "line": 382,
+          "text": "    await loadPersonalPlanStage2AccessWithDeps(deps({ stage2Enabled: () => false }), \"owner-1\"),",
+          "symbols": [
+            "loadPersonalPlanStage2AccessWithDeps"
+          ]
+        },
+        {
+          "line": 399,
+          "text": "    assert.deepEqual(await loadPersonalPlanStage2AccessWithDeps(deps(override), \"owner-1\"), {",
+          "symbols": [
+            "loadPersonalPlanStage2AccessWithDeps"
+          ]
+        },
+        {
+          "line": 406,
+          "text": "      loadPersonalPlanStage2AccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanStage2AccessWithDeps"
+          ]
+        },
+        {
+          "line": 420,
+          "text": "  const access = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 422,
+          "text": "      appRollout: () => \"internal\",",
+          "symbols": [
+            "appRollout"
+          ]
+        },
+        {
+          "line": 423,
+          "text": "      loadIsInternal: async () => false,",
+          "symbols": [
+            "loadIsInternal"
+          ]
+        },
+        {
+          "line": 437,
+          "text": "  const access = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 438,
+          "text": "    deps({ appRollout: () => \"internal\", loadIsInternal: async () => true }),",
+          "symbols": [
+            "loadIsInternal",
+            "appRollout"
+          ]
+        },
+        {
+          "line": 448,
+          "text": "  const access = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 476,
+          "text": "  const access = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 508,
+          "text": "  const access = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 526,
+          "text": "  const access = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 556,
+          "text": "  const access = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 584,
+          "text": "      loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 609,
+          "text": "  const accessPending = loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 638,
+          "text": "  const accessPending = loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 662,
+          "text": "  const pending = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 674,
+          "text": "  const pendingWithoutArtifactLead = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 691,
+          "text": "      loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 704,
+          "text": "  const access = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 719,
+          "text": "  const noDraft = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 738,
+          "text": "  const activeDraft = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 760,
+          "text": "    const access = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 804,
+          "text": "  const access = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 826,
+          "text": "  const access = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 871,
+          "text": "      loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 921,
+          "text": "      load: createSupabasePersonalPlanJourneyAccessLoader(admin).loadCurrentProductDraft,",
+          "symbols": [
+            "createSupabasePersonalPlanJourneyAccessLoader"
+          ]
+        },
+        {
+          "line": 1039,
+          "text": "  const loader = createSupabasePersonalPlanJourneyAccessLoader(admin)",
+          "symbols": [
+            "createSupabasePersonalPlanJourneyAccessLoader"
+          ]
+        },
+        {
+          "line": 1045,
+          "text": "  const access = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 1050,
+          "text": "      appRollout: () => \"all\",",
+          "symbols": [
+            "appRollout"
+          ]
+        },
+        {
+          "line": 1082,
+          "text": "  await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 1087,
+          "text": "      appRollout: () => \"all\",",
+          "symbols": [
+            "appRollout"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/freemium-enrollment-admission.test.ts",
+      "sha256": "fcc6c0f7c564fa5078c7c81823991341ab1859d414d6e00c33f72c369b8a2389",
+      "matches": [
+        {
+          "line": 10,
+          "text": "import { loadPersonalPlanJourneyAccessWithDeps } from \"../src/lib/personal-plan/journey-access-loader\"",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 124,
+          "text": "    appRollout: () => \"all\",",
+          "symbols": [
+            "appRollout"
+          ]
+        },
+        {
+          "line": 132,
+          "text": "    loadIsInternal: async () => false,",
+          "symbols": [
+            "loadIsInternal"
+          ]
+        },
+        {
+          "line": 138,
+          "text": "  const access = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        },
+        {
+          "line": 159,
+          "text": "  const access = await loadPersonalPlanJourneyAccessWithDeps(",
+          "symbols": [
+            "loadPersonalPlanJourneyAccessWithDeps"
+          ]
+        }
+      ]
+    }
+  ],
+  "limits": "Static named word search only; not human full-read credit or arbitrary reflection proof."
+}

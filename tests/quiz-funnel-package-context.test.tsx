@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { readFileSync } from "node:fs"
 import { renderToStaticMarkup } from "react-dom/server"
+import { JSDOM } from "jsdom"
 
 import { QuizFunnelPackageProvider } from "../src/components/quiz/quiz-funnel-package-provider"
 import { QuizInfoStrip } from "../src/components/quiz/quiz-info-strip"
@@ -50,13 +51,6 @@ function withBrowser<T>(run: (storage: MemoryStorage) => T): T {
     Reflect.deleteProperty(globalThis, "window")
   }
 }
-
-test("an organic quiz store carries no funnel package", () => {
-  useQuizStore.getState().reset()
-  useQuizStore.getState().setFunnelPackageKey(null)
-
-  assert.equal(useQuizStore.getState().funnelPackageKey, null)
-})
 
 test("the server-resolved package key is authoritative in both directions", () => {
   useQuizStore.getState().setFunnelPackageKey("scan_v1")
@@ -112,19 +106,6 @@ test("a moderator fresh start clears quiz progress but keeps the funnel package"
     assert.deepEqual(state.answers, {})
     assert.equal(state.lead.name, "")
   })
-})
-
-test("the provider never mutates the shared store during a server render", () => {
-  useQuizStore.getState().setFunnelPackageKey(null)
-
-  const html = renderToStaticMarkup(
-    <QuizFunnelPackageProvider funnelPackageKey="scan_v1">
-      <span>Quiz</span>
-    </QuizFunnelPackageProvider>,
-  )
-
-  assert.equal(html, "<span>Quiz</span>")
-  assert.equal(useQuizStore.getState().funnelPackageKey, null)
 })
 
 test("the provider applies the package key before the first child renders", () => {
@@ -234,6 +215,10 @@ test("a server-rendered package reaches the consumer copy without any bootstrap"
 
   assert.ok(html.includes(SCAN_INFO_STRIP_BODY), "SSR renders the server value")
   assert.equal(useQuizStore.getState().funnelPackageKey, null, "and never touches the store")
+  const fragment = JSDOM.fragment(html)
+  assert.equal(fragment.childNodes.length, 1)
+  assert.equal((fragment.firstChild as Element).getAttribute("role"), "note")
+  assert.doesNotMatch(html, /dann geht’s an deine Routine und Produkte/)
 })
 
 test("the bootstrap fallback publishes the effective package to the context too", async () => {

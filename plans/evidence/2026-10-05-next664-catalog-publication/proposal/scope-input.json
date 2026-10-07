@@ -1,0 +1,20 @@
+{
+  "files": [
+    "tests/expansion-apply-batch.test.ts",
+    "tests/expansion-apply-templates.test.ts",
+    "tests/admin-product-category-write-policy.test.ts",
+    "tests/admin-product-support-specs.test.ts",
+    "tests/catalog-authority-historical-repair-migration.test.ts",
+    "tests/catalog-authority-legacy-sync-retirement-migration.test.ts",
+    "tests/catalog-authority-lifecycle-repair.test.ts",
+    "tests/catalog-authority-product-spec-relationship-verification.test.ts",
+    "tests/catalog-authority-relationship-convergence-migration.test.ts",
+    "tests/catalog-authority-repair.test.ts",
+    "tests/catalog-authority-schema-foundations-migration.test.ts",
+    "tests/catalog-apply-executor-hardening-postgres.test.ts",
+    "tests/product-identifier-global-ownership-migration.test.ts",
+    "tests/audit-product-metadata-script.test.ts",
+    "tests/product-metadata-health.test.ts",
+    "tests/product-metadata-ingest-identity.test.ts"
+  ]
+}

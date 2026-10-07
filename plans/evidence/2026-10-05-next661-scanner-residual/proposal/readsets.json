@@ -1,0 +1,458 @@
+[
+  {
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "sha256": "f14accb79b547b8e2ae03d2209ca488c5293d68b26de9761759dd81a6f800778",
+    "bytes": 3128,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scan-analytics.test.ts",
+    "sha256": "1dff0ddbcec5ca5f07d4cd404ac43b419c6b077e85cbf6c39982390e7934871e",
+    "bytes": 9152,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scan-catalog-search-typo.test.ts",
+    "sha256": "07e11e116311151d810306a03a939a3b65761113ca4eb48040c98608e7fd9897",
+    "bytes": 5314,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scan-masked-alternative.test.ts",
+    "sha256": "0fdfaccbf9cd820b236319c29b1f436fc3ff36e486b9afffc2e40923140ec668",
+    "bytes": 3497,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "sha256": "567dab97d0a1046a414ff62e3e5c88d448ec2d60b125f668a8270eaf57abc618",
+    "bytes": 8855,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scan-observability.test.ts",
+    "sha256": "4fad30a5f6d04dbae371b31b687373186c846d2d59a84bcef5c1044144058782",
+    "bytes": 4002,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scan-pending-submission.test.ts",
+    "sha256": "dad7338acea05026887a5e7342b6e0cbd9c1e2515b55ce9d2b2133a487260f60",
+    "bytes": 2138,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scan-presentation-rows.test.ts",
+    "sha256": "224e8072febd335de814e1e0404d59fddb47bd3674b22298bf9943d47fabf8e8",
+    "bytes": 4819,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scan-product-presentation.test.ts",
+    "sha256": "df169295dd5af81c3f1ff27050f1ceba23902530f09a6eb2ec80606289453d8b",
+    "bytes": 3950,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scan-profile-context.test.ts",
+    "sha256": "a1954509f65c914f35ed7e4d397685623a3a92c3fc7939603f1d84f7165a0677",
+    "bytes": 4941,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scan-resolve-anti-leak.test.ts",
+    "sha256": "fe243479378d21d0da02235d04252e2b49293304614e9dc46874608b36d65c3b",
+    "bytes": 14540,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "sha256": "29d0c60a38ec3e47102da2fa4c130dfa3f7c01ff5232d8fd99a9e43c32adeb12",
+    "bytes": 6227,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scan-submit-dm-event-log.test.ts",
+    "sha256": "03ca04ca2493e7065d49908e2a7abc0c73dc12ecaefcb71a1f0af8f3147dfbbb",
+    "bytes": 2311,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scan-trigger-cards-ui.test.tsx",
+    "sha256": "7316d3546d9d53002c5db75a42b5c8ba05f89bad6f8a5636bba6a28a273f1ec3",
+    "bytes": 5987,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "sha256": "308eee575810814d0d0b2e13c7724d6b7840d4bd510622a41f4c88852c5e1531",
+    "bytes": 4582,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scan-verdict-access.test.ts",
+    "sha256": "9995cb859942dd65316448cff235f9d9781d6f09c56517048f816b4783d6a0b8",
+    "bytes": 3990,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scanner-analytics-context.test.ts",
+    "sha256": "5919aab593441fca35598b5169dc38530325fe0a4e35c47879f07220b89e2e5e",
+    "bytes": 2709,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scanner-offer-analytics.test.ts",
+    "sha256": "9e54b9c2cfc4b0b95ff3a339bf92158b9d43dbe35d9c73b73d2745401cb43282",
+    "bytes": 3062,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scanner-quiz-view.test.ts",
+    "sha256": "ff83b01c9de59739fbbfcbd3f80e3142e22f1ff576094a6b428b93ba56d93fa7",
+    "bytes": 7875,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scanner-result-artifact-email.test.ts",
+    "sha256": "fc43bac2b3ee3199d55e3e9db3d464c489a4c2a0fbaaac00ef30133cdb554455",
+    "bytes": 1758,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "tests/scanner-trial-offer.test.tsx",
+    "sha256": "054d6897fd9a11c332562d8a5052295b2f668e3677ba4bd155706a0467081205",
+    "bytes": 4287,
+    "readDepth": "Full current file: all callbacks/helpers/tables/fixtures;119 aggregate AST declarations"
+  },
+  {
+    "file": "src/lib/scan/alternative-comparison.ts",
+    "sha256": "074e0f0696e2bc956cc534d069aad9c4afc520575dc1ef56e3b7d8266e7888ac",
+    "bytes": 2398,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/scan/masked-alternative.ts",
+    "sha256": "f95f71134da0d508e8128190d94417d364591965ed49ccf2a69499b8686a5c4d",
+    "bytes": 2756,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/scan/presentation-rows.ts",
+    "sha256": "da5ba1da58acdbee42f6cf2057c6c0ccb4ed6450ad325f76635bba91ae0592f8",
+    "bytes": 3845,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/scan/product-presentation.ts",
+    "sha256": "3ea93de572b145c43007b3bb28373f3056438ea71ba698c7fd8a9293899b0177",
+    "bytes": 4551,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/scan/role-selection.ts",
+    "sha256": "1e1d4f6cead65b02ddea3d00aff0fd94e2aedad28252e75c32d753b668426334",
+    "bytes": 2187,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/scan/pending-submission.ts",
+    "sha256": "849cbb78f7fd710238aa91168c5ca67383fc825025c112ae779731b4d6f486fa",
+    "bytes": 3542,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/scan/profile-context.ts",
+    "sha256": "897769a982848d5b5ebb27b47502190be45a26fb85dc6c94a10f72e820774aea",
+    "bytes": 1734,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/scan/verdict-access.ts",
+    "sha256": "7807e27e8048b6fb8ed8cf7d7e111025ee69692e8d2171ed3496ff9659519ab2",
+    "bytes": 2828,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/scan/scan-analytics.ts",
+    "sha256": "f77c83e97d469283c053f6273c47799300f04d5eef005cd5b44a2efbf1ae8328",
+    "bytes": 2200,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/scan/triggers/session-marker.ts",
+    "sha256": "01a191d366f973c73d47c96000303eec094ffd4239e7435038135343c3a7f405",
+    "bytes": 5878,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/observability/scan.ts",
+    "sha256": "ef86d2acf76deb1a0862d0118a8d64d6c0dc889f4687b517e490337bce525e1d",
+    "bytes": 5958,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/scan/catalog-search.ts",
+    "sha256": "12d36f3026d9c7d711e89fda9e2fabcbcf86f3c2f3922d456252b7f349f547b6",
+    "bytes": 7358,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/scan/submit-dm-event-log.ts",
+    "sha256": "57e8cdc7975addcc9eb9758fb7137d413235eb438b39cb649554f58f0f8291e6",
+    "bytes": 2145,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/funnel/analytics-context.ts",
+    "sha256": "a866f7429ea693f0a0fd1a4e1c471e7c3922448a4904548fcc6018b212ae7aa6",
+    "bytes": 1843,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/analytics/scanner-quiz-view.ts",
+    "sha256": "07ebf5a6869d33b52110f7ffd969b012cdf955ff1e84c0b934dd8dba2534e9db",
+    "bytes": 3696,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/components/scan/scan-trigger-cards.tsx",
+    "sha256": "47d4a89f7588d586b0838ded266aeb447262dd9f326496c15f43c4c4ea271662",
+    "bytes": 4967,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/components/billing/scanner-trial-offer.tsx",
+    "sha256": "cdc36a0c78ba3d8d599836b6192416699f6d56d3983b2f334946713cfffdc58f",
+    "bytes": 5575,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/components/billing/trial-offer.tsx",
+    "sha256": "4051ca8d025e47a2d1bd1d32796bdba7791953087493980148d672837a05374a",
+    "bytes": 8483,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/customerio/scanner-result-artifact.ts",
+    "sha256": "65f0881a0652eb7b5a8d017ede32be35ef63a9078e9949e0d6b6750c229b8314",
+    "bytes": 1255,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/app/api/scan/resolve/route.ts",
+    "sha256": "9502eac574fbc19276f1c994b47a82f9c7c22e29a4f7bf89438203ed5a835ad4",
+    "bytes": 27604,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/scan/scanner-context-supabase.ts",
+    "sha256": "895b2afc2c1c3893601715da2236ae7b8e903292369e67203d159d2c6a0ab539",
+    "bytes": 2535,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/scan/scanner-context.ts",
+    "sha256": "f77e2a27db12dc68cc8b4deab30c25c45e12796053b32bf43fd71f7d4b7e73ce",
+    "bytes": 22633,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "scripts/mobile/profile-fixture.ts",
+    "sha256": "f95b44a03e3d58db43e518224b0c969245ff1a94a07cc800f21fe14c0e270ed7",
+    "bytes": 12091,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/personal-plan/routine/commerce.ts",
+    "sha256": "54887c47fed101a272b7b61bf8b9c36aad54dba3723f77476316a6cfd71bf0ed",
+    "bytes": 3414,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/product-identity/display-title.ts",
+    "sha256": "b3227a1c978a5e704bba7413087b75e97cd0b99b62aed25d05a3d6100e23c5cf",
+    "bytes": 1038,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/product-identity/normalize.ts",
+    "sha256": "817e15aed0f145308fb7e971ac9ab6171ddb0d3f0b2c043e9e06377b765d69db",
+    "bytes": 3441,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/scan/route.ts",
+    "sha256": "fe5d062ff939962807c453c1feaabaf6bde3cd4e76dac9b9831e9316b3efadb3",
+    "bytes": 4163,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/scan/load-scan-verdict.ts",
+    "sha256": "31770332de371dddaeb46d811dd1dffd42932b3ba5e9289f2035eb152e2d4f91",
+    "bytes": 5820,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/app/api/scan/search/route.ts",
+    "sha256": "98cb7df79a80ae7ab18e3a85cbdceb1c8b48b7ac110d5b1c08adc2ff41f8ef2e",
+    "bytes": 4851,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/app/api/funnel/session/route.ts",
+    "sha256": "da657d3e0ab9db46f2c569ae06c08d4a10d98ca64e7dcb8eb336d3513f11ea3d",
+    "bytes": 3149,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/analytics/routes.ts",
+    "sha256": "b1ea998155308a84bb64fe1a0c96469cb431dfc0992dbc29b9e2d7efdaa9acf2",
+    "bytes": 6220,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/analytics/track-app-event.ts",
+    "sha256": "d72b4009f31a5f4fbbfc953956e46a5962282d72bf9d9daf0382500eadf4969d",
+    "bytes": 2086,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/personal-plan/compute-stage1.ts",
+    "sha256": "3618dbc5d3e1c035ea60b79dffe6a356ced57c3e19b8d591c512d688936a4bcc",
+    "bytes": 4272,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "supabase/migrations/20260920160000_scan_name_only_submission_intake.sql",
+    "sha256": "c01148513fac0f5b9fc5def2e27ed3b43789c228cea7e47d474d38165b73ff7c",
+    "bytes": 2352,
+    "readDepth": "Full operative source text read; imported transitive engines not automatically credited"
+  },
+  {
+    "file": "src/lib/analytics/destinations/posthog.ts",
+    "sha256": "50a10cb0bdebec1ae539d8fbf83e1987b632995758d6a7bc5b1f3bd6d49db766",
+    "bytes": 21345,
+    "readDepth": "1–75,185–218,260–295,500–end: clean/mapping/actual track relevant events"
+  },
+  {
+    "file": "src/lib/analytics/events.ts",
+    "sha256": "48ce55be88f197549909df5014cfd51334d3238efc6b7ecb63456b48ad137238",
+    "bytes": 22960,
+    "readDepth": "430–453,650–730: scanner/offer event contracts"
+  },
+  {
+    "file": "src/components/scan/scan-flow.tsx",
+    "sha256": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+    "bytes": 64026,
+    "readDepth": "290–340 plus caller search: server-confirmed tier gates storage"
+  },
+  {
+    "file": "src/lib/scan/resolve-verdict.ts",
+    "sha256": "533f118abf48d49bbcf1ecde1528bd5b5a523028acb6136f2ed452f24077f0dd",
+    "bytes": 15182,
+    "readDepth": "150–225: role/comparison assembly caller"
+  },
+  {
+    "file": "src/lib/customerio/result-artifact-service.ts",
+    "sha256": "b86f1fe35d378513dc7c9ff4b4d2e9906ea50124dcb9dfd54a7635e72d7d7f47",
+    "bytes": 3543,
+    "readDepth": "80–127 scanner artifact branch and delivery caller"
+  },
+  {
+    "file": "src/app/api/scan/submit/route.ts",
+    "sha256": "b509ae15cc10aee607e086ac10c843d77668386dc546a6c640a167cb729c2dad",
+    "bytes": 12241,
+    "readDepth": "180–232 name-conflict recovery caller"
+  },
+  {
+    "file": "src/lib/product-intake/submissions.ts",
+    "sha256": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3",
+    "bytes": 46124,
+    "readDepth": "42–59 open statuses; other matches navigation only"
+  },
+  {
+    "file": "src/lib/personal-plan/input.ts",
+    "sha256": "22743980e01019fc9834a5a5f6ad3ef566def3757be3b17a2c5994f11ac95c6f",
+    "bytes": 9148,
+    "readDepth": "1–155 and170–264 source schema/legacy builder/profile projection"
+  },
+  {
+    "file": "src/lib/personal-plan/types.ts",
+    "sha256": "40297a7f5b93d2ae223603fe818111f8a546c21299579d4eaf1da3d6089e2389",
+    "bytes": 17171,
+    "readDepth": "130–156 hair fields"
+  },
+  {
+    "file": "src/lib/personal-plan-quiz/offer-adapter.ts",
+    "sha256": "67cce9c3515c8bb2aff287131fda1be77c7c81188732b3fc9e66b1e3afefa6f4",
+    "bytes": 12530,
+    "readDepth": "1–102 legacy forward mapping; reverse adapter out of scope"
+  },
+  {
+    "file": "src/lib/scan/types.ts",
+    "sha256": "dce26c3380df9386a8296b52c79cb702c47fc9a6ab49fb4f04ea1a250d2e2c02",
+    "bytes": 7375,
+    "readDepth": "1–110 scan alternative/payload contracts"
+  },
+  {
+    "file": "package.json",
+    "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    "bytes": 25353,
+    "readDepth": "Node test command and dependency versions"
+  },
+  {
+    "file": "package-lock.json",
+    "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
+    "bytes": 590438,
+    "readDepth": "Guard only; not semantically read whole lock"
+  },
+  {
+    "file": ".github/workflows/ci.yml",
+    "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "bytes": 17598,
+    "readDepth": "152–163 actual test:node CI step"
+  },
+  {
+    "file": ".nvmrc",
+    "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+    "bytes": 3,
+    "readDepth": "full"
+  },
+  {
+    "file": "tests/server-only-register.cjs",
+    "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+    "bytes": 391,
+    "readDepth": "full marker-only Node hook"
+  },
+  {
+    "file": "plans/freemium-scanner-first/plan.md",
+    "sha256": "a5a795fabb557e03aed778067b75cb06b7039f4e991cc4ef072872e34ce4894b",
+    "bytes": 28900,
+    "readDepth": "T8/T10 and privacy clauses supporting current contract; not full plan"
+  },
+  {
+    "file": "node_modules/next/dist/server/web/spec-extension/response.js",
+    "sha256": "68a5a07540d57a4beb3275fddd0502fd5ef9a42986b414c0bcee99a3f9033366",
+    "bytes": 4977,
+    "readDepth": "84–108 JSON serialization delegates native Response.json; no owner execution"
+  },
+  {
+    "file": "node_modules/@electric-sql/pglite/package.json",
+    "sha256": "a540c379fd1d820810793681d25fa7ad5dadfcee2b190d14a6553fdb469cfe3c",
+    "bytes": 5853,
+    "readDepth": "installed package identity guard only"
+  },
+  {
+    "file": "node_modules/typescript/package.json",
+    "sha256": "822ef7ca6452205657b6288b066481ecf508bfbf43455d715cf7d3ec457561e6",
+    "bytes": 3620,
+    "readDepth": "static parser identity guard only"
+  },
+  {
+    "file": "node_modules/typescript/lib/typescript.js",
+    "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675",
+    "bytes": 9112572,
+    "readDepth": "static parser bytes guard only, not semantic full read"
+  }
+]

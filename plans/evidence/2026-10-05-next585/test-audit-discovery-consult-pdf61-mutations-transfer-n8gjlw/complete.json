@@ -1,0 +1,249 @@
+{
+  "phase": "transfer",
+  "verified": 1,
+  "cleanRuns": 2,
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "sourceGuards": [
+    {
+      "file": "src/app/admin/beratung/[enrollmentId]/pdf/page.tsx",
+      "sha": "4fe42c9f7be41ab9199b1cc8242216faafabe46c01bbd1adb72859fc6ddbbf70"
+    },
+    {
+      "file": "src/components/discovery/print/discovery-routine-document.tsx",
+      "sha": "b4808e615d893256fc06b1f3d85eb3544241f740dca4b7979316ea0e3b2445b7"
+    },
+    {
+      "file": "src/lib/discovery/cockpit.ts",
+      "sha": "ce2975efba1d388ee27bb0724910dfa4aa3f17246033fe34e1033bb1ed081151"
+    },
+    {
+      "file": "src/lib/discovery/refined-routine.ts",
+      "sha": "79a8321c4bb5c53a9594b0664cc708f326bca7ff058c6aeba4faa18cd821ee00"
+    },
+    {
+      "file": "src/lib/discovery/cadence-label.ts",
+      "sha": "c2d407cb9c22a9904d692aa6920efeb0e8d407e4dc8d9cb7646e7d64ecaa5154"
+    },
+    {
+      "file": "src/lib/discovery/product-label.ts",
+      "sha": "8d357c9064bde86270829baad10c17674ea312d9b4afdef0f239e5c30070e185"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/canonicalize.ts",
+      "sha": "e4121a385e6c86c957143147994132d9ec1695de1cc7d51d3801d0ad51b451ae"
+    },
+    {
+      "file": "src/lib/product-identity/display-title.ts",
+      "sha": "b3227a1c978a5e704bba7413087b75e97cd0b99b62aed25d05a3d6100e23c5cf"
+    },
+    {
+      "file": "src/lib/discovery/classify.ts",
+      "sha": "494058e87814dce648ff8c5c72dd13b8cb4382467730f8b9333333b0a2abf678"
+    },
+    {
+      "file": "src/lib/discovery/frequency.ts",
+      "sha": "42ecbb35dbbfbdba7257f8c2bec6a1ed560f707c59e1f37e193e854e1be9896e"
+    },
+    {
+      "file": "src/app/api/admin/beratung/[enrollmentId]/consult-brief/route.ts",
+      "sha": "44532ab4c35abb877091432a2b5ad53f2bd6fc6358bc2257627c6b6b8583d3d4"
+    },
+    {
+      "file": "src/app/api/admin/beratung/[enrollmentId]/call-sheet/route.ts",
+      "sha": "8ff8256ab19ff5f2be37c44c8d82b1af3fcdae3e9fcd988eba3e8df71c17dcbb"
+    },
+    {
+      "file": "src/app/api/admin/beratung/shared.ts",
+      "sha": "8048ade70b72e841b671b44bef28653c25245a3ed01f5f46c4b9c1d5d6ed9eef"
+    },
+    {
+      "file": "src/lib/discovery/call-sheet.ts",
+      "sha": "7bfb9a6a9d87c4548923045aa598a07df40a5c5b6f119a05e10fc127452e460e"
+    },
+    {
+      "file": "src/lib/discovery/consult-brief/source.ts",
+      "sha": "7e713e4daca11209547f8f31ee14f051dbf961b6f893f2855380c1db926629b0"
+    },
+    {
+      "file": "src/lib/discovery/consult-brief/input.ts",
+      "sha": "909007aef4824c979874e1f103e9d6eaaa3c7e67a5bbc2e6122d006003c143db"
+    },
+    {
+      "file": "src/lib/discovery/consult-brief/snapshot-facts.ts",
+      "sha": "20d96fdc21b65d1180e00947d3f50feff0127bd66caffb4f1e7c702664c4bd00"
+    },
+    {
+      "file": "src/lib/discovery/consult-brief/hash.ts",
+      "sha": "378cd02b22d2f7c75e109540a9af4d93399335a5af82809c79cfc389b916b765"
+    },
+    {
+      "file": "src/lib/discovery/consult-brief/generate.ts",
+      "sha": "09b232852601e759d9bd49859351285d08cf3d842941e83a885eba3b48054d03"
+    },
+    {
+      "file": "src/lib/discovery/consult-brief/api-schema.ts",
+      "sha": "2667dda662d17bdca093472200d95e6b8d505e649e496fa6c422ae5ca4a9ecae"
+    },
+    {
+      "file": "src/lib/discovery/consult-brief/prompt.ts",
+      "sha": "0ea3baa873b17903db2d5e7278c936b782dcaafab9237e4e58f99e705d7df7bf"
+    },
+    {
+      "file": "src/lib/discovery/consult-brief/lint.ts",
+      "sha": "ec9c45e56527e2cb79dac0c6b26c6d1ba2f4170d3224df1620acb5b305092f40"
+    },
+    {
+      "file": "src/lib/discovery/consult-brief/knowledge.ts",
+      "sha": "a68fdc1c6a7278a009c50c7871aeabdda738fa5808b2e429ace39d12d36fb4ff"
+    },
+    {
+      "file": "scripts/eval-consult-brief/checks.ts",
+      "sha": "61e119bb93dea9f4529e57255a148e3a0982c43e9768ca0925ed397999bfc464"
+    },
+    {
+      "file": "tests/fixtures/consult-brief/golden-profiles.ts",
+      "sha": "4ff8882fdb87b41b4bf3aec9197221ed62efa55972f754cf517ac79e669428c6"
+    },
+    {
+      "file": "tests/fixtures/consult-brief/recorded-nomi.json",
+      "sha": "9efb48dd477f0c93ce30ffb157ccfebd030a1d32723f672228128f1a7d4d5ce5"
+    },
+    {
+      "file": "src/lib/discovery/heat-styling.ts",
+      "sha": "3808829cb064b297dac810bc9e1fa594adc878148acb317dd75b4a9317939775"
+    },
+    {
+      "file": "src/lib/discovery/runsheet/index.ts",
+      "sha": "9ae3297444143aadf3043300fe11ab9440c40d94c1c79c230d1c80402bd39fe4"
+    },
+    {
+      "file": "src/lib/discovery/runsheet/buckets.ts",
+      "sha": "3c133dbe9ba03964f3a922714221a27218bd2090f174bf43878268fb4ee1e3ec"
+    },
+    {
+      "file": "src/lib/discovery/runsheet/checklist.ts",
+      "sha": "6b6af3e09b1305948f4a3e6f7b5bb78287910741d766cfae223398072481e891"
+    },
+    {
+      "file": "src/app/admin/layout.tsx",
+      "sha": "045f4a5ed6774dd9157f4e01b693f0d37ceada719cf762e30095b29a45d9a9ef"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "node_modules/react-dom/server.node.js",
+      "sha": "f2dd93f6f91f983cd91232098d4ac55578596d33d680d7cb9438ea3b0a611b4b"
+    },
+    {
+      "file": "node_modules/next/dist/client/components/not-found.js",
+      "sha": "5d835de0faff84105e69248ac22561194284b8aacd78937a90c11f9492622201"
+    },
+    {
+      "file": "src/lib/discovery/quiz-answers.ts",
+      "sha": "e9a83b8ce555cdd277e6cbaf6acd60e7fe47458bcbeaebf4839428fc24c85c55"
+    },
+    {
+      "file": "src/app/admin/beratung/[enrollmentId]/page.tsx",
+      "sha": "586f0276c8add490377ab3340ce08c9045ea76b029ea7a07389a82fef0cc7eb5"
+    },
+    {
+      "file": "src/components/discovery/cockpit/discovery-call-cockpit.tsx",
+      "sha": "2d0adde32589464e10ba2b9a1bb9d13263ca40bbfada8b9d4ab82a1572d68071"
+    },
+    {
+      "file": "src/components/discovery/cockpit/runsheet-brief.tsx",
+      "sha": "360aa7659c7cf1c59617e15eb9202a591685198bf8eb32d1d1af653d63dc3f52"
+    },
+    {
+      "file": "scripts/eval-consult-brief/run.ts",
+      "sha": "1050bcc72ed1cdf6ead7eb428c93a2a24d8714d04bc7d8609d7b809e96fde9f5"
+    },
+    {
+      "file": "src/components/feedback/feedback-widget.tsx",
+      "sha": "5f5c94513992db4591eccb3ac77aa5e29132e0d0736c9ef9fd2a033bbdae99d3"
+    },
+    {
+      "file": "src/components/cookie-consent/cookie-consent.tsx",
+      "sha": "cc25b6301f25df9605b97d154875e207aceb8a644f2717864ce40f800210d1da"
+    },
+    {
+      "file": "src/app/layout.tsx",
+      "sha": "cb59fbca704acc3352087e1dc3057b43690f510f8d40fc7c01319249b9846466"
+    },
+    {
+      "file": "node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js",
+      "sha": "e0a591b81f983794366bbc8338df0ebbbc7add48fdcee772870e226eadcda9ce"
+    },
+    {
+      "file": "node_modules/next/dist/client/components/redirect.js",
+      "sha": "3f6233bded38f4c383a8d544a5adc845ab9a8c1c20d54957000adc151c5b161a"
+    },
+    {
+      "file": "package.json",
+      "sha": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": "package-lock.json",
+      "sha": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    },
+    {
+      "file": ".nvmrc",
+      "sha": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675"
+    },
+    {
+      "file": "node_modules/typescript/package.json",
+      "sha": "822ef7ca6452205657b6288b066481ecf508bfbf43455d715cf7d3ec457561e6"
+    },
+    {
+      "file": "node_modules/react/package.json",
+      "sha": "ce01a280a6109d1a837e88ce99784f318785079dbffda086a870aad61adc94e1"
+    },
+    {
+      "file": "node_modules/react-dom/package.json",
+      "sha": "92aa96480eaab724565c5bb8a4b1dd355114506e5babd36c48c783407ff9937d"
+    },
+    {
+      "file": "node_modules/next/package.json",
+      "sha": "006ccbc8816f40ace4307a6048c25ef3cdbe93598529d5dc85db9d19d912274d"
+    },
+    {
+      "file": "node_modules/tsx/package.json",
+      "sha": "6e764b21991c21595441f82387c1451ccd10a3e7a3f0973cc5e3649a12dea7d2"
+    },
+    {
+      "file": "src/lib/discovery/consult-brief/knowledge-sources.ts",
+      "sha": "5c0fd25fcdc33528f19e9c2cfb4030445779a90a448e974c5cb83245deca28d4"
+    },
+    {
+      "file": "src/lib/discovery/concern-recipes.ts",
+      "sha": "77176c8a3c052bbd31e87fdac69c49867c8c464c0a648a18833bd2e281ef4b31"
+    },
+    {
+      "file": "src/lib/vocabulary/frequencies.ts",
+      "sha": "d79bb3584473a8f6541feecff58a40633736f9376981ff190b645114dc0eb3a9"
+    },
+    {
+      "file": "src/lib/product-identity/index.ts",
+      "sha": "fd7c23ab66221159b693d8f3c076ad1169160e1d2ed1cd1de7b923d1e3a82d46"
+    },
+    {
+      "file": "src/lib/personal-plan/decision-presentation.ts",
+      "sha": "59f31da07e7dc79be68ef3f5ebe9bf66073ecdab6168559a25646616475edbf5"
+    }
+  ]
+}

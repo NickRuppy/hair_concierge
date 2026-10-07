@@ -1,0 +1,54 @@
+[
+  {
+    "id": "wrong-owner-bypass",
+    "lane": "uploadpath",
+    "phase": "new",
+    "intended": "Actual route must reject wrong-owner path with400; bypass causes actual storage verification410, caught at existing status assertion.",
+    "source": "src/lib/product-intake/upload-paths.ts",
+    "selectedTest": {
+      "file": "tests/product-intake-submissions.test.ts",
+      "name": "route handler returns controlled client error for wrong-user upload paths"
+    },
+    "originalHash": "a5a096b823218cf583b96075710badf8744f701d833212828de6e266929fdd44",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-uploadpath-mutations-new/wrong-owner-bypass-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-uploadpath-mutations-new/wrong-owner-bypass-fault.tap"
+    },
+    "restoredHash": "a5a096b823218cf583b96075710badf8744f701d833212828de6e266929fdd44",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-uploadpath-mutations-new/wrong-owner-bypass-after.tap"
+    },
+    "keeperAssertionLines": [
+      1983,
+      1984,
+      1985
+    ],
+    "assertionStacks": [
+      1983
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  }
+]

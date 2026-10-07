@@ -1,0 +1,635 @@
+{
+  "originalGuards": [
+    {
+      "file": "tests/reactivation-stripe-context-postgres.test.ts",
+      "sha256": "386b328b8478e40597058348a792890627f573e3df9a6697ed7e1723fc54a270"
+    },
+    {
+      "file": "tests/reactivation-checkout-metadata.test.ts",
+      "sha256": "784478263208522bf37bb2dffc1f4e816811d0b08c45f345e4d5aca92b76bd3e"
+    },
+    {
+      "file": "tests/reactivation-retained-account-activation.test.ts",
+      "sha256": "8ef221ef187d867ab2941c5bb5205e49af67439e33b3c529e14cdb53bbb288d7"
+    },
+    {
+      "file": "tests/reactivation-stripe-context-runtime.test.ts",
+      "sha256": "257a4a472930539e71266d8320dffd60f175b091749ba5c74caae4ebf75e84e9"
+    },
+    {
+      "file": "tests/reactivation-helpers.test.ts",
+      "sha256": "6639b8910ac9253d87b2b008fb5e53c3f38e335511a518b6dcb97fa7dea39ab7"
+    },
+    {
+      "file": "tests/reactivation-checkout-recovery.spec.ts",
+      "sha256": "82f0c6591d955477440721ee865bfa370055d12b9066b0f8c881ab86aa401a8a"
+    },
+    {
+      "file": "tests/reactivation-trial-management.test.ts",
+      "sha256": "c8f04e9cbc7d85c908b7e9a59fc753a42c3cad7bd8156f9075b24222c984d637"
+    },
+    {
+      "file": "tests/reactivation-auth-return.test.ts",
+      "sha256": "0438dc495f5c5c01c6f0ee0ed6406cfaafc359d8086fe0debe5f99bfbd35b17d"
+    },
+    {
+      "file": "tests/reactivation-routing.test.ts",
+      "sha256": "72b7affede80ab62f0db66e4c73e42f8c3ac532ed6e2100c46172f0bcf998623"
+    },
+    {
+      "file": "src/lib/reactivation/checkout-recovery.ts",
+      "sha256": "ae4dc3a9ae881a89fb372cc72f12e4f32a07fdf1094ffb4f24b9a6cbe5957dd9"
+    },
+    {
+      "file": "src/lib/reactivation/checkout-reservations.ts",
+      "sha256": "e1e14f2ad3c5ce5a511cf4918f561af1568d924426dc2eb1c18d735ca1eb2377"
+    },
+    {
+      "file": "src/lib/reactivation/profile-quiz-answers.ts",
+      "sha256": "4892919a1dc7486a0054644fc6d51704c9d3bee27be845948e039e99109a6bb9"
+    },
+    {
+      "file": "src/lib/reactivation/return-destination.ts",
+      "sha256": "48b88020e14c0e29db0744e616ce9a94d4399d8e52952c2eed95233d307807ab"
+    },
+    {
+      "file": "src/lib/reactivation/stripe-checkout-context.ts",
+      "sha256": "c4d51565dd34601e2fb1e5858470c79439f6ddcc8a1ec8ab9589e07604350389"
+    },
+    {
+      "file": "src/lib/reactivation/stripe-checkout-recovery.ts",
+      "sha256": "95f2390c0d83060576590bde47a9e3d32ec4ac11cfe9123312fd5aa69e7e313c"
+    },
+    {
+      "file": "src/app/reactivate/page.tsx",
+      "sha256": "ca6d462430c6fa257b7233de5a86b532904e418d2640d4949d964ec1ec312ca9"
+    },
+    {
+      "file": "src/components/reactivation/membership-reactivation-checkout.tsx",
+      "sha256": "65633082b1b404f7c5f66f64307f75cbee99be431ba71c3f99f5f0a976fd0412"
+    },
+    {
+      "file": "src/components/checkout/payment-method-checkout.tsx",
+      "sha256": "93a3cc1c82fc6b0e8db03ec6af00b48a863496ccea37faaed17f5f9ce289f3b4"
+    },
+    {
+      "file": "src/lib/auth/route-classification.ts",
+      "sha256": "6a5c8c0a283054ab108779a6a8f23764a4919b67adea2f0a94cb389abb4d57a6"
+    },
+    {
+      "file": "src/lib/auth/unauthenticated-redirect.ts",
+      "sha256": "bd6703ab7d835709100f2870c7ad950b1b66837f6e2f0b9f78836f8cdb6a1231"
+    },
+    {
+      "file": "src/lib/billing/checkout-success-redirect.ts",
+      "sha256": "ffe58e6d3b90a278e882101a674c7f3d65ce241c0d6c0bbea21321c5bd935092"
+    },
+    {
+      "file": "src/lib/billing/trial-membership.ts",
+      "sha256": "1e5a8d19e1bd9e04ecc4d727a3460b28bfa70a6af955b355e605c79aaf4fdc05"
+    },
+    {
+      "file": "src/lib/billing/trial-effective-contract.ts",
+      "sha256": "8700806b915a6472297eee6b523671fbcaa924a7eb4f4c02edf47bf6d5d40d96"
+    },
+    {
+      "file": "src/lib/billing/trial-returning-customer.ts",
+      "sha256": "901d4e91e87b39e0394b95410c786beff3123dbc52f340e79955f5d5e8b8c99a"
+    },
+    {
+      "file": "src/lib/billing/moderator-reset-cutoff.ts",
+      "sha256": "b7f4cfcf738472d0d7eab0adbd758acde100e78d99b9e7fa6eecbabed322802a"
+    },
+    {
+      "file": "src/lib/paypal/plans.ts",
+      "sha256": "08d36facaadaf6d9beb3e1433c3dcd0fbacd48f99b00fc0dd1e24a1b1045ca1a"
+    },
+    {
+      "file": "src/lib/stripe/checkout-session-params.ts",
+      "sha256": "985f472524ca69289513989e59f39068cde6a1234c0b0a7429f15da343b595b9"
+    },
+    {
+      "file": "src/lib/stripe/trial-checkout-session-params.ts",
+      "sha256": "9341b1b612522030f2272dcb75a455ea914792c6810567aa2f176dd73ebb51c3"
+    },
+    {
+      "file": "src/lib/quiz/offer-preview.ts",
+      "sha256": "d436af030c92a7189c79db4d974fe13e5c1e602d94bfc23d3276f96926ab10e4"
+    },
+    {
+      "file": "supabase/migrations/20260714200000_membership_reactivation_checkout_reservations.sql",
+      "sha256": "0627a8ba0d27a43f024a60ac8b655158e614acbc146f709180d81390d225e4c4"
+    },
+    {
+      "file": "supabase/migrations/20260715200000_paypal_reactivation_intent_uniqueness.sql",
+      "sha256": "5e01f36c4ff43d771d20afa23a70d2d19e3f4fd9dcbc6afe81cb2278c90cb3aa"
+    },
+    {
+      "file": "supabase/migrations/20260913202413_membership_reactivation_stripe_context.sql",
+      "sha256": "0e1923a5b51c6119be2691cfc4f5a258b3c8900c95ecc3c8d04d52d8fd41a3c1"
+    },
+    {
+      "file": "playwright.config.ts",
+      "sha256": "1bae952413616dc389aad1ebe4278173df2ea9e51add59045d72c24501f85aa9"
+    },
+    {
+      "file": "scripts/ci/path-rules.mjs",
+      "sha256": "e74b1ea820f04881ede4b5140251af7b456d327c57137ae72f2a48ad94d4d7f5"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "src/lib/stripe/checkout-activation.ts",
+      "sha256": "f33ca66366ec59a915fdeba82bb397ad20891dd837495de25c6bf4e51deb8bdc"
+    },
+    {
+      "file": "src/lib/stripe/webhook-handlers.ts",
+      "sha256": "611ec5966703c23c01beb04982fff17715a801afb808ec9b80117ae0462e7041"
+    },
+    {
+      "file": "src/lib/billing/subscriptions.ts",
+      "sha256": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c"
+    },
+    {
+      "file": "src/lib/stripe/trial-account-admission.ts",
+      "sha256": "36267f9ff61d48e48bebc4278d8606e0a7c677b05c3b425639fc4da35d7a50c0"
+    },
+    {
+      "file": "src/lib/supabase/middleware.ts",
+      "sha256": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7"
+    },
+    {
+      "file": "src/lib/paypal/checkout-intents.ts",
+      "sha256": "a26c67160595e5d4f620d461d42141009dbe4a4ee26f666d1d11246becb25765"
+    },
+    {
+      "file": "src/app/api/paypal/create-subscription-intent/route.ts",
+      "sha256": "cdc24635c7668e5976f8cf812af8dc02109e27d134f71855edb93cf794a12a63"
+    },
+    {
+      "file": "src/app/api/stripe/create-checkout-session/route.ts",
+      "sha256": "0808a083b02a9611deab703bf9fc7a9b3cecb5dce2b5be1889003a0cd06a9bd8"
+    },
+    {
+      "file": "src/components/checkout/paypal-subscription-button.tsx",
+      "sha256": "df81932a397efbe358f595927ce40ad73425bcdf0e64aeafc2fe7fd9db11fae1"
+    },
+    {
+      "file": "src/lib/openai-ads/browser.ts",
+      "sha256": "30c0a0b871aac8a5bf6f2131d7c48a6643f71dc7c31cca298196bed4ab288ab3"
+    },
+    {
+      "file": "src/lib/quiz/normalization.ts",
+      "sha256": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239"
+    },
+    {
+      "file": "src/lib/billing/trial-runtime.ts",
+      "sha256": "0dae1fdc8a90e3b71a6faf4a20fafa9c655c165650fbe952a3b36e66b29bffe0"
+    },
+    {
+      "file": "src/app/api/stripe/webhook/route.ts",
+      "sha256": "83c74462ffda261d3a044467d68a918b034febbefca9f6aad4ae131dd84f35ab"
+    },
+    {
+      "file": "src/app/welcome/page.tsx",
+      "sha256": "e6c5c768deee6f4f304e1dc5a4ed27ba8c0a186938069fec0c579ed560fda24e"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/src/PostgrestTransformBuilder.ts",
+      "sha256": "3483dce13f52a70e35149044b424112bce6f0a4f3140da9130d9dcf71deb4f95"
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/src/PostgrestBuilder.ts",
+      "sha256": "2ce38ea1551e3fa2bfa49c1311e21191797b10b0ea0f7660da3b825bb37fe3ec"
+    },
+    {
+      "file": "node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js",
+      "sha256": "e0a591b81f983794366bbc8338df0ebbbc7add48fdcee772870e226eadcda9ce"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/index.cjs.map",
+      "sha256": "af9f64e861763113df03e067851e5d2a645bdf1f58675e9aead1a70379419851"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    },
+    {
+      "file": ".nvmrc",
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "file": "node_modules/typescript/package.json",
+      "sha256": "822ef7ca6452205657b6288b066481ecf508bfbf43455d715cf7d3ec457561e6"
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675"
+    },
+    {
+      "file": "node_modules/react/package.json",
+      "sha256": "ce01a280a6109d1a837e88ce99784f318785079dbffda086a870aad61adc94e1"
+    },
+    {
+      "file": "node_modules/react-dom/package.json",
+      "sha256": "92aa96480eaab724565c5bb8a4b1dd355114506e5babd36c48c783407ff9937d"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/package.json",
+      "sha256": "a540c379fd1d820810793681d25fa7ad5dadfcee2b190d14a6553fdb469cfe3c"
+    },
+    {
+      "file": "node_modules/@playwright/test/package.json",
+      "sha256": "6a1bfbf979df620c080e4b0b0506e6fc53a070e2280a971b189839b1a481ac01"
+    },
+    {
+      "file": "node_modules/tsx/package.json",
+      "sha256": "6e764b21991c21595441f82387c1451ccd10a3e7a3f0973cc5e3649a12dea7d2"
+    },
+    {
+      "file": "node_modules/esbuild/package.json",
+      "sha256": "9ce21c976ffbbb95001f460e9e8af7c6d719f748eb70441e617a14dd0b68a5b8"
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/package.json",
+      "sha256": "395783968ba3868bbc44b14d3e5b97b308f0acae074bdf2a5ff18d0cbe1e2798"
+    }
+  ],
+  "localImportGraphFiles": [
+    "src/app/api/paypal/create-subscription-intent/route.ts",
+    "src/components/checkout/active-subscription-dialog.tsx",
+    "src/components/checkout/payment-feedback-card.tsx",
+    "src/components/checkout/payment-method-checkout.tsx",
+    "src/components/checkout/payment-option-exposure.tsx",
+    "src/components/checkout/paypal-script-failure.ts",
+    "src/components/checkout/paypal-subscription-button.tsx",
+    "src/components/checkout/plan-reference-prices.ts",
+    "src/components/checkout/stripe-offer-elements-checkout.tsx",
+    "src/components/checkout/subscription-plan-selector.tsx",
+    "src/components/checkout/use-payment-support-report.ts",
+    "src/components/providers/payment-runtime-provider.tsx",
+    "src/components/quiz/offer-tracking-provider.tsx",
+    "src/components/reactivation/membership-reactivation-checkout.tsx",
+    "src/components/ui/button.tsx",
+    "src/components/ui/dialog.tsx",
+    "src/components/ui/icon.tsx",
+    "src/funnels/packages.json",
+    "src/funnels/quizzes/registry.json",
+    "src/funnels/quizzes/registry.ts",
+    "src/lib/analytics/checkout-attempt.ts",
+    "src/lib/analytics/destinations/customerio.ts",
+    "src/lib/analytics/destinations/meta.ts",
+    "src/lib/analytics/destinations/posthog.ts",
+    "src/lib/analytics/events.ts",
+    "src/lib/analytics/meta-capi.ts",
+    "src/lib/analytics/meta-offer-view-client.ts",
+    "src/lib/analytics/meta-offer-view-id.ts",
+    "src/lib/analytics/observe-once-engaged.ts",
+    "src/lib/analytics/offer-engagement.ts",
+    "src/lib/analytics/offer-payment-option-view.ts",
+    "src/lib/analytics/offer-section-order.ts",
+    "src/lib/analytics/offer-tracking-claims.ts",
+    "src/lib/analytics/offer-viewed-payload.ts",
+    "src/lib/analytics/page-url.ts",
+    "src/lib/analytics/routes.ts",
+    "src/lib/analytics/runtime/bounded-fifo.ts",
+    "src/lib/analytics/runtime/environment.ts",
+    "src/lib/analytics/runtime/posthog.ts",
+    "src/lib/analytics/track-app-event.ts",
+    "src/lib/auth/checkout-activation-outcome.ts",
+    "src/lib/auth/intake-state.ts",
+    "src/lib/auth/route-classification.ts",
+    "src/lib/auth/unauthenticated-redirect.ts",
+    "src/lib/billing/analytics-destinations/customerio.ts",
+    "src/lib/billing/analytics-destinations/funnel.ts",
+    "src/lib/billing/analytics-destinations/meta-capi.ts",
+    "src/lib/billing/analytics-destinations/openai-capi.ts",
+    "src/lib/billing/analytics-destinations/posthog-server.ts",
+    "src/lib/billing/analytics-destinations/types.ts",
+    "src/lib/billing/analytics-outbox.ts",
+    "src/lib/billing/checkout-success-redirect.ts",
+    "src/lib/billing/moderator-reset-cutoff.ts",
+    "src/lib/billing/offer-products.ts",
+    "src/lib/billing/payment-runtime-config.ts",
+    "src/lib/billing/personal-plan-one-time-activation.ts",
+    "src/lib/billing/personal-plan-one-time-consent-copy.ts",
+    "src/lib/billing/personal-plan-one-time-consents.ts",
+    "src/lib/billing/plan-change.ts",
+    "src/lib/billing/pricing-catalog.ts",
+    "src/lib/billing/purchases.ts",
+    "src/lib/billing/subscriptions.ts",
+    "src/lib/billing/trial-access-projection.ts",
+    "src/lib/billing/trial-admission.ts",
+    "src/lib/billing/trial-analytics-context.ts",
+    "src/lib/billing/trial-checkout-attempt.ts",
+    "src/lib/billing/trial-effective-contract.ts",
+    "src/lib/billing/trial-eligibility.ts",
+    "src/lib/billing/trial-identity-claims.ts",
+    "src/lib/billing/trial-management-operations.ts",
+    "src/lib/billing/trial-membership.ts",
+    "src/lib/billing/trial-offer.ts",
+    "src/lib/billing/trial-policy.ts",
+    "src/lib/billing/trial-runtime.ts",
+    "src/lib/billing/types.ts",
+    "src/lib/bondbuilder/constants.ts",
+    "src/lib/checkout/access-recovery.ts",
+    "src/lib/checkout/payment-feedback.ts",
+    "src/lib/conditioner/constants.ts",
+    "src/lib/cookie-consent.ts",
+    "src/lib/customerio-tracking.ts",
+    "src/lib/customerio/offer-engagement-client.ts",
+    "src/lib/customerio/personal-plan-one-time-confirmation.ts",
+    "src/lib/customerio/server.ts",
+    "src/lib/customerio/transactional.ts",
+    "src/lib/deep-cleansing-shampoo/constants.ts",
+    "src/lib/discovery/flag.ts",
+    "src/lib/discovery/participant.ts",
+    "src/lib/dry-shampoo/constants.ts",
+    "src/lib/email-deliverability-shared.ts",
+    "src/lib/entitlements/flag.ts",
+    "src/lib/freemium/checkout-metadata.ts",
+    "src/lib/freemium/plan-provisioning-supabase.ts",
+    "src/lib/freemium/plan-provisioning.ts",
+    "src/lib/funnel/client.ts",
+    "src/lib/funnel/cookie.ts",
+    "src/lib/funnel/flags.ts",
+    "src/lib/funnel/journey-kind.ts",
+    "src/lib/funnel/offer-presentation.ts",
+    "src/lib/funnel/organic-offer-media-experiment.ts",
+    "src/lib/funnel/packages.ts",
+    "src/lib/funnel/personal-plan-pricing-experiment.ts",
+    "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+    "src/lib/funnel/purchase-attribution.ts",
+    "src/lib/funnel/server.ts",
+    "src/lib/help/info-tips.ts",
+    "src/lib/leave-in/constants.ts",
+    "src/lib/mask/constants.ts",
+    "src/lib/meta-pixel.ts",
+    "src/lib/observability/checkout-watchdog.ts",
+    "src/lib/observability/checkout.ts",
+    "src/lib/observability/offer-experiment.ts",
+    "src/lib/observability/payment-client.ts",
+    "src/lib/observability/payment-server-core.ts",
+    "src/lib/observability/payment-server.ts",
+    "src/lib/observability/payment.ts",
+    "src/lib/observability/sentry-scrubbing.ts",
+    "src/lib/oil/constants.ts",
+    "src/lib/oil/purpose.ts",
+    "src/lib/onboarding/goal-flow.ts",
+    "src/lib/openai-ads/browser.ts",
+    "src/lib/openai-ads/event-payload.ts",
+    "src/lib/openai-ads/server/capi.ts",
+    "src/lib/openai-ads/server/consent-cookie.ts",
+    "src/lib/openai-ads/server/context.ts",
+    "src/lib/paypal/checkout-intents.ts",
+    "src/lib/paypal/client.ts",
+    "src/lib/paypal/plans.ts",
+    "src/lib/paypal/subscription-shapes.ts",
+    "src/lib/paypal/subscriptions.ts",
+    "src/lib/paypal/trial-checkout-attempt.ts",
+    "src/lib/paypal/trial-checkout.ts",
+    "src/lib/paypal/trial-collection-start.ts",
+    "src/lib/paypal/trial-runtime.ts",
+    "src/lib/peeling/constants.ts",
+    "src/lib/personal-plan-field-test/errors.ts",
+    "src/lib/personal-plan-field-test/moderator-contract.ts",
+    "src/lib/personal-plan-field-test/moderator.ts",
+    "src/lib/personal-plan-quiz/offer-adapter.ts",
+    "src/lib/personal-plan-quiz/persistence.ts",
+    "src/lib/personal-plan-quiz/primary-concern.ts",
+    "src/lib/personal-plan-quiz/types.ts",
+    "src/lib/personal-plan/categories/bondbuilder.ts",
+    "src/lib/personal-plan/categories/conditioner.ts",
+    "src/lib/personal-plan/categories/deep-cleansing.ts",
+    "src/lib/personal-plan/categories/dry-shampoo.ts",
+    "src/lib/personal-plan/categories/heat-protectant.ts",
+    "src/lib/personal-plan/categories/leave-in.ts",
+    "src/lib/personal-plan/categories/mask.ts",
+    "src/lib/personal-plan/categories/oil.ts",
+    "src/lib/personal-plan/categories/scalp-care.ts",
+    "src/lib/personal-plan/categories/shampoo.ts",
+    "src/lib/personal-plan/compute-stage1.ts",
+    "src/lib/personal-plan/decision-presentation.ts",
+    "src/lib/personal-plan/direct-acceptance/accept.ts",
+    "src/lib/personal-plan/direct-acceptance/defaults.ts",
+    "src/lib/personal-plan/freemium-enrollment.ts",
+    "src/lib/personal-plan/frontier-routing-loader.ts",
+    "src/lib/personal-plan/frontier-routing.ts",
+    "src/lib/personal-plan/input.ts",
+    "src/lib/personal-plan/legacy-cutover-eligibility.ts",
+    "src/lib/personal-plan/legacy-prefill.ts",
+    "src/lib/personal-plan/needs.ts",
+    "src/lib/personal-plan/oil-heat-context.ts",
+    "src/lib/personal-plan/persistence/index.ts",
+    "src/lib/personal-plan/persistence/stage1-service.ts",
+    "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+    "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts",
+    "src/lib/personal-plan/portfolio.ts",
+    "src/lib/personal-plan/product-preview-contract.ts",
+    "src/lib/personal-plan/product-previews.ts",
+    "src/lib/personal-plan/products/authorities.ts",
+    "src/lib/personal-plan/products/authority/catalog-batching.ts",
+    "src/lib/personal-plan/products/authority/catalog-facts.ts",
+    "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+    "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+    "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+    "src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts",
+    "src/lib/personal-plan/products/authority/categories/dry-shampoo.ts",
+    "src/lib/personal-plan/products/authority/categories/heat-protectant.ts",
+    "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+    "src/lib/personal-plan/products/authority/categories/mask.ts",
+    "src/lib/personal-plan/products/authority/categories/oil.ts",
+    "src/lib/personal-plan/products/authority/categories/scalp-care.ts",
+    "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts",
+    "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+    "src/lib/personal-plan/products/authority/category-decision-schema.ts",
+    "src/lib/personal-plan/products/authority/contracts.ts",
+    "src/lib/personal-plan/products/authority/evaluate.ts",
+    "src/lib/personal-plan/products/authority/shared.ts",
+    "src/lib/personal-plan/products/authority/snapshot.ts",
+    "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+    "src/lib/personal-plan/products/candidate-ranking.ts",
+    "src/lib/personal-plan/products/comparison-dimensions.ts",
+    "src/lib/personal-plan/products/contracts.ts",
+    "src/lib/personal-plan/products/fit-comparison-schema.ts",
+    "src/lib/personal-plan/products/fit-comparison.ts",
+    "src/lib/personal-plan/products/gateway.ts",
+    "src/lib/personal-plan/products/inventory-search.ts",
+    "src/lib/personal-plan/products/legacy-inventory-entry.ts",
+    "src/lib/personal-plan/products/portfolio.ts",
+    "src/lib/personal-plan/products/product-load-resolution.ts",
+    "src/lib/personal-plan/products/production-persistence-gateway.ts",
+    "src/lib/personal-plan/products/recovery-desired-state.ts",
+    "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+    "src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts",
+    "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+    "src/lib/personal-plan/products/state-machine.ts",
+    "src/lib/personal-plan/reasons.ts",
+    "src/lib/personal-plan/refinement/answer-provenance.ts",
+    "src/lib/personal-plan/refinement/assumed-defaults.ts",
+    "src/lib/personal-plan/refinement/gateway.ts",
+    "src/lib/personal-plan/refinement/heat-events.ts",
+    "src/lib/personal-plan/refinement/module-status.ts",
+    "src/lib/personal-plan/refinement/production-persistence-gateway.ts",
+    "src/lib/personal-plan/refinement/question-path.ts",
+    "src/lib/personal-plan/refinement/session.ts",
+    "src/lib/personal-plan/refinement/stage1-adapter.ts",
+    "src/lib/personal-plan/refinement/types.ts",
+    "src/lib/personal-plan/release.ts",
+    "src/lib/personal-plan/rollout-access.ts",
+    "src/lib/personal-plan/routine-candidate-compiler.ts",
+    "src/lib/personal-plan/routine-proposal-stager.ts",
+    "src/lib/personal-plan/routine/cadence-authority.ts",
+    "src/lib/personal-plan/routine/cadence.ts",
+    "src/lib/personal-plan/routine/canonicalize.ts",
+    "src/lib/personal-plan/routine/commerce.ts",
+    "src/lib/personal-plan/routine/diff.ts",
+    "src/lib/personal-plan/routine/editor.ts",
+    "src/lib/personal-plan/transition-performance.ts",
+    "src/lib/personal-plan/types.ts",
+    "src/lib/product-identity/brand-resolution.ts",
+    "src/lib/product-identity/index.ts",
+    "src/lib/product-identity/normalize.ts",
+    "src/lib/product-specs/constants.ts",
+    "src/lib/product-usage/shampoo-fallback.ts",
+    "src/lib/profile/brush-type.ts",
+    "src/lib/profile/chemical-treatment.ts",
+    "src/lib/profile/signal-derivations.ts",
+    "src/lib/quiz/completion.ts",
+    "src/lib/quiz/diagnostic-input.ts",
+    "src/lib/quiz/need-lane.ts",
+    "src/lib/quiz/normalization.ts",
+    "src/lib/quiz/offer-preview-products.ts",
+    "src/lib/quiz/offer-preview-types.ts",
+    "src/lib/quiz/offer-preview.ts",
+    "src/lib/quiz/primary-concern.ts",
+    "src/lib/quiz/types.ts",
+    "src/lib/reactivation/checkout-recovery.ts",
+    "src/lib/reactivation/checkout-reservations.ts",
+    "src/lib/reactivation/profile-quiz-answers.ts",
+    "src/lib/reactivation/return-destination.ts",
+    "src/lib/reactivation/stripe-checkout-context.ts",
+    "src/lib/recommendation-engine/assessments/reset.ts",
+    "src/lib/recommendation-engine/categories/shared.ts",
+    "src/lib/recommendation-engine/contracts.ts",
+    "src/lib/recommendation-engine/request-context.ts",
+    "src/lib/recommendation-engine/shampoo-cadence.ts",
+    "src/lib/recommendation-engine/types.ts",
+    "src/lib/routines/personal-plan/application/contracts.ts",
+    "src/lib/shampoo/constants.ts",
+    "src/lib/stripe/checkout-activation.ts",
+    "src/lib/stripe/checkout-session-params.ts",
+    "src/lib/stripe/client.ts",
+    "src/lib/stripe/intervals.ts",
+    "src/lib/stripe/prepared-checkout-credential.ts",
+    "src/lib/stripe/pricing-plans.ts",
+    "src/lib/stripe/trial-account-admission.ts",
+    "src/lib/stripe/trial-authorization.ts",
+    "src/lib/stripe/trial-checkout-session-params.ts",
+    "src/lib/stripe/webhook-handlers.ts",
+    "src/lib/supabase/admin.ts",
+    "src/lib/supabase/middleware.ts",
+    "src/lib/supabase/server.ts",
+    "src/lib/types.ts",
+    "src/lib/ui/modal-layer-manager.ts",
+    "src/lib/utils.ts",
+    "src/lib/vocabulary/concerns-goals.ts",
+    "src/lib/vocabulary/errors.ts",
+    "src/lib/vocabulary/frequencies.ts",
+    "src/lib/vocabulary/hair-length.ts",
+    "src/lib/vocabulary/hair-types.ts",
+    "src/lib/vocabulary/index.ts",
+    "src/lib/vocabulary/onboarding-care.ts",
+    "src/lib/vocabulary/onboarding-goals.ts",
+    "src/lib/vocabulary/profile-labels.ts",
+    "src/lib/vocabulary/source-labels.ts",
+    "tests/reactivation-auth-return.test.ts",
+    "tests/reactivation-checkout-metadata.test.ts",
+    "tests/reactivation-helpers.test.ts",
+    "tests/reactivation-retained-account-activation.test.ts",
+    "tests/reactivation-routing.test.ts",
+    "tests/reactivation-stripe-context-postgres.test.ts",
+    "tests/reactivation-stripe-context-runtime.test.ts",
+    "tests/reactivation-trial-management.test.ts"
+  ],
+  "dynamicExpressions": [
+    {
+      "file": "tests/reactivation-trial-management.test.ts",
+      "expression": "require(specifier.startsWith(\"@/\") ? path.resolve(\"src\", specifier.slice(2)) : specifier)"
+    }
+  ],
+  "bareRuntimeEntries": [
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@electric-sql/pglite/dist/index.cjs",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@paypal/paypal-js/dist/cjs/paypal-js.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@paypal/react-paypal-js/dist/cjs/react-paypal-js.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/index.server.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/node/build/cjs/index.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@stripe/react-stripe-js/dist/checkout.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@stripe/react-stripe-js/dist/react-stripe.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@stripe/stripe-js/lib/index.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@stripe/stripe-js/pure/index.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/ssr/dist/main/index.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/dist/index.cjs",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/class-variance-authority/dist/index.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/clsx/dist/clsx.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/lucide-react/dist/cjs/lucide-react.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/dynamic.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/headers.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/link.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/server.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/posthog-js/dist/main.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react-dom/index.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react-dom/server.node.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/react/index.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/server-only/index.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/stripe/cjs/stripe.cjs.node.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/tailwind-merge/dist/bundle-cjs.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript/lib/typescript.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/index.cjs"
+  ],
+  "selectedDistributions": [
+    "tsx",
+    "esbuild",
+    "get-tsconfig",
+    "resolve-pkg-maps",
+    "fsevents",
+    "@esbuild/darwin-arm64",
+    "react",
+    "react-dom",
+    "zod",
+    "@electric-sql/pglite",
+    "stripe/cjs",
+    "@supabase/auth-js/dist",
+    "@supabase/ssr/dist",
+    "@supabase/supabase-js/dist",
+    "@supabase/postgrest-js/dist",
+    "@supabase/realtime-js/dist",
+    "@supabase/storage-js/dist",
+    "@supabase/functions-js/dist",
+    "next/dist/server/web",
+    "next/dist/shared/lib",
+    "next/dist/server/request",
+    "next/dist/server/after",
+    "next/dist/compiled/@edge-runtime/cookies"
+  ],
+  "limits": [
+    "Literal repository import graph is an overapproximation and includes type-only source references; no whole-source semantic read claim.",
+    "Nonliteral dynamic expressions are recorded, not silently resolved. The existing 67 guards independently pin the configured browser and route source inputs; this driver only executes two native keepers.",
+    "Installed runtime distributions and actual bare import entries are byte guards. Unselected SDK vendor transitives, platform conditions and dev/build tools are not comprehensively frozen. Package-lock and package manifests remain pinned.",
+    "No .env or secret files inspected. No whole data tree or unconsumed migrations frozen."
+  ]
+}

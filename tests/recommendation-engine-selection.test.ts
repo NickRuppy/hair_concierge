@@ -101,43 +101,6 @@ function createMaskDecision(
   }
 }
 
-test("engine conditioner reranking prefers explicit target fit over higher semantic score", () => {
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(SEVERE_DAMAGE_PROFILE, [])
-  const decision = runtime.categories.conditioner
-
-  const candidates = [
-    createMatchedProduct("ideal", "Conditioner", { combined_score: 0.72 }),
-    createMatchedProduct("mismatch", "Conditioner", { combined_score: 0.88 }),
-  ]
-
-  const specs: ProductConditionerRerankSpecs[] = [
-    {
-      product_id: "ideal",
-      weight: "medium",
-      repair_level: "high",
-      balance_direction: "moisture",
-      ingredient_flags: [],
-    },
-    {
-      product_id: "mismatch",
-      weight: "rich",
-      repair_level: "low",
-      balance_direction: "protein",
-      ingredient_flags: [],
-    },
-  ]
-
-  const reranked = rerankConditionerProductsWithEngine({
-    candidates,
-    specs,
-    decision,
-    hairProfile: SEVERE_DAMAGE_PROFILE,
-  })
-
-  assert.equal(reranked[0]?.id, "ideal")
-  assert.equal(reranked[0]?.recommendation_meta?.category, "conditioner")
-})
-
 test("engine conditioner reranking softly prefers lighter fits under CareBalance flat-load pressure", () => {
   const profile = {
     ...LOW_DAMAGE_PROFILE,
@@ -299,6 +262,51 @@ test("engine conditioner reranking excludes mismatches when three non-mismatches
 
 test("engine conditioner reranking marks fallback mismatches when coverage is insufficient", () => {
   const runtime = buildRecommendationEngineRuntimeFromPersistence(SEVERE_DAMAGE_PROFILE, [])
+  const categories = runtime.categories
+  assert.equal(categories.shampoo.relevant, true)
+  assert.equal(categories.shampoo.action, "add")
+  assert.deepEqual(categories.shampoo.targetProfile, {
+    scalpRoute: "balanced",
+    shampooBucket: "normal",
+    secondaryBucket: null,
+    cleansingIntensity: "regular",
+  })
+
+  assert.equal(categories.conditioner.relevant, true)
+  assert.equal(categories.conditioner.action, "add")
+  assert.deepEqual(categories.conditioner.targetProfile, {
+    balance: "moisture",
+    repairLevel: "high",
+    weight: "medium",
+    thickness: "fine",
+    activeDamageDrivers: runtime.damage.activeDamageDrivers,
+  })
+
+  assert.equal(categories.mask.relevant, true)
+  assert.equal(categories.mask.action, "add")
+  assert.deepEqual(categories.mask.targetProfile, {
+    balance: "moisture",
+    repairLevel: "high",
+    weight: "light",
+    needStrength: 3,
+    role: "fixed",
+    intensityRequest: null,
+    thickness: "fine",
+    density: "medium",
+  })
+
+  assert.equal(categories.leaveIn.relevant, true)
+  assert.equal(categories.leaveIn.action, "add")
+  assert.equal(categories.leaveIn.targetProfile?.needBucket, "heat_protect")
+  assert.equal(categories.leaveIn.targetProfile?.stylingContext, "heat_style")
+  assert.equal(categories.leaveIn.targetProfile?.conditionerRelationship, "replacement_capable")
+  assert.deepEqual(categories.leaveIn.targetProfile?.careBenefits, [
+    "heat_protect",
+    "repair",
+    "detangle_smooth",
+  ])
+  assert.equal(categories.oil.relevant, false)
+
   const decision = runtime.categories.conditioner
 
   const candidates = [
@@ -330,6 +338,8 @@ test("engine conditioner reranking marks fallback mismatches when coverage is in
     hairProfile: SEVERE_DAMAGE_PROFILE,
   })
 
+  assert.equal(reranked[0]?.id, "ideal")
+  assert.equal(reranked[0]?.recommendation_meta?.category, "conditioner")
   assert.equal(reranked.length, 2)
   assert.equal(reranked[1]?.id, "mismatch")
   assert.match(reranked[1]?.recommendation_meta?.tradeoffs[0] ?? "", /^Fallback:/)
@@ -547,6 +557,9 @@ test("engine mask reranking prefers medium concentration for medium mask need", 
   })
 
   assert.equal(reranked[0]?.id, "medium")
+  const highMetadata = reranked.find((product) => product.id === "high")?.recommendation_meta
+  assert.ok(highMetadata?.category === "mask")
+  assert.equal(highMetadata.fit_status, "supportive")
   assert.match(reranked[1]?.recommendation_meta?.tradeoffs.join(" ") ?? "", /sparsam/)
   assert.equal("_fitReasonCodes" in reranked[0], false)
 })
@@ -591,14 +604,21 @@ test("engine mask reranking prioritizes light weight for light mask targets", ()
 })
 
 test("engine mask reranking uplifts explicit low-need intensive requests to medium concentration", () => {
-  const decision = createMaskDecision({
-    balance: "balanced",
-    repairLevel: "medium",
-    weight: "medium",
-    needStrength: 0,
-    role: "optional",
-    intensityRequest: "intensive",
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "mask",
+    message: "Welche intensive Maske passt zu mir?",
   })
+  const decision = buildRecommendationEngineRuntimeFromPersistence(
+    LOW_DAMAGE_PROFILE,
+    [],
+    requestContext,
+  ).categories.mask
+  assert.equal(requestContext.maskIntensityRequest, "intensive")
+  assert.equal(decision.relevant, true)
+  assert.equal(decision.targetProfile?.role, "optional")
+  assert.equal(decision.targetProfile?.repairLevel, "medium")
+  assert.equal(decision.targetProfile?.intensityRequest, "intensive")
+  assert.ok(decision.notes.includes("mask_explicit_intensive_request_uplift"))
 
   const candidates = [
     createMatchedProduct("low", "Maske", { combined_score: 0.9 }),
@@ -709,6 +729,9 @@ test("engine leave-in reranking strongly prefers heat-safe fit for heat styling 
   })
 
   assert.equal(reranked[0]?.id, "ideal")
+  const idealMetadata = reranked[0]?.recommendation_meta
+  assert.ok(idealMetadata?.category === "leave_in")
+  assert.equal(idealMetadata.fit_status, "supportive")
   assert.equal(reranked[0]?.recommendation_meta?.category, "leave_in")
 })
 
@@ -1226,8 +1249,13 @@ test("engine shampoo reranking keeps the primary treatment bucket ahead of the r
   const decision = runtime.categories.shampoo
 
   assert.equal(decision.relevant, true)
-  assert.equal(decision.targetProfile?.shampooBucket, "schuppen")
-  assert.equal(decision.targetProfile?.secondaryBucket, "dehydriert-fettig")
+  assert.equal(runtime.careNeeds.thermalProtectionNeed, "none")
+  assert.deepEqual(decision.targetProfile, {
+    scalpRoute: "dandruff",
+    shampooBucket: "schuppen",
+    secondaryBucket: "dehydriert-fettig",
+    cleansingIntensity: "regular",
+  })
 
   const candidates = [
     createMatchedProduct("rotation", "Shampoo", { combined_score: 0.86 }),
@@ -2715,7 +2743,7 @@ test("engine dry shampoo reranking understands current live dry-shampoo spec fie
   )
 })
 
-test("engine peeling reranking requires both scalp-focus and peeling-type alignment", () => {
+test("engine peeling reranking prefers peeling-type alignment when scalp focus is shared", () => {
   const decision: PeelingCategoryDecision = {
     category: "peeling",
     relevant: true,
@@ -2780,4 +2808,8 @@ test("engine selectors keep baseline conditioner active when shared engine is ot
   assert.equal(runtime.categories.mask.relevant, false)
   assert.equal(runtime.categories.leaveIn.relevant, false)
   assert.equal(runtime.categories.oil.relevant, false)
+  assert.equal(runtime.categories.bondbuilder.relevant, false)
+  assert.equal(runtime.categories.deepCleansingShampoo.relevant, false)
+  assert.equal(runtime.categories.dryShampoo.relevant, false)
+  assert.equal(runtime.categories.peeling.relevant, false)
 })

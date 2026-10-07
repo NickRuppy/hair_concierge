@@ -1,0 +1,27 @@
+{
+  "status": "PASS_STATIC",
+  "pinsSHA": "9fbdea960d87acb674473172b4d6d797f49496d8b8faafad0aad0b24cb4f6ad5",
+  "parsedToolFiles": [
+    "operator-edit.cjs",
+    "operator-guard.cjs",
+    "operator-native-proof.cjs",
+    "operator-proof.cjs",
+    "operator-readonly-preload.cjs",
+    "operator-run-controls.cjs",
+    "prepare-pins.cjs",
+    "proof-attestation.cjs",
+    "static-integrity.cjs"
+  ],
+  "original247GuardsUnchanged": true,
+  "priorRuntimeIdentityConfigPolicyDependenciesUnchanged": true,
+  "approvedPackedPolicyOnly": true,
+  "strictProofPredicateAndDecoderByteIdentical": true,
+  "controls": 2,
+  "uniqueMutants": 2,
+  "repositoryWrites": 0,
+  "children": 0,
+  "ownerImports": 0,
+  "nativeRuns": 0
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

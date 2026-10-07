@@ -1,0 +1,728 @@
+[
+  {
+    "id": "C1-status-role",
+    "candidate": "C1",
+    "file": "src/components/chat/product-intake-card.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeSubmittedState",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "      role=\"status\"",
+    "to": "      role=\"note\"",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "intendedAssertion": "Missing role=status assertion fails.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "mutatedSha256": "a5585ba933f42e1e309dfec0ea9f59f051cb3bd0fc465b1623b5c2e6ef09b00e",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/chat/product-intake-card.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card renders persisted submitted state after reload$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C1-polite-announcement",
+    "candidate": "C1",
+    "file": "src/components/chat/product-intake-card.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeSubmittedState",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "      aria-live=\"polite\"",
+    "to": "      aria-live=\"off\"",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "intendedAssertion": "Missing polite accessibility assertion fails.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "mutatedSha256": "66810059a3597d9d9a37af06ae863aa385c46ec58f300620b60eb0c5398f4ba1",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/chat/product-intake-card.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card renders persisted submitted state after reload$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C1-pending-headline",
+    "candidate": "C1",
+    "file": "src/components/chat/product-intake-card.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeSubmittedState",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "headline: \"Danke, wir prüfen dein Produkt.\"",
+    "to": "headline: \"Danke, das Produkt ist angekommen.\"",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "intendedAssertion": "Existing pending headline assertion fails.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "mutatedSha256": "f1ecb49cc6cd1a30a8c2ffcbf185e66c03b47551621ab2fad57fc47b0b8a45bb",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/chat/product-intake-card.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card renders persisted submitted state after reload$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C1-pending-followup-copy",
+    "candidate": "C1",
+    "file": "src/components/chat/product-intake-card.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeSubmittedState",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "body: \"Wir melden uns hier im Chat. Du kannst inzwischen einfach weiterfragen.\"",
+    "to": "body: \"Du kannst inzwischen einfach weiterfragen.\"",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "intendedAssertion": "Transferred chat-notification promise assertion fails.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "mutatedSha256": "1f3d015a54e3ce7b4c20946ec2a21f269d50e2275a4e049ffb4392e7ba3eda9d",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/chat/product-intake-card.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card renders persisted submitted state after reload$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C1-collapsed-field-0",
+    "candidate": "C1",
+    "file": "src/components/chat/product-intake-card.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeSubmittedState",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "{copy.body}</p>",
+    "to": "{copy.body}</p><span>{\"Foto hochladen\"}</span>",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "intendedAssertion": "Only this forbidden field is leaked; its retained absence assertion fails.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "mutatedSha256": "28931c3f2eed90c6cffafe0595ba6eae662368461f7c0f9d984ae219ed31d8b1",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/chat/product-intake-card.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card renders persisted submitted state after reload$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C1-collapsed-field-1",
+    "candidate": "C1",
+    "file": "src/components/chat/product-intake-card.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeSubmittedState",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "{copy.body}</p>",
+    "to": "{copy.body}</p><span>{\"Daten eingeben\"}</span>",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "intendedAssertion": "Only this forbidden field is leaked; its retained absence assertion fails.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "mutatedSha256": "cc93eaddddb086551c0d699ccce915d1cc8a82afa7f55f29b8b11bd8e3d139fa",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/chat/product-intake-card.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card renders persisted submitted state after reload$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C1-collapsed-field-2",
+    "candidate": "C1",
+    "file": "src/components/chat/product-intake-card.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeSubmittedState",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "{copy.body}</p>",
+    "to": "{copy.body}</p><span>{\"Kategorie\"}</span>",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "intendedAssertion": "Only this forbidden field is leaked; its retained absence assertion fails.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "mutatedSha256": "1c92900cf7adbb00f2d7ea8b5e49b6e1de79c369b71fe84f7beb90ae273ba81a",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/chat/product-intake-card.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card renders persisted submitted state after reload$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C1-collapsed-field-3",
+    "candidate": "C1",
+    "file": "src/components/chat/product-intake-card.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeSubmittedState",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "{copy.body}</p>",
+    "to": "{copy.body}</p><span>{\"Häufigkeit\"}</span>",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "intendedAssertion": "Only this forbidden field is leaked; its retained absence assertion fails.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "mutatedSha256": "188a96d28afaa1f3bf6049b18b40189fd3b1264595091c766d77d5eeb9f6c4b8",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/chat/product-intake-card.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card renders persisted submitted state after reload$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C1-collapsed-field-4",
+    "candidate": "C1",
+    "file": "src/components/chat/product-intake-card.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeSubmittedState",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "{copy.body}</p>",
+    "to": "{copy.body}</p><span>{\"Jean & Len\"}</span>",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "intendedAssertion": "Only this forbidden field is leaked; its retained absence assertion fails.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "mutatedSha256": "784bc3be18267869945a7359528fe65d23faf5533d2ea73dc7c31a28079c8d4a",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/chat/product-intake-card.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card renders persisted submitted state after reload$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C1-collapsed-field-5",
+    "candidate": "C1",
+    "file": "src/components/chat/product-intake-card.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeSubmittedState",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "{copy.body}</p>",
+    "to": "{copy.body}</p><span>{\"Produkt einreichen\"}</span>",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders persisted submitted state after reload"
+    },
+    "intendedAssertion": "Only this forbidden field is leaked; its retained absence assertion fails.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "mutatedSha256": "56550949ff7fa5b3d744cc97e49fa3d835a722527d0fb5fc4f90b57da0b91e68",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/chat/product-intake-card.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card renders persisted submitted state after reload$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C2-matched-headline",
+    "candidate": "C2",
+    "file": "src/components/chat/product-intake-card.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeSubmittedState",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "headline: \"Produkt gespeichert.\"",
+    "to": "headline: \"Produkt angekommen.\"",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders resolved review state after approval"
+    },
+    "intendedAssertion": "Existing matched headline assertion fails.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "mutatedSha256": "127ebcbb54d8dbcf72b8ce7655e6f067bbf6155c5e9552469c6aa93402911e1b",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/chat/product-intake-card.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card renders resolved review state after approval$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C2-matched-followup-copy",
+    "candidate": "C2",
+    "file": "src/components/chat/product-intake-card.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeSubmittedState",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "body: \"Du kannst dazu jetzt direkt weiterfragen.\"",
+    "to": "body: \"Du kannst später weiterfragen.\"",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders resolved review state after approval"
+    },
+    "intendedAssertion": "Transferred exact matched followup assertion fails.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "mutatedSha256": "e03619b2f19ea88cc4ddeba6e92c5023e9f8604ac8591e8fcf02c77048093b71",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/chat/product-intake-card.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card renders resolved review state after approval$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C2-matched-upload-leak",
+    "candidate": "C2",
+    "file": "src/components/chat/product-intake-card.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeSubmittedState",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "{copy.body}</p>",
+    "to": "{copy.body}</p>{status === \"matched\" ? <span>Foto hochladen</span> : null}",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card renders resolved review state after approval"
+    },
+    "intendedAssertion": "Transferred absence of editable upload action fails.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "mutatedSha256": "6c858ad9cc39657516853cf3170248830fcbd352230e04584e6c86efbbab0376",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/chat/product-intake-card.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card renders resolved review state after approval$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C3-fallback-creates-image",
+    "candidate": "C3",
+    "file": "src/components/chat/product-image.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductImage",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "      <Icon className={ICON_SIZES[size]} />",
+    "to": "      <img src=\"/unexpected-fallback.png\" alt=\"\" />",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "assistant product lookup clarification renders an enabled structured selection action"
+    },
+    "intendedAssertion": "Same missing-image candidate renders img; transferred no-img assertion fails on real ChatMessage output. No browser fetch during static render.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "c6a7836ed34f15d1b0721a3e5649d468cd93d67fffd7683ef8f02dba93ea6a30",
+    "mutatedSha256": "2b10cff153ebaa855ca0eb54766c0236ad4b94bde966c9b1bf67573c08ed2259",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/chat/product-image.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^assistant product lookup clarification renders an enabled structured selection action$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C4-photo-method-label",
+    "candidate": "C4",
+    "file": "src/components/product-intake/product-intake-form-fields.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeMethodToggle",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "label: \"Foto hochladen\", icon: ImageUp",
+    "to": "label: \"Foto auswählen\", icon: ImageUp",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card reports submitted metadata to parent"
+    },
+    "intendedAssertion": "Initial existing-element HTML no longer has original photo method label.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "67d0fea754cd303e0e1cc9e16bf0b053ec14ec2df458870e034bf38b7212afe7",
+    "mutatedSha256": "3b03dcb5869f619e5cf31095ba897f42627073dac1723aeb7407d05a05b716a6",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/product-intake/product-intake-form-fields.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card reports submitted metadata to parent$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C4-manual-method-label",
+    "candidate": "C4",
+    "file": "src/components/product-intake/product-intake-form-fields.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeMethodToggle",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "label: \"Daten eingeben\", icon: Keyboard",
+    "to": "label: \"Manuell erfassen\", icon: Keyboard",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card reports submitted metadata to parent"
+    },
+    "intendedAssertion": "Initial existing-element HTML no longer has original manual method label.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "67d0fea754cd303e0e1cc9e16bf0b053ec14ec2df458870e034bf38b7212afe7",
+    "mutatedSha256": "ddb35c4766218a366ac8de231cfba9216470a09aa7ce1e793a5db9175d3c9a86",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/product-intake/product-intake-form-fields.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card reports submitted metadata to parent$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C4-unwanted-helper-copy-0",
+    "candidate": "C4",
+    "file": "src/components/chat/product-intake-card.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeCard",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "      <ProductIntakeMethodToggle value={method} onChange={setMethod} />",
+    "to": "      <p>Danke für dein Produkt</p>\n      <ProductIntakeMethodToggle value={method} onChange={setMethod} />",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card reports submitted metadata to parent"
+    },
+    "intendedAssertion": "Initial normal-card helper-copy absence fails without changing input or submit lifecycle.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "mutatedSha256": "1afda2e613c8537198b06f5e1024a345539cf1e4bf1a8fa06518b2d74c53882a",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/chat/product-intake-card.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card reports submitted metadata to parent$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "C4-unwanted-helper-copy-1",
+    "candidate": "C4",
+    "file": "src/components/chat/product-intake-card.tsx",
+    "anchor": {
+      "kind": "source",
+      "scope": "ProductIntakeCard",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "      <ProductIntakeMethodToggle value={method} onChange={setMethod} />",
+    "to": "      <p>Wir haben es noch nicht sicher in unserer Datenbank</p>\n      <ProductIntakeMethodToggle value={method} onChange={setMethod} />",
+    "test": {
+      "file": "tests/chat-product-mentions.test.tsx",
+      "name": "product intake card reports submitted metadata to parent"
+    },
+    "intendedAssertion": "Initial normal-card helper-copy absence fails without changing input or submit lifecycle.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "749645129888d9f62ee1145754762e62987257c0f224b05203dcd197a3ff3ba2",
+    "mutatedSha256": "ef4435c65be4adefbdd3bf9de009a51b0d64c148a36d67d1ac0b180d683adf79",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/components/chat/product-intake-card.tsx",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^product intake card reports submitted metadata to parent$",
+      "tests/chat-product-mentions.test.tsx"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "D1-denies-all-routine-actions",
+    "candidate": "D1",
+    "file": "src/lib/agent-v2/pending-followup-action.ts",
+    "anchor": {
+      "kind": "source",
+      "scope": "isPendingRoutineMutation",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "  return action?.kind === \"routine_mutation\"",
+    "to": "  return false",
+    "test": {
+      "file": "tests/agent-v2-pending-followup-action.spec.ts",
+      "name": "resolvePendingRoutineMutationPolicy authorizes short confirmations for routine mutation state"
+    },
+    "intendedAssertion": "Existing policy authorization keeper gets denied result instead of full authorized action.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "c81006b7573a8be14040900d411f2e73e0419faa0e5c430646aa0325239e8801",
+    "mutatedSha256": "796876b662b66803d250532a0e24bf4f1a2839888d1560fd587c0beb7995bd7d",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/lib/agent-v2/pending-followup-action.ts",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^resolvePendingRoutineMutationPolicy authorizes short confirmations for routine mutation state$",
+      "tests/agent-v2-pending-followup-action.spec.ts"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "D1-admits-product-offer-as-routine",
+    "candidate": "D1",
+    "file": "src/lib/agent-v2/pending-followup-action.ts",
+    "anchor": {
+      "kind": "source",
+      "scope": "isPendingRoutineMutation",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "  return action?.kind === \"routine_mutation\"",
+    "to": "  return true",
+    "test": {
+      "file": "tests/agent-v2-pending-followup-action.spec.ts",
+      "name": "resolvePendingRoutineMutationPolicy denies short confirmations without routine mutation state"
+    },
+    "intendedAssertion": "Existing negative policy keeper product_recommendation row becomes authorized. Null row can still deny and is not sufficient.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "c81006b7573a8be14040900d411f2e73e0419faa0e5c430646aa0325239e8801",
+    "mutatedSha256": "fe87e2156e3bb2dfa5c65551c644f7ab22d95cb352ddf6380275ab78b4ad36d6",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/lib/agent-v2/pending-followup-action.ts",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^resolvePendingRoutineMutationPolicy denies short confirmations without routine mutation state$",
+      "tests/agent-v2-pending-followup-action.spec.ts"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "D2-removes-direct-object-protection",
+    "candidate": "D2",
+    "file": "src/lib/agent-v2/runtime/product-tool-context.ts",
+    "anchor": {
+      "kind": "source",
+      "scope": "buildAgentV2ProductToolMessage",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "DIRECT_NAMED_OBJECT_ASK.test(latestMessage) || DIRECT_PRODUCT_NEED.test(latestMessage)",
+    "to": "false || DIRECT_PRODUCT_NEED.test(latestMessage)",
+    "test": {
+      "file": "tests/agent-v2-product-tool-context.spec.ts",
+      "name": "direct asks with a named object stay unchanged even with referential wording"
+    },
+    "intendedAssertion": "Keeper containing dann gains stale context and fails exact equality; original donor without referential cue still passes fallback, showing redundant weaker sensitivity.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "7b102a089a0680524bc379937f193d8f420ce63dd98432c044e9b2b2f16283b3",
+    "mutatedSha256": "fdf4037226adf572517cc298a0ff121e08f666af4bc8468306fe2d3e11cdb62d",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/lib/agent-v2/runtime/product-tool-context.ts",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^direct asks with a named object stay unchanged even with referential wording$",
+      "tests/agent-v2-product-tool-context.spec.ts"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  },
+  {
+    "id": "D3-rejects-fit-terminal-assessment",
+    "candidate": "D3",
+    "file": "src/lib/agent-v2/contracts.ts",
+    "anchor": {
+      "kind": "source",
+      "scope": "AgentV2ProductAssessmentPayloadSchema",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "  assessment_kind: AgentV2ProductAssessmentKindSchema.describe(",
+    "to": "  assessment_kind: AgentV2ProductAssessmentKindSchema.refine((kind) => kind !== \"fit\").describe(",
+    "test": {
+      "file": "tests/agent-v2-responses-runtime.spec.ts",
+      "name": "AgentV2 runtime repairs ungrounded trusted product assessment by loading product facts"
+    },
+    "intendedAssertion": "Real runtime validator rejects otherwise accepted fit payload; retained product_assessment/failure_stage/repair assertions fail. Must verify intended assertion, not schema-generation setup error.",
+    "staticFileOccurrences": 1,
+    "sourceSha256": "4fe98f5eeaf5ad7487ff3b44359d66035d63ecbee564b3746a6aad4e1f4f7cd2",
+    "mutatedSha256": "1c98410e3bfbb777cf670c4049b0564773be1937ff3e66d50421d3aa911d7482",
+    "originalSnapshot": "/tmp/test-audit-agent-context-staging-UcVSik/source-originals/src/lib/agent-v2/contracts.ts",
+    "nativeArgs": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^AgentV2 runtime repairs ungrounded trusted product assessment by loading product facts$",
+      "tests/agent-v2-responses-runtime.spec.ts"
+    ],
+    "expected": "Named retained keeper red at intended assertion, then clean source green. Not executed.",
+    "sensitivityLimit": "Main applies one source fault after transfer, captures assertion failure (not setup/parse/type error), restores original bytes in finally. No fixture/provider/DB mutation."
+  }
+]

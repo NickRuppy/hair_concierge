@@ -305,23 +305,13 @@ test("regular field-test bind failure stays off the commercial path", async () =
   assert.equal(metas, 0)
 })
 
-test("ordinary legacy lead retains commercial synchronization", async () => {
+test("ordinary lead reuse excludes a moderator-owned lead with the same email and answers", async () => {
   let syncs = 0
   let metas = 0
+  const ordinaryLeadId = "10000000-0000-4000-8000-000000000009"
   const response = await handler({
     onSync: () => syncs++,
     onMeta: () => metas++,
-  })(request())
-
-  assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), { leadId })
-  assert.equal(syncs, 1)
-  assert.equal(metas, 1)
-})
-
-test("ordinary lead reuse excludes a moderator-owned lead with the same email and answers", async () => {
-  const ordinaryLeadId = "10000000-0000-4000-8000-000000000009"
-  const response = await handler({
     recentLeads: [
       {
         id: leadId,
@@ -341,6 +331,8 @@ test("ordinary lead reuse excludes a moderator-owned lead with the same email an
 
   assert.equal(response.status, 200)
   assert.deepEqual(await response.json(), { leadId: ordinaryLeadId })
+  assert.equal(syncs, 1)
+  assert.equal(metas, 1)
 })
 
 test("organic moderator saves a private owned lead without guest binding, dedupe or commercial dispatch", async () => {
@@ -381,51 +373,6 @@ test("organic moderator saves a private owned lead without guest binding, dedupe
     confirmedEmail: moderator.email,
     funnelSessionId: funnelContext.sessionId,
     name: requestBody.name,
-    marketingConsent: false,
-    quizAnswers: requestBody.quizAnswers,
-  })
-})
-
-test("partner lead capture persists the server-authorized creator name instead of client input", async () => {
-  const calls: unknown[] = []
-  const forbidden = () => {
-    throw Error("partner must not use commercial persistence")
-  }
-  const partner = {
-    kind: "authorized" as const,
-    invitationId: "40000000-0000-4000-8000-000000000004",
-    userId: "50000000-0000-4000-8000-000000000005",
-    name: "Lea Sommer",
-    email: requestBody.email,
-    funnelSessionId: funnelContext.sessionId,
-  }
-  const post = createQuizLeadPostHandler({
-    checkRateLimit: async () => ({ allowed: true }),
-    cookies: (async () => ({ get: () => undefined })) as never,
-    resolveFunnelCookieContext: async () => funnelContext,
-    resolveModeratorJourney: async () => ({ kind: "ordinary" }),
-    resolvePartnerJourney: async () => partner,
-    savePartnerAccessLead: async (input) => {
-      calls.push(input)
-      return { leadId, reused: false }
-    },
-    createAdminClient: forbidden,
-    checkEmailDeliverability: forbidden,
-    syncQuizLeadToCustomerIo: forbidden,
-    enqueueMetaLead: forbidden,
-    bindRegularQuizFieldTestLead: forbidden,
-    scheduleAfter: forbidden,
-  })
-  const response = await post(request({}, { name: "Changed in the browser" }))
-
-  assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), { leadId })
-  assert.deepEqual(JSON.parse(JSON.stringify(calls[0])), {
-    invitationId: partner.invitationId,
-    userId: partner.userId,
-    funnelSessionId: partner.funnelSessionId,
-    email: partner.email,
-    name: partner.name,
     marketingConsent: false,
     quizAnswers: requestBody.quizAnswers,
   })
@@ -964,6 +911,15 @@ test("a leftover moderator intent cookie never blocks an authorized partner lead
   assert.equal(response.status, 200)
   assert.deepEqual(await response.json(), { leadId })
   assert.equal(calls.length, 1)
+  assert.deepEqual(JSON.parse(JSON.stringify(calls[0])), {
+    invitationId: partner.invitationId,
+    userId: partner.userId,
+    funnelSessionId: partner.funnelSessionId,
+    email: partner.email,
+    name: partner.name,
+    marketingConsent: false,
+    quizAnswers: requestBody.quizAnswers,
+  })
   assert.equal(moderatorConsulted, false)
 })
 

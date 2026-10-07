@@ -1,0 +1,182 @@
+{
+  "status": "STATIC_PREPARATION_PASS_ALL18_DIAGNOSTICS_DEFINED_NATIVE_UNRUN",
+  "pinsSHA256": "b41d3a0d1a4021f978e0458b7e7a6c21881541ff195bb662c28e0d59ea917d70",
+  "checks": [
+    {
+      "name": "edit-check",
+      "exitCode": 0,
+      "log": "/tmp/test-audit-generation157-tools-v2-orjded8b/edit-check.txt",
+      "sha256": "660fbbea616e4053f48209dd9871caf178a4c8f6f22dce5d9097265014f38c85",
+      "result": {
+        "mode": "check",
+        "phase": "before",
+        "counts": {
+          "before": 157,
+          "transfer": 157,
+          "cut": 150
+        },
+        "unrelatedCallbacks": 139,
+        "unchangedRetainedCallbacks": 143,
+        "parsedPhaseFiles": 81,
+        "sourceControlsParsed": 18,
+        "readsetGuards": 280,
+        "dependencyFiles": 5022,
+        "repositoryWrites": 0,
+        "childrenStarted": 0
+      },
+      "preload": [
+        {
+          "staticReadOnlyEnforced": true,
+          "attemptedWrites": 0,
+          "attemptedChildren": 0
+        },
+        {
+          "attemptedOwnerImports": 0,
+          "attemptedNetworkCalls": 0
+        }
+      ]
+    },
+    {
+      "name": "controls-check",
+      "exitCode": 0,
+      "log": "/tmp/test-audit-generation157-tools-v2-orjded8b/controls-check.txt",
+      "sha256": "076ab78fd132a926f211b65d0e1111609cc622e3dc45625c25d6a85fba37f982",
+      "result": {
+        "mode": "check",
+        "phase": "before",
+        "controls": 18,
+        "tsMutantsParsed": 18,
+        "sqlByteRecipes": 0,
+        "allControlsPrepared": true,
+        "phaseOracles": "exact assertion startLine and text in transfer/cut",
+        "selectedTestCount": 1,
+        "repositoryWrites": 0,
+        "runtimeRuns": 0,
+        "childrenStarted": 0
+      },
+      "preload": [
+        {
+          "staticReadOnlyEnforced": true,
+          "attemptedWrites": 0,
+          "attemptedChildren": 0
+        },
+        {
+          "attemptedOwnerImports": 0,
+          "attemptedNetworkCalls": 0
+        }
+      ]
+    },
+    {
+      "name": "proof-attestation",
+      "exitCode": 0,
+      "log": "/tmp/test-audit-generation157-tools-v2-orjded8b/proof-attestation.txt",
+      "sha256": "9aa0676ad6921d3c64154a0c57bb5345d78876519456a98e33bcdfe355ef4e5b",
+      "result": {
+        "status": "PASS_STATIC_SYNTHETIC_ONLY",
+        "controls": 18,
+        "phases": 2,
+        "assertions": 1538,
+        "repositoryWrites": 0,
+        "children": 0,
+        "ownerImports": 0,
+        "nativeRuns": 0,
+        "limits": "Predicted literal reporter projections only. No actual owner, Zod or native execution. Object/array and undefined serialization limitations remain explicit."
+      },
+      "preload": [
+        {
+          "staticReadOnlyEnforced": true,
+          "attemptedWrites": 0,
+          "attemptedChildren": 0
+        },
+        {
+          "attemptedOwnerImports": 0,
+          "attemptedNetworkCalls": 0
+        }
+      ]
+    },
+    {
+      "name": "static-integrity",
+      "exitCode": 0,
+      "log": "/tmp/test-audit-generation157-tools-v2-orjded8b/static-integrity.txt",
+      "sha256": "3d23dff39f7320ce5f5f55f5b8a823888ac54bae55985bfd6bc7e0ddf0d61fa7",
+      "result": {
+        "status": "PASS_STATIC",
+        "pinsSHA256": "b41d3a0d1a4021f978e0458b7e7a6c21881541ff195bb662c28e0d59ea917d70",
+        "parsedFiles": [
+          "catalog-decoder-source.cjs",
+          "diagnostic-projection.cjs",
+          "operator-edit.cjs",
+          "operator-guard.cjs",
+          "operator-native-proof.cjs",
+          "operator-proof.cjs",
+          "operator-readonly-preload.cjs",
+          "operator-run-controls.cjs",
+          "prepare-v2.cjs",
+          "proof-attestation.cjs",
+          "static-integrity.cjs"
+        ],
+        "original109AndAll280ReadsetsUnchanged": true,
+        "all5022RuntimePinsAndIdentityPoliciesUnchanged": true,
+        "all18SourceRecipesAndFirstFramesUnchanged": true,
+        "catalogScalarDecoderByteExact": true,
+        "diagnosticsReady": 18,
+        "repositoryWrites": 0,
+        "children": 0,
+        "ownerImports": 0,
+        "nativeRuns": 0,
+        "limits": "Static prediction and parser validation, not runtime acceptance."
+      },
+      "preload": [
+        {
+          "staticReadOnlyEnforced": true,
+          "attemptedWrites": 0,
+          "attemptedChildren": 0
+        },
+        {
+          "attemptedOwnerImports": 0,
+          "attemptedNetworkCalls": 0
+        }
+      ]
+    }
+  ],
+  "original109ReadsetsUnchanged": true,
+  "all280OperativeReadsetsUnchanged": true,
+  "all5022RuntimeDependencyPinsUnchanged": true,
+  "all32DistributionInventoriesUnchanged": true,
+  "identityNodeConfigPackedPoliciesUnchanged": true,
+  "sourceRecipesTestSelectionsPhaseAssertionsUnchanged": 18,
+  "nativeArgvByteExactWithVersion1": true,
+  "counts": {
+    "AST": [
+      157,
+      157,
+      150
+    ],
+    "nativeTitles": [
+      158,
+      158,
+      151
+    ],
+    "unchangedPgSkip": 1,
+    "unchangedRetained": 143,
+    "strictUnrelated": 139,
+    "heldF": 11,
+    "phaseFiles": 81
+  },
+  "diagnosticPolicies": {
+    "D1": "Complete exact printed success/expected-failure projections, exclusively bound omission path and exact own-undefined message witness; source/Zod justify own undefined. No unseen actual payload fabrication.",
+    "otherLiteral": "Complete expected/actual printed projections plus existing full decoded literal assertion messages and strict FIRST/frame/source gates.",
+    "C4": "Exact full custom assertion message, expected regex empty projection and typed printed string/supported-prefix bad-markup witness; no full HTML equality or unseen-tail claim."
+  },
+  "reporterLimits": "Undefined properties are omitted; arrays/objects use Object.entries. Source evidence establishes own undefined/container types; TAP alone does not. Complete printed keys/types/values are required; no unknown/extra/missing/partial/truncated object data.",
+  "readDepth": "Whole literal fixture and bounded source ranges through actual parser/schema, Zod4.4.3 safeParse/optional/object normal+JIT handling and pinned Node reporter; no full Zod/tree semantic claim. Existing author read-depth classifications remain intact.",
+  "additionalSourceReadEvidence": "diagnostic-source-evidence.json",
+  "sourceTestRepositoryWrites": 0,
+  "oldKitOrProposalWrites": 0,
+  "nativeOrZodOwnerExecution": 0,
+  "networkOperations": 0,
+  "staticSyntheticAssertions": 1538,
+  "preparationNotes": "One preparer guard correction allowed its own already-existing TMP root directory. One synthetic negative test was corrected to replace encoded SSR actual rather than an unescaped substring. Decoder additionally rejects hidden continuation after blank lines. These unpublished preparation changes are recorded in preparation-finalization.json. Final PIN precedes final delta; no later executable reseal.",
+  "finalDeltaCurrent": true,
+  "requiredMainProof": "Root reviews fresh decoder/version, requalifies existing baseline, then all18 actual transfer and18 cut controls plus cohort/whole CI/coverage; no actual fault proof claimed here."
+}

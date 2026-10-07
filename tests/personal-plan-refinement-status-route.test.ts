@@ -131,6 +131,10 @@ test("fresh plan with no refinement draft: both modules open, progress 2/4", asy
       ["habits", "open"],
     ],
   )
+  assert.ok(
+    body.modules[0].openQuestionCount > 0,
+    "fresh products module must expose open questions",
+  )
   assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })
   assert.equal(body.module1HandedOff, false)
   assert.deepEqual(body.banner, { visible: true, module: "products", dismissed: false })
@@ -259,6 +263,7 @@ test("banner reflects a stored dismissal for the current open module", async () 
 
   assert.equal(res.status, 200)
   assert.deepEqual(body.banner, { visible: false, module: "products", dismissed: true })
+  assert.equal(body.modules.find((m: { module: string }) => m.module === "products").status, "open")
 })
 
 test("in_progress draft wins over a completed draft on the same initial need version", async () => {

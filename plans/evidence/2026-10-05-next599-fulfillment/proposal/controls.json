@@ -1,0 +1,272 @@
+[
+  {
+    "id": "receipt-email-leak",
+    "owner": "scripts/billing/one-time-recover.ts",
+    "ownerSha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "scope": {
+      "kind": "function",
+      "name": "runOneTimeRecoveryCommand",
+      "startLine": 326
+    },
+    "from": "    reconciliation,\n",
+    "to": "    reconciliation: Object.assign({}, reconciliation, { debugEmail: verification.payment.email }),\n",
+    "mutantSha256": "b6bcf3acd59b4a2b4446abae772ddbe029834abd843885a4a6c9764cde84e620",
+    "testFile": "tests/one-time-recovery-command.test.ts",
+    "testName": "applies only when confirmation exactly matches the target",
+    "argv": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^applies only when confirmation exactly matches the target$",
+      "tests/one-time-recovery-command.test.ts"
+    ],
+    "selectedDeclarations": 1,
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "messageContains": "leaked buyer@example.com",
+      "firstKeeperFrame": {
+        "transfer": {
+          "startLine": 353,
+          "text": "assert.equal(output.includes(value), false, `leaked ${value}`)",
+          "keeperBodySha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69"
+        },
+        "cut": {
+          "startLine": 353,
+          "text": "assert.equal(output.includes(value), false, `leaked ${value}`)",
+          "keeperBodySha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69"
+        }
+      }
+    },
+    "intent": "Transferred donor privacy loop: original donor and strengthened keeper both fail.",
+    "execution": "NOT RUN; source anchor uniqueness and TS syntax checked only"
+  },
+  {
+    "id": "receipt-fixed-amount",
+    "owner": "scripts/billing/one-time-recover.ts",
+    "ownerSha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "scope": {
+      "kind": "function",
+      "name": "runOneTimeRecoveryCommand",
+      "startLine": 326
+    },
+    "from": "    amount: \"29.99\",",
+    "to": "    amount: \"0.00\" as RecoveryCommandReceipt[\"amount\"],",
+    "mutantSha256": "765f27df1d69a95ac919cf8d518db10381c8557098690c8f3d76611abae446ad",
+    "testFile": "tests/one-time-recovery-command.test.ts",
+    "testName": "applies only when confirmation exactly matches the target",
+    "argv": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^applies only when confirmation exactly matches the target$",
+      "tests/one-time-recovery-command.test.ts"
+    ],
+    "selectedDeclarations": 1,
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "messageContains": "false !== true",
+      "firstKeeperFrame": {
+        "transfer": {
+          "startLine": 355,
+          "text": "assert.equal(output.includes(\"29.99\"), true)",
+          "keeperBodySha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69"
+        },
+        "cut": {
+          "startLine": 355,
+          "text": "assert.equal(output.includes(\"29.99\"), true)",
+          "keeperBodySha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69"
+        }
+      }
+    },
+    "intent": "Transferred donor fixed-price string: original donor and strengthened keeper both fail.",
+    "execution": "NOT RUN; source anchor uniqueness and TS syntax checked only"
+  },
+  {
+    "id": "receipt-fixed-currency",
+    "owner": "scripts/billing/one-time-recover.ts",
+    "ownerSha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "scope": {
+      "kind": "function",
+      "name": "runOneTimeRecoveryCommand",
+      "startLine": 326
+    },
+    "from": "    currency: \"EUR\",",
+    "to": "    currency: \"USD\" as RecoveryCommandReceipt[\"currency\"],",
+    "mutantSha256": "f03e2fb7fe2ac98a5cff4dc814006701b37817c5ab1e1c779c0d0d49cef1cba6",
+    "testFile": "tests/one-time-recovery-command.test.ts",
+    "testName": "applies only when confirmation exactly matches the target",
+    "argv": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^applies only when confirmation exactly matches the target$",
+      "tests/one-time-recovery-command.test.ts"
+    ],
+    "selectedDeclarations": 1,
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "messageContains": "false !== true",
+      "firstKeeperFrame": {
+        "transfer": {
+          "startLine": 356,
+          "text": "assert.equal(output.includes(\"EUR\"), true)",
+          "keeperBodySha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69"
+        },
+        "cut": {
+          "startLine": 356,
+          "text": "assert.equal(output.includes(\"EUR\"), true)",
+          "keeperBodySha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69"
+        }
+      }
+    },
+    "intent": "Transferred donor fixed-currency string: original donor and strengthened keeper both fail.",
+    "execution": "NOT RUN; source anchor uniqueness and TS syntax checked only"
+  },
+  {
+    "id": "apply-mode",
+    "owner": "scripts/billing/one-time-recover.ts",
+    "ownerSha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "scope": {
+      "kind": "function",
+      "name": "runOneTimeRecoveryCommand",
+      "startLine": 326
+    },
+    "from": "    mode: request.apply ? \"apply\" : \"dry-run\",",
+    "to": "    mode: \"dry-run\",",
+    "mutantSha256": "51d6ca7933d54dcad09490fee029e84cd599e1fa429bf9e549e60ef01fed9402",
+    "testFile": "tests/one-time-recovery-command.test.ts",
+    "testName": "applies only when confirmation exactly matches the target",
+    "argv": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^applies only when confirmation exactly matches the target$",
+      "tests/one-time-recovery-command.test.ts"
+    ],
+    "selectedDeclarations": 1,
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "messageContains": "dry-run",
+      "firstKeeperFrame": {
+        "transfer": {
+          "startLine": 342,
+          "text": "assert.equal(receipt.mode, \"apply\")",
+          "keeperBodySha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69"
+        },
+        "cut": {
+          "startLine": 342,
+          "text": "assert.equal(receipt.mode, \"apply\")",
+          "keeperBodySha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69"
+        }
+      }
+    },
+    "intent": "Original keeper mode remains independently asserted.",
+    "execution": "NOT RUN; source anchor uniqueness and TS syntax checked only"
+  },
+  {
+    "id": "apply-guard-receipt",
+    "owner": "scripts/billing/one-time-recover.ts",
+    "ownerSha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "scope": {
+      "kind": "function",
+      "name": "runOneTimeRecoveryCommand",
+      "startLine": 326
+    },
+    "from": "    applyGuardSatisfied: request.apply,",
+    "to": "    applyGuardSatisfied: false,",
+    "mutantSha256": "a3b447a65efa534d5f41af584145df1bf21fe1b044b8a48b69967de3dfa80e69",
+    "testFile": "tests/one-time-recovery-command.test.ts",
+    "testName": "applies only when confirmation exactly matches the target",
+    "argv": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^applies only when confirmation exactly matches the target$",
+      "tests/one-time-recovery-command.test.ts"
+    ],
+    "selectedDeclarations": 1,
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "messageContains": "false !== true",
+      "firstKeeperFrame": {
+        "transfer": {
+          "startLine": 343,
+          "text": "assert.equal(receipt.applyGuardSatisfied, true)",
+          "keeperBodySha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69"
+        },
+        "cut": {
+          "startLine": 343,
+          "text": "assert.equal(receipt.applyGuardSatisfied, true)",
+          "keeperBodySha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69"
+        }
+      }
+    },
+    "intent": "Original keeper guard remains independently asserted.",
+    "execution": "NOT RUN; source anchor uniqueness and TS syntax checked only"
+  },
+  {
+    "id": "activation-after-receipt",
+    "owner": "scripts/billing/one-time-recover.ts",
+    "ownerSha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "scope": {
+      "kind": "function",
+      "name": "runOneTimeRecoveryCommand",
+      "startLine": 326
+    },
+    "from": "  if (request.apply) {\n    if (target.provider === \"stripe\") await deps.activateStripe(target, verification)\n    else await deps.activatePayPal(target, verification)\n  }\n\n  const reconciliation = await deps.readReceipt(verification.payment, verification)",
+    "to": "  const reconciliation = await deps.readReceipt(verification.payment, verification)\n  if (request.apply) {\n    if (target.provider === \"stripe\") await deps.activateStripe(target, verification)\n    else await deps.activatePayPal(target, verification)\n  }",
+    "mutantSha256": "fd55a9544f4ead71d236f86add6e95792d095d22d6e19ae1314a078e7c6112dc",
+    "testFile": "tests/one-time-recovery-command.test.ts",
+    "testName": "applies only when confirmation exactly matches the target",
+    "argv": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^applies only when confirmation exactly matches the target$",
+      "tests/one-time-recovery-command.test.ts"
+    ],
+    "selectedDeclarations": 1,
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "messageContains": "readReceipt",
+      "firstKeeperFrame": {
+        "transfer": {
+          "startLine": 344,
+          "text": "assert.deepEqual(calls, [",
+          "keeperBodySha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69"
+        },
+        "cut": {
+          "startLine": 344,
+          "text": "assert.deepEqual(calls, [",
+          "keeperBodySha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69"
+        }
+      }
+    },
+    "intent": "Original keeper observes actual orchestrator order, fixture only records.",
+    "execution": "NOT RUN; source anchor uniqueness and TS syntax checked only"
+  }
+]

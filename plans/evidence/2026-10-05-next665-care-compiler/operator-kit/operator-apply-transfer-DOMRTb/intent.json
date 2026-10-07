@@ -1,0 +1,46 @@
+{
+  "mode": "transfer",
+  "from": "before",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "67f792bcbb94f1a2f6f807cddd4403c08da414aeec3748c71ad49d5bd28ccb89",
+  "prerequisite": null,
+  "files": [
+    {
+      "file": "tests/recommendation-engine-shampoo-cadence.test.ts",
+      "before": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+      "after": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432"
+    },
+    {
+      "file": "tests/care-balance-frequency-targets.test.ts",
+      "before": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+      "after": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a"
+    },
+    {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "before": "d1967063160af1b28843b08791ebebf80c9ad95f43bef60dedcc7198c56c5533",
+      "after": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3"
+    },
+    {
+      "file": "tests/personal-plan-routine-cadence.test.ts",
+      "before": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+      "after": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729"
+    },
+    {
+      "file": "tests/personal-plan/product-previews.test.ts",
+      "before": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+      "after": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7"
+    },
+    {
+      "file": "tests/personal-plan-exact-catalog-bundle.test.ts",
+      "before": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+      "after": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65"
+    },
+    {
+      "file": "tests/personal-plan-stage3-contracts.test.ts",
+      "before": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+      "after": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4"
+    }
+  ]
+}

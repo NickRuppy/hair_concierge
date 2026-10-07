@@ -1,0 +1,29 @@
+{
+  "status": "PASS_STATIC",
+  "pinsSHA": "3be17f0d28861a6791fb575d3550eed571275aaae9b7c5f7c295002bfe87cecd",
+  "parsedToolFiles": [
+    "operator-edit.cjs",
+    "operator-guard.cjs",
+    "operator-native-proof.cjs",
+    "operator-proof.cjs",
+    "operator-readonly-preload.cjs",
+    "operator-run-controls.cjs",
+    "prepare-pins.cjs",
+    "proof-attestation.cjs",
+    "static-integrity.cjs"
+  ],
+  "original97GuardsUnchanged": true,
+  "templateIdentityRuntimeDependenciesUnchanged": true,
+  "catalogTypedDecoderByteIdentical": true,
+  "careCleanCounterErrorDecoderByteIdentical": true,
+  "sourceControls": 20,
+  "uniqueMutants": 14,
+  "controlOnlyAmendments": 9,
+  "repositoryWrites": 0,
+  "children": 0,
+  "ownerImports": 0,
+  "nativeRuns": 0,
+  "limits": "Static byte/AST invariants and synthetic diagnostic policy; no acceptance or native fault claim."
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

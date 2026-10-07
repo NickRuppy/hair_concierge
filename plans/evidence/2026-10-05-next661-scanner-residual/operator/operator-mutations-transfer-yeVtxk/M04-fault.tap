@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: maskScanVerdictPayload: masks every alternative, leaves every other field untouched
+not ok 1 - maskScanVerdictPayload: masks every alternative, leaves every other field untouched
+  ---
+  duration_ms: 3.042125
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-masked-alternative.test.ts:2:3520'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'comparison',
+    +   'productId',
+        'verdict',
+        'verdictLabel'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'comparison'
+    1: 'verdict'
+    2: 'verdictLabel'
+  actual:
+    0: 'comparison'
+    1: 'productId'
+    2: 'verdict'
+    3: 'verdictLabel'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-masked-alternative.test.ts:94:12)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 751.028625

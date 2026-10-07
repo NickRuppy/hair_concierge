@@ -1,0 +1,42 @@
+{
+  "parentAccepted": true,
+  "templatePinsSHA": "9fbdea960d87acb674473172b4d6d797f49496d8b8faafad0aad0b24cb4f6ad5",
+  "acceptedReceipts": [
+    {
+      "path": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-cut-Yl383O/complete.json",
+      "sha256": "d6ac36f3bf6574397606431f3f0065932a67b4a81d82bfdfdca478d73ab5507c"
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/complete.json",
+      "sha256": "2c12d4f1225a587a4ef0ab9079db6e80823d15262819a1d0ce34430aa7d0f0c5"
+    },
+    {
+      "path": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-apply-cut-wjSBX5/receipt.json",
+      "sha256": "3ff288a418d38eef025b55a4ae8a183936762649ce9392aaeed29e7e830582a2"
+    }
+  ],
+  "files": [
+    {
+      "file": "src/lib/personal-plan/rollout-access.ts",
+      "priorTemplateSha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+      "currentAcceptedSha256": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c",
+      "original76Guard": false,
+      "oldTemplateSourcePinAdopted": false
+    },
+    {
+      "file": "src/lib/personal-plan/journey-access-loader.ts",
+      "priorTemplateSha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+      "currentAcceptedSha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+      "original76Guard": false,
+      "oldTemplateSourcePinAdopted": false
+    },
+    {
+      "file": "src/lib/personal-plan/release.ts",
+      "priorTemplateSha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+      "currentAcceptedSha256": "7fff03697221fa4281c0a3756c3cfab618460c536e60cb05e060e38d2693fdd0",
+      "original76Guard": false,
+      "oldTemplateSourcePinAdopted": false
+    }
+  ],
+  "limits": "Source pin set from unrelated Free67 is not inherited. New scanner local closure captured after accepted dormant cut; original76 guards unchanged. Formatting did not change source bytes."
+}

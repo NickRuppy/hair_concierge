@@ -1,0 +1,328 @@
+TAP version 13
+# Subtest: the first Routine still activates without any proposal (no active Routine yet)
+ok 1 - the first Routine still activates without any proposal (no active Routine yet)
+  ---
+  duration_ms: 698.724
+  ...
+# Subtest: a module-driven recompute activates the successor immediately instead of proposing it
+ok 2 - a module-driven recompute activates the successor immediately instead of proposing it
+  ---
+  duration_ms: 440.591167
+  ...
+# Subtest: replaying a module-driven completion reports the activation, not a pending proposal (self-exclusion)
+ok 3 - replaying a module-driven completion reports the activation, not a pending proposal (self-exclusion)
+  ---
+  duration_ms: 451.249166
+  ...
+# Subtest: a habits-module-driven recompute activates the successor immediately too (habits-shaped lineage)
+ok 4 - a habits-module-driven recompute activates the successor immediately too (habits-shaped lineage)
+  ---
+  duration_ms: 494.745625
+  ...
+# Subtest: the closing completion of a Modul-1-projected draft activates the successor immediately (result_refined_need_version_id branch)
+ok 5 - the closing completion of a Modul-1-projected draft activates the successor immediately (result_refined_need_version_id branch)
+  ---
+  duration_ms: 423.420666
+  ...
+# Subtest: today's linear (non-module) recompute keeps its pending proposal — the gate does not fire
+ok 6 - today's linear (non-module) recompute keeps its pending proposal — the gate does not fire
+  ---
+  duration_ms: 431.961875
+  ...
+# Subtest: the direct-accept provenance write is atomic with activation
+ok 7 - the direct-accept provenance write is atomic with activation
+  ---
+  duration_ms: 408.656042
+  ...
+# Subtest: an already_completed replay whose staged proposal has since gone stale degrades to reporting it, without a RAISE
+ok 8 - an already_completed replay whose staged proposal has since gone stale degrades to reporting it, without a RAISE
+  ---
+  duration_ms: 402.003959
+  ...
+# Subtest: a returning (A→B→A) refined version can re-activate its historical Routine through the existing RPCs
+ok 9 - a returning (A→B→A) refined version can re-activate its historical Routine through the existing RPCs
+  ---
+  duration_ms: 423.968875
+  ...
+# Subtest: EXECUTE is granted only to service_role
+ok 10 - EXECUTE is granted only to service_role
+  ---
+  duration_ms: 407.54325
+  ...
+# Subtest: the recompute-activation migration wraps the existing RPCs instead of copying them
+ok 11 - the recompute-activation migration wraps the existing RPCs instead of copying them
+  ---
+  duration_ms: 4.901042
+  ...
+# Subtest: today's linear refinement keeps its pending proposal
+ok 12 - today's linear refinement keeps its pending proposal
+  ---
+  duration_ms: 3.764041
+  ...
+# Subtest: a refined version from another plan's module lineage never activates this one
+ok 13 - a refined version from another plan's module lineage never activates this one
+  ---
+  duration_ms: 0.35025
+  ...
+# Subtest: a later recompute on the same module-projected version proposes instead of activating
+ok 14 - a later recompute on the same module-projected version proposes instead of activating
+  ---
+  duration_ms: 0.262625
+  ...
+# Subtest: the first Routine still activates without any proposal
+ok 15 - the first Routine still activates without any proposal
+  ---
+  duration_ms: 0.181
+  ...
+# Subtest: replaying a module-driven completion reports the activation, not a pending proposal
+ok 16 - replaying a module-driven completion reports the activation, not a pending proposal
+  ---
+  duration_ms: 0.234708
+  ...
+# Subtest: an unconfirmable proposal on the replay path degrades to its pending proposal
+ok 17 - an unconfirmable proposal on the replay path degrades to its pending proposal
+  ---
+  duration_ms: 0.2455
+  ...
+# Subtest: an unconfirmable proposal the completion itself staged still fails loudly
+ok 18 - an unconfirmable proposal the completion itself staged still fails loudly
+  ---
+  duration_ms: 0.228541
+  ...
+# Subtest: a failing provenance write rolls the whole completion back
+ok 19 - a failing provenance write rolls the whole completion back
+  ---
+  duration_ms: 0.301708
+  ...
+# Subtest: routine-proposal adapter always calls the activation-aware delegating RPC
+ok 20 - routine-proposal adapter always calls the activation-aware delegating RPC
+  ---
+  duration_ms: 2.508709
+  ...
+# Subtest: routine-proposal adapter carries the compiler's fresh source CAS token
+ok 21 - routine-proposal adapter carries the compiler's fresh source CAS token
+  ---
+  duration_ms: 0.3325
+  ...
+# Subtest: activation-aware delegating RPC permits no proposal pointer for first activation
+ok 22 - activation-aware delegating RPC permits no proposal pointer for first activation
+  ---
+  duration_ms: 0.188875
+  ...
+# Subtest: routine-proposal adapter preserves stable SQL outcomes and maps transport failures
+ok 23 - routine-proposal adapter preserves stable SQL outcomes and maps transport failures
+  ---
+  duration_ms: 0.295083
+  ...
+# Subtest: routine-proposal adapter rejects invalid bounded payloads before its sole RPC
+ok 24 - routine-proposal adapter rejects invalid bounded payloads before its sole RPC
+  ---
+  duration_ms: 0.318542
+  ...
+# Subtest: routine-proposal adapter forwards the atomic direct-accept provenance flag
+ok 25 - routine-proposal adapter forwards the atomic direct-accept provenance flag
+  ---
+  duration_ms: 0.228417
+  ...
+# Subtest: a superseded refined version is stale without reading the refinement lineage
+ok 26 - a superseded refined version is stale without reading the refinement lineage
+  ---
+  duration_ms: 2.054958
+  ...
+# Subtest: a plan without a current refined version is stale rather than module-driven
+ok 27 - a plan without a current refined version is stale rather than module-driven
+  ---
+  duration_ms: 0.108583
+  ...
+# Subtest: a missing plan row is stale rather than an exception
+ok 28 - a missing plan row is stale rather than an exception
+  ---
+  duration_ms: 0.060625
+  ...
+# Subtest: a module projection naming the current version is module-driven, owner-scoped on both reads
+ok 29 - a module projection naming the current version is module-driven, owner-scoped on both reads
+  ---
+  duration_ms: 0.262916
+  ...
+# Subtest: a completed module draft whose result is the current version is module-driven
+ok 30 - a completed module draft whose result is the current version is module-driven
+  ---
+  duration_ms: 0.085875
+  ...
+# Subtest: a module-driven plan whose lineage names only other versions is not module-driven
+ok 31 - a module-driven plan whose lineage names only other versions is not module-driven
+  ---
+  duration_ms: 0.066792
+  ...
+# Subtest: a linear refinement completion carries no module lineage and stays on today's terminal path
+ok 32 - a linear refinement completion carries no module lineage and stays on today's terminal path
+  ---
+  duration_ms: 0.110958
+  ...
+# Subtest: a plan with no refinement draft at all is not module-driven
+ok 33 - a plan with no refinement draft at all is not module-driven
+  ---
+  duration_ms: 0.145458
+  ...
+# Subtest: read failures surface instead of being misclassified as not module-driven
+ok 34 - read failures surface instead of being misclassified as not module-driven
+  ---
+  duration_ms: 0.537833
+  ...
+# Subtest: the production routine-state reader returns null with a single read when the plan has no active routine
+ok 35 - the production routine-state reader returns null with a single read when the plan has no active routine
+  ---
+  duration_ms: 0.887334
+  ...
+# Subtest: the production routine-state reader composes the plan and version rows, translating undefined source-draft fields to null
+ok 36 - the production routine-state reader composes the plan and version rows, translating undefined source-draft fields to null
+  ---
+  duration_ms: 1.880416
+  ...
+# Subtest: the production routine-state reader carries real source-draft fields through unchanged
+ok 37 - the production routine-state reader carries real source-draft fields through unchanged
+  ---
+  duration_ms: 0.237375
+  ...
+# Subtest: the production routine-state reader rejects a routine version row missing its source refined-need id
+ok 38 - the production routine-state reader rejects a routine version row missing its source refined-need id
+  ---
+  duration_ms: 0.178916
+  ...
+# personal_plan_transition_performance {
+#   layer: 'server',
+#   operation: 'stage3_authority_single_canonical_draft',
+#   outcome: 'success',
+#   duration_ms: 0.01
+# }
+# personal_plan_transition_performance {
+#   layer: 'server',
+#   operation: 'stage3_authority_single_source_context',
+#   outcome: 'success',
+#   duration_ms: 0.04
+# }
+# personal_plan_transition_performance {
+#   layer: 'server',
+#   operation: 'stage3_authority_single_authority_facts',
+#   outcome: 'success',
+#   duration_ms: 0.16
+# }
+# personal_plan_transition_performance {
+#   layer: 'server',
+#   operation: 'stage3_authority_single_cas_save',
+#   outcome: 'saved',
+#   duration_ms: 0.05
+# }
+# personal_plan_transition_performance {
+#   layer: 'server',
+#   operation: 'stage3_authority_single_canonical_draft',
+#   outcome: 'success',
+#   duration_ms: 0.01
+# }
+# personal_plan_transition_performance {
+#   layer: 'server',
+#   operation: 'stage3_authority_single_source_context',
+#   outcome: 'success',
+#   duration_ms: 0.03
+# }
+# personal_plan_transition_performance {
+#   layer: 'server',
+#   operation: 'stage3_authority_single_authority_facts',
+#   outcome: 'success',
+#   duration_ms: 0.05
+# }
+# personal_plan_transition_performance {
+#   layer: 'server',
+#   operation: 'stage3_authority_single_cas_save',
+#   outcome: 'saved',
+#   duration_ms: 0.01
+# }
+# Subtest: a rebuilt draft for a person who owns products completes and activates
+ok 39 - a rebuilt draft for a person who owns products completes and activates
+  ---
+  duration_ms: 25.045
+  ...
+# Subtest: a retained (unassigned) product's disposition never blocks the recompute
+ok 40 - a retained (unassigned) product's disposition never blocks the recompute
+  ---
+  duration_ms: 3.709458
+  ...
+# Subtest: stages the historical Routine as a successor of the current one and confirms it
+ok 41 - stages the historical Routine as a successor of the current one and confirms it
+  ---
+  duration_ms: 3.579125
+  ...
+# Subtest: the direct operation keys name the exact transition, so a repeated flip stages afresh
+ok 42 - the direct operation keys name the exact transition, so a repeated flip stages afresh
+  ---
+  duration_ms: 0.267916
+  ...
+# Subtest: an identical retry at the same plan revision reuses the same fingerprint inputs
+ok 43 - an identical retry at the same plan revision reuses the same fingerprint inputs
+  ---
+  duration_ms: 0.155125
+  ...
+# Subtest: a still-pending proposal for the target Routine is reported, never staged over
+ok 44 - a still-pending proposal for the target Routine is reported, never staged over
+  ---
+  duration_ms: 0.212792
+  ...
+# Subtest: a missing or foreign plan row gets its own terminal reason
+ok 45 - a missing or foreign plan row gets its own terminal reason
+  ---
+  duration_ms: 0.075041
+  ...
+# Subtest: does nothing when the historical Routine is already the active one
+ok 46 - does nothing when the historical Routine is already the active one
+  ---
+  duration_ms: 0.070667
+  ...
+# Subtest: reports no_routine_for_draft when nothing was ever compiled from the draft
+ok 47 - reports no_routine_for_draft when nothing was ever compiled from the draft
+  ---
+  duration_ms: 0.153
+  ...
+# Subtest: a moved plan between the read and the stage is a retryable conflict
+ok 48 - a moved plan between the read and the stage is a retryable conflict
+  ---
+  duration_ms: 0.296875
+  ...
+# Subtest: a moved plan between the stage and the confirm is a retryable conflict
+ok 49 - a moved plan between the stage and the confirm is a retryable conflict
+  ---
+  duration_ms: 0.292083
+  ...
+# Subtest: a stale_proposal confirm is terminal, never retried
+ok 50 - a stale_proposal confirm is terminal, never retried
+  ---
+  duration_ms: 0.290417
+  ...
+# Subtest: a refused staging is terminal, not retried
+ok 51 - a refused staging is terminal, not retried
+  ---
+  duration_ms: 0.173333
+  ...
+# Subtest: an already-staged identical proposal is confirmed rather than re-staged
+ok 52 - an already-staged identical proposal is confirmed rather than re-staged
+  ---
+  duration_ms: 0.142334
+  ...
+# Subtest: an already-accepted proposal counts as activated, not as a failure
+ok 53 - an already-accepted proposal counts as activated, not as a failure
+  ---
+  duration_ms: 0.067417
+  ...
+# Subtest: an unrecognised confirm outcome is terminal
+ok 54 - an unrecognised confirm outcome is terminal
+  ---
+  duration_ms: 2.025625
+  ...
+1..54
+# tests 54
+# suites 0
+# pass 54
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5158.830375

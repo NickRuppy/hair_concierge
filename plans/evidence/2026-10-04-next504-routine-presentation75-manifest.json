@@ -1,0 +1,1163 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "counts": {
+    "before": 75,
+    "transfer": 75,
+    "cut": 69
+  },
+  "files": [
+    {
+      "file": "tests/personal-plan-stage4-ui.test.tsx",
+      "stages": {
+        "before": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/before/tests/personal-plan-stage4-ui.test.tsx",
+          "sha256": "488d18f0aaa24f194feb315b0888e7023b7cbee0da42acb989d5ae303035a0ed",
+          "sites": [
+            {
+              "title": "renders Basis before Optional and groups multiple roles into one Bedarfsplan category card",
+              "sha256": "fd53844b09012e2bef353670bcbcf66e65b8a430e66e0bb188407ccfa0dee813"
+            },
+            {
+              "title": "Routine has no journey header — Bottom-Nav carries orientation (Task 2.7)",
+              "sha256": "94dda91b241ebb84301e32d4343c47da7560b9592f8874f4f62b87175babbd11"
+            },
+            {
+              "title": "a basis slot with a planned ref but no chosen product blocks the Anwendung",
+              "sha256": "ee90392ad87f127ef7dd81f9b1f49facddba064ffc3f902a9cf4468f5cbdf448"
+            },
+            {
+              "title": "a planned item with a chosen catalog product is a full routine member",
+              "sha256": "a4ac1019a296a716a80a92618cb403e837cf01df28e4c2993016e3ec961439fa"
+            },
+            {
+              "title": "uses proposal copy initially and never offers an Anwendung hero button",
+              "sha256": "ac72c3c33eca3b25979ba0b1f6c12537d7fc7e05c466a474549126d416b5718e"
+            },
+            {
+              "title": "the edit affordance is a quiet link in the heading row, not a hero button",
+              "sha256": "730e2543b92841a464527f75b442d7ed0e07906fa49c818a1b95a7c939ee2279"
+            },
+            {
+              "title": "uses presentation-only catalog image and name facts outside the Routine payload",
+              "sha256": "8b53020982a60305ee27146aa7b7bf1c68ee7fb4b97b2502817a7f129478b812"
+            },
+            {
+              "title": "shows verified Oil heat capability in the existing Stage 4 metadata line only",
+              "sha256": "fe3918fdbb94f2d330f7db5c0e38f60fdce7e5f066a3951114cbfa66e7793a6a"
+            },
+            {
+              "title": "renders active routine as product-led result with separated later additions",
+              "sha256": "5d42ac899d8bcd9686e093cae75e8d50c74ae3264a77d92c24dd0c82fb0660e6"
+            },
+            {
+              "title": "shows v3 replacement labels and retained owned products without adding them to Routine items",
+              "sha256": "b2da97f6c8fb0f5107b851daae7358f403600864f285743b1d75a20e82e8aec4"
+            },
+            {
+              "title": "shows v4 retained inventory as stored, non-executable product context",
+              "sha256": "81e6a7edde0440262fa917e0eda69cca3a2d17b809781a36c5753298dbe0cd8b"
+            },
+            {
+              "title": "explains confirmed unnecessary heat protection in the not-planned routine section",
+              "sha256": "6f3e7a65e0e837c83aa335fc77b668833276c527eee2685ff66da2bf00b6252b"
+            },
+            {
+              "title": "keeps required Basis gaps explicit and renders a named recovery state without payload",
+              "sha256": "3ab935e9c826fe6bd12c8042dbb0ea9c0f35ad08638f8a538f33c45583492dab"
+            },
+            {
+              "title": "states non-executable conditions plainly and keeps editing global",
+              "sha256": "7392150d5d4e0a3bab406bf15d2cb124bb7a481f74460ced566fcd2aca907baa"
+            },
+            {
+              "title": "renders a quiet, reason-specific placeholder step per deferral reason (Task 2.2)",
+              "sha256": "da6b13851562ecf171157edf74c965e21729eabb3d751dd3a829ba576439154d"
+            },
+            {
+              "title": "an excluded item with no matching server deferral reason keeps the generic excluded copy",
+              "sha256": "e8163637d7cddf88074d74a8c914e69d10fd74dcfd58abf96166c3b4d6cf095d"
+            },
+            {
+              "title": "a role a later recompute resolved is no longer excluded, so its placeholder disappears with no extra clearing logic",
+              "sha256": "1ad08960bc671710b27ad9f8e0df815d10020a6af1a5661ffb5c7596d76d2f1d"
+            },
+            {
+              "title": "the all-deferred shape (zero-recommendation accept) renders only placeholders",
+              "sha256": "e624fe71404c4b1818ee98f378b8eddd73ba17a7bd5f20b6ac0bac71543cf173"
+            },
+            {
+              "title": "translates structured Personal Plan cadence without exposing internal keys",
+              "sha256": "1168aba1b8d6180b9ccccf496224cff3a8de45f259757b333f5784f249cd5d65"
+            },
+            {
+              "title": "presents every structured cadence kind and keeps a user override authoritative",
+              "sha256": "d2acc77019a3758a56fc48cab4c967ab0297d5024c53b23d1c14fb7196ac6f17"
+            },
+            {
+              "title": "fresh state (products open, 2 von 4): banner renders above the routine blocks",
+              "sha256": "1bad565cd5215d597972aa58d80d61e7bf3e164c7d1e317ec91359994037009a"
+            },
+            {
+              "title": "post-module-1 state (habits open, 3 von 4): banner renders above the routine blocks too",
+              "sha256": "33e6ad51f4bb3b3528de0f1ff62c12de8df75ef9e44da54e1b85574e7e9701dd"
+            },
+            {
+              "title": "dismissed state: refinementBanner absent renders no banner",
+              "sha256": "bc49cb3cbb39ff3c9655ad593238394aef38e6b5b709fe2aedef3380f29ba6bd"
+            },
+            {
+              "title": "all-done state: no refinementBanner prop at all renders no banner",
+              "sha256": "7e192fb8cf192ced6ccd931e74c569719c4183ac1527500cf9540ac73344ba75"
+            },
+            {
+              "title": "Task 2.6: the plan-updated toast renders with the exact signed-off copy above the routine blocks",
+              "sha256": "26c91922083f1655169bb1492f962e05b130a546a5ab1b43d283b9af218a4afa"
+            },
+            {
+              "title": "Task 2.6: the plan-updated toast is absent without the signal",
+              "sha256": "9211ea1df6ecd0719fd70a3cb84673bd4740cd4b2b30342545a0b920c655a838"
+            },
+            {
+              "title": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit",
+              "sha256": "c4ea21364d6742162f89fe01a9462b81ab5c77d5e94d05dac115f204200d6228"
+            }
+          ]
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/transfer/tests/personal-plan-stage4-ui.test.tsx",
+          "sha256": "78f0e57f5d0ae518fed708aa52d0db1595ec31c040cdd3d19194dc8b7c20fc4c",
+          "sites": [
+            {
+              "title": "renders Basis before Optional and groups multiple roles into one Bedarfsplan category card",
+              "sha256": "fd53844b09012e2bef353670bcbcf66e65b8a430e66e0bb188407ccfa0dee813"
+            },
+            {
+              "title": "Routine has no journey header — Bottom-Nav carries orientation (Task 2.7)",
+              "sha256": "94dda91b241ebb84301e32d4343c47da7560b9592f8874f4f62b87175babbd11"
+            },
+            {
+              "title": "a basis slot with a planned ref but no chosen product blocks the Anwendung",
+              "sha256": "ee90392ad87f127ef7dd81f9b1f49facddba064ffc3f902a9cf4468f5cbdf448"
+            },
+            {
+              "title": "a planned item with a chosen catalog product is a full routine member",
+              "sha256": "a4ac1019a296a716a80a92618cb403e837cf01df28e4c2993016e3ec961439fa"
+            },
+            {
+              "title": "uses proposal copy initially and never offers an Anwendung hero button",
+              "sha256": "ac72c3c33eca3b25979ba0b1f6c12537d7fc7e05c466a474549126d416b5718e"
+            },
+            {
+              "title": "the edit affordance is a quiet link in the heading row, not a hero button",
+              "sha256": "730e2543b92841a464527f75b442d7ed0e07906fa49c818a1b95a7c939ee2279"
+            },
+            {
+              "title": "uses presentation-only catalog image and name facts outside the Routine payload",
+              "sha256": "8b53020982a60305ee27146aa7b7bf1c68ee7fb4b97b2502817a7f129478b812"
+            },
+            {
+              "title": "shows verified Oil heat capability in the existing Stage 4 metadata line only",
+              "sha256": "fe3918fdbb94f2d330f7db5c0e38f60fdce7e5f066a3951114cbfa66e7793a6a"
+            },
+            {
+              "title": "renders active routine as product-led result with separated later additions",
+              "sha256": "5d42ac899d8bcd9686e093cae75e8d50c74ae3264a77d92c24dd0c82fb0660e6"
+            },
+            {
+              "title": "shows v3 replacement labels and retained owned products without adding them to Routine items",
+              "sha256": "b2da97f6c8fb0f5107b851daae7358f403600864f285743b1d75a20e82e8aec4"
+            },
+            {
+              "title": "shows v4 retained inventory as stored, non-executable product context",
+              "sha256": "81e6a7edde0440262fa917e0eda69cca3a2d17b809781a36c5753298dbe0cd8b"
+            },
+            {
+              "title": "explains confirmed unnecessary heat protection in the not-planned routine section",
+              "sha256": "6f3e7a65e0e837c83aa335fc77b668833276c527eee2685ff66da2bf00b6252b"
+            },
+            {
+              "title": "keeps required Basis gaps explicit and renders a named recovery state without payload",
+              "sha256": "3ab935e9c826fe6bd12c8042dbb0ea9c0f35ad08638f8a538f33c45583492dab"
+            },
+            {
+              "title": "states non-executable conditions plainly and keeps editing global",
+              "sha256": "7392150d5d4e0a3bab406bf15d2cb124bb7a481f74460ced566fcd2aca907baa"
+            },
+            {
+              "title": "renders a quiet, reason-specific placeholder step per deferral reason (Task 2.2)",
+              "sha256": "da6b13851562ecf171157edf74c965e21729eabb3d751dd3a829ba576439154d"
+            },
+            {
+              "title": "an excluded item with no matching server deferral reason keeps the generic excluded copy",
+              "sha256": "e8163637d7cddf88074d74a8c914e69d10fd74dcfd58abf96166c3b4d6cf095d"
+            },
+            {
+              "title": "a role a later recompute resolved is no longer excluded, so its placeholder disappears with no extra clearing logic",
+              "sha256": "1ad08960bc671710b27ad9f8e0df815d10020a6af1a5661ffb5c7596d76d2f1d"
+            },
+            {
+              "title": "the all-deferred shape (zero-recommendation accept) renders only placeholders",
+              "sha256": "e624fe71404c4b1818ee98f378b8eddd73ba17a7bd5f20b6ac0bac71543cf173"
+            },
+            {
+              "title": "translates structured Personal Plan cadence without exposing internal keys",
+              "sha256": "1168aba1b8d6180b9ccccf496224cff3a8de45f259757b333f5784f249cd5d65"
+            },
+            {
+              "title": "presents every structured cadence kind and keeps a user override authoritative",
+              "sha256": "d2acc77019a3758a56fc48cab4c967ab0297d5024c53b23d1c14fb7196ac6f17"
+            },
+            {
+              "title": "fresh state (products open, 2 von 4): banner renders above the routine blocks",
+              "sha256": "1bad565cd5215d597972aa58d80d61e7bf3e164c7d1e317ec91359994037009a"
+            },
+            {
+              "title": "post-module-1 state (habits open, 3 von 4): banner renders above the routine blocks too",
+              "sha256": "33e6ad51f4bb3b3528de0f1ff62c12de8df75ef9e44da54e1b85574e7e9701dd"
+            },
+            {
+              "title": "dismissed state: refinementBanner absent renders no banner",
+              "sha256": "bc49cb3cbb39ff3c9655ad593238394aef38e6b5b709fe2aedef3380f29ba6bd"
+            },
+            {
+              "title": "all-done state: no refinementBanner prop at all renders no banner",
+              "sha256": "7e192fb8cf192ced6ccd931e74c569719c4183ac1527500cf9540ac73344ba75"
+            },
+            {
+              "title": "Task 2.6: the plan-updated toast renders with the exact signed-off copy above the routine blocks",
+              "sha256": "26c91922083f1655169bb1492f962e05b130a546a5ab1b43d283b9af218a4afa"
+            },
+            {
+              "title": "Task 2.6: the plan-updated toast is absent without the signal",
+              "sha256": "59be9fd51c0010eb37a50f60a42afb2959b380835e18e5ba11f03fddae3a81cf"
+            },
+            {
+              "title": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit",
+              "sha256": "c8ee71f86af0152031f69d2753de93cc74b4cc8a9e3ab37136f04acfd70e5811"
+            }
+          ]
+        },
+        "cut": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/cut/tests/personal-plan-stage4-ui.test.tsx",
+          "sha256": "6ee506e42ef46f736cb8fae4b4ea08e982ee151233fc0a31a17ff72574ac3427",
+          "sites": [
+            {
+              "title": "renders Basis before Optional and groups multiple roles into one Bedarfsplan category card",
+              "sha256": "fd53844b09012e2bef353670bcbcf66e65b8a430e66e0bb188407ccfa0dee813"
+            },
+            {
+              "title": "Routine has no journey header — Bottom-Nav carries orientation (Task 2.7)",
+              "sha256": "94dda91b241ebb84301e32d4343c47da7560b9592f8874f4f62b87175babbd11"
+            },
+            {
+              "title": "a basis slot with a planned ref but no chosen product blocks the Anwendung",
+              "sha256": "ee90392ad87f127ef7dd81f9b1f49facddba064ffc3f902a9cf4468f5cbdf448"
+            },
+            {
+              "title": "a planned item with a chosen catalog product is a full routine member",
+              "sha256": "a4ac1019a296a716a80a92618cb403e837cf01df28e4c2993016e3ec961439fa"
+            },
+            {
+              "title": "uses proposal copy initially and never offers an Anwendung hero button",
+              "sha256": "ac72c3c33eca3b25979ba0b1f6c12537d7fc7e05c466a474549126d416b5718e"
+            },
+            {
+              "title": "the edit affordance is a quiet link in the heading row, not a hero button",
+              "sha256": "730e2543b92841a464527f75b442d7ed0e07906fa49c818a1b95a7c939ee2279"
+            },
+            {
+              "title": "uses presentation-only catalog image and name facts outside the Routine payload",
+              "sha256": "8b53020982a60305ee27146aa7b7bf1c68ee7fb4b97b2502817a7f129478b812"
+            },
+            {
+              "title": "shows verified Oil heat capability in the existing Stage 4 metadata line only",
+              "sha256": "fe3918fdbb94f2d330f7db5c0e38f60fdce7e5f066a3951114cbfa66e7793a6a"
+            },
+            {
+              "title": "renders active routine as product-led result with separated later additions",
+              "sha256": "5d42ac899d8bcd9686e093cae75e8d50c74ae3264a77d92c24dd0c82fb0660e6"
+            },
+            {
+              "title": "shows v3 replacement labels and retained owned products without adding them to Routine items",
+              "sha256": "b2da97f6c8fb0f5107b851daae7358f403600864f285743b1d75a20e82e8aec4"
+            },
+            {
+              "title": "shows v4 retained inventory as stored, non-executable product context",
+              "sha256": "81e6a7edde0440262fa917e0eda69cca3a2d17b809781a36c5753298dbe0cd8b"
+            },
+            {
+              "title": "explains confirmed unnecessary heat protection in the not-planned routine section",
+              "sha256": "6f3e7a65e0e837c83aa335fc77b668833276c527eee2685ff66da2bf00b6252b"
+            },
+            {
+              "title": "keeps required Basis gaps explicit and renders a named recovery state without payload",
+              "sha256": "3ab935e9c826fe6bd12c8042dbb0ea9c0f35ad08638f8a538f33c45583492dab"
+            },
+            {
+              "title": "states non-executable conditions plainly and keeps editing global",
+              "sha256": "7392150d5d4e0a3bab406bf15d2cb124bb7a481f74460ced566fcd2aca907baa"
+            },
+            {
+              "title": "renders a quiet, reason-specific placeholder step per deferral reason (Task 2.2)",
+              "sha256": "da6b13851562ecf171157edf74c965e21729eabb3d751dd3a829ba576439154d"
+            },
+            {
+              "title": "an excluded item with no matching server deferral reason keeps the generic excluded copy",
+              "sha256": "e8163637d7cddf88074d74a8c914e69d10fd74dcfd58abf96166c3b4d6cf095d"
+            },
+            {
+              "title": "a role a later recompute resolved is no longer excluded, so its placeholder disappears with no extra clearing logic",
+              "sha256": "1ad08960bc671710b27ad9f8e0df815d10020a6af1a5661ffb5c7596d76d2f1d"
+            },
+            {
+              "title": "the all-deferred shape (zero-recommendation accept) renders only placeholders",
+              "sha256": "e624fe71404c4b1818ee98f378b8eddd73ba17a7bd5f20b6ac0bac71543cf173"
+            },
+            {
+              "title": "translates structured Personal Plan cadence without exposing internal keys",
+              "sha256": "1168aba1b8d6180b9ccccf496224cff3a8de45f259757b333f5784f249cd5d65"
+            },
+            {
+              "title": "presents every structured cadence kind and keeps a user override authoritative",
+              "sha256": "d2acc77019a3758a56fc48cab4c967ab0297d5024c53b23d1c14fb7196ac6f17"
+            },
+            {
+              "title": "fresh state (products open, 2 von 4): banner renders above the routine blocks",
+              "sha256": "1bad565cd5215d597972aa58d80d61e7bf3e164c7d1e317ec91359994037009a"
+            },
+            {
+              "title": "Task 2.6: the plan-updated toast is absent without the signal",
+              "sha256": "59be9fd51c0010eb37a50f60a42afb2959b380835e18e5ba11f03fddae3a81cf"
+            },
+            {
+              "title": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit",
+              "sha256": "c8ee71f86af0152031f69d2753de93cc74b4cc8a9e3ab37136f04acfd70e5811"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+      "stages": {
+        "before": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/before/tests/personal-plan-stage4-route-ui.test.tsx",
+          "sha256": "cff5fd8b518357a51b5947a46dece1b74b41858fd5af9c2d29bc491ada74a793",
+          "sites": [
+            {
+              "title": "Routine resolver preserves legacy only for people without a Personal Plan",
+              "sha256": "cbeb33cb29cf53a10cee9eea7ecf289955abba55cb2b4e6aa19cd531e7e554de"
+            },
+            {
+              "title": "Routine resolver shows scoped recovery instead of legacy on a Personal Plan read failure",
+              "sha256": "7de9ddf2d1e5fbb4839a8fada4830f6bda51b5079515da442cee2c2e2c20d719"
+            },
+            {
+              "title": "Routine resolver loads v3 presentation from an initial proposal candidate",
+              "sha256": "efd9092417031398f4f1d5acf819c9f5850f889c8b87acbc795f211fd3265103"
+            },
+            {
+              "title": "Routine resolver threads the refinement banner view model through from readRefinementBanner",
+              "sha256": "7097831b0846c480c4380a7f889ef59d1703f85503607775f470a9a160d8ae21"
+            },
+            {
+              "title": "Routine resolver degrades to no banner when readRefinementBanner is absent or fails",
+              "sha256": "19ed6f0d3f80cae067e58e9d1879f381d28614d24ef702352fcae3f54554047a"
+            },
+            {
+              "title": "Routine unavailable recovery offers an explicit reload action",
+              "sha256": "a1bb5a4329d56e6420d7f267ba8685e6a671427a94039133390119b26ce6ecc0"
+            },
+            {
+              "title": "Routine unavailable recovery also offers a forward CTA out of the dead end",
+              "sha256": "71dcbc9d38d3af5517fa9f8a20df8813cdd02a4642927afa51aaf245237d26d6"
+            },
+            {
+              "title": "Routine resolver does not construct a Personal Plan Routine view before Stage 4 is reachable",
+              "sha256": "b7f215bd446612cf3db3afef96adfcb46d70f80efd8a91728dbe75f2b8b37c46"
+            }
+          ]
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/transfer/tests/personal-plan-stage4-route-ui.test.tsx",
+          "sha256": "5e6e03984d249a9a65af268a1b1d3aeefa04cc22733a9bc4ff9e1bf81cefadaf",
+          "sites": [
+            {
+              "title": "Routine resolver preserves legacy only for people without a Personal Plan",
+              "sha256": "cbeb33cb29cf53a10cee9eea7ecf289955abba55cb2b4e6aa19cd531e7e554de"
+            },
+            {
+              "title": "Routine resolver shows scoped recovery instead of legacy on a Personal Plan read failure",
+              "sha256": "7de9ddf2d1e5fbb4839a8fada4830f6bda51b5079515da442cee2c2e2c20d719"
+            },
+            {
+              "title": "Routine resolver loads v3 presentation from an initial proposal candidate",
+              "sha256": "efd9092417031398f4f1d5acf819c9f5850f889c8b87acbc795f211fd3265103"
+            },
+            {
+              "title": "Routine resolver threads the refinement banner view model through from readRefinementBanner",
+              "sha256": "7097831b0846c480c4380a7f889ef59d1703f85503607775f470a9a160d8ae21"
+            },
+            {
+              "title": "Routine resolver degrades to no banner when readRefinementBanner is absent or fails",
+              "sha256": "19ed6f0d3f80cae067e58e9d1879f381d28614d24ef702352fcae3f54554047a"
+            },
+            {
+              "title": "Routine unavailable recovery offers an explicit reload action",
+              "sha256": "d13d49acff0c689d7d91a700bd937265a69a0de3dde86d8b6cd0f50161b94d3a"
+            },
+            {
+              "title": "Routine unavailable recovery also offers a forward CTA out of the dead end",
+              "sha256": "71dcbc9d38d3af5517fa9f8a20df8813cdd02a4642927afa51aaf245237d26d6"
+            },
+            {
+              "title": "Routine resolver does not construct a Personal Plan Routine view before Stage 4 is reachable",
+              "sha256": "b7f215bd446612cf3db3afef96adfcb46d70f80efd8a91728dbe75f2b8b37c46"
+            }
+          ]
+        },
+        "cut": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/cut/tests/personal-plan-stage4-route-ui.test.tsx",
+          "sha256": "8f070f75736da631a96d824e4b19b3609e63ecb0afc88d1b98d75a5c8f398841",
+          "sites": [
+            {
+              "title": "Routine resolver preserves legacy only for people without a Personal Plan",
+              "sha256": "cbeb33cb29cf53a10cee9eea7ecf289955abba55cb2b4e6aa19cd531e7e554de"
+            },
+            {
+              "title": "Routine resolver shows scoped recovery instead of legacy on a Personal Plan read failure",
+              "sha256": "7de9ddf2d1e5fbb4839a8fada4830f6bda51b5079515da442cee2c2e2c20d719"
+            },
+            {
+              "title": "Routine resolver loads v3 presentation from an initial proposal candidate",
+              "sha256": "efd9092417031398f4f1d5acf819c9f5850f889c8b87acbc795f211fd3265103"
+            },
+            {
+              "title": "Routine resolver threads the refinement banner view model through from readRefinementBanner",
+              "sha256": "7097831b0846c480c4380a7f889ef59d1703f85503607775f470a9a160d8ae21"
+            },
+            {
+              "title": "Routine resolver degrades to no banner when readRefinementBanner is absent or fails",
+              "sha256": "19ed6f0d3f80cae067e58e9d1879f381d28614d24ef702352fcae3f54554047a"
+            },
+            {
+              "title": "Routine unavailable recovery offers an explicit reload action",
+              "sha256": "d13d49acff0c689d7d91a700bd937265a69a0de3dde86d8b6cd0f50161b94d3a"
+            },
+            {
+              "title": "Routine resolver does not construct a Personal Plan Routine view before Stage 4 is reachable",
+              "sha256": "b7f215bd446612cf3db3afef96adfcb46d70f80efd8a91728dbe75f2b8b37c46"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "file": "tests/personal-plan-stage4-interaction-ui.test.tsx",
+      "stages": {
+        "before": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/before/tests/personal-plan-stage4-interaction-ui.test.tsx",
+          "sha256": "0d89862dfbc3d1c8f77c79468093c032312da02ff74ce9d7cc3f139be3e8fda3",
+          "sites": [
+            {
+              "title": "global editor renders the complete Routine and submits a local operation batch",
+              "sha256": "22000c5e60e7f8dee05a566946c78fe392796b6ddc0ab759f454493b8e46d263"
+            },
+            {
+              "title": "global editor blocks invalid controls and asks before discarding dirty edits",
+              "sha256": "901e3b56294ff46104b1ed9964fa82e07c097c10c1a91eb5a46516fc7d8c0f27"
+            },
+            {
+              "title": "Routine discard confirmation uses the reviewed visible actions",
+              "sha256": "227eb4ae8c104af6fc9049ba29912355efe1be9c7ef547f14a0377bee49a6a6e"
+            },
+            {
+              "title": "global editor starts at the recommendation and can clear a cadence override",
+              "sha256": "559e9790fbb95ed6b15784ee0a861c7f7bec8430206522443a4d9c2bc8015077"
+            },
+            {
+              "title": "routine client never renders raw server error tokens",
+              "sha256": "9dc3ff379f79e0afb6342488eefabcac184e5274a768ed1bb69b7d26b8bba4ff"
+            },
+            {
+              "title": "Routine entry never blocks actions and defers reconciliation behind a pending proposal",
+              "sha256": "cfa742477cd188861945aa92abc6eebbdb4e223633e1c5c5071ece1fb31dd4e8"
+            },
+            {
+              "title": "the entry sync reloads for a healed module recompute, not only for a staged proposal",
+              "sha256": "4783845be5300531c9142c279e1ac407155569ad7c83c0be6d9e4601a48fa85d"
+            },
+            {
+              "title": "successor proposals are available from the overview but never auto-open on entry",
+              "sha256": "3214a5bf751f54f7aefc462c5bfee3b138c85bd7548bd4b866a198edee7243ea"
+            },
+            {
+              "title": "proposal sheet body separates initial confirmation from successor review callbacks",
+              "sha256": "035a9f79ca06c52b1cabed37570be345d230debe3b57878d95ed25ef50232d02"
+            },
+            {
+              "title": "proposal acceptance reload distinguishes lost response, same pending, and supersession",
+              "sha256": "2ad01d47c35a20d264048738461276361e753b16d2318335e954f560b304b2e6"
+            },
+            {
+              "title": "every Routine acceptance refreshes server-owned navigation and portfolio presentation",
+              "sha256": "dae93fc9d8100780041098299660dfa5c137af4309776aa1c3fcacfa3ab8e45d"
+            },
+            {
+              "title": "proposal sheet blocks duplicate requests only while a request is running",
+              "sha256": "63d689da2f3d894f64f126d26d988f1908619b64beb23642276fb7ba29c025db"
+            },
+            {
+              "title": "proposal deltas render frozen consumer labels instead of internal item keys",
+              "sha256": "6ee658a97354402e9020982aabe7124e20272fa5dfcb8ba51708a34ccc9a01a3"
+            },
+            {
+              "title": "product detail keeps fit frozen while commerce and explicit actions stay caller-owned",
+              "sha256": "719c8e451a4110b9d8d491c3f431195b45be9189596cb300c026a56c571f73e4"
+            }
+          ]
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/transfer/tests/personal-plan-stage4-interaction-ui.test.tsx",
+          "sha256": "0d89862dfbc3d1c8f77c79468093c032312da02ff74ce9d7cc3f139be3e8fda3",
+          "sites": [
+            {
+              "title": "global editor renders the complete Routine and submits a local operation batch",
+              "sha256": "22000c5e60e7f8dee05a566946c78fe392796b6ddc0ab759f454493b8e46d263"
+            },
+            {
+              "title": "global editor blocks invalid controls and asks before discarding dirty edits",
+              "sha256": "901e3b56294ff46104b1ed9964fa82e07c097c10c1a91eb5a46516fc7d8c0f27"
+            },
+            {
+              "title": "Routine discard confirmation uses the reviewed visible actions",
+              "sha256": "227eb4ae8c104af6fc9049ba29912355efe1be9c7ef547f14a0377bee49a6a6e"
+            },
+            {
+              "title": "global editor starts at the recommendation and can clear a cadence override",
+              "sha256": "559e9790fbb95ed6b15784ee0a861c7f7bec8430206522443a4d9c2bc8015077"
+            },
+            {
+              "title": "routine client never renders raw server error tokens",
+              "sha256": "9dc3ff379f79e0afb6342488eefabcac184e5274a768ed1bb69b7d26b8bba4ff"
+            },
+            {
+              "title": "Routine entry never blocks actions and defers reconciliation behind a pending proposal",
+              "sha256": "cfa742477cd188861945aa92abc6eebbdb4e223633e1c5c5071ece1fb31dd4e8"
+            },
+            {
+              "title": "the entry sync reloads for a healed module recompute, not only for a staged proposal",
+              "sha256": "4783845be5300531c9142c279e1ac407155569ad7c83c0be6d9e4601a48fa85d"
+            },
+            {
+              "title": "successor proposals are available from the overview but never auto-open on entry",
+              "sha256": "3214a5bf751f54f7aefc462c5bfee3b138c85bd7548bd4b866a198edee7243ea"
+            },
+            {
+              "title": "proposal sheet body separates initial confirmation from successor review callbacks",
+              "sha256": "035a9f79ca06c52b1cabed37570be345d230debe3b57878d95ed25ef50232d02"
+            },
+            {
+              "title": "proposal acceptance reload distinguishes lost response, same pending, and supersession",
+              "sha256": "2ad01d47c35a20d264048738461276361e753b16d2318335e954f560b304b2e6"
+            },
+            {
+              "title": "every Routine acceptance refreshes server-owned navigation and portfolio presentation",
+              "sha256": "dae93fc9d8100780041098299660dfa5c137af4309776aa1c3fcacfa3ab8e45d"
+            },
+            {
+              "title": "proposal sheet blocks duplicate requests only while a request is running",
+              "sha256": "63d689da2f3d894f64f126d26d988f1908619b64beb23642276fb7ba29c025db"
+            },
+            {
+              "title": "proposal deltas render frozen consumer labels instead of internal item keys",
+              "sha256": "6ee658a97354402e9020982aabe7124e20272fa5dfcb8ba51708a34ccc9a01a3"
+            },
+            {
+              "title": "product detail keeps fit frozen while commerce and explicit actions stay caller-owned",
+              "sha256": "719c8e451a4110b9d8d491c3f431195b45be9189596cb300c026a56c571f73e4"
+            }
+          ]
+        },
+        "cut": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/cut/tests/personal-plan-stage4-interaction-ui.test.tsx",
+          "sha256": "0d89862dfbc3d1c8f77c79468093c032312da02ff74ce9d7cc3f139be3e8fda3",
+          "sites": [
+            {
+              "title": "global editor renders the complete Routine and submits a local operation batch",
+              "sha256": "22000c5e60e7f8dee05a566946c78fe392796b6ddc0ab759f454493b8e46d263"
+            },
+            {
+              "title": "global editor blocks invalid controls and asks before discarding dirty edits",
+              "sha256": "901e3b56294ff46104b1ed9964fa82e07c097c10c1a91eb5a46516fc7d8c0f27"
+            },
+            {
+              "title": "Routine discard confirmation uses the reviewed visible actions",
+              "sha256": "227eb4ae8c104af6fc9049ba29912355efe1be9c7ef547f14a0377bee49a6a6e"
+            },
+            {
+              "title": "global editor starts at the recommendation and can clear a cadence override",
+              "sha256": "559e9790fbb95ed6b15784ee0a861c7f7bec8430206522443a4d9c2bc8015077"
+            },
+            {
+              "title": "routine client never renders raw server error tokens",
+              "sha256": "9dc3ff379f79e0afb6342488eefabcac184e5274a768ed1bb69b7d26b8bba4ff"
+            },
+            {
+              "title": "Routine entry never blocks actions and defers reconciliation behind a pending proposal",
+              "sha256": "cfa742477cd188861945aa92abc6eebbdb4e223633e1c5c5071ece1fb31dd4e8"
+            },
+            {
+              "title": "the entry sync reloads for a healed module recompute, not only for a staged proposal",
+              "sha256": "4783845be5300531c9142c279e1ac407155569ad7c83c0be6d9e4601a48fa85d"
+            },
+            {
+              "title": "successor proposals are available from the overview but never auto-open on entry",
+              "sha256": "3214a5bf751f54f7aefc462c5bfee3b138c85bd7548bd4b866a198edee7243ea"
+            },
+            {
+              "title": "proposal sheet body separates initial confirmation from successor review callbacks",
+              "sha256": "035a9f79ca06c52b1cabed37570be345d230debe3b57878d95ed25ef50232d02"
+            },
+            {
+              "title": "proposal acceptance reload distinguishes lost response, same pending, and supersession",
+              "sha256": "2ad01d47c35a20d264048738461276361e753b16d2318335e954f560b304b2e6"
+            },
+            {
+              "title": "every Routine acceptance refreshes server-owned navigation and portfolio presentation",
+              "sha256": "dae93fc9d8100780041098299660dfa5c137af4309776aa1c3fcacfa3ab8e45d"
+            },
+            {
+              "title": "proposal sheet blocks duplicate requests only while a request is running",
+              "sha256": "63d689da2f3d894f64f126d26d988f1908619b64beb23642276fb7ba29c025db"
+            },
+            {
+              "title": "proposal deltas render frozen consumer labels instead of internal item keys",
+              "sha256": "6ee658a97354402e9020982aabe7124e20272fa5dfcb8ba51708a34ccc9a01a3"
+            },
+            {
+              "title": "product detail keeps fit frozen while commerce and explicit actions stay caller-owned",
+              "sha256": "719c8e451a4110b9d8d491c3f431195b45be9189596cb300c026a56c571f73e4"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "file": "tests/personal-plan-stage4-attention-ui.test.tsx",
+      "stages": {
+        "before": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/before/tests/personal-plan-stage4-attention-ui.test.tsx",
+          "sha256": "67c05c7b4e544a9bf1111ce3634bd8300b292998725d86a24224b74a4477237b",
+          "sites": [
+            {
+              "title": "renders an accessible, layout-independent dot only for a pending Routine proposal",
+              "sha256": "dfc036fee641ab8bca13ccbe0d4e48b34c08baa92edbe98a8309a6426b463e7e"
+            }
+          ]
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/transfer/tests/personal-plan-stage4-attention-ui.test.tsx",
+          "sha256": "67c05c7b4e544a9bf1111ce3634bd8300b292998725d86a24224b74a4477237b",
+          "sites": [
+            {
+              "title": "renders an accessible, layout-independent dot only for a pending Routine proposal",
+              "sha256": "dfc036fee641ab8bca13ccbe0d4e48b34c08baa92edbe98a8309a6426b463e7e"
+            }
+          ]
+        },
+        "cut": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/cut/tests/personal-plan-stage4-attention-ui.test.tsx",
+          "sha256": "67c05c7b4e544a9bf1111ce3634bd8300b292998725d86a24224b74a4477237b",
+          "sites": [
+            {
+              "title": "renders an accessible, layout-independent dot only for a pending Routine proposal",
+              "sha256": "dfc036fee641ab8bca13ccbe0d4e48b34c08baa92edbe98a8309a6426b463e7e"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "stages": {
+        "before": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/before/tests/personal-plan-portfolio-presentation.test.ts",
+          "sha256": "8a53430cdaa32c26538026cef8b46f3a38997000198ee54c5b2c086e5be9f03d",
+          "sites": [
+            {
+              "title": "loads a strict owner, plan, and portfolio-scoped v3 snapshot for downstream presentation",
+              "sha256": "a020e632201fa829ca79352cc40a5c44e786e44e76fd2ca73cb99318bf73ea46"
+            },
+            {
+              "title": "uses v3-only labels for a replacement and an informed override, preserving legacy wording",
+              "sha256": "7a698f5fc464d38cd8c8ef8a14b9ebc7af8747a0c18ca692031751a01b43f664"
+            },
+            {
+              "title": "presents v4 replacement metadata while leaving retained inventory display-only",
+              "sha256": "4c7bb24894b4d60b0a405cf95f467f0efc956d306649f2bc60b05c084ee5a49e"
+            },
+            {
+              "title": "fails closed when a stored portfolio snapshot is not strict",
+              "sha256": "b3ba40d31fac7e2e1bfad95ae070700a0a11c37c45e2edd6b314a8e6f2048d7e"
+            },
+            {
+              "title": "marks a v3 pending-source replacement as Noch kaufen even without a retained catalog product",
+              "sha256": "64bc4c7c2a4ffcd93f3e823b2cd8e2c2afc04f1b5067ebfa419764baa63532f6"
+            },
+            {
+              "title": "marks a v3 planned purchase without an owned source as Noch kaufen",
+              "sha256": "03bccca8781d511d2c4cd3eab5653bba669c86e964550a0cf84fff2190482d93"
+            },
+            {
+              "title": "carries a server-derived deferral reason keyed by its decision, dropping capture-level reasons without one",
+              "sha256": "307f0d29ff8d02dc83b4ba98f9483143cc104d8db0bcefb175052c3e0121c7ef"
+            },
+            {
+              "title": "presents one retained owned product when the same product filled multiple replaced roles",
+              "sha256": "5369934d6e275e68d54ec266a395add4f948899d6c43c326ebd21780f737d382"
+            },
+            {
+              "title": "profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays",
+              "sha256": "86a0a378d306167a7e3b660b60668ea61a2523be190cf0d09932c992dab5223b"
+            },
+            {
+              "title": "profile presentation API rejects unauthenticated reads",
+              "sha256": "7b467be752dcbed9a38f134b256a3c4b7f27db0390426f085f837d65826fc728"
+            }
+          ]
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/transfer/tests/personal-plan-portfolio-presentation.test.ts",
+          "sha256": "2de9cc6fad4d555f8ea593fceb4662f669f10cd2ae67730f0a5d5358fa51033d",
+          "sites": [
+            {
+              "title": "loads a strict owner, plan, and portfolio-scoped v3 snapshot for downstream presentation",
+              "sha256": "a020e632201fa829ca79352cc40a5c44e786e44e76fd2ca73cb99318bf73ea46"
+            },
+            {
+              "title": "uses v3-only labels for a replacement and an informed override, preserving legacy wording",
+              "sha256": "7a698f5fc464d38cd8c8ef8a14b9ebc7af8747a0c18ca692031751a01b43f664"
+            },
+            {
+              "title": "presents v4 replacement metadata while leaving retained inventory display-only",
+              "sha256": "4c7bb24894b4d60b0a405cf95f467f0efc956d306649f2bc60b05c084ee5a49e"
+            },
+            {
+              "title": "fails closed when a stored portfolio snapshot is not strict",
+              "sha256": "b3ba40d31fac7e2e1bfad95ae070700a0a11c37c45e2edd6b314a8e6f2048d7e"
+            },
+            {
+              "title": "marks a v3 pending-source replacement as Noch kaufen even without a retained catalog product",
+              "sha256": "64bc4c7c2a4ffcd93f3e823b2cd8e2c2afc04f1b5067ebfa419764baa63532f6"
+            },
+            {
+              "title": "marks a v3 planned purchase without an owned source as Noch kaufen",
+              "sha256": "03bccca8781d511d2c4cd3eab5653bba669c86e964550a0cf84fff2190482d93"
+            },
+            {
+              "title": "carries a server-derived deferral reason keyed by its decision, dropping capture-level reasons without one",
+              "sha256": "307f0d29ff8d02dc83b4ba98f9483143cc104d8db0bcefb175052c3e0121c7ef"
+            },
+            {
+              "title": "presents one retained owned product when the same product filled multiple replaced roles",
+              "sha256": "5369934d6e275e68d54ec266a395add4f948899d6c43c326ebd21780f737d382"
+            },
+            {
+              "title": "profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays",
+              "sha256": "6ff8001683c06313eb2c7221e2670f69d5cccf1a7e07a7267d683b9833184432"
+            },
+            {
+              "title": "profile presentation API rejects unauthenticated reads",
+              "sha256": "7b467be752dcbed9a38f134b256a3c4b7f27db0390426f085f837d65826fc728"
+            }
+          ]
+        },
+        "cut": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/cut/tests/personal-plan-portfolio-presentation.test.ts",
+          "sha256": "79bb2e6629cf6e168f0112fa3f2e95bf887b897b118f3fad2b625a172128ea1a",
+          "sites": [
+            {
+              "title": "uses v3-only labels for a replacement and an informed override, preserving legacy wording",
+              "sha256": "7a698f5fc464d38cd8c8ef8a14b9ebc7af8747a0c18ca692031751a01b43f664"
+            },
+            {
+              "title": "presents v4 replacement metadata while leaving retained inventory display-only",
+              "sha256": "4c7bb24894b4d60b0a405cf95f467f0efc956d306649f2bc60b05c084ee5a49e"
+            },
+            {
+              "title": "fails closed when a stored portfolio snapshot is not strict",
+              "sha256": "b3ba40d31fac7e2e1bfad95ae070700a0a11c37c45e2edd6b314a8e6f2048d7e"
+            },
+            {
+              "title": "marks a v3 pending-source replacement as Noch kaufen even without a retained catalog product",
+              "sha256": "64bc4c7c2a4ffcd93f3e823b2cd8e2c2afc04f1b5067ebfa419764baa63532f6"
+            },
+            {
+              "title": "marks a v3 planned purchase without an owned source as Noch kaufen",
+              "sha256": "03bccca8781d511d2c4cd3eab5653bba669c86e964550a0cf84fff2190482d93"
+            },
+            {
+              "title": "carries a server-derived deferral reason keyed by its decision, dropping capture-level reasons without one",
+              "sha256": "307f0d29ff8d02dc83b4ba98f9483143cc104d8db0bcefb175052c3e0121c7ef"
+            },
+            {
+              "title": "presents one retained owned product when the same product filled multiple replaced roles",
+              "sha256": "5369934d6e275e68d54ec266a395add4f948899d6c43c326ebd21780f737d382"
+            },
+            {
+              "title": "profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays",
+              "sha256": "6ff8001683c06313eb2c7221e2670f69d5cccf1a7e07a7267d683b9833184432"
+            },
+            {
+              "title": "profile presentation API rejects unauthenticated reads",
+              "sha256": "7b467be752dcbed9a38f134b256a3c4b7f27db0390426f085f837d65826fc728"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "file": "tests/routine-page-ui.test.tsx",
+      "stages": {
+        "before": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/before/tests/routine-page-ui.test.tsx",
+          "sha256": "8571aea5696afd319fae1ea05c2b0fe8b3b42039d9e346256d379c6efa70439c",
+          "sites": [
+            {
+              "title": "routine card visuals map every shaped card kind to a state action",
+              "sha256": "1da9748eb6d87d9f74aab71184ef4d2a42b430f6f913ef9148c8ef698748a0f1"
+            },
+            {
+              "title": "routine card status descriptions stay German per kind",
+              "sha256": "6997eeda86cd25e52e1dc949be7b5b1303b9807f9da370cc2ae993ff14b2719b"
+            },
+            {
+              "title": "frequency model exposes stable slider stops, target band, and compact Chaarlie marker",
+              "sha256": "5e0ead3d5d6c582a9caf1a6d9e4abd91c6a04fd7d55bfa2084208b98e363160b"
+            },
+            {
+              "title": "frequency model falls back to the preferred target when the user has no current value",
+              "sha256": "0731da250332c330d6ef2e3287292f73f27b50ad26692cbf598cf9b113c71ffd"
+            },
+            {
+              "title": "routine product drawer receives loaded profile context",
+              "sha256": "8b59f663155d4d5f5d87ff24643d10ef32ad47700e286af97e6dc40b89de22bc"
+            },
+            {
+              "title": "Gemerkt section: defaults to hidden (flag-off byte-identity) and fetches only when merklisteEnabled",
+              "sha256": "94a651296c4528b11c6b39a210a94295869d037a7940fb30761cc9e24c93f3be"
+            },
+            {
+              "title": "Gemerkt section: the section anchor matches the scanner bookmark's deep-link target",
+              "sha256": "daae94bf002dee0bf5465deb7f43c71e0ed61479ba719844e9628745a352374c"
+            },
+            {
+              "title": "Gemerkt section: graduation hands off to the EXISTING save/move sheet — no direct write from this section",
+              "sha256": "f9ed23fbe2ac4ad6587738af04f9bd7aa7b0032ced85e2d12e5aa428fa44deed"
+            },
+            {
+              "title": "Gemerkt section: a routine graduation (not a plain removal) tells the caller WHICH product graduated (F6, Z3)",
+              "sha256": "0ce45716bba30dca40df5e05ba5ca61063014700a8516ae495381933a8da0f30"
+            },
+            {
+              "title": "PersonalPlanRoutineClient: graduation hands off into the existing sync/proposal/editor flow, with an honest in-progress state (Z3)",
+              "sha256": "4ccfb0828313d34dfca11b0cc186d4c00317d31e147b737cbeeda99623fba397"
+            },
+            {
+              "title": "RoutinePageClient (legacy): wires the shared Gemerkt section with the server-derived flag and refreshes the routine list on graduation (F6)",
+              "sha256": "bd56994f2bbbb98f4d4d709adc64a039d0b59dfe32d3c1fdc4ac2788efde776e"
+            },
+            {
+              "title": "PersonalPlanRoutineClient: wires the shared Gemerkt section too — this is the branch every freemium/subscriber premium user actually resolves to (F1)",
+              "sha256": "8625f25cfce12d6adcc842beeff505ad188b7317b76d3fbba0a985c0209152cf"
+            },
+            {
+              "title": "RoutinePage: BOTH the legacy and personal-plan branches pass the server-derived flag, not a client-side read (F1)",
+              "sha256": "fc1ff78982fcba873c8e46a72543e4e4080ae690d3513fb16c38a26768f77c12"
+            },
+            {
+              "title": "routine trigger seeds are sent from session storage with the route conversation id",
+              "sha256": "aa654ea86cb0912c7d1d5b648065af0e367e394291ba8d6bf6b8380d2a609dbe"
+            },
+            {
+              "title": "chat product drawer hydrates routine membership before rendering the action",
+              "sha256": "1c88c264902b9917d4798c853020ac9211bf9eae0fba96b2f85fdb23ad23ac14"
+            }
+          ]
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/transfer/tests/routine-page-ui.test.tsx",
+          "sha256": "8571aea5696afd319fae1ea05c2b0fe8b3b42039d9e346256d379c6efa70439c",
+          "sites": [
+            {
+              "title": "routine card visuals map every shaped card kind to a state action",
+              "sha256": "1da9748eb6d87d9f74aab71184ef4d2a42b430f6f913ef9148c8ef698748a0f1"
+            },
+            {
+              "title": "routine card status descriptions stay German per kind",
+              "sha256": "6997eeda86cd25e52e1dc949be7b5b1303b9807f9da370cc2ae993ff14b2719b"
+            },
+            {
+              "title": "frequency model exposes stable slider stops, target band, and compact Chaarlie marker",
+              "sha256": "5e0ead3d5d6c582a9caf1a6d9e4abd91c6a04fd7d55bfa2084208b98e363160b"
+            },
+            {
+              "title": "frequency model falls back to the preferred target when the user has no current value",
+              "sha256": "0731da250332c330d6ef2e3287292f73f27b50ad26692cbf598cf9b113c71ffd"
+            },
+            {
+              "title": "routine product drawer receives loaded profile context",
+              "sha256": "8b59f663155d4d5f5d87ff24643d10ef32ad47700e286af97e6dc40b89de22bc"
+            },
+            {
+              "title": "Gemerkt section: defaults to hidden (flag-off byte-identity) and fetches only when merklisteEnabled",
+              "sha256": "94a651296c4528b11c6b39a210a94295869d037a7940fb30761cc9e24c93f3be"
+            },
+            {
+              "title": "Gemerkt section: the section anchor matches the scanner bookmark's deep-link target",
+              "sha256": "daae94bf002dee0bf5465deb7f43c71e0ed61479ba719844e9628745a352374c"
+            },
+            {
+              "title": "Gemerkt section: graduation hands off to the EXISTING save/move sheet — no direct write from this section",
+              "sha256": "f9ed23fbe2ac4ad6587738af04f9bd7aa7b0032ced85e2d12e5aa428fa44deed"
+            },
+            {
+              "title": "Gemerkt section: a routine graduation (not a plain removal) tells the caller WHICH product graduated (F6, Z3)",
+              "sha256": "0ce45716bba30dca40df5e05ba5ca61063014700a8516ae495381933a8da0f30"
+            },
+            {
+              "title": "PersonalPlanRoutineClient: graduation hands off into the existing sync/proposal/editor flow, with an honest in-progress state (Z3)",
+              "sha256": "4ccfb0828313d34dfca11b0cc186d4c00317d31e147b737cbeeda99623fba397"
+            },
+            {
+              "title": "RoutinePageClient (legacy): wires the shared Gemerkt section with the server-derived flag and refreshes the routine list on graduation (F6)",
+              "sha256": "bd56994f2bbbb98f4d4d709adc64a039d0b59dfe32d3c1fdc4ac2788efde776e"
+            },
+            {
+              "title": "PersonalPlanRoutineClient: wires the shared Gemerkt section too — this is the branch every freemium/subscriber premium user actually resolves to (F1)",
+              "sha256": "8625f25cfce12d6adcc842beeff505ad188b7317b76d3fbba0a985c0209152cf"
+            },
+            {
+              "title": "RoutinePage: BOTH the legacy and personal-plan branches pass the server-derived flag, not a client-side read (F1)",
+              "sha256": "fc1ff78982fcba873c8e46a72543e4e4080ae690d3513fb16c38a26768f77c12"
+            },
+            {
+              "title": "routine trigger seeds are sent from session storage with the route conversation id",
+              "sha256": "aa654ea86cb0912c7d1d5b648065af0e367e394291ba8d6bf6b8380d2a609dbe"
+            },
+            {
+              "title": "chat product drawer hydrates routine membership before rendering the action",
+              "sha256": "1c88c264902b9917d4798c853020ac9211bf9eae0fba96b2f85fdb23ad23ac14"
+            }
+          ]
+        },
+        "cut": {
+          "path": "/tmp/test-audit-routine-presentation75-snapshots/cut/tests/routine-page-ui.test.tsx",
+          "sha256": "8571aea5696afd319fae1ea05c2b0fe8b3b42039d9e346256d379c6efa70439c",
+          "sites": [
+            {
+              "title": "routine card visuals map every shaped card kind to a state action",
+              "sha256": "1da9748eb6d87d9f74aab71184ef4d2a42b430f6f913ef9148c8ef698748a0f1"
+            },
+            {
+              "title": "routine card status descriptions stay German per kind",
+              "sha256": "6997eeda86cd25e52e1dc949be7b5b1303b9807f9da370cc2ae993ff14b2719b"
+            },
+            {
+              "title": "frequency model exposes stable slider stops, target band, and compact Chaarlie marker",
+              "sha256": "5e0ead3d5d6c582a9caf1a6d9e4abd91c6a04fd7d55bfa2084208b98e363160b"
+            },
+            {
+              "title": "frequency model falls back to the preferred target when the user has no current value",
+              "sha256": "0731da250332c330d6ef2e3287292f73f27b50ad26692cbf598cf9b113c71ffd"
+            },
+            {
+              "title": "routine product drawer receives loaded profile context",
+              "sha256": "8b59f663155d4d5f5d87ff24643d10ef32ad47700e286af97e6dc40b89de22bc"
+            },
+            {
+              "title": "Gemerkt section: defaults to hidden (flag-off byte-identity) and fetches only when merklisteEnabled",
+              "sha256": "94a651296c4528b11c6b39a210a94295869d037a7940fb30761cc9e24c93f3be"
+            },
+            {
+              "title": "Gemerkt section: the section anchor matches the scanner bookmark's deep-link target",
+              "sha256": "daae94bf002dee0bf5465deb7f43c71e0ed61479ba719844e9628745a352374c"
+            },
+            {
+              "title": "Gemerkt section: graduation hands off to the EXISTING save/move sheet — no direct write from this section",
+              "sha256": "f9ed23fbe2ac4ad6587738af04f9bd7aa7b0032ced85e2d12e5aa428fa44deed"
+            },
+            {
+              "title": "Gemerkt section: a routine graduation (not a plain removal) tells the caller WHICH product graduated (F6, Z3)",
+              "sha256": "0ce45716bba30dca40df5e05ba5ca61063014700a8516ae495381933a8da0f30"
+            },
+            {
+              "title": "PersonalPlanRoutineClient: graduation hands off into the existing sync/proposal/editor flow, with an honest in-progress state (Z3)",
+              "sha256": "4ccfb0828313d34dfca11b0cc186d4c00317d31e147b737cbeeda99623fba397"
+            },
+            {
+              "title": "RoutinePageClient (legacy): wires the shared Gemerkt section with the server-derived flag and refreshes the routine list on graduation (F6)",
+              "sha256": "bd56994f2bbbb98f4d4d709adc64a039d0b59dfe32d3c1fdc4ac2788efde776e"
+            },
+            {
+              "title": "PersonalPlanRoutineClient: wires the shared Gemerkt section too — this is the branch every freemium/subscriber premium user actually resolves to (F1)",
+              "sha256": "8625f25cfce12d6adcc842beeff505ad188b7317b76d3fbba0a985c0209152cf"
+            },
+            {
+              "title": "RoutinePage: BOTH the legacy and personal-plan branches pass the server-derived flag, not a client-side read (F1)",
+              "sha256": "fc1ff78982fcba873c8e46a72543e4e4080ae690d3513fb16c38a26768f77c12"
+            },
+            {
+              "title": "routine trigger seeds are sent from session storage with the route conversation id",
+              "sha256": "aa654ea86cb0912c7d1d5b648065af0e367e394291ba8d6bf6b8380d2a609dbe"
+            },
+            {
+              "title": "chat product drawer hydrates routine membership before rendering the action",
+              "sha256": "1c88c264902b9917d4798c853020ac9211bf9eae0fba96b2f85fdb23ad23ac14"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "guards": [
+    {
+      "file": "src/app/routine/page.tsx",
+      "sha256": "298522d8399b3638fdd03d1d4605df4e3b74d766e7b2947ea71e01331ca0b8de"
+    },
+    {
+      "file": "src/app/api/personal-plan/portfolio-presentation/route.ts",
+      "sha256": "52e406819640937f7612b1d623f22087cee6888d86d97588fea9e17acbec7146"
+    },
+    {
+      "file": "src/components/ui/retry-refresh-button.tsx",
+      "sha256": "320223f8f5ef3c7d5fe65f60c2a66faf59688631a5584c07aa688c28743c21f9"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+      "sha256": "4c677c8272a0b0db20ae25d2a7eab4abca805dcd6736ef2652f0fbfa48a382a6"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/repository.ts",
+      "sha256": "5573df42d2948ac531c040766336627b60621743519baf8c4291f36640facb25"
+    },
+    {
+      "file": "src/lib/personal-plan/products/contracts.ts",
+      "sha256": "bc4291e12db65a3e220c884344255403e4ea3c3eb19d24fb3c5a4605ae011366"
+    },
+    {
+      "file": "src/components/routine/personal-plan/index.ts",
+      "sha256": "cee4c2ca79d7519cbb4d3ff18ea0c844701bb36951e49645e80c05b74d4baba2"
+    },
+    {
+      "file": "src/components/routine/personal-plan/personal-plan-routine-client.tsx",
+      "sha256": "35b2b982260a289dbb8068e66809cf1ca7744e635f763cb1397ebd029618a94d"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-attention-indicator.tsx",
+      "sha256": "573d37574e855ed23c248052ec9ad1321548e31cb86dd91bcecade94171641ab"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-editor.tsx",
+      "sha256": "a47f1d6b99984e0d832bd7cd1d3fdd103860cb003ea4561b6de38714f1348fc8"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-item-card.tsx",
+      "sha256": "6f93d8d0073557e65964661275bc8acb520524d81bc8856a781b95d07c9aadda"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-page.tsx",
+      "sha256": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-plan-updated-toast.tsx",
+      "sha256": "d38fd896a878b8c0040d7b8980bf74efcfdedf99ce52db113c3e4b497901e9b5"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-product-detail.tsx",
+      "sha256": "f433e3c5794dc5f00c52642cddb5f0c35cf0d7b413db81127ba227d34f878ed0"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-proposal-sheet.tsx",
+      "sha256": "992331ddccc3cef4630b817fbaf3eb4be3a18ed4475ea579719e758bb63fdbfd"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-refinement-banner.tsx",
+      "sha256": "8b37e2bffee1bfd52a41e54fa1f91c781c03cd8a0f894dc1ad2386a592b74d0a"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-section.tsx",
+      "sha256": "5ddfc9757d16494eac2162b89b422e9588f660df22c006b53e4bc481574413a2"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-status.tsx",
+      "sha256": "f66adab8c09d2cc0001d90894537ab8428f062f74e2b459773802aef4aed34bb"
+    },
+    {
+      "file": "src/components/routine/routine-card-model.ts",
+      "sha256": "b38ae094871496ccd794d89b7613c55c1f9ee90465864477c18394be0a61b14d"
+    },
+    {
+      "file": "src/components/routine/gemerkt-section.tsx",
+      "sha256": "44a4b16054c8d199286944d3b86490306e0fbfa890bb740b3b4ff2e99fe066e6"
+    }
+  ],
+  "sourceChanges": [],
+  "cuts": [
+    {
+      "id": "C1",
+      "file": "tests/personal-plan-stage4-route-ui.test.tsx",
+      "donor": "Routine unavailable recovery also offers a forward CTA out of the dead end",
+      "keeper": "Routine unavailable recovery offers an explicit reload action",
+      "donorSha": "71dcbc9d38d3af5517fa9f8a20df8813cdd02a4642927afa51aaf245237d26d6",
+      "keeperBeforeSha": "a1bb5a4329d56e6420d7f267ba8685e6a671427a94039133390119b26ce6ecc0",
+      "keeperAfterSha": "d13d49acff0c689d7d91a700bd937265a69a0de3dde86d8b6cd0f50161b94d3a"
+    },
+    {
+      "id": "C2",
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "donor": "loads a strict owner, plan, and portfolio-scoped v3 snapshot for downstream presentation",
+      "keeper": "profile presentation API authenticates, owner-scopes its active portfolio, and returns JSON-safe arrays",
+      "donorSha": "a020e632201fa829ca79352cc40a5c44e786e44e76fd2ca73cb99318bf73ea46",
+      "keeperBeforeSha": "86a0a378d306167a7e3b660b60668ea61a2523be190cf0d09932c992dab5223b",
+      "keeperAfterSha": "6ff8001683c06313eb2c7221e2670f69d5cccf1a7e07a7267d683b9833184432"
+    },
+    {
+      "id": "C3",
+      "file": "tests/personal-plan-stage4-ui.test.tsx",
+      "donor": "dismissed state: refinementBanner absent renders no banner",
+      "keeper": "Task 2.6: the plan-updated toast is absent without the signal",
+      "donorSha": "bc49cb3cbb39ff3c9655ad593238394aef38e6b5b709fe2aedef3380f29ba6bd",
+      "keeperBeforeSha": "9211ea1df6ecd0719fd70a3cb84673bd4740cd4b2b30342545a0b920c655a838",
+      "keeperAfterSha": "59be9fd51c0010eb37a50f60a42afb2959b380835e18e5ba11f03fddae3a81cf"
+    },
+    {
+      "id": "C4",
+      "file": "tests/personal-plan-stage4-ui.test.tsx",
+      "donor": "all-done state: no refinementBanner prop at all renders no banner",
+      "keeper": "Task 2.6: the plan-updated toast is absent without the signal",
+      "donorSha": "7e192fb8cf192ced6ccd931e74c569719c4183ac1527500cf9540ac73344ba75",
+      "keeperBeforeSha": "9211ea1df6ecd0719fd70a3cb84673bd4740cd4b2b30342545a0b920c655a838",
+      "keeperAfterSha": "59be9fd51c0010eb37a50f60a42afb2959b380835e18e5ba11f03fddae3a81cf"
+    },
+    {
+      "id": "C5",
+      "file": "tests/personal-plan-stage4-ui.test.tsx",
+      "donor": "Task 2.6: the plan-updated toast renders with the exact signed-off copy above the routine blocks",
+      "keeper": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit",
+      "donorSha": "26c91922083f1655169bb1492f962e05b130a546a5ab1b43d283b9af218a4afa",
+      "keeperBeforeSha": "c4ea21364d6742162f89fe01a9462b81ab5c77d5e94d05dac115f204200d6228",
+      "keeperAfterSha": "c8ee71f86af0152031f69d2753de93cc74b4cc8a9e3ab37136f04acfd70e5811"
+    },
+    {
+      "id": "C6",
+      "file": "tests/personal-plan-stage4-ui.test.tsx",
+      "donor": "post-module-1 state (habits open, 3 von 4): banner renders above the routine blocks too",
+      "keeper": "Task 2.6: the plan-updated toast and the refinement banner can render on the same visit",
+      "donorSha": "33e6ad51f4bb3b3528de0f1ff62c12de8df75ef9e44da54e1b85574e7e9701dd",
+      "keeperBeforeSha": "c4ea21364d6742162f89fe01a9462b81ab5c77d5e94d05dac115f204200d6228",
+      "keeperAfterSha": "c8ee71f86af0152031f69d2753de93cc74b4cc8a9e3ab37136f04acfd70e5811"
+    }
+  ]
+}

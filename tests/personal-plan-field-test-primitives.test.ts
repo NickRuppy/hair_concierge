@@ -14,7 +14,6 @@ import {
   PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_MAX_ACTIVATIONS,
   PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_TTL_DAYS,
   PERSONAL_PLAN_FIELD_TEST_UNAVAILABLE_CODE,
-  verifyPersonalPlanFieldTestToken,
 } from "../src/lib/personal-plan-field-test"
 
 const secret = "personal-plan-field-test-cookie-secret-32-plus"
@@ -29,9 +28,6 @@ test("field-test tokens are independent 256-bit opaque credentials stored as SHA
   assert.notEqual(first.token, second.token)
   assert.equal(first.tokenHash, hashPersonalPlanFieldTestToken(first.token))
   assert.equal(first.tokenHash, createHash("sha256").update(first.token, "utf8").digest("hex"))
-  assert.equal(verifyPersonalPlanFieldTestToken(first.token, first.tokenHash), true)
-  assert.equal(verifyPersonalPlanFieldTestToken(second.token, first.tokenHash), false)
-  assert.equal(verifyPersonalPlanFieldTestToken(first.token, "not-a-hash"), false)
 })
 
 test("field-test campaign cookies are signed, HttpOnly, and contain only trusted campaign context", () => {

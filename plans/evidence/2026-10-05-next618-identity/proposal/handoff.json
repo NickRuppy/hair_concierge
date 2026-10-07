@@ -1,0 +1,41 @@
+{
+  "status": "COMPLETE_READONLY_PACKET_ONE_CONDITIONAL_C",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "scope": "canonical identity31 exact five files",
+  "classification": {
+    "R": 29,
+    "F": 1,
+    "C": 1,
+    "D": 0
+  },
+  "prospectiveCounts": [
+    31,
+    31,
+    30
+  ],
+  "actualAppliedCuts": 0,
+  "sourceCleanup": null,
+  "hashes": {
+    "manifest.json": "0c952af62b35a52af39802a34879f5a697d9e26cfdcea38369e6602d334966b7",
+    "complete-ledger.md": "3d099a443796f41c3f49e40fee8f14c302b932546c06795d013d2723589cc3f0",
+    "ledger.json": "2fda0119c97a903abb3ec023ab2b898654b6a056f917eb3abcb6390992d47672",
+    "layer-plan.md": "983eb7dddc9cedeb63c2ad066200dbde46fc5073d59447b30838944101752edd",
+    "candidates.json": "75b382bc0e6ee0a78e2eed5c049a0e117ef6feddc5ee9bbfe110646124e3029b",
+    "sites.json": "1cf561de059c615f937876e4e76506ca4abb8be2caaec99665794d67c5b68c11",
+    "controls.json": "07cdc56ee7cb985fbbe1d5d379eca533984c89ff5795c5d3a73fe70d60f4f00f",
+    "held-findings.json": "173560bb7fc31c51a6e83e7c8949ca67bcccc3ec95faa50fe504a7ff419cb469",
+    "commands.json": "a070c2e51cdbdce79a0f62008dad7f45677aea8e5033a45008893c7e47d9cc02",
+    "complete.diff": "e99e88e5a235da8dfd0eb3d46b152b890e14271982b888d3d9b224f9ddc14471",
+    "transfer.diff": "07c8961c979568cc42276e5bea0898a253925f9ee579e5e3daf59ab834c82440",
+    "static-receipt.json": "d2e51ffda9b99b44af92b14c7bb9e89aae2097d3f8d5de360f4f62979841d33d"
+  },
+  "readsetGuards": 49,
+  "limits": [
+    "Current none(rawText) semantic return/input-echo equivalence; raw donor and keeper strings are different.",
+    "All31 assigned callback bodies fully read; adjacent caller files read only as documented ranges.",
+    "No tests/compiler/owner imports/SQL/provider/browser/DB/env operations; four source faults parsed only.",
+    "Held F seed key-versus-label weakness unchanged; no repair or credit.",
+    "Authoring scripts are provenance only, not operator tools; all repo integration belongs to main."
+  ]
+}

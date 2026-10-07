@@ -452,7 +452,7 @@ export function findForbiddenPhrases(text: string): ConsultForbiddenPhrase[] {
  * her products, swap targets or options carries is an invented product (G4). Deliberately a
  * closed list: an unknown brand outside it is not caught here (Nick's edit pass is).
  */
-export const CONSULT_MARKET_BRANDS: readonly string[] = [
+const CONSULT_MARKET_BRANDS: readonly string[] = [
   "Alpecin",
   "Alterra",
   "Alverde",

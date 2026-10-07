@@ -1,0 +1,33 @@
+--- before/tests/product-identity-resolution.test.ts
++++ cut/tests/product-identity-resolution.test.ts
+@@ -42,6 +42,8 @@
+   const nonMatch = resolveBrandFromText("SK18 Leave-in Molecular Repair Hair Oil", brands)
+   assert.equal(nonMatch.match, "none")
+   assert.equal(nonMatch.brand, null)
++  assert.equal(nonMatch.confidence, "none")
++  assert.equal(nonMatch.reason, "unresolved")
+   assert.equal(nonMatch.unresolvedRawText, "SK18 Leave-in Molecular Repair Hair Oil")
+ })
+ 
+@@ -92,21 +94,6 @@
+   assert.equal(fructisAlias.brand?.id, "brand-garnier")
+   assert.equal(fructisAlias.productLine?.id, "line-fructis")
+   assert.equal(fructisAlias.reason, "brand_line_alias_exact")
+-})
+-
+-test("unknown brand returns unresolved raw text with no confidence", () => {
+-  const catalog = buildBrandResolutionCatalog({
+-    brands: [{ id: "brand-garnier", canonical_name: "Garnier", normalized_name: "garnier" }],
+-    productLines: [],
+-    brandAliases: [],
+-  })
+-
+-  const resolution = resolveBrandFromText("Unbekannte Pflegecreme", catalog)
+-
+-  assert.equal(resolution.match, "none")
+-  assert.equal(resolution.confidence, "none")
+-  assert.equal(resolution.reason, "unresolved")
+-  assert.equal(resolution.unresolvedRawText, "Unbekannte Pflegecreme")
+ })
+ 
+ test("conflicting aliases are reported and excluded from usable alias resolution", () => {

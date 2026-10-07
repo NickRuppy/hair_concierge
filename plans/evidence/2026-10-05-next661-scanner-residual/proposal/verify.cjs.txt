@@ -1,0 +1,19 @@
+// Read-only static verification. No test/owner imports, children, database or writes.
+const fs=require('node:fs'),crypto=require('node:crypto');
+const R='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',P=__dirname,ts=require(R+'/node_modules/typescript');
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=n=>JSON.parse(fs.readFileSync(P+'/'+n));
+const files=read('original-files.json'),rows=read('phase-files.json'),c=read('candidates.json'),ledger=read('ledger.json'),guards=read('readsets.json'),controls=read('controls.json');
+function check(x,msg){if(!x)throw Error(msg)}
+function once(s,from,to){check(s.split(from).length===2,'nonunique replacement');return s.replace(from,()=>to)}
+const parsed={};function parse(file,text){const sf=ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true,file.endsWith('.tsx')?ts.ScriptKind.TSX:ts.ScriptKind.TS);check(!sf.parseDiagnostics.length,'parse '+file);const out=[];function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test')out.push({title:n.arguments[0].text??n.arguments[0].getText(sf),body:n.getText(sf)});ts.forEachChild(n,walk)}walk(sf);return out}
+for(const g of guards)check(sha(fs.readFileSync(R+'/'+g.file))===g.sha256,'guard drift '+g.file);
+const keepers=new Map(c.map(x=>[x.keeperBefore.file+'\0'+x.keeperBefore.title,x]));let unchanged=0;const counts={before:0,transfer:0,cut:0};
+for(const f of files){const b=fs.readFileSync(R+'/'+f.file,'utf8');check(sha(b)===f.sha256,'original617 drift');let t=b;for(const x of keepers.values())if(x.keeperBefore.file===f.file)t=once(t,x.keeperBefore.body,x.keeperTransfer.body);let k=t;for(const x of c.filter(x=>x.donor.file===f.file))k=once(k,x.donor.body+'\n\n','');for(const e of read('support-edits.json').filter(x=>x.file===f.file))k=once(k,e.from,e.to);
+ for(const[phase,expected]of Object.entries({before:b,transfer:t,cut:k})){const snapshot=fs.readFileSync(P+'/'+phase+'/'+f.file,'utf8');check(snapshot===expected,'whole patch reconstruction '+phase+'/'+f.file);const r=rows.find(x=>x.phase===phase&&x.file===f.file);check(sha(snapshot)===r.sha256,'snapshotSHA');const p=parse(f.file,snapshot);check(p.length===r.sites,'sites');parsed[phase+'\0'+f.file]=p;counts[phase]+=p.length;}
+ for(const s of parsed['cut\0'+f.file]){const prior=parsed['before\0'+f.file].find(x=>x.title===s.title);check(prior,'new declaration');if(!keepers.has(f.file+'\0'+s.title)){check(s.body===prior.body,'unrelated callback');unchanged++}}
+}
+for(const x of c){for(const a of x.keeperBefore.assertions)check(x.keeperTransfer.body.includes(a.text),'old keeper assertion changed '+x.id);check(!parsed['cut\0'+x.donor.file].some(s=>s.title===x.donor.title),'donor survived')}
+for(const f of ledger.filter(x=>x.classification==='F'))for(const phase of ['before','transfer','cut'])check(sha(parsed[phase+'\0'+f.file].find(x=>x.title===f.title).body)===f.sha256,'heldF changed');
+for(const x of controls){const b=fs.readFileSync(R+'/'+x.file,'utf8');check(sha(b)===x.sourceSha256,'source control drift');const m=once(b,x.from,x.to);check(sha(m)===x.mutantSha256,'mutantSHA');if(x.prospectiveTsParsed)parse(x.file,m)}
+check(JSON.stringify(counts)==='{"before":119,"transfer":119,"cut":105}','total');check(unchanged===98,'unrelated total');
+console.log(JSON.stringify({status:'static PASS',counts,files:files.length,snapshots:rows.length,candidates:c.length,keepers:keepers.size,unrelatedCallbacks:unchanged,heldF:ledger.filter(x=>x.classification==='F').length,guards:guards.length,controls:controls.length,tsSourceMutantsParsed:16,sqlRecipesNotExecuted:2,repositoryWrites:0,children:0,ownerImports:0,nativeTests:0,node:process.version},null,2));

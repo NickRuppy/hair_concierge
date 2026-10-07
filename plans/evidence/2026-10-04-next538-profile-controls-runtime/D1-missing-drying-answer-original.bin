@@ -1,0 +1,399 @@
+import {
+  CHEMICAL_TREATMENT_LABELS,
+  PROFILE_CONCERN_LABELS,
+  CUTICLE_CONDITION_LABELS,
+  GOAL_LABELS,
+  HAIR_DENSITY_OPTIONS,
+  HAIR_TEXTURE_OPTIONS,
+  HAIR_THICKNESS_OPTIONS,
+  HEAT_STYLING_OPTIONS,
+  PROTEIN_MOISTURE_LABELS,
+  SCALP_CONDITION_LABELS,
+  SCALP_TYPE_LABELS,
+  STYLING_TOOL_LABELS,
+} from "@/lib/types"
+import type { HairProfile } from "@/lib/types"
+import { getGoalLabel, getOrderedGoals } from "@/lib/onboarding/goal-flow"
+import type { OnboardingStep } from "@/lib/onboarding/store"
+import {
+  BRUSH_TYPE_LABELS,
+  DRYING_METHOD_LABELS,
+  HAIR_LENGTH_OPTIONS,
+  NIGHT_PROTECTION_LABELS,
+  TOWEL_MATERIAL_LABELS,
+  TOWEL_TECHNIQUE_LABELS,
+} from "@/lib/vocabulary"
+import type {
+  AdditionalHeatTool,
+  DryingRoute,
+  PersonalPlanRefinementAnswersV1,
+} from "@/lib/personal-plan/refinement/types"
+
+const PLAN_DRYING_ROUTE_LABELS: Record<DryingRoute, string> = {
+  air_dry: "Lufttrocknen",
+  ordinary_blow_dry: "Gewöhnlich föhnen",
+  diffuser_or_airflow_shaping: "Diffusor oder formender Luftstrom",
+}
+
+const PLAN_HEAT_TOOL_LABELS: Record<AdditionalHeatTool, string> = {
+  dryer_brush: "Föhnbürste",
+  hot_air_styler: "Heißluft-Multistyler",
+  straightener: "Glätteisen",
+  curling_or_wave_iron: "Lockenstab oder Welleneisen",
+  thermal_rollers: "Thermo-Wickler",
+}
+
+export type ProfileJourneySectionKey =
+  | "quiz"
+  | "products"
+  | "styling"
+  | "routine"
+  | "goals"
+  | "memory"
+export type ProfileFieldValue = string | string[] | null
+
+export type ProfileEditTarget =
+  | { kind: "quiz" }
+  | { kind: "onboarding"; step: OnboardingStep }
+  | { kind: "profile-edit-goals" }
+
+export type ProfileFieldConfig = {
+  key: string
+  label: string
+  sectionKey: Exclude<ProfileJourneySectionKey, "products" | "memory">
+  editTarget: ProfileEditTarget
+  getValue: (
+    profile: HairProfile | null,
+    plan?: PersonalPlanRefinementAnswersV1 | null,
+  ) => ProfileFieldValue
+}
+
+export type ProfileSectionMeta = {
+  key: ProfileJourneySectionKey
+  title: string
+  description: string
+}
+
+function optionLabel(
+  value: string | null | undefined,
+  options: Array<{ value: string; label: string }>,
+): string | null {
+  if (!value) return null
+  return options.find((option) => option.value === value)?.label ?? value
+}
+
+function optionLabels(
+  values: string[] | null | undefined,
+  labels: Record<string, string>,
+): string[] | null {
+  if (!values || values.length === 0) return null
+  return Array.from(new Set(values.map((value) => labels[value] ?? value)))
+}
+
+// Resolves the towel material + technique as a single unit so the two fields can never mix
+// sources: if the legacy profile has any towel signal, both fields read only the legacy values
+// (existing legacy fallbacks, e.g. no_towel material implying "Keine Trocknungstechnik", stay
+// intact). Otherwise both fields read only the plan overlay, including its own no_towel branch.
+function resolveTowelSource(
+  profile: HairProfile | null,
+  plan?: PersonalPlanRefinementAnswersV1 | null,
+): { material: ProfileFieldValue; technique: ProfileFieldValue } {
+  const hasLegacyTowelSignal = Boolean(profile?.towel_material || profile?.towel_technique)
+
+  if (hasLegacyTowelSignal) {
+    return {
+      material: profile?.towel_material
+        ? (TOWEL_MATERIAL_LABELS[profile.towel_material] ?? profile.towel_material)
+        : null,
+      technique: profile?.towel_technique
+        ? (TOWEL_TECHNIQUE_LABELS[profile.towel_technique] ?? profile.towel_technique)
+        : profile?.towel_material === "no_towel"
+          ? "Keine Trocknungstechnik"
+          : null,
+    }
+  }
+
+  const planMaterial = plan?.towel?.material ?? null
+  const planTechnique = plan?.towel?.technique ?? null
+
+  return {
+    material: planMaterial ? (TOWEL_MATERIAL_LABELS[planMaterial] ?? planMaterial) : null,
+    technique: planTechnique
+      ? (TOWEL_TECHNIQUE_LABELS[planTechnique] ?? planTechnique)
+      : planMaterial === "no_towel"
+        ? "Keine Trocknungstechnik"
+        : null,
+  }
+}
+
+function orderedGoalLabels(profile: HairProfile | null): string[] | null {
+  if (!profile) return null
+
+  const selectedGoals = new Set(profile.goals ?? [])
+
+  if (profile.desired_volume === "more") {
+    selectedGoals.add("volume")
+  }
+
+  if (profile.desired_volume === "less") {
+    selectedGoals.add("less_volume")
+  }
+
+  if (selectedGoals.size === 0) return null
+
+  const ordered =
+    profile.hair_texture != null
+      ? getOrderedGoals(profile.hair_texture).filter((goal) => selectedGoals.has(goal))
+      : []
+
+  const remainder = Array.from(selectedGoals).filter((goal) => !ordered.includes(goal))
+  const goals = [...ordered, ...remainder]
+
+  return goals.map((goal) =>
+    profile.hair_texture != null
+      ? getGoalLabel(goal, profile.hair_texture)
+      : (GOAL_LABELS[goal] ?? goal),
+  )
+}
+
+export const PROFILE_SECTION_META: ProfileSectionMeta[] = [
+  {
+    key: "quiz",
+    title: "Haar-Check",
+    description: "Die Antworten aus deinem Haar-Check in derselben Reihenfolge wie im Quiz.",
+  },
+  {
+    key: "products",
+    title: "Produkte",
+    description: "Welche Produkte du im Onboarding ausgewählt und genauer beschrieben hast.",
+  },
+  {
+    key: "styling",
+    title: "Styling",
+    description: "Hitzetools, Frequenz und Hitzeschutz aus dem Styling-Teil des Onboardings.",
+  },
+  {
+    key: "routine",
+    title: "Alltag",
+    description: "Trocknen, Bürste/Kamm und Nachtschutz aus dem Alltagsteil deines Onboardings.",
+  },
+  {
+    key: "goals",
+    title: "Ziele",
+    description: "Deine ausgewählten Haarziele aus dem Haar-Check.",
+  },
+  {
+    key: "memory",
+    title: "Erinnerungen",
+    description: "Hinweise aus dem Chat, langfristig gespeichert.",
+  },
+]
+
+export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
+  {
+    key: "hair_texture",
+    label: "Haarstruktur",
+    sectionKey: "quiz",
+    editTarget: { kind: "quiz" },
+    getValue: (profile) => optionLabel(profile?.hair_texture, HAIR_TEXTURE_OPTIONS),
+  },
+  {
+    key: "thickness",
+    label: "Haardicke",
+    sectionKey: "quiz",
+    editTarget: { kind: "quiz" },
+    getValue: (profile) => optionLabel(profile?.thickness, HAIR_THICKNESS_OPTIONS),
+  },
+  {
+    key: "density",
+    label: "Haardichte",
+    sectionKey: "quiz",
+    editTarget: { kind: "quiz" },
+    getValue: (profile) => optionLabel(profile?.density, HAIR_DENSITY_OPTIONS),
+  },
+  {
+    key: "hair_length",
+    label: "Haarlänge",
+    sectionKey: "quiz",
+    editTarget: { kind: "quiz" },
+    getValue: (profile) => optionLabel(profile?.hair_length, HAIR_LENGTH_OPTIONS),
+  },
+  {
+    key: "cuticle_condition",
+    label: "Oberfläche",
+    sectionKey: "quiz",
+    editTarget: { kind: "quiz" },
+    getValue: (profile) =>
+      profile?.cuticle_condition
+        ? (CUTICLE_CONDITION_LABELS[profile.cuticle_condition] ?? profile.cuticle_condition)
+        : null,
+  },
+  {
+    key: "protein_moisture_balance",
+    label: "Elastizität",
+    sectionKey: "quiz",
+    editTarget: { kind: "quiz" },
+    getValue: (profile) =>
+      profile?.protein_moisture_balance
+        ? (PROTEIN_MOISTURE_LABELS[profile.protein_moisture_balance] ??
+          profile.protein_moisture_balance)
+        : null,
+  },
+  {
+    key: "chemical_treatment",
+    label: "Chemische Behandlungen",
+    sectionKey: "quiz",
+    editTarget: { kind: "quiz" },
+    getValue: (profile) =>
+      profile?.chemical_treatment?.length
+        ? profile.chemical_treatment.map(
+            (treatment) => CHEMICAL_TREATMENT_LABELS[treatment] ?? treatment,
+          )
+        : null,
+  },
+  {
+    key: "scalp_type",
+    label: "Kopfhauttyp",
+    sectionKey: "quiz",
+    editTarget: { kind: "quiz" },
+    getValue: (profile) =>
+      profile?.scalp_type ? (SCALP_TYPE_LABELS[profile.scalp_type] ?? profile.scalp_type) : null,
+  },
+  {
+    key: "scalp_condition",
+    label: "Kopfhaut-Beschwerden",
+    sectionKey: "quiz",
+    editTarget: { kind: "quiz" },
+    getValue: (profile) =>
+      profile?.scalp_condition
+        ? (SCALP_CONDITION_LABELS[profile.scalp_condition] ?? profile.scalp_condition)
+        : profile?.scalp_type
+          ? "Keine Beschwerden"
+          : null,
+  },
+  {
+    key: "concerns",
+    label: "Haar-Bedenken",
+    sectionKey: "quiz",
+    editTarget: { kind: "quiz" },
+    getValue: (profile) => {
+      if (!profile) return null
+      if (profile.concerns.length === 0) return "Nichts davon"
+      return optionLabels(profile.concerns, PROFILE_CONCERN_LABELS)
+    },
+  },
+  {
+    key: "styling_tools",
+    label: "Hitzetools",
+    sectionKey: "styling",
+    editTarget: { kind: "onboarding", step: "heat_tools" },
+    getValue: (profile, plan) => {
+      if (profile?.styling_tools?.length) {
+        return optionLabels(profile.styling_tools, STYLING_TOOL_LABELS)
+      }
+
+      if (profile?.heat_styling === "never") {
+        return "Keine Hitzetools"
+      }
+
+      if (plan?.additionalHeatTools) {
+        if (plan.additionalHeatTools.length === 0) return "Keine Hitzetools"
+        return optionLabels(plan.additionalHeatTools, PLAN_HEAT_TOOL_LABELS)
+      }
+
+      return null
+    },
+  },
+  {
+    key: "heat_styling",
+    label: "Styling-Frequenz",
+    sectionKey: "styling",
+    editTarget: { kind: "onboarding", step: "heat_frequency" },
+    getValue: (profile) => optionLabel(profile?.heat_styling, HEAT_STYLING_OPTIONS),
+  },
+  {
+    key: "uses_heat_protection",
+    label: "Hitzeschutz",
+    sectionKey: "styling",
+    editTarget: { kind: "onboarding", step: "heat_protection" },
+    getValue: (profile) =>
+      profile?.uses_heat_protection != null ? (profile.uses_heat_protection ? "Ja" : "Nein") : null,
+  },
+  {
+    key: "towel_material",
+    label: "Handtuch-Material",
+    sectionKey: "routine",
+    editTarget: { kind: "onboarding", step: "towel_material" },
+    getValue: (profile, plan) => resolveTowelSource(profile, plan).material,
+  },
+  {
+    key: "towel_technique",
+    label: "Trocknungstechnik",
+    sectionKey: "routine",
+    editTarget: { kind: "onboarding", step: "towel_technique" },
+    getValue: (profile, plan) => resolveTowelSource(profile, plan).technique,
+  },
+  {
+    key: "drying_method",
+    label: "Trocknungsmethode",
+    sectionKey: "routine",
+    editTarget: { kind: "onboarding", step: "drying_method" },
+    getValue: (profile, plan) => {
+      if (profile?.drying_method) {
+        return DRYING_METHOD_LABELS[profile.drying_method] ?? profile.drying_method
+      }
+
+      if (plan?.dryingRoutes) {
+        if (plan.dryingRoutes.length === 0) return "Nichts davon"
+        return plan.dryingRoutes.map((route) => PLAN_DRYING_ROUTE_LABELS[route] ?? route).join(", ")
+      }
+
+      return null
+    },
+  },
+  {
+    key: "brush_type",
+    label: "Bürste / Kamm",
+    sectionKey: "routine",
+    editTarget: { kind: "onboarding", step: "brush_type" },
+    getValue: (profile) => {
+      if (profile?.brush_type?.length) {
+        return optionLabels(profile.brush_type, BRUSH_TYPE_LABELS)
+      }
+
+      if (profile?.brush_type && profile.brush_type.length === 0) {
+        return "Keine regelmäßige Bürste"
+      }
+
+      return null
+    },
+  },
+  {
+    key: "night_protection",
+    label: "Nachtschutz",
+    sectionKey: "routine",
+    editTarget: { kind: "onboarding", step: "night_protection" },
+    getValue: (profile, plan) => {
+      if (profile?.night_protection?.length) {
+        return optionLabels(profile.night_protection, NIGHT_PROTECTION_LABELS)
+      }
+      if (Array.isArray(profile?.night_protection)) {
+        return "Nichts davon"
+      }
+
+      if (plan?.nightProtection) {
+        if (plan.nightProtection.length === 0) return "Nichts davon"
+        return optionLabels(plan.nightProtection, NIGHT_PROTECTION_LABELS)
+      }
+
+      return null
+    },
+  },
+  {
+    key: "goals",
+    label: "Deine Haarziele",
+    sectionKey: "goals",
+    editTarget: { kind: "profile-edit-goals" },
+    getValue: (profile) => orderedGoalLabels(profile),
+  },
+]

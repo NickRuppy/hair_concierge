@@ -1,0 +1,424 @@
+{
+  "counts": {
+    "R": 35,
+    "C": 3,
+    "D": 3,
+    "F": 5
+  },
+  "sites": [
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "title": "creates an opaque UUID attempt id",
+      "line": 38,
+      "callbackSha256": "22c4114e07f49c7f0396cbfaa7f2560b69f68d4b9c977692c3da2158b38eb0b0",
+      "mark": "R",
+      "evidence": "Opaque UUID format survives into real attempt row primary key; a constant/non-UUID identifier from createScanResolveAttemptId fails the regex. Route fixtures replace ID generation, so they cannot prove this.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "title": "records a started attempt with canonical value",
+      "line": 45,
+      "callbackSha256": "165935f07d67e7cbb16576097135c2748d4a47f589e9685218ee9a99b8eaebdc",
+      "mark": "R",
+      "evidence": "Exact started insert table and complete id/user/type/raw/canonical projection; catches wrong table, raw/canonical confusion or added timestamp. Primary keeper for D1.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "title": "completes exactly the same unfinished attempt with the v2 terminal outcome",
+      "line": 65,
+      "callbackSha256": "037aaff55a2c35442157ca76b70399acb2b62510536ed8826b212ea4f823c962",
+      "mark": "R",
+      "evidence": "Actual completion update values, timestamp type, exact id and completed_at=null filters; catches overwrite of completed row or wrong attempt. This observes SDK query construction, not a true concurrent DB race.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "title": "persists dm lookup telemetry only when the completed resolve was eligible",
+      "line": 115,
+      "callbackSha256": "2172748eeb3253e66b30c8a281c7917078e0259f07cdb521b880d058dc81e906",
+      "mark": "R",
+      "evidence": "Actual dm payload projection hit/420/1500 is observed on completion; catches omitted or swapped duration/deadline fields. Title overstates eligibility: route owns deciding eligible; no negative eligibility input here.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "title": "non-GTIN raw value logs a null canonical value",
+      "line": 157,
+      "callbackSha256": "2f65b02461e274c0a9875d3385a3eb0f2a647997760eb51c43aa2cdd676fe906",
+      "mark": "R",
+      "evidence": "Actual invalid GTIN1234 produces canonical_value=null on inserted row; catches fallback storing invalid raw value as canonical. Different actual canonicalizer branch from valid row keeper.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "title": "fail-open: an insert error never throws",
+      "line": 170,
+      "callbackSha256": "264888df6b11637dcc240584eaea635e29e7aa15967e2734e432a3c8cee6cc6f",
+      "mark": "C",
+      "evidence": "Resolved insert error must not reject the scan telemetry writer. Keeper: tests/scan-resolve-route.test.ts :: attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException; recordScanResolveAttempt writes payload then branches solely on response.error; reportAttemptLogFailure reads Date.now/throttle and error message, never GTIN/ids/createdAt. Real route drains actual writer through queued scheduleAttemptWrite FIFO.",
+      "candidate": "C1"
+    },
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "title": "fail-open: a thrown client error never propagates",
+      "line": 189,
+      "callbackSha256": "b2ba5b8d95b52cb856275675b81b25c910982f02ce6a489cb98b3d83e0e2c515",
+      "mark": "R",
+      "evidence": "Async client insert rejection network down takes writer catch path, unlike resolved error object in C1/C2; removing catch makes doesNotReject fail. It is not a synchronous from() throw test.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "title": "fail-open: a completion error never propagates",
+      "line": 210,
+      "callbackSha256": "3b7104726d84c812aa663cf92a83a7394808ea78a0d93640ca9e2b09f2431f13",
+      "mark": "C",
+      "evidence": "Resolved completion update error does not reject. Keeper: tests/scan-resolve-event-log.test.ts :: a completion-write failure also captures to Sentry; completeScanResolveAttempt constructs update then error/capture path; same calls and data, independent actual completion owner remains.",
+      "candidate": "C3"
+    },
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "title": "an explicit createdAt is written as the row's created_at",
+      "line": 244,
+      "callbackSha256": "78cf207baad46b27de6f9ddf44b4fa1c38fee30e2f7ac959bf79cc80fb132da5",
+      "mark": "R",
+      "evidence": "Supplied request timestamp survives exactly as created_at despite deferred insert; catches dropping the override and using DB drain-time default. Default omission keeper cannot prove positive timestamp.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "title": "without an explicit createdAt the row keeps the column default",
+      "line": 261,
+      "callbackSha256": "b897dbf678e5673c3603b33bc770eef4c830fe87666e6240b285335abb127c44",
+      "mark": "D",
+      "evidence": "Without createdAt property, inserted row must omit created_at so DB default remains. Keeper: tests/scan-resolve-event-log.test.ts :: records a started attempt with canonical value; Same record writer createdAt false branch. Keeper checks entire row own-enumerable keys exactly and correct scan_resolve_events table.",
+      "candidate": "D1"
+    },
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "title": "a start-write failure captures once to Sentry with the attempt_log_write_failed reason",
+      "line": 274,
+      "callbackSha256": "5be8a1d27e8ba8db469e0a952aa526759d275d15cc51d0bdc9a7bdc4bfb2c405",
+      "mark": "C",
+      "evidence": "Exactly one warning capture with route resolve,status200,reason attempt_log_write_failed. Keeper: tests/scan-resolve-route.test.ts :: attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException; Neither reportAttemptLogFailure nor capture details depend on attempt payload fields; differences in valid GTIN/ids/timestamp do not distinguish this failure branch.",
+      "candidate": "C2"
+    },
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "title": "a completion-write failure also captures to Sentry",
+      "line": 300,
+      "callbackSha256": "f1cd7f60c66fd2502c271e3c4387dee4ec35ef1c1d8367471004ca921e5a9f20",
+      "mark": "R",
+      "evidence": "Real completion error invokes capture once and (after transfer) does not reject. Start-insert route keeper cannot cover update-chain error branch. Removing completion reportAttemptLogFailure fails count.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "title": "a second write failure within the 60s throttle window does not capture again",
+      "line": 334,
+      "callbackSha256": "19f9507e2ce9fe0770df2c76f19fa31a326782fba8951124863d39ae784bf04a",
+      "mark": "R",
+      "evidence": "Two failed writes in same unchanged real-clock window produce only one capture; removing now<throttleUntil guard emits2. First capture and suppression observed independently.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "title": "a write failure after the throttle window resets captures again",
+      "line": 352,
+      "callbackSha256": "4b8936b47f5e562f767f2762420a4fc2015bcc15bf266bf12730335cdb5695a2",
+      "mark": "F",
+      "evidence": "Claims expiry but calls resetAttemptLogCaptureThrottleForTests between writes, so changing throttle duration to Infinity still passes. Retain expiry contract; repair in place using controlled Date.now and existing two writes at exact+60000ms, no second reset. Keep separate within-window case. No F repair included in proposed cuts.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-events-migration.test.ts",
+      "title": "adds nullable v2 terminal telemetry without changing the legacy outcome contract",
+      "line": 16,
+      "callbackSha256": "b58f785b973ecff64e20d8607333e7ad96665313bf6c37d2efb12864afa6e7df",
+      "mark": "R",
+      "evidence": "Enum/storage compatibility remains independently static: lookup4,terminal8,failure-stage10 values, nullable legacy outcome preserved and new fields/default present. Runtime replay has no complete enum input matrix/catalog read, so cannot absorb whole declaration under no-new-input rules.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-events-migration.test.ts",
+      "title": "backfills every legacy event as terminal-unknown, never as a proven resolution",
+      "line": 59,
+      "callbackSha256": "9535d9baabe1c4a4755a85fe2a3dad0d75ad4729d92a68a9b193a5273031b4a0",
+      "mark": "D",
+      "evidence": "Every existing legacy row backfills telemetry_version1 and legacy_unknown, never proven resolved. Keeper: tests/scan-resolve-events-migration.test.ts :: telemetry migration executes, accepts v2 starts, and aggregates before retention deletion; UPDATE guards only telemetry_version IS NULL and terminal_outcome IS NULL, not outcome. All10 satisfy both. Keeper later inserts real v2 row and reapplies migration preserving version2+null.",
+      "candidate": "D2"
+    },
+    {
+      "file": "tests/scan-resolve-events-migration.test.ts",
+      "title": "materializes only non-PII aggregates before raw data deletion and remains idempotent",
+      "line": 69,
+      "callbackSha256": "62dc7272734fd417c89bd6bdc119f84e0c53013450a22638cb19cc618b6fdda3",
+      "mark": "R",
+      "evidence": "Aggregate field inventory, PII-column exclusion, exact conflict key and aggregate-before-delete contract. Runtime keeper only checks summed count, not all columns/privacy/order after interruption. Retain cheapest independent SQL schema/privacy proof.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-events-migration.test.ts",
+      "title": "keeps telemetry service-role-only, with bounded UTC retention and a stable daily cron job",
+      "line": 101,
+      "callbackSha256": "a70795c6f9293ff9b9c4f6bb56d28547ed0415ec4ac5da3a8e21bcc62fa8c5f4",
+      "mark": "R",
+      "evidence": "Role grants/revocations, SECURITY INVOKER/search_path, shared-schema grant preservation, UTC cutoff,12-month aggregate retention and stable03:15 cron. Runtime covers function privileges only; cron function is fixture-defined, no actual pg_cron scheduler or UTC-boundary case. Cannot cut whole static declaration.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-events-migration.test.ts",
+      "title": "telemetry migration executes, accepts v2 starts, and aggregates before retention deletion",
+      "line": 137,
+      "callbackSha256": "6883e4354daced870068271c5560ad05b7c3dacd6706271bb1bb560856fc90d6",
+      "mark": "R",
+      "evidence": "Actual expansion SQL migrates10 legacy rows, supports null-start v2, reapplies without corrupting inflight, preserves schema/function grants, executes retention twice and checks raw1/aggregate10. Primary D2 keeper. Removing backfill or deleting raw first fails actual database output.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-auto-save.test.ts",
+      "title": "scan resolve auto-save: a premium in-catalog resolve auto-saves exactly this product",
+      "line": 170,
+      "callbackSha256": "9e40a9074c5d85cd7d25d9e680a18827d2619fc8805365d284b1cdfef2534944",
+      "mark": "R",
+      "evidence": "Actual route schedules correct admin client/user/product only after response. Moving write inline fails empty calls; wrong identity/client fails captured callback. Distinct successful dispatch observation from write-failure keeper.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-auto-save.test.ts",
+      "title": "scan resolve auto-save: the response reflects the predicted post-save state, not the stale pre-save read (F3)",
+      "line": 194,
+      "callbackSha256": "7ccbf277cb1561dc0360ac9d78f83dd02063e10669e98fcae080dd84716d1f33",
+      "mark": "D",
+      "evidence": "Premium null pre-save state responds200 with savedState merkliste/managedByScan true before deferred write. Keeper: tests/scan-resolve-auto-save.test.ts :: scan resolve auto-save: a write failure is caught and reported, never turned into a 5xx; afterQueue stores callback until flush. Actual route computes responseSavedState when prior.state===null before any save invocation. Keeper asserts status200,kind in_catalog,exact savedState before flush, then exact failure capture.",
+      "candidate": "D3"
+    },
+    {
+      "file": "tests/scan-resolve-auto-save.test.ts",
+      "title": "scan resolve auto-save: an already-saved product's response state is carried through unchanged",
+      "line": 212,
+      "callbackSha256": "59e610e34262e8ac25b3ea81bedf836e2ae5b9078c77c82d876cf8af1096dbe0",
+      "mark": "R",
+      "evidence": "Existing merkliste/true preserved; changing branch to downgrade already-saved state fails exact body. Null prediction keeper cannot observe positive-existing state.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-auto-save.test.ts",
+      "title": "scan resolve auto-save: an owned (routine) product's response state is carried through unchanged (F2)",
+      "line": 228,
+      "callbackSha256": "15526711749355caf0725b924e689e0c8ae1d053f8e4fc65c957508fdf6e9029",
+      "mark": "R",
+      "evidence": "Existing routine/false must not become merkliste/true; unconditional optimistic assignment violates exclusivity and fails exact body.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-auto-save.test.ts",
+      "title": "scan resolve auto-save: a masked (free-tier) resolve never auto-saves \u2014 direct-request denial",
+      "line": 244,
+      "callbackSha256": "eb9e53750041197d263870575a85a70b2fae0f06f44d6d176c10d2c1926bfb30",
+      "mark": "F",
+      "evidence": "Masked response and freeRevealAvailable are meaningful, but forbidden autoSave throws are swallowed in actual inner catch; flushing alone does not prove absence. Replace throwing-only sentinel with invocation counter checked after same flush, or observe queue admission. No change included.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-auto-save.test.ts",
+      "title": "scan resolve auto-save: flag off never auto-saves, even for an otherwise-premium user",
+      "line": 267,
+      "callbackSha256": "415b27d5807b77fb26a082f65191605198eb70dec97a9d6fed5bd21d6d8c27e3",
+      "mark": "F",
+      "evidence": "Flag-off response and no entitlement read are meaningful (entitlement throw would503), but base after() discards callbacks so forbidden deferred auto-save stays invisible. In-place counter on scheduler/callback with real captured drain needed. No new request required; held unchanged.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-auto-save.test.ts",
+      "title": "scan resolve auto-save: a not_needed verdict never auto-saves (nothing in-catalog to save)",
+      "line": 284,
+      "callbackSha256": "a170e631a6f5634006448282e020d195923ae21082f07615770f701bc12b22af",
+      "mark": "F",
+      "evidence": "not_needed response and no paid-access lookup are meaningful, but discarding after callback hides forbidden deferred write. Keep this verdict branch; repair scheduler admission observation in place. Held unchanged.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-auto-save.test.ts",
+      "title": "scan resolve auto-save: an unavailable paid-access lookup still fails closed with 503, before any save",
+      "line": 304,
+      "callbackSha256": "3893ebc550c91ef483ac81a3360b8ffa213eb648e9648ab6b2f89f20360d13bf",
+      "mark": "F",
+      "evidence": "Unavailable access503 independently meaningful, but no deferred queue observation proves before-any-save; a scheduled write followed by access throw would still503. Retain with future queue/counter repair, no deletion.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-auto-save.test.ts",
+      "title": "scan resolve auto-save: a write failure is caught and reported, never turned into a 5xx",
+      "line": 319,
+      "callbackSha256": "c0723d57f1ec97bfe7cfa0c9db4a0c4a5957fd2304b4f9fc5283ed1e26698c67",
+      "mark": "R",
+      "evidence": "Optimistic null\u2192merkliste body is asserted BEFORE actual deferred failure, then exact warning tuple after flush. Rethrowing deferred save fails flush; deleting/reporting wrong reason fails capture. Primary D3 keeper.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-auto-save.test.ts",
+      "title": "scan resolve auto-save: a synchronously throwing after() cannot turn a resolved scan into a 503",
+      "line": 356,
+      "callbackSha256": "5bb235dd693a51fbb4d2aff9a52cd910aec56f2dcce6b86b6f41b5a7077caf6f",
+      "mark": "R",
+      "evidence": "ProductId route reaches auto-save-specific runAfter try/catch; synchronously thrown scheduler must still return200. Barcode telemetry scheduler has separate catch so its sibling is not equivalent.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-resolve-auto-save.test.ts",
+      "title": "scan resolve auto-save: rescanning the same product auto-saves again each time (idempotency is the DB's job, not a client-side skip)",
+      "line": 371,
+      "callbackSha256": "4e2cf7c05dde15a67a10b917b44b55311ba324fca2a93a2c38aafe4c7760ac8d",
+      "mark": "R",
+      "evidence": "Two actual requests both enqueue a save and drain invokes twice; a handler-local cached already-saved skip fails count2. DB idempotency tests do not prove route attempts each request.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-wishlist-auto-save-postgres.test.ts",
+      "title": "auto-save: a bare scan wishlist-saves the product (round trip into the listing the Gemerkt section reads)",
+      "line": 208,
+      "callbackSha256": "59798b4ef3592933717bcbd460e74d4f6ad40cb5907d0c3f68213edfe718f866",
+      "mark": "R",
+      "evidence": "Actual owner and SQL persist one wishlist row after FIRST call on empty fixture. Title overstates listing roundtrip (only table count is read), but real first-write contract remains. Repeated final state does not observe this exact intermediate; held rather than add query/input.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-wishlist-auto-save-postgres.test.ts",
+      "title": "auto-save: rescanning the same product is idempotent \u2014 exactly one row survives repeated scans",
+      "line": 214,
+      "callbackSha256": "82e2382303375b08249c5d074418b109d763ad074b4b238ba0831fa109df3199",
+      "mark": "R",
+      "evidence": "Actual owner called3 times against same SQL store, unique row survives. Deleting/widening UNIQUE conflict target causes PostgreSQL error or wrong count. Shim hardcodes DO NOTHING and ignores ignoreDuplicates; independent retained saved-state:222 asserts actual SDK option; do not claim full Supabase transport parity.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-wishlist-auto-save-postgres.test.ts",
+      "title": "auto-save NON-DESTRUCTIVE REGRESSION: owning a product, then rescanning + auto-saving it, leaves the ownership row untouched AND writes no wishlist row (F2)",
+      "line": 222,
+      "callbackSha256": "bbf4ca8ceaf46835e8d117330f77e4dbda92e6d5b0b63fd8aa1bbebf0e13a0b5",
+      "mark": "R",
+      "evidence": "After exactly one owned rescan, same projected id/status/identity/source row and zero wishlist; before.length1 and owned/catalog_search literals guard fixture and non-destruction. Repeated keeper lacks first-call observation and fixed-literal guards; union not established without extra read.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-wishlist-auto-save-postgres.test.ts",
+      "title": "auto-save NON-DESTRUCTIVE REGRESSION: repeated rescan+auto-save of an owned product never touches ownership nor writes a wishlist row, across multiple scans",
+      "line": 246,
+      "callbackSha256": "d405f8a5c9a59a1d16e3b92c133b2821fc45ae6b7202a830ad9443b0af37eece",
+      "mark": "R",
+      "evidence": "After3 rescans of owned row, projected owned row persists and zero wishlist. Existing first-rescan keeper does not observe repeated invocation lifecycle; possible ownership fast-path/cache state change affects repeats. No claim distinct raw input alone is sufficient; current repeated boundary preserved conservatively.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-wishlist-auto-save-postgres.test.ts",
+      "title": "auto-save: scoped to user and product \u2014 another user's or another product's rows are untouched",
+      "line": 259,
+      "callbackSha256": "944387c69810b632913428be633a37ba159ade4e54635916d9f746794d3a50b8",
+      "mark": "R",
+      "evidence": "Three actual user/product keys each produce row; total3 rejects broad conflict target or lost user/product scope. Do not cut as duplicate bare save: multi-key isolation is independent.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-wishlist-auto-save-postgres.test.ts",
+      "title": "auto-save: an owned row from ANOTHER user does not block this user's rescan, and is itself untouched",
+      "line": 275,
+      "callbackSha256": "68234b2eb40209968bdcb4df20993562f29705b9f3ec4617ebba800dabfd3a8c",
+      "mark": "R",
+      "evidence": "Other-user ownership must not suppress this user insert nor touch foreign row/wishlist; removing user_id ownership filter would skip wrongly and fail current-user count.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-wishlist-route.test.ts",
+      "title": "scan wishlist GET: unauthenticated is rejected",
+      "line": 28,
+      "callbackSha256": "343bfe62ea38afafb137b49ec38dc9792fcd83e92318992b6c80622289cee7f0",
+      "mark": "R",
+      "evidence": "Actual wishlist route with null auth returns401 before handler; removing auth gate returns200. Other scan routes use wrapper but do not prove this configured route still composes it.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-wishlist-route.test.ts",
+      "title": "scan wishlist GET: rate limited returns 429 with Retry-After, before any load",
+      "line": 34,
+      "callbackSha256": "daa8b5fa39c86f851b948290a4ea7b9ca76195c446699fe7b8d304ca2de1bed4",
+      "mark": "R",
+      "evidence": "Denied limiter returns429/rate_limited and bounded Retry-After before list call; bypass limiter produces503 from forbidden-list sentinel, so negative is meaningful here.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-wishlist-route.test.ts",
+      "title": "scan wishlist GET: rate limiter unavailable fails closed with 503, without a Sentry capture",
+      "line": 49,
+      "callbackSha256": "7cfa99abd6bac0db8f2bbb6ee48784cc4ce811f57a468ddd5a3924286f2ef283",
+      "mark": "R",
+      "evidence": "Unavailable limiter returns503/temporarily_unavailable without capture; treating outage as429 or routing through exception capture fails independently.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-wishlist-route.test.ts",
+      "title": "scan wishlist GET: returns the injected entries",
+      "line": 65,
+      "callbackSha256": "acb58bcbfcda312e943080a4e8393bf78263f20a0f05215120ce2f6915ff788f",
+      "mark": "R",
+      "evidence": "Actual route delivers {entries:[entry]} HTTP200; stub supplies model data but actual owner must envelope/serialize it. Dropped/wrong response key fails; not fixture-only comparison.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-wishlist-route.test.ts",
+      "title": "scan wishlist GET: an unexpected error maps to 503 and captures to Sentry",
+      "line": 80,
+      "callbackSha256": "48196382b5439222b20bc2f30e34e79ce4e54874474ddaaa2aeb424157fd8ed3",
+      "mark": "R",
+      "evidence": "Actual list throw boom becomes503 and exact error identity plus route/reason/user capture; removing capture or using wrong context fails.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-wishlist-route.test.ts",
+      "title": "listScanWishlist: joins product fields and presents commerce data",
+      "line": 148,
+      "callbackSha256": "bcf28cc00c6d881dd99cb9312ca2e6d95cfaa1b8c9708485c485e67e20e507a1",
+      "mark": "R",
+      "evidence": "Actual listing forwards user filter, descending created_at order and joined fields into independent commerce mapper. Wrong filter/order/projection fails. Intl expected formatter does not execute helper under test but this is not full SDK join proof.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-wishlist-route.test.ts",
+      "title": "listScanWishlist: drops a row whose joined product is gone (deleted/deactivated)",
+      "line": 169,
+      "callbackSha256": "35de3f025729f916aafc69189193dc6db13f61b52b093e86b4e77bc679663108",
+      "mark": "R",
+      "evidence": "Null joined product filters toempty rather than dereference or leak entry; valid lifecycle/quarantine cases cannot take missing-join branch.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-wishlist-route.test.ts",
+      "title": "listScanWishlist: a load error throws a stable error",
+      "line": 175,
+      "callbackSha256": "c1fc30e2ee7b543c7709e79f8b21da855c3b42708a08dc18dd7b5a0816c7476a",
+      "mark": "R",
+      "evidence": "Resolved DB read error converts to stable scan_wishlist_list_failed; ignoring error yields[] and rejects assertion fails.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-wishlist-route.test.ts",
+      "title": "listScanWishlist: drops a product that has since been deactivated or discontinued",
+      "line": 187,
+      "callbackSha256": "ef11c3a602caa4105a2e24cca5f881f61d560022ab76d219c6bb660ef2b04e38",
+      "mark": "R",
+      "evidence": "Mixed active/inactive/discontinued products yield onlyprod-1; dropping either lifecycle conjunct leaks corresponding row. Actual predicate, not mock filter, owns decision.",
+      "candidate": null
+    },
+    {
+      "file": "tests/scan-wishlist-route.test.ts",
+      "title": "listScanWishlist: drops a disposition-quarantined product (ruling R7)",
+      "line": 203,
+      "callbackSha256": "421dab2cb4ec20570fc03572d9f5e0541eb7e1403925d62929285fec3536d9f2",
+      "mark": "R",
+      "evidence": "Real loadQuarantinedProductIdsAmong executes against returned disposition row; actual listing removes only quarantined ID. Disabling membership filter leaks2. Stub does not implement filter policy.",
+      "candidate": null
+    }
+  ]
+}

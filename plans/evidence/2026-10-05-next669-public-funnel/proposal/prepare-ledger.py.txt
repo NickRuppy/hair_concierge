@@ -1,0 +1,108 @@
+from pathlib import Path
+import json, collections
+P=Path('/tmp/test-audit-public-funnel66-c69uzpx6'); inv=json.loads((P/'inventory.json').read_text())
+# One explicit judgment for every original AST registration; loops remain original sites.
+D={
+'funnel-api':[
+('R','Valid fixed UUID + quiz_completed + {step:10} yields the exact sanitized success DTO. Detects parser dropping properties/milestone or returning a different status envelope. Route rejection inputs cannot preserve this positive DTO.'),
+('R','quiz_started with an untrusted top-level quizVariant returns only eventId/milestone/properties. Detects browser-controlled variant leaking into trusted output; valid simple payload lacks the hostile field.'),
+('R','Invalid JSON, malformed UUID and each existing lead_captured/purchase_completed/unknown row exercise separate validation branches. Exact invalid_json/invalid_milestone/400 unions retained; no positive parser input subsumes them.'),
+('F','Existing ASCII x payloads detect excessive property/body length and exact 413/error codes, but do not distinguish UTF-8 bytes from UTF-16/code-point length. Title overstates UTF-8 coverage. Keep unchanged; no non-ASCII case or repair credit added.')],
+'funnel-client':[
+('R','Allowlisted context envelope parser separates trusted acquisition/journey fields from unsupported values and partial scanner metadata; exact DTO assertions retained. This is a public parsing contract independent of request retry delivery.'),
+('R','Bounded failed bootstrap attempts plus later fresh caller retry observe request count, null state and eventual context. Removing retry reset changes this existing failure/recovery schedule; successful first-response tests cannot absorb it.'),
+('R','Unresolved request crosses injected short timeout then next attempt recovers. Detects unbounded pending promise or poisoned in-flight state. This clock/scheduler prefix differs from explicit transport errors.'),
+('R','Acquisition identity is retained when milestone updates race an older GET across journeys. Detects stale request overwriting newer signed-session context; same-journey enrichment has a different revision guard.'),
+('F','One successful first attempt notifies the already subscribed observer with exact session ID. Title says retry but maxAttempts is 1 and no failure occurs, so retry-delivery prefix is untested. Keep meaningful subscriber contract unchanged; no new failed attempt added.'),
+('R','Same-journey milestone precedes GET; acquisition enrichment must survive. Detects over-broad revision rejection that treats an identity-compatible enrichment like an old foreign journey.'),
+('R','Identity-only pre-bootstrap milestone still permits acquisition GET. Detects marking the context ready before landing/quiz metadata has arrived; no existing complete envelope has this readiness prefix.'),
+('R','HTTP 200 with incomplete scanner context is retried and never cached ready. Detects treating status success as schema completeness. Distinct from non-OK, timeout and parse-only envelopes.')],
+'funnel-cookie':[
+('R','Signed complete visitor/session/package/issuedAt round-trip under fixed secret. Detects encode/decode field loss or signature incompatibility. Route rejection fixtures do not observe complete decoded value.'),
+('R','Campaign touch replacement predicate covers same-session quiz navigation, explicit entry and changed-session cases with original path values. Detects campaign attribution replacement during navigation. HMAC validity does not subsume retention policy.'),
+('R','Tampering, unknown package and expired context are rejected separately. Detects signature bypass, package allowlist bypass and max-age bypass. These are distinct consumed bytes/times; no stronger same-input keeper.'),
+('R','Touch cookie has its own expiry independent of session lifetime. Detects accepting stale touch through the long-lived session duration. Keep separate from session-expiry test.')],
+'funnel-migration':[
+('R','Actual migration text pins private summary/event table and RLS definitions. Independent database architecture contract: fake RPC mapping and HTTP responses cannot prove DDL/privacy.'),
+('R','Actual SQL recorder contains event lock/idempotency and first-milestone preservation clauses. Detects removal of serialized event IDs/COALESCE-first logic text. No DB execution or transaction correctness claim; retain separately from copied/mock persistence.'),
+('R','Actual SQL function privileges are service-role only, with revokes. Detects textual public/anon/authenticated grant regression. Browser predicate alone is not the SQL security boundary.'),
+('R','Quiz variant SQL validates known inputs before mutation and preserves existing snapshot on conflict, including required backfill/allowlist literals. Detects loss of guard ordering or immutability expression in shipped migration; mapping fake does not execute this.'),
+('R','RPC signature/default-null and old-signature removal/new-signature grants preserve existing named callers. Detects signature/grant contract drift; storage-state tests do not cover the generated/public callable surface.')],
+'funnel-rate-limit':[
+('R','Injected limiter observes normalized signed-session key and configured max/window. Detects replacing session identity with untrusted/raw key or wrong limits. No route rejection fixture reaches a successful signed quota call.'),
+('R','Unavailable limiter service returns fail-closed result. Detects exception/unavailable admission. Existing exhausted-quota result has a different failure cause.'),
+('R','Exhausted quota preserves ordinary rejected result rather than service failure. Detects conflating abuse rejection and infrastructure fault; independent response semantics.')],
+'funnel-route':[
+('F','Actual POST with signed context and purchase_completed rejects 400 invalid_milestone. This covers transport admission, not a directly observed zero-database-call counter: an ignored read could occur and preserve response. Keep rejection contract unchanged; no DB-order proof claimed.'),
+('F','Actual POST with tampered cookie returns 202 {enabled:false}. Real signature/context boundary exercised; fixture does not directly spy on every database entrypoint. An ignored read can remain invisible. Hold unchanged, no cleanup credit.'),
+('F','Declared content-length 9000 with harmless {} returns 413 payload_too_large. Does not observe request.text invocation/bodyUsed, so early-body-read claim is weaker than title. Keep exact admission response contract; no new request traps added.')],
+'funnel-server':[
+('R','Existing browser milestone predicate positive/negative values pin delivery authority below parser. API parser only uses selected examples; helper callers and server-confirmed conversions make this independent defense.'),
+('R','Actual recordFunnelEventWithRpc consumes signed scalp package, PayPal reference, supplied occurrence/properties/touch and calls injected RPC with package/quiz/landing/provider/reference/time/first-touch assertions plus exact returned data identity. Detects adapter field mapping loss. No real SQL storage claim.'),
+('R','Injected RPC error object must reject through actual recorder. Detects swallowed DB failure or wrong error/message; successful mapping cannot replace error branch.'),
+('F','Trusted offer_viewed override guided-story-founder-letter is observed in p_offer_variant. Title also claims browser events use packages, but this callback only supplies trusted override; no negative override input. Keep positive provenance contract unchanged, do not invent missing browser case.'),
+('R','No occurredAt supplied: resulting RPC timestamp is between before/after wall-clock bounds. Detects constant/context-issuedAt replacement. Explicit occurrence mapping uses a different optional-argument branch.'),
+('R','Missing row yields exact permanent not-found; valid mocked row plus RPC error yields transient failure/error text. Query builder select/eq are inert stubs so no table/filter identity proof. Typed outcomes remain credible and cannot be moved into positive adapter fixture.')],
+'gated-example-pages':[
+('R','Flag removed under finally restoration: real page-tier, app-access-state and gated-mode entrypoints all return premium without request context. Independent default short-circuit, not Boolean wrapper; prior removed helper tests are not counted again.'),
+('F','Four existing route source rows require real server mode call and nearby example return. A return in wrong branch or nearby keepsake fallback can satisfy 1500-character window; no free/premium semantic execution. Hold architecture signal unchanged, no permission to remove real route/tier coverage.'),
+('R','Routine/application source locates Promise.all around gate and named page resolver. Detects named sequential-await regression and preserves latency architecture. It is a bounded structural guard, not timing/concurrency runtime proof; SSR copy does not subsume it.'),
+('R','Chat source pins separate flag-off literal return, later Suspense segment and sync exported page. Detects moving tier await to unconditional page branch. Unique streaming/default architecture; retained independently of rendered static example.'),
+('R','Every existing page copy has distinct benefit, differs from sheet copy, retains own CTA rather than generic pitch. Exact table content read; detects copy homogenization independently of one rendered composition.'),
+('R','Existing copy contexts map routine/anwendung/chat to their own feature/source. Detects wrong opener attribution on one page. Hook-state CTA test uses chat override and cannot prove all registry rows.'),
+('R','Real Routine SSR uses real four catalog fixtures and populated categories, no empty/gap/preview actions; whole product URL/image/copy assertions retained. Application/chat fixtures exercise different visual owners.'),
+('R','Real Anwendung SSR has populated confirmed shelf slots, rest visual and no partial/open states. Exact existing day fixture union retained; Routine markup is not same input/renderer.'),
+('R','C2 keeper: existing Chat SSR + four-message/two-user fixture and capability bans/no feedback/product affordances. Gains donor empty timestamps and timestamp-markup absence using same html. Existing fixture/content assertions remain exact.'),
+('C','C2: same GatedChatExample, router/pathname and initial hook state as immediately preceding stronger keeper. Transfer whole fixture timestamp loop and exact markup regex to existing html. No new render, messages or date inputs; preserve both raw field and rendered absence contracts.'),
+('R','Original three-page render loop pins each feature/label/benefit/CTA and exactly one CTA block. Those existing composition inputs differ from isolated GatedPreview hook fixture. Retain all rows/calls; no table packing.')],
+'gated-pages-zero-mutation':[
+('R','C3 keeper: original routine/anwendung/chat loop traps fetch/XHR/beacon, restores globals and uses throwing router with /routine pathname. Each existing render result gains donor form/submit/formaction absence. Network and nonempty assertions remain exact; no mount-effect proof.'),
+('C','C3: identical renderComposition(Composition) under identical trap/router for same three existing rows. Transfer three complete negative markup assertions to prior existing result; delete duplicate registration only. Three native renders removed, no new cases/rows/calls.'),
+('R','Positive graph control reaches actual Routine card, Anwendung day card and Chat bubble. Prevents completely inert resolver/walker from making exclusions vacuous. Independent architecture support, no duplicate with rendered output.'),
+('F','Existing per-composition graph excludes seven named write modules but regex follows double-quoted static from imports/exports only. Dynamic, side-effect or single-quoted imports can evade it; PremiumSheet also has live writes outside denylist but closed in preview. Retain bounded static exclusion defense unchanged; no universal no-write claim.'),
+('R','Existing per-entry graph checks only gated component/fixture/copy sources for fetch/beacon/API route literals. Direct request insertion there is independently caught even in unmounted effect. This is lexical scope, not entire reachable UI/provider closure.'),
+('F','Each composition checks no anchor before inert marker or after CTA marker. It does not locate the actual closing inert div, so an anchor between that closing tag and CTA can escape yet pass. Hold unchanged; event cancellation tests and zero-network render do not fix ancestry gap.'),
+('R','Actual InertExample capture handlers synchronously preventDefault and stopPropagation for click/auxclick/submit original event rows. Detects missing suppression and retains concrete dispatch props; SSR cannot execute events.'),
+('R','Actual keydown capture cancels Enter/Space but leaves Tab untouched with exact ordered recorder array. Detects keyboard escape or accidental focus-navigation suppression; mouse capture is distinct input.')],
+'gated-preview-component':[
+('R','C1 keeper: real GatedPreview single-useState dispatcher initial false, routine defaults and existing child. Frame/label/benefit/single CTA/viewport assertions retained, gains scroll union against same returned tree; no PremiumSheet child invocation.'),
+('C','C1: identical renderPreview().render() fixture and initial dispatcher. Move full scroll/role/ARIA/nonempty-ID/tabstop/child/exact-one-scroller union into prior keeper. Reuse keeper existing identical label query (including helper uniqueness assertion); remove second component render, no new input.'),
+('R','Chat override follows closed→CTA click→open context→onClose→closed in same harness. Detects broken opener/closer state or wrong feature/source. Snapshot/default routine keeper has no interaction prefix; retain.'),
+('R','Application override propagates all three supplied strings and rejects routine/generic defaults. Detects caller copy loss/hardcoding. Different consumed feature/source/copy input, no default-fixture equivalence.')],
+'editorial-pages':[
+('R','Actual MethodikContent SSR asserts cosmetic/self-report/uncertainty/source/affiliate/ownership/medical referral/quiz link and bans validation overclaim. Protected public content union retained; source occurrence checks are not same renderer/input.'),
+('R','Editorial shell source composes header/main/footer; actual footer SSR has legal imprint and no Methodik/Ratgeber links. Independent frame/footer visibility constraint, not entire Methodik copy equivalence.'),
+('R','Methodik explicitly opts in to first-party bootstrap, default shell off, public bootstrap exact effect and no vendor/auth/milestone dependencies. Architecture/privacy contract absent from SSR because effects do not execute.'),
+('R','Actual NotFound SSR has branded German copy and home/quiz recovery links, bans framework English fallback. Separate page identity and output.'),
+('R','NotFound source opts into default tracking-free shell and excludes bootstrap/session/vendor references. Distinct privacy dependency contract; a clean SSR cannot prove mount-time privacy.'),
+('R','Existing multi-file source literals pin approved serious non-medical public framing and ban old risk/diagnosis/time claims. Keep all literals/files. Limited to source occurrence/absence, not proof each branch displays it or legal correctness. Active default variant still registered; no retirement inferred.'),
+('R','Actual AGB/Widerruf/Datenschutz SSR normalized text protects legacy one-time promises, no new quarter/one-time offering, guarantee/refund/access and privacy wording. Membership fixture has only AGB, so cannot absorb complete multi-page union without additional calls/packing.'),
+('R','Actual AGB SSR pins 7-day trial/prices/authorization start/paid-period start/legacy promises/no quarter plan/year renewal/refund/withdrawal. Different domain contract from legacy multi-page test; avoid unrelated legal assertion packing despite repeated AGB render.')],
+'landing-client-import-boundary':[
+('R','AST static-value graph from five existing entries tracks client boundary and rejects @sentry/nextjs; type-only imports excluded. Detects static SDK edge reintroduced before deferred runtime. Source graph intentionally ignores dynamic imports; SSR cannot prove bundle deferral.'),
+('R','AST static-value graph from fresh quiz entry excludes four deferred heavy modules while requiring continuation module and dynamic full-quiz import text. Detects lost split or fake empty graph. No browser chunk/timing proof; current async continuation and fresh-entry caller read.')]
+}
+O={
+'funnel-api':['src/lib/funnel/api.ts','src/lib/funnel/server.ts','src/app/api/funnel/session/route.ts'],
+'funnel-client':['src/lib/funnel/client.ts','src/providers/public-funnel-context-bootstrap.tsx','src/components/personal-plan-quiz/personal-plan-quiz-entry.tsx'],
+'funnel-cookie':['src/lib/funnel/cookie.ts','src/proxy.ts','src/lib/funnel/packages.ts'],
+'funnel-migration':['supabase/migrations/20260711120000_funnel_attribution.sql','supabase/migrations/20260730120000_add_funnel_session_quiz_variant.sql','src/lib/funnel/server.ts'],
+'funnel-rate-limit':['src/lib/rate-limit.ts','src/app/api/funnel/session/route.ts'],
+'funnel-route':['src/app/api/funnel/session/route.ts','src/lib/funnel/cookie.ts','src/lib/funnel/server.ts'],
+'funnel-server':['src/lib/funnel/server.ts','src/lib/funnel/packages.ts','src/lib/billing/analytics-destinations/funnel.ts'],
+'gated-example-pages':['src/lib/gated-preview/gate.ts','src/lib/auth/authenticated-app-route-access.ts','src/components/gated-preview/gated-routine-example.tsx','src/components/gated-preview/gated-anwendung-example.tsx','src/components/gated-preview/gated-chat-example.tsx'],
+'gated-pages-zero-mutation':['src/components/gated-preview/gated-preview.tsx','src/components/gated-preview/inert-example.tsx','src/components/routine/personal-plan/routine-page.tsx','src/components/application/application-page.tsx','src/components/chat/chat-message.tsx'],
+'gated-preview-component':['src/components/gated-preview/gated-preview.tsx','src/components/premium-sheet/premium-sheet.tsx','src/components/ui/button.tsx'],
+'editorial-pages':['src/app/methodik/page.tsx','src/components/editorial/editorial-shell.tsx','src/providers/public-funnel-context-bootstrap.tsx','src/app/not-found.tsx','src/app/agb/page.tsx','src/app/widerruf/page.tsx','src/app/datenschutz/page.tsx'],
+'landing-client-import-boundary':['instrumentation-client.ts','src/app/global-error.tsx','src/app/layout.tsx','src/app/page.tsx','src/app/lp/[slug]/page.tsx','src/components/personal-plan-quiz/personal-plan-quiz-entry.tsx','src/components/personal-plan-quiz/personal-plan-quiz-continuation.ts']}
+rows=[]
+for f in inv:
+ key=Path(f['file']).name.split('.test')[0]; assert len(D[key])==len(f['rows'])
+ for r,(v,why) in zip(f['rows'],D[key]):
+  rows.append({'id':key+':'+str(r['ordinal']),'verdict':v,'file':f['file'],'originalFileSHA256':f['sha256'],'line':r['line'],'endLine':r['endLine'],'title':r['title'],'nativeMultiplicity':4 if r['registrationLoop']=='GATED_ROUTES' else 3 if r['registrationLoop'] else 1,'semanticJudgment':why,'ownerReadset':O[key],'callbackSHA256':r['callbackSHA256'],'assertions':r['assertions'],'calls':r['calls'],'testReadDepth':'COMPLETE original file, fixtures, all helper bodies and all original callbacks','runtimeStatus':'UNRUN; static audit only','removalCredit':0})
+counts=dict(collections.Counter(r['verdict'] for r in rows));assert len(rows)==66
+(P/'complete-ledger.json').write_text(json.dumps({'counts':counts,'rows':rows},ensure_ascii=False,indent=2)+'\n')
+md=['# Public funnel66 complete original-site ledger','',f'66 original declarations / 79 native registrations. Judgments: {counts}. Conditional C only; zero removals executed or credited. All F remain byte-exact.','', 'Each row has complete assertion/call inventory and callback hash in complete-ledger.json; original whole bodies are frozen under originals/. Read-depth exceptions for supporting source and dependencies are in read-scope.json.']
+for r in rows:
+ md += ['',f'## {r["id"]} — {r["verdict"]}',f'`{r["file"]}:{r["line"]}–{r["endLine"]}` · {r["title"]} · native multiplicity {r["nativeMultiplicity"]}', '',r['semanticJudgment'],'','Operative owner/readset: '+', '.join('`'+x+'`' for x in r['ownerReadset'])+'.']
+(P/'complete-ledger.md').write_text('\n'.join(md)+'\n');print(counts)

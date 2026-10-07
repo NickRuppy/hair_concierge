@@ -1,0 +1,25 @@
+{
+  "status": "PASS_RECORDED_FULL_NATIVE_TAP",
+  "phase": "before",
+  "totals": {
+    "tests": 158,
+    "pass": 157,
+    "fail": 0,
+    "skipped": 1,
+    "cancelled": 0,
+    "todo": 0
+  },
+  "logPath": "/tmp/test-audit-generation158-main-before.tap",
+  "logSHA256": "41b3b3f97fc94a9354640a6c4cd5e69e9c19d9620cd9335d43501c299c1271ec",
+  "commandSHA256": "3c178dbbb7dedbf4e04c7d936bfdd67ca88669d7754d5a27353d5aaba311c3c6",
+  "pinsSHA": "b41d3a0d1a4021f978e0458b7e7a6c21881541ff195bb662c28e0d59ea917d70",
+  "counts": {
+    "before": 157,
+    "transfer": 157,
+    "cut": 150
+  },
+  "limits": "Main must attest closed process exit 0; text validation cannot prove process status. No runtime launched by this checker.",
+  "repositoryWrites": 0,
+  "children": 0,
+  "ownerImports": 0
+}

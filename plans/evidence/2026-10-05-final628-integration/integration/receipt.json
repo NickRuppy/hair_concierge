@@ -1,0 +1,98 @@
+{
+  "files": [
+    {
+      "file": "tests/customerio-page-view.test.ts",
+      "beforeSHA256": "f7cbeff8443b65be033cb5d39ae83a227dea8e9602ff23bfc57bf42601caeffe",
+      "afterSHA256": "f7cbeff8443b65be033cb5d39ae83a227dea8e9602ff23bfc57bf42601caeffe",
+      "changed": false
+    },
+    {
+      "file": "tests/discovery-cockpit-complexity-dom.test.tsx",
+      "beforeSHA256": "63c655cac89d4336acc6fda7434466c7c772e7851ac48ae03b974611eb960b04",
+      "afterSHA256": "2d9a0472b250013dc5c85053a0ee0e17d9bb7334fc7b0b1dfa9cc72b40228095",
+      "changed": true
+    },
+    {
+      "file": "tests/discovery-products-loading.test.tsx",
+      "beforeSHA256": "2b8184eb0aa8ebf763f6f044a4f64fef47a5791db9b6230e2098df583965e5a0",
+      "afterSHA256": "b9b4f1d9430a05d6f86be3e9f8a01ff5d95969aa1a09f3223c1c79e004789b55",
+      "changed": true
+    },
+    {
+      "file": "tests/discovery-refined-usage.test.ts",
+      "beforeSHA256": "55fbffd7795be751f465158b9d3927b5e2612fac4df8236d4845440d5d69f6c4",
+      "afterSHA256": "82ba65d2dc5d82eac138691112c7d86b132256a9023526f4265b14a1fbc3b909",
+      "changed": true
+    },
+    {
+      "file": "tests/discovery-unanswered-categories.test.tsx",
+      "beforeSHA256": "fa0775cf1524e0d8cba67ef6c81c1dce8f4b5d242d69fc5bc79dfc8a91825cdf",
+      "afterSHA256": "2a845f5228a6d15b3bea526dced65d67f0af06135aaaa19b7c7d387180d647d5",
+      "changed": true
+    },
+    {
+      "file": "tests/personal-plan-field-test-ui.test.tsx",
+      "beforeSHA256": "4737c57eee0061e44ab84e47abef535bef3de94df7cc05de70622b9bc65965e8",
+      "afterSHA256": "4737c57eee0061e44ab84e47abef535bef3de94df7cc05de70622b9bc65965e8",
+      "changed": false
+    },
+    {
+      "file": "tests/product-identity-resolution.test.ts",
+      "beforeSHA256": "edbf3f82a925f46eed9e85104ac8f283ed13192de8e8784d516bc4f9b9927dfb",
+      "afterSHA256": "edbf3f82a925f46eed9e85104ac8f283ed13192de8e8784d516bc4f9b9927dfb",
+      "changed": false
+    },
+    {
+      "file": "tests/scan-research-intake-form-ui.test.tsx",
+      "beforeSHA256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a",
+      "afterSHA256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a",
+      "changed": false
+    },
+    {
+      "file": "tests/scan-resolve-auto-save.test.ts",
+      "beforeSHA256": "de4d4d0a8bf10bcec4edcf2543e7fb759d06bce3e98f22d4e8e882d4a0fe4dba",
+      "afterSHA256": "de4d4d0a8bf10bcec4edcf2543e7fb759d06bce3e98f22d4e8e882d4a0fe4dba",
+      "changed": false
+    },
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "beforeSHA256": "00316a1edf13965567845b2513b846a94d7ab3074f2fff05f5452ca87b0fce0e",
+      "afterSHA256": "00316a1edf13965567845b2513b846a94d7ab3074f2fff05f5452ca87b0fce0e",
+      "changed": false
+    },
+    {
+      "file": "tests/scan-resolve-events-migration.test.ts",
+      "beforeSHA256": "bbf36aaadfe6ef1d0c335267e6f584a4eddce708820af1cf8887867c1b3aff8f",
+      "afterSHA256": "bbf36aaadfe6ef1d0c335267e6f584a4eddce708820af1cf8887867c1b3aff8f",
+      "changed": false
+    },
+    {
+      "file": "tests/scan-resolve-route.test.ts",
+      "beforeSHA256": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add",
+      "afterSHA256": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add",
+      "changed": false
+    },
+    {
+      "file": "tests/scan-unknown-flow-ui.test.tsx",
+      "beforeSHA256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf",
+      "afterSHA256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf",
+      "changed": false
+    },
+    {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "beforeSHA256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+      "afterSHA256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+      "changed": false
+    },
+    {
+      "file": "tests/trial-reminders.test.ts",
+      "beforeSHA256": "f74cf7c1a16d2bbdb6d13c152f3a13b626bc5bb579ad7c70750a107a2a0a0c2f",
+      "afterSHA256": "f74cf7c1a16d2bbdb6d13c152f3a13b626bc5bb579ad7c70750a107a2a0a0c2f",
+      "changed": false
+    }
+  ],
+  "allASTShapesEqual": true,
+  "sourceWrites": 0,
+  "newInputsCallsOrTestRegistrations": 0,
+  "phaseProof": "Earlier native/fault proof was on archived preformat cut bytes. Fresh whole native/c8 checks these formatted bytes."
+}

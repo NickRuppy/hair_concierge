@@ -1,0 +1,291 @@
+{
+  "originalGuards": [
+    {
+      "file": "src/lib/funnel/server.ts",
+      "sha256": "d664770e0103972242ab81c3a3573243695f901e68ecfe4461e61d0410360df6"
+    },
+    {
+      "file": "src/app/api/stripe/create-checkout-session/route.ts",
+      "sha256": "0808a083b02a9611deab703bf9fc7a9b3cecb5dce2b5be1889003a0cd06a9bd8"
+    },
+    {
+      "file": "tests/personal-plan-pricing-experiment.test.ts",
+      "sha256": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31"
+    },
+    {
+      "file": "tests/stripe-checkout-session-route-contract.test.ts",
+      "sha256": "b966b1716f13172213e841b6a3528154579c2fde3bdc63e0758f7734860e12b2"
+    },
+    {
+      "file": "src/app/api/analytics/meta-offer-view/route.ts",
+      "sha256": "8b2008675f27a002eea4d9ff2ae61d5733dad963185b3d2baf240e287af0f927"
+    },
+    {
+      "file": "src/app/api/billing/payment-support/route.ts",
+      "sha256": "f33d08ef477d7dd2c91bb44d155475d2aeaf39218812f43dcacb386db04c1a76"
+    },
+    {
+      "file": "src/app/api/funnel/session/route.ts",
+      "sha256": "da657d3e0ab9db46f2c569ae06c08d4a10d98ca64e7dcb8eb336d3513f11ea3d"
+    },
+    {
+      "file": "src/app/api/paypal/create-subscription-intent/route.ts",
+      "sha256": "cdc24635c7668e5976f8cf812af8dc02109e27d134f71855edb93cf794a12a63"
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/activate/route.ts",
+      "sha256": "cc81676e5f7352f30fafcb84acb7acc5cb65ef36d162bef9aa7138f18c9f6cd9"
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/moderator/activate/route.ts",
+      "sha256": "e039eb061eaa680ea07b2d8a3548232ccba7f1556cf84fff5bc5ffdfcde90186"
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/moderator/start/route.ts",
+      "sha256": "b2603bf9278f809233de2e031dde951d9347b152399f62814fc5b55f9f77fbad"
+    },
+    {
+      "file": "src/app/api/quiz/email-return/choose/route.ts",
+      "sha256": "39175962afc94e53edffe41da10d44b5b2cab05b32984f16cc4a512a3b9150fa"
+    },
+    {
+      "file": "src/app/api/quiz/email-return/context/route.ts",
+      "sha256": "2828ca1c0e6edc3c4acb4664ec3cff286fff2ac1089fb75b675f3113d5d68181"
+    },
+    {
+      "file": "src/app/api/quiz/field-test/activate/route.ts",
+      "sha256": "4a13e5b3862b1572fb1aeb699ef43051e5cc9e3e1949990c973265e01538520d"
+    },
+    {
+      "file": "src/app/api/quiz/lead/route.ts",
+      "sha256": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-draft/resume/route.ts",
+      "sha256": "e680907d3e92b488aadbc866ba334da81c42878d3a9c1f072c6f54d570447092"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-draft/route.ts",
+      "sha256": "8dfb645529879cac85e6cf9f62539270094c14b2a6d6b0a774724a081b6fd384"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-lead/route.ts",
+      "sha256": "305fda288afd763743b050c9a5f620ad3742286d4397f49ea657bf7939c52595"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-prepare/route.ts",
+      "sha256": "1c4b9507d665d79c6451a138e1237077bf1f8aaf9f2e6a94054dc019ad7ddf1f"
+    },
+    {
+      "file": "src/app/lp/[slug]/page.tsx",
+      "sha256": "c986d0de667d792caf017dd92d97ea9a946d85812340af9006768da532b01cec"
+    },
+    {
+      "file": "src/app/plan-bereit/page.tsx",
+      "sha256": "3266d35f5b0a8f5312e6415d40bc52224dc660a830134dc44089600343d96289"
+    },
+    {
+      "file": "src/app/plan-bereit/readiness.ts",
+      "sha256": "aec3ee617b8d3eecc9e60116a00214d08a481b28981c20f707f342d299bea08e"
+    },
+    {
+      "file": "src/app/plan-bereit/status/route.ts",
+      "sha256": "1b8f09e7bde788b2ec359a3d937fc84a58fa1ae1b14aa9c7d79c997260f22bff"
+    },
+    {
+      "file": "src/app/result/[leadId]/page.tsx",
+      "sha256": "83ce34fd0d9d356a66b9e4201a3676236d11c7e06ec09563e0742ee91ca36ae1"
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/funnel.ts",
+      "sha256": "7c6d71e7eeb0ec6af41020df967b0126e6ced1436c715d9914674e8dda4ef6bb"
+    },
+    {
+      "file": "src/lib/quiz/funnel-package-context.ts",
+      "sha256": "69f13a89706944ae8dc09d179e25ab7e75d9c9012d01df8ada8b23bc8ed80d66"
+    },
+    {
+      "file": "tests/funnel-server.test.ts",
+      "sha256": "84aec887c25617e6504b6e574b3dac815c03b96aac69f74556ce73abb956c8fc"
+    },
+    {
+      "file": "tests/organic-offer-media-experiment.test.ts",
+      "sha256": "429e96be662296b1f76bee7e8044ae3ff8a7d4bd4cfb3f498271a50d73048a41"
+    },
+    {
+      "file": "src/lib/stripe/checkout-activation.ts",
+      "sha256": "f33ca66366ec59a915fdeba82bb397ad20891dd837495de25c6bf4e51deb8bdc"
+    },
+    {
+      "file": "src/lib/paypal/order-activation.ts",
+      "sha256": "f3bce8ac0eed4b1db6517e1a0b63bb942023661c0149a0ed438d4d6c70852435"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-activation.ts",
+      "sha256": "1efa98c6055012f5912c22c5e7420b36331ffc702b52344a2db40bc2ade458eb"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "sha256": "9780ca72927361d64c493de99f1780e7b9a58800e3fb52ea0fbad8227b97a544"
+    },
+    {
+      "file": "src/app/api/billing/one-time-activation-status/route.ts",
+      "sha256": "fab9ef797b506b624e565238129b3ffcc3b82a9830d4f3bdb4a36efa5778d149"
+    },
+    {
+      "file": "src/app/api/paypal/create-order-intent/route.ts",
+      "sha256": "2e339bc67b9a8bdf0a7f9783a8115bc4bc4d536d57905f0ab6833dfba8796b43"
+    },
+    {
+      "file": "src/app/api/paypal/capture-order/route.ts",
+      "sha256": "e7a7f460c96f21ea4a40dcef06f3f1b5b2c8834b6645ba24a60b06ce788fe968"
+    },
+    {
+      "file": "src/app/welcome/page.tsx",
+      "sha256": "e6c5c768deee6f4f304e1dc5a4ed27ba8c0a186938069fec0c579ed560fda24e"
+    },
+    {
+      "file": "scripts/billing/one-time-recover.ts",
+      "sha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75"
+    },
+    {
+      "file": "plans/free-trial-launch/plan.md",
+      "sha256": "a59520782fdb03e1226ae322d687ed6408ed0e2c39cd37727fe1a62b6ebefde0"
+    },
+    {
+      "file": "docs/free-trial-launch-runbook.md",
+      "sha256": "a1c60fbc2dc832110fbff6566df0cde37ba3e167debb5cf747f0e0afe9fba668"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "tests/funnel-variants.test.ts",
+      "sha256": "5a48c8448af9fa1be9effbe4ee3411a1ad61081a97d8a154d48c6a8bb4779c4e"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675"
+    },
+    {
+      "file": "src/lib/funnel/api.ts",
+      "sha256": "b1180f5324e78983f63b1a73b1f98f7cd02aabacba1271165446588370356679"
+    },
+    {
+      "file": "src/lib/funnel/client.ts",
+      "sha256": "9c3728cffff3810d829afd198c2406e35cf6edb3d4c68dbfc5a1cfa845e100a8"
+    }
+  ],
+  "localImportGraphFiles": [
+    "src/app/api/stripe/create-checkout-session/route.ts",
+    "src/funnels/packages.json",
+    "src/funnels/quizzes/registry.json",
+    "src/funnels/quizzes/registry.ts",
+    "src/lib/analytics/meta-capi.ts",
+    "src/lib/billing/offer-products.ts",
+    "src/lib/billing/payment-runtime-config.ts",
+    "src/lib/billing/personal-plan-one-time-consent-copy.ts",
+    "src/lib/billing/personal-plan-one-time-consents.ts",
+    "src/lib/billing/pricing-catalog.ts",
+    "src/lib/billing/purchases.ts",
+    "src/lib/billing/subscriptions.ts",
+    "src/lib/billing/trial-access-projection.ts",
+    "src/lib/billing/trial-admission.ts",
+    "src/lib/billing/trial-analytics-context.ts",
+    "src/lib/billing/trial-checkout-attempt.ts",
+    "src/lib/billing/trial-eligibility.ts",
+    "src/lib/billing/trial-identity-claims.ts",
+    "src/lib/billing/trial-management-operations.ts",
+    "src/lib/billing/trial-offer.ts",
+    "src/lib/billing/trial-policy.ts",
+    "src/lib/billing/trial-runtime.ts",
+    "src/lib/billing/types.ts",
+    "src/lib/checkout/payment-feedback.ts",
+    "src/lib/entitlements/flag.ts",
+    "src/lib/freemium/checkout-metadata.ts",
+    "src/lib/freemium/checkout-return.ts",
+    "src/lib/funnel/cookie.ts",
+    "src/lib/funnel/flags.ts",
+    "src/lib/funnel/journey-kind.ts",
+    "src/lib/funnel/offer-presentation.ts",
+    "src/lib/funnel/organic-offer-media-experiment.ts",
+    "src/lib/funnel/packages.ts",
+    "src/lib/funnel/personal-plan-pricing-experiment.ts",
+    "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+    "src/lib/funnel/server.ts",
+    "src/lib/observability/checkout.ts",
+    "src/lib/observability/offer-experiment.ts",
+    "src/lib/observability/payment-server-core.ts",
+    "src/lib/observability/payment-server.ts",
+    "src/lib/observability/payment.ts",
+    "src/lib/observability/sentry-scrubbing.ts",
+    "src/lib/paypal/trial-collection-start.ts",
+    "src/lib/reactivation/checkout-recovery.ts",
+    "src/lib/reactivation/checkout-reservations.ts",
+    "src/lib/reactivation/return-destination.ts",
+    "src/lib/reactivation/stripe-checkout-context.ts",
+    "src/lib/reactivation/stripe-checkout-recovery.ts",
+    "src/lib/stripe/checkout-session-params.ts",
+    "src/lib/stripe/client.ts",
+    "src/lib/stripe/intervals.ts",
+    "src/lib/stripe/pricing-plans.ts",
+    "src/lib/stripe/trial-catalog.ts",
+    "src/lib/stripe/trial-checkout-session-params.ts",
+    "src/lib/stripe/trial-checkout.ts",
+    "src/lib/supabase/admin.ts",
+    "src/lib/supabase/server.ts",
+    "tests/personal-plan-pricing-experiment.test.ts",
+    "tests/stripe-checkout-session-route-contract.test.ts"
+  ],
+  "dynamicExpressions": [],
+  "bareRuntimeEntries": [
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/nextjs/build/cjs/index.server.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/node/build/cjs/index.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/ssr/dist/main/index.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@supabase/supabase-js/dist/index.cjs",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/headers.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/next/server.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/server-only/index.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/stripe/cjs/stripe.cjs.node.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/zod/index.cjs"
+  ],
+  "selectedDistributions": [
+    "tsx",
+    "esbuild",
+    "get-tsconfig",
+    "resolve-pkg-maps",
+    "fsevents",
+    "@esbuild/darwin-arm64",
+    "react",
+    "react-dom",
+    "zod",
+    "stripe/cjs",
+    "@supabase/auth-js/dist",
+    "@supabase/ssr/dist",
+    "@supabase/supabase-js/dist",
+    "@supabase/postgrest-js/dist",
+    "@supabase/realtime-js/dist",
+    "@supabase/storage-js/dist",
+    "@supabase/functions-js/dist",
+    "next/dist/server/web",
+    "next/dist/shared/lib",
+    "next/dist/server/request",
+    "next/dist/server/after",
+    "next/dist/compiled/@edge-runtime/cookies"
+  ],
+  "limits": [
+    "Literal repository import graph is an overapproximation and includes type-only source references; no whole-source semantic read claim.",
+    "Nonliteral dynamic expressions are recorded, not silently resolved. All original46 guards are strict; this driver executes only the single existing native retirement keeper.",
+    "Installed runtime distributions and actual bare import entries are byte guards. Unselected SDK vendor transitives, platform conditions and dev/build tools are not comprehensively frozen. Package-lock and package manifests remain pinned.",
+    "No .env or secret files inspected. No whole data tree or unconsumed migrations frozen."
+  ]
+}

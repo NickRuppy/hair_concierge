@@ -150,23 +150,6 @@ export function classifyProductReadiness(
   }
 }
 
-/** Compatibility projection for the existing unlinked-product ledger. */
-export function classifyCandidate(
-  input: Omit<ReadinessCandidate, "status" | "blockers"> & {
-    has_disposition: boolean
-    image_url_present: boolean
-    product_facts_present: boolean
-    required_protocols_complete: boolean
-  },
-): ReadinessCandidate {
-  const result = classifyProductReadiness(input)
-  return {
-    ...result,
-    has_barcode: false,
-    status: result.status === "blocked" ? "blocked" : "ready_for_ean_research",
-  }
-}
-
 export function selectActiveSupportedProducts(products: Row[], identifiers: Row[]) {
   const barcodeProductIds = new Set(
     identifiers

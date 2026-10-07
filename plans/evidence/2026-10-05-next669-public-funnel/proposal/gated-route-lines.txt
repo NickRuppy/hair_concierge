@@ -1,0 +1,701 @@
+
+FILE src/app/routine/page.tsx
+1: import Link from "next/link"
+2: import type { ReactNode } from "react"
+3: 
+4: import { GatedRoutineExample } from "@/components/gated-preview/gated-routine-example"
+5: import { GemerktSection } from "@/components/routine/gemerkt-section"
+6: import { PersonalPlanRoutineClient } from "@/components/routine/personal-plan"
+7: import type { RoutineRefinementBannerViewModel } from "@/components/routine/personal-plan/routine-refinement-banner"
+8: import { RoutinePageClient } from "@/components/routine/routine-page-client"
+9: import { RetryRefreshButton } from "@/components/ui/retry-refresh-button"
+10: import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
+11: import { resolveGatedPageMode } from "@/lib/gated-preview/gate"
+12: import {
+13:   loadPersonalPlanKeepsakeContentForUser,
+14:   type PersonalPlanKeepsakeContent,
+15: } from "@/lib/personal-plan/keepsake-content"
+16: import { loadPersonalPlanRoutineView } from "@/lib/personal-plan/routine/load-view"
+17: import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
+18: import {
+19:   loadOwnerPortfolioPresentation,
+20:   type PortfolioPresentation,
+21: } from "@/lib/personal-plan/routine/portfolio-presentation"
+22: import { loadRefinementStatusForUser } from "@/lib/personal-plan/refinement/refinement-status-loader"
+23: import {
+24:   isPersonalPlanAppV1Enabled,
+25:   isPersonalPlanStage4Enabled,
+26: } from "@/lib/personal-plan/release"
+27: import {
+28:   canAccessPersonalPlanJourneyStage,
+29:   type PersonalPlanJourneyAccess,
+30: } from "@/lib/personal-plan/journey-access"
+31: import {
+32:   loadCachedAuthenticatedAppUserId,
+33:   loadCachedPersonalPlanJourneyAccessForUser,
+34: } from "@/lib/personal-plan/navigation-access"
+35: import { createAdminClient } from "@/lib/supabase/admin"
+36: import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
+37: 
+38: export const dynamic = "force-dynamic"
+39: 
+40: export type RoutinePageResolverDeps = {
+41:   getUserId: () => Promise<string | null>
+42:   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
+43:   readView: (input: {
+44:     userId: string
+45:     enabled: boolean
+46:   }) => ReturnType<typeof loadPersonalPlanRoutineView>
+47:   stage4Enabled: () => boolean
+48:   readPortfolioPresentation?: (
+49:     userId: string,
+50:     planId: string,
+51:     portfolioVersionId: string,
+52:   ) => Promise<PortfolioPresentation | null>
+53:   /**
+54:    * The Routine refinement banner's data (Task 2.3): module, progress, and
+55:    * visibility straight from the refinement-status API contract (Task 1.7).
+56:    * Optional and failure-tolerant like `readPortfolioPresentation` above — a
+57:    * missing dep or a failed read just means no banner, never a broken page.
+58:    */
+59:   readRefinementBanner?: (userId: string) => Promise<RoutineRefinementBannerViewModel | null>
+60: }
+61: 
+62: export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
+63:   const userId = await deps.getUserId()
+64:   if (!userId) return { kind: "legacy" as const }
+65: 
+66:   try {
+67:     const journey = await deps.loadJourneyAccess(userId)
+68:     if (journey.kind === "legacy") return { kind: "legacy" as const }
+69:     if (!canAccessPersonalPlanJourneyStage(journey, "stage4")) {
+70:       return { kind: "unavailable" as const }
+71:     }
+72: 
+73:     const enabled = deps.stage4Enabled()
+74:     const view = await deps.readView({ userId, enabled })
+75:     if (view.status === "no_personal_plan") return { kind: "legacy" as const }
+76:     const routinePayload =
+77:       view.status === "proposal" ? view.pendingProposal?.candidate : view.activeVersion?.payload
+78:     const portfolioVersionId = routinePayload?.source.productPortfolioVersionId
+79:     let portfolioPresentation: PortfolioPresentation | null = null
+80:     if (portfolioVersionId && deps.readPortfolioPresentation) {
+81:       try {
+82:         portfolioPresentation = await deps.readPortfolioPresentation(
+83:           userId,
+84:           view.personalPlanId,
+85:           portfolioVersionId,
+86:         )
+87:       } catch {
+88:         // Presentation must not substitute or hide an otherwise valid Routine.
+89:       }
+90:     }
+91:     let refinementBanner: RoutineRefinementBannerViewModel | null = null
+92:     if (deps.readRefinementBanner) {
+93:       try {
+94:         refinementBanner = await deps.readRefinementBanner(userId)
+95:       } catch {
+96:         // Cosmetic and deliberately failure-tolerant, like the presentation
+97:         // load above: a failed banner read must never hide or break the
+98:         // Routine itself.
+99:       }
+100:     }
+101:     return {
+102:       kind: "personal_plan" as const,
+103:       view,
+104:       enabled,
+105:       portfolioPresentation,
+106:       refinementBanner,
+107:     }
+108:   } catch {
+109:     // The legacy Routine is not a safe substitute once a Personal Plan exists.
+110:     // Preserve the scoped recovery state instead of silently presenting it as confirmed.
+111:     return { kind: "unavailable" as const }
+112:   }
+113: }
+114: 
+115: const defaultDeps: RoutinePageResolverDeps = {
+116:   getUserId: loadCachedAuthenticatedAppUserId,
+117:   loadJourneyAccess: loadCachedPersonalPlanJourneyAccessForUser,
+118:   readView: ({ userId, enabled }) =>
+119:     loadPersonalPlanRoutineView({
+120:       client: createAdminClient() as unknown as PersonalPlanRoutineReadClient,
+121:       userId,
+122:       enabled,
+123:     }),
+124:   stage4Enabled: () => isPersonalPlanAppV1Enabled() && isPersonalPlanStage4Enabled(),
+125:   readPortfolioPresentation: (userId, planId, portfolioVersionId) =>
+126:     loadOwnerPortfolioPresentation(
+127:       createAdminClient() as unknown as PersonalPlanRoutineReadClient,
+128:       userId,
+129:       planId,
+130:       portfolioVersionId,
+131:     ),
+132:   readRefinementBanner: async (userId) => {
+133:     const result = await loadRefinementStatusForUser(
+134:       createAdminClient() as unknown as Parameters<typeof loadRefinementStatusForUser>[0],
+135:       userId,
+136:     )
+137:     if (result.status !== "ok" || !result.data.banner.visible || !result.data.banner.module) {
+138:       return null
+139:     }
+140:     return {
+141:       module: result.data.banner.module,
+142:       completedSteps: result.data.progress.completedSteps,
+143:       totalSteps: result.data.progress.totalSteps,
+144:     }
+145:   },
+146: }
+147: 
+148: export function RoutineUnavailableState({
+149:   retryAction = <RetryRefreshButton label="Erneut laden" />,
+150: }: {
+151:   retryAction?: ReactNode
+152: } = {}) {
+153:   return (
+154:     <main className="mx-auto min-h-screen w-full max-w-2xl px-4 py-8">
+155:       <section aria-live="polite" className="space-y-3 rounded-[8px] border border-border p-5">
+156:         <h1 className="text-xl font-semibold">Deine Routine ist gerade nicht verfügbar</h1>
+157:         <p className="text-sm text-muted-foreground">
+158:           Bitte lade diese Seite erneut. Deine bestätigte Routine bleibt unverändert.
+159:         </p>
+160:         <div className="mt-5 flex flex-wrap items-center gap-3">
+161:           {retryAction}
+162:           <Link
+163:             href="/plan-start"
+164:             className="inline-flex min-h-[44px] items-center justify-center rounded-[12px] border-[1.5px] border-primary px-5 text-sm font-semibold text-primary hover:bg-muted"
+165:           >
+166:             Zum Plan
+167:           </Link>
+168:         </div>
+169:       </section>
+170:     </main>
+171:   )
+172: }
+173: 
+174: /**
+175:  * PR5 review fix (Z2): the keepsake Routine for a lapsed owner who never had an accepted
+176:  * Routine version (a legacy subscriber, or a buyer whose provisioning stopped before
+177:  * Stage-4 acceptance). Their Merkliste is still theirs, so it renders here read-only — the
+178:  * same `GemerktSection` the full keepsake Routine uses, with both write affordances gone.
+179:  * The Routine itself says, honestly, that there is none; it never borrows the „Beispiel"
+180:  * composition, which belongs to a never-paid user and is not this user's own plan.
+181:  */
+182: function KeepsakeNoRoutineState({ merklisteEnabled }: { merklisteEnabled: boolean }) {
+183:   return (
+184:     <main className="mx-auto min-h-screen w-full max-w-2xl space-y-6 px-4 py-8">
+185:       <section className="space-y-3 rounded-[8px] border border-border p-5">
+186:         <h1 className="text-xl font-semibold">Noch keine Routine</h1>
+187:         <p className="text-sm text-muted-foreground">
+188:           Für dich ist keine bestätigte Routine hinterlegt. Was du gemerkt hast, bleibt gespeichert.
+189:         </p>
+190:       </section>
+191:       <GemerktSection merklisteEnabled={merklisteEnabled} readOnly />
+192:     </main>
+193:   )
+194: }
+195: 
+196: /**
+197:  * T17 keepsake resolver — the LAPSED owner's own Routine.
+198:  *
+199:  * Deliberately does NOT go through `loadJourneyAccess`: that loader is the entitlement
+200:  * authority (`accessState === "active"` plus a prepared source), and widening it would
+201:  * hand a lapsed user every route and API that asks it for permission. This reads the two
+202:  * facts a keepsake render needs — proof they own an accepted Routine version, and that
+203:  * version itself — through the same owner-scoped readers the premium path uses, and
+204:  * nothing else.
+205:  *
+206:  * `enabled: false` is what makes the read a keepsake rather than a live Routine: no
+207:  * pending proposal is loaded, so the successor/accept machinery has nothing to act on
+208:  * (`loadPersonalPlanRoutineView` returns `status: "active"` with the frozen version).
+209:  */
+210: export type KeepsakeRoutinePageResolverDeps = {
+211:   getUserId: () => Promise<string | null>
+212:   loadKeepsakeContent: (userId: string) => Promise<PersonalPlanKeepsakeContent | null>
+213:   readView: (input: {
+214:     userId: string
+215:     enabled: boolean
+216:   }) => ReturnType<typeof loadPersonalPlanRoutineView>
+217:   readPortfolioPresentation?: (
+218:     userId: string,
+219:     planId: string,
+220:     portfolioVersionId: string,
+221:   ) => Promise<PortfolioPresentation | null>
+222: }
+223: 
+224: export async function resolveKeepsakeRoutinePage(deps: KeepsakeRoutinePageResolverDeps) {
+225:   const userId = await deps.getUserId()
+226:   if (!userId) return { kind: "unavailable" as const }
+227: 
+228:   try {
+229:     const keepsake = await deps.loadKeepsakeContent(userId)
+230:     // PR5 review fix (Z2): "no accepted Routine version" is not the same failure as "the
+231:     // read broke". A lapsed owner may legitimately have none — a legacy subscriber, or a
+232:     // buyer whose provisioning stopped before Stage-4 acceptance — and still own Merkliste
+233:     // and chat keepsakes. That cohort gets this page's HONEST pre-routine state (see
+234:     // `KeepsakeNoRoutineState`), never the „Beispiel" composition, which would show them a
+235:     // stranger's routine as if it were theirs.
+236:     if (!keepsake) return { kind: "no_routine" as const }
+237:     const view = await deps.readView({ userId, enabled: false })
+238:     if (view.status === "no_personal_plan" || !view.activeVersion) {
+239:       return { kind: "no_routine" as const }
+240:     }
+241:     const portfolioVersionId = view.activeVersion.payload.source.productPortfolioVersionId
+242:     let portfolioPresentation: PortfolioPresentation | null = null
+243:     if (portfolioVersionId && deps.readPortfolioPresentation) {
+244:       try {
+245:         portfolioPresentation = await deps.readPortfolioPresentation(
+246:           userId,
+247:           view.personalPlanId,
+248:           portfolioVersionId,
+249:         )
+250:       } catch {
+251:         // Presentation must not substitute or hide an otherwise valid Routine.
+252:       }
+253:     }
+254:     return { kind: "keepsake" as const, view, portfolioPresentation }
+255:   } catch {
+256:     return { kind: "unavailable" as const }
+257:   }
+258: }
+259: 
+260: const keepsakeDeps: KeepsakeRoutinePageResolverDeps = {
+261:   getUserId: loadCachedAuthenticatedAppUserId,
+262:   loadKeepsakeContent: loadPersonalPlanKeepsakeContentForUser,
+263:   readView: defaultDeps.readView,
+264:   readPortfolioPresentation: defaultDeps.readPortfolioPresentation,
+265: }
+266: 
+267: async function resolveDefaultRoutinePage() {
+268:   const startedAt = performance.now()
+269:   const resolved = await resolveRoutinePage(defaultDeps)
+270:   reportPersonalPlanTransitionTiming({
+271:     layer: "server",
+272:     operation: "routine_page_resolve",
+273:     outcome: resolved.kind,
+274:     durationMs: performance.now() - startedAt,
+275:   })
+276:   return resolved
+277: }
+278: 
+279: export default async function RoutinePage() {
+280:   // T12 (freemium-scanner-first PR3): the free tier gets the framed „Beispiel" Routine
+281:   // instead of its own (empty, stage-gated) one — the only branch this page gained;
+282:   // premium and flag-off fall straight through to today's behaviour below.
+283:   //
+284:   // Pre-boundary fix wave (F2): the tier check and `resolveDefaultRoutinePage` now start
+285:   // CONCURRENTLY instead of the tier gating serially ahead of the resolver — the previous
+286:   // order added one `auth.getUser()` plus a billing/moderator composite in front of every
+287:   // PREMIUM render, which is the common case. The trade is a resolver read a FREE render
+288:   // now performs and discards (never a write — `resolveRoutinePage` is read-only and
+289:   // catches its own errors) for zero added latency on the premium path. Semantics are
+290:   // unchanged: a free render still never reaches `resolved`'s output, and
+291:   // `resolveGatedPageMode` itself still fails closed to premium on flag-off or an
+292:   // entitlement-source outage.
+293:   //
+294:   // T17 widens that one branch from two states to three: `"example"` is the never-paid
+295:   // free tier (unchanged), `"keepsake"` is a LAPSED owner who keeps reading their OWN
+296:   // Routine with every mutation locked, and `"premium"` still falls straight through to
+297:   // today's page. The keepsake read starts only after the mode is known — it is a second
+298:   // owner read that a premium or free render must never pay for.
+299:   const [pageMode, resolved] = await Promise.all([
+300:     resolveGatedPageMode(),
+301:     resolveDefaultRoutinePage(),
+302:   ])
+303:   if (pageMode === "keepsake") {
+304:     const keepsake = await resolveKeepsakeRoutinePage(keepsakeDeps)
+305:     if (keepsake.kind === "keepsake") {
+306:       return (
+307:         <PersonalPlanRoutineClient
+308:           initialView={keepsake.view}
+309:           enabled={false}
+310:           portfolioPresentation={keepsake.portfolioPresentation}
+311:           initialRefinementBanner={null}
+312:           merklisteEnabled={isFreemiumScannerFirstEnabled()}
+313:           keepsake
+314:         />
+315:       )
+316:     }
+317:     // PR5 review fix (Z2): a lapsed owner with no accepted Routine keeps the keepsakes they
+318:     // DO have — their Merkliste is right here, read-only — and sees an honest empty Routine
+319:     // instead of the „Beispiel" page.
+320:     if (keepsake.kind === "no_routine") {
+321:       return <KeepsakeNoRoutineState merklisteEnabled={isFreemiumScannerFirstEnabled()} />
+322:     }
+323:     // The keepsake read itself failed (`unavailable`): fall back to the free tier's own
+324:     // page rather than inventing a third state on an untrusted signal.
+325:     return <GatedRoutineExample />
+326:   }
+327:   const renderGatedExample = pageMode === "example"
+328:   // F3: verified with two production builds + a live network capture — the suspected
+329:   // bundle bloat did not reproduce. `GatedPreview`'s (and therefore `PremiumSheet`'s)
+330:   // client chunk set is IDENTICAL to `RoutinePageClient`'s own (see the matching comment
+331:   // in `app/chat/page.tsx`), i.e. that code already ships on this route via a chunk shared
+332:   // for unrelated reasons, so a dynamic import here would move nothing. Kept static.
+333:   if (renderGatedExample) return <GatedRoutineExample />
+334: 
+335:   if (resolved.kind === "legacy") {
+336:     // T16: the „Gemerkt" section (Merkliste's new home, replacing the scan flow's in-sheet
+337:     // list) is gated on the freemium flag itself, independent of tier — the section's OWN
+338:     // fetch (`/api/scan/wishlist`) is what tells premium from free (403 for free, hidden
+339:     // silently), but the flag has to gate whether `RoutinePageClient` attempts that fetch
+340:     // AT ALL. Without this, an existing paid subscriber with the flag OFF would see a
+341:     // brand-new section today's Routine page never had — flag-off must stay byte-identical.
+342:     return <RoutinePageClient merklisteEnabled={isFreemiumScannerFirstEnabled()} />
+343:   }
+344: 
+345:   if (resolved.kind === "unavailable") {
+346:     return <RoutineUnavailableState />
+347:   }
+348: 
+349:   return (
+350:     <PersonalPlanRoutineClient
+351:       initialView={resolved.view}
+352:       enabled={resolved.enabled}
+353:       portfolioPresentation={resolved.portfolioPresentation}
+354:       initialRefinementBanner={resolved.refinementBanner}
+355:       // Fix round 1 (F1): every freemium-provisioned buyer and every current subscriber
+356:       // resolves HERE, not to the `legacy` branch above — the same flag gate has to reach
+357:       // this branch too, or the „Gemerkt" section (and the scanner bookmark's
+358:       // `/routine#gemerkt` deep-link) is unreachable for the exact cohort it exists for.
+359:       merklisteEnabled={isFreemiumScannerFirstEnabled()}
+360:     />
+361:   )
+362: }
+
+
+FILE src/app/anwendung/page.tsx
+1: import { RouteAwareApplicationPage } from "@/components/application/application-page"
+2: import type { ApplicationPageView } from "@/components/application/application-types"
+3: import { toApplicationPageView } from "@/components/application/application-view-adapter"
+4: import { GatedAnwendungExample } from "@/components/gated-preview/gated-anwendung-example"
+5: import { resolveGatedPageMode } from "@/lib/gated-preview/gate"
+6: import {
+7:   loadPersonalPlanKeepsakeContentForUser,
+8:   type PersonalPlanKeepsakeContent,
+9: } from "@/lib/personal-plan/keepsake-content"
+10: import {
+11:   PERSONAL_PLAN_STAGE5_CONTRACT_VERSION,
+12:   type PersonalPlanStage5ContractVersion,
+13: } from "@/lib/personal-plan/stage5-access"
+14: import {
+15:   isPersonalPlanAppV1Enabled,
+16:   isPersonalPlanStage4Enabled,
+17: } from "@/lib/personal-plan/release"
+18: import {
+19:   canAccessPersonalPlanJourneyStage,
+20:   type PersonalPlanJourneyAccess,
+21: } from "@/lib/personal-plan/journey-access"
+22: import {
+23:   loadCachedAuthenticatedAppUserId,
+24:   loadCachedPersonalPlanJourneyAccessForUser,
+25: } from "@/lib/personal-plan/navigation-access"
+26: import {
+27:   adaptAcceptedActiveRoutineForApplication,
+28:   loadImmutableRoutineProfile,
+29:   type ApplicationRoutineReadClient,
+30: } from "@/lib/personal-plan/routine/application-adapter"
+31: import { loadPersonalPlanActiveRoutineVersion } from "@/lib/personal-plan/routine/load-view"
+32: import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
+33: import { compileApplicationViewV2 } from "@/lib/routines/personal-plan/application/compiler-v2"
+34: import { applicationFamilyTemplateV2Schema } from "@/lib/routines/personal-plan/application/contracts-v2"
+35: import { projectApplicationCadenceByDay } from "@/lib/routines/personal-plan/application/cadence-projector"
+36: import { createServerApplicationGuidanceRepository } from "@/lib/routines/personal-plan/application/repository"
+37: import type { ApplicationDayTypeKey } from "@/lib/routines/personal-plan/application/contracts"
+38: import { createAdminClient } from "@/lib/supabase/admin"
+39: import {
+40:   capturePersonalPlanApplicationFailure,
+41:   type PersonalPlanApplicationFailureDetails,
+42: } from "@/lib/observability/personal-plan-application"
+43: import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
+44: import { CatalogDatabaseReadError } from "@/lib/catalog-authority/product-spec-relationships"
+45: 
+46: export const dynamic = "force-dynamic"
+47: 
+48: type AdminReadClient = PersonalPlanRoutineReadClient & ApplicationRoutineReadClient
+49: 
+50: export type AnwendungResolverDeps = {
+51:   getUserId: () => Promise<string | null>
+52:   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
+53:   loadRoutineVersion: (
+54:     userId: string,
+55:     planId: string,
+56:     activeRoutineVersionId: string,
+57:   ) => ReturnType<typeof loadPersonalPlanActiveRoutineVersion>
+58:   adaptRoutine: typeof adaptAcceptedActiveRoutineForApplication
+59:   loadProfile: typeof loadImmutableRoutineProfile
+60:   loadContent: (
+61:     contractVersion: PersonalPlanStage5ContractVersion,
+62:   ) => ReturnType<typeof createServerApplicationGuidanceRepository>
+63:   createReadClient: () => AdminReadClient
+64:   appEnabled: () => boolean
+65:   stage4Enabled: () => boolean
+66:   reportFailure: (details: PersonalPlanApplicationFailureDetails) => void
+67:   /**
+68:    * T17 keepsake: proof that this user owns an accepted Routine version, read WITHOUT
+69:    * the entitlement authority (`loadJourneyAccess`) — see the doc comment on
+70:    * `resolveKeepsakeRoutinePage` in `app/routine/page.tsx` for why widening that loader
+71:    * instead was rejected. Only ever consulted in keepsake mode.
+72:    */
+73:   loadKeepsakeContent?: (userId: string) => Promise<PersonalPlanKeepsakeContent | null>
+74: }
+75: 
+76: // Only Stage 5's own throw codes may become a Sentry tag. A database or Zod
+77: // message can carry key and received values, and its cardinality is unbounded.
+78: const STABLE_FAILURE_CODES = new Set([
+79:   "accepted_routine_product_unavailable",
+80:   "accepted_routine_product_identity_unavailable",
+81:   "application_v2_product_pointers_unavailable",
+82:   "refined_need_not_found",
+83: ])
+84: 
+85: function failureCode(error: unknown): string {
+86:   const message = error instanceof Error ? error.message : ""
+87:   return STABLE_FAILURE_CODES.has(message) ? message : "unknown"
+88: }
+89: 
+90: function failureReason(error: unknown): PersonalPlanApplicationFailureDetails["reason"] {
+91:   const message = error instanceof Error ? error.message : ""
+92:   if (error instanceof CatalogDatabaseReadError) return "database"
+93:   if (error instanceof Error && error.name === "ZodError") return "schema_contract"
+94:   if (/database|postgres|supabase|relation|query/i.test(message)) return "database"
+95:   if (/zod|schema|invalid|expected|missing active day definition/i.test(message))
+96:     return "schema_contract"
+97:   if (/guidance|protocol/i.test(message)) return "missing_protocol"
+98:   return "unknown"
+99: }
+100: 
+101: export async function resolveAnwendungPage(
+102:   deps: AnwendungResolverDeps,
+103:   selectedDayType?: ApplicationDayTypeKey,
+104:   options?: {
+105:     /**
+106:      * T17: resolve the Anwendung from KEEPSAKE evidence (a lapsed owner's own accepted
+107:      * Routine) instead of from live journey entitlement. Everything downstream — the
+108:      * routine version read, the adapter, the compiler, the failure reporting — is the
+109:      * identical owner-scoped pipeline; only the source of `{planId, routineVersionId}`
+110:      * differs. Omitted (every pre-T17 caller) the journey path runs verbatim.
+111:      */
+112:     keepsake?: boolean
+113:   },
+114: ): Promise<ApplicationPageView> {
+115:   if (!deps.appEnabled() || !deps.stage4Enabled()) {
+116:     return { state: "feature_disabled" }
+117:   }
+118:   const userId = await deps.getUserId()
+119:   if (!userId) return { state: "feature_disabled" }
+120: 
+121:   const startedAt = Date.now()
+122:   let failureContext: Omit<PersonalPlanApplicationFailureDetails, "reason" | "durationMs"> = {}
+123: 
+124:   try {
+125:     let source: { personalPlanId: string; activeRoutineVersionId: string }
+126:     if (options?.keepsake) {
+127:       const keepsake = await deps.loadKeepsakeContent?.(userId)
+128:       if (!keepsake) return { state: "no_active_routine" }
+129:       source = keepsake
+130:     } else {
+131:       const journey = await deps.loadJourneyAccess(userId)
+132:       if (!canAccessPersonalPlanJourneyStage(journey, "stage5")) {
+133:         return { state: "feature_disabled" }
+134:       }
+135:       if (journey.kind !== "personal_plan" || !journey.activeRoutineVersionId) {
+136:         return { state: "no_active_routine" }
+137:       }
+138:       source = {
+139:         personalPlanId: journey.personalPlanId,
+140:         activeRoutineVersionId: journey.activeRoutineVersionId,
+141:       }
+142:     }
+143:     const client = deps.createReadClient()
+144:     const contractVersion = PERSONAL_PLAN_STAGE5_CONTRACT_VERSION
+145:     const content = deps.loadContent(contractVersion)
+146:     const [activeVersion, dayDefinitions, protocols] = await Promise.all([
+147:       deps.loadRoutineVersion(userId, source.personalPlanId, source.activeRoutineVersionId),
+148:       content.loadActiveDayTypeDefinitions(),
+149:       content.loadActiveGuidanceProtocols(),
+150:     ])
+151:     if (!activeVersion) return { state: "no_active_routine" }
+152:     failureContext = {
+153:       planId: source.personalPlanId,
+154:       routineVersionId: activeVersion.id,
+155:       refinedVersionId: activeVersion.payload.source.refinedVersionId,
+156:     }
+157:     const [accepted, profile] = await Promise.all([
+158:       deps.adaptRoutine({ client, activeVersion, contractVersion }),
+159:       deps.loadProfile({
+160:         client,
+161:         userId,
+162:         planId: source.personalPlanId,
+163:         refinedVersionId: activeVersion.payload.source.refinedVersionId,
+164:       }),
+165:     ])
+166:     const familyPayloads = protocols.map((protocol) =>
+167:       applicationFamilyTemplateV2Schema.parse(protocol.payload),
+168:     )
+169:     const applicationInput = {
+170:       routineItems: accepted.routineItems,
+171:       unresolvedRoutineItems: accepted.unresolvedRoutineItems,
+172:       profile,
+173:       dayTypes: dayDefinitions.map((day) => ({ key: day.key, sortOrder: day.sortOrder })),
+174:     }
+175:     if (!accepted.applicationPointersV2) {
+176:       throw new Error("application_v2_product_pointers_unavailable")
+177:     }
+178:     const compiled = compileApplicationViewV2({
+179:       input: applicationInput,
+180:       familyTemplates: familyPayloads,
+181:       productPointers: accepted.applicationPointersV2,
+182:     })
+183:     for (const degraded of accepted.degradedItems) {
+184:       deps.reportFailure({
+185:         ...failureContext,
+186:         durationMs: Date.now() - startedAt,
+187:         reason: "product_guidance_unresolved",
+188:         productId: degraded.productId,
+189:         issueCode: degraded.issue,
+190:       })
+191:     }
+192:     const pointerIssues = compiled.pointerIssues
+193:     if (pointerIssues.length > 0) {
+194:       for (const issue of pointerIssues) {
+195:         deps.reportFailure({
+196:           ...failureContext,
+197:           durationMs: Date.now() - startedAt,
+198:           reason: "product_guidance_unresolved",
+199:           productId: issue.productId,
+200:           issueCode: issue.reason,
+201:         })
+202:       }
+203:     }
+204:     const selectedFailure = selectedDayType
+205:       ? compiled.failures.find((failure) => failure.dayType === selectedDayType)
+206:       : undefined
+207:     if (selectedFailure) {
+208:       deps.reportFailure({
+209:         ...failureContext,
+210:         durationMs: Date.now() - startedAt,
+211:         reason:
+212:           selectedFailure.reason === "incomplete_guidance"
+213:             ? "incomplete_guidance"
+214:             : "missing_protocol",
+215:       })
+216:     }
+217:     const view = toApplicationPageView({
+218:       compiled,
+219:       dayDefinitions,
+220:       cadenceByDay: projectApplicationCadenceByDay({
+221:         routineItems: accepted.routineItems,
+222:         compiledDayKeys: compiled.days.map((day) => day.key),
+223:       }),
+224:     })
+225:     if (selectedDayType) {
+226:       if (view.state === "ready" && view.days.some((day) => day.dayType === selectedDayType)) {
+227:         return { ...view, selectedDayType }
+228:       }
+229:       if (view.state === "no_complete_day" && view.restDay.dayType === selectedDayType) {
+230:         return { state: "ready", days: [view.restDay], selectedDayType }
+231:       }
+232:       return { state: "day_unavailable", overviewHref: "/anwendung" }
+233:     }
+234:     return view
+235:   } catch (error) {
+236:     deps.reportFailure({
+237:       ...failureContext,
+238:       durationMs: Date.now() - startedAt,
+239:       reason: failureReason(error),
+240:       failureCode: failureCode(error),
+241:     })
+242:     return { state: "unavailable" }
+243:   }
+244: }
+245: 
+246: function createAdminReadClient() {
+247:   return createAdminClient() as unknown as AdminReadClient
+248: }
+249: const defaultDeps: AnwendungResolverDeps = {
+250:   getUserId: loadCachedAuthenticatedAppUserId,
+251:   loadJourneyAccess: loadCachedPersonalPlanJourneyAccessForUser,
+252:   loadRoutineVersion: (userId, planId, activeRoutineVersionId) =>
+253:     loadPersonalPlanActiveRoutineVersion({
+254:       client: createAdminReadClient(),
+255:       userId,
+256:       planId,
+257:       activeRoutineVersionId,
+258:     }),
+259:   adaptRoutine: adaptAcceptedActiveRoutineForApplication,
+260:   loadProfile: loadImmutableRoutineProfile,
+261:   loadContent: (contractVersion) => createServerApplicationGuidanceRepository(contractVersion),
+262:   createReadClient: createAdminReadClient,
+263:   appEnabled: isPersonalPlanAppV1Enabled,
+264:   stage4Enabled: isPersonalPlanStage4Enabled,
+265:   reportFailure: capturePersonalPlanApplicationFailure,
+266:   loadKeepsakeContent: loadPersonalPlanKeepsakeContentForUser,
+267: }
+268: 
+269: async function resolveDefaultAnwendungPage(
+270:   selectedDayType?: ApplicationDayTypeKey,
+271:   options?: { keepsake?: boolean },
+272: ) {
+273:   const startedAt = performance.now()
+274:   const view = await resolveAnwendungPage(defaultDeps, selectedDayType, options)
+275:   const durationMs = performance.now() - startedAt
+276:   reportPersonalPlanTransitionTiming({
+277:     layer: "server",
+278:     operation: selectedDayType ? "application_day_resolve" : "application_page_resolve",
+279:     outcome: view.state,
+280:     durationMs,
+281:   })
+282:   return { view, durationMs }
+283: }
+284: 
+285: export default async function AnwendungPage({
+286:   selectedDayType,
+287: }: { selectedDayType?: ApplicationDayTypeKey } = {}) {
+288:   // T12 (freemium-scanner-first PR3): the free tier gets the framed „Beispiel" Anwendung
+289:   // instead of its own (stage-gated, empty) one — for the overview and for every
+290:   // `/anwendung/[dayType]` deep link, which re-renders this same component.
+291:   //
+292:   // Pre-boundary fix wave (F2): the tier check and `resolveDefaultAnwendungPage` now start
+293:   // CONCURRENTLY instead of the tier gating serially ahead of the resolver — the previous
+294:   // order added one `auth.getUser()` plus a billing/moderator composite in front of every
+295:   // PREMIUM render, which is the common case. The trade is a resolver read a FREE render
+296:   // now performs and discards (never a write — `resolveAnwendungPage` is read-only; its
+297:   // `reportFailure` calls only fire on genuine compile failures, unrelated to the tier) for
+298:   // zero added latency on the premium path. Semantics are unchanged: a free render still
+299:   // never reaches `view`, and `resolveGatedPageMode` itself still fails closed to
+300:   // premium on flag-off or an entitlement-source outage.
+301:   //
+302:   // T17 widens that one branch from two states to three: `"example"` is the never-paid
+303:   // free tier (unchanged), `"keepsake"` is a LAPSED owner reading their OWN Anwendung
+304:   // (same page, same compiler — sourced from their accepted Routine instead of live
+305:   // journey entitlement; the page itself has no mutations to lock), and `"premium"` falls
+306:   // straight through to today's page.
+307:   const [pageMode, { view, durationMs }] = await Promise.all([
+308:     resolveGatedPageMode(),
+309:     resolveDefaultAnwendungPage(selectedDayType),
+310:   ])
+311:   if (pageMode === "keepsake") {
+312:     const keepsake = await resolveDefaultAnwendungPage(selectedDayType, { keepsake: true })
+313:     // A keepsake read that produced nothing renderable falls back to the free tier's own
+314:     // page rather than showing an owner a "feature disabled" dead end.
+315:     if (keepsake.view.state !== "feature_disabled" && keepsake.view.state !== "unavailable") {
+316:       return <RouteAwareApplicationPage view={keepsake.view} />
+317:     }
+318:     return <GatedAnwendungExample />
+319:   }
+320:   const renderGatedExample = pageMode === "example"
+321:   // F3: verified with two production builds + a live network capture — the suspected
+322:   // bundle bloat did not reproduce. `GatedPreview`'s (and therefore `PremiumSheet`'s)
+323:   // client chunk set is IDENTICAL to `ApplicationPage`'s own (see the matching comment in
+324:   // `app/chat/page.tsx`), i.e. that code already ships on this route via a chunk shared
+325:   // for unrelated reasons, so a dynamic import here would move nothing. Kept static.
+326:   if (renderGatedExample) return <GatedAnwendungExample />
+327: 
+328:   const internalComputeMs =
+329:     process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED === "true"
+330:       ? Math.round(durationMs * 100) / 100
+331:       : undefined
+332:   return <RouteAwareApplicationPage view={view} internalComputeMs={internalComputeMs} />
+333: }
+

@@ -1,0 +1,37 @@
+TAP version 13
+# Subtest: no auth session is an ordinary signed-out visit, not an outage
+not ok 1 - no auth session is an ordinary signed-out visit, not an outage
+  ---
+  duration_ms: 2.639666
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/partner-access-journey.test.ts:2:5631'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   kind: 'unavailable'
+    -   kind: 'none'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    kind: 'none'
+  actual:
+    kind: 'unavailable'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/partner-access-journey.test.ts:211:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 287.792041

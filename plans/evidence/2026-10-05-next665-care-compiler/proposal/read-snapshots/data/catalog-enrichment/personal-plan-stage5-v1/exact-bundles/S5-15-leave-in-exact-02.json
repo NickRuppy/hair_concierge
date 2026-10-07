@@ -1,0 +1,456 @@
+{
+  "schema_version": "personal-plan-exact-catalog-bundle-v1",
+  "batch_id": "S5-15-leave-in-exact-02",
+  "items": [
+    {
+      "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+      "product_name": "Kevin Murphy Young Again",
+      "expected_current_category": "leave_in",
+      "target_category": "leave_in",
+      "facts": {
+        "category": "leave_in",
+        "values": {
+          "care_direction": "balanced",
+          "repair_support_level": "medium",
+          "plan_roles": ["post_wash_leave_in"],
+          "functional_benefits": ["moisture_softness", "shine_support", "smooth_anti_frizz", "repair_support"]
+        },
+        "sources": [
+          {
+            "label": "Kevin Murphy Produktseite",
+            "url": "https://kevinmurphy.com.au/th/en/products/by-benefit/rejuvenate/YOUNG-AGAIN.html",
+            "text": "Weightless leave-in oil; supports softness, nourishment, protection, shine and stronger-feeling hair.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "post_wash_leave_in",
+          "cadence": null,
+          "source": {
+            "label": "Kevin Murphy Produktseite",
+            "url": "https://kevinmurphy.com.au/th/en/products/by-benefit/rejuvenate/YOUNG-AGAIN.html",
+            "text": "Use as a leave-in treatment before styling for moisture and shine.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-leave-in-6ad82861-d68e-4e70-a976-78c0f35d087b-post-wash",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": {
+              "kind": "product",
+              "category": "leave_in",
+              "productId": "6ad82861-d68e-4e70-a976-78c0f35d087b"
+            },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": ["wash_day", "intensive_care_day", "styling_day"],
+            "exactGuidanceRequired": true,
+            "sequence": {
+              "anchor": "damp_leave_on",
+              "before": [],
+              "after": ["post_cleanse_rinse_off"],
+              "conflictsWith": []
+            },
+            "requirements": {
+              "requiredCatalogFacts": ["leave_in.plan_roles"],
+              "requiredProtocolFacts": [],
+              "requiredProfileFacts": []
+            },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": { "kind": "qualitative", "copyDe": "Mit einer kleinen Menge starten." },
+              "cautions": []
+            },
+            "steps": [
+              {
+                "stepKey": "dose-kevin-murphy-young-again",
+                "action": "apply_product",
+                "copyTemplateDe": "Eine kleine Menge in den Handflächen verteilen."
+              },
+              {
+                "stepKey": "apply-kevin-murphy-young-again",
+                "action": "apply_product",
+                "copyTemplateDe": "In Längen und Spitzen einarbeiten und danach wie gewünscht stylen."
+              }
+            ],
+            "evidence": [
+              {
+                "sourceUrl": "https://kevinmurphy.com.au/th/en/products/by-benefit/rejuvenate/YOUNG-AGAIN.html",
+                "sourceType": "manufacturer",
+                "checkedAt": "2026-08-11"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "6b01025d-9e72-4514-b42e-bbb6065fbe1c",
+      "product_name": "Elvital Öl Magique Midnight Serum",
+      "expected_current_category": "leave_in",
+      "target_category": "leave_in",
+      "facts": {
+        "category": "leave_in",
+        "values": {
+          "care_direction": "moisture",
+          "repair_support_level": "low",
+          "plan_roles": ["post_wash_leave_in"],
+          "functional_benefits": ["moisture_softness", "smooth_anti_frizz", "shine_support"]
+        },
+        "sources": [
+          {
+            "label": "L'Oréal Paris Produktseite",
+            "url": "https://www.loreal-paris.de/elvital/oel-magique/midnight-serum",
+            "text": "Night serum for dry or wet hair; no morning rinse required; non-greasy shine and softness.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "post_wash_leave_in",
+          "cadence": null,
+          "source": {
+            "label": "L'Oréal Paris Produktseite",
+            "url": "https://www.loreal-paris.de/elvital/oel-magique/midnight-serum",
+            "text": "Apply to dry or wet hair before sleep or after waking; no rinse.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-leave-in-6b01025d-9e72-4514-b42e-bbb6065fbe1c-post-wash",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": { "kind": "product", "category": "leave_in", "productId": "6b01025d-9e72-4514-b42e-bbb6065fbe1c" },
+            "role": "leave_in",
+            "applicationFamily": "between_wash_dry_care",
+            "compatibleDayTypes": ["wash_day", "between_wash_care_day", "styling_day"],
+            "exactGuidanceRequired": true,
+            "sequence": { "anchor": "dry_finish", "before": [], "after": [], "conflictsWith": [] },
+            "requirements": { "requiredCatalogFacts": ["leave_in.plan_roles"], "requiredProtocolFacts": [], "requiredProfileFacts": [] },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": { "kind": "qualitative", "copyDe": "Eine kleine Menge verwenden." },
+              "cautions": []
+            },
+            "steps": [
+              { "stepKey": "apply-elvital-midnight", "action": "apply_product", "copyTemplateDe": "Abends oder morgens eine kleine Menge in trockenes oder nasses Haar geben." },
+              { "stepKey": "leave-elvital-midnight", "action": "dry", "copyTemplateDe": "Nicht ausspülen; das Produkt im Haar lassen." }
+            ],
+            "evidence": [
+              { "sourceUrl": "https://www.loreal-paris.de/elvital/oel-magique/midnight-serum", "sourceType": "manufacturer", "checkedAt": "2026-08-11" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6",
+      "product_name": "Moroccanoil All In One Leave In Conditioner",
+      "expected_current_category": "leave_in",
+      "target_category": "leave_in",
+      "facts": {
+        "category": "leave_in",
+        "values": {
+          "care_direction": "balanced",
+          "repair_support_level": "medium",
+          "plan_roles": ["post_wash_leave_in", "pre_heat_application"],
+          "functional_benefits": ["detangle", "moisture_softness", "smooth_anti_frizz", "heat_protect", "repair_support", "shine_support"]
+        },
+        "sources": [
+          {
+            "label": "Moroccanoil Produktseite",
+            "url": "https://ca.moroccanoil.com/products/leave-in-conditioner",
+            "text": "Multitasking spray detangles, hydrates, softens, helps against breakage and thermal damage.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "post_wash_leave_in",
+          "cadence": null,
+          "source": {
+            "label": "Moroccanoil Produktseite",
+            "url": "https://ca.moroccanoil.com/products/leave-in-conditioner",
+            "text": "Spray throughout clean towel-dried hair, comb through, then style.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-leave-in-7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6-post-wash",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": { "kind": "product", "category": "leave_in", "productId": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6" },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": ["wash_day", "intensive_care_day", "styling_day"],
+            "exactGuidanceRequired": true,
+            "sequence": { "anchor": "damp_leave_on", "before": [], "after": ["post_cleanse_rinse_off"], "conflictsWith": [] },
+            "requirements": { "requiredCatalogFacts": ["leave_in.plan_roles"], "requiredProtocolFacts": [], "requiredProfileFacts": [] },
+            "protocolFacts": {
+              "applicationArea": "all_hair",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": { "kind": "qualitative", "copyDe": "Gleichmäßig aufsprühen." },
+              "cautions": []
+            },
+            "steps": [
+              { "stepKey": "spray-moroccanoil-all-in-one", "action": "apply_product", "copyTemplateDe": "Gleichmäßig ins saubere, handtuchtrockene Haar sprühen." },
+              { "stepKey": "comb-moroccanoil-all-in-one", "action": "section", "copyTemplateDe": "Durchkämmen und danach wie gewohnt stylen." }
+            ],
+            "evidence": [
+              { "sourceUrl": "https://ca.moroccanoil.com/products/leave-in-conditioner", "sourceType": "manufacturer", "checkedAt": "2026-08-11" }
+            ]
+          }
+        },
+        {
+          "role": "pre_heat_protection",
+          "cadence": null,
+          "source": {
+            "label": "Moroccanoil Produktseite",
+            "url": "https://ca.moroccanoil.com/products/leave-in-conditioner",
+            "text": "Product page states protection against thermal damage.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-leave-in-7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6-heat",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": { "kind": "product", "category": "leave_in", "productId": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6" },
+            "role": "heat_protection",
+            "applicationFamily": "pre_heat_damp",
+            "compatibleDayTypes": ["styling_day"],
+            "exactGuidanceRequired": true,
+            "sequence": { "anchor": "damp_leave_on", "before": ["heat_tool"], "after": [], "conflictsWith": [] },
+            "requirements": { "requiredCatalogFacts": ["leave_in.plan_roles"], "requiredProtocolFacts": [], "requiredProfileFacts": [] },
+            "protocolFacts": {
+              "applicationArea": "all_hair",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": { "kind": "qualitative", "copyDe": "Gleichmäßig aufsprühen." },
+              "cautions": []
+            },
+            "steps": [
+              { "stepKey": "spray-moroccanoil-before-heat", "action": "apply_product", "copyTemplateDe": "Vor dem Hitzestyling gleichmäßig ins handtuchtrockene Haar sprühen." },
+              { "stepKey": "style-moroccanoil-after-heat", "action": "tool", "copyTemplateDe": "Danach wie gewohnt mit Wärme stylen." }
+            ],
+            "evidence": [
+              { "sourceUrl": "https://ca.moroccanoil.com/products/leave-in-conditioner", "sourceType": "manufacturer", "checkedAt": "2026-08-11" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "7d65ed50-898c-40c3-8865-ebe5688774c8",
+      "product_name": "It’s a 10 Miracle Leave-In Lite",
+      "expected_current_category": "leave_in",
+      "target_category": "leave_in",
+      "facts": {
+        "category": "leave_in",
+        "values": {
+          "care_direction": "balanced",
+          "repair_support_level": "medium",
+          "plan_roles": ["post_wash_leave_in", "pre_heat_application"],
+          "functional_benefits": ["detangle", "moisture_softness", "smooth_anti_frizz", "heat_protect", "repair_support", "shine_support"]
+        },
+        "sources": [
+          {
+            "label": "Ulta Produktseite",
+            "url": "https://www.ulta.com/p/miracle-leave-in-lite-with-10-benefits-xlsImpprod6481236",
+            "text": "Leave-in Lite is used on towel-dried hair, not rinsed, and styled as desired.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "post_wash_leave_in",
+          "cadence": null,
+          "source": {
+            "label": "Ulta Produktseite",
+            "url": "https://www.ulta.com/p/miracle-leave-in-lite-with-10-benefits-xlsImpprod6481236",
+            "text": "Spray mid-shaft to ends on towel-dried hair; do not rinse.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-leave-in-7d65ed50-898c-40c3-8865-ebe5688774c8-post-wash",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": { "kind": "product", "category": "leave_in", "productId": "7d65ed50-898c-40c3-8865-ebe5688774c8" },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": ["wash_day", "intensive_care_day", "styling_day"],
+            "exactGuidanceRequired": true,
+            "sequence": { "anchor": "damp_leave_on", "before": [], "after": ["post_cleanse_rinse_off"], "conflictsWith": [] },
+            "requirements": { "requiredCatalogFacts": ["leave_in.plan_roles"], "requiredProtocolFacts": [], "requiredProfileFacts": [] },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": { "kind": "qualitative", "copyDe": "Gleichmäßig in Längen und Spitzen sprühen." },
+              "cautions": []
+            },
+            "steps": [
+              { "stepKey": "spray-its-a-10-lite", "action": "apply_product", "copyTemplateDe": "Auf das handtuchtrockene Haar von den mittleren Längen bis in die Spitzen sprühen." },
+              { "stepKey": "comb-its-a-10-lite", "action": "section", "copyTemplateDe": "Durchkämmen und nicht ausspülen." }
+            ],
+            "evidence": [
+              { "sourceUrl": "https://www.ulta.com/p/miracle-leave-in-lite-with-10-benefits-xlsImpprod6481236", "sourceType": "retailer", "checkedAt": "2026-08-11" }
+            ]
+          }
+        },
+        {
+          "role": "pre_heat_protection",
+          "cadence": null,
+          "source": {
+            "label": "Amazon Produktseite",
+            "url": "https://www.amazon.com/Its-10-Haircare-Miracle-Leave/dp/B007L5H7XK",
+            "text": "Directions mention blow drying or heat styling after partial air-drying.",
+            "sourceType": "retailer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-leave-in-7d65ed50-898c-40c3-8865-ebe5688774c8-heat",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": { "kind": "product", "category": "leave_in", "productId": "7d65ed50-898c-40c3-8865-ebe5688774c8" },
+            "role": "heat_protection",
+            "applicationFamily": "pre_heat_damp",
+            "compatibleDayTypes": ["styling_day"],
+            "exactGuidanceRequired": true,
+            "sequence": { "anchor": "damp_leave_on", "before": ["heat_tool"], "after": [], "conflictsWith": [] },
+            "requirements": { "requiredCatalogFacts": ["leave_in.plan_roles"], "requiredProtocolFacts": [], "requiredProfileFacts": [] },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": { "kind": "qualitative", "copyDe": "Gleichmäßig in Längen und Spitzen sprühen." },
+              "cautions": []
+            },
+            "steps": [
+              { "stepKey": "apply-its-a-10-before-heat", "action": "apply_product", "copyTemplateDe": "Vor dem Hitzestyling ins handtuchtrockene Haar sprühen und durcharbeiten." },
+              { "stepKey": "style-its-a-10-heat", "action": "tool", "copyTemplateDe": "Kurz antrocknen lassen und dann föhnen oder mit Wärme stylen." }
+            ],
+            "evidence": [
+              { "sourceUrl": "https://www.amazon.com/Its-10-Haircare-Miracle-Leave/dp/B007L5H7XK", "sourceType": "retailer", "checkedAt": "2026-08-11" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "product_id": "8715f0f5-9104-46ec-b450-e73f1441c1fa",
+      "product_name": "Curlsmith Weightless Air Dry Cream",
+      "expected_current_category": "leave_in",
+      "target_category": "leave_in",
+      "facts": {
+        "category": "leave_in",
+        "values": {
+          "care_direction": "moisture",
+          "repair_support_level": "low",
+          "plan_roles": ["post_wash_leave_in"],
+          "functional_benefits": ["moisture_softness", "curl_shape_support", "smooth_anti_frizz"]
+        },
+        "sources": [
+          {
+            "label": "Curlsmith Produktseite",
+            "url": "https://eu.curlsmith.com/products/weightless-air-dry-cream",
+            "text": "Versatile leave-in conditioner; lightweight cream defines, moisturises and hydrates curls.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          }
+        ]
+      },
+      "protocols": [
+        {
+          "role": "post_wash_leave_in",
+          "cadence": null,
+          "source": {
+            "label": "Curlsmith Produktseite",
+            "url": "https://eu.curlsmith.com/products/weightless-air-dry-cream",
+            "text": "Leave-in conditioner with lightweight texture for air drying curls.",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-08-11"
+          },
+          "guidance_payload": {
+            "schemaVersion": 1,
+            "guidanceKey": "product-leave-in-8715f0f5-9104-46ec-b450-e73f1441c1fa-post-wash",
+            "protocolVersion": 1,
+            "locale": "de",
+            "scope": { "kind": "product", "category": "leave_in", "productId": "8715f0f5-9104-46ec-b450-e73f1441c1fa" },
+            "role": "leave_in",
+            "applicationFamily": "post_wash_damp_conditioning",
+            "compatibleDayTypes": ["wash_day", "intensive_care_day", "styling_day"],
+            "exactGuidanceRequired": true,
+            "sequence": { "anchor": "damp_leave_on", "before": [], "after": ["post_cleanse_rinse_off"], "conflictsWith": [] },
+            "requirements": { "requiredCatalogFacts": ["leave_in.plan_roles"], "requiredProtocolFacts": [], "requiredProfileFacts": [] },
+            "protocolFacts": {
+              "applicationArea": "lengths_ends",
+              "rinse": "leave_in",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable",
+              "reapplication": "none",
+              "amount": { "kind": "qualitative", "copyDe": "Eine kleine bis mittlere Menge verwenden." },
+              "cautions": []
+            },
+            "steps": [
+              { "stepKey": "apply-curlsmith-air-dry", "action": "apply_product", "copyTemplateDe": "In das feuchte Haar geben und in Längen und Spitzen verteilen." },
+              { "stepKey": "shape-curlsmith-air-dry", "action": "section", "copyTemplateDe": "Locken oder Wellen in Form bringen und an der Luft trocknen lassen." }
+            ],
+            "evidence": [
+              { "sourceUrl": "https://eu.curlsmith.com/products/weightless-air-dry-cream", "sourceType": "manufacturer", "checkedAt": "2026-08-11" }
+            ]
+          }
+        }
+      ]
+    },
+    {"product_id":"915aa362-6479-41f2-bb59-0260493b3d58","product_name":"Paul Mitchell Full Circle Leave-In","expected_current_category":"leave_in","target_category":"leave_in","facts":{"category":"leave_in","values":{"care_direction":"moisture","repair_support_level":"low","plan_roles":["post_wash_leave_in"],"functional_benefits":["detangle","moisture_softness","smooth_anti_frizz","curl_shape_support"]},"sources":[{"label":"Paul Mitchell Produktseite","url":"https://www.paulmitchell.com/products/full-circle-leave-in-cream","text":"Lightweight leave-in cream hydrates, detangles, minimizes frizz and helps protect curls from damage.","sourceType":"manufacturer","checkedAt":"2026-08-11"}]},"protocols":[{"role":"post_wash_leave_in","cadence":null,"source":{"label":"Paul Mitchell Produktseite","url":"https://www.paulmitchell.com/products/full-circle-leave-in-cream","text":"Apply to damp or towel-dried hair; work through, scrunch curls, diffuse.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-915aa362-6479-41f2-bb59-0260493b3d58-post-wash","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"915aa362-6479-41f2-bb59-0260493b3d58"},"role":"leave_in","applicationFamily":"post_wash_damp_conditioning","compatibleDayTypes":["wash_day","intensive_care_day","styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":[],"after":["post_cleanse_rinse_off"],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"lengths_ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Eine großzügige Menge verwenden."},"cautions":[]},"steps":[{"stepKey":"apply-paul-mitchell-full-circle","action":"apply_product","copyTemplateDe":"In das feuchte oder handtuchtrockene Haar geben und mit Fingern oder Kamm verteilen."},{"stepKey":"shape-paul-mitchell-full-circle","action":"section","copyTemplateDe":"Locken sanft scrunchen und danach lufttrocknen oder diffus trocknen."}],"evidence":[{"sourceUrl":"https://www.paulmitchell.com/products/full-circle-leave-in-cream","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}}]},
+    {"product_id":"94cf6959-a53b-421b-9f0f-05efc239171c","product_name":"Wella Ultimate Repair Protective Leave-In","expected_current_category":"leave_in","target_category":"leave_in","facts":{"category":"leave_in","values":{"care_direction":"balanced","repair_support_level":"high","plan_roles":["post_wash_leave_in","pre_heat_application"],"functional_benefits":["detangle","smooth_anti_frizz","heat_protect","repair_support"]},"sources":[{"label":"Wella Produktseite","url":"https://www.wella.com/professional/en-US/products/hair-care/ultimate-repair/ultimate-repair-protective-leave-in","text":"Protective leave-in helps defend against thermal stress, mechanical damage and heat styling up to 230 C.","sourceType":"manufacturer","checkedAt":"2026-08-11"}]},"protocols":[{"role":"post_wash_leave_in","cadence":null,"source":{"label":"Wella Produktseite","url":"https://www.wella.com/professional/en-US/products/hair-care/ultimate-repair/ultimate-repair-protective-leave-in","text":"Leave-in protective cream for damaged hair with anti-frizz and repair positioning.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-94cf6959-a53b-421b-9f0f-05efc239171c-post-wash","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"94cf6959-a53b-421b-9f0f-05efc239171c"},"role":"leave_in","applicationFamily":"post_wash_damp_conditioning","compatibleDayTypes":["wash_day","intensive_care_day","styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":[],"after":["post_cleanse_rinse_off"],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"lengths_ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Sparsam in Längen und Spitzen verteilen."},"cautions":[]},"steps":[{"stepKey":"apply-wella-ultimate-repair","action":"apply_product","copyTemplateDe":"Nach der Wäsche sparsam in Längen und Spitzen des feuchten Haares verteilen."},{"stepKey":"leave-wella-ultimate-repair","action":"dry","copyTemplateDe":"Nicht ausspülen und danach wie geplant stylen."}],"evidence":[{"sourceUrl":"https://www.wella.com/professional/en-US/products/hair-care/ultimate-repair/ultimate-repair-protective-leave-in","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}},{"role":"pre_heat_protection","cadence":null,"source":{"label":"Wella Produktseite","url":"https://www.wella.com/professional/en-US/products/hair-care/ultimate-repair/ultimate-repair-protective-leave-in","text":"Heat styling protection is stated up to 450 F / 230 C.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-94cf6959-a53b-421b-9f0f-05efc239171c-heat","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"94cf6959-a53b-421b-9f0f-05efc239171c"},"role":"heat_protection","applicationFamily":"pre_heat_damp","compatibleDayTypes":["styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":["heat_tool"],"after":[],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"lengths_ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Gleichmäßig vor Wärme verteilen."},"cautions":[]},"steps":[{"stepKey":"apply-wella-before-heat","action":"apply_product","copyTemplateDe":"Vor Föhn, Glätteisen oder Lockenstab gleichmäßig in Längen und Spitzen verteilen."},{"stepKey":"style-wella-heat","action":"tool","copyTemplateDe":"Danach mit Wärme stylen."}],"evidence":[{"sourceUrl":"https://www.wella.com/professional/en-US/products/hair-care/ultimate-repair/ultimate-repair-protective-leave-in","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}}]},
+    {"product_id":"993f0e55-2450-4557-853d-e6e23ec0d1a9","product_name":"OUAI Leave In Conditioner","expected_current_category":"leave_in","target_category":"leave_in","facts":{"category":"leave_in","values":{"care_direction":"balanced","repair_support_level":"medium","plan_roles":["post_wash_leave_in","pre_heat_application"],"functional_benefits":["detangle","moisture_softness","smooth_anti_frizz","heat_protect","repair_support"]},"sources":[{"label":"OUAI Produkt-FAQ","url":"https://theouai.com/blogs/by-the-ouai/ouai-leave-in-conditioner-frequently-asked-questions","text":"Do-it-all detangler repairs dry ends, fights frizz, protects against breakage and heat up to 232 C.","sourceType":"manufacturer","checkedAt":"2026-08-11"}]},"protocols":[{"role":"post_wash_leave_in","cadence":null,"source":{"label":"OUAI Produkt-FAQ","url":"https://theouai.com/blogs/by-the-ouai/ouai-leave-in-conditioner-frequently-asked-questions","text":"Leave-in conditioner detangles, repairs dry ends and fights frizz.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-993f0e55-2450-4557-853d-e6e23ec0d1a9-post-wash","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"993f0e55-2450-4557-853d-e6e23ec0d1a9"},"role":"leave_in","applicationFamily":"post_wash_damp_conditioning","compatibleDayTypes":["wash_day","intensive_care_day","styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":[],"after":["post_cleanse_rinse_off"],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"lengths_ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Einige Sprühstöße verwenden."},"cautions":[]},"steps":[{"stepKey":"spray-ouai-leave-in","action":"apply_product","copyTemplateDe":"Einige Sprühstöße in Längen und Spitzen geben."},{"stepKey":"comb-ouai-leave-in","action":"section","copyTemplateDe":"Durchkämmen und nicht ausspülen."}],"evidence":[{"sourceUrl":"https://theouai.com/blogs/by-the-ouai/ouai-leave-in-conditioner-frequently-asked-questions","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}},{"role":"pre_heat_protection","cadence":null,"source":{"label":"OUAI Produkt-FAQ","url":"https://theouai.com/blogs/by-the-ouai/ouai-leave-in-conditioner-frequently-asked-questions","text":"Heat protection is stated up to 450 F / 232 C.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-993f0e55-2450-4557-853d-e6e23ec0d1a9-heat","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"993f0e55-2450-4557-853d-e6e23ec0d1a9"},"role":"heat_protection","applicationFamily":"either_state_protection","compatibleDayTypes":["styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"dry_pre_heat","before":["heat_tool"],"after":[],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"all_hair","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Gleichmäßig aufsprühen."},"cautions":[]},"steps":[{"stepKey":"spray-ouai-before-heat","action":"apply_product","copyTemplateDe":"Vor dem Hitzestyling gleichmäßig aufsprühen."},{"stepKey":"style-ouai-heat","action":"tool","copyTemplateDe":"Danach mit Wärme stylen."}],"evidence":[{"sourceUrl":"https://theouai.com/blogs/by-the-ouai/ouai-leave-in-conditioner-frequently-asked-questions","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}}]},
+    {"product_id":"9b664b11-fd11-47e3-9b7e-76e34736b43e","product_name":"Alcina Hyaluron 2.0","expected_current_category":"leave_in","target_category":"leave_in","facts":{"category":"leave_in","values":{"care_direction":"moisture","repair_support_level":"low","plan_roles":["post_wash_leave_in","pre_heat_application"],"functional_benefits":["detangle","moisture_softness","smooth_anti_frizz","heat_protect","shine_support"]},"sources":[{"label":"Alcina Produktseite","url":"https://www.alcina.com/de-de/haar/haarpflege/leave-in-pflege/hyaluron-20-spray-f19952/","text":"Leave-in care for dry hair; moisturises and includes heat protection up to 230 C.","sourceType":"manufacturer","checkedAt":"2026-08-11"}]},"protocols":[{"role":"post_wash_leave_in","cadence":null,"source":{"label":"hair-shop.com Anwendung","url":"https://www.hair-shop.com/alcina-hyaluron-2-0-spray-125ml.html","text":"After washing, spray 10-15 pumps into damp hair and comb through; do not rinse.","sourceType":"retailer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-9b664b11-fd11-47e3-9b7e-76e34736b43e-post-wash","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"9b664b11-fd11-47e3-9b7e-76e34736b43e"},"role":"leave_in","applicationFamily":"post_wash_damp_conditioning","compatibleDayTypes":["wash_day","intensive_care_day","styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":[],"after":["post_cleanse_rinse_off"],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"all_hair","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Je nach Haarlänge 10–15 Sprühstöße."},"cautions":[]},"steps":[{"stepKey":"spray-alcina-hyaluron","action":"apply_product","copyTemplateDe":"Nach der Wäsche je nach Haarlänge 10–15 Sprühstöße ins feuchte Haar sprühen."},{"stepKey":"comb-alcina-hyaluron","action":"section","copyTemplateDe":"Durchkämmen und nicht ausspülen."}],"evidence":[{"sourceUrl":"https://www.hair-shop.com/alcina-hyaluron-2-0-spray-125ml.html","sourceType":"retailer","checkedAt":"2026-08-11"}]}},{"role":"pre_heat_protection","cadence":null,"source":{"label":"Alcina Produktseite","url":"https://www.alcina.com/de-de/haar/haarpflege/leave-in-pflege/hyaluron-20-spray-f19952/","text":"Integrated heat protection is stated up to 230 C.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-9b664b11-fd11-47e3-9b7e-76e34736b43e-heat","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"9b664b11-fd11-47e3-9b7e-76e34736b43e"},"role":"heat_protection","applicationFamily":"pre_heat_damp","compatibleDayTypes":["styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":["heat_tool"],"after":[],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"all_hair","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"10–15 Sprühstöße je nach Haarlänge."},"cautions":[]},"steps":[{"stepKey":"spray-alcina-before-heat","action":"apply_product","copyTemplateDe":"Vor dem Hitzestyling ins feuchte Haar sprühen und verteilen."},{"stepKey":"style-alcina-heat","action":"tool","copyTemplateDe":"Danach wie geplant mit Wärme stylen."}],"evidence":[{"sourceUrl":"https://www.alcina.com/de-de/haar/haarpflege/leave-in-pflege/hyaluron-20-spray-f19952/","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}}]},
+    {"product_id":"9f94c225-61ec-455d-b303-f39e885e222a","product_name":"Neqi Build Boost Leave-In Balm","expected_current_category":"leave_in","target_category":"leave_in","facts":{"category":"leave_in","values":{"care_direction":"protein","repair_support_level":"high","plan_roles":["post_wash_leave_in","pre_heat_application"],"functional_benefits":["repair_support","heat_protect","smooth_anti_frizz"]},"sources":[{"label":"NEQI Produktseite","url":"https://en.neqi-hair.com/products/build-boost-balm","text":"Strengthening and repairing leave-in balm seals hair structure and provides effective heat protection.","sourceType":"manufacturer","checkedAt":"2026-08-11"}]},"protocols":[{"role":"post_wash_leave_in","cadence":null,"source":{"label":"NEQI How-tos","url":"https://en.neqi-hair.com/pages/how-tos","text":"After shampooing, apply leave-in cream evenly to the ends; do not rinse.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-9f94c225-61ec-455d-b303-f39e885e222a-post-wash","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"9f94c225-61ec-455d-b303-f39e885e222a"},"role":"leave_in","applicationFamily":"post_wash_damp_conditioning","compatibleDayTypes":["wash_day","intensive_care_day","styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":[],"after":["post_cleanse_rinse_off"],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Großzügig und gleichmäßig in die Spitzen geben."},"cautions":[]},"steps":[{"stepKey":"apply-neqi-build-boost","action":"apply_product","copyTemplateDe":"Nach der Wäsche großzügig und gleichmäßig in die Spitzen geben."},{"stepKey":"leave-neqi-build-boost","action":"dry","copyTemplateDe":"Nicht ausspülen und danach wie gewohnt stylen."}],"evidence":[{"sourceUrl":"https://en.neqi-hair.com/pages/how-tos","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}},{"role":"pre_heat_protection","cadence":null,"source":{"label":"NEQI Produktseite","url":"https://en.neqi-hair.com/products/build-boost-balm","text":"Product page states effective heat protection.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-9f94c225-61ec-455d-b303-f39e885e222a-heat","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"9f94c225-61ec-455d-b303-f39e885e222a"},"role":"heat_protection","applicationFamily":"pre_heat_damp","compatibleDayTypes":["styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":["heat_tool"],"after":[],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"lengths_ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Gleichmäßig vor Wärme verteilen."},"cautions":[]},"steps":[{"stepKey":"apply-neqi-build-before-heat","action":"apply_product","copyTemplateDe":"Vor Wärme gleichmäßig in Längen und Spitzen verteilen."},{"stepKey":"style-neqi-build-heat","action":"tool","copyTemplateDe":"Danach wie gewohnt stylen."}],"evidence":[{"sourceUrl":"https://en.neqi-hair.com/products/build-boost-balm","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}}]},
+    {"product_id":"a3b21686-fe35-46f1-b560-b8a563dc96ae","product_name":"Redken Acidic Color Gloss Leave-In","expected_current_category":"leave_in","target_category":"leave_in","facts":{"category":"leave_in","values":{"care_direction":"balanced","repair_support_level":"medium","plan_roles":["post_wash_leave_in","pre_heat_application"],"functional_benefits":["detangle","moisture_softness","heat_protect","shine_support","smooth_anti_frizz"]},"sources":[{"label":"Redken Produktseite","url":"https://www.redken.com/hair-care/acidic-color-gloss-heat-protection-leave-in-treatment.html","text":"Leave-in spray provides hydration, detangling and heat protection up to 450 F.","sourceType":"manufacturer","checkedAt":"2026-08-11"}]},"protocols":[{"role":"post_wash_leave_in","cadence":null,"source":{"label":"Redken Produktseite","url":"https://www.redken.com/hair-care/acidic-color-gloss-heat-protection-leave-in-treatment.html","text":"Apply to clean damp hair; leave in; do not rinse.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-a3b21686-fe35-46f1-b560-b8a563dc96ae-post-wash","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"a3b21686-fe35-46f1-b560-b8a563dc96ae"},"role":"leave_in","applicationFamily":"post_wash_damp_conditioning","compatibleDayTypes":["wash_day","intensive_care_day","styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":[],"after":["post_cleanse_rinse_off"],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"lengths_ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Gleichmäßig verteilen."},"cautions":[]},"steps":[{"stepKey":"apply-redken-acidic-color-gloss","action":"apply_product","copyTemplateDe":"Auf sauberes, feuchtes Haar geben und gleichmäßig in Längen und Spitzen verteilen."},{"stepKey":"leave-redken-acidic-color-gloss","action":"dry","copyTemplateDe":"Nicht ausspülen und danach wie gewünscht stylen."}],"evidence":[{"sourceUrl":"https://www.redken.com/hair-care/acidic-color-gloss-heat-protection-leave-in-treatment.html","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}},{"role":"pre_heat_protection","cadence":null,"source":{"label":"Redken Produktseite","url":"https://www.redken.com/hair-care/acidic-color-gloss-heat-protection-leave-in-treatment.html","text":"Heat protection is stated up to 450 F.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-a3b21686-fe35-46f1-b560-b8a563dc96ae-heat","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"a3b21686-fe35-46f1-b560-b8a563dc96ae"},"role":"heat_protection","applicationFamily":"pre_heat_damp","compatibleDayTypes":["styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":["heat_tool"],"after":[],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"lengths_ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Gleichmäßig vor Wärme verteilen."},"cautions":[]},"steps":[{"stepKey":"apply-redken-before-heat","action":"apply_product","copyTemplateDe":"Vor dem Hitzestyling auf sauberes, feuchtes Haar geben und verteilen."},{"stepKey":"style-redken-heat","action":"tool","copyTemplateDe":"Danach mit Wärme stylen."}],"evidence":[{"sourceUrl":"https://www.redken.com/hair-care/acidic-color-gloss-heat-protection-leave-in-treatment.html","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}}]},
+    {"product_id":"a72d630d-547a-465f-9846-3006b38af0a2","product_name":"Garnier Hair Food Macadamia","expected_current_category":"leave_in","target_category":"leave_in","facts":{"category":"leave_in","values":{"care_direction":"moisture","repair_support_level":"low","plan_roles":["post_wash_leave_in"],"functional_benefits":["moisture_softness","smooth_anti_frizz"]},"sources":[{"label":"Garnier Produktseite","url":"https://www.garnier.com.au/about-our-brands/fructis/hair-food/fructis-hair-food-smoothing-macadamia","text":"Multi-use mask; leave-in use on damp or dry hair, mid-lengths and ends.","sourceType":"manufacturer","checkedAt":"2026-08-11"}]},"protocols":[{"role":"post_wash_leave_in","cadence":null,"source":{"label":"Garnier Produktseite","url":"https://www.garnier.com.au/about-our-brands/fructis/hair-food/fructis-hair-food-smoothing-macadamia","text":"As leave-in, apply a small amount to damp or dry mid-lengths and ends.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-a72d630d-547a-465f-9846-3006b38af0a2-post-wash","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"a72d630d-547a-465f-9846-3006b38af0a2"},"role":"leave_in","applicationFamily":"post_wash_damp_conditioning","compatibleDayTypes":["wash_day","intensive_care_day","between_wash_care_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":[],"after":["post_cleanse_rinse_off"],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"lengths_ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Eine kleine Menge verwenden."},"cautions":[]},"steps":[{"stepKey":"apply-garnier-macadamia-leave-in","action":"apply_product","copyTemplateDe":"Eine kleine Menge in feuchte oder trockene Längen und Spitzen geben."},{"stepKey":"leave-garnier-macadamia-leave-in","action":"dry","copyTemplateDe":"Nicht ausspülen."}],"evidence":[{"sourceUrl":"https://www.garnier.com.au/about-our-brands/fructis/hair-food/fructis-hair-food-smoothing-macadamia","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}}]},
+    {"product_id":"b139d4e8-6f26-4096-a1b9-d9efcb02d2ec","product_name":"EVO Day of Grace Leave-In","expected_current_category":"leave_in","target_category":"leave_in","facts":{"category":"leave_in","values":{"care_direction":"balanced","repair_support_level":"low","plan_roles":["post_wash_leave_in","pre_heat_application"],"functional_benefits":["detangle","moisture_softness","smooth_anti_frizz","heat_protect","shine_support"]},"sources":[{"label":"EVO Produktseite","url":"https://www.evohair.com/en-au/products/39260-evo-day-of-grace-pre-style-primer-200ml","text":"Lightweight leave-in primer detangles, improves condition and protects against heat and UV damage.","sourceType":"manufacturer","checkedAt":"2026-08-11"}]},"protocols":[{"role":"post_wash_leave_in","cadence":null,"source":{"label":"EVO Produktseite","url":"https://www.evohair.com/en-au/products/39260-evo-day-of-grace-pre-style-primer-200ml","text":"Leave-in primer prepares hair before styling by detangling and improving condition.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-b139d4e8-6f26-4096-a1b9-d9efcb02d2ec-post-wash","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"b139d4e8-6f26-4096-a1b9-d9efcb02d2ec"},"role":"leave_in","applicationFamily":"post_wash_damp_conditioning","compatibleDayTypes":["wash_day","styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":[],"after":["post_cleanse_rinse_off"],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"all_hair","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Gleichmäßig aufsprühen."},"cautions":[]},"steps":[{"stepKey":"spray-evo-day-of-grace","action":"apply_product","copyTemplateDe":"Vor dem Styling gleichmäßig ins feuchte Haar sprühen."},{"stepKey":"comb-evo-day-of-grace","action":"section","copyTemplateDe":"Durchkämmen und nicht ausspülen."}],"evidence":[{"sourceUrl":"https://www.evohair.com/en-au/products/39260-evo-day-of-grace-pre-style-primer-200ml","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}},{"role":"pre_heat_protection","cadence":null,"source":{"label":"EVO Produktseite","url":"https://www.evohair.com/en-au/products/39260-evo-day-of-grace-pre-style-primer-200ml","text":"Product page states protection against heat damage.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-b139d4e8-6f26-4096-a1b9-d9efcb02d2ec-heat","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"b139d4e8-6f26-4096-a1b9-d9efcb02d2ec"},"role":"heat_protection","applicationFamily":"pre_heat_damp","compatibleDayTypes":["styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":["heat_tool"],"after":[],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"all_hair","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Gleichmäßig vor Wärme aufsprühen."},"cautions":[]},"steps":[{"stepKey":"spray-evo-before-heat","action":"apply_product","copyTemplateDe":"Vor dem Föhnen oder Hitzestyling gleichmäßig aufsprühen."},{"stepKey":"style-evo-heat","action":"tool","copyTemplateDe":"Danach mit Wärme stylen."}],"evidence":[{"sourceUrl":"https://www.evohair.com/en-au/products/39260-evo-day-of-grace-pre-style-primer-200ml","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}}]},
+    {"product_id":"bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd","product_name":"Neqi Leave-In Moisturizing Mist","expected_current_category":"leave_in","target_category":"leave_in","facts":{"category":"leave_in","values":{"care_direction":"moisture","repair_support_level":"low","plan_roles":["post_wash_leave_in"],"functional_benefits":["detangle","moisture_softness","smooth_anti_frizz","shine_support"]},"sources":[{"label":"NEQI Produktseite","url":"https://en.neqi-hair.com/products/neqi-x-the-beautiful-people-leave-in-mist","text":"Lightweight detangling anti-frizz leave-in treatment provides intense hydration and smoother hair.","sourceType":"manufacturer","checkedAt":"2026-08-11"}]},"protocols":[{"role":"post_wash_leave_in","cadence":null,"source":{"label":"NEQI Produktseite","url":"https://en.neqi-hair.com/products/neqi-x-the-beautiful-people-leave-in-mist","text":"Leave-in mist is lightweight, detangling and anti-frizz with intense hydration.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd-post-wash","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd"},"role":"leave_in","applicationFamily":"post_wash_damp_conditioning","compatibleDayTypes":["wash_day","styling_day","between_wash_care_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":[],"after":["post_cleanse_rinse_off"],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"all_hair","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Leicht und gleichmäßig aufsprühen."},"cautions":[]},"steps":[{"stepKey":"spray-neqi-mist","action":"apply_product","copyTemplateDe":"Gleichmäßig auf das handtuchtrockene Haar sprühen."},{"stepKey":"style-neqi-mist","action":"section","copyTemplateDe":"Durcharbeiten und anschließend wie gewohnt stylen."}],"evidence":[{"sourceUrl":"https://en.neqi-hair.com/products/neqi-x-the-beautiful-people-leave-in-mist","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}}]},
+    {"product_id":"c6e80f39-20ba-401e-b041-6ee7c89a5996","product_name":"Balea Aqua Hyaluron 3in1","expected_current_category":"leave_in","target_category":"leave_in","facts":{"category":"leave_in","values":{"care_direction":"moisture","repair_support_level":"low","plan_roles":["post_wash_leave_in"],"functional_benefits":["detangle","moisture_softness","shine_support"]},"sources":[{"label":"dm Produktseite","url":"https://www.dm.de/p/d/1417521/balea-professional-haarmaske-3in1-aqua-hyaluron","text":"3in1 mask can be used as leave-in care; moisturising formula improves combability, suppleness and shine.","sourceType":"retailer","checkedAt":"2026-08-11"}]},"protocols":[{"role":"post_wash_leave_in","cadence":null,"source":{"label":"dm Produktseite","url":"https://www.dm.at/p/d/1417521/balea-professional-3in1-haarmaske-aqua-hyaluron","text":"For leave-in care, massage a small amount into towel-dried or dry hair; do not rinse.","sourceType":"retailer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-c6e80f39-20ba-401e-b041-6ee7c89a5996-post-wash","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"c6e80f39-20ba-401e-b041-6ee7c89a5996"},"role":"leave_in","applicationFamily":"post_wash_damp_conditioning","compatibleDayTypes":["wash_day","intensive_care_day","between_wash_care_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":[],"after":["post_cleanse_rinse_off"],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"lengths_ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Eine kleine Menge verwenden."},"cautions":[]},"steps":[{"stepKey":"apply-balea-aqua-hyaluron","action":"apply_product","copyTemplateDe":"Eine kleine Menge in handtuchtrockenes oder trockenes Haar einmassieren."},{"stepKey":"leave-balea-aqua-hyaluron","action":"dry","copyTemplateDe":"Nicht ausspülen."}],"evidence":[{"sourceUrl":"https://www.dm.at/p/d/1417521/balea-professional-3in1-haarmaske-aqua-hyaluron","sourceType":"retailer","checkedAt":"2026-08-11"}]}}]},
+    {"product_id":"e3c4b607-8f81-462c-8a2b-e45c8b3a2976","product_name":"Cantu Leave-In Repair Cream","expected_current_category":"leave_in","target_category":"leave_in","facts":{"category":"leave_in","values":{"care_direction":"moisture","repair_support_level":"medium","plan_roles":["post_wash_leave_in"],"functional_benefits":["moisture_softness","smooth_anti_frizz","repair_support","curl_shape_support"]},"sources":[{"label":"Cantu Produktseite","url":"https://www.cantubeauty.com/search/leave-in-conditioning-cream/?term=repair+cream","text":"Leave-in conditioning repair cream; apply to damp hair, comb through and do not rinse.","sourceType":"manufacturer","checkedAt":"2026-08-11"}]},"protocols":[{"role":"post_wash_leave_in","cadence":null,"source":{"label":"Cantu Produktseite","url":"https://www.cantubeauty.com/search/leave-in-conditioning-cream/?term=repair+cream","text":"Apply a generous amount to ends of damp hair and work toward roots; do not rinse.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-e3c4b607-8f81-462c-8a2b-e45c8b3a2976-post-wash","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"e3c4b607-8f81-462c-8a2b-e45c8b3a2976"},"role":"leave_in","applicationFamily":"post_wash_damp_conditioning","compatibleDayTypes":["wash_day","intensive_care_day","styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":[],"after":["post_cleanse_rinse_off"],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"all_hair","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Eine großzügige Menge verwenden."},"cautions":[]},"steps":[{"stepKey":"apply-cantu-repair-cream","action":"apply_product","copyTemplateDe":"Eine großzügige Menge in die Spitzen des feuchten Haares geben und Richtung Ansatz einarbeiten."},{"stepKey":"comb-cantu-repair-cream","action":"section","copyTemplateDe":"Für gleichmäßige Verteilung durchkämmen und nicht ausspülen."}],"evidence":[{"sourceUrl":"https://www.cantubeauty.com/search/leave-in-conditioning-cream/?term=repair+cream","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}}]},
+    {"product_id":"e6896862-523b-42b3-967d-41cbd16acf64","product_name":"Neqi Moisture Mystery","expected_current_category":"leave_in","target_category":"leave_in","facts":{"category":"leave_in","values":{"care_direction":"moisture","repair_support_level":"low","plan_roles":["post_wash_leave_in","pre_heat_application"],"functional_benefits":["moisture_softness","smooth_anti_frizz","heat_protect","shine_support"]},"sources":[{"label":"NEQI Produktseite","url":"https://en.neqi-hair.com/products/moisture-mystery-leave-in-cream","text":"Leave-in cream provides long-term moisture without weighing down and heat protection up to 230 C.","sourceType":"manufacturer","checkedAt":"2026-08-11"}]},"protocols":[{"role":"post_wash_leave_in","cadence":null,"source":{"label":"NEQI Produktseite","url":"https://en.neqi-hair.com/products/moisture-mystery-leave-in-cream","text":"After shampooing, apply generously to ends, work in, do not rinse, style as usual.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-e6896862-523b-42b3-967d-41cbd16acf64-post-wash","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"e6896862-523b-42b3-967d-41cbd16acf64"},"role":"leave_in","applicationFamily":"post_wash_damp_conditioning","compatibleDayTypes":["wash_day","intensive_care_day","styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":[],"after":["post_cleanse_rinse_off"],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Großzügig und gleichmäßig in die Spitzen geben."},"cautions":[]},"steps":[{"stepKey":"apply-neqi-moisture-mystery","action":"apply_product","copyTemplateDe":"Nach der Wäsche großzügig und gleichmäßig in die Spitzen geben."},{"stepKey":"leave-neqi-moisture-mystery","action":"dry","copyTemplateDe":"Nicht ausspülen und danach wie gewohnt stylen."}],"evidence":[{"sourceUrl":"https://en.neqi-hair.com/products/moisture-mystery-leave-in-cream","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}},{"role":"pre_heat_protection","cadence":null,"source":{"label":"NEQI Produktseite","url":"https://en.neqi-hair.com/products/moisture-mystery-leave-in-cream","text":"Heat protection is stated up to 230 C.","sourceType":"manufacturer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-e6896862-523b-42b3-967d-41cbd16acf64-heat","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"e6896862-523b-42b3-967d-41cbd16acf64"},"role":"heat_protection","applicationFamily":"pre_heat_damp","compatibleDayTypes":["styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":["heat_tool"],"after":[],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"lengths_ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Gleichmäßig vor Wärme verteilen."},"cautions":[]},"steps":[{"stepKey":"apply-neqi-moisture-before-heat","action":"apply_product","copyTemplateDe":"Vor dem Hitzestyling gleichmäßig in Längen und Spitzen verteilen."},{"stepKey":"style-neqi-moisture-heat","action":"tool","copyTemplateDe":"Danach mit Wärme stylen."}],"evidence":[{"sourceUrl":"https://en.neqi-hair.com/products/moisture-mystery-leave-in-cream","sourceType":"manufacturer","checkedAt":"2026-08-11"}]}}]},
+    {"product_id":"e781ca9e-886d-40a1-bfe1-48177cfbf381","product_name":"Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW","expected_current_category":"leave_in","target_category":"leave_in","facts":{"category":"leave_in","values":{"care_direction":"moisture","repair_support_level":"medium","plan_roles":["post_wash_leave_in","pre_heat_application"],"functional_benefits":["moisture_softness","smooth_anti_frizz","heat_protect","curl_shape_support","repair_support","shine_support"]},"sources":[{"label":"Boots Produktseite","url":"https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854","text":"Leave-in cream protects against humidity, frizz and heat up to 230 C; soft shiny hair.","sourceType":"retailer","checkedAt":"2026-08-11"}]},"protocols":[{"role":"post_wash_leave_in","cadence":null,"source":{"label":"Dunnes Produktseite","url":"https://www.dunnesstoresgrocery.com/product/pantene-prov-moisture-recharge-heat-%26-glow-leavein-cream-135ml-heat-%26-frizz-protectant-id-100333234","text":"Apply 1-2 pumps on clean towel-dried hair; use dry between washes for frizz or curl definition.","sourceType":"retailer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-e781ca9e-886d-40a1-bfe1-48177cfbf381-post-wash","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"e781ca9e-886d-40a1-bfe1-48177cfbf381"},"role":"leave_in","applicationFamily":"post_wash_damp_conditioning","compatibleDayTypes":["wash_day","styling_day","between_wash_care_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":[],"after":["post_cleanse_rinse_off"],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"all_hair","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"1–2 Pumpstöße verwenden."},"cautions":[]},"steps":[{"stepKey":"apply-pantene-heat-glow","action":"apply_product","copyTemplateDe":"1–2 Pumpstöße auf sauberes, handtuchtrockenes Haar geben."},{"stepKey":"distribute-pantene-heat-glow","action":"section","copyTemplateDe":"Gleichmäßig verteilen und nicht ausspülen."}],"evidence":[{"sourceUrl":"https://www.dunnesstoresgrocery.com/product/pantene-prov-moisture-recharge-heat-%26-glow-leavein-cream-135ml-heat-%26-frizz-protectant-id-100333234","sourceType":"retailer","checkedAt":"2026-08-11"}]}},{"role":"pre_heat_protection","cadence":null,"source":{"label":"Boots Produktseite","url":"https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854","text":"Heat protection is stated up to 230 C.","sourceType":"retailer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-e781ca9e-886d-40a1-bfe1-48177cfbf381-heat","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"e781ca9e-886d-40a1-bfe1-48177cfbf381"},"role":"heat_protection","applicationFamily":"pre_heat_damp","compatibleDayTypes":["styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":["heat_tool"],"after":[],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"all_hair","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"1–2 Pumpstöße verwenden."},"cautions":[]},"steps":[{"stepKey":"apply-pantene-before-heat","action":"apply_product","copyTemplateDe":"Vor Wärme 1–2 Pumpstöße auf sauberes, handtuchtrockenes Haar geben und verteilen."},{"stepKey":"blowdry-pantene-heat-glow","action":"tool","copyTemplateDe":"Föhnen, um den Hitzeschutz-Schritt abzuschließen."}],"evidence":[{"sourceUrl":"https://www.boots.com/pantene-moisture-leave-on-hair-treatment-135ml-10374854","sourceType":"retailer","checkedAt":"2026-08-11"}]}}]},
+    {"product_id":"f8f3b51d-8e64-487d-bad5-4a47c58862ed","product_name":"Pantene Pro-V Miracles 7in1 Haaröl Spray","expected_current_category":"leave_in","target_category":"leave_in","facts":{"category":"leave_in","values":{"care_direction":"balanced","repair_support_level":"medium","plan_roles":["post_wash_leave_in","pre_heat_application"],"functional_benefits":["detangle","smooth_anti_frizz","heat_protect","repair_support","shine_support"]},"sources":[{"label":"HAIRCODE Produktseite","url":"https://www.haircode.uk/products-we-love/hair-oil/pantene-7-in-1-hair-oil-mist","text":"7-in-1 mist strengthens against styling damage, protects against split ends and heat, adds weightless glow.","sourceType":"retailer","checkedAt":"2026-08-11"}]},"protocols":[{"role":"post_wash_leave_in","cadence":null,"source":{"label":"Amazon Produktseite","url":"https://www.amazon.ae/Pantene-Miracles-Weightless-Castor-Biotin/dp/B08BYJWWJ3","text":"Spray evenly on damp or dry hair, focusing on the ends.","sourceType":"retailer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-f8f3b51d-8e64-487d-bad5-4a47c58862ed-post-wash","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"f8f3b51d-8e64-487d-bad5-4a47c58862ed"},"role":"leave_in","applicationFamily":"between_wash_dry_care","compatibleDayTypes":["wash_day","between_wash_care_day","styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"dry_finish","before":[],"after":[],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Gleichmäßig auf die Spitzen sprühen."},"cautions":[]},"steps":[{"stepKey":"spray-pantene-7in1","action":"apply_product","copyTemplateDe":"Gleichmäßig auf feuchtes oder trockenes Haar sprühen, besonders in die Spitzen."},{"stepKey":"leave-pantene-7in1","action":"dry","copyTemplateDe":"Nicht ausspülen."}],"evidence":[{"sourceUrl":"https://www.amazon.ae/Pantene-Miracles-Weightless-Castor-Biotin/dp/B08BYJWWJ3","sourceType":"retailer","checkedAt":"2026-08-11"}]}},{"role":"pre_heat_protection","cadence":null,"source":{"label":"HAIRCODE Produktseite","url":"https://www.haircode.uk/products-we-love/hair-oil/pantene-7-in-1-hair-oil-mist","text":"Product benefits include heat protection and strengthening against styling damage.","sourceType":"retailer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-f8f3b51d-8e64-487d-bad5-4a47c58862ed-heat","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"f8f3b51d-8e64-487d-bad5-4a47c58862ed"},"role":"heat_protection","applicationFamily":"either_state_protection","compatibleDayTypes":["styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"dry_pre_heat","before":["heat_tool"],"after":[],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"lengths_ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Gleichmäßig in Längen und Spitzen sprühen."},"cautions":[]},"steps":[{"stepKey":"spray-pantene-7in1-before-heat","action":"apply_product","copyTemplateDe":"Vor Wärme gleichmäßig in Längen und Spitzen sprühen."},{"stepKey":"style-pantene-7in1-heat","action":"tool","copyTemplateDe":"Danach mit Wärme stylen."}],"evidence":[{"sourceUrl":"https://www.haircode.uk/products-we-love/hair-oil/pantene-7-in-1-hair-oil-mist","sourceType":"retailer","checkedAt":"2026-08-11"}]}}]},
+    {"product_id":"f9595d2c-d86d-4bdb-9758-c98d1e213f3c","product_name":"alverde Leave-In Sprühkur Express 7in1","expected_current_category":"leave_in","target_category":"leave_in","facts":{"category":"leave_in","values":{"care_direction":"balanced","repair_support_level":"medium","plan_roles":["post_wash_leave_in"],"functional_benefits":["detangle","moisture_softness","repair_support","shine_support"]},"sources":[{"label":"dm Produktseite","url":"https://www.dm.de/p/d/3090444/alverde-naturkosmetik-leave-in-spruehkur-7in1-express","text":"Leave-in spray can be sprayed into dry or damp lengths and ends; no rinse stated.","sourceType":"retailer","checkedAt":"2026-08-11"}]},"protocols":[{"role":"post_wash_leave_in","cadence":null,"source":{"label":"dm Produktseite","url":"https://www.dm.de/p/d/3090444/alverde-naturkosmetik-leave-in-spruehkur-7in1-express","text":"Spray from about 30 cm into lengths and ends; use on dry or damp hair.","sourceType":"retailer","checkedAt":"2026-08-11"},"guidance_payload":{"schemaVersion":1,"guidanceKey":"product-leave-in-f9595d2c-d86d-4bdb-9758-c98d1e213f3c-post-wash","protocolVersion":1,"locale":"de","scope":{"kind":"product","category":"leave_in","productId":"f9595d2c-d86d-4bdb-9758-c98d1e213f3c"},"role":"leave_in","applicationFamily":"between_wash_dry_care","compatibleDayTypes":["wash_day","between_wash_care_day","styling_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"dry_finish","before":[],"after":[],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"lengths_ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Aus etwa 30 cm Abstand sprühen."},"cautions":[]},"steps":[{"stepKey":"shake-alverde-7in1","action":"section","copyTemplateDe":"Vor Gebrauch schütteln."},{"stepKey":"spray-alverde-7in1","action":"apply_product","copyTemplateDe":"Aus etwa 30 cm Entfernung in Längen und Spitzen des feuchten oder trockenen Haares sprühen."}],"evidence":[{"sourceUrl":"https://www.dm.de/p/d/3090444/alverde-naturkosmetik-leave-in-spruehkur-7in1-express","sourceType":"retailer","checkedAt":"2026-08-11"}]}}]}
+  ]
+}

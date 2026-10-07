@@ -1,0 +1,39 @@
+--- before/tests/reactivation-retained-account-activation.test.ts
++++ transfer/tests/reactivation-retained-account-activation.test.ts
+@@ -222,8 +222,11 @@
+ 
+ test("Stripe duplicate webhook safely repeats completion of the same bound reservation", async () => {
+   const f = fixture()
+-  await handleCheckoutSessionCompleted(f.session, f.deps)
+-  await handleCheckoutSessionCompleted(f.session, f.deps)
++  const first = await handleCheckoutSessionCompleted(f.session, f.deps)
++  const second = await handleCheckoutSessionCompleted(f.session, f.deps)
++  assert.equal(first.userId, userId)
++  assert.equal(second.userId, userId)
++  assert.equal(second.canSetInitialPassword, false)
+   assert.equal(f.reservation.status, "completed")
+   assert.equal(f.billing.length, 1)
+   assert.equal(f.users.length, 1)
+@@ -418,6 +421,7 @@
+ test("competing subscription insert is adopted only for the same immutable account", async () => {
+   for (const owner of [userId, "other-owner"]) {
+     const f = fixture()
++    const originalProfile = { ...f.profiles[0] }
+     f.raceBilling(() =>
+       f.billing.push({
+         provider: "stripe",
+@@ -427,10 +431,13 @@
+     )
+     if (owner === userId)
+       assert.equal((await ensureCheckoutAccount(f.session, f.deps)).userId, userId)
+-    else
++    else {
+       await assert.rejects(ensureCheckoutAccount(f.session, f.deps), {
+         code: "checkout_ownership_conflict",
+       })
++      assert.deepEqual(f.profiles[0], originalProfile)
++      assert.deepEqual(f.writes, [])
++    }
+     assert.equal(f.billing.length, 1)
+     assert.equal(f.billing[0].user_id, owner)
+     assert.equal(f.users.length, 1)

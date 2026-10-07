@@ -337,18 +337,6 @@ const legacyApprovalPayloadSchema = researchedPayloadSchema.extend({
 export type ProductIntakeFinalReviewedPayload = z.infer<typeof finalPayloadSchema>
 export type ProductIntakeResearchedPayload = z.infer<typeof researchedPayloadSchema>
 
-export type ProductIntakeResearchedPayloadParseResult =
-  | {
-      ok: true
-      missingFields: []
-      payload: ProductIntakeResearchedPayload
-    }
-  | {
-      ok: false
-      missingFields: string[]
-      payload: null
-    }
-
 export type ProductIntakeApprovalValidationResult =
   | {
       ok: true
@@ -380,25 +368,6 @@ function uniquePaths(paths: string[]): string[] {
 
 function parseErrors(error: z.ZodError, prefix: string[] = []): string[] {
   return uniquePaths(error.issues.map((issue) => issuePath(issue, prefix)))
-}
-
-export function parseProductIntakeResearchedPayload(
-  value: unknown,
-): ProductIntakeResearchedPayloadParseResult {
-  const parsed = researchedPayloadSchema.safeParse(value)
-  if (!parsed.success) {
-    return {
-      ok: false,
-      missingFields: parseErrors(parsed.error),
-      payload: null,
-    }
-  }
-
-  return {
-    ok: true,
-    missingFields: [],
-    payload: parsed.data,
-  }
 }
 
 function withProductId<Table extends ProductIntakeTargetSpecTable>(

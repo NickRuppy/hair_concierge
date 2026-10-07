@@ -1,0 +1,79 @@
+from pathlib import Path
+import json,hashlib,difflib
+D=Path('/tmp/test-audit-scanner-intake26');R=Path('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning')
+rows=json.loads((D/'before-ast.json').read_text());sha=lambda b:hashlib.sha256(b if isinstance(b,bytes) else b.encode()).hexdigest();write=lambda n,x:(D/n).write_text(json.dumps(x,ensure_ascii=False,indent=2)+'\n')
+U='tests/scan-unknown-flow-ui.test.tsx';I='tests/scan-research-intake-form-ui.test.tsx'
+u=[r for r in rows if r['file']==U];i=[r for r in rows if r['file']==I];assert len(u)==len(i)==13
+# Only existing rendered values are observed; no new render/owner/event calls.
+uadded='''  assert.match(markup, /Danke dir – das ist neu für uns!/)
+  assert.match(markup, /Wir nehmen es auf\\. Dein Ergebnis kommt in den Chat\\./)
+  assert.match(markup, /Wobei benutzt du es\\?/)
+  const inputs = findAll(tree.value, (element) => element.type === "input")
+  assert.deepEqual(inputs, [])
+  assert.doesNotMatch(markup, /Marke/)
+  assert.doesNotMatch(markup, /Produktname/)
+  assert.doesNotMatch(markup, /Zur Prüfung einreichen/)
+'''
+iadded='''  assert.match(markup, /Marke/)
+  assert.match(markup, /Produktname/)
+  assert.match(markup, /Was ist es\\?/)
+  assert.match(markup, /Tippe die Kategorie an – das reicht uns schon\\./)
+  assert.match(markup, /Zurück/)
+  // Task 6 copy audit: no user-facing string in the intake form leaks the retailer name.
+  assert.doesNotMatch(markup, /\\bdm\\b/)
+  assert.doesNotMatch(markup, /role="alert"/)
+'''
+keeperAfter={U:u[7]['body'].replace('  const markup = renderToStaticMarkup(tree.value)\n','  const markup = renderToStaticMarkup(tree.value)\n'+uadded),I:i[1]['body'].replace('  const markup = renderToStaticMarkup(tree.value)\n','  const markup = renderToStaticMarkup(tree.value)\n'+iadded)}
+phases={}
+for file,k,donors in [(U,u[7],[u[6],u[8]]),(I,i[1],[i[0],i[12]])]:
+ before=(R/file).read_text();transfer=before.replace(k['body'],keeperAfter[file]);cut=transfer
+ for donor in donors:
+  assert cut.count(donor['body'])==1
+  suffix='\n\n' if donor['body']+'\n\n' in cut else '\n'
+  cut=cut.replace(donor['body']+suffix,'',1)
+  # Trim only the adjacent separator blank line left by a removed declaration.
+  if cut.endswith('\n\n'):cut=cut[:-1]
+ # Keep all other whitespace, comments, imports, helpers exact.
+ for phase,text in [('before',before),('transfer',transfer),('cut',cut)]:
+  dest=D/'snapshots'/phase/file;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_text(text);phases[(phase,file)]=text
+for a,b in [('before','transfer'),('transfer','cut'),('before','cut')]:
+ out=''.join(''.join(difflib.unified_diff(phases[(a,f)].splitlines(True),phases[(b,f)].splitlines(True),fromfile=a+'/'+f,tofile=b+'/'+f)) for f in [U,I]);(D/({'beforetransfer':'transfer.diff','transfercut':'cut.diff','beforecut':'complete.diff'}[a+b])).write_text(out)
+# Each row names the narrow actual oracle, not its optimistic title.
+ud=[
+('R','Actual ScanProductThumb proxied image onError changes same-image state to accessible fallback role/img and label.','Remove onError state update or fallback aria-label.','src/components/scan/scan-product-thumb.tsx:31-69','Direct callback test; no network or real optimizer failure proved.'),
+('R','Identified shampoo default copy, brand case conversion, absent generic grid, no submission on view, exact category plus one_tap on confirmation.','Submit eagerly, show generic copy, or emit grid/incorrect category.','src/components/scan/scan-unknown-flow.tsx:62-145','Live identified branch differs from generic donor inputs.'),
+('R','Other reveals generic grid without submitting, removes primary suggestion, override conditioner emits grid.','Submit while expanding, retain shampoo suggestion or send prior suggestion.','src/components/scan/scan-unknown-flow.tsx:63-78,138-144','State transition and override retained.'),
+('R','Secondary heat-protectant suggestion also excluded after two expansions; scalp-care tap emits grid.','Filter only primary suggestions or fail secondary expansion.','src/components/scan/scan-unknown-flow.tsx:65-70,175-184','Different category/expanded-state branch.'),
+('R','Null suggestion enters grid, mixed-case brand unchanged, confirmation controls absent and Shampoo present.','Treat null as suggestion or force title case on mixed-case brand.','src/components/scan/scan-unknown-flow.tsx:63-64;src/lib/scan/verdict-labels.ts:86-91','Not equivalent to uppercase positive identified fixture.'),
+('R','One confirmation callback before pending; pending direct callback blocked and alternate control disabled; failed prop state restores enabled label and alert.','Remove submitting guard or fail label/disabled/error reset.','src/components/scan/scan-unknown-flow.tsx:72-79,128-145,193-197','Does not prove actual network, retry response or browser focus.'),
+('C','Exact signed-off generic headline, subline and question.','Change any complete literal while preserving bridge order prefixes.','src/lib/scan/verdict-labels.ts:69-77;src/components/scan/scan-unknown-flow.tsx:104-124','C1 into existing identical bridge render; three assertions verbatim.'),
+('R','Complete bridge copy and headline→bridge→subline order.','Drop or move bridge relative to existing text.','src/components/scan/scan-unknown-flow.tsx:104-118','Canonical generic initial-render keeper, absorbs C1/C2.'),
+('C','No input elements, no Marke, Produktname or submit-step CTA in generic one-tap branch.','Reintroduce a field or textual second-step affordance.','src/components/scan/scan-unknown-flow.tsx:81-200','C2 into identical bridge tree/markup; no new product call.'),
+('R','Enabled shampoo card emits one category-only payload and no Weiter control.','Require second step, send wrong shape/category or leave card disabled.','src/components/scan/scan-unknown-flow.tsx:72-79,149-174','Callback/event distinct from static copies; no inferred exactly-once network.'),
+('R','Pending conditioner card DOM disabled plus direct duplicate taps suppressed and expander disabled.','Remove DOM disabled or handleTap submitting guard.','src/components/scan/scan-unknown-flow.tsx:76,159,179','Independent DOM attribute and event-handler guard.'),
+('R','After mask tap plus parent pending, exactly one submitting card, no mask label and other four labels retained.','Relabel all cards or lose selected-card state across rerender.','src/components/scan/scan-unknown-flow.tsx:60,149-174','Different transition from failed oil-reset regression.'),
+('R','Oil pending then failure clears loading text, restores error, aria-pressed false and no selected plum style.','Use tappedCategory without submitting in isTapped.','src/components/scan/scan-unknown-flow.tsx:149-174','Historical F17 regression from255ffa87; retain actual stateful test.')]
+id=[
+('C','Body labels, category question/helper, back text and no standalone retailer dm.','Change a rendered body literal or leak retailer brand.','src/components/scan/scan-search-sheet.tsx:92-103,190-278','C3 into identical empty/default autofocus tree/markup; title heading belongs to parent, no new heading claim.'),
+('R','SSR autofocus present; Marke input alone receives autoFocus true, Produktname does not.','Remove or move declarative autoFocus.','src/components/scan/scan-search-sheet.tsx:202-233','Structural focus contract; no browser commit, DOM focus or ref focus proved. Keeper absorbs C3/C4.'),
+('R','Empty brand with filled product prevents category callback.','Remove brandValid guard.','src/components/scan/scan-search-sheet.tsx:165-180','Refs remain null; focus redirection is not asserted.'),
+('R','Empty product with filled brand prevents category callback.','Remove productNameValid guard.','src/components/scan/scan-search-sheet.tsx:166-184','Different short-circuit branch; refs null no focus proof.'),
+('R','Filled exact brand/product permit conditioner callback once.','Always deny or send wrong category.','src/components/scan/scan-search-sheet.tsx:176-187','Distinct positive validation boundary.'),
+('R','Both whitespace-only fields block submit.','Accept raw nonempty whitespace in both validation guards.','src/components/scan/scan-search-sheet.tsx:165-166','Does not independently detect only one removed trim; retains existing input.'),
+('R','Exactly two inputs forward raw typed brand/name to corresponding controlled callbacks.','Swap callbacks, trim/transform value or omit an input.','src/components/scan/scan-search-sheet.tsx:206-230','Direct onChange calls; no DOM input-event claim.'),
+('R','Five primary controls initially visible, heat absent; expander reveals all five secondary controls.','Omit primary/secondary category or break expansion state.','src/components/scan/scan-search-sheet.tsx:169-174,265-274','Shared CATEGORY_COPY used only for labels; independent explicit keys cover visibility.'),
+('F','Mask selection then pending shows one busy label, removes mask label, keeps Shampoo label and disables back.','Lose tapped state/selected label or back disabled; other cards disabled attribute can regress undetected.','src/components/scan/scan-search-sheet.tsx:195,243-260','Held unchanged: title promises other controls disable but never asserts their disabled attributes; no F repair/deletion credit.'),
+('R','Filled-form direct duplicate category taps while submitting emit no callbacks.','Remove handleTap submitting guard.','src/components/scan/scan-search-sheet.tsx:177','Independent from pending presentation and DOM disabled attribute.'),
+('R','Back affordance exists and invokes onBack once.','Omit or disconnect back action.','src/components/scan/scan-search-sheet.tsx:192-199','Does not assert back is blocked during pending; other test covers back disabled.'),
+('R','Supplied error renders escaped standard copy, alert role and polite live region.','Drop alert/live attr or error content.','src/components/scan/scan-search-sheet.tsx:282-285','Non-null error branch retained; differs from empty donor/keeper.'),
+('C','Null/default error renders no alert.','Render error container unconditionally.','src/components/scan/scan-search-sheet.tsx:282-285','C4 into existing default-null autofocus markup; eliminates redundant SSR call only.')]
+ledger=[]
+for group,notes in [(u,ud),(i,id)]:
+ for row,(mark,contract,failure,source,limits) in zip(group,notes):ledger.append({**row,'mark':mark,'actualContract':contract,'credibleRegression':failure,'operativeSource':source,'limits':limits})
+write('judgments.json',ledger);write('complete-ledger.json',ledger)
+candidates=[]
+for cid,donor,k in [('C1',u[6],u[7]),('C2',u[8],u[7]),('C3',i[0],i[1]),('C4',i[12],i[1])]:
+ candidates.append({'id':cid,'file':donor['file'],'donor':donor,'keeper':k,'keeperAfter':keeperAfter[donor['file']],'assertionUnion':donor['assertions'],'equivalence':('Both exact renderFlow({submitting:false,onSubmit:()=>undefined}) resolve to fresh hooks [false,false,null], identical unknownResult/category map and error:null. No callback invocation. Same actual returned tree and same renderToStaticMarkup. C2 transfers existing findAll observation only.' if donor['file']==U else 'Both renderForm resolve to brandText:"", productNameText:"", submitting:false,error:null, no-op callbacks; useState false/null and two null useRefs. Explicit empty/null versus omitted values normalize through ?? identically. No event/ref invocation. Same actual returned tree and same renderToStaticMarkup. C4 reuses existing markup instead of adding SSR.'),'history':('f61a7c64 initial one-tap;2a87014e added stronger bridge order' if donor['file']==U else 'ac021a5b introduced own child form and direct interaction tests'),'productionDeletion':None,'status':'conditional; all actual-owner faults and green main proof pending'})
+write('candidates.json',candidates)
+write('phase-hashes.json',[{'phase':p,'file':f,'sha256':sha(t),'lines':len(t.splitlines())} for (p,f),t in phases.items()])
+print(json.dumps({'marks':{m:sum(r['mark']==m for r in ledger) for m in ['R','F','C','D']},'snapshots':6,'candidateIds':[c['id'] for c in candidates]}))

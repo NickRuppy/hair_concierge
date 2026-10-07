@@ -1,0 +1,18 @@
+{
+  "executable": "/usr/local/bin/node",
+  "args": [
+    "--experimental-test-isolation=none",
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern",
+    "^all 11 templates produce a schema-valid, product-scoped V1 guidance payload$",
+    "tests/expansion-apply-templates.test.ts"
+  ],
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "timeoutMs": 45000,
+  "detached": true
+}

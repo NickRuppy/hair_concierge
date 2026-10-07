@@ -1,0 +1,40 @@
+{
+  "status": "READONLY_CONDITIONAL_SIX",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "counts": {
+    "before": 125,
+    "transfer": 125,
+    "cut": 119
+  },
+  "classification": {
+    "R": 114,
+    "F": 5,
+    "C": 4,
+    "D": 2
+  },
+  "sourceCleanup": null,
+  "runtime": false,
+  "hashes": {
+    "manifest.json": "53fbed371f43e577c3049f263ade5fcc920840fa74ed0b9eb56433a46d588b06",
+    "layer-plan.md": "c2d56565b245bb175c1e1375d761e6ee2a7da2a5a9b20b510c5a6609b5789a4b",
+    "complete-ledger.md": "c77728a9970ad1121821bfcda21c847852e303d62c74dbbe8d5eb648078e87d4",
+    "ledger.json": "bc83ea76e6984756a0c6c8c29045afb6b4f193542fce5b8985dd5682e056a55e",
+    "candidates.json": "c6c9739b95107c8fb8f5c451f3e99c9c9a4bff6e050b7ba7d75e5af6fcf41344",
+    "candidate-bodies.json": "8559ec2d6b11b6161357a8083034f2057ebd8bf8fc3df1eb362b070d501a1eac",
+    "sites.json": "e34ce9dc1abad8f2be673a7093839e988c7ae22b113135b7996aa1013d2748a4",
+    "survivors.json": "3d14ef0a342ea2906dcc68ae984cdae1ab53143ba18102a4a83b6d35a9b70f5c",
+    "controls.json": "d2855b0b3dccb2cff1fdf6d9f071231d2f03ebc9a06d2c1b8fd7aadef8969029",
+    "commands.json": "150f501a44944e51cbdae17411f9456dfda36dff27723e941a8cd7c86ff053bc",
+    "readsets.json": "d9e7ad1b5c7b4e60ddf7498cd0896a9380ba5e1d4d97e2990380dd2e4d56b885",
+    "phase-files.json": "b6327fadd1ded9e057c8ed3e6ab3628b4cf0b4c788cc97c46228fbd26adbd336",
+    "static-receipt.json": "bb56a38dda287281acd2e49261541afa8ebcfaa16ef434054e57c920f41b5578",
+    "complete.diff": "9b0bfc18087c0574d8201b992fdcf19dc02f37bc3eef67733d448e7ba8dd7abe",
+    "transfer.diff": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prepare.cjs": "c976cd0457e059735c48473769683706c2e1c1558e3a9c8d4f9eb16bb4723ad1",
+    "controls.cjs": "d9eb2cd1e50aee60f55a98f76ccdf95dddb22f45d5b962cdff5869aebe06671f",
+    "write-ledger.py": "5ab478afa92c841f089ba3b28fd32ca48c5d938164e8d1a93747db8733a20bcb",
+    "finalize.py": "0bc3dc9f7f64300b5748db333dc16b96b9012f3cd0c5bfbd777c1d92f1f49e90"
+  }
+}

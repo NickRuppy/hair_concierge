@@ -1,0 +1,46 @@
+{
+  "scope": "tests/agent-guidance.spec.ts",
+  "decision": "one guarded D candidate; keeper receives messages on its two existing assertions only",
+  "counts": { "before": 32, "after_diagnostic_transfer": 32, "after_cut": 31 },
+  "donor": {
+    "name": "current-turn separated hair-loss wording can load safety overlay",
+    "lines": "676-694",
+    "body": "test(\"current-turn separated hair-loss wording can load safety overlay\", async () => {\n  const guidance = await loadAdvisorGuidance({\n    intent: \"problem_context\",\n    category: \"general_haircare\",\n    categories: [],\n    profileFocus: [\"hair_loss_or_thinning_guardrail\", \"dry_lengths\"],\n    message: \"mir fallen seit kurzem viele Haare aus, kann ein Oel helfen?\",\n    userContext: createUserContext({\n      profile: createHairProfile({\n        thickness: \"normal\",\n        concerns: [\"dryness\"],\n      }),\n    }),\n    conversationState: null,\n  })\n\n  assert.ok(guidance.loaded_guidance_ids.includes(\"overlay:hair_loss_or_thinning_guardrail\"))\n  assert.ok(guidance.avoid.some((line) => /diagnose|regrowth|hair-loss/i.test(line)))\n})",
+    "sha256": "af9eff1a64daffb039041e4869c47bff755bab7b67c71f04423c9f6e3809ac63"
+  },
+  "keeper": {
+    "name": "current-turn separated hair-loss wording loads safety overlay without model focus",
+    "lines": "696-715",
+    "body_before": "test(\"current-turn separated hair-loss wording loads safety overlay without model focus\", async () => {\n  const guidance = await loadAdvisorGuidance({\n    intent: \"problem_context\",\n    category: \"general_haircare\",\n    categories: [],\n    profileFocus: [],\n    message: \"Mir fallen seit kurzem viele Haare aus. Kann ein Haaroel helfen?\",\n    userContext: createUserContext({\n      profile: createHairProfile({\n        thickness: \"normal\",\n        concerns: [\"dryness\"],\n        scalp_condition: null,\n      }),\n    }),\n    conversationState: null,\n  })\n\n  assert.ok(guidance.loaded_guidance_ids.includes(\"overlay:hair_loss_or_thinning_guardrail\"))\n  assert.ok(guidance.avoid.some((line) => /diagnose|regrowth|hair-loss/i.test(line)))\n})",
+    "body_after": "test(\"current-turn separated hair-loss wording loads safety overlay without model focus\", async () => {\n  const guidance = await loadAdvisorGuidance({\n    intent: \"problem_context\",\n    category: \"general_haircare\",\n    categories: [],\n    profileFocus: [],\n    message: \"Mir fallen seit kurzem viele Haare aus. Kann ein Haaroel helfen?\",\n    userContext: createUserContext({\n      profile: createHairProfile({\n        thickness: \"normal\",\n        concerns: [\"dryness\"],\n        scalp_condition: null,\n      }),\n    }),\n    conversationState: null,\n  })\n\n  assert.ok(\n    guidance.loaded_guidance_ids.includes(\"overlay:hair_loss_or_thinning_guardrail\"),\n    \"current-turn separated hair-loss wording must select the safety overlay without model focus\",\n  )\n  assert.ok(\n    guidance.avoid.some((line) => /diagnose|regrowth|hair-loss/i.test(line)),\n    \"selected hair-loss guardrail must retain its parsed avoidance receipt\",\n  )\n})",
+    "sha256_before": "086c507e8d9d60462814898f3246e136e91d92f65a79a1943b5bcddbff6ba789"
+  },
+  "actual_owner_and_dependency": {
+    "current_turn_detector": "src/lib/agent/tools/load-advisor-guidance.ts:476-489",
+    "safety_overlay_insertion": "src/lib/agent/tools/load-advisor-guidance.ts:355-369",
+    "compatible_focus_route": "src/lib/agent/tools/load-advisor-guidance.ts:371-401",
+    "parsed_avoidance_receipt": "src/lib/agent/tools/load-advisor-guidance.ts:510-548,638-650",
+    "data_dependency": "data/agent-guidance/overlays/hair-loss-or-thinning-guardrail.md:24-28",
+    "caller": "src/lib/agent/compare/run-agentic-tool-loop.ts:405-434",
+    "executor": "src/lib/agent/orchestrator/run-agentic-tool-turn.ts:213-280",
+    "ci": ".github/workflows/ci.yml:163-164; package.json:68"
+  },
+  "subsumption": {
+    "assertion_union": [
+      "loaded_guidance_ids contains overlay:hair_loss_or_thinning_guardrail",
+      "avoid contains diagnosis/regrowth/hair-loss language"
+    ],
+    "reason": "The donor's only additional input is a compatible profile focus. The current-turn detector inserts the same overlay first, the focus route can only add a duplicate for this wording, and unique() removes it. The keeper proves the same safety outcome without model focus."
+  },
+  "history": [
+    { "commit": "4383accd", "date": "2026-05-13", "subject": "[codex] Replace production recommendation engine with tool loop (#98)" },
+    { "commit": "56e24cbf", "date": "2026-05-13", "subject": "feat(chat): replace production recommendation engine with tool loop" }
+  ],
+  "risk": "Removal loses only the redundant compatible-focus permutation for separated wording. It must not remove the no-focus keeper or alter the current-turn detector, parser, overlay Markdown, tool definitions, CI command, or any other callback.",
+  "controls": [
+    "Run the native Node 22 command only after applying the staged cut: node --import ./tests/server-only-register.cjs --import tsx --test tests/agent-guidance.spec.ts",
+    "Diagnostic mutation: temporarily make hasHairLossOrThinningSignal return false; retained keeper must fail its first assertion with the added current-turn diagnostic.",
+    "Diagnostic mutation: temporarily make compactAvoidLines return []; retained keeper must fail its second assertion with the added parsed-avoidance-receipt diagnostic.",
+    "Restore each temporary control mutation before ordinary validation. Do not use a foreign runner or scripts/run-vitest.mjs for this lane."
+  ]
+}

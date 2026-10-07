@@ -1,0 +1,290 @@
+[
+  {
+    "id": "receipt-email-leak",
+    "file": "scripts/billing/one-time-recover.ts",
+    "sourceSha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "mutatedSha256": "b6bcf3acd59b4a2b4446abae772ddbe029834abd843885a4a6c9764cde84e620",
+    "anchor": {
+      "kind": "function",
+      "scope": "runOneTimeRecoveryCommand",
+      "scopeSha256": "2a2279224598b20df13cee6419aaacd770fd45e8bc5a43f9a15092adf8dc404f",
+      "expectedOccurrences": 1
+    },
+    "from": "    reconciliation,\n",
+    "to": "    reconciliation: Object.assign({}, reconciliation, { debugEmail: verification.payment.email }),\n",
+    "test": {
+      "file": "tests/one-time-recovery-command.test.ts",
+      "name": "applies only when confirmation exactly matches the target"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^applies only when confirmation exactly matches the target$",
+      "tests/one-time-recovery-command.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 353,
+        "text": "assert.equal(output.includes(value), false, `leaked ${value}`)",
+        "keeperSha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69",
+        "testFileSha256": "65dbdc081adbad4392c95dccb9908585525f2e859236bc96a481cc11875f0a6b"
+      },
+      "cut": {
+        "startLine": 353,
+        "text": "assert.equal(output.includes(value), false, `leaked ${value}`)",
+        "keeperSha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69",
+        "testFileSha256": "b0ef567977d3953a99cf3c36f2836a947003e577ab0a84aa61fb08f3bd8e29d4"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "leaked buyer@example.com"
+    ],
+    "intendedAssertion": "Transferred donor privacy loop: original donor and strengthened keeper both fail.",
+    "proofKind": "transferred donor oracle"
+  },
+  {
+    "id": "receipt-fixed-amount",
+    "file": "scripts/billing/one-time-recover.ts",
+    "sourceSha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "mutatedSha256": "765f27df1d69a95ac919cf8d518db10381c8557098690c8f3d76611abae446ad",
+    "anchor": {
+      "kind": "function",
+      "scope": "runOneTimeRecoveryCommand",
+      "scopeSha256": "2a2279224598b20df13cee6419aaacd770fd45e8bc5a43f9a15092adf8dc404f",
+      "expectedOccurrences": 1
+    },
+    "from": "    amount: \"29.99\",",
+    "to": "    amount: \"0.00\" as RecoveryCommandReceipt[\"amount\"],",
+    "test": {
+      "file": "tests/one-time-recovery-command.test.ts",
+      "name": "applies only when confirmation exactly matches the target"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^applies only when confirmation exactly matches the target$",
+      "tests/one-time-recovery-command.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 355,
+        "text": "assert.equal(output.includes(\"29.99\"), true)",
+        "keeperSha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69",
+        "testFileSha256": "65dbdc081adbad4392c95dccb9908585525f2e859236bc96a481cc11875f0a6b"
+      },
+      "cut": {
+        "startLine": 355,
+        "text": "assert.equal(output.includes(\"29.99\"), true)",
+        "keeperSha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69",
+        "testFileSha256": "b0ef567977d3953a99cf3c36f2836a947003e577ab0a84aa61fb08f3bd8e29d4"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "false !== true"
+    ],
+    "intendedAssertion": "Transferred donor fixed-price string: original donor and strengthened keeper both fail.",
+    "proofKind": "transferred donor oracle"
+  },
+  {
+    "id": "receipt-fixed-currency",
+    "file": "scripts/billing/one-time-recover.ts",
+    "sourceSha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "mutatedSha256": "f03e2fb7fe2ac98a5cff4dc814006701b37817c5ab1e1c779c0d0d49cef1cba6",
+    "anchor": {
+      "kind": "function",
+      "scope": "runOneTimeRecoveryCommand",
+      "scopeSha256": "2a2279224598b20df13cee6419aaacd770fd45e8bc5a43f9a15092adf8dc404f",
+      "expectedOccurrences": 1
+    },
+    "from": "    currency: \"EUR\",",
+    "to": "    currency: \"USD\" as RecoveryCommandReceipt[\"currency\"],",
+    "test": {
+      "file": "tests/one-time-recovery-command.test.ts",
+      "name": "applies only when confirmation exactly matches the target"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^applies only when confirmation exactly matches the target$",
+      "tests/one-time-recovery-command.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 356,
+        "text": "assert.equal(output.includes(\"EUR\"), true)",
+        "keeperSha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69",
+        "testFileSha256": "65dbdc081adbad4392c95dccb9908585525f2e859236bc96a481cc11875f0a6b"
+      },
+      "cut": {
+        "startLine": 356,
+        "text": "assert.equal(output.includes(\"EUR\"), true)",
+        "keeperSha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69",
+        "testFileSha256": "b0ef567977d3953a99cf3c36f2836a947003e577ab0a84aa61fb08f3bd8e29d4"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "false !== true"
+    ],
+    "intendedAssertion": "Transferred donor fixed-currency string: original donor and strengthened keeper both fail.",
+    "proofKind": "transferred donor oracle"
+  },
+  {
+    "id": "apply-mode",
+    "file": "scripts/billing/one-time-recover.ts",
+    "sourceSha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "mutatedSha256": "51d6ca7933d54dcad09490fee029e84cd599e1fa429bf9e549e60ef01fed9402",
+    "anchor": {
+      "kind": "function",
+      "scope": "runOneTimeRecoveryCommand",
+      "scopeSha256": "2a2279224598b20df13cee6419aaacd770fd45e8bc5a43f9a15092adf8dc404f",
+      "expectedOccurrences": 1
+    },
+    "from": "    mode: request.apply ? \"apply\" : \"dry-run\",",
+    "to": "    mode: \"dry-run\",",
+    "test": {
+      "file": "tests/one-time-recovery-command.test.ts",
+      "name": "applies only when confirmation exactly matches the target"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^applies only when confirmation exactly matches the target$",
+      "tests/one-time-recovery-command.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 342,
+        "text": "assert.equal(receipt.mode, \"apply\")",
+        "keeperSha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69",
+        "testFileSha256": "65dbdc081adbad4392c95dccb9908585525f2e859236bc96a481cc11875f0a6b"
+      },
+      "cut": {
+        "startLine": 342,
+        "text": "assert.equal(receipt.mode, \"apply\")",
+        "keeperSha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69",
+        "testFileSha256": "b0ef567977d3953a99cf3c36f2836a947003e577ab0a84aa61fb08f3bd8e29d4"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "dry-run"
+    ],
+    "intendedAssertion": "Original keeper mode remains independently asserted.",
+    "proofKind": "original keeper oracle"
+  },
+  {
+    "id": "apply-guard-receipt",
+    "file": "scripts/billing/one-time-recover.ts",
+    "sourceSha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "mutatedSha256": "a3b447a65efa534d5f41af584145df1bf21fe1b044b8a48b69967de3dfa80e69",
+    "anchor": {
+      "kind": "function",
+      "scope": "runOneTimeRecoveryCommand",
+      "scopeSha256": "2a2279224598b20df13cee6419aaacd770fd45e8bc5a43f9a15092adf8dc404f",
+      "expectedOccurrences": 1
+    },
+    "from": "    applyGuardSatisfied: request.apply,",
+    "to": "    applyGuardSatisfied: false,",
+    "test": {
+      "file": "tests/one-time-recovery-command.test.ts",
+      "name": "applies only when confirmation exactly matches the target"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^applies only when confirmation exactly matches the target$",
+      "tests/one-time-recovery-command.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 343,
+        "text": "assert.equal(receipt.applyGuardSatisfied, true)",
+        "keeperSha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69",
+        "testFileSha256": "65dbdc081adbad4392c95dccb9908585525f2e859236bc96a481cc11875f0a6b"
+      },
+      "cut": {
+        "startLine": 343,
+        "text": "assert.equal(receipt.applyGuardSatisfied, true)",
+        "keeperSha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69",
+        "testFileSha256": "b0ef567977d3953a99cf3c36f2836a947003e577ab0a84aa61fb08f3bd8e29d4"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "false !== true"
+    ],
+    "intendedAssertion": "Original keeper guard remains independently asserted.",
+    "proofKind": "original keeper oracle"
+  },
+  {
+    "id": "activation-after-receipt",
+    "file": "scripts/billing/one-time-recover.ts",
+    "sourceSha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+    "mutatedSha256": "fd55a9544f4ead71d236f86add6e95792d095d22d6e19ae1314a078e7c6112dc",
+    "anchor": {
+      "kind": "function",
+      "scope": "runOneTimeRecoveryCommand",
+      "scopeSha256": "2a2279224598b20df13cee6419aaacd770fd45e8bc5a43f9a15092adf8dc404f",
+      "expectedOccurrences": 1
+    },
+    "from": "  if (request.apply) {\n    if (target.provider === \"stripe\") await deps.activateStripe(target, verification)\n    else await deps.activatePayPal(target, verification)\n  }\n\n  const reconciliation = await deps.readReceipt(verification.payment, verification)",
+    "to": "  const reconciliation = await deps.readReceipt(verification.payment, verification)\n  if (request.apply) {\n    if (target.provider === \"stripe\") await deps.activateStripe(target, verification)\n    else await deps.activatePayPal(target, verification)\n  }",
+    "test": {
+      "file": "tests/one-time-recovery-command.test.ts",
+      "name": "applies only when confirmation exactly matches the target"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^applies only when confirmation exactly matches the target$",
+      "tests/one-time-recovery-command.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 344,
+        "text": "assert.deepEqual(calls, [\n    \"verifyStripe:stripe_checkout_session\",\n    \"activateStripe:stripe_checkout_session\",\n    \"readReceipt\",\n  ])",
+        "keeperSha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69",
+        "testFileSha256": "65dbdc081adbad4392c95dccb9908585525f2e859236bc96a481cc11875f0a6b"
+      },
+      "cut": {
+        "startLine": 344,
+        "text": "assert.deepEqual(calls, [\n    \"verifyStripe:stripe_checkout_session\",\n    \"activateStripe:stripe_checkout_session\",\n    \"readReceipt\",\n  ])",
+        "keeperSha256": "bf629906bf72eda2f34107bf447a74824da5708866c1d5c25f4c89e81415ff69",
+        "testFileSha256": "b0ef567977d3953a99cf3c36f2836a947003e577ab0a84aa61fb08f3bd8e29d4"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "readReceipt"
+    ],
+    "intendedAssertion": "Original keeper observes actual orchestrator order, fixture only records.",
+    "proofKind": "original keeper oracle"
+  }
+]

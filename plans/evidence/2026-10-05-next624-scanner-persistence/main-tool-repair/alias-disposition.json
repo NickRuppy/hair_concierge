@@ -1,0 +1,9 @@
+{
+  "correctedSameRealpathKeys": [
+    "/private/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-proof.cjs",
+    "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-proof.cjs"
+  ],
+  "oldPins": "dbfb119c5495d133879823ddd8636ca5829ccee5a2efa4619328cae28cfb6f6a",
+  "currentPins": "e17df846d1944a146f0f760dbd16d77c404a1d1cafea73b9fefedf12a8b8fcb3",
+  "sourceWrites": 0
+}

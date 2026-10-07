@@ -1,0 +1,354 @@
+TAP version 13
+# Subtest: N3: a NOT-yet-terminal account attempts provisioning and marks a terminal outcome
+ok 1 - N3: a NOT-yet-terminal account attempts provisioning and marks a terminal outcome
+  ---
+  duration_ms: 0.858708
+  ...
+# Subtest: N3: invalid_source is also marked terminal
+ok 2 - N3: invalid_source is also marked terminal
+  ---
+  duration_ms: 0.114209
+  ...
+# Subtest: N3: an ALREADY-terminal account short-circuits — no provision call, no report call
+ok 3 - N3: an ALREADY-terminal account short-circuits — no provision call, no report call
+  ---
+  duration_ms: 0.072958
+  ...
+# Subtest: N3: second render after a terminal first render fires exactly ONE Sentry report total
+ok 4 - N3: second render after a terminal first render fires exactly ONE Sentry report total
+  ---
+  duration_ms: 0.23
+  ...
+# Subtest: N3: temporarily_unavailable is never marked terminal — retry stays allowed every render
+ok 5 - N3: temporarily_unavailable is never marked terminal — retry stays allowed every render
+  ---
+  duration_ms: 0.159458
+  ...
+# Subtest: N3: a failed marker write is swallowed — the render still succeeds
+ok 6 - N3: a failed marker write is swallowed — the render still succeeds
+  ---
+  duration_ms: 0.1555
+  ...
+# Subtest: N3: a provisioned/paid_user outcome is never marked terminal
+ok 7 - N3: a provisioned/paid_user outcome is never marked terminal
+  ---
+  duration_ms: 0.234417
+  ...
+# Subtest: N3: an already-provisioned account (hasInitialNeed) never consults the terminal marker at all
+ok 8 - N3: an already-provisioned account (hasInitialNeed) never consults the terminal marker at all
+  ---
+  duration_ms: 0.108
+  ...
+# Subtest: inbox names the address the link went to and offers resend + correction
+ok 9 - inbox names the address the link went to and offers resend + correction
+  ---
+  duration_ms: 8.092
+  ...
+# Subtest: inbox falls back to generic copy when the address is unknown
+ok 10 - inbox falls back to generic copy when the address is unknown
+  ---
+  duration_ms: 0.934542
+  ...
+# Subtest: sending shows the in-flight line and no inbox hint yet
+ok 11 - sending shows the in-flight line and no inbox hint yet
+  ---
+  duration_ms: 0.415208
+  ...
+# Subtest: resend is disabled during the cooldown and counts it down
+ok 12 - resend is disabled during the cooldown and counts it down
+  ---
+  duration_ms: 0.267416
+  ...
+# Subtest: the resend notice is announced politely
+ok 13 - the resend notice is announced politely
+  ---
+  duration_ms: 0.493959
+  ...
+# Subtest: correction shows the labelled e-mail form
+ok 14 - correction shows the labelled e-mail form
+  ---
+  duration_ms: 0.498708
+  ...
+# Subtest: a correction validation error is wired to the field via aria
+ok 15 - a correction validation error is wired to the field via aria
+  ---
+  duration_ms: 0.401042
+  ...
+# Subtest: W1a: the missing/refused-capability state is honest and points back to the quiz
+ok 16 - W1a: the missing/refused-capability state is honest and points back to the quiz
+  ---
+  duration_ms: 0.241709
+  ...
+# Subtest: expired explains itself and offers a fresh link
+ok 17 - expired explains itself and offers a fresh link
+  ---
+  duration_ms: 0.707167
+  ...
+# Subtest: no_lead sends the visitor back to the quiz
+ok 18 - no_lead sends the visitor back to the quiz
+  ---
+  duration_ms: 0.427958
+  ...
+# Subtest: claimed offers the login, with our own heading (W7)
+ok 19 - claimed offers the login, with our own heading (W7)
+  ---
+  duration_ms: 0.178958
+  ...
+# Subtest: W7: a failed send prints the reason once, not twice
+ok 20 - W7: a failed send prints the reason once, not twice
+  ---
+  duration_ms: 0.415208
+  ...
+# Subtest: resolving renders the empty shell (no flash of the wrong state)
+ok 21 - resolving renders the empty shell (no flash of the wrong state)
+  ---
+  duration_ms: 0.100958
+  ...
+# Subtest: a free account with no enrollment is provisioned and then passes the scanner's profile-context read (no profile_missing)
+ok 22 - a free account with no enrollment is provisioned and then passes the scanner's profile-context read (no profile_missing)
+  ---
+  duration_ms: 15.919208
+  ...
+# Subtest: a provisioned need without linked diagnostics still has no scanner context
+ok 23 - a provisioned need without linked diagnostics still has no scanner context
+  ---
+  duration_ms: 1.71575
+  ...
+# Subtest: provisioned scanner context fails closed on corrupt_need_hash
+ok 24 - provisioned scanner context fails closed on corrupt_need_hash
+  ---
+  duration_ms: 1.425333
+  ...
+# Subtest: provisioned scanner context fails closed on stale_publication
+ok 25 - provisioned scanner context fails closed on stale_publication
+  ---
+  duration_ms: 1.673209
+  ...
+# Subtest: provisioning twice is idempotent: no duplicate need_versions row, enrollment stays null
+ok 26 - provisioning twice is idempotent: no duplicate need_versions row, enrollment stays null
+  ---
+  duration_ms: 1.407417
+  ...
+# Subtest: a user with no linked quiz artifact is not provisioned and the scanner still 409s profile_missing
+ok 27 - a user with no linked quiz artifact is not provisioned and the scanner still 409s profile_missing
+  ---
+  duration_ms: 0.379083
+  ...
+# Subtest: a plan already pinned to a real enrollment id fails the free service permanently with enrollment_mismatch (I1's collision, not self-healing)
+ok 28 - a plan already pinned to a real enrollment id fails the free service permanently with enrollment_mismatch (I1's collision, not self-healing)
+  ---
+  duration_ms: 0.559375
+  ...
+# Subtest: an active moderator/field-test user is refused with paid_user and not provisioned
+ok 29 - an active moderator/field-test user is refused with paid_user and not provisioned
+  ---
+  duration_ms: 0.397625
+  ...
+# Subtest: a user with only an email-keyed manual access grant (no user_id row) is refused with paid_user
+ok 30 - a user with only an email-keyed manual access grant (no user_id row) is refused with paid_user
+  ---
+  duration_ms: 0.463292
+  ...
+# Subtest: an unreadable moderator lookup with no independent paid entitlement fails closed with temporarily_unavailable, not provisioning
+ok 31 - an unreadable moderator lookup with no independent paid entitlement fails closed with temporarily_unavailable, not provisioning
+  ---
+  duration_ms: 0.524125
+  ...
+# Subtest: flag ON — new user: quiz completion routes into the free-registration destination, /scan is admitted, five-tab free nav renders, and legacy offer routes remain public
+ok 32 - flag ON — new user: quiz completion routes into the free-registration destination, /scan is admitted, five-tab free nav renders, and legacy offer routes remain public
+  ---
+  duration_ms: 0.872625
+  ...
+# Subtest: flag OFF — new user: quiz completion stays on today's paid destination, /scan is NOT admitted (scanner back in stealth for a non-paying account), and nav stays the unchanged legacy shell
+ok 33 - flag OFF — new user: quiz completion stays on today's paid destination, /scan is NOT admitted (scanner back in stealth for a non-paying account), and nav stays the unchanged legacy shell
+  ---
+  duration_ms: 0.121209
+  ...
+# Subtest: existing premium (paid Personal Plan) users are unaffected by the flag in either state — de-stealth and cutover only ever touch the NEW free-tier entry path
+ok 34 - existing premium (paid Personal Plan) users are unaffected by the flag in either state — de-stealth and cutover only ever touch the NEW free-tier entry path
+  ---
+  duration_ms: 0.128625
+  ...
+# [freemium] post-purchase routine acceptance still in flight { code: 'conflict', activationConfirmed: false }
+# [freemium] post-purchase routine acceptance still in flight { code: 'refinement_in_progress', activationConfirmed: null }
+# [freemium] post-purchase routine acceptance unavailable { code: 'recommendation_unavailable' }
+# [freemium] post-purchase routine acceptance unavailable { code: 'unknown' }
+# Subtest: a converting free user's plan is re-pinned off null, then derived and accepted
+ok 35 - a converting free user's plan is re-pinned off null, then derived and accepted
+  ---
+  duration_ms: 12.548459
+  ...
+# Subtest: WITHOUT the pin step the same call fails enrollment_mismatch — the T6 carry-forward, red
+ok 36 - WITHOUT the pin step the same call fails enrollment_mismatch — the T6 carry-forward, red
+  ---
+  duration_ms: 0.831208
+  ...
+# Subtest: replaying provisioning is a no-op: one admission, one need version, no second accept
+ok 37 - replaying provisioning is a no-op: one admission, one need version, no second accept
+  ---
+  duration_ms: 0.737958
+  ...
+# Subtest: a plan already owned by another enrollment is never overwritten
+ok 38 - a plan already owned by another enrollment is never overwritten
+  ---
+  duration_ms: 0.072459
+  ...
+# Subtest: a buyer with no plan row yet is admitted and the plan is created pinned
+ok 39 - a buyer with no plan row yet is admitted and the plan is created pinned
+  ---
+  duration_ms: 0.446959
+  ...
+# Subtest: no attached quiz artifact means no admission is written at all
+ok 40 - no attached quiz artifact means no admission is written at all
+  ---
+  duration_ms: 0.068833
+  ...
+# Subtest: a failed Routine acceptance still provisions — the purchase is never undone
+ok 41 - a failed Routine acceptance still provisions — the purchase is never undone
+  ---
+  duration_ms: 0.4835
+  ...
+# Subtest: an unavailable admission write reports a retryable stage, never a fake success
+ok 42 - an unavailable admission write reports a retryable stage, never a fake success
+  ---
+  duration_ms: 0.075584
+  ...
+# Subtest: Y2: the conflict LOSER does not claim a Routine that does not exist yet
+ok 43 - Y2: the conflict LOSER does not claim a Routine that does not exist yet
+  ---
+  duration_ms: 0.678042
+  ...
+# Subtest: Y2: the conflict loser converges once the winner has committed
+ok 44 - Y2: the conflict loser converges once the winner has committed
+  ---
+  duration_ms: 0.294125
+  ...
+# Subtest: Y2: an unconfirmable read is never optimistic
+ok 45 - Y2: an unconfirmable read is never optimistic
+  ---
+  duration_ms: 0.131958
+  ...
+# Subtest: Y2: `plan_already_accepted` is proof on its own and needs no extra read
+ok 46 - Y2: `plan_already_accepted` is proof on its own and needs no extra read
+  ---
+  duration_ms: 0.046125
+  ...
+# Subtest: Y2: every other acceptance failure stays unavailable
+ok 47 - Y2: every other acceptance failure stays unavailable
+  ---
+  duration_ms: 0.162958
+  ...
+# Subtest: Y2: an in-flight Routine provisions the plan but never reports it ready
+ok 48 - Y2: an in-flight Routine provisions the plan but never reports it ready
+  ---
+  duration_ms: 0.417583
+  ...
+# Subtest: the submitted catalog is standard for the sheet in BOTH launch-pricing states
+ok 49 - the submitted catalog is standard for the sheet in BOTH launch-pricing states
+  ---
+  duration_ms: 0.514875
+  ...
+# Subtest: the flag still moves every other source — the pin is the sheet's, not a global change
+ok 50 - the flag still moves every other source — the pin is the sheet's, not a global change
+  ---
+  duration_ms: 0.067625
+  ...
+# Subtest: the submitted price id equals the price the sheet rendered, both flag states
+ok 51 - the submitted price id equals the price the sheet rendered, both flag states
+  ---
+  duration_ms: 0.246416
+  ...
+# Subtest: the rendered amounts are the standard ones, so the assertion above cannot pass vacuously
+ok 52 - the rendered amounts are the standard ones, so the assertion above cannot pass vacuously
+  ---
+  duration_ms: 0.357
+  ...
+# Subtest: the request schema accepts the sheet's contract and refuses every legacy protocol
+ok 53 - the request schema accepts the sheet's contract and refuses every legacy protocol
+  ---
+  duration_ms: 1.593792
+  ...
+# Subtest: returnPath belongs to the sheet alone
+ok 54 - returnPath belongs to the sheet alone
+  ---
+  duration_ms: 0.318709
+  ...
+# Subtest: a repeated CTA press recovers the same Stripe Session
+ok 55 - a repeated CTA press recovers the same Stripe Session
+  ---
+  duration_ms: 0.110208
+  ...
+# Subtest: contextual completion keeps the buyer in the sheet and off /welcome
+ok 56 - contextual completion keeps the buyer in the sheet and off /welcome
+  ---
+  duration_ms: 0.162083
+  ...
+# Subtest: every pre-T14 caller keeps today's /welcome return, byte for byte
+ok 57 - every pre-T14 caller keeps today's /welcome return, byte for byte
+  ---
+  duration_ms: 0.1865
+  ...
+# Subtest: contextual completion without a return url is a programming error, not a silent /welcome
+ok 58 - contextual completion without a return url is a programming error, not a silent /welcome
+  ---
+  duration_ms: 0.291083
+  ...
+# Subtest: the return path is an allowlist, not a redirector
+ok 59 - the return path is an allowlist, not a redirector
+  ---
+  duration_ms: 0.143167
+  ...
+# Subtest: the completion endpoint is authenticated but NOT behind the paywall
+ok 60 - the completion endpoint is authenticated but NOT behind the paywall
+  ---
+  duration_ms: 0.096167
+  ...
+# Subtest: only a marked Session with a user id is a freemium purchase
+ok 61 - only a marked Session with a user id is a freemium purchase
+  ---
+  duration_ms: 0.055292
+  ...
+# Subtest: provisions a free initial snapshot from the user's linked quiz artifact, without any enrollment field
+ok 62 - provisions a free initial snapshot from the user's linked quiz artifact, without any enrollment field
+  ---
+  duration_ms: 12.818167
+  ...
+# Subtest: calling it twice re-derives and re-submits, but the persistence layer owns dedup — the service itself performs no local caching
+ok 63 - calling it twice re-derives and re-submits, but the persistence layer owns dedup — the service itself performs no local caching
+  ---
+  duration_ms: 1.111541
+  ...
+# Subtest: no linked quiz artifact yields a typed outcome without attempting a write
+ok 64 - no linked quiz artifact yields a typed outcome without attempting a write
+  ---
+  duration_ms: 0.081458
+  ...
+# Subtest: maps an unusable artifact and storage failures to safe typed outcomes
+ok 65 - maps an unusable artifact and storage failures to safe typed outcomes
+  ---
+  duration_ms: 0.336417
+  ...
+# Subtest: refuses a user whose paid-access composite resolves 'allowed' (subscription/one-time/manual-grant/moderator), without reading the artifact or writing
+ok 66 - refuses a user whose paid-access composite resolves 'allowed' (subscription/one-time/manual-grant/moderator), without reading the artifact or writing
+  ---
+  duration_ms: 0.065917
+  ...
+# Subtest: a paid-access composite resolving 'unavailable' (e.g. an unreadable moderator lookup) maps to temporarily_unavailable, without reading the artifact or writing
+ok 67 - a paid-access composite resolving 'unavailable' (e.g. an unreadable moderator lookup) maps to temporarily_unavailable, without reading the artifact or writing
+  ---
+  duration_ms: 0.058625
+  ...
+# Subtest: a throwing paid-access check maps to temporarily_unavailable rather than proceeding
+ok 68 - a throwing paid-access check maps to temporarily_unavailable rather than proceeding
+  ---
+  duration_ms: 0.106083
+  ...
+1..68
+# tests 68
+# suites 0
+# pass 68
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3756.087125

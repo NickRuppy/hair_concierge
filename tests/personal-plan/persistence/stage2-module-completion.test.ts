@@ -408,31 +408,6 @@ test("products-first completion without owned heat protection preserves non-heat
   assert.deepEqual(output.coverage, legacyProjection.outputSnapshot.coverage)
 })
 
-test("module completion records the projection lineage and the Modul-1 handoff marker", async () => {
-  const db = createModuleRefinementDb({
-    answers: PRODUCTS_ANSWERS,
-    completedQuestionIds: PRODUCTS_QUESTION_IDS,
-    answerProvenance: userProvenance(PRODUCTS_QUESTION_IDS),
-    revision: 2,
-  })
-  const service = createService(db)
-
-  const result = await service.completeModule({ module: "products", expectedRevision: 2 })
-
-  assert.deepEqual(db.row.moduleProjections, {
-    products: {
-      needVersionId: result.refinedVersionId,
-      projectedAtRevision: 2,
-      stage3Handoff: true,
-    },
-  })
-  // The marker is readable again after a reload, so the Stage-3 entry survives
-  // one even though the draft is still `in_progress`.
-  const reloaded = await db.persistence.loadOrCreate("user-1")
-  assert.equal(reloaded.moduleProjections.products?.stage3Handoff, true)
-  assert.equal(reloaded.status, "in_progress")
-})
-
 test("habits-first module completion writes a version without a Stage-3 handoff marker", async () => {
   const db = createModuleRefinementDb({
     answers: HABITS_ANSWERS,
@@ -565,43 +540,6 @@ test("a moved Stage-1 source maps to a reloadable conflict and writes nothing", 
   assert.equal(db.needVersions.length, 0)
   assert.deepEqual(db.row.moduleProjections, {})
   assert.equal(db.plan.currentRefinedNeedVersionId, null)
-})
-
-test("a recorded projection is not replayed once the draft closed or its source moved", async () => {
-  const db = createModuleRefinementDb({
-    answers: PRODUCTS_ANSWERS,
-    completedQuestionIds: PRODUCTS_QUESTION_IDS,
-    answerProvenance: userProvenance(PRODUCTS_QUESTION_IDS),
-    revision: 2,
-  })
-  const first = await createService(db).completeModule({ module: "products", expectedRevision: 2 })
-  const replayInput = {
-    userId: "user-1",
-    draft: await db.persistence.loadOrCreate("user-1"),
-    module: "products" as const,
-    expectedRevision: 2,
-    inputSnapshot: {},
-    outputSnapshot: {},
-    inputHash: "a".repeat(64),
-    schemaVersion: 1,
-    computationVersion: "test",
-  }
-
-  // The draft closed in the meantime (full completion, staling): a replay must
-  // reload rather than receive a success for a version that is no longer the draft's.
-  db.row.status = "complete"
-  assert.deepEqual(await db.persistence.completeModule(replayInput), {
-    outcome: "revision_conflict",
-    revision: 2,
-  })
-
-  // The Stage-1 source moved: the recorded version no longer descends from it.
-  db.row.status = "in_progress"
-  db.plan.currentInitialNeedVersionId = "initial-2"
-  assert.deepEqual(await db.persistence.completeModule(replayInput), { outcome: "stale_source" })
-
-  assert.equal(db.needVersions.length, 1)
-  assert.equal(db.row.moduleProjections.products?.needVersionId, first.refinedVersionId)
 })
 
 test("completing the second module closes the draft exactly like today's full completion", async () => {

@@ -1,0 +1,22 @@
+{
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "command": [
+    "node",
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "tests/free-registration-screen.test.tsx",
+    "tests/free-registration-recovery-terminal.test.ts",
+    "tests/free-snapshot-provisioning-acceptance.test.ts",
+    "tests/freemium-sheet-checkout-contract.test.ts",
+    "tests/freemium-plan-provisioning.test.ts",
+    "tests/freemium-cutover-journey.test.ts",
+    "tests/personal-plan/persistence/free-snapshot-service.test.ts"
+  ],
+  "status": "NOT_RUN",
+  "controls": "controls.json",
+  "note": "Main only after review/guarded tooling; preserve baseline failures. AST67 contains68 actual registrations."
+}

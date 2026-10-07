@@ -206,16 +206,6 @@ type FrequencyDeltaContext = {
   allowedRange?: WashAllowedRange | null
 }
 
-/** One product against its step. */
-export function deriveFrequencyDelta(
-  entry: FrequencyDeltaContext & {
-    /** Her intake answer; null/undefined = not asked, `unknown` = „Weiß ich nicht". */
-    frequency: string | null | undefined
-  },
-): FrequencyDelta | null {
-  return deriveStepFrequencyDelta({ ...entry, frequencies: [entry.frequency] })
-}
-
 /**
  * A step against its band, on the SUM of all her products in it (fix round 1: one chip per
  * step — two shampoos she alternates add up). Any product without a known frequency → null:

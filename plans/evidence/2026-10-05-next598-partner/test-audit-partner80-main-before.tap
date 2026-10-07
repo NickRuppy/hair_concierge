@@ -1,0 +1,443 @@
+TAP version 13
+# Subtest: partner admin page exposes the recurring single and batch workflow
+ok 1 - partner admin page exposes the recurring single and batch workflow
+  ---
+  duration_ms: 10.692042
+  ...
+# Subtest: partner activation requires exact authorization and sends ready email only once
+ok 2 - partner activation requires exact authorization and sends ready email only once
+  ---
+  duration_ms: 5.515958
+  ...
+# Subtest: partner activation requires no funnel cookie — authorization is resolved from the user and lead alone
+ok 3 - partner activation requires no funnel cookie — authorization is resolved from the user and lead alone
+  ---
+  duration_ms: 0.577709
+  ...
+# Subtest: partner activation sends an existing paid creator to their canonical plan lead
+ok 4 - partner activation sends an existing paid creator to their canonical plan lead
+  ---
+  duration_ms: 0.5995
+  ...
+# Subtest: partner activation rejects cross-origin requests before authorization
+ok 5 - partner activation rejects cross-origin requests before authorization
+  ---
+  duration_ms: 0.506
+  ...
+# Subtest: new creator claim creates and signs into the exact named account without an email roundtrip
+ok 6 - new creator claim creates and signs into the exact named account without an email roundtrip
+  ---
+  duration_ms: 7.059042
+  ...
+# Subtest: an existing unrelated account requires normal mailbox proof once
+ok 7 - an existing unrelated account requires normal mailbox proof once
+  ---
+  duration_ms: 1.019125
+  ...
+# Subtest: an existing-account email can resume the claim in a different browser
+ok 8 - an existing-account email can resume the claim in a different browser
+  ---
+  duration_ms: 1.773375
+  ...
+# Subtest: a failed account creation releases the claim reservation immediately
+ok 9 - a failed account creation releases the claim reservation immediately
+  ---
+  duration_ms: 0.541292
+  ...
+# Subtest: an invalid claim-attempt cookie is replaced before the database reservation
+ok 10 - an invalid claim-attempt cookie is replaced before the database reservation
+  ---
+  duration_ms: 0.402
+  ...
+# Subtest: authenticated continuation completes only the invitation email account
+ok 11 - authenticated continuation completes only the invitation email account
+  ---
+  duration_ms: 0.577292
+  ...
+# Subtest: a currently paying account claims without a fresh start
+ok 12 - a currently paying account claims without a fresh start
+  ---
+  duration_ms: 0.78875
+  ...
+# Subtest: a lapsed account claims with a fresh start
+ok 13 - a lapsed account claims with a fresh start
+  ---
+  duration_ms: 0.374917
+  ...
+# Subtest: a new account always claims with a fresh start, without consulting billing
+ok 14 - a new account always claims with a fresh start, without consulting billing
+  ---
+  duration_ms: 0.507458
+  ...
+# Subtest: a paid-access lookup failure fails closed instead of assuming a fresh start
+ok 15 - a paid-access lookup failure fails closed instead of assuming a fresh start
+  ---
+  duration_ms: 0.599875
+  ...
+# Subtest: a failed claim completion removes only the new unbound funnel and releases the reservation
+ok 16 - a failed claim completion removes only the new unbound funnel and releases the reservation
+  ---
+  duration_ms: 0.278375
+  ...
+# Subtest: partner access CLI is dry-run by default and parses a bounded batch
+ok 17 - partner access CLI is dry-run by default and parses a bounded batch
+  ---
+  duration_ms: 0.7885
+  ...
+# Subtest: partner access CLI mutations require all production confirmation gates
+ok 18 - partner access CLI mutations require all production confirmation gates
+  ---
+  duration_ms: 0.542917
+  ...
+# Subtest: email correction validates the invitation and sends only the normalized new address
+ok 19 - email correction validates the invitation and sends only the normalized new address
+  ---
+  duration_ms: 8.858458
+  ...
+# Subtest: email correction rejects cross-origin, stale, unchanged, and throttled requests
+ok 20 - email correction rejects cross-origin, stale, unchanged, and throttled requests
+  ---
+  duration_ms: 3.380667
+  ...
+# Subtest: email confirmation returns a fresh fragment credential and fails closed
+ok 21 - email confirmation returns a fresh fragment credential and fails closed
+  ---
+  duration_ms: 2.812041
+  ...
+# Subtest: partner transactional payloads contain only the recipient-facing link and first name
+ok 22 - partner transactional payloads contain only the recipient-facing link and first name
+  ---
+  duration_ms: 2.097916
+  ...
+# Subtest: partner intent contains only invitation context and expires
+ok 23 - partner intent contains only invitation context and expires
+  ---
+  duration_ms: 2.803833
+  ...
+# Partner journey lookup failed: Error: database unavailable
+#     at loadInvitation (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/partner-access-journey.test.ts:159:15)
+#     at resolvePartnerJourney (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/partner-access/journey.ts:58:24)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/partner-access-journey.test.ts:156:22)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# Partner journey lookup failed: Error: auth service blip
+#     at getUser (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/partner-access-journey.test.ts:170:15)
+#     at resolvePartnerJourney (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/partner-access/journey.ts:55:24)
+#     at TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/partner-access-journey.test.ts:167:28)
+#     at Test.runInAsyncScope (node:async_hooks:211:14)
+#     at Test.run (node:internal/test_runner/test:934:25)
+#     at Test.processPendingSubtests (node:internal/test_runner/test:633:18)
+#     at Test.postRun (node:internal/test_runner/test:1045:19)
+#     at Test.run (node:internal/test_runner/test:973:12)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# Partner journey lookup failed: { name: 'AuthRetryableFetchError', message: 'down' }
+# Partner journey lookup failed: Error: database unavailable
+#     at loadInvitation (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/partner-access-journey.test.ts:270:15)
+#     at resolvePartnerJourney (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/partner-access/journey.ts:58:24)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/partner-access-journey.test.ts:267:19)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# Subtest: a signed-out visitor gets an ordinary journey with zero lookups
+ok 24 - a signed-out visitor gets an ordinary journey with zero lookups
+  ---
+  duration_ms: 3.219625
+  ...
+# Subtest: a signed-in user with no claimed invitation gets an ordinary journey
+ok 25 - a signed-in user with no claimed invitation gets an ordinary journey
+  ---
+  duration_ms: 0.138333
+  ...
+# Subtest: a claimed, unrevoked invitation authorizes the partner journey from the user alone
+ok 26 - a claimed, unrevoked invitation authorizes the partner journey from the user alone
+  ---
+  duration_ms: 0.133458
+  ...
+# Subtest: a revoked invitation makes the account an ordinary user again, never blocked
+ok 27 - a revoked invitation makes the account an ordinary user again, never blocked
+  ---
+  duration_ms: 0.184375
+  ...
+# Subtest: another user's claimed invitation never authorizes this user
+ok 28 - another user's claimed invitation never authorizes this user
+  ---
+  duration_ms: 0.084916
+  ...
+# Subtest: a read error is unavailable, not none or a thrown exception
+ok 29 - a read error is unavailable, not none or a thrown exception
+  ---
+  duration_ms: 1.467834
+  ...
+# Subtest: an auth-service error on getUser() is unavailable, not none
+ok 30 - an auth-service error on getUser() is unavailable, not none
+  ---
+  duration_ms: 0.287708
+  ...
+# Subtest: no auth session is an ordinary signed-out visit, not an outage
+ok 31 - no auth session is an ordinary signed-out visit, not an outage
+  ---
+  duration_ms: 1.63425
+  ...
+# Subtest: a real auth failure on the default getUser path is unavailable, not none
+ok 32 - a real auth failure on the default getUser path is unavailable, not none
+  ---
+  duration_ms: 0.337667
+  ...
+# Subtest: the default getUser path carries app_metadata through to the hint check
+ok 33 - the default getUser path carries app_metadata through to the hint check
+  ---
+  duration_ms: 0.2835
+  ...
+# Subtest: a signed-in user without the claim stamp never reads the invitation table
+ok 34 - a signed-in user without the claim stamp never reads the invitation table
+  ---
+  duration_ms: 0.077583
+  ...
+# Subtest: only a stamped account can be made unavailable by an invitation read error
+ok 35 - only a stamped account can be made unavailable by an invitation read error
+  ---
+  duration_ms: 0.305958
+  ...
+# Subtest: an invitation row without a funnel session stays an ordinary journey
+ok 36 - an invitation row without a funnel session stays an ordinary journey
+  ---
+  duration_ms: 0.074834
+  ...
+# Partner quiz context lookup failed: Error: database unavailable
+#     at Object.resolvePartnerJourney (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/partner-access-quiz-context.test.ts:48:13)
+#     at GET (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/partner-access/quiz-context/route.ts:20:42)
+#     at TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/partner-access-quiz-context.test.ts:51:33)
+#     at Test.runInAsyncScope (node:async_hooks:211:14)
+#     at Test.run (node:internal/test_runner/test:934:25)
+#     at Test.processPendingSubtests (node:internal/test_runner/test:633:18)
+#     at Test.postRun (node:internal/test_runner/test:1045:19)
+#     at Test.run (node:internal/test_runner/test:973:12)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# Subtest: creator quiz context returns only the server-authorized invitation identity, resolved from the user alone
+ok 37 - creator quiz context returns only the server-authorized invitation identity, resolved from the user alone
+  ---
+  duration_ms: 2.448
+  ...
+# Subtest: creator quiz context distinguishes ordinary and temporarily unavailable journeys
+ok 38 - creator quiz context distinguishes ordinary and temporarily unavailable journeys
+  ---
+  duration_ms: 2.403833
+  ...
+# Subtest: creator quiz context reports unavailable when the journey lookup throws
+ok 39 - creator quiz context reports unavailable when the journey lookup throws
+  ---
+  duration_ms: 1.291875
+  ...
+# Subtest: creator quiz context parser and metadata hint fail closed
+ok 40 - creator quiz context parser and metadata hint fail closed
+  ---
+  duration_ms: 0.2425
+  ...
+# Subtest: only a stable creator hint triggers context lookup
+ok 41 - only a stable creator hint triggers context lookup
+  ---
+  duration_ms: 0.120542
+  ...
+# Subtest: resolve shows personal identity and stores only signed invitation context
+ok 42 - resolve shows personal identity and stores only signed invitation context
+  ---
+  duration_ms: 5.119792
+  ...
+# Subtest: resolve rejects cross-origin, malformed, and unavailable credentials generically
+ok 43 - resolve rejects cross-origin, malformed, and unavailable credentials generically
+  ---
+  duration_ms: 1.2805
+  ...
+# Subtest: resolve resumes the personal screen from the signed HttpOnly intent cookie
+ok 44 - resolve resumes the personal screen from the signed HttpOnly intent cookie
+  ---
+  duration_ms: 0.800875
+  ...
+# Subtest: resolve rejects resume without a valid intent cookie
+ok 45 - resolve rejects resume without a valid intent cookie
+  ---
+  duration_ms: 0.31625
+  ...
+# Subtest: partner access migration creates private invitation and correction state
+ok 46 - partner access migration creates private invitation and correction state
+  ---
+  duration_ms: 0.503208
+  ...
+# Subtest: partner access migration extends grants and preserves one active grant per invitation
+ok 47 - partner access migration extends grants and preserves one active grant per invitation
+  ---
+  duration_ms: 0.128041
+  ...
+# Subtest: partner mutation functions are service-only and explicit about privilege
+ok 48 - partner mutation functions are service-only and explicit about privilege
+  ---
+  duration_ms: 0.093583
+  ...
+# Subtest: partner routing is additive and cannot rename the established owner source
+ok 49 - partner routing is additive and cannot rename the established owner source
+  ---
+  duration_ms: 0.060708
+  ...
+# Subtest: partner invitation creation sends one normalized atomic batch and projects personal links
+ok 50 - partner invitation creation sends one normalized atomic batch and projects personal links
+  ---
+  duration_ms: 1.129875
+  ...
+# Subtest: partner invitation resolution is read-only and fails closed on version or revocation
+ok 51 - partner invitation resolution is read-only and fails closed on version or revocation
+  ---
+  duration_ms: 1.151834
+  ...
+# Subtest: partner invitation status is derived from current revocation and grant state
+ok 52 - partner invitation status is derived from current revocation and grant state
+  ---
+  duration_ms: 0.112792
+  ...
+# Subtest: admin list projects reproducible links without returning raw credentials
+ok 53 - admin list projects reproducible links without returning raw credentials
+  ---
+  duration_ms: 0.289458
+  ...
+# Subtest: admin list distinguishes a claimed account from an untouched invitation
+ok 54 - admin list distinguishes a claimed account from an untouched invitation
+  ---
+  duration_ms: 0.097375
+  ...
+# Subtest: partner invitation batches are atomic and normalize creator identity
+ok 55 - partner invitation batches are atomic and normalize creator identity
+  ---
+  duration_ms: 525.209542
+  ...
+# Subtest: claim reservation is exclusive, replayable, and recoverable after abandonment
+ok 56 - claim reservation is exclusive, replayable, and recoverable after abandonment
+  ---
+  duration_ms: 344.981875
+  ...
+# Subtest: an existing-account handoff can release its reservation immediately
+ok 57 - an existing-account handoff can release its reservation immediately
+  ---
+  duration_ms: 343.960834
+  ...
+# Subtest: email correction is throttled and invalidated by invitation rotation
+ok 58 - email correction is throttled and invalidated by invitation rotation
+  ---
+  duration_ms: 350.721667
+  ...
+# Subtest: claiming a partner invitation grants free access and restarts an existing account
+ok 59 - claiming a partner invitation grants free access and restarts an existing account
+  ---
+  duration_ms: 375.365583
+  ...
+# Subtest: a paying account can claim partner access without a fresh start
+ok 60 - a paying account can claim partner access without a fresh start
+  ---
+  duration_ms: 349.601292
+  ...
+# Subtest: omitting p_fresh_start grants access, records no decision and performs no reset
+ok 61 - omitting p_fresh_start grants access, records no decision and performs no reset
+  ---
+  duration_ms: 355.7965
+  ...
+# Subtest: a claim from the rollout window still restarts on the next decided claim
+ok 62 - a claim from the rollout window still restarts on the next decided claim
+  ---
+  duration_ms: 351.467583
+  ...
+# Subtest: an admin repair leaves the pending fresh start for the creator's next link open
+ok 63 - an admin repair leaves the pending fresh start for the creator's next link open
+  ---
+  duration_ms: 356.410791
+  ...
+# Subtest: a recorded no-reset decision survives a later fresh-start claim (P1)
+ok 64 - a recorded no-reset decision survives a later fresh-start claim (P1)
+  ---
+  duration_ms: 352.999083
+  ...
+# Subtest: a replayed claim completion neither re-grants nor restarts the account again
+ok 65 - a replayed claim completion neither re-grants nor restarts the account again
+  ---
+  duration_ms: 347.117208
+  ...
+# Subtest: a legacy claimed invitation self-heals its grant and restart exactly once
+ok 66 - a legacy claimed invitation self-heals its grant and restart exactly once
+  ---
+  duration_ms: 367.583625
+  ...
+# Subtest: a failing fresh start rolls the whole claim completion back
+ok 67 - a failing fresh start rolls the whole claim completion back
+  ---
+  duration_ms: 347.81575
+  ...
+# Subtest: activation reuses the claim grant and revocation cycles keep one active grant
+ok 68 - activation reuses the claim grant and revocation cycles keep one active grant
+  ---
+  duration_ms: 358.595917
+  ...
+# Subtest: a claimed but never activated invitation regains a grant on reactivation
+ok 69 - a claimed but never activated invitation regains a grant on reactivation
+  ---
+  duration_ms: 351.806709
+  ...
+# Subtest: reactivation repairs a legacy claimed row that was never revoked, exactly once
+ok 70 - reactivation repairs a legacy claimed row that was never revoked, exactly once
+  ---
+  duration_ms: 361.977
+  ...
+# Subtest: activation is replay-safe, indefinite, revocable, and preserves independent paid access
+ok 71 - activation is replay-safe, indefinite, revocable, and preserves independent paid access
+  ---
+  duration_ms: 360.867708
+  ...
+# Subtest: the fresh start helper stays out of reach of anon and authenticated callers
+ok 72 - the fresh start helper stays out of reach of anon and authenticated callers
+  ---
+  duration_ms: 332.724917
+  ...
+# Subtest: partner invitation credentials are deterministic, versioned, and tamper evident
+ok 73 - partner invitation credentials are deterministic, versioned, and tamper evident
+  ---
+  duration_ms: 1.106042
+  ...
+# Subtest: rotating the stored version invalidates the previous credential
+ok 74 - rotating the stored version invalidates the previous credential
+  ---
+  duration_ms: 0.181584
+  ...
+# Subtest: credentials reject malformed identifiers, versions, and weak secrets
+ok 75 - credentials reject malformed identifiers, versions, and weak secrets
+  ---
+  duration_ms: 0.21775
+  ...
+# Subtest: creator invitation keeps the approved concise identity and account-creation copy
+ok 76 - creator invitation keeps the approved concise identity and account-creation copy
+  ---
+  duration_ms: 4.703625
+  ...
+# Subtest: creator invitation greets a full-name account by first name
+ok 77 - creator invitation greets a full-name account by first name
+  ---
+  duration_ms: 0.913334
+  ...
+# Subtest: email correction stays inline and short
+ok 78 - email correction stays inline and short
+  ---
+  duration_ms: 0.365083
+  ...
+# Subtest: the quiz draft is cleared only when the claim response signals a fresh start
+ok 79 - the quiz draft is cleared only when the claim response signals a fresh start
+  ---
+  duration_ms: 0.087375
+  ...
+# Subtest: the invitation client wires the draft-clearing predicate before navigating away
+ok 80 - the invitation client wires the draft-clearing predicate before navigating away
+  ---
+  duration_ms: 2.523209
+  ...
+1..80
+# tests 80
+# suites 0
+# pass 80
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7483.146833

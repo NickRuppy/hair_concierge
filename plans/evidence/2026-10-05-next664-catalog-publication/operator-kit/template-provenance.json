@@ -1,0 +1,13 @@
+{
+  "template": "/tmp/test-audit-free67-tools-phkvfcm3",
+  "files": {
+    "operator-guard.cjs": "1b4b20d2ddd513790e3ce880ae0217b627ac3b58ac16bf55271282ea000d42ea",
+    "operator-proof.cjs": "9784400ba6f2ce2fb4ecc35e1027ffb3351e978f00ae087ecfd180ba09e88d15",
+    "operator-edit.cjs": "6b45132ad37e1583695c047469e6232b286a0619ed8d2db3a335432ef0455d6c",
+    "operator-run-controls.cjs": "b883327d047f4152cfdcaa1dddd9a81c4d6c93ae540ac191e3430a582d8b0a91",
+    "operator-native-proof.cjs": "549f54e76cb4a6f344899c3b9c510e1f2cc275851b61acdd31b1554e72fc028f",
+    "operator-readonly-preload.cjs": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "operator-pins.json": "9fbdea960d87acb674473172b4d6d797f49496d8b8faafad0aad0b24cb4f6ad5"
+  },
+  "reusedIdentityDependencies": "Exact prior reviewed pins and policies; no inherited Free source guards. Catalog111 original semantic guards preserved separately."
+}

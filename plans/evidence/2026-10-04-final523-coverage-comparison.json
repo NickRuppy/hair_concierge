@@ -1,0 +1,3052 @@
+{
+  "baselineFiles": 1935,
+  "finalFiles": 1892,
+  "removed": [
+    "apps/product-intake-review/app/api/submissions/[submissionId]/publish/final-image-handoff.ts",
+    "scripts/research-leave-in-specs.ts",
+    "scripts/research-shampoo-specs.ts",
+    "src/components/quiz/app-value-stack-proof.tsx",
+    "src/components/quiz/app-value-stack-routine.tsx",
+    "src/components/quiz/guided-story-analysis.tsx",
+    "src/components/quiz/guided-story-chat-demo.tsx",
+    "src/components/quiz/guided-story-routine.tsx",
+    "src/components/quiz/guided-story-support.tsx",
+    "src/components/quiz/guided-story-tracker-proof.tsx",
+    "src/components/quiz/quiz-brand-panel.tsx",
+    "src/components/quiz/quiz-card.tsx",
+    "src/components/quiz/quiz-profile-card.tsx",
+    "src/components/quiz/result-offer-countdown.tsx",
+    "src/components/quiz/use-guided-story-flow.ts",
+    "src/components/ui/accordion.tsx",
+    "src/components/ui/dropdown-menu.tsx",
+    "src/components/ui/label.tsx",
+    "src/components/ui/progress.tsx",
+    "src/components/ui/scroll-area.tsx",
+    "src/components/ui/select.tsx",
+    "src/components/ui/separator.tsx",
+    "src/components/ui/sheet.tsx",
+    "src/components/ui/toast.tsx",
+    "src/components/waitlist/quiz-gate-landing.tsx",
+    "src/components/waitlist/quiz-gate-modal.tsx",
+    "src/components/waitlist/waitlist-form.tsx",
+    "src/lib/agent/compare/held-out-turns.ts",
+    "src/lib/agent/compare/run-compare.ts",
+    "src/lib/agent/compare/scenarios.ts",
+    "src/lib/paypal/trial-plan-shape.ts",
+    "src/lib/personal-plan/products/index.ts",
+    "src/lib/quiz/app-value-stack-copy.ts",
+    "src/lib/quiz/brand-panel-content.ts",
+    "src/lib/quiz/display-name.ts",
+    "src/lib/quiz/guided-story-chat.ts",
+    "src/lib/quiz/guided-story-flow.ts",
+    "src/lib/quiz/guided-story-preview.ts",
+    "src/lib/quiz/guided-story-routine-copy.ts",
+    "src/lib/quiz/guided-story-tracker.ts",
+    "src/lib/quiz/result-card-data.ts",
+    "src/lib/quiz/results-lookup.ts",
+    "src/lib/routines/product-attachments.ts"
+  ],
+  "global": {
+    "lines": {
+      "before": {
+        "total": 446681,
+        "covered": 311739,
+        "skipped": 0,
+        "pct": 69.79
+      },
+      "after": {
+        "total": 437773,
+        "covered": 306896,
+        "skipped": 0,
+        "pct": 70.1
+      },
+      "deltaPercentagePoints": 0.3138384009673274,
+      "relativeLossPercent": -0.4496891655599292
+    },
+    "statements": {
+      "before": {
+        "total": 446681,
+        "covered": 311739,
+        "skipped": 0,
+        "pct": 69.79
+      },
+      "after": {
+        "total": 437773,
+        "covered": 306896,
+        "skipped": 0,
+        "pct": 70.1
+      },
+      "deltaPercentagePoints": 0.3138384009673274,
+      "relativeLossPercent": -0.4496891655599292
+    },
+    "functions": {
+      "before": {
+        "total": 25474,
+        "covered": 21163,
+        "skipped": 0,
+        "pct": 83.07
+      },
+      "after": {
+        "total": 24947,
+        "covered": 20780,
+        "skipped": 0,
+        "pct": 83.29
+      },
+      "deltaPercentagePoints": 0.2197260846681104,
+      "relativeLossPercent": -0.2644852941849192
+    },
+    "branches": {
+      "before": {
+        "total": 85644,
+        "covered": 69840,
+        "skipped": 0,
+        "pct": 81.54
+      },
+      "after": {
+        "total": 84586,
+        "covered": 69005,
+        "skipped": 0,
+        "pct": 81.57
+      },
+      "deltaPercentagePoints": 0.03282560708836968,
+      "relativeLossPercent": -0.040253669723315184
+    }
+  },
+  "conservative": {
+    "lines": {
+      "before": {
+        "total": 446681,
+        "covered": 311739,
+        "skipped": 0,
+        "pct": 69.79
+      },
+      "actual": {
+        "total": 437773,
+        "covered": 306896,
+        "skipped": 0,
+        "pct": 70.1
+      },
+      "conservative": {
+        "total": 446688,
+        "covered": 306896
+      },
+      "retiredTotal": 6479,
+      "retiredCovered": 3212,
+      "deltaPercentagePoints": -1.0852956213672798
+    },
+    "statements": {
+      "before": {
+        "total": 446681,
+        "covered": 311739,
+        "skipped": 0,
+        "pct": 69.79
+      },
+      "actual": {
+        "total": 437773,
+        "covered": 306896,
+        "skipped": 0,
+        "pct": 70.1
+      },
+      "conservative": {
+        "total": 446688,
+        "covered": 306896
+      },
+      "retiredTotal": 6479,
+      "retiredCovered": 3212,
+      "deltaPercentagePoints": -1.0852956213672798
+    },
+    "functions": {
+      "before": {
+        "total": 25474,
+        "covered": 21163,
+        "skipped": 0,
+        "pct": 83.07
+      },
+      "actual": {
+        "total": 24947,
+        "covered": 20780,
+        "skipped": 0,
+        "pct": 83.29
+      },
+      "conservative": {
+        "total": 25474,
+        "covered": 20780
+      },
+      "retiredTotal": 269,
+      "retiredCovered": 220,
+      "deltaPercentagePoints": -1.5034937583418326
+    },
+    "branches": {
+      "before": {
+        "total": 85644,
+        "covered": 69840,
+        "skipped": 0,
+        "pct": 81.54
+      },
+      "actual": {
+        "total": 84586,
+        "covered": 69005,
+        "skipped": 0,
+        "pct": 81.57
+      },
+      "conservative": {
+        "total": 85716,
+        "covered": 69005
+      },
+      "retiredTotal": 663,
+      "retiredCovered": 514,
+      "deltaPercentagePoints": -1.0426451832459804
+    }
+  },
+  "changedEntries": 136,
+  "declines": [
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent/compare/run-shadow-agent.ts",
+      "metric": "branches",
+      "before": {
+        "total": 8,
+        "covered": 6,
+        "skipped": 0,
+        "pct": 75
+      },
+      "after": {
+        "total": 1,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      },
+      "deltaPercentagePoints": -75
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent/orchestrator/model-client.ts",
+      "metric": "branches",
+      "before": {
+        "total": 8,
+        "covered": 6,
+        "skipped": 0,
+        "pct": 75
+      },
+      "after": {
+        "total": 1,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      },
+      "deltaPercentagePoints": -75
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/openai/chat.ts",
+      "metric": "branches",
+      "before": {
+        "total": 8,
+        "covered": 6,
+        "skipped": 0,
+        "pct": 75
+      },
+      "after": {
+        "total": 1,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      },
+      "deltaPercentagePoints": -75
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/openai/chat.ts",
+      "metric": "functions",
+      "before": {
+        "total": 9,
+        "covered": 4,
+        "skipped": 0,
+        "pct": 44.44
+      },
+      "after": {
+        "total": 1,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      },
+      "deltaPercentagePoints": -44.44444444444444
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/openai/chat.ts",
+      "metric": "lines",
+      "before": {
+        "total": 51,
+        "covered": 20,
+        "skipped": 0,
+        "pct": 39.21
+      },
+      "after": {
+        "total": 51,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      },
+      "deltaPercentagePoints": -39.21568627450981
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/openai/chat.ts",
+      "metric": "statements",
+      "before": {
+        "total": 51,
+        "covered": 20,
+        "skipped": 0,
+        "pct": 39.21
+      },
+      "after": {
+        "total": 51,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      },
+      "deltaPercentagePoints": -39.21568627450981
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent/orchestrator/model-client.ts",
+      "metric": "lines",
+      "before": {
+        "total": 430,
+        "covered": 154,
+        "skipped": 0,
+        "pct": 35.81
+      },
+      "after": {
+        "total": 430,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      },
+      "deltaPercentagePoints": -35.81395348837209
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent/orchestrator/model-client.ts",
+      "metric": "statements",
+      "before": {
+        "total": 430,
+        "covered": 154,
+        "skipped": 0,
+        "pct": 35.81
+      },
+      "after": {
+        "total": 430,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      },
+      "deltaPercentagePoints": -35.81395348837209
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan-quiz/loading-timeline.ts",
+      "metric": "functions",
+      "before": {
+        "total": 8,
+        "covered": 7,
+        "skipped": 0,
+        "pct": 87.5
+      },
+      "after": {
+        "total": 5,
+        "covered": 3,
+        "skipped": 0,
+        "pct": 60
+      },
+      "deltaPercentagePoints": -27.5
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan-quiz/loading-timeline.ts",
+      "metric": "branches",
+      "before": {
+        "total": 16,
+        "covered": 14,
+        "skipped": 0,
+        "pct": 87.5
+      },
+      "after": {
+        "total": 5,
+        "covered": 3,
+        "skipped": 0,
+        "pct": 60
+      },
+      "deltaPercentagePoints": -27.5
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent/orchestrator/model-client.ts",
+      "metric": "functions",
+      "before": {
+        "total": 16,
+        "covered": 4,
+        "skipped": 0,
+        "pct": 25
+      },
+      "after": {
+        "total": 1,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      },
+      "deltaPercentagePoints": -25
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent/compare/run-shadow-agent.ts",
+      "metric": "functions",
+      "before": {
+        "total": 24,
+        "covered": 4,
+        "skipped": 0,
+        "pct": 16.66
+      },
+      "after": {
+        "total": 1,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      },
+      "deltaPercentagePoints": -16.666666666666664
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent/compare/run-shadow-agent.ts",
+      "metric": "lines",
+      "before": {
+        "total": 364,
+        "covered": 52,
+        "skipped": 0,
+        "pct": 14.28
+      },
+      "after": {
+        "total": 314,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      },
+      "deltaPercentagePoints": -14.285714285714285
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent/compare/run-shadow-agent.ts",
+      "metric": "statements",
+      "before": {
+        "total": 364,
+        "covered": 52,
+        "skipped": 0,
+        "pct": 14.28
+      },
+      "after": {
+        "total": 314,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 0
+      },
+      "deltaPercentagePoints": -14.285714285714285
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/paypal/order-intents.ts",
+      "metric": "lines",
+      "before": {
+        "total": 302,
+        "covered": 242,
+        "skipped": 0,
+        "pct": 80.13
+      },
+      "after": {
+        "total": 153,
+        "covered": 105,
+        "skipped": 0,
+        "pct": 68.62
+      },
+      "deltaPercentagePoints": -11.50499935073367
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/paypal/order-intents.ts",
+      "metric": "statements",
+      "before": {
+        "total": 302,
+        "covered": 242,
+        "skipped": 0,
+        "pct": 80.13
+      },
+      "after": {
+        "total": 153,
+        "covered": 105,
+        "skipped": 0,
+        "pct": 68.62
+      },
+      "deltaPercentagePoints": -11.50499935073367
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/waitlist/tokens.ts",
+      "metric": "branches",
+      "before": {
+        "total": 15,
+        "covered": 13,
+        "skipped": 0,
+        "pct": 86.66
+      },
+      "after": {
+        "total": 9,
+        "covered": 7,
+        "skipped": 0,
+        "pct": 77.77
+      },
+      "deltaPercentagePoints": -8.888888888888886
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/funnels/landing/registry.ts",
+      "metric": "branches",
+      "before": {
+        "total": 14,
+        "covered": 11,
+        "skipped": 0,
+        "pct": 78.57
+      },
+      "after": {
+        "total": 10,
+        "covered": 7,
+        "skipped": 0,
+        "pct": 70
+      },
+      "deltaPercentagePoints": -8.57142857142857
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/billing/personal-plan-one-time-consents.ts",
+      "metric": "branches",
+      "before": {
+        "total": 59,
+        "covered": 47,
+        "skipped": 0,
+        "pct": 79.66
+      },
+      "after": {
+        "total": 44,
+        "covered": 32,
+        "skipped": 0,
+        "pct": 72.72
+      },
+      "deltaPercentagePoints": -6.933744221879806
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/onboarding/goal-flow.ts",
+      "metric": "branches",
+      "before": {
+        "total": 22,
+        "covered": 18,
+        "skipped": 0,
+        "pct": 81.81
+      },
+      "after": {
+        "total": 16,
+        "covered": 12,
+        "skipped": 0,
+        "pct": 75
+      },
+      "deltaPercentagePoints": -6.818181818181827
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan-quiz/loading-timeline.ts",
+      "metric": "lines",
+      "before": {
+        "total": 28,
+        "covered": 28,
+        "skipped": 0,
+        "pct": 100
+      },
+      "after": {
+        "total": 15,
+        "covered": 14,
+        "skipped": 0,
+        "pct": 93.33
+      },
+      "deltaPercentagePoints": -6.666666666666671
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan-quiz/loading-timeline.ts",
+      "metric": "statements",
+      "before": {
+        "total": 28,
+        "covered": 28,
+        "skipped": 0,
+        "pct": 100
+      },
+      "after": {
+        "total": 15,
+        "covered": 14,
+        "skipped": 0,
+        "pct": 93.33
+      },
+      "deltaPercentagePoints": -6.666666666666671
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/billing/purchases.ts",
+      "metric": "lines",
+      "before": {
+        "total": 283,
+        "covered": 192,
+        "skipped": 0,
+        "pct": 67.84
+      },
+      "after": {
+        "total": 277,
+        "covered": 171,
+        "skipped": 0,
+        "pct": 61.73
+      },
+      "deltaPercentagePoints": -6.111670982638309
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/billing/purchases.ts",
+      "metric": "statements",
+      "before": {
+        "total": 283,
+        "covered": 192,
+        "skipped": 0,
+        "pct": 67.84
+      },
+      "after": {
+        "total": 277,
+        "covered": 171,
+        "skipped": 0,
+        "pct": 61.73
+      },
+      "deltaPercentagePoints": -6.111670982638309
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/direct-acceptance/defaults.ts",
+      "metric": "branches",
+      "before": {
+        "total": 17,
+        "covered": 15,
+        "skipped": 0,
+        "pct": 88.23
+      },
+      "after": {
+        "total": 12,
+        "covered": 10,
+        "skipped": 0,
+        "pct": 83.33
+      },
+      "deltaPercentagePoints": -4.901960784313715
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/direct-acceptance/defaults.ts",
+      "metric": "functions",
+      "before": {
+        "total": 14,
+        "covered": 10,
+        "skipped": 0,
+        "pct": 71.42
+      },
+      "after": {
+        "total": 12,
+        "covered": 8,
+        "skipped": 0,
+        "pct": 66.66
+      },
+      "deltaPercentagePoints": -4.761904761904773
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/types.ts",
+      "metric": "branches",
+      "before": {
+        "total": 13,
+        "covered": 11,
+        "skipped": 0,
+        "pct": 84.61
+      },
+      "after": {
+        "total": 10,
+        "covered": 8,
+        "skipped": 0,
+        "pct": 80
+      },
+      "deltaPercentagePoints": -4.615384615384613
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/routine/portfolio-presentation.ts",
+      "metric": "branches",
+      "before": {
+        "total": 45,
+        "covered": 35,
+        "skipped": 0,
+        "pct": 77.77
+      },
+      "after": {
+        "total": 41,
+        "covered": 30,
+        "skipped": 0,
+        "pct": 73.17
+      },
+      "deltaPercentagePoints": -4.6070460704607115
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/refinement/module-scope.ts",
+      "metric": "functions",
+      "before": {
+        "total": 27,
+        "covered": 26,
+        "skipped": 0,
+        "pct": 96.29
+      },
+      "after": {
+        "total": 27,
+        "covered": 25,
+        "skipped": 0,
+        "pct": 92.59
+      },
+      "deltaPercentagePoints": -3.7037037037036953
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/gated-preview/gate.ts",
+      "metric": "branches",
+      "before": {
+        "total": 21,
+        "covered": 19,
+        "skipped": 0,
+        "pct": 90.47
+      },
+      "after": {
+        "total": 16,
+        "covered": 14,
+        "skipped": 0,
+        "pct": 87.5
+      },
+      "deltaPercentagePoints": -2.9761904761904816
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan-field-test/token.ts",
+      "metric": "branches",
+      "before": {
+        "total": 16,
+        "covered": 14,
+        "skipped": 0,
+        "pct": 87.5
+      },
+      "after": {
+        "total": 13,
+        "covered": 11,
+        "skipped": 0,
+        "pct": 84.61
+      },
+      "deltaPercentagePoints": -2.884615384615387
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/auth/free-registration.ts",
+      "metric": "functions",
+      "before": {
+        "total": 36,
+        "covered": 30,
+        "skipped": 0,
+        "pct": 83.33
+      },
+      "after": {
+        "total": 36,
+        "covered": 29,
+        "skipped": 0,
+        "pct": 80.55
+      },
+      "deltaPercentagePoints": -2.7777777777777857
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/persistence/index.ts",
+      "metric": "lines",
+      "before": {
+        "total": 202,
+        "covered": 197,
+        "skipped": 0,
+        "pct": 97.52
+      },
+      "after": {
+        "total": 97,
+        "covered": 92,
+        "skipped": 0,
+        "pct": 94.84
+      },
+      "deltaPercentagePoints": -2.6793916505052664
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/persistence/index.ts",
+      "metric": "statements",
+      "before": {
+        "total": 202,
+        "covered": 197,
+        "skipped": 0,
+        "pct": 97.52
+      },
+      "after": {
+        "total": 97,
+        "covered": 92,
+        "skipped": 0,
+        "pct": 94.84
+      },
+      "deltaPercentagePoints": -2.6793916505052664
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/recommendation-engine/chat.ts",
+      "metric": "functions",
+      "before": {
+        "total": 31,
+        "covered": 20,
+        "skipped": 0,
+        "pct": 64.51
+      },
+      "after": {
+        "total": 29,
+        "covered": 18,
+        "skipped": 0,
+        "pct": 62.06
+      },
+      "deltaPercentagePoints": -2.4471635150166833
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/products/inventory-search.ts",
+      "metric": "functions",
+      "before": {
+        "total": 26,
+        "covered": 24,
+        "skipped": 0,
+        "pct": 92.3
+      },
+      "after": {
+        "total": 10,
+        "covered": 9,
+        "skipped": 0,
+        "pct": 90
+      },
+      "deltaPercentagePoints": -2.3076923076923066
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/quiz/quiz-analysis.tsx",
+      "metric": "functions",
+      "before": {
+        "total": 25,
+        "covered": 21,
+        "skipped": 0,
+        "pct": 84
+      },
+      "after": {
+        "total": 22,
+        "covered": 18,
+        "skipped": 0,
+        "pct": 81.81
+      },
+      "deltaPercentagePoints": -2.1818181818181728
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "metric": "functions",
+      "before": {
+        "total": 46,
+        "covered": 36,
+        "skipped": 0,
+        "pct": 78.26
+      },
+      "after": {
+        "total": 42,
+        "covered": 32,
+        "skipped": 0,
+        "pct": 76.19
+      },
+      "deltaPercentagePoints": -2.070393374741201
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/quiz/hair-portrait.tsx",
+      "metric": "functions",
+      "before": {
+        "total": 30,
+        "covered": 27,
+        "skipped": 0,
+        "pct": 90
+      },
+      "after": {
+        "total": 25,
+        "covered": 22,
+        "skipped": 0,
+        "pct": 88
+      },
+      "deltaPercentagePoints": -2
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/personal-plan-start/plan-start-opening.tsx",
+      "metric": "branches",
+      "before": {
+        "total": 11,
+        "covered": 9,
+        "skipped": 0,
+        "pct": 81.81
+      },
+      "after": {
+        "total": 10,
+        "covered": 8,
+        "skipped": 0,
+        "pct": 80
+      },
+      "deltaPercentagePoints": -1.8181818181818272
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/profile/haar-check-edit-control.tsx",
+      "metric": "branches",
+      "before": {
+        "total": 11,
+        "covered": 9,
+        "skipped": 0,
+        "pct": 81.81
+      },
+      "after": {
+        "total": 10,
+        "covered": 8,
+        "skipped": 0,
+        "pct": 80
+      },
+      "deltaPercentagePoints": -1.8181818181818272
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/labs/agent-compare/route.ts",
+      "metric": "branches",
+      "before": {
+        "total": 78,
+        "covered": 68,
+        "skipped": 0,
+        "pct": 87.17
+      },
+      "after": {
+        "total": 82,
+        "covered": 70,
+        "skipped": 0,
+        "pct": 85.36
+      },
+      "deltaPercentagePoints": -1.813633520950603
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/refinement/module-scope.ts",
+      "metric": "branches",
+      "before": {
+        "total": 68,
+        "covered": 64,
+        "skipped": 0,
+        "pct": 94.11
+      },
+      "after": {
+        "total": 65,
+        "covered": 60,
+        "skipped": 0,
+        "pct": 92.3
+      },
+      "deltaPercentagePoints": -1.8099547511312153
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/billing/personal-plan-one-time-consents.ts",
+      "metric": "functions",
+      "before": {
+        "total": 42,
+        "covered": 27,
+        "skipped": 0,
+        "pct": 64.28
+      },
+      "after": {
+        "total": 32,
+        "covered": 20,
+        "skipped": 0,
+        "pct": 62.5
+      },
+      "deltaPercentagePoints": -1.7857142857142918
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/product-intake/repository.ts",
+      "metric": "branches",
+      "before": {
+        "total": 42,
+        "covered": 28,
+        "skipped": 0,
+        "pct": 66.66
+      },
+      "after": {
+        "total": 40,
+        "covered": 26,
+        "skipped": 0,
+        "pct": 65
+      },
+      "deltaPercentagePoints": -1.6666666666666572
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/recommendation-engine/chat.ts",
+      "metric": "lines",
+      "before": {
+        "total": 462,
+        "covered": 250,
+        "skipped": 0,
+        "pct": 54.11
+      },
+      "after": {
+        "total": 446,
+        "covered": 234,
+        "skipped": 0,
+        "pct": 52.46
+      },
+      "deltaPercentagePoints": -1.6461863995496344
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/recommendation-engine/chat.ts",
+      "metric": "statements",
+      "before": {
+        "total": 462,
+        "covered": 250,
+        "skipped": 0,
+        "pct": 54.11
+      },
+      "after": {
+        "total": 446,
+        "covered": 234,
+        "skipped": 0,
+        "pct": 52.46
+      },
+      "deltaPercentagePoints": -1.6461863995496344
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/personal-plan-refinement/refinement-flow.tsx",
+      "metric": "functions",
+      "before": {
+        "total": 33,
+        "covered": 25,
+        "skipped": 0,
+        "pct": 75.75
+      },
+      "after": {
+        "total": 31,
+        "covered": 23,
+        "skipped": 0,
+        "pct": 74.19
+      },
+      "deltaPercentagePoints": -1.564027370478982
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "metric": "branches",
+      "before": {
+        "total": 133,
+        "covered": 106,
+        "skipped": 0,
+        "pct": 79.69
+      },
+      "after": {
+        "total": 124,
+        "covered": 97,
+        "skipped": 0,
+        "pct": 78.22
+      },
+      "deltaPercentagePoints": -1.4734416686878546
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/discovery/cockpit-copy.ts",
+      "metric": "branches",
+      "before": {
+        "total": 26,
+        "covered": 24,
+        "skipped": 0,
+        "pct": 92.3
+      },
+      "after": {
+        "total": 22,
+        "covered": 20,
+        "skipped": 0,
+        "pct": 90.9
+      },
+      "deltaPercentagePoints": -1.3986013986014
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/onboarding/goal-flow.ts",
+      "metric": "functions",
+      "before": {
+        "total": 13,
+        "covered": 12,
+        "skipped": 0,
+        "pct": 92.3
+      },
+      "after": {
+        "total": 11,
+        "covered": 10,
+        "skipped": 0,
+        "pct": 90.9
+      },
+      "deltaPercentagePoints": -1.3986013986014
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/tracking/types.ts",
+      "metric": "branches",
+      "before": {
+        "total": 27,
+        "covered": 24,
+        "skipped": 0,
+        "pct": 88.88
+      },
+      "after": {
+        "total": 24,
+        "covered": 21,
+        "skipped": 0,
+        "pct": 87.5
+      },
+      "deltaPercentagePoints": -1.3888888888888857
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent-v2/resolved-product-selection-adapter.ts",
+      "metric": "branches",
+      "before": {
+        "total": 108,
+        "covered": 81,
+        "skipped": 0,
+        "pct": 75
+      },
+      "after": {
+        "total": 95,
+        "covered": 70,
+        "skipped": 0,
+        "pct": 73.68
+      },
+      "deltaPercentagePoints": -1.3157894736842195
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/product-lines/display.ts",
+      "metric": "branches",
+      "before": {
+        "total": 52,
+        "covered": 42,
+        "skipped": 0,
+        "pct": 80.76
+      },
+      "after": {
+        "total": 49,
+        "covered": 39,
+        "skipped": 0,
+        "pct": 79.59
+      },
+      "deltaPercentagePoints": -1.1773940345369027
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/quiz/need-lane.ts",
+      "metric": "branches",
+      "before": {
+        "total": 99,
+        "covered": 97,
+        "skipped": 0,
+        "pct": 97.97
+      },
+      "after": {
+        "total": 97,
+        "covered": 94,
+        "skipped": 0,
+        "pct": 96.9
+      },
+      "deltaPercentagePoints": -1.0725814849526216
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/recommendation-engine/chat.ts",
+      "metric": "branches",
+      "before": {
+        "total": 53,
+        "covered": 44,
+        "skipped": 0,
+        "pct": 83.01
+      },
+      "after": {
+        "total": 50,
+        "covered": 41,
+        "skipped": 0,
+        "pct": 82
+      },
+      "deltaPercentagePoints": -1.0188679245283083
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/scan/scan-result-card.tsx",
+      "metric": "branches",
+      "before": {
+        "total": 21,
+        "covered": 19,
+        "skipped": 0,
+        "pct": 90.47
+      },
+      "after": {
+        "total": 19,
+        "covered": 17,
+        "skipped": 0,
+        "pct": 89.47
+      },
+      "deltaPercentagePoints": -1.0025062656641666
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/scan/scan-product-thumb.tsx",
+      "metric": "branches",
+      "before": {
+        "total": 21,
+        "covered": 17,
+        "skipped": 0,
+        "pct": 80.95
+      },
+      "after": {
+        "total": 20,
+        "covered": 16,
+        "skipped": 0,
+        "pct": 80
+      },
+      "deltaPercentagePoints": -0.952380952380949
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts",
+      "metric": "branches",
+      "before": {
+        "total": 141,
+        "covered": 127,
+        "skipped": 0,
+        "pct": 90.07
+      },
+      "after": {
+        "total": 139,
+        "covered": 124,
+        "skipped": 0,
+        "pct": 89.2
+      },
+      "deltaPercentagePoints": -0.8622888922904224
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/quiz/guided-story-priorities.ts",
+      "metric": "branches",
+      "before": {
+        "total": 300,
+        "covered": 281,
+        "skipped": 0,
+        "pct": 93.66
+      },
+      "after": {
+        "total": 293,
+        "covered": 272,
+        "skipped": 0,
+        "pct": 92.83
+      },
+      "deltaPercentagePoints": -0.8339021615472149
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/triggers/trigger-rules.ts",
+      "metric": "functions",
+      "before": {
+        "total": 38,
+        "covered": 37,
+        "skipped": 0,
+        "pct": 97.36
+      },
+      "after": {
+        "total": 29,
+        "covered": 28,
+        "skipped": 0,
+        "pct": 96.55
+      },
+      "deltaPercentagePoints": -0.8166969147005432
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/products/fit-comparison.ts",
+      "metric": "branches",
+      "before": {
+        "total": 254,
+        "covered": 212,
+        "skipped": 0,
+        "pct": 83.46
+      },
+      "after": {
+        "total": 248,
+        "covered": 205,
+        "skipped": 0,
+        "pct": 82.66
+      },
+      "deltaPercentagePoints": -0.8032766065531973
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/refinement/answer-provenance.ts",
+      "metric": "branches",
+      "before": {
+        "total": 24,
+        "covered": 22,
+        "skipped": 0,
+        "pct": 91.66
+      },
+      "after": {
+        "total": 22,
+        "covered": 20,
+        "skipped": 0,
+        "pct": 90.9
+      },
+      "deltaPercentagePoints": -0.7575757575757507
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/discovery/runsheet/index.ts",
+      "metric": "functions",
+      "before": {
+        "total": 21,
+        "covered": 18,
+        "skipped": 0,
+        "pct": 85.71
+      },
+      "after": {
+        "total": 20,
+        "covered": 17,
+        "skipped": 0,
+        "pct": 85
+      },
+      "deltaPercentagePoints": -0.7142857142857082
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+      "metric": "branches",
+      "before": {
+        "total": 86,
+        "covered": 78,
+        "skipped": 0,
+        "pct": 90.69
+      },
+      "after": {
+        "total": 80,
+        "covered": 72,
+        "skipped": 0,
+        "pct": 90
+      },
+      "deltaPercentagePoints": -0.6976744186046488
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/triggers/trigger-rules.ts",
+      "metric": "branches",
+      "before": {
+        "total": 63,
+        "covered": 61,
+        "skipped": 0,
+        "pct": 96.82
+      },
+      "after": {
+        "total": 52,
+        "covered": 50,
+        "skipped": 0,
+        "pct": 96.15
+      },
+      "deltaPercentagePoints": -0.6715506715506621
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/quiz/quiz-analysis.tsx",
+      "metric": "lines",
+      "before": {
+        "total": 235,
+        "covered": 167,
+        "skipped": 0,
+        "pct": 71.06
+      },
+      "after": {
+        "total": 230,
+        "covered": 162,
+        "skipped": 0,
+        "pct": 70.43
+      },
+      "deltaPercentagePoints": -0.6290471785383858
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/quiz/quiz-analysis.tsx",
+      "metric": "statements",
+      "before": {
+        "total": 235,
+        "covered": 167,
+        "skipped": 0,
+        "pct": 71.06
+      },
+      "after": {
+        "total": 230,
+        "covered": 162,
+        "skipped": 0,
+        "pct": 70.43
+      },
+      "deltaPercentagePoints": -0.6290471785383858
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/auth/intake-state.ts",
+      "metric": "functions",
+      "before": {
+        "total": 19,
+        "covered": 18,
+        "skipped": 0,
+        "pct": 94.73
+      },
+      "after": {
+        "total": 17,
+        "covered": 16,
+        "skipped": 0,
+        "pct": 94.11
+      },
+      "deltaPercentagePoints": -0.6191950464396285
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/product-intake/shampoo-protocol-roles.ts",
+      "metric": "branches",
+      "before": {
+        "total": 19,
+        "covered": 17,
+        "skipped": 0,
+        "pct": 89.47
+      },
+      "after": {
+        "total": 18,
+        "covered": 16,
+        "skipped": 0,
+        "pct": 88.88
+      },
+      "deltaPercentagePoints": -0.5847953216374293
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/quiz/funnel-copy.ts",
+      "metric": "branches",
+      "before": {
+        "total": 19,
+        "covered": 17,
+        "skipped": 0,
+        "pct": 89.47
+      },
+      "after": {
+        "total": 18,
+        "covered": 16,
+        "skipped": 0,
+        "pct": 88.88
+      },
+      "deltaPercentagePoints": -0.5847953216374293
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/personal-plan-start/plan-start-flow.tsx",
+      "metric": "functions",
+      "before": {
+        "total": 83,
+        "covered": 64,
+        "skipped": 0,
+        "pct": 77.1
+      },
+      "after": {
+        "total": 81,
+        "covered": 62,
+        "skipped": 0,
+        "pct": 76.54
+      },
+      "deltaPercentagePoints": -0.5652238583965641
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/premium-sheet/pricing.ts",
+      "metric": "branches",
+      "before": {
+        "total": 20,
+        "covered": 18,
+        "skipped": 0,
+        "pct": 90
+      },
+      "after": {
+        "total": 19,
+        "covered": 17,
+        "skipped": 0,
+        "pct": 89.47
+      },
+      "deltaPercentagePoints": -0.526315789473685
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/stripe/webhook/route.ts",
+      "metric": "branches",
+      "before": {
+        "total": 131,
+        "covered": 82,
+        "skipped": 0,
+        "pct": 62.59
+      },
+      "after": {
+        "total": 132,
+        "covered": 82,
+        "skipped": 0,
+        "pct": 62.12
+      },
+      "deltaPercentagePoints": -0.47420772611612705
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/checkout/paypal-one-time-recovery.ts",
+      "metric": "functions",
+      "before": {
+        "total": 37,
+        "covered": 34,
+        "skipped": 0,
+        "pct": 91.89
+      },
+      "after": {
+        "total": 35,
+        "covered": 32,
+        "skipped": 0,
+        "pct": 91.42
+      },
+      "deltaPercentagePoints": -0.4633204633204713
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/stripe/trial-authorization.ts",
+      "metric": "branches",
+      "before": {
+        "total": 116,
+        "covered": 101,
+        "skipped": 0,
+        "pct": 87.06
+      },
+      "after": {
+        "total": 112,
+        "covered": 97,
+        "skipped": 0,
+        "pct": 86.6
+      },
+      "deltaPercentagePoints": -0.4618226600985196
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "metric": "lines",
+      "before": {
+        "total": 1663,
+        "covered": 1038,
+        "skipped": 0,
+        "pct": 62.41
+      },
+      "after": {
+        "total": 1644,
+        "covered": 1019,
+        "skipped": 0,
+        "pct": 61.98
+      },
+      "deltaPercentagePoints": -0.4343497299899255
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "metric": "statements",
+      "before": {
+        "total": 1663,
+        "covered": 1038,
+        "skipped": 0,
+        "pct": 62.41
+      },
+      "after": {
+        "total": 1644,
+        "covered": 1019,
+        "skipped": 0,
+        "pct": 61.98
+      },
+      "deltaPercentagePoints": -0.4343497299899255
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/discovery/runsheet/index.ts",
+      "metric": "branches",
+      "before": {
+        "total": 22,
+        "covered": 20,
+        "skipped": 0,
+        "pct": 90.9
+      },
+      "after": {
+        "total": 21,
+        "covered": 19,
+        "skipped": 0,
+        "pct": 90.47
+      },
+      "deltaPercentagePoints": -0.4329004329004249
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/shampoo/constants.ts",
+      "metric": "branches",
+      "before": {
+        "total": 50,
+        "covered": 45,
+        "skipped": 0,
+        "pct": 90
+      },
+      "after": {
+        "total": 48,
+        "covered": 43,
+        "skipped": 0,
+        "pct": 89.58
+      },
+      "deltaPercentagePoints": -0.4166666666666572
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent-v2/resolved-product-selection-adapter.ts",
+      "metric": "functions",
+      "before": {
+        "total": 35,
+        "covered": 34,
+        "skipped": 0,
+        "pct": 97.14
+      },
+      "after": {
+        "total": 31,
+        "covered": 30,
+        "skipped": 0,
+        "pct": 96.77
+      },
+      "deltaPercentagePoints": -0.3686635944700356
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/meta-pixel.ts",
+      "metric": "branches",
+      "before": {
+        "total": 166,
+        "covered": 142,
+        "skipped": 0,
+        "pct": 85.54
+      },
+      "after": {
+        "total": 162,
+        "covered": 138,
+        "skipped": 0,
+        "pct": 85.18
+      },
+      "deltaPercentagePoints": -0.3569834895135955
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/quiz/quiz-analysis.tsx",
+      "metric": "branches",
+      "before": {
+        "total": 52,
+        "covered": 49,
+        "skipped": 0,
+        "pct": 94.23
+      },
+      "after": {
+        "total": 49,
+        "covered": 46,
+        "skipped": 0,
+        "pct": 93.87
+      },
+      "deltaPercentagePoints": -0.3532182103610637
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent-v2/resolved-product-selection-adapter.ts",
+      "metric": "lines",
+      "before": {
+        "total": 392,
+        "covered": 380,
+        "skipped": 0,
+        "pct": 96.93
+      },
+      "after": {
+        "total": 352,
+        "covered": 340,
+        "skipped": 0,
+        "pct": 96.59
+      },
+      "deltaPercentagePoints": -0.34786641929498785
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent-v2/resolved-product-selection-adapter.ts",
+      "metric": "statements",
+      "before": {
+        "total": 392,
+        "covered": 380,
+        "skipped": 0,
+        "pct": 96.93
+      },
+      "after": {
+        "total": 352,
+        "covered": 340,
+        "skipped": 0,
+        "pct": 96.59
+      },
+      "deltaPercentagePoints": -0.34786641929498785
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/products/fixture-gateway.ts",
+      "metric": "lines",
+      "before": {
+        "total": 1063,
+        "covered": 1012,
+        "skipped": 0,
+        "pct": 95.2
+      },
+      "after": {
+        "total": 1069,
+        "covered": 1014,
+        "skipped": 0,
+        "pct": 94.85
+      },
+      "deltaPercentagePoints": -0.34725308378514796
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/products/fixture-gateway.ts",
+      "metric": "statements",
+      "before": {
+        "total": 1063,
+        "covered": 1012,
+        "skipped": 0,
+        "pct": 95.2
+      },
+      "after": {
+        "total": 1069,
+        "covered": 1014,
+        "skipped": 0,
+        "pct": 94.85
+      },
+      "deltaPercentagePoints": -0.34725308378514796
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/personal-plan-refinement/refinement-flow.tsx",
+      "metric": "branches",
+      "before": {
+        "total": 109,
+        "covered": 89,
+        "skipped": 0,
+        "pct": 81.65
+      },
+      "after": {
+        "total": 107,
+        "covered": 87,
+        "skipped": 0,
+        "pct": 81.3
+      },
+      "deltaPercentagePoints": -0.3429649318357235
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/product-intake/catalog-enrichment/index.ts",
+      "metric": "branches",
+      "before": {
+        "total": 280,
+        "covered": 246,
+        "skipped": 0,
+        "pct": 87.85
+      },
+      "after": {
+        "total": 265,
+        "covered": 232,
+        "skipped": 0,
+        "pct": 87.54
+      },
+      "deltaPercentagePoints": -0.3099730458221046
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/product-identity/brand-resolution.ts",
+      "metric": "branches",
+      "before": {
+        "total": 148,
+        "covered": 129,
+        "skipped": 0,
+        "pct": 87.16
+      },
+      "after": {
+        "total": 137,
+        "covered": 119,
+        "skipped": 0,
+        "pct": 86.86
+      },
+      "deltaPercentagePoints": -0.30084829354902354
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/scan/scan-save-sheet.tsx",
+      "metric": "lines",
+      "before": {
+        "total": 242,
+        "covered": 71,
+        "skipped": 0,
+        "pct": 29.33
+      },
+      "after": {
+        "total": 241,
+        "covered": 70,
+        "skipped": 0,
+        "pct": 29.04
+      },
+      "deltaPercentagePoints": -0.2931998216796394
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/scan/scan-save-sheet.tsx",
+      "metric": "statements",
+      "before": {
+        "total": 242,
+        "covered": 71,
+        "skipped": 0,
+        "pct": 29.33
+      },
+      "after": {
+        "total": 241,
+        "covered": 70,
+        "skipped": 0,
+        "pct": 29.04
+      },
+      "deltaPercentagePoints": -0.2931998216796394
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/products/stage2-entry-adapter.ts",
+      "metric": "branches",
+      "before": {
+        "total": 61,
+        "covered": 51,
+        "skipped": 0,
+        "pct": 83.6
+      },
+      "after": {
+        "total": 60,
+        "covered": 50,
+        "skipped": 0,
+        "pct": 83.33
+      },
+      "deltaPercentagePoints": -0.2732240437158424
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/quiz/guided-story-products.ts",
+      "metric": "branches",
+      "before": {
+        "total": 131,
+        "covered": 125,
+        "skipped": 0,
+        "pct": 95.41
+      },
+      "after": {
+        "total": 124,
+        "covered": 118,
+        "skipped": 0,
+        "pct": 95.16
+      },
+      "deltaPercentagePoints": -0.2585570056636186
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/discovery/runsheet/frequency.ts",
+      "metric": "functions",
+      "before": {
+        "total": 29,
+        "covered": 28,
+        "skipped": 0,
+        "pct": 96.55
+      },
+      "after": {
+        "total": 27,
+        "covered": 26,
+        "skipped": 0,
+        "pct": 96.29
+      },
+      "deltaPercentagePoints": -0.2554278416347415
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent-v2/production/persisted-session-state.ts",
+      "metric": "lines",
+      "before": {
+        "total": 391,
+        "covered": 362,
+        "skipped": 0,
+        "pct": 92.58
+      },
+      "after": {
+        "total": 352,
+        "covered": 325,
+        "skipped": 0,
+        "pct": 92.32
+      },
+      "deltaPercentagePoints": -0.2535747500581209
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent-v2/production/persisted-session-state.ts",
+      "metric": "statements",
+      "before": {
+        "total": 391,
+        "covered": 362,
+        "skipped": 0,
+        "pct": 92.58
+      },
+      "after": {
+        "total": 352,
+        "covered": 325,
+        "skipped": 0,
+        "pct": 92.32
+      },
+      "deltaPercentagePoints": -0.2535747500581209
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/tracking/nudges.ts",
+      "metric": "branches",
+      "before": {
+        "total": 35,
+        "covered": 32,
+        "skipped": 0,
+        "pct": 91.42
+      },
+      "after": {
+        "total": 34,
+        "covered": 31,
+        "skipped": 0,
+        "pct": 91.17
+      },
+      "deltaPercentagePoints": -0.25210084033614066
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/discovery/consult-brief/generate.ts",
+      "metric": "branches",
+      "before": {
+        "total": 41,
+        "covered": 37,
+        "skipped": 0,
+        "pct": 90.24
+      },
+      "after": {
+        "total": 40,
+        "covered": 36,
+        "skipped": 0,
+        "pct": 90
+      },
+      "deltaPercentagePoints": -0.2439024390243958
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/personal-plan-refinement/refinement-flow.tsx",
+      "metric": "lines",
+      "before": {
+        "total": 1245,
+        "covered": 710,
+        "skipped": 0,
+        "pct": 57.02
+      },
+      "after": {
+        "total": 1238,
+        "covered": 703,
+        "skipped": 0,
+        "pct": 56.78
+      },
+      "deltaPercentagePoints": -0.24297513154394323
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/personal-plan-refinement/refinement-flow.tsx",
+      "metric": "statements",
+      "before": {
+        "total": 1245,
+        "covered": 710,
+        "skipped": 0,
+        "pct": 57.02
+      },
+      "after": {
+        "total": 1238,
+        "covered": 703,
+        "skipped": 0,
+        "pct": 56.78
+      },
+      "deltaPercentagePoints": -0.24297513154394323
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/personal-plan-start/plan-start-flow.tsx",
+      "metric": "lines",
+      "before": {
+        "total": 1562,
+        "covered": 1124,
+        "skipped": 0,
+        "pct": 71.95
+      },
+      "after": {
+        "total": 1550,
+        "covered": 1112,
+        "skipped": 0,
+        "pct": 71.74
+      },
+      "deltaPercentagePoints": -0.21709140473339517
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/personal-plan-start/plan-start-flow.tsx",
+      "metric": "statements",
+      "before": {
+        "total": 1562,
+        "covered": 1124,
+        "skipped": 0,
+        "pct": 71.95
+      },
+      "after": {
+        "total": 1550,
+        "covered": 1112,
+        "skipped": 0,
+        "pct": 71.74
+      },
+      "deltaPercentagePoints": -0.21709140473339517
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/routine/portfolio-presentation.ts",
+      "metric": "lines",
+      "before": {
+        "total": 109,
+        "covered": 105,
+        "skipped": 0,
+        "pct": 96.33
+      },
+      "after": {
+        "total": 103,
+        "covered": 99,
+        "skipped": 0,
+        "pct": 96.11
+      },
+      "deltaPercentagePoints": -0.21377037498885443
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/routine/portfolio-presentation.ts",
+      "metric": "statements",
+      "before": {
+        "total": 109,
+        "covered": 105,
+        "skipped": 0,
+        "pct": 96.33
+      },
+      "after": {
+        "total": 103,
+        "covered": 99,
+        "skipped": 0,
+        "pct": 96.11
+      },
+      "deltaPercentagePoints": -0.21377037498885443
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/products/fit-comparison.ts",
+      "metric": "functions",
+      "before": {
+        "total": 46,
+        "covered": 44,
+        "skipped": 0,
+        "pct": 95.65
+      },
+      "after": {
+        "total": 44,
+        "covered": 42,
+        "skipped": 0,
+        "pct": 95.45
+      },
+      "deltaPercentagePoints": -0.19762845849803057
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/product-identity/brand-resolution.ts",
+      "metric": "lines",
+      "before": {
+        "total": 533,
+        "covered": 521,
+        "skipped": 0,
+        "pct": 97.74
+      },
+      "after": {
+        "total": 490,
+        "covered": 478,
+        "skipped": 0,
+        "pct": 97.55
+      },
+      "deltaPercentagePoints": -0.19757246238081905
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/product-identity/brand-resolution.ts",
+      "metric": "statements",
+      "before": {
+        "total": 533,
+        "covered": 521,
+        "skipped": 0,
+        "pct": 97.74
+      },
+      "after": {
+        "total": 490,
+        "covered": 478,
+        "skipped": 0,
+        "pct": 97.55
+      },
+      "deltaPercentagePoints": -0.19757246238081905
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/recommendation-engine/request-context.ts",
+      "metric": "branches",
+      "before": {
+        "total": 113,
+        "covered": 88,
+        "skipped": 0,
+        "pct": 77.87
+      },
+      "after": {
+        "total": 112,
+        "covered": 87,
+        "skipped": 0,
+        "pct": 77.67
+      },
+      "deltaPercentagePoints": -0.19753476611883514
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/funnel/packages.ts",
+      "metric": "branches",
+      "before": {
+        "total": 67,
+        "covered": 42,
+        "skipped": 0,
+        "pct": 62.68
+      },
+      "after": {
+        "total": 64,
+        "covered": 40,
+        "skipped": 0,
+        "pct": 62.5
+      },
+      "deltaPercentagePoints": -0.18656716417910957
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/types.ts",
+      "metric": "lines",
+      "before": {
+        "total": 549,
+        "covered": 549,
+        "skipped": 0,
+        "pct": 100
+      },
+      "after": {
+        "total": 545,
+        "covered": 544,
+        "skipped": 0,
+        "pct": 99.81
+      },
+      "deltaPercentagePoints": -0.18348623853211166
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/types.ts",
+      "metric": "statements",
+      "before": {
+        "total": 549,
+        "covered": 549,
+        "skipped": 0,
+        "pct": 100
+      },
+      "after": {
+        "total": 545,
+        "covered": 544,
+        "skipped": 0,
+        "pct": 99.81
+      },
+      "deltaPercentagePoints": -0.18348623853211166
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/beratung/intake/items/route.ts",
+      "metric": "branches",
+      "before": {
+        "total": 76,
+        "covered": 71,
+        "skipped": 0,
+        "pct": 93.42
+      },
+      "after": {
+        "total": 74,
+        "covered": 69,
+        "skipped": 0,
+        "pct": 93.24
+      },
+      "deltaPercentagePoints": -0.17780938833570303
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/products/authority/categories/mask.ts",
+      "metric": "branches",
+      "before": {
+        "total": 133,
+        "covered": 123,
+        "skipped": 0,
+        "pct": 92.48
+      },
+      "after": {
+        "total": 130,
+        "covered": 120,
+        "skipped": 0,
+        "pct": 92.3
+      },
+      "deltaPercentagePoints": -0.17351069982649392
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/products/fixture-gateway.ts",
+      "metric": "branches",
+      "before": {
+        "total": 226,
+        "covered": 183,
+        "skipped": 0,
+        "pct": 80.97
+      },
+      "after": {
+        "total": 224,
+        "covered": 181,
+        "skipped": 0,
+        "pct": 80.8
+      },
+      "deltaPercentagePoints": -0.1698798988622059
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/scripts/posthog/update-personal-plan-offer-v3-dashboards.ts",
+      "metric": "branches",
+      "before": {
+        "total": 137,
+        "covered": 108,
+        "skipped": 0,
+        "pct": 78.83
+      },
+      "after": {
+        "total": 136,
+        "covered": 107,
+        "skipped": 0,
+        "pct": 78.67
+      },
+      "deltaPercentagePoints": -0.15564620008588292
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/billing/purchases.ts",
+      "metric": "branches",
+      "before": {
+        "total": 142,
+        "covered": 111,
+        "skipped": 0,
+        "pct": 78.16
+      },
+      "after": {
+        "total": 141,
+        "covered": 110,
+        "skipped": 0,
+        "pct": 78.01
+      },
+      "deltaPercentagePoints": -0.1548296873439199
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/refinement/fixture-gateway.ts",
+      "metric": "branches",
+      "before": {
+        "total": 53,
+        "covered": 51,
+        "skipped": 0,
+        "pct": 96.22
+      },
+      "after": {
+        "total": 51,
+        "covered": 49,
+        "skipped": 0,
+        "pct": 96.07
+      },
+      "deltaPercentagePoints": -0.14798372179060948
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/scripts/posthog/update-personal-plan-offer-v4-dashboards.ts",
+      "metric": "branches",
+      "before": {
+        "total": 144,
+        "covered": 114,
+        "skipped": 0,
+        "pct": 79.16
+      },
+      "after": {
+        "total": 143,
+        "covered": 113,
+        "skipped": 0,
+        "pct": 79.02
+      },
+      "deltaPercentagePoints": -0.14568764568763015
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent-v2/pending-followup-action.ts",
+      "metric": "branches",
+      "before": {
+        "total": 71,
+        "covered": 64,
+        "skipped": 0,
+        "pct": 90.14
+      },
+      "after": {
+        "total": 70,
+        "covered": 63,
+        "skipped": 0,
+        "pct": 90
+      },
+      "deltaPercentagePoints": -0.14084507042254302
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/quiz/scan-insert-examples.ts",
+      "metric": "branches",
+      "before": {
+        "total": 94,
+        "covered": 88,
+        "skipped": 0,
+        "pct": 93.61
+      },
+      "after": {
+        "total": 92,
+        "covered": 86,
+        "skipped": 0,
+        "pct": 93.47
+      },
+      "deltaPercentagePoints": -0.1387604070305315
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/personal-plan-start/plan-start-flow.tsx",
+      "metric": "branches",
+      "before": {
+        "total": 229,
+        "covered": 193,
+        "skipped": 0,
+        "pct": 84.27
+      },
+      "after": {
+        "total": 227,
+        "covered": 191,
+        "skipped": 0,
+        "pct": 84.14
+      },
+      "deltaPercentagePoints": -0.13850681953715593
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/scripts/posthog/update-personal-plan-offer-v2-dashboards.ts",
+      "metric": "branches",
+      "before": {
+        "total": 176,
+        "covered": 134,
+        "skipped": 0,
+        "pct": 76.13
+      },
+      "after": {
+        "total": 175,
+        "covered": 133,
+        "skipped": 0,
+        "pct": 76
+      },
+      "deltaPercentagePoints": -0.13636363636364024
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/discovery/consult-brief/lint.ts",
+      "metric": "functions",
+      "before": {
+        "total": 39,
+        "covered": 37,
+        "skipped": 0,
+        "pct": 94.87
+      },
+      "after": {
+        "total": 38,
+        "covered": 36,
+        "skipped": 0,
+        "pct": 94.73
+      },
+      "deltaPercentagePoints": -0.13495276653171118
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/product-intake/category-validators.ts",
+      "metric": "functions",
+      "before": {
+        "total": 40,
+        "covered": 39,
+        "skipped": 0,
+        "pct": 97.5
+      },
+      "after": {
+        "total": 38,
+        "covered": 37,
+        "skipped": 0,
+        "pct": 97.36
+      },
+      "deltaPercentagePoints": -0.1315789473684248
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/chat/product-lookup-selection-ui.ts",
+      "metric": "lines",
+      "before": {
+        "total": 217,
+        "covered": 214,
+        "skipped": 0,
+        "pct": 98.61
+      },
+      "after": {
+        "total": 199,
+        "covered": 196,
+        "skipped": 0,
+        "pct": 98.49
+      },
+      "deltaPercentagePoints": -0.12504920917953655
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/chat/product-lookup-selection-ui.ts",
+      "metric": "statements",
+      "before": {
+        "total": 217,
+        "covered": 214,
+        "skipped": 0,
+        "pct": 98.61
+      },
+      "after": {
+        "total": 199,
+        "covered": 196,
+        "skipped": 0,
+        "pct": 98.49
+      },
+      "deltaPercentagePoints": -0.12504920917953655
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/routine/cadence.ts",
+      "metric": "branches",
+      "before": {
+        "total": 119,
+        "covered": 102,
+        "skipped": 0,
+        "pct": 85.71
+      },
+      "after": {
+        "total": 118,
+        "covered": 101,
+        "skipped": 0,
+        "pct": 85.59
+      },
+      "deltaPercentagePoints": -0.12106537530264916
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/plan-start/page.tsx",
+      "metric": "branches",
+      "before": {
+        "total": 97,
+        "covered": 86,
+        "skipped": 0,
+        "pct": 88.65
+      },
+      "after": {
+        "total": 96,
+        "covered": 85,
+        "skipped": 0,
+        "pct": 88.54
+      },
+      "deltaPercentagePoints": -0.11812714776633015
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/quiz/hair-portrait.tsx",
+      "metric": "lines",
+      "before": {
+        "total": 447,
+        "covered": 402,
+        "skipped": 0,
+        "pct": 89.93
+      },
+      "after": {
+        "total": 432,
+        "covered": 388,
+        "skipped": 0,
+        "pct": 89.81
+      },
+      "deltaPercentagePoints": -0.11807109122545967
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/quiz/hair-portrait.tsx",
+      "metric": "statements",
+      "before": {
+        "total": 447,
+        "covered": 402,
+        "skipped": 0,
+        "pct": 89.93
+      },
+      "after": {
+        "total": 432,
+        "covered": 388,
+        "skipped": 0,
+        "pct": 89.81
+      },
+      "deltaPercentagePoints": -0.11807109122545967
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/meta-pixel.ts",
+      "metric": "lines",
+      "before": {
+        "total": 529,
+        "covered": 518,
+        "skipped": 0,
+        "pct": 97.92
+      },
+      "after": {
+        "total": 501,
+        "covered": 490,
+        "skipped": 0,
+        "pct": 97.8
+      },
+      "deltaPercentagePoints": -0.11621369736897691
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/meta-pixel.ts",
+      "metric": "statements",
+      "before": {
+        "total": 529,
+        "covered": 518,
+        "skipped": 0,
+        "pct": 97.92
+      },
+      "after": {
+        "total": 501,
+        "covered": 490,
+        "skipped": 0,
+        "pct": 97.8
+      },
+      "deltaPercentagePoints": -0.11621369736897691
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/auth/free-registration.ts",
+      "metric": "branches",
+      "before": {
+        "total": 112,
+        "covered": 105,
+        "skipped": 0,
+        "pct": 93.75
+      },
+      "after": {
+        "total": 110,
+        "covered": 103,
+        "skipped": 0,
+        "pct": 93.63
+      },
+      "deltaPercentagePoints": -0.11363636363635976
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/products/fixture-gateway.ts",
+      "metric": "functions",
+      "before": {
+        "total": 32,
+        "covered": 31,
+        "skipped": 0,
+        "pct": 96.87
+      },
+      "after": {
+        "total": 31,
+        "covered": 30,
+        "skipped": 0,
+        "pct": 96.77
+      },
+      "deltaPercentagePoints": -0.10080645161289681
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/tracking/types.ts",
+      "metric": "lines",
+      "before": {
+        "total": 95,
+        "covered": 94,
+        "skipped": 0,
+        "pct": 98.94
+      },
+      "after": {
+        "total": 87,
+        "covered": 86,
+        "skipped": 0,
+        "pct": 98.85
+      },
+      "deltaPercentagePoints": -0.09679370840895274
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/tracking/types.ts",
+      "metric": "statements",
+      "before": {
+        "total": 95,
+        "covered": 94,
+        "skipped": 0,
+        "pct": 98.94
+      },
+      "after": {
+        "total": 87,
+        "covered": 86,
+        "skipped": 0,
+        "pct": 98.85
+      },
+      "deltaPercentagePoints": -0.09679370840895274
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/stripe/webhook-handlers.ts",
+      "metric": "branches",
+      "before": {
+        "total": 256,
+        "covered": 193,
+        "skipped": 0,
+        "pct": 75.39
+      },
+      "after": {
+        "total": 255,
+        "covered": 192,
+        "skipped": 0,
+        "pct": 75.29
+      },
+      "deltaPercentagePoints": -0.09650735294117396
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/personal-plan-start/snapshot-adapter.ts",
+      "metric": "branches",
+      "before": {
+        "total": 169,
+        "covered": 143,
+        "skipped": 0,
+        "pct": 84.61
+      },
+      "after": {
+        "total": 168,
+        "covered": 142,
+        "skipped": 0,
+        "pct": 84.52
+      },
+      "deltaPercentagePoints": -0.0915750915750948
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "metric": "branches",
+      "before": {
+        "total": 67,
+        "covered": 63,
+        "skipped": 0,
+        "pct": 94.02
+      },
+      "after": {
+        "total": 66,
+        "covered": 62,
+        "skipped": 0,
+        "pct": 93.93
+      },
+      "deltaPercentagePoints": -0.09045680687472668
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/result-presentation.ts",
+      "metric": "branches",
+      "before": {
+        "total": 69,
+        "covered": 67,
+        "skipped": 0,
+        "pct": 97.1
+      },
+      "after": {
+        "total": 67,
+        "covered": 65,
+        "skipped": 0,
+        "pct": 97.01
+      },
+      "deltaPercentagePoints": -0.0865239022279809
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/discovery/runsheet/frequency.ts",
+      "metric": "branches",
+      "before": {
+        "total": 129,
+        "covered": 122,
+        "skipped": 0,
+        "pct": 94.57
+      },
+      "after": {
+        "total": 127,
+        "covered": 120,
+        "skipped": 0,
+        "pct": 94.48
+      },
+      "deltaPercentagePoints": -0.0854544344747552
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/personal-plan/stage-2/route.ts",
+      "metric": "branches",
+      "before": {
+        "total": 92,
+        "covered": 85,
+        "skipped": 0,
+        "pct": 92.39
+      },
+      "after": {
+        "total": 91,
+        "covered": 84,
+        "skipped": 0,
+        "pct": 92.3
+      },
+      "deltaPercentagePoints": -0.08361204013378654
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/scan-flow-state.ts",
+      "metric": "branches",
+      "before": {
+        "total": 135,
+        "covered": 128,
+        "skipped": 0,
+        "pct": 94.81
+      },
+      "after": {
+        "total": 133,
+        "covered": 126,
+        "skipped": 0,
+        "pct": 94.73
+      },
+      "deltaPercentagePoints": -0.07797270955167335
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/discovery/intake.ts",
+      "metric": "branches",
+      "before": {
+        "total": 157,
+        "covered": 148,
+        "skipped": 0,
+        "pct": 94.26
+      },
+      "after": {
+        "total": 155,
+        "covered": 146,
+        "skipped": 0,
+        "pct": 94.19
+      },
+      "deltaPercentagePoints": -0.07396753647010712
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/paypal/trial-paid-recovery.ts",
+      "metric": "lines",
+      "before": {
+        "total": 624,
+        "covered": 603,
+        "skipped": 0,
+        "pct": 96.63
+      },
+      "after": {
+        "total": 582,
+        "covered": 562,
+        "skipped": 0,
+        "pct": 96.56
+      },
+      "deltaPercentagePoints": -0.07104150145387678
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/paypal/trial-paid-recovery.ts",
+      "metric": "statements",
+      "before": {
+        "total": 624,
+        "covered": 603,
+        "skipped": 0,
+        "pct": 96.63
+      },
+      "after": {
+        "total": 582,
+        "covered": 562,
+        "skipped": 0,
+        "pct": 96.56
+      },
+      "deltaPercentagePoints": -0.07104150145387678
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent/tools/select-products.ts",
+      "metric": "branches",
+      "before": {
+        "total": 934,
+        "covered": 670,
+        "skipped": 0,
+        "pct": 71.73
+      },
+      "after": {
+        "total": 932,
+        "covered": 668,
+        "skipped": 0,
+        "pct": 71.67
+      },
+      "deltaPercentagePoints": -0.060655632243054924
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent/tools/load-advisor-guidance.ts",
+      "metric": "branches",
+      "before": {
+        "total": 240,
+        "covered": 210,
+        "skipped": 0,
+        "pct": 87.5
+      },
+      "after": {
+        "total": 239,
+        "covered": 209,
+        "skipped": 0,
+        "pct": 87.44
+      },
+      "deltaPercentagePoints": -0.052301255230119637
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/discovery/consult-brief/lint.ts",
+      "metric": "branches",
+      "before": {
+        "total": 176,
+        "covered": 162,
+        "skipped": 0,
+        "pct": 92.04
+      },
+      "after": {
+        "total": 175,
+        "covered": 161,
+        "skipped": 0,
+        "pct": 92
+      },
+      "deltaPercentagePoints": -0.045454545454546746
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/products/fit-comparison.ts",
+      "metric": "lines",
+      "before": {
+        "total": 800,
+        "covered": 786,
+        "skipped": 0,
+        "pct": 98.25
+      },
+      "after": {
+        "total": 788,
+        "covered": 774,
+        "skipped": 0,
+        "pct": 98.22
+      },
+      "deltaPercentagePoints": -0.026649746192887847
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/personal-plan/products/fit-comparison.ts",
+      "metric": "statements",
+      "before": {
+        "total": 800,
+        "covered": 786,
+        "skipped": 0,
+        "pct": 98.25
+      },
+      "after": {
+        "total": 788,
+        "covered": 774,
+        "skipped": 0,
+        "pct": 98.22
+      },
+      "deltaPercentagePoints": -0.026649746192887847
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/scan/scan-search-sheet.tsx",
+      "metric": "branches",
+      "before": {
+        "total": 248,
+        "covered": 232,
+        "skipped": 0,
+        "pct": 93.54
+      },
+      "after": {
+        "total": 247,
+        "covered": 231,
+        "skipped": 0,
+        "pct": 93.52
+      },
+      "deltaPercentagePoints": -0.02611989029645656
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/stripe/trial-authorization.ts",
+      "metric": "lines",
+      "before": {
+        "total": 318,
+        "covered": 317,
+        "skipped": 0,
+        "pct": 99.68
+      },
+      "after": {
+        "total": 298,
+        "covered": 297,
+        "skipped": 0,
+        "pct": 99.66
+      },
+      "deltaPercentagePoints": -0.02110506099363363
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/stripe/trial-authorization.ts",
+      "metric": "statements",
+      "before": {
+        "total": 318,
+        "covered": 317,
+        "skipped": 0,
+        "pct": 99.68
+      },
+      "after": {
+        "total": 298,
+        "covered": 297,
+        "skipped": 0,
+        "pct": 99.66
+      },
+      "deltaPercentagePoints": -0.02110506099363363
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent-v2/runtime/responses-agent.ts",
+      "metric": "branches",
+      "before": {
+        "total": 1040,
+        "covered": 821,
+        "skipped": 0,
+        "pct": 78.94
+      },
+      "after": {
+        "total": 1039,
+        "covered": 820,
+        "skipped": 0,
+        "pct": 78.92
+      },
+      "deltaPercentagePoints": -0.02026726882357366
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/discovery/refined-routine.ts",
+      "metric": "branches",
+      "before": {
+        "total": 235,
+        "covered": 230,
+        "skipped": 0,
+        "pct": 97.87
+      },
+      "after": {
+        "total": 233,
+        "covered": 228,
+        "skipped": 0,
+        "pct": 97.85
+      },
+      "deltaPercentagePoints": -0.0182631723130271
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/recommendation-engine/care-balance/evaluators.ts",
+      "metric": "branches",
+      "before": {
+        "total": 211,
+        "covered": 203,
+        "skipped": 0,
+        "pct": 96.2
+      },
+      "after": {
+        "total": 210,
+        "covered": 202,
+        "skipped": 0,
+        "pct": 96.19
+      },
+      "deltaPercentagePoints": -0.018054615211013925
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/scan/scan-flow.tsx",
+      "metric": "lines",
+      "before": {
+        "total": 1328,
+        "covered": 1250,
+        "skipped": 0,
+        "pct": 94.12
+      },
+      "after": {
+        "total": 1327,
+        "covered": 1249,
+        "skipped": 0,
+        "pct": 94.12
+      },
+      "deltaPercentagePoints": -0.004426144669110954
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/scan/scan-flow.tsx",
+      "metric": "statements",
+      "before": {
+        "total": 1328,
+        "covered": 1250,
+        "skipped": 0,
+        "pct": 94.12
+      },
+      "after": {
+        "total": 1327,
+        "covered": 1249,
+        "skipped": 0,
+        "pct": 94.12
+      },
+      "deltaPercentagePoints": -0.004426144669110954
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent/tools/build-or-fix-routine.ts",
+      "metric": "lines",
+      "before": {
+        "total": 483,
+        "covered": 479,
+        "skipped": 0,
+        "pct": 99.17
+      },
+      "after": {
+        "total": 481,
+        "covered": 477,
+        "skipped": 0,
+        "pct": 99.16
+      },
+      "deltaPercentagePoints": -0.003443481704351825
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent/tools/build-or-fix-routine.ts",
+      "metric": "statements",
+      "before": {
+        "total": 483,
+        "covered": 479,
+        "skipped": 0,
+        "pct": 99.17
+      },
+      "after": {
+        "total": 481,
+        "covered": 477,
+        "skipped": 0,
+        "pct": 99.16
+      },
+      "deltaPercentagePoints": -0.003443481704351825
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/scan-flow-state.ts",
+      "metric": "lines",
+      "before": {
+        "total": 649,
+        "covered": 648,
+        "skipped": 0,
+        "pct": 99.84
+      },
+      "after": {
+        "total": 647,
+        "covered": 646,
+        "skipped": 0,
+        "pct": 99.84
+      },
+      "deltaPercentagePoints": -0.0004763004789083425
+    },
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/scan/scan-flow-state.ts",
+      "metric": "statements",
+      "before": {
+        "total": 649,
+        "covered": 648,
+        "skipped": 0,
+        "pct": 99.84
+      },
+      "after": {
+        "total": 647,
+        "covered": 646,
+        "skipped": 0,
+        "pct": 99.84
+      },
+      "deltaPercentagePoints": -0.0004763004789083425
+    }
+  ],
+  "globalCoverageDropsWithin2pp": true,
+  "conservativeOriginalDenominatorWithin2pp": true,
+  "rawPerFileDiagnosticWithin2pp": false,
+  "sameFailures": true,
+  "baselineFailures": [
+    "selectProducts applies leave-in heat tool overrides to the runtime",
+    "selectProducts applies leave-in texture and density overrides with profile notices",
+    "selectProducts applies leave-in thickness overrides and surfaces profile deviation",
+    "selectProducts applies oil density overrides to density-weight caution",
+    "selectProducts applies oil thickness overrides to hard-gated oil selection",
+    "selectProducts asks for oil purpose when a product pick lacks inferred purpose",
+    "selectProducts builds a leave-in heat target from generic Hitzeschutz wording",
+    "selectProducts builds a leave-in target for explicit heat requests on otherwise quiet profiles",
+    "selectProducts carries unsupported ingredient caveats for live oil requests",
+    "selectProducts does not treat oily-root product wording as a dry-shampoo bridge",
+    "selectProducts includes owned verified non-recommended products for assessment",
+    "selectProducts keeps silicone-free unsupported while still recommending conditioner",
+    "selectProducts keeps silicone-free unsupported while still recommending shampoo",
+    "selectProducts marks exact leave-in heat temperatures unsupported",
+    "selectProducts narrows product-detail assessment grounding to target product ids",
+    "selectProducts passes explicit dry-shampoo bridge context into category engine",
+    "selectProducts preserves resolved assessment target when engine returns no products",
+    "selectProducts preserves supplied effective care context in runtime and care balance output",
+    "selectProducts recommends conditioner for low-need balanced profile with existing conditioner",
+    "selectProducts redirects message-stated frequent dry-shampoo use instead of recommending more",
+    "selectProducts still returns explicit oil products while exposing CareBalance decrease-frequency framing",
+    "selectProducts tool carries unsupported ingredient caveats for leave-in requests",
+    "selectProducts tool passes request-aware mask runtime into category engine",
+    "selectProducts treats dry-shampoo routine need questions as guidance-only, not dry-hair hard-nos",
+    "selectProducts treats non-greasy fine-hair oil wording as a light finish target",
+    "selectProducts treats separate heat protectant as a leave-in bonus for blow-dry-only requests"
+  ],
+  "finalFailures": [
+    "selectProducts applies leave-in heat tool overrides to the runtime",
+    "selectProducts applies leave-in texture and density overrides with profile notices",
+    "selectProducts applies leave-in thickness overrides and surfaces profile deviation",
+    "selectProducts applies oil density overrides to density-weight caution",
+    "selectProducts applies oil thickness overrides to hard-gated oil selection",
+    "selectProducts asks for oil purpose when a product pick lacks inferred purpose",
+    "selectProducts builds a leave-in heat target from generic Hitzeschutz wording",
+    "selectProducts builds a leave-in target for explicit heat requests on otherwise quiet profiles",
+    "selectProducts carries unsupported ingredient caveats for live oil requests",
+    "selectProducts does not treat oily-root product wording as a dry-shampoo bridge",
+    "selectProducts includes owned verified non-recommended products for assessment",
+    "selectProducts keeps silicone-free unsupported while still recommending conditioner",
+    "selectProducts keeps silicone-free unsupported while still recommending shampoo",
+    "selectProducts marks exact leave-in heat temperatures unsupported",
+    "selectProducts narrows product-detail assessment grounding to target product ids",
+    "selectProducts passes explicit dry-shampoo bridge context into category engine",
+    "selectProducts preserves resolved assessment target when engine returns no products",
+    "selectProducts preserves supplied effective care context in runtime and care balance output",
+    "selectProducts recommends conditioner for low-need balanced profile with existing conditioner",
+    "selectProducts redirects message-stated frequent dry-shampoo use instead of recommending more",
+    "selectProducts still returns explicit oil products while exposing CareBalance decrease-frequency framing",
+    "selectProducts tool carries unsupported ingredient caveats for leave-in requests",
+    "selectProducts tool passes request-aware mask runtime into category engine",
+    "selectProducts treats dry-shampoo routine need questions as guidance-only, not dry-hair hard-nos",
+    "selectProducts treats non-greasy fine-hair oil wording as a light finish target",
+    "selectProducts treats separate heat protectant as a leave-in bonus for blow-dry-only requests"
+  ]
+}

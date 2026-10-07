@@ -1,5 +1,3 @@
-import { PRODUCT_FREQUENCY_LABELS } from "@/lib/vocabulary/frequencies"
-
 import {
   STAGE2_ASSUMED_DRY_SHAMPOO_BRIDGE_PREFERENCE,
   STAGE2_ASSUMED_SCALP_IRRITATION_DETAIL,
@@ -68,49 +66,4 @@ export function buildDirectAcceptanceStage2Defaults(
     completedQuestionIds: resolution.orderedQuestionIds,
     answerProvenance,
   }
-}
-
-export type DirectAcceptanceAssumption = {
-  /** The Stage-2 question this assumption stands in for. */
-  id: Stage2QuestionId
-  label: string
-}
-
-/**
- * German assumption lines for the Stage-2 defaults a direct acceptance applies.
- * No surface renders them since the fork screen was removed — the Routine
- * banner and the Profil tab carry assumption-awareness now.
- */
-export function directAcceptanceAssumptions(
-  triggerContext: Stage2TriggerContext,
-): DirectAcceptanceAssumption[] {
-  const washLabel = PRODUCT_FREQUENCY_LABELS[DIRECT_ACCEPTANCE_WET_WASH_FREQUENCY]
-
-  return [
-    {
-      id: "current_product_categories",
-      label: "Du startest ohne bestehende Pflegeprodukte",
-    },
-    { id: "wet_wash_frequency", label: `Haarwäsche ${washLabel}` },
-    ...(triggerContext.hasReportedIrritatedScalp
-      ? [
-          {
-            id: "scalp_irritation_detail" as const,
-            label: "Kopfhaut aktuell nicht gereizt",
-          },
-        ]
-      : []),
-    ...(triggerContext.dryShampooBridgeEligibility === "eligible"
-      ? [
-          {
-            id: "dry_shampoo_bridge_preference" as const,
-            label: "Kein Trockenshampoo zwischen den Wäschen",
-          },
-        ]
-      : []),
-    { id: "towel_handling", label: "Haare sanft mit einem Mikrofaser-Handtuch ausdrücken" },
-    { id: "drying_routes", label: "Lufttrocknen, kein Föhnen" },
-    { id: "additional_heat_tools", label: "Keine Hitze-Styling-Geräte" },
-    { id: "night_protection", label: "Kein besonderer Haarschutz über Nacht" },
-  ]
 }

@@ -1,0 +1,16 @@
+'use strict'
+const fs=require('node:fs'),assert=require('node:assert/strict'),crypto=require('node:crypto');
+const D='/tmp/test-audit-scanner-intake26-isolation-dml82bss',O='/tmp/test-audit-scanner-intake26-tools-y8mclofg',R='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning';
+const ts=require(R+'/node_modules/typescript'),read=p=>fs.readFileSync(p,'utf8'),json=p=>JSON.parse(read(p)),sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+const old=json(O+'/operator-pins.json'),next=json(D+'/operator-pins.json'),flag='--experimental-test-isolation=none';
+for(const key of Object.keys(old))if(!['artifactHashes','entrypointTemplateHashes'].includes(key))assert.deepEqual(next[key],old[key],key);
+for(const key of ['artifactHashes','entrypointTemplateHashes'])for(const [file,hash]of Object.entries(old[key]))assert.equal(next[key][file],hash);
+const a=json(O+'/operator-controls-normalized.json'),b=json(D+'/operator-controls-normalized.json');assert.equal(b.length,14);
+for(let i=0;i<a.length;i++){assert.equal(b[i].command.filter(x=>x===flag).length,1);const current=JSON.parse(JSON.stringify(b[i]));current.command=current.command.filter(x=>x!==flag);assert.deepEqual(current,a[i]);}
+for(const name of ['operator-proof.cjs','operator-readonly-preload.cjs','operator-evidence.json','operator-candidates.json','operator-selected-closure.json'])assert.equal(read(D+'/'+name),read(O+'/'+name));
+const normalize=s=>s.replace(/const PIN_SHA='[a-f0-9]{64}'/,"const PIN_SHA='PLACEHOLDER'");for(const name of ['operator-edit.cjs','operator-run-controls.cjs'])assert.equal(normalize(read(D+'/'+name)),normalize(read(O+'/'+name)));
+assert.equal(read(D+'/operator-guard.cjs'),read(O+'/operator-guard.cjs').replace(O+'/operator',D+'/operator').replace("'tsx','--test','--test-name-pattern=^'","'tsx','--test','--experimental-test-isolation=none','--test-name-pattern=^'"));
+const code=fs.readdirSync(D).filter(n=>n.endsWith('.cjs'));for(const name of code){const sf=ts.createSourceFile(name,read(D+'/'+name),ts.ScriptTarget.Latest,true,ts.ScriptKind.JS);assert.equal(sf.parseDiagnostics.length,0,name);}
+for(const [file,hash]of Object.entries(json(D+'/amendment-provenance.json').failedReceiptHashes))assert.equal(sha(fs.readFileSync(file)),hash,file);
+for(const name of ['editor-check.log','controls-check.log']){const s=read(D+'/'+name);assert(s.includes('"phase": "transfer"'));assert(s.includes('"attemptedWrites":0,"attemptedChildren":0'));}
+console.log(JSON.stringify({result:'PASS static only',controls:14,onlyControlFieldChanged:'command',flag,allOriginalNonArtifactPinFieldsIdentical:true,oldArtifactsRetained:69,oldEntrypointAttestationsRetained:2,proofDecoderAndAllOraclesUnchanged:true,parsedToolFiles:code.length,originalFailureReceiptsPreserved:true,phase:'transfer',repositoryWrites:0,childrenStarted:0,ownerTestImports:0,runtimeTests:0},null,2));

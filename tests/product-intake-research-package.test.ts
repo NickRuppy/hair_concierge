@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises"
-import { existsSync, readFileSync } from "node:fs"
+import { existsSync } from "node:fs"
 import { join } from "node:path"
 import { tmpdir } from "node:os"
 import test from "node:test"
@@ -333,16 +333,4 @@ test("validateResearchPackage rejects packages missing required files", async ()
   } finally {
     await rm(rootDir, { recursive: true, force: true })
   }
-})
-
-test("prepare research script has no apply flags or Supabase write/RPC calls", () => {
-  const source = readFileSync("scripts/product-intake/prepare-research.ts", "utf8")
-
-  assert.doesNotMatch(source, /flagBool\(args,\s*["']apply["']/)
-  assert.doesNotMatch(source, /\.update\(/)
-  assert.doesNotMatch(source, /\.insert\(/)
-  assert.doesNotMatch(source, /\.upsert\(/)
-  assert.doesNotMatch(source, /\.delete\(/)
-  assert.doesNotMatch(source, /\.rpc\(/)
-  assert.doesNotMatch(source, /--apply/)
 })

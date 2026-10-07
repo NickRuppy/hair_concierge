@@ -1,0 +1,130 @@
+[
+  {
+    "id": "C1",
+    "classification": "C",
+    "file": "tests/welcome-email-display.test.tsx",
+    "donor": {
+      "file": "tests/welcome-email-display.test.tsx",
+      "line": 44,
+      "title": "terminal PayPal activation polling reports a typed payment failure without the token",
+      "start": 1758,
+      "end": 2436,
+      "body": "() => {\n  assert.match(\n    welcomeClientSource,\n    /capturePaymentFailure\\(\\{[\\s\\S]*signal: \"customer_payment_error_observed\"[\\s\\S]*stage: \"paypal_activation_status_poll\"[\\s\\S]*errorFamily: \"timeout\"/,\n  )\n  assert.match(welcomeClientSource, /providerReferencePresent: true/)\n  const paymentFailureCall = welcomeClientSource.match(\n    /capturePaymentFailure\\(\\{[\\s\\S]*?providerReferencePresent: true,[\\s\\S]*?\\n\\s*\\}\\)/,\n  )?.[0]\n  assert.ok(paymentFailureCall)\n  assert.doesNotMatch(paymentFailureCall, /token:/)\n  assert.doesNotMatch(paymentFailureCall, /paypalActivationToken/)\n}",
+      "bodySha256": "5de010a647848db5ee63e2f53804a65bb8c3f3884125abcd29eab02c168b9f12"
+    },
+    "keeperFile": "tests/welcome-activation-outcomes.spec.ts",
+    "keeper": {
+      "file": "tests/welcome-activation-outcomes.spec.ts",
+      "line": 234,
+      "title": "PayPal poll timeout replaces the spinner with status-retry feedback",
+      "start": 10748,
+      "end": 11648,
+      "body": "async ({ page }) => {\n    await page.clock.install()\n    let polls = 0\n    await page.route(\"**/api/paypal/activation-status?*\", async (route) => {\n      polls++\n      await route.fulfill({ json: { status: \"pending\" } })\n    })\n    await page.goto(`${origin}/welcome?provider=paypal&mode=pending`)\n    for (let i = 0; i < 15; i++) {\n      const response = page.waitForResponse(\"**/api/paypal/activation-status?*\")\n      await page.clock.runFor(2000)\n      await (await response).finished()\n      await page.evaluate(() => Promise.resolve())\n    }\n    await expect(page.getByRole(\"heading\", { name: \"Die Einrichtung dauert länger\" })).toBeVisible()\n    await expect(page.getByRole(\"button\", { name: \"Status prüfen\" })).toBeVisible()\n    expect(polls).toBe(15)\n    await page.clock.runFor(6000)\n    expect(polls).toBe(15)\n  }",
+      "bodySha256": "6918e7186641b5d5668a8c148abf245e4af866c1c3b7c90700c0f95945d87360"
+    },
+    "union": "Existing browser timeout keeper drives the real WelcomeClient through15 pending PayPal responses and six extra seconds. Its existing exact inputs hit the one capturePaymentFailure site inspected by the donor. Record actual capture arguments and assert one exact literal13-field payload, excluding any extra token/identifier field. No new poll/input/call.",
+    "history": "8a5e42c2 actionable activation recovery introduced server/browser outcomes; earlier Stripe/PayPal one-time recovery remains supported. Current public return routes and provider URL builders still use /welcome.",
+    "nonTestCallers": [
+      "src/app/welcome/page.tsx:WelcomePage",
+      "src/app/welcome/welcome-client.tsx:WelcomeClient"
+    ],
+    "cleanup": "Only donor callback; source reads remain needed by other callbacks.",
+    "risk": "Conditional on focused baseline, transfer browser assertions, actual source controls and parent campaign gates; no new input/scenario/table case."
+  },
+  {
+    "id": "C2",
+    "classification": "C",
+    "file": "tests/welcome-email-display.test.tsx",
+    "donor": {
+      "file": "tests/welcome-email-display.test.tsx",
+      "line": 58,
+      "title": "welcome labels the account email as Chaarlie-E-Mail",
+      "start": 2438,
+      "end": 2636,
+      "body": "() => {\n  assert.match(welcomeClientSource, /Chaarlie-E-Mail/)\n  assert.doesNotMatch(welcomeClientSource, /E-Mail aus deinem Checkout/)\n}",
+      "bodySha256": "74eb91b7a79cab549897083a06abc428859af481d88e7a4eb1e3e70cb92c61f3"
+    },
+    "keeperFile": "tests/welcome-activation-outcomes.spec.ts",
+    "keeper": {
+      "file": "tests/welcome-activation-outcomes.spec.ts",
+      "line": 113,
+      "title": "email send failure keeps password input and allows a successful resend",
+      "start": 4927,
+      "end": 5867,
+      "body": "async ({\n    page,\n  }) => {\n    let requests = 0\n    await page.route(\"**/api/auth/send-magic-link\", (route) => {\n      requests++\n      return route.fulfill(\n        requests === 1\n          ? { status: 500, json: { code: \"auth_link_send_failed\" } }\n          : { json: { ok: true } },\n      )\n    })\n    await page.goto(`${origin}/welcome`)\n    await page.getByLabel(\"Passwort\", { exact: true }).fill(\"Example123\")\n    await page.getByRole(\"button\", { name: \"Login-Link senden\" }).click()\n    await expect(page.getByRole(\"alert\")).toContainText(\"Dein Konto ist bereit.\")\n    await expect(page.getByLabel(\"Passwort\", { exact: true })).toHaveValue(\"Example123\")\n    await page.getByRole(\"button\", { name: \"Login-Link senden\" }).click()\n    await expect(page.getByRole(\"heading\", { name: \"Check deine E-Mails\" })).toBeVisible()\n    expect(requests).toBe(2)\n  }",
+      "bodySha256": "f1bb63d1b403447029c55cd3496c064740fce35ebcc8ffd4917d67f3c3e6245c"
+    },
+    "union": "Existing email resend keeper renders the actual activation-choice branch for alex@example.com before interactions. The source has exactly one account-email label in that branch. Assert getByLabel(Chaarlie-E-Mail) value alex@example.com and no old rendered label, then preserve all existing failure/resend/password assertions.",
+    "history": "8a5e42c2 actionable activation recovery introduced server/browser outcomes; earlier Stripe/PayPal one-time recovery remains supported. Current public return routes and provider URL builders still use /welcome.",
+    "nonTestCallers": [
+      "src/app/welcome/page.tsx:WelcomePage",
+      "src/app/welcome/welcome-client.tsx:WelcomeClient"
+    ],
+    "cleanup": "Only donor callback; source reads remain needed by other callbacks.",
+    "risk": "Conditional on focused baseline, transfer browser assertions, actual source controls and parent campaign gates; no new input/scenario/table case."
+  },
+  {
+    "id": "D1",
+    "classification": "D",
+    "file": "tests/welcome-email-display.test.tsx",
+    "donor": {
+      "file": "tests/welcome-email-display.test.tsx",
+      "line": 172,
+      "title": "a paid Stripe verification failure preserves the revoked return state",
+      "start": 8323,
+      "end": 8626,
+      "body": "() => {\n  assert.match(\n    welcomePageSource,\n    /oneTimeReturnStateFromError\\(error: unknown\\): \"revoked\" \\| \"support_needed\"/,\n  )\n  assert.match(welcomePageSource, /error\\.code === \"checkout_one_time_charge_revoked\"/)\n}",
+      "bodySha256": "a67970872372f261c8ef35cbc21b14e0f6466cf57c0431407ef072e4980d7a55"
+    },
+    "keeperFile": "tests/welcome-activation-return.test.ts",
+    "keeper": {
+      "file": "tests/welcome-activation-return.test.ts",
+      "line": 204,
+      "title": "Stripe verification failures keep paid one-time returns pending and classify terminal failures",
+      "start": 7821,
+      "end": 9735,
+      "body": "async () => {\n  const paid = loadWelcome({\n    stripeVerifyError: (CheckoutActivationError: new (code: string, message: string) => Error) =>\n      new CheckoutActivationError(\"checkout_one_time_charge_revoked\", \"payment needs confirmation\"),\n    recoveredStripeSession: {\n      mode: \"payment\",\n      payment_status: \"paid\",\n      customer_details: { email: \"buyer@example.test\" },\n    },\n  })\n  const paidPage = await paid.render({ session_id: \"cs_paid\" })\n  assert.equal(paidPage.type, paid.WelcomeClient)\n  assert.equal(paidPage.props.mode, \"pending\")\n  assert.equal(paidPage.props.oneTimeReturnState, \"revoked\")\n  assert.equal(paidPage.props.email, \"buyer@example.test\")\n\n  const structural = loadWelcome({\n    stripeVerifyError: (CheckoutActivationError: new (code: string, message: string) => Error) =>\n      new CheckoutActivationError(\"checkout_subscription_inactive\", \"subscription cannot activate\"),\n  })\n  assertRecoveryPanel(\n    await structural.render({ session_id: \"cs_structural\" }),\n    structural.CheckoutRecoveryPanel,\n    \"trial_reconciliation_required\",\n  )\n\n  const missing = loadWelcome({\n    stripeVerifyError: (CheckoutActivationError: new (code: string, message: string) => Error) =>\n      new CheckoutActivationError(\"resource_missing\", \"provider object missing\"),\n  })\n  assertRecoveryPanel(\n    await missing.render({ session_id: \"cs_missing\" }),\n    missing.CheckoutRecoveryPanel,\n    \"activation_link_invalid\",\n  )\n\n  const temporary = loadWelcome({\n    stripeVerifyError: new Error(\"network detail should stay private\"),\n  })\n  const temporaryPage = await temporary.render({ session_id: \"cs_network\" })\n  assertRecoveryPanel(temporaryPage, temporary.CheckoutRecoveryPanel, \"activation_temporary\")\n  assert.equal(JSON.stringify(temporaryPage).includes(\"network detail\"), false)\n}",
+      "bodySha256": "8a89daacd50dc841694c6db3706955dfb9f1d5db956a9716cab925950ceb3be0"
+    },
+    "union": "Existing real WelcomePage invocation throws CheckoutActivationError(checkout_one_time_charge_revoked), retrieves payment+paid and asserts returned oneTimeReturnState revoked. Donor only checks a private helper signature and the same code string anywhere; it adds no independent support_needed behavioral assertion. Existing keeper catches actual incorrect mapping and survives helper/type alias rename.",
+    "history": "8a5e42c2 actionable activation recovery introduced server/browser outcomes; earlier Stripe/PayPal one-time recovery remains supported. Current public return routes and provider URL builders still use /welcome.",
+    "nonTestCallers": [
+      "src/app/welcome/page.tsx:WelcomePage",
+      "src/app/welcome/welcome-client.tsx:WelcomeClient"
+    ],
+    "cleanup": "Only donor callback; source reads remain needed by other callbacks.",
+    "risk": "Conditional on focused baseline, transfer browser assertions, actual source controls and parent campaign gates; no new input/scenario/table case."
+  },
+  {
+    "id": "D2",
+    "classification": "D",
+    "file": "tests/welcome-activation-return.test.ts",
+    "donor": {
+      "file": "tests/welcome-activation-return.test.ts",
+      "line": 197,
+      "title": "the preflight guard is sensitive to an in-memory bypass",
+      "start": 7463,
+      "end": 7819,
+      "body": "async () => {\n  const f = loadWelcome({ stripeRecoveryCode: \"trial_unavailable\", bypassStripePreflight: true })\n  const page = await f.render({ session_id: \"cs_trial\" })\n  assert.notEqual(page.type, f.CheckoutRecoveryPanel)\n  assert.deepEqual(f.calls, [\"firstDestination\", \"createClient\"])\n}",
+      "bodySha256": "b304633489dc0d99aa28492ca9e76ec7131889ac932d631f1841d95fe5def3f1"
+    },
+    "keeperFile": "tests/welcome-activation-return.test.ts",
+    "keeper": {
+      "file": "tests/welcome-activation-return.test.ts",
+      "line": 188,
+      "title": "persisted Stripe trial denial renders before account writes or destination reads for signed-in and anonymous returns",
+      "start": 7023,
+      "end": 7461,
+      "body": "async () => {\n  for (const signedIn of [true, false]) {\n    const f = loadWelcome({ signedIn, stripeRecoveryCode: \"trial_unavailable\" })\n    const page = await f.render({ session_id: \"cs_trial\" })\n    assertRecoveryPanel(page, f.CheckoutRecoveryPanel, \"trial_unavailable\")\n    assert.deepEqual(f.calls, [])\n  }\n}",
+      "bodySha256": "ce7c709459f4fbd1cc5969671464b4e74840a7559a99fa40f5a28ba7c8932504"
+    },
+    "union": "Donor deliberately replaces the real preflight guard with if(false), then expects the wrong/bypassed behavior. Adjacent actual-source keeper already uses the same persisted denial and verifies exact recovery panel plus no account/destination calls, for both signed-in and anonymous returns. In-memory source mutation is calibration support, not a second product contract. Removing the guard makes that keeper fail; preserve that proof with parent-only mutation control.",
+    "history": "8a5e42c2 actionable activation recovery introduced server/browser outcomes; earlier Stripe/PayPal one-time recovery remains supported. Current public return routes and provider URL builders still use /welcome.",
+    "nonTestCallers": [
+      "src/app/welcome/page.tsx:WelcomePage",
+      "src/app/welcome/welcome-client.tsx:WelcomeClient"
+    ],
+    "cleanup": "Remove Options.bypassStripePreflight and its test-only source.replace branch; always transpile original source. No production changes.",
+    "risk": "Conditional on focused baseline, transfer browser assertions, actual source controls and parent campaign gates; no new input/scenario/table case."
+  }
+]

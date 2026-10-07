@@ -1,0 +1,42 @@
+{
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "executable": "node",
+  "argv": [
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "tests/customerio-funnel-attribution.test.ts",
+    "tests/customerio-page-view.test.ts",
+    "tests/customerio-quiz-traits.test.ts",
+    "tests/customerio-server.test.ts",
+    "tests/customerio-stripe-lifecycle.test.ts",
+    "tests/customerio-transactional.test.ts",
+    "tests/customerio-trial-reminder.test.ts",
+    "tests/email-deliverability.test.ts",
+    "tests/personal-plan-customerio-backfill.test.ts",
+    "tests/personal-plan-customerio-outbox-migration.test.ts",
+    "tests/personal-plan-customerio-outbox.test.ts",
+    "tests/personal-plan-customerio-reconcile-route.test.ts",
+    "tests/personal-plan-customerio-sync.test.ts",
+    "tests/trial-reminders-delivery.test.ts",
+    "tests/trial-reminders-route.test.ts",
+    "tests/trial-reminders-sql.test.ts",
+    "tests/trial-reminders.test.ts",
+    "tests/meta-offer-view.test.ts"
+  ],
+  "ownedAST": {
+    "before": 94,
+    "transfer": 94,
+    "cut": 90
+  },
+  "includingUnchangedExternalKeeperAST": {
+    "before": 105,
+    "transfer": 105,
+    "cut": 101
+  },
+  "status": "NOT_RUN",
+  "externalKeeperFileNotNewAudit": "tests/meta-offer-view.test.ts"
+}

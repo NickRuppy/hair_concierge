@@ -1,0 +1,448 @@
+{
+  "kind": "Full semantic no-cut audit; immutable zero-change phases, not an operator manifest",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "counts": {
+    "before": 76,
+    "transfer": 76,
+    "cut": 76,
+    "R": 75,
+    "F": 1,
+    "C": 0,
+    "D": 0
+  },
+  "files": [
+    {
+      "file": "tests/personal-plan-frontier-routing.test.ts",
+      "count": 13,
+      "bytes": 13187,
+      "beforeSha256": "7cfe19b45599878767a08e392abe67c1d3960cea03ba3ef151b0367f18ca8fd4",
+      "transferSha256": "7cfe19b45599878767a08e392abe67c1d3960cea03ba3ef151b0367f18ca8fd4",
+      "cutSha256": "7cfe19b45599878767a08e392abe67c1d3960cea03ba3ef151b0367f18ca8fd4",
+      "supportSha256": "b4e876102a49f3828f0f3e535fbe658cbb199b74367c2612e557c0c950b4930f",
+      "unchangedCallbacks": 13
+    },
+    {
+      "file": "tests/personal-plan-journey-access.test.ts",
+      "count": 5,
+      "bytes": 5765,
+      "beforeSha256": "eedb424d8f33b026201dffd82d1ae88156dc2b155822e57790f7d650f6366b60",
+      "transferSha256": "eedb424d8f33b026201dffd82d1ae88156dc2b155822e57790f7d650f6366b60",
+      "cutSha256": "eedb424d8f33b026201dffd82d1ae88156dc2b155822e57790f7d650f6366b60",
+      "supportSha256": "d7a5bc878c6579aefb730af2efba513d08c758e6ea351b34cc7ccaa539d6a223",
+      "unchangedCallbacks": 5
+    },
+    {
+      "file": "tests/personal-plan-legacy-cutover-eligibility.test.ts",
+      "count": 3,
+      "bytes": 3132,
+      "beforeSha256": "e197f33ddafa8f540d8d651a43c7ee9ae4715082a88dffef10eded71b05248ad",
+      "transferSha256": "e197f33ddafa8f540d8d651a43c7ee9ae4715082a88dffef10eded71b05248ad",
+      "cutSha256": "e197f33ddafa8f540d8d651a43c7ee9ae4715082a88dffef10eded71b05248ad",
+      "supportSha256": "793f6186823d8db035604a76318bc576950a25cbb6bdfca41ca4f2096aff8177",
+      "unchangedCallbacks": 3
+    },
+    {
+      "file": "tests/personal-plan-legacy-prefill.test.ts",
+      "count": 9,
+      "bytes": 8058,
+      "beforeSha256": "91a6551169f9a5edcaadc867a66993a8fcf0a33491c1caf48df215a6cf339e02",
+      "transferSha256": "91a6551169f9a5edcaadc867a66993a8fcf0a33491c1caf48df215a6cf339e02",
+      "cutSha256": "91a6551169f9a5edcaadc867a66993a8fcf0a33491c1caf48df215a6cf339e02",
+      "supportSha256": "98202cd500d7056009136f9e6318531009c93eb3fe1f1e03eb23285cb51e7917",
+      "unchangedCallbacks": 9
+    },
+    {
+      "file": "tests/personal-plan-migration-admission-migration.test.ts",
+      "count": 14,
+      "bytes": 29859,
+      "beforeSha256": "c26ebf96d26182a3b01de26e22ae6e144b21d295e582c78d12ea1ca8a926bad2",
+      "transferSha256": "c26ebf96d26182a3b01de26e22ae6e144b21d295e582c78d12ea1ca8a926bad2",
+      "cutSha256": "c26ebf96d26182a3b01de26e22ae6e144b21d295e582c78d12ea1ca8a926bad2",
+      "supportSha256": "f912ade505c44ec1ac1111ec5ee07ac75fd88326d864cc0949632f4acb77b441",
+      "unchangedCallbacks": 14
+    },
+    {
+      "file": "tests/personal-plan-migration-admission.test.ts",
+      "count": 6,
+      "bytes": 6866,
+      "beforeSha256": "01061d1a164b91b1f45eb92d8220c18f093376594a9aafe4da6560a5a85ac6b0",
+      "transferSha256": "01061d1a164b91b1f45eb92d8220c18f093376594a9aafe4da6560a5a85ac6b0",
+      "cutSha256": "01061d1a164b91b1f45eb92d8220c18f093376594a9aafe4da6560a5a85ac6b0",
+      "supportSha256": "8c6a8df09806d1e56746e0adf5134e4baac5dff49fcd28734d2feb148ac2c51a",
+      "unchangedCallbacks": 6
+    },
+    {
+      "file": "tests/personal-plan-migration-quiz-context.test.ts",
+      "count": 3,
+      "bytes": 2406,
+      "beforeSha256": "2d5e7ff20088d45e2b30f88ece972e798b03d83e25b9a10a4a2362df89d64c98",
+      "transferSha256": "2d5e7ff20088d45e2b30f88ece972e798b03d83e25b9a10a4a2362df89d64c98",
+      "cutSha256": "2d5e7ff20088d45e2b30f88ece972e798b03d83e25b9a10a4a2362df89d64c98",
+      "supportSha256": "342f016f4945523b5202c98e73ef2ebfa1f048a0a73584f98786cb9ace927390",
+      "unchangedCallbacks": 3
+    },
+    {
+      "file": "tests/personal-plan-migration-quiz-prefill.test.ts",
+      "count": 12,
+      "bytes": 21689,
+      "beforeSha256": "30929d9613f95597bb2cb77b7606548839d48cedc9fac87402b4240abd229ff4",
+      "transferSha256": "30929d9613f95597bb2cb77b7606548839d48cedc9fac87402b4240abd229ff4",
+      "cutSha256": "30929d9613f95597bb2cb77b7606548839d48cedc9fac87402b4240abd229ff4",
+      "supportSha256": "cffb39f148509ec4f34987ed4c06c889f8c679a1c04936629088880f8c58adce",
+      "unchangedCallbacks": 12
+    },
+    {
+      "file": "tests/personal-plan-migration-ready-route.test.ts",
+      "count": 6,
+      "bytes": 7539,
+      "beforeSha256": "396ec7d84d0b9b1832cf50b84604e13ff6743b004fec4661263ad2efe7c71a46",
+      "transferSha256": "396ec7d84d0b9b1832cf50b84604e13ff6743b004fec4661263ad2efe7c71a46",
+      "cutSha256": "396ec7d84d0b9b1832cf50b84604e13ff6743b004fec4661263ad2efe7c71a46",
+      "supportSha256": "1384c5558a612035f24c81c7d3faacb18595cf7a087e427971ec729ab437089a",
+      "unchangedCallbacks": 6
+    },
+    {
+      "file": "tests/personal-plan-rollout-access.test.ts",
+      "count": 5,
+      "bytes": 6398,
+      "beforeSha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+      "transferSha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+      "cutSha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+      "supportSha256": "268a77b34f682fbd12f11089429d0afcb5f14aeb5513cd34551378179914fd66",
+      "unchangedCallbacks": 5
+    }
+  ],
+  "readset": [
+    {
+      "file": "src/lib/personal-plan/frontier-routing.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "532aaf2f53973c532b1f5269cb81cb74c3f1483ad29c35fa27766b4d7b5489aa",
+      "bytes": 2439
+    },
+    {
+      "file": "src/lib/personal-plan/frontier-routing-loader.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "3602786d58e9ad2ac489a148b52ada98fb2f0b3f3fff2b915e8bc2ebfd57c135",
+      "bytes": 6479
+    },
+    {
+      "file": "src/lib/personal-plan/journey-access.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "abf839a86f4c28178223b97d43fed5d579e7317a78f8d8e95ccf29f7fcec2baf",
+      "bytes": 4640
+    },
+    {
+      "file": "src/lib/personal-plan/legacy-cutover-eligibility.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "c23956ed706e32be5b522c3391baa9778d12dc21043f4a18e955ac6c2826d319",
+      "bytes": 3043
+    },
+    {
+      "file": "src/lib/personal-plan/legacy-prefill.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "309514fe296a23f6b0ee4943874bf7af4beef3ce9b857b665ccd7aae3ec262ce",
+      "bytes": 11479
+    },
+    {
+      "file": "src/lib/personal-plan/migration-admission.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "c55ef64c0bbe0322694b490f7645f08198854c0bac9791d6321ae92bc9b39140",
+      "bytes": 7321
+    },
+    {
+      "file": "src/lib/personal-plan/migration-quiz-context.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "c27223753d2fefd96f6150bc2712bd5c09c9666bdac7a9c7c97f8a5485ec9633",
+      "bytes": 3866
+    },
+    {
+      "file": "src/lib/personal-plan/migration-quiz.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "1f7f28f87255975762073fe21b0e21f1000ff91bd0c467f61953294747ba2a4b",
+      "bytes": 1885
+    },
+    {
+      "file": "src/lib/personal-plan/rollout-access.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+      "bytes": 4691
+    },
+    {
+      "file": "src/lib/personal-plan/release.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+      "bytes": 3346
+    },
+    {
+      "file": "src/lib/quiz/migration-prefill-init.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "d47951d219de5a338224c01bcd0f11e1fccef09013a251962f0c87e8fef1d052",
+      "bytes": 5143
+    },
+    {
+      "file": "src/app/api/personal-plan/migration-quiz-context/route.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "9c9da3bf9a3ba4a140eb5a9d2f6e7be7fbdfc3572e809547050bb1f4f9f5abaf",
+      "bytes": 6207
+    },
+    {
+      "file": "src/app/plan-bereit/status/route.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "1b8f09e7bde788b2ec359a3d937fc84a58fa1ae1b14aa9c7d79c997260f22bff",
+      "bytes": 11440
+    },
+    {
+      "file": "src/app/quiz/page.tsx",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "d2ada32e0a4cebbd2c5201d434739a4d78200de6522096e56c7edca7d688a60f",
+      "bytes": 16212
+    },
+    {
+      "file": "src/lib/quiz/store.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "8245d784856dc36fc11c4fad35a1c400a65adf55fb994ad415408a94644f91f5",
+      "bytes": 6040
+    },
+    {
+      "file": "src/lib/quiz/types.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "11ec81f1d6f0e5480132ec892301a2437852c2fc80bf95c22abf2207e6b1fce2",
+      "bytes": 2854
+    },
+    {
+      "file": "src/lib/quiz/screen-order.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "78bc469add4d51a92b8b9e19b2d9376553453b5595c9ac1661e037c60630e204",
+      "bytes": 6490
+    },
+    {
+      "file": "src/lib/quiz/normalization.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239",
+      "bytes": 11376
+    },
+    {
+      "file": "src/lib/vocabulary/onboarding-care.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547",
+      "bytes": 3838
+    },
+    {
+      "file": "src/lib/vocabulary/frequencies.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "d79bb3584473a8f6541feecff58a40633736f9376981ff190b645114dc0eb3a9",
+      "bytes": 6217
+    },
+    {
+      "file": "src/lib/product-usage/shampoo-fallback.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "2480aea9af037a2217ffd5a6e3d3014a7d42e01c3a760a383680ee30a5ba3c07",
+      "bytes": 2676
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/errors.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "1e9b1f458e6adb52ee76ecf725c3a6007e91aab6ccb5f89a6dd00232691c93a1",
+      "bytes": 1708
+    },
+    {
+      "file": "tests/personal-plan-migration-admission.fixtures.ts",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "5c3c8dd47e56adcb279abfc3f4381cdd3c3cc21f9a3d0d10c7167019e2ce3c50",
+      "bytes": 7762
+    },
+    {
+      "file": "supabase/migrations/20260828104243_personal_plan_paid_migration_admission.sql",
+      "readDepth": "Full file read including helpers and operative declarations.",
+      "sha256": "258af22e01b0287330b59753d645c13b51ab4da8ae564bcd2576c9e02086d39a",
+      "bytes": 39040
+    },
+    {
+      "file": "src/lib/personal-plan/journey-access-loader.ts",
+      "readDepth": "Previously full source in journey/lifecycle; refreshed 175-220,317-420,448-480,570-620, all symbol/caller references.",
+      "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+      "bytes": 21991
+    },
+    {
+      "file": "src/lib/personal-plan/enrollment.ts",
+      "readDepth": "Previously full owner in journey/lifecycle; refreshed175-225 migration-bound admission.",
+      "sha256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+      "bytes": 17762
+    },
+    {
+      "file": "src/lib/personal-plan/persistence/stage2-optional-entry.ts",
+      "readDepth": "Previously full stage2 owner; refreshed155-210 mapper invocation/receipt guard.",
+      "sha256": "b304e8d92d6635ba78e7c01db630bc8987e5d32201f161973ce7043322793c0f",
+      "bytes": 16374
+    },
+    {
+      "file": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "readDepth": "Refreshed1-115 optional migration mapper/authority/handoff; not entire generic persistence module.",
+      "sha256": "7b1e5b2b8668b973a1d2dc208e19273fb481fad8cd9bf042cf05e4c04a927ea3",
+      "bytes": 42184
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/types.ts",
+      "readDepth": "1-150 relevant category and answer declarations; rest outside mapper.",
+      "sha256": "9d19d1249ac0ee2f43fbcaa8ff03417df5afd143f3fb6e9da26be0618db24f04",
+      "bytes": 6121
+    },
+    {
+      "file": "src/lib/quiz/questions.ts",
+      "readDepth": "1-30 question order/number; not full copy/options catalog.",
+      "sha256": "49d978c9ad9f02c716213e81fdf0abe392ed9e8803f8dbea69c9e07576acf683",
+      "bytes": 10293
+    },
+    {
+      "file": "src/app/plan-bereit/page.tsx",
+      "readDepth": "150-190 current migration read entry; prior full journey page not claimed new.",
+      "sha256": "3266d35f5b0a8f5312e6415d40bc52224dc660a830134dc44089600343d96289",
+      "bytes": 12344
+    },
+    {
+      "file": "src/app/api/quiz/lead/route.ts",
+      "readDepth": "118-162 and603-680 migration intent/auth/cookie/save/result boundary; other lead branches not reread.",
+      "sha256": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+      "bytes": 28830
+    },
+    {
+      "file": "src/components/quiz/quiz-lead-capture.tsx",
+      "readDepth": "424-452 and510-525 request intent and completion/recovery href consumers; not full component.",
+      "sha256": "2708d0f076e24e474ff30587080e92200f8f112dff52ecb9a338820cd1a1efb9",
+      "bytes": 31154
+    },
+    {
+      "file": "src/lib/stripe/checkout-activation.ts",
+      "readDepth": "458-483 and symbol search471,614; provider orchestration outside this lane.",
+      "sha256": "f33ca66366ec59a915fdeba82bb397ad20891dd837495de25c6bf4e51deb8bdc",
+      "bytes": 54607
+    },
+    {
+      "file": "src/lib/paypal/trial-account-admission.ts",
+      "readDepth": "535-558 current trial cutoff caller.",
+      "sha256": "ffdf9630360251aa04e04f24dc11db17698ed293ba2b713b2e602380d303ef5e",
+      "bytes": 29195
+    },
+    {
+      "file": "src/lib/paypal/checkout-activation.ts",
+      "readDepth": "104-126 plus current symbol search349.",
+      "sha256": "4a0c4bd392e72c2b3851855ba99f0a06cba4c4b0c0ef978d360a61b92ea9738b",
+      "bytes": 25832
+    },
+    {
+      "file": "src/lib/supabase/middleware.ts",
+      "readDepth": "Earlier navigation current frontier import/binding/call409,746; not new full middleware audit.",
+      "sha256": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7",
+      "bytes": 36657
+    },
+    {
+      "file": "src/app/onboarding/page.tsx",
+      "readDepth": "Earlier navigation frontier call149; not full page reread.",
+      "sha256": "6623401e9abffffeedc49f8aacf12185257f95c8cd275501419013c4432d7cef",
+      "bytes": 7016
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "readDepth": "135-165 native CI owner routing.",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+      "bytes": 17598
+    },
+    {
+      "file": "package.json",
+      "readDepth": "test:node and test:contracts script definitions; package version fields.",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+      "bytes": 25353
+    },
+    {
+      "file": "package-lock.json",
+      "readDepth": "Hash only; no semantic full-read claim.",
+      "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
+      "bytes": 590438
+    },
+    {
+      "file": ".nvmrc",
+      "readDepth": "Runtime pin only.",
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "bytes": 3
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "readDepth": "Full marker-only preload implementation.",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+      "bytes": 391
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts",
+      "readDepth": "798-860,868-938 constructor/query/exec/close type contracts; no wasm runtime execution.",
+      "sha256": "aa4bc50bc6ba80c59ad64dd2f58112b873b6b2f255e383dae69f3c4abb4a753b",
+      "bytes": 44697
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/index.d.ts",
+      "readDepth": "Export linkage1-30.",
+      "sha256": "cf15756708e9bd904e7982f4423a466786b439f14147c615ed8ec4e59ab83db6",
+      "bytes": 17310
+    },
+    {
+      "file": "node_modules/zustand/vanilla.js",
+      "readDepth": "Full shallow setState merge/getState/subscription source.",
+      "sha256": "15dcb1e8a40b51ef580fbb27e05bac872ff0e71f2f2ad4d316d7fb344319453e",
+      "bytes": 1027
+    },
+    {
+      "file": "node_modules/zustand/react.js",
+      "readDepth": "Full React external-store hook binding source.",
+      "sha256": "4193ec2661359a71f870eb4fe4f8002505d2014934432bd9900afafd3c9f9f96",
+      "bytes": 785
+    },
+    {
+      "file": "node_modules/react/cjs/react.development.js",
+      "readDepth": "1190-1275 hook dispatcher delegation, not renderer scheduler.",
+      "sha256": "4325e6263375459503858c0982d50bbc25bc33e66676954698c67221d2ee8b72",
+      "bytes": 47219
+    },
+    {
+      "file": "node_modules/next/dist/server/web/spec-extension/response.js",
+      "readDepth": "1-50 and90-103 constructor/Response.json delegation.",
+      "sha256": "68a5a07540d57a4beb3275fddd0502fd5ef9a42986b414c0bcee99a3f9033366",
+      "bytes": 4977
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/package.json",
+      "readDepth": "Dependency version pin.",
+      "sha256": "a540c379fd1d820810793681d25fa7ad5dadfcee2b190d14a6553fdb469cfe3c",
+      "bytes": 5853
+    },
+    {
+      "file": "node_modules/react/package.json",
+      "readDepth": "Dependency version pin.",
+      "sha256": "ce01a280a6109d1a837e88ce99784f318785079dbffda086a870aad61adc94e1",
+      "bytes": 1248
+    },
+    {
+      "file": "node_modules/zustand/package.json",
+      "readDepth": "Dependency version pin.",
+      "sha256": "355bb5254e2d996e62830d1ec5b845cb81be98ef789c098a8861bfc99c371804",
+      "bytes": 2176
+    },
+    {
+      "file": "node_modules/next/package.json",
+      "readDepth": "Dependency version pin.",
+      "sha256": "006ccbc8816f40ace4307a6048c25ef3cdbe93598529d5dc85db9d19d912274d",
+      "bytes": 11243
+    },
+    {
+      "file": "node_modules/typescript/package.json",
+      "readDepth": "Parser version pin.",
+      "sha256": "822ef7ca6452205657b6288b066481ecf508bfbf43455d715cf7d3ec457561e6",
+      "bytes": 3620
+    }
+  ],
+  "priorNavigationSha256": "c52edb1b8f7462cd6a405cc0ede63873afcaec7c31cab50cc504811e918d2208",
+  "childrenStarted": 0,
+  "ownerTestImports": 0,
+  "repositoryWrites": 0,
+  "runtimeTests": 0
+}

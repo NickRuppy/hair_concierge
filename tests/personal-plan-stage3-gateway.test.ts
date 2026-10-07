@@ -14,8 +14,6 @@ import {
   type FixtureStage3Gateway,
   type Stage3CategoryRequirement,
 } from "../src/lib/personal-plan/products/fixture-gateway"
-
-const now = "2026-08-07T10:00:00.000Z"
 const requirements: Stage3CategoryRequirement[] = [
   {
     category: "conditioner",
@@ -26,7 +24,7 @@ const requirements: Stage3CategoryRequirement[] = [
 ]
 
 function gateway(): FixtureStage3Gateway {
-  return createFixtureStage3Gateway({ now: () => now, searchDelayMs: 0 })
+  return createFixtureStage3Gateway({ searchDelayMs: 0 })
 }
 
 test("the fixture resumes a prefilled catalog product using its persisted product identity", async () => {
@@ -71,18 +69,6 @@ test("the fixture resumes a prefilled catalog product using its persisted produc
   if (result.status !== "saved") return
   assert.equal(result.draft.products[0]?.userProductId, "legacy-owned")
   assert.equal(result.draft.products[0]?.source, "existing_inventory")
-})
-
-test("production product failures share the frozen unavailable and snapshot codes", () => {
-  for (const code of [
-    "temporarily_unavailable",
-    "unsupported_snapshot_version",
-    "snapshot_too_large",
-  ] as const) {
-    const error = new Stage3ProductsGatewayError(code)
-    assert.equal(error.name, "Stage3ProductsGatewayError")
-    assert.equal(error.code, code)
-  }
 })
 
 test("the HTTP gateway preserves a stale refined source conflict", async () => {
@@ -375,7 +361,7 @@ test("fixture accepts an already-open category with a stale revision as canonica
 })
 
 test("search trims and requires two characters, caps at eight, and echoes request tokens", async () => {
-  const subject = createFixtureStage3Gateway({ now: () => now, searchDelayMs: 0 })
+  const subject = createFixtureStage3Gateway({ searchDelayMs: 0 })
 
   const tooShort = await subject.search({ category: "conditioner", query: " a ", requestToken: 1 })
   assert.deepEqual(tooShort, {
@@ -414,7 +400,6 @@ test("fixture search reports capping only when a ninth matching product exists",
   }))
   const search = async (candidateCount: number) =>
     createFixtureStage3Gateway({
-      now: () => now,
       searchDelayMs: 0,
       catalog: catalog.slice(0, candidateCount),
     }).search({ category: "conditioner", query: "boundary", requestToken: candidateCount })
@@ -449,37 +434,8 @@ test("fixture search covers Shampoo, Conditioner, Oil, Scalp Care, and Heat Prot
   }
 })
 
-test("successful mutations stamp updatedAt from the injected clock", async () => {
-  const timestamps = ["created", "mutated"]
-  const subject = createFixtureStage3Gateway({
-    now: () => timestamps.shift() ?? "later",
-    searchDelayMs: 0,
-  })
-  await createDraft(subject)
-  const search = await subject.search({
-    category: "conditioner",
-    query: "condition",
-    requestToken: 1,
-  })
-  assert.equal(search.status, "ready")
-
-  const saved = await subject.mutate({
-    draftId: "draft-1",
-    expectedRevision: 0,
-    mutation: {
-      type: "capture_catalog_candidate",
-      candidateId: search.result.candidates[0]!.candidateId,
-      frequencyRange: "weekly_2x",
-    },
-  })
-
-  assert.equal(saved.status, "saved")
-  assert.equal(saved.draft.updatedAt, "mutated")
-})
-
 test("one-shot fixture failures are recoverable and never apply a failed save or completion", async () => {
   const subject = createFixtureStage3Gateway({
-    now: () => now,
     searchDelayMs: 0,
     failOnce: ["search", "mutate", "complete"],
   })

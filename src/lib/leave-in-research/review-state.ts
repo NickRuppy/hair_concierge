@@ -88,7 +88,6 @@ export type LeaveInLabReviewDecision = z.infer<typeof decisionSchema>
 export type LeaveInLabProductReviewState = z.infer<typeof productReviewStateSchema>
 export type LeaveInLabReviewState = z.infer<typeof reviewStateSchema>
 export type LeaveInReworkEntry = z.infer<typeof reworkEntrySchema>
-export type LeaveInReworkQueue = z.infer<typeof reworkQueueSchema>
 
 export type LeaveInLabReviewSnapshot = Omit<LeaveInLabProductReviewState, "decisions">
 
@@ -211,15 +210,6 @@ export function saveLeaveInLabReviewState(input: {
   })
   writeJsonAtomically(input.filePath, next)
   return decision
-}
-
-export function readLeaveInReworkQueue(filePath: string): LeaveInReworkQueue | null {
-  if (!existsSync(filePath)) return null
-  try {
-    return reworkQueueSchema.parse(JSON.parse(readFileSync(filePath, "utf8")))
-  } catch {
-    return null
-  }
 }
 
 export function updateLeaveInReworkQueue(

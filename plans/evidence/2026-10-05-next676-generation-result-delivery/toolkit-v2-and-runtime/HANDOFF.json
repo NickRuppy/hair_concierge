@@ -1,0 +1,39 @@
+{
+  "status": "PREPARED_V2_FOR_ROOT_REVIEW_NO_RUNTIME_EXECUTION",
+  "directory": "/tmp/test-audit-generation157-tools-v2-orjded8b",
+  "pinsSHA256": "b41d3a0d1a4021f978e0458b7e7a6c21881541ff195bb662c28e0d59ea917d70",
+  "artifactSealSHA256": "40f156e93a63c646d49a71c73eaa5c4b86a0390535119ed14081eb34ffb95eda",
+  "staticReceiptSHA256": "dd1624ee770e0ac9eccf8f1c871a827a99bdc1a763e9486e699f4e3b6a2a07e4",
+  "originalProposal": {
+    "directory": "/tmp/test-audit-plan-generation157-R7hJl1",
+    "manifestSHA256": "5a1b8e56f7e6fc31b1f972fa98d91d8746169261702e5a3bef33f9f6ce74abcd",
+    "handoffSHA256": "504f0497b4ce931fe86b5ae449d547a410102a75d803f09115c939c96928003a",
+    "unchanged": true
+  },
+  "previousKit": {
+    "directory": "/tmp/test-audit-generation157-tools-xwq0stb7",
+    "handoffSHA256": "19745fcb357658428450e5ce145fbf0d3fce9d68943992382b4b9a39e7566223",
+    "unchanged": true
+  },
+  "keyHashes": {
+    "operator-guard.cjs": "bb8b6d4aca4bcdab011d273f5eada27d4764c3847dfb87476bf5928cb39cc373",
+    "operator-edit.cjs": "42e0e04bcffba79a67774a4d26e8bee14ff07585821d23808df589c9ec3a81d5",
+    "operator-run-controls.cjs": "2c7632a28efc1c25f38ce5c1671418701c8cf4b96add24dd6041de0bad6fad85",
+    "operator-proof.cjs": "e62db62961fb4f7a6ec0406ead51f837871fbd1a4525166115b507298a99d84c",
+    "diagnostic-projection.cjs": "eea9191823a6840d6f3ae449769dc0f13e78369a400daf97b74928be62ecfe88",
+    "operator-readonly-preload.cjs": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "operator-native-proof.cjs": "8cda5fc555ace41b984aeee919cb9f8545e0dedf98e5b472d0f69ba556fb8258",
+    "prepare-v2.cjs": "b88360c05c3c5d0d4bb24b8e70244dcff84bfc2a3bee6247ca7b9ead56ef4ffb",
+    "operator-controls-normalized.json": "e0642672c98f1baafc3ebebf231ed2dbec690905e4ad18ffb5500118cd988267",
+    "diagnostic-source-evidence.json": "139c2865c16e6d74316800b44b8cbe86d4c8e68bb81e7f5bcbb8f4d0fa02b00e",
+    "final-template-delta.patch": "78c30fa13b809fa7390e24cb9aa006a5980e25d2f284363070cf4c1884ac940a",
+    "README.md": "e3d736bb1f48333b6256aa70d2a3a1470eb03a239db7412fd744c5eafba09c77",
+    "main-commands.json": "4739dcd1fde24071b22e09b0954d9e9d2a96e007145df178b68aaf5e17b562e1"
+  },
+  "diagnosticsReady": 18,
+  "runtimeControlsRunByWorker": 0,
+  "verification": "Four final enforced-readonly checks closed0;1538 synthetic checks; zero checked-code writes/children/owner imports/network. No native or Zod execution.",
+  "baseline": "Reuse root closed158title baseline via byte-identical full-native argv and unchanged source/runtime guards; fresh checker does not launch native.",
+  "sealOrder": "Final PIN and executable constants were frozen before current delta/artifact seal. No post-delta pin substitution.",
+  "limits": "Reporter projection cannot independently observe own undefined/container type; exact source evidence plus own-undefined message witness and complete expected/actual projection bound to D1 preserve the intended failure. Actual native proof remains main-only and unrun in worker."
+}

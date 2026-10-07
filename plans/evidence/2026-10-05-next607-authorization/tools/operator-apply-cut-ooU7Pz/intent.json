@@ -1,0 +1,32 @@
+{
+  "mode": "cut",
+  "from": "before",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "693f7db9ff92ae74f9541de924803d5c98322d38e9ddf3c5d9e4f7ba5ab0147f",
+  "prerequisite": {
+    "dir": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-mutations-before-eO3xTh",
+    "completionSHA": "cd78bd22e6efdbd2582a04230b0742a3aafede90e1054b71410f04f3e63e0c04",
+    "verified": 1,
+    "logFiles": 3,
+    "phase": "before"
+  },
+  "files": [
+    {
+      "file": "src/lib/funnel/server.ts",
+      "before": "d664770e0103972242ab81c3a3573243695f901e68ecfe4461e61d0410360df6",
+      "after": "aec7ac4e2ec1c193f1d5e8145e76e58084c0c779c04aaef16f3223e232bcd3ba"
+    },
+    {
+      "file": "src/app/api/stripe/create-checkout-session/route.ts",
+      "before": "0808a083b02a9611deab703bf9fc7a9b3cecb5dce2b5be1889003a0cd06a9bd8",
+      "after": "2b4d0e46ea8558bcd54b04124bf57ccf9b6d6b2eb6afe6aacb140c63c8400946"
+    },
+    {
+      "file": "tests/personal-plan-pricing-experiment.test.ts",
+      "before": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31",
+      "after": "bb971461b6198bbff84b75885d43c8dd492322521f74d72ad02c7065a8d0ae7f"
+    }
+  ]
+}

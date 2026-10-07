@@ -1,0 +1,78 @@
+from pathlib import Path
+import hashlib,json,re,difflib
+D=Path(__file__).parent; T=Path('/tmp/test-audit-scanner119-tools-e5gg36wq'); P=Path('/tmp/test-audit-quiz-portrait43-ygKLUS'); C=Path('/tmp/test-audit-catalog99-tools-k9e7uyhg')
+sha=lambda b:hashlib.sha256(b).hexdigest()
+def write(f,s):
+ p=D/f;p.parent.mkdir(parents=True,exist_ok=True)
+ with p.open('x') as h:h.write(s)
+files=['operator-guard.cjs','operator-edit.cjs','operator-run-controls.cjs','operator-proof.cjs','operator-native-proof.cjs','operator-readonly-preload.cjs','operator-pins.json','prepare-pins.cjs','HANDOFF.json']
+provenance={}
+for f in files:
+ b=(T/f).read_bytes();write('template-originals/scanner119-'+f,b.decode());provenance['scanner119/'+f]={'path':str(T/f),'sha256':sha(b)}
+b=(C/'operator-proof.cjs').read_bytes();write('template-originals/catalog99-operator-proof.cjs',b.decode());provenance['catalog99/operator-proof.cjs']={'path':str(C/'operator-proof.cjs'),'sha256':sha(b)}
+assert provenance['scanner119/operator-pins.json']['sha256']=='b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f'
+assert provenance['catalog99/operator-proof.cjs']['sha256']=='3ae1bda88ceca8c1dbcf14fa635eda9f9204f2561556730994eb7d74e2f86dc0'
+write('template-provenance.json',json.dumps(provenance,indent=2)+'\n')
+s=(T/'operator-guard.cjs').read_text().replace(str(T)+'/operator',str(D)+'/operator').replace('/tmp/test-audit-scanner-residual119',str(P))
+a=s.index('function nativeRegistrationNames(');b=s.index('function replaceOnce(',a)
+s=s[:a]+r'''function nativeRegistrationNames(ts,file,text){
+ const sf=parse(ts,file,text),names=[];let table=null;
+ function visit(n){if(ts.isVariableDeclaration(n)&&n.name.getText(sf)==='SINGLE_TAP_FILES'){
+  if(!ts.isArrayLiteralExpression(n.initializer))fail('Literal motion table required');table=n.initializer.elements.map(e=>{if(!ts.isStringLiteralLike(e))fail('Literal motion row required');return e.text})
+ }ts.forEachChild(n,visit)}visit(sf);
+ function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){
+  const title=n.arguments[0];let loop=null;for(let p=n.parent;p;p=p.parent)if(ts.isForOfStatement(p)){if(loop)fail('Nested registration loop');loop=p}
+  if(loop){if(file!=='tests/quiz-motion-tokens.test.ts'||loop.expression.getText(sf)!=='SINGLE_TAP_FILES'||!table||table.length!==4||title.getText(sf)!=='`${path}: single-tap advance uses MOTION_MS.settle, no private delay`')fail('Unknown registration expansion');for(const p of table)names.push(p+': single-tap advance uses MOTION_MS.settle, no private delay')}
+  else{if(!ts.isStringLiteralLike(title))fail('Unknown dynamic title');names.push(title.text)}
+ }ts.forEachChild(n,walk)}walk(sf);return names
+}
+function nonAssertionCalls(ts,file,text){const sf=parse(ts,file,text),calls=[];function walk(n){if(ts.isCallExpression(n)&&!n.expression.getText(sf).startsWith('assert.'))calls.push(n.getText(sf));ts.forEachChild(n,walk)}for(const row of registrations(ts,file,text).values()){const callback=parse(ts,file,'const callback = '+row.callback);function only(n){if(ts.isCallExpression(n)&&!n.expression.getText(callback).startsWith('assert.'))calls.push(n.getText(callback));ts.forEachChild(n,only)}only(callback)}return calls}
+''' +s[b:]
+s=s.replace('candidates.length!==14||controls.length!==18','candidates.length!==1||controls.length!==3').replace("keepers.size!==7)fail('Seven unique keepers required')","keepers.size!==1)fail('One unique keeper required')")
+s=s.replace("c.donor.body+'\\n\\n'","c.donor.body")
+s=s.replace("Object.keys(snapshots).length!==21||JSON.stringify(counts)!=='{\"before\":119,\"transfer\":119,\"cut\":105}'||unrelated!==98||unchangedRetained!==100||changedKeepers!==5", "Object.keys(snapshots).length!==9||JSON.stringify(counts)!=='{\"before\":43,\"transfer\":43,\"cut\":42}'||unrelated!==41||unchangedRetained!==41||changedKeepers!==1")
+s=s.replace('held.sha256','held.bodySHA256').replace("phase==='cut'?114:128","phase==='cut'?45:46")
+s=s.replace("if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated bytes')", "if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated bytes'); if(JSON.stringify(nonAssertionCalls(ts,file,before.bytes.toString()))!==JSON.stringify(nonAssertionCalls(ts,file,transfer.bytes.toString())))fail('Transfer changed owner calls or inputs')")
+s=s.replace("u.donorText!==donor.assertions[i].text||u.keeperText!==row.assertions[u.keeperIndex]?.text||!u.basis", "u.donorText!==donor.assertions[i].text||u.keeperText!==row.assertions[u.keeperIndex]?.text||u.donorText.replace(/\\s+/g,'')!==u.keeperText.replace(/\\s+/g,'')||!u.basis")
+s=s.replace("const exactCommand=['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1','--test-name-pattern=^'+escaped+'$',c.test.file]", "const exactCommand=['/usr/local/bin/node','--experimental-test-isolation=none','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-reporter=tap','--test-name-pattern','^'+escaped+'$',c.test.file]")
+write('operator-guard.cjs',s)
+s=(T/'operator-proof.cjs').read_text();cat=(C/'operator-proof.cjs').read_text();a=cat.index('function diagnosticValue(');b=cat.index('function valueProof(',a);decoder=cat[a:b]
+extra=r'''// Quiz-only conjunction. RegExp diagnostics encode expected as an empty object.
+// Reject truncated HTML: absence predicates require the complete actual string.
+function valueProof(control,text){
+ const expected=diagnosticValue(text,'expected'),actual=diagnosticValue(text,'actual'),message=errorMessage(text);
+ const header=control.messageHeader+' Input:\n\n';
+ const actualQuoted=/^  actual: ['"`]/m.test(text), expectedBare=/^  expected:[ \t]*\n(?=  \S)/m.test(text);
+ let accepted=expected.ok&&expected.emptyObject===true&&expectedBare&&actual.ok&&actualQuoted&&typeof actual.value==='string'&&!actual.truncated&&typeof message==='string'&&message.startsWith(header);
+ const html=actual.value;
+ if(accepted){
+  accepted=html.includes('data-hair-length-card="true"')&&html.includes('Taille oder länger.')&&html.includes('data-hair-portrait-media="true"');
+  if(control.id==='C1-fixed-responsive-frame')accepted=accepted&&html.includes('h-[183px]')&&!html.includes('h-[184px]');
+  else if(control.id==='C1-description-association')accepted=accepted&&!html.includes('aria-describedby');
+  else if(control.id==='C1-decorative-body')accepted=accepted&&html.includes('<svg aria-hidden="false"')&&!html.includes('<svg aria-hidden="true"');
+  else accepted=false;
+ }
+ // The outer fields must occur once; nested actual exception fields do not count.
+ const one=key=>[...text.matchAll(new RegExp('^  '+key+':','gm'))].length===1;
+ accepted=accepted&&['error','operator','stack','expected','actual','code'].every(one);
+ return{accepted,expected,actual,exactHeader:header};
+}
+'''
+s=s.replace('function intended(control,run,phase){',decoder+extra+'function intended(control,run,phase){')
+s=s.replace(" const messageMatches=", " const decodedValues=valueProof(control,run.text)\n const messageMatches=")
+s=s.replace('&&firstFrame.includes(stackToken),operator', '&&firstFrame.includes(stackToken)&&decodedValues.accepted,decodedValues,operator')
+s=s.replace('complete.verified!==18','complete.verified!==3').replace('complete.cleanRuns!==36','complete.cleanRuns!==6').replace('Required18','Required3').replace('length!==21','length!==9').replace('records.length!==18','records.length!==3').replace('Eighteen records','Three records').replace('verified:18,logFiles:54','verified:3,logFiles:9')
+s=s.replace('clean,errorMessage,intended','clean,errorMessage,diagnosticValue,valueProof,intended');write('operator-proof.cjs',s)
+for f in ['operator-edit.cjs','operator-run-controls.cjs','operator-native-proof.cjs','operator-readonly-preload.cjs']:
+ s=(T/f).read_text();s=re.sub(r"const PIN_SHA='[a-f0-9]{64}'","const PIN_SHA='PIN_SHA_PLACEHOLDER'",s)
+ s=s.replace('parsedPhaseFiles:63','parsedPhaseFiles:27').replace('sourceControlsParsed:18','sourceControlsParsed:3').replace('tsMutantsParsed:16,sqlByteRecipes:2','tsMutantsParsed:3,sqlByteRecipes:0').replace('prepared.size===18','prepared.size===3').replace('receipts.length===18','receipts.length===3').replace('ALL21','ALL9').replace("phase==='cut'?114:128","phase==='cut'?45:46")
+ if f=='operator-native-proof.cjs':s=s.replace("const expectedCommand={executable:process.execPath,args:['--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1',...ctx.evidence.ownedFiles],cwd:g.ROOT};", "const expectedCommand=JSON.parse(fs.readFileSync(path.join(path.dirname(g.BASE),'full-native-command.json')));")
+ write(f,s)
+write('decoder-provenance.json',json.dumps({'source':str(C/'operator-proof.cjs'),'fileSHA256':provenance['catalog99/operator-proof.cjs']['sha256'],'function':'diagnosticValue','functionSHA256':sha(decoder.encode()),'copy':'byte-exact','scannerMessageAndFirstFramePredicate':'byte-exact base plus decodedValues.accepted conjunction; no relaxation','limits':'Reject truncated HTML even if intended clause is visible; runtime shape remains unobserved.'},indent=2)+'\n')
+
+# Additional strict path-bound FIRST outer frame, beyond unchanged scanner base predicate.
+f=D/'operator-proof.cjs';s=f.read_text()
+s=s.replace(" const decodedValues=valueProof(control,run.text)",r""" const decodedValues=valueProof(control,run.text)
+ const esc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+ const exactFirstFrame=new RegExp('^    (?:at )?TestContext\\.<anonymous> \\((?:file://)?(?:'+esc(g.ROOT+'/')+')?'+esc(stackToken)+'[1-9]\\d*\\)$').test(firstFrame)""")
+s=s.replace('&&decodedValues.accepted,decodedValues,operator','&&decodedValues.accepted&&exactFirstFrame,exactFirstFrame,decodedValues,operator');f.write_text(s)

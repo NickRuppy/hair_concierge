@@ -33,9 +33,7 @@ import { createSelectProductsTool } from "@/lib/agent/tools/select-products"
 import { loadUserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import type { RecommendationEngineRuntime } from "@/lib/recommendation-engine/runtime"
 import type { ConversationState, RoutineLayer, RoutineProductCategory } from "@/lib/types"
-import { createTestSession, upsertHairProfile } from "../../../../scripts/eval-chat/client"
 import type {
-  AgentCompareScenario,
   AgentCompareTurnResult,
   AgentCompareToolLoopVariant,
   AgentCompareUserRequest,
@@ -83,20 +81,6 @@ type AgenticToolLoopRuntime = (params: {
   answerCompositionMode?: AgenticAnswerCompositionMode
   consultationBrief?: AgenticConsultationBrief | null
 }) => Promise<AgenticToolLoopRuntimeResult>
-
-function getRequiredCompareEnv() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-  if (!supabaseUrl || !serviceRoleKey || !anonKey) {
-    throw new Error(
-      "Missing env vars: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, NEXT_PUBLIC_SUPABASE_ANON_KEY",
-    )
-  }
-
-  return { supabaseUrl, serviceRoleKey, anonKey }
-}
 
 async function loadRuntime(): Promise<{
   runAgenticToolTurn: AgenticToolLoopRuntime
@@ -551,35 +535,5 @@ export async function runToolLoopComparisonForUser(
     state_transition: extractStateTransition(finalResult),
     turns: turnResults,
     error: null,
-  }
-}
-
-export async function runToolLoopComparison(params: {
-  scenario: AgentCompareScenario
-  prompt?: string
-  turns?: string[]
-  baseUrl?: string | null
-  toolLoopVariant?: AgentCompareToolLoopVariant
-}): Promise<CompareRunResult> {
-  const { supabaseUrl, serviceRoleKey, anonKey } = getRequiredCompareEnv()
-  const session = await createTestSession(supabaseUrl, serviceRoleKey, anonKey)
-
-  try {
-    await upsertHairProfile(
-      session.admin,
-      session.userId,
-      params.scenario.hair_profile,
-      params.scenario.routine_inventory ?? [],
-    )
-
-    return runToolLoopComparisonForUser({
-      userId: session.userId,
-      prompt: params.prompt,
-      turns: params.turns,
-      baseUrl: params.baseUrl,
-      toolLoopVariant: params.toolLoopVariant,
-    })
-  } finally {
-    await session.cleanup()
   }
 }

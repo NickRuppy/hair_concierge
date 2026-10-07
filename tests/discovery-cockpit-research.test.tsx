@@ -514,6 +514,7 @@ test("an open submission without a live job is enqueued, and the new status come
     label: "In Recherche – wartet",
     canStartResearch: false,
   })
+  assert.equal((result.body as { identityChanged?: boolean }).identityChanged, false)
 })
 
 test("a failed job is retried, not enqueued", async () => {
@@ -695,13 +696,6 @@ test("race: a catalog match assigned first wins over a later submission attach",
   assert.deepEqual(calls, [`create:${ids.user}:${EAN}`, `attach-lost:${ids.barcodeItem}`])
   assert.equal(result.body.status?.label, "Im Katalog")
   assert.equal((result.body as { identityChanged?: boolean }).identityChanged, true)
-})
-
-test("an enqueue changes no identity, so the cockpit only updates the badge", async () => {
-  const { deps } = routeDeps()
-  const result = await post(deps, { itemId: ids.researchItem })
-  assert.equal(result.status, 200)
-  assert.equal((result.body as { identityChanged?: boolean }).identityChanged, false)
 })
 
 test("a second-tab retry the RPC refuses reports the job the first tab queued", async () => {

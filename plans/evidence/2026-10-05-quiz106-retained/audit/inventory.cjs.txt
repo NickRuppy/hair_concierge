@@ -1,0 +1,34 @@
+'use strict';
+const fs=require('node:fs'), crypto=require('node:crypto'), path=require('node:path');
+const dir=__dirname, initial=JSON.parse(fs.readFileSync(path.join(dir,'start-pins.json'),'utf8'));
+const ts=require(path.join(initial.root,'node_modules/typescript/lib/typescript.js'));
+const sha=s=>crypto.createHash('sha256').update(s).digest('hex');
+const output=[];
+for(const file of initial.testFiles){
+ const bytes=fs.readFileSync(path.join(initial.root,file)), expected=initial.pins.find(p=>p.file===file);
+ if(sha(bytes)!==expected.sha256) throw Error('drift '+file);
+ const source=bytes.toString(), sf=ts.createSourceFile(file,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ if(sf.parseDiagnostics.length)throw Error('parse '+file);
+ const rows=[];
+ const walk=n=>{if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'&&n.arguments.some(a=>ts.isArrowFunction(a)||ts.isFunctionExpression(a))){
+ const cb=n.arguments.find(a=>ts.isArrowFunction(a)||ts.isFunctionExpression(a));
+ const assertions=[],calls=[];const inner=x=>{if(ts.isCallExpression(x)){const s=x.expression.getText(sf);calls.push({line:sf.getLineAndCharacterOfPosition(x.getStart(sf)).line+1,expression:s,text:x.getText(sf)});if(s==='assert'||s.startsWith('assert.'))assertions.push(calls[calls.length-1]);}ts.forEachChild(x,inner)};inner(cb);
+ rows.push({ordinal:rows.length+1,title:n.arguments[0].getText(sf),line:sf.getLineAndCharacterOfPosition(n.getStart(sf)).line+1,endLine:sf.getLineAndCharacterOfPosition(n.end).line+1,callbackSHA256:sha(cb.getText(sf)),registrationSHA256:sha(n.getText(sf)),callback:cb.getText(sf),assertions,calls});}
+ ts.forEachChild(n,walk);};walk(sf); output.push({file,sha256:sha(bytes),registrationCount:rows.length,rows});
+}
+fs.writeFileSync(path.join(dir,'inventory.json'),JSON.stringify(output,null,2)+'\n');
+for(const f of output){process.stdout.write(f.file+' '+f.registrationCount+'\n');for(const r of f.rows) process.stdout.write(String(r.ordinal).padStart(2)+' L'+r.line+' '+r.title+'\n');}
+const structures=[];
+for(const file of initial.testFiles){
+ const source=fs.readFileSync(path.join(initial.root,file),'utf8'),sf=ts.createSourceFile(file,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ const f=output.find(x=>x.file===file),extra=[],tables=[];
+ const unwrap=n=>{while(ts.isAsExpression(n)||ts.isSatisfiesExpression(n)||ts.isParenthesizedExpression(n))n=n.expression;return n;};
+ const walk=n=>{
+  const ln=sf.getLineAndCharacterOfPosition(n.getStart(sf)).line+1;
+  if(ts.isCallExpression(n)&&n.expression.getText(sf).startsWith('assert')&&!f.rows.some(r=>ln>=r.line&&ln<=r.endLine))extra.push({line:ln,text:n.getText(sf)});
+  if(ts.isVariableDeclaration(n)&&n.initializer){const z=unwrap(n.initializer);if(ts.isArrayLiteralExpression(z)||ts.isObjectLiteralExpression(z)) tables.push({name:n.name.getText(sf),line:ln,literal:n.initializer.getText(sf),kind:ts.isArrayLiteralExpression(z)?'array':'object',size:ts.isArrayLiteralExpression(z)?z.elements.length:z.properties.length});}
+  if(ts.isForOfStatement(n)) tables.push({name:'for-of',line:ln,iterable:n.expression.getText(sf),fullSource:n.getText(sf)});
+  ts.forEachChild(n,walk);
+ };walk(sf);structures.push({file,supportAssertions:extra,tables});
+}
+fs.writeFileSync(path.join(dir,'support-and-tables.json'),JSON.stringify(structures,null,2)+'\n');

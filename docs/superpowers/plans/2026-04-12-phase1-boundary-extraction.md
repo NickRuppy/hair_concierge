@@ -18,27 +18,27 @@ All paths relative to worktree: `/Users/nick/AI_work/hair_conscierge/.worktrees/
 
 ### Files To Create
 
-| File | Responsibility |
-|------|---------------|
-| `src/lib/rag/contracts.ts` | Shared request/result types (TurnRequestContext, LoadedTurnContext, PipelineParams, PipelineResult) |
-| `src/lib/rag/category-engine/types.ts` | Minimal wrapper type stubs |
-| `src/lib/rag/category-engine/index.ts` | Category dispatch helpers |
-| `src/lib/rag/category-engine/shampoo-wrapper.ts` | Shampoo decision + clarification + filter |
-| `src/lib/rag/category-engine/conditioner-wrapper.ts` | Conditioner decision + clarification |
-| `src/lib/rag/category-engine/leave-in-wrapper.ts` | Leave-in decision + clarification |
-| `src/lib/rag/category-engine/oil-wrapper.ts` | Oil decision + clarification + filter |
-| `src/lib/rag/category-engine/mask-wrapper.ts` | Mask decision + concern search order |
-| `src/lib/rag/retrieval/retrieval-service.ts` | Single retrieval entry point |
-| `src/lib/rag/response/response-composer.ts` | Response synthesis wrapper |
-| `src/lib/rag/selection/types.ts` | Selection service types |
-| `src/lib/rag/selection/product-selection-service.ts` | Category-specific product matching |
-| `src/lib/rag/orchestrator/types.ts` | Orchestrator-internal types |
-| `src/lib/rag/orchestrator/conversation-orchestrator.ts` | Turn orchestration (replaces pipeline internals) |
+| File                                                    | Responsibility                                                                                      |
+| ------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `src/lib/rag/contracts.ts`                              | Shared request/result types (TurnRequestContext, LoadedTurnContext, PipelineParams, PipelineResult) |
+| `src/lib/rag/category-engine/types.ts`                  | Minimal wrapper type stubs                                                                          |
+| `src/lib/rag/category-engine/index.ts`                  | Category dispatch helpers                                                                           |
+| `src/lib/rag/category-engine/shampoo-wrapper.ts`        | Shampoo decision + clarification + filter                                                           |
+| `src/lib/rag/category-engine/conditioner-wrapper.ts`    | Conditioner decision + clarification                                                                |
+| `src/lib/rag/category-engine/leave-in-wrapper.ts`       | Leave-in decision + clarification                                                                   |
+| `src/lib/rag/category-engine/oil-wrapper.ts`            | Oil decision + clarification + filter                                                               |
+| `src/lib/rag/category-engine/mask-wrapper.ts`           | Mask decision + concern search order                                                                |
+| `src/lib/rag/retrieval/retrieval-service.ts`            | Single retrieval entry point                                                                        |
+| `src/lib/rag/response/response-composer.ts`             | Response synthesis wrapper                                                                          |
+| `src/lib/rag/selection/types.ts`                        | Selection service types                                                                             |
+| `src/lib/rag/selection/product-selection-service.ts`    | Category-specific product matching                                                                  |
+| `src/lib/rag/orchestrator/types.ts`                     | Orchestrator-internal types                                                                         |
+| `src/lib/rag/orchestrator/conversation-orchestrator.ts` | Turn orchestration (replaces pipeline internals)                                                    |
 
 ### Files To Modify
 
-| File | Change |
-|------|--------|
+| File                      | Change                                          |
+| ------------------------- | ----------------------------------------------- |
 | `src/lib/rag/pipeline.ts` | Replace body with thin facade over orchestrator |
 
 ### Existing Files Preserved (Not Modified)
@@ -51,28 +51,29 @@ All existing decision files (`shampoo-decision.ts`, `conditioner-decision.ts`, `
 
 The current `src/lib/rag/pipeline.ts` (696 lines) orchestrates everything inline. Key sections by line range:
 
-| Lines | Concern |
-|-------|---------|
-| 72–92 | `PipelineParams` + `PipelineResult` type definitions |
-| 94–103 | `measureAsync` helper |
-| 117–151 | Parallel load: history + hair profile + memory |
-| 155–176 | Intent classification + routine planning |
-| 177–188 | Category decision building (one-liner per category) |
-| 190–194 | Pre-compute conditioner concern code |
-| 196–237 | Route evaluation + telemetry emission |
-| 239–262 | Conversation creation + title generation |
+| Lines   | Concern                                                          |
+| ------- | ---------------------------------------------------------------- |
+| 72–92   | `PipelineParams` + `PipelineResult` type definitions             |
+| 94–103  | `measureAsync` helper                                            |
+| 117–151 | Parallel load: history + hair profile + memory                   |
+| 155–176 | Intent classification + routine planning                         |
+| 177–188 | Category decision building (one-liner per category)              |
+| 190–194 | Pre-compute conditioner concern code                             |
+| 196–237 | Route evaluation + telemetry emission                            |
+| 239–262 | Conversation creation + title generation                         |
 | 264–371 | **Clarification branch**: minimal retrieval + synthesis + return |
-| 373–406 | Normal branch: metadata filter building + full retrieval |
-| 407–416 | Source building from retrieved chunks |
-| 418–623 | **Product matching mega-switch** (200 lines, all categories) |
-| 625–628 | Memory constraint application |
-| 629–695 | Synthesis + debug trace + return |
+| 373–406 | Normal branch: metadata filter building + full retrieval         |
+| 407–416 | Source building from retrieved chunks                            |
+| 418–623 | **Product matching mega-switch** (200 lines, all categories)     |
+| 625–628 | Memory constraint application                                    |
+| 629–695 | Synthesis + debug trace + return                                 |
 
 ---
 
 ### Task 1: Shared Contracts and Type Files
 
 **Files:**
+
 - Create: `src/lib/rag/contracts.ts`
 - Create: `src/lib/rag/orchestrator/types.ts`
 - Create: `src/lib/rag/category-engine/types.ts`
@@ -237,6 +238,7 @@ git commit -m "refactor: add shared contracts and type files for Phase 1 boundar
 ### Task 2: Category Wrappers
 
 **Files:**
+
 - Create: `src/lib/rag/category-engine/shampoo-wrapper.ts`
 - Create: `src/lib/rag/category-engine/conditioner-wrapper.ts`
 - Create: `src/lib/rag/category-engine/leave-in-wrapper.ts`
@@ -322,15 +324,9 @@ export {
  * Mask category wrapper.
  * Groups mask decision, concern mapping, and reranking.
  */
-export {
-  deriveMaskDecision,
-  rerankMaskProducts,
-} from "@/lib/rag/mask-reranker"
+export { deriveMaskDecision, rerankMaskProducts } from "@/lib/rag/mask-reranker"
 
-export {
-  buildMaskConcernSearchOrder,
-  mapMaskTypeToConcernCode,
-} from "@/lib/rag/mask-mapper"
+export { buildMaskConcernSearchOrder, mapMaskTypeToConcernCode } from "@/lib/rag/mask-mapper"
 ```
 
 - [ ] **Step 6: Create `src/lib/rag/category-engine/index.ts`**
@@ -347,10 +343,21 @@ import type {
   OilDecision,
 } from "@/lib/types"
 import type { CategoryDecisions } from "@/lib/rag/contracts"
-import { buildShampooDecision, buildShampooClarificationQuestions, buildShampooRetrievalFilter } from "./shampoo-wrapper"
-import { buildConditionerDecision, buildConditionerClarificationQuestions } from "./conditioner-wrapper"
+import {
+  buildShampooDecision,
+  buildShampooClarificationQuestions,
+  buildShampooRetrievalFilter,
+} from "./shampoo-wrapper"
+import {
+  buildConditionerDecision,
+  buildConditionerClarificationQuestions,
+} from "./conditioner-wrapper"
 import { buildLeaveInDecision, buildLeaveInClarificationQuestions } from "./leave-in-wrapper"
-import { buildOilDecision, buildOilClarificationQuestions, buildOilRetrievalFilter } from "./oil-wrapper"
+import {
+  buildOilDecision,
+  buildOilClarificationQuestions,
+  buildOilRetrievalFilter,
+} from "./oil-wrapper"
 import { deriveMaskDecision } from "./mask-wrapper"
 import { buildClarificationQuestions } from "@/lib/rag/clarification"
 import type { RoutinePlan } from "@/lib/types"
@@ -401,7 +408,11 @@ export function buildCategoryClarificationQuestions(
   if (productCategory === "shampoo" && decisions.shampoo && !decisions.shampoo.eligible) {
     return buildShampooClarificationQuestions(decisions.shampoo)
   }
-  if (productCategory === "conditioner" && decisions.conditioner && !decisions.conditioner.eligible) {
+  if (
+    productCategory === "conditioner" &&
+    decisions.conditioner &&
+    !decisions.conditioner.eligible
+  ) {
     return buildConditionerClarificationQuestions(decisions.conditioner)
   }
   if (productCategory === "leave_in" && decisions.leaveIn && !decisions.leaveIn.eligible) {
@@ -443,9 +454,8 @@ export function buildCategoryRetrievalFilter(
   if (oilFilter) return oilFilter
 
   // Conditioner concern code filter
-  const conditionerConcern = productCategory === "conditioner"
-    ? decisions.conditioner?.matched_concern_code
-    : null
+  const conditionerConcern =
+    productCategory === "conditioner" ? decisions.conditioner?.matched_concern_code : null
 
   if (intent === "product_recommendation") {
     if (hairProfile?.thickness) {
@@ -463,9 +473,7 @@ export function buildCategoryRetrievalFilter(
 /**
  * Get the primary category decision for trace/synthesis purposes.
  */
-export function getPrimaryCategoryDecision(
-  decisions: CategoryDecisions,
-) {
+export function getPrimaryCategoryDecision(decisions: CategoryDecisions) {
   return decisions.shampoo ?? decisions.conditioner ?? decisions.leaveIn ?? decisions.oil
 }
 ```
@@ -488,6 +496,7 @@ git commit -m "refactor: add category wrappers grouping decision/clarification/f
 ### Task 3: Retrieval Service and Response Composer
 
 **Files:**
+
 - Create: `src/lib/rag/retrieval/retrieval-service.ts`
 - Create: `src/lib/rag/response/response-composer.ts`
 
@@ -549,9 +558,7 @@ export type { SynthesizeParams, SynthesisResult }
  * Delegates to the existing synthesizer — this wrapper exists so the orchestrator
  * has a single import for response composition.
  */
-export async function composeResponse(
-  params: SynthesizeParams,
-): Promise<SynthesisResult> {
+export async function composeResponse(params: SynthesizeParams): Promise<SynthesisResult> {
   return synthesizeResponse(params)
 }
 ```
@@ -574,6 +581,7 @@ git commit -m "refactor: add retrieval service and response composer wrappers"
 ### Task 4: Product Selection Service
 
 **Files:**
+
 - Create: `src/lib/rag/selection/product-selection-service.ts`
 
 This extracts the 200-line product matching mega-switch from `pipeline.ts` (lines 418–622) into a dedicated service. Each category gets its own selection function. A dispatcher routes by category.
@@ -583,6 +591,7 @@ This extracts the 200-line product matching mega-switch from `pipeline.ts` (line
 Extract the per-category matching flows from `pipeline.ts`. Each function encapsulates the full matching + reranking/annotation flow for its category. The dispatcher function calls the right one.
 
 **Important:** The code in each `select*` function below is extracted directly from `pipeline.ts` with these changes:
+
 - Each function creates its own `supabase` client via `createAdminClient()`
 - Each function takes explicit typed parameters instead of reading from pipeline closure
 - Each function returns `SelectionResult` with updated decisions
@@ -609,10 +618,7 @@ import {
   buildLeaveInDecision,
   rerankLeaveInProducts,
 } from "@/lib/rag/category-engine/leave-in-wrapper"
-import {
-  buildOilDecision,
-  annotateOilRecommendations,
-} from "@/lib/rag/category-engine/oil-wrapper"
+import { buildOilDecision, annotateOilRecommendations } from "@/lib/rag/category-engine/oil-wrapper"
 import {
   deriveMaskDecision,
   rerankMaskProducts,
@@ -668,10 +674,10 @@ async function selectShampoo(
       count: 1,
     })
     for (const product of secondaryCandidates) {
-      (product as unknown as Record<string, unknown>).shampoo_role = "daily"
+      ;(product as unknown as Record<string, unknown>).shampoo_role = "daily"
     }
     for (const product of shampooCandidates) {
-      (product as unknown as Record<string, unknown>).shampoo_role = "treatment"
+      ;(product as unknown as Record<string, unknown>).shampoo_role = "treatment"
     }
   }
 
@@ -708,7 +714,10 @@ async function selectConditioner(
   const { data: specs, error: specsError } = await supabase
     .from("product_conditioner_rerank_specs")
     .select("*")
-    .in("product_id", candidates.map((c) => c.id))
+    .in(
+      "product_id",
+      candidates.map((c) => c.id),
+    )
 
   if (specsError) {
     console.error("Failed to load conditioner specs for reranking:", specsError)
@@ -754,7 +763,10 @@ async function selectLeaveIn(
   const { data: specs, error: specsError } = await supabase
     .from("product_leave_in_specs")
     .select("*")
-    .in("product_id", candidates.map((c) => c.id))
+    .in(
+      "product_id",
+      candidates.map((c) => c.id),
+    )
 
   if (specsError) {
     console.error("Failed to load leave-in specs for reranking:", specsError)
@@ -822,16 +834,17 @@ async function selectMask(
 
     if (candidates.length === 0) continue
 
-    const prioritized = candidates.filter((c) =>
-      c.suitable_concerns.includes(concernCode),
-    )
+    const prioritized = candidates.filter((c) => c.suitable_concerns.includes(concernCode))
     if (prioritized.length === 0) continue
 
     const supabase = createAdminClient()
     const { data: specs, error: specsError } = await supabase
       .from("product_mask_specs")
       .select("*")
-      .in("product_id", prioritized.map((c) => c.id))
+      .in(
+        "product_id",
+        prioritized.map((c) => c.id),
+      )
 
     if (specsError) {
       console.error("Failed to load mask specs for reranking:", specsError)
@@ -855,7 +868,10 @@ async function selectMask(
   return { products, updatedDecisions: { mask: decision } }
 }
 
-async function selectGeneric(message: string, hairProfile: HairProfile | null): Promise<SelectionResult> {
+async function selectGeneric(
+  message: string,
+  hairProfile: HairProfile | null,
+): Promise<SelectionResult> {
   const products = await matchProducts({
     query: message,
     thickness: hairProfile?.thickness ?? undefined,
@@ -945,6 +961,7 @@ git commit -m "refactor: extract product selection service from pipeline mega-sw
 ### Task 5: Conversation Orchestrator
 
 **Files:**
+
 - Create: `src/lib/rag/orchestrator/conversation-orchestrator.ts`
 
 This is the core of the refactor. Extract the full `runPipeline()` flow from `pipeline.ts` into a clean orchestrator that delegates to the new modules. The logic is identical — only the organization changes.
@@ -954,6 +971,7 @@ This is the core of the refactor. Extract the full `runPipeline()` flow from `pi
 This file reimplements `runPipeline()` using the new modules. Read through `pipeline.ts` and verify each section is accounted for.
 
 **Structure:**
+
 - `orchestrateTurn()` — main entry point (equivalent to `runPipeline()`)
 - `loadContext()` — parallel load of history + profile + memory (pipeline lines 127–153)
 - `classifyAndRoute()` — classification + routing + telemetry (pipeline lines 155–237)
@@ -968,10 +986,7 @@ import { evaluateRoute } from "@/lib/rag/router"
 import { emitRouterEvent } from "@/lib/rag/retrieval-telemetry"
 import { generateConversationTitle } from "@/lib/rag/title-generator"
 import { PRODUCT_INTENTS } from "@/lib/rag/retrieval-constants"
-import {
-  buildPipelineTraceDraft,
-  type PipelineTraceDraft,
-} from "@/lib/rag/debug-trace"
+import { buildPipelineTraceDraft, type PipelineTraceDraft } from "@/lib/rag/debug-trace"
 import {
   buildRoutineClarificationQuestions,
   buildRoutinePlan,
@@ -1009,9 +1024,7 @@ import type { UserMemoryContext } from "@/lib/rag/user-memory"
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-async function measureAsync<T>(
-  work: () => Promise<T>,
-): Promise<{ result: T; durationMs: number }> {
+async function measureAsync<T>(work: () => Promise<T>): Promise<{ result: T; durationMs: number }> {
   const start = performance.now()
   const result = await work()
   return { result, durationMs: Math.round(performance.now() - start) }
@@ -1019,9 +1032,7 @@ async function measureAsync<T>(
 
 // ── Context Loading ──────────────────────────────────────────────────────────
 
-async function loadContext(
-  request: TurnRequestContext,
-): Promise<{
+async function loadContext(request: TurnRequestContext): Promise<{
   loaded: LoadedTurnContext
   historyLoadMs: number
   hairProfileLoadMs: number
@@ -1045,12 +1056,9 @@ async function loadContext(
             .then(({ data }) => data)
         : null,
     ),
-    measureAsync(async () =>
-      await supabase
-        .from("hair_profiles")
-        .select("*")
-        .eq("user_id", request.userId)
-        .single(),
+    measureAsync(
+      async () =>
+        await supabase.from("hair_profiles").select("*").eq("user_id", request.userId).single(),
     ),
     measureAsync(() => loadUserMemoryContext(request.userId, supabase)),
   ])
@@ -1178,9 +1186,7 @@ async function ensureConversation(
  *
  * The public interface (PipelineParams → PipelineResult) is unchanged.
  */
-export async function orchestrateTurn(
-  params: PipelineParams,
-): Promise<PipelineResult> {
+export async function orchestrateTurn(params: PipelineParams): Promise<PipelineResult> {
   const { message, userId, requestId } = params
   let conversationId = params.conversationId
   const startedAt = new Date().toISOString()
@@ -1196,12 +1202,7 @@ export async function orchestrateTurn(
   const { conversationHistory, hairProfile, memoryContext } = loaded
 
   // ── Step 2: Classify intent + evaluate route ───────────────────────────
-  const routing = await classifyAndRoute(
-    message,
-    conversationHistory,
-    hairProfile,
-    conversationId,
-  )
+  const routing = await classifyAndRoute(message, conversationHistory, hairProfile, conversationId)
   const { classification, routerDecision, intent, productCategory, shouldPlanRoutine } = routing
 
   // ── Step 3: Routine planning (if applicable) ───────────────────────────
@@ -1347,7 +1348,12 @@ export async function orchestrateTurn(
   }
 
   // ── Step 7: Normal branch — retrieval ──────────────────────────────────
-  const metadataFilter = buildCategoryRetrievalFilter(intent, productCategory, decisions, hairProfile)
+  const metadataFilter = buildCategoryRetrievalFilter(
+    intent,
+    productCategory,
+    decisions,
+    hairProfile,
+  )
   const retrievalCount = routerDecision.retrieval_mode === "faq" ? 3 : 5
 
   const retrievalStart = performance.now()
@@ -1390,11 +1396,15 @@ export async function orchestrateTurn(
     matchedProducts = selectionResult.products
 
     // Merge updated decisions back
-    if (selectionResult.updatedDecisions.shampoo) decisions.shampoo = selectionResult.updatedDecisions.shampoo
-    if (selectionResult.updatedDecisions.conditioner) decisions.conditioner = selectionResult.updatedDecisions.conditioner
-    if (selectionResult.updatedDecisions.leaveIn) decisions.leaveIn = selectionResult.updatedDecisions.leaveIn
+    if (selectionResult.updatedDecisions.shampoo)
+      decisions.shampoo = selectionResult.updatedDecisions.shampoo
+    if (selectionResult.updatedDecisions.conditioner)
+      decisions.conditioner = selectionResult.updatedDecisions.conditioner
+    if (selectionResult.updatedDecisions.leaveIn)
+      decisions.leaveIn = selectionResult.updatedDecisions.leaveIn
     if (selectionResult.updatedDecisions.oil) decisions.oil = selectionResult.updatedDecisions.oil
-    if (selectionResult.updatedDecisions.mask) decisions.mask = selectionResult.updatedDecisions.mask
+    if (selectionResult.updatedDecisions.mask)
+      decisions.mask = selectionResult.updatedDecisions.mask
   }
 
   const productMatchingMs = Math.round(performance.now() - productMatchingStart)
@@ -1487,6 +1497,7 @@ git commit -m "refactor: add conversation orchestrator replacing pipeline intern
 ### Task 6: Pipeline Compatibility Facade
 
 **Files:**
+
 - Modify: `src/lib/rag/pipeline.ts`
 
 Replace the 696-line body with a thin facade that delegates to the orchestrator. Keep the same public API — `runPipeline()` with `PipelineParams` → `PipelineResult`.
@@ -1514,9 +1525,7 @@ export type { PipelineParams, PipelineResult }
  * Orchestrates the full RAG pipeline for a single user turn.
  * Delegates to the conversation orchestrator.
  */
-export async function runPipeline(
-  params: PipelineParams,
-): Promise<PipelineResult> {
+export async function runPipeline(params: PipelineParams): Promise<PipelineResult> {
   return orchestrateTurn(params)
 }
 ```
@@ -1561,6 +1570,7 @@ Expected: PASS — production build succeeds.
 - [ ] **Step 5: Verify acceptance criteria**
 
 Manually confirm:
+
 1. `pipeline.ts` is now a thin facade (~20 lines)
 2. `route.ts` is unchanged
 3. Orchestrator has no inline category branching for decisions or clarification (delegated to category-engine)
@@ -1572,8 +1582,11 @@ Manually confirm:
 - [ ] **Step 6: Final commit if any fixes were needed**
 
 Only if previous steps required fixes:
+
 ```bash
 cd /Users/nick/AI_work/hair_conscierge/.worktrees/phase1-boundary-extraction
 git add -A
 git commit -m "fix: resolve type/lint issues from Phase 1 boundary extraction"
 ```
+
+Historical audit note (2026-10-02): the unused getShampooProfileCompleteness score projection in this April proposal was removed with its test-only wrapper. Current production asks getShampooMissingProfileFields directly; the archived code examples above describe the earlier extraction proposal.

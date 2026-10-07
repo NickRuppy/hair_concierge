@@ -1,0 +1,18 @@
+{
+  "result": "PASS static only",
+  "controls": 14,
+  "onlyControlFieldChanged": "command",
+  "flag": "--experimental-test-isolation=none",
+  "allOriginalNonArtifactPinFieldsIdentical": true,
+  "oldArtifactsRetained": 69,
+  "oldEntrypointAttestationsRetained": 2,
+  "proofDecoderAndAllOraclesUnchanged": true,
+  "parsedToolFiles": 6,
+  "originalFailureReceiptsPreserved": true,
+  "phase": "transfer",
+  "repositoryWrites": 0,
+  "childrenStarted": 0,
+  "ownerTestImports": 0,
+  "runtimeTests": 0
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}

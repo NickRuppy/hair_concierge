@@ -1,0 +1,29 @@
+TAP version 13
+# Subtest: forbidden and invalid states show support without waiting or payment claims
+not ok 1 - forbidden and invalid states show support without waiting or payment claims
+  ---
+  duration_ms: 9.9505
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-ready-server-first.test.tsx:2:8135'
+  failureType: 'testCodeFailure'
+  error: 'non-ready header must retain the chaarlie wordmark'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: '<div class="min-h-screen bg-[var(--background)] text-[var(--foreground)]"><header class="z-30 border-b border-[rgba(107,80,160,0.10)] bg-[rgba(253,251,249,0.96)] backdrop-blur sticky top-[var(--personal-plan-shell-header-offset,0px)]" data-personal-plan-stage="1" data-personal-plan-journey-header="true"><div class="mx-auto w-full max-w-[720px] px-4 pb-3 pt-2.5 sm:px-6"><div class="grid min-h-12 items-center gap-2 grid-cols-[48px_minmax(0,1fr)_48px]"><span aria-hidden="true"></span><span class="text-center font-header text-xl text-[var(--brand-plum-darkest)]">haarplan</span><span aria-live="polite" class="text-right text-[10px] font-bold text-[var(--status-ok-text)]"></span></div></div></header><main class="personal-plan-cookie-clearance px-5 py-8 sm:px-8"><div class="mx-auto flex min-h-[calc(100vh-8rem)] w-full max-w-lg flex-col"><section class="flex flex-1 flex-col items-center justify-center py-12 text-center"><div class="mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-[var(--brand-plum-ice)]"><span class="h-3 w-3 rounded-full bg-[var(--brand-plum)]" aria-hidden="true"></span></div><p class="mb-3 text-sm font-medium text-[var(--brand-plum)]">Deine Angaben sind gespeichert</p><div class="w-full space-y-6" aria-live="polite"><div class="space-y-4"><h1 class="font-header text-4xl leading-tight">Wir können deinen Haarplan gerade nicht zuordnen.</h1><p class="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">Bitte kontaktiere den Support. Wir prüfen die Zuordnung mit dir gemeinsam.</p></div><div class="space-y-4 rounded-3xl border border-border bg-card p-5"><a href="/kontakt" class="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-border bg-background px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted">Support kontaktieren</a></div></div></section></div></main></div>'
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-ready-server-first.test.tsx:215:12)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 322.884208

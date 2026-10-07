@@ -1,0 +1,787 @@
+[
+  {
+    "id": "C1-unknown-heat-state",
+    "candidate": "C1",
+    "owner": "src/lib/personal-plan/needs.ts",
+    "sourceSHA256": "e79fb582f70dbd85f78c5771f3f32b350c503e365540e2f43e9a8d8541f1e1af",
+    "uniqueFrom": "return { knowledgeState: \"unknown\", state: \"unknown\", events: [], sourceFacts: [] }",
+    "to": "return { knowledgeState: \"unknown\", state: \"absent\", events: [], sourceFacts: [] }",
+    "mutantSnapshot": "controls/C1-unknown-heat-state/src/lib/personal-plan/needs.ts",
+    "mutantSHA256": "a5e6167d9d67f680cc5ef06fc1c4eea7e895ef583bce8107a29ef92bbf81ab5e",
+    "keeper": {
+      "file": "tests/personal-plan/needs.test.ts",
+      "title": "INITIAL-02: quiz-led Shampoo cadence keeps current behavior unknown"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "expected": {
+        "knowledgeState": "unknown",
+        "state": "unknown",
+        "events": [],
+        "sourceFacts": []
+      },
+      "prospectiveActual": {
+        "knowledgeState": "unknown",
+        "state": "absent",
+        "events": [],
+        "sourceFacts": []
+      },
+      "messageIncludes": null,
+      "phase": {
+        "transfer": {
+          "line": 39,
+          "assertion": "assert.deepEqual(assessment.heatExposure, {",
+          "firstKeeperFrameFile": "tests/personal-plan/needs.test.ts"
+        },
+        "cut": {
+          "line": 39,
+          "assertion": "assert.deepEqual(assessment.heatExposure, {",
+          "firstKeeperFrameFile": "tests/personal-plan/needs.test.ts"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "C2-default-reason",
+    "candidate": "C2",
+    "owner": "src/lib/personal-plan/types.ts",
+    "sourceSHA256": "40297a7f5b93d2ae223603fe818111f8a546c21299579d4eaf1da3d6089e2389",
+    "uniqueFrom": "scalpIrritationState: { state: \"unknown\", reason: \"scalp_irritation_detail\" },",
+    "to": "scalpIrritationState: { state: \"unknown\", reason: \"heat_tool_use\" },",
+    "mutantSnapshot": "controls/C2-default-reason/src/lib/personal-plan/types.ts",
+    "mutantSHA256": "9ffbcd57fde30bfde482357a6b988ac0ad8d2dcd9ff34076509be91c6a7af2b8",
+    "keeper": {
+      "file": "tests/personal-plan/input.test.ts",
+      "title": "INITIAL-01: a valid V3 paid quiz becomes a quiz-faithful initial profile"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "expected": "full six-field routine literal in keeper",
+      "prospectiveActual": "same literal except scalpIrritationState.reason=heat_tool_use",
+      "messageIncludes": null,
+      "phase": {
+        "transfer": {
+          "line": 28,
+          "assertion": "assert.deepEqual(profile.routine, {",
+          "firstKeeperFrameFile": "tests/personal-plan/input.test.ts"
+        },
+        "cut": {
+          "line": 28,
+          "assertion": "assert.deepEqual(profile.routine, {",
+          "firstKeeperFrameFile": "tests/personal-plan/input.test.ts"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "C3-ip-prefix",
+    "candidate": "C3",
+    "owner": "src/lib/rate-limit.ts",
+    "sourceSHA256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "uniqueFrom": "prefix: \"personal-plan-prepare-ip\",\n  limit: 100,\n  windowMs: 10_000,",
+    "to": "prefix: \"personal-plan-prepare-ip-wrong\",\n  limit: 100,\n  windowMs: 10_000,",
+    "mutantSnapshot": "controls/C3-ip-prefix/src/lib/rate-limit.ts",
+    "mutantSHA256": "a3ae6e5c7648363e83924e603d3e31258365ad9d7980f09f888277dec820f7d3",
+    "keeper": {
+      "file": "tests/personal-plan-prepare-route.test.ts",
+      "title": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "expected": [
+        {
+          "prefix": "personal-plan-prepare-ip",
+          "limit": 100,
+          "windowMs": 10000
+        },
+        {
+          "prefix": "personal-plan-prepare-journey",
+          "limit": 10,
+          "windowMs": 10000
+        }
+      ],
+      "prospectiveActual": "same two captured configs with ip.prefix as defined in to",
+      "messageIncludes": null,
+      "phase": {
+        "transfer": {
+          "line": 160,
+          "assertion": "assert.deepEqual(fixture.rateConfigs, [",
+          "firstKeeperFrameFile": "tests/personal-plan-prepare-route.test.ts"
+        },
+        "cut": {
+          "line": 147,
+          "assertion": "assert.deepEqual(fixture.rateConfigs, [",
+          "firstKeeperFrameFile": "tests/personal-plan-prepare-route.test.ts"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "C3-ip-limit",
+    "candidate": "C3",
+    "owner": "src/lib/rate-limit.ts",
+    "sourceSHA256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "uniqueFrom": "prefix: \"personal-plan-prepare-ip\",\n  limit: 100,\n  windowMs: 10_000,",
+    "to": "prefix: \"personal-plan-prepare-ip\",\n  limit: 101,\n  windowMs: 10_000,",
+    "mutantSnapshot": "controls/C3-ip-limit/src/lib/rate-limit.ts",
+    "mutantSHA256": "f194151f15ece16335b6cc50d0ac8776a09ed4ec2f1674310812371894e92bd3",
+    "keeper": {
+      "file": "tests/personal-plan-prepare-route.test.ts",
+      "title": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "expected": [
+        {
+          "prefix": "personal-plan-prepare-ip",
+          "limit": 100,
+          "windowMs": 10000
+        },
+        {
+          "prefix": "personal-plan-prepare-journey",
+          "limit": 10,
+          "windowMs": 10000
+        }
+      ],
+      "prospectiveActual": "same two captured configs with ip.limit as defined in to",
+      "messageIncludes": null,
+      "phase": {
+        "transfer": {
+          "line": 160,
+          "assertion": "assert.deepEqual(fixture.rateConfigs, [",
+          "firstKeeperFrameFile": "tests/personal-plan-prepare-route.test.ts"
+        },
+        "cut": {
+          "line": 147,
+          "assertion": "assert.deepEqual(fixture.rateConfigs, [",
+          "firstKeeperFrameFile": "tests/personal-plan-prepare-route.test.ts"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "C3-ip-window",
+    "candidate": "C3",
+    "owner": "src/lib/rate-limit.ts",
+    "sourceSHA256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "uniqueFrom": "prefix: \"personal-plan-prepare-ip\",\n  limit: 100,\n  windowMs: 10_000,",
+    "to": "prefix: \"personal-plan-prepare-ip\",\n  limit: 100,\n  windowMs: 11_000,",
+    "mutantSnapshot": "controls/C3-ip-window/src/lib/rate-limit.ts",
+    "mutantSHA256": "f9fefa59704989f69d9d02fa93466dd7659dcff21c9d658668251c8c8acc4022",
+    "keeper": {
+      "file": "tests/personal-plan-prepare-route.test.ts",
+      "title": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "expected": [
+        {
+          "prefix": "personal-plan-prepare-ip",
+          "limit": 100,
+          "windowMs": 10000
+        },
+        {
+          "prefix": "personal-plan-prepare-journey",
+          "limit": 10,
+          "windowMs": 10000
+        }
+      ],
+      "prospectiveActual": "same two captured configs with ip.window as defined in to",
+      "messageIncludes": null,
+      "phase": {
+        "transfer": {
+          "line": 160,
+          "assertion": "assert.deepEqual(fixture.rateConfigs, [",
+          "firstKeeperFrameFile": "tests/personal-plan-prepare-route.test.ts"
+        },
+        "cut": {
+          "line": 147,
+          "assertion": "assert.deepEqual(fixture.rateConfigs, [",
+          "firstKeeperFrameFile": "tests/personal-plan-prepare-route.test.ts"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "C3-journey-prefix",
+    "candidate": "C3",
+    "owner": "src/lib/rate-limit.ts",
+    "sourceSHA256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "uniqueFrom": "prefix: \"personal-plan-prepare-journey\",\n  limit: 10,\n  windowMs: 10_000,",
+    "to": "prefix: \"personal-plan-prepare-journey-wrong\",\n  limit: 10,\n  windowMs: 10_000,",
+    "mutantSnapshot": "controls/C3-journey-prefix/src/lib/rate-limit.ts",
+    "mutantSHA256": "cbcdaa8de4211f3c35369c59313b98dae4b33c013d1aad8723c7f44d9ae25170",
+    "keeper": {
+      "file": "tests/personal-plan-prepare-route.test.ts",
+      "title": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "expected": [
+        {
+          "prefix": "personal-plan-prepare-ip",
+          "limit": 100,
+          "windowMs": 10000
+        },
+        {
+          "prefix": "personal-plan-prepare-journey",
+          "limit": 10,
+          "windowMs": 10000
+        }
+      ],
+      "prospectiveActual": "same two captured configs with journey.prefix as defined in to",
+      "messageIncludes": null,
+      "phase": {
+        "transfer": {
+          "line": 160,
+          "assertion": "assert.deepEqual(fixture.rateConfigs, [",
+          "firstKeeperFrameFile": "tests/personal-plan-prepare-route.test.ts"
+        },
+        "cut": {
+          "line": 147,
+          "assertion": "assert.deepEqual(fixture.rateConfigs, [",
+          "firstKeeperFrameFile": "tests/personal-plan-prepare-route.test.ts"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "C3-journey-limit",
+    "candidate": "C3",
+    "owner": "src/lib/rate-limit.ts",
+    "sourceSHA256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "uniqueFrom": "prefix: \"personal-plan-prepare-journey\",\n  limit: 10,\n  windowMs: 10_000,",
+    "to": "prefix: \"personal-plan-prepare-journey\",\n  limit: 11,\n  windowMs: 10_000,",
+    "mutantSnapshot": "controls/C3-journey-limit/src/lib/rate-limit.ts",
+    "mutantSHA256": "2287093a978e1231837665364f769f6f061890b605637c2050d5060fe5e096df",
+    "keeper": {
+      "file": "tests/personal-plan-prepare-route.test.ts",
+      "title": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "expected": [
+        {
+          "prefix": "personal-plan-prepare-ip",
+          "limit": 100,
+          "windowMs": 10000
+        },
+        {
+          "prefix": "personal-plan-prepare-journey",
+          "limit": 10,
+          "windowMs": 10000
+        }
+      ],
+      "prospectiveActual": "same two captured configs with journey.limit as defined in to",
+      "messageIncludes": null,
+      "phase": {
+        "transfer": {
+          "line": 160,
+          "assertion": "assert.deepEqual(fixture.rateConfigs, [",
+          "firstKeeperFrameFile": "tests/personal-plan-prepare-route.test.ts"
+        },
+        "cut": {
+          "line": 147,
+          "assertion": "assert.deepEqual(fixture.rateConfigs, [",
+          "firstKeeperFrameFile": "tests/personal-plan-prepare-route.test.ts"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "C3-journey-window",
+    "candidate": "C3",
+    "owner": "src/lib/rate-limit.ts",
+    "sourceSHA256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "uniqueFrom": "prefix: \"personal-plan-prepare-journey\",\n  limit: 10,\n  windowMs: 10_000,",
+    "to": "prefix: \"personal-plan-prepare-journey\",\n  limit: 10,\n  windowMs: 11_000,",
+    "mutantSnapshot": "controls/C3-journey-window/src/lib/rate-limit.ts",
+    "mutantSHA256": "5c5b8841a80d1629cfb39b7ad52ee0b2538e7251946034610999e6b838e814bf",
+    "keeper": {
+      "file": "tests/personal-plan-prepare-route.test.ts",
+      "title": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "expected": [
+        {
+          "prefix": "personal-plan-prepare-ip",
+          "limit": 100,
+          "windowMs": 10000
+        },
+        {
+          "prefix": "personal-plan-prepare-journey",
+          "limit": 10,
+          "windowMs": 10000
+        }
+      ],
+      "prospectiveActual": "same two captured configs with journey.window as defined in to",
+      "messageIncludes": null,
+      "phase": {
+        "transfer": {
+          "line": 160,
+          "assertion": "assert.deepEqual(fixture.rateConfigs, [",
+          "firstKeeperFrameFile": "tests/personal-plan-prepare-route.test.ts"
+        },
+        "cut": {
+          "line": 147,
+          "assertion": "assert.deepEqual(fixture.rateConfigs, [",
+          "firstKeeperFrameFile": "tests/personal-plan-prepare-route.test.ts"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "C3-lead-namespace",
+    "candidate": "C3",
+    "owner": "src/lib/rate-limit.ts",
+    "sourceSHA256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "uniqueFrom": "prefix: \"quiz-lead\",",
+    "to": "prefix: \"personal-plan-prepare-ip\",",
+    "mutantSnapshot": "controls/C3-lead-namespace/src/lib/rate-limit.ts",
+    "mutantSHA256": "4fadd6670ff498f370866f0b0ba8518d3d554665be56c4908d92a5f4763cb55b",
+    "keeper": {
+      "file": "tests/personal-plan-prepare-route.test.ts",
+      "title": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "notStrictEqual",
+      "expected": "personal-plan-prepare-ip",
+      "prospectiveActual": "personal-plan-prepare-ip",
+      "messageIncludes": null,
+      "phase": {
+        "transfer": {
+          "line": 164,
+          "assertion": "assert.notEqual(fixture.rateConfigs[0].prefix, QUIZ_LEAD_RATE_LIMIT.prefix)",
+          "firstKeeperFrameFile": "tests/personal-plan-prepare-route.test.ts"
+        },
+        "cut": {
+          "line": 151,
+          "assertion": "assert.notEqual(fixture.rateConfigs[0].prefix, QUIZ_LEAD_RATE_LIMIT.prefix)",
+          "firstKeeperFrameFile": "tests/personal-plan-prepare-route.test.ts"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "C4-progressbar",
+    "candidate": "C4",
+    "owner": "src/app/plan-bereit/plan-ready-arrival.tsx",
+    "sourceSHA256": "3ffe8425b73ea809f4113cfb6326750b503aec5a3206a661614b992a56f9fd81",
+    "uniqueFrom": "<PersonalPlanJourneyHeader currentStage={1} centeredBrand />",
+    "to": "<PersonalPlanJourneyHeader currentStage={1} centeredBrand moduleProgress={{ completedSteps: 1, totalSteps: 5 }} />",
+    "mutantSnapshot": "controls/C4-progressbar/src/app/plan-bereit/plan-ready-arrival.tsx",
+    "mutantSHA256": "fb4103634783108ab7e8fc0000101a8666e681194d17b59a34792d3fb03a13ef",
+    "keeper": {
+      "file": "tests/personal-plan-ready-server-first.test.tsx",
+      "title": "server-first pending envelope renders approved static copy and no-JS recovery"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "doesNotMatch",
+      "expected": "/role=\"progressbar\"/",
+      "prospectiveActual": "rendered initial checking HTML contains role=\"progressbar\"",
+      "messageIncludes": "non-ready header must omit the stage progressbar",
+      "phase": {
+        "transfer": {
+          "line": 99,
+          "assertion": "assert.doesNotMatch(html, /role=\"progressbar\"/",
+          "firstKeeperFrameFile": "tests/personal-plan-ready-server-first.test.tsx"
+        },
+        "cut": {
+          "line": 99,
+          "assertion": "assert.doesNotMatch(html, /role=\"progressbar\"/",
+          "firstKeeperFrameFile": "tests/personal-plan-ready-server-first.test.tsx"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "C4-retry-progressbar",
+    "candidate": "C4",
+    "owner": "src/app/plan-bereit/personal-plan-ready-client.tsx",
+    "sourceSHA256": "c06111b4f92e188cc7eafab8d2e30c181a543b3049dfbc125f0a373bbdc6803b",
+    "uniqueFrom": "<PersonalPlanJourneyHeader currentStage={1} centeredBrand />",
+    "to": "<PersonalPlanJourneyHeader currentStage={1} centeredBrand moduleProgress={{ completedSteps: 1, totalSteps: 5 }} />",
+    "mutantSnapshot": "controls/C4-retry-progressbar/src/app/plan-bereit/personal-plan-ready-client.tsx",
+    "mutantSHA256": "acc23351ca0a5b46362b29d8d0d360787886f98200c09b6acf4cafc420c05804",
+    "keeper": {
+      "file": "tests/personal-plan-ready-server-first.test.tsx",
+      "title": "timeout and transient states lead with a retry state instead of a live check"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "doesNotMatch",
+      "expected": "/role=\"progressbar\"/",
+      "prospectiveActual": "rendered timeout HTML contains role=\"progressbar\"",
+      "messageIncludes": "non-ready header must omit the stage progressbar",
+      "phase": {
+        "transfer": {
+          "line": 242,
+          "assertion": "assert.doesNotMatch(html, /role=\"progressbar\"/",
+          "firstKeeperFrameFile": "tests/personal-plan-ready-server-first.test.tsx"
+        },
+        "cut": {
+          "line": 242,
+          "assertion": "assert.doesNotMatch(html, /role=\"progressbar\"/",
+          "firstKeeperFrameFile": "tests/personal-plan-ready-server-first.test.tsx"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "C4-retired-label",
+    "candidate": "C4",
+    "owner": "src/components/personal-plan-journey/journey-header.tsx",
+    "sourceSHA256": "82b306804db19852b829dbda63193db876abacf72db2b4f828c449c317d51bb6",
+    "uniqueFrom": "data-personal-plan-journey-header=\"true\"\n    >",
+    "to": "data-personal-plan-journey-header=\"true\"\n    >\n      <span>Personal-Plan-Stufen</span>",
+    "mutantSnapshot": "controls/C4-retired-label/src/components/personal-plan-journey/journey-header.tsx",
+    "mutantSHA256": "1ceb3100b315c25a0f28a55f84a6c022d994b2d59710427257e6581041aa3783",
+    "keeper": {
+      "file": "tests/personal-plan-ready-server-first.test.tsx",
+      "title": "missing source facts ask for the fact without claiming no action is needed"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "doesNotMatch",
+      "expected": "/Personal-Plan-Stufen/",
+      "prospectiveActual": "rendered missing-fact HTML contains Personal-Plan-Stufen",
+      "messageIncludes": "non-ready header must omit retired stage labels",
+      "phase": {
+        "transfer": {
+          "line": 188,
+          "assertion": "assert.doesNotMatch(html, /Personal-Plan-Stufen/",
+          "firstKeeperFrameFile": "tests/personal-plan-ready-server-first.test.tsx"
+        },
+        "cut": {
+          "line": 188,
+          "assertion": "assert.doesNotMatch(html, /Personal-Plan-Stufen/",
+          "firstKeeperFrameFile": "tests/personal-plan-ready-server-first.test.tsx"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "C4-wordmark",
+    "candidate": "C4",
+    "owner": "src/components/personal-plan-journey/journey-header.tsx",
+    "sourceSHA256": "82b306804db19852b829dbda63193db876abacf72db2b4f828c449c317d51bb6",
+    "uniqueFrom": "              chaarlie\n",
+    "to": "              haarplan\n",
+    "mutantSnapshot": "controls/C4-wordmark/src/components/personal-plan-journey/journey-header.tsx",
+    "mutantSHA256": "42c7fa2071186ea0fb7d05af95cb834b63e32f7ed909e10a425db80d65ec9b8b",
+    "keeper": {
+      "file": "tests/personal-plan-ready-server-first.test.tsx",
+      "title": "forbidden and invalid states show support without waiting or payment claims"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "match",
+      "expected": "/>chaarlie</",
+      "prospectiveActual": "rendered forbidden HTML has haarplan in place of chaarlie",
+      "messageIncludes": "non-ready header must retain the chaarlie wordmark",
+      "phase": {
+        "transfer": {
+          "line": 215,
+          "assertion": "assert.match(html, />chaarlie</",
+          "firstKeeperFrameFile": "tests/personal-plan-ready-server-first.test.tsx"
+        },
+        "cut": {
+          "line": 215,
+          "assertion": "assert.match(html, />chaarlie</",
+          "firstKeeperFrameFile": "tests/personal-plan-ready-server-first.test.tsx"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "D1-typed-failure",
+    "candidate": "D1",
+    "owner": "src/lib/personal-plan/input.ts",
+    "sourceSHA256": "22743980e01019fc9834a5a5f6ad3ef566def3757be3b17a2c5994f11ac95c6f",
+    "uniqueFrom": ": { ok: false, error: { code: \"invalid_quiz_envelope\", quizVersion: 3 } }",
+    "to": ": { ok: false, error: { code: \"unsupported_quiz_version\", quizVersion: 3 } }",
+    "mutantSnapshot": "controls/D1-typed-failure/src/lib/personal-plan/input.ts",
+    "mutantSHA256": "873b23629ef8eef1a4f39002ff25d18e13edb88f86a6cdf0fbd206fb7bfb6f95",
+    "keeper": {
+      "file": "tests/personal-plan/input.test.ts",
+      "title": "mask-missing-thickness: required Mask target input fails closed at the shared parser"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "expected": {
+        "ok": false,
+        "error": {
+          "code": "invalid_quiz_envelope",
+          "quizVersion": 3
+        }
+      },
+      "prospectiveActual": {
+        "ok": false,
+        "error": {
+          "code": "unsupported_quiz_version",
+          "quizVersion": 3
+        }
+      },
+      "messageIncludes": null,
+      "phase": {
+        "transfer": {
+          "line": 87,
+          "assertion": "assert.deepEqual(parsed, {",
+          "firstKeeperFrameFile": "tests/personal-plan/input.test.ts"
+        },
+        "cut": {
+          "line": 77,
+          "assertion": "assert.deepEqual(parsed, {",
+          "firstKeeperFrameFile": "tests/personal-plan/input.test.ts"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "D1-required-thickness",
+    "candidate": "D1",
+    "owner": "src/lib/personal-plan-quiz/persistence.ts",
+    "sourceSHA256": "9783d531cfaf8ed1b8d91b133b030758fd2bf3c128b5eee10cd4b0e6f5883335",
+    "uniqueFrom": "    thickness: z.enum([\"fine\", \"normal\", \"coarse\"]),",
+    "to": "    thickness: z.enum([\"fine\", \"normal\", \"coarse\"]).optional(),",
+    "mutantSnapshot": "controls/D1-required-thickness/src/lib/personal-plan-quiz/persistence.ts",
+    "mutantSHA256": "6d7ab0f87ebc589159841ce2985602e77a50bcebdf998e7d2a7ce2312fb2e1f7",
+    "keeper": {
+      "file": "tests/personal-plan/input.test.ts",
+      "title": "mask-missing-thickness: required Mask target input fails closed at the shared parser"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "expected": {
+        "ok": false,
+        "error": {
+          "code": "invalid_quiz_envelope",
+          "quizVersion": 3
+        }
+      },
+      "prospectiveActual": "ok=true,envelope=existing COMPLETE_V3_PLAN_ENVELOPE with thickness undefined; full decoded actual must be inspected by main, not accepted merely for any failure",
+      "messageIncludes": null,
+      "phase": {
+        "transfer": {
+          "line": 87,
+          "assertion": "assert.deepEqual(parsed, {",
+          "firstKeeperFrameFile": "tests/personal-plan/input.test.ts"
+        },
+        "cut": {
+          "line": 77,
+          "assertion": "assert.deepEqual(parsed, {",
+          "firstKeeperFrameFile": "tests/personal-plan/input.test.ts"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "D2-numeric-message-id",
+    "candidate": "D2",
+    "owner": "src/lib/customerio/personal-plan-result-artifact.ts",
+    "sourceSHA256": "3baa0cb7cb2f0a8da27dfb0df946cb5c12de81e1d369f7169f96e219c645b587",
+    "uniqueFrom": "return /^\\d+$/.test(configured) ? Number(configured) : configured",
+    "to": "return /^\\d+$/.test(configured) ? configured : configured",
+    "mutantSnapshot": "controls/D2-numeric-message-id/src/lib/customerio/personal-plan-result-artifact.ts",
+    "mutantSHA256": "d3e72bdc48107bff6a007494224b7ef91e25984d02404cfd7d64d7631ea6aff8",
+    "keeper": {
+      "file": "tests/quiz-result-artifact-route.test.ts",
+      "title": "claims, sends, and marks the result artifact email sent"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "expected": 42,
+      "prospectiveActual": "42",
+      "messageIncludes": null,
+      "phase": {
+        "transfer": {
+          "line": 184,
+          "assertion": "assert.equal(sends[0].transactionalMessageId, 42)",
+          "firstKeeperFrameFile": "tests/quiz-result-artifact-route.test.ts"
+        },
+        "cut": {
+          "line": 184,
+          "assertion": "assert.equal(sends[0].transactionalMessageId, 42)",
+          "firstKeeperFrameFile": "tests/quiz-result-artifact-route.test.ts"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "D3-null-claim-result",
+    "candidate": "D3",
+    "owner": "src/lib/customerio/result-artifact-service.ts",
+    "sourceSHA256": "b86f1fe35d378513dc7c9ff4b4d2e9906ea50124dcb9dfd54a7635e72d7d7f47",
+    "uniqueFrom": "if (!lead) {\n    return { sent: false, skipped: true }\n  }",
+    "to": "if (!lead) {\n    return { sent: false, skipped: false }\n  }",
+    "mutantSnapshot": "controls/D3-null-claim-result/src/lib/customerio/result-artifact-service.ts",
+    "mutantSHA256": "d9e418f50e3bf8733be5e61a47d1385c8c7b3a898b08f2629263cf7f45d6cc3e",
+    "keeper": {
+      "file": "tests/quiz-result-artifact-route.test.ts",
+      "title": "skips a failed result artifact email until manual retry resets it"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "expected": {
+        "sent": false,
+        "skipped": true
+      },
+      "prospectiveActual": {
+        "sent": false,
+        "skipped": false
+      },
+      "messageIncludes": null,
+      "phase": {
+        "transfer": {
+          "line": 386,
+          "assertion": "assert.deepEqual(response.body, { sent: false, skipped: true })",
+          "firstKeeperFrameFile": "tests/quiz-result-artifact-route.test.ts"
+        },
+        "cut": {
+          "line": 368,
+          "assertion": "assert.deepEqual(response.body, { sent: false, skipped: true })",
+          "firstKeeperFrameFile": "tests/quiz-result-artifact-route.test.ts"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  },
+  {
+    "id": "D3-production-null-filter",
+    "candidate": "D3",
+    "owner": "src/app/api/quiz/result-artifact/route.ts",
+    "sourceSHA256": "8b24f4964d21d8c24359bbbdc9b102f740d3f5fe2c757c174a9f638466c797ba",
+    "uniqueFrom": "        .is(\"artifact_email_status\", null)\n",
+    "to": "",
+    "mutantSnapshot": "controls/D3-production-null-filter/src/app/api/quiz/result-artifact/route.ts",
+    "mutantSHA256": "7a21b076be57ef742294f2454e350c10f408692007094db483cedb321f4b4eff",
+    "keeper": {
+      "file": "tests/quiz-result-artifact-route.test.ts",
+      "title": "the production claim excludes moderator-owned legacy leads"
+    },
+    "oracle": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "expected": [
+        [
+          "eq",
+          "id",
+          "550e8400-e29b-41d4-a716-446655440000"
+        ],
+        [
+          "is",
+          "artifact_email_status",
+          null
+        ],
+        [
+          "eq",
+          "quiz_kind",
+          "legacy"
+        ],
+        [
+          "is",
+          "moderator_campaign_id",
+          null
+        ]
+      ],
+      "prospectiveActual": [
+        [
+          "eq",
+          "id",
+          "550e8400-e29b-41d4-a716-446655440000"
+        ],
+        [
+          "eq",
+          "quiz_kind",
+          "legacy"
+        ],
+        [
+          "is",
+          "moderator_campaign_id",
+          null
+        ]
+      ],
+      "messageIncludes": null,
+      "phase": {
+        "transfer": {
+          "line": 155,
+          "assertion": "assert.deepEqual(filters, [",
+          "firstKeeperFrameFile": "tests/quiz-result-artifact-route.test.ts"
+        },
+        "cut": {
+          "line": 155,
+          "assertion": "assert.deepEqual(filters, [",
+          "firstKeeperFrameFile": "tests/quiz-result-artifact-route.test.ts"
+        }
+      },
+      "requireFirstKeeperFrame": true
+    },
+    "status": "static recipe only; no execution or observed diagnostics",
+    "requiredRuntimeSequence": "one selected clean pass \u2192 one intended assertion failure \u2192 byte-exact owned CAS restore \u2192 one selected clean pass; reject setup/import/hook/timeout/cancel/skip errors"
+  }
+]

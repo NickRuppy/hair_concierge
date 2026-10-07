@@ -1,0 +1,80 @@
+[
+  {
+    "id": "C1",
+    "mark": "C",
+    "donorFile": "tests/analytics-runtime.test.ts",
+    "donor": {
+      "title": "bounded FIFO drops the oldest item and warns when full",
+      "line": 22,
+      "body": "test(\"bounded FIFO drops the oldest item and warns when full\", () => {\n  const warnings: string[] = []\n  const queue = createBoundedFifo<number>({\n    label: \"test\",\n    limit: 2,\n    warn: (message) => warnings.push(message),\n  })\n\n  queue.push(1)\n  queue.push(2)\n  queue.push(3)\n\n  assert.deepEqual(queue.drain(), [2, 3])\n  assert.equal(warnings.length, 1)\n})",
+      "hash": "0a5e945fc48d1c9ea538cb6c38bae5a9cbb5bbfeaf33894d893e0f7ffdfc0e53",
+      "mark": "C",
+      "reason": "C1 actual Sentry FIFO overflow keeper receives three pushes at limit2,drains last two in order; transfer warncount1. Numeric labels are opaque to queue."
+    },
+    "keeperFile": "tests/sentry-client-runtime.test.ts",
+    "keeperBefore": {
+      "title": "bounded FIFO drops the oldest exception and preserves rejection order",
+      "line": 162,
+      "body": "test(\"bounded FIFO drops the oldest exception and preserves rejection order\", async () => {\n  const harness = createHarness({ queueLimit: 2 })\n  await harness.runtime.start(\"/\")\n  harness.eventSource.dispatch(\"unhandledrejection\", { reason: \"first\" })\n  harness.eventSource.dispatch(\"unhandledrejection\", { reason: new Error(\"second\") })\n  harness.eventSource.dispatch(\"unhandledrejection\", { reason: { secret: \"do not serialize\" } })\n  harness.load.resolve(createClient(harness.calls))\n  await Promise.resolve()\n  await Promise.resolve()\n\n  const captures = harness.calls.filter(([name]) => name === \"captureException\")\n  assert.equal(captures.length, 2)\n  assert.equal((captures[0]?.[1] as Error).message, \"second\")\n  assert.equal((captures[1]?.[1] as Error).message, \"Unhandled promise rejection\")\n  assert.deepEqual(\n    captures.map((call) => call[2]),\n    [\n      { mechanism: { type: \"onunhandledrejection\", handled: false } },\n      { mechanism: { type: \"onunhandledrejection\", handled: false } },\n    ],\n  )\n})",
+      "hash": "425552ecc3ef2a4b92dbf236fc4ca69c84716bcd7010316d3ba394788c05fa85",
+      "mark": "R",
+      "reason": "Primary C1 keeper: real runtime→sharedFIFO limit2 drops first, preserves last2 error/mechanism order. Add exactlyonewarning assertion; no new dispatch/input."
+    },
+    "keeperAfter": "test(\"bounded FIFO drops the oldest exception and preserves rejection order\", async () => {\n  const harness = createHarness({ queueLimit: 2 })\n  await harness.runtime.start(\"/\")\n  harness.eventSource.dispatch(\"unhandledrejection\", { reason: \"first\" })\n  harness.eventSource.dispatch(\"unhandledrejection\", { reason: new Error(\"second\") })\n  harness.eventSource.dispatch(\"unhandledrejection\", { reason: { secret: \"do not serialize\" } })\n  harness.load.resolve(createClient(harness.calls))\n  await Promise.resolve()\n  await Promise.resolve()\n\n  const captures = harness.calls.filter(([name]) => name === \"captureException\")\n  assert.equal(captures.length, 2)\n  assert.equal(harness.calls.filter(([name]) => name === \"warn\").length, 1, \"one overflow warning\")\n  assert.equal((captures[0]?.[1] as Error).message, \"second\")\n  assert.equal((captures[1]?.[1] as Error).message, \"Unhandled promise rejection\")\n  assert.deepEqual(\n    captures.map((call) => call[2]),\n    [\n      { mechanism: { type: \"onunhandledrejection\", handled: false } },\n      { mechanism: { type: \"onunhandledrejection\", handled: false } },\n    ],\n  )\n})",
+    "union": "drain last2/order asserted by existing second and fallback Error capture; carry exactly1 overflowwarning",
+    "readset": "FIFO onlyreads queue.length,limit; item opaque,label onlywarningtext unasserted; same3pushes atlimit2",
+    "cleanup": "remove now-unused createBoundedFifo test import only"
+  },
+  {
+    "id": "C2",
+    "mark": "C",
+    "donorFile": "tests/analytics-runtime.test.ts",
+    "donor": {
+      "title": "Customer.io bridges page, identify, track, and reset in FIFO order",
+      "line": 273,
+      "body": "test(\"Customer.io bridges page, identify, track, and reset in FIFO order\", () => {\n  const calls: unknown[][] = []\n  const tracker = createCustomerIoTracker({ queueLimit: 10 })\n\n  tracker.page(\"/quiz\")\n  tracker.identify(\"user-1\", { email: \"test@example.com\" })\n  tracker.track(\"quiz_started\", { step_number: 2 })\n  tracker.reset()\n\n  tracker.setClient({\n    identify: (...args) => calls.push([\"identify\", ...args]),\n    page: (...args) => calls.push([\"page\", ...args]),\n    reset: () => calls.push([\"reset\"]),\n    track: (...args) => calls.push([\"track\", ...args]),\n  })\n\n  assert.deepEqual(calls, [\n    [\"page\", undefined, \"/quiz\", {}],\n    [\"identify\", \"user-1\", { email: \"test@example.com\" }],\n    [\"track\", \"quiz_started\", { step_number: 2 }],\n    [\"reset\"],\n  ])\n})",
+      "hash": "6b059605f529ca54bbf54b45d391633156dcae0c42fee5d1f08d9cf501d04aee",
+      "mark": "C",
+      "reason": "C2 public Customer.io helper keeper already flushes page/identify/track/reset exact full array, plus clean undefined props. All differing strings are forwarded opaquely, queue10/100 both below overflow with4 items."
+    },
+    "keeperFile": "tests/customerio-tracking.test.ts",
+    "keeperBefore": {
+      "title": "browser helpers queue before readiness and flush clean payloads in order",
+      "line": 30,
+      "body": "test(\"browser helpers queue before readiness and flush clean payloads in order\", () => {\n  const { calls, client } = createCustomerIoClient()\n\n  clearCustomerIoBrowserClient()\n\n  assert.equal(trackCustomerIoPage(\"/quiz?step=goals\", { referrer: undefined }), true)\n  assert.equal(\n    identifyCustomerIoUser(\"user-123\", {\n      email: \"test@example.com\",\n      name: \"Test User\",\n      unused: undefined,\n    }),\n    true,\n  )\n  assert.equal(\n    trackCustomerIoEvent(\"quiz_lead_captured\", {\n      lead_id: \"lead-123\",\n      marketing_consent: true,\n      skipped: undefined,\n    }),\n    true,\n  )\n  assert.equal(resetCustomerIoBrowserClient(), true)\n  assert.deepEqual(calls, [])\n\n  setCustomerIoBrowserClient(client)\n\n  assert.deepEqual(calls, [\n    [\"page\", undefined, \"/quiz?step=goals\", {}],\n    [\"identify\", \"user-123\", { email: \"test@example.com\", name: \"Test User\" }],\n    [\"track\", \"quiz_lead_captured\", { lead_id: \"lead-123\", marketing_consent: true }],\n    [\"reset\"],\n  ])\n\n  clearCustomerIoBrowserClient()\n})",
+      "hash": "0d695f42a1eb931f0bd7429be74d1f015346d3bbdbdcb6078d1718188e194d2f",
+      "mark": "R",
+      "reason": "Primary C2 keeper: actual public helpers→singletontracker→sharedFIFO→client;4operations exactly asserted, admissiontrue/emptybeforeflush and undefinedpropertycleaning extra."
+    },
+    "keeperAfter": "test(\"browser helpers queue before readiness and flush clean payloads in order\", () => {\n  const { calls, client } = createCustomerIoClient()\n\n  clearCustomerIoBrowserClient()\n\n  assert.equal(trackCustomerIoPage(\"/quiz?step=goals\", { referrer: undefined }), true)\n  assert.equal(\n    identifyCustomerIoUser(\"user-123\", {\n      email: \"test@example.com\",\n      name: \"Test User\",\n      unused: undefined,\n    }),\n    true,\n  )\n  assert.equal(\n    trackCustomerIoEvent(\"quiz_lead_captured\", {\n      lead_id: \"lead-123\",\n      marketing_consent: true,\n      skipped: undefined,\n    }),\n    true,\n  )\n  assert.equal(resetCustomerIoBrowserClient(), true)\n  assert.deepEqual(calls, [])\n\n  setCustomerIoBrowserClient(client)\n\n  assert.deepEqual(calls, [\n    [\"page\", undefined, \"/quiz?step=goals\", {}],\n    [\"identify\", \"user-123\", { email: \"test@example.com\", name: \"Test User\" }],\n    [\"track\", \"quiz_lead_captured\", { lead_id: \"lead-123\", marketing_consent: true }],\n    [\"reset\"],\n  ])\n\n  clearCustomerIoBrowserClient()\n})",
+    "union": "all4operation order and raw argument projection already exact in public helper keeper; no new assertion needed",
+    "readset": "Bothqueue4 before setClient,limit10vs100 neverreached; no browser pageContext in Node. Event/path/user strings neverbranched on. cleanproperties onlyfiltersundefined; donorhasnone, keeper additionallydoes.",
+    "cleanup": "none"
+  },
+  {
+    "id": "D1",
+    "mark": "D",
+    "donorFile": "tests/app-performance-telemetry.test.ts",
+    "donor": {
+      "title": "accepts only generated UUID v4 correlation identifiers",
+      "line": 131,
+      "body": "test(\"accepts only generated UUID v4 correlation identifiers\", () => {\n  assert.throws(\n    () =>\n      createAppPerformanceEvent({\n        routeGroup: \"routine\",\n        operation: \"proxy_access\",\n        outcome: \"success\",\n        durationMs: 1,\n        correlationId: \"request-correlation-id\",\n      }),\n    /correlationId/,\n  )\n})",
+      "hash": "ce8be3bf43d0ee421e664457d1af585051f9ccf90383b71c9a78e8a813b08cca",
+      "mark": "D",
+      "reason": "D1 duplicate invalid correlation predicate: request-correlation-id and keeper lead_123@example.com both fail same UUID regex after valid enums. No UUID-shapedwrongversion input here despite title; no distinct contract lost."
+    },
+    "keeperFile": "tests/app-performance-telemetry.test.ts",
+    "keeperBefore": {
+      "title": "rejects invalid enum values and identifiers from the telemetry envelope",
+      "line": 37,
+      "body": "test(\"rejects invalid enum values and identifiers from the telemetry envelope\", () => {\n  assert.throws(\n    () =>\n      createAppPerformanceEvent({\n        routeGroup: \"/routine?lead=secret\" as \"routine\",\n        operation: \"proxy_auth\",\n        outcome: \"success\",\n        durationMs: 1,\n        correlationId,\n      }),\n    /routeGroup/,\n  )\n  assert.throws(\n    () =>\n      createAppPerformanceEvent({\n        routeGroup: \"routine\",\n        operation: \"custom_query\" as \"proxy_auth\",\n        outcome: \"success\",\n        durationMs: 1,\n        correlationId,\n      }),\n    /operation/,\n  )\n  assert.throws(\n    () =>\n      createAppPerformanceEvent({\n        routeGroup: \"routine\",\n        operation: \"proxy_auth\",\n        outcome: \"success\",\n        durationMs: 1,\n        correlationId: \"lead_123@example.com\",\n      }),\n    /correlationId/,\n  )\n})",
+      "hash": "976d1165b707ef22f44e986d95a5a77eeeb1753caf13fdd03c67cccc9bc93e82",
+      "mark": "R",
+      "reason": "Primary D1 keeper: invalid route,operation and correlation each fail intended field guard, with valid other fields."
+    },
+    "keeperAfter": "test(\"rejects invalid enum values and identifiers from the telemetry envelope\", () => {\n  assert.throws(\n    () =>\n      createAppPerformanceEvent({\n        routeGroup: \"/routine?lead=secret\" as \"routine\",\n        operation: \"proxy_auth\",\n        outcome: \"success\",\n        durationMs: 1,\n        correlationId,\n      }),\n    /routeGroup/,\n  )\n  assert.throws(\n    () =>\n      createAppPerformanceEvent({\n        routeGroup: \"routine\",\n        operation: \"custom_query\" as \"proxy_auth\",\n        outcome: \"success\",\n        durationMs: 1,\n        correlationId,\n      }),\n    /operation/,\n  )\n  assert.throws(\n    () =>\n      createAppPerformanceEvent({\n        routeGroup: \"routine\",\n        operation: \"proxy_auth\",\n        outcome: \"success\",\n        durationMs: 1,\n        correlationId: \"lead_123@example.com\",\n      }),\n    /correlationId/,\n  )\n})",
+    "union": "assert.throws /correlationId/ already observed by third existing actual createAppPerformanceEvent call",
+    "readset": "Valid routine,proxy_auth/proxy_access,success all passenumguards. Bothstrings fail identical CORRELATION_ID_PATTERN.test before duration/region/roundtrips; no UUIDvariant branch reached.",
+    "cleanup": "none"
+  }
+]

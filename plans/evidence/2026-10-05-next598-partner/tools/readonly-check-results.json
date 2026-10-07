@@ -1,0 +1,16 @@
+[
+  {
+    "chunk_id": "053146",
+    "wall_time_seconds": 1.845528792,
+    "exit_code": 0,
+    "original_token_count": 102,
+    "output": "{\n  \"mode\": \"check\",\n  \"phase\": \"before\",\n  \"counts\": {\n    \"before\": 84,\n    \"transfer\": 84,\n    \"cut\": 76\n  },\n  \"unrelatedCallbacks\": 72,\n  \"unchangedRetainedCallbacks\": 72,\n  \"parsedPhaseFiles\": 48,\n  \"sourceControlsParsed\": 20,\n  \"readsetGuards\": 131,\n  \"dependencyFiles\": 1848,\n  \"repositoryWrites\": 0,\n  \"childrenStarted\": 0\n}\n{\"staticReadOnlyEnforced\":true,\"attemptedWrites\":0,\"attemptedChildren\":0}\n"
+  },
+  {
+    "chunk_id": "e64cc8",
+    "wall_time_seconds": 2.2104915,
+    "exit_code": 0,
+    "original_token_count": 91,
+    "output": "{\n  \"mode\": \"check\",\n  \"phase\": \"before\",\n  \"controls\": 20,\n  \"allUniqueOwnersParsed\": true,\n  \"allControlsParsed\": true,\n  \"phaseOracles\": \"exact assertion startLine and text in transfer/cut\",\n  \"selectedTestCount\": 1,\n  \"repositoryWrites\": 0,\n  \"runtimeRuns\": 0,\n  \"childrenStarted\": 0\n}\n{\"staticReadOnlyEnforced\":true,\"attemptedWrites\":0,\"attemptedChildren\":0}\n"
+  }
+]

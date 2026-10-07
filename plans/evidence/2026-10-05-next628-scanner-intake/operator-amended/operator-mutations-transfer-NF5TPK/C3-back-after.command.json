@@ -1,0 +1,16 @@
+{
+  "executable": "/usr/local/bin/node",
+  "args": [
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--experimental-test-isolation=none",
+    "--test-name-pattern=^ScanResearchIntakeForm: entering the intake state moves focus to the Marke field \\(task 6 a11y\\)$",
+    "tests/scan-research-intake-form-ui.test.tsx"
+  ],
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "timeoutMs": 45000,
+  "detached": true
+}

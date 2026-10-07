@@ -1,0 +1,294 @@
+{
+  "scope": "Full57 declaration semantic pass with explicit operative owner/caller/dependency read limits. Hashing is not reading credit.",
+  "full": [
+    {
+      "file": "tests/auth-confirm-replay.test.ts",
+      "sha256": "a16844e55372f363aa5f94e6999867aeec5654efdf96299cf47d7e5781a810af"
+    },
+    {
+      "file": "tests/auth-middleware-query-cleanup.test.ts",
+      "sha256": "f3d694d58efb8f857770ef1bd54c4e7404717594f8ad6da7fd6eeaca2a4cbdb8"
+    },
+    {
+      "file": "tests/auth-middleware-replay.test.ts",
+      "sha256": "84e49620009837392f66629cf084bb84aabad18f0e60910126a71efb1fd5cc0e"
+    },
+    {
+      "file": "tests/auth-unauthenticated-redirect.test.ts",
+      "sha256": "011f1fc7b03972391d5a75e0597f93b977047eb6376f93255ca158d9c5e30175"
+    },
+    {
+      "file": "tests/quiz-email-return-browser.spec.ts",
+      "sha256": "f9105766485689988f066e32f7568f68f3bbed48cc35c707fb7a776953c34116"
+    },
+    {
+      "file": "tests/quiz-email-return-choice.test.ts",
+      "sha256": "755b4d7808f1d6fd69c54aa5ff8af509a13d4d171ac98dc4fa9a45c6909c218c"
+    },
+    {
+      "file": "tests/quiz-email-return-credential.test.ts",
+      "sha256": "32ddc15cd8935497c142ec08ff8bd5dce75ab035c9f4a716117435fe24e0b263"
+    },
+    {
+      "file": "tests/quiz-email-return-entry.test.ts",
+      "sha256": "95212f04f53d17f495a903231eb2495d2d6d1f0939503918ce417222eee880c9"
+    },
+    {
+      "file": "tests/quiz-email-return-postgres.test.ts",
+      "sha256": "6a4ed1927d46800fc81d7411bfb4b6409ca877cfc696216ea901bd02ac068fe0"
+    },
+    {
+      "file": "tests/quiz-email-return-selection.test.ts",
+      "sha256": "67b77db34c94ed5bb7a8739a274c5f6af64a27cea2502de6bacd66673d5c639b"
+    },
+    {
+      "file": "tests/result-email-return-page.test.ts",
+      "sha256": "8fb62e830b6db97f7294345822305a3570b12669e1b2944b52c3ccca536cc2ba"
+    },
+    {
+      "file": "src/app/auth/confirm/route.ts",
+      "sha256": "00170301a97f17888e15dd83fd7e93dc45c98313878213a8953bd9c7042f15e2"
+    },
+    {
+      "file": "src/lib/auth/moderator-return.ts",
+      "sha256": "59195c07927330c2f37bc6d58bedfaebf82fa103815888896f7c6ba4e63fb554"
+    },
+    {
+      "file": "src/lib/auth/unauthenticated-redirect.ts",
+      "sha256": "bd6703ab7d835709100f2870c7ad950b1b66837f6e2f0b9f78836f8cdb6a1231"
+    },
+    {
+      "file": "src/lib/auth/intake-state.ts",
+      "sha256": "536e205c575026bd76a56fec5e25b62c234bae0ac05e18797e918fd26c11eab2"
+    },
+    {
+      "file": "src/lib/supabase/middleware.ts",
+      "sha256": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7"
+    },
+    {
+      "file": "src/lib/quiz/email-return-credential.ts",
+      "sha256": "9abe0200239d08bba30a797b4f543d0147e507c5317b74706dced5737b90733c"
+    },
+    {
+      "file": "src/lib/quiz/email-return-context.ts",
+      "sha256": "6613c5c7cb21c21cd6b63c6e5a1d03e42b1f88a63018f8513c338801bb2cbd26"
+    },
+    {
+      "file": "src/lib/quiz/email-return-constants.ts",
+      "sha256": "e7d8922c1364f7562652439426e5868d6caf95bae7f2d93480772d5f820bb14c"
+    },
+    {
+      "file": "src/lib/quiz/email-return-server.ts",
+      "sha256": "3972f47ca4d6188ff6f74c956bdd070f5dd512a8618eaea99f98322a4f610fec"
+    },
+    {
+      "file": "src/lib/quiz/email-return-edit.ts",
+      "sha256": "d572c29439be368819e9e5496bf4dfc1bbf78634456447e981204597d6d3455a"
+    },
+    {
+      "file": "src/lib/quiz/email-return-prefill.ts",
+      "sha256": "73fa51284354cc6998e425164133f76a50f794ce38e1e83ba9e6ac9ae44e9c7e"
+    },
+    {
+      "file": "src/app/quiz/return/route.ts",
+      "sha256": "15914c7ccb7cac1fd614d3c9292a2311c7f9699ff9122a3203798db8f8177ac5"
+    },
+    {
+      "file": "src/app/api/quiz/email-return/context/route.ts",
+      "sha256": "2828ca1c0e6edc3c4acb4664ec3cff286fff2ac1089fb75b675f3113d5d68181"
+    },
+    {
+      "file": "src/app/api/quiz/email-return/choose/route.ts",
+      "sha256": "39175962afc94e53edffe41da10d44b5b2cab05b32984f16cc4a512a3b9150fa"
+    },
+    {
+      "file": "supabase/migrations/20260918180721_quiz_email_return_links.sql",
+      "sha256": "74686f0229db1049163bfe6788c8e26c40a1a258c0d2a4d617d45244a40c41d0"
+    },
+    {
+      "file": "src/app/quiz/page.tsx",
+      "sha256": "d2ada32e0a4cebbd2c5201d434739a4d78200de6522096e56c7edca7d688a60f"
+    },
+    {
+      "file": "src/components/quiz/quiz-lead-capture.tsx",
+      "sha256": "2708d0f076e24e474ff30587080e92200f8f112dff52ecb9a338820cd1a1efb9"
+    },
+    {
+      "file": "src/components/quiz/returning-lead-prompt.tsx",
+      "sha256": "8d17442b724c9c1ff70a64a639619028a7ffac0894c1b1ac2611ed4b2c98e452"
+    },
+    {
+      "file": "src/components/quiz/quiz-funnel-package-provider.tsx",
+      "sha256": "e36f019b2dc25a67d7ce7169508b949ad136c1177b7d83e189c31bfe241e7b80"
+    },
+    {
+      "file": "src/app/result/[leadId]/page.tsx",
+      "sha256": "83ce34fd0d9d356a66b9e4201a3676236d11c7e06ec09563e0742ee91ca36ae1"
+    },
+    {
+      "file": "src/lib/quiz/store.ts",
+      "sha256": "8245d784856dc36fc11c4fad35a1c400a65adf55fb994ad415408a94644f91f5"
+    },
+    {
+      "file": "src/lib/quiz/draft.ts",
+      "sha256": "ade503f1a6baebb94afbcb7c5b59225c1b06a0cdfca8a2eeba7ad7bf8e1d0177"
+    },
+    {
+      "file": "src/lib/quiz/validators.ts",
+      "sha256": "5f972cfa650604ad0255d2cff6879849d34347df650a0d46b1bfc067adcca1e0"
+    },
+    {
+      "file": "src/lib/quiz/normalization.ts",
+      "sha256": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239"
+    },
+    {
+      "file": "src/lib/funnel/cookie.ts",
+      "sha256": "522741b96f60560c02f92a5445428380de02231b2b3724b4143dfc6da14f7b48"
+    },
+    {
+      "file": "tests/quiz-email-return-edit.test.ts",
+      "sha256": "06fdcb0875fd631ce115c8686e270ebeff3a0b8fbf4aec2b3a9dd91db3c1f3f4"
+    },
+    {
+      "file": "tests/quiz-email-return-journey.test.ts",
+      "sha256": "36ebebaf5268f164bba2699eac57d90aaaeacb52fe8525fed949cd2ea2622e41"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "playwright.config.ts",
+      "sha256": "1bae952413616dc389aad1ebe4278173df2ea9e51add59045d72c24501f85aa9"
+    },
+    {
+      "file": "plans/returning-lead-prefill/plan.md",
+      "sha256": "c9268ccf4f192c9513c19653d7252d6df80b1ee332e99981600cb4475f4a30eb"
+    },
+    {
+      "file": "node_modules/next/dist/server/web/spec-extension/response.js",
+      "sha256": "68a5a07540d57a4beb3275fddd0502fd5ef9a42986b414c0bcee99a3f9033366"
+    },
+    {
+      "file": "node_modules/next/dist/server/web/spec-extension/request.js",
+      "sha256": "2490a352d271fb39e1fccce06ee6887999dffa7909ccfd5ca0cc8bab8008065b"
+    }
+  ],
+  "slices": [
+    {
+      "file": "src/components/auth/auth-form.tsx",
+      "ranges": "1-82: imports and full password recovery builder; submit consumer search191",
+      "sha256": "0e3f5bdb9a902702e72e5be790a62302eb5c2a345dbdf9cceb2a132af7545d22"
+    },
+    {
+      "file": "src/app/api/quiz/lead/route.ts",
+      "ranges": "110-165,270-320,475-510: consent raw marker, exact cookie/source validation and timestamp consumer",
+      "sha256": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "ranges": "1-210,475-550: full context decoder, actual lead/session filter lookup, event RPC adapter up through error handling",
+      "sha256": "775feb24b57ae2c7d71c4dec2f5ef4a8781fefaf355699331718fc44f92380dd"
+    },
+    {
+      "file": "src/proxy.ts",
+      "ranges": "1-90,160-206: actual middleware entrypoints",
+      "sha256": "a309a92a1b3a6f420a3739690babd3bc371beb2daf441aa94da2977f5ee82bfa"
+    },
+    {
+      "file": "src/lib/auth/route-classification.ts",
+      "ranges": "1-90: public routing declarations; no entire classifier audit",
+      "sha256": "6a5c8c0a283054ab108779a6a8f23764a4919b67adea2f0a94cb389abb4d57a6"
+    },
+    {
+      "file": "tests/auth-post-checkout-routes.spec.ts",
+      "ranges": "135-220: complete excluded browser Back/Forward callback/server fixture and subsequent handler support context",
+      "sha256": "721eff67e232b86205dedecdf737fd3b89fffd56b758949386c53b09d3d3d9e9"
+    },
+    {
+      "file": "docs/customerio-data-contract.md",
+      "ranges": "1-68: documented operator issuer and capability lifecycle",
+      "sha256": "47dcb24a7e0c413f341f509cbfea15d6874496441ad8e21b40a52b8596abb618"
+    },
+    {
+      "file": "plans/returning-lead-scan-launch/plan.md",
+      "ranges": "outcome/journey/decision/source-selection portions in displayed output; remainder not full-read credit",
+      "sha256": "d5f9e22ad6a5c0161988390fdcf12612f1aa01de0e01cdc5d970fde30eb9c2e2"
+    },
+    {
+      "file": "plans/evidence/2026-10-02-auth-runtime-ledger.md",
+      "ranges": "1-105 read relevant ownership/history/CI and browser row; no new full148 audit",
+      "sha256": "cb57598a2e3ad88152ea7c33a118fcc0687da7a6286b4e6fcd58396057ad0ccf"
+    },
+    {
+      "file": "package.json",
+      "ranges": "current relevant scripts49,69 and dependency versions; complete file output truncated, no full-read claim",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "ranges": "135-185,280-315 plus named browser/job routing search",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": "node_modules/@supabase/supabase-js/src/SupabaseClient.ts",
+      "ranges": "425-482: RPC delegates actual PostgREST",
+      "sha256": "6471325c10145a7a6c4f92d1e332fc6d51203ef0c2e7cf022ade5511217c2a60"
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/src/PostgrestClient.ts",
+      "ranges": "374-454: actual RPC method/URL/body construction",
+      "sha256": "50121d8145aa9fd4b4f6b9382270db0343a6fdd6e2f56b5f0e8c872dc683d9c8"
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/src/PostgrestFilterBuilder.ts",
+      "ranges": "1-125,152-179: types and actual eq serializes query param; unrelated390-465 slice not credited",
+      "sha256": "49b784b351661bddfd0e223f6395eebde85f8c4a348462cf8e5e83ec850402f8"
+    },
+    {
+      "file": "node_modules/@supabase/auth-js/src/GoTrueClient.ts",
+      "ranges": "1395-1425,2280-2344: exchange lock and OTP session/error result behavior",
+      "sha256": "7a94d4fbf3bee35b694b6a88d68a2666605f98fdabae086ea45fca55211a5988"
+    },
+    {
+      "file": "node_modules/@supabase/auth-js/src/lib/types.ts",
+      "ranges": "EmailOtpType declaration862 search",
+      "sha256": "489ade90400de1c133ad8fe39041f29d787f532c8b2b312b2cd9fd5ab3ba516e"
+    },
+    {
+      "file": "node_modules/next/dist/server/web/next-url.js",
+      "ranges": "95-220: pathname/search/toString/clone operative properties",
+      "sha256": "c1ae75a3ef41496af0e735514598da7abf23b7d1f2b46242bd3d884a625355cd"
+    },
+    {
+      "file": "node_modules/next/package.json",
+      "ranges": "version search only",
+      "sha256": "006ccbc8816f40ace4307a6048c25ef3cdbe93598529d5dc85db9d19d912274d"
+    },
+    {
+      "file": "node_modules/@playwright/test/package.json",
+      "ranges": "version/export search only",
+      "sha256": "6a1bfbf979df620c080e4b0b0506e6fc53a070e2280a971b189839b1a481ac01"
+    },
+    {
+      "file": "node_modules/typescript/package.json",
+      "ranges": "version search only",
+      "sha256": "822ef7ca6452205657b6288b066481ecf508bfbf43455d715cf7d3ec457561e6"
+    },
+    {
+      "file": "node_modules/tsx/package.json",
+      "ranges": "version/export search only",
+      "sha256": "6e764b21991c21595441f82387c1451ccd10a3e7a3f0973cc5e3649a12dea7d2"
+    }
+  ],
+  "limits": [
+    "No whole repository/source closure, entire Supabase/Next/React/Playwright/TypeScript dependency audit, production schema or provider-state claim.",
+    "No actual PKCE/OTP provider operation or linkQuizToProfile DB execution: tests inject those effects and assert orchestration.",
+    "No deployed PostgreSQL schema or concurrency proof: retained opt-in test creates minimal roles/leads foundation then actual migration.",
+    "Native Node crypto/URL implementations are platform APIs; no core source audit claimed.",
+    "Browser fixtures route mocked context/choice/lead replies; actual client UI/state executes only if main later runs browser.",
+    "Excluded sibling tests were read only as marked and receive no new57-site count credit.",
+    "Environment values/files not read; scripts/config inspected as text only."
+  ],
+  "runtimeExecuted": false
+}

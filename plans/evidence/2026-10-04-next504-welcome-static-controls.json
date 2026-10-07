@@ -1,0 +1,62 @@
+[
+  {
+    "id": "C1-stage",
+    "file": "src/app/welcome/welcome-client.tsx",
+    "sha256": "2f877931f7c2808f67448d6d10d0a9357c2fd3665c37f3b9d49efb43a630288a",
+    "find": "signal: \"customer_payment_error_observed\",\n          provider: \"paypal\",\n          stage: \"paypal_activation_status_poll\",",
+    "replace": "signal: \"customer_payment_error_observed\",\n          provider: \"paypal\",\n          stage: \"checkout_return\",",
+    "occurrences": 1,
+    "keeperFile": "tests/welcome-activation-outcomes.spec.ts",
+    "keeperTitle": "PayPal poll timeout replaces the spinner with status-retry feedback",
+    "expected": "Exact emitted payload must reject a wrong stage.",
+    "restore": "Parent-only serial fault; save original bytes and restore in finally; verify original SHA. Not applied/run by worker."
+  },
+  {
+    "id": "C1-token-leak",
+    "file": "src/app/welcome/welcome-client.tsx",
+    "sha256": "2f877931f7c2808f67448d6d10d0a9357c2fd3665c37f3b9d49efb43a630288a",
+    "find": "          providerReferencePresent: true,\n        })",
+    "replace": "          providerReferencePresent: true,\n          ...{ token: paypalActivationToken },\n        })",
+    "occurrences": 1,
+    "keeperFile": "tests/welcome-activation-outcomes.spec.ts",
+    "keeperTitle": "PayPal poll timeout replaces the spinner with status-retry feedback",
+    "expected": "Exact payload rejects extra token property containing fixture-token; spread keeps TS object compatibility.",
+    "restore": "Parent-only serial fault; save original bytes and restore in finally; verify original SHA. Not applied/run by worker."
+  },
+  {
+    "id": "C2-label",
+    "file": "src/app/welcome/welcome-client.tsx",
+    "sha256": "2f877931f7c2808f67448d6d10d0a9357c2fd3665c37f3b9d49efb43a630288a",
+    "find": "                Chaarlie-E-Mail",
+    "replace": "                E-Mail aus deinem Checkout",
+    "occurrences": 1,
+    "keeperFile": "tests/welcome-activation-outcomes.spec.ts",
+    "keeperTitle": "email send failure keeps password input and allows a successful resend",
+    "expected": "Rendered exact accessible label assertion fails; old text absence also fails.",
+    "restore": "Parent-only serial fault; save original bytes and restore in finally; verify original SHA. Not applied/run by worker."
+  },
+  {
+    "id": "D1-revoked",
+    "file": "src/app/welcome/page.tsx",
+    "sha256": "e6c5c768deee6f4f304e1dc5a4ed27ba8c0a186938069fec0c579ed560fda24e",
+    "find": "    ? \"revoked\"\n    : \"support_needed\"",
+    "replace": "    ? \"support_needed\"\n    : \"support_needed\"",
+    "occurrences": 1,
+    "keeperFile": "tests/welcome-activation-return.test.ts",
+    "keeperTitle": "Stripe verification failures keep paid one-time returns pending and classify terminal failures",
+    "expected": "Existing paidPage.props.oneTimeReturnState revoked assertion fails.",
+    "restore": "Parent-only serial fault; save original bytes and restore in finally; verify original SHA. Not applied/run by worker."
+  },
+  {
+    "id": "D2-preflight",
+    "file": "src/app/welcome/page.tsx",
+    "sha256": "e6c5c768deee6f4f304e1dc5a4ed27ba8c0a186938069fec0c579ed560fda24e",
+    "find": "if (recoveryCode) return <CheckoutRecoveryPanel code={recoveryCode} />",
+    "replace": "if (false) return <CheckoutRecoveryPanel code={recoveryCode} />",
+    "occurrences": 1,
+    "keeperFile": "tests/welcome-activation-return.test.ts",
+    "keeperTitle": "persisted Stripe trial denial renders before account writes or destination reads for signed-in and anonymous returns",
+    "expected": "Original-source preflight keeper returns activation client/calls destination rather than recovery panel/no calls.",
+    "restore": "Parent-only serial fault; save original bytes and restore in finally; verify original SHA. Not applied/run by worker."
+  }
+]

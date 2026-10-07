@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: the Chat example is a short, capability-true transcript through the real bubbles
+not ok 1 - the Chat example is a short, capability-true transcript through the real bubbles
+  ---
+  duration_ms: 22.800167
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/gated-example-pages.test.tsx:2:10215'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '2026-07-11T10:05:00.000Z'
+    - ''
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: ''
+  actual: '2026-07-11T10:05:00.000Z'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/gated-example-pages.test.tsx:294:12)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2545.177333

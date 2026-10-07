@@ -1,0 +1,32 @@
+[
+  {
+    "file": "operator-guard.cjs",
+    "template": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-guard.cjs",
+    "templateSHA256": "fda51c060377a3566172dff9e51c0081a68d79d3a3f0913c49a005474a6e3a2c",
+    "preparedSHA256": "fb2b12ce0780def29fa21e050b1eb47fbc45ce7a805f48c398e77148a0795b3a"
+  },
+  {
+    "file": "operator-edit.cjs",
+    "template": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-edit.cjs",
+    "templateSHA256": "5c4a4bdb43f7f1f818fa3aa7fa398030ac7753ce26f17cadcb0e49b829075bfd",
+    "preparedSHA256": "776595b05d71d07210f76a7b63a081d8a77793d586eeea663c262de29dff2433"
+  },
+  {
+    "file": "operator-run-controls.cjs",
+    "template": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-run-controls.cjs",
+    "templateSHA256": "f6f500bcc511f04f92bc5efd9b48f924d455d897b7667bb1e07c70ee4a30bd80",
+    "preparedSHA256": "e86d629a4a35ffa67afb9fe64be824fbd135e07ac2e7932904a893c06a5ee55e"
+  },
+  {
+    "file": "operator-proof.cjs",
+    "template": "/tmp/test-audit-email94-tools-c435q0q0/operator-proof.cjs",
+    "templateSHA256": "7358f9d79d532f9c7b01a7a31d3f2a4b91d29d4e4d07f5cb7c67ad984eee71d1",
+    "preparedSHA256": "c49ee44a3bdf85b8a71a6087189bccdd224340c44086a850488abdda78abd2fd"
+  },
+  {
+    "file": "operator-readonly-preload.cjs",
+    "template": "/tmp/test-audit-discovery163-tools-70q2q9t7/operator-readonly-preload.cjs",
+    "templateSHA256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "preparedSHA256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e"
+  }
+]

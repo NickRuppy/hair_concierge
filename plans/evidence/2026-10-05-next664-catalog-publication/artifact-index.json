@@ -1,0 +1,2474 @@
+[
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/HANDOFF.json",
+    "archived": "proposal/HANDOFF.json",
+    "sha256": "906be2f307cc9e414f35d087de966a5caa94654a7e1b8f2898d646fe48c7abb0",
+    "bytes": 1345
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/artifact-hashes.json",
+    "archived": "proposal/artifact-hashes.json",
+    "sha256": "768ab26f78eacbd246b3ebbb9be9c569c971459f5872b30511fe50b7ee561965",
+    "bytes": 24688
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/build-proposal.cjs",
+    "archived": "proposal/build-proposal.cjs.txt",
+    "sha256": "471408088181935e2d0adb8c61d285effc1dd9b4c0ea54988dd93230bbc41850",
+    "bytes": 7878
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/caller-search.txt",
+    "archived": "proposal/caller-search.txt",
+    "sha256": "8e7d55915538c5d18b6ffba625275fa1e2dea0fbb173a2225b856dfdeff4ef5f",
+    "bytes": 14498
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/candidates.json",
+    "archived": "proposal/candidates.json",
+    "sha256": "9be6642c190a674eea5de45aa573140369f7e2bc96ba5c399165fe894f079144",
+    "bytes": 21764
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/complete.diff",
+    "archived": "proposal/complete.diff",
+    "sha256": "3a70909e7539c6f268ac241060fb7d285ffd2fe69741cab9d7851c07523b4950",
+    "bytes": 3185
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/controls.json",
+    "archived": "proposal/controls.json",
+    "sha256": "38bbcf3ce9e95022b51ca9c0405af8138fe0f2606a12cf1dc41fc7abbdcd635e",
+    "bytes": 15306
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/dynamic-migration-pins.json",
+    "archived": "proposal/dynamic-migration-pins.json",
+    "sha256": "e4bb0f3aaa1bf9903474835d168c2183907b6ecf29c84660c273bef0652d3bd2",
+    "bytes": 66219
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/final-static-check.cjs",
+    "archived": "proposal/final-static-check.cjs.txt",
+    "sha256": "7c3bd7864cc29b9c6b9bb530a3d4afd502bc892780d4e30b371364c8dd781407",
+    "bytes": 1991
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/final-static-receipt.json",
+    "archived": "proposal/final-static-receipt.json",
+    "sha256": "3c5ed3c080e3623052193018dc6989e64d710c6229408510e864a89f99ca1084",
+    "bytes": 387
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/freeze-readset-controls.cjs",
+    "archived": "proposal/freeze-readset-controls.cjs.txt",
+    "sha256": "fd09cceb5e7d99ce05ada73dda31e91139355373dd66d1d8eb3f60a9c20d2f05",
+    "bytes": 12425
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/freeze-tests.cjs",
+    "archived": "proposal/freeze-tests.cjs.txt",
+    "sha256": "7f799a10dcee29f0e07e067d2a1712cffbe502654fff0f5101f8c4add28507bf",
+    "bytes": 1769
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/frozen-tests.json",
+    "archived": "proposal/frozen-tests.json",
+    "sha256": "fe7147728a8d3e61bab9d314440bd3340b0c8d9ce64f4e830e18f7497bf8e0cc",
+    "bytes": 168334
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/history.txt",
+    "archived": "proposal/history.txt",
+    "sha256": "7345c488d2da1d7f4afbdea6d97168680e6764067d3aa826aa5d2041bff4d267",
+    "bytes": 3109
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/import-closure.json",
+    "archived": "proposal/import-closure.json",
+    "sha256": "55b72ae341b414c7b70e92a9e8a717b28fd858af84457e656c547cca0b8bf07b",
+    "bytes": 40658
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/judgment-notes.json",
+    "archived": "proposal/judgment-notes.json",
+    "sha256": "d3167f102d3df8622e10d52625d2888b67249c6319d4c1ff614d1f016e69f3b5",
+    "bytes": 15108
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/layer-plan.md",
+    "archived": "proposal/layer-plan.md",
+    "sha256": "0f52de3bda2360c7b66bca7e86dd138d191d3de2638ce4ab49cf5c3a2909adef",
+    "bytes": 12220
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/ledger.json",
+    "archived": "proposal/ledger.json",
+    "sha256": "1307c881820f83f28a82620b486dd7f6eaeb72ae32fc77b7c7d895b1e4a4b92c",
+    "bytes": 188142
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/ledger.md",
+    "archived": "proposal/ledger.md",
+    "sha256": "e7c88b1192e83bdc415ca5380ffa6916e447464411c20087c900fa4c321a281b",
+    "bytes": 27783
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/main-commands.json",
+    "archived": "proposal/main-commands.json",
+    "sha256": "f373cb9d402e59d376491319a2360a98c43acc67d1722265a4244a50c311b19a",
+    "bytes": 1419
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/manifest.json",
+    "archived": "proposal/manifest.json",
+    "sha256": "d53bee703b3486be20d12d1e0cd61051efbd08b2f21501da88c87ac9ac52b87d",
+    "bytes": 37340
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/phase-map.json",
+    "archived": "proposal/phase-map.json",
+    "sha256": "5924a01462f51ddf647663849814434517f1735b817023486674b4d43d53829d",
+    "bytes": 8085
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/readset.json",
+    "archived": "proposal/readset.json",
+    "sha256": "5fd9121cc86c263eced355109dddf901dc3f3d6a6a6ef498eb3dca69bf5bae65",
+    "bytes": 24547
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/reconstruction-static.json",
+    "archived": "proposal/reconstruction-static.json",
+    "sha256": "1476de43bace5420602a819d1fbedec735696188e0506f2a3f2facea03fcdeb0",
+    "bytes": 599
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/scope-input.json",
+    "archived": "proposal/scope-input.json",
+    "sha256": "ba2175714ce6ab75225b0214bd04cabbdf27883348ed2438648c7bba00e42b57",
+    "bytes": 957
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/site-map.json",
+    "archived": "proposal/site-map.json",
+    "sha256": "2b8b922eeffe6df18f56b76f8e3df34a25db35f74a30fe22caaf5bc4723f21f4",
+    "bytes": 643256
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/before/tests/admin-product-category-write-policy.test.ts",
+    "archived": "proposal/snapshots/before/tests/admin-product-category-write-policy.test.ts.txt",
+    "sha256": "d514f46097b447fe1b5dcbd3b295278faef6171b913a67984a72d56671f0ad9d",
+    "bytes": 767
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/before/tests/admin-product-support-specs.test.ts",
+    "archived": "proposal/snapshots/before/tests/admin-product-support-specs.test.ts.txt",
+    "sha256": "0a699fb0d2bc8dc18029e9cdc870fd99c296525f3247c89bc944a5f2af0ec7e8",
+    "bytes": 6753
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/before/tests/audit-product-metadata-script.test.ts",
+    "archived": "proposal/snapshots/before/tests/audit-product-metadata-script.test.ts.txt",
+    "sha256": "e5512246eb5bd26b0a50c5fd44cfc9c1030c38a8fb0aa3a38766df22745d268c",
+    "bytes": 3569
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/before/tests/catalog-apply-executor-hardening-postgres.test.ts",
+    "archived": "proposal/snapshots/before/tests/catalog-apply-executor-hardening-postgres.test.ts.txt",
+    "sha256": "1d3ebeb58c69d1822e05dc192d278eb03ffe5c9d05671b3c5a8108b70ab1ca49",
+    "bytes": 12079
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/before/tests/catalog-authority-historical-repair-migration.test.ts",
+    "archived": "proposal/snapshots/before/tests/catalog-authority-historical-repair-migration.test.ts.txt",
+    "sha256": "fe9ad82db99a589fdd2efd8a616303a06a7ee1cb6ff98943765d599f80b34182",
+    "bytes": 3000
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/before/tests/catalog-authority-legacy-sync-retirement-migration.test.ts",
+    "archived": "proposal/snapshots/before/tests/catalog-authority-legacy-sync-retirement-migration.test.ts.txt",
+    "sha256": "8d275f1272daeae6368df33db91edb717dbe0e3d09ce1cdb655aa275b932789b",
+    "bytes": 4106
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/before/tests/catalog-authority-lifecycle-repair.test.ts",
+    "archived": "proposal/snapshots/before/tests/catalog-authority-lifecycle-repair.test.ts.txt",
+    "sha256": "6d39e19cf0bcd141b8d331825d95d809d8bfdf47ff2c1dc06aeb9b81921f11d9",
+    "bytes": 2310
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/before/tests/catalog-authority-product-spec-relationship-verification.test.ts",
+    "archived": "proposal/snapshots/before/tests/catalog-authority-product-spec-relationship-verification.test.ts.txt",
+    "sha256": "ea17f620d4a5eee9c4c4dea903d155982f1ac64da19d231dc1e48a1360b78309",
+    "bytes": 2223
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/before/tests/catalog-authority-relationship-convergence-migration.test.ts",
+    "archived": "proposal/snapshots/before/tests/catalog-authority-relationship-convergence-migration.test.ts.txt",
+    "sha256": "60e55dba47fc6cf284c8dec4af3dea6f36e635465ded021d00294f6653bb9b05",
+    "bytes": 2127
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/before/tests/catalog-authority-repair.test.ts",
+    "archived": "proposal/snapshots/before/tests/catalog-authority-repair.test.ts.txt",
+    "sha256": "122cb85071c3d033e087698fed73b50d62bdb72a19d64bec5aabc1041f8be27e",
+    "bytes": 6769
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/before/tests/catalog-authority-schema-foundations-migration.test.ts",
+    "archived": "proposal/snapshots/before/tests/catalog-authority-schema-foundations-migration.test.ts.txt",
+    "sha256": "38c4775d77780e01c516e60bf2e7ec7678a9941fb7b425b0f3bfe3ef840302d4",
+    "bytes": 8919
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/before/tests/expansion-apply-batch.test.ts",
+    "archived": "proposal/snapshots/before/tests/expansion-apply-batch.test.ts.txt",
+    "sha256": "2d12291a8386f0c9633aa641d6258d10c1decb59bd88d83976db0ec5c73b84b9",
+    "bytes": 18669
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/before/tests/expansion-apply-templates.test.ts",
+    "archived": "proposal/snapshots/before/tests/expansion-apply-templates.test.ts.txt",
+    "sha256": "27145efd09abaffd8f57fdb232e02ca2e9e778321f4a3066392057af674ca1d4",
+    "bytes": 16522
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/before/tests/product-identifier-global-ownership-migration.test.ts",
+    "archived": "proposal/snapshots/before/tests/product-identifier-global-ownership-migration.test.ts.txt",
+    "sha256": "b31189e4db4f3a4be4092aa308239377b0cc5948c84e746804bf67d42e0b7d15",
+    "bytes": 9849
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/before/tests/product-metadata-health.test.ts",
+    "archived": "proposal/snapshots/before/tests/product-metadata-health.test.ts.txt",
+    "sha256": "a7901948598a66553af2ce65ca81076c8b11fcab46a5d34eb3b9bdadfce4c5eb",
+    "bytes": 2058
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/before/tests/product-metadata-ingest-identity.test.ts",
+    "archived": "proposal/snapshots/before/tests/product-metadata-ingest-identity.test.ts.txt",
+    "sha256": "b7eef8effe81bdafa8c0101eae8184242ae781a9eb98b7cfd842cefda4cd9635",
+    "bytes": 2596
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/cut/tests/admin-product-category-write-policy.test.ts",
+    "archived": "proposal/snapshots/cut/tests/admin-product-category-write-policy.test.ts.txt",
+    "sha256": "d514f46097b447fe1b5dcbd3b295278faef6171b913a67984a72d56671f0ad9d",
+    "bytes": 767
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/cut/tests/admin-product-support-specs.test.ts",
+    "archived": "proposal/snapshots/cut/tests/admin-product-support-specs.test.ts.txt",
+    "sha256": "0a699fb0d2bc8dc18029e9cdc870fd99c296525f3247c89bc944a5f2af0ec7e8",
+    "bytes": 6753
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/cut/tests/audit-product-metadata-script.test.ts",
+    "archived": "proposal/snapshots/cut/tests/audit-product-metadata-script.test.ts.txt",
+    "sha256": "e5512246eb5bd26b0a50c5fd44cfc9c1030c38a8fb0aa3a38766df22745d268c",
+    "bytes": 3569
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/cut/tests/catalog-apply-executor-hardening-postgres.test.ts",
+    "archived": "proposal/snapshots/cut/tests/catalog-apply-executor-hardening-postgres.test.ts.txt",
+    "sha256": "1d3ebeb58c69d1822e05dc192d278eb03ffe5c9d05671b3c5a8108b70ab1ca49",
+    "bytes": 12079
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/cut/tests/catalog-authority-historical-repair-migration.test.ts",
+    "archived": "proposal/snapshots/cut/tests/catalog-authority-historical-repair-migration.test.ts.txt",
+    "sha256": "fe9ad82db99a589fdd2efd8a616303a06a7ee1cb6ff98943765d599f80b34182",
+    "bytes": 3000
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/cut/tests/catalog-authority-legacy-sync-retirement-migration.test.ts",
+    "archived": "proposal/snapshots/cut/tests/catalog-authority-legacy-sync-retirement-migration.test.ts.txt",
+    "sha256": "8d275f1272daeae6368df33db91edb717dbe0e3d09ce1cdb655aa275b932789b",
+    "bytes": 4106
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/cut/tests/catalog-authority-lifecycle-repair.test.ts",
+    "archived": "proposal/snapshots/cut/tests/catalog-authority-lifecycle-repair.test.ts.txt",
+    "sha256": "6d39e19cf0bcd141b8d331825d95d809d8bfdf47ff2c1dc06aeb9b81921f11d9",
+    "bytes": 2310
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/cut/tests/catalog-authority-product-spec-relationship-verification.test.ts",
+    "archived": "proposal/snapshots/cut/tests/catalog-authority-product-spec-relationship-verification.test.ts.txt",
+    "sha256": "ea17f620d4a5eee9c4c4dea903d155982f1ac64da19d231dc1e48a1360b78309",
+    "bytes": 2223
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/cut/tests/catalog-authority-relationship-convergence-migration.test.ts",
+    "archived": "proposal/snapshots/cut/tests/catalog-authority-relationship-convergence-migration.test.ts.txt",
+    "sha256": "60e55dba47fc6cf284c8dec4af3dea6f36e635465ded021d00294f6653bb9b05",
+    "bytes": 2127
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/cut/tests/catalog-authority-repair.test.ts",
+    "archived": "proposal/snapshots/cut/tests/catalog-authority-repair.test.ts.txt",
+    "sha256": "122cb85071c3d033e087698fed73b50d62bdb72a19d64bec5aabc1041f8be27e",
+    "bytes": 6769
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/cut/tests/catalog-authority-schema-foundations-migration.test.ts",
+    "archived": "proposal/snapshots/cut/tests/catalog-authority-schema-foundations-migration.test.ts.txt",
+    "sha256": "38c4775d77780e01c516e60bf2e7ec7678a9941fb7b425b0f3bfe3ef840302d4",
+    "bytes": 8919
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/cut/tests/expansion-apply-batch.test.ts",
+    "archived": "proposal/snapshots/cut/tests/expansion-apply-batch.test.ts.txt",
+    "sha256": "bcbe4a6111c1ba2e7d30d2de1834910f19adc0ad7ce6d4d12060c90b469df6f5",
+    "bytes": 18453
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/cut/tests/expansion-apply-templates.test.ts",
+    "archived": "proposal/snapshots/cut/tests/expansion-apply-templates.test.ts.txt",
+    "sha256": "a590852fd6258fb798e7781131a6e07307049e3c0b6b093cf658a041bb6b77d4",
+    "bytes": 16037
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/cut/tests/product-identifier-global-ownership-migration.test.ts",
+    "archived": "proposal/snapshots/cut/tests/product-identifier-global-ownership-migration.test.ts.txt",
+    "sha256": "b31189e4db4f3a4be4092aa308239377b0cc5948c84e746804bf67d42e0b7d15",
+    "bytes": 9849
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/cut/tests/product-metadata-health.test.ts",
+    "archived": "proposal/snapshots/cut/tests/product-metadata-health.test.ts.txt",
+    "sha256": "a7901948598a66553af2ce65ca81076c8b11fcab46a5d34eb3b9bdadfce4c5eb",
+    "bytes": 2058
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/cut/tests/product-metadata-ingest-identity.test.ts",
+    "archived": "proposal/snapshots/cut/tests/product-metadata-ingest-identity.test.ts.txt",
+    "sha256": "b7eef8effe81bdafa8c0101eae8184242ae781a9eb98b7cfd842cefda4cd9635",
+    "bytes": 2596
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/mutants/C1-oil-day-types.ts",
+    "archived": "proposal/snapshots/mutants/C1-oil-day-types.ts.txt",
+    "sha256": "a020ff53bacec7479d090036066c1f65f539c9b4ecff486d3375707ffcfdf46a",
+    "bytes": 34544
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/mutants/C2-mask-payload-role-literal.ts",
+    "archived": "proposal/snapshots/mutants/C2-mask-payload-role-literal.ts.txt",
+    "sha256": "e0a735c2c4103e401c9ab104e58d38d39d2f499ec309a32bbbc1e43109ef1fa2",
+    "bytes": 34568
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/mutants/C2-mask-role-literal.ts",
+    "archived": "proposal/snapshots/mutants/C2-mask-role-literal.ts.txt",
+    "sha256": "924152f60b3b28cc90a40e17b293e61f08239ea32bfc712c71a92d83a03e93ed",
+    "bytes": 26889
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/mutants/C2-row-category.ts",
+    "archived": "proposal/snapshots/mutants/C2-row-category.ts.txt",
+    "sha256": "54d461cde0b4949e9a029328c65ff340a9785eb25fa464835c23bba0bd155b56",
+    "bytes": 34624
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/mutants/C2-row-role.ts",
+    "archived": "proposal/snapshots/mutants/C2-row-role.ts.txt",
+    "sha256": "4f29546435e13cf1d761e6b878918e2d270e89de21cd54d398369621952c6a3f",
+    "bytes": 34619
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/mutants/C3-recommendation-serialization.ts",
+    "archived": "proposal/snapshots/mutants/C3-recommendation-serialization.ts.txt",
+    "sha256": "e0cdcd5302b1d29e66e7ffc0dcb74d9705f5417aface954f11c35c5cfe496984",
+    "bytes": 26428
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/.github/workflows/ci.yml",
+    "archived": "proposal/snapshots/readset/.github/workflows/ci.yml",
+    "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "bytes": 17598
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/.nvmrc",
+    "archived": "proposal/snapshots/readset/.nvmrc",
+    "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+    "bytes": 3
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/docs/ops/catalog-repairs/2026-08-15-catalog-authority-lifecycle/preflight.sql",
+    "archived": "proposal/snapshots/readset/docs/ops/catalog-repairs/2026-08-15-catalog-authority-lifecycle/preflight.sql",
+    "sha256": "68b60d276f2b674a8e35472346665b7bad45fcbf40d1c8aa0e5a4ace154010e2",
+    "bytes": 4046
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/docs/ops/catalog-repairs/2026-08-15-catalog-authority-lifecycle/repair.sql",
+    "archived": "proposal/snapshots/readset/docs/ops/catalog-repairs/2026-08-15-catalog-authority-lifecycle/repair.sql",
+    "sha256": "8f59d290669c9b9aa0bf1cb15e4cb5bc1b683bc3117d9ac2f3f30f9369305cf8",
+    "bytes": 9546
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/package-lock.json",
+    "archived": "proposal/snapshots/readset/package-lock.json.txt",
+    "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
+    "bytes": 590438
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/package.json",
+    "archived": "proposal/snapshots/readset/package.json.txt",
+    "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    "bytes": 25353
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/plans/scan-db-expansion/research/leave-in-manifest.json",
+    "archived": "proposal/snapshots/readset/plans/scan-db-expansion/research/leave-in-manifest.json",
+    "sha256": "c4e4dfd4c6ae376683b15ac7f6b1c63370eb7f18b1651eec15130b251ea3acc1",
+    "bytes": 91188
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/plans/scan-db-expansion/research/mask-manifest.json",
+    "archived": "proposal/snapshots/readset/plans/scan-db-expansion/research/mask-manifest.json",
+    "sha256": "8aa8aaf9469b391d5c5041c518cec73ac1f6e348d41fd312c7c7e52fc06a3caa",
+    "bytes": 40472
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/plans/scan-db-expansion/research/oil-manifest.json",
+    "archived": "proposal/snapshots/readset/plans/scan-db-expansion/research/oil-manifest.json",
+    "sha256": "28632cd6850f161852f80e5187f2342889ee65fffe472d1a3857e79fa0a2d74d",
+    "bytes": 38539
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/scripts/audit-product-metadata.ts",
+    "archived": "proposal/snapshots/readset/scripts/audit-product-metadata.ts.txt",
+    "sha256": "ef71e36764303565432986366f3f57c534f13851423e88113a095f0c02452b07",
+    "bytes": 7930
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/scripts/catalog-authority/oil-repair-client.ts",
+    "archived": "proposal/snapshots/readset/scripts/catalog-authority/oil-repair-client.ts.txt",
+    "sha256": "c477788ba0c912e151b7b17c961bbc36e8b6c4ee4389f268a53cd86a359df721",
+    "bytes": 6948
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/scripts/catalog-authority/schema-audit.sql",
+    "archived": "proposal/snapshots/readset/scripts/catalog-authority/schema-audit.sql",
+    "sha256": "88ce597fd8b5ae99a06b2390bf29110694d3e24b5d06df5904ead543e1c16c03",
+    "bytes": 3221
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/scripts/catalog-authority/verify-product-spec-relationships.ts",
+    "archived": "proposal/snapshots/readset/scripts/catalog-authority/verify-product-spec-relationships.ts.txt",
+    "sha256": "dd2d42eaa5b21c2c3457a7d96acfc1d0f1f3b524a0ee67478f3848371bc566e1",
+    "bytes": 5761
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/scripts/ingest-products.ts",
+    "archived": "proposal/snapshots/readset/scripts/ingest-products.ts.txt",
+    "sha256": "5682804113f156cb14bfa49f7d86155756fe3408ef167bb4698811ba8837d3fa",
+    "bytes": 24393
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/scripts/product-intake/catalog-enrichment/stage5-protocol-client.ts",
+    "archived": "proposal/snapshots/readset/scripts/product-intake/catalog-enrichment/stage5-protocol-client.ts.txt",
+    "sha256": "191428f1a12b6573b0592157fbf8157613eed1fca1791e63da47e4d43e2337e5",
+    "bytes": 13888
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/scripts/product-intake/cli.ts",
+    "archived": "proposal/snapshots/readset/scripts/product-intake/cli.ts.txt",
+    "sha256": "ed0d04b4980c0e4efe4c6c79a859767084deafeee343e37ee1588d81c2ff42b2",
+    "bytes": 3145
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/scripts/product-intake/expansion/apply.ts",
+    "archived": "proposal/snapshots/readset/scripts/product-intake/expansion/apply.ts.txt",
+    "sha256": "2e2366c3fa9957ac3e763441f835ade74c9c66d751a93811ba3af2c3406b8668",
+    "bytes": 6434
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/scripts/product-intake/expansion/preflight.ts",
+    "archived": "proposal/snapshots/readset/scripts/product-intake/expansion/preflight.ts.txt",
+    "sha256": "fe6ecdc48a75de8e149bedcc549ce1a3a99ee86c5415e223966b11057f904cda",
+    "bytes": 8958
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/app/api/admin/products/[id]/route.ts",
+    "archived": "proposal/snapshots/readset/src/app/api/admin/products/[id]/route.ts.txt",
+    "sha256": "f4f2db8896a5e9f5afdfd4a57ad870e904f94bafa5d0b1d22a31f0c9a95a48b9",
+    "bytes": 11562
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/app/api/admin/products/route.ts",
+    "archived": "proposal/snapshots/readset/src/app/api/admin/products/route.ts.txt",
+    "sha256": "37ca688ef07cd7db2d19a6f6baf93d7cbfbb19f630ac2dbed94db01528ba74a3",
+    "bytes": 13284
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/admin/product-category-write-policy.ts",
+    "archived": "proposal/snapshots/readset/src/lib/admin/product-category-write-policy.ts.txt",
+    "sha256": "c488e7fc53bed67919d66dcd948af3423062135ce4b081a7adec5a7523492cab",
+    "bytes": 585
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/admin/product-filters.ts",
+    "archived": "proposal/snapshots/readset/src/lib/admin/product-filters.ts.txt",
+    "sha256": "0e12952fec79f772f18d8766bffdaa2bcbc38d43fa4ad1bc95360a4708718206",
+    "bytes": 2848
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/affiliate-research/csv.ts",
+    "archived": "proposal/snapshots/readset/src/lib/affiliate-research/csv.ts.txt",
+    "sha256": "3df18cc58c95925f7a43eb46cb3945df54ee3a1e19c7b5436ebb92855022f78f",
+    "bytes": 3242
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/affiliate-research/url-gate.ts",
+    "archived": "proposal/snapshots/readset/src/lib/affiliate-research/url-gate.ts.txt",
+    "sha256": "6eb27b7c791bff7a510f44b9ea0b18b1d97cdd665c0e55f2e68325ba3b1a814c",
+    "bytes": 3040
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/bondbuilder/constants.ts",
+    "archived": "proposal/snapshots/readset/src/lib/bondbuilder/constants.ts.txt",
+    "sha256": "f08d9c9133b6a3a937be2591d5ccc3d9520303049e256bfe8adf96d809d95400",
+    "bytes": 927
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/catalog-authority/contracts.ts",
+    "archived": "proposal/snapshots/readset/src/lib/catalog-authority/contracts.ts.txt",
+    "sha256": "5dec8617c79c16aaa4705a3513c4ae36fa4314469e0b499f5fb4c327f6f52384",
+    "bytes": 7944
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/catalog-authority/oil-repair.ts",
+    "archived": "proposal/snapshots/readset/src/lib/catalog-authority/oil-repair.ts.txt",
+    "sha256": "991549878c4687371b0af82dec381395c5823f590525197da9e65da4523dee0b",
+    "bytes": 10446
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/catalog-authority/product-spec-relationships.ts",
+    "archived": "proposal/snapshots/readset/src/lib/catalog-authority/product-spec-relationships.ts.txt",
+    "sha256": "14573ddab8070f7d8b4b7bc3b98c254ad3e93ac84ad40da46d05b1221e3363d1",
+    "bytes": 2058
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/catalog-authority/repair.ts",
+    "archived": "proposal/snapshots/readset/src/lib/catalog-authority/repair.ts.txt",
+    "sha256": "487a17d0a012c107e92444123e5524df814e133671c8455485e8325773ab6ab4",
+    "bytes": 6514
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/conditioner/constants.ts",
+    "archived": "proposal/snapshots/readset/src/lib/conditioner/constants.ts.txt",
+    "sha256": "755f034a482a19d41e25bcfaef244227ea3884f6a410983b63011d8b7cb065bb",
+    "bytes": 1761
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/deep-cleansing-shampoo/constants.ts",
+    "archived": "proposal/snapshots/readset/src/lib/deep-cleansing-shampoo/constants.ts.txt",
+    "sha256": "1b332ae25648ec77cd7ad3a30a2fde906630bf265614506a52dc0dfd1381a25f",
+    "bytes": 2185
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/dry-shampoo/constants.ts",
+    "archived": "proposal/snapshots/readset/src/lib/dry-shampoo/constants.ts.txt",
+    "sha256": "c2a05fc0941545369abe2cbc996eb9367e7a33227ca9305a9e14479201b5c25f",
+    "bytes": 844
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/leave-in/constants.ts",
+    "archived": "proposal/snapshots/readset/src/lib/leave-in/constants.ts.txt",
+    "sha256": "9ccffc3c5faaa69ab6ed436f7af56aa0fa867ae6e898a71f2bd8a7d78410a7f4",
+    "bytes": 5957
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/mask/constants.ts",
+    "archived": "proposal/snapshots/readset/src/lib/mask/constants.ts.txt",
+    "sha256": "f557bc2ae0818d96819360ac4c015ac3fa53c580352ba024993465503911b63c",
+    "bytes": 940
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/observability/checkout.ts",
+    "archived": "proposal/snapshots/readset/src/lib/observability/checkout.ts.txt",
+    "sha256": "34c41d9cc134da4df6762251af4ba11dcffd5180f21bffd1bb5e8b5f8484d49d",
+    "bytes": 9602
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/observability/product-intake.ts",
+    "archived": "proposal/snapshots/readset/src/lib/observability/product-intake.ts.txt",
+    "sha256": "685bb78f1f174352851b0c3e51c3ddd1e7666e44a04c38373ccdccf2f919f31d",
+    "bytes": 5101
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/observability/sentry-scrubbing.ts",
+    "archived": "proposal/snapshots/readset/src/lib/observability/sentry-scrubbing.ts.txt",
+    "sha256": "3980e1d096344f18c4288226d63f9577037fc486bb049a67316d8e157b6a8c60",
+    "bytes": 6625
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/oil/constants.ts",
+    "archived": "proposal/snapshots/readset/src/lib/oil/constants.ts.txt",
+    "sha256": "eada5f14cff4a56fb7b43ad8eb1c6def195a1f27f30bcb98165ca6f418036286",
+    "bytes": 2493
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/peeling/constants.ts",
+    "archived": "proposal/snapshots/readset/src/lib/peeling/constants.ts.txt",
+    "sha256": "856037856c8fecabe9f3b03040f5c80318e77222786bf4f4d47c0dd85d99a4ce",
+    "bytes": 517
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/personal-plan/products/authorities.ts",
+    "archived": "proposal/snapshots/readset/src/lib/personal-plan/products/authorities.ts.txt",
+    "sha256": "46722afc73e14c5f10b83fd220bc4e5f82c3de001086881190cd1fb769b91e2b",
+    "bytes": 4532
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/personal-plan/products/authority/contracts.ts",
+    "archived": "proposal/snapshots/readset/src/lib/personal-plan/products/authority/contracts.ts.txt",
+    "sha256": "300032e978090b8226f72f4880c6cdf310beb95438786b9e966d594bc3416781",
+    "bytes": 8049
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/personal-plan/products/contracts.ts",
+    "archived": "proposal/snapshots/readset/src/lib/personal-plan/products/contracts.ts.txt",
+    "sha256": "bc4291e12db65a3e220c884344255403e4ea3c3eb19d24fb3c5a4605ae011366",
+    "bytes": 52077
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/personal-plan/types.ts",
+    "archived": "proposal/snapshots/readset/src/lib/personal-plan/types.ts.txt",
+    "sha256": "40297a7f5b93d2ae223603fe818111f8a546c21299579d4eaf1da3d6089e2389",
+    "bytes": 17171
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/personal-plan-quiz/types.ts",
+    "archived": "proposal/snapshots/readset/src/lib/personal-plan-quiz/types.ts.txt",
+    "sha256": "19565073dbad675141bcbbb94a796a73da7727569164a01e0622a4e471736c46",
+    "bytes": 3694
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-identity/brand-resolution.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-identity/brand-resolution.ts.txt",
+    "sha256": "5182615a8419b477e73b0a00e05e78bb9436d8b7ad9c3c7f2d35850f65e48b8a",
+    "bytes": 13993
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-identity/index.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-identity/index.ts.txt",
+    "sha256": "fd7c23ab66221159b693d8f3c076ad1169160e1d2ed1cd1de7b923d1e3a82d46",
+    "bytes": 4791
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-identity/normalize.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-identity/normalize.ts.txt",
+    "sha256": "817e15aed0f145308fb7e971ac9ab6171ddb0d3f0b2c043e9e06377b765d69db",
+    "bytes": 3441
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-intake/catalog-enrichment/index.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-intake/catalog-enrichment/index.ts.txt",
+    "sha256": "0bcc3808975c972feb91e55dba06109c94d415269c4ec83879ebe14d09c268b2",
+    "bytes": 26831
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-intake/catalog-enrichment/stage5-protocols.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-intake/catalog-enrichment/stage5-protocols.ts.txt",
+    "sha256": "4326f203bb4bc9f4c3425d5ddd6a42e18f06484cdefc5c2f794116c84b274fb6",
+    "bytes": 21939
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-intake/catalog-enrichment/stage5-v2-application.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-intake/catalog-enrichment/stage5-v2-application.ts.txt",
+    "sha256": "f34af15d367d456a6cf69a4ab2abdc9ac0fd1320aaaf494517d67962ab59bbea",
+    "bytes": 9369
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts.txt",
+    "sha256": "3e37fd254ec305710841f63f060cb7056b7d361fb7dbc6b9a250126d9a3f92b6",
+    "bytes": 12830
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-intake/catalog-enrichment/stage5-v2-pointer-delta.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-intake/catalog-enrichment/stage5-v2-pointer-delta.ts.txt",
+    "sha256": "d5d2df8d18b3c2cf54806f6f34d848d54aca4a5556d479885a6bb95f3d4f914e",
+    "bytes": 13390
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-intake/category-validators.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-intake/category-validators.ts.txt",
+    "sha256": "5094f1b5e1811bae7ebfd7e062e9c14c0e8eb7ad7f05bf431716e1c8b5304a63",
+    "bytes": 39881
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-intake/expansion-apply-templates.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-intake/expansion-apply-templates.ts.txt",
+    "sha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "bytes": 34573
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-intake/expansion-apply.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-intake/expansion-apply.ts.txt",
+    "sha256": "d1b710c3b9ff424fbb09984451d3695d701ea1f90fdbdf12bd7d711295b8c618",
+    "bytes": 26389
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-intake/expansion-manifest.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-intake/expansion-manifest.ts.txt",
+    "sha256": "c82e49e141cb7912bff2c4720fd8468b0d337cf458b59f66fae5e13cb76093c9",
+    "bytes": 26902
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-intake/shampoo-protocol-roles.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-intake/shampoo-protocol-roles.ts.txt",
+    "sha256": "b7e7531ba0d2b6983553e3577868d1cfcf3a31d35760d1fe95f998ff469659ff",
+    "bytes": 933
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-metadata/buyability.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-metadata/buyability.ts.txt",
+    "sha256": "dc0e982a86deca04da69fceee16d5a3abfc4893c5b25945fc0fbe01f327dc0b5",
+    "bytes": 3546
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-metadata/health.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-metadata/health.ts.txt",
+    "sha256": "3d00a1775de58980f2b573bf42de65c82974a4481d06a1147c4eaab961a6c082",
+    "bytes": 3868
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-metadata/ingest-identity.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-metadata/ingest-identity.ts.txt",
+    "sha256": "cb1075236fbc64b89ffeb0b987eec5a948955585e28ff133f785398fb297cf46",
+    "bytes": 3546
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-specs/concern-taxonomy.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-specs/concern-taxonomy.ts.txt",
+    "sha256": "a0ac321c8671bd43153d0d367a0c93ea708af61f5dedfe0eab8708c76de49fab",
+    "bytes": 5543
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/product-specs/constants.ts",
+    "archived": "proposal/snapshots/readset/src/lib/product-specs/constants.ts.txt",
+    "sha256": "3c9c5637b689901f7995aa04da9e41bc34d34b91fc85e474489e02cd6e62613d",
+    "bytes": 5097
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/quiz/diagnostic-input.ts",
+    "archived": "proposal/snapshots/readset/src/lib/quiz/diagnostic-input.ts.txt",
+    "sha256": "964652bf5d3e3d8cd9bc233b18977e59e3cf7264a97ec7de5d5c4ac6cea7149e",
+    "bytes": 3239
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/recommendation-engine/contracts.ts",
+    "archived": "proposal/snapshots/readset/src/lib/recommendation-engine/contracts.ts.txt",
+    "sha256": "c057d4aa0c25c44bdb60432a11b1cda1521a0d59d533826f6383dfd639c4d30e",
+    "bytes": 6107
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/recommendation-engine/types.ts",
+    "archived": "proposal/snapshots/readset/src/lib/recommendation-engine/types.ts.txt",
+    "sha256": "4d945a6198871e362ead2b1f575b3907ccce8e61b804e2add40fbc3de674a648",
+    "bytes": 19364
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/routines/personal-plan/application/contracts-v2.ts",
+    "archived": "proposal/snapshots/readset/src/lib/routines/personal-plan/application/contracts-v2.ts.txt",
+    "sha256": "9bbf61d129b7220dfeb8b980532a3b16443b371490b037e9333bb6a60f502b69",
+    "bytes": 10178
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/routines/personal-plan/application/contracts.ts",
+    "archived": "proposal/snapshots/readset/src/lib/routines/personal-plan/application/contracts.ts.txt",
+    "sha256": "752971bf0c26f18e8ef4ba9ec282b2652a96c25a20206d5467ea8f3751aecf68",
+    "bytes": 11744
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/scan/catalog-eligibility.ts",
+    "archived": "proposal/snapshots/readset/src/lib/scan/catalog-eligibility.ts.txt",
+    "sha256": "0bcee33a0110e82bf580ac2a978866670829a91a592c1261fe9242ec6500741d",
+    "bytes": 5325
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/scan/identifier-lookup.ts",
+    "archived": "proposal/snapshots/readset/src/lib/scan/identifier-lookup.ts.txt",
+    "sha256": "5770b9b643b39849dd1bc98f293ba9ca82de4ff968c82158c79558e8d95de403",
+    "bytes": 3666
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/shampoo/constants.ts",
+    "archived": "proposal/snapshots/readset/src/lib/shampoo/constants.ts.txt",
+    "sha256": "9959a578b18747184e176ff52756cae5950bff1a723a027d8e1ac0fd3a7b7ca6",
+    "bytes": 2977
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/shampoo/eligibility.ts",
+    "archived": "proposal/snapshots/readset/src/lib/shampoo/eligibility.ts.txt",
+    "sha256": "b93939efad65b847ac45c878f2f19d627f23a6d1b6f6e90e490c6a91928cac99",
+    "bytes": 3362
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/supabase/admin.ts",
+    "archived": "proposal/snapshots/readset/src/lib/supabase/admin.ts.txt",
+    "sha256": "bd6ec1538d65a01f82b3f55b2839f0ac347d617c6de29d13cea4b0eff737386a",
+    "bytes": 307
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/supabase/server.ts",
+    "archived": "proposal/snapshots/readset/src/lib/supabase/server.ts.txt",
+    "sha256": "ab2e4b8ccc17f8fb4a43d2a755a563a8549f2ea02feedb9df44ee2112501aa9a",
+    "bytes": 770
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/types.ts",
+    "archived": "proposal/snapshots/readset/src/lib/types.ts.txt",
+    "sha256": "80ce0439bebeb683290f086cc1bab20f3d03a29c577e750ceaa8f73d48243d93",
+    "bytes": 40494
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/validators/index.ts",
+    "archived": "proposal/snapshots/readset/src/lib/validators/index.ts.txt",
+    "sha256": "00f1b39ac6469ad5b9ddc54f482bb8178ded748760ae80628404dbbf277f54ea",
+    "bytes": 11871
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/vocabulary/concerns-goals.ts",
+    "archived": "proposal/snapshots/readset/src/lib/vocabulary/concerns-goals.ts.txt",
+    "sha256": "f588c309f78685855551f8270f8dec4fc5e046d5c1165d734a63f168315f28e8",
+    "bytes": 1565
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/vocabulary/errors.ts",
+    "archived": "proposal/snapshots/readset/src/lib/vocabulary/errors.ts.txt",
+    "sha256": "79aa0a1fe9ddc787d7f487df6d91d608a2c8d2cb9ea2ac4f06411683395b68aa",
+    "bytes": 581
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/vocabulary/frequencies.ts",
+    "archived": "proposal/snapshots/readset/src/lib/vocabulary/frequencies.ts.txt",
+    "sha256": "d79bb3584473a8f6541feecff58a40633736f9376981ff190b645114dc0eb3a9",
+    "bytes": 6217
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/vocabulary/hair-length.ts",
+    "archived": "proposal/snapshots/readset/src/lib/vocabulary/hair-length.ts.txt",
+    "sha256": "3dd675892cb15b6021d7365203bdc225e86805bfb15beec305cc90e83d74c9e4",
+    "bytes": 918
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/vocabulary/hair-types.ts",
+    "archived": "proposal/snapshots/readset/src/lib/vocabulary/hair-types.ts.txt",
+    "sha256": "36c517006e2cf2717a7f9527fe0484c7c117ba7caa8b7ed7008445950cd79b72",
+    "bytes": 1153
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/vocabulary/index.ts",
+    "archived": "proposal/snapshots/readset/src/lib/vocabulary/index.ts.txt",
+    "sha256": "5e011545b7a6a94b96720af7b225dc12c025dbf0509f8b20cdd352bbcfa3109b",
+    "bytes": 3427
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/vocabulary/onboarding-care.ts",
+    "archived": "proposal/snapshots/readset/src/lib/vocabulary/onboarding-care.ts.txt",
+    "sha256": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547",
+    "bytes": 3838
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/vocabulary/onboarding-goals.ts",
+    "archived": "proposal/snapshots/readset/src/lib/vocabulary/onboarding-goals.ts.txt",
+    "sha256": "71ead0b61b4aeffeb47b53c63acb6fe84acae797e18ea774fa25104854c8a098",
+    "bytes": 1410
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/vocabulary/profile-labels.ts",
+    "archived": "proposal/snapshots/readset/src/lib/vocabulary/profile-labels.ts.txt",
+    "sha256": "e0e8d5df461dc19c3e0eb1a85a8dbac8c5f32316c12cd90352bcec506ac5e466",
+    "bytes": 4702
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/src/lib/vocabulary/source-labels.ts",
+    "archived": "proposal/snapshots/readset/src/lib/vocabulary/source-labels.ts.txt",
+    "sha256": "b4cce749ac8d49b3f0dd3a9a2e1e6e9cea64f6ae76858bc161d7f173b22475f1",
+    "bytes": 543
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/supabase/migrations/20260815083332_catalog_authority_schema_foundations.sql",
+    "archived": "proposal/snapshots/readset/supabase/migrations/20260815083332_catalog_authority_schema_foundations.sql",
+    "sha256": "9086fae4796da9258508754c821154700acf892a99c5ed35820673bffc79fe2d",
+    "bytes": 26235
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/supabase/migrations/20260815220000_catalog_spec_relationship_convergence.sql",
+    "archived": "proposal/snapshots/readset/supabase/migrations/20260815220000_catalog_spec_relationship_convergence.sql",
+    "sha256": "4231423fb59be041795402e1faf83534674bbaefa61675a2529ce8fd671db458",
+    "bytes": 3085
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/supabase/migrations/20260816130000_catalog_authority_historical_repair.sql",
+    "archived": "proposal/snapshots/readset/supabase/migrations/20260816130000_catalog_authority_historical_repair.sql",
+    "sha256": "79a0b69d722fa7b2934924f837e2f5e35a20bef96fc36ce69fc604cf2dfe1754",
+    "bytes": 2890
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/supabase/migrations/20260816180000_catalog_authority_retire_legacy_sync_and_validate.sql",
+    "archived": "proposal/snapshots/readset/supabase/migrations/20260816180000_catalog_authority_retire_legacy_sync_and_validate.sql",
+    "sha256": "bacd8db5d985b81e5f6939d9548da1e9ccf38e074446b05427bf285bf0bb0662",
+    "bytes": 4031
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/supabase/migrations/20260826142000_product_identifier_canonical_gtin_expand.sql",
+    "archived": "proposal/snapshots/readset/supabase/migrations/20260826142000_product_identifier_canonical_gtin_expand.sql",
+    "sha256": "4e23c9fe9644b363a825f7bf9099820db8a6ceb4278968e735ba8b307e56759a",
+    "bytes": 2550
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/supabase/migrations/20260826142100_product_identifier_canonical_gtin_writers.sql",
+    "archived": "proposal/snapshots/readset/supabase/migrations/20260826142100_product_identifier_canonical_gtin_writers.sql",
+    "sha256": "36da85d802ecaacef077a2ca6711a6d0051d27c9582821e6377af5881768baef",
+    "bytes": 8926
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/supabase/migrations/20260826142200_product_identifier_canonical_gtin_invariant.sql",
+    "archived": "proposal/snapshots/readset/supabase/migrations/20260826142200_product_identifier_canonical_gtin_invariant.sql",
+    "sha256": "0d7f17c2313cc8b8e52c54afe7c20156944b3c511740d582a579b43665326310",
+    "bytes": 1740
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/supabase/migrations/20260929090000_catalog_apply_executor_null_guards_shared_lock.sql",
+    "archived": "proposal/snapshots/readset/supabase/migrations/20260929090000_catalog_apply_executor_null_guards_shared_lock.sql",
+    "sha256": "833e5713f5dc82c05aefee1d81f51195abfe1f41e7d3549fd62065420f56a772",
+    "bytes": 13445
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/admin-product-category-write-policy.test.ts",
+    "archived": "proposal/snapshots/readset/tests/admin-product-category-write-policy.test.ts.txt",
+    "sha256": "d514f46097b447fe1b5dcbd3b295278faef6171b913a67984a72d56671f0ad9d",
+    "bytes": 767
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/admin-product-support-specs.test.ts",
+    "archived": "proposal/snapshots/readset/tests/admin-product-support-specs.test.ts.txt",
+    "sha256": "0a699fb0d2bc8dc18029e9cdc870fd99c296525f3247c89bc944a5f2af0ec7e8",
+    "bytes": 6753
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/audit-product-metadata-script.test.ts",
+    "archived": "proposal/snapshots/readset/tests/audit-product-metadata-script.test.ts.txt",
+    "sha256": "e5512246eb5bd26b0a50c5fd44cfc9c1030c38a8fb0aa3a38766df22745d268c",
+    "bytes": 3569
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/catalog-apply-executor-hardening-postgres.test.ts",
+    "archived": "proposal/snapshots/readset/tests/catalog-apply-executor-hardening-postgres.test.ts.txt",
+    "sha256": "1d3ebeb58c69d1822e05dc192d278eb03ffe5c9d05671b3c5a8108b70ab1ca49",
+    "bytes": 12079
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/catalog-authority-historical-repair-migration.test.ts",
+    "archived": "proposal/snapshots/readset/tests/catalog-authority-historical-repair-migration.test.ts.txt",
+    "sha256": "fe9ad82db99a589fdd2efd8a616303a06a7ee1cb6ff98943765d599f80b34182",
+    "bytes": 3000
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/catalog-authority-legacy-sync-retirement-migration.test.ts",
+    "archived": "proposal/snapshots/readset/tests/catalog-authority-legacy-sync-retirement-migration.test.ts.txt",
+    "sha256": "8d275f1272daeae6368df33db91edb717dbe0e3d09ce1cdb655aa275b932789b",
+    "bytes": 4106
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/catalog-authority-lifecycle-repair.test.ts",
+    "archived": "proposal/snapshots/readset/tests/catalog-authority-lifecycle-repair.test.ts.txt",
+    "sha256": "6d39e19cf0bcd141b8d331825d95d809d8bfdf47ff2c1dc06aeb9b81921f11d9",
+    "bytes": 2310
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/catalog-authority-product-spec-relationship-verification.test.ts",
+    "archived": "proposal/snapshots/readset/tests/catalog-authority-product-spec-relationship-verification.test.ts.txt",
+    "sha256": "ea17f620d4a5eee9c4c4dea903d155982f1ac64da19d231dc1e48a1360b78309",
+    "bytes": 2223
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/catalog-authority-relationship-convergence-migration.test.ts",
+    "archived": "proposal/snapshots/readset/tests/catalog-authority-relationship-convergence-migration.test.ts.txt",
+    "sha256": "60e55dba47fc6cf284c8dec4af3dea6f36e635465ded021d00294f6653bb9b05",
+    "bytes": 2127
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/catalog-authority-repair.test.ts",
+    "archived": "proposal/snapshots/readset/tests/catalog-authority-repair.test.ts.txt",
+    "sha256": "122cb85071c3d033e087698fed73b50d62bdb72a19d64bec5aabc1041f8be27e",
+    "bytes": 6769
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/catalog-authority-schema-foundations-migration.test.ts",
+    "archived": "proposal/snapshots/readset/tests/catalog-authority-schema-foundations-migration.test.ts.txt",
+    "sha256": "38c4775d77780e01c516e60bf2e7ec7678a9941fb7b425b0f3bfe3ef840302d4",
+    "bytes": 8919
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/expansion-apply-batch.test.ts",
+    "archived": "proposal/snapshots/readset/tests/expansion-apply-batch.test.ts.txt",
+    "sha256": "2d12291a8386f0c9633aa641d6258d10c1decb59bd88d83976db0ec5c73b84b9",
+    "bytes": 18669
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/expansion-apply-templates.test.ts",
+    "archived": "proposal/snapshots/readset/tests/expansion-apply-templates.test.ts.txt",
+    "sha256": "27145efd09abaffd8f57fdb232e02ca2e9e778321f4a3066392057af674ca1d4",
+    "bytes": 16522
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/product-identifier-global-ownership-migration.test.ts",
+    "archived": "proposal/snapshots/readset/tests/product-identifier-global-ownership-migration.test.ts.txt",
+    "sha256": "b31189e4db4f3a4be4092aa308239377b0cc5948c84e746804bf67d42e0b7d15",
+    "bytes": 9849
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/product-metadata-health.test.ts",
+    "archived": "proposal/snapshots/readset/tests/product-metadata-health.test.ts.txt",
+    "sha256": "a7901948598a66553af2ce65ca81076c8b11fcab46a5d34eb3b9bdadfce4c5eb",
+    "bytes": 2058
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/product-metadata-ingest-identity.test.ts",
+    "archived": "proposal/snapshots/readset/tests/product-metadata-ingest-identity.test.ts.txt",
+    "sha256": "b7eef8effe81bdafa8c0101eae8184242ae781a9eb98b7cfd842cefda4cd9635",
+    "bytes": 2596
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tests/server-only-register.cjs",
+    "archived": "proposal/snapshots/readset/tests/server-only-register.cjs.txt",
+    "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+    "bytes": 391
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/readset/tsconfig.json",
+    "archived": "proposal/snapshots/readset/tsconfig.json",
+    "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd",
+    "bytes": 770
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/transfer/tests/admin-product-category-write-policy.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/admin-product-category-write-policy.test.ts.txt",
+    "sha256": "d514f46097b447fe1b5dcbd3b295278faef6171b913a67984a72d56671f0ad9d",
+    "bytes": 767
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/transfer/tests/admin-product-support-specs.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/admin-product-support-specs.test.ts.txt",
+    "sha256": "0a699fb0d2bc8dc18029e9cdc870fd99c296525f3247c89bc944a5f2af0ec7e8",
+    "bytes": 6753
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/transfer/tests/audit-product-metadata-script.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/audit-product-metadata-script.test.ts.txt",
+    "sha256": "e5512246eb5bd26b0a50c5fd44cfc9c1030c38a8fb0aa3a38766df22745d268c",
+    "bytes": 3569
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/transfer/tests/catalog-apply-executor-hardening-postgres.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/catalog-apply-executor-hardening-postgres.test.ts.txt",
+    "sha256": "1d3ebeb58c69d1822e05dc192d278eb03ffe5c9d05671b3c5a8108b70ab1ca49",
+    "bytes": 12079
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/transfer/tests/catalog-authority-historical-repair-migration.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/catalog-authority-historical-repair-migration.test.ts.txt",
+    "sha256": "fe9ad82db99a589fdd2efd8a616303a06a7ee1cb6ff98943765d599f80b34182",
+    "bytes": 3000
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/transfer/tests/catalog-authority-legacy-sync-retirement-migration.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/catalog-authority-legacy-sync-retirement-migration.test.ts.txt",
+    "sha256": "8d275f1272daeae6368df33db91edb717dbe0e3d09ce1cdb655aa275b932789b",
+    "bytes": 4106
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/transfer/tests/catalog-authority-lifecycle-repair.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/catalog-authority-lifecycle-repair.test.ts.txt",
+    "sha256": "6d39e19cf0bcd141b8d331825d95d809d8bfdf47ff2c1dc06aeb9b81921f11d9",
+    "bytes": 2310
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/transfer/tests/catalog-authority-product-spec-relationship-verification.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/catalog-authority-product-spec-relationship-verification.test.ts.txt",
+    "sha256": "ea17f620d4a5eee9c4c4dea903d155982f1ac64da19d231dc1e48a1360b78309",
+    "bytes": 2223
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/transfer/tests/catalog-authority-relationship-convergence-migration.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/catalog-authority-relationship-convergence-migration.test.ts.txt",
+    "sha256": "60e55dba47fc6cf284c8dec4af3dea6f36e635465ded021d00294f6653bb9b05",
+    "bytes": 2127
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/transfer/tests/catalog-authority-repair.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/catalog-authority-repair.test.ts.txt",
+    "sha256": "122cb85071c3d033e087698fed73b50d62bdb72a19d64bec5aabc1041f8be27e",
+    "bytes": 6769
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/transfer/tests/catalog-authority-schema-foundations-migration.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/catalog-authority-schema-foundations-migration.test.ts.txt",
+    "sha256": "38c4775d77780e01c516e60bf2e7ec7678a9941fb7b425b0f3bfe3ef840302d4",
+    "bytes": 8919
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/transfer/tests/expansion-apply-batch.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/expansion-apply-batch.test.ts.txt",
+    "sha256": "b88065bfeeeba0bc6a2391b88f336c66829d796bf9db259b80353c708502bee0",
+    "bytes": 18779
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/transfer/tests/expansion-apply-templates.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/expansion-apply-templates.test.ts.txt",
+    "sha256": "c3fa72a4020d1986c003f22fd95a6ac6b70b13353c90a0bb3c7ec5757a0850a5",
+    "bytes": 17218
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/transfer/tests/product-identifier-global-ownership-migration.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/product-identifier-global-ownership-migration.test.ts.txt",
+    "sha256": "b31189e4db4f3a4be4092aa308239377b0cc5948c84e746804bf67d42e0b7d15",
+    "bytes": 9849
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/transfer/tests/product-metadata-health.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/product-metadata-health.test.ts.txt",
+    "sha256": "a7901948598a66553af2ce65ca81076c8b11fcab46a5d34eb3b9bdadfce4c5eb",
+    "bytes": 2058
+  },
+  {
+    "original": "/tmp/test-audit-catalog-publication99-0f7kicd2/snapshots/transfer/tests/product-metadata-ingest-identity.test.ts",
+    "archived": "proposal/snapshots/transfer/tests/product-metadata-ingest-identity.test.ts.txt",
+    "sha256": "b7eef8effe81bdafa8c0101eae8184242ae781a9eb98b7cfd842cefda4cd9635",
+    "bytes": 2596
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/HANDOFF.json",
+    "archived": "operator-kit/HANDOFF.json",
+    "sha256": "ba583e173794970893da648716956826eddcb8de0da73895105cc43bf941a879",
+    "bytes": 4981
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/README.md",
+    "archived": "operator-kit/README.md",
+    "sha256": "d00e438c36519dadd80342f8d214a9078ccea44d741bf30ef90227541fcd75ed",
+    "bytes": 7094
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/amend-proof.py",
+    "archived": "operator-kit/amend-proof.py.txt",
+    "sha256": "72d9f7180878b8ccac35caa08fd5b900d63b6f1e61a13672d792d1485b12b694",
+    "bytes": 4579
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/artifact-hashes.json",
+    "archived": "operator-kit/artifact-hashes.json",
+    "sha256": "37506b5f722f1f64c757144eea6e23f9d3e3a919d51bb70326bdbe6c3fb68123",
+    "bytes": 3994
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/c3-approved-amendment/C3-recommendation-serialization.ts",
+    "archived": "operator-kit/c3-approved-amendment/C3-recommendation-serialization.ts.txt",
+    "sha256": "298cc691179accd3dbf8391704fca25df81a45982ebe3a0ad0f8b5bc89e6ff36",
+    "bytes": 26428
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/c3-approved-amendment/controls.json",
+    "archived": "operator-kit/c3-approved-amendment/controls.json",
+    "sha256": "c7b511585431eef2118599014bab4aa7c845730a7d0887cdebf646389ffbb865",
+    "bytes": 15578
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/c3-approved-amendment/disposition.json",
+    "archived": "operator-kit/c3-approved-amendment/disposition.json",
+    "sha256": "31d64ada9026e651aedfe7d1f9ef8ecab89335b5c9f4f24c4538e94e2745e639",
+    "bytes": 943
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/c3-approved-amendment/original-control.json",
+    "archived": "operator-kit/c3-approved-amendment/original-control.json",
+    "sha256": "87a47655987471150855902b48ae3d839adc529ed994e8f18f6df0a15e3a6d7f",
+    "bytes": 2551
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/c3-approved-amendment/original-mutant.ts",
+    "archived": "operator-kit/c3-approved-amendment/original-mutant.ts.txt",
+    "sha256": "e0cdcd5302b1d29e66e7ffc0dcb74d9705f5417aface954f11c35c5cfe496984",
+    "bytes": 26428
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/full-native-command.json",
+    "archived": "operator-kit/full-native-command.json",
+    "sha256": "7aa5b8147d6871308998b66a52cac647db5d940bdf8c286a9433da2ffa22d1f2",
+    "bytes": 1239
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/node-tap-source-evidence.json",
+    "archived": "operator-kit/node-tap-source-evidence.json",
+    "sha256": "cef8db1b82cf703158c23745114745d94f1a4dddb5b45fce442704e2a7276c11",
+    "bytes": 3602
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/intent.json",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/intent.json",
+    "sha256": "dfab9bb3c2f80809988895e54a87b81c8eb839e3c31aa13bcc9cad59f8067a12",
+    "bytes": 4541
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/originals/tests/admin-product-category-write-policy.test.ts",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/originals/tests/admin-product-category-write-policy.test.ts.txt",
+    "sha256": "d514f46097b447fe1b5dcbd3b295278faef6171b913a67984a72d56671f0ad9d",
+    "bytes": 767
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/originals/tests/admin-product-support-specs.test.ts",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/originals/tests/admin-product-support-specs.test.ts.txt",
+    "sha256": "0a699fb0d2bc8dc18029e9cdc870fd99c296525f3247c89bc944a5f2af0ec7e8",
+    "bytes": 6753
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/originals/tests/audit-product-metadata-script.test.ts",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/originals/tests/audit-product-metadata-script.test.ts.txt",
+    "sha256": "e5512246eb5bd26b0a50c5fd44cfc9c1030c38a8fb0aa3a38766df22745d268c",
+    "bytes": 3569
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/originals/tests/catalog-apply-executor-hardening-postgres.test.ts",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/originals/tests/catalog-apply-executor-hardening-postgres.test.ts.txt",
+    "sha256": "1d3ebeb58c69d1822e05dc192d278eb03ffe5c9d05671b3c5a8108b70ab1ca49",
+    "bytes": 12079
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/originals/tests/catalog-authority-historical-repair-migration.test.ts",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/originals/tests/catalog-authority-historical-repair-migration.test.ts.txt",
+    "sha256": "fe9ad82db99a589fdd2efd8a616303a06a7ee1cb6ff98943765d599f80b34182",
+    "bytes": 3000
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/originals/tests/catalog-authority-legacy-sync-retirement-migration.test.ts",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/originals/tests/catalog-authority-legacy-sync-retirement-migration.test.ts.txt",
+    "sha256": "8d275f1272daeae6368df33db91edb717dbe0e3d09ce1cdb655aa275b932789b",
+    "bytes": 4106
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/originals/tests/catalog-authority-lifecycle-repair.test.ts",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/originals/tests/catalog-authority-lifecycle-repair.test.ts.txt",
+    "sha256": "6d39e19cf0bcd141b8d331825d95d809d8bfdf47ff2c1dc06aeb9b81921f11d9",
+    "bytes": 2310
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/originals/tests/catalog-authority-product-spec-relationship-verification.test.ts",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/originals/tests/catalog-authority-product-spec-relationship-verification.test.ts.txt",
+    "sha256": "ea17f620d4a5eee9c4c4dea903d155982f1ac64da19d231dc1e48a1360b78309",
+    "bytes": 2223
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/originals/tests/catalog-authority-relationship-convergence-migration.test.ts",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/originals/tests/catalog-authority-relationship-convergence-migration.test.ts.txt",
+    "sha256": "60e55dba47fc6cf284c8dec4af3dea6f36e635465ded021d00294f6653bb9b05",
+    "bytes": 2127
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/originals/tests/catalog-authority-repair.test.ts",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/originals/tests/catalog-authority-repair.test.ts.txt",
+    "sha256": "122cb85071c3d033e087698fed73b50d62bdb72a19d64bec5aabc1041f8be27e",
+    "bytes": 6769
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/originals/tests/catalog-authority-schema-foundations-migration.test.ts",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/originals/tests/catalog-authority-schema-foundations-migration.test.ts.txt",
+    "sha256": "38c4775d77780e01c516e60bf2e7ec7678a9941fb7b425b0f3bfe3ef840302d4",
+    "bytes": 8919
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/originals/tests/expansion-apply-batch.test.ts",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/originals/tests/expansion-apply-batch.test.ts.txt",
+    "sha256": "b88065bfeeeba0bc6a2391b88f336c66829d796bf9db259b80353c708502bee0",
+    "bytes": 18779
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/originals/tests/expansion-apply-templates.test.ts",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/originals/tests/expansion-apply-templates.test.ts.txt",
+    "sha256": "c3fa72a4020d1986c003f22fd95a6ac6b70b13353c90a0bb3c7ec5757a0850a5",
+    "bytes": 17218
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/originals/tests/product-identifier-global-ownership-migration.test.ts",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/originals/tests/product-identifier-global-ownership-migration.test.ts.txt",
+    "sha256": "b31189e4db4f3a4be4092aa308239377b0cc5948c84e746804bf67d42e0b7d15",
+    "bytes": 9849
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/originals/tests/product-metadata-health.test.ts",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/originals/tests/product-metadata-health.test.ts.txt",
+    "sha256": "a7901948598a66553af2ce65ca81076c8b11fcab46a5d34eb3b9bdadfce4c5eb",
+    "bytes": 2058
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/originals/tests/product-metadata-ingest-identity.test.ts",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/originals/tests/product-metadata-ingest-identity.test.ts.txt",
+    "sha256": "b7eef8effe81bdafa8c0101eae8184242ae781a9eb98b7cfd842cefda4cd9635",
+    "bytes": 2596
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-cut-QpCNUU/receipt.json",
+    "archived": "operator-kit/operator-apply-cut-QpCNUU/receipt.json",
+    "sha256": "732f3e77d3dda165e476ea65021032a00adce3bb04becadb41495b18c3c3f33a",
+    "bytes": 2771
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/intent.json",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/intent.json",
+    "sha256": "13b4594990543b9e094be905de2dd04f9779c5719dfafcb45f68511230782e79",
+    "bytes": 4301
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/originals/tests/admin-product-category-write-policy.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/originals/tests/admin-product-category-write-policy.test.ts.txt",
+    "sha256": "d514f46097b447fe1b5dcbd3b295278faef6171b913a67984a72d56671f0ad9d",
+    "bytes": 767
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/originals/tests/admin-product-support-specs.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/originals/tests/admin-product-support-specs.test.ts.txt",
+    "sha256": "0a699fb0d2bc8dc18029e9cdc870fd99c296525f3247c89bc944a5f2af0ec7e8",
+    "bytes": 6753
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/originals/tests/audit-product-metadata-script.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/originals/tests/audit-product-metadata-script.test.ts.txt",
+    "sha256": "e5512246eb5bd26b0a50c5fd44cfc9c1030c38a8fb0aa3a38766df22745d268c",
+    "bytes": 3569
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/originals/tests/catalog-apply-executor-hardening-postgres.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/originals/tests/catalog-apply-executor-hardening-postgres.test.ts.txt",
+    "sha256": "1d3ebeb58c69d1822e05dc192d278eb03ffe5c9d05671b3c5a8108b70ab1ca49",
+    "bytes": 12079
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/originals/tests/catalog-authority-historical-repair-migration.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/originals/tests/catalog-authority-historical-repair-migration.test.ts.txt",
+    "sha256": "fe9ad82db99a589fdd2efd8a616303a06a7ee1cb6ff98943765d599f80b34182",
+    "bytes": 3000
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/originals/tests/catalog-authority-legacy-sync-retirement-migration.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/originals/tests/catalog-authority-legacy-sync-retirement-migration.test.ts.txt",
+    "sha256": "8d275f1272daeae6368df33db91edb717dbe0e3d09ce1cdb655aa275b932789b",
+    "bytes": 4106
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/originals/tests/catalog-authority-lifecycle-repair.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/originals/tests/catalog-authority-lifecycle-repair.test.ts.txt",
+    "sha256": "6d39e19cf0bcd141b8d331825d95d809d8bfdf47ff2c1dc06aeb9b81921f11d9",
+    "bytes": 2310
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/originals/tests/catalog-authority-product-spec-relationship-verification.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/originals/tests/catalog-authority-product-spec-relationship-verification.test.ts.txt",
+    "sha256": "ea17f620d4a5eee9c4c4dea903d155982f1ac64da19d231dc1e48a1360b78309",
+    "bytes": 2223
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/originals/tests/catalog-authority-relationship-convergence-migration.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/originals/tests/catalog-authority-relationship-convergence-migration.test.ts.txt",
+    "sha256": "60e55dba47fc6cf284c8dec4af3dea6f36e635465ded021d00294f6653bb9b05",
+    "bytes": 2127
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/originals/tests/catalog-authority-repair.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/originals/tests/catalog-authority-repair.test.ts.txt",
+    "sha256": "122cb85071c3d033e087698fed73b50d62bdb72a19d64bec5aabc1041f8be27e",
+    "bytes": 6769
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/originals/tests/catalog-authority-schema-foundations-migration.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/originals/tests/catalog-authority-schema-foundations-migration.test.ts.txt",
+    "sha256": "38c4775d77780e01c516e60bf2e7ec7678a9941fb7b425b0f3bfe3ef840302d4",
+    "bytes": 8919
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/originals/tests/expansion-apply-batch.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/originals/tests/expansion-apply-batch.test.ts.txt",
+    "sha256": "2d12291a8386f0c9633aa641d6258d10c1decb59bd88d83976db0ec5c73b84b9",
+    "bytes": 18669
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/originals/tests/expansion-apply-templates.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/originals/tests/expansion-apply-templates.test.ts.txt",
+    "sha256": "27145efd09abaffd8f57fdb232e02ca2e9e778321f4a3066392057af674ca1d4",
+    "bytes": 16522
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/originals/tests/product-identifier-global-ownership-migration.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/originals/tests/product-identifier-global-ownership-migration.test.ts.txt",
+    "sha256": "b31189e4db4f3a4be4092aa308239377b0cc5948c84e746804bf67d42e0b7d15",
+    "bytes": 9849
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/originals/tests/product-metadata-health.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/originals/tests/product-metadata-health.test.ts.txt",
+    "sha256": "a7901948598a66553af2ce65ca81076c8b11fcab46a5d34eb3b9bdadfce4c5eb",
+    "bytes": 2058
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/originals/tests/product-metadata-ingest-identity.test.ts",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/originals/tests/product-metadata-ingest-identity.test.ts.txt",
+    "sha256": "b7eef8effe81bdafa8c0101eae8184242ae781a9eb98b7cfd842cefda4cd9635",
+    "bytes": 2596
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-apply-transfer-JkGHcn/receipt.json",
+    "archived": "operator-kit/operator-apply-transfer-JkGHcn/receipt.json",
+    "sha256": "08af12a4373c0433292fc12af0b6f3dfa655ba5014107a9a32ebc8fcf961b8ab",
+    "bytes": 2541
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-candidates.json",
+    "archived": "operator-kit/operator-candidates.json",
+    "sha256": "63a68d1c259b59b96850a63373a99e029cad3fb13214ecbdc399909d31dac5d7",
+    "bytes": 15696
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-controls-normalized.json",
+    "archived": "operator-kit/operator-controls-normalized.json",
+    "sha256": "cf07e2595690aa86b1453310a9b239f85f968cf692acc5cd74eb92dd47a009f9",
+    "bytes": 15474
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-edit.cjs",
+    "archived": "operator-kit/operator-edit.cjs.txt",
+    "sha256": "914fb2adb87a82962e1ede374445ec6c781ca2131bcdf3f4fc150d9727059574",
+    "bytes": 3639
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-evidence.json",
+    "archived": "operator-kit/operator-evidence.json",
+    "sha256": "ffc90e9a2d878fdf00943961099ea5815e85015be0f3310f1a6787bcea1cf6bb",
+    "bytes": 39666
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-guard.cjs",
+    "archived": "operator-kit/operator-guard.cjs.txt",
+    "sha256": "15c32770cf23bbdd17d4ea28e54ad56d1fb0f8ee408af63b54f9b0a2e9a65c68",
+    "bytes": 15531
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C1-oil-day-types/originals/src/lib/product-intake/expansion-apply-templates.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C1-oil-day-types/originals/src/lib/product-intake/expansion-apply-templates.ts.txt",
+    "sha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "bytes": 34573
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C1-oil-day-types-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C1-oil-day-types-after.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C1-oil-day-types-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C1-oil-day-types-after.tap",
+    "sha256": "2cf9190e972aba6d00e6671e967c4446454f127bc0f49c425bede7d771860e13",
+    "bytes": 325
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C1-oil-day-types-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C1-oil-day-types-before.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C1-oil-day-types-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C1-oil-day-types-before.tap",
+    "sha256": "cf92ec3aa816e34246dbdb4da50b3fe83a17fc45c6f97960b4ad22a0e09b9e71",
+    "bytes": 326
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C1-oil-day-types-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C1-oil-day-types-fault.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C1-oil-day-types-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C1-oil-day-types-fault.tap",
+    "sha256": "4aa737fb0515fae3a8edc99373bec4f33543ca16a0c50fd78fee8eeb527636b8",
+    "bytes": 1365
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-mask-payload-role-literal/originals/src/lib/product-intake/expansion-apply-templates.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-mask-payload-role-literal/originals/src/lib/product-intake/expansion-apply-templates.ts.txt",
+    "sha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "bytes": 34573
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-mask-payload-role-literal-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-mask-payload-role-literal-after.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-mask-payload-role-literal-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-mask-payload-role-literal-after.tap",
+    "sha256": "1634c9a1a1c60ffd86e984d957e23858402989aa4e7afd4de05f6e5f8cddb7af",
+    "bytes": 326
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-mask-payload-role-literal-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-mask-payload-role-literal-before.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-mask-payload-role-literal-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-mask-payload-role-literal-before.tap",
+    "sha256": "25d53ede9b5126f027d62ea4e41a2a797af6d1a0a4e3a0e7c9b64cc4056f44e5",
+    "bytes": 326
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-mask-payload-role-literal-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-mask-payload-role-literal-fault.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-mask-payload-role-literal-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-mask-payload-role-literal-fault.tap",
+    "sha256": "24a64e22a8a020a9660f2e538d1450c6b9c40f867f04aff46e44535cabacd4be",
+    "bytes": 1132
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-mask-role-literal/originals/src/lib/product-intake/expansion-manifest.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-mask-role-literal/originals/src/lib/product-intake/expansion-manifest.ts.txt",
+    "sha256": "c82e49e141cb7912bff2c4720fd8468b0d337cf458b59f66fae5e13cb76093c9",
+    "bytes": 26902
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-mask-role-literal-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-mask-role-literal-after.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-mask-role-literal-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-mask-role-literal-after.tap",
+    "sha256": "552441193b7bbecf7e4bfdcf6f640f7848db70379daa33e642868faf786e330a",
+    "bytes": 325
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-mask-role-literal-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-mask-role-literal-before.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-mask-role-literal-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-mask-role-literal-before.tap",
+    "sha256": "288914ef480711ada3e5daa5b8b5e4bc6c2bbbd6b8906506660c2e3c4f7ba009",
+    "bytes": 327
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-mask-role-literal-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-mask-role-literal-fault.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-mask-role-literal-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-mask-role-literal-fault.tap",
+    "sha256": "3ee3917de493fb85f2e351f6e3f53e126584a9b929478032b498498e001ca19b",
+    "bytes": 1187
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-row-category/originals/src/lib/product-intake/expansion-apply-templates.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-row-category/originals/src/lib/product-intake/expansion-apply-templates.ts.txt",
+    "sha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "bytes": 34573
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-row-category-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-row-category-after.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-row-category-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-row-category-after.tap",
+    "sha256": "1b4dfc917bcf46fe97447c0a25b609be0bc83247426e104e505d353d88205698",
+    "bytes": 325
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-row-category-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-row-category-before.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-row-category-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-row-category-before.tap",
+    "sha256": "618b47668bae18a03e48668c4983fce2610bd0d73095995c69f00f56aec1f6a4",
+    "bytes": 324
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-row-category-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-row-category-fault.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-row-category-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-row-category-fault.tap",
+    "sha256": "8512ced63bba9f6d714b86ee739190f46616272d9f11d8241f7cace097a4d4eb",
+    "bytes": 1099
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-row-role/originals/src/lib/product-intake/expansion-apply-templates.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-row-role/originals/src/lib/product-intake/expansion-apply-templates.ts.txt",
+    "sha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "bytes": 34573
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-row-role-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-row-role-after.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-row-role-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-row-role-after.tap",
+    "sha256": "395ecb94606347968cec0cf9babdea6b4d2b2f9cca0405f0ec8919f7e0bd7c75",
+    "bytes": 324
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-row-role-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-row-role-before.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-row-role-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-row-role-before.tap",
+    "sha256": "4d8cc4b20116d9cccfe1baf792068b102ade512c4285ca1e83029c1e3485eb8f",
+    "bytes": 327
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-row-role-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-row-role-fault.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C2-row-role-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C2-row-role-fault.tap",
+    "sha256": "d7a32df293f168abaf8f94eecb184a587b66c6cc8eeb05873dd010e68e459656",
+    "bytes": 1107
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C3-recommendation-serialization/originals/src/lib/product-intake/expansion-apply.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C3-recommendation-serialization/originals/src/lib/product-intake/expansion-apply.ts.txt",
+    "sha256": "d1b710c3b9ff424fbb09984451d3695d701ea1f90fdbdf12bd7d711295b8c618",
+    "bytes": 26389
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C3-recommendation-serialization-after.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C3-recommendation-serialization-after.command.json",
+    "sha256": "2a9c6b54e2cfb10a487a9ef99e83215aebb92bb13f1fb205ee3176c7be368dd8",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C3-recommendation-serialization-after.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C3-recommendation-serialization-after.tap",
+    "sha256": "774b92b593580ccadc046e5f1abaa8e33618f121b791f44f1b7ddf5959c2d582",
+    "bytes": 315
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C3-recommendation-serialization-before.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C3-recommendation-serialization-before.command.json",
+    "sha256": "2a9c6b54e2cfb10a487a9ef99e83215aebb92bb13f1fb205ee3176c7be368dd8",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C3-recommendation-serialization-before.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C3-recommendation-serialization-before.tap",
+    "sha256": "4cd7baff4b523bcdb77c12a1111113ce86eebf4c768476eeea7b261a2efe6f87",
+    "bytes": 315
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C3-recommendation-serialization-fault.command.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C3-recommendation-serialization-fault.command.json",
+    "sha256": "2a9c6b54e2cfb10a487a9ef99e83215aebb92bb13f1fb205ee3176c7be368dd8",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/C3-recommendation-serialization-fault.tap",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/C3-recommendation-serialization-fault.tap",
+    "sha256": "7c142dbf5018384ce0860992ef067e66349ea9fc6178e6e5f00272dcfe37ad94",
+    "bytes": 21149
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/src/lib/product-intake/expansion-apply-templates.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/src/lib/product-intake/expansion-apply-templates.ts.txt",
+    "sha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "bytes": 34573
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/src/lib/product-intake/expansion-apply.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/src/lib/product-intake/expansion-apply.ts.txt",
+    "sha256": "d1b710c3b9ff424fbb09984451d3695d701ea1f90fdbdf12bd7d711295b8c618",
+    "bytes": 26389
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/src/lib/product-intake/expansion-manifest.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/src/lib/product-intake/expansion-manifest.ts.txt",
+    "sha256": "c82e49e141cb7912bff2c4720fd8468b0d337cf458b59f66fae5e13cb76093c9",
+    "bytes": 26902
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/tests/admin-product-category-write-policy.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/tests/admin-product-category-write-policy.test.ts.txt",
+    "sha256": "d514f46097b447fe1b5dcbd3b295278faef6171b913a67984a72d56671f0ad9d",
+    "bytes": 767
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/tests/admin-product-support-specs.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/tests/admin-product-support-specs.test.ts.txt",
+    "sha256": "0a699fb0d2bc8dc18029e9cdc870fd99c296525f3247c89bc944a5f2af0ec7e8",
+    "bytes": 6753
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/tests/audit-product-metadata-script.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/tests/audit-product-metadata-script.test.ts.txt",
+    "sha256": "e5512246eb5bd26b0a50c5fd44cfc9c1030c38a8fb0aa3a38766df22745d268c",
+    "bytes": 3569
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/tests/catalog-apply-executor-hardening-postgres.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/tests/catalog-apply-executor-hardening-postgres.test.ts.txt",
+    "sha256": "1d3ebeb58c69d1822e05dc192d278eb03ffe5c9d05671b3c5a8108b70ab1ca49",
+    "bytes": 12079
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/tests/catalog-authority-historical-repair-migration.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/tests/catalog-authority-historical-repair-migration.test.ts.txt",
+    "sha256": "fe9ad82db99a589fdd2efd8a616303a06a7ee1cb6ff98943765d599f80b34182",
+    "bytes": 3000
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/tests/catalog-authority-legacy-sync-retirement-migration.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/tests/catalog-authority-legacy-sync-retirement-migration.test.ts.txt",
+    "sha256": "8d275f1272daeae6368df33db91edb717dbe0e3d09ce1cdb655aa275b932789b",
+    "bytes": 4106
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/tests/catalog-authority-lifecycle-repair.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/tests/catalog-authority-lifecycle-repair.test.ts.txt",
+    "sha256": "6d39e19cf0bcd141b8d331825d95d809d8bfdf47ff2c1dc06aeb9b81921f11d9",
+    "bytes": 2310
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/tests/catalog-authority-product-spec-relationship-verification.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/tests/catalog-authority-product-spec-relationship-verification.test.ts.txt",
+    "sha256": "ea17f620d4a5eee9c4c4dea903d155982f1ac64da19d231dc1e48a1360b78309",
+    "bytes": 2223
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/tests/catalog-authority-relationship-convergence-migration.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/tests/catalog-authority-relationship-convergence-migration.test.ts.txt",
+    "sha256": "60e55dba47fc6cf284c8dec4af3dea6f36e635465ded021d00294f6653bb9b05",
+    "bytes": 2127
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/tests/catalog-authority-repair.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/tests/catalog-authority-repair.test.ts.txt",
+    "sha256": "122cb85071c3d033e087698fed73b50d62bdb72a19d64bec5aabc1041f8be27e",
+    "bytes": 6769
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/tests/catalog-authority-schema-foundations-migration.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/tests/catalog-authority-schema-foundations-migration.test.ts.txt",
+    "sha256": "38c4775d77780e01c516e60bf2e7ec7678a9941fb7b425b0f3bfe3ef840302d4",
+    "bytes": 8919
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/tests/expansion-apply-batch.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/tests/expansion-apply-batch.test.ts.txt",
+    "sha256": "bcbe4a6111c1ba2e7d30d2de1834910f19adc0ad7ce6d4d12060c90b469df6f5",
+    "bytes": 18453
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/tests/expansion-apply-templates.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/tests/expansion-apply-templates.test.ts.txt",
+    "sha256": "a590852fd6258fb798e7781131a6e07307049e3c0b6b093cf658a041bb6b77d4",
+    "bytes": 16037
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/tests/product-identifier-global-ownership-migration.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/tests/product-identifier-global-ownership-migration.test.ts.txt",
+    "sha256": "b31189e4db4f3a4be4092aa308239377b0cc5948c84e746804bf67d42e0b7d15",
+    "bytes": 9849
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/tests/product-metadata-health.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/tests/product-metadata-health.test.ts.txt",
+    "sha256": "a7901948598a66553af2ce65ca81076c8b11fcab46a5d34eb3b9bdadfce4c5eb",
+    "bytes": 2058
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/all-originals/tests/product-metadata-ingest-identity.test.ts",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/all-originals/tests/product-metadata-ingest-identity.test.ts.txt",
+    "sha256": "b7eef8effe81bdafa8c0101eae8184242ae781a9eb98b7cfd842cefda4cd9635",
+    "bytes": 2596
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/complete.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/complete.json",
+    "sha256": "99ffe9c71986b56205ac72337f7e26f321115779bf7b79191245bd2b3fb47d0f",
+    "bytes": 80630
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/intent.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/intent.json",
+    "sha256": "6ee6375feb3b3b485d7c9610c40641209f8dc2c756380a774f1edb47bdd9b3b0",
+    "bytes": 2706
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-cut-YIemy2/receipt.json",
+    "archived": "operator-kit/operator-mutations-cut-YIemy2/receipt.json",
+    "sha256": "266c80b901705f2f7a511544c97ad12cadcb81f0d10937b005931eaa6815b30f",
+    "bytes": 806362
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C1-oil-day-types/originals/src/lib/product-intake/expansion-apply-templates.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C1-oil-day-types/originals/src/lib/product-intake/expansion-apply-templates.ts.txt",
+    "sha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "bytes": 34573
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C1-oil-day-types-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C1-oil-day-types-after.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C1-oil-day-types-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C1-oil-day-types-after.tap",
+    "sha256": "b541039bfb19ac8dc4f5685850003bfcca18de825c6e6652a964a89dfa77c4e0",
+    "bytes": 325
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C1-oil-day-types-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C1-oil-day-types-before.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C1-oil-day-types-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C1-oil-day-types-before.tap",
+    "sha256": "34ec9e0e1ba81058bacef3a914c8ea819ce1415d42adb8c4a098cdbb4717868c",
+    "bytes": 323
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C1-oil-day-types-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C1-oil-day-types-fault.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C1-oil-day-types-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C1-oil-day-types-fault.tap",
+    "sha256": "a5208038516a452c659ab9aa4d121604586ebc7fbcf6d18e43e87a4f2cb78206",
+    "bytes": 1363
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-mask-payload-role-literal/originals/src/lib/product-intake/expansion-apply-templates.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-mask-payload-role-literal/originals/src/lib/product-intake/expansion-apply-templates.ts.txt",
+    "sha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "bytes": 34573
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-mask-payload-role-literal-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-mask-payload-role-literal-after.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-mask-payload-role-literal-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-mask-payload-role-literal-after.tap",
+    "sha256": "ebb891167a65ae6b117370978e532577fc2fb06f73f60011383fca2323f7afad",
+    "bytes": 326
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-mask-payload-role-literal-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-mask-payload-role-literal-before.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-mask-payload-role-literal-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-mask-payload-role-literal-before.tap",
+    "sha256": "c5ff31c8eb6b0d258e3b433807d0ba7c4a4d19e4ef7d2ba2aa87a93268683fd2",
+    "bytes": 321
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-mask-payload-role-literal-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-mask-payload-role-literal-fault.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-mask-payload-role-literal-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-mask-payload-role-literal-fault.tap",
+    "sha256": "2ed32d6a56df61f7bea918f89ff26d944f38019f36a054ad081f66d680060550",
+    "bytes": 1131
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-mask-role-literal/originals/src/lib/product-intake/expansion-manifest.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-mask-role-literal/originals/src/lib/product-intake/expansion-manifest.ts.txt",
+    "sha256": "c82e49e141cb7912bff2c4720fd8468b0d337cf458b59f66fae5e13cb76093c9",
+    "bytes": 26902
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-mask-role-literal-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-mask-role-literal-after.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-mask-role-literal-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-mask-role-literal-after.tap",
+    "sha256": "a47e5bbbc1899131cc2308854cc6e5e7829b9d79fcfba8c6d9d447edec4652ef",
+    "bytes": 325
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-mask-role-literal-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-mask-role-literal-before.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-mask-role-literal-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-mask-role-literal-before.tap",
+    "sha256": "9e76e68ed74622b9670f9b81c8dc599ca72110a9ad9471540868e7587c962579",
+    "bytes": 326
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-mask-role-literal-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-mask-role-literal-fault.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-mask-role-literal-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-mask-role-literal-fault.tap",
+    "sha256": "8a0633cd9b19febc24b94c73ca1c557789af1644bf830e909cc1217ce40df2fb",
+    "bytes": 1184
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-row-category/originals/src/lib/product-intake/expansion-apply-templates.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-row-category/originals/src/lib/product-intake/expansion-apply-templates.ts.txt",
+    "sha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "bytes": 34573
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-row-category-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-row-category-after.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-row-category-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-row-category-after.tap",
+    "sha256": "a8492848135a94415ec59b38519793a9bafcdc06fc30db84e35ddc6c27461944",
+    "bytes": 326
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-row-category-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-row-category-before.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-row-category-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-row-category-before.tap",
+    "sha256": "9bd7b3e23985215a4ff8f32dae9de6a8cbc4ea5fadc9d82e24dab3ee09de7b6a",
+    "bytes": 325
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-row-category-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-row-category-fault.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-row-category-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-row-category-fault.tap",
+    "sha256": "69f500968fba94a3e79dc0c092026350042802370371ea9dfdebe2245ddb6da2",
+    "bytes": 1099
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-row-role/originals/src/lib/product-intake/expansion-apply-templates.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-row-role/originals/src/lib/product-intake/expansion-apply-templates.ts.txt",
+    "sha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "bytes": 34573
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-row-role-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-row-role-after.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-row-role-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-row-role-after.tap",
+    "sha256": "b4c8ba5588b0aab0b3757a75e672b29e5cdb5013f21ad72e045caeb18e1c8f7e",
+    "bytes": 323
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-row-role-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-row-role-before.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-row-role-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-row-role-before.tap",
+    "sha256": "950443ec93e7412aede0e14dc6c37033c9b5253abedfc237847834e3c63799ca",
+    "bytes": 324
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-row-role-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-row-role-fault.command.json",
+    "sha256": "3ead37dce43690834c3b339a913f78152c4ac41cc017fc85928835f7ba3f6a5a",
+    "bytes": 503
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C2-row-role-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C2-row-role-fault.tap",
+    "sha256": "2797ac77b6a1b1d3395048b800105a6d05b9d45682704e8068609a71aaff4edd",
+    "bytes": 1107
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C3-recommendation-serialization/originals/src/lib/product-intake/expansion-apply.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C3-recommendation-serialization/originals/src/lib/product-intake/expansion-apply.ts.txt",
+    "sha256": "d1b710c3b9ff424fbb09984451d3695d701ea1f90fdbdf12bd7d711295b8c618",
+    "bytes": 26389
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C3-recommendation-serialization-after.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C3-recommendation-serialization-after.command.json",
+    "sha256": "2a9c6b54e2cfb10a487a9ef99e83215aebb92bb13f1fb205ee3176c7be368dd8",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C3-recommendation-serialization-after.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C3-recommendation-serialization-after.tap",
+    "sha256": "96581e1cb39d31eb379571dd3d9aafe8f8c8b6a8a97610d7a3e9d4e7385949c7",
+    "bytes": 311
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C3-recommendation-serialization-before.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C3-recommendation-serialization-before.command.json",
+    "sha256": "2a9c6b54e2cfb10a487a9ef99e83215aebb92bb13f1fb205ee3176c7be368dd8",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C3-recommendation-serialization-before.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C3-recommendation-serialization-before.tap",
+    "sha256": "718afec4f27ec18c448c34cdac0120c67201e1ed3a8b7249998c76b6e9950ba6",
+    "bytes": 315
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C3-recommendation-serialization-fault.command.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C3-recommendation-serialization-fault.command.json",
+    "sha256": "2a9c6b54e2cfb10a487a9ef99e83215aebb92bb13f1fb205ee3176c7be368dd8",
+    "bytes": 493
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/C3-recommendation-serialization-fault.tap",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/C3-recommendation-serialization-fault.tap",
+    "sha256": "4440dde4fd55d6a9c5cffb857b50bf7f6234bef12c917faa3983936a4a8c0029",
+    "bytes": 21149
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/src/lib/product-intake/expansion-apply-templates.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/src/lib/product-intake/expansion-apply-templates.ts.txt",
+    "sha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "bytes": 34573
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/src/lib/product-intake/expansion-apply.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/src/lib/product-intake/expansion-apply.ts.txt",
+    "sha256": "d1b710c3b9ff424fbb09984451d3695d701ea1f90fdbdf12bd7d711295b8c618",
+    "bytes": 26389
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/src/lib/product-intake/expansion-manifest.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/src/lib/product-intake/expansion-manifest.ts.txt",
+    "sha256": "c82e49e141cb7912bff2c4720fd8468b0d337cf458b59f66fae5e13cb76093c9",
+    "bytes": 26902
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/tests/admin-product-category-write-policy.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/tests/admin-product-category-write-policy.test.ts.txt",
+    "sha256": "d514f46097b447fe1b5dcbd3b295278faef6171b913a67984a72d56671f0ad9d",
+    "bytes": 767
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/tests/admin-product-support-specs.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/tests/admin-product-support-specs.test.ts.txt",
+    "sha256": "0a699fb0d2bc8dc18029e9cdc870fd99c296525f3247c89bc944a5f2af0ec7e8",
+    "bytes": 6753
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/tests/audit-product-metadata-script.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/tests/audit-product-metadata-script.test.ts.txt",
+    "sha256": "e5512246eb5bd26b0a50c5fd44cfc9c1030c38a8fb0aa3a38766df22745d268c",
+    "bytes": 3569
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/tests/catalog-apply-executor-hardening-postgres.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/tests/catalog-apply-executor-hardening-postgres.test.ts.txt",
+    "sha256": "1d3ebeb58c69d1822e05dc192d278eb03ffe5c9d05671b3c5a8108b70ab1ca49",
+    "bytes": 12079
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/tests/catalog-authority-historical-repair-migration.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/tests/catalog-authority-historical-repair-migration.test.ts.txt",
+    "sha256": "fe9ad82db99a589fdd2efd8a616303a06a7ee1cb6ff98943765d599f80b34182",
+    "bytes": 3000
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/tests/catalog-authority-legacy-sync-retirement-migration.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/tests/catalog-authority-legacy-sync-retirement-migration.test.ts.txt",
+    "sha256": "8d275f1272daeae6368df33db91edb717dbe0e3d09ce1cdb655aa275b932789b",
+    "bytes": 4106
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/tests/catalog-authority-lifecycle-repair.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/tests/catalog-authority-lifecycle-repair.test.ts.txt",
+    "sha256": "6d39e19cf0bcd141b8d331825d95d809d8bfdf47ff2c1dc06aeb9b81921f11d9",
+    "bytes": 2310
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/tests/catalog-authority-product-spec-relationship-verification.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/tests/catalog-authority-product-spec-relationship-verification.test.ts.txt",
+    "sha256": "ea17f620d4a5eee9c4c4dea903d155982f1ac64da19d231dc1e48a1360b78309",
+    "bytes": 2223
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/tests/catalog-authority-relationship-convergence-migration.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/tests/catalog-authority-relationship-convergence-migration.test.ts.txt",
+    "sha256": "60e55dba47fc6cf284c8dec4af3dea6f36e635465ded021d00294f6653bb9b05",
+    "bytes": 2127
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/tests/catalog-authority-repair.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/tests/catalog-authority-repair.test.ts.txt",
+    "sha256": "122cb85071c3d033e087698fed73b50d62bdb72a19d64bec5aabc1041f8be27e",
+    "bytes": 6769
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/tests/catalog-authority-schema-foundations-migration.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/tests/catalog-authority-schema-foundations-migration.test.ts.txt",
+    "sha256": "38c4775d77780e01c516e60bf2e7ec7678a9941fb7b425b0f3bfe3ef840302d4",
+    "bytes": 8919
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/tests/expansion-apply-batch.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/tests/expansion-apply-batch.test.ts.txt",
+    "sha256": "b88065bfeeeba0bc6a2391b88f336c66829d796bf9db259b80353c708502bee0",
+    "bytes": 18779
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/tests/expansion-apply-templates.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/tests/expansion-apply-templates.test.ts.txt",
+    "sha256": "c3fa72a4020d1986c003f22fd95a6ac6b70b13353c90a0bb3c7ec5757a0850a5",
+    "bytes": 17218
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/tests/product-identifier-global-ownership-migration.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/tests/product-identifier-global-ownership-migration.test.ts.txt",
+    "sha256": "b31189e4db4f3a4be4092aa308239377b0cc5948c84e746804bf67d42e0b7d15",
+    "bytes": 9849
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/tests/product-metadata-health.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/tests/product-metadata-health.test.ts.txt",
+    "sha256": "a7901948598a66553af2ce65ca81076c8b11fcab46a5d34eb3b9bdadfce4c5eb",
+    "bytes": 2058
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/all-originals/tests/product-metadata-ingest-identity.test.ts",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/all-originals/tests/product-metadata-ingest-identity.test.ts.txt",
+    "sha256": "b7eef8effe81bdafa8c0101eae8184242ae781a9eb98b7cfd842cefda4cd9635",
+    "bytes": 2596
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/complete.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/complete.json",
+    "sha256": "06dd50c3bf7d995758b16e6d49af9eb10406d78c6ded7c70d4418d5895dcb234",
+    "bytes": 80635
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/intent.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/intent.json",
+    "sha256": "dd36372ca93d5423582ce8c51cebbdf24fddf6b641fd6233160e3c8a2bcfa74d",
+    "bytes": 2711
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD/receipt.json",
+    "archived": "operator-kit/operator-mutations-transfer-LuHPcD/receipt.json",
+    "sha256": "fa0feafc798a27b29a294d8ec738d564f3dcea34572d9b2432fba00c3ed789ad",
+    "bytes": 806482
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-native-proof.cjs",
+    "archived": "operator-kit/operator-native-proof.cjs.txt",
+    "sha256": "9e605235a50ae4f32194ac8f65fb3f5c192fb6ffb8b5c3a1a73983907a92e761",
+    "bytes": 1779
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-pins.json",
+    "archived": "operator-kit/operator-pins.json",
+    "sha256": "4ac6d1b4344d4296e8c91668d9c62bc352869ce8636f4d2c54f42612bf118a3d",
+    "bytes": 2391221
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-proof.cjs",
+    "archived": "operator-kit/operator-proof.cjs.txt",
+    "sha256": "3ae1bda88ceca8c1dbcf14fa635eda9f9204f2561556730994eb7d74e2f86dc0",
+    "bytes": 9081
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-readonly-preload.cjs",
+    "archived": "operator-kit/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-run-controls.cjs",
+    "archived": "operator-kit/operator-run-controls.cjs.txt",
+    "sha256": "68c37c9b89beea2ae1af205ee8b4a42c59fc0b31e8207ccb190ffdb9d6ff9455",
+    "bytes": 8051
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-selected-closure.json",
+    "archived": "operator-kit/operator-selected-closure.json",
+    "sha256": "a64682ec5bbdbbe41ff1da4838f9e0f76ab684489950243786999e8db1811c93",
+    "bytes": 111042
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/preliminary-tool-pins.json",
+    "archived": "operator-kit/preliminary-tool-pins.json",
+    "sha256": "dded9463a2f670c77d2b2d19008f6b123552ef83e1192beed88ec710980cbf9a",
+    "bytes": 2389940
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/preparation-receipt.txt",
+    "archived": "operator-kit/preparation-receipt.txt",
+    "sha256": "eaeed15a4d8bff94ab1e520813633e752fd0fc8e65db9c4c70d1517e62aa74f3",
+    "bytes": 568
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/prepare-pins.cjs",
+    "archived": "operator-kit/prepare-pins.cjs.txt",
+    "sha256": "b59513b1427da823a1cec1d50d4e97f5ca1188de3d0116b7bfb35a021dceeb59",
+    "bytes": 15076
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/prepare-tools.py",
+    "archived": "operator-kit/prepare-tools.py.txt",
+    "sha256": "3c1f532e1a87694b52871d79b57adc37bf8423ff6f84a99c33c9ff491fa2d7e1",
+    "bytes": 10612
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/proof-attestation-receipt.txt",
+    "archived": "operator-kit/proof-attestation-receipt.txt",
+    "sha256": "a0968b4bc13d059ea136a37a03c05ddb8e6c1d79143f6c0399f3ecde70691e6d",
+    "bytes": 435
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/proof-attestation.cjs",
+    "archived": "operator-kit/proof-attestation.cjs.txt",
+    "sha256": "75a8ae4aab76f0c0df2613f7dcdb5767f142893832ca49ba6706167cef2f51a0",
+    "bytes": 5232
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/static-controls-receipt.txt",
+    "archived": "operator-kit/static-controls-receipt.txt",
+    "sha256": "e8362324e420a6978c4331b0e2e0b643d57e1d0205fd99a7d608efb4463c4c35",
+    "bytes": 410
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/static-editor-receipt.txt",
+    "archived": "operator-kit/static-editor-receipt.txt",
+    "sha256": "a7a42c4e60a25683851350ec5f0277992f75def69e21d55db374c6c0602379bd",
+    "bytes": 461
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/static-integrity-receipt.txt",
+    "archived": "operator-kit/static-integrity-receipt.txt",
+    "sha256": "6949ff05ded824801205234d4fdfc913f06ac37d796f22f56ece416001ecc6df",
+    "bytes": 752
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/static-integrity.cjs",
+    "archived": "operator-kit/static-integrity.cjs.txt",
+    "sha256": "1326d0d1cffb34ad626c84fe6bb8421820dc5f021996de2889a29c849ac31599",
+    "bytes": 2457
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/template-delta.patch",
+    "archived": "operator-kit/template-delta.patch",
+    "sha256": "d81ea912bb95874fcebd6ee0f1cabfcadce63c96a3dbff302f9190fa2a64ffef",
+    "bytes": 26468
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/template-originals/operator-edit.cjs",
+    "archived": "operator-kit/template-originals/operator-edit.cjs.txt",
+    "sha256": "6b45132ad37e1583695c047469e6232b286a0619ed8d2db3a335432ef0455d6c",
+    "bytes": 3639
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/template-originals/operator-guard.cjs",
+    "archived": "operator-kit/template-originals/operator-guard.cjs.txt",
+    "sha256": "1b4b20d2ddd513790e3ce880ae0217b627ac3b58ac16bf55271282ea000d42ea",
+    "bytes": 15791
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/template-originals/operator-native-proof.cjs",
+    "archived": "operator-kit/template-originals/operator-native-proof.cjs.txt",
+    "sha256": "549f54e76cb4a6f344899c3b9c510e1f2cc275851b61acdd31b1554e72fc028f",
+    "bytes": 1877
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/template-originals/operator-pins.json",
+    "archived": "operator-kit/template-originals/operator-pins.json",
+    "sha256": "9fbdea960d87acb674473172b4d6d797f49496d8b8faafad0aad0b24cb4f6ad5",
+    "bytes": 2291883
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/template-originals/operator-proof.cjs",
+    "archived": "operator-kit/template-originals/operator-proof.cjs.txt",
+    "sha256": "9784400ba6f2ce2fb4ecc35e1027ffb3351e978f00ae087ecfd180ba09e88d15",
+    "bytes": 5725
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/template-originals/operator-readonly-preload.cjs",
+    "archived": "operator-kit/template-originals/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/template-originals/operator-run-controls.cjs",
+    "archived": "operator-kit/template-originals/operator-run-controls.cjs.txt",
+    "sha256": "b883327d047f4152cfdcaa1dddd9a81c4d6c93ae540ac191e3430a582d8b0a91",
+    "bytes": 8050
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-tools-k9e7uyhg/template-provenance.json",
+    "archived": "operator-kit/template-provenance.json",
+    "sha256": "b93c5fc937ed501bcb02843e378c23d01014e336826e66c7a4d86c8587a34c05",
+    "bytes": 923
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-independent.md",
+    "archived": "independent-review/test-audit-catalog99-independent.md",
+    "sha256": "9240e249e4619fd7b5a66c6096ab358876dcd5f85f47be38410b6fd0d9444e48",
+    "bytes": 14628
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-independent-static.json",
+    "archived": "independent-test-audit-catalog99-independent-static.json/test-audit-catalog99-independent-static.json",
+    "sha256": "270bae67cd59f15b0eccc8392836731542ac66ec73a1601a0b65cf2f2097f10e",
+    "bytes": 8107
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-independent-amendment.cjs",
+    "archived": "independent-test-audit-catalog99-independent-amendment.cjs/test-audit-catalog99-independent-amendment.cjs.txt",
+    "sha256": "58cf66e4a12eb0dcdeb622d4e69c28f298c543428931cbef8a7335e9103d7d1f",
+    "bytes": 2125
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-independent-amendment.json",
+    "archived": "independent-test-audit-catalog99-independent-amendment.json/test-audit-catalog99-independent-amendment.json",
+    "sha256": "41cd36660fea8437e7a2b1ccf6017ae611a8a118d1176901d6e01a15d6a52ae9",
+    "bytes": 1032
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-independent-receipt.json",
+    "archived": "independent-test-audit-catalog99-independent-receipt.json/test-audit-catalog99-independent-receipt.json",
+    "sha256": "42bf732366e98e11048071ac2bc6d402e0452b0e0864841f9917e88988a5b292",
+    "bytes": 1187
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-independent-check.cjs",
+    "archived": "independent-test-audit-catalog99-independent-check.cjs/test-audit-catalog99-independent-check.cjs.txt",
+    "sha256": "2f28f8741ba3c5b82c6f6487d5926200ea69c76e6eb32f64ae9ac9c27f848de8",
+    "bytes": 5343
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-main-before-native.command.json",
+    "archived": "main-native-test-audit-catalog99-main-before-native.command.json/test-audit-catalog99-main-before-native.command.json",
+    "sha256": "c9abf62abb14ba735a315ed4bf102617edb9034a2b857192bc7b8afb17671391",
+    "bytes": 1227
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-main-before-native.result.json",
+    "archived": "main-native-test-audit-catalog99-main-before-native.result.json/test-audit-catalog99-main-before-native.result.json",
+    "sha256": "5c933ea9238f7d99137849a50f1ac55095629c55e362c02bc36883f73af3abde",
+    "bytes": 170
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-main-before-native.tap",
+    "archived": "main-native-test-audit-catalog99-main-before-native.tap/test-audit-catalog99-main-before-native.tap",
+    "sha256": "b3da42fed7e19a68828f224dac146b956baac76927fde7e9b8bda22ebde30652",
+    "bytes": 19598
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-main-transfer-native.command.json",
+    "archived": "main-native-test-audit-catalog99-main-transfer-native.command.json/test-audit-catalog99-main-transfer-native.command.json",
+    "sha256": "c9abf62abb14ba735a315ed4bf102617edb9034a2b857192bc7b8afb17671391",
+    "bytes": 1227
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-main-transfer-native.result.json",
+    "archived": "main-native-test-audit-catalog99-main-transfer-native.result.json/test-audit-catalog99-main-transfer-native.result.json",
+    "sha256": "5c933ea9238f7d99137849a50f1ac55095629c55e362c02bc36883f73af3abde",
+    "bytes": 170
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-main-transfer-native.tap",
+    "archived": "main-native-test-audit-catalog99-main-transfer-native.tap/test-audit-catalog99-main-transfer-native.tap",
+    "sha256": "3d4220a85d0cd6adc40890a75e0de00a9feb5171eb950a9864c1ef2ecef03673",
+    "bytes": 19598
+  },
+  {
+    "original": "/tmp/test-audit-catalog96-main-cut-native.command.json",
+    "archived": "main-native-test-audit-catalog96-main-cut-native.command.json/test-audit-catalog96-main-cut-native.command.json",
+    "sha256": "c9abf62abb14ba735a315ed4bf102617edb9034a2b857192bc7b8afb17671391",
+    "bytes": 1227
+  },
+  {
+    "original": "/tmp/test-audit-catalog96-main-cut-native.result.json",
+    "archived": "main-native-test-audit-catalog96-main-cut-native.result.json/test-audit-catalog96-main-cut-native.result.json",
+    "sha256": "135be298da94c5ff25a82c97ae1ab124ecbaadb9cda5a8e4246401b6f60011c1",
+    "bytes": 170
+  },
+  {
+    "original": "/tmp/test-audit-catalog96-main-cut-native.tap",
+    "archived": "main-native-test-audit-catalog96-main-cut-native.tap/test-audit-catalog96-main-cut-native.tap",
+    "sha256": "615f0603f210cdf78486aff289ce63b8327964d6b1d8805f81416aeca2f7db7f",
+    "bytes": 18996
+  },
+  {
+    "original": "/tmp/test-audit-catalog99-main-native-command.json",
+    "archived": "main-argv/test-audit-catalog99-main-native-command.json",
+    "sha256": "c9abf62abb14ba735a315ed4bf102617edb9034a2b857192bc7b8afb17671391",
+    "bytes": 1227
+  }
+]

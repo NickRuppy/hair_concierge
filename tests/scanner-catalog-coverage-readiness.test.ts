@@ -2,7 +2,6 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
-  classifyCandidate,
   classifyProductReadiness,
   fingerprint,
   selectActiveSupportedProducts,
@@ -81,7 +80,7 @@ test("scanner readiness discovers a dandruff-only product through its live autho
 })
 
 test("readiness classification is deterministic and only admits complete non-unknown candidates", () => {
-  const ready = classifyCandidate({
+  const ready = classifyProductReadiness({
     product_id: "a",
     category: "shampoo",
     has_barcode: false,
@@ -93,7 +92,7 @@ test("readiness classification is deterministic and only admits complete non-unk
   })
   assert.equal(ready.status, "ready_for_ean_research")
   assert.deepEqual(ready.blockers, [])
-  const blocked = classifyCandidate({
+  const blocked = classifyProductReadiness({
     product_id: "b",
     category: "shampoo",
     has_barcode: false,
@@ -118,7 +117,7 @@ test("readiness classification is deterministic and only admits complete non-unk
 })
 
 test("a secondary applicable role with an unknown verdict blocks the product", () => {
-  const result = classifyCandidate({
+  const result = classifyProductReadiness({
     product_id: "multi-role",
     category: "leave_in",
     has_barcode: false,

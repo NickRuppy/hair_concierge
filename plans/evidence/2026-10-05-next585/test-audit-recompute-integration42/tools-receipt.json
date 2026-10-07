@@ -1,0 +1,35 @@
+{
+  "status": "static tools ready; runtime unexecuted",
+  "tools": {
+    "guard.cjs": "d43a29b7fc60c9a4d9ce55f93b64be66b8866d1e67afa49a9542e87cb1f8b2bd",
+    "edit.cjs": "818ea06916d45255533274316949f60dffec27bbe38f29c3c0a5e423a0493d77",
+    "run-controls.cjs": "d28c19a89afc4272ddf161d509d61e3e1a198e431b4784a09acf446b86319da3",
+    "tool-pins.json": "d046b8fe55f68203328488215af4648519fdbd227074691938b1ddcd72cd931b",
+    "controls-normalized.json": "186f19da16e8a8a3a179f65c3de2a22be4865948488a5880eadf3ae917876a88",
+    "tools.md": "214ac228d84888f01db2a4790e497440cf7ec012e73cfab0f791f1281146298a",
+    "editor-check.json": "d4e12628b699888be7c418fd62cae2be53ccfce6b540ad86dda54c695cf94e8e",
+    "controls-check.json": "f5316afb6d90ada22363ed55c16db66343ca57270c461df65f44e4b3d1ac1e13"
+  },
+  "beforePhase": true,
+  "proofCounts": [
+    58,
+    58,
+    54
+  ],
+  "unrelatedCallbacks": 53,
+  "sourceReadset": 34,
+  "dependencyGuards": 374,
+  "nativeOrOwnerExecutions": 0,
+  "repositoryWrites": 0,
+  "sharedLock": "/tmp/test-audit-pruning-operator-lock",
+  "frozenProposalHashes": {
+    "manifest.json": "59c4589f2a4b9deb7b70ed603e8a6c5a865cc36071624259f8424fcce9bcbe13",
+    "sites.json": "68e9dd367b99d6ece49b738176658e4100ef2292784ae94516b23125847ed35b",
+    "candidates.json": "ebf13ec31c3a8ff14dba283904290c8da2dc9d243a1dc37929f65dacd8d2f605",
+    "controls.json": "c1ce96a719f518ed3080edd894eb739a2c726ace20c2c013ec80a8f46aa7cdb8",
+    "controls-normalized.json": "186f19da16e8a8a3a179f65c3de2a22be4865948488a5880eadf3ae917876a88",
+    "complete.diff": "b2c47358791d8fc279215833e778a5b21bbf016ccceb6d697dd85b4fd3010cac",
+    "complete-ledger.md": "bd786771e8c7466864889e6fe32e5c21a62e87c1483898b4844b63a843e3e625",
+    "layer-plan.md": "5e57da3fcd210e8e9e0e63a7ce9bc4b05a6d4eafe59eacafb197471903b70423"
+  }
+}

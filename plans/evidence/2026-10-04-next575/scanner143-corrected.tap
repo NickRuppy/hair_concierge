@@ -1,0 +1,725 @@
+TAP version 13
+# Subtest: normalizeDetectionBox: a quarter-frame box becomes 0..1 fractions of the frame
+ok 1 - normalizeDetectionBox: a quarter-frame box becomes 0..1 fractions of the frame
+  ---
+  duration_ms: 0.790084
+  ...
+# Subtest: normalizeDetectionBox: a box hanging over the frame edge is clamped into 0..1
+ok 2 - normalizeDetectionBox: a box hanging over the frame edge is clamped into 0..1
+  ---
+  duration_ms: 0.067166
+  ...
+# Subtest: normalizeDetectionBox: a frame with no intrinsic size yields a zero box
+ok 3 - normalizeDetectionBox: a frame with no intrinsic size yields a zero box
+  ---
+  duration_ms: 0.047875
+  ...
+# Subtest: unrotateDetectionBox: maps a box detected in the 90°-rotated retry frame back to the video
+ok 4 - unrotateDetectionBox: maps a box detected in the 90°-rotated retry frame back to the video
+  ---
+  duration_ms: 0.053458
+  ...
+# Subtest: unrotateDetectionBox: a full-frame rotated box maps back to the full frame
+ok 5 - unrotateDetectionBox: a full-frame rotated box maps back to the full frame
+  ---
+  duration_ms: 0.07975
+  ...
+# Subtest: mapBoxToCover: matching aspect ratios need no crop
+ok 6 - mapBoxToCover: matching aspect ratios need no crop
+  ---
+  duration_ms: 0.076042
+  ...
+# Subtest: mapBoxToCover: a portrait video in a 3:4 element crops top and bottom
+ok 7 - mapBoxToCover: a portrait video in a 3:4 element crops top and bottom
+  ---
+  duration_ms: 0.232208
+  ...
+# Subtest: mapBoxToCover: a landscape video crops on the long axis
+ok 8 - mapBoxToCover: a landscape video crops on the long axis
+  ---
+  duration_ms: 0.108583
+  ...
+# Subtest: mapBoxToCover: an unmeasured video or element yields a zero rect instead of NaN
+ok 9 - mapBoxToCover: an unmeasured video or element yields a zero rect instead of NaN
+  ---
+  duration_ms: 0.304083
+  ...
+# Subtest: nextDetectionState: a raw hit spots the barcode
+ok 10 - nextDetectionState: a raw hit spots the barcode
+  ---
+  duration_ms: 0.292625
+  ...
+# Subtest: nextDetectionState: a raw hit follows the barcode while already spotted
+ok 11 - nextDetectionState: a raw hit follows the barcode while already spotted
+  ---
+  duration_ms: 0.050417
+  ...
+# Subtest: nextDetectionState: an accepted decode reads the barcode
+ok 12 - nextDetectionState: an accepted decode reads the barcode
+  ---
+  duration_ms: 0.03725
+  ...
+# Subtest: nextDetectionState: empty attempts below the re-arm threshold hold the outline
+ok 13 - nextDetectionState: empty attempts below the re-arm threshold hold the outline
+  ---
+  duration_ms: 0.03975
+  ...
+# Subtest: nextDetectionState: the re-arm threshold clears the outline back to searching
+ok 14 - nextDetectionState: the re-arm threshold clears the outline back to searching
+  ---
+  duration_ms: 0.032125
+  ...
+# Subtest: nextDetectionState: a read outline is cleared by the same re-arm streak
+ok 15 - nextDetectionState: a read outline is cleared by the same re-arm streak
+  ---
+  duration_ms: 0.032042
+  ...
+# Subtest: nextDetectionState: a custom re-arm threshold is honoured
+ok 16 - nextDetectionState: a custom re-arm threshold is honoured
+  ---
+  duration_ms: 0.030125
+  ...
+# Subtest: nextDetectionState: an attempt restart always returns to searching
+ok 17 - nextDetectionState: an attempt restart always returns to searching
+  ---
+  duration_ms: 0.068875
+  ...
+# Subtest: isSameDetectionState: two searching states are the same
+ok 18 - isSameDetectionState: two searching states are the same
+  ---
+  duration_ms: 0.042375
+  ...
+# Subtest: isSameDetectionState: a different kind is a change
+ok 19 - isSameDetectionState: a different kind is a change
+  ---
+  duration_ms: 0.030667
+  ...
+# Subtest: isSameDetectionState: jitter below the half-percent tolerance is not a change
+ok 20 - isSameDetectionState: jitter below the half-percent tolerance is not a change
+  ---
+  duration_ms: 0.037
+  ...
+# Subtest: isSameDetectionState: a move past the tolerance is a change
+ok 21 - isSameDetectionState: a move past the tolerance is a change
+  ---
+  duration_ms: 0.031791
+  ...
+# Subtest: isSameDetectionState: a hair's move never counts, wherever in the frame it lands
+ok 22 - isSameDetectionState: a hair's move never counts, wherever in the frame it lands
+  ---
+  duration_ms: 0.031875
+  ...
+# Subtest: isSameDetectionState: a slow drift is reported once it has really accumulated
+ok 23 - isSameDetectionState: a slow drift is reported once it has really accumulated
+  ---
+  duration_ms: 0.068167
+  ...
+# Subtest: isSameDetectionState: a real move is a change
+ok 24 - isSameDetectionState: a real move is a change
+  ---
+  duration_ms: 0.027042
+  ...
+# Subtest: deriveViewfinderPresentation: a spotted barcode is drawn where the loop saw it
+ok 25 - deriveViewfinderPresentation: a spotted barcode is drawn where the loop saw it
+  ---
+  duration_ms: 0.058459
+  ...
+# Subtest: deriveViewfinderPresentation: searching draws no outline at all
+ok 26 - deriveViewfinderPresentation: searching draws no outline at all
+  ---
+  duration_ms: 0.031042
+  ...
+# Subtest: deriveViewfinderPresentation: a sheet over a spotted barcode goes static searching
+ok 27 - deriveViewfinderPresentation: a sheet over a spotted barcode goes static searching
+  ---
+  duration_ms: 0.029625
+  ...
+# Subtest: deriveViewfinderPresentation: the read confirm survives the sheet rising over it
+ok 28 - deriveViewfinderPresentation: the read confirm survives the sheet rising over it
+  ---
+  duration_ms: 0.030583
+  ...
+# Subtest: deriveViewfinderPresentation: the confirm window keeps the box the decode was read at
+ok 29 - deriveViewfinderPresentation: the confirm window keeps the box the decode was read at
+  ---
+  duration_ms: 0.028625
+  ...
+# Subtest: deriveViewfinderPresentation: the confirm outline survives the barcode leaving the frame
+ok 30 - deriveViewfinderPresentation: the confirm outline survives the barcode leaving the frame
+  ---
+  duration_ms: 0.028208
+  ...
+# Subtest: nextViewfinderAnnouncement: the idle hint starts in the region rather than being announced
+ok 31 - nextViewfinderAnnouncement: the idle hint starts in the region rather than being announced
+  ---
+  duration_ms: 0.083333
+  ...
+# Subtest: nextViewfinderAnnouncement: a barcode found and lost again announces once each way
+ok 32 - nextViewfinderAnnouncement: a barcode found and lost again announces once each way
+  ---
+  duration_ms: 0.045292
+  ...
+# Subtest: nextViewfinderAnnouncement: an accepted decode always announces
+ok 33 - nextViewfinderAnnouncement: an accepted decode always announces
+  ---
+  duration_ms: 0.03675
+  ...
+# Subtest: nextViewfinderAnnouncement: a situational hint announces even after the flip budget is spent
+ok 34 - nextViewfinderAnnouncement: a situational hint announces even after the flip budget is spent
+  ---
+  duration_ms: 0.088542
+  ...
+# Subtest: nextViewfinderAnnouncement: the mount publish does not spend the searching budget, so a later return-to-idle still announces
+ok 35 - nextViewfinderAnnouncement: the mount publish does not spend the searching budget, so a later return-to-idle still announces
+  ---
+  duration_ms: 0.054083
+  ...
+# Subtest: detectionEventForPauseChange: closing the sheet drops what the loop last saw
+ok 36 - detectionEventForPauseChange: closing the sheet drops what the loop last saw
+  ---
+  duration_ms: 0.040541
+  ...
+# Subtest: detectionEventForPauseChange: opening the sheet reports nothing
+ok 37 - detectionEventForPauseChange: opening the sheet reports nothing
+  ---
+  duration_ms: 0.025291
+  ...
+# Subtest: detectionEventForPauseChange: an unchanged pause state reports nothing
+ok 38 - detectionEventForPauseChange: an unchanged pause state reports nothing
+  ---
+  duration_ms: 0.025292
+  ...
+# Subtest: initialScanFlowState: starts scanning, live camera, nothing in flight
+ok 39 - initialScanFlowState: starts scanning, live camera, nothing in flight
+  ---
+  duration_ms: 0.830208
+  ...
+# Subtest: scanFlowReducer: returns the same state object for an action it ignores
+ok 40 - scanFlowReducer: returns the same state object for an action it ignores
+  ---
+  duration_ms: 0.192542
+  ...
+# Subtest: resolve_started: with showResolvingImmediately shows the skeleton at once
+ok 41 - resolve_started: with showResolvingImmediately shows the skeleton at once
+  ---
+  duration_ms: 0.124625
+  ...
+# Subtest: resolve_started: taking over from a submit clears the busy flag it superseded
+ok 42 - resolve_started: taking over from a submit clears the busy flag it superseded
+  ---
+  duration_ms: 0.096917
+  ...
+# Subtest: resolving_sheet_due: a stale timer never raises the skeleton
+ok 43 - resolving_sheet_due: a stale timer never raises the skeleton
+  ---
+  duration_ms: 0.133792
+  ...
+# Subtest: resolving_sheet_due: cannot replace an already-shown result with the skeleton
+ok 44 - resolving_sheet_due: cannot replace an already-shown result with the skeleton
+  ---
+  duration_ms: 0.076125
+  ...
+# Subtest: resolved: a stale response never repaints a step the user already left (F4)
+ok 45 - resolved: a stale response never repaints a step the user already left (F4)
+  ---
+  duration_ms: 0.089125
+  ...
+# Subtest: resolved: a superseded response loses to the newer request
+ok 46 - resolved: a superseded response loses to the newer request
+  ---
+  duration_ms: 0.049166
+  ...
+# Subtest: resolve_failed: settles the request but leaves the step to the component's toast
+ok 47 - resolve_failed: settles the request but leaves the step to the component's toast
+  ---
+  duration_ms: 0.190583
+  ...
+# Subtest: resolve_failed: a stale failure is dropped, so no toast storm on a left step (F1)
+ok 48 - resolve_failed: a stale failure is dropped, so no toast storm on a left step (F1)
+  ---
+  duration_ms: 0.282291
+  ...
+# Subtest: submit_started: marks the flow busy and clears a previous error
+ok 49 - submit_started: marks the flow busy and clears a previous error
+  ---
+  duration_ms: 0.15725
+  ...
+# Subtest: submitted: opens the pending sheet and clears the busy flag
+ok 50 - submitted: opens the pending sheet and clears the busy flag
+  ---
+  duration_ms: 0.0555
+  ...
+# Subtest: submit_failed: keeps the unknown sheet open and shows the error line (F17)
+ok 51 - submit_failed: keeps the unknown sheet open and shows the error line (F17)
+  ---
+  duration_ms: 0.045125
+  ...
+# Subtest: submit_failed: a stale failure never paints an error on a step the user left
+ok 52 - submit_failed: a stale failure never paints an error on a step the user left
+  ---
+  duration_ms: 0.03825
+  ...
+# Subtest: a resolve action cannot settle a submit request that happens to share its token
+ok 53 - a resolve action cannot settle a submit request that happens to share its token
+  ---
+  duration_ms: 0.037167
+  ...
+# Subtest: a submit action cannot settle a resolve request that happens to share its token
+ok 54 - a submit action cannot settle a resolve request that happens to share its token
+  ---
+  duration_ms: 0.065084
+  ...
+# Subtest: return_to_scanning: resets the sheet stack, the error and the in-flight request
+ok 55 - return_to_scanning: resets the sheet stack, the error and the in-flight request
+  ---
+  duration_ms: 0.041125
+  ...
+# Subtest: return_to_scanning: bumps the epoch so the Scanner restarts its session
+ok 56 - return_to_scanning: bumps the epoch so the Scanner restarts its session
+  ---
+  duration_ms: 0.031292
+  ...
+# Subtest: return_to_scanning: leaves the camera state alone
+ok 57 - return_to_scanning: leaves the camera state alone
+  ---
+  duration_ms: 0.035375
+  ...
+# Subtest: auxiliary_opened: ignored while a step sheet is already open
+ok 58 - auxiliary_opened: ignored while a step sheet is already open
+  ---
+  duration_ms: 0.041792
+  ...
+# Subtest: auxiliary_opened: the search sheet remembers why it was opened
+ok 59 - auxiliary_opened: the search sheet remembers why it was opened
+  ---
+  duration_ms: 0.035875
+  ...
+# Subtest: auxiliary_opened: the wishlist sheet never rewrites the search reason
+ok 60 - auxiliary_opened: the wishlist sheet never rewrites the search reason
+  ---
+  duration_ms: 0.032125
+  ...
+# Subtest: auxiliary_closed: returns to no auxiliary sheet without touching the step
+ok 61 - auxiliary_closed: returns to no auxiliary sheet without touching the step
+  ---
+  duration_ms: 0.030458
+  ...
+# Subtest: auxiliary_closed: without cancelSubmit leaves an in-flight submit's activeRequest untouched (the submitResearchFromSearch success/already_in_catalog continuation depends on this)
+ok 62 - auxiliary_closed: without cancelSubmit leaves an in-flight submit's activeRequest untouched (the submitResearchFromSearch success/already_in_catalog continuation depends on this)
+  ---
+  duration_ms: 0.033666
+  ...
+# Subtest: auxiliary_closed with cancelSubmit: reopening and submitting again still works (a fresh token owns the flow)
+ok 63 - auxiliary_closed with cancelSubmit: reopening and submitting again still works (a fresh token owns the flow)
+  ---
+  duration_ms: 0.054083
+  ...
+# Subtest: auxiliary_closed with cancelSubmit: a no-op when nothing is in flight (e.g. dismissing an idle sheet)
+ok 64 - auxiliary_closed with cancelSubmit: a no-op when nothing is in flight (e.g. dismissing an idle sheet)
+  ---
+  duration_ms: 0.035958
+  ...
+# Subtest: save_sheet_toggled: opens and closes the save sheet
+ok 65 - save_sheet_toggled: opens and closes the save sheet
+  ---
+  duration_ms: 0.038625
+  ...
+# Subtest: saved_state_changed: a save for product A never lands on product B's card (F5)
+ok 66 - saved_state_changed: a save for product A never lands on product B's card (F5)
+  ---
+  duration_ms: 0.038041
+  ...
+# Subtest: saved_state_changed: dropped when no result sheet is open at all
+ok 67 - saved_state_changed: dropped when no result sheet is open at all
+  ---
+  duration_ms: 0.028291
+  ...
+# Subtest: camera_retry: puts the camera back live from unavailable and from stalled
+ok 68 - camera_retry: puts the camera back live from unavailable and from stalled
+  ---
+  duration_ms: 0.033583
+  ...
+# Subtest: isDetectionPaused: only a bare scanning step with no sheet keeps decoding
+ok 69 - isDetectionPaused: only a bare scanning step with no sheet keeps decoding
+  ---
+  duration_ms: 0.061834
+  ...
+# Subtest: scanFlowReducer: a masked verdict proves the free tier, an unmasked one proves premium
+ok 70 - scanFlowReducer: a masked verdict proves the free tier, an unmasked one proves premium
+  ---
+  duration_ms: 0.106542
+  ...
+# Subtest: scanFlowReducer: a later evidence-free verdict does not unlock a proven free tier
+ok 71 - scanFlowReducer: a later evidence-free verdict does not unlock a proven free tier
+  ---
+  duration_ms: 0.040333
+  ...
+# Subtest: scanFlowReducer: a successful reveal only lands on the product it was started for
+ok 72 - scanFlowReducer: a successful reveal only lands on the product it was started for
+  ---
+  duration_ms: 0.105542
+  ...
+# Subtest: scanFlowReducer: 409 already_used flips the CTA; an empty list or any other failure only clears the busy flag
+ok 73 - scanFlowReducer: 409 already_used flips the CTA; an empty list or any other failure only clears the busy flag
+  ---
+  duration_ms: 0.1565
+  ...
+# Subtest: scanFlowReducer: C2 — a superseded reveal's late failure never erases a newer reveal's success (same product)
+ok 74 - scanFlowReducer: C2 — a superseded reveal's late failure never erases a newer reveal's success (same product)
+  ---
+  duration_ms: 0.057875
+  ...
+# Subtest: scanFlowReducer: a new resolve and a return to scanning both drop what the reveal showed
+ok 75 - scanFlowReducer: a new resolve and a return to scanning both drop what the reveal showed
+  ---
+  duration_ms: 0.046375
+  ...
+# Subtest: tier_upgraded: a verified purchase unlocks this surface and clears every free-tier pitch
+ok 76 - tier_upgraded: a verified purchase unlocks this surface and clears every free-tier pitch
+  ---
+  duration_ms: 0.063083
+  ...
+# Subtest: scanFlowReducer: the Premium sheet opens with its context, closes empty, and pauses detection
+ok 77 - scanFlowReducer: the Premium sheet opens with its context, closes empty, and pauses detection
+  ---
+  duration_ms: 0.041625
+  ...
+# Subtest: resolved: the category history survives return_to_scanning and accumulates across scans
+ok 78 - resolved: the category history survives return_to_scanning and accumulates across scans
+  ---
+  duration_ms: 0.039459
+  ...
+# Subtest: resolved: a mismatch verdict increments consecutiveMismatches, any other fit verdict resets it
+ok 79 - resolved: a mismatch verdict increments consecutiveMismatches, any other fit verdict resets it
+  ---
+  duration_ms: 0.04525
+  ...
+# Subtest: resolved: not_needed/unknown/pending leave a running mismatch streak untouched, not reset
+ok 80 - resolved: not_needed/unknown/pending leave a running mismatch streak untouched, not reset
+  ---
+  duration_ms: 0.033791
+  ...
+# Subtest: resolved: the trigger-layer decision is derived from tier/sessionNumber, not passed verbatim
+ok 81 - resolved: the trigger-layer decision is derived from tier/sessionNumber, not passed verbatim
+  ---
+  duration_ms: 0.08475
+  ...
+# Subtest: resolved: omitting tier/sessionNumber fails closed to no trigger at all (every pre-T10 call site)
+ok 82 - resolved: omitting tier/sessionNumber fails closed to no trigger at all (every pre-T10 call site)
+  ---
+  duration_ms: 0.040291
+  ...
+# Subtest: fatigue: once a proactive trigger has fired, a later resolve's own card is suppressed
+ok 83 - fatigue: once a proactive trigger has fired, a later resolve's own card is suppressed
+  ---
+  duration_ms: 0.048167
+  ...
+# Subtest: F2: a pending_submission resolve under would-be-qualifying conditions also leaves the budget unspent
+ok 84 - F2: a pending_submission resolve under would-be-qualifying conditions also leaves the budget unspent
+  ---
+  duration_ms: 0.040291
+  ...
+# Subtest: F2: after an unknown resolve, the NEXT in_catalog resolve can still pitch (budget was never spent)
+ok 85 - F2: after an unknown resolve, the NEXT in_catalog resolve can still pitch (budget was never spent)
+  ---
+  duration_ms: 0.053291
+  ...
+# Subtest: activeProactiveTrigger and zweiScansGleicheKategorie reset on a new resolve and on return_to_scanning
+ok 86 - activeProactiveTrigger and zweiScansGleicheKategorie reset on a new resolve and on return_to_scanning
+  ---
+  duration_ms: 0.060084
+  ...
+# Subtest: fatigue_hydrated: re-seeds an empty budget from a persisted value (simulates a remount)
+ok 87 - fatigue_hydrated: re-seeds an empty budget from a persisted value (simulates a remount)
+  ---
+  duration_ms: 0.038625
+  ...
+# Subtest: fatigue_hydrated: null (nothing persisted) leaves the budget open for this mount
+ok 88 - fatigue_hydrated: null (nothing persisted) leaves the budget open for this mount
+  ---
+  duration_ms: 0.027
+  ...
+# Subtest: fatigue_hydrated: never clobbers a budget already spent this same mount
+ok 89 - fatigue_hydrated: never clobbers a budget already spent this same mount
+  ---
+  duration_ms: 0.034375
+  ...
+# Subtest: createScanLoopController: starts stopped, unpaused and unscheduled
+ok 90 - createScanLoopController: starts stopped, unpaused and unscheduled
+  ---
+  duration_ms: 0.5275
+  ...
+# Subtest: nextLoopAction: schedules only when running, unpaused and nothing is outstanding
+ok 91 - nextLoopAction: schedules only when running, unpaused and nothing is outstanding
+  ---
+  duration_ms: 0.088667
+  ...
+# Subtest: nextLoopAction: never lets a second frame become outstanding, however often it is called
+ok 92 - nextLoopAction: never lets a second frame become outstanding, however often it is called
+  ---
+  duration_ms: 0.124167
+  ...
+# Subtest: nextLoopAction: pause → unpause → continuation keeps exactly one frame outstanding
+ok 93 - nextLoopAction: pause → unpause → continuation keeps exactly one frame outstanding
+  ---
+  duration_ms: 0.06525
+  ...
+# Subtest: setPauseReason: the two reasons are independent and never clear each other
+ok 94 - setPauseReason: the two reasons are independent and never clear each other
+  ---
+  duration_ms: 0.094667
+  ...
+# Subtest: setPauseReason: reports whether the pause set actually changed
+ok 95 - setPauseReason: reports whether the pause set actually changed
+  ---
+  duration_ms: 0.040958
+  ...
+# Subtest: setPauseReason: a real change bumps the generation and drops the clock anchor
+ok 96 - setPauseReason: a real change bumps the generation and drops the clock anchor
+  ---
+  duration_ms: 0.052208
+  ...
+# Subtest: isDetectionCurrent: a detection started before a pause is dropped on arrival
+ok 97 - isDetectionCurrent: a detection started before a pause is dropped on arrival
+  ---
+  duration_ms: 0.045542
+  ...
+# Subtest: isDetectionCurrent: an epoch restart invalidates an in-flight detection
+ok 98 - isDetectionCurrent: an epoch restart invalidates an in-flight detection
+  ---
+  duration_ms: 0.174958
+  ...
+# Subtest: isDetectionCurrent: a stale continuation after teardown is a no-op
+ok 99 - isDetectionCurrent: a stale continuation after teardown is a no-op
+  ---
+  duration_ms: 0.280083
+  ...
+# Subtest: advanceLoopClock: accrues the gap between consecutive running ticks
+ok 100 - advanceLoopClock: accrues the gap between consecutive running ticks
+  ---
+  duration_ms: 0.114917
+  ...
+# Subtest: advanceLoopClock: a single gap is capped so one long stall cannot burn the budget
+ok 101 - advanceLoopClock: a single gap is capped so one long stall cannot burn the budget
+  ---
+  duration_ms: 0.041417
+  ...
+# Subtest: advanceLoopClock: paused ticks accrue nothing and drop the anchor
+ok 102 - advanceLoopClock: paused ticks accrue nothing and drop the anchor
+  ---
+  duration_ms: 0.048042
+  ...
+# Subtest: advanceLoopClock: reports the search fallback exactly once, at 3000ms of active time
+ok 103 - advanceLoopClock: reports the search fallback exactly once, at 3000ms of active time
+  ---
+  duration_ms: 0.106583
+  ...
+# Subtest: advanceLoopClock: a decoded session never reports the fallback
+ok 104 - advanceLoopClock: a decoded session never reports the fallback
+  ---
+  duration_ms: 0.107667
+  ...
+# Subtest: streamReleasePlan: releasing the live stream clears both shared slots
+ok 105 - streamReleasePlan: releasing the live stream clears both shared slots
+  ---
+  duration_ms: 0.288167
+  ...
+# Subtest: streamReleasePlan: a stale effect instance cannot stop the newer instance's stream
+ok 106 - streamReleasePlan: a stale effect instance cannot stop the newer instance's stream
+  ---
+  duration_ms: 0.03825
+  ...
+# Subtest: streamReleasePlan: slots are judged independently
+ok 107 - streamReleasePlan: slots are judged independently
+  ---
+  duration_ms: 0.038667
+  ...
+# Subtest: MUTE_GRACE_MS: a foreground mute is tolerated for 3s before re-acquiring
+ok 108 - MUTE_GRACE_MS: a foreground mute is tolerated for 3s before re-acquiring
+  ---
+  duration_ms: 0.029292
+  ...
+# Subtest: isVideoStreamDead: a muted-but-live track is not dead
+ok 109 - isVideoStreamDead: a muted-but-live track is not dead
+  ---
+  duration_ms: 0.06725
+  ...
+# Subtest: isVideoStreamDead: ended tracks, no tracks and no stream are dead
+ok 110 - isVideoStreamDead: ended tracks, no tracks and no stream are dead
+  ---
+  duration_ms: 0.033833
+  ...
+# Subtest: recoveryFailureAction: a failed re-acquire after `ended` stalls
+ok 111 - recoveryFailureAction: a failed re-acquire after `ended` stalls
+  ---
+  duration_ms: 0.035625
+  ...
+# Subtest: recoveryFailureAction: a failed re-acquire on the mute path keeps the old stream
+ok 112 - recoveryFailureAction: a failed re-acquire on the mute path keeps the old stream
+  ---
+  duration_ms: 0.0285
+  ...
+# Subtest: recoveryFailureAction: any trigger stalls once the old stream is provably dead
+ok 113 - recoveryFailureAction: any trigger stalls once the old stream is provably dead
+  ---
+  duration_ms: 0.027625
+  ...
+# Subtest: createScanSessionState: returns a fresh object each call — mutating one does not leak into the next
+ok 114 - createScanSessionState: returns a fresh object each call — mutating one does not leak into the next
+  ---
+  duration_ms: 0.784709
+  ...
+# Subtest: createScanSessionState: two calls produce deeply-equal but distinct objects
+ok 115 - createScanSessionState: two calls produce deeply-equal but distinct objects
+  ---
+  duration_ms: 0.114625
+  ...
+# Subtest: restartScanSessionState: re-arms the guards that would block a second scan
+ok 116 - restartScanSessionState: re-arms the guards that would block a second scan
+  ---
+  duration_ms: 0.083708
+  ...
+# Subtest: restartScanSessionState: keeps loop lifecycle flags, not scan-attempt state
+ok 117 - restartScanSessionState: keeps loop lifecycle flags, not scan-attempt state
+  ---
+  duration_ms: 0.044
+  ...
+# Subtest: applyRawDetection: a third and fourth identical read do not re-fire
+ok 118 - applyRawDetection: a third and fourth identical read do not re-fire
+  ---
+  duration_ms: 0.09875
+  ...
+# Subtest: applyRawDetection: an invalid checksum resets the streak without firing
+ok 119 - applyRawDetection: an invalid checksum resets the streak without firing
+  ---
+  duration_ms: 0.044542
+  ...
+# Subtest: applyRawDetection: a raw hit clears the empty-detection re-arm counter
+ok 120 - applyRawDetection: a raw hit clears the empty-detection re-arm counter
+  ---
+  duration_ms: 0.044667
+  ...
+# Subtest: D6: after a restart the previously fired value is blocked while it stays in frame
+ok 121 - D6: after a restart the previously fired value is blocked while it stays in frame
+  ---
+  duration_ms: 0.112458
+  ...
+# Subtest: D6: three empty detections release the block and the value fires again
+ok 122 - D6: three empty detections release the block and the value fires again
+  ---
+  duration_ms: 0.191042
+  ...
+# Subtest: D6: a block released on an empty frame still needs two matching reads from cold
+ok 123 - D6: a block released on an empty frame still needs two matching reads from cold
+  ---
+  duration_ms: 0.251041
+  ...
+# Subtest: D6/C1: a blocked read resets the active clock and the hint telemetry
+ok 124 - D6/C1: a blocked read resets the active clock and the hint telemetry
+  ---
+  duration_ms: 0.07975
+  ...
+# Subtest: D6/C1: once the block is released the fallback re-arms from zero active time
+ok 125 - D6/C1: once the block is released the fallback re-arms from zero active time
+  ---
+  duration_ms: 0.047041
+  ...
+# Subtest: D6: a different barcode fires while another value is blocked
+ok 126 - D6: a different barcode fires while another value is blocked
+  ---
+  duration_ms: 0.032666
+  ...
+# Subtest: noteEmptyDetection: counts attempts and is idempotent past the re-arm threshold
+ok 127 - noteEmptyDetection: counts attempts and is idempotent past the re-arm threshold
+  ---
+  duration_ms: 0.034958
+  ...
+# Subtest: advanceActiveClock: accumulates only the ticks the caller reports
+ok 128 - advanceActiveClock: accumulates only the ticks the caller reports
+  ---
+  duration_ms: 0.025125
+  ...
+# Subtest: advanceActiveClock: ignores non-positive and non-finite deltas
+ok 129 - advanceActiveClock: ignores non-positive and non-finite deltas
+  ---
+  duration_ms: 0.031542
+  ...
+# Subtest: shouldFireTimeout: fires once at 3000ms of active time and never again
+ok 130 - shouldFireTimeout: fires once at 3000ms of active time and never again
+  ---
+  duration_ms: 0.030417
+  ...
+# Subtest: shouldFireTimeout: paused wall time never counts — a long sheet does not pop the search
+ok 131 - shouldFireTimeout: paused wall time never counts — a long sheet does not pop the search
+  ---
+  duration_ms: 0.066958
+  ...
+# Subtest: restartScanSessionState: resets the active clock so the fallback re-arms per attempt
+ok 132 - restartScanSessionState: resets the active clock so the fallback re-arms per attempt
+  ---
+  duration_ms: 0.034125
+  ...
+# Subtest: restartScanSessionState: with nothing fired, an existing block is carried forward
+ok 133 - restartScanSessionState: with nothing fired, an existing block is carried forward
+  ---
+  duration_ms: 0.027209
+  ...
+# Subtest: STABLE_READ_REQUIRED_MATCHES / REARM_EMPTY_DETECTIONS / SCAN_TIMEOUT_MS: pinned values
+ok 134 - STABLE_READ_REQUIRED_MATCHES / REARM_EMPTY_DETECTIONS / SCAN_TIMEOUT_MS: pinned values
+  ---
+  duration_ms: 0.027583
+  ...
+# Subtest: unfireDetection: a refused decode fires again from a fresh pair of reads
+ok 135 - unfireDetection: a refused decode fires again from a fresh pair of reads
+  ---
+  duration_ms: 0.037666
+  ...
+# Subtest: unfireDetection: only the value that actually fired is reverted
+ok 136 - unfireDetection: only the value that actually fired is reverted
+  ---
+  duration_ms: 0.026208
+  ...
+# Subtest: unfireDetection: leaves the D6 block alone
+ok 137 - unfireDetection: leaves the D6 block alone
+  ---
+  duration_ms: 0.025875
+  ...
+# Subtest: selectDetectionCandidate: with one result, that result
+ok 138 - selectDetectionCandidate: with one result, that result
+  ---
+  duration_ms: 0.046208
+  ...
+# Subtest: selectDetectionCandidate: no result at all
+ok 139 - selectDetectionCandidate: no result at all
+  ---
+  duration_ms: 0.02375
+  ...
+# Subtest: selectDetectionCandidate: skips the blocked value for a new one in the same frame
+ok 140 - selectDetectionCandidate: skips the blocked value for a new one in the same frame
+  ---
+  duration_ms: 0.0365
+  ...
+# Subtest: selectDetectionCandidate: everything blocked falls back to the first result
+ok 141 - selectDetectionCandidate: everything blocked falls back to the first result
+  ---
+  duration_ms: 0.029583
+  ...
+# Subtest: selectDetectionCandidate: an unreadable second code does not beat the blocked one
+ok 142 - selectDetectionCandidate: an unreadable second code does not beat the blocked one
+  ---
+  duration_ms: 0.028875
+  ...
+# Subtest: selectDetectionCandidate: with nothing blocked the first result wins
+ok 143 - selectDetectionCandidate: with nothing blocked the first result wins
+  ---
+  duration_ms: 0.033084
+  ...
+1..143
+# tests 143
+# suites 0
+# pass 143
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 361.350417

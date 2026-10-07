@@ -1,0 +1,105 @@
+TAP version 13
+# Subtest: adds a nullable versioned thumbnail URL that is cleared with canonical replacement
+ok 1 - adds a nullable versioned thumbnail URL that is cleared with canonical replacement
+  ---
+  duration_ms: 0.491666
+  ...
+# Subtest: wraps product intake approval and validates matching source-hash metadata
+ok 2 - wraps product intake approval and validates matching source-hash metadata
+  ---
+  duration_ms: 0.457042
+  ...
+# Subtest: adds service-role-only v3 search by delegating to v2 and restoring its order
+ok 3 - adds service-role-only v3 search by delegating to v2 and restoring its order
+  ---
+  duration_ms: 0.295709
+  ...
+# Subtest: alphaCoverage: fully transparent canvas is 0
+ok 4 - alphaCoverage: fully transparent canvas is 0
+  ---
+  duration_ms: 0.564459
+  ...
+# Subtest: alphaCoverage: matches the known opaque fraction of a synthetic square
+ok 5 - alphaCoverage: matches the known opaque fraction of a synthetic square
+  ---
+  duration_ms: 0.130333
+  ...
+# Subtest: haloScore: a uniformly bright subject has ~0 boundary halo
+ok 6 - haloScore: a uniformly bright subject has ~0 boundary halo
+  ---
+  duration_ms: 0.538833
+  ...
+# Subtest: haloScore: a warm dark ring around the boundary scores high
+ok 7 - haloScore: a warm dark ring around the boundary scores high
+  ---
+  duration_ms: 0.451125
+  ...
+# Subtest: haloScore: a dark but neutral (non-warm) boundary ring does not trigger the heuristic
+ok 8 - haloScore: a dark but neutral (non-warm) boundary ring does not trigger the heuristic
+  ---
+  duration_ms: 0.469542
+  ...
+# Subtest: haloScore: empty canvas does not divide by zero
+ok 9 - haloScore: empty canvas does not divide by zero
+  ---
+  duration_ms: 0.050541
+  ...
+# Subtest: a low-res source with a shadow halo reports BOTH reasons, not just the last one
+ok 10 - a low-res source with a shadow halo reports BOTH reasons, not just the last one
+  ---
+  duration_ms: 16.670125
+  ...
+# Subtest: a clean high-res source is ok with no reason at all
+ok 11 - a clean high-res source is ok with no reason at all
+  ---
+  duration_ms: 87.686958
+  ...
+# Subtest: dry-run accounts for image and no-image rows without writes
+ok 12 - dry-run accounts for image and no-image rows without writes
+  ---
+  duration_ms: 55.993834
+  ...
+# Subtest: apply creates a missing object and compare-and-set pointer
+ok 13 - apply creates a missing object and compare-and-set pointer
+  ---
+  duration_ms: 52.2755
+  ...
+# Subtest: apply reuses a valid stored thumbnail and refuses a source-change race
+ok 14 - apply reuses a valid stored thumbnail and refuses a source-change race
+  ---
+  duration_ms: 57.786917
+  ...
+# Subtest: refuses canonical URLs outside the owned product-images bucket
+ok 15 - refuses canonical URLs outside the owned product-images bucket
+  ---
+  duration_ms: 0.19475
+  ...
+# Subtest: a full rerun reuses the matching object and performs zero writes
+ok 16 - a full rerun reuses the matching object and performs zero writes
+  ---
+  duration_ms: 56.261625
+  ...
+# Subtest: generates a versioned 144px WebP thumbnail keyed by the full canonical hash
+ok 17 - generates a versioned 144px WebP thumbnail keyed by the full canonical hash
+  ---
+  duration_ms: 9.495666
+  ...
+# Subtest: produces a different immutable path when canonical bytes change
+ok 18 - produces a different immutable path when canonical bytes change
+  ---
+  duration_ms: 13.143709
+  ...
+# Subtest: rejects unreadable and animated canonical files
+ok 19 - rejects unreadable and animated canonical files
+  ---
+  duration_ms: 0.786042
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1093.0235

@@ -1,0 +1,226 @@
+--- a/tests/scan-detection-state.test.ts
++++ b/tests/scan-detection-state.test.ts
+@@ -275,17 +275,7 @@
+   assert.equal(presentation.outlineBox, null)
+ })
+ 
+-test("deriveViewfinderPresentation: the confirm window holds the read look over a fresh spot", () => {
+-  // The bottle has not moved, so the loop keeps reporting raw hits behind the confirm.
+-  const presentation = deriveViewfinderPresentation({
+-    detection: { kind: "spotted", box: boxA },
+-    confirmBox: boxA,
+-    confirmActive: true,
+-    detectionPaused: false,
+-  })
+-
+-  assert.equal(presentation.visual, "read")
+-})
++
+ 
+ test("deriveViewfinderPresentation: a sheet over a spotted barcode goes static searching", () => {
+   const presentation = deriveViewfinderPresentation({
+@@ -403,14 +393,7 @@
+   assert.deepEqual(spoken, [SCAN_HINT_SPOTTED, SCAN_HINT_DEFAULT, SCAN_HINT_MORE_LIGHT])
+ })
+ 
+-test("nextViewfinderAnnouncement: a fresh attempt re-arms both flips", () => {
+-  const { state } = announcements([{ visual: "spotted" }, { visual: "searching" }])
+-  assert.equal(state.spottedAnnounced, true)
+-  assert.equal(state.searchingAnnounced, true)
+-
+-  const restarted = announcements([{ visual: "spotted" }], INITIAL_VIEWFINDER_ANNOUNCEMENT)
+-  assert.deepEqual(restarted.spoken, [SCAN_HINT_SPOTTED])
+-})
++
+ 
+ test("nextViewfinderAnnouncement: the mount publish does not spend the searching budget, so a later return-to-idle still announces", () => {
+   // Step 1: the very first publish a mounted scanner ever runs — searching + the default
+@@ -440,6 +423,7 @@
+   })
+   assert.equal(afterSearchingAgain.announcement, SCAN_HINT_DEFAULT)
+   assert.equal(afterSearchingAgain.searchingAnnounced, true)
++  assert.equal(afterSearchingAgain.spottedAnnounced, true)
+ 
+   // Step 4: still searching within the same attempt — the budget is spent now, so the
+   // live region holds its text instead of being asked to say the same thing twice. This
+--- a/tests/scan-scanner-session.test.ts
++++ b/tests/scan-scanner-session.test.ts
+@@ -16,8 +16,11 @@
+   type ScanSessionState,
+ } from "../src/lib/scan/scanner-session"
+ 
+-test("createScanSessionState: returns the fully-reset default shape", () => {
+-  assert.deepEqual(createScanSessionState(), {
++
++
++test("createScanSessionState: returns a fresh object each call — mutating one does not leak into the next", () => {
++  const first = createScanSessionState()
++  assert.deepEqual(first, {
+     detecting: false,
+     frameCounter: 0,
+     blockedValue: null,
+@@ -38,10 +41,6 @@
+     hint: null,
+     hintChangedAt: 0,
+   })
+-})
+-
+-test("createScanSessionState: returns a fresh object each call — mutating one does not leak into the next", () => {
+-  const first = createScanSessionState()
+   first.detecting = true
+   first.lastFiredValue = "4006381333931"
+   first.frameCounter = 42
+@@ -97,16 +96,7 @@
+   assert.equal(session.hintChangedAt, 5_000)
+ })
+ 
+-test("restartScanSessionState: mutates in place so the running detection loop sees it", () => {
+-  const session = createScanSessionState()
+-  const loopReference = session
+-  session.lastFiredValue = "4006381333931"
+-
+-  restartScanSessionState(session, 1)
+-
+-  assert.equal(loopReference, session)
+-  assert.equal(loopReference.lastFiredValue, null)
+-})
++
+ 
+ test("restartScanSessionState: keeps loop lifecycle flags, not scan-attempt state", () => {
+   const session = createScanSessionState()
+@@ -141,27 +131,20 @@
+   return applyRawDetection(session, { rawValue, boundingBoxRatio: 0.3, now }, validate).fire
+ }
+ 
+-test("applyRawDetection: two consecutive matching reads fire once", () => {
+-  const session = createScanSessionState()
+-
++
++
++test("applyRawDetection: a third and fourth identical read do not re-fire", () => {
++  const session = createScanSessionState()
+   assert.equal(read(session, EAN_A, 100), null)
+   assert.equal(session.consecutiveMatch, 1)
+-
+   assert.equal(read(session, EAN_A, 200), EAN_A)
+   assert.equal(session.lastFiredValue, EAN_A)
+   assert.equal(session.hasDecoded, true)
+-  // The fire consumes the streak so the next frame starts a fresh one.
+   assert.equal(session.consecutiveMatch, 0)
+   assert.equal(session.lastRawValue, null)
+   assert.equal(session.rawDetectionsWithoutStableRead, 0)
+   assert.equal(session.lastDetectionTime, 200)
+   assert.equal(session.lastBoundingBoxRatio, 0.3)
+-})
+-
+-test("applyRawDetection: a third and fourth identical read do not re-fire", () => {
+-  const session = createScanSessionState()
+-  read(session, EAN_A, 100)
+-  assert.equal(read(session, EAN_A, 200), EAN_A)
+ 
+   assert.equal(read(session, EAN_A, 300), null)
+   assert.equal(read(session, EAN_A, 400), null)
+@@ -368,15 +351,7 @@
+   assert.equal(shouldFireTimeout(session), true)
+ })
+ 
+-test("shouldFireTimeout: a decoded session never fires the fallback", () => {
+-  const session = createScanSessionState()
+-  session.hasDecoded = true
+-  advanceActiveClock(session, SCAN_TIMEOUT_MS * 2)
+-
+-  assert.equal(shouldFireTimeout(session), false)
+-  // Not consumed either: the one-shot stays armed for the next attempt.
+-  assert.equal(session.timeoutFired, false)
+-})
++
+ 
+ test("restartScanSessionState: resets the active clock so the fallback re-arms per attempt", () => {
+   const session = createScanSessionState()
+--- a/tests/scan-scanner-loop.test.ts
++++ b/tests/scan-scanner-loop.test.ts
+@@ -223,21 +223,15 @@
+ // Active clock: the 3s fallback measures scanning time, not wall time (F2)
+ // ---------------------------------------------------------------------------
+ 
+-test("advanceLoopClock: the first tick anchors the clock without accruing anything", () => {
++
++
++test("advanceLoopClock: accrues the gap between consecutive running ticks", () => {
+   const controller = runningController()
+   const session = createScanSessionState()
+ 
+   assert.equal(advanceLoopClock(controller, session, 1_000).timedOut, false)
+-
+   assert.equal(session.activeMs, 0)
+   assert.equal(controller.lastTickAt, 1_000)
+-})
+-
+-test("advanceLoopClock: accrues the gap between consecutive running ticks", () => {
+-  const controller = runningController()
+-  const session = createScanSessionState()
+-
+-  advanceLoopClock(controller, session, 1_000)
+   advanceLoopClock(controller, session, 1_016)
+   advanceLoopClock(controller, session, 1_032)
+ 
+@@ -312,6 +306,8 @@
+     now += 100
+     assert.equal(advanceLoopClock(controller, session, now).timedOut, false)
+   }
++
++  assert.equal(session.timeoutFired, false)
+ })
+ 
+ // ---------------------------------------------------------------------------
+@@ -335,15 +331,7 @@
+   assert.deepEqual(plan, { clearCurrent: false, clearVideoSource: false })
+ })
+ 
+-test("streamReleasePlan: during a recovery swap the old stream leaves the new one attached", () => {
+-  // `recover()` acquires first: the ref and the video already point at the new stream when
+-  // the old one is released, so releasing it must not detach the live viewfinder.
+-  const previous: FakeStream = { id: "previous" }
+-  const next: FakeStream = { id: "next" }
+-  const plan = streamReleasePlan({ current: next, videoSource: next }, previous)
+-  assert.equal(plan.clearCurrent, false)
+-  assert.equal(plan.clearVideoSource, false)
+-})
++
+ 
+ test("streamReleasePlan: slots are judged independently", () => {
+   const stream: FakeStream = { id: "s" }
+--- a/tests/scan-flow-state.test.ts
++++ b/tests/scan-flow-state.test.ts
+@@ -357,18 +357,7 @@
+   assert.deepEqual(state.activeRequest, { kind: "submit", token: 5 })
+ })
+ 
+-test("auxiliary_closed with cancelSubmit: dismissing the search sheet while a research-intake submit is in flight cancels it (same bug class as F4)", () => {
+-  const state = run(
+-    { type: "auxiliary_opened", sheet: "search" },
+-    { type: "submit_started", token: 5 },
+-    { type: "auxiliary_closed", cancelSubmit: true },
+-  )
+-
+-  assert.equal(state.auxiliary, "none")
+-  assert.equal(state.submitting, false)
+-  assert.equal(state.submitError, null)
+-  assert.equal(state.activeRequest, null)
+-})
++
+ 
+ test("auxiliary_closed with cancelSubmit: reopening and submitting again still works (a fresh token owns the flow)", () => {
+   const dismissed = run(
+@@ -376,6 +365,11 @@
+     { type: "submit_started", token: 5 },
+     { type: "auxiliary_closed", cancelSubmit: true },
+   )
++
++  assert.equal(dismissed.auxiliary, "none")
++  assert.equal(dismissed.submitting, false)
++  assert.equal(dismissed.submitError, null)
++  assert.equal(dismissed.activeRequest, null)
+ 
+   const reopened = scanFlowReducer(dismissed, {
+     type: "auxiliary_opened",

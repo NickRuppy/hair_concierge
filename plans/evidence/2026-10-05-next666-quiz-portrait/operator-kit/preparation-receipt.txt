@@ -1,0 +1,61 @@
+{
+  "directory": "/private/tmp/test-audit-quizportrait43-tools-bpihum9l",
+  "pinSHA": "f834e22d29ca38c7105a3723a4aad845ef6ed96ee367b9ddfc78dac28308c396",
+  "originalGuards": 82,
+  "phases": {
+    "before": 43,
+    "transfer": 43,
+    "cut": 42
+  },
+  "nativeCounts": {
+    "before": 46,
+    "transfer": 46,
+    "cut": 45
+  },
+  "readset": 90,
+  "localClosure": 39,
+  "inheritedDependencies": 5020,
+  "dependencies": 5129,
+  "dependencyTrees": 38,
+  "newDependencies": 109,
+  "newTrees": 6,
+  "sharpPackages": [
+    {
+      "name": "sharp",
+      "version": "0.34.5",
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp"
+    },
+    {
+      "name": "@img/colour",
+      "version": "1.0.0",
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@img/colour"
+    },
+    {
+      "name": "detect-libc",
+      "version": "2.1.2",
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/detect-libc"
+    },
+    {
+      "name": "semver",
+      "version": "7.7.4",
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/sharp/node_modules/semver"
+    },
+    {
+      "name": "@img/sharp-darwin-arm64",
+      "version": "0.34.5",
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@img/sharp-darwin-arm64"
+    },
+    {
+      "name": "@img/sharp-libvips-darwin-arm64",
+      "version": "1.2.4",
+      "path": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@img/sharp-libvips-darwin-arm64"
+    }
+  ],
+  "nonliteralImports": [],
+  "controls": 3,
+  "tsMutants": 3,
+  "attemptedOutsideWrites": 0,
+  "attemptedChildren": 0,
+  "attemptedOwnerImports": 0,
+  "attemptedNetworkCalls": 0
+}

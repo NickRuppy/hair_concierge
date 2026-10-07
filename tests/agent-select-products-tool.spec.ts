@@ -510,28 +510,6 @@ test("projectSelectedProducts returns authoritative shampoo recommendation paylo
   assertProjectionDoesNotExposeFallback(result)
 })
 
-test("projectSelectedProducts returns generic recommend policy for ordinary product picks", () => {
-  const result = projectSelectedProducts(
-    [createShampooMatchedProduct("p-1", 0.94, ["Passt zum normalen Kopfhaut-Fokus"])],
-    { thickness: "normal", scalp_type: "balanced", scalp_condition: null } as HairProfile,
-    "shampoo",
-    createShampooRuntimeStub(
-      createRelevantShampooDecision({
-        targetProfile: {
-          scalpRoute: "balanced",
-          shampooBucket: "normal",
-          secondaryBucket: null,
-          cleansingIntensity: "regular",
-        },
-      }),
-    ),
-    { userJob: "product_pick", concerns: [] },
-  )
-
-  assert.equal(result.product_response_policy, "recommend")
-  assert.match(result.policy_reason, /Shampoo|Kopfhaut/i)
-})
-
 test("projectSelectedProducts does not let profile length concerns veto direct shampoo picks", () => {
   const result = projectSelectedProducts(
     [createShampooMatchedProduct("p-1", 0.94, ["Passt zum normalen Kopfhaut-Fokus"])],
@@ -558,6 +536,8 @@ test("projectSelectedProducts does not let profile length concerns veto direct s
   assert.equal(result.decision, "recommended")
   assert.equal(result.product_response_policy, "recommend")
   assert.equal(result.products.length, 1)
+
+  assert.match(result.policy_reason, /Shampoo|Kopfhaut/i)
 })
 
 test("projectSelectedProducts still recommends explicit non-shampoo products when runtime marks category irrelevant", () => {
@@ -583,47 +563,6 @@ test("projectSelectedProducts still recommends explicit non-shampoo products whe
   assert.equal(result.decision, "recommended")
   assert.equal(result.product_response_policy, "recommend")
   assert.equal(result.products.length, 1)
-})
-
-test("projectSelectedProducts emits conditioner unsupported-signal caveats without making claims", () => {
-  const result = projectSelectedProducts(
-    [createMatchedProduct("p-conditioner", 0.94)],
-    {
-      thickness: "normal",
-      protein_moisture_balance: "stretches_bounces",
-      chemical_treatment: ["colored"],
-    } as HairProfile,
-    "conditioner",
-    createRuntimeStub(),
-    {
-      userJob: "product_pick",
-      concerns: [],
-      activeProfileSignals: [
-        {
-          field: "chemical_treatment",
-          value: "colored",
-          source: "message",
-          selection_effect: "qualifier",
-          evidence: "gefaerbte Haare",
-        },
-      ],
-    },
-  )
-
-  assert.equal(result.category, "conditioner")
-  assert.equal(result.products.length, 1)
-  assert.deepEqual(
-    result.products[0].unsupported_requested_signals.map((signal) => [
-      signal.field,
-      signal.value,
-      signal.reason,
-    ]),
-    [["chemical_treatment", "colored", "no_structured_product_data"]],
-  )
-  assert.deepEqual(
-    result.products[0].supported_claims.some((claim) => claim.field === "chemical_treatment"),
-    false,
-  )
 })
 
 test("projectSelectedProducts exposes conditioner claims without density or damage drivers", () => {
@@ -844,6 +783,17 @@ test("projectSelectedProducts keeps unsupported color requests out of conditione
   assert.equal(
     result.products[0]?.supported_claims.some((claim) => claim.field === "chemical_treatment"),
     false,
+  )
+
+  assert.equal(result.category, "conditioner")
+  assert.equal(result.products.length, 1)
+  assert.deepEqual(
+    result.products[0].unsupported_requested_signals.map((signal) => [
+      signal.field,
+      signal.value,
+      signal.reason,
+    ]),
+    [["chemical_treatment", "colored", "no_structured_product_data"]],
   )
 })
 
@@ -2462,26 +2412,6 @@ test("projectSelectedProducts preserves oil no-recommendation decisions as redir
   assert.match(result.category_guidance, /Build-up|weniger Öl|Keine Öl-Produkte/)
 })
 
-test("projectSelectedProducts returns not_recommended when shampoo is not the right lever", () => {
-  const result = projectSelectedProducts(
-    [],
-    { thickness: "normal" } as HairProfile,
-    "shampoo",
-    createShampooRuntimeStub(
-      createRelevantShampooDecision({
-        relevant: false,
-        action: null,
-        targetProfile: null,
-      }),
-    ),
-  )
-
-  assert.equal(result.decision, "not_recommended")
-  assert.equal(result.product_response_policy, "redirect_to_better_lever")
-  assert.match(result.category_guidance, /nicht der wichtigste Hebel/)
-  assert.deepEqual(result.products, [])
-})
-
 test("projectSelectedProducts suppresses shampoo products when the category is not recommended", () => {
   const result = projectSelectedProducts(
     [createShampooMatchedProduct("p-1", 0.94, ["Wäre ein guter Shampoo-Treffer"])],
@@ -2500,6 +2430,8 @@ test("projectSelectedProducts suppresses shampoo products when the category is n
   assert.equal(result.product_response_policy, "redirect_to_better_lever")
   assert.deepEqual(result.products, [])
   assert.equal(result.comparison_facts, null)
+
+  assert.match(result.category_guidance, /nicht der wichtigste Hebel/)
 })
 
 test("projectSelectedProducts treats dry-length shampoo questions as not shampoo-first", () => {
@@ -3521,19 +3453,6 @@ test("oil purpose inference keeps negated scalp finish requests out of pre-wash"
     inferOilPurposeFromMessage("eher als finish, nicht auf die kopfhaut"),
     "styling_finish",
   )
-})
-
-test("projectSelectedProducts uses mask-specific missing-info for explicit mask requests", () => {
-  const result = projectSelectedProducts([], { thickness: "normal" } as HairProfile, "mask")
-
-  assert.deepEqual(result.missing_info, [
-    {
-      key: "protein_moisture_balance",
-      label: "Protein-/Feuchtigkeitsbalance",
-      blocking: true,
-      detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance für die Masken-Auswahl.",
-    },
-  ])
 })
 
 test("projectSelectedProducts redirects deep-cleansing scalp treatment requests without products", () => {

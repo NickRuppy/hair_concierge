@@ -1,0 +1,527 @@
+TAP version 13
+# [analytics] Customer.io dispatch failed Error: synthetic Customer.io dispatch failure
+#     at Object.track (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/customerio-funnel-attribution.test.ts:20:49)
+#     at dispatch (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/customerio-tracking.ts:142:21)
+#     at dispatchSafely (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/customerio-tracking.ts:150:14)
+#     at Object.setClient (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/customerio-tracking.ts:197:46)
+#     at setCustomerIoBrowserClient (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/customerio-tracking.ts:213:18)
+#     at TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/customerio-funnel-attribution.test.ts:53:5)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+# Subtest: Customer.io enriches cold funnel events and isolates queued dispatch failures
+ok 1 - Customer.io enriches cold funnel events and isolates queued dispatch failures
+  ---
+  duration_ms: 15.505833
+  ...
+# Subtest: Customer.io page paths preserve the canonical result identifier and entry context
+ok 2 - Customer.io page paths preserve the canonical result identifier and entry context
+  ---
+  duration_ms: 0.944041
+  ...
+# Subtest: Customer.io page paths omit a trailing question mark without query parameters
+ok 3 - Customer.io page paths omit a trailing question mark without query parameters
+  ---
+  duration_ms: 0.1095
+  ...
+# Subtest: Customer.io page paths remove credentials, identifiers, and nested return URLs
+ok 4 - Customer.io page paths remove credentials, identifiers, and nested return URLs
+  ---
+  duration_ms: 0.169625
+  ...
+# Subtest: Customer.io page paths reject arbitrary values under otherwise safe keys
+ok 5 - Customer.io page paths reject arbitrary values under otherwise safe keys
+  ---
+  duration_ms: 0.112667
+  ...
+# Subtest: shared analytics URL sanitization removes sensitive queries and fragments
+ok 6 - shared analytics URL sanitization removes sensitive queries and fragments
+  ---
+  duration_ms: 0.109125
+  ...
+# Subtest: Meta page tracking recognizes credential-bearing browser locations
+ok 7 - Meta page tracking recognizes credential-bearing browser locations
+  ---
+  duration_ms: 0.181417
+  ...
+# Subtest: builds rich Customer.io quiz traits with labels when consent is true
+ok 8 - builds rich Customer.io quiz traits with labels when consent is true
+  ---
+  duration_ms: 1.267208
+  ...
+# Subtest: keeps inherited consent time separate from the fresh quiz completion
+ok 9 - keeps inherited consent time separate from the fresh quiz completion
+  ---
+  duration_ms: 0.162875
+  ...
+# Subtest: builds rich Customer.io quiz traits when marketing consent is false
+ok 10 - builds rich Customer.io quiz traits when marketing consent is false
+  ---
+  duration_ms: 0.239042
+  ...
+# Subtest: server identify uses Customer.io EU Pipelines strict mode
+ok 11 - server identify uses Customer.io EU Pipelines strict mode
+  ---
+  duration_ms: 11.243041
+  ...
+# Subtest: server track returns a failed result instead of throwing
+ok 12 - server track returns a failed result instead of throwing
+  ---
+  duration_ms: 0.835625
+  ...
+# Subtest: server helper no-ops when CUSTOMERIO_SERVER_WRITE_KEY is missing
+ok 13 - server helper no-ops when CUSTOMERIO_SERVER_WRITE_KEY is missing
+  ---
+  duration_ms: 0.085583
+  ...
+# Subtest: builds purchase and subscription events from a completed checkout
+ok 14 - builds purchase and subscription events from a completed checkout
+  ---
+  duration_ms: 0.759583
+  ...
+# Subtest: does not build paid Customer.io lifecycle events for a verified trial
+ok 15 - does not build paid Customer.io lifecycle events for a verified trial
+  ---
+  duration_ms: 0.161542
+  ...
+# Subtest: builds payment_failed from an invoice
+ok 16 - builds payment_failed from an invoice
+  ---
+  duration_ms: 0.092375
+  ...
+# Subtest: builds subscription cancellation with event-id-scoped dedupe
+ok 17 - builds subscription cancellation with event-id-scoped dedupe
+  ---
+  duration_ms: 0.080458
+  ...
+# Subtest: builds Customer.io App API transactional request with privacy flags
+ok 18 - builds Customer.io App API transactional request with privacy flags
+  ---
+  duration_ms: 0.706083
+  ...
+# Subtest: sends Customer.io transactional email through the App API
+ok 19 - sends Customer.io transactional email through the App API
+  ---
+  duration_ms: 8.123584
+  ...
+# Subtest: throws with status and response text for non-ok responses
+ok 20 - throws with status and response text for non-ok responses
+  ---
+  duration_ms: 0.85975
+  ...
+# Subtest: returns the documented Customer.io delivery receipt
+ok 21 - returns the documented Customer.io delivery receipt
+  ---
+  duration_ms: 0.322416
+  ...
+# Subtest: classifies non-2xx responses as definitive HTTP failures
+ok 22 - classifies non-2xx responses as definitive HTTP failures
+  ---
+  duration_ms: 0.209375
+  ...
+# Subtest: treats network failures and malformed success receipts as ambiguous
+ok 23 - treats network failures and malformed success receipts as ambiguous
+  ---
+  duration_ms: 0.232375
+  ...
+# Subtest: inline required receipts preserve safe flags and provide complete per-send content without altering old callers
+ok 24 - inline required receipts preserve safe flags and provide complete per-send content without altering old callers
+  ---
+  duration_ms: 0.061167
+  ...
+# Subtest: sends the attachment dictionary alongside content and rejects oversized attachments before fetch
+ok 25 - sends the attachment dictionary alongside content and rejects oversized attachments before fetch
+  ---
+  duration_ms: 0.518667
+  ...
+# Subtest: builds the stored Customer.io transactional message with privacy-preserving flags
+ok 26 - builds the stored Customer.io transactional message with privacy-preserving flags
+  ---
+  duration_ms: 1.530417
+  ...
+# Subtest: rejects CRLF injection at the transport boundary
+ok 27 - rejects CRLF injection at the transport boundary
+  ---
+  duration_ms: 0.227333
+  ...
+# Subtest: korrigiert belegte Provider-Tippfehler aus den Bounce-Logs
+ok 28 - korrigiert belegte Provider-Tippfehler aus den Bounce-Logs
+  ---
+  duration_ms: 0.51
+  ...
+# Subtest: schlaegt nichts vor bei real existierenden Domains
+ok 29 - schlaegt nichts vor bei real existierenden Domains
+  ---
+  duration_ms: 0.110333
+  ...
+# Subtest: verkraftet unvollstaendige Eingaben ohne zu werfen
+ok 30 - verkraftet unvollstaendige Eingaben ohne zu werfen
+  ---
+  duration_ms: 0.042917
+  ...
+# Subtest: nimmt Grossanbieter ohne DNS-Abfrage an
+ok 31 - nimmt Grossanbieter ohne DNS-Abfrage an
+  ---
+  duration_ms: 0.152209
+  ...
+# Subtest: nimmt Domains mit gueltigem MX an
+ok 32 - nimmt Domains mit gueltigem MX an
+  ---
+  duration_ms: 0.199417
+  ...
+# Subtest: lehnt Null MX nach RFC 7505 ab
+ok 33 - lehnt Null MX nach RFC 7505 ab
+  ---
+  duration_ms: 0.116292
+  ...
+# Subtest: nimmt Domains ohne MX an, wenn ein A-Eintrag existiert (RFC 5321)
+ok 34 - nimmt Domains ohne MX an, wenn ein A-Eintrag existiert (RFC 5321)
+  ---
+  duration_ms: 0.170041
+  ...
+# Subtest: nimmt Domains ohne MX an, wenn ein AAAA-Eintrag existiert
+ok 35 - nimmt Domains ohne MX an, wenn ein AAAA-Eintrag existiert
+  ---
+  duration_ms: 0.208209
+  ...
+# Subtest: nimmt einen gueltigen A-Eintrag trotz transientem AAAA-Fehler als impliziten MX an
+ok 36 - nimmt einen gueltigen A-Eintrag trotz transientem AAAA-Fehler als impliziten MX an
+  ---
+  duration_ms: 0.317458
+  ...
+# Subtest: lehnt Domains ohne MX und ohne A/AAAA ab und liefert den Vorschlag mit
+ok 37 - lehnt Domains ohne MX und ohne A/AAAA ab und liefert den Vorschlag mit
+  ---
+  duration_ms: 0.916084
+  ...
+# Subtest: lehnt ungueltiges Format ab, ohne DNS zu fragen
+ok 38 - lehnt ungueltiges Format ab, ohne DNS zu fragen
+  ---
+  duration_ms: 0.094917
+  ...
+# Subtest: laesst bei DNS-Zeitueberschreitung durch
+ok 39 - laesst bei DNS-Zeitueberschreitung durch
+  ---
+  duration_ms: 21.207542
+  ...
+# Subtest: laesst bei unerwartetem Resolver-Fehler durch
+ok 40 - laesst bei unerwartetem Resolver-Fehler durch
+  ---
+  duration_ms: 0.231792
+  ...
+# (node:27930) ExperimentalWarning: The MockTimers API is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: laesst durch, wenn der A/AAAA-Fallback in einen Timeout laeuft
+ok 41 - laesst durch, wenn der A/AAAA-Fallback in einen Timeout laeuft
+  ---
+  duration_ms: 20.810833
+  ...
+# Subtest: teilt ein einziges Zeitbudget zwischen MX und A/AAAA
+ok 42 - teilt ein einziges Zeitbudget zwischen MX und A/AAAA
+  ---
+  duration_ms: 1.003416
+  ...
+# Subtest: raeumt den Timeout nach erfolgreichem Lookup ab
+ok 43 - raeumt den Timeout nach erfolgreichem Lookup ab
+  ---
+  duration_ms: 0.134958
+  ...
+# Subtest: normalisiert die Adresse auf Kleinschreibung ohne Leerzeichen
+ok 44 - normalisiert die Adresse auf Kleinschreibung ohne Leerzeichen
+  ---
+  duration_ms: 0.0575
+  ...
+# Subtest: Meta offer endpoint validates, limits, and passes only request-bound delivery data
+ok 45 - Meta offer endpoint validates, limits, and passes only request-bound delivery data
+  ---
+  duration_ms: 6.357084
+  ...
+# Subtest: Meta offer endpoint is a benign no-op while its flag is off
+ok 46 - Meta offer endpoint is a benign no-op while its flag is off
+  ---
+  duration_ms: 0.425292
+  ...
+# Subtest: Meta offer endpoint rejects forged context, unknown keys, and malformed IDs
+ok 47 - Meta offer endpoint rejects forged context, unknown keys, and malformed IDs
+  ---
+  duration_ms: 1.441792
+  ...
+# Subtest: Meta offer endpoint rejects non-canonical UUIDs before rate limiting or delivery
+ok 48 - Meta offer endpoint rejects non-canonical UUIDs before rate limiting or delivery
+  ---
+  duration_ms: 0.914833
+  ...
+# Subtest: Meta offer endpoint accepts only the deterministic UUID-v8 event ID used by the client
+ok 49 - Meta offer endpoint accepts only the deterministic UUID-v8 event ID used by the client
+  ---
+  duration_ms: 1.202875
+  ...
+# Subtest: Meta offer endpoint rejects missing server-owned lead evidence
+ok 50 - Meta offer endpoint rejects missing server-owned lead evidence
+  ---
+  duration_ms: 0.54725
+  ...
+# Subtest: Meta offer delivery requires recent quiz evidence and constructs the canonical event
+ok 51 - Meta offer delivery requires recent quiz evidence and constructs the canonical event
+  ---
+  duration_ms: 1.003417
+  ...
+# Subtest: Meta offer endpoint bounds streamed bodies before rate limiting
+ok 52 - Meta offer endpoint bounds streamed bodies before rate limiting
+  ---
+  duration_ms: 0.317458
+  ...
+# Subtest: Meta offer endpoint isolates delivery failures from its validated request contract
+ok 53 - Meta offer endpoint isolates delivery failures from its validated request contract
+  ---
+  duration_ms: 0.817791
+  ...
+# Subtest: Meta offer lookup preserves legacy quiz evidence and requires an attached personal plan
+ok 54 - Meta offer lookup preserves legacy quiz evidence and requires an attached personal plan
+  ---
+  duration_ms: 0.934375
+  ...
+# Subtest: offer CAPI uses the eligible lead's server-resolved package behind its existing flag
+ok 55 - offer CAPI uses the eligible lead's server-resolved package behind its existing flag
+  ---
+  duration_ms: 0.147083
+  ...
+# Subtest: live backfill requires an explicit campaign-safety preflight
+ok 56 - live backfill requires an explicit campaign-safety preflight
+  ---
+  duration_ms: 0.511709
+  ...
+# Subtest: historical backfill explicitly requests profile-only work
+ok 57 - historical backfill explicitly requests profile-only work
+  ---
+  duration_ms: 1.905666
+  ...
+# Subtest: dry-run backfill performs no database writes or Customer.io dispatch
+ok 58 - dry-run backfill performs no database writes or Customer.io dispatch
+  ---
+  duration_ms: 0.253916
+  ...
+# Subtest: backfill reports queued retries separately from delivered profiles
+ok 59 - backfill reports queued retries separately from delivered profiles
+  ---
+  duration_ms: 0.121791
+  ...
+# Subtest: backfill continues when immediate dispatch throws because the durable row already exists
+ok 60 - backfill continues when immediate dispatch throws because the durable row already exists
+  ---
+  duration_ms: 0.226625
+  ...
+# Subtest: Customer.io profile outbox migration keeps payload in source tables and private delivery state
+ok 61 - Customer.io profile outbox migration keeps payload in source tables and private delivery state
+  ---
+  duration_ms: 1.30725
+  ...
+# Subtest: Customer.io profile outbox makes only newly inserted consented leads event eligible
+ok 62 - Customer.io profile outbox makes only newly inserted consented leads event eligible
+  ---
+  duration_ms: 0.380125
+  ...
+# Subtest: profile-only backfill request cannot create or downgrade event eligibility
+ok 63 - profile-only backfill request cannot create or downgrade event eligibility
+  ---
+  duration_ms: 0.28825
+  ...
+# Subtest: new lead delivery identifies current Supabase truth before the completion event
+ok 64 - new lead delivery identifies current Supabase truth before the completion event
+  ---
+  duration_ms: 2.123708
+  ...
+# Subtest: historical profile-only outbox row can never request the completion event
+ok 65 - historical profile-only outbox row can never request the completion event
+  ---
+  duration_ms: 0.26
+  ...
+# Subtest: field-test profile sync never emits the commercial completion event
+ok 66 - field-test profile sync never emits the commercial completion event
+  ---
+  duration_ms: 0.129334
+  ...
+# Subtest: moderator lead remains non-commercial after its funnel moves to a newer result
+ok 67 - moderator lead remains non-commercial after its funnel moves to a newer result
+  ---
+  duration_ms: 0.116625
+  ...
+# Subtest: profile updates do not resend an already delivered completion event
+ok 68 - profile updates do not resend an already delivered completion event
+  ---
+  duration_ms: 0.202125
+  ...
+# Subtest: transient Customer.io failures are recorded for retry instead of reported as delivered
+ok 69 - transient Customer.io failures are recorded for retry instead of reported as delivered
+  ---
+  duration_ms: 0.151584
+  ...
+# Subtest: Customer.io fallback retry uses a Vercel Hobby-compatible daily schedule
+ok 70 - Customer.io fallback retry uses a Vercel Hobby-compatible daily schedule
+  ---
+  duration_ms: 0.904
+  ...
+# Subtest: Customer.io profile reconcile is bounded and authenticates before retry work
+ok 71 - Customer.io profile reconcile is bounded and authenticates before retry work
+  ---
+  duration_ms: 0.901667
+  ...
+# Subtest: Customer.io profile reconcile drains a bounded retry batch
+ok 72 - Customer.io profile reconcile drains a bounded retry batch
+  ---
+  duration_ms: 0.153584
+  ...
+# [customerio:server] identify personal-plan lead lead-123 { skipped: undefined, status: 503, error: '503 down' }
+# Subtest: historical profile parsing is total over malformed v2 concern data
+ok 73 - historical profile parsing is total over malformed v2 concern data
+  ---
+  duration_ms: 0.470833
+  ...
+# Subtest: historical profile parsing preserves the exact v2 concern vocabulary and labels
+ok 74 - historical profile parsing preserves the exact v2 concern vocabulary and labels
+  ---
+  duration_ms: 1.848208
+  ...
+# Subtest: personal-plan traits keep shared primitives canonical and namespace divergent answers
+ok 75 - personal-plan traits keep shared primitives canonical and namespace divergent answers
+  ---
+  duration_ms: 0.218791
+  ...
+# Subtest: every structured Personal Plan concern has a readable Customer.io label
+ok 76 - every structured Personal Plan concern has a readable Customer.io label
+  ---
+  duration_ms: 0.090125
+  ...
+# Subtest: personal-plan live sync identifies first and emits one dedicated stable completion event
+ok 77 - personal-plan live sync identifies first and emits one dedicated stable completion event
+  ---
+  duration_ms: 9.283875
+  ...
+# Subtest: personal-plan profile-only sync cannot emit a completion event
+ok 78 - personal-plan profile-only sync cannot emit a completion event
+  ---
+  duration_ms: 0.257375
+  ...
+# Subtest: personal-plan sync does not emit the completion event when identify failed
+ok 79 - personal-plan sync does not emit the completion event when identify failed
+  ---
+  duration_ms: 1.183667
+  ...
+# Subtest: enabled reminder enqueues cutoff and revalidates just before sending once to verified owner
+ok 80 - enabled reminder enqueues cutoff and revalidates just before sending once to verified owner
+  ---
+  duration_ms: 18.899584
+  ...
+# Subtest: off switch and missing configuration cannot enqueue, claim or send
+ok 81 - off switch and missing configuration cannot enqueue, claim or send
+  ---
+  duration_ms: 0.327083
+  ...
+# Subtest: cancellation or expiry after claim suppresses send at the fresh database gate
+ok 82 - cancellation or expiry after claim suppresses send at the fresh database gate
+  ---
+  duration_ms: 0.165333
+  ...
+# Subtest: fresh current terms are rendered, not stale terms claimed earlier
+ok 83 - fresh current terms are rendered, not stale terms claimed earlier
+  ---
+  duration_ms: 0.508417
+  ...
+# Subtest: missing verified owner and malformed or swapped fresh claims send nothing
+ok 84 - missing verified owner and malformed or swapped fresh claims send nothing
+  ---
+  duration_ms: 0.343584
+  ...
+# Subtest: ambiguous delivery, malformed ACK and HTTP rejection park with no retry
+ok 85 - ambiguous delivery, malformed ACK and HTTP rejection park with no retry
+  ---
+  duration_ms: 1.486625
+  ...
+# Subtest: post-send settlement failure propagates and never repeats provider send
+ok 86 - post-send settlement failure propagates and never repeats provider send
+  ---
+  duration_ms: 0.609083
+  ...
+# Subtest: reminder cron authenticates before all work and exposes aggregate state only
+ok 87 - reminder cron authenticates before all work and exposes aggregate state only
+  ---
+  duration_ms: 1.962792
+  ...
+# Subtest: configured five-minute cron reaches server-auth handler without browser login
+ok 88 - configured five-minute cron reaches server-auth handler without browser login
+  ---
+  duration_ms: 1.552959
+  ...
+# Subtest: queues each eligible Stripe and PayPal new trial exactly once using the frozen required-notice contract shape
+ok 89 - queues each eligible Stripe and PayPal new trial exactly once using the frozen required-notice contract shape
+  ---
+  duration_ms: 647.720375
+  ...
+# Subtest: does not queue before the immutable trial end is within 48 hours
+ok 90 - does not queue before the immutable trial end is within 48 hours
+  ---
+  duration_ms: 516.284583
+  ...
+# Subtest: rollout cutoff excludes earlier trials and cancellation suppresses an already queued reminder
+ok 91 - rollout cutoff excludes earlier trials and cancellation suppresses an already queued reminder
+  ---
+  duration_ms: 436.006125
+  ...
+# Subtest: paid, revoked, expired, and provider-unresolved trials never queue
+ok 92 - paid, revoked, expired, and provider-unresolved trials never queue
+  ---
+  duration_ms: 423.545167
+  ...
+# Subtest: fresh prepare fences cancellation and repeated workers before a provider call
+ok 93 - fresh prepare fences cancellation and repeated workers before a provider call
+  ---
+  duration_ms: 444.575333
+  ...
+# Subtest: cancellation after claim is a fresh no-send fence, while an undispatched failure can be parked
+ok 94 - cancellation after claim is a fresh no-send fence, while an undispatched failure can be parked
+  ---
+  duration_ms: 409.831833
+  ...
+# Subtest: a temporary management change holds a claimed reminder and releases it after reconciliation
+ok 95 - a temporary management change holds a claimed reminder and releases it after reconciliation
+  ---
+  duration_ms: 410.403459
+  ...
+# Subtest: expired leases park for support and stale completion cannot overwrite the outcome
+ok 96 - expired leases park for support and stale completion cannot overwrite the outcome
+  ---
+  duration_ms: 408.466208
+  ...
+# Subtest: private rows and RPCs remain service-only
+ok 97 - private rows and RPCs remain service-only
+  ---
+  duration_ms: 408.419834
+  ...
+# Subtest: the dispatcher consumes the actual SQL RPC shape and records a fake Customer.io acknowledgement
+ok 98 - the dispatcher consumes the actual SQL RPC shape and records a fake Customer.io acknowledgement
+  ---
+  duration_ms: 430.757834
+  ...
+# Subtest: supports the accepted monthly and annual price contracts without inventing amounts
+ok 99 - supports the accepted monthly and annual price contracts without inventing amounts
+  ---
+  duration_ms: 15.776125
+  ...
+# Subtest: rejects malformed accepted terms rather than creating a reminder with fallback billing facts
+ok 100 - rejects malformed accepted terms rather than creating a reminder with fallback billing facts
+  ---
+  duration_ms: 0.258
+  ...
+# Subtest: PayPal reminder states the day-after first-charge date while the trial end stays exact
+ok 101 - PayPal reminder states the day-after first-charge date while the trial end stays exact
+  ---
+  duration_ms: 0.473792
+  ...
+1..101
+# tests 101
+# suites 0
+# pass 101
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10764.3265

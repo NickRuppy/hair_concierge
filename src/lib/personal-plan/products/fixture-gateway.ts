@@ -119,7 +119,6 @@ export type FixtureGatewayFailureOperation = "search" | "mutate" | "complete"
 export type FixtureStage3GatewayOptions = {
   /** Local QA only: resume a controlled persisted-draft fixture. */
   initialDraft?: { draft: Stage3ProductDraft; requirements: Stage3CategoryRequirement[] }
-  now?: () => string
   searchDelayMs?: number
   /** Optional Labs-only catalog for browser scenarios that need controlled search breadth. */
   catalog?: readonly Stage3CatalogCandidate[]
@@ -189,7 +188,6 @@ export type FixtureStage3DecisionReviewBundle = {
 export function createFixtureStage3Gateway(
   options: FixtureStage3GatewayOptions = {},
 ): FixtureStage3Gateway {
-  const now = options.now ?? (() => new Date().toISOString())
   const searchDelayMs = options.searchDelayMs ?? DEFAULT_SEARCH_DELAY_MS
   const catalog = options.catalog ?? FIXTURE_CATALOG
   const inventoryAuthorityV2Enabled = options.inventoryAuthorityV2Enabled ?? false
@@ -213,13 +211,17 @@ export function createFixtureStage3Gateway(
     const existing = drafts.get(input.draftId)
     if (existing) {
       if (existing.refinedVersionId !== input.refinedVersionId && existing.status !== "completed") {
-        const stale = invalidateDraftForRefinedVersion(existing, input.refinedVersionId, now())
+        const stale = invalidateDraftForRefinedVersion(
+          existing,
+          input.refinedVersionId,
+          new Date().toISOString(),
+        )
         drafts.set(stale.draftId, stale)
         return { status: "stale", draft: stale, requirements: input.requirements }
       }
       return { status: existing.status, draft: existing, requirements: input.requirements }
     }
-    const draft = createStage3Draft({ ...input, now: now() })
+    const draft = createStage3Draft({ ...input, now: new Date().toISOString() })
     drafts.set(draft.draftId, draft)
     requirementsByDraftId.set(draft.draftId, input.requirements)
     return { status: "active", draft, requirements: input.requirements }
@@ -273,7 +275,7 @@ export function createFixtureStage3Gateway(
         requirements,
         () => `fixture-captured-${nextCapturedProduct++}`,
       ),
-      updatedAt: now(),
+      updatedAt: new Date().toISOString(),
     }
     if (
       !inventoryAuthorityV2Enabled &&
@@ -296,7 +298,11 @@ export function createFixtureStage3Gateway(
     const draft = requireDraft(drafts, input.draftId)
     const requirements = requirementsByDraftId.get(input.draftId)
     if (!requirements) throw new Error(`missing requirements for draft ${input.draftId}`)
-    const next = invalidateDraftForRefinedVersion(draft, input.refinedVersionId, now())
+    const next = invalidateDraftForRefinedVersion(
+      draft,
+      input.refinedVersionId,
+      new Date().toISOString(),
+    )
     drafts.set(next.draftId, next)
     return { status: next.status, draft: next, requirements }
   }
@@ -317,14 +323,14 @@ export function createFixtureStage3Gateway(
       const portfolioVersionId = `fixture-portfolio-${nextPortfolio++}`
       const portfolio = createProposedProductPortfolio(draft, requirements, {
         portfolioVersionId,
-        createdAt: now(),
+        createdAt: new Date().toISOString(),
       })
       const completedDraft: Stage3ProductDraft = {
         ...draft,
         status: "completed",
         pass: "ready_for_routine",
         revision: draft.revision + 1,
-        updatedAt: now(),
+        updatedAt: new Date().toISOString(),
       }
       const completed: Extract<FixtureCompleteResponse, { status: "ready_for_routine" }> = {
         status: "ready_for_routine",
@@ -448,7 +454,7 @@ export function createFixtureStage3Gateway(
         draft,
         fixtureAuthorityDecision(draft, subject, evaluation, input.intent, selectedReplacement),
       ),
-      updatedAt: now(),
+      updatedAt: new Date().toISOString(),
     }
     drafts.set(next.draftId, next)
     return { status: "saved", draft: next }

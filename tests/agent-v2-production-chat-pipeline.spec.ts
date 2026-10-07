@@ -27,7 +27,6 @@ import type { ConversationState, HairProfile, Message, Product } from "../src/li
 import {
   createDefaultAgentV2ConversationState,
   normalizeAgentV2ConversationState,
-  summarizeAgentV2ConversationState,
   type AgentV2ConversationStateV2,
 } from "../src/lib/agent-v2/production/persisted-session-state"
 type SelectProductsToolParams = Parameters<ReturnType<typeof createSelectProductsTool>>[0]
@@ -798,9 +797,8 @@ test("AgentV2 persisted state keeps only three active product contexts and deriv
     state.agent_v2.active_product_contexts.map((context) => context.product_id),
     ["product-two", "product-three", "product-four"],
   )
-  const summary = summarizeAgentV2ConversationState(state)
-  assert.equal(summary.active_product_context_count, 3)
-  assert.equal(summary.active_resolved_product.product_id, "product-four")
+  assert.equal(state.agent_v2.active_product_contexts.length, 3)
+  assert.equal(state.agent_v2.active_resolved_product_context?.product_id, "product-four")
 })
 
 test("AgentV2 persisted state normalizes legacy pending routine action into pending follow-up action", () => {

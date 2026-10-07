@@ -1,0 +1,120 @@
+TAP version 13
+# Subtest: ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)
+ok 1 - ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)
+  ---
+  duration_ms: 9.99625
+  ...
+# Subtest: ScanResearchIntakeForm: a category tap is blocked while Marke is empty, even with a filled Produktname
+ok 2 - ScanResearchIntakeForm: a category tap is blocked while Marke is empty, even with a filled Produktname
+  ---
+  duration_ms: 0.607125
+  ...
+# Subtest: ScanResearchIntakeForm: a category tap is blocked while Produktname is empty, even with a filled Marke
+ok 3 - ScanResearchIntakeForm: a category tap is blocked while Produktname is empty, even with a filled Marke
+  ---
+  duration_ms: 0.209542
+  ...
+# Subtest: ScanResearchIntakeForm: a category tap submits exactly the tapped category once both fields are filled
+ok 4 - ScanResearchIntakeForm: a category tap submits exactly the tapped category once both fields are filled
+  ---
+  duration_ms: 0.411458
+  ...
+# Subtest: ScanResearchIntakeForm: whitespace-only text still counts as empty (blocks submit)
+ok 5 - ScanResearchIntakeForm: whitespace-only text still counts as empty (blocks submit)
+  ---
+  duration_ms: 0.256334
+  ...
+# Subtest: ScanResearchIntakeForm: edits call onBrandTextChange/onProductNameTextChange with the raw typed value
+ok 6 - ScanResearchIntakeForm: edits call onBrandTextChange/onProductNameTextChange with the raw typed value
+  ---
+  duration_ms: 0.208625
+  ...
+# Subtest: ScanResearchIntakeForm: shows the five primary categories only, with a 'Mehr …' expander for the rest
+ok 7 - ScanResearchIntakeForm: shows the five primary categories only, with a 'Mehr …' expander for the rest
+  ---
+  duration_ms: 1.147458
+  ...
+# Subtest: ScanResearchIntakeForm: the tapped card alone shows the submitting label while others and the back affordance disable
+ok 8 - ScanResearchIntakeForm: the tapped card alone shows the submitting label while others and the back affordance disable
+  ---
+  duration_ms: 1.325375
+  ...
+# Subtest: ScanResearchIntakeForm: a second tap while submitting does not resubmit
+ok 9 - ScanResearchIntakeForm: a second tap while submitting does not resubmit
+  ---
+  duration_ms: 0.486083
+  ...
+# Subtest: ScanResearchIntakeForm: onBack fires exactly on the back affordance
+ok 10 - ScanResearchIntakeForm: onBack fires exactly on the back affordance
+  ---
+  duration_ms: 0.522125
+  ...
+# Subtest: ScanResearchIntakeForm: renders the standard error copy inside an alert role with a polite live region (task 6 a11y)
+ok 11 - ScanResearchIntakeForm: renders the standard error copy inside an alert role with a polite live region (task 6 a11y)
+  ---
+  duration_ms: 0.7225
+  ...
+# Subtest: dm thumbnail: a failed optimizer image becomes the accessible placeholder
+ok 12 - dm thumbnail: a failed optimizer image becomes the accessible placeholder
+  ---
+  duration_ms: 3.702167
+  ...
+# Subtest: identified unknown: renders identity and one-tap confirmation without creating a submission on view
+ok 13 - identified unknown: renders identity and one-tap confirmation without creating a submission on view
+  ---
+  duration_ms: 6.211042
+  ...
+# Subtest: identified unknown: other reveals grid without submitting, then allows a category override
+ok 14 - identified unknown: other reveals grid without submitting, then allows a category override
+  ---
+  duration_ms: 1.327584
+  ...
+# Subtest: identified unknown: expanding alternative categories also excludes a secondary suggestion
+ok 15 - identified unknown: expanding alternative categories also excludes a secondary suggestion
+  ---
+  duration_ms: 0.672292
+  ...
+# Subtest: identified unknown: ambiguous category uses the normal grid and mixed-case brand stays unchanged
+ok 16 - identified unknown: ambiguous category uses the normal grid and mixed-case brand stays unchanged
+  ---
+  duration_ms: 0.783084
+  ...
+# Subtest: identified unknown: failed confirmation restores its label and keeps recovery available
+ok 17 - identified unknown: failed confirmation restores its label and keeps recovery available
+  ---
+  duration_ms: 1.104958
+  ...
+# Subtest: ScanUnknownFlow: the bridge line sits under the headline, above the subline
+ok 18 - ScanUnknownFlow: the bridge line sits under the headline, above the subline
+  ---
+  duration_ms: 0.684875
+  ...
+# Subtest: ScanUnknownFlow: tapping a category card submits exactly { category } once, no Absenden step
+ok 19 - ScanUnknownFlow: tapping a category card submits exactly { category } once, no Absenden step
+  ---
+  duration_ms: 0.437208
+  ...
+# Subtest: ScanUnknownFlow: cards are disabled while submitting and a second tap does not resubmit
+ok 20 - ScanUnknownFlow: cards are disabled while submitting and a second tap does not resubmit
+  ---
+  duration_ms: 0.5915
+  ...
+# Subtest: ScanUnknownFlow: the tapped card alone shows the submitting label while others stay put
+ok 21 - ScanUnknownFlow: the tapped card alone shows the submitting label while others stay put
+  ---
+  duration_ms: 1.229167
+  ...
+# Subtest: ScanUnknownFlow: a failed submission clears the in-flight highlight next to the error (F17)
+ok 22 - ScanUnknownFlow: a failed submission clears the in-flight highlight next to the error (F17)
+  ---
+  duration_ms: 1.088791
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 968.185083

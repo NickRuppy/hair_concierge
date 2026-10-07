@@ -1,0 +1,203 @@
+import json,pathlib,hashlib,collections
+p=pathlib.Path('/tmp/test-audit-plan157-current-packet.txt').read_text().strip(); d=pathlib.Path(p)
+inv=json.loads((d/'inventory.json').read_text()); cs=json.loads((d/'candidates.json').read_text())
+notes={
+'personal-plan-email-precheck.test.ts':[
+'R|Successful deliverability maps normalized email and suggestion without persistence; a changed successful lookup projection or normalization fails exact response/calls.',
+'R|Undeliverable lookup must preserve lead-compatible rejection reason, original email and suggestion; returning accepted or losing the correction fails.',
+'R|Malformed body matrix must return 400 before deliverability invocation; a permissive schema or lookup-before-parse fails lookup counter.',
+'R|Thrown DNS/deliverability exception maps 500 for fail-open client handling; swallowed success or wrong rejection shape fails.',
+'R|Dedicated precheck budget rejects before DNS and carries bounded retry metadata; borrowing lead budget or performing lookup after denial fails.',
+'R|Limiter unavailable is 503 rather than ordinary 429; wrong operational failure mapping fails.'],
+'personal-plan-preparation-client.test.ts':[
+'R|Crypto-derived UUID version/variant plus 32-byte opaque claim token; weak length/bit masking or non-random credential construction fails independent byte-derived checks.',
+'R|Stored preparation identity survives only identical fresh answer key; expiry, malformed storage and differing answers invalidate it. This is browser persistence, not server replay duplication.',
+'R|Retry-After accepts only integer short waits in its explicit bound; accepting fractional, excessive or malformed headers violates independently tested parser boundary.',
+'R|One 429 schedules exact server wait then retries once with unchanged body/credential; off-by-one retry or wrong wait/request receipt fails.',
+'R|Injected native-like browser fetch must be detached; binding it to helper input makes this fixture throw. This tests a real invocation ABI, not fabricated response policy.',
+'R|409 and successful mismatched artifact/token receipts discard poisoned identity; ordinary successful receipt does not. Wrong discard flag or trusting foreign receipt fails.',
+'R|Second 429 and invalid wait stop without request three; unbounded retry or honoring invalid delay fails observed invocation count.',
+'R|Network/5xx retain one bounded retry while ordinary 4xx stop; these consume different response/throw branches, not redundant raw strings.'],
+'personal-plan-prepare-idempotency-migration.test.ts':[
+'R|Actual PGlite RPC insert and same-identity replay preserve original expiry and one row; changing replay branch to insert/update expiry fails database output.',
+'F|Different answer hash, token hash and user replay rejection plus a second-ID reused claim token are meaningful SQL authority. Generic rejects does not assert SQLSTATE or intended mismatch reason; hold unchanged until narrow negative-oracle repair, no cut.',
+'R|Attached successful artifact remains replayable despite age while expired prepared artifact rejects; status/expiry conjunction is distinct from new insert validation.',
+'F|New expired preparation must reject, but generic rejection does not identify expiry guard. Retain this input; repair oracle separately rather than delete.',
+'R|Service-only RPC signature/revocations plus actual cron schedule five-minute retention are independent deployment/ACL contracts absent from fake application tests. Static identifier syntax is executable SQL identity.'],
+'personal-plan-prepare-route.test.ts':[
+'C|C3: both constants and namespace exclusions transfer onto configs already consumed by the actual preparation handler.',
+'R|Disabled handler is 404 without rate call; unavailable verified context is 503 without preparation. Ordering/access branches differ from successful keeper.',
+'R|Unexpected context throw produces structured500 and one log; typed unavailable alone cannot catch outer exception response regression.',
+'R|Primary C3 keeper: actual IP-before-context-before-journey invocation, client replay identity, receipt and hashed claim. Transferred config literals prevent producer-correlated budget oracle.',
+'R|Absent verified journey skips only journey bucket; preserving emergency IP call/order independently catches invented anonymous journey key.',
+'R|Actual rejected vs unavailable limiter must differ Retry-After/error statuses; synthetic handler default-success cannot prove rejection behavior.',
+'R|Legacy already-open page lacking both replay fields gets server credential and exact returned identity; partial credentials follow different reject path.',
+'R|Partial credential rejected before persistence; accepting one browser-owned authority field would break replay ownership.',
+'R|Typed replay conflict maps409 stable code, not500 or success; storage mock supplies exception but route owns mapping.',
+'R|Production RPC adapter binds exact payload, maps22023/23505, rejects malformed receipts and purges only newly inserted rows; this executes actual adapter, not mock receipt validation.'],
+'personal-plan-prepared-plan.test.ts':[
+'R|V2 adapter taxonomy, ranked diagnosis and mandatory elasticity conversion asserted independently; mapping old fields to wrong current vocabulary fails.',
+'R|Multiple scalp concerns select conservative supported direction; permissive severe-scalp recommendation is detectable.',
+'R|Volume goal follows factual hair signals and is invariant to selection order; first-selected shortcut fails opposite ordering.',
+'R|Hair damage remains its own concern rather than merged into frizz; dropping that mapped concern fails.',
+'R|Combined hair-loss compatibility does not evict routine concerns and preserves limited scope; cap/order regressions fail.',
+'R|Prepared artifact exposes three public dimensions while products/routine remain locked; accidental public disclosure or dimension loss fails.',
+'R|Email central priority and offer assessment remain separate; copying row-one assessment to email source fails independently specified values.',
+'R|Complete straight/wavy/curly/coily inputs build deterministic artifacts; distinct texture/category paths are not covered by one neutral profile.',
+'R|Canonical answer hash ignores order but changes with durable factual changes; versioned content identity is a storage contract, not self-comparison.'],
+'personal-plan-production-client.test.ts':[
+'R|Stage3 optional inventory POST endpoint/body is distinct from baseline GET; fake response does not own request construction or real bootstrap validation.',
+'R|Stage2 optional module POST body and returned revision plus ordinary GET; wrong endpoint/method/module projection fails.',
+'R|503 typed error then a new successful load must issue request two; helper caching failure or untyped exception fails.',
+'R|Final answer combines PATCH and completeAfterSave with expected revision and returns handoff; splitting/lossy serialization fails observed request and result.',
+'R|Completion503 retains savedSession on typed error so durable answer survives recovery; dropping nested receipt fails.',
+'R|Module completion passes through present recompute; stripping the optional field fails. Distinct from absent property behavior.',
+'R|Absent module recompute stays absent as own key, not merely undefined; synthesizing a field fails key assertion.',
+'R|Intake stable UUID is sent as idempotency header and omitted from body while input/revision retained; transport contract owned by actual gateway.'],
+'personal-plan-ready-server-first.test.tsx':[
+'R|Multiple missing facts display only current question, honest remaining count, checkbox and no scanner link; rendering all questions/early scanner CTA fails SSR.',
+'R|Ready authenticated email-return package uses scanner destination even with personal-plan source; source-kind-only routing fails.',
+'R|C4 checking keeper: approved pending copy/loading marker and no-JS reload/support links; additionally retains header absence/wordmark for same checking input.',
+'R|Ready envelope literal approved copy, retired-stage absence, correct href and no-JS ready state; distinct ready branch retained.',
+'R|C4 missing-fact keeper: exact question and actionable copy, additionally same input header invariants; falsely passive wording fails.',
+'R|C4 support keeper: forbidden/invalid states do not promise waiting/payment and retain support CTA plus header invariants; both input rows unchanged.',
+'R|C4 retry keeper: timeout/transient render retry not live-check copy plus header invariants; legacy initialStatus and envelope inputs remain.',
+'F|Source matching helper names and method spelling is refactor-sensitive and does not execute poll effects. Meaningful none/link/poll/security/copy constraints remain; no complete interactive keeper union established, hold unchanged.',
+'C|C4: donor four SSR invocations are already present in four existing keepers, including actual default nextHref equivalence.',
+'F|Page source helper/name regex does not execute auth/admission or initial envelope propagation. Contract is real; retain pending behavior-level oracle, no automatic static deletion.'],
+'personal-plan-ready-transition.test.ts':[
+'R|CTA only ready: enum-state truth table catches enabling pending/error or delaying ready.',
+'R|Polling interval*limit bound30s is independent user wait-budget contract; source scheduler uses both constants, same bound not asserted by request-state test.',
+'R|State machine sends one POST per link instruction, then GET, and re-arms when server asks; losing re-arm or perpetual POST fails sequential states.',
+'R|Access surface distinguishes exact correlation pending/unavailable from genuine no-source onboarding; preserving active access does not imply source readiness.',
+'F|Mixed source/UI checks cover real retry/auth/payment boundaries but private spellings and no execution of client effect leave false-green paths. Hold entire callback unchanged; no full existing keeper union.'],
+'personal-plan-result-artifact-email.test.ts':[
+'R|Stored public-only payload asserts exact message shape, URL, default identifier and excludes locked/private/free-text fields; getter-numeric keeper cannot replace projection/privacy/default checks.',
+'R|Compatible artifact missing primaryMessage derives from stored priorities; expected helper result checks delegation while branch parse/compatibility remains meaningful. Do not claim independent copy correctness.',
+'R|Corrupt legacy central priority disagreeing with first diagnostic row rejects; valid stored-v2 priority distinction cannot cover this compatibility guard.',
+'D|D2: exact numeric42 assertion already observes actual common getter through retained regular route delivery; unrelated quiz fields are outside getter readset.',
+'R|Service claims once under an atomic store port and marks sent only after success; fake provides atomicity, test proves orchestration, not database locking.',
+'R|Provider failure is sanitized/marked and returned without leaking into journey; actual catch/sanitizer control independently valuable.'],
+'personal-plan-result-artifact-route.test.ts':[
+'R|Missing transactional config503 precedes claim; disabled delivery cannot consume a lead.',
+'R|Personal-plan route executes actual service with attached public artifact and returns sent200; different store/adaptor from regular email route.',
+'R|Unavailable lead limiter surfaces recoverable copy/status; distinct pre-claim error response.',
+'F|Source grep for dedicated endpoint/keepalive/non-await protects valid journey isolation but void/private call spelling is not executed effect proof. Hold0credit.'],
+'personal-plan-result-return-migration.test.ts':[
+'R|Private hash-only unique capability table, owner-independent lead mapping TTL/RLS/ACL/search_path, bounded SKIP LOCKED purge and no PII are executable deployment contracts. No runtime migration replay in this lane subsumes them.'],
+'personal-plan-result-return-reset.test.ts':[
+'R|Reset requires same-origin Fetch Metadata; cross-site/missing headers reject before capability writes. Preserve CSRF boundary.',
+'R|HTTP204 private no-store/Vary only after both async capabilities complete; fire-and-forget reset would fail ordering/headers.',
+'R|Rate denial and thrown server reset fail closed rather than204; distinct errors retained.',
+'R|Valid result and draft capability revocations plus both cookie expirations must occur; partial reset would leave resurrectable access.',
+'R|Malformed/missing result token with revoked=false is idempotent; actual isValidToken && !revoked condition differs from valid-token successful revocation. Do not cut as fake-only.'],
+'personal-plan-result-return.test.ts':[
+'R|32-byte opaque token/hash and host-only HttpOnly/Secure/Lax expiry cookie prevent guessable credentials/domain leakage; exact boundary independent.',
+'R|Invalid token shapes return invalid without resolver call; permissive regex/prematureDB request fails counter.',
+'R|Thrown transport error retried once; returns only lead UUID, not full row; wrong count or projection fails.',
+'R|Application errors are not retried and capability not cleared; retry-all/clear-on-error breaks recoverability.',
+'R|Returned transport envelopes retry once then warn without token disclosure; not same throw branch as earlier test.',
+'R|Returned PostgREST transport error then valid second response succeeds; failure-only warning keeper cannot prove success projection.',
+'R|Issue upsert rotates one lead token and revoke clears cookie/hash-bound mapping; ownership/rotation differs from lookup.',
+'R|Resolved result wins over resume/draft; unavailable is preserved, explicit resume then draft then fresh precedence; wrong state ordering fails.',
+'R|Return-entry trust requires valid resolved capability matching requested lead; client entry flag alone cannot grant trust.'],
+'personal-plan-result-reveal.test.ts':[
+'R|Date-key relative week/four-week German copy uses deterministic dates; wrong offsets/timezone text fails.',
+'R|Timer schedule exposes each message and cancels handles before completion/navigation; ordering/drop/extra completion fails owned timer callbacks.',
+'R|Completion event literal trigger, duration, step and lead shape is independent analytics protocol; dropping field/mislabeling trigger fails.',
+'R|Negative/nonfinite/oversized elapsed and visible-step boundaries normalize independently; raw fixture variations hit distinct numeric predicates.',
+'R|Completion claim changes ref once and rejects second claim; duplicate telemetry/navigation prevention, not same timer schedule proof.',
+'R|Page-view exclusion for reveal route protects event ownership before offer; public path config contract retained.',
+'F|Exit hold constant plus source shell/timer spellings do not prove elapsed real mounted state. Meaningful transition and cleanup contract retained, require interactive oracle before narrowing.'],
+'personal-plan-return-artifact-repair-postgres.test.ts':[
+'R|Actual PostgreSQL two-session barriers test parallel repair single winner and concurrent source-change/Stage1 insertion serialization; PGlite sequential tests cannot replace locks. Environment-dependent skip remains unchanged.'],
+'personal-plan-return-artifact-repair.test.ts':[
+'R|Actual repair adapter builds server artifact yet preserves exact v2/v3 captured envelope/hash in CAS; auto-migration of source would violate provenance.',
+'R|Missing context/ambiguous historical concerns fail before RPC; legitimate missing fact repair cannot replace this no-write boundary.',
+'R|RPC repaired/already-present/conflict/forbidden/unavailable map typed results; fake returns receipts but real owner validates and maps them.',
+'R|Actual PGlite SQL replay covers ACL, exact CAS, immutable valid facts, idempotent predecessor retention and guard trigger; sequential-only limits stated, no concurrency overclaim.'],
+'quiz-result-artifact-email.test.ts':[
+'R|Current and legacy concern vocabularies yield same diagnosis through actual adapter; metamorphic compatibility compares distinct normalization inputs, not fabricated fixture identity.',
+'R|Arbitrary lead ID is URL-encoded with public attribution; normal UUID keeper cannot catch slash/query injection encoding regression.'],
+'quiz-result-artifact-route.test.ts':[
+'R|Actual kind resolver selects latest persisted scanner package with exact query ordering and absent analytics gating; trusting stale first row fails query contract.',
+'R|Actual production claim query excludes moderator and demands null status; retains real common filter policy after D3, without claiming SQL execution.',
+'R|D2 strongest keeper actual route/service/common serializer delivers numeric42 with exact diagnostics/public fields/privacy and markSent; all originals retained.',
+'R|Organic missing config returns503 without claim or mutation; scanner-specific missing key follows separate branch.',
+'R|Scanner missing dedicated config returns503 without consuming lead; organic configuration must not authorize this stream.',
+'R|Attribution lookup failure returns502 before claim; failure must not be silently treated as organic.',
+'R|Persisted scanner attribution produces minimal scanner payload without marketing consent gate; preserves transaction-vs-marketing contract.',
+'R|Personal-plan row cannot enter regular legacy parser/sender; different quiz-kind early guard retained.',
+'D|D3: statuses are read only by fake non-null predicate; actual production sees identical null. Retained failed-status keeper contains all donor assertions and real claim-query guard remains.',
+'R|D3 primary keeper null claim returns skipped200/no send/no markSent. Failed is not read by service; no claim of SQL status-specific proof.',
+'R|Missing first name is permitted and not leaked as bogus copy; actual payload schema should not make optional name mandatory.',
+'R|Organic concurrent invocations use same atomic port, one send/mark; detects moving send outside claimed result. Port atomicity is fixture premise, not DB proof.',
+'R|Scanner concurrent delivery has distinct minimal serializer/config and no consent gate; retain branch-specific same-service orchestration, no C proof proposed.',
+'R|Send failure invokes real sanitizer and failed state with no sent mark; secret-like input must be redacted.',
+'R|Incomplete stored answers fail before actual serializer/send and mark diagnostic failure; generic null-claim keeper never parses answers.',
+'R|Attribution absence/organic rows resolve organic while lookup error throws; missing is not unavailable, preserve three states.'],
+'quiz-result-artifact-trigger.test.ts':[
+'R|No lead or access still checking blocks trigger; independent early predicates in actual mounted caller.',
+'R|Existing active subscriber can still receive result email; canGoStraightToRoutine deliberately not gating delivery, catches reintroduced early bypass.',
+'R|Same prior lead prevents resend, different lead permits it; ref-key idempotency differs from store claim.'],
+'personal-plan-api-stage1.test.ts':[
+'F|Title claims server identity, but fixture reaches activation-pending with null artifact and never asserts propagated user. Keep actual409 mapping; strengthen identity/read observations separately.',
+'F|Pending owner expected no persistence construction, but constructed flag is only set by eventual write and loadArtifact=null already blocks it. Removing journey gate can false-pass. Keep pending contract, repair counter later.',
+'R|Disabled404 and unauthenticated401 remain distinct typed API responses; no completed plan fixture can substitute.'],
+'personal-plan-stage1-source.test.ts':[
+'R|Legacy source exact lead provenance, current vocabulary and sorted multi-select arrays; wrong mapping/hash input affects durable identity.',
+'R|Unsupported legacy texture despite TypeScript cast fails real parser with typed version1 error; V3 missing thickness is different schema/branch.',
+'R|Migration must disable immutable trigger before historical provenance backfill and restore afterward. Exact SQL trigger name is live database identity; ordering needed for migration safety.'],
+'personal-plan/input.test.ts':[
+'R|C2 keeper parse validV3 and build quiz-faithful profile, now exact default routine delivered. Field mapping/default exposure assertions preserved.',
+'R|V2 dry/damage/scalp aliases normalize once without invented breakage and unknown recurrence; V3 profile cannot cover old envelope semantics.',
+'D|D1 exact thickness-undefined envelope/parser/typed error already in retained loop thickness iteration; no new row.',
+'R|D1 keeper existing thickness and elasticResponse missing fields reject currentV3 schema independently; loop remains one AST registration.',
+'R|Envelope hash stable across object key insertion order; persisted idempotency key must not depend on JavaScript construction order.'],
+'personal-plan/needs.test.ts':[
+'R|C1 keeper preserves quiz-led cadence with unknown actual behavior, adds exact unknown heat result on same assessment.',
+'R|Oily scalp gives one Reset point while load/frequency/scalp buildup remain unknown; inventing product knowledge fails.',
+'R|Known shampoo frequency removes only that missing input and records fact; unknown currentProductLoad remains, so blanket known/unknown mapping fails.',
+'C|C1 same assess() result already computed by first keeper; move full unknown heat object.',
+'R|Lightened chemical fact independently raises high shared repair priority even smooth/no-concern baseline; surface-only heuristic fails.',
+'R|Rare vs frequent heat frequencies give different damage priorities, while elasticity remains contextual; treating snaps as damage-alone fails.',
+'R|Ordinary airflow remains separate route/frequency fact while all heat events remain complete; indiscriminate filter or loss of eventmetadata fails.',
+'R|Rough rubbing contributes moderate mechanical risk/medium repair; empty gentle signals contribute none. Refined routine input distinct.',
+'R|Hair-loss boundary present/limited-evidence/unassessed remains excluded from structural damage; medical-cosmetic overreach detectable.'],
+'personal-plan/portfolio.test.ts':[
+'R|Noncoily leave-in basis owns persistent damp smoothing and demotes overlapping oil; failing allocation produces duplicate basis job.',
+'R|Coily supports two-layer damp smoothing exception; blanket oil demotion fails distinct texture predicate.',
+'R|Conditioner baseline remains while bondbuilder/mask keep distinct repair roles; broad duplicate suppression loses valid care.',
+'R|Wet-wash owner and deferred heat carrier allocations retain source coverage without invented exposure; distinct protocol jobs.',
+'R|Dry Shampoo stays bridge within shampoo cadence budget; competing wash-owner rewrite fails coverage/oracle.',
+'R|Coverage identities distinguish scalp care support and reset overlap. Synthetic decisions isolate current normative scalp-care decision.md uncovered-job contract; no complete owner-output keeper established, no obsolete-source claim.'],
+'personal-plan/reasons.test.ts':[
+'R|Salience keeps two primary facts and remaining secondary detail in order; truncating all reasons loses explanation.',
+'R|Stable dedup removes repeated IDs without reorder, repeated normalization idempotent; not same unique-reason input as first test.'],
+'personal-plan/types.test.ts':[
+'R|Canonical ten-category ordering is independent serialized configuration; compute facade constructs decisions separately and neutral output renders subset, so no complete keeper union.',
+'C|C2 literal default context asserted on actual delivered buildPlanProfile routine; no direct input/config distinction remains.'],
+'personal-plan/persistence/stage1-service.test.ts':[
+'F|Executes real computation/hash/persist mapping, but title owner binding not asserted on captured request user/source IDs. Preserve success proof; strengthen identity assertion separately.',
+'F|Flag-off/pending cases count artifact reads and writes, not entitlement read; title non-cohort/all reads broader than actual oracle. Retain tested deny outcomes; no cut.',
+'R|Pre-cutoff normal purchase denies without mutation when migration off; cutoff inclusive boundary is separate from paid-pending.',
+'R|Verified paid pre-cutoff source admitted only migration flag on; no unpaid widening; current recovery contract.',
+'R|Bound migration enrollment bypasses launch cutoff only with active access; rejecting valid migration or admitting inactive fails.',
+'R|Existing migration Plan resumes persisted result without source reread/recompute; durable recovery identity must survive stale/missing lead.',
+'R|Unavailable storage and invalid quiz compute map typed safe outcomes; invalid input not mistaken for activation success.',
+'R|Exact legacy lead path computes/persists source kind+lead provenance without artifact load; legacy vs artifact storage readsets are distinct.']}
+rows=[];by=collections.defaultdict(list)
+for x in inv:by[x['file']].append(x)
+for f,xs in by.items():
+ key=f[len('tests/'):]; ns=notes.get(key)
+ assert ns is not None,(key,'missing');assert len(ns)==len(xs),(key,len(ns),len(xs))
+ for x,n in zip(xs,ns):
+  v,why=n.split('|',1);rows.append({**x,'verdict':v,'evidence':why,'runtimeProof':'Not run; all judgments static. Main acceptance/control required for C/D.'})
+assert len(rows)==157
+counts=dict(collections.Counter(x['verdict'] for x in rows));(d/'ledger.json').write_text(json.dumps({'scope':157,'counts':counts,'cases':rows},indent=2)+'\n')
+md=['# Initial Plan production and durable artifact/result return: full case ledger','',f'27 current files, 157 AST declarations. {counts}. F declarations stay byte-identical, zero credit. Candidate deletions are conditional; no repository changes or test execution.','']
+for f,xs in by.items():
+ md+=['## '+f,'','| Original line | Mark | Exact declaration | Contract and detectable failure / keeper |','|---:|:---:|---|---|']
+ for x in [r for r in rows if r['file']==f]:md.append('| '+str(x['line'])+' | '+x['verdict']+' | '+x['name'].replace('|','\\|')+' | '+x['evidence'].replace('|','\\|')+' |')
+ md.append('')
+(d/'ledger.md').write_text('\n'.join(md)+'\n');print(p,counts)

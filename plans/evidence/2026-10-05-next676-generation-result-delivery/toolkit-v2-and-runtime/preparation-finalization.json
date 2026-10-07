@@ -1,0 +1,41 @@
+{
+  "preparationPinsSHA256": "253cd5469e9c2dee4f40ba196b9ed4315cfe4b031e1f5e23b523e604e1ea155f",
+  "finalPinsSHA256": "b41d3a0d1a4021f978e0458b7e7a6c21881541ff195bb662c28e0d59ea917d70",
+  "unpublishedPreparationArtifactChanges": [
+    {
+      "path": "/tmp/test-audit-generation157-tools-v2-orjded8b/diagnostic-projection.cjs",
+      "oldSHA256": "95af83ef1dfe431f28d4bc63a250c71b7351ee9abc44b439280e5a0b40f60dff",
+      "newSHA256": "eea9191823a6840d6f3ae449769dc0f13e78369a400daf97b74928be62ecfe88"
+    },
+    {
+      "path": "/tmp/test-audit-generation157-tools-v2-orjded8b/proof-attestation.cjs",
+      "oldSHA256": "32cde0e2976f6fc6feb818e507558e01beaf00c133512a03fc9e4d68b05652a9",
+      "newSHA256": "2f86bbd79caff973d39451f60bbafdb6883ce70b3191978d24ded0be3ab7477b"
+    }
+  ],
+  "reason": "Harden decoder against unconsumed/blank-line diagnostic continuation; fix synthetic SSR negative case to mutate the encoded actual field instead of an unescaped substring. No underlying owner/test/source recipe or diagnostic expected actual value change.",
+  "entrypointChanges": [
+    {
+      "path": "/tmp/test-audit-generation157-tools-v2-orjded8b/operator-edit.cjs",
+      "oldSHA256": "e34cfab896038b9a6c9948b2138c8b8d5ea902428c41bd3b56d75b04bc062c53",
+      "newSHA256": "42e0e04bcffba79a67774a4d26e8bee14ff07585821d23808df589c9ec3a81d5",
+      "change": "Only PIN_SHA literal"
+    },
+    {
+      "path": "/tmp/test-audit-generation157-tools-v2-orjded8b/operator-run-controls.cjs",
+      "oldSHA256": "8a5ea9f959ae7d89c587494ffd1a56bab38ca2f620616dc27e7c7532c0a804ce",
+      "newSHA256": "2c7632a28efc1c25f38ce5c1671418701c8cf4b96add24dd6041de0bad6fad85",
+      "change": "Only PIN_SHA literal"
+    },
+    {
+      "path": "/tmp/test-audit-generation157-tools-v2-orjded8b/operator-native-proof.cjs",
+      "oldSHA256": "5522b87031b912c883caed41718c71c20d9580502be4ad8c4e300d391ac30b81",
+      "newSHA256": "8cda5fc555ace41b984aeee919cb9f8545e0dedf98e5b472d0f69ba556fb8258",
+      "change": "Only PIN_SHA literal"
+    }
+  ],
+  "protectedSourceRuntimeIdentityReadsetsUnchanged": true,
+  "finalDeltaMustBeGeneratedAfterThisStep": true,
+  "runtimeRuns": 0,
+  "repositoryWrites": 0
+}

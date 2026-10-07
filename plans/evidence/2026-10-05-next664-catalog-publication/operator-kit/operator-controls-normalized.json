@@ -1,0 +1,335 @@
+[
+  {
+    "id": "C1-oil-day-types",
+    "candidate": "C1",
+    "file": "src/lib/product-intake/expansion-apply-templates.ts",
+    "sourceSha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "mutatedSha256": "a020ff53bacec7479d090036066c1f65f539c9b4ecff486d3375707ffcfdf46a",
+    "anchor": {
+      "kind": "file",
+      "scopeSha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+      "expectedOccurrences": 1
+    },
+    "from": "    role: \"leave_in\",\n    applicationFamily: \"post_wash_damp_conditioning\",\n    compatibleDayTypes: [\n      \"wash_day\",\n      \"intensive_care_day\",\n      \"bond_repair_day\",\n      \"clarifying_wash_day\",\n    ],",
+    "to": "    role: \"leave_in\",\n    applicationFamily: \"post_wash_damp_conditioning\",\n    compatibleDayTypes: [\n      \"wash_day\",\n      \"intensive_care_day\",\n      \"bond_repair_day\",\n    ],",
+    "test": {
+      "file": "tests/expansion-apply-templates.test.ts",
+      "name": "all 11 templates produce a schema-valid, product-scoped V1 guidance payload"
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--experimental-test-isolation=none",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^all 11 templates produce a schema-valid, product-scoped V1 guidance payload$",
+      "tests/expansion-apply-templates.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 108,
+        "text": "assert.deepEqual(payload.compatibleDayTypes, [\n        \"wash_day\",\n        \"intensive_care_day\",\n        \"bond_repair_day\",\n        \"clarifying_wash_day\",\n      ])",
+        "keeperSha256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "testFileSha256": "c3fa72a4020d1986c003f22fd95a6ac6b70b13353c90a0bb3c7ec5757a0850a5"
+      },
+      "cut": {
+        "startLine": 108,
+        "text": "assert.deepEqual(payload.compatibleDayTypes, [\n        \"wash_day\",\n        \"intensive_care_day\",\n        \"bond_repair_day\",\n        \"clarifying_wash_day\",\n      ])",
+        "keeperSha256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "testFileSha256": "a590852fd6258fb798e7781131a6e07307049e3c0b6b093cf658a041bb6b77d4"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      "wash_day",
+      "intensive_care_day",
+      "bond_repair_day",
+      "clarifying_wash_day"
+    ],
+    "actualValue": [
+      "wash_day",
+      "intensive_care_day",
+      "bond_repair_day"
+    ],
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'wash_day',\n    'intensive_care_day',\n    'bond_repair_day',\n-   'clarifying_wash_day'\n  ]",
+      "clarifying_wash_day"
+    ],
+    "intendedAssertion": "assert.deepEqual(payload.compatibleDayTypes, [\n        \"wash_day\",\n        \"intensive_care_day\",\n        \"bond_repair_day\",\n        \"clarifying_wash_day\",\n      ])",
+    "limits": "Exact frozen owner bytes/unique file anchor; all TS mutants parsed. Message/value/outer first-frame proof still requires main native execution."
+  },
+  {
+    "id": "C2-row-role",
+    "candidate": "C2",
+    "file": "src/lib/product-intake/expansion-apply-templates.ts",
+    "sourceSha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "mutatedSha256": "4f29546435e13cf1d761e6b878918e2d270e89de21cd54d398369621952c6a3f",
+    "anchor": {
+      "kind": "file",
+      "scopeSha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+      "expectedOccurrences": 1
+    },
+    "from": "    role: meta.role,",
+    "to": "    role: templateId === \"TPL-SHAMPOO-STD\" ? \"finish\" : meta.role,",
+    "test": {
+      "file": "tests/expansion-apply-templates.test.ts",
+      "name": "all 11 templates produce a schema-valid, product-scoped V1 guidance payload"
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--experimental-test-isolation=none",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^all 11 templates produce a schema-valid, product-scoped V1 guidance payload$",
+      "tests/expansion-apply-templates.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 100,
+        "text": "assert.equal(row.role, meta.role, templateId)",
+        "keeperSha256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "testFileSha256": "c3fa72a4020d1986c003f22fd95a6ac6b70b13353c90a0bb3c7ec5757a0850a5"
+      },
+      "cut": {
+        "startLine": 100,
+        "text": "assert.equal(row.role, meta.role, templateId)",
+        "keeperSha256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "testFileSha256": "a590852fd6258fb798e7781131a6e07307049e3c0b6b093cf658a041bb6b77d4"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": "shampoo_everyday",
+    "actualValue": "finish",
+    "errorMessageIncludes": [
+      "TPL-SHAMPOO-STD\n+ actual - expected\n\n+ 'finish'\n- 'shampoo_everyday'",
+      "TPL-SHAMPOO-STD"
+    ],
+    "intendedAssertion": "assert.equal(row.role, meta.role, templateId)",
+    "limits": "Exact frozen owner bytes/unique file anchor; all TS mutants parsed. Message/value/outer first-frame proof still requires main native execution."
+  },
+  {
+    "id": "C2-row-category",
+    "candidate": "C2",
+    "file": "src/lib/product-intake/expansion-apply-templates.ts",
+    "sourceSha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "mutatedSha256": "54d461cde0b4949e9a029328c65ff340a9785eb25fa464835c23bba0bd155b56",
+    "anchor": {
+      "kind": "file",
+      "scopeSha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+      "expectedOccurrences": 1
+    },
+    "from": "    category: meta.category,",
+    "to": "    category: templateId === \"TPL-SHAMPOO-STD\" ? \"conditioner\" : meta.category,",
+    "test": {
+      "file": "tests/expansion-apply-templates.test.ts",
+      "name": "all 11 templates produce a schema-valid, product-scoped V1 guidance payload"
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--experimental-test-isolation=none",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^all 11 templates produce a schema-valid, product-scoped V1 guidance payload$",
+      "tests/expansion-apply-templates.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 101,
+        "text": "assert.equal(row.category, meta.category, templateId)",
+        "keeperSha256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "testFileSha256": "c3fa72a4020d1986c003f22fd95a6ac6b70b13353c90a0bb3c7ec5757a0850a5"
+      },
+      "cut": {
+        "startLine": 101,
+        "text": "assert.equal(row.category, meta.category, templateId)",
+        "keeperSha256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "testFileSha256": "a590852fd6258fb798e7781131a6e07307049e3c0b6b093cf658a041bb6b77d4"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": "shampoo",
+    "actualValue": "conditioner",
+    "errorMessageIncludes": [
+      "TPL-SHAMPOO-STD\n+ actual - expected\n\n+ 'conditioner'\n- 'shampoo'",
+      "TPL-SHAMPOO-STD"
+    ],
+    "intendedAssertion": "assert.equal(row.category, meta.category, templateId)",
+    "limits": "Exact frozen owner bytes/unique file anchor; all TS mutants parsed. Message/value/outer first-frame proof still requires main native execution."
+  },
+  {
+    "id": "C2-mask-role-literal",
+    "candidate": "C2",
+    "file": "src/lib/product-intake/expansion-manifest.ts",
+    "sourceSha256": "c82e49e141cb7912bff2c4720fd8468b0d337cf458b59f66fae5e13cb76093c9",
+    "mutatedSha256": "924152f60b3b28cc90a40e17b293e61f08239ea32bfc712c71a92d83a03e93ed",
+    "anchor": {
+      "kind": "file",
+      "scopeSha256": "c82e49e141cb7912bff2c4720fd8468b0d337cf458b59f66fae5e13cb76093c9",
+      "expectedOccurrences": 1
+    },
+    "from": "\"TPL-MASK\": { category: \"mask\", role: \"intensive_conditioning_mask\" },",
+    "to": "\"TPL-MASK\": { category: \"mask\", role: \"intensive_care\" },",
+    "test": {
+      "file": "tests/expansion-apply-templates.test.ts",
+      "name": "all 11 templates produce a schema-valid, product-scoped V1 guidance payload"
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--experimental-test-isolation=none",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^all 11 templates produce a schema-valid, product-scoped V1 guidance payload$",
+      "tests/expansion-apply-templates.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 104,
+        "text": "assert.equal(maskRow.role, \"intensive_conditioning_mask\")",
+        "keeperSha256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "testFileSha256": "c3fa72a4020d1986c003f22fd95a6ac6b70b13353c90a0bb3c7ec5757a0850a5"
+      },
+      "cut": {
+        "startLine": 104,
+        "text": "assert.equal(maskRow.role, \"intensive_conditioning_mask\")",
+        "keeperSha256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "testFileSha256": "a590852fd6258fb798e7781131a6e07307049e3c0b6b093cf658a041bb6b77d4"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": "intensive_conditioning_mask",
+    "actualValue": "intensive_care",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'intensive_care'\n- 'intensive_conditioning_mask'\n              ^",
+      "intensive_conditioning_mask"
+    ],
+    "intendedAssertion": "assert.equal(maskRow.role, \"intensive_conditioning_mask\")",
+    "limits": "Exact frozen owner bytes/unique file anchor; all TS mutants parsed. Message/value/outer first-frame proof still requires main native execution."
+  },
+  {
+    "id": "C2-mask-payload-role-literal",
+    "candidate": "C2",
+    "file": "src/lib/product-intake/expansion-apply-templates.ts",
+    "sourceSha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+    "mutatedSha256": "e0a735c2c4103e401c9ab104e58d38d39d2f499ec309a32bbbc1e43109ef1fa2",
+    "anchor": {
+      "kind": "file",
+      "scopeSha256": "9db5cbd89257a046bdfcf2368a13faa3c32362ef88c4a646ac4d0a75914e06be",
+      "expectedOccurrences": 1
+    },
+    "from": "    role: \"intensive_care\",\n    applicationFamily: \"post_shampoo_rinse_out_mask\",",
+    "to": "    role: \"condition\",\n    applicationFamily: \"post_shampoo_rinse_out_mask\",",
+    "test": {
+      "file": "tests/expansion-apply-templates.test.ts",
+      "name": "all 11 templates produce a schema-valid, product-scoped V1 guidance payload"
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--experimental-test-isolation=none",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^all 11 templates produce a schema-valid, product-scoped V1 guidance payload$",
+      "tests/expansion-apply-templates.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 105,
+        "text": "assert.equal((maskRow.guidance_payload as { role: string }).role, \"intensive_care\")",
+        "keeperSha256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "testFileSha256": "c3fa72a4020d1986c003f22fd95a6ac6b70b13353c90a0bb3c7ec5757a0850a5"
+      },
+      "cut": {
+        "startLine": 105,
+        "text": "assert.equal((maskRow.guidance_payload as { role: string }).role, \"intensive_care\")",
+        "keeperSha256": "74b578d05a063923a441b477179c7b697bee7e9c2fabd9743b7b3e3a3a09438a",
+        "testFileSha256": "a590852fd6258fb798e7781131a6e07307049e3c0b6b093cf658a041bb6b77d4"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": "intensive_care",
+    "actualValue": "condition",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'condition'\n- 'intensive_care'",
+      "intensive_care"
+    ],
+    "intendedAssertion": "assert.equal((maskRow.guidance_payload as { role: string }).role, \"intensive_care\")",
+    "limits": "Exact frozen owner bytes/unique file anchor; all TS mutants parsed. Message/value/outer first-frame proof still requires main native execution."
+  },
+  {
+    "id": "C3-recommendation-serialization",
+    "candidate": "C3",
+    "file": "src/lib/product-intake/expansion-apply.ts",
+    "sourceSha256": "d1b710c3b9ff424fbb09984451d3695d701ea1f90fdbdf12bd7d711295b8c618",
+    "mutatedSha256": "298cc691179accd3dbf8391704fca25df81a45982ebe3a0ad0f8b5bc89e6ff36",
+    "anchor": {
+      "kind": "file",
+      "scopeSha256": "d1b710c3b9ff424fbb09984451d3695d701ea1f90fdbdf12bd7d711295b8c618",
+      "expectedOccurrences": 1
+    },
+    "from": "  const batchJson = JSON.stringify(batch)",
+    "to": "  const batchJson = JSON.stringify({ is_chaarlie_recommended: false, ...batch })",
+    "test": {
+      "file": "tests/expansion-apply-batch.test.ts",
+      "name": "the reviewed mask manifest parks only its excluded-identifier product"
+    },
+    "command": [
+      "/usr/local/bin/node",
+      "--experimental-test-isolation=none",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern",
+      "^the reviewed mask manifest parks only its excluded-identifier product$",
+      "tests/expansion-apply-batch.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 120,
+        "text": "assert.doesNotMatch(result.batchJson, /is_chaarlie_recommended/)",
+        "keeperSha256": "5061af609676f79f4c8be63fea997b7d6530cad2e6304200689ff76c6adeb129",
+        "testFileSha256": "b88065bfeeeba0bc6a2391b88f336c66829d796bf9db259b80353c708502bee0"
+      },
+      "cut": {
+        "startLine": 120,
+        "text": "assert.doesNotMatch(result.batchJson, /is_chaarlie_recommended/)",
+        "keeperSha256": "5061af609676f79f4c8be63fea997b7d6530cad2e6304200689ff76c6adeb129",
+        "testFileSha256": "bcbe4a6111c1ba2e7d30d2de1834910f19adc0ad7ce6d4d12060c90b469df6f5"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "expectedRegex": "/is_chaarlie_recommended/",
+    "actualPredicate": "Decoded Node string actual begins with {\"is_chaarlie_recommended\":false, before original batch schema_version. Node inspect truncation allowed only after a complete quoted 10000-code-unit prefix plus exact positive remaining-character count. No nested object/exception or later message substitutes.",
+    "errorMessageIncludes": [
+      "The input was expected to not match the regular expression /is_chaarlie_recommended/. Input:",
+      "/is_chaarlie_recommended/"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(result.batchJson, /is_chaarlie_recommended/)",
+    "limits": "Exact frozen owner bytes/unique file anchor; all TS mutants parsed. Message/value/outer first-frame proof still requires main native execution."
+  }
+]

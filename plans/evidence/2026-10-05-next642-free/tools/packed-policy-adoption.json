@@ -1,0 +1,10 @@
+{
+  "mainApproved": true,
+  "files": {
+    "/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/policy.cjs": "b1622277836750342cc6efe96c11bdf140d36fc7b76e7356d1c25869ab887bcd",
+    "/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/disposition.json": "903587ed8a72b5f2955c0355a69770c7a4dceffe6a1c39a2eccd55f235d19103",
+    "/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/actual-static-checks.json": "b1267bf6eadf8e9861fbe24686d5f287aea16aaa96b30e9419dd41611169ff80"
+  },
+  "historicalOriginalHashPreserved": true,
+  "limits": "No original packed snapshot recovered; no whole-file diff claim. Only exact target relevant policy is adopted."
+}

@@ -1,0 +1,14 @@
+{
+  "mode": "check",
+  "phase": "before",
+  "controls": 13,
+  "tsMutantsParsed": 13,
+  "allControlsPrepared": true,
+  "phaseOracles": "exact assertion startLine and text in transfer/cut",
+  "selectedTestCount": 1,
+  "repositoryWrites": 0,
+  "runtimeRuns": 0,
+  "childrenStarted": 0
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

@@ -1,0 +1,2358 @@
+{
+  "before": {
+    "tests/personal-plan/refinement/module-status.test.ts": [
+      {
+        "name": "a fully auto-accepted draft leaves both modules open and assumptions active",
+        "line": 44,
+        "start": 1457,
+        "end": 1967,
+        "body": "test(\"a fully auto-accepted draft leaves both modules open and assumptions active\", () => {\n  const { answers, completedQuestionIds } = defaults()\n  const input = {\n    triggerContext: TRIGGER_CONTEXT,\n    answers,\n    completedQuestionIds,\n    answerProvenance: buildAssumedAnswerProvenance(completedQuestionIds),\n  }\n\n  const states = stage2ModuleStates(input)\n  assert.equal(states.products.status, \"open\")\n  assert.equal(states.habits.status, \"open\")\n  assert.equal(stage2AssumptionsActive(input), true)\n})",
+        "sha256": "954c9646b451e08f3b856d97c9bb17d093b190fbb70ca48c92a2e0b842a80148",
+        "assertions": [
+          {
+            "line": 54,
+            "text": "assert.equal(states.products.status, \"open\")"
+          },
+          {
+            "line": 55,
+            "text": "assert.equal(states.habits.status, \"open\")"
+          },
+          {
+            "line": 56,
+            "text": "assert.equal(stage2AssumptionsActive(input), true)"
+          }
+        ]
+      },
+      {
+        "name": "a draft the user answered end to end has no open module and no assumptions",
+        "line": 59,
+        "start": 1969,
+        "end": 2496,
+        "body": "test(\"a draft the user answered end to end has no open module and no assumptions\", () => {\n  const { answers, completedQuestionIds } = defaults()\n  const input = {\n    triggerContext: TRIGGER_CONTEXT,\n    answers,\n    completedQuestionIds,\n    answerProvenance: provenanceFor(completedQuestionIds, [\"products\", \"habits\"]),\n  }\n\n  const states = stage2ModuleStates(input)\n  assert.equal(states.products.status, \"complete\")\n  assert.equal(states.habits.status, \"complete\")\n  assert.equal(stage2AssumptionsActive(input), false)\n})",
+        "sha256": "61be81a72e8be16b546578e9c7b9f9b93728c7ed68cb58fc36f476ec3b332583",
+        "assertions": [
+          {
+            "line": 69,
+            "text": "assert.equal(states.products.status, \"complete\")"
+          },
+          {
+            "line": 70,
+            "text": "assert.equal(states.habits.status, \"complete\")"
+          },
+          {
+            "line": 71,
+            "text": "assert.equal(stage2AssumptionsActive(input), false)"
+          }
+        ]
+      },
+      {
+        "name": "one user-answered module keeps assumptions active while the other stays open",
+        "line": 74,
+        "start": 2498,
+        "end": 3066,
+        "body": "test(\"one user-answered module keeps assumptions active while the other stays open\", () => {\n  const { answers, completedQuestionIds } = defaults()\n  const input = {\n    triggerContext: TRIGGER_CONTEXT,\n    answers,\n    completedQuestionIds,\n    answerProvenance: provenanceFor(completedQuestionIds, [\"products\"]),\n  }\n\n  const states = stage2ModuleStates(input)\n  assert.equal(states.products.status, \"complete\")\n  assert.equal(states.habits.status, \"open\")\n  assert.ok(states.habits.openQuestionIds.length > 0)\n  assert.equal(stage2AssumptionsActive(input), true)\n})",
+        "sha256": "a716d0a951b04c6ccb2b6d51ba1bea14b83e853cc20aeb94a66c8dbdc8edb8ac",
+        "assertions": [
+          {
+            "line": 84,
+            "text": "assert.equal(states.products.status, \"complete\")"
+          },
+          {
+            "line": 85,
+            "text": "assert.equal(states.habits.status, \"open\")"
+          },
+          {
+            "line": 86,
+            "text": "assert.ok(states.habits.openQuestionIds.length > 0)"
+          },
+          {
+            "line": 87,
+            "text": "assert.equal(stage2AssumptionsActive(input), true)"
+          }
+        ]
+      },
+      {
+        "name": "an untouched draft runs on assumptions",
+        "line": 90,
+        "start": 3068,
+        "end": 3333,
+        "body": "test(\"an untouched draft runs on assumptions\", () => {\n  const input = {\n    triggerContext: TRIGGER_CONTEXT,\n    answers: {},\n    completedQuestionIds: [] as Stage2QuestionId[],\n    answerProvenance: {},\n  }\n\n  assert.equal(stage2AssumptionsActive(input), true)\n})",
+        "sha256": "446fbaf5b301bf457e7da79f5b0113bbb1e22c8b03ac1272777971be732e4d35",
+        "assertions": [
+          {
+            "line": 98,
+            "text": "assert.equal(stage2AssumptionsActive(input), true)"
+          }
+        ]
+      },
+      {
+        "name": "legacy answers without a provenance entry count as user answers",
+        "line": 101,
+        "start": 3335,
+        "end": 3652,
+        "body": "test(\"legacy answers without a provenance entry count as user answers\", () => {\n  const { answers, completedQuestionIds } = defaults()\n\n  assert.equal(\n    stage2AssumptionsActive({\n      triggerContext: TRIGGER_CONTEXT,\n      answers,\n      completedQuestionIds,\n      answerProvenance: {},\n    }),\n    false,\n  )\n})",
+        "sha256": "daa57298a459de44f446c4b37ea6b9a04b43f2a99f8ef7942e5b7ff16fa9b3ff",
+        "assertions": [
+          {
+            "line": 104,
+            "text": "assert.equal(\n    stage2AssumptionsActive({\n      triggerContext: TRIGGER_CONTEXT,\n      answers,\n      completedQuestionIds,\n      answerProvenance: {},\n    }),\n    false,\n  )"
+          }
+        ]
+      }
+    ],
+    "tests/personal-plan/refinement/refinement-status.test.ts": [
+      {
+        "name": "a fresh plan with no draft: both modules open, progress 2/4, banner points at products",
+        "line": 35,
+        "start": 1187,
+        "end": 2071,
+        "body": "test(\"a fresh plan with no draft: both modules open, progress 2/4, banner points at products\", () => {\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: {},\n      completedQuestionIds: [] as Stage2QuestionId[],\n      answerProvenance: {},\n    },\n    moduleProjections: {},\n    bannerDismissals: NO_DISMISSALS,\n  })\n\n  assert.equal(refinementStatusResponseSchema.safeParse(result).success, true)\n  assert.deepEqual(\n    result.modules.map((m) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )\n  assert.ok(result.modules[0].openQuestionCount > 0)\n  assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })\n  assert.equal(result.module1HandedOff, false)\n  assert.deepEqual(result.banner, { visible: true, module: \"products\", dismissed: false })\n})",
+        "sha256": "a5a07b72e0b3d1db9b7b8fa1673601f5da82460272aacf9cb016a0e22afd0a10",
+        "assertions": [
+          {
+            "line": 47,
+            "text": "assert.equal(refinementStatusResponseSchema.safeParse(result).success, true)"
+          },
+          {
+            "line": 48,
+            "text": "assert.deepEqual(\n    result.modules.map((m) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )"
+          },
+          {
+            "line": 55,
+            "text": "assert.ok(result.modules[0].openQuestionCount > 0)"
+          },
+          {
+            "line": 56,
+            "text": "assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })"
+          },
+          {
+            "line": 57,
+            "text": "assert.equal(result.module1HandedOff, false)"
+          },
+          {
+            "line": 58,
+            "text": "assert.deepEqual(result.banner, { visible: true, module: \"products\", dismissed: false })"
+          }
+        ]
+      },
+      {
+        "name": "partial products answers: products stays open with the correct open-question count",
+        "line": 61,
+        "start": 2073,
+        "end": 2892,
+        "body": "test(\"partial products answers: products stays open with the correct open-question count\", () => {\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: { currentProductCategories: [\"shampoo\"] },\n      completedQuestionIds: [\"current_product_categories\"] as Stage2QuestionId[],\n      answerProvenance: { current_product_categories: \"user\" },\n    },\n    moduleProjections: {},\n    bannerDismissals: NO_DISMISSALS,\n  })\n\n  const products = result.modules.find((m) => m.module === \"products\")\n  assert.equal(products?.status, \"open\")\n  // products path here is [current_product_categories, wet_wash_frequency]; one answered.\n  assert.equal(products?.openQuestionCount, 1)\n  assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })\n})",
+        "sha256": "8eff4ac7acb31e68b21ca44d5e653e08b9759b557ba0e81492eb6a1814c666ba",
+        "assertions": [
+          {
+            "line": 74,
+            "text": "assert.equal(products?.status, \"open\")"
+          },
+          {
+            "line": 76,
+            "text": "assert.equal(products?.openQuestionCount, 1)"
+          },
+          {
+            "line": 77,
+            "text": "assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })"
+          }
+        ]
+      },
+      {
+        "name": "products module complete via lineage: 3/4 and the handoff marker is surfaced",
+        "line": 80,
+        "start": 2894,
+        "end": 4172,
+        "body": "test(\"products module complete via lineage: 3/4 and the handoff marker is surfaced\", () => {\n  const productsAnswers: PersonalPlanRefinementAnswersV1 = {\n    currentProductCategories: [\"shampoo\"],\n    wetWashFrequency: \"daily_1x\",\n  }\n  const moduleProjections: Stage2ModuleProjections = {\n    products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n  }\n\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: productsAnswers,\n      completedQuestionIds: [\n        \"current_product_categories\",\n        \"wet_wash_frequency\",\n      ] as Stage2QuestionId[],\n      answerProvenance: { current_product_categories: \"user\", wet_wash_frequency: \"user\" },\n    },\n    moduleProjections,\n    bannerDismissals: NO_DISMISSALS,\n  })\n\n  assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"complete\")\n  assert.equal(result.modules.find((m) => m.module === \"habits\")?.status, \"open\")\n  assert.deepEqual(result.progress, { completedSteps: 3, totalSteps: 4 })\n  assert.equal(result.module1HandedOff, true)\n  // The next open module is habits now, and it has never been dismissed.\n  assert.deepEqual(result.banner, { visible: true, module: \"habits\", dismissed: false })\n})",
+        "sha256": "18c6041d890beef7b701be673f6bb981c4e49c43674fd3684050706369908e30",
+        "assertions": [
+          {
+            "line": 103,
+            "text": "assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"complete\")"
+          },
+          {
+            "line": 104,
+            "text": "assert.equal(result.modules.find((m) => m.module === \"habits\")?.status, \"open\")"
+          },
+          {
+            "line": 105,
+            "text": "assert.deepEqual(result.progress, { completedSteps: 3, totalSteps: 4 })"
+          },
+          {
+            "line": 106,
+            "text": "assert.equal(result.module1HandedOff, true)"
+          },
+          {
+            "line": 108,
+            "text": "assert.deepEqual(result.banner, { visible: true, module: \"habits\", dismissed: false })"
+          }
+        ]
+      },
+      {
+        "name": "both modules complete: 4/4, no open module left, banner not visible",
+        "line": 111,
+        "start": 4174,
+        "end": 5579,
+        "body": "test(\"both modules complete: 4/4, no open module left, banner not visible\", () => {\n  const answers: PersonalPlanRefinementAnswersV1 = {\n    currentProductCategories: [\"shampoo\"],\n    wetWashFrequency: \"daily_1x\",\n    towel: { material: \"no_towel\" },\n    dryingRoutes: [],\n    additionalHeatTools: [],\n    nightProtection: [],\n  }\n  const completedQuestionIds: Stage2QuestionId[] = [\n    \"current_product_categories\",\n    \"wet_wash_frequency\",\n    \"towel_handling\",\n    \"drying_routes\",\n    \"additional_heat_tools\",\n    \"night_protection\",\n  ]\n  const moduleProjections: Stage2ModuleProjections = {\n    products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n    habits: { needVersionId: \"need-v3\", projectedAtRevision: 2, stage3Handoff: false },\n  }\n\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers,\n      completedQuestionIds,\n      answerProvenance: Object.fromEntries(completedQuestionIds.map((id) => [id, \"user\"])),\n    },\n    moduleProjections,\n    bannerDismissals: NO_DISMISSALS,\n  })\n\n  assert.deepEqual(\n    result.modules.map((m) => m.status),\n    [\"complete\", \"complete\"],\n  )\n  assert.deepEqual(result.progress, { completedSteps: 4, totalSteps: 4 })\n  assert.equal(result.module1HandedOff, true)\n  assert.deepEqual(result.banner, { visible: false, module: null, dismissed: false })\n})",
+        "sha256": "a68dfc7e59b871674a49ad17d604e20f3931e22d88ddac498f92c8491f7aedba",
+        "assertions": [
+          {
+            "line": 144,
+            "text": "assert.deepEqual(\n    result.modules.map((m) => m.status),\n    [\"complete\", \"complete\"],\n  )"
+          },
+          {
+            "line": 148,
+            "text": "assert.deepEqual(result.progress, { completedSteps: 4, totalSteps: 4 })"
+          },
+          {
+            "line": 149,
+            "text": "assert.equal(result.module1HandedOff, true)"
+          },
+          {
+            "line": 150,
+            "text": "assert.deepEqual(result.banner, { visible: false, module: null, dismissed: false })"
+          }
+        ]
+      },
+      {
+        "name": "assumed-only answers (no user provenance) count as open, matching direct-accept semantics",
+        "line": 153,
+        "start": 5581,
+        "end": 6375,
+        "body": "test(\"assumed-only answers (no user provenance) count as open, matching direct-accept semantics\", () => {\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: { currentProductCategories: [\"shampoo\"], wetWashFrequency: \"daily_1x\" },\n      completedQuestionIds: [\n        \"current_product_categories\",\n        \"wet_wash_frequency\",\n      ] as Stage2QuestionId[],\n      answerProvenance: {\n        current_product_categories: \"assumed\",\n        wet_wash_frequency: \"assumed\",\n      },\n    },\n    moduleProjections: {},\n    bannerDismissals: NO_DISMISSALS,\n  })\n\n  assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"open\")\n  assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })\n})",
+        "sha256": "fd185e9489a647273d69719d6071d45d702a746e06db2d849731c4aaf9985cd5",
+        "assertions": [
+          {
+            "line": 171,
+            "text": "assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"open\")"
+          },
+          {
+            "line": 172,
+            "text": "assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })"
+          }
+        ]
+      },
+      {
+        "name": "banner: dismissing the current open module hides it without affecting the module list",
+        "line": 175,
+        "start": 6377,
+        "end": 6956,
+        "body": "test(\"banner: dismissing the current open module hides it without affecting the module list\", () => {\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: {},\n      completedQuestionIds: [] as Stage2QuestionId[],\n      answerProvenance: {},\n    },\n    moduleProjections: {},\n    bannerDismissals: dismissals(\"products\"),\n  })\n\n  assert.deepEqual(result.banner, { visible: false, module: \"products\", dismissed: true })\n  assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"open\")\n})",
+        "sha256": "2fdf1dbe087dc9368a3a5fc4e0af5f76092b2093bf9e230a83c73f9986965651",
+        "assertions": [
+          {
+            "line": 187,
+            "text": "assert.deepEqual(result.banner, { visible: false, module: \"products\", dismissed: true })"
+          },
+          {
+            "line": 188,
+            "text": "assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"open\")"
+          }
+        ]
+      },
+      {
+        "name": "banner reappears once a different module becomes the next open one, even if the old dismissal is still stored",
+        "line": 191,
+        "start": 6958,
+        "end": 7943,
+        "body": "test(\"banner reappears once a different module becomes the next open one, even if the old dismissal is still stored\", () => {\n  const productsAnswers: PersonalPlanRefinementAnswersV1 = {\n    currentProductCategories: [\"shampoo\"],\n    wetWashFrequency: \"daily_1x\",\n  }\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: productsAnswers,\n      completedQuestionIds: [\n        \"current_product_categories\",\n        \"wet_wash_frequency\",\n      ] as Stage2QuestionId[],\n      answerProvenance: { current_product_categories: \"user\", wet_wash_frequency: \"user\" },\n    },\n    moduleProjections: {\n      products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n    },\n    // \"products\" was dismissed earlier, but it is no longer the open module.\n    bannerDismissals: dismissals(\"products\"),\n  })\n\n  assert.deepEqual(result.banner, { visible: true, module: \"habits\", dismissed: false })\n})",
+        "sha256": "39de1e6bfaed70dba0dc630165caa43e1d8719d188d6f72d1282af94156be096",
+        "assertions": [
+          {
+            "line": 213,
+            "text": "assert.deepEqual(result.banner, { visible: true, module: \"habits\", dismissed: false })"
+          }
+        ]
+      }
+    ],
+    "tests/personal-plan-refinement-answer-provenance-migration.test.ts": [
+      {
+        "name": "the provenance backfill labels a synthetic draft on a CLEARED-flag plan 'assumed'",
+        "line": 122,
+        "start": 3861,
+        "end": 4895,
+        "body": "test(\"the provenance backfill labels a synthetic draft on a CLEARED-flag plan 'assumed'\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(CONDITIONAL_CONTEXT)\n  // The exact regression: an old unconditional proposal-accept already cleared\n  // `unrefined_direct_accept`, so the plan flag alone reads this fully\n  // synthetic draft as real refinement progress (\"4 von 4\").\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    answers: synthetic.answers,\n    completedQuestionIds: synthetic.completedQuestionIds,\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.ok(synthetic.completedQuestionIds.includes(\"scalp_irritation_detail\"))\n  assert.ok(synthetic.completedQuestionIds.includes(\"dry_shampoo_bridge_preference\"))\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))\n})",
+        "sha256": "ac97ab0e7fa7bf6672d029896d6233294a7dce4a3c00c42837718716c5f0f078",
+        "assertions": [
+          {
+            "line": 139,
+            "text": "assert.ok(synthetic.completedQuestionIds.includes(\"scalp_irritation_detail\"))"
+          },
+          {
+            "line": 140,
+            "text": "assert.ok(synthetic.completedQuestionIds.includes(\"dry_shampoo_bridge_preference\"))"
+          },
+          {
+            "line": 141,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill still labels a synthetic draft on a flagged plan 'assumed'",
+        "line": 144,
+        "start": 4897,
+        "end": 5545,
+        "body": "test(\"the provenance backfill still labels a synthetic draft on a flagged plan 'assumed'\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(PLAIN_CONTEXT)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: true })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    answers: synthetic.answers,\n    completedQuestionIds: synthetic.completedQuestionIds,\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))\n})",
+        "sha256": "2062a017d350abddae5db9127caccd8c38693e73e8554d51815ad81c64c468e8",
+        "assertions": [
+          {
+            "line": 158,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill leaves a plan without direct-acceptance evidence entirely 'user'",
+        "line": 161,
+        "start": 5547,
+        "end": 6654,
+        "body": "test(\"the provenance backfill leaves a plan without direct-acceptance evidence entirely 'user'\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const completedQuestionIds = [\n    \"current_product_categories\",\n    \"wet_wash_frequency\",\n    \"towel_handling\",\n    \"drying_routes\",\n    \"additional_heat_tools\",\n    \"night_protection\",\n    \"heat:ordinary_blow_dry\",\n  ]\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    answers: {\n      currentProductCategories: [\"shampoo\", \"conditioner\"],\n      wetWashFrequency: \"daily\",\n      towel: { material: \"baumwolle\", technique: \"rough_rubbing\" },\n      dryingRoutes: [\"ordinary_blow_dry\"],\n      additionalHeatTools: [],\n      nightProtection: [\"silk_pillowcase\"],\n      heatEvents: { \"heat:ordinary_blow_dry\": { frequency: \"weekly_3x\" } },\n    },\n    completedQuestionIds,\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), allUser(completedQuestionIds))\n})",
+        "sha256": "8a6eb39983e2bbab670a42a9a479e29e62f1049b600a40d616a666954ca49bc7",
+        "assertions": [
+          {
+            "line": 191,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), allUser(completedQuestionIds))"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill splits a reopened, partially refined draft per answer",
+        "line": 194,
+        "start": 6656,
+        "end": 8122,
+        "body": "test(\"the provenance backfill splits a reopened, partially refined draft per answer\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(PLAIN_CONTEXT)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  // The completed synthetic draft `reopen()` left behind — the durable trace of\n  // direct acceptance that survives the flag clear.\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    answers: synthetic.answers,\n    completedQuestionIds: synthetic.completedQuestionIds,\n  })\n  // The successor draft: `reopen()` copied the synthetic answers forward and the\n  // user has since re-answered two of them (plus the heat event that opened).\n  await insertDraft(pg, {\n    draftId: id(3, 3),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: {\n      ...synthetic.answers,\n      wetWashFrequency: \"daily\",\n      dryingRoutes: [\"ordinary_blow_dry\"],\n      heatEvents: { \"heat:ordinary_blow_dry\": { frequency: \"weekly_3x\" } },\n    },\n    completedQuestionIds: [...synthetic.completedQuestionIds, \"heat:ordinary_blow_dry\"],\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(3, 3)), {\n    ...allAssumed(synthetic.completedQuestionIds),\n    wet_wash_frequency: \"user\",\n    drying_routes: \"user\",\n    \"heat:ordinary_blow_dry\": \"user\",\n  })\n})",
+        "sha256": "9c27f30229c2b96c4df9e20251b3bfee95de78de3adbc4944b5fb9ba3f905a6b",
+        "assertions": [
+          {
+            "line": 225,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(3, 3)), {\n    ...allAssumed(synthetic.completedQuestionIds),\n    wet_wash_frequency: \"user\",\n    drying_routes: \"user\",\n    \"heat:ordinary_blow_dry\": \"user\",\n  })"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill keeps an assumed-valued heat event 'assumed' inside the cohort",
+        "line": 233,
+        "start": 8124,
+        "end": 9104,
+        "body": "test(\"the provenance backfill keeps an assumed-valued heat event 'assumed' inside the cohort\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(PLAIN_CONTEXT)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: true })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: {\n      ...synthetic.answers,\n      additionalHeatTools: [\"straightener\"],\n      heatEvents: {\n        \"heat:straightener\": { frequency: \"less_than_monthly\", protectionConsistency: \"unsure\" },\n      },\n    },\n    completedQuestionIds: [...synthetic.completedQuestionIds, \"heat:straightener\"],\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), {\n    ...allAssumed(synthetic.completedQuestionIds),\n    additional_heat_tools: \"user\",\n    \"heat:straightener\": \"assumed\",\n  })\n})",
+        "sha256": "32539b0e6d2940c38a3f0de8b41e6909315d03979c6657eb3796a9258fdc900c",
+        "assertions": [
+          {
+            "line": 254,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), {\n    ...allAssumed(synthetic.completedQuestionIds),\n    additional_heat_tools: \"user\",\n    \"heat:straightener\": \"assumed\",\n  })"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill errs to 'assumed' for a draft indistinguishable from the defaults",
+        "line": 261,
+        "start": 9106,
+        "end": 10055,
+        "body": "test(\"the provenance backfill errs to 'assumed' for a draft indistinguishable from the defaults\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(PLAIN_CONTEXT)\n  // Ruled error direction: a user who freely answered every question with\n  // exactly the assumed value is indistinguishable from a synthetic draft. One\n  // unnecessary banner (false-incomplete) beats a synthetic user who never gets\n  // the refinement entry point at all (false-complete).\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    answers: synthetic.answers,\n    completedQuestionIds: synthetic.completedQuestionIds,\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))\n})",
+        "sha256": "9af0515063111b63c9980d0ccebdf38d73d60a0b0d1c42e194bf04711d13e47e",
+        "assertions": [
+          {
+            "line": 279,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill writes an empty map for a draft with no completed answers",
+        "line": 282,
+        "start": 10057,
+        "end": 10577,
+        "body": "test(\"the provenance backfill writes an empty map for a draft with no completed answers\", async (t) => {\n  const pg = await migratedDatabase(t)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: true })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: {},\n    completedQuestionIds: [],\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), {})\n})",
+        "sha256": "bf139a8ad9ab043081f032335fcb39992541142796db6f9aa74d1ea0d859bf07",
+        "assertions": [
+          {
+            "line": 296,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), {})"
+          }
+        ]
+      },
+      {
+        "name": "the save RPC keeps a 5-argument compatibility overload for the migrate-then-deploy window",
+        "line": 299,
+        "start": 10579,
+        "end": 12809,
+        "body": "test(\"the save RPC keeps a 5-argument compatibility overload for the migrate-then-deploy window\", async (t) => {\n  const pg = await migratedDatabase(t)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: {},\n    completedQuestionIds: [],\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  const { rows: signatures } = await pg.query<{ arity: number }>(\n    `SELECT pg_catalog.array_length(proargtypes, 1) AS arity\n       FROM pg_catalog.pg_proc\n      WHERE proname = 'personal_plan_save_refinement_draft'\n      ORDER BY 1`,\n  )\n  assert.deepEqual(\n    signatures.map((row) => row.arity),\n    [5, 6],\n  )\n\n  // The still-live previous build calls the 5-argument signature.\n  const { rows: legacy } = await pg.query<{ result: { outcome: string; revision: number } }>(\n    `SELECT public.personal_plan_save_refinement_draft(\n       $1::uuid, $2::uuid, 0::bigint, $3::jsonb, $4::text[]\n     ) AS result`,\n    [id(9, 9), id(2, 2), JSON.stringify({ wetWashFrequency: \"daily\" }), \"{wet_wash_frequency}\"],\n  )\n  assert.equal(legacy[0]!.result.outcome, \"saved\")\n  assert.equal(legacy[0]!.result.revision, 1)\n  // Nothing is invented for the newly completed id: a completed id with no\n  // entry is treated as 'user' by userAnsweredQuestionIds(), which is exactly\n  // what a write from the pre-provenance build means.\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), {})\n\n  // The 6-argument path is untouched and still writes provenance.\n  const { rows: current } = await pg.query<{ result: { outcome: string; revision: number } }>(\n    `SELECT public.personal_plan_save_refinement_draft(\n       $1::uuid, $2::uuid, 1::bigint, $3::jsonb, $4::text[], $5::jsonb\n     ) AS result`,\n    [\n      id(9, 9),\n      id(2, 2),\n      JSON.stringify({ wetWashFrequency: \"daily\" }),\n      \"{wet_wash_frequency}\",\n      JSON.stringify({ wet_wash_frequency: \"user\" }),\n    ],\n  )\n  assert.equal(current[0]!.result.outcome, \"saved\")\n  assert.equal(current[0]!.result.revision, 2)\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), { wet_wash_frequency: \"user\" })\n})",
+        "sha256": "f54573670a785439c56da5b1f6a270ed87640ffdd1075fbabbd430668c601ed7",
+        "assertions": [
+          {
+            "line": 319,
+            "text": "assert.deepEqual(\n    signatures.map((row) => row.arity),\n    [5, 6],\n  )"
+          },
+          {
+            "line": 331,
+            "text": "assert.equal(legacy[0]!.result.outcome, \"saved\")"
+          },
+          {
+            "line": 332,
+            "text": "assert.equal(legacy[0]!.result.revision, 1)"
+          },
+          {
+            "line": 336,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), {})"
+          },
+          {
+            "line": 351,
+            "text": "assert.equal(current[0]!.result.outcome, \"saved\")"
+          },
+          {
+            "line": 352,
+            "text": "assert.equal(current[0]!.result.revision, 2)"
+          },
+          {
+            "line": 353,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), { wet_wash_frequency: \"user\" })"
+          }
+        ]
+      },
+      {
+        "name": "the 5-argument compatibility overload preserves backfilled provenance instead of wiping it",
+        "line": 356,
+        "start": 12811,
+        "end": 15097,
+        "body": "test(\"the 5-argument compatibility overload preserves backfilled provenance instead of wiping it\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(PLAIN_CONTEXT)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: true })\n  // Backfills to a MIX: `wet_wash_frequency` deviates from the assumption, the\n  // rest of the synthetic set does not.\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: { ...synthetic.answers, wetWashFrequency: \"daily\" },\n    completedQuestionIds: synthetic.completedQuestionIds,\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  const backfilled = await provenanceOf(pg, id(2, 2))\n  assert.equal(backfilled.wet_wash_frequency, \"user\")\n  assert.equal(backfilled.night_protection, \"assumed\")\n  assert.equal(backfilled.drying_routes, \"assumed\")\n\n  // A straggler save from the still-live old build: it drops `night_protection`\n  // from the completed set and reports a brand-new id it has no provenance for.\n  const keptQuestionIds = synthetic.completedQuestionIds.filter(\n    (questionId) => questionId !== \"night_protection\",\n  )\n  const { rows } = await pg.query<{ result: { outcome: string; revision: number } }>(\n    `SELECT public.personal_plan_save_refinement_draft(\n       $1::uuid, $2::uuid, 0::bigint, $3::jsonb, $4::text[]\n     ) AS result`,\n    [\n      id(9, 9),\n      id(2, 2),\n      JSON.stringify({ ...synthetic.answers, wetWashFrequency: \"daily\" }),\n      `{${[...keptQuestionIds, \"oil_purposes\"].join(\",\")}}`,\n    ],\n  )\n  assert.equal(rows[0]!.result.outcome, \"saved\")\n\n  const afterLegacySave = await provenanceOf(pg, id(2, 2))\n  // Kept ids keep their exact labels — the backfilled 'assumed' cohort survives.\n  assert.deepEqual(\n    afterLegacySave,\n    Object.fromEntries(keptQuestionIds.map((questionId) => [questionId, backfilled[questionId]!])),\n  )\n  // Dropped id is gone (prune semantics), new id is not invented.\n  assert.equal(\"night_protection\" in afterLegacySave, false)\n  assert.equal(\"oil_purposes\" in afterLegacySave, false)\n  assert.equal(afterLegacySave.wet_wash_frequency, \"user\")\n  assert.equal(afterLegacySave.drying_routes, \"assumed\")\n})",
+        "sha256": "e5c4272d99f1b18153973cb5f648b1d0ce75e3d3ecd7322f3398497e78b0b12d",
+        "assertions": [
+          {
+            "line": 374,
+            "text": "assert.equal(backfilled.wet_wash_frequency, \"user\")"
+          },
+          {
+            "line": 375,
+            "text": "assert.equal(backfilled.night_protection, \"assumed\")"
+          },
+          {
+            "line": 376,
+            "text": "assert.equal(backfilled.drying_routes, \"assumed\")"
+          },
+          {
+            "line": 394,
+            "text": "assert.equal(rows[0]!.result.outcome, \"saved\")"
+          },
+          {
+            "line": 398,
+            "text": "assert.deepEqual(\n    afterLegacySave,\n    Object.fromEntries(keptQuestionIds.map((questionId) => [questionId, backfilled[questionId]!])),\n  )"
+          },
+          {
+            "line": 403,
+            "text": "assert.equal(\"night_protection\" in afterLegacySave, false)"
+          },
+          {
+            "line": 404,
+            "text": "assert.equal(\"oil_purposes\" in afterLegacySave, false)"
+          },
+          {
+            "line": 405,
+            "text": "assert.equal(afterLegacySave.wet_wash_frequency, \"user\")"
+          },
+          {
+            "line": 406,
+            "text": "assert.equal(afterLegacySave.drying_routes, \"assumed\")"
+          }
+        ]
+      },
+      {
+        "name": "the 6-argument save RPC still rejects a non-object provenance payload",
+        "line": 409,
+        "start": 15099,
+        "end": 15951,
+        "body": "test(\"the 6-argument save RPC still rejects a non-object provenance payload\", async (t) => {\n  const pg = await migratedDatabase(t)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: {},\n    completedQuestionIds: [],\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  const { rows } = await pg.query<{ result: { outcome: string; reasonCode: string } }>(\n    `SELECT public.personal_plan_save_refinement_draft(\n       $1::uuid, $2::uuid, 0::bigint, '{}'::jsonb, '{}'::text[], '[]'::jsonb\n     ) AS result`,\n    [id(9, 9), id(2, 2)],\n  )\n  assert.equal(rows[0]!.result.outcome, \"invalid_source\")\n  assert.equal(rows[0]!.result.reasonCode, \"invalid_answer_provenance\")\n})",
+        "sha256": "216f2c8429d1900ec5aa56c51aadac74e5fb958c8eeefab056138b9564244425",
+        "assertions": [
+          {
+            "line": 429,
+            "text": "assert.equal(rows[0]!.result.outcome, \"invalid_source\")"
+          },
+          {
+            "line": 430,
+            "text": "assert.equal(rows[0]!.result.reasonCode, \"invalid_answer_provenance\")"
+          }
+        ]
+      }
+    ],
+    "tests/personal-plan-refinement-presentation-route.test.ts": [
+      {
+        "name": "returns the refinement answers bound to the current refined need version",
+        "line": 162,
+        "start": 4552,
+        "end": 6418,
+        "body": "test(\"returns the refinement answers bound to the current refined need version\", async () => {\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: ids.refined,\n        active_routine_version_id: null,\n        pending_routine_proposal_id: null,\n      },\n    ],\n    personal_plan_refinement_drafts: [\n      {\n        id: \"draft-stale\",\n        personal_plan_id: ids.plan,\n        status: \"complete\",\n        result_refined_need_version_id: ids.staleRefined,\n        answers: { towel: { material: \"handtuch\", technique: \"rub\" } },\n        completed_question_ids: [\"towel_handling\"],\n        // Newer than the correct draft below, but bound to a superseded refined-need\n        // version. Winning here would prove the route wrongly authorities on recency.\n        updated_at: \"2026-08-14T00:00:00.000Z\",\n      },\n      {\n        id: \"draft-current\",\n        personal_plan_id: ids.plan,\n        status: \"complete\",\n        result_refined_need_version_id: ids.refined,\n        answers: { towel: { material: \"frottee\", technique: \"gentle_press\" }, nightProtection: [] },\n        completed_question_ids: [\"towel_handling\", \"night_protection\"],\n        updated_at: \"2026-08-10T00:00:00.000Z\",\n      },\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(res.headers.get(\"Cache-Control\"), \"no-store\")\n  assert.equal(body.answers.towel.material, \"frottee\")\n  assert.deepEqual(body.answers.nightProtection, [])\n  assert.deepEqual(body.completedQuestionIds, [\"towel_handling\", \"night_protection\"])\n  assert.equal(body.routineProducts, null)\n})",
+        "sha256": "38dfe8c28b9288bf587b8aa8ea00d422e4166401b8966ab0aec5c532bbd404ad",
+        "assertions": [
+          {
+            "line": 205,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 206,
+            "text": "assert.equal(res.headers.get(\"Cache-Control\"), \"no-store\")"
+          },
+          {
+            "line": 207,
+            "text": "assert.equal(body.answers.towel.material, \"frottee\")"
+          },
+          {
+            "line": 208,
+            "text": "assert.deepEqual(body.answers.nightProtection, [])"
+          },
+          {
+            "line": 209,
+            "text": "assert.deepEqual(body.completedQuestionIds, [\"towel_handling\", \"night_protection\"])"
+          },
+          {
+            "line": 210,
+            "text": "assert.equal(body.routineProducts, null)"
+          }
+        ]
+      },
+      {
+        "name": "returns null answers when no complete draft matches the pointer",
+        "line": 213,
+        "start": 6420,
+        "end": 7532,
+        "body": "test(\"returns null answers when no complete draft matches the pointer\", async () => {\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: ids.refined,\n        active_routine_version_id: null,\n        pending_routine_proposal_id: null,\n      },\n    ],\n    personal_plan_refinement_drafts: [\n      {\n        id: \"draft-other\",\n        personal_plan_id: ids.plan,\n        status: \"complete\",\n        result_refined_need_version_id: ids.staleRefined,\n        answers: { towel: { material: \"handtuch\" } },\n        completed_question_ids: [\"towel_handling\"],\n        updated_at: \"2026-08-10T00:00:00.000Z\",\n      },\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(body.answers, null)\n  assert.deepEqual(body.completedQuestionIds, [])\n  assert.equal(body.routineProducts, null)\n})",
+        "sha256": "f105c2ebabac5c1c3d97bc3a98e94f3af89a1800bd4d45e4ef9a23d5a9e550ea",
+        "assertions": [
+          {
+            "line": 245,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 246,
+            "text": "assert.equal(body.answers, null)"
+          },
+          {
+            "line": 247,
+            "text": "assert.deepEqual(body.completedQuestionIds, [])"
+          },
+          {
+            "line": 248,
+            "text": "assert.equal(body.routineProducts, null)"
+          }
+        ]
+      },
+      {
+        "name": "returns included routine products of the active version",
+        "line": 266,
+        "start": 8176,
+        "end": 9750,
+        "body": "test(\"returns included routine products of the active version\", async () => {\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: null,\n        active_routine_version_id: ids.routineVersion,\n        pending_routine_proposal_id: null,\n      },\n    ],\n    personal_plan_routine_versions: [\n      {\n        id: ids.routineVersion,\n        user_id: ids.user,\n        personal_plan_id: ids.plan,\n        payload: routinePayload(ids.routineVersion, [\n          ownedConditioner,\n          plannedShampoo,\n          pendingReviewMask,\n        ]),\n      },\n    ],\n    personal_plan_need_versions: [\n      matchingRefinedNeedVersionRow([\"conditioner\", \"shampoo\", \"mask\"]),\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(body.routineProducts.length, 2)\n  const owned = body.routineProducts.find((product: { state: string }) => product.state === \"owned\")\n  assert.equal(owned.name, \"Gliss Kur Aqua Revive Conditioner\")\n  assert.equal(owned.categoryLabel, \"Conditioner\")\n  assert.equal(owned.purposeLabel, \"Pflege nach der Reinigung\")\n  const planned = body.routineProducts.find(\n    (product: { state: string }) => product.state === \"planned\",\n  )\n  assert.equal(planned.name, \"Neues Shampoo\")\n  assert.equal(planned.categoryLabel, \"Shampoo\")\n})",
+        "sha256": "6440e834318e18a8365c67104d386471291ea5746e7fe41b38c5edc9a04dddf1",
+        "assertions": [
+          {
+            "line": 302,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 303,
+            "text": "assert.equal(body.routineProducts.length, 2)"
+          },
+          {
+            "line": 305,
+            "text": "assert.equal(owned.name, \"Gliss Kur Aqua Revive Conditioner\")"
+          },
+          {
+            "line": 306,
+            "text": "assert.equal(owned.categoryLabel, \"Conditioner\")"
+          },
+          {
+            "line": 307,
+            "text": "assert.equal(owned.purposeLabel, \"Pflege nach der Reinigung\")"
+          },
+          {
+            "line": 311,
+            "text": "assert.equal(planned.name, \"Neues Shampoo\")"
+          },
+          {
+            "line": 312,
+            "text": "assert.equal(planned.categoryLabel, \"Shampoo\")"
+          }
+        ]
+      },
+      {
+        "name": "routineProducts is null without an active routine",
+        "line": 315,
+        "start": 9752,
+        "end": 10392,
+        "body": "test(\"routineProducts is null without an active routine\", async () => {\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: null,\n        active_routine_version_id: null,\n        pending_routine_proposal_id: null,\n      },\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(body.routineProducts, null)\n})",
+        "sha256": "d94cbe8d916ce8aa660cbe50d178b3c6f83a2ba93ba4474ada06b3c4a193ab5d",
+        "assertions": [
+          {
+            "line": 336,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 337,
+            "text": "assert.equal(body.routineProducts, null)"
+          }
+        ]
+      },
+      {
+        "name": "routineProducts is null when the active routine is authority_repair_required",
+        "line": 340,
+        "start": 10394,
+        "end": 11636,
+        "body": "test(\"routineProducts is null when the active routine is authority_repair_required\", async () => {\n  // No personal_plan_need_versions row is seeded for ids.refined, so\n  // hasMatchingSourceCategoryOrder() cannot confirm the frozen Routine still matches its\n  // immutable source. /routine would show a repair prompt and hide items in this state;\n  // /profile must not show a possibly-stale product list either.\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: null,\n        active_routine_version_id: ids.routineVersion,\n        pending_routine_proposal_id: null,\n      },\n    ],\n    personal_plan_routine_versions: [\n      {\n        id: ids.routineVersion,\n        user_id: ids.user,\n        personal_plan_id: ids.plan,\n        payload: routinePayload(ids.routineVersion, [ownedConditioner, plannedShampoo]),\n      },\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(body.routineProducts, null)\n})",
+        "sha256": "9c3939f6582fce3e42e409fdacf849cfb9f83a06bf065fe6832006b3fcc418e2",
+        "assertions": [
+          {
+            "line": 373,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 374,
+            "text": "assert.equal(body.routineProducts, null)"
+          }
+        ]
+      },
+      {
+        "name": "refinement presentation API rejects unauthenticated reads",
+        "line": 377,
+        "start": 11638,
+        "end": 11938,
+        "body": "test(\"refinement presentation API rejects unauthenticated reads\", async () => {\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => null,\n    client: () => {\n      throw new Error(\"must not construct client\")\n    },\n  }).GET()\n  assert.equal(res.status, 401)\n})",
+        "sha256": "040bde3ba09c84a9565b9a711d95693d9fc9c14fcb9ba77d1b1beb4d130a5537",
+        "assertions": [
+          {
+            "line": 384,
+            "text": "assert.equal(res.status, 401)"
+          }
+        ]
+      }
+    ],
+    "tests/personal-plan-refinement-status-route.test.ts": [
+      {
+        "name": "fresh plan with no refinement draft: both modules open, progress 2/4",
+        "line": 118,
+        "start": 3899,
+        "end": 4633,
+        "body": "test(\"fresh plan with no refinement draft: both modules open, progress 2/4\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(res.headers.get(\"Cache-Control\"), \"no-store\")\n  assert.deepEqual(\n    body.modules.map((m: { module: string; status: string }) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )\n  assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })\n  assert.equal(body.module1HandedOff, false)\n  assert.deepEqual(body.banner, { visible: true, module: \"products\", dismissed: false })\n})",
+        "sha256": "bad81e5552ef7653a71b1712db928cefe5526ca580c095de6a1a0db2d71d0288",
+        "assertions": [
+          {
+            "line": 125,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 126,
+            "text": "assert.equal(res.headers.get(\"Cache-Control\"), \"no-store\")"
+          },
+          {
+            "line": 127,
+            "text": "assert.deepEqual(\n    body.modules.map((m: { module: string; status: string }) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )"
+          },
+          {
+            "line": 134,
+            "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })"
+          },
+          {
+            "line": 135,
+            "text": "assert.equal(body.module1HandedOff, false)"
+          },
+          {
+            "line": 136,
+            "text": "assert.deepEqual(body.banner, { visible: true, module: \"products\", dismissed: false })"
+          }
+        ]
+      },
+      {
+        "name": "partial products user-answers: products open with the correct open-question count",
+        "line": 139,
+        "start": 4635,
+        "end": 5640,
+        "body": "test(\"partial products user-answers: products open with the correct open-question count\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"in_progress\",\n        answers: { currentProductCategories: [\"shampoo\"] },\n        completed_question_ids: [\"current_product_categories\"],\n        answer_provenance: { current_product_categories: \"user\" },\n        module_projections: {},\n        updated_at: \"2026-08-20T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  const products = body.modules.find((m: { module: string }) => m.module === \"products\")\n  assert.equal(products.status, \"open\")\n  assert.equal(products.openQuestionCount, 1)\n  assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })\n})",
+        "sha256": "f1454bc0bd680f377be7ca39d9b0f2affeb1b42b0652f98c2583c2aa243eec32",
+        "assertions": [
+          {
+            "line": 158,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 160,
+            "text": "assert.equal(products.status, \"open\")"
+          },
+          {
+            "line": 161,
+            "text": "assert.equal(products.openQuestionCount, 1)"
+          },
+          {
+            "line": 162,
+            "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })"
+          }
+        ]
+      },
+      {
+        "name": "products module complete via lineage: 3/4 and the handoff marker is set",
+        "line": 165,
+        "start": 5642,
+        "end": 6991,
+        "body": "test(\"products module complete via lineage: 3/4 and the handoff marker is set\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"in_progress\",\n        answers: { currentProductCategories: [\"shampoo\"], wetWashFrequency: \"daily\" },\n        completed_question_ids: [\"current_product_categories\", \"wet_wash_frequency\"],\n        answer_provenance: { current_product_categories: \"user\", wet_wash_frequency: \"user\" },\n        module_projections: {\n          products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n        },\n        updated_at: \"2026-08-20T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(\n    body.modules.find((m: { module: string }) => m.module === \"products\").status,\n    \"complete\",\n  )\n  assert.equal(body.modules.find((m: { module: string }) => m.module === \"habits\").status, \"open\")\n  assert.deepEqual(body.progress, { completedSteps: 3, totalSteps: 4 })\n  assert.equal(body.module1HandedOff, true)\n  assert.deepEqual(body.banner, { visible: true, module: \"habits\", dismissed: false })\n})",
+        "sha256": "974961a1b80cd15af0e79c4db7195db243b9e0e483f3fad7cf40e1fac6997f58",
+        "assertions": [
+          {
+            "line": 186,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 187,
+            "text": "assert.equal(\n    body.modules.find((m: { module: string }) => m.module === \"products\").status,\n    \"complete\",\n  )"
+          },
+          {
+            "line": 191,
+            "text": "assert.equal(body.modules.find((m: { module: string }) => m.module === \"habits\").status, \"open\")"
+          },
+          {
+            "line": 192,
+            "text": "assert.deepEqual(body.progress, { completedSteps: 3, totalSteps: 4 })"
+          },
+          {
+            "line": 193,
+            "text": "assert.equal(body.module1HandedOff, true)"
+          },
+          {
+            "line": 194,
+            "text": "assert.deepEqual(body.banner, { visible: true, module: \"habits\", dismissed: false })"
+          }
+        ]
+      },
+      {
+        "name": "both modules complete: 4/4",
+        "line": 197,
+        "start": 6993,
+        "end": 8583,
+        "body": "test(\"both modules complete: 4/4\", async () => {\n  const answers = {\n    currentProductCategories: [\"shampoo\"],\n    wetWashFrequency: \"daily\",\n    towel: { material: \"no_towel\" },\n    dryingRoutes: [],\n    additionalHeatTools: [],\n    nightProtection: [],\n  }\n  const completedQuestionIds = [\n    \"current_product_categories\",\n    \"wet_wash_frequency\",\n    \"towel_handling\",\n    \"drying_routes\",\n    \"additional_heat_tools\",\n    \"night_protection\",\n  ]\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"complete\",\n        answers,\n        completed_question_ids: completedQuestionIds,\n        answer_provenance: Object.fromEntries(completedQuestionIds.map((id) => [id, \"user\"])),\n        module_projections: {\n          products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n          habits: { needVersionId: \"need-v3\", projectedAtRevision: 2, stage3Handoff: false },\n        },\n        updated_at: \"2026-08-21T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.deepEqual(\n    body.modules.map((m: { status: string }) => m.status),\n    [\"complete\", \"complete\"],\n  )\n  assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })\n  assert.equal(body.module1HandedOff, true)\n  assert.deepEqual(body.banner, { visible: false, module: null, dismissed: false })\n})",
+        "sha256": "3586d769766ff39e1819555a96a17c0364f2b328097d001ec07483f68793c0b2",
+        "assertions": [
+          {
+            "line": 235,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 236,
+            "text": "assert.deepEqual(\n    body.modules.map((m: { status: string }) => m.status),\n    [\"complete\", \"complete\"],\n  )"
+          },
+          {
+            "line": 240,
+            "text": "assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })"
+          },
+          {
+            "line": 241,
+            "text": "assert.equal(body.module1HandedOff, true)"
+          },
+          {
+            "line": 242,
+            "text": "assert.deepEqual(body.banner, { visible: false, module: null, dismissed: false })"
+          }
+        ]
+      },
+      {
+        "name": "banner reflects a stored dismissal for the current open module",
+        "line": 245,
+        "start": 8585,
+        "end": 9173,
+        "body": "test(\"banner reflects a stored dismissal for the current open module\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    [PERSONAL_PLAN_UI_LIFECYCLE_MARKS_TABLE]: [\n      {\n        user_id: ids.user,\n        kind: \"module_banner_dismissed\",\n        subject: \"products\",\n        marked_at: \"2026-08-20T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.deepEqual(body.banner, { visible: false, module: \"products\", dismissed: true })\n})",
+        "sha256": "80cf00d350bd46e98ea7546aff853d52e91aa7cf238e0c1a0b587127e141787e",
+        "assertions": [
+          {
+            "line": 260,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 261,
+            "text": "assert.deepEqual(body.banner, { visible: false, module: \"products\", dismissed: true })"
+          }
+        ]
+      },
+      {
+        "name": "in_progress draft wins over a completed draft on the same initial need version",
+        "line": 264,
+        "start": 9175,
+        "end": 10741,
+        "body": "test(\"in_progress draft wins over a completed draft on the same initial need version\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"complete\",\n        answers: {\n          currentProductCategories: [\"shampoo\"],\n          wetWashFrequency: \"daily\",\n          towel: { material: \"no_towel\" },\n          dryingRoutes: [],\n          additionalHeatTools: [],\n          nightProtection: [],\n        },\n        completed_question_ids: [\n          \"current_product_categories\",\n          \"wet_wash_frequency\",\n          \"towel_handling\",\n          \"drying_routes\",\n          \"additional_heat_tools\",\n          \"night_protection\",\n        ],\n        answer_provenance: { current_product_categories: \"user\" },\n        module_projections: {},\n        updated_at: \"2026-08-19T00:00:00.000Z\",\n      },\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"in_progress\",\n        answers: {},\n        completed_question_ids: [],\n        answer_provenance: {},\n        module_projections: {},\n        updated_at: \"2026-08-22T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  // Reads the in_progress row, not the (also present) complete one.\n  assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })\n})",
+        "sha256": "8c1b48a99e7060aa30b88fd7b3c5bf0313702af0a00de0bb8b15e49b77d42408",
+        "assertions": [
+          {
+            "line": 307,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 309,
+            "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })"
+          }
+        ]
+      },
+      {
+        "name": "initial need version with neither a Stage-1 lead nor a prepared-artifact source degrades to 503",
+        "line": 312,
+        "start": 10743,
+        "end": 11106,
+        "body": "test(\"initial need version with neither a Stage-1 lead nor a prepared-artifact source degrades to 503\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [\n      needVersionRow({ stage1_source_lead_id: null, prepared_artifact_source_id: null }),\n    ],\n  }).GET()\n\n  assert.equal(res.status, 503)\n})",
+        "sha256": "96e5a8a516fd741dfb82084baeed6484dd9dec684ad5658efe2b7b9de95710c7",
+        "assertions": [
+          {
+            "line": 320,
+            "text": "assert.equal(res.status, 503)"
+          }
+        ]
+      },
+      {
+        "name": "no personal plan: typed 404",
+        "line": 323,
+        "start": 11108,
+        "end": 11314,
+        "body": "test(\"no personal plan: typed 404\", async () => {\n  const res = await handlersFor({}).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 404)\n  assert.equal(body.error, \"no_personal_plan\")\n})",
+        "sha256": "c5240d71349596ee1b4cc0f6373c1cb35e571c0b9585e5ecdce3d1608d77b776",
+        "assertions": [
+          {
+            "line": 327,
+            "text": "assert.equal(res.status, 404)"
+          },
+          {
+            "line": 328,
+            "text": "assert.equal(body.error, \"no_personal_plan\")"
+          }
+        ]
+      },
+      {
+        "name": "rejects unauthenticated reads",
+        "line": 331,
+        "start": 11316,
+        "end": 11450,
+        "body": "test(\"rejects unauthenticated reads\", async () => {\n  const res = await handlersFor({}, null).GET()\n  assert.equal(res.status, 401)\n})",
+        "sha256": "e83fb008cfb6e5f003b045a42f52aaec13988d3f875a7662c65db9a746fbe199",
+        "assertions": [
+          {
+            "line": 333,
+            "text": "assert.equal(res.status, 401)"
+          }
+        ]
+      }
+    ]
+  },
+  "transfer": {
+    "tests/personal-plan/refinement/module-status.test.ts": [
+      {
+        "name": "a fully auto-accepted draft leaves both modules open and assumptions active",
+        "line": 44,
+        "start": 1457,
+        "end": 1967,
+        "body": "test(\"a fully auto-accepted draft leaves both modules open and assumptions active\", () => {\n  const { answers, completedQuestionIds } = defaults()\n  const input = {\n    triggerContext: TRIGGER_CONTEXT,\n    answers,\n    completedQuestionIds,\n    answerProvenance: buildAssumedAnswerProvenance(completedQuestionIds),\n  }\n\n  const states = stage2ModuleStates(input)\n  assert.equal(states.products.status, \"open\")\n  assert.equal(states.habits.status, \"open\")\n  assert.equal(stage2AssumptionsActive(input), true)\n})",
+        "sha256": "954c9646b451e08f3b856d97c9bb17d093b190fbb70ca48c92a2e0b842a80148",
+        "assertions": [
+          {
+            "line": 54,
+            "text": "assert.equal(states.products.status, \"open\")"
+          },
+          {
+            "line": 55,
+            "text": "assert.equal(states.habits.status, \"open\")"
+          },
+          {
+            "line": 56,
+            "text": "assert.equal(stage2AssumptionsActive(input), true)"
+          }
+        ]
+      },
+      {
+        "name": "a draft the user answered end to end has no open module and no assumptions",
+        "line": 59,
+        "start": 1969,
+        "end": 2496,
+        "body": "test(\"a draft the user answered end to end has no open module and no assumptions\", () => {\n  const { answers, completedQuestionIds } = defaults()\n  const input = {\n    triggerContext: TRIGGER_CONTEXT,\n    answers,\n    completedQuestionIds,\n    answerProvenance: provenanceFor(completedQuestionIds, [\"products\", \"habits\"]),\n  }\n\n  const states = stage2ModuleStates(input)\n  assert.equal(states.products.status, \"complete\")\n  assert.equal(states.habits.status, \"complete\")\n  assert.equal(stage2AssumptionsActive(input), false)\n})",
+        "sha256": "61be81a72e8be16b546578e9c7b9f9b93728c7ed68cb58fc36f476ec3b332583",
+        "assertions": [
+          {
+            "line": 69,
+            "text": "assert.equal(states.products.status, \"complete\")"
+          },
+          {
+            "line": 70,
+            "text": "assert.equal(states.habits.status, \"complete\")"
+          },
+          {
+            "line": 71,
+            "text": "assert.equal(stage2AssumptionsActive(input), false)"
+          }
+        ]
+      },
+      {
+        "name": "one user-answered module keeps assumptions active while the other stays open",
+        "line": 74,
+        "start": 2498,
+        "end": 3066,
+        "body": "test(\"one user-answered module keeps assumptions active while the other stays open\", () => {\n  const { answers, completedQuestionIds } = defaults()\n  const input = {\n    triggerContext: TRIGGER_CONTEXT,\n    answers,\n    completedQuestionIds,\n    answerProvenance: provenanceFor(completedQuestionIds, [\"products\"]),\n  }\n\n  const states = stage2ModuleStates(input)\n  assert.equal(states.products.status, \"complete\")\n  assert.equal(states.habits.status, \"open\")\n  assert.ok(states.habits.openQuestionIds.length > 0)\n  assert.equal(stage2AssumptionsActive(input), true)\n})",
+        "sha256": "a716d0a951b04c6ccb2b6d51ba1bea14b83e853cc20aeb94a66c8dbdc8edb8ac",
+        "assertions": [
+          {
+            "line": 84,
+            "text": "assert.equal(states.products.status, \"complete\")"
+          },
+          {
+            "line": 85,
+            "text": "assert.equal(states.habits.status, \"open\")"
+          },
+          {
+            "line": 86,
+            "text": "assert.ok(states.habits.openQuestionIds.length > 0)"
+          },
+          {
+            "line": 87,
+            "text": "assert.equal(stage2AssumptionsActive(input), true)"
+          }
+        ]
+      },
+      {
+        "name": "an untouched draft runs on assumptions",
+        "line": 90,
+        "start": 3068,
+        "end": 3333,
+        "body": "test(\"an untouched draft runs on assumptions\", () => {\n  const input = {\n    triggerContext: TRIGGER_CONTEXT,\n    answers: {},\n    completedQuestionIds: [] as Stage2QuestionId[],\n    answerProvenance: {},\n  }\n\n  assert.equal(stage2AssumptionsActive(input), true)\n})",
+        "sha256": "446fbaf5b301bf457e7da79f5b0113bbb1e22c8b03ac1272777971be732e4d35",
+        "assertions": [
+          {
+            "line": 98,
+            "text": "assert.equal(stage2AssumptionsActive(input), true)"
+          }
+        ]
+      },
+      {
+        "name": "legacy answers without a provenance entry count as user answers",
+        "line": 101,
+        "start": 3335,
+        "end": 3652,
+        "body": "test(\"legacy answers without a provenance entry count as user answers\", () => {\n  const { answers, completedQuestionIds } = defaults()\n\n  assert.equal(\n    stage2AssumptionsActive({\n      triggerContext: TRIGGER_CONTEXT,\n      answers,\n      completedQuestionIds,\n      answerProvenance: {},\n    }),\n    false,\n  )\n})",
+        "sha256": "daa57298a459de44f446c4b37ea6b9a04b43f2a99f8ef7942e5b7ff16fa9b3ff",
+        "assertions": [
+          {
+            "line": 104,
+            "text": "assert.equal(\n    stage2AssumptionsActive({\n      triggerContext: TRIGGER_CONTEXT,\n      answers,\n      completedQuestionIds,\n      answerProvenance: {},\n    }),\n    false,\n  )"
+          }
+        ]
+      }
+    ],
+    "tests/personal-plan/refinement/refinement-status.test.ts": [
+      {
+        "name": "a fresh plan with no draft: both modules open, progress 2/4, banner points at products",
+        "line": 35,
+        "start": 1187,
+        "end": 2071,
+        "body": "test(\"a fresh plan with no draft: both modules open, progress 2/4, banner points at products\", () => {\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: {},\n      completedQuestionIds: [] as Stage2QuestionId[],\n      answerProvenance: {},\n    },\n    moduleProjections: {},\n    bannerDismissals: NO_DISMISSALS,\n  })\n\n  assert.equal(refinementStatusResponseSchema.safeParse(result).success, true)\n  assert.deepEqual(\n    result.modules.map((m) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )\n  assert.ok(result.modules[0].openQuestionCount > 0)\n  assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })\n  assert.equal(result.module1HandedOff, false)\n  assert.deepEqual(result.banner, { visible: true, module: \"products\", dismissed: false })\n})",
+        "sha256": "a5a07b72e0b3d1db9b7b8fa1673601f5da82460272aacf9cb016a0e22afd0a10",
+        "assertions": [
+          {
+            "line": 47,
+            "text": "assert.equal(refinementStatusResponseSchema.safeParse(result).success, true)"
+          },
+          {
+            "line": 48,
+            "text": "assert.deepEqual(\n    result.modules.map((m) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )"
+          },
+          {
+            "line": 55,
+            "text": "assert.ok(result.modules[0].openQuestionCount > 0)"
+          },
+          {
+            "line": 56,
+            "text": "assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })"
+          },
+          {
+            "line": 57,
+            "text": "assert.equal(result.module1HandedOff, false)"
+          },
+          {
+            "line": 58,
+            "text": "assert.deepEqual(result.banner, { visible: true, module: \"products\", dismissed: false })"
+          }
+        ]
+      },
+      {
+        "name": "partial products answers: products stays open with the correct open-question count",
+        "line": 61,
+        "start": 2073,
+        "end": 2892,
+        "body": "test(\"partial products answers: products stays open with the correct open-question count\", () => {\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: { currentProductCategories: [\"shampoo\"] },\n      completedQuestionIds: [\"current_product_categories\"] as Stage2QuestionId[],\n      answerProvenance: { current_product_categories: \"user\" },\n    },\n    moduleProjections: {},\n    bannerDismissals: NO_DISMISSALS,\n  })\n\n  const products = result.modules.find((m) => m.module === \"products\")\n  assert.equal(products?.status, \"open\")\n  // products path here is [current_product_categories, wet_wash_frequency]; one answered.\n  assert.equal(products?.openQuestionCount, 1)\n  assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })\n})",
+        "sha256": "8eff4ac7acb31e68b21ca44d5e653e08b9759b557ba0e81492eb6a1814c666ba",
+        "assertions": [
+          {
+            "line": 74,
+            "text": "assert.equal(products?.status, \"open\")"
+          },
+          {
+            "line": 76,
+            "text": "assert.equal(products?.openQuestionCount, 1)"
+          },
+          {
+            "line": 77,
+            "text": "assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })"
+          }
+        ]
+      },
+      {
+        "name": "products module complete via lineage: 3/4 and the handoff marker is surfaced",
+        "line": 80,
+        "start": 2894,
+        "end": 4172,
+        "body": "test(\"products module complete via lineage: 3/4 and the handoff marker is surfaced\", () => {\n  const productsAnswers: PersonalPlanRefinementAnswersV1 = {\n    currentProductCategories: [\"shampoo\"],\n    wetWashFrequency: \"daily_1x\",\n  }\n  const moduleProjections: Stage2ModuleProjections = {\n    products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n  }\n\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: productsAnswers,\n      completedQuestionIds: [\n        \"current_product_categories\",\n        \"wet_wash_frequency\",\n      ] as Stage2QuestionId[],\n      answerProvenance: { current_product_categories: \"user\", wet_wash_frequency: \"user\" },\n    },\n    moduleProjections,\n    bannerDismissals: NO_DISMISSALS,\n  })\n\n  assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"complete\")\n  assert.equal(result.modules.find((m) => m.module === \"habits\")?.status, \"open\")\n  assert.deepEqual(result.progress, { completedSteps: 3, totalSteps: 4 })\n  assert.equal(result.module1HandedOff, true)\n  // The next open module is habits now, and it has never been dismissed.\n  assert.deepEqual(result.banner, { visible: true, module: \"habits\", dismissed: false })\n})",
+        "sha256": "18c6041d890beef7b701be673f6bb981c4e49c43674fd3684050706369908e30",
+        "assertions": [
+          {
+            "line": 103,
+            "text": "assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"complete\")"
+          },
+          {
+            "line": 104,
+            "text": "assert.equal(result.modules.find((m) => m.module === \"habits\")?.status, \"open\")"
+          },
+          {
+            "line": 105,
+            "text": "assert.deepEqual(result.progress, { completedSteps: 3, totalSteps: 4 })"
+          },
+          {
+            "line": 106,
+            "text": "assert.equal(result.module1HandedOff, true)"
+          },
+          {
+            "line": 108,
+            "text": "assert.deepEqual(result.banner, { visible: true, module: \"habits\", dismissed: false })"
+          }
+        ]
+      },
+      {
+        "name": "both modules complete: 4/4, no open module left, banner not visible",
+        "line": 111,
+        "start": 4174,
+        "end": 5579,
+        "body": "test(\"both modules complete: 4/4, no open module left, banner not visible\", () => {\n  const answers: PersonalPlanRefinementAnswersV1 = {\n    currentProductCategories: [\"shampoo\"],\n    wetWashFrequency: \"daily_1x\",\n    towel: { material: \"no_towel\" },\n    dryingRoutes: [],\n    additionalHeatTools: [],\n    nightProtection: [],\n  }\n  const completedQuestionIds: Stage2QuestionId[] = [\n    \"current_product_categories\",\n    \"wet_wash_frequency\",\n    \"towel_handling\",\n    \"drying_routes\",\n    \"additional_heat_tools\",\n    \"night_protection\",\n  ]\n  const moduleProjections: Stage2ModuleProjections = {\n    products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n    habits: { needVersionId: \"need-v3\", projectedAtRevision: 2, stage3Handoff: false },\n  }\n\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers,\n      completedQuestionIds,\n      answerProvenance: Object.fromEntries(completedQuestionIds.map((id) => [id, \"user\"])),\n    },\n    moduleProjections,\n    bannerDismissals: NO_DISMISSALS,\n  })\n\n  assert.deepEqual(\n    result.modules.map((m) => m.status),\n    [\"complete\", \"complete\"],\n  )\n  assert.deepEqual(result.progress, { completedSteps: 4, totalSteps: 4 })\n  assert.equal(result.module1HandedOff, true)\n  assert.deepEqual(result.banner, { visible: false, module: null, dismissed: false })\n})",
+        "sha256": "a68dfc7e59b871674a49ad17d604e20f3931e22d88ddac498f92c8491f7aedba",
+        "assertions": [
+          {
+            "line": 144,
+            "text": "assert.deepEqual(\n    result.modules.map((m) => m.status),\n    [\"complete\", \"complete\"],\n  )"
+          },
+          {
+            "line": 148,
+            "text": "assert.deepEqual(result.progress, { completedSteps: 4, totalSteps: 4 })"
+          },
+          {
+            "line": 149,
+            "text": "assert.equal(result.module1HandedOff, true)"
+          },
+          {
+            "line": 150,
+            "text": "assert.deepEqual(result.banner, { visible: false, module: null, dismissed: false })"
+          }
+        ]
+      },
+      {
+        "name": "assumed-only answers (no user provenance) count as open, matching direct-accept semantics",
+        "line": 153,
+        "start": 5581,
+        "end": 6375,
+        "body": "test(\"assumed-only answers (no user provenance) count as open, matching direct-accept semantics\", () => {\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: { currentProductCategories: [\"shampoo\"], wetWashFrequency: \"daily_1x\" },\n      completedQuestionIds: [\n        \"current_product_categories\",\n        \"wet_wash_frequency\",\n      ] as Stage2QuestionId[],\n      answerProvenance: {\n        current_product_categories: \"assumed\",\n        wet_wash_frequency: \"assumed\",\n      },\n    },\n    moduleProjections: {},\n    bannerDismissals: NO_DISMISSALS,\n  })\n\n  assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"open\")\n  assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })\n})",
+        "sha256": "fd185e9489a647273d69719d6071d45d702a746e06db2d849731c4aaf9985cd5",
+        "assertions": [
+          {
+            "line": 171,
+            "text": "assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"open\")"
+          },
+          {
+            "line": 172,
+            "text": "assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })"
+          }
+        ]
+      },
+      {
+        "name": "banner: dismissing the current open module hides it without affecting the module list",
+        "line": 175,
+        "start": 6377,
+        "end": 6956,
+        "body": "test(\"banner: dismissing the current open module hides it without affecting the module list\", () => {\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: {},\n      completedQuestionIds: [] as Stage2QuestionId[],\n      answerProvenance: {},\n    },\n    moduleProjections: {},\n    bannerDismissals: dismissals(\"products\"),\n  })\n\n  assert.deepEqual(result.banner, { visible: false, module: \"products\", dismissed: true })\n  assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"open\")\n})",
+        "sha256": "2fdf1dbe087dc9368a3a5fc4e0af5f76092b2093bf9e230a83c73f9986965651",
+        "assertions": [
+          {
+            "line": 187,
+            "text": "assert.deepEqual(result.banner, { visible: false, module: \"products\", dismissed: true })"
+          },
+          {
+            "line": 188,
+            "text": "assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"open\")"
+          }
+        ]
+      },
+      {
+        "name": "banner reappears once a different module becomes the next open one, even if the old dismissal is still stored",
+        "line": 191,
+        "start": 6958,
+        "end": 7943,
+        "body": "test(\"banner reappears once a different module becomes the next open one, even if the old dismissal is still stored\", () => {\n  const productsAnswers: PersonalPlanRefinementAnswersV1 = {\n    currentProductCategories: [\"shampoo\"],\n    wetWashFrequency: \"daily_1x\",\n  }\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: productsAnswers,\n      completedQuestionIds: [\n        \"current_product_categories\",\n        \"wet_wash_frequency\",\n      ] as Stage2QuestionId[],\n      answerProvenance: { current_product_categories: \"user\", wet_wash_frequency: \"user\" },\n    },\n    moduleProjections: {\n      products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n    },\n    // \"products\" was dismissed earlier, but it is no longer the open module.\n    bannerDismissals: dismissals(\"products\"),\n  })\n\n  assert.deepEqual(result.banner, { visible: true, module: \"habits\", dismissed: false })\n})",
+        "sha256": "39de1e6bfaed70dba0dc630165caa43e1d8719d188d6f72d1282af94156be096",
+        "assertions": [
+          {
+            "line": 213,
+            "text": "assert.deepEqual(result.banner, { visible: true, module: \"habits\", dismissed: false })"
+          }
+        ]
+      }
+    ],
+    "tests/personal-plan-refinement-answer-provenance-migration.test.ts": [
+      {
+        "name": "the provenance backfill labels a synthetic draft on a CLEARED-flag plan 'assumed'",
+        "line": 122,
+        "start": 3861,
+        "end": 4895,
+        "body": "test(\"the provenance backfill labels a synthetic draft on a CLEARED-flag plan 'assumed'\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(CONDITIONAL_CONTEXT)\n  // The exact regression: an old unconditional proposal-accept already cleared\n  // `unrefined_direct_accept`, so the plan flag alone reads this fully\n  // synthetic draft as real refinement progress (\"4 von 4\").\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    answers: synthetic.answers,\n    completedQuestionIds: synthetic.completedQuestionIds,\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.ok(synthetic.completedQuestionIds.includes(\"scalp_irritation_detail\"))\n  assert.ok(synthetic.completedQuestionIds.includes(\"dry_shampoo_bridge_preference\"))\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))\n})",
+        "sha256": "ac97ab0e7fa7bf6672d029896d6233294a7dce4a3c00c42837718716c5f0f078",
+        "assertions": [
+          {
+            "line": 139,
+            "text": "assert.ok(synthetic.completedQuestionIds.includes(\"scalp_irritation_detail\"))"
+          },
+          {
+            "line": 140,
+            "text": "assert.ok(synthetic.completedQuestionIds.includes(\"dry_shampoo_bridge_preference\"))"
+          },
+          {
+            "line": 141,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill still labels a synthetic draft on a flagged plan 'assumed'",
+        "line": 144,
+        "start": 4897,
+        "end": 5545,
+        "body": "test(\"the provenance backfill still labels a synthetic draft on a flagged plan 'assumed'\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(PLAIN_CONTEXT)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: true })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    answers: synthetic.answers,\n    completedQuestionIds: synthetic.completedQuestionIds,\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))\n})",
+        "sha256": "2062a017d350abddae5db9127caccd8c38693e73e8554d51815ad81c64c468e8",
+        "assertions": [
+          {
+            "line": 158,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill leaves a plan without direct-acceptance evidence entirely 'user'",
+        "line": 161,
+        "start": 5547,
+        "end": 6654,
+        "body": "test(\"the provenance backfill leaves a plan without direct-acceptance evidence entirely 'user'\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const completedQuestionIds = [\n    \"current_product_categories\",\n    \"wet_wash_frequency\",\n    \"towel_handling\",\n    \"drying_routes\",\n    \"additional_heat_tools\",\n    \"night_protection\",\n    \"heat:ordinary_blow_dry\",\n  ]\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    answers: {\n      currentProductCategories: [\"shampoo\", \"conditioner\"],\n      wetWashFrequency: \"daily\",\n      towel: { material: \"baumwolle\", technique: \"rough_rubbing\" },\n      dryingRoutes: [\"ordinary_blow_dry\"],\n      additionalHeatTools: [],\n      nightProtection: [\"silk_pillowcase\"],\n      heatEvents: { \"heat:ordinary_blow_dry\": { frequency: \"weekly_3x\" } },\n    },\n    completedQuestionIds,\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), allUser(completedQuestionIds))\n})",
+        "sha256": "8a6eb39983e2bbab670a42a9a479e29e62f1049b600a40d616a666954ca49bc7",
+        "assertions": [
+          {
+            "line": 191,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), allUser(completedQuestionIds))"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill splits a reopened, partially refined draft per answer",
+        "line": 194,
+        "start": 6656,
+        "end": 8122,
+        "body": "test(\"the provenance backfill splits a reopened, partially refined draft per answer\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(PLAIN_CONTEXT)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  // The completed synthetic draft `reopen()` left behind — the durable trace of\n  // direct acceptance that survives the flag clear.\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    answers: synthetic.answers,\n    completedQuestionIds: synthetic.completedQuestionIds,\n  })\n  // The successor draft: `reopen()` copied the synthetic answers forward and the\n  // user has since re-answered two of them (plus the heat event that opened).\n  await insertDraft(pg, {\n    draftId: id(3, 3),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: {\n      ...synthetic.answers,\n      wetWashFrequency: \"daily\",\n      dryingRoutes: [\"ordinary_blow_dry\"],\n      heatEvents: { \"heat:ordinary_blow_dry\": { frequency: \"weekly_3x\" } },\n    },\n    completedQuestionIds: [...synthetic.completedQuestionIds, \"heat:ordinary_blow_dry\"],\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(3, 3)), {\n    ...allAssumed(synthetic.completedQuestionIds),\n    wet_wash_frequency: \"user\",\n    drying_routes: \"user\",\n    \"heat:ordinary_blow_dry\": \"user\",\n  })\n})",
+        "sha256": "9c27f30229c2b96c4df9e20251b3bfee95de78de3adbc4944b5fb9ba3f905a6b",
+        "assertions": [
+          {
+            "line": 225,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(3, 3)), {\n    ...allAssumed(synthetic.completedQuestionIds),\n    wet_wash_frequency: \"user\",\n    drying_routes: \"user\",\n    \"heat:ordinary_blow_dry\": \"user\",\n  })"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill keeps an assumed-valued heat event 'assumed' inside the cohort",
+        "line": 233,
+        "start": 8124,
+        "end": 9104,
+        "body": "test(\"the provenance backfill keeps an assumed-valued heat event 'assumed' inside the cohort\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(PLAIN_CONTEXT)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: true })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: {\n      ...synthetic.answers,\n      additionalHeatTools: [\"straightener\"],\n      heatEvents: {\n        \"heat:straightener\": { frequency: \"less_than_monthly\", protectionConsistency: \"unsure\" },\n      },\n    },\n    completedQuestionIds: [...synthetic.completedQuestionIds, \"heat:straightener\"],\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), {\n    ...allAssumed(synthetic.completedQuestionIds),\n    additional_heat_tools: \"user\",\n    \"heat:straightener\": \"assumed\",\n  })\n})",
+        "sha256": "32539b0e6d2940c38a3f0de8b41e6909315d03979c6657eb3796a9258fdc900c",
+        "assertions": [
+          {
+            "line": 254,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), {\n    ...allAssumed(synthetic.completedQuestionIds),\n    additional_heat_tools: \"user\",\n    \"heat:straightener\": \"assumed\",\n  })"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill errs to 'assumed' for a draft indistinguishable from the defaults",
+        "line": 261,
+        "start": 9106,
+        "end": 10055,
+        "body": "test(\"the provenance backfill errs to 'assumed' for a draft indistinguishable from the defaults\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(PLAIN_CONTEXT)\n  // Ruled error direction: a user who freely answered every question with\n  // exactly the assumed value is indistinguishable from a synthetic draft. One\n  // unnecessary banner (false-incomplete) beats a synthetic user who never gets\n  // the refinement entry point at all (false-complete).\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    answers: synthetic.answers,\n    completedQuestionIds: synthetic.completedQuestionIds,\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))\n})",
+        "sha256": "9af0515063111b63c9980d0ccebdf38d73d60a0b0d1c42e194bf04711d13e47e",
+        "assertions": [
+          {
+            "line": 279,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill writes an empty map for a draft with no completed answers",
+        "line": 282,
+        "start": 10057,
+        "end": 10577,
+        "body": "test(\"the provenance backfill writes an empty map for a draft with no completed answers\", async (t) => {\n  const pg = await migratedDatabase(t)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: true })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: {},\n    completedQuestionIds: [],\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), {})\n})",
+        "sha256": "bf139a8ad9ab043081f032335fcb39992541142796db6f9aa74d1ea0d859bf07",
+        "assertions": [
+          {
+            "line": 296,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), {})"
+          }
+        ]
+      },
+      {
+        "name": "the save RPC keeps a 5-argument compatibility overload for the migrate-then-deploy window",
+        "line": 299,
+        "start": 10579,
+        "end": 12809,
+        "body": "test(\"the save RPC keeps a 5-argument compatibility overload for the migrate-then-deploy window\", async (t) => {\n  const pg = await migratedDatabase(t)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: {},\n    completedQuestionIds: [],\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  const { rows: signatures } = await pg.query<{ arity: number }>(\n    `SELECT pg_catalog.array_length(proargtypes, 1) AS arity\n       FROM pg_catalog.pg_proc\n      WHERE proname = 'personal_plan_save_refinement_draft'\n      ORDER BY 1`,\n  )\n  assert.deepEqual(\n    signatures.map((row) => row.arity),\n    [5, 6],\n  )\n\n  // The still-live previous build calls the 5-argument signature.\n  const { rows: legacy } = await pg.query<{ result: { outcome: string; revision: number } }>(\n    `SELECT public.personal_plan_save_refinement_draft(\n       $1::uuid, $2::uuid, 0::bigint, $3::jsonb, $4::text[]\n     ) AS result`,\n    [id(9, 9), id(2, 2), JSON.stringify({ wetWashFrequency: \"daily\" }), \"{wet_wash_frequency}\"],\n  )\n  assert.equal(legacy[0]!.result.outcome, \"saved\")\n  assert.equal(legacy[0]!.result.revision, 1)\n  // Nothing is invented for the newly completed id: a completed id with no\n  // entry is treated as 'user' by userAnsweredQuestionIds(), which is exactly\n  // what a write from the pre-provenance build means.\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), {})\n\n  // The 6-argument path is untouched and still writes provenance.\n  const { rows: current } = await pg.query<{ result: { outcome: string; revision: number } }>(\n    `SELECT public.personal_plan_save_refinement_draft(\n       $1::uuid, $2::uuid, 1::bigint, $3::jsonb, $4::text[], $5::jsonb\n     ) AS result`,\n    [\n      id(9, 9),\n      id(2, 2),\n      JSON.stringify({ wetWashFrequency: \"daily\" }),\n      \"{wet_wash_frequency}\",\n      JSON.stringify({ wet_wash_frequency: \"user\" }),\n    ],\n  )\n  assert.equal(current[0]!.result.outcome, \"saved\")\n  assert.equal(current[0]!.result.revision, 2)\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), { wet_wash_frequency: \"user\" })\n})",
+        "sha256": "f54573670a785439c56da5b1f6a270ed87640ffdd1075fbabbd430668c601ed7",
+        "assertions": [
+          {
+            "line": 319,
+            "text": "assert.deepEqual(\n    signatures.map((row) => row.arity),\n    [5, 6],\n  )"
+          },
+          {
+            "line": 331,
+            "text": "assert.equal(legacy[0]!.result.outcome, \"saved\")"
+          },
+          {
+            "line": 332,
+            "text": "assert.equal(legacy[0]!.result.revision, 1)"
+          },
+          {
+            "line": 336,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), {})"
+          },
+          {
+            "line": 351,
+            "text": "assert.equal(current[0]!.result.outcome, \"saved\")"
+          },
+          {
+            "line": 352,
+            "text": "assert.equal(current[0]!.result.revision, 2)"
+          },
+          {
+            "line": 353,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), { wet_wash_frequency: \"user\" })"
+          }
+        ]
+      },
+      {
+        "name": "the 5-argument compatibility overload preserves backfilled provenance instead of wiping it",
+        "line": 356,
+        "start": 12811,
+        "end": 15097,
+        "body": "test(\"the 5-argument compatibility overload preserves backfilled provenance instead of wiping it\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(PLAIN_CONTEXT)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: true })\n  // Backfills to a MIX: `wet_wash_frequency` deviates from the assumption, the\n  // rest of the synthetic set does not.\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: { ...synthetic.answers, wetWashFrequency: \"daily\" },\n    completedQuestionIds: synthetic.completedQuestionIds,\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  const backfilled = await provenanceOf(pg, id(2, 2))\n  assert.equal(backfilled.wet_wash_frequency, \"user\")\n  assert.equal(backfilled.night_protection, \"assumed\")\n  assert.equal(backfilled.drying_routes, \"assumed\")\n\n  // A straggler save from the still-live old build: it drops `night_protection`\n  // from the completed set and reports a brand-new id it has no provenance for.\n  const keptQuestionIds = synthetic.completedQuestionIds.filter(\n    (questionId) => questionId !== \"night_protection\",\n  )\n  const { rows } = await pg.query<{ result: { outcome: string; revision: number } }>(\n    `SELECT public.personal_plan_save_refinement_draft(\n       $1::uuid, $2::uuid, 0::bigint, $3::jsonb, $4::text[]\n     ) AS result`,\n    [\n      id(9, 9),\n      id(2, 2),\n      JSON.stringify({ ...synthetic.answers, wetWashFrequency: \"daily\" }),\n      `{${[...keptQuestionIds, \"oil_purposes\"].join(\",\")}}`,\n    ],\n  )\n  assert.equal(rows[0]!.result.outcome, \"saved\")\n\n  const afterLegacySave = await provenanceOf(pg, id(2, 2))\n  // Kept ids keep their exact labels — the backfilled 'assumed' cohort survives.\n  assert.deepEqual(\n    afterLegacySave,\n    Object.fromEntries(keptQuestionIds.map((questionId) => [questionId, backfilled[questionId]!])),\n  )\n  // Dropped id is gone (prune semantics), new id is not invented.\n  assert.equal(\"night_protection\" in afterLegacySave, false)\n  assert.equal(\"oil_purposes\" in afterLegacySave, false)\n  assert.equal(afterLegacySave.wet_wash_frequency, \"user\")\n  assert.equal(afterLegacySave.drying_routes, \"assumed\")\n})",
+        "sha256": "e5c4272d99f1b18153973cb5f648b1d0ce75e3d3ecd7322f3398497e78b0b12d",
+        "assertions": [
+          {
+            "line": 374,
+            "text": "assert.equal(backfilled.wet_wash_frequency, \"user\")"
+          },
+          {
+            "line": 375,
+            "text": "assert.equal(backfilled.night_protection, \"assumed\")"
+          },
+          {
+            "line": 376,
+            "text": "assert.equal(backfilled.drying_routes, \"assumed\")"
+          },
+          {
+            "line": 394,
+            "text": "assert.equal(rows[0]!.result.outcome, \"saved\")"
+          },
+          {
+            "line": 398,
+            "text": "assert.deepEqual(\n    afterLegacySave,\n    Object.fromEntries(keptQuestionIds.map((questionId) => [questionId, backfilled[questionId]!])),\n  )"
+          },
+          {
+            "line": 403,
+            "text": "assert.equal(\"night_protection\" in afterLegacySave, false)"
+          },
+          {
+            "line": 404,
+            "text": "assert.equal(\"oil_purposes\" in afterLegacySave, false)"
+          },
+          {
+            "line": 405,
+            "text": "assert.equal(afterLegacySave.wet_wash_frequency, \"user\")"
+          },
+          {
+            "line": 406,
+            "text": "assert.equal(afterLegacySave.drying_routes, \"assumed\")"
+          }
+        ]
+      },
+      {
+        "name": "the 6-argument save RPC still rejects a non-object provenance payload",
+        "line": 409,
+        "start": 15099,
+        "end": 15951,
+        "body": "test(\"the 6-argument save RPC still rejects a non-object provenance payload\", async (t) => {\n  const pg = await migratedDatabase(t)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: {},\n    completedQuestionIds: [],\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  const { rows } = await pg.query<{ result: { outcome: string; reasonCode: string } }>(\n    `SELECT public.personal_plan_save_refinement_draft(\n       $1::uuid, $2::uuid, 0::bigint, '{}'::jsonb, '{}'::text[], '[]'::jsonb\n     ) AS result`,\n    [id(9, 9), id(2, 2)],\n  )\n  assert.equal(rows[0]!.result.outcome, \"invalid_source\")\n  assert.equal(rows[0]!.result.reasonCode, \"invalid_answer_provenance\")\n})",
+        "sha256": "216f2c8429d1900ec5aa56c51aadac74e5fb958c8eeefab056138b9564244425",
+        "assertions": [
+          {
+            "line": 429,
+            "text": "assert.equal(rows[0]!.result.outcome, \"invalid_source\")"
+          },
+          {
+            "line": 430,
+            "text": "assert.equal(rows[0]!.result.reasonCode, \"invalid_answer_provenance\")"
+          }
+        ]
+      }
+    ],
+    "tests/personal-plan-refinement-presentation-route.test.ts": [
+      {
+        "name": "returns the refinement answers bound to the current refined need version",
+        "line": 162,
+        "start": 4552,
+        "end": 6418,
+        "body": "test(\"returns the refinement answers bound to the current refined need version\", async () => {\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: ids.refined,\n        active_routine_version_id: null,\n        pending_routine_proposal_id: null,\n      },\n    ],\n    personal_plan_refinement_drafts: [\n      {\n        id: \"draft-stale\",\n        personal_plan_id: ids.plan,\n        status: \"complete\",\n        result_refined_need_version_id: ids.staleRefined,\n        answers: { towel: { material: \"handtuch\", technique: \"rub\" } },\n        completed_question_ids: [\"towel_handling\"],\n        // Newer than the correct draft below, but bound to a superseded refined-need\n        // version. Winning here would prove the route wrongly authorities on recency.\n        updated_at: \"2026-08-14T00:00:00.000Z\",\n      },\n      {\n        id: \"draft-current\",\n        personal_plan_id: ids.plan,\n        status: \"complete\",\n        result_refined_need_version_id: ids.refined,\n        answers: { towel: { material: \"frottee\", technique: \"gentle_press\" }, nightProtection: [] },\n        completed_question_ids: [\"towel_handling\", \"night_protection\"],\n        updated_at: \"2026-08-10T00:00:00.000Z\",\n      },\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(res.headers.get(\"Cache-Control\"), \"no-store\")\n  assert.equal(body.answers.towel.material, \"frottee\")\n  assert.deepEqual(body.answers.nightProtection, [])\n  assert.deepEqual(body.completedQuestionIds, [\"towel_handling\", \"night_protection\"])\n  assert.equal(body.routineProducts, null)\n})",
+        "sha256": "38dfe8c28b9288bf587b8aa8ea00d422e4166401b8966ab0aec5c532bbd404ad",
+        "assertions": [
+          {
+            "line": 205,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 206,
+            "text": "assert.equal(res.headers.get(\"Cache-Control\"), \"no-store\")"
+          },
+          {
+            "line": 207,
+            "text": "assert.equal(body.answers.towel.material, \"frottee\")"
+          },
+          {
+            "line": 208,
+            "text": "assert.deepEqual(body.answers.nightProtection, [])"
+          },
+          {
+            "line": 209,
+            "text": "assert.deepEqual(body.completedQuestionIds, [\"towel_handling\", \"night_protection\"])"
+          },
+          {
+            "line": 210,
+            "text": "assert.equal(body.routineProducts, null)"
+          }
+        ]
+      },
+      {
+        "name": "returns null answers when no complete draft matches the pointer",
+        "line": 213,
+        "start": 6420,
+        "end": 7532,
+        "body": "test(\"returns null answers when no complete draft matches the pointer\", async () => {\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: ids.refined,\n        active_routine_version_id: null,\n        pending_routine_proposal_id: null,\n      },\n    ],\n    personal_plan_refinement_drafts: [\n      {\n        id: \"draft-other\",\n        personal_plan_id: ids.plan,\n        status: \"complete\",\n        result_refined_need_version_id: ids.staleRefined,\n        answers: { towel: { material: \"handtuch\" } },\n        completed_question_ids: [\"towel_handling\"],\n        updated_at: \"2026-08-10T00:00:00.000Z\",\n      },\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(body.answers, null)\n  assert.deepEqual(body.completedQuestionIds, [])\n  assert.equal(body.routineProducts, null)\n})",
+        "sha256": "f105c2ebabac5c1c3d97bc3a98e94f3af89a1800bd4d45e4ef9a23d5a9e550ea",
+        "assertions": [
+          {
+            "line": 245,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 246,
+            "text": "assert.equal(body.answers, null)"
+          },
+          {
+            "line": 247,
+            "text": "assert.deepEqual(body.completedQuestionIds, [])"
+          },
+          {
+            "line": 248,
+            "text": "assert.equal(body.routineProducts, null)"
+          }
+        ]
+      },
+      {
+        "name": "returns included routine products of the active version",
+        "line": 266,
+        "start": 8176,
+        "end": 9750,
+        "body": "test(\"returns included routine products of the active version\", async () => {\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: null,\n        active_routine_version_id: ids.routineVersion,\n        pending_routine_proposal_id: null,\n      },\n    ],\n    personal_plan_routine_versions: [\n      {\n        id: ids.routineVersion,\n        user_id: ids.user,\n        personal_plan_id: ids.plan,\n        payload: routinePayload(ids.routineVersion, [\n          ownedConditioner,\n          plannedShampoo,\n          pendingReviewMask,\n        ]),\n      },\n    ],\n    personal_plan_need_versions: [\n      matchingRefinedNeedVersionRow([\"conditioner\", \"shampoo\", \"mask\"]),\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(body.routineProducts.length, 2)\n  const owned = body.routineProducts.find((product: { state: string }) => product.state === \"owned\")\n  assert.equal(owned.name, \"Gliss Kur Aqua Revive Conditioner\")\n  assert.equal(owned.categoryLabel, \"Conditioner\")\n  assert.equal(owned.purposeLabel, \"Pflege nach der Reinigung\")\n  const planned = body.routineProducts.find(\n    (product: { state: string }) => product.state === \"planned\",\n  )\n  assert.equal(planned.name, \"Neues Shampoo\")\n  assert.equal(planned.categoryLabel, \"Shampoo\")\n})",
+        "sha256": "6440e834318e18a8365c67104d386471291ea5746e7fe41b38c5edc9a04dddf1",
+        "assertions": [
+          {
+            "line": 302,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 303,
+            "text": "assert.equal(body.routineProducts.length, 2)"
+          },
+          {
+            "line": 305,
+            "text": "assert.equal(owned.name, \"Gliss Kur Aqua Revive Conditioner\")"
+          },
+          {
+            "line": 306,
+            "text": "assert.equal(owned.categoryLabel, \"Conditioner\")"
+          },
+          {
+            "line": 307,
+            "text": "assert.equal(owned.purposeLabel, \"Pflege nach der Reinigung\")"
+          },
+          {
+            "line": 311,
+            "text": "assert.equal(planned.name, \"Neues Shampoo\")"
+          },
+          {
+            "line": 312,
+            "text": "assert.equal(planned.categoryLabel, \"Shampoo\")"
+          }
+        ]
+      },
+      {
+        "name": "routineProducts is null without an active routine",
+        "line": 315,
+        "start": 9752,
+        "end": 10392,
+        "body": "test(\"routineProducts is null without an active routine\", async () => {\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: null,\n        active_routine_version_id: null,\n        pending_routine_proposal_id: null,\n      },\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(body.routineProducts, null)\n})",
+        "sha256": "d94cbe8d916ce8aa660cbe50d178b3c6f83a2ba93ba4474ada06b3c4a193ab5d",
+        "assertions": [
+          {
+            "line": 336,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 337,
+            "text": "assert.equal(body.routineProducts, null)"
+          }
+        ]
+      },
+      {
+        "name": "routineProducts is null when the active routine is authority_repair_required",
+        "line": 340,
+        "start": 10394,
+        "end": 11636,
+        "body": "test(\"routineProducts is null when the active routine is authority_repair_required\", async () => {\n  // No personal_plan_need_versions row is seeded for ids.refined, so\n  // hasMatchingSourceCategoryOrder() cannot confirm the frozen Routine still matches its\n  // immutable source. /routine would show a repair prompt and hide items in this state;\n  // /profile must not show a possibly-stale product list either.\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: null,\n        active_routine_version_id: ids.routineVersion,\n        pending_routine_proposal_id: null,\n      },\n    ],\n    personal_plan_routine_versions: [\n      {\n        id: ids.routineVersion,\n        user_id: ids.user,\n        personal_plan_id: ids.plan,\n        payload: routinePayload(ids.routineVersion, [ownedConditioner, plannedShampoo]),\n      },\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(body.routineProducts, null)\n})",
+        "sha256": "9c3939f6582fce3e42e409fdacf849cfb9f83a06bf065fe6832006b3fcc418e2",
+        "assertions": [
+          {
+            "line": 373,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 374,
+            "text": "assert.equal(body.routineProducts, null)"
+          }
+        ]
+      },
+      {
+        "name": "refinement presentation API rejects unauthenticated reads",
+        "line": 377,
+        "start": 11638,
+        "end": 11938,
+        "body": "test(\"refinement presentation API rejects unauthenticated reads\", async () => {\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => null,\n    client: () => {\n      throw new Error(\"must not construct client\")\n    },\n  }).GET()\n  assert.equal(res.status, 401)\n})",
+        "sha256": "040bde3ba09c84a9565b9a711d95693d9fc9c14fcb9ba77d1b1beb4d130a5537",
+        "assertions": [
+          {
+            "line": 384,
+            "text": "assert.equal(res.status, 401)"
+          }
+        ]
+      }
+    ],
+    "tests/personal-plan-refinement-status-route.test.ts": [
+      {
+        "name": "fresh plan with no refinement draft: both modules open, progress 2/4",
+        "line": 118,
+        "start": 3899,
+        "end": 4736,
+        "body": "test(\"fresh plan with no refinement draft: both modules open, progress 2/4\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(res.headers.get(\"Cache-Control\"), \"no-store\")\n  assert.deepEqual(\n    body.modules.map((m: { module: string; status: string }) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )\n  assert.ok(body.modules[0].openQuestionCount > 0, \"fresh products module must expose open questions\")\n  assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })\n  assert.equal(body.module1HandedOff, false)\n  assert.deepEqual(body.banner, { visible: true, module: \"products\", dismissed: false })\n})",
+        "sha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "assertions": [
+          {
+            "line": 125,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 126,
+            "text": "assert.equal(res.headers.get(\"Cache-Control\"), \"no-store\")"
+          },
+          {
+            "line": 127,
+            "text": "assert.deepEqual(\n    body.modules.map((m: { module: string; status: string }) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )"
+          },
+          {
+            "line": 134,
+            "text": "assert.ok(body.modules[0].openQuestionCount > 0, \"fresh products module must expose open questions\")"
+          },
+          {
+            "line": 135,
+            "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })"
+          },
+          {
+            "line": 136,
+            "text": "assert.equal(body.module1HandedOff, false)"
+          },
+          {
+            "line": 137,
+            "text": "assert.deepEqual(body.banner, { visible: true, module: \"products\", dismissed: false })"
+          }
+        ]
+      },
+      {
+        "name": "partial products user-answers: products open with the correct open-question count",
+        "line": 140,
+        "start": 4738,
+        "end": 5743,
+        "body": "test(\"partial products user-answers: products open with the correct open-question count\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"in_progress\",\n        answers: { currentProductCategories: [\"shampoo\"] },\n        completed_question_ids: [\"current_product_categories\"],\n        answer_provenance: { current_product_categories: \"user\" },\n        module_projections: {},\n        updated_at: \"2026-08-20T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  const products = body.modules.find((m: { module: string }) => m.module === \"products\")\n  assert.equal(products.status, \"open\")\n  assert.equal(products.openQuestionCount, 1)\n  assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })\n})",
+        "sha256": "f1454bc0bd680f377be7ca39d9b0f2affeb1b42b0652f98c2583c2aa243eec32",
+        "assertions": [
+          {
+            "line": 159,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 161,
+            "text": "assert.equal(products.status, \"open\")"
+          },
+          {
+            "line": 162,
+            "text": "assert.equal(products.openQuestionCount, 1)"
+          },
+          {
+            "line": 163,
+            "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })"
+          }
+        ]
+      },
+      {
+        "name": "products module complete via lineage: 3/4 and the handoff marker is set",
+        "line": 166,
+        "start": 5745,
+        "end": 7094,
+        "body": "test(\"products module complete via lineage: 3/4 and the handoff marker is set\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"in_progress\",\n        answers: { currentProductCategories: [\"shampoo\"], wetWashFrequency: \"daily\" },\n        completed_question_ids: [\"current_product_categories\", \"wet_wash_frequency\"],\n        answer_provenance: { current_product_categories: \"user\", wet_wash_frequency: \"user\" },\n        module_projections: {\n          products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n        },\n        updated_at: \"2026-08-20T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(\n    body.modules.find((m: { module: string }) => m.module === \"products\").status,\n    \"complete\",\n  )\n  assert.equal(body.modules.find((m: { module: string }) => m.module === \"habits\").status, \"open\")\n  assert.deepEqual(body.progress, { completedSteps: 3, totalSteps: 4 })\n  assert.equal(body.module1HandedOff, true)\n  assert.deepEqual(body.banner, { visible: true, module: \"habits\", dismissed: false })\n})",
+        "sha256": "974961a1b80cd15af0e79c4db7195db243b9e0e483f3fad7cf40e1fac6997f58",
+        "assertions": [
+          {
+            "line": 187,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 188,
+            "text": "assert.equal(\n    body.modules.find((m: { module: string }) => m.module === \"products\").status,\n    \"complete\",\n  )"
+          },
+          {
+            "line": 192,
+            "text": "assert.equal(body.modules.find((m: { module: string }) => m.module === \"habits\").status, \"open\")"
+          },
+          {
+            "line": 193,
+            "text": "assert.deepEqual(body.progress, { completedSteps: 3, totalSteps: 4 })"
+          },
+          {
+            "line": 194,
+            "text": "assert.equal(body.module1HandedOff, true)"
+          },
+          {
+            "line": 195,
+            "text": "assert.deepEqual(body.banner, { visible: true, module: \"habits\", dismissed: false })"
+          }
+        ]
+      },
+      {
+        "name": "both modules complete: 4/4",
+        "line": 198,
+        "start": 7096,
+        "end": 8686,
+        "body": "test(\"both modules complete: 4/4\", async () => {\n  const answers = {\n    currentProductCategories: [\"shampoo\"],\n    wetWashFrequency: \"daily\",\n    towel: { material: \"no_towel\" },\n    dryingRoutes: [],\n    additionalHeatTools: [],\n    nightProtection: [],\n  }\n  const completedQuestionIds = [\n    \"current_product_categories\",\n    \"wet_wash_frequency\",\n    \"towel_handling\",\n    \"drying_routes\",\n    \"additional_heat_tools\",\n    \"night_protection\",\n  ]\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"complete\",\n        answers,\n        completed_question_ids: completedQuestionIds,\n        answer_provenance: Object.fromEntries(completedQuestionIds.map((id) => [id, \"user\"])),\n        module_projections: {\n          products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n          habits: { needVersionId: \"need-v3\", projectedAtRevision: 2, stage3Handoff: false },\n        },\n        updated_at: \"2026-08-21T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.deepEqual(\n    body.modules.map((m: { status: string }) => m.status),\n    [\"complete\", \"complete\"],\n  )\n  assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })\n  assert.equal(body.module1HandedOff, true)\n  assert.deepEqual(body.banner, { visible: false, module: null, dismissed: false })\n})",
+        "sha256": "3586d769766ff39e1819555a96a17c0364f2b328097d001ec07483f68793c0b2",
+        "assertions": [
+          {
+            "line": 236,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 237,
+            "text": "assert.deepEqual(\n    body.modules.map((m: { status: string }) => m.status),\n    [\"complete\", \"complete\"],\n  )"
+          },
+          {
+            "line": 241,
+            "text": "assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })"
+          },
+          {
+            "line": 242,
+            "text": "assert.equal(body.module1HandedOff, true)"
+          },
+          {
+            "line": 243,
+            "text": "assert.deepEqual(body.banner, { visible: false, module: null, dismissed: false })"
+          }
+        ]
+      },
+      {
+        "name": "banner reflects a stored dismissal for the current open module",
+        "line": 246,
+        "start": 8688,
+        "end": 9377,
+        "body": "test(\"banner reflects a stored dismissal for the current open module\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    [PERSONAL_PLAN_UI_LIFECYCLE_MARKS_TABLE]: [\n      {\n        user_id: ids.user,\n        kind: \"module_banner_dismissed\",\n        subject: \"products\",\n        marked_at: \"2026-08-20T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.deepEqual(body.banner, { visible: false, module: \"products\", dismissed: true })\n  assert.equal(body.modules.find((m: { module: string }) => m.module === \"products\").status, \"open\")\n})",
+        "sha256": "77289bcdf398868005f31dce5a2a5ebeb0ca345e24a43936211e38dfbcbba9eb",
+        "assertions": [
+          {
+            "line": 261,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 262,
+            "text": "assert.deepEqual(body.banner, { visible: false, module: \"products\", dismissed: true })"
+          },
+          {
+            "line": 263,
+            "text": "assert.equal(body.modules.find((m: { module: string }) => m.module === \"products\").status, \"open\")"
+          }
+        ]
+      },
+      {
+        "name": "in_progress draft wins over a completed draft on the same initial need version",
+        "line": 266,
+        "start": 9379,
+        "end": 10945,
+        "body": "test(\"in_progress draft wins over a completed draft on the same initial need version\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"complete\",\n        answers: {\n          currentProductCategories: [\"shampoo\"],\n          wetWashFrequency: \"daily\",\n          towel: { material: \"no_towel\" },\n          dryingRoutes: [],\n          additionalHeatTools: [],\n          nightProtection: [],\n        },\n        completed_question_ids: [\n          \"current_product_categories\",\n          \"wet_wash_frequency\",\n          \"towel_handling\",\n          \"drying_routes\",\n          \"additional_heat_tools\",\n          \"night_protection\",\n        ],\n        answer_provenance: { current_product_categories: \"user\" },\n        module_projections: {},\n        updated_at: \"2026-08-19T00:00:00.000Z\",\n      },\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"in_progress\",\n        answers: {},\n        completed_question_ids: [],\n        answer_provenance: {},\n        module_projections: {},\n        updated_at: \"2026-08-22T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  // Reads the in_progress row, not the (also present) complete one.\n  assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })\n})",
+        "sha256": "8c1b48a99e7060aa30b88fd7b3c5bf0313702af0a00de0bb8b15e49b77d42408",
+        "assertions": [
+          {
+            "line": 309,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 311,
+            "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })"
+          }
+        ]
+      },
+      {
+        "name": "initial need version with neither a Stage-1 lead nor a prepared-artifact source degrades to 503",
+        "line": 314,
+        "start": 10947,
+        "end": 11310,
+        "body": "test(\"initial need version with neither a Stage-1 lead nor a prepared-artifact source degrades to 503\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [\n      needVersionRow({ stage1_source_lead_id: null, prepared_artifact_source_id: null }),\n    ],\n  }).GET()\n\n  assert.equal(res.status, 503)\n})",
+        "sha256": "96e5a8a516fd741dfb82084baeed6484dd9dec684ad5658efe2b7b9de95710c7",
+        "assertions": [
+          {
+            "line": 322,
+            "text": "assert.equal(res.status, 503)"
+          }
+        ]
+      },
+      {
+        "name": "no personal plan: typed 404",
+        "line": 325,
+        "start": 11312,
+        "end": 11518,
+        "body": "test(\"no personal plan: typed 404\", async () => {\n  const res = await handlersFor({}).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 404)\n  assert.equal(body.error, \"no_personal_plan\")\n})",
+        "sha256": "c5240d71349596ee1b4cc0f6373c1cb35e571c0b9585e5ecdce3d1608d77b776",
+        "assertions": [
+          {
+            "line": 329,
+            "text": "assert.equal(res.status, 404)"
+          },
+          {
+            "line": 330,
+            "text": "assert.equal(body.error, \"no_personal_plan\")"
+          }
+        ]
+      },
+      {
+        "name": "rejects unauthenticated reads",
+        "line": 333,
+        "start": 11520,
+        "end": 11654,
+        "body": "test(\"rejects unauthenticated reads\", async () => {\n  const res = await handlersFor({}, null).GET()\n  assert.equal(res.status, 401)\n})",
+        "sha256": "e83fb008cfb6e5f003b045a42f52aaec13988d3f875a7662c65db9a746fbe199",
+        "assertions": [
+          {
+            "line": 335,
+            "text": "assert.equal(res.status, 401)"
+          }
+        ]
+      }
+    ]
+  },
+  "cut": {
+    "tests/personal-plan/refinement/module-status.test.ts": [
+      {
+        "name": "a fully auto-accepted draft leaves both modules open and assumptions active",
+        "line": 44,
+        "start": 1457,
+        "end": 1967,
+        "body": "test(\"a fully auto-accepted draft leaves both modules open and assumptions active\", () => {\n  const { answers, completedQuestionIds } = defaults()\n  const input = {\n    triggerContext: TRIGGER_CONTEXT,\n    answers,\n    completedQuestionIds,\n    answerProvenance: buildAssumedAnswerProvenance(completedQuestionIds),\n  }\n\n  const states = stage2ModuleStates(input)\n  assert.equal(states.products.status, \"open\")\n  assert.equal(states.habits.status, \"open\")\n  assert.equal(stage2AssumptionsActive(input), true)\n})",
+        "sha256": "954c9646b451e08f3b856d97c9bb17d093b190fbb70ca48c92a2e0b842a80148",
+        "assertions": [
+          {
+            "line": 54,
+            "text": "assert.equal(states.products.status, \"open\")"
+          },
+          {
+            "line": 55,
+            "text": "assert.equal(states.habits.status, \"open\")"
+          },
+          {
+            "line": 56,
+            "text": "assert.equal(stage2AssumptionsActive(input), true)"
+          }
+        ]
+      },
+      {
+        "name": "a draft the user answered end to end has no open module and no assumptions",
+        "line": 59,
+        "start": 1969,
+        "end": 2496,
+        "body": "test(\"a draft the user answered end to end has no open module and no assumptions\", () => {\n  const { answers, completedQuestionIds } = defaults()\n  const input = {\n    triggerContext: TRIGGER_CONTEXT,\n    answers,\n    completedQuestionIds,\n    answerProvenance: provenanceFor(completedQuestionIds, [\"products\", \"habits\"]),\n  }\n\n  const states = stage2ModuleStates(input)\n  assert.equal(states.products.status, \"complete\")\n  assert.equal(states.habits.status, \"complete\")\n  assert.equal(stage2AssumptionsActive(input), false)\n})",
+        "sha256": "61be81a72e8be16b546578e9c7b9f9b93728c7ed68cb58fc36f476ec3b332583",
+        "assertions": [
+          {
+            "line": 69,
+            "text": "assert.equal(states.products.status, \"complete\")"
+          },
+          {
+            "line": 70,
+            "text": "assert.equal(states.habits.status, \"complete\")"
+          },
+          {
+            "line": 71,
+            "text": "assert.equal(stage2AssumptionsActive(input), false)"
+          }
+        ]
+      },
+      {
+        "name": "one user-answered module keeps assumptions active while the other stays open",
+        "line": 74,
+        "start": 2498,
+        "end": 3066,
+        "body": "test(\"one user-answered module keeps assumptions active while the other stays open\", () => {\n  const { answers, completedQuestionIds } = defaults()\n  const input = {\n    triggerContext: TRIGGER_CONTEXT,\n    answers,\n    completedQuestionIds,\n    answerProvenance: provenanceFor(completedQuestionIds, [\"products\"]),\n  }\n\n  const states = stage2ModuleStates(input)\n  assert.equal(states.products.status, \"complete\")\n  assert.equal(states.habits.status, \"open\")\n  assert.ok(states.habits.openQuestionIds.length > 0)\n  assert.equal(stage2AssumptionsActive(input), true)\n})",
+        "sha256": "a716d0a951b04c6ccb2b6d51ba1bea14b83e853cc20aeb94a66c8dbdc8edb8ac",
+        "assertions": [
+          {
+            "line": 84,
+            "text": "assert.equal(states.products.status, \"complete\")"
+          },
+          {
+            "line": 85,
+            "text": "assert.equal(states.habits.status, \"open\")"
+          },
+          {
+            "line": 86,
+            "text": "assert.ok(states.habits.openQuestionIds.length > 0)"
+          },
+          {
+            "line": 87,
+            "text": "assert.equal(stage2AssumptionsActive(input), true)"
+          }
+        ]
+      },
+      {
+        "name": "legacy answers without a provenance entry count as user answers",
+        "line": 90,
+        "start": 3068,
+        "end": 3385,
+        "body": "test(\"legacy answers without a provenance entry count as user answers\", () => {\n  const { answers, completedQuestionIds } = defaults()\n\n  assert.equal(\n    stage2AssumptionsActive({\n      triggerContext: TRIGGER_CONTEXT,\n      answers,\n      completedQuestionIds,\n      answerProvenance: {},\n    }),\n    false,\n  )\n})",
+        "sha256": "daa57298a459de44f446c4b37ea6b9a04b43f2a99f8ef7942e5b7ff16fa9b3ff",
+        "assertions": [
+          {
+            "line": 93,
+            "text": "assert.equal(\n    stage2AssumptionsActive({\n      triggerContext: TRIGGER_CONTEXT,\n      answers,\n      completedQuestionIds,\n      answerProvenance: {},\n    }),\n    false,\n  )"
+          }
+        ]
+      }
+    ],
+    "tests/personal-plan/refinement/refinement-status.test.ts": [
+      {
+        "name": "assumed-only answers (no user provenance) count as open, matching direct-accept semantics",
+        "line": 31,
+        "start": 1123,
+        "end": 1917,
+        "body": "test(\"assumed-only answers (no user provenance) count as open, matching direct-accept semantics\", () => {\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: { currentProductCategories: [\"shampoo\"], wetWashFrequency: \"daily_1x\" },\n      completedQuestionIds: [\n        \"current_product_categories\",\n        \"wet_wash_frequency\",\n      ] as Stage2QuestionId[],\n      answerProvenance: {\n        current_product_categories: \"assumed\",\n        wet_wash_frequency: \"assumed\",\n      },\n    },\n    moduleProjections: {},\n    bannerDismissals: NO_DISMISSALS,\n  })\n\n  assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"open\")\n  assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })\n})",
+        "sha256": "fd185e9489a647273d69719d6071d45d702a746e06db2d849731c4aaf9985cd5",
+        "assertions": [
+          {
+            "line": 49,
+            "text": "assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"open\")"
+          },
+          {
+            "line": 50,
+            "text": "assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })"
+          }
+        ]
+      },
+      {
+        "name": "banner reappears once a different module becomes the next open one, even if the old dismissal is still stored",
+        "line": 53,
+        "start": 1919,
+        "end": 2904,
+        "body": "test(\"banner reappears once a different module becomes the next open one, even if the old dismissal is still stored\", () => {\n  const productsAnswers: PersonalPlanRefinementAnswersV1 = {\n    currentProductCategories: [\"shampoo\"],\n    wetWashFrequency: \"daily_1x\",\n  }\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: productsAnswers,\n      completedQuestionIds: [\n        \"current_product_categories\",\n        \"wet_wash_frequency\",\n      ] as Stage2QuestionId[],\n      answerProvenance: { current_product_categories: \"user\", wet_wash_frequency: \"user\" },\n    },\n    moduleProjections: {\n      products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n    },\n    // \"products\" was dismissed earlier, but it is no longer the open module.\n    bannerDismissals: dismissals(\"products\"),\n  })\n\n  assert.deepEqual(result.banner, { visible: true, module: \"habits\", dismissed: false })\n})",
+        "sha256": "39de1e6bfaed70dba0dc630165caa43e1d8719d188d6f72d1282af94156be096",
+        "assertions": [
+          {
+            "line": 75,
+            "text": "assert.deepEqual(result.banner, { visible: true, module: \"habits\", dismissed: false })"
+          }
+        ]
+      }
+    ],
+    "tests/personal-plan-refinement-answer-provenance-migration.test.ts": [
+      {
+        "name": "the provenance backfill labels a synthetic draft on a CLEARED-flag plan 'assumed'",
+        "line": 122,
+        "start": 3861,
+        "end": 4895,
+        "body": "test(\"the provenance backfill labels a synthetic draft on a CLEARED-flag plan 'assumed'\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(CONDITIONAL_CONTEXT)\n  // The exact regression: an old unconditional proposal-accept already cleared\n  // `unrefined_direct_accept`, so the plan flag alone reads this fully\n  // synthetic draft as real refinement progress (\"4 von 4\").\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    answers: synthetic.answers,\n    completedQuestionIds: synthetic.completedQuestionIds,\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.ok(synthetic.completedQuestionIds.includes(\"scalp_irritation_detail\"))\n  assert.ok(synthetic.completedQuestionIds.includes(\"dry_shampoo_bridge_preference\"))\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))\n})",
+        "sha256": "ac97ab0e7fa7bf6672d029896d6233294a7dce4a3c00c42837718716c5f0f078",
+        "assertions": [
+          {
+            "line": 139,
+            "text": "assert.ok(synthetic.completedQuestionIds.includes(\"scalp_irritation_detail\"))"
+          },
+          {
+            "line": 140,
+            "text": "assert.ok(synthetic.completedQuestionIds.includes(\"dry_shampoo_bridge_preference\"))"
+          },
+          {
+            "line": 141,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill still labels a synthetic draft on a flagged plan 'assumed'",
+        "line": 144,
+        "start": 4897,
+        "end": 5545,
+        "body": "test(\"the provenance backfill still labels a synthetic draft on a flagged plan 'assumed'\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(PLAIN_CONTEXT)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: true })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    answers: synthetic.answers,\n    completedQuestionIds: synthetic.completedQuestionIds,\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))\n})",
+        "sha256": "2062a017d350abddae5db9127caccd8c38693e73e8554d51815ad81c64c468e8",
+        "assertions": [
+          {
+            "line": 158,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill leaves a plan without direct-acceptance evidence entirely 'user'",
+        "line": 161,
+        "start": 5547,
+        "end": 6654,
+        "body": "test(\"the provenance backfill leaves a plan without direct-acceptance evidence entirely 'user'\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const completedQuestionIds = [\n    \"current_product_categories\",\n    \"wet_wash_frequency\",\n    \"towel_handling\",\n    \"drying_routes\",\n    \"additional_heat_tools\",\n    \"night_protection\",\n    \"heat:ordinary_blow_dry\",\n  ]\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    answers: {\n      currentProductCategories: [\"shampoo\", \"conditioner\"],\n      wetWashFrequency: \"daily\",\n      towel: { material: \"baumwolle\", technique: \"rough_rubbing\" },\n      dryingRoutes: [\"ordinary_blow_dry\"],\n      additionalHeatTools: [],\n      nightProtection: [\"silk_pillowcase\"],\n      heatEvents: { \"heat:ordinary_blow_dry\": { frequency: \"weekly_3x\" } },\n    },\n    completedQuestionIds,\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), allUser(completedQuestionIds))\n})",
+        "sha256": "8a6eb39983e2bbab670a42a9a479e29e62f1049b600a40d616a666954ca49bc7",
+        "assertions": [
+          {
+            "line": 191,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), allUser(completedQuestionIds))"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill splits a reopened, partially refined draft per answer",
+        "line": 194,
+        "start": 6656,
+        "end": 8122,
+        "body": "test(\"the provenance backfill splits a reopened, partially refined draft per answer\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(PLAIN_CONTEXT)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  // The completed synthetic draft `reopen()` left behind — the durable trace of\n  // direct acceptance that survives the flag clear.\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    answers: synthetic.answers,\n    completedQuestionIds: synthetic.completedQuestionIds,\n  })\n  // The successor draft: `reopen()` copied the synthetic answers forward and the\n  // user has since re-answered two of them (plus the heat event that opened).\n  await insertDraft(pg, {\n    draftId: id(3, 3),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: {\n      ...synthetic.answers,\n      wetWashFrequency: \"daily\",\n      dryingRoutes: [\"ordinary_blow_dry\"],\n      heatEvents: { \"heat:ordinary_blow_dry\": { frequency: \"weekly_3x\" } },\n    },\n    completedQuestionIds: [...synthetic.completedQuestionIds, \"heat:ordinary_blow_dry\"],\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(3, 3)), {\n    ...allAssumed(synthetic.completedQuestionIds),\n    wet_wash_frequency: \"user\",\n    drying_routes: \"user\",\n    \"heat:ordinary_blow_dry\": \"user\",\n  })\n})",
+        "sha256": "9c27f30229c2b96c4df9e20251b3bfee95de78de3adbc4944b5fb9ba3f905a6b",
+        "assertions": [
+          {
+            "line": 225,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(3, 3)), {\n    ...allAssumed(synthetic.completedQuestionIds),\n    wet_wash_frequency: \"user\",\n    drying_routes: \"user\",\n    \"heat:ordinary_blow_dry\": \"user\",\n  })"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill keeps an assumed-valued heat event 'assumed' inside the cohort",
+        "line": 233,
+        "start": 8124,
+        "end": 9104,
+        "body": "test(\"the provenance backfill keeps an assumed-valued heat event 'assumed' inside the cohort\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(PLAIN_CONTEXT)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: true })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: {\n      ...synthetic.answers,\n      additionalHeatTools: [\"straightener\"],\n      heatEvents: {\n        \"heat:straightener\": { frequency: \"less_than_monthly\", protectionConsistency: \"unsure\" },\n      },\n    },\n    completedQuestionIds: [...synthetic.completedQuestionIds, \"heat:straightener\"],\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), {\n    ...allAssumed(synthetic.completedQuestionIds),\n    additional_heat_tools: \"user\",\n    \"heat:straightener\": \"assumed\",\n  })\n})",
+        "sha256": "32539b0e6d2940c38a3f0de8b41e6909315d03979c6657eb3796a9258fdc900c",
+        "assertions": [
+          {
+            "line": 254,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), {\n    ...allAssumed(synthetic.completedQuestionIds),\n    additional_heat_tools: \"user\",\n    \"heat:straightener\": \"assumed\",\n  })"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill errs to 'assumed' for a draft indistinguishable from the defaults",
+        "line": 261,
+        "start": 9106,
+        "end": 10055,
+        "body": "test(\"the provenance backfill errs to 'assumed' for a draft indistinguishable from the defaults\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(PLAIN_CONTEXT)\n  // Ruled error direction: a user who freely answered every question with\n  // exactly the assumed value is indistinguishable from a synthetic draft. One\n  // unnecessary banner (false-incomplete) beats a synthetic user who never gets\n  // the refinement entry point at all (false-complete).\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    answers: synthetic.answers,\n    completedQuestionIds: synthetic.completedQuestionIds,\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))\n})",
+        "sha256": "9af0515063111b63c9980d0ccebdf38d73d60a0b0d1c42e194bf04711d13e47e",
+        "assertions": [
+          {
+            "line": 279,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), allAssumed(synthetic.completedQuestionIds))"
+          }
+        ]
+      },
+      {
+        "name": "the provenance backfill writes an empty map for a draft with no completed answers",
+        "line": 282,
+        "start": 10057,
+        "end": 10577,
+        "body": "test(\"the provenance backfill writes an empty map for a draft with no completed answers\", async (t) => {\n  const pg = await migratedDatabase(t)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: true })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: {},\n    completedQuestionIds: [],\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), {})\n})",
+        "sha256": "bf139a8ad9ab043081f032335fcb39992541142796db6f9aa74d1ea0d859bf07",
+        "assertions": [
+          {
+            "line": 296,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), {})"
+          }
+        ]
+      },
+      {
+        "name": "the save RPC keeps a 5-argument compatibility overload for the migrate-then-deploy window",
+        "line": 299,
+        "start": 10579,
+        "end": 12809,
+        "body": "test(\"the save RPC keeps a 5-argument compatibility overload for the migrate-then-deploy window\", async (t) => {\n  const pg = await migratedDatabase(t)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: {},\n    completedQuestionIds: [],\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  const { rows: signatures } = await pg.query<{ arity: number }>(\n    `SELECT pg_catalog.array_length(proargtypes, 1) AS arity\n       FROM pg_catalog.pg_proc\n      WHERE proname = 'personal_plan_save_refinement_draft'\n      ORDER BY 1`,\n  )\n  assert.deepEqual(\n    signatures.map((row) => row.arity),\n    [5, 6],\n  )\n\n  // The still-live previous build calls the 5-argument signature.\n  const { rows: legacy } = await pg.query<{ result: { outcome: string; revision: number } }>(\n    `SELECT public.personal_plan_save_refinement_draft(\n       $1::uuid, $2::uuid, 0::bigint, $3::jsonb, $4::text[]\n     ) AS result`,\n    [id(9, 9), id(2, 2), JSON.stringify({ wetWashFrequency: \"daily\" }), \"{wet_wash_frequency}\"],\n  )\n  assert.equal(legacy[0]!.result.outcome, \"saved\")\n  assert.equal(legacy[0]!.result.revision, 1)\n  // Nothing is invented for the newly completed id: a completed id with no\n  // entry is treated as 'user' by userAnsweredQuestionIds(), which is exactly\n  // what a write from the pre-provenance build means.\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), {})\n\n  // The 6-argument path is untouched and still writes provenance.\n  const { rows: current } = await pg.query<{ result: { outcome: string; revision: number } }>(\n    `SELECT public.personal_plan_save_refinement_draft(\n       $1::uuid, $2::uuid, 1::bigint, $3::jsonb, $4::text[], $5::jsonb\n     ) AS result`,\n    [\n      id(9, 9),\n      id(2, 2),\n      JSON.stringify({ wetWashFrequency: \"daily\" }),\n      \"{wet_wash_frequency}\",\n      JSON.stringify({ wet_wash_frequency: \"user\" }),\n    ],\n  )\n  assert.equal(current[0]!.result.outcome, \"saved\")\n  assert.equal(current[0]!.result.revision, 2)\n  assert.deepEqual(await provenanceOf(pg, id(2, 2)), { wet_wash_frequency: \"user\" })\n})",
+        "sha256": "f54573670a785439c56da5b1f6a270ed87640ffdd1075fbabbd430668c601ed7",
+        "assertions": [
+          {
+            "line": 319,
+            "text": "assert.deepEqual(\n    signatures.map((row) => row.arity),\n    [5, 6],\n  )"
+          },
+          {
+            "line": 331,
+            "text": "assert.equal(legacy[0]!.result.outcome, \"saved\")"
+          },
+          {
+            "line": 332,
+            "text": "assert.equal(legacy[0]!.result.revision, 1)"
+          },
+          {
+            "line": 336,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), {})"
+          },
+          {
+            "line": 351,
+            "text": "assert.equal(current[0]!.result.outcome, \"saved\")"
+          },
+          {
+            "line": 352,
+            "text": "assert.equal(current[0]!.result.revision, 2)"
+          },
+          {
+            "line": 353,
+            "text": "assert.deepEqual(await provenanceOf(pg, id(2, 2)), { wet_wash_frequency: \"user\" })"
+          }
+        ]
+      },
+      {
+        "name": "the 5-argument compatibility overload preserves backfilled provenance instead of wiping it",
+        "line": 356,
+        "start": 12811,
+        "end": 15097,
+        "body": "test(\"the 5-argument compatibility overload preserves backfilled provenance instead of wiping it\", async (t) => {\n  const pg = await migratedDatabase(t)\n  const synthetic = buildDirectAcceptanceStage2Defaults(PLAIN_CONTEXT)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: true })\n  // Backfills to a MIX: `wet_wash_frequency` deviates from the assumption, the\n  // rest of the synthetic set does not.\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: { ...synthetic.answers, wetWashFrequency: \"daily\" },\n    completedQuestionIds: synthetic.completedQuestionIds,\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  const backfilled = await provenanceOf(pg, id(2, 2))\n  assert.equal(backfilled.wet_wash_frequency, \"user\")\n  assert.equal(backfilled.night_protection, \"assumed\")\n  assert.equal(backfilled.drying_routes, \"assumed\")\n\n  // A straggler save from the still-live old build: it drops `night_protection`\n  // from the completed set and reports a brand-new id it has no provenance for.\n  const keptQuestionIds = synthetic.completedQuestionIds.filter(\n    (questionId) => questionId !== \"night_protection\",\n  )\n  const { rows } = await pg.query<{ result: { outcome: string; revision: number } }>(\n    `SELECT public.personal_plan_save_refinement_draft(\n       $1::uuid, $2::uuid, 0::bigint, $3::jsonb, $4::text[]\n     ) AS result`,\n    [\n      id(9, 9),\n      id(2, 2),\n      JSON.stringify({ ...synthetic.answers, wetWashFrequency: \"daily\" }),\n      `{${[...keptQuestionIds, \"oil_purposes\"].join(\",\")}}`,\n    ],\n  )\n  assert.equal(rows[0]!.result.outcome, \"saved\")\n\n  const afterLegacySave = await provenanceOf(pg, id(2, 2))\n  // Kept ids keep their exact labels — the backfilled 'assumed' cohort survives.\n  assert.deepEqual(\n    afterLegacySave,\n    Object.fromEntries(keptQuestionIds.map((questionId) => [questionId, backfilled[questionId]!])),\n  )\n  // Dropped id is gone (prune semantics), new id is not invented.\n  assert.equal(\"night_protection\" in afterLegacySave, false)\n  assert.equal(\"oil_purposes\" in afterLegacySave, false)\n  assert.equal(afterLegacySave.wet_wash_frequency, \"user\")\n  assert.equal(afterLegacySave.drying_routes, \"assumed\")\n})",
+        "sha256": "e5c4272d99f1b18153973cb5f648b1d0ce75e3d3ecd7322f3398497e78b0b12d",
+        "assertions": [
+          {
+            "line": 374,
+            "text": "assert.equal(backfilled.wet_wash_frequency, \"user\")"
+          },
+          {
+            "line": 375,
+            "text": "assert.equal(backfilled.night_protection, \"assumed\")"
+          },
+          {
+            "line": 376,
+            "text": "assert.equal(backfilled.drying_routes, \"assumed\")"
+          },
+          {
+            "line": 394,
+            "text": "assert.equal(rows[0]!.result.outcome, \"saved\")"
+          },
+          {
+            "line": 398,
+            "text": "assert.deepEqual(\n    afterLegacySave,\n    Object.fromEntries(keptQuestionIds.map((questionId) => [questionId, backfilled[questionId]!])),\n  )"
+          },
+          {
+            "line": 403,
+            "text": "assert.equal(\"night_protection\" in afterLegacySave, false)"
+          },
+          {
+            "line": 404,
+            "text": "assert.equal(\"oil_purposes\" in afterLegacySave, false)"
+          },
+          {
+            "line": 405,
+            "text": "assert.equal(afterLegacySave.wet_wash_frequency, \"user\")"
+          },
+          {
+            "line": 406,
+            "text": "assert.equal(afterLegacySave.drying_routes, \"assumed\")"
+          }
+        ]
+      },
+      {
+        "name": "the 6-argument save RPC still rejects a non-object provenance payload",
+        "line": 409,
+        "start": 15099,
+        "end": 15951,
+        "body": "test(\"the 6-argument save RPC still rejects a non-object provenance payload\", async (t) => {\n  const pg = await migratedDatabase(t)\n  await insertPlan(pg, { planId: id(1, 1), userId: id(9, 9), unrefinedDirectAccept: false })\n  await insertDraft(pg, {\n    draftId: id(2, 2),\n    planId: id(1, 1),\n    userId: id(9, 9),\n    status: \"in_progress\",\n    answers: {},\n    completedQuestionIds: [],\n  })\n\n  await pg.exec(await readFile(MIGRATION, \"utf8\"))\n\n  const { rows } = await pg.query<{ result: { outcome: string; reasonCode: string } }>(\n    `SELECT public.personal_plan_save_refinement_draft(\n       $1::uuid, $2::uuid, 0::bigint, '{}'::jsonb, '{}'::text[], '[]'::jsonb\n     ) AS result`,\n    [id(9, 9), id(2, 2)],\n  )\n  assert.equal(rows[0]!.result.outcome, \"invalid_source\")\n  assert.equal(rows[0]!.result.reasonCode, \"invalid_answer_provenance\")\n})",
+        "sha256": "216f2c8429d1900ec5aa56c51aadac74e5fb958c8eeefab056138b9564244425",
+        "assertions": [
+          {
+            "line": 429,
+            "text": "assert.equal(rows[0]!.result.outcome, \"invalid_source\")"
+          },
+          {
+            "line": 430,
+            "text": "assert.equal(rows[0]!.result.reasonCode, \"invalid_answer_provenance\")"
+          }
+        ]
+      }
+    ],
+    "tests/personal-plan-refinement-presentation-route.test.ts": [
+      {
+        "name": "returns the refinement answers bound to the current refined need version",
+        "line": 162,
+        "start": 4552,
+        "end": 6418,
+        "body": "test(\"returns the refinement answers bound to the current refined need version\", async () => {\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: ids.refined,\n        active_routine_version_id: null,\n        pending_routine_proposal_id: null,\n      },\n    ],\n    personal_plan_refinement_drafts: [\n      {\n        id: \"draft-stale\",\n        personal_plan_id: ids.plan,\n        status: \"complete\",\n        result_refined_need_version_id: ids.staleRefined,\n        answers: { towel: { material: \"handtuch\", technique: \"rub\" } },\n        completed_question_ids: [\"towel_handling\"],\n        // Newer than the correct draft below, but bound to a superseded refined-need\n        // version. Winning here would prove the route wrongly authorities on recency.\n        updated_at: \"2026-08-14T00:00:00.000Z\",\n      },\n      {\n        id: \"draft-current\",\n        personal_plan_id: ids.plan,\n        status: \"complete\",\n        result_refined_need_version_id: ids.refined,\n        answers: { towel: { material: \"frottee\", technique: \"gentle_press\" }, nightProtection: [] },\n        completed_question_ids: [\"towel_handling\", \"night_protection\"],\n        updated_at: \"2026-08-10T00:00:00.000Z\",\n      },\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(res.headers.get(\"Cache-Control\"), \"no-store\")\n  assert.equal(body.answers.towel.material, \"frottee\")\n  assert.deepEqual(body.answers.nightProtection, [])\n  assert.deepEqual(body.completedQuestionIds, [\"towel_handling\", \"night_protection\"])\n  assert.equal(body.routineProducts, null)\n})",
+        "sha256": "38dfe8c28b9288bf587b8aa8ea00d422e4166401b8966ab0aec5c532bbd404ad",
+        "assertions": [
+          {
+            "line": 205,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 206,
+            "text": "assert.equal(res.headers.get(\"Cache-Control\"), \"no-store\")"
+          },
+          {
+            "line": 207,
+            "text": "assert.equal(body.answers.towel.material, \"frottee\")"
+          },
+          {
+            "line": 208,
+            "text": "assert.deepEqual(body.answers.nightProtection, [])"
+          },
+          {
+            "line": 209,
+            "text": "assert.deepEqual(body.completedQuestionIds, [\"towel_handling\", \"night_protection\"])"
+          },
+          {
+            "line": 210,
+            "text": "assert.equal(body.routineProducts, null)"
+          }
+        ]
+      },
+      {
+        "name": "returns null answers when no complete draft matches the pointer",
+        "line": 213,
+        "start": 6420,
+        "end": 7532,
+        "body": "test(\"returns null answers when no complete draft matches the pointer\", async () => {\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: ids.refined,\n        active_routine_version_id: null,\n        pending_routine_proposal_id: null,\n      },\n    ],\n    personal_plan_refinement_drafts: [\n      {\n        id: \"draft-other\",\n        personal_plan_id: ids.plan,\n        status: \"complete\",\n        result_refined_need_version_id: ids.staleRefined,\n        answers: { towel: { material: \"handtuch\" } },\n        completed_question_ids: [\"towel_handling\"],\n        updated_at: \"2026-08-10T00:00:00.000Z\",\n      },\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(body.answers, null)\n  assert.deepEqual(body.completedQuestionIds, [])\n  assert.equal(body.routineProducts, null)\n})",
+        "sha256": "f105c2ebabac5c1c3d97bc3a98e94f3af89a1800bd4d45e4ef9a23d5a9e550ea",
+        "assertions": [
+          {
+            "line": 245,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 246,
+            "text": "assert.equal(body.answers, null)"
+          },
+          {
+            "line": 247,
+            "text": "assert.deepEqual(body.completedQuestionIds, [])"
+          },
+          {
+            "line": 248,
+            "text": "assert.equal(body.routineProducts, null)"
+          }
+        ]
+      },
+      {
+        "name": "returns included routine products of the active version",
+        "line": 266,
+        "start": 8176,
+        "end": 9750,
+        "body": "test(\"returns included routine products of the active version\", async () => {\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: null,\n        active_routine_version_id: ids.routineVersion,\n        pending_routine_proposal_id: null,\n      },\n    ],\n    personal_plan_routine_versions: [\n      {\n        id: ids.routineVersion,\n        user_id: ids.user,\n        personal_plan_id: ids.plan,\n        payload: routinePayload(ids.routineVersion, [\n          ownedConditioner,\n          plannedShampoo,\n          pendingReviewMask,\n        ]),\n      },\n    ],\n    personal_plan_need_versions: [\n      matchingRefinedNeedVersionRow([\"conditioner\", \"shampoo\", \"mask\"]),\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(body.routineProducts.length, 2)\n  const owned = body.routineProducts.find((product: { state: string }) => product.state === \"owned\")\n  assert.equal(owned.name, \"Gliss Kur Aqua Revive Conditioner\")\n  assert.equal(owned.categoryLabel, \"Conditioner\")\n  assert.equal(owned.purposeLabel, \"Pflege nach der Reinigung\")\n  const planned = body.routineProducts.find(\n    (product: { state: string }) => product.state === \"planned\",\n  )\n  assert.equal(planned.name, \"Neues Shampoo\")\n  assert.equal(planned.categoryLabel, \"Shampoo\")\n})",
+        "sha256": "6440e834318e18a8365c67104d386471291ea5746e7fe41b38c5edc9a04dddf1",
+        "assertions": [
+          {
+            "line": 302,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 303,
+            "text": "assert.equal(body.routineProducts.length, 2)"
+          },
+          {
+            "line": 305,
+            "text": "assert.equal(owned.name, \"Gliss Kur Aqua Revive Conditioner\")"
+          },
+          {
+            "line": 306,
+            "text": "assert.equal(owned.categoryLabel, \"Conditioner\")"
+          },
+          {
+            "line": 307,
+            "text": "assert.equal(owned.purposeLabel, \"Pflege nach der Reinigung\")"
+          },
+          {
+            "line": 311,
+            "text": "assert.equal(planned.name, \"Neues Shampoo\")"
+          },
+          {
+            "line": 312,
+            "text": "assert.equal(planned.categoryLabel, \"Shampoo\")"
+          }
+        ]
+      },
+      {
+        "name": "routineProducts is null when the active routine is authority_repair_required",
+        "line": 315,
+        "start": 9752,
+        "end": 10994,
+        "body": "test(\"routineProducts is null when the active routine is authority_repair_required\", async () => {\n  // No personal_plan_need_versions row is seeded for ids.refined, so\n  // hasMatchingSourceCategoryOrder() cannot confirm the frozen Routine still matches its\n  // immutable source. /routine would show a repair prompt and hide items in this state;\n  // /profile must not show a possibly-stale product list either.\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: null,\n        active_routine_version_id: ids.routineVersion,\n        pending_routine_proposal_id: null,\n      },\n    ],\n    personal_plan_routine_versions: [\n      {\n        id: ids.routineVersion,\n        user_id: ids.user,\n        personal_plan_id: ids.plan,\n        payload: routinePayload(ids.routineVersion, [ownedConditioner, plannedShampoo]),\n      },\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(body.routineProducts, null)\n})",
+        "sha256": "9c3939f6582fce3e42e409fdacf849cfb9f83a06bf065fe6832006b3fcc418e2",
+        "assertions": [
+          {
+            "line": 348,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 349,
+            "text": "assert.equal(body.routineProducts, null)"
+          }
+        ]
+      },
+      {
+        "name": "refinement presentation API rejects unauthenticated reads",
+        "line": 352,
+        "start": 10996,
+        "end": 11296,
+        "body": "test(\"refinement presentation API rejects unauthenticated reads\", async () => {\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => null,\n    client: () => {\n      throw new Error(\"must not construct client\")\n    },\n  }).GET()\n  assert.equal(res.status, 401)\n})",
+        "sha256": "040bde3ba09c84a9565b9a711d95693d9fc9c14fcb9ba77d1b1beb4d130a5537",
+        "assertions": [
+          {
+            "line": 359,
+            "text": "assert.equal(res.status, 401)"
+          }
+        ]
+      }
+    ],
+    "tests/personal-plan-refinement-status-route.test.ts": [
+      {
+        "name": "fresh plan with no refinement draft: both modules open, progress 2/4",
+        "line": 118,
+        "start": 3899,
+        "end": 4736,
+        "body": "test(\"fresh plan with no refinement draft: both modules open, progress 2/4\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(res.headers.get(\"Cache-Control\"), \"no-store\")\n  assert.deepEqual(\n    body.modules.map((m: { module: string; status: string }) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )\n  assert.ok(body.modules[0].openQuestionCount > 0, \"fresh products module must expose open questions\")\n  assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })\n  assert.equal(body.module1HandedOff, false)\n  assert.deepEqual(body.banner, { visible: true, module: \"products\", dismissed: false })\n})",
+        "sha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "assertions": [
+          {
+            "line": 125,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 126,
+            "text": "assert.equal(res.headers.get(\"Cache-Control\"), \"no-store\")"
+          },
+          {
+            "line": 127,
+            "text": "assert.deepEqual(\n    body.modules.map((m: { module: string; status: string }) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )"
+          },
+          {
+            "line": 134,
+            "text": "assert.ok(body.modules[0].openQuestionCount > 0, \"fresh products module must expose open questions\")"
+          },
+          {
+            "line": 135,
+            "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })"
+          },
+          {
+            "line": 136,
+            "text": "assert.equal(body.module1HandedOff, false)"
+          },
+          {
+            "line": 137,
+            "text": "assert.deepEqual(body.banner, { visible: true, module: \"products\", dismissed: false })"
+          }
+        ]
+      },
+      {
+        "name": "partial products user-answers: products open with the correct open-question count",
+        "line": 140,
+        "start": 4738,
+        "end": 5743,
+        "body": "test(\"partial products user-answers: products open with the correct open-question count\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"in_progress\",\n        answers: { currentProductCategories: [\"shampoo\"] },\n        completed_question_ids: [\"current_product_categories\"],\n        answer_provenance: { current_product_categories: \"user\" },\n        module_projections: {},\n        updated_at: \"2026-08-20T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  const products = body.modules.find((m: { module: string }) => m.module === \"products\")\n  assert.equal(products.status, \"open\")\n  assert.equal(products.openQuestionCount, 1)\n  assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })\n})",
+        "sha256": "f1454bc0bd680f377be7ca39d9b0f2affeb1b42b0652f98c2583c2aa243eec32",
+        "assertions": [
+          {
+            "line": 159,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 161,
+            "text": "assert.equal(products.status, \"open\")"
+          },
+          {
+            "line": 162,
+            "text": "assert.equal(products.openQuestionCount, 1)"
+          },
+          {
+            "line": 163,
+            "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })"
+          }
+        ]
+      },
+      {
+        "name": "products module complete via lineage: 3/4 and the handoff marker is set",
+        "line": 166,
+        "start": 5745,
+        "end": 7094,
+        "body": "test(\"products module complete via lineage: 3/4 and the handoff marker is set\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"in_progress\",\n        answers: { currentProductCategories: [\"shampoo\"], wetWashFrequency: \"daily\" },\n        completed_question_ids: [\"current_product_categories\", \"wet_wash_frequency\"],\n        answer_provenance: { current_product_categories: \"user\", wet_wash_frequency: \"user\" },\n        module_projections: {\n          products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n        },\n        updated_at: \"2026-08-20T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(\n    body.modules.find((m: { module: string }) => m.module === \"products\").status,\n    \"complete\",\n  )\n  assert.equal(body.modules.find((m: { module: string }) => m.module === \"habits\").status, \"open\")\n  assert.deepEqual(body.progress, { completedSteps: 3, totalSteps: 4 })\n  assert.equal(body.module1HandedOff, true)\n  assert.deepEqual(body.banner, { visible: true, module: \"habits\", dismissed: false })\n})",
+        "sha256": "974961a1b80cd15af0e79c4db7195db243b9e0e483f3fad7cf40e1fac6997f58",
+        "assertions": [
+          {
+            "line": 187,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 188,
+            "text": "assert.equal(\n    body.modules.find((m: { module: string }) => m.module === \"products\").status,\n    \"complete\",\n  )"
+          },
+          {
+            "line": 192,
+            "text": "assert.equal(body.modules.find((m: { module: string }) => m.module === \"habits\").status, \"open\")"
+          },
+          {
+            "line": 193,
+            "text": "assert.deepEqual(body.progress, { completedSteps: 3, totalSteps: 4 })"
+          },
+          {
+            "line": 194,
+            "text": "assert.equal(body.module1HandedOff, true)"
+          },
+          {
+            "line": 195,
+            "text": "assert.deepEqual(body.banner, { visible: true, module: \"habits\", dismissed: false })"
+          }
+        ]
+      },
+      {
+        "name": "both modules complete: 4/4",
+        "line": 198,
+        "start": 7096,
+        "end": 8686,
+        "body": "test(\"both modules complete: 4/4\", async () => {\n  const answers = {\n    currentProductCategories: [\"shampoo\"],\n    wetWashFrequency: \"daily\",\n    towel: { material: \"no_towel\" },\n    dryingRoutes: [],\n    additionalHeatTools: [],\n    nightProtection: [],\n  }\n  const completedQuestionIds = [\n    \"current_product_categories\",\n    \"wet_wash_frequency\",\n    \"towel_handling\",\n    \"drying_routes\",\n    \"additional_heat_tools\",\n    \"night_protection\",\n  ]\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"complete\",\n        answers,\n        completed_question_ids: completedQuestionIds,\n        answer_provenance: Object.fromEntries(completedQuestionIds.map((id) => [id, \"user\"])),\n        module_projections: {\n          products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n          habits: { needVersionId: \"need-v3\", projectedAtRevision: 2, stage3Handoff: false },\n        },\n        updated_at: \"2026-08-21T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.deepEqual(\n    body.modules.map((m: { status: string }) => m.status),\n    [\"complete\", \"complete\"],\n  )\n  assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })\n  assert.equal(body.module1HandedOff, true)\n  assert.deepEqual(body.banner, { visible: false, module: null, dismissed: false })\n})",
+        "sha256": "3586d769766ff39e1819555a96a17c0364f2b328097d001ec07483f68793c0b2",
+        "assertions": [
+          {
+            "line": 236,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 237,
+            "text": "assert.deepEqual(\n    body.modules.map((m: { status: string }) => m.status),\n    [\"complete\", \"complete\"],\n  )"
+          },
+          {
+            "line": 241,
+            "text": "assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })"
+          },
+          {
+            "line": 242,
+            "text": "assert.equal(body.module1HandedOff, true)"
+          },
+          {
+            "line": 243,
+            "text": "assert.deepEqual(body.banner, { visible: false, module: null, dismissed: false })"
+          }
+        ]
+      },
+      {
+        "name": "banner reflects a stored dismissal for the current open module",
+        "line": 246,
+        "start": 8688,
+        "end": 9377,
+        "body": "test(\"banner reflects a stored dismissal for the current open module\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    [PERSONAL_PLAN_UI_LIFECYCLE_MARKS_TABLE]: [\n      {\n        user_id: ids.user,\n        kind: \"module_banner_dismissed\",\n        subject: \"products\",\n        marked_at: \"2026-08-20T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.deepEqual(body.banner, { visible: false, module: \"products\", dismissed: true })\n  assert.equal(body.modules.find((m: { module: string }) => m.module === \"products\").status, \"open\")\n})",
+        "sha256": "77289bcdf398868005f31dce5a2a5ebeb0ca345e24a43936211e38dfbcbba9eb",
+        "assertions": [
+          {
+            "line": 261,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 262,
+            "text": "assert.deepEqual(body.banner, { visible: false, module: \"products\", dismissed: true })"
+          },
+          {
+            "line": 263,
+            "text": "assert.equal(body.modules.find((m: { module: string }) => m.module === \"products\").status, \"open\")"
+          }
+        ]
+      },
+      {
+        "name": "in_progress draft wins over a completed draft on the same initial need version",
+        "line": 266,
+        "start": 9379,
+        "end": 10945,
+        "body": "test(\"in_progress draft wins over a completed draft on the same initial need version\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"complete\",\n        answers: {\n          currentProductCategories: [\"shampoo\"],\n          wetWashFrequency: \"daily\",\n          towel: { material: \"no_towel\" },\n          dryingRoutes: [],\n          additionalHeatTools: [],\n          nightProtection: [],\n        },\n        completed_question_ids: [\n          \"current_product_categories\",\n          \"wet_wash_frequency\",\n          \"towel_handling\",\n          \"drying_routes\",\n          \"additional_heat_tools\",\n          \"night_protection\",\n        ],\n        answer_provenance: { current_product_categories: \"user\" },\n        module_projections: {},\n        updated_at: \"2026-08-19T00:00:00.000Z\",\n      },\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"in_progress\",\n        answers: {},\n        completed_question_ids: [],\n        answer_provenance: {},\n        module_projections: {},\n        updated_at: \"2026-08-22T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  // Reads the in_progress row, not the (also present) complete one.\n  assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })\n})",
+        "sha256": "8c1b48a99e7060aa30b88fd7b3c5bf0313702af0a00de0bb8b15e49b77d42408",
+        "assertions": [
+          {
+            "line": 309,
+            "text": "assert.equal(res.status, 200)"
+          },
+          {
+            "line": 311,
+            "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })"
+          }
+        ]
+      },
+      {
+        "name": "initial need version with neither a Stage-1 lead nor a prepared-artifact source degrades to 503",
+        "line": 314,
+        "start": 10947,
+        "end": 11310,
+        "body": "test(\"initial need version with neither a Stage-1 lead nor a prepared-artifact source degrades to 503\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [\n      needVersionRow({ stage1_source_lead_id: null, prepared_artifact_source_id: null }),\n    ],\n  }).GET()\n\n  assert.equal(res.status, 503)\n})",
+        "sha256": "96e5a8a516fd741dfb82084baeed6484dd9dec684ad5658efe2b7b9de95710c7",
+        "assertions": [
+          {
+            "line": 322,
+            "text": "assert.equal(res.status, 503)"
+          }
+        ]
+      },
+      {
+        "name": "no personal plan: typed 404",
+        "line": 325,
+        "start": 11312,
+        "end": 11518,
+        "body": "test(\"no personal plan: typed 404\", async () => {\n  const res = await handlersFor({}).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 404)\n  assert.equal(body.error, \"no_personal_plan\")\n})",
+        "sha256": "c5240d71349596ee1b4cc0f6373c1cb35e571c0b9585e5ecdce3d1608d77b776",
+        "assertions": [
+          {
+            "line": 329,
+            "text": "assert.equal(res.status, 404)"
+          },
+          {
+            "line": 330,
+            "text": "assert.equal(body.error, \"no_personal_plan\")"
+          }
+        ]
+      },
+      {
+        "name": "rejects unauthenticated reads",
+        "line": 333,
+        "start": 11520,
+        "end": 11654,
+        "body": "test(\"rejects unauthenticated reads\", async () => {\n  const res = await handlersFor({}, null).GET()\n  assert.equal(res.status, 401)\n})",
+        "sha256": "e83fb008cfb6e5f003b045a42f52aaec13988d3f875a7662c65db9a746fbe199",
+        "assertions": [
+          {
+            "line": 335,
+            "text": "assert.equal(res.status, 401)"
+          }
+        ]
+      }
+    ]
+  }
+}

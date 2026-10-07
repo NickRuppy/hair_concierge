@@ -1,0 +1,13 @@
+{
+  "mode": "check",
+  "phase": "before",
+  "controls": 1,
+  "allUniqueOwnersParsed": true,
+  "allControlsParsed": true,
+  "phaseOracles": "exact retained assertion startLine and text in before",
+  "selectedTestCount": 1,
+  "repositoryWrites": 0,
+  "runtimeRuns": 0,
+  "childrenStarted": 0
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}

@@ -1,0 +1,377 @@
+{
+  "fullRead": [
+    {
+      "file": "tests/personal-plan-offer-motion.spec.ts",
+      "sha256": "56e17fcbbc4950bcc618a1f21b10934b0f9126a8805faca5a655f1a0772271c7"
+    },
+    {
+      "file": "tests/personal-plan-pricing-experiment.test.ts",
+      "sha256": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31"
+    },
+    {
+      "file": "tests/free-reveal.test.ts",
+      "sha256": "c2e6a44a32c5a6a983143d4417fdadd12a0d4ae93a4ee3d4b9ed5c36fa8c0ad8"
+    },
+    {
+      "file": "tests/meta-offer-view.test.ts",
+      "sha256": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6"
+    },
+    {
+      "file": "tests/organic-offer-media-experiment.test.ts",
+      "sha256": "429e96be662296b1f76bee7e8044ae3ff8a7d4bd4cfb3f498271a50d73048a41"
+    },
+    {
+      "file": "tests/meta-offer-view-client.test.ts",
+      "sha256": "7c4d0831d19962626e38a47b8350909059599611663f034faa11d4a9f13316cd"
+    },
+    {
+      "file": "tests/personal-plan-transition-motion.test.tsx",
+      "sha256": "482ca59f56dbbf4d2ecb72df4c776fafec98701cb548d8e91268344a385a57d4"
+    },
+    {
+      "file": "src/lib/entitlements/free-reveal.ts",
+      "sha256": "9e0adf219ce1576f080bcf959a7d7c5b47d8a7a29bac3dae4a9ba5ca168ff93e"
+    },
+    {
+      "file": "src/lib/entitlements/entitlements.ts",
+      "sha256": "faa22816f34f6a818bbf80bdebac6b627aaa1a12470cef7ae7ead627cb49cf59"
+    },
+    {
+      "file": "supabase/migrations/20260905090000_scan_free_reveals.sql",
+      "sha256": "1097d9c559e03a3c99d2a2567ee29718c2d7cd7b9f78511c4b242119327b29c2"
+    },
+    {
+      "file": "src/lib/funnel/personal-plan-pricing-experiment.ts",
+      "sha256": "2df4e53841c87e421524c1cbaaeb0daeed9ac6d2a467cd8ae4da849faf2af516"
+    },
+    {
+      "file": "src/lib/funnel/organic-offer-media-experiment.ts",
+      "sha256": "8e0882803faa756e7c103c53a16b857a73db8ac9e5f9c261ea013743f7902887"
+    },
+    {
+      "file": "src/lib/funnel/flags.ts",
+      "sha256": "981bd9436dae7c1fc7cbd8d6dc60e3d6bbaa9dc3bea994e0a33fac525f02528d"
+    },
+    {
+      "file": "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+      "sha256": "ac0fce778e1594083573a8b4fdb1f8ed5aa00e8d9427338856f8ae22781a0cf4"
+    },
+    {
+      "file": "scripts/create-personal-plan-one-time-qa-token.ts",
+      "sha256": "a3109def25fb2d86f1b2d7f11aa053d041f26fabe0bda10e3b77afcc1561fbaa"
+    },
+    {
+      "file": "src/lib/analytics/meta-offer-view-client.ts",
+      "sha256": "320ea8d68143153d486d771fadcedc64877205ebf288dfc1da090b7d2a5a0565"
+    },
+    {
+      "file": "src/lib/analytics/meta-offer-view-id.ts",
+      "sha256": "3456cc669f5cdf679cc7192c7b02a2ccec6383e303f5e827b662d08aaec6d127"
+    },
+    {
+      "file": "src/app/api/analytics/meta-offer-view/route.ts",
+      "sha256": "8b2008675f27a002eea4d9ff2ae61d5733dad963185b3d2baf240e287af0f927"
+    },
+    {
+      "file": "src/lib/personal-plan/stage-navigation-intent.ts",
+      "sha256": "5b0b5a4db6ecba41b55aa6bb977dfda70192bda83453339ba0369034e243e4c9"
+    },
+    {
+      "file": "src/components/personal-plan-journey/view-transition.tsx",
+      "sha256": "2cea9a34c040c643d3c692ca93f3138e5a65f11c7adc43dbb89cad3a57ce19bc"
+    },
+    {
+      "file": "src/components/application/application-page.tsx",
+      "sha256": "df15aabce70ed7ff6d7e5c803e23bbd08ec9860f600ee115d6e9a5b7cb0da1d9"
+    },
+    {
+      "file": "src/components/application/application-overview.tsx",
+      "sha256": "eb6da9b0d4a9a7a89f75b8089ab10ca10e4f7d3d1d1e5bd1c32170ee4d2e4d13"
+    },
+    {
+      "file": "src/components/application/application-day.tsx",
+      "sha256": "d568242610f047dfd6ee8a50cacaf0ceaf0a51b9bdd7351f85350654c6c6a05f"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/session.ts",
+      "sha256": "2988e410830d68e04a380934fd7f3ac51236901e10c91d629e1cf6a2fcac0712"
+    },
+    {
+      "file": "src/lib/stripe/offer-client-loader.ts",
+      "sha256": "a9a093ef1091516a68e849d2d0e2e903dabdb01f35f920894029d0fcf3a1d9c2"
+    },
+    {
+      "file": "src/lib/labs/offer-page-access.ts",
+      "sha256": "6a1382da89073e84c54320a4531b8fe68ad89ad4c56c4384b211b36cdcf81ea4"
+    },
+    {
+      "file": "src/lib/funnel/journey-kind.ts",
+      "sha256": "6088e7e2554b37b0d2da5231dd5361fdeed8cd2ebf1dae5286e107d7543efe88"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "playwright.config.ts",
+      "sha256": "1bae952413616dc389aad1ebe4278173df2ea9e51add59045d72c24501f85aa9"
+    }
+  ],
+  "boundedRead": [
+    {
+      "file": "src/lib/funnel/server.ts",
+      "ranges": [
+        [
+          1,
+          620
+        ]
+      ],
+      "sha256": "d664770e0103972242ab81c3a3573243695f901e68ecfe4461e61d0410360df6"
+    },
+    {
+      "file": "src/lib/funnel/packages.ts",
+      "ranges": [
+        "tail60"
+      ],
+      "sha256": "66cab34518f29604a37c7a32721f74ca5c930f82a12dcf293db69e3b90a080be"
+    },
+    {
+      "file": "src/app/api/scan/reveal/route.ts",
+      "ranges": [
+        [
+          90,
+          225
+        ]
+      ],
+      "sha256": "537858d34a38a7c493536f571b3cd52efd6e3de124f698915c3fda5a6fc31e45"
+    },
+    {
+      "file": "src/app/api/scan/resolve/route.ts",
+      "ranges": [
+        [
+          500,
+          521
+        ]
+      ],
+      "sha256": "9502eac574fbc19276f1c994b47a82f9c7c22e29a4f7bf89438203ed5a835ad4"
+    },
+    {
+      "file": "src/app/result/[leadId]/page.tsx",
+      "ranges": [
+        [
+          440,
+          600
+        ]
+      ],
+      "sha256": "83ce34fd0d9d356a66b9e4201a3676236d11c7e06ec09563e0742ee91ca36ae1"
+    },
+    {
+      "file": "src/components/quiz/offer-tracking-provider.tsx",
+      "ranges": [
+        [
+          200,
+          275
+        ]
+      ],
+      "sha256": "f37765d1a238f67e48d99fbef9310311b56f4e994674ca879bb075b8b1af3995"
+    },
+    {
+      "file": "src/app/labs/offer-page/page.tsx",
+      "ranges": [
+        [
+          1,
+          220
+        ]
+      ],
+      "sha256": "4b4151a1ca267ecb019fb75c39fa5a1ec14d1f1f8f9c18d79352e3ced30aed60"
+    },
+    {
+      "file": "src/components/personal-plan-offer/personal-plan-offer.tsx",
+      "ranges": [
+        [
+          355,
+          710
+        ],
+        [
+          935,
+          1020
+        ]
+      ],
+      "sha256": "f8373a3f8f9ee26815679654c15d7fc840221f51c25c1e7d50e7199841478033"
+    },
+    {
+      "file": "src/components/quiz/result-offer-pricing.tsx",
+      "ranges": [
+        [
+          427,
+          635
+        ],
+        [
+          1010,
+          1120
+        ],
+        [
+          1185,
+          1255
+        ]
+      ],
+      "sha256": "461bf77fd54505e7fdcaa10c0630bfc942803fdb13ddc546ba7c745c6e91d33a"
+    },
+    {
+      "file": "src/components/checkout/personal-plan-one-time-checkout.tsx",
+      "ranges": [
+        [
+          375,
+          515
+        ],
+        [
+          723,
+          870
+        ]
+      ],
+      "sha256": "3d1ba6216be7fd0f1c647139c3ad019bb382e93c76969bad93ba023c66ec6882"
+    },
+    {
+      "file": "src/components/checkout/paypal-one-time-button.tsx",
+      "ranges": [
+        [
+          285,
+          408
+        ],
+        [
+          437,
+          495
+        ]
+      ],
+      "sha256": "a60cf97517aa398c79d87eb6132a72430708474bf81054c35496be911ffaa07b"
+    },
+    {
+      "file": "src/components/checkout/offer-payment-overlay.tsx",
+      "ranges": [
+        [
+          130,
+          215
+        ],
+        [
+          228,
+          250
+        ]
+      ],
+      "sha256": "522228797fbec0514a40d3e05ecc1b29e89523c8fdb8706716c72d119f27c404"
+    },
+    {
+      "file": "src/components/personal-plan-start/plan-start-flow.tsx",
+      "ranges": [
+        [
+          738,
+          751
+        ],
+        [
+          1316,
+          1439
+        ]
+      ],
+      "sha256": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40"
+    },
+    {
+      "file": "src/components/personal-plan-refinement/refinement-flow.tsx",
+      "ranges": [
+        [
+          1,
+          72
+        ],
+        [
+          169,
+          300
+        ],
+        [
+          752,
+          880
+        ],
+        [
+          1127,
+          1285
+        ]
+      ],
+      "sha256": "2a295e4034394ba379c9494773df734453ae7aa0f01a2dd4076faadcd18c1462"
+    },
+    {
+      "file": "src/lib/analytics/meta-capi.ts",
+      "ranges": [
+        [
+          120,
+          144
+        ]
+      ],
+      "sha256": "1219f337cca4e3c7141a2048f022f8f1c913dd16094a0d69d75e11e9e3c7e5cd"
+    },
+    {
+      "file": "src/app/globals.css",
+      "ranges": [
+        [
+          1168,
+          1210
+        ],
+        [
+          1476,
+          1502
+        ]
+      ],
+      "sha256": "0021b712cdc24524f0e91cab1009d627c74ea72d8e3db6c28df6a653fe9a2ea5"
+    },
+    {
+      "file": "src/app/api/stripe/create-checkout-session/route.ts",
+      "ranges": [
+        [
+          600,
+          670
+        ],
+        "symbol search identifies unconditional retirement578\u2013580 before authorization629; fullroute notread"
+      ],
+      "sha256": "0808a083b02a9611deab703bf9fc7a9b3cecb5dce2b5be1889003a0cd06a9bd8"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "ranges": [
+        [
+          1,
+          195
+        ],
+        [
+          260,
+          316
+        ],
+        [
+          320,
+          366
+        ]
+      ],
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": "package.json",
+      "ranges": [
+        "native/browser scripts and declared dependencies; first broad output truncated, relevant commands reread"
+      ],
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "src/app/welcome/welcome-client.tsx",
+      "ranges": [
+        "symbol navigation only; not full implementation proof"
+      ],
+      "sha256": "2f877931f7c2808f67448d6d10d0a9357c2fd3665c37f3b9d49efb43a630288a"
+    },
+    {
+      "file": "scripts/ci/changed-paths.mjs",
+      "ranges": [
+        "rg CI selection navigation only"
+      ],
+      "sha256": "8b53f9c6dfd56ebe3a980cf7223dd9f0b82f9432ea145c764a37723a6cc7086c"
+    }
+  ],
+  "priorEvidence": [
+    "/tmp/test-audit-static-layer-challenge.md"
+  ],
+  "limits": "All seven test callbacks/helpers/table rows read; not a full recursive renderer/provider/product graph review. Candidate-only operative owner and fake complete. No env files, product import or tests executed."
+}

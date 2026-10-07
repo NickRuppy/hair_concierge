@@ -1,0 +1,20 @@
+import os,json,hashlib,pathlib,re
+D=pathlib.Path('/tmp/test-audit-recompute-integration42'); R=pathlib.Path('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning')
+def H(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+m=json.loads((D/'manifest.json').read_text()); c=json.loads((D/'controls.json').read_text())
+messages=['staged AND confirmed within the same transaction — the closing draft still satisfies condition 1 via result_refined_need_version_id','confirmed within the same transaction, not just proposed','Expected values to be strictly equal:','the provenance write leaves an active Routine','the provenance write does not bump the plan revision again','Expected values to be strictly deep-equal:','Expected values to be strictly equal:']
+for i,x in enumerate(c):
+ x['command']=['--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-reporter=tap','--test-name-pattern=^'+re.sub(r'([\\^$.*+?()\[\]{}|])',r'\\\1',x['testName'])+'$',x['testFile']]
+ x['requiredMessage']=messages[i];x['requiredOperator']='==' if i==3 else 'deepStrictEqual' if i==5 else 'strictEqual'
+ x['proofKind']='new transferred positive oracle only; no before-oracle claim' if i==3 else 'existing actual owner oracle preserved'
+(D/'controls-normalized.json').write_text(json.dumps(c,indent=2,ensure_ascii=False)+'\n')
+extra=['tests/server-only-register.cjs','tsconfig.json','package-lock.json','node_modules/typescript/lib/typescript.js','node_modules/typescript/package.json','node_modules/tsx/package.json','node_modules/esbuild/package.json','node_modules/esbuild/lib/main.js','node_modules/esbuild/bin/esbuild']
+extra+=re.findall(r'"(supabase/migrations/[^"\n]+\.sql)"',(R/'tests/personal-plan-pglite-migration.fixtures.ts').read_text())
+for base in ['node_modules/tsx/dist','node_modules/@electric-sql/pglite/dist','node_modules/zod']:
+ for p in (R/base).rglob('*'):
+  if p.is_file() and (p.suffix in ['.js','.cjs','.mjs','.wasm','.data'] or p.name=='package.json'): extra.append(str(p.relative_to(R)))
+for p in (R/'node_modules/@esbuild').glob('*/bin/esbuild'): extra.append(str(p.relative_to(R)))
+gitdir=pathlib.Path((R/'.git').read_text().strip().split('gitdir: ')[1]); common=(gitdir/(gitdir/'commondir').read_text().strip()).resolve()
+pins={'root':str(R),'head':m['head'],'branch':'refs/heads/codex/test-audit-pruning','gitdir':str(gitdir),'common':str(common),'gitConfigSha256':H(common/'config'),'nodeVersion':'v22.12.0','nodePath':'/usr/local/bin/node','nodeSha256':H(pathlib.Path('/usr/local/bin/node')),'artifacts':{f:H(D/f) for f in ['manifest.json','sites.json','candidates.json','controls.json','controls-normalized.json','complete.diff','complete-ledger.md','layer-plan.md']},'dependencies':{f:H(R/f) for f in sorted(set(extra))}}
+(D/'tool-pins.json').write_text(json.dumps(pins,indent=2)+'\n')
+print('Pins',H(D/'tool-pins.json'),'dependency files',len(pins['dependencies']))

@@ -1,0 +1,10 @@
+'use strict'
+// Static-only audit harness: reject filesystem mutations and child creation.
+const fs=require('node:fs'),cp=require('node:child_process')
+let writes=0,children=0
+for(const name of['writeFileSync','appendFileSync','renameSync','unlinkSync','mkdirSync','rmdirSync','rmSync','copyFileSync','truncateSync','chmodSync','chownSync','symlinkSync','linkSync','utimesSync','mkdtempSync'])fs[name]=()=>{writes++;throw Error('Read-only check attempted '+name)}
+const originalOpen=fs.openSync
+fs.openSync=function(file,flags,...rest){if(typeof flags!=='string'||!['r','rs'].includes(flags)){writes++;throw Error('Read-only check attempted open '+flags)}return originalOpen.call(this,file,flags,...rest)}
+for(const name of['writeFile','appendFile','rename','unlink','mkdir','rmdir','rm','copyFile','truncate','chmod','chown','symlink','link','utimes','mkdtemp','open'])fs.promises[name]=async()=>{writes++;throw Error('Read-only check attempted async '+name)}
+for(const name of['spawn','spawnSync','exec','execSync','execFile','execFileSync','fork'])cp[name]=()=>{children++;throw Error('Read-only check attempted child '+name)}
+process.on('exit',()=>process.stdout.write(JSON.stringify({staticReadOnlyEnforced:true,attemptedWrites:writes,attemptedChildren:children})+'\n'))

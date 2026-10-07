@@ -13,6 +13,8 @@ import {
   loadPlanStartStage2HandoffBootstrap,
   loadPlanStartStage3Bootstrap,
   planStartStage3BootstrapMode,
+  planStartRefinementExitDestination,
+  stage3CompletionRoutineHref,
   PlanStartProductionGate,
   recoverPlanStartStage3Load,
   refinementAutoHandoffEnabled,
@@ -23,7 +25,6 @@ import {
 import { Stage3BootstrapContractError } from "../src/lib/personal-plan/products/bootstrap-response"
 import { Stage3PreparationError } from "../src/lib/personal-plan/products/bootstrap-recovery"
 import {
-  deriveRefinementEntryMode,
   RefinementFlow,
   shouldReturnToStage1FromQuestion,
 } from "../src/components/personal-plan-refinement/refinement-flow"
@@ -281,12 +282,16 @@ test("plan-start re-entry selects Stage 3 when refinement is complete and curren
     loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
   }
 
-  assert.deepEqual(await resolvePlanStartPageState(deps), {
+  const state = await resolvePlanStartPageState(deps)
+  assert.deepEqual(state, {
     state: "production",
     initialJourney: { stage: "stage3", refinedVersionId: "refined-1" },
     personalPlanId: "plan-1",
     initialRefinementSession: refinementSession("complete", "refined-1"),
   })
+  assert.ok(state.state === "production")
+  assert.equal(planStartRefinementExitDestination(state.initialJourney), "stage1")
+  assert.equal(stage3CompletionRoutineHref(state.initialJourney, "/routine"), "/routine")
 })
 
 test("a server-validated Routine repair request re-enters Stage 3 from a later frontier", async () => {
@@ -400,17 +405,12 @@ test("a transient server Stage 1 preload failure preserves the browser retry pat
   })
 })
 
-test("direct Stage 2 entry opens fresh and partial sessions on normal Stage 2 questions", () => {
+test("the first Stage 2 question permits returning to Stage 1", () => {
   const fresh = refinementSession("in_progress")
   fresh.answers = {}
   fresh.completedQuestionIds = []
   fresh.path.completedQuestionIds = []
   fresh.path.firstUnresolvedQuestionId = "current_product_categories"
-
-  // The invitation chapter is retired (relic removal 28.08.2026): a fresh
-  // entry always opens its first question directly.
-  assert.equal(deriveRefinementEntryMode(fresh), "question")
-  assert.equal(deriveRefinementEntryMode(refinementSession("in_progress")), "question")
   assert.equal(
     shouldReturnToStage1FromQuestion({
       session: fresh,
@@ -418,7 +418,6 @@ test("direct Stage 2 entry opens fresh and partial sessions on normal Stage 2 qu
     }),
     true,
   )
-  assert.equal(deriveRefinementEntryMode(refinementSession("complete", "refined-1")), "bridge")
 })
 
 test("a server-seeded Stage 2 partial resume renders the saved question on first paint", () => {
@@ -1031,7 +1030,7 @@ test("product-kind correction completion failure preserves a saved session for c
 
 /**
  * FINDING C. After a direct accept the refinement draft is COMPLETE, so a bare
- * `/plan-start` seeds the completed session, `deriveRefinementEntryMode` maps it
+ * `/plan-start` seeds the completed session, the initial-view resolver maps it
  * to "bridge", and the bridge auto-hands off straight into Stage 3 — the
  * Routine nudge's "Jetzt verfeinern" would never show the Feinschliff. The
  * `?refine=1` param forces the same Stage-2 re-entry the in-session
@@ -1248,51 +1247,5 @@ test("accepted + IN-PROGRESS draft, undirected: unchanged Stage 2 fall-through",
     initialJourney: { stage: "stage2", planAccepted: true },
     personalPlanId: "plan-1",
     initialRefinementSession: refinementSession("in_progress"),
-  })
-})
-
-test("NOT accepted + complete draft + frontier stage3, undirected: unchanged Stage 3 resume", async () => {
-  const deps: ResumeAwareDeps = {
-    enabled: () => true,
-    stage2Enabled: () => true,
-    getUserId: async () => "owner-1",
-    loadJourneyAccess: async () => ({
-      kind: "personal_plan",
-      personalPlanId: "plan-1",
-      frontier: "stage3",
-      nextHref: "/plan-start",
-      allowed: { ...allowed, stage3: true },
-    }),
-    loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
-  }
-
-  assert.deepEqual(await resolvePlanStartPageState(deps), {
-    state: "production",
-    initialJourney: { stage: "stage3", refinedVersionId: "refined-1" },
-    personalPlanId: "plan-1",
-    initialRefinementSession: refinementSession("complete", "refined-1"),
-  })
-})
-
-test("NOT accepted + complete draft + frontier != stage3, undirected: unchanged Stage 2 fall-through", async () => {
-  const deps: ResumeAwareDeps = {
-    enabled: () => true,
-    stage2Enabled: () => true,
-    getUserId: async () => "owner-1",
-    loadJourneyAccess: async () => ({
-      kind: "personal_plan",
-      personalPlanId: "plan-1",
-      frontier: "stage2",
-      nextHref: "/plan-start",
-      allowed,
-    }),
-    loadExistingRefinementSession: async () => refinementSession("complete", "refined-1"),
-  }
-
-  assert.deepEqual(await resolvePlanStartPageState(deps), {
-    state: "production",
-    initialJourney: { stage: "stage2" },
-    personalPlanId: "plan-1",
-    initialRefinementSession: refinementSession("complete", "refined-1"),
   })
 })

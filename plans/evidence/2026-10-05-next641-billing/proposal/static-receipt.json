@@ -1,0 +1,23 @@
+{
+  "counts": {
+    "before": 125,
+    "transfer": 125,
+    "cut": 119
+  },
+  "files": 13,
+  "phasesParsed": 39,
+  "unchangedSurvivingCallbacks": 119,
+  "distinctKeepers": 5,
+  "unrelatedCallbacks": 114,
+  "ownerImports": 0,
+  "runtimeTests": 0,
+  "repositoryWrites": 0,
+  "childrenStarted": 0,
+  "sourceFaultsParsed": 5,
+  "currentReadsetsMatch": 55,
+  "sourceAndOwnerExecution": 0,
+  "metadataWrites": 0,
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "oracleLinesVerifiedAllPhases": 15
+}

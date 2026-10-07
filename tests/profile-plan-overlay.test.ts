@@ -44,10 +44,6 @@ test("present-but-empty drying routes reads as answered none", () => {
   assert.equal(dryingMethodField.getValue(null, { dryingRoutes: [] }), "Nichts davon")
 })
 
-test("undefined drying routes stays null", () => {
-  assert.equal(dryingMethodField.getValue(null, {}), null)
-})
-
 test("unanswered plan leaves value null", () => {
   assert.equal(towelMaterialField.getValue(null, null), null)
   assert.equal(towelMaterialField.getValue(null, {}), null)
@@ -83,11 +79,6 @@ test("towel material and technique resolve as a unit — pure plan no_towel", ()
     "Kein Handtuch: Ich lasse meine Haare tropfnass trocknen",
   )
   assert.equal(towelTechniqueField.getValue(null, plan), "Keine Trocknungstechnik")
-})
-
-test("plan-derived no_towel material implies no technique needed", () => {
-  const value = towelTechniqueField.getValue(null, { towel: { material: "no_towel" } })
-  assert.equal(value, "Keine Trocknungstechnik")
 })
 
 test("plan additional heat tools map to Alltag/Styling labels", () => {

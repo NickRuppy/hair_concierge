@@ -1,0 +1,44 @@
+"""TMP-only final metadata sealing. No child execution and no repository writes.
+Only own kit artifact hashes may change; original source/runtime/identity pins stay exact.
+Run once after author static checks; never a proposal writer or test runner.
+"""
+from pathlib import Path
+import json,hashlib,re,difflib
+D=Path(__file__).parent
+P=Path('/tmp/test-audit-public-funnel66-c69uzpx6')
+sha=lambda b:hashlib.sha256(b).hexdigest()
+read=lambda p:json.loads(p.read_text())
+write=lambda name,x:(D/name).write_text(json.dumps(x,indent=2,ensure_ascii=False)+'\n')
+pins=read(D/'operator-pins.json');original_bytes=(D/'operator-pins.json').read_bytes();old_sha=sha(original_bytes)
+assert old_sha=='8e4f811c6504c16d7986bdc4be8935724137495736702be33256ccc2e5d814cd'
+(D/'preseal-pins.json').write_bytes(original_bytes)
+# Diagnostics and amendments are separate from unchanged sealed proposal.
+assert sha((P/'manifest.json').read_bytes())=='152177b98efeb7dd05c261323a8eaec59f1bf6cabb690a122c1e645414552b9a'
+assert sha((P/'handoff-receipt.json').read_bytes())=='c4a22b53082fc6edf7c06d7781f788af9dce0d0767ce1c365bdcdeb60450cf85'
+parts=[]
+for a in read(D/'control-amendments.json')['amendments']:
+ parts.append(''.join(difflib.unified_diff(Path(a['original']['snapshot']).read_text().splitlines(True),Path(a['amended']['snapshot']).read_text().splitlines(True),fromfile=a['id']+'/original-sealed-mutant/'+a['source'],tofile=a['id']+'/amended-kit-mutant/'+a['source'])))
+(D/'control-amendments.diff').write_text('\n'.join(parts))
+parts=[]
+for file in ['operator-guard.cjs','operator-edit.cjs','operator-run-controls.cjs','operator-proof.cjs','operator-readonly-preload.cjs','operator-native-proof.cjs','prepare-pins.cjs','proof-attestation.cjs','static-integrity.cjs']:
+ before=(D/'template-originals'/file).read_text();after=(D/file).read_text()
+ parts.append(''.join(difflib.unified_diff(before.splitlines(True),after.splitlines(True),fromfile='reviewed-care102/'+file,tofile='public66/'+file)))
+(D/'final-template-delta.patch').write_text('\n'.join(parts))
+# Only self-owned files may be refreshed. No source, dependency, identity or proposal refresh.
+protected={k:v for k,v in pins.items() if k not in ['artifactHashes','entrypointTemplateHashes']}
+for file in list(pins['artifactHashes']):
+ p=Path(file)
+ if p.parent==D: pins['artifactHashes'][file]=sha(p.read_bytes())
+ else: assert sha(p.read_bytes())==pins['artifactHashes'][file],('Protected artifact drift',file)
+for file in ['freeze-handoff.py','preseal-pins.json','final-template-delta.patch','control-amendments.diff']:
+ pins['artifactHashes'][str(D/file)]=sha((D/file).read_bytes())
+assert protected=={k:v for k,v in pins.items() if k not in ['artifactHashes','entrypointTemplateHashes']}
+(D/'operator-pins.json').chmod(0o644)
+write('operator-pins.json',pins)
+(D/'operator-pins.json').chmod(0o444)
+final_sha=sha((D/'operator-pins.json').read_bytes())
+for name in ['operator-edit.cjs','operator-run-controls.cjs','operator-native-proof.cjs']:
+ p=D/name;s=p.read_text();assert s.count("const PIN_SHA='"+old_sha+"'")==1
+ p.write_text(s.replace("const PIN_SHA='"+old_sha+"'","const PIN_SHA='"+final_sha+"'"))
+write('pin-freeze-disposition.json',{'presealPinsSHA256':old_sha,'finalPinsSHA256':final_sha,'protectedPinsUnchanged':True,'allowedChanges':'Own toolkit code/artifact hashes only; static-integrity extraction now compares exact function body, not adjacent wrapper comment. Added original-vs-amended control diff, template delta and freeze-script hashes. All source/test/readset/runtime/dependency/identity/proposal pins unchanged.','nativeRuns':0,'repositoryWrites':0,'children':0})
+print(final_sha)

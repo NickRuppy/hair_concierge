@@ -105,16 +105,6 @@ test("wash_rhythm nudge speaks about washing, not the shampoo product", () => {
   assert.ok(!nudges[0].message.includes("Shampoo"))
 })
 
-test("observed clearly above band -> decrease nudge", () => {
-  const nudges = computeNudges({
-    cadences: [cadence("mask", 5)],
-    targets: [MASK_TARGET],
-    dismissed: [],
-  })
-  assert.equal(nudges.length, 1)
-  assert.equal(nudges[0].direction, "decrease")
-})
-
 test("dismissed direction stays hidden; other direction still fires", () => {
   const dismissed = [{ category: "mask", direction: "increase" }]
   assert.equal(
@@ -125,14 +115,13 @@ test("dismissed direction stays hidden; other direction still fires", () => {
     }).length,
     0,
   )
-  assert.equal(
-    computeNudges({
-      cadences: [cadence("mask", 5)],
-      targets: [MASK_TARGET],
-      dismissed,
-    }).length,
-    1,
-  )
+  const otherDirection = computeNudges({
+    cadences: [cadence("mask", 5)],
+    targets: [MASK_TARGET],
+    dismissed,
+  })
+  assert.equal(otherDirection.length, 1)
+  assert.equal(otherDirection[0].direction, "decrease")
 })
 
 test("no target for category -> no nudge", () => {

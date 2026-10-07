@@ -1,0 +1,422 @@
+[
+  {
+    "from": "tests/discovery-call-toolkit-migration.test.ts",
+    "to": "src/lib/personal-plan/products/contracts.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-call-toolkit-migration.test.ts",
+    "to": "src/lib/personal-plan/types.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-call-toolkit-migration.test.ts",
+    "to": "src/lib/product-identity/index.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-call-tracking.test.ts",
+    "to": "src/lib/analytics/destinations/customerio.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-call-tracking.test.ts",
+    "to": "src/lib/analytics/destinations/meta.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-call-tracking.test.ts",
+    "to": "src/lib/analytics/routes.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-call-tracking.test.ts",
+    "to": "src/lib/analytics/scanner-quiz-view.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-call-tracking.test.ts",
+    "to": "src/lib/customerio-tracking.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-call-tracking.test.ts",
+    "to": "src/lib/meta-pixel.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-checklist-categories.test.tsx",
+    "to": "src/components/personal-plan-products/stage3-product-copy.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-checklist-categories.test.tsx",
+    "to": "src/components/discovery/intake/categories.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-checklist-categories.test.tsx",
+    "to": "src/lib/discovery/intake.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-checklist-projection.test.ts",
+    "to": "src/app/beratung/produkte/quiz-projection.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-cockpit-complexity-dom.test.tsx",
+    "to": "tests/helpers/dom.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-cockpit-complexity-dom.test.tsx",
+    "to": "src/components/discovery/cockpit/discovery-call-cockpit.tsx",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-cockpit-complexity-dom.test.tsx",
+    "to": "src/lib/discovery/cockpit.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-cockpit-complexity-dom.test.tsx",
+    "to": "src/lib/discovery/call-sheet.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-cockpit-complexity-dom.test.tsx",
+    "to": "src/lib/discovery/property-rows.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-cockpit-complexity-dom.test.tsx",
+    "to": "src/lib/personal-plan/products/contracts.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-cockpit-depth.test.ts",
+    "to": "src/lib/discovery/property-rows.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-cockpit-depth.test.ts",
+    "to": "src/lib/discovery/load-ideal-routine.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-cockpit-depth.test.ts",
+    "to": "src/lib/discovery/load-participant-verdicts.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-cockpit-depth.test.ts",
+    "to": "src/lib/discovery/refined-routine.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-cockpit-depth.test.ts",
+    "to": "src/lib/mobile/scan-contracts.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-cockpit-depth.test.ts",
+    "to": "src/lib/personal-plan/compute-stage1.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-cockpit-depth.test.ts",
+    "to": "src/lib/personal-plan/decision-presentation.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-cockpit-depth.test.ts",
+    "to": "src/lib/personal-plan/products/comparison-dimensions.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-cockpit-depth.test.ts",
+    "to": "src/lib/personal-plan/routine/labels.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-cockpit-depth.test.ts",
+    "to": "src/lib/personal-plan/types.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-cockpit-depth.test.ts",
+    "to": "src/lib/scan/profile-context.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-cockpit-depth.test.ts",
+    "to": "src/lib/scan/types.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-cockpit-depth.test.ts",
+    "to": "tests/personal-plan/fixtures.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-frequency.test.ts",
+    "to": "src/lib/discovery/frequency.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-heat-flow.test.ts",
+    "to": "src/components/discovery/intake/heat-flow.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-heat-flow.test.ts",
+    "to": "src/lib/discovery/heat-styling.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-heat-styling.test.ts",
+    "to": "src/lib/discovery/heat-styling.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-intake-item-image.test.tsx",
+    "to": "src/components/discovery/intake/discovery-products-screen.tsx",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-intake-item-image.test.tsx",
+    "to": "src/lib/discovery/intake.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-middleware-gate.test.ts",
+    "to": "src/lib/supabase/middleware.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-middleware-gate.test.ts",
+    "to": "src/lib/discovery/participant.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-participant-routing.test.ts",
+    "to": "src/components/quiz/quiz-preparation.tsx",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-participant-routing.test.ts",
+    "to": "src/app/auth/confirm/route.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-participant-routing.test.ts",
+    "to": "src/lib/auth/discovery-return.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-participant-routing.test.ts",
+    "to": "src/lib/auth/route-classification.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-participant-routing.test.ts",
+    "to": "src/lib/auth/unauthenticated-redirect.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-participant-routing.test.ts",
+    "to": "src/lib/discovery/participant.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-participant-routing.test.ts",
+    "to": "src/lib/quiz/lead-capture-mode.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-participant-routing.test.ts",
+    "to": "src/lib/quiz/screen-order.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-product-label.test.ts",
+    "to": "src/lib/discovery/product-label.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-products-loading.test.tsx",
+    "to": "src/app/beratung/produkte/loading.tsx",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-products-loading.test.tsx",
+    "to": "src/components/discovery/intake/discovery-products-screen.tsx",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-quiz-answers.test.ts",
+    "to": "src/components/quiz/quiz-scalp-question.tsx",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-quiz-answers.test.ts",
+    "to": "src/lib/discovery/quiz-answers.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-quiz-identity.test.ts",
+    "to": "src/app/api/beratung/quiz-context/route.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-quiz-identity.test.ts",
+    "to": "src/app/api/quiz/lead/route.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-quiz-identity.test.ts",
+    "to": "src/lib/discovery/journey.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-quiz-identity.test.ts",
+    "to": "src/lib/discovery/participant.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-quiz-identity.test.ts",
+    "to": "src/lib/discovery/enrollment.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-reconcile.test.ts",
+    "to": "scripts/discovery.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-reconcile.test.ts",
+    "to": "src/lib/discovery/reconcile.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-refined-usage.test.ts",
+    "to": "src/lib/personal-plan/product-preview-contract.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-refined-usage.test.ts",
+    "to": "src/lib/personal-plan/products/contracts.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-refined-usage.test.ts",
+    "to": "src/lib/personal-plan/types.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-refined-usage.test.ts",
+    "to": "src/lib/discovery/load-ideal-routine.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-refined-usage.test.ts",
+    "to": "src/lib/discovery/refined-routine.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-refined-usage.test.ts",
+    "to": "src/lib/scan/product-presentation.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-runsheet-locked-in-dom.test.tsx",
+    "to": "tests/helpers/dom.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-runsheet-locked-in-dom.test.tsx",
+    "to": "src/components/discovery/cockpit/discovery-call-cockpit.tsx",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-runsheet-locked-in-dom.test.tsx",
+    "to": "src/components/discovery/cockpit/runsheet-locked-in.tsx",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-runsheet-locked-in-dom.test.tsx",
+    "to": "src/lib/discovery/cockpit.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-runsheet-locked-in-dom.test.tsx",
+    "to": "src/lib/discovery/runsheet/index.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-runsheet-locked-in-dom.test.tsx",
+    "to": "src/lib/personal-plan/products/contracts.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-search-sheet-props.test.tsx",
+    "to": "src/components/scan/scan-search-sheet.tsx",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-search-sheet-props.test.tsx",
+    "to": "src/components/ui/bottom-sheet.tsx",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-search-sheet-props.test.tsx",
+    "to": "src/app/api/scan/search/route.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-search-sheet-props.test.tsx",
+    "to": "src/app/api/scan/search-retailer/route.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-swap-sort.test.ts",
+    "to": "src/components/discovery/cockpit/swap-sort.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-unanswered-categories.test.tsx",
+    "to": "src/app/admin/beratung/[enrollmentId]/page.tsx",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-unanswered-categories.test.tsx",
+    "to": "src/components/discovery/print/discovery-routine-document.tsx",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-unanswered-categories.test.tsx",
+    "to": "src/lib/discovery/cockpit.ts",
+    "typeOnly": false
+  },
+  {
+    "from": "tests/discovery-unanswered-categories.test.tsx",
+    "to": "src/lib/discovery/enrollment.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-unanswered-categories.test.tsx",
+    "to": "src/lib/discovery/load-ideal-routine.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-unanswered-categories.test.tsx",
+    "to": "src/lib/scan/product-presentation.ts",
+    "typeOnly": true
+  },
+  {
+    "from": "tests/discovery-unanswered-categories.test.tsx",
+    "to": "src/lib/discovery/refined-routine.ts",
+    "typeOnly": false
+  }
+]

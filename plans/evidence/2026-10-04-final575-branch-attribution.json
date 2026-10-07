@@ -1,0 +1,52 @@
+{
+  "rawFlags": 42,
+  "sourceSummaryChangesVs564": [
+    {
+      "path": "src/lib/scan/scanner-session.ts",
+      "before": {
+        "lines": {
+          "total": 562,
+          "covered": 561,
+          "skipped": 0,
+          "pct": 99.82
+        },
+        "functions": {
+          "total": 45,
+          "covered": 45,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 128,
+          "covered": 122,
+          "skipped": 0,
+          "pct": 95.31
+        }
+      },
+      "after": {
+        "lines": {
+          "total": 562,
+          "covered": 561,
+          "skipped": 0,
+          "pct": 99.82
+        },
+        "functions": {
+          "total": 45,
+          "covered": 45,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 126,
+          "covered": 120,
+          "skipped": 0,
+          "pct": 95.23
+        }
+      },
+      "sameZeroBranchLocations": true,
+      "sameZeroFunctionLocations": true,
+      "sameZeroStatementLocations": true
+    }
+  ],
+  "scope": "Exact zero-count branch/function/statement mapped locations compared in every coverage path with changed summary; source unchanged since564. Raw threshold diagnostics remain separate from aggregate budget."
+}

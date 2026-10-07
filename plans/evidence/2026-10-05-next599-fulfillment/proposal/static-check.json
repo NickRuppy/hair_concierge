@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "counts": {
+    "before": 75,
+    "transfer": 75,
+    "cut": 74
+  },
+  "phaseSnapshots": 24,
+  "unchangedRetainedCallbacks": 73,
+  "changedKeeperCallbacks": 1,
+  "controls": 6,
+  "readsetGuards": 49,
+  "ownerExecution": false,
+  "repositoryWrites": false,
+  "runtimeProof": false
+}

@@ -1,0 +1,553 @@
+{
+  "localRuntimeFiles": [
+    "src/components/personal-plan-products/stage3-product-copy.ts",
+    "src/components/scan/scan-product-thumb.tsx",
+    "src/components/scan/scan-search-sheet.tsx",
+    "src/components/scan/scan-unknown-flow.tsx",
+    "src/components/ui/bottom-sheet.tsx",
+    "src/components/ui/skeleton.tsx",
+    "src/lib/analytics/destinations/customerio.ts",
+    "src/lib/analytics/destinations/meta.ts",
+    "src/lib/analytics/destinations/posthog.ts",
+    "src/lib/analytics/page-url.ts",
+    "src/lib/analytics/routes.ts",
+    "src/lib/analytics/runtime/bounded-fifo.ts",
+    "src/lib/analytics/runtime/environment.ts",
+    "src/lib/analytics/runtime/posthog.ts",
+    "src/lib/analytics/track-app-event.ts",
+    "src/lib/cookie-consent.ts",
+    "src/lib/customerio-tracking.ts",
+    "src/lib/funnel/client.ts",
+    "src/lib/funnel/flags.ts",
+    "src/lib/funnel/journey-kind.ts",
+    "src/lib/meta-pixel.ts",
+    "src/lib/motion-loader.ts",
+    "src/lib/motion.ts",
+    "src/lib/personal-plan/products/authorities.ts",
+    "src/lib/personal-plan/products/contracts.ts",
+    "src/lib/product-identity/display-title.ts",
+    "src/lib/scan/catalog-search.ts",
+    "src/lib/scan/scan-analytics.ts",
+    "src/lib/scan/use-latest-request.ts",
+    "src/lib/scan/verdict-labels.ts",
+    "src/lib/ui/modal-layer-manager.ts",
+    "src/lib/utils.ts",
+    "src/lib/vocabulary/frequencies.ts",
+    "tests/scan-research-intake-form-ui.test.tsx",
+    "tests/scan-unknown-flow-ui.test.tsx",
+    "tests/server-only-register.cjs"
+  ],
+  "edges": [
+    {
+      "from": "tests/scan-unknown-flow-ui.test.tsx",
+      "to": "src/components/personal-plan-products/stage3-product-copy.ts",
+      "spec": "../src/components/personal-plan-products/stage3-product-copy",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/scan-unknown-flow-ui.test.tsx",
+      "to": "src/components/scan/scan-unknown-flow.tsx",
+      "spec": "../src/components/scan/scan-unknown-flow",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/scan-unknown-flow-ui.test.tsx",
+      "to": "src/components/scan/scan-product-thumb.tsx",
+      "spec": "../src/components/scan/scan-product-thumb",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/scan-unknown-flow-ui.test.tsx",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "../src/lib/personal-plan/products/contracts",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/scan-unknown-flow-ui.test.tsx",
+      "to": "src/lib/scan/types.ts",
+      "spec": "../src/lib/scan/types",
+      "typeOnly": true
+    },
+    {
+      "from": "tests/scan-research-intake-form-ui.test.tsx",
+      "to": "src/components/personal-plan-products/stage3-product-copy.ts",
+      "spec": "../src/components/personal-plan-products/stage3-product-copy",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/scan-research-intake-form-ui.test.tsx",
+      "to": "src/components/scan/scan-search-sheet.tsx",
+      "spec": "../src/components/scan/scan-search-sheet",
+      "typeOnly": false
+    },
+    {
+      "from": "src/components/personal-plan-products/stage3-product-copy.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "@/lib/personal-plan/products/contracts",
+      "typeOnly": true
+    },
+    {
+      "from": "src/components/personal-plan-products/stage3-product-copy.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "typeOnly": true
+    },
+    {
+      "from": "src/components/scan/scan-unknown-flow.tsx",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "@/lib/personal-plan/products/contracts",
+      "typeOnly": true
+    },
+    {
+      "from": "src/components/scan/scan-unknown-flow.tsx",
+      "to": "src/lib/scan/types.ts",
+      "spec": "@/lib/scan/types",
+      "typeOnly": true
+    },
+    {
+      "from": "src/components/scan/scan-unknown-flow.tsx",
+      "to": "src/lib/scan/verdict-labels.ts",
+      "spec": "@/lib/scan/verdict-labels",
+      "typeOnly": false
+    },
+    {
+      "from": "src/components/scan/scan-unknown-flow.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "typeOnly": false
+    },
+    {
+      "from": "src/components/scan/scan-unknown-flow.tsx",
+      "to": "src/components/scan/scan-product-thumb.tsx",
+      "spec": "./scan-product-thumb",
+      "typeOnly": false
+    },
+    {
+      "from": "src/components/scan/scan-product-thumb.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "spec": "@/lib/vocabulary/frequencies",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "spec": "./authorities",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "spec": "./authority/contracts",
+      "typeOnly": true
+    },
+    {
+      "from": "src/components/scan/scan-search-sheet.tsx",
+      "to": "src/components/ui/bottom-sheet.tsx",
+      "spec": "@/components/ui/bottom-sheet",
+      "typeOnly": false
+    },
+    {
+      "from": "src/components/scan/scan-search-sheet.tsx",
+      "to": "src/components/ui/skeleton.tsx",
+      "spec": "@/components/ui/skeleton",
+      "typeOnly": false
+    },
+    {
+      "from": "src/components/scan/scan-search-sheet.tsx",
+      "to": "src/app/api/scan/search/route.ts",
+      "spec": "@/app/api/scan/search/route",
+      "typeOnly": true
+    },
+    {
+      "from": "src/components/scan/scan-search-sheet.tsx",
+      "to": "src/app/api/scan/search-retailer/route.ts",
+      "spec": "@/app/api/scan/search-retailer/route",
+      "typeOnly": true
+    },
+    {
+      "from": "src/components/scan/scan-search-sheet.tsx",
+      "to": "src/components/personal-plan-products/stage3-product-copy.ts",
+      "spec": "@/components/personal-plan-products/stage3-product-copy",
+      "typeOnly": false
+    },
+    {
+      "from": "src/components/scan/scan-search-sheet.tsx",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "@/lib/personal-plan/products/contracts",
+      "typeOnly": false
+    },
+    {
+      "from": "src/components/scan/scan-search-sheet.tsx",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "@/lib/personal-plan/products/contracts",
+      "typeOnly": true
+    },
+    {
+      "from": "src/components/scan/scan-search-sheet.tsx",
+      "to": "src/lib/motion-loader.ts",
+      "spec": "@/lib/motion-loader",
+      "typeOnly": false
+    },
+    {
+      "from": "src/components/scan/scan-search-sheet.tsx",
+      "to": "src/lib/product-identity/display-title.ts",
+      "spec": "@/lib/product-identity/display-title",
+      "typeOnly": false
+    },
+    {
+      "from": "src/components/scan/scan-search-sheet.tsx",
+      "to": "src/lib/scan/catalog-search.ts",
+      "spec": "@/lib/scan/catalog-search",
+      "typeOnly": false
+    },
+    {
+      "from": "src/components/scan/scan-search-sheet.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "typeOnly": false
+    },
+    {
+      "from": "src/components/scan/scan-search-sheet.tsx",
+      "to": "src/lib/scan/scan-analytics.ts",
+      "spec": "@/lib/scan/scan-analytics",
+      "typeOnly": false
+    },
+    {
+      "from": "src/components/scan/scan-search-sheet.tsx",
+      "to": "src/lib/scan/use-latest-request.ts",
+      "spec": "@/lib/scan/use-latest-request",
+      "typeOnly": false
+    },
+    {
+      "from": "src/components/scan/scan-search-sheet.tsx",
+      "to": "src/components/scan/scan-product-thumb.tsx",
+      "spec": "./scan-product-thumb",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/scan/verdict-labels.ts",
+      "to": "src/components/personal-plan-products/stage3-product-copy.ts",
+      "spec": "@/components/personal-plan-products/stage3-product-copy",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/scan/verdict-labels.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "@/lib/personal-plan/products/contracts",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/scan/verdict-labels.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/scan/verdict-labels.ts",
+      "to": "src/lib/scan/types.ts",
+      "spec": "./types",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/personal-plan/products/authorities.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "spec": "@/lib/personal-plan/types",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/personal-plan/products/authorities.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "./contracts",
+      "typeOnly": true
+    },
+    {
+      "from": "src/components/ui/bottom-sheet.tsx",
+      "to": "src/lib/ui/modal-layer-manager.ts",
+      "spec": "@/lib/ui/modal-layer-manager",
+      "typeOnly": false
+    },
+    {
+      "from": "src/components/ui/bottom-sheet.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "typeOnly": false
+    },
+    {
+      "from": "src/components/ui/skeleton.tsx",
+      "to": "src/lib/utils.ts",
+      "spec": "@/lib/utils",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/motion-loader.ts",
+      "to": "src/lib/motion.ts",
+      "spec": "./motion",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/scan/catalog-search.ts",
+      "to": "src/components/personal-plan-products/stage3-product-copy.ts",
+      "spec": "@/components/personal-plan-products/stage3-product-copy",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/scan/catalog-search.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "spec": "@/lib/personal-plan/products/contracts",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/scan/catalog-search.ts",
+      "to": "src/lib/product-identity/display-title.ts",
+      "spec": "@/lib/product-identity/display-title",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/scan/scan-analytics.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "@/lib/analytics/events",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/scan/scan-analytics.ts",
+      "to": "src/lib/analytics/track-app-event.ts",
+      "spec": "@/lib/analytics/track-app-event",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/scan/scan-analytics.ts",
+      "to": "src/lib/cookie-consent.ts",
+      "spec": "@/lib/cookie-consent",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/analytics/track-app-event.ts",
+      "to": "src/lib/analytics/destinations/customerio.ts",
+      "spec": "./destinations/customerio",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/analytics/track-app-event.ts",
+      "to": "src/lib/analytics/destinations/meta.ts",
+      "spec": "./destinations/meta",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/analytics/track-app-event.ts",
+      "to": "src/lib/analytics/destinations/posthog.ts",
+      "spec": "./destinations/posthog",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/analytics/track-app-event.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "./events",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/analytics/track-app-event.ts",
+      "to": "src/lib/analytics/routes.ts",
+      "spec": "./routes",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/analytics/track-app-event.ts",
+      "to": "src/lib/funnel/client.ts",
+      "spec": "@/lib/funnel/client",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/analytics/destinations/customerio.ts",
+      "to": "src/lib/customerio-tracking.ts",
+      "spec": "@/lib/customerio-tracking",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/analytics/destinations/customerio.ts",
+      "to": "src/lib/funnel/client.ts",
+      "spec": "@/lib/funnel/client",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/analytics/destinations/customerio.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "../events",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/analytics/destinations/customerio.ts",
+      "to": "src/lib/funnel/journey-kind.ts",
+      "spec": "@/lib/funnel/journey-kind",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/analytics/destinations/meta.ts",
+      "to": "src/lib/meta-pixel.ts",
+      "spec": "@/lib/meta-pixel",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/analytics/destinations/meta.ts",
+      "to": "src/lib/funnel/client.ts",
+      "spec": "@/lib/funnel/client",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/analytics/destinations/meta.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "../events",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/analytics/destinations/meta.ts",
+      "to": "src/lib/funnel/journey-kind.ts",
+      "spec": "@/lib/funnel/journey-kind",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/analytics/destinations/posthog.ts",
+      "to": "src/lib/analytics/runtime/posthog.ts",
+      "spec": "@/lib/analytics/runtime/posthog",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/analytics/destinations/posthog.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "../events",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/analytics/destinations/posthog.ts",
+      "to": "src/lib/stripe/intervals.ts",
+      "spec": "@/lib/stripe/intervals",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/analytics/destinations/posthog.ts",
+      "to": "src/lib/billing/pricing-catalog.ts",
+      "spec": "@/lib/billing/pricing-catalog",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/analytics/routes.ts",
+      "to": "src/lib/analytics/events.ts",
+      "spec": "./events",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/funnel/client.ts",
+      "to": "src/lib/funnel/journey-kind.ts",
+      "spec": "./journey-kind",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/funnel/client.ts",
+      "to": "src/lib/funnel/server.ts",
+      "spec": "./server",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/customerio-tracking.ts",
+      "to": "src/lib/analytics/runtime/bounded-fifo.ts",
+      "spec": "@/lib/analytics/runtime/bounded-fifo",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/customerio-tracking.ts",
+      "to": "src/lib/analytics/page-url.ts",
+      "spec": "@/lib/analytics/page-url",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/meta-pixel.ts",
+      "to": "src/lib/analytics/runtime/environment.ts",
+      "spec": "@/lib/analytics/runtime/environment",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/meta-pixel.ts",
+      "to": "src/lib/funnel/flags.ts",
+      "spec": "@/lib/funnel/flags",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/analytics/runtime/posthog.ts",
+      "to": "src/lib/analytics/runtime/bounded-fifo.ts",
+      "spec": "./bounded-fifo",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/analytics/runtime/posthog.ts",
+      "to": "src/lib/funnel/client.ts",
+      "spec": "@/lib/funnel/client",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/analytics/runtime/posthog.ts",
+      "to": "src/lib/analytics/page-url.ts",
+      "spec": "@/lib/analytics/page-url",
+      "typeOnly": false
+    }
+  ],
+  "externals": [
+    "clsx",
+    "lucide-react",
+    "next/image",
+    "posthog-js",
+    "react",
+    "react-dom",
+    "react-dom/server",
+    "tailwind-merge",
+    "zod"
+  ],
+  "nonliteralImports": [],
+  "pinOrigins": {
+    "tests/server-only-register.cjs": "preserved original/proven prior pin",
+    "src/components/personal-plan-products/stage3-product-copy.ts": "preserved original/proven prior pin",
+    "src/components/scan/scan-unknown-flow.tsx": "preserved original/proven prior pin",
+    "src/components/scan/scan-product-thumb.tsx": "preserved original/proven prior pin",
+    "src/lib/personal-plan/products/contracts.ts": "preserved original/proven prior pin",
+    "src/components/scan/scan-search-sheet.tsx": "preserved original/proven prior pin",
+    "src/lib/scan/verdict-labels.ts": "preserved original/proven prior pin",
+    "src/lib/utils.ts": "preserved original/proven prior pin",
+    "src/lib/vocabulary/frequencies.ts": "preserved original/proven prior pin",
+    "src/lib/personal-plan/products/authorities.ts": "preserved original/proven prior pin",
+    "src/components/ui/bottom-sheet.tsx": "preserved original/proven prior pin",
+    "src/components/ui/skeleton.tsx": "first-time selected runtime source guard",
+    "src/lib/motion-loader.ts": "first-time selected runtime source guard",
+    "src/lib/product-identity/display-title.ts": "first-time selected runtime source guard",
+    "src/lib/scan/catalog-search.ts": "first-time selected runtime source guard",
+    "src/lib/scan/scan-analytics.ts": "first-time selected runtime source guard",
+    "src/lib/scan/use-latest-request.ts": "first-time selected runtime source guard",
+    "src/lib/ui/modal-layer-manager.ts": "preserved original/proven prior pin",
+    "src/lib/motion.ts": "preserved original/proven prior pin",
+    "src/lib/analytics/track-app-event.ts": "preserved original/proven prior pin",
+    "src/lib/cookie-consent.ts": "preserved original/proven prior pin",
+    "src/lib/analytics/destinations/customerio.ts": "preserved original/proven prior pin",
+    "src/lib/analytics/destinations/meta.ts": "preserved original/proven prior pin",
+    "src/lib/analytics/destinations/posthog.ts": "preserved original/proven prior pin",
+    "src/lib/analytics/routes.ts": "preserved original/proven prior pin",
+    "src/lib/funnel/client.ts": "preserved original/proven prior pin",
+    "src/lib/customerio-tracking.ts": "preserved original/proven prior pin",
+    "src/lib/funnel/journey-kind.ts": "preserved original/proven prior pin",
+    "src/lib/meta-pixel.ts": "preserved original/proven prior pin",
+    "src/lib/analytics/runtime/posthog.ts": "preserved original/proven prior pin",
+    "src/lib/analytics/runtime/bounded-fifo.ts": "preserved original/proven prior pin",
+    "src/lib/analytics/page-url.ts": "preserved original/proven prior pin",
+    "src/lib/analytics/runtime/environment.ts": "preserved original/proven prior pin",
+    "src/lib/funnel/flags.ts": "preserved original/proven prior pin"
+  },
+  "limits": "Original25 readsets exact plus selected static literal runtime closure. Added guards are first-time hashes, never replacements for a changed old pin. Type-only transitive graphs and all external runtime closure are not exhaustively pinned/read. Prior2192 bounded dependency pins/30 trees copied exactly and verified. Hashing is not semantic audit credit."
+}

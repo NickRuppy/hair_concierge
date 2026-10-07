@@ -1,0 +1,1192 @@
+[
+  {
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "title": "deriveAlternativeComparison: no criteria yields an empty comparison with a zero score",
+    "line": 20,
+    "sha256": "bd11fa9fea1568f35fd3e40edb7da22a48f882bacc201e7e9ee9572e9645f7b6",
+    "classification": "C",
+    "candidate": "C1",
+    "evidence": "C1: empty-array projection is already called by the retained undefined-criteria masking keeper; exact {rows:[],summaryScore:0}.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "title": "deriveAlternativeComparison: a pass criterion becomes a match row",
+    "line": 25,
+    "sha256": "467685d63abe628ae23b9dd5a6553b380d9f4ddfa6a421cfacc9c4f6e448bce1",
+    "classification": "C",
+    "candidate": "C2",
+    "evidence": "C2: pass->match/id-label verbatim/score1 complete row is owned by the composed payload keeper, strengthened for its existing first default alternative; generic copied string fields differ but no category/identifier branch exists.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "title": "deriveAlternativeComparison: caution/fail/unknown map to partial/mismatch/unknown",
+    "line": 33,
+    "sha256": "1769db287075f1e3861a999cc55f69ec508d6293bf2d842151b4ce646c39a82e",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: caution/fail/unknown exercise three distinct switch arms; pass-only composed fixtures cannot catch swapped mismatch/unknown mappings.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "title": "deriveAlternativeComparison: summary score is the fraction of matching rows",
+    "line": 45,
+    "sha256": "af9fb4aa9f2558b3f8329334efb4e68818e6dc4d8e166c7dacd5081fd257a34f",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: two matches among four rows constrain denominator and unknown inclusion; all-pass/empty score probes cannot catch denominator counting only measured rows.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "title": "deriveAlternativeComparison: preserves criteria order and copies id/label verbatim",
+    "line": 55,
+    "sha256": "6cf8d4cabecdb85c988c95726257ec4e2d84b8b51e5564667859fa0182982f74",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: two ordered distinct row IDs and labels constrain order; the retained route label oracle sorts and cannot detect row reversal.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "title": "deriveAlternativeComparison: a row never carries anything beyond rowId/label/state",
+    "line": 69,
+    "sha256": "cd1fb731efb10eac375837ba8c22b0974fc84a68c3fbfb4554d375af39ec1f24",
+    "classification": "C",
+    "candidate": "C3",
+    "evidence": "C3: exact composed comparison deepEqual forbids every extra own row field, subsuming sorted own keys on the default one-row projection.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "title": "deriveAlternativeComparison: is a pure function \u2014 same input, same output, no mutation",
+    "line": 75,
+    "sha256": "eb5f7b397166dab0ec4675c843a6dfeeaeef8557bd80916a04c2d680e569944d",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: two calls on the same frozen array reject unstable output and array mutation; this is not a deep-freeze proof against mutation of the nested criterion object.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-analytics.test.ts",
+    "title": "Scan analytics is PostHog-only",
+    "line": 47,
+    "sha256": "8ed8202284961b1e70345a27c7a12df2f19e51bc814e8648117c7757870970f6",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: literal destination booleans prevent scan events being forwarded to Customer.io/Meta; direct PostHog mapper tests cannot detect routing leaks.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-analytics.test.ts",
+    "title": "noOpScanAnalytics never forwards events",
+    "line": 53,
+    "sha256": "aadd90b824b03fe516cd30d6bd82348a8156988e32d516b51d54868c262c28fa",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: explicitly injected/default no-op port must not forward. Consent factory is a separate callable object and cannot detect accidental no-op implementation forwarding.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-analytics.test.ts",
+    "title": "Scan analytics factory only fires with analytics consent",
+    "line": 71,
+    "sha256": "4ef929f2ce208666e669e412964d4432da1401dc8e96d5721664e069714b5f9b",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: declined/unset consent suppresses events; granted consent forwards all original typed payloads. Serializer siblings call the destination directly and bypass this policy.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-analytics.test.ts",
+    "title": "Scan events map to PostHog with the documented snake_case properties",
+    "line": 156,
+    "sha256": "00cf246eee88c6ff5be1d6f42ed14ae82af99ec7b610c15543c3edff1034c64f",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: actual destination maps ten scan events to independent literal snake_case outputs; swapped/deleted properties fail. Provider capture is only the observed sink.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-analytics.test.ts",
+    "title": "scan_submission_created's intakePath distinguishes the barcode-scan unknown flow from the search sheet's name-based recovery",
+    "line": 234,
+    "sha256": "627181cbdb5cf5da30ffd3336dea2bf707c4017ac056383b04129abe69628d4d",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: name_search and null suggestedCategory preserve distinct public recovery attribution; prior table emits scan with nonnull category.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-analytics.test.ts",
+    "title": "scan_result_shown reports a not_needed verdict as a catalog hit, not a miss",
+    "line": 270,
+    "sha256": "0cb68bdaad04be39fc73416a24deb864975434a0e0c61277fe277afda852efe7",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: product-bearing not_needed remains catalog hit; null product becomes false. A kind-only predicate fails the independent null/header check.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-catalog-search-typo.test.ts",
+    "title": "`matchCatalogProducts typo table: ${label} (\"${query}\")`",
+    "line": 71,
+    "sha256": "348c9729f3bda59cdb51defb60c4d7cb37fe552aacc13be1a7d584768667a4f5",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: ten table rows cover deletion/substitution/long-token edit budget/transposition/reject bounds/multiple tokens/prefix distance. One AST site, no row regrouping or removal proposed.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-catalog-search-typo.test.ts",
+    "title": "matchCatalogProducts: tokens under 5 chars compare whole words, not word prefixes",
+    "line": 76,
+    "sha256": "64998bb35fdc88175ad765d2db2fdbd2df48c95202ee9c1574ee56e86dd6dc3b",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: short-token whole-word guard rejects oil while longer/whole deletion matches; dropping the prefix-length guard broadens unrelated product hits.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-catalog-search-typo.test.ts",
+    "title": "matchCatalogProducts: very short tokens (< 3 chars) get no typo tolerance",
+    "line": 84,
+    "sha256": "b29b745f2eeafa88eae96c7b2663507cfc2f6d81b1e2ce88d68611fca3150b03",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: a two-character query receives no typo budget; the three/five-character fixtures do not prove this boundary.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-catalog-search-typo.test.ts",
+    "title": "matchCatalogProducts: exact title \u2192 substring \u2192 token \u2192 typo-only tiers, sort_order only breaks ties within a tier",
+    "line": 89,
+    "sha256": "7742388d728c6e6a7e09ade7d96b9ce80d65d2d5e18e8732984df699c2236b14",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: all four ranking tiers conflict with sort_order, so putting sort ahead of tier produces a wrong full order.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-catalog-search-typo.test.ts",
+    "title": "matchCatalogProducts: within the typo tier the existing sort_order \u2192 name \u2192 id tiebreak holds",
+    "line": 100,
+    "sha256": "a167cbd1d1a7c678fe87769af0a397055b7eaa0ab9396dbaa7f6d72eb24f7094",
+    "classification": "F",
+    "candidate": null,
+    "evidence": "F: still protects sort_order then name within typo tier, but every name differs; the claimed final id tiebreak is not exercised. Retain full callback, no added fixture or zero-credit repair here.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-catalog-search-typo.test.ts",
+    "title": "matchCatalogProducts: plain substring matching is unchanged (case-insensitive, over the identity title)",
+    "line": 112,
+    "sha256": "56c045ea901e0c2b90ce0a226a0628b214368ddf25a038c0669bfee8e8d0ac7a",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: uppercase and multiword substring route bypass edit distance and constrain compatibility of preexisting search.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-catalog-search-typo.test.ts",
+    "title": "matchCatalogProducts: numbers never match by typo \u2014 sizes and product numbers are exact",
+    "line": 117,
+    "sha256": "e6124fe00c03d0b83df63c93889ec6823b7af110835f8aa0f3a2e145cc65843b",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: digit-bearing query/title tokens preserve numeric identities; allowing edit distance on them would mix100/200 or No3/No4.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-masked-alternative.test.ts",
+    "title": "maskAlternative: withholds identity, productId, image, price and net content",
+    "line": 34,
+    "sha256": "aea7852f96a98ff0aecd08d4e14da0f111ef9563fd17c81359b612f86c485994",
+    "classification": "C",
+    "candidate": "C4",
+    "evidence": "C4: payload keeper already calls actual maskAlternative for each existing alternative and checks exact outer key set on both.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-masked-alternative.test.ts",
+    "title": "maskAlternative: keeps the alternative's own verdict and verdict label",
+    "line": 39,
+    "sha256": "ba68a0355154eb3bce7a9813146e74c794fb9dad028e3f8978cae9d98ed427ed",
+    "classification": "C",
+    "candidate": "C5",
+    "evidence": "C5: actual resolve masked alternativeB already carries supportive/Passt eingeschr\u00e4nkt; transfer both literal assertions to that existing HTTP response.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-masked-alternative.test.ts",
+    "title": "maskAlternative: derives comparison rows from the alternative's own criteria",
+    "line": 47,
+    "sha256": "f5ea0c4c2aa355115d7b6030929465616582f1986e062e91d5afd043ce2bf66d",
+    "classification": "C",
+    "candidate": "C6",
+    "evidence": "C6: first payload alternative is exactly alternative() with the same criterion; add exact existing rows/score union there, no new invocation.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-masked-alternative.test.ts",
+    "title": "maskAlternative: an alternative with no carried criteria yields an empty comparison",
+    "line": 55,
+    "sha256": "0abfca9727993099427b024d820211a7223e3b487eed6c69d3c9e8411d4926e5",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: undefined criteria must enter ??[] and yield empty rows/zero; explicit [] only tests the downstream projection and misses fallback removal.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-masked-alternative.test.ts",
+    "title": "maskAlternative: does not mutate the input",
+    "line": 60,
+    "sha256": "42a69e09bdd7213df2b78ed133667b9705c1488c6e148b8a75a2d6f416b4a0ef",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: full JSON snapshot before/after catches mutation of input identity and nested criteria; merely comparing output keys cannot.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-masked-alternative.test.ts",
+    "title": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched",
+    "line": 83,
+    "sha256": "075ffd2af6a0cf8e878b29ea13147454cc75ca1b0ad82715e5539093751a3f7e",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R primary keeper: two alternatives both masked while exact verdictTitle/coverage/dimensions references survive; now owns first default comparison row/score assertions too.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-masked-alternative.test.ts",
+    "title": "maskScanVerdictPayload: an empty alternatives list stays empty",
+    "line": 94,
+    "sha256": "1b0db810a55d9de25675860d7db15190ca5a0387decf8f0e573dbadc1b89ed25",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: empty alternative list must remain empty; a fallback/recommendation placeholder insertion is not exercised by the two-item keeper.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: identifier-based scan rows are unaffected (byte-identical EAN lane)",
+    "line": 48,
+    "sha256": "3ebff1d75e7be6f4c55330f2fecec624dffec0c2c34a41f19510a30fbe469676",
+    "classification": "D",
+    "candidate": "D1",
+    "evidence": "D1: exact same EAN INSERT runs first in retained two-lane coexistence SQL keeper; final count2 observes both surviving insertions.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: a name-only scan row (no identifier) is now accepted",
+    "line": 62,
+    "sha256": "3cf68cccf33d5e70aa92266afb6132117a2404de76026748ee5afc3a2a8434f5",
+    "classification": "D",
+    "candidate": "D2",
+    "evidence": "D2: same name-only identity and INSERT is accepted in retained coexistence keeper; existing EAN row is excluded by name-index predicate, and count2 observes both.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: a scan row with neither identifier nor brand+name still fails the CHECK",
+    "line": 75,
+    "sha256": "f19a060b36dca16d1ebe83083526a0190c24dab5369a6feb462a944d07ec8416",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: missing both identity forms must fail the named CHECK; allowing incomplete scan rows would pass happy SQL replays.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: a scan row with only brand_text (no product_name_text, no identifier) still fails",
+    "line": 89,
+    "sha256": "a479d3f590107a2381901b3a2fc5a4298cf9a9669a7f3cc3d15944a4ccd3196c",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: brand-only differs from completely absent name data and must still fail AND constraint; weakening AND to OR is caught.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: non-scan sources are untouched by the relaxed CHECK (the rule only ever constrains source='scan')",
+    "line": 103,
+    "sha256": "bbc0b3f49abdbfce1fe987ea1faca36406b9f591b0e95291a8ec3e8d5f63f92a",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: non-scan source bypasses scanner-specific CHECK. Applying scan restrictions to onboarding is distinct regression.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: one-open-name-only-submission index rejects a second open duplicate (case-insensitive)",
+    "line": 118,
+    "sha256": "37c38e2ebecc5280c1533428fa886c9872910b0d9e513ec4ca404b4a37b2cd86",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: lowercased duplicate across two open states must fail named unique index; dropping lower() or researching from predicate escapes simple happy inserts.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: the index scopes to (user, category, brand, name) -- a different user, category, brand, or name is not blocked",
+    "line": 138,
+    "sha256": "a313b27424599811459bf9cccbdf530aa501d557abe991b81e9fd53590b3068a",
+    "classification": "F",
+    "candidate": null,
+    "evidence": "F: actual rows independently vary user/category/name, not brand despite title. Retain three proven scope dimensions/count4; no extra input or cut claimed.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: a CLOSED prior submission (not in the open-status set) does not block a new one",
+    "line": 171,
+    "sha256": "7ffc534da6a64f31a7246e6826f41793898011cfc1b8b79224594ca6b046aaee",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: prior rejected state must not block a new open request; including closed status in partial index fails second insert.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category",
+    "line": 192,
+    "sha256": "ca7a42d9af7c7608f2046e2f0618dad57967c4c62b2cdb6c5e89204daf4caaa0",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R primary keeper: same user/category can store EAN and name-only rows concurrently; exact original INSERTs/count2 subsume two isolated happy callbacks.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-observability.test.ts",
+    "title": "captureScanException tags and scopes the event under scan.*",
+    "line": 10,
+    "sha256": "7b4ee5382d2416b43f3fb6e9192a0b645503dd0a6c3244799be39ba04b9f01c5",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: actual capture builds tags/string status/context/error severity and passes same thrown error to sink; wrong scope transformation fails literal dictionaries.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-observability.test.ts",
+    "title": "captureScanException honours an explicit warning level, without leaking it into tags/context",
+    "line": 54,
+    "sha256": "62265034ad8d5214b1b512e2dc787b32e9d489e3fabe962b064d2c557a83ada0",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: explicit warning overrides default severity and stays absent from serialized tags/context; default-error test does not cover it.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-observability.test.ts",
+    "title": "buildScanSentryPayload omits reason/userId when absent, never emits empty tag values",
+    "line": 93,
+    "sha256": "2bc166992dbd0ee8ac23c1941e566bdbbacdbc8cd2d65700f7f2b741c1c5f2a5",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: undefined reason/user omitted rather than emitted empty; populated error fixture cannot constrain absence.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-observability.test.ts",
+    "title": "buildScanSentryPayload carries a distinct tag per scan route, for filtering",
+    "line": 99,
+    "sha256": "90a849448f8f93d4feecb18e59bdb8f3a09c6edd8449ab2c6939c8d544629826",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: five distinct public route tag values retained. They are operator filtering identifiers, not private implementation names; no stronger actual sink keeper covers their complete literal union.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-observability.test.ts",
+    "title": "dm lookup warnings capture only a fixed message and low-cardinality reason, once per window",
+    "line": 107,
+    "sha256": "432691cf8f451d85ec2fd9ad2d27b17a385195de282635b2347e7a52601b91df",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: fixed safe message and reason plus throttle suppression/window expiry protect privacy and incident-volume behavior, independent of payload builder.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-pending-submission.test.ts",
+    "title": "findOpenScanSubmission: open submission found",
+    "line": 31,
+    "sha256": "9883b8ad86fa15200e2dff32880a466e79a4d17f8832bebb0cadff0af0533e87",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: real query adapter emits user isolation, complete open statuses, GTIN variants and maps id/status from returned data. Stubs only record actual query; route deps replace this owner.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-pending-submission.test.ts",
+    "title": "findOpenScanSubmission: no open submission is null",
+    "line": 51,
+    "sha256": "bc87ee349f0c90a25154ecebd2a58a456adc59e45ccf30212accffe7694a62f7",
+    "classification": "C",
+    "candidate": "C12",
+    "evidence": "C12: existing variant-query keeper also receives {data:null,error:null}; wrap its existing await with null assertion. Query variant differences are consumed in request construction, but not after the data-null return predicate; all variant assertions retained.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-pending-submission.test.ts",
+    "title": "findOpenScanSubmission: queries every GTIN spelling of the same number",
+    "line": 59,
+    "sha256": "33a8b17835e38913e532f0dae8d444eb8d2b73812ecffd15378fef18081e89f2",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R primary keeper: three GTIN spellings including UPC preserve query compatibility; now also observes actual null-data output on that existing call.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-presentation-rows.test.ts",
+    "title": "the active-product lookup requires both the active flag and the active lifecycle",
+    "line": 55,
+    "sha256": "60eb25ec9227ce509a56d6683947933adcbd4e08b578507c644e97acd5a239bf",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: actual factory must request products id/category and both active gates; injected route loader siblings never observe this SQL-builder protocol.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-presentation-rows.test.ts",
+    "title": "the active-product lookup reports a miss as null and a query failure as the caller's error code",
+    "line": 73,
+    "sha256": "204530d12b7c3ee1ba857d394df7f791dd1e730359ed86f9d9a9874027e56976",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: no row -> null and query error -> caller-specific reveal code are distinct response branches; successful row mapping cannot prove them.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-presentation-rows.test.ts",
+    "title": "presentation rows select the full commerce column list, dedupe ids and normalize the link status",
+    "line": 84,
+    "sha256": "efc6a824bac3bd9a75d5e91600266f1c2215e7cdf6ec39d2b99a88a0dc37b4c6",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: full commerce select list/deduped IDs and unknown purchase status normalization; dropping a column or leaking pending status is detectable.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-presentation-rows.test.ts",
+    "title": "presentation rows short-circuit on an empty id list and surface the caller's error code",
+    "line": 135,
+    "sha256": "6558d9ad0029a4c3578948af65de23e7c2a9e8fbd0b0cb11f4d8f1f430eac74a",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: empty IDs perform no query, while nonempty query error preserves caller-specific code; both explicit controls remain.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-product-presentation.test.ts",
+    "title": "product header renders name, brand, category label and commerce",
+    "line": 70,
+    "sha256": "42be5c043e90b99a5b46b6572c10dcd8b723d815ce302e0fd6a3de07b3f03e75",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: exact scan header projection and German commerce values bridge identity/category and commerce owner; masked route checks only scanned name/brand, not full header.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-product-presentation.test.ts",
+    "title": "product header hides the purchase link when the link is not available",
+    "line": 84,
+    "sha256": "cc99383ed3a10782d3ddaa7d574681bd15e226bc1f9c727130e87230404d96f7",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: unavailable link is hidden while known price remains; blindly dropping all commerce or exposing unavailable URL fails.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-product-presentation.test.ts",
+    "title": "product header drops a price without a currency instead of assuming EUR",
+    "line": 91,
+    "sha256": "ab4076d7f5e7a956b67b135937e40cef888fa5b81381c801ade3f98e4a0e25f8",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: missing currency fails closed rather than assumingEUR; availableEUR fixture cannot prove this null gate.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-product-presentation.test.ts",
+    "title": "presented verdict joins brand and purchase url onto alternatives",
+    "line": 95,
+    "sha256": "d9436fb804262594c7a7d22cadd22270bc5c42ad6ac5470e7f29b648cb35c390",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: alternative keyed row enriches brand/purchase URL while verdict-core price/title pass through unchanged; joins by array order or replaces core price would fail.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-product-presentation.test.ts",
+    "title": "presented verdict leaves alternatives without a catalog row quiet, not broken",
+    "line": 114,
+    "sha256": "c2621c88191639649c686355e931466247893227374bebec6e590f6743a7df87",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: no alternative row -> null brand and URL, rather than wrong scanned row fallback or throw; keyed happy join insufficient.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-product-presentation.test.ts",
+    "title": "presented verdict passes the not_needed payload through unchanged",
+    "line": 121,
+    "sha256": "12909378c7abb4b6804fff943ff0dc1b0d0d554bfe8a03981d741287ab0cae0f",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: not_needed payload passes through unchanged; in_catalog enrichment must not create alternatives/reshape independent not-needed contract.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-profile-context.test.ts",
+    "title": "loadScanEvaluationContext: refined source takes precedence and preserves every evaluated category decision",
+    "line": 62,
+    "sha256": "597f7f2c6fb89d5e47400d9276c222f6ddf28553ec2f69e12d7a7878f9b4d71d",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: refined literal source/revision and hash plus real generated decision/routine preservation. Shared compute fixture is not an independent engine-correctness oracle; source selection/publication still independent.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-profile-context.test.ts",
+    "title": "loadScanEvaluationContext: initial fallback without refined head preserves initial category decisions",
+    "line": 75,
+    "sha256": "f60ada051bc4f323bd88940ebcca5b5a6e40b46402c08e3b4f522e3b2ab6cb61",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R primary keeper: initial-only actual adapter output preserves decisions/source; now also retains original initial hair projection.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-profile-context.test.ts",
+    "title": "loadScanEvaluationContext: genuinely absent refined source falls back to compatible initial",
+    "line": 84,
+    "sha256": "20af9d97b387a8ab231e9e243aa0549494d11b40fc5a2831edbf2f5793b18bc4",
+    "classification": "C",
+    "candidate": "C11",
+    "evidence": "C11: both callbacks set refined=null; validNeed returns on !need before inspecting current_refined_need_version_id. Only remaining fixture difference is that dead pointer; identical initial source/engine calls. Move exact hair assertion to existing initial keeper.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-profile-context.test.ts",
+    "title": "loadScanEvaluationContext: no plan and no completed source is null",
+    "line": 92,
+    "sha256": "89e31794f247f835bc708aba48d5ee4f5b0118d4b0ed574930d5f7fd25b98e25",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: absent completed profile exits before source assembly and performs only read RPC; explicit no-publish oracle retains isolation of missing context.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-profile-context.test.ts",
+    "title": "loadScanEvaluationContext: plan without need versions or completed source is null",
+    "line": 100,
+    "sha256": "f58f850832a069197357acb6ba115af6662e2c28ed87838ea7ec5a5907699be7",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: completed profile + plan but no owned need/lead is a later rejection than absentprofile; must not fabricate source from a bare profile.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-profile-context.test.ts",
+    "title": "loadScanEvaluationContext: failed source reads and invalid hashes are retry, never missing profile",
+    "line": 111,
+    "sha256": "ab62a2a6ad9770b7192996037167215c91258eaa299fe066a42a5ffe69d57eef",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: DB read error and hash mismatch reject unavailable rather than returning null/missing profile; retain actual hash/RPC error distinctions.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-resolve-anti-leak.test.ts",
+    "title": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree",
+    "line": 284,
+    "sha256": "59352288d570fdc3e3ad4bb4039088c6ac53986ac1992ba25dd7b16d15791aea",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R primary actual route keeper: authenticated productId path -> real presentation/quarantine/masking/JSON wrapper with injected external reads. Preserves adversarial string exclusions/scanned identity and now full recursive key/labels/supportive alternative assertions.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-resolve-anti-leak.test.ts",
+    "title": "anti-leak: no alternative entry carries an identity/resolvable key at any depth",
+    "line": 317,
+    "sha256": "6ef3bbd23071b6c02b754e2c97ad0de2e83f2d6d646c883e58affaf6e3fc4c30",
+    "classification": "C",
+    "candidate": "C7",
+    "evidence": "C7: exact same route fixture/deps/request/flag as primary string keeper; transfer all alternatives2/forbidden recursive keys/exact allowed set assertions onto its parsed existing body.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-resolve-anti-leak.test.ts",
+    "title": "anti-leak: comparison row labels come only from the fixture's generic criterion labels, never product names",
+    "line": 346,
+    "sha256": "98e1ad6cd83d90e832624d447f131146b94a405c2ed668ed8b240936858250aa",
+    "classification": "C",
+    "candidate": "C8",
+    "evidence": "C8: exact same route invocation as primary keeper; transfer existing generic-label projection assertion, no extra response or handler call.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-resolve-anti-leak.test.ts",
+    "title": "anti-leak: an alternative's raw EAN/GTIN-shaped identifier never reaches the masked response",
+    "line": 358,
+    "sha256": "7d5e74a4cddf835565ba234cf96479ef3ee41b27c67b17c89aa0c6a03a81d2f7",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: identifier HTTP branch consumes request EAN via validation/lookup/attempt telemetry rather than productId path; preserve raw request identifier exclusion.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-resolve-anti-leak.test.ts",
+    "title": "anti-leak: masking survives an alternative whose productId collides with a substring used elsewhere (no accidental UUID leak)",
+    "line": 367,
+    "sha256": "442125fd1851a1b6e0ceeb74a2066f88b227439604bc855550c3c4dd6c503071",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: alternative/scanned product identity collision is retained conservatively; it changes identifiers consumed by presentation/quarantine reads before serialization. No input-complete independent keeper proved for that collision.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-resolve-anti-leak.test.ts",
+    "title": "anti-leak: dm-identified unknown exposes only the product-row subset",
+    "line": 385,
+    "sha256": "3b53cb58fed9d200341d6dc3354fbea94fc71b70e559dfd1d1e6eb1f21612e6a",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: unknown retailer enrichment exposes only six identified fields and no URL/INCI/descriptive secrets. Distinct not-found response branch, not masked known-product projection.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "an evaluation status without a verdict scans as unknown",
+    "line": 86,
+    "sha256": "5bf9c2fb867ad21cdba228b26144d771ea79bfd177cd9e55a0b2ff81d779536a",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: status known passes four verdicts; unknown/pending/unsupported normalizeunknown; missing status handling can overclaim fit.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "no evaluated role selects nothing",
+    "line": 96,
+    "sha256": "ddfb2e96cc84acb10a19cc5bc90dbf448a3c16bbdf9e175265d8c9cae14f819d",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: empty entries ->null avoids fabricatedwinner/null dereference; nonempty cases insufficient.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "a single evaluated role is the winner regardless of its verdict",
+    "line": 100,
+    "sha256": "c10c091b56158ebf68005a85817e5717dfa3072787c037e3bac17e03beb1e87e",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: single mismatch winner remains actual entry; single cardinality is supported public selector input, not same as rankingtwo.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "ideal beats supportive",
+    "line": 105,
+    "sha256": "8be8ba027bf91de46a01f354dac1564e05f46847cf456ee1b52f707bdc883280",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: ideal outranks supportive despite later input order; swapping rank entries fails.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "supportive beats unknown",
+    "line": 111,
+    "sha256": "c8faf3cbcc76112af370d4ab18e540c0c5a41bafa0e0f0fe33733178f9b703f8",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: supportive outranks knownunknown; adjacent rank ordering distinct.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "unknown beats mismatch so a mixed role result never overclaims a rejection",
+    "line": 117,
+    "sha256": "9c871dee5b0273ca66f92e12f946c731c5a461651ef736cfdbbf23e05647426a",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: unknown outranks mismatch to avoid unjustifiedrejection; changing unknown rank fails.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "all roles mismatching stays a mismatch on the first role",
+    "line": 123,
+    "sha256": "b4e4f32604005a13d07b2a8cd6d2ffe77a45fc29b029bae3712be08b0698fece",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: two mismatches preserve first and resultingmismatch verdict; tie and statusinteraction retained.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "an equal verdict is broken by the higher target coverage",
+    "line": 131,
+    "sha256": "d25a57135b731a6578c789382a41de6e651c45e184e0ca13a83c1a7a8d60567f",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: higher measured matches breaks equalverdict; ignoring coverage fails.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "a missing coverage loses against measured coverage on an equal verdict",
+    "line": 137,
+    "sha256": "96b18751d32cb07549974380a4d0000be09aa82a233dceb2455abdc7907bdd31",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: null coverage loses to measuredpositive; treating absence as high/full coverage fails.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "an equal verdict and coverage is broken by fewer caution criteria",
+    "line": 143,
+    "sha256": "7fb827de41e6b4b197283ae613675463ddfdd1176b0097bf7cbb1754acca1b6d",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: equalrank/coverage picks fewer cautions; dropping cautioncount fails.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "a full tie keeps the given role order",
+    "line": 155,
+    "sha256": "73425d000dd6ec4b4ddfd9df0b1b8f67773a80758a9372a934bef1853606222a",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: full tie preserves either suppliedorder on two existing calls; fixedrole bias or unstable sorting fails.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "selecting does not reorder the caller's entries",
+    "line": 168,
+    "sha256": "9239a94ff69849840d614a04039657361be5f3379c91efcf3d19c72ffe66a0c8",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: caller array remains unchanged despite bettersecond; in-place sorting would fail. Winner tests alone do not observe mutation.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-submit-dm-event-log.test.ts",
+    "title": "writes only the privacy-safe submit lookup measurement",
+    "line": 19,
+    "sha256": "18e2cdcb6888dfdc7531840c5c9bc7ebdcb71404ca7c03bbd8e86eea806c07ad",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: actualwriter exact table and safe outcome/time fields, including explicitcreatedAt; substitutingclient mock output cannot implement this mapping itself.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-submit-dm-event-log.test.ts",
+    "title": "is fail-open and rate-limits a degraded submit telemetry warning",
+    "line": 50,
+    "sha256": "71609adff50108a62c7519808d14fef9f6118d94213465c77907342525201250",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: resolved insert error does notreject, warns without rawprovider detail and emits once perwindow; privacy/throttle behavior realowner executes. No claim of rejectedpromise/syncthrow coverage.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-trigger-cards-ui.test.tsx",
+    "title": "ScanProactiveTriggerCard: renders a card for every proactive trigger id with its own copy",
+    "line": 80,
+    "sha256": "91017fcce87bbafe33b8cfe85ec0f5bfd39a011a4f3907dde26fde0feb0addb6",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: actual card element produces one region/CTA per supportedid with nonempty accessible name; bounded shape/a11y contract, not independent proof of exact per-idcopy quality.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-trigger-cards-ui.test.tsx",
+    "title": "ScanProactiveTriggerCard: kategorien_luecke links into /routine instead of opening the sheet",
+    "line": 99,
+    "sha256": "3eda7d10d7e8843b39b05508c62ea4e6b2276ed2ededfa0782e2dcf80352bf2e",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: categorygap uses routinehref and nobutton/noopen; cannot be subsumed by remaining imperativeCTA cases.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-trigger-cards-ui.test.tsx",
+    "title": "ScanProactiveTriggerCard: passt_gut_moment/frust_serie/wiederkehrer open the sheet via a button",
+    "line": 111,
+    "sha256": "9bdbe2b0e36d897f5c965503f4f6d9247e94775daec0b8f8cf45a1bf92427ce9",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: three supported prompt buttons invoke suppliedcallback exactlyonce and expose noa; actualcomponent event wiring runs.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-trigger-cards-ui.test.tsx",
+    "title": "ScanCategoryRepeatCard: renders its own card, names the repeated category, and opens the sheet on tap",
+    "line": 125,
+    "sha256": "a0d1b02fef5d3f58d35b629be6de9dd8cc37b6ce7470b9977e8a5234caf47c3a",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: repeatedcategory literalShampoo and ownmarker/button callback; distinct component/personalizedlabel.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "recordScanSession: the first call on fresh storage is session 1",
+    "line": 26,
+    "sha256": "2997300c1974d8ab1ec53ea467cfb4991182f8d558a8dcd4a4c4aeb44c931b08",
+    "classification": "C",
+    "candidate": "C9",
+    "evidence": "C9: exact initial recordScanSession(storage,1000) call already exists in session3 keeper. Transfer returned1 and persistentrecord truthy observations immediately afterfirstcall.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "recordScanSession: a call more than 30 minutes later is session 2",
+    "line": 32,
+    "sha256": "cf445376510670cf0d8125fe3bd9491f59e4c4b2e5051eab4f9ce3ebd59a63c8",
+    "classification": "C",
+    "candidate": "C10",
+    "evidence": "C10: exactsecondcall at1000+31minutes already exists in session3 keeper. Transfer return2 assertion in place withoutanothercall.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "recordScanSession: a call within 30 minutes stays the SAME session (no increment)",
+    "line": 38,
+    "sha256": "abbbb7251d3a0905f0ec28a6720b50d2be028e9136eb641b757f82a2503fa768",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R:29minute and+5second remount remain same session; catches threshold/update-lastSeen handling notcovered31min gaps.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "recordScanSession: the count keeps climbing across further 30-minute gaps",
+    "line": 46,
+    "sha256": "49b99c03857937e65b793e2c9cf8d8fcf0ad719e7a44029194c21014fd5f62a7",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R primary keeper: threeexisting timestampcalls now assert1/storedrecord/2/3, retaining laterincrement proof.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "recordScanSession: null storage (SSR, private mode) is always session 1, never crashes",
+    "line": 53,
+    "sha256": "b6a338d005aabb57d85eb35e71c488d8f8eecf2efccd7f5f9cdd1c17cf0294a6",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: nullstorage directSSR gate safe1 differs from thrown accessor catch.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "recordScanSession: a storage that throws is treated as session 1, never crashes",
+    "line": 57,
+    "sha256": "0b61d47b80adba175a64dee7d1463bddbf6ebfc0f3811a695795cc96ff68e44d",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: throwing storage returns1 throughcatch; unsafegetItem/setItem propagation fails.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "recordScanSession: corrupt/garbage JSON in storage is treated as no prior record",
+    "line": 69,
+    "sha256": "599551b85b86f4bd1954a946fba35e1380eaeb8720dc671e1c90c3a0254a7869",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: invalidJSON parsecatch restarts1; freshmissingstorage does notexercise corruptedserializedrecord.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "readScanFatigueBudget: nothing persisted yet answers null",
+    "line": 77,
+    "sha256": "77a4e52e2e0d4e3d6cd9889f18c35b695d74facce0e94f2d7cc4c8829c5eae4e",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: absentfatigue value ->null throughrealgetItem validation; other tests coverinvalidstring andnoadapter rather thanfreshstorage.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "writeScanFatigueBudget + readScanFatigueBudget: round-trips a persisted trigger id",
+    "line": 82,
+    "sha256": "b71d5d860bb22ead119c46e7b91c4fa8e48c2e43fbe27a309f983210bed9852d",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: frust_serie exactenum value persists/rawkey matches; actualwhitelist membership is productprotocol, retain independently of categorygaproundtrip.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "readScanFatigueBudget: null storage (SSR) or garbage content is always a safe null",
+    "line": 89,
+    "sha256": "d0a47930232fb15552298db7eeec1d4c96f25272c5d75947143b70b513861eef",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: nullstorage andinvalidenum content safe null; prevents readingarbitrary values as triggerIDs.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "readScanFatigueBudget/writeScanFatigueBudget: a storage that throws never crashes",
+    "line": 96,
+    "sha256": "e5a7766807a2582780dcef5eceb585ca82efda62864b8c40a7b3d72179afd91a",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: thrown fatigue read andwrite do notcrash; both guardedoperations retain externalstorage failure boundary.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "F1: the fatigue budget survives being read back by a fresh storage read (simulates a remount)",
+    "line": 109,
+    "sha256": "0736d4cb55851f781103472a41506f38c1975f16fdf2754397fafa070168dffc",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: kategorien_luecke membership is independently consumed by runtime trigger-ID whitelist. It is not remount execution, but realwrite/read enumacceptance differs from retainedfrust_serie; no claimed duplicate solely by mockstorage.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-verdict-access.test.ts",
+    "title": "isMaskedScanVerdict: only a response carrying freeRevealAvailable is masked",
+    "line": 71,
+    "sha256": "e6c6fb5538db3d087daae46774465664c04337597d3b2c30522ed66662c51584",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: own marker presence bothtrue/false distinguishes masked from premium/notneeded. Booleanvalue-only guard regression fails.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-verdict-access.test.ts",
+    "title": "scanTierSignal: an in_catalog verdict is the only evidence of a tier",
+    "line": 78,
+    "sha256": "9a5e1616ed3c763c160b51cd01c22e94bd5f2c6107dabecd4a1ef48e3c233579",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: onlyincatalog proves tier; unknownproduct/pending/notneeded cannotinferpremium. Distinct wirekinds retained.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-verdict-access.test.ts",
+    "title": "nextScanTierSignal: a proven tier survives a later verdict that carries no evidence",
+    "line": 102,
+    "sha256": "e31af54b186fb530a30b7bd08f7af63437475e0a39848a8dab5e28493867c4ae",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: unknownnext preserves currenttier and realnewtier overrides; prevents accidentalunlocks orstale purchase state.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scan-verdict-access.test.ts",
+    "title": "scanRevealCta: the reveal is offered only while the credit is genuinely unspent",
+    "line": 111,
+    "sha256": "2ffb539d403b7755467fa51da6ec8b4b32e9fdfc31929ef1f0a69c17a75cceba",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: reveal requiresunusedcredit andno409override; both spentboolean andserverobservedspent cases retained.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-analytics-context.test.ts",
+    "title": "durable original source wins after touch consumed or replaced; only safe acquisition fields leave server",
+    "line": 20,
+    "sha256": "d6822b1d77bbf71eab2ef634460791bbd8a2254390ae691f863bfd3831698f2b",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: durable row wins overmissing/replacedtouch and stripsprivateclickid; lateracquisitioncannot overwriteoriginal.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-analytics-context.test.ts",
+    "title": "new scanner context uses signed matching touch, never a different journey or failed lookup fallback",
+    "line": 36,
+    "sha256": "e6fb4e0a6be9070de89ca3b623c9d53ea5fd6e7fd1bd9d006d8cdfc6819d9376",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: signedmatching session accepts touch, differentjourney/dbfailure/non-scanner excludes; independentauthority guards.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-analytics-context.test.ts",
+    "title": "safe source does not reveal raw dynamic paths, querystrings or unsupported values",
+    "line": 49,
+    "sha256": "b9d1e2ba51508115adcf0adb71ffb9eaaf05cc8a3f49deb81716d9444aeb8859",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: dynamic path/objectcampaign withheld, strings trimmed, trustedinternal/testkind/session values survive; privacyliteral constraints.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-analytics-context.test.ts",
+    "title": "scanner metadata readiness distinguishes a database failure from a confirmed empty acquisition",
+    "line": 69,
+    "sha256": "02caee42656d2f746aed62bf0a2d5f62c542a004a47a17f8e3228426ab364c16",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: confirmedemptyacquisition remainsready whileDBfailure notready; trackerretryneeds distinction.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-offer-analytics.test.ts",
+    "title": "scanner offer content events are PostHog-only",
+    "line": 21,
+    "sha256": "1201037baba5a5907b88d973692fc757e96af59b86adfea98ed279bad3ae4a9d",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: eventdestination routing denies Meta/Customerio for twooffer contentevents; serialization testsbypassrouter.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-offer-analytics.test.ts",
+    "title": "scanner offer content interactions retain the offer envelope and omit an absent section",
+    "line": 30,
+    "sha256": "0fa45f80a31818599d0c4c30c5ba66811cbb5a5833e024dbef4f6634840bf669",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: twoactualPostHog eventcases carry event-specific fields andcommonofferIDs; undefinedsection removed, presentsection retained. Missingproperty andwrongname regressions detected.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-quiz-view.test.ts",
+    "title": "scanner quiz view emits once with event-time timestamp only for scan_v1",
+    "line": 8,
+    "sha256": "0d42e963b33abc053a163c34585368af362c7ac0d904f4b077d4971792db5f05",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: settledperpackage snapshot usesfirst step/resume/event-time andfullsafecontext exactlyonce; subsequentcall cannotretime/replace it.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-quiz-view.test.ts",
+    "title": "an ordinary displayed quiz never emits even if a late lookup identifies scan_v1",
+    "line": 54,
+    "sha256": "77c399d23eaa018e5036b5604a92538077df1afdf0979887203795f41324ec98",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: ordinarydisplayedquiz mustnotemit fromlatescannercontext; stalecontext alone insufficient.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-quiz-view.test.ts",
+    "title": "a no-longer-current scanner mount is not backdated after context resolves",
+    "line": 64,
+    "sha256": "67e5b88ab15c19437f86e66d1405dfff211d54ff4f52816a9ceca142c0470e45",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: inactive mount beforecontextresolve suppresses emission; realisCurrentcallback observed.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-quiz-view.test.ts",
+    "title": "a failed context lookup retries with the original mount snapshot",
+    "line": 87,
+    "sha256": "72e0e7e729896e18ab6c0cded49f2ded9a01954041647e9942a3062c4c5eda0e",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: nullcontext retried preserving originalstep/id/time; freshretry snapshot or noretry fails.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-quiz-view.test.ts",
+    "title": "each rendered mount gets one distinct scanner view",
+    "line": 118,
+    "sha256": "24e4f23619d0631445f77b50a5c8b5d1f310eedf958fc24a537f93ae1b07ebeb",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: twoseparate trackerinstances emittwodistinctids while eachsettlesonce; singleton/globalsettledstate fails.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-quiz-view.test.ts",
+    "title": "scanner quiz views are PostHog-only and map their bounded snapshot",
+    "line": 146,
+    "sha256": "27c4d2826c7a7c277c8c579ce5c4258711a614f3a74bea0e377111a9a64706da",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: real destination mapping boundedquizsnapshot plusPostHog-only route; trackerstub doesnotcoverwire naming/destination.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-quiz-view.test.ts",
+    "title": "incomplete scanner metadata retries before capture and persistent failure emits no view",
+    "line": 203,
+    "sha256": "b99c61eec197561f6fe4c631f5fafb2ff32dbd464d4eeaebe3a99a4c085923c3",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: metadatafalse retries bounded3; recovery2 emitsonewithinternalflag andpersistentfailure emitsnone; nullcontextcase doesnotcoverpartialauthoritative metadata.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-result-artifact-email.test.ts",
+    "title": "builds the dedicated scanner transactional payload without organic focus or caller package",
+    "line": 14,
+    "sha256": "220eb22d3ad97c17207d299c1949e15d8938dec5d1cd30b1cacfab2d9fc2faa8",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: actualpayload dedicatedconfigurednumerictemplate, trimmedtarget/encodedlead resultURL andonlytwomessagedata keys; genericartifactbuilder is separateformat.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-result-artifact-email.test.ts",
+    "title": "requires an explicit scanner message id instead of falling back to the organic template",
+    "line": 36,
+    "sha256": "c3081d6663d2ed8dc3883ee21ba611c44e232614b1378d657f19d131f7b38e88",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: omittedmessageid throws explicitdedicatedenvkey, neverorganicfallback; configuredhappycase insufficient.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-trial-offer.test.tsx",
+    "title": "scanner presentation uses the controlled selection and only the compact tariff layout",
+    "line": 38,
+    "sha256": "a5d47fe2e6a364ee9f7dc853941c1d41cf07251d35e526d3c815e1491743b44c",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: actualcompactscannerUI selectedyear/monthcallback plusmonthlycomparison,savings,introprice,paymentnotice andnoherocopy. Defaultoffer distinctrenderbranch.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-trial-offer.test.tsx",
+    "title": "scanner presentation without introductory annual price anchors on the renewal equivalent",
+    "line": 66,
+    "sha256": "6a835fb2b352d8ea8654c0a5e667012b8c46253d31d250922a5838e5b3b85510",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: equalfirst/renewalprice switches copyandannualequivalent/savings; introductoryfixture cannotcoverbranch.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-trial-offer.test.tsx",
+    "title": "scanner presentation propagates pending state and selected dynamic monthly terms",
+    "line": 81,
+    "sha256": "740a55e68dd52aea2842a65d17bb86d84f9fbdbfa95a603dfef006c5bf38e3c1",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: pending disablescallback andrendersmonthterms bothdirectcomponent andrealTrialOffer scannerbranch; callbackno-opanddelegationdistinct.",
+    "runtime": "Not run; do not delete baseline failures."
+  },
+  {
+    "file": "tests/scanner-trial-offer.test.tsx",
+    "title": "scanner trial continue is the pricing CTA and carries the selected interval",
+    "line": 110,
+    "sha256": "b809c8c8bd36e1bd75733a90c714c4436ed09fd10b8e32dc95c65a68ecb410d9",
+    "classification": "R",
+    "candidate": null,
+    "evidence": "R: exactpricingCTA analytics attributes plusselectedmonth arelivepubliceventprotocol; pricingtextpendingtests do notassert these attributes.",
+    "runtime": "Not run; do not delete baseline failures."
+  }
+]

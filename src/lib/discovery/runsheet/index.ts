@@ -10,7 +10,6 @@ export {
 } from "./buckets"
 export {
   compareFrequencyToBand,
-  deriveFrequencyDelta,
   deriveStepFrequencyDelta,
   IDEAL_CADENCE_LABELS,
   IDEAL_CADENCE_RULES,

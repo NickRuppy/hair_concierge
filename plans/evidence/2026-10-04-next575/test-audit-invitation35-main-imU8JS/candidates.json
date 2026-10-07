@@ -1,0 +1,83 @@
+[
+  {
+    "id": "C1",
+    "file": "tests/discovery-invitation-card.test.tsx",
+    "donor": {
+      "title": "the invite CTA uses the coral funnel CTA, not plum",
+      "line": 43,
+      "start": 1322,
+      "end": 1635,
+      "body": "test(\"the invite CTA uses the coral funnel CTA, not plum\", () => {\n  const markup = renderToStaticMarkup(\n    <DiscoveryInvitationCard email=\"lea@example.test\" mode=\"ready\" name=\"Lea Sommer\" />,\n  )\n  assert.ok(markup.includes(\"bg-[var(--brand-coral)]\"))\n  assert.ok(!markup.includes(\"bg-[var(--brand-plum)]\"))\n})",
+      "hash": "030c47019b52f4d927575ba8dab6eb852716211369aae0b49361bd9725102057",
+      "mark": "C",
+      "evidence": "C1: exact same ready/email/name/default-prop render already in editable-email keeper; move both color assertions onto prefilled markup."
+    },
+    "keeperBefore": {
+      "title": "the invite always shows an editable e-mail field, prefilled when the admin entered one",
+      "line": 62,
+      "start": 2121,
+      "end": 2815,
+      "body": "test(\"the invite always shows an editable e-mail field, prefilled when the admin entered one\", () => {\n  const prefilled = renderToStaticMarkup(\n    <DiscoveryInvitationCard email=\"lea@example.test\" mode=\"ready\" name=\"Lea Sommer\" />,\n  )\n  assert.match(prefilled, /<input[^>]*type=\"email\"[^>]*value=\"lea@example.test\"/)\n  assert.ok(prefilled.includes(\"Deine E-Mail\"))\n  assert.ok(!/<input[^>]*readonly/i.test(prefilled))\n  assert.ok(!/<input[^>]*disabled/i.test(prefilled))\n\n  const empty = renderToStaticMarkup(\n    <DiscoveryInvitationCard email=\"\" mode=\"ready\" name=\"Lea Sommer\" />,\n  )\n  assert.match(empty, /<input[^>]*type=\"email\"[^>]*value=\"\"/)\n  assert.ok(empty.includes(\"Los geht\"))\n})",
+      "hash": "e4b7aa699d6b2f35ab7b9090e532f049a25da45c3d3b832ca761f1acadd22211",
+      "mark": "R",
+      "evidence": "Primary renderer keeper for prefilled/empty editable fields, label/CTA; absorbs C1 and C2 without new render/input."
+    },
+    "keeperAfter": {
+      "title": "the invite always shows an editable e-mail field, prefilled when the admin entered one",
+      "line": 62,
+      "start": 2121,
+      "end": 3091,
+      "body": "test(\"the invite always shows an editable e-mail field, prefilled when the admin entered one\", () => {\n  const prefilled = renderToStaticMarkup(\n    <DiscoveryInvitationCard email=\"lea@example.test\" mode=\"ready\" name=\"Lea Sommer\" />,\n  )\n  assert.match(prefilled, /<input[^>]*type=\"email\"[^>]*value=\"lea@example.test\"/)\n  assert.ok(prefilled.includes(\"Deine E-Mail\"))\n  assert.ok(prefilled.includes(\"bg-[var(--brand-coral)]\"), \"positive coral CTA absent\")\n  assert.ok(!prefilled.includes(\"bg-[var(--brand-plum)]\"), \"negative plum token present\")\n  assert.ok(!/<input[^>]*readonly/i.test(prefilled))\n  assert.ok(!/<input[^>]*disabled/i.test(prefilled))\n\n  const empty = renderToStaticMarkup(\n    <DiscoveryInvitationCard email=\"\" mode=\"ready\" name=\"Lea Sommer\" />,\n  )\n  assert.match(empty, /<input[^>]*type=\"email\"[^>]*value=\"\"/)\n  assert.ok(empty.includes(\"Los geht\"))\n  assert.match(empty, /motion-safe:animate-\\[personalPlanStageTargetFade_var\\(--motion-screen\\)/)\n})",
+      "hash": "bf299e51a317c2ae9b136ea79254cab9b2e7c99285d0f386e423fe41332b2678"
+    },
+    "inputProof": "identical email=lea@example.test/mode=ready/name=Lea Sommer/default errors and handlers",
+    "lostAssertions": [
+      "coral present",
+      "plum absent"
+    ],
+    "newInputs": 0,
+    "newCalls": 0,
+    "sourceCleanup": "none; all imports and fixtures still used",
+    "validation": "conditional on main native baseline/transfer, intended source controls, cut native and campaign coverage"
+  },
+  {
+    "id": "C2",
+    "file": "tests/discovery-invitation-card.test.tsx",
+    "donor": {
+      "title": "the ready card fades its content in",
+      "line": 108,
+      "start": 4372,
+      "end": 4625,
+      "body": "test(\"the ready card fades its content in\", () => {\n  const markup = renderToStaticMarkup(<DiscoveryInvitationCard email=\"\" mode=\"ready\" name=\"Lea\" />)\n  assert.match(markup, /motion-safe:animate-\\[personalPlanStageTargetFade_var\\(--motion-screen\\)/)\n})",
+      "hash": "80a3797404aaced4260c3b9fcf1a069c67feabc92f8a16f854f871e4cdf6aa09",
+      "mark": "C",
+      "evidence": "C2: move exact animation assertion to existing empty ready render. Lea Sommer and Lea both map firstName Lea and cannot affect outer CONTENT_FADE_IN."
+    },
+    "keeperBefore": {
+      "title": "the invite always shows an editable e-mail field, prefilled when the admin entered one",
+      "line": 62,
+      "start": 2121,
+      "end": 2815,
+      "body": "test(\"the invite always shows an editable e-mail field, prefilled when the admin entered one\", () => {\n  const prefilled = renderToStaticMarkup(\n    <DiscoveryInvitationCard email=\"lea@example.test\" mode=\"ready\" name=\"Lea Sommer\" />,\n  )\n  assert.match(prefilled, /<input[^>]*type=\"email\"[^>]*value=\"lea@example.test\"/)\n  assert.ok(prefilled.includes(\"Deine E-Mail\"))\n  assert.ok(!/<input[^>]*readonly/i.test(prefilled))\n  assert.ok(!/<input[^>]*disabled/i.test(prefilled))\n\n  const empty = renderToStaticMarkup(\n    <DiscoveryInvitationCard email=\"\" mode=\"ready\" name=\"Lea Sommer\" />,\n  )\n  assert.match(empty, /<input[^>]*type=\"email\"[^>]*value=\"\"/)\n  assert.ok(empty.includes(\"Los geht\"))\n})",
+      "hash": "e4b7aa699d6b2f35ab7b9090e532f049a25da45c3d3b832ca761f1acadd22211",
+      "mark": "R",
+      "evidence": "Primary renderer keeper for prefilled/empty editable fields, label/CTA; absorbs C1 and C2 without new render/input."
+    },
+    "keeperAfter": {
+      "title": "the invite always shows an editable e-mail field, prefilled when the admin entered one",
+      "line": 62,
+      "start": 2121,
+      "end": 3091,
+      "body": "test(\"the invite always shows an editable e-mail field, prefilled when the admin entered one\", () => {\n  const prefilled = renderToStaticMarkup(\n    <DiscoveryInvitationCard email=\"lea@example.test\" mode=\"ready\" name=\"Lea Sommer\" />,\n  )\n  assert.match(prefilled, /<input[^>]*type=\"email\"[^>]*value=\"lea@example.test\"/)\n  assert.ok(prefilled.includes(\"Deine E-Mail\"))\n  assert.ok(prefilled.includes(\"bg-[var(--brand-coral)]\"), \"positive coral CTA absent\")\n  assert.ok(!prefilled.includes(\"bg-[var(--brand-plum)]\"), \"negative plum token present\")\n  assert.ok(!/<input[^>]*readonly/i.test(prefilled))\n  assert.ok(!/<input[^>]*disabled/i.test(prefilled))\n\n  const empty = renderToStaticMarkup(\n    <DiscoveryInvitationCard email=\"\" mode=\"ready\" name=\"Lea Sommer\" />,\n  )\n  assert.match(empty, /<input[^>]*type=\"email\"[^>]*value=\"\"/)\n  assert.ok(empty.includes(\"Los geht\"))\n  assert.match(empty, /motion-safe:animate-\\[personalPlanStageTargetFade_var\\(--motion-screen\\)/)\n})",
+      "hash": "bf299e51a317c2ae9b136ea79254cab9b2e7c99285d0f386e423fe41332b2678"
+    },
+    "inputProof": "email empty/mode ready/default errors/handlers identical; name Lea vs Lea Sommer maps same firstName via trim/split first token, no other name read",
+    "lostAssertions": [
+      "exact motion-safe animation prefix present"
+    ],
+    "newInputs": 0,
+    "newCalls": 0,
+    "sourceCleanup": "none; all imports and fixtures still used",
+    "validation": "conditional on main native baseline/transfer, intended source controls, cut native and campaign coverage"
+  }
+]

@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: field-test activation qualifies Stage 1 and the journey without a payment timestamp
+ok 1 - field-test activation qualifies Stage 1 and the journey without a payment timestamp
+  ---
+  duration_ms: 3.810875
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 295.267875

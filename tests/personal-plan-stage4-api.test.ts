@@ -109,7 +109,7 @@ test("routine read derives auth, owner-scopes admin reads, and returns a no-stor
   assert.equal(body.pendingProposal.id, ids.proposal)
 })
 
-test("routine read preserves no-plan versus incomplete-plan and disables new entry while off", async () => {
+test("routine read returns no-plan and disables entry while off", async () => {
   let response = await createPersonalPlanRoutineRouteHandlers(
     routeDeps({ client: () => client({}) }),
   ).GET()
@@ -136,43 +136,36 @@ test("routine read preserves no-plan versus incomplete-plan and disables new ent
 })
 
 test("attention never leaks proposal facts and is false when Stage 4 is disabled", async () => {
-  let constructed = false
-  let response = await createPersonalPlanRoutineAttentionRouteHandlers(
-    routeDeps({
-      client: () => {
-        constructed = true
-        return client({})
-      },
-    }),
-  ).GET()
+  let response = await createPersonalPlanRoutineAttentionRouteHandlers({
+    enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage4Access,
+  }).GET()
   assert.deepEqual(await response.json(), { hasPendingProposal: true })
-  assert.equal(constructed, false)
-  response = await createPersonalPlanRoutineAttentionRouteHandlers(
-    routeDeps({ enabled: () => false }),
-  ).GET()
+  response = await createPersonalPlanRoutineAttentionRouteHandlers({
+    enabled: () => false,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage4Access,
+  }).GET()
   assert.deepEqual(await response.json(), { hasPendingProposal: false })
 })
 
-test("attention stays non-exposing before the Stage 4 frontier and journey-loader failure fails closed", async () => {
-  let constructed = false
-  let response = await createPersonalPlanRoutineAttentionRouteHandlers(
-    routeDeps({
-      loadJourneyAccess: async () => ({
-        kind: "personal_plan",
-        personalPlanId: ids.plan,
-        frontier: "stage3",
-        nextHref: "/plan-start",
-        allowed: { stage1: true, stage2: true, stage3: true, stage4: false, stage5: false },
-      }),
-      client: () => {
-        constructed = true
-        return client({})
-      },
+test("attention stays non-exposing before Stage 4; routine read fails closed when its journey loader fails", async () => {
+  let response = await createPersonalPlanRoutineAttentionRouteHandlers({
+    enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      personalPlanId: ids.plan,
+      frontier: "stage3",
+      hasPendingRoutineProposal: true,
+      nextHref: "/plan-start",
+      allowed: { stage1: true, stage2: true, stage3: true, stage4: false, stage5: false },
     }),
-  ).GET()
+  }).GET()
   assert.deepEqual(await response.json(), { hasPendingProposal: false })
-  assert.equal(constructed, false)
 
+  let constructed = false
   response = await createPersonalPlanRoutineRouteHandlers(
     routeDeps({
       loadJourneyAccess: async () => {

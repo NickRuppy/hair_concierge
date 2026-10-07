@@ -1,0 +1,8 @@
+from pathlib import Path
+import sys,hashlib,json
+R=Path('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning');D=Path('/tmp/test-audit-free-provisioning67')
+for f in sys.argv[1:]:
+ b=(R/f).read_bytes();p=D/'readset-snapshots'/f
+ if p.exists() and p.read_bytes()!=b:raise Exception('readset drift '+f)
+ if not p.exists():p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b)
+ print(f,len(b.splitlines()),hashlib.sha256(b).hexdigest())

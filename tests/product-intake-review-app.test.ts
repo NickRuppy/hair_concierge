@@ -1206,13 +1206,6 @@ test("review app preserves existing property decisions when another property is 
   }
 })
 
-test("review app can bulk approve all properties", () => {
-  const html = renderAppHtml()
-
-  assert.match(html, /saveAllPropertiesApproved/)
-  assert.match(html, /Alle Eigenschaften passen/)
-})
-
 test("review app rejects final package approval until image and properties are approved", async () => {
   const root = await mkdtemp(join(tmpdir(), "product-intake-review-app-"))
   try {

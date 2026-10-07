@@ -1,0 +1,7 @@
+## Main review resolution before transfer
+
+Read-only counterpart /tmp/test-audit-next385-plan-review.md approved with no new Nick decision. The migration staged driver is already prepared and main-reviewed: /tmp/test-audit-discovery-chronology-edit.cjs, full immutable phase plan/diff; eight main controls /tmp/test-audit-chronology-controls-main.cjs. The embedded historical proposal predates that driver. Main reviewed the staged composer receipt declaration; it already derives composerRequest from modelClient.composeRequests[0]. Both actual AgenticToolLoopModelClient.runStep and composeFinalAnswer require systemPrompt:string (agentic-tool-loop-types.ts:75,80); reviewer incorrectly cited the separate optional Classic classify/render type. Classic transferred receipt already assert.ok narrows its optional string. No cast or unnecessary semantic repair.
+
+Main accepts ordinary test-ownership coupling within the authorized campaign: three keepers are self-contained fakes at real orchestrator/model-client input, no provider/admin dependency, same unconditional configured bytes and same CI lane. Any unrelated keeper failure remains a visible CI failure; all original76independent literals remain. Representative27faults explicitly do not claim every76literal individuallyisolated. Whole8-suite before176/176 passes withzero skips/failures, not hypothetical skipped-agent arithmetic. These are routine proof choices, no product/risk scope change.
+
+No new source/test change from reviewer suggestions; original precise staged plan remains valid.

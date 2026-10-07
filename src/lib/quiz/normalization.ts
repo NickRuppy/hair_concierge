@@ -151,29 +151,6 @@ export function toggleTreatmentSelection(current: string[], value: string): stri
   return sortTreatments([...set]) ?? []
 }
 
-export function toggleConcernSelection(
-  current: string[],
-  value: string,
-): NonNullable<QuizAnswers["concerns"]> {
-  if (value === "none") {
-    return []
-  }
-
-  if (!QUIZ_ANSWER_CONCERN_VALUES.includes(value as (typeof QUIZ_ANSWER_CONCERN_VALUES)[number])) {
-    return sortConcerns(current) ?? []
-  }
-
-  const set = new Set(current)
-
-  if (set.has(value)) {
-    set.delete(value)
-  } else {
-    set.add(value)
-  }
-
-  return sortConcerns([...set]) ?? []
-}
-
 export function normalizeStoredQuizAnswers(
   raw: StoredQuizAnswers | Record<string, unknown> | null | undefined,
 ): QuizAnswers {

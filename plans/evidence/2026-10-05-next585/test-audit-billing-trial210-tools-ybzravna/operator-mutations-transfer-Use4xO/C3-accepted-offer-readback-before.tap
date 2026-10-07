@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: trial admission adapter creates one immutable enrollment attempt through its real SQL shape
+ok 1 - trial admission adapter creates one immutable enrollment attempt through its real SQL shape
+  ---
+  duration_ms: 530.160041
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 804.085458

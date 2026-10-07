@@ -1,0 +1,73 @@
+--- transfer/tests/billing-trial-required-notices.test.ts
++++ cut/tests/billing-trial-required-notices.test.ts
+@@ -469,11 +469,6 @@
+   assert.match(message.receipt_text, /21\. September 2026 um 12:00:00 MESZ/)
+ })
+ 
+-test("Stripe contract confirmation keeps the exact-moment first-charge statement", () => {
+-  const message = buildTrialRequiredNoticeMessage("contract_confirmation", snapshot)
+-  assert.match(message.receipt_text, /Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen/)
+-})
+-
+ test("PayPal contract confirmation with a frozen midnight trial end names one date for trial end and first charge", () => {
+   const message = buildTrialRequiredNoticeMessage("contract_confirmation", {
+     ...snapshot,
+--- transfer/tests/billing-trial-admission-postgres.test.ts
++++ cut/tests/billing-trial-admission-postgres.test.ts
+@@ -382,38 +382,6 @@
+   )
+ })
+ 
+-test("trial enrollment adapter rejects a successful upsert whose readback has different accepted terms", async () => {
+-  const existing = { id: IDS.first, user_id: null, provider: "stripe", accepted_offer: OFFER }
+-  const mismatchedReadback = {
+-    from(table: string) {
+-      assert.equal(table, "trial_enrollments")
+-      return {
+-        async upsert() {
+-          return { error: null }
+-        },
+-        select(columns: string) {
+-          assert.equal(columns, "id,user_id,provider,accepted_offer")
+-          return { eq: () => ({ single: async () => ({ data: existing, error: null }) }) }
+-        },
+-      }
+-    },
+-  } as never
+-  await assert.rejects(
+-    () =>
+-      createTrialEnrollment(mismatchedReadback, {
+-        id: IDS.first,
+-        userId: null,
+-        provider: "stripe",
+-        offer: createTrialOfferSnapshot("year", {
+-          monthPriceId: "price_trial_month",
+-          yearPriceId: "price_trial_year",
+-          annualCouponId: "coupon_trial_year",
+-        }),
+-      }),
+-    /does not match accepted terms/,
+-  )
+-})
+-
+ test("trial admission reserves, activates atomically, and replays only the exact provider receipt", async (t) => {
+   const pg = await database(t)
+   await enrollment(pg, IDS.first, IDS.profile)
+--- transfer/tests/billing-trial-policy.test.ts
++++ cut/tests/billing-trial-policy.test.ts
+@@ -17,15 +17,6 @@
+     ...overrides,
+   }
+ }
+-
+-test("grants trial access from authorization inclusively until the immutable end exclusively", () => {
+-  assert.deepEqual(resolveTrialAccess(facts(), new Date("2026-09-13T12:00:00.000Z")), {
+-    hasAccess: true,
+-    phase: "trial",
+-    reason: "trial_active",
+-  })
+-  assert.equal(resolveTrialAccess(facts(), NOW).reason, "first_collection_pending")
+-})
+ 
+ test("accepts valid ISO offsets and fractional seconds", () => {
+   assert.deepEqual(

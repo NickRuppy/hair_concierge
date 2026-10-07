@@ -1,0 +1,47 @@
+{
+  "status": "STATIC_ONLY_PASS_RUNTIME_NOT_RUN",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "packetManifestSHA256": "0c952af62b35a52af39802a34879f5a697d9e26cfdcea38369e6602d334966b7",
+  "packetHandoffSHA256": "33b7bbe5e4a4f149c0418bdc4482df976fc871279d56593a05052da438bee097",
+  "pinsSHA256": "132c346bff375008376b55eb0499f0701fcf11dfa905ad34c0842e29c2d19e0a",
+  "counts": [
+    31,
+    31,
+    30
+  ],
+  "files": 5,
+  "unchangedCallbacks": 29,
+  "heldF": 1,
+  "phaseFilesParsed": 15,
+  "actualSourceFaultsParsedOnly": 4,
+  "originalReadsetsPreserved": 49,
+  "phaseAwareTests": 5,
+  "fixedReadsets": 46,
+  "selectedLocalRuntimeFiles": 14,
+  "installedDependencies": 503,
+  "dependencyTrees": 17,
+  "newDependencyPins": 72,
+  "configPolicySHA256": "04de875c4e62e53c69af322fcc215bf0c04f8098c0ebd3bc3ef46eba730f1ecf",
+  "sharedConfigRelevantSHA256": "1ffae91f2e0ffc3d2fc37c4824e9128809295f477f1ee227343aed6c41255fc3",
+  "checks": {
+    "editor-check.log": {
+      "sha256": "a6a8dee99a52faf8a486d1957008954954f74d344f008336a9f5538a18203453",
+      "text": "{\n  \"mode\": \"check\",\n  \"phase\": \"before\",\n  \"counts\": {\n    \"before\": 31,\n    \"transfer\": 31,\n    \"cut\": 30\n  },\n  \"unrelatedCallbacks\": 29,\n  \"unchangedRetainedCallbacks\": 29,\n  \"parsedPhaseFiles\": 15,\n  \"sourceControlsParsed\": 4,\n  \"readsetGuards\": 46,\n  \"dependencyFiles\": 503,\n  \"repositoryWrites\": 0,\n  \"childrenStarted\": 0\n}\n{\"staticReadOnlyEnforced\":true,\"attemptedWrites\":0,\"attemptedChildren\":0}\n"
+    },
+    "controls-check.log": {
+      "sha256": "f677b3e4b2a92062625e7fef61c91e45d9acd0a510d895164ae61f665b30016b",
+      "text": "{\n  \"mode\": \"check\",\n  \"phase\": \"before\",\n  \"controls\": 4,\n  \"allUniqueOwnersParsed\": true,\n  \"allControlsParsed\": true,\n  \"phaseOracles\": \"exact assertion startLine and text in transfer/cut\",\n  \"selectedTestCount\": 1,\n  \"repositoryWrites\": 0,\n  \"runtimeRuns\": 0,\n  \"childrenStarted\": 0\n}\n{\"staticReadOnlyEnforced\":true,\"attemptedWrites\":0,\"attemptedChildren\":0}\n"
+    },
+    "syntax-check.log": {
+      "sha256": "0725a985643eae034a3e43f92b5e28bd8369c197e4bf465736dc6f066a14a036",
+      "text": "{\"files\":[\"operator-edit.cjs\",\"operator-guard.cjs\",\"operator-proof.cjs\",\"operator-readonly-preload.cjs\",\"operator-run-controls.cjs\",\"prepare-data-pins.cjs\"],\"parseDiagnostics\":0,\"repositoryImports\":0,\"childrenStarted\":0}\n{\"staticReadOnlyEnforced\":true,\"attemptedWrites\":0,\"attemptedChildren\":0}\n"
+    }
+  },
+  "repositoryWrites": 0,
+  "testOrOwnerImports": 0,
+  "runtimeTests": 0,
+  "childrenStartedByChecksOrPreparers": 0,
+  "limits": "All original49 exact; selected local literal runtime import graph guarded. Original five test files phase-aware; other44 remain fixed. Added local/dependency hashes are first-time guards; overlap pins are preserved. Selected17 package distributions/entrypoints only; no whole vendor tree or type-only/external dynamic execution claim. Correction imported SDK/CLI libraries are pinned but never imported by preparation. Optional native ws acceleration/fsevents, dormant CLI data/env files and exhaustive external type trees excluded."
+}

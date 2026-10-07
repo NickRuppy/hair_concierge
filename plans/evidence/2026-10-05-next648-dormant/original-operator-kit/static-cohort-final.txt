@@ -1,0 +1,3 @@
+{"mode":"check","phase":"transfer","expected":103,"command":["node","--import","./tests/server-only-register.cjs","--import","tsx","--test","--test-concurrency=1","tests/personal-plan-journey-access-loader.test.ts","tests/personal-plan-stage3-release.test.ts","tests/auth-middleware-personal-plan-routine.test.ts","tests/freemium-enrollment-admission.test.ts","tests/personal-plan-trial-stage1-journey.test.ts","tests/personal-plan-field-test-access.test.ts","tests/personal-plan-rollout-access.test.ts"],"repositoryWrites":0,"childrenStarted":0}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

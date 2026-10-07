@@ -1,0 +1,2875 @@
+{
+  "before": {
+    "tests/product-identity-normalize.test.ts": [
+      {
+        "name": "canonical category constants include supported and known unsupported keys",
+        "line": 16,
+        "start": 357,
+        "end": 1225,
+        "body": "test(\"canonical category constants include supported and known unsupported keys\", () => {\n  assert.deepEqual(SUPPORTED_PRODUCT_CATEGORY_KEYS, [\n    \"shampoo\",\n    \"conditioner\",\n    \"leave_in\",\n    \"mask\",\n    \"oil\",\n    \"dry_shampoo\",\n    \"deep_cleansing_shampoo\",\n    \"bondbuilder\",\n    \"heat_protectant\",\n    \"scalp_care\",\n  ])\n\n  assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes(\"heat_protectant\"), true)\n  assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes(\"hairspray\"), true)\n  assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.leave_in, \"Leave-in\")\n  assert.equal(SUPPORTED_PRODUCT_CATEGORY_KEYS.includes(\"heat_protectant\"), true)\n  assert.equal(SUPPORTED_PRODUCT_CATEGORY_KEYS.includes(\"scalp_care\"), true)\n  assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.heat_protectant, \"Hitzeschutz\")\n  assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.scalp_care, \"Kopfhautpflege\")\n})",
+        "sha256": "8c6c4308e487858a9ce3d36eeb685f2c71c5f90fc12b284aba81eede0b1807fc",
+        "assertions": [
+          {
+            "line": 17,
+            "text": "assert.deepEqual(SUPPORTED_PRODUCT_CATEGORY_KEYS, [\n    \"shampoo\",\n    \"conditioner\",\n    \"leave_in\",\n    \"mask\",\n    \"oil\",\n    \"dry_shampoo\",\n    \"deep_cleansing_shampoo\",\n    \"bondbuilder\",\n    \"heat_protectant\",\n    \"scalp_care\",\n  ])"
+          },
+          {
+            "line": 30,
+            "text": "assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes(\"heat_protectant\"), true)"
+          },
+          {
+            "line": 31,
+            "text": "assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes(\"hairspray\"), true)"
+          },
+          {
+            "line": 32,
+            "text": "assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.leave_in, \"Leave-in\")"
+          },
+          {
+            "line": 33,
+            "text": "assert.equal(SUPPORTED_PRODUCT_CATEGORY_KEYS.includes(\"heat_protectant\"), true)"
+          },
+          {
+            "line": 34,
+            "text": "assert.equal(SUPPORTED_PRODUCT_CATEGORY_KEYS.includes(\"scalp_care\"), true)"
+          },
+          {
+            "line": 35,
+            "text": "assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.heat_protectant, \"Hitzeschutz\")"
+          },
+          {
+            "line": 36,
+            "text": "assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.scalp_care, \"Kopfhautpflege\")"
+          }
+        ]
+      },
+      {
+        "name": "normalizeCategoryKey maps production labels, canonical keys, and simple oil aliases",
+        "line": 39,
+        "start": 1227,
+        "end": 2872,
+        "body": "test(\"normalizeCategoryKey maps production labels, canonical keys, and simple oil aliases\", () => {\n  assert.equal(normalizeCategoryKey(\"Shampoo\"), \"shampoo\")\n  assert.equal(normalizeCategoryKey(\"Conditioner (Drogerie)\"), \"conditioner\")\n  assert.equal(normalizeCategoryKey(\"Leave-in\"), \"leave_in\")\n  assert.equal(normalizeCategoryKey(\"Maske\"), \"mask\")\n  assert.equal(normalizeCategoryKey(\"Öle\"), \"oil\")\n  assert.equal(normalizeCategoryKey(\"Trockenshampoo\"), \"dry_shampoo\")\n  assert.equal(normalizeCategoryKey(\"Tiefenreinigungsshampoo\"), \"deep_cleansing_shampoo\")\n  assert.equal(normalizeCategoryKey(\"Bondbuilder\"), \"bondbuilder\")\n  assert.equal(normalizeCategoryKey(\"Hitzeschutz\"), \"heat_protectant\")\n  assert.equal(normalizeCategoryKey(\"Kopfhautpflege\"), \"scalp_care\")\n  assert.equal(normalizeCategoryKey(\"Scalp Care\"), \"scalp_care\")\n  assert.equal(normalizeCategoryKey(\"Serum\"), \"serum\")\n  assert.equal(normalizeCategoryKey(\"Scrub\"), \"scrub\")\n  assert.equal(normalizeCategoryKey(\"Peeling\"), \"peeling\")\n  assert.equal(normalizeCategoryKey(\"Styling-Gel\"), \"styling_gel\")\n  assert.equal(normalizeCategoryKey(\"Styling Mousse\"), \"styling_mousse\")\n  assert.equal(normalizeCategoryKey(\"Styling-Creme\"), \"styling_cream\")\n  assert.equal(normalizeCategoryKey(\"Haarspray\"), \"hairspray\")\n  assert.equal(normalizeCategoryKey(\"dry_shampoo\"), \"dry_shampoo\")\n  assert.equal(normalizeCategoryKey(\"Deep Cleansing Shampoo\"), \"deep_cleansing_shampoo\")\n  assert.equal(normalizeCategoryKey(\"Öl\"), \"oil\")\n  assert.equal(normalizeCategoryKey(\"Oele\"), \"oil\")\n  assert.equal(normalizeCategoryKey(\"Ole\"), \"oil\")\n  assert.equal(normalizeCategoryKey(\"Unbekannt\"), null)\n})",
+        "sha256": "74fd331b916d361c02b071267bc79de983e73d1335dcab3604cb33d5f056c27e",
+        "assertions": [
+          {
+            "line": 40,
+            "text": "assert.equal(normalizeCategoryKey(\"Shampoo\"), \"shampoo\")"
+          },
+          {
+            "line": 41,
+            "text": "assert.equal(normalizeCategoryKey(\"Conditioner (Drogerie)\"), \"conditioner\")"
+          },
+          {
+            "line": 42,
+            "text": "assert.equal(normalizeCategoryKey(\"Leave-in\"), \"leave_in\")"
+          },
+          {
+            "line": 43,
+            "text": "assert.equal(normalizeCategoryKey(\"Maske\"), \"mask\")"
+          },
+          {
+            "line": 44,
+            "text": "assert.equal(normalizeCategoryKey(\"Öle\"), \"oil\")"
+          },
+          {
+            "line": 45,
+            "text": "assert.equal(normalizeCategoryKey(\"Trockenshampoo\"), \"dry_shampoo\")"
+          },
+          {
+            "line": 46,
+            "text": "assert.equal(normalizeCategoryKey(\"Tiefenreinigungsshampoo\"), \"deep_cleansing_shampoo\")"
+          },
+          {
+            "line": 47,
+            "text": "assert.equal(normalizeCategoryKey(\"Bondbuilder\"), \"bondbuilder\")"
+          },
+          {
+            "line": 48,
+            "text": "assert.equal(normalizeCategoryKey(\"Hitzeschutz\"), \"heat_protectant\")"
+          },
+          {
+            "line": 49,
+            "text": "assert.equal(normalizeCategoryKey(\"Kopfhautpflege\"), \"scalp_care\")"
+          },
+          {
+            "line": 50,
+            "text": "assert.equal(normalizeCategoryKey(\"Scalp Care\"), \"scalp_care\")"
+          },
+          {
+            "line": 51,
+            "text": "assert.equal(normalizeCategoryKey(\"Serum\"), \"serum\")"
+          },
+          {
+            "line": 52,
+            "text": "assert.equal(normalizeCategoryKey(\"Scrub\"), \"scrub\")"
+          },
+          {
+            "line": 53,
+            "text": "assert.equal(normalizeCategoryKey(\"Peeling\"), \"peeling\")"
+          },
+          {
+            "line": 54,
+            "text": "assert.equal(normalizeCategoryKey(\"Styling-Gel\"), \"styling_gel\")"
+          },
+          {
+            "line": 55,
+            "text": "assert.equal(normalizeCategoryKey(\"Styling Mousse\"), \"styling_mousse\")"
+          },
+          {
+            "line": 56,
+            "text": "assert.equal(normalizeCategoryKey(\"Styling-Creme\"), \"styling_cream\")"
+          },
+          {
+            "line": 57,
+            "text": "assert.equal(normalizeCategoryKey(\"Haarspray\"), \"hairspray\")"
+          },
+          {
+            "line": 58,
+            "text": "assert.equal(normalizeCategoryKey(\"dry_shampoo\"), \"dry_shampoo\")"
+          },
+          {
+            "line": 59,
+            "text": "assert.equal(normalizeCategoryKey(\"Deep Cleansing Shampoo\"), \"deep_cleansing_shampoo\")"
+          },
+          {
+            "line": 60,
+            "text": "assert.equal(normalizeCategoryKey(\"Öl\"), \"oil\")"
+          },
+          {
+            "line": 61,
+            "text": "assert.equal(normalizeCategoryKey(\"Oele\"), \"oil\")"
+          },
+          {
+            "line": 62,
+            "text": "assert.equal(normalizeCategoryKey(\"Ole\"), \"oil\")"
+          },
+          {
+            "line": 63,
+            "text": "assert.equal(normalizeCategoryKey(\"Unbekannt\"), null)"
+          }
+        ]
+      },
+      {
+        "name": "normalizeText folds accents, punctuation, case, and spacing",
+        "line": 66,
+        "start": 2874,
+        "end": 3117,
+        "body": "test(\"normalizeText folds accents, punctuation, case, and spacing\", () => {\n  assert.equal(normalizeText(\"  Öl / Leave-in -- Nº 5  \"), \"ol leave in no 5\")\n  assert.equal(normalizeText(\"Tiefenreinigungs-Shampoo\"), \"tiefenreinigungs shampoo\")\n})",
+        "sha256": "b8ed8d473a998b61f481f8ae989a473a9cd84468677bfc3768f530f7657410fd",
+        "assertions": [
+          {
+            "line": 67,
+            "text": "assert.equal(normalizeText(\"  Öl / Leave-in -- Nº 5  \"), \"ol leave in no 5\")"
+          },
+          {
+            "line": 68,
+            "text": "assert.equal(normalizeText(\"Tiefenreinigungs-Shampoo\"), \"tiefenreinigungs shampoo\")"
+          }
+        ]
+      },
+      {
+        "name": "normalizeIdentityText is stable for case, whitespace, punctuation, and safe diacritics",
+        "line": 71,
+        "start": 3119,
+        "end": 3624,
+        "body": "test(\"normalizeIdentityText is stable for case, whitespace, punctuation, and safe diacritics\", () => {\n  assert.equal(normalizeIdentityText(\"  OLAPLEX   Nº. 5 -- Leave-In  \"), \"olaplex no 5 leave in\")\n  assert.equal(\n    normalizeIdentityText(\"OLAPLEX N°5 Bond Maintenance\"),\n    \"olaplex no 5 bond maintenance\",\n  )\n  assert.equal(normalizeIdentityText(\"Olaplex No 5 Leave In\"), \"olaplex no 5 leave in\")\n  assert.equal(normalizeIdentityText(\"Garnier Fructis / Hair-Food\"), \"garnier fructis hair food\")\n})",
+        "sha256": "5011d4a1e73e0076d8068fc88fd2bd9bdebfdf28f19d5fcc686cf6d87073f3e7",
+        "assertions": [
+          {
+            "line": 72,
+            "text": "assert.equal(normalizeIdentityText(\"  OLAPLEX   Nº. 5 -- Leave-In  \"), \"olaplex no 5 leave in\")"
+          },
+          {
+            "line": 73,
+            "text": "assert.equal(\n    normalizeIdentityText(\"OLAPLEX N°5 Bond Maintenance\"),\n    \"olaplex no 5 bond maintenance\",\n  )"
+          },
+          {
+            "line": 77,
+            "text": "assert.equal(normalizeIdentityText(\"Olaplex No 5 Leave In\"), \"olaplex no 5 leave in\")"
+          },
+          {
+            "line": 78,
+            "text": "assert.equal(normalizeIdentityText(\"Garnier Fructis / Hair-Food\"), \"garnier fructis hair food\")"
+          }
+        ]
+      },
+      {
+        "name": "normalizeIdentityText matches L'Oreal variants without broad unsafe rewrites",
+        "line": 81,
+        "start": 3626,
+        "end": 3956,
+        "body": "test(\"normalizeIdentityText matches L'Oreal variants without broad unsafe rewrites\", () => {\n  assert.equal(normalizeIdentityText(\"L'Oréal\"), \"loreal\")\n  assert.equal(normalizeIdentityText(\"L’Oréal\"), \"loreal\")\n  assert.equal(normalizeIdentityText(\"LʼOréal\"), \"loreal\")\n  assert.equal(normalizeIdentityText(\"Loreal\"), \"loreal\")\n})",
+        "sha256": "b34b89e572b633b7a3b902660444bfd1d1fb1cf3bb2c36027dd7f2568fdab6b5",
+        "assertions": [
+          {
+            "line": 82,
+            "text": "assert.equal(normalizeIdentityText(\"L'Oréal\"), \"loreal\")"
+          },
+          {
+            "line": 83,
+            "text": "assert.equal(normalizeIdentityText(\"L’Oréal\"), \"loreal\")"
+          },
+          {
+            "line": 84,
+            "text": "assert.equal(normalizeIdentityText(\"LʼOréal\"), \"loreal\")"
+          },
+          {
+            "line": 85,
+            "text": "assert.equal(normalizeIdentityText(\"Loreal\"), \"loreal\")"
+          }
+        ]
+      },
+      {
+        "name": "normalizeIdentifier returns stable snake-case identifiers",
+        "line": 88,
+        "start": 3958,
+        "end": 4349,
+        "body": "test(\"normalizeIdentifier returns stable snake-case identifiers\", () => {\n  assert.equal(normalizeIdentifier(\"Deep Cleansing Shampoo\"), \"deep_cleansing_shampoo\")\n  assert.equal(normalizeIdentifier(\"  Öle + Pflege  \"), \"ole_pflege\")\n  assert.equal(normalizeIdentifier(\"leave_in\"), \"leave_in\")\n  assert.equal(normalizeIdentifier(null), \"\")\n  assert.equal(normalizeIdentifier(undefined), \"\")\n})",
+        "sha256": "433e96b44137a770c957ee347fcadc98d1099eea504a8dcdfb8a16cbe567776d",
+        "assertions": [
+          {
+            "line": 89,
+            "text": "assert.equal(normalizeIdentifier(\"Deep Cleansing Shampoo\"), \"deep_cleansing_shampoo\")"
+          },
+          {
+            "line": 90,
+            "text": "assert.equal(normalizeIdentifier(\"  Öle + Pflege  \"), \"ole_pflege\")"
+          },
+          {
+            "line": 91,
+            "text": "assert.equal(normalizeIdentifier(\"leave_in\"), \"leave_in\")"
+          },
+          {
+            "line": 92,
+            "text": "assert.equal(normalizeIdentifier(null), \"\")"
+          },
+          {
+            "line": 93,
+            "text": "assert.equal(normalizeIdentifier(undefined), \"\")"
+          }
+        ]
+      },
+      {
+        "name": "tokenizeProductName returns normalized searchable product-name tokens",
+        "line": 96,
+        "start": 4351,
+        "end": 4761,
+        "body": "test(\"tokenizeProductName returns normalized searchable product-name tokens\", () => {\n  assert.deepEqual(tokenizeProductName(\"Garnier Fructis Hair-Food Aloe\"), [\n    \"garnier\",\n    \"fructis\",\n    \"hair\",\n    \"food\",\n    \"aloe\",\n  ])\n  assert.deepEqual(tokenizeProductName(\"L'Oréal Professionnel\"), [\"loreal\", \"professionnel\"])\n  assert.deepEqual(tokenizeProductName(\"OLAPLEX No. 5\"), [\"olaplex\", \"no\", \"5\"])\n})",
+        "sha256": "7d30b9ab0e7da16affeab1168dba301e2c4c52a909e2d3b13f88c519d5594bc2",
+        "assertions": [
+          {
+            "line": 97,
+            "text": "assert.deepEqual(tokenizeProductName(\"Garnier Fructis Hair-Food Aloe\"), [\n    \"garnier\",\n    \"fructis\",\n    \"hair\",\n    \"food\",\n    \"aloe\",\n  ])"
+          },
+          {
+            "line": 104,
+            "text": "assert.deepEqual(tokenizeProductName(\"L'Oréal Professionnel\"), [\"loreal\", \"professionnel\"])"
+          },
+          {
+            "line": 105,
+            "text": "assert.deepEqual(tokenizeProductName(\"OLAPLEX No. 5\"), [\"olaplex\", \"no\", \"5\"])"
+          }
+        ]
+      },
+      {
+        "name": "cleanProductDisplayName removes exact brand and product line prefixes conservatively",
+        "line": 108,
+        "start": 4763,
+        "end": 5744,
+        "body": "test(\"cleanProductDisplayName removes exact brand and product line prefixes conservatively\", () => {\n  assert.equal(\n    cleanProductDisplayName(\"Olaplex No. 5 Leave-In Conditioner\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Leave-In Conditioner\",\n  )\n\n  assert.equal(\n    cleanProductDisplayName(\"Olaplex Bond Maintenance Shampoo\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Bond Maintenance Shampoo\",\n  )\n\n  assert.equal(\n    cleanProductDisplayName(\"The Ordinary Ordinary Shampoo\", {\n      brand: \"Ordinary\",\n    }),\n    \"The Ordinary Ordinary Shampoo\",\n  )\n\n  assert.equal(\n    cleanProductDisplayName(\"Olaplexx No. 5 Leave-In Conditioner\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Olaplexx No. 5 Leave-In Conditioner\",\n  )\n\n  assert.equal(\n    cleanProductDisplayName(\"L'Oréal Paris Elvital Dream Length\", {\n      brand: \"Loreal Paris\",\n      productLine: \"Elvital\",\n    }),\n    \"Dream Length\",\n  )\n})",
+        "sha256": "debc7c37b4914b7c1ded8545eb022786bc27f75477fb2a2b157d808a126bf7ad",
+        "assertions": [
+          {
+            "line": 109,
+            "text": "assert.equal(\n    cleanProductDisplayName(\"Olaplex No. 5 Leave-In Conditioner\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Leave-In Conditioner\",\n  )"
+          },
+          {
+            "line": 117,
+            "text": "assert.equal(\n    cleanProductDisplayName(\"Olaplex Bond Maintenance Shampoo\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Bond Maintenance Shampoo\",\n  )"
+          },
+          {
+            "line": 125,
+            "text": "assert.equal(\n    cleanProductDisplayName(\"The Ordinary Ordinary Shampoo\", {\n      brand: \"Ordinary\",\n    }),\n    \"The Ordinary Ordinary Shampoo\",\n  )"
+          },
+          {
+            "line": 132,
+            "text": "assert.equal(\n    cleanProductDisplayName(\"Olaplexx No. 5 Leave-In Conditioner\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Olaplexx No. 5 Leave-In Conditioner\",\n  )"
+          },
+          {
+            "line": 140,
+            "text": "assert.equal(\n    cleanProductDisplayName(\"L'Oréal Paris Elvital Dream Length\", {\n      brand: \"Loreal Paris\",\n      productLine: \"Elvital\",\n    }),\n    \"Dream Length\",\n  )"
+          }
+        ]
+      }
+    ],
+    "tests/product-identity-resolution.test.ts": [
+      {
+        "name": "resolveBrandFromText returns an exact brand and product line prefix match",
+        "line": 24,
+        "start": 463,
+        "end": 967,
+        "body": "test(\"resolveBrandFromText returns an exact brand and product line prefix match\", () => {\n  const resolution = resolveBrandFromText(\"Olaplex Nr. 5 Leave-In Conditioner\", brands)\n\n  assert.equal(resolution.match, \"brand_line\")\n  assert.equal(resolution.brand?.key, \"olaplex\")\n  assert.equal(resolution.productLine?.key, \"no_5\")\n  assert.equal(resolution.matchedText, \"Olaplex Nr. 5\")\n  assert.equal(resolution.confidence, \"high\")\n  assert.equal(resolution.reason, \"canonical_brand_with_line_inference\")\n})",
+        "sha256": "487cbe942d18c60b005ac5f1b13ae5dbf9a6ef84c9fb12a3b4626359ec167433",
+        "assertions": [
+          {
+            "line": 27,
+            "text": "assert.equal(resolution.match, \"brand_line\")"
+          },
+          {
+            "line": 28,
+            "text": "assert.equal(resolution.brand?.key, \"olaplex\")"
+          },
+          {
+            "line": 29,
+            "text": "assert.equal(resolution.productLine?.key, \"no_5\")"
+          },
+          {
+            "line": 30,
+            "text": "assert.equal(resolution.matchedText, \"Olaplex Nr. 5\")"
+          },
+          {
+            "line": 31,
+            "text": "assert.equal(resolution.confidence, \"high\")"
+          },
+          {
+            "line": 32,
+            "text": "assert.equal(resolution.reason, \"canonical_brand_with_line_inference\")"
+          }
+        ]
+      },
+      {
+        "name": "resolveBrandFromText returns an exact brand match without over-matching inside words",
+        "line": 35,
+        "start": 969,
+        "end": 1606,
+        "body": "test(\"resolveBrandFromText returns an exact brand match without over-matching inside words\", () => {\n  const resolution = resolveBrandFromText(\"K 18 Leave-in Molecular Repair Hair Oil\", brands)\n  assert.equal(resolution.match, \"brand\")\n  assert.equal(resolution.brand?.key, \"k18\")\n  assert.equal(resolution.productLine, null)\n  assert.equal(resolution.reason, \"brand_alias_exact\")\n\n  const nonMatch = resolveBrandFromText(\"SK18 Leave-in Molecular Repair Hair Oil\", brands)\n  assert.equal(nonMatch.match, \"none\")\n  assert.equal(nonMatch.brand, null)\n  assert.equal(nonMatch.unresolvedRawText, \"SK18 Leave-in Molecular Repair Hair Oil\")\n})",
+        "sha256": "fd8ab458d84aecc6dfdfe0788a74ccf594a36c30c4ad027596376aaa46bbf718",
+        "assertions": [
+          {
+            "line": 37,
+            "text": "assert.equal(resolution.match, \"brand\")"
+          },
+          {
+            "line": 38,
+            "text": "assert.equal(resolution.brand?.key, \"k18\")"
+          },
+          {
+            "line": 39,
+            "text": "assert.equal(resolution.productLine, null)"
+          },
+          {
+            "line": 40,
+            "text": "assert.equal(resolution.reason, \"brand_alias_exact\")"
+          },
+          {
+            "line": 43,
+            "text": "assert.equal(nonMatch.match, \"none\")"
+          },
+          {
+            "line": 44,
+            "text": "assert.equal(nonMatch.brand, null)"
+          },
+          {
+            "line": 45,
+            "text": "assert.equal(nonMatch.unresolvedRawText, \"SK18 Leave-in Molecular Repair Hair Oil\")"
+          }
+        ]
+      },
+      {
+        "name": "resolveBrandFromText resolves Phase 0 aliases before canonical brand names",
+        "line": 48,
+        "start": 1608,
+        "end": 3394,
+        "body": "test(\"resolveBrandFromText resolves Phase 0 aliases before canonical brand names\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      { id: \"brand-pantene\", canonical_name: \"Pantene\", normalized_name: \"pantene\" },\n      { id: \"brand-garnier\", canonical_name: \"Garnier\", normalized_name: \"garnier\" },\n    ],\n    productLines: [\n      {\n        id: \"line-pro-v\",\n        brand_id: \"brand-pantene\",\n        canonical_name: \"Pro-V\",\n        normalized_name: \"pro v\",\n      },\n      {\n        id: \"line-fructis\",\n        brand_id: \"brand-garnier\",\n        canonical_name: \"Fructis\",\n        normalized_name: \"fructis\",\n      },\n    ],\n    brandAliases: [\n      {\n        brand_id: \"brand-garnier\",\n        product_line_id: \"line-fructis\",\n        alias: \"Fructis\",\n        normalized_alias: \"fructis\",\n      },\n    ],\n  })\n\n  const proV = resolveBrandFromText(\"Pantene Pro-V Repair & Care Shampoo\", catalog)\n  assert.equal(proV.match, \"brand_line\")\n  assert.equal(proV.brand?.id, \"brand-pantene\")\n  assert.equal(proV.productLine?.id, \"line-pro-v\")\n  assert.equal(proV.reason, \"canonical_brand_with_line_inference\")\n\n  const garnierFructis = resolveBrandFromText(\"Garnier Fructis Aloe Hydra Bomb\", catalog)\n  assert.equal(garnierFructis.match, \"brand_line\")\n  assert.equal(garnierFructis.brand?.id, \"brand-garnier\")\n  assert.equal(garnierFructis.productLine?.id, \"line-fructis\")\n  assert.equal(garnierFructis.reason, \"canonical_brand_with_line_inference\")\n\n  const fructisAlias = resolveBrandFromText(\"Fructis Aloe Hydra Bomb\", catalog)\n  assert.equal(fructisAlias.match, \"brand_line\")\n  assert.equal(fructisAlias.brand?.id, \"brand-garnier\")\n  assert.equal(fructisAlias.productLine?.id, \"line-fructis\")\n  assert.equal(fructisAlias.reason, \"brand_line_alias_exact\")\n})",
+        "sha256": "3f78b2f953b0ee8ad45d9cca98a5be37fe41de012df62ae37dbffce5d5bd02a7",
+        "assertions": [
+          {
+            "line": 79,
+            "text": "assert.equal(proV.match, \"brand_line\")"
+          },
+          {
+            "line": 80,
+            "text": "assert.equal(proV.brand?.id, \"brand-pantene\")"
+          },
+          {
+            "line": 81,
+            "text": "assert.equal(proV.productLine?.id, \"line-pro-v\")"
+          },
+          {
+            "line": 82,
+            "text": "assert.equal(proV.reason, \"canonical_brand_with_line_inference\")"
+          },
+          {
+            "line": 85,
+            "text": "assert.equal(garnierFructis.match, \"brand_line\")"
+          },
+          {
+            "line": 86,
+            "text": "assert.equal(garnierFructis.brand?.id, \"brand-garnier\")"
+          },
+          {
+            "line": 87,
+            "text": "assert.equal(garnierFructis.productLine?.id, \"line-fructis\")"
+          },
+          {
+            "line": 88,
+            "text": "assert.equal(garnierFructis.reason, \"canonical_brand_with_line_inference\")"
+          },
+          {
+            "line": 91,
+            "text": "assert.equal(fructisAlias.match, \"brand_line\")"
+          },
+          {
+            "line": 92,
+            "text": "assert.equal(fructisAlias.brand?.id, \"brand-garnier\")"
+          },
+          {
+            "line": 93,
+            "text": "assert.equal(fructisAlias.productLine?.id, \"line-fructis\")"
+          },
+          {
+            "line": 94,
+            "text": "assert.equal(fructisAlias.reason, \"brand_line_alias_exact\")"
+          }
+        ]
+      },
+      {
+        "name": "unknown brand returns unresolved raw text with no confidence",
+        "line": 97,
+        "start": 3396,
+        "end": 3951,
+        "body": "test(\"unknown brand returns unresolved raw text with no confidence\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [{ id: \"brand-garnier\", canonical_name: \"Garnier\", normalized_name: \"garnier\" }],\n    productLines: [],\n    brandAliases: [],\n  })\n\n  const resolution = resolveBrandFromText(\"Unbekannte Pflegecreme\", catalog)\n\n  assert.equal(resolution.match, \"none\")\n  assert.equal(resolution.confidence, \"none\")\n  assert.equal(resolution.reason, \"unresolved\")\n  assert.equal(resolution.unresolvedRawText, \"Unbekannte Pflegecreme\")\n})",
+        "sha256": "355895870d4f6ac90c06f210033ba697942ac160d4e7f8f8d3198acf8f4c06dd",
+        "assertions": [
+          {
+            "line": 106,
+            "text": "assert.equal(resolution.match, \"none\")"
+          },
+          {
+            "line": 107,
+            "text": "assert.equal(resolution.confidence, \"none\")"
+          },
+          {
+            "line": 108,
+            "text": "assert.equal(resolution.reason, \"unresolved\")"
+          },
+          {
+            "line": 109,
+            "text": "assert.equal(resolution.unresolvedRawText, \"Unbekannte Pflegecreme\")"
+          }
+        ]
+      },
+      {
+        "name": "conflicting aliases are reported and excluded from usable alias resolution",
+        "line": 112,
+        "start": 3953,
+        "end": 4884,
+        "body": "test(\"conflicting aliases are reported and excluded from usable alias resolution\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      { id: \"brand-first\", canonical_name: \"First\", normalized_name: \"first\" },\n      { id: \"brand-second\", canonical_name: \"Second\", normalized_name: \"second\" },\n    ],\n    productLines: [],\n    brandAliases: [\n      {\n        brand_id: \"brand-first\",\n        product_line_id: null,\n        alias: \"Shared\",\n        normalized_alias: \"shared\",\n      },\n      {\n        brand_id: \"brand-second\",\n        product_line_id: null,\n        alias: \"Shared\",\n        normalized_alias: \"shared\",\n      },\n    ],\n  })\n\n  assert.deepEqual(\n    catalog.conflicts.map((conflict) => conflict.normalizedAlias),\n    [\"shared\"],\n  )\n\n  const resolution = resolveBrandFromText(\"Shared Shampoo\", catalog)\n  assert.equal(resolution.match, \"none\")\n  assert.equal(resolution.reason, \"unresolved\")\n})",
+        "sha256": "7a5ad4e9696df95d10f8451232edd975fe7c5dfd520400d0ae35eebed6ecb182",
+        "assertions": [
+          {
+            "line": 135,
+            "text": "assert.deepEqual(\n    catalog.conflicts.map((conflict) => conflict.normalizedAlias),\n    [\"shared\"],\n  )"
+          },
+          {
+            "line": 141,
+            "text": "assert.equal(resolution.match, \"none\")"
+          },
+          {
+            "line": 142,
+            "text": "assert.equal(resolution.reason, \"unresolved\")"
+          }
+        ]
+      },
+      {
+        "name": "resolver uses Phase 0 normalized brand and line fields for punctuation variants",
+        "line": 145,
+        "start": 4886,
+        "end": 6238,
+        "body": "test(\"resolver uses Phase 0 normalized brand and line fields for punctuation variants\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      {\n        id: \"brand-loreal-paris\",\n        canonical_name: \"Loreal Paris\",\n        normalized_name: \"loreal paris\",\n      },\n    ],\n    productLines: [\n      {\n        id: \"line-elvital\",\n        brand_id: \"brand-loreal-paris\",\n        canonical_name: \"Elvital\",\n        normalized_name: \"elvital\",\n      },\n    ],\n    brandAliases: [],\n  })\n\n  const resolution = resolveBrandFromText(\"Loreal Paris Elvital Dream Length\", catalog)\n\n  assert.equal(resolution.match, \"brand_line\")\n  assert.equal(resolution.brand?.id, \"brand-loreal-paris\")\n  assert.equal(resolution.productLine?.id, \"line-elvital\")\n  assert.equal(resolution.matchedText, \"Loreal Paris Elvital\")\n  assert.equal(resolution.reason, \"canonical_brand_with_line_inference\")\n\n  const apostropheResolution = resolveBrandFromText(\"L'Oréal Paris Elvital Dream Length\", catalog)\n  assert.equal(apostropheResolution.match, \"brand_line\")\n  assert.equal(apostropheResolution.brand?.id, \"brand-loreal-paris\")\n  assert.equal(apostropheResolution.productLine?.id, \"line-elvital\")\n  assert.equal(apostropheResolution.matchedText, \"L'Oréal Paris Elvital\")\n  assert.equal(apostropheResolution.reason, \"canonical_brand_with_line_inference\")\n})",
+        "sha256": "90fe7fcabbc8122807a97e0decef49a9c4ca22aeb8a716c56d7cf4b0ffe553ae",
+        "assertions": [
+          {
+            "line": 167,
+            "text": "assert.equal(resolution.match, \"brand_line\")"
+          },
+          {
+            "line": 168,
+            "text": "assert.equal(resolution.brand?.id, \"brand-loreal-paris\")"
+          },
+          {
+            "line": 169,
+            "text": "assert.equal(resolution.productLine?.id, \"line-elvital\")"
+          },
+          {
+            "line": 170,
+            "text": "assert.equal(resolution.matchedText, \"Loreal Paris Elvital\")"
+          },
+          {
+            "line": 171,
+            "text": "assert.equal(resolution.reason, \"canonical_brand_with_line_inference\")"
+          },
+          {
+            "line": 174,
+            "text": "assert.equal(apostropheResolution.match, \"brand_line\")"
+          },
+          {
+            "line": 175,
+            "text": "assert.equal(apostropheResolution.brand?.id, \"brand-loreal-paris\")"
+          },
+          {
+            "line": 176,
+            "text": "assert.equal(apostropheResolution.productLine?.id, \"line-elvital\")"
+          },
+          {
+            "line": 177,
+            "text": "assert.equal(apostropheResolution.matchedText, \"L'Oréal Paris Elvital\")"
+          },
+          {
+            "line": 178,
+            "text": "assert.equal(apostropheResolution.reason, \"canonical_brand_with_line_inference\")"
+          }
+        ]
+      },
+      {
+        "name": "alias collisions with canonical brand names are reported and excluded",
+        "line": 181,
+        "start": 6240,
+        "end": 7315,
+        "body": "test(\"alias collisions with canonical brand names are reported and excluded\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      { id: \"brand-garnier\", canonical_name: \"Garnier\", normalized_name: \"garnier\" },\n      { id: \"brand-fructis\", canonical_name: \"Fructis\", normalized_name: \"fructis\" },\n    ],\n    productLines: [\n      {\n        id: \"line-fructis\",\n        brand_id: \"brand-garnier\",\n        canonical_name: \"Fructis\",\n        normalized_name: \"fructis\",\n      },\n    ],\n    brandAliases: [\n      {\n        brand_id: \"brand-garnier\",\n        product_line_id: \"line-fructis\",\n        alias: \"Fructis\",\n        normalized_alias: \"fructis\",\n      },\n    ],\n  })\n\n  assert.deepEqual(\n    catalog.conflicts.map((conflict) => conflict.normalizedAlias),\n    [\"fructis\"],\n  )\n\n  const resolution = resolveBrandFromText(\"Fructis Shampoo\", catalog)\n  assert.equal(resolution.match, \"brand\")\n  assert.equal(resolution.brand?.id, \"brand-fructis\")\n  assert.equal(resolution.productLine, null)\n  assert.equal(resolution.reason, \"canonical_brand_exact\")\n})",
+        "sha256": "8aed896e1cf4bb208a5c7eb21898f487682fa1dd501e656e810db6f2474ae715",
+        "assertions": [
+          {
+            "line": 205,
+            "text": "assert.deepEqual(\n    catalog.conflicts.map((conflict) => conflict.normalizedAlias),\n    [\"fructis\"],\n  )"
+          },
+          {
+            "line": 211,
+            "text": "assert.equal(resolution.match, \"brand\")"
+          },
+          {
+            "line": 212,
+            "text": "assert.equal(resolution.brand?.id, \"brand-fructis\")"
+          },
+          {
+            "line": 213,
+            "text": "assert.equal(resolution.productLine, null)"
+          },
+          {
+            "line": 214,
+            "text": "assert.equal(resolution.reason, \"canonical_brand_exact\")"
+          }
+        ]
+      },
+      {
+        "name": "line-specific aliases with missing product lines are excluded",
+        "line": 217,
+        "start": 7317,
+        "end": 8030,
+        "body": "test(\"line-specific aliases with missing product lines are excluded\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      {\n        id: \"brand-loreal-paris\",\n        canonical_name: \"L'Oréal Paris\",\n        normalized_name: \"loreal paris\",\n      },\n    ],\n    productLines: [],\n    brandAliases: [\n      {\n        brand_id: \"brand-loreal-paris\",\n        product_line_id: \"line-elvital\",\n        alias: \"Elvital\",\n        normalized_alias: \"elvital\",\n      },\n    ],\n  })\n\n  assert.equal(catalog.aliases.length, 0)\n\n  const resolution = resolveBrandFromText(\"Elvital Dream Length Shampoo\", catalog)\n  assert.equal(resolution.match, \"none\")\n  assert.equal(resolution.reason, \"unresolved\")\n})",
+        "sha256": "49b880c67811a5aa0c2a956e78c7c21e03293e215c3fdd075a45c3f874bba361",
+        "assertions": [
+          {
+            "line": 237,
+            "text": "assert.equal(catalog.aliases.length, 0)"
+          },
+          {
+            "line": 240,
+            "text": "assert.equal(resolution.match, \"none\")"
+          },
+          {
+            "line": 241,
+            "text": "assert.equal(resolution.reason, \"unresolved\")"
+          }
+        ]
+      },
+      {
+        "name": "resolver handles corrected Phase A catalog aliases",
+        "line": 244,
+        "start": 8032,
+        "end": 12624,
+        "body": "test(\"resolver handles corrected Phase A catalog aliases\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      {\n        id: \"brand-garnier\",\n        canonical_name: \"Garnier\",\n        normalized_name: \"garnier\",\n      },\n      {\n        id: \"brand-gliss\",\n        canonical_name: \"Schwarzkopf GLISS\",\n        normalized_name: \"schwarzkopf gliss\",\n      },\n      {\n        id: \"brand-monday\",\n        canonical_name: \"MONDAY\",\n        normalized_name: \"monday\",\n      },\n      {\n        id: \"brand-loreal-paris\",\n        canonical_name: \"L'Oréal Paris\",\n        normalized_name: \"loreal paris\",\n      },\n      {\n        id: \"brand-loreal-professionnel\",\n        canonical_name: \"L'Oréal Professionnel\",\n        normalized_name: \"loreal professionnel\",\n      },\n      {\n        id: \"brand-balea\",\n        canonical_name: \"Balea\",\n        normalized_name: \"balea\",\n      },\n    ],\n    productLines: [\n      {\n        id: \"line-fructis\",\n        brand_id: \"brand-garnier\",\n        canonical_name: \"Fructis\",\n        normalized_name: \"fructis\",\n      },\n      {\n        id: \"line-wahre\",\n        brand_id: \"brand-garnier\",\n        canonical_name: \"Wahre Schätze\",\n        normalized_name: \"wahre schatze\",\n      },\n      {\n        id: \"line-elvital\",\n        brand_id: \"brand-loreal-paris\",\n        canonical_name: \"Elvital\",\n        normalized_name: \"elvital\",\n      },\n      {\n        id: \"line-metal-dx\",\n        brand_id: \"brand-loreal-professionnel\",\n        canonical_name: \"Metal DX\",\n        normalized_name: \"metal dx\",\n      },\n      {\n        id: \"line-professional\",\n        brand_id: \"brand-balea\",\n        canonical_name: \"Professional\",\n        normalized_name: \"professional\",\n      },\n    ],\n    brandAliases: [\n      {\n        brand_id: \"brand-garnier\",\n        product_line_id: \"line-fructis\",\n        alias: \"Fructis\",\n        normalized_alias: \"fructis\",\n      },\n      {\n        brand_id: \"brand-garnier\",\n        product_line_id: \"line-fructis\",\n        alias: \"Garnier Hair Food\",\n        normalized_alias: \"garnier hair food\",\n      },\n      {\n        brand_id: \"brand-garnier\",\n        product_line_id: \"line-wahre\",\n        alias: \"Wahre Schätze\",\n        normalized_alias: \"wahre schatze\",\n      },\n      {\n        brand_id: \"brand-gliss\",\n        product_line_id: null,\n        alias: \"Glisskur\",\n        normalized_alias: \"glisskur\",\n      },\n      {\n        brand_id: \"brand-monday\",\n        product_line_id: null,\n        alias: \"Monday Haircare\",\n        normalized_alias: \"monday haircare\",\n      },\n      {\n        brand_id: \"brand-loreal-paris\",\n        product_line_id: null,\n        alias: \"L'Oréal\",\n        normalized_alias: \"loreal\",\n      },\n      {\n        brand_id: \"brand-loreal-paris\",\n        product_line_id: \"line-elvital\",\n        alias: \"Elvital\",\n        normalized_alias: \"elvital\",\n      },\n      {\n        brand_id: \"brand-loreal-professionnel\",\n        product_line_id: \"line-metal-dx\",\n        alias: \"Serie Expert Metal DX\",\n        normalized_alias: \"serie expert metal dx\",\n      },\n      {\n        brand_id: \"brand-balea\",\n        product_line_id: \"line-professional\",\n        alias: \"Balea Aqua\",\n        normalized_alias: \"balea aqua\",\n      },\n    ],\n  })\n\n  const fructis = resolveBrandFromText(\"Garnier Hair Food Aloe Vera\", catalog)\n  assert.equal(fructis.match, \"brand_line\")\n  assert.equal(fructis.brand?.id, \"brand-garnier\")\n  assert.equal(fructis.productLine?.id, \"line-fructis\")\n\n  const wahre = resolveBrandFromText(\"Wahre Schätze Avocado\", catalog)\n  assert.equal(wahre.match, \"brand_line\")\n  assert.equal(wahre.productLine?.id, \"line-wahre\")\n\n  const gliss = resolveBrandFromText(\"Glisskur Liquid Silk\", catalog)\n  assert.equal(gliss.match, \"brand\")\n  assert.equal(gliss.brand?.id, \"brand-gliss\")\n  assert.equal(gliss.productLine, null)\n\n  const monday = resolveBrandFromText(\"Monday Haircare Volume Shampoo\", catalog)\n  assert.equal(monday.match, \"brand\")\n  assert.equal(monday.brand?.id, \"brand-monday\")\n\n  const elvital = resolveBrandFromText(\"Elvital Öl Magique\", catalog)\n  assert.equal(elvital.match, \"brand_line\")\n  assert.equal(elvital.productLine?.id, \"line-elvital\")\n\n  const metalDx = resolveBrandFromText(\"Serie Expert Metal DX Shampoo\", catalog)\n  assert.equal(metalDx.match, \"brand_line\")\n  assert.equal(metalDx.brand?.id, \"brand-loreal-professionnel\")\n  assert.equal(metalDx.productLine?.id, \"line-metal-dx\")\n\n  const balea = resolveBrandFromText(\"Balea Aqua Hyaluron\", catalog)\n  assert.equal(balea.match, \"brand_line\")\n  assert.equal(balea.productLine?.id, \"line-professional\")\n})",
+        "sha256": "aa15e96f406812499fe82cf61bfc2d3d5aa101e7119456313017d2ca696f5351",
+        "assertions": [
+          {
+            "line": 369,
+            "text": "assert.equal(fructis.match, \"brand_line\")"
+          },
+          {
+            "line": 370,
+            "text": "assert.equal(fructis.brand?.id, \"brand-garnier\")"
+          },
+          {
+            "line": 371,
+            "text": "assert.equal(fructis.productLine?.id, \"line-fructis\")"
+          },
+          {
+            "line": 374,
+            "text": "assert.equal(wahre.match, \"brand_line\")"
+          },
+          {
+            "line": 375,
+            "text": "assert.equal(wahre.productLine?.id, \"line-wahre\")"
+          },
+          {
+            "line": 378,
+            "text": "assert.equal(gliss.match, \"brand\")"
+          },
+          {
+            "line": 379,
+            "text": "assert.equal(gliss.brand?.id, \"brand-gliss\")"
+          },
+          {
+            "line": 380,
+            "text": "assert.equal(gliss.productLine, null)"
+          },
+          {
+            "line": 383,
+            "text": "assert.equal(monday.match, \"brand\")"
+          },
+          {
+            "line": 384,
+            "text": "assert.equal(monday.brand?.id, \"brand-monday\")"
+          },
+          {
+            "line": 387,
+            "text": "assert.equal(elvital.match, \"brand_line\")"
+          },
+          {
+            "line": 388,
+            "text": "assert.equal(elvital.productLine?.id, \"line-elvital\")"
+          },
+          {
+            "line": 391,
+            "text": "assert.equal(metalDx.match, \"brand_line\")"
+          },
+          {
+            "line": 392,
+            "text": "assert.equal(metalDx.brand?.id, \"brand-loreal-professionnel\")"
+          },
+          {
+            "line": 393,
+            "text": "assert.equal(metalDx.productLine?.id, \"line-metal-dx\")"
+          },
+          {
+            "line": 396,
+            "text": "assert.equal(balea.match, \"brand_line\")"
+          },
+          {
+            "line": 397,
+            "text": "assert.equal(balea.productLine?.id, \"line-professional\")"
+          }
+        ]
+      }
+    ],
+    "tests/product-identity-schema.test.ts": [
+      {
+        "name": "product identity migration creates the phase 0 identity tables",
+        "line": 20,
+        "start": 704,
+        "end": 1070,
+        "body": "test(\"product identity migration creates the phase 0 identity tables\", () => {\n  for (const table of [\n    \"product_categories\",\n    \"brands\",\n    \"product_lines\",\n    \"brand_aliases\",\n    \"product_identifiers\",\n  ]) {\n    assertIncludes(`create table if not exists public.${table}`)\n    assertIncludes(`alter table public.${table} enable row level security`)\n  }\n})",
+        "sha256": "b6d4d96d8cad177c24293423b171643aab158ba1a0a4a902ab266351fd6c8fbc",
+        "assertions": []
+      },
+      {
+        "name": "product identity migration exposes only public-safe identity tables to public clients",
+        "line": 33,
+        "start": 1072,
+        "end": 2127,
+        "body": "test(\"product identity migration exposes only public-safe identity tables to public clients\", () => {\n  for (const table of [\"product_categories\", \"brands\"]) {\n    assertIncludes(`grant select on table public.${table} to anon, authenticated`)\n    assert.match(\n      normalizedSql,\n      new RegExp(\n        `create\\\\s+policy\\\\s+${table}_select_public\\\\s+on\\\\s+public\\\\.${table}\\\\s+for\\\\s+select\\\\s+to\\\\s+anon,\\\\s+authenticated\\\\s+using\\\\s+\\\\(true\\\\)`,\n        \"i\",\n      ),\n    )\n    assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(\n        `create\\\\s+policy\\\\s+\\\\w+\\\\s+on\\\\s+public\\\\.${table}\\\\s+for\\\\s+(insert|update|delete)`,\n        \"i\",\n      ),\n    )\n  }\n\n  for (const table of [\"product_lines\", \"brand_aliases\", \"product_identifiers\"]) {\n    assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`grant\\\\s+select\\\\s+on\\\\s+table\\\\s+public\\\\.${table}\\\\s+to\\\\s+anon`, \"i\"),\n    )\n    assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`create\\\\s+policy\\\\s+${table}_select_public\\\\s+on\\\\s+public\\\\.${table}`, \"i\"),\n    )\n  }\n})",
+        "sha256": "41621040685126f3988a805990f6cf3b66812bd4eb71eda24858dd1d8e869ca8",
+        "assertions": [
+          {
+            "line": 36,
+            "text": "assert.match(\n      normalizedSql,\n      new RegExp(\n        `create\\\\s+policy\\\\s+${table}_select_public\\\\s+on\\\\s+public\\\\.${table}\\\\s+for\\\\s+select\\\\s+to\\\\s+anon,\\\\s+authenticated\\\\s+using\\\\s+\\\\(true\\\\)`,\n        \"i\",\n      ),\n    )"
+          },
+          {
+            "line": 43,
+            "text": "assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(\n        `create\\\\s+policy\\\\s+\\\\w+\\\\s+on\\\\s+public\\\\.${table}\\\\s+for\\\\s+(insert|update|delete)`,\n        \"i\",\n      ),\n    )"
+          },
+          {
+            "line": 53,
+            "text": "assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`grant\\\\s+select\\\\s+on\\\\s+table\\\\s+public\\\\.${table}\\\\s+to\\\\s+anon`, \"i\"),\n    )"
+          },
+          {
+            "line": 57,
+            "text": "assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`create\\\\s+policy\\\\s+${table}_select_public\\\\s+on\\\\s+public\\\\.${table}`, \"i\"),\n    )"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration keeps non-recommended products out of public product reads",
+        "line": 64,
+        "start": 2129,
+        "end": 2599,
+        "body": "test(\"product identity migration keeps non-recommended products out of public product reads\", () => {\n  assert.match(normalizedSql, /drop\\s+policy\\s+if\\s+exists\\s+\"products_select_active\"/)\n  assert.match(\n    normalizedSql,\n    /create\\s+policy\\s+\"products_select_active\"\\s+on\\s+public\\.products\\s+for\\s+select\\s+to\\s+authenticated\\s+using\\s+\\(\\s*is_active\\s+=\\s+true\\s+and\\s+is_chaarlie_recommended\\s+=\\s+true\\s+and\\s+auth\\.role\\(\\)\\s+=\\s+'authenticated'\\s+\\)/,\n  )\n})",
+        "sha256": "bcf212eee60c8177aea3884d48a884a30355bdf776f12f491f2ceec238949da9",
+        "assertions": [
+          {
+            "line": 65,
+            "text": "assert.match(normalizedSql, /drop\\s+policy\\s+if\\s+exists\\s+\"products_select_active\"/)"
+          },
+          {
+            "line": 66,
+            "text": "assert.match(\n    normalizedSql,\n    /create\\s+policy\\s+\"products_select_active\"\\s+on\\s+public\\.products\\s+for\\s+select\\s+to\\s+authenticated\\s+using\\s+\\(\\s*is_active\\s+=\\s+true\\s+and\\s+is_chaarlie_recommended\\s+=\\s+true\\s+and\\s+auth\\.role\\(\\)\\s+=\\s+'authenticated'\\s+\\)/,\n  )"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration keeps semantic product matching aligned with catalog visibility",
+        "line": 72,
+        "start": 2601,
+        "end": 3056,
+        "body": "test(\"product identity migration keeps semantic product matching aligned with catalog visibility\", () => {\n  assert.match(normalizedSql, /drop\\s+function\\s+if\\s+exists\\s+public\\.match_products/)\n  assert.match(normalizedSql, /create\\s+or\\s+replace\\s+function\\s+public\\.match_products/)\n  assert.match(\n    normalizedSql,\n    /where\\s+p\\.is_active\\s+=\\s+true\\s+and\\s+p\\.is_chaarlie_recommended\\s+=\\s+true\\s+and\\s+p\\.lifecycle_status\\s+=\\s+'active'/,\n  )\n})",
+        "sha256": "a5c7bf70fb642cea8f8c88c7d0f551fa962039fd11e4890006319231f9b9c4b7",
+        "assertions": [
+          {
+            "line": 73,
+            "text": "assert.match(normalizedSql, /drop\\s+function\\s+if\\s+exists\\s+public\\.match_products/)"
+          },
+          {
+            "line": 74,
+            "text": "assert.match(normalizedSql, /create\\s+or\\s+replace\\s+function\\s+public\\.match_products/)"
+          },
+          {
+            "line": 75,
+            "text": "assert.match(\n    normalizedSql,\n    /where\\s+p\\.is_active\\s+=\\s+true\\s+and\\s+p\\.is_chaarlie_recommended\\s+=\\s+true\\s+and\\s+p\\.lifecycle_status\\s+=\\s+'active'/,\n  )"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration extends products without contracting legacy fields",
+        "line": 81,
+        "start": 3058,
+        "end": 4187,
+        "body": "test(\"product identity migration extends products without contracting legacy fields\", () => {\n  for (const column of [\n    \"category_key\",\n    \"brand_id\",\n    \"product_line_id\",\n    \"origin\",\n    \"is_chaarlie_recommended\",\n  ]) {\n    assertIncludes(`add column if not exists ${column}`)\n  }\n\n  assertIncludes(\"add column if not exists is_chaarlie_recommended boolean not null default true\")\n  assert.match(normalizedSql, /origin\\s+=\\s+coalesce\\(origin,\\s+'curated'\\)/)\n  assertIncludes(\"is_chaarlie_recommended = true\")\n  assertIncludes(\"add constraint products_origin_check\")\n  assert.match(normalizedSql, /check\\s+\\(origin\\s+in\\s+\\('curated',\\s+'user_submitted'\\)\\)/)\n  assertIncludes(\"add constraint products_category_key_fkey\")\n  assertIncludes(\"add constraint products_brand_id_fkey\")\n  assertIncludes(\"add constraint products_product_line_matches_brand\")\n\n  assert.doesNotMatch(normalizedSql, /drop\\s+column\\s+(if\\s+exists\\s+)?brand\\b/)\n  assert.doesNotMatch(normalizedSql, /drop\\s+column\\s+(if\\s+exists\\s+)?category\\b/)\n  assert.doesNotMatch(normalizedSql, /alter\\s+column\\s+(category_key|brand_id)\\s+set\\s+not\\s+null/)\n})",
+        "sha256": "13e6538f833e57940035131a6fc1037c7fc7a86193a7a91948a08d81786cb3db",
+        "assertions": [
+          {
+            "line": 93,
+            "text": "assert.match(normalizedSql, /origin\\s+=\\s+coalesce\\(origin,\\s+'curated'\\)/)"
+          },
+          {
+            "line": 96,
+            "text": "assert.match(normalizedSql, /check\\s+\\(origin\\s+in\\s+\\('curated',\\s+'user_submitted'\\)\\)/)"
+          },
+          {
+            "line": 101,
+            "text": "assert.doesNotMatch(normalizedSql, /drop\\s+column\\s+(if\\s+exists\\s+)?brand\\b/)"
+          },
+          {
+            "line": 102,
+            "text": "assert.doesNotMatch(normalizedSql, /drop\\s+column\\s+(if\\s+exists\\s+)?category\\b/)"
+          },
+          {
+            "line": 103,
+            "text": "assert.doesNotMatch(normalizedSql, /alter\\s+column\\s+(category_key|brand_id)\\s+set\\s+not\\s+null/)"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration keeps product lines and identifiers compatible",
+        "line": 106,
+        "start": 4189,
+        "end": 4827,
+        "body": "test(\"product identity migration keeps product lines and identifiers compatible\", () => {\n  assert.match(normalizedSql, /unique\\s+\\(id,\\s+brand_id\\)/)\n  assert.match(normalizedSql, /foreign\\s+key\\s+\\(product_line_id,\\s+brand_id\\)/)\n  assert.match(normalizedSql, /on\\s+delete\\s+set\\s+null\\s+\\(product_line_id\\)/)\n  assertIncludes(\"normalized_identifier_value\")\n  assertIncludes(\"idx_product_identifiers_product_type_value\")\n  assertIncludes(\"idx_product_identifiers_lookup\")\n  assert.doesNotMatch(\n    normalizedSql,\n    /unique\\s+index\\s+\\w+\\s+on\\s+public\\.product_identifiers\\s+\\(identifier_type,\\s*normalized_identifier_value\\)/,\n  )\n})",
+        "sha256": "605f39014516365f59cbf177d081eab835a152799f3500c83fc372112c670ff2",
+        "assertions": [
+          {
+            "line": 107,
+            "text": "assert.match(normalizedSql, /unique\\s+\\(id,\\s+brand_id\\)/)"
+          },
+          {
+            "line": 108,
+            "text": "assert.match(normalizedSql, /foreign\\s+key\\s+\\(product_line_id,\\s+brand_id\\)/)"
+          },
+          {
+            "line": 109,
+            "text": "assert.match(normalizedSql, /on\\s+delete\\s+set\\s+null\\s+\\(product_line_id\\)/)"
+          },
+          {
+            "line": 113,
+            "text": "assert.doesNotMatch(\n    normalizedSql,\n    /unique\\s+index\\s+\\w+\\s+on\\s+public\\.product_identifiers\\s+\\(identifier_type,\\s*normalized_identifier_value\\)/,\n  )"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration stores script-normalized identity values",
+        "line": 119,
+        "start": 4829,
+        "end": 5303,
+        "body": "test(\"product identity migration stores script-normalized identity values\", () => {\n  assert.match(\n    normalizedSql,\n    /canonical_name\\s+text\\s+not\\s+null,\\s+normalized_name\\s+text\\s+not\\s+null/,\n  )\n  assert.match(normalizedSql, /alias\\s+text\\s+not\\s+null,\\s+normalized_alias\\s+text\\s+not\\s+null/)\n  assert.doesNotMatch(normalizedSql, /normalized_name\\s+text\\s+generated\\s+always/)\n  assert.doesNotMatch(normalizedSql, /normalized_alias\\s+text\\s+generated\\s+always/)\n})",
+        "sha256": "7c9bad695f9c8f8e76e972c7efe7c2bfa823052be4cae74d94d0b5bab4bf9406",
+        "assertions": [
+          {
+            "line": 120,
+            "text": "assert.match(\n    normalizedSql,\n    /canonical_name\\s+text\\s+not\\s+null,\\s+normalized_name\\s+text\\s+not\\s+null/,\n  )"
+          },
+          {
+            "line": 124,
+            "text": "assert.match(normalizedSql, /alias\\s+text\\s+not\\s+null,\\s+normalized_alias\\s+text\\s+not\\s+null/)"
+          },
+          {
+            "line": 125,
+            "text": "assert.doesNotMatch(normalizedSql, /normalized_name\\s+text\\s+generated\\s+always/)"
+          },
+          {
+            "line": 126,
+            "text": "assert.doesNotMatch(normalizedSql, /normalized_alias\\s+text\\s+generated\\s+always/)"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration seeds all phase 0 product categories",
+        "line": 129,
+        "start": 5305,
+        "end": 5776,
+        "body": "test(\"product identity migration seeds all phase 0 product categories\", () => {\n  for (const categoryKey of [\n    \"shampoo\",\n    \"conditioner\",\n    \"mask\",\n    \"leave_in\",\n    \"oil\",\n    \"dry_shampoo\",\n    \"deep_cleansing_shampoo\",\n    \"bondbuilder\",\n    \"heat_protectant\",\n    \"serum\",\n    \"scrub\",\n    \"peeling\",\n    \"styling_gel\",\n    \"styling_mousse\",\n    \"styling_cream\",\n    \"hairspray\",\n  ]) {\n    assert.match(normalizedSql, new RegExp(`'${categoryKey}'`))\n  }\n})",
+        "sha256": "3371f01ca674c61f8ce1e70a1d70f28ddf7e28aa3598f4cd99a0ec8237ce4890",
+        "assertions": [
+          {
+            "line": 148,
+            "text": "assert.match(normalizedSql, new RegExp(`'${categoryKey}'`))"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration stays inside the phase 0 boundary",
+        "line": 152,
+        "start": 5778,
+        "end": 6058,
+        "body": "test(\"product identity migration stays inside the phase 0 boundary\", () => {\n  assert.doesNotMatch(normalizedSql, /product_submissions/)\n  assert.doesNotMatch(normalizedSql, /user_product_usage/)\n  assert.doesNotMatch(normalizedSql, /alter\\s+table\\s+public\\.product_\\w+_specs/)\n})",
+        "sha256": "858205caa0269e24beebad80c1f34d22d5037c212ab2f8a9c0978ce3d8a1e2e9",
+        "assertions": [
+          {
+            "line": 153,
+            "text": "assert.doesNotMatch(normalizedSql, /product_submissions/)"
+          },
+          {
+            "line": 154,
+            "text": "assert.doesNotMatch(normalizedSql, /user_product_usage/)"
+          },
+          {
+            "line": 155,
+            "text": "assert.doesNotMatch(normalizedSql, /alter\\s+table\\s+public\\.product_\\w+_specs/)"
+          }
+        ]
+      }
+    ],
+    "tests/product-identity-title.test.ts": [
+      {
+        "name": "product identity title composes brand, line and name without visible duplication",
+        "line": 6,
+        "start": 159,
+        "end": 930,
+        "body": "test(\"product identity title composes brand, line and name without visible duplication\", () => {\n  assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Neqi\",\n      productLine: \"NEQI x @_the.beautiful.people\",\n      name: \"Leave-In Moisturizing Mist\",\n    }),\n    \"NEQI x @_the.beautiful.people Leave-In Moisturizing Mist\",\n  )\n  assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Garnier Wahre Schätze\",\n      productLine: \"Wahre Schätze\",\n      name: \"Honig Schätze Shampoo\",\n    }),\n    \"Garnier Wahre Schätze Honig Schätze Shampoo\",\n  )\n  assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Syoss\",\n      productLine: \"Intense Fullness\",\n      name: \"Syoss Intense Fullness Shampoo\",\n    }),\n    \"Syoss Intense Fullness Shampoo\",\n  )\n})",
+        "sha256": "f28515ce89185fae7e08314d25dad834a27eef7594657de5e67fe77be6e1c32c",
+        "assertions": [
+          {
+            "line": 7,
+            "text": "assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Neqi\",\n      productLine: \"NEQI x @_the.beautiful.people\",\n      name: \"Leave-In Moisturizing Mist\",\n    }),\n    \"NEQI x @_the.beautiful.people Leave-In Moisturizing Mist\",\n  )"
+          },
+          {
+            "line": 15,
+            "text": "assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Garnier Wahre Schätze\",\n      productLine: \"Wahre Schätze\",\n      name: \"Honig Schätze Shampoo\",\n    }),\n    \"Garnier Wahre Schätze Honig Schätze Shampoo\",\n  )"
+          },
+          {
+            "line": 23,
+            "text": "assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Syoss\",\n      productLine: \"Intense Fullness\",\n      name: \"Syoss Intense Fullness Shampoo\",\n    }),\n    \"Syoss Intense Fullness Shampoo\",\n  )"
+          }
+        ]
+      },
+      {
+        "name": "product identity title ignores blank identity parts",
+        "line": 33,
+        "start": 932,
+        "end": 1137,
+        "body": "test(\"product identity title ignores blank identity parts\", () => {\n  assert.equal(\n    composeProductIdentityTitle({ brand: \"  \", productLine: null, name: \"Repair Shampoo\" }),\n    \"Repair Shampoo\",\n  )\n})",
+        "sha256": "4ed7cb5db9a7c4389c4a582fe5e9f26872364796b5bb6caca92e2078d0ec7d00",
+        "assertions": [
+          {
+            "line": 34,
+            "text": "assert.equal(\n    composeProductIdentityTitle({ brand: \"  \", productLine: null, name: \"Repair Shampoo\" }),\n    \"Repair Shampoo\",\n  )"
+          }
+        ]
+      }
+    ],
+    "tests/product-identity-correction.test.ts": [
+      {
+        "name": "canonical correction apply guard requires the production project confirmation",
+        "line": 10,
+        "start": 229,
+        "end": 1014,
+        "body": "test(\"canonical correction apply guard requires the production project confirmation\", () => {\n  assert.doesNotThrow(() =>\n    assertCanonicalCorrectionApplyTarget({\n      apply: false,\n      confirmProject: null,\n      supabaseUrl: \"https://example.supabase.co\",\n    }),\n  )\n\n  assert.throws(\n    () =>\n      assertCanonicalCorrectionApplyTarget({\n        apply: true,\n        confirmProject: \"wrong\",\n        supabaseUrl: \"https://pqdkhefxsxkyeqelqegq.supabase.co\",\n      }),\n    /Writes require --confirm-project=pqdkhefxsxkyeqelqegq/,\n  )\n\n  assert.throws(\n    () =>\n      assertCanonicalCorrectionApplyTarget({\n        apply: true,\n        confirmProject: \"pqdkhefxsxkyeqelqegq\",\n        supabaseUrl: \"https://other.supabase.co\",\n      }),\n    /unexpected Supabase project/,\n  )\n})",
+        "sha256": "57c074a89a7439593faa0955cbf4f2d7c7b792c9ef0d9ecda8058714cd14c2db",
+        "assertions": [
+          {
+            "line": 11,
+            "text": "assert.doesNotThrow(() =>\n    assertCanonicalCorrectionApplyTarget({\n      apply: false,\n      confirmProject: null,\n      supabaseUrl: \"https://example.supabase.co\",\n    }),\n  )"
+          },
+          {
+            "line": 19,
+            "text": "assert.throws(\n    () =>\n      assertCanonicalCorrectionApplyTarget({\n        apply: true,\n        confirmProject: \"wrong\",\n        supabaseUrl: \"https://pqdkhefxsxkyeqelqegq.supabase.co\",\n      }),\n    /Writes require --confirm-project=pqdkhefxsxkyeqelqegq/,\n  )"
+          },
+          {
+            "line": 29,
+            "text": "assert.throws(\n    () =>\n      assertCanonicalCorrectionApplyTarget({\n        apply: true,\n        confirmProject: \"pqdkhefxsxkyeqelqegq\",\n        supabaseUrl: \"https://other.supabase.co\",\n      }),\n    /unexpected Supabase project/,\n  )"
+          }
+        ]
+      },
+      {
+        "name": "canonical correction product patch never writes live product names or legacy fields",
+        "line": 40,
+        "start": 1016,
+        "end": 1455,
+        "body": "test(\"canonical correction product patch never writes live product names or legacy fields\", () => {\n  const patch = buildProductPatch({\n    brandId: \"brand-id\",\n    productLineId: \"line-id\",\n  }) as Record<string, unknown>\n\n  assert.deepEqual(patch, {\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n  })\n  assert.equal(\"name\" in patch, false)\n  assert.equal(\"brand\" in patch, false)\n  assert.equal(\"category\" in patch, false)\n})",
+        "sha256": "fc2859cdd4e9033c6b82efda6cc001b136e9e482355e62d965658f930bfd64df",
+        "assertions": [
+          {
+            "line": 46,
+            "text": "assert.deepEqual(patch, {\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n  })"
+          },
+          {
+            "line": 50,
+            "text": "assert.equal(\"name\" in patch, false)"
+          },
+          {
+            "line": 51,
+            "text": "assert.equal(\"brand\" in patch, false)"
+          },
+          {
+            "line": 52,
+            "text": "assert.equal(\"category\" in patch, false)"
+          }
+        ]
+      },
+      {
+        "name": "canonical correction alias upsert rows only include database columns",
+        "line": 55,
+        "start": 1457,
+        "end": 2003,
+        "body": "test(\"canonical correction alias upsert rows only include database columns\", () => {\n  const row = brandAliasWriteRow({\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n    alias: \"Garnier Hair Food\",\n    normalized_alias: \"garnier hair food\",\n    source: \"curated\",\n    target_brand_name: \"Garnier\",\n    target_product_line_name: \"Fructis\",\n  })\n\n  assert.deepEqual(row, {\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n    alias: \"Garnier Hair Food\",\n    normalized_alias: \"garnier hair food\",\n    source: \"curated\",\n  })\n})",
+        "sha256": "2759695dc620e99abfd60574716733dd5fd3a9fc159ffe18debf806f034572aa",
+        "assertions": [
+          {
+            "line": 66,
+            "text": "assert.deepEqual(row, {\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n    alias: \"Garnier Hair Food\",\n    normalized_alias: \"garnier hair food\",\n    source: \"curated\",\n  })"
+          }
+        ]
+      }
+    ]
+  },
+  "transfer": {
+    "tests/product-identity-normalize.test.ts": [
+      {
+        "name": "canonical category constants include supported and known unsupported keys",
+        "line": 16,
+        "start": 357,
+        "end": 1225,
+        "body": "test(\"canonical category constants include supported and known unsupported keys\", () => {\n  assert.deepEqual(SUPPORTED_PRODUCT_CATEGORY_KEYS, [\n    \"shampoo\",\n    \"conditioner\",\n    \"leave_in\",\n    \"mask\",\n    \"oil\",\n    \"dry_shampoo\",\n    \"deep_cleansing_shampoo\",\n    \"bondbuilder\",\n    \"heat_protectant\",\n    \"scalp_care\",\n  ])\n\n  assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes(\"heat_protectant\"), true)\n  assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes(\"hairspray\"), true)\n  assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.leave_in, \"Leave-in\")\n  assert.equal(SUPPORTED_PRODUCT_CATEGORY_KEYS.includes(\"heat_protectant\"), true)\n  assert.equal(SUPPORTED_PRODUCT_CATEGORY_KEYS.includes(\"scalp_care\"), true)\n  assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.heat_protectant, \"Hitzeschutz\")\n  assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.scalp_care, \"Kopfhautpflege\")\n})",
+        "sha256": "8c6c4308e487858a9ce3d36eeb685f2c71c5f90fc12b284aba81eede0b1807fc",
+        "assertions": [
+          {
+            "line": 17,
+            "text": "assert.deepEqual(SUPPORTED_PRODUCT_CATEGORY_KEYS, [\n    \"shampoo\",\n    \"conditioner\",\n    \"leave_in\",\n    \"mask\",\n    \"oil\",\n    \"dry_shampoo\",\n    \"deep_cleansing_shampoo\",\n    \"bondbuilder\",\n    \"heat_protectant\",\n    \"scalp_care\",\n  ])"
+          },
+          {
+            "line": 30,
+            "text": "assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes(\"heat_protectant\"), true)"
+          },
+          {
+            "line": 31,
+            "text": "assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes(\"hairspray\"), true)"
+          },
+          {
+            "line": 32,
+            "text": "assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.leave_in, \"Leave-in\")"
+          },
+          {
+            "line": 33,
+            "text": "assert.equal(SUPPORTED_PRODUCT_CATEGORY_KEYS.includes(\"heat_protectant\"), true)"
+          },
+          {
+            "line": 34,
+            "text": "assert.equal(SUPPORTED_PRODUCT_CATEGORY_KEYS.includes(\"scalp_care\"), true)"
+          },
+          {
+            "line": 35,
+            "text": "assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.heat_protectant, \"Hitzeschutz\")"
+          },
+          {
+            "line": 36,
+            "text": "assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.scalp_care, \"Kopfhautpflege\")"
+          }
+        ]
+      },
+      {
+        "name": "normalizeCategoryKey maps production labels, canonical keys, and simple oil aliases",
+        "line": 39,
+        "start": 1227,
+        "end": 2872,
+        "body": "test(\"normalizeCategoryKey maps production labels, canonical keys, and simple oil aliases\", () => {\n  assert.equal(normalizeCategoryKey(\"Shampoo\"), \"shampoo\")\n  assert.equal(normalizeCategoryKey(\"Conditioner (Drogerie)\"), \"conditioner\")\n  assert.equal(normalizeCategoryKey(\"Leave-in\"), \"leave_in\")\n  assert.equal(normalizeCategoryKey(\"Maske\"), \"mask\")\n  assert.equal(normalizeCategoryKey(\"Öle\"), \"oil\")\n  assert.equal(normalizeCategoryKey(\"Trockenshampoo\"), \"dry_shampoo\")\n  assert.equal(normalizeCategoryKey(\"Tiefenreinigungsshampoo\"), \"deep_cleansing_shampoo\")\n  assert.equal(normalizeCategoryKey(\"Bondbuilder\"), \"bondbuilder\")\n  assert.equal(normalizeCategoryKey(\"Hitzeschutz\"), \"heat_protectant\")\n  assert.equal(normalizeCategoryKey(\"Kopfhautpflege\"), \"scalp_care\")\n  assert.equal(normalizeCategoryKey(\"Scalp Care\"), \"scalp_care\")\n  assert.equal(normalizeCategoryKey(\"Serum\"), \"serum\")\n  assert.equal(normalizeCategoryKey(\"Scrub\"), \"scrub\")\n  assert.equal(normalizeCategoryKey(\"Peeling\"), \"peeling\")\n  assert.equal(normalizeCategoryKey(\"Styling-Gel\"), \"styling_gel\")\n  assert.equal(normalizeCategoryKey(\"Styling Mousse\"), \"styling_mousse\")\n  assert.equal(normalizeCategoryKey(\"Styling-Creme\"), \"styling_cream\")\n  assert.equal(normalizeCategoryKey(\"Haarspray\"), \"hairspray\")\n  assert.equal(normalizeCategoryKey(\"dry_shampoo\"), \"dry_shampoo\")\n  assert.equal(normalizeCategoryKey(\"Deep Cleansing Shampoo\"), \"deep_cleansing_shampoo\")\n  assert.equal(normalizeCategoryKey(\"Öl\"), \"oil\")\n  assert.equal(normalizeCategoryKey(\"Oele\"), \"oil\")\n  assert.equal(normalizeCategoryKey(\"Ole\"), \"oil\")\n  assert.equal(normalizeCategoryKey(\"Unbekannt\"), null)\n})",
+        "sha256": "74fd331b916d361c02b071267bc79de983e73d1335dcab3604cb33d5f056c27e",
+        "assertions": [
+          {
+            "line": 40,
+            "text": "assert.equal(normalizeCategoryKey(\"Shampoo\"), \"shampoo\")"
+          },
+          {
+            "line": 41,
+            "text": "assert.equal(normalizeCategoryKey(\"Conditioner (Drogerie)\"), \"conditioner\")"
+          },
+          {
+            "line": 42,
+            "text": "assert.equal(normalizeCategoryKey(\"Leave-in\"), \"leave_in\")"
+          },
+          {
+            "line": 43,
+            "text": "assert.equal(normalizeCategoryKey(\"Maske\"), \"mask\")"
+          },
+          {
+            "line": 44,
+            "text": "assert.equal(normalizeCategoryKey(\"Öle\"), \"oil\")"
+          },
+          {
+            "line": 45,
+            "text": "assert.equal(normalizeCategoryKey(\"Trockenshampoo\"), \"dry_shampoo\")"
+          },
+          {
+            "line": 46,
+            "text": "assert.equal(normalizeCategoryKey(\"Tiefenreinigungsshampoo\"), \"deep_cleansing_shampoo\")"
+          },
+          {
+            "line": 47,
+            "text": "assert.equal(normalizeCategoryKey(\"Bondbuilder\"), \"bondbuilder\")"
+          },
+          {
+            "line": 48,
+            "text": "assert.equal(normalizeCategoryKey(\"Hitzeschutz\"), \"heat_protectant\")"
+          },
+          {
+            "line": 49,
+            "text": "assert.equal(normalizeCategoryKey(\"Kopfhautpflege\"), \"scalp_care\")"
+          },
+          {
+            "line": 50,
+            "text": "assert.equal(normalizeCategoryKey(\"Scalp Care\"), \"scalp_care\")"
+          },
+          {
+            "line": 51,
+            "text": "assert.equal(normalizeCategoryKey(\"Serum\"), \"serum\")"
+          },
+          {
+            "line": 52,
+            "text": "assert.equal(normalizeCategoryKey(\"Scrub\"), \"scrub\")"
+          },
+          {
+            "line": 53,
+            "text": "assert.equal(normalizeCategoryKey(\"Peeling\"), \"peeling\")"
+          },
+          {
+            "line": 54,
+            "text": "assert.equal(normalizeCategoryKey(\"Styling-Gel\"), \"styling_gel\")"
+          },
+          {
+            "line": 55,
+            "text": "assert.equal(normalizeCategoryKey(\"Styling Mousse\"), \"styling_mousse\")"
+          },
+          {
+            "line": 56,
+            "text": "assert.equal(normalizeCategoryKey(\"Styling-Creme\"), \"styling_cream\")"
+          },
+          {
+            "line": 57,
+            "text": "assert.equal(normalizeCategoryKey(\"Haarspray\"), \"hairspray\")"
+          },
+          {
+            "line": 58,
+            "text": "assert.equal(normalizeCategoryKey(\"dry_shampoo\"), \"dry_shampoo\")"
+          },
+          {
+            "line": 59,
+            "text": "assert.equal(normalizeCategoryKey(\"Deep Cleansing Shampoo\"), \"deep_cleansing_shampoo\")"
+          },
+          {
+            "line": 60,
+            "text": "assert.equal(normalizeCategoryKey(\"Öl\"), \"oil\")"
+          },
+          {
+            "line": 61,
+            "text": "assert.equal(normalizeCategoryKey(\"Oele\"), \"oil\")"
+          },
+          {
+            "line": 62,
+            "text": "assert.equal(normalizeCategoryKey(\"Ole\"), \"oil\")"
+          },
+          {
+            "line": 63,
+            "text": "assert.equal(normalizeCategoryKey(\"Unbekannt\"), null)"
+          }
+        ]
+      },
+      {
+        "name": "normalizeText folds accents, punctuation, case, and spacing",
+        "line": 66,
+        "start": 2874,
+        "end": 3117,
+        "body": "test(\"normalizeText folds accents, punctuation, case, and spacing\", () => {\n  assert.equal(normalizeText(\"  Öl / Leave-in -- Nº 5  \"), \"ol leave in no 5\")\n  assert.equal(normalizeText(\"Tiefenreinigungs-Shampoo\"), \"tiefenreinigungs shampoo\")\n})",
+        "sha256": "b8ed8d473a998b61f481f8ae989a473a9cd84468677bfc3768f530f7657410fd",
+        "assertions": [
+          {
+            "line": 67,
+            "text": "assert.equal(normalizeText(\"  Öl / Leave-in -- Nº 5  \"), \"ol leave in no 5\")"
+          },
+          {
+            "line": 68,
+            "text": "assert.equal(normalizeText(\"Tiefenreinigungs-Shampoo\"), \"tiefenreinigungs shampoo\")"
+          }
+        ]
+      },
+      {
+        "name": "normalizeIdentityText is stable for case, whitespace, punctuation, and safe diacritics",
+        "line": 71,
+        "start": 3119,
+        "end": 3624,
+        "body": "test(\"normalizeIdentityText is stable for case, whitespace, punctuation, and safe diacritics\", () => {\n  assert.equal(normalizeIdentityText(\"  OLAPLEX   Nº. 5 -- Leave-In  \"), \"olaplex no 5 leave in\")\n  assert.equal(\n    normalizeIdentityText(\"OLAPLEX N°5 Bond Maintenance\"),\n    \"olaplex no 5 bond maintenance\",\n  )\n  assert.equal(normalizeIdentityText(\"Olaplex No 5 Leave In\"), \"olaplex no 5 leave in\")\n  assert.equal(normalizeIdentityText(\"Garnier Fructis / Hair-Food\"), \"garnier fructis hair food\")\n})",
+        "sha256": "5011d4a1e73e0076d8068fc88fd2bd9bdebfdf28f19d5fcc686cf6d87073f3e7",
+        "assertions": [
+          {
+            "line": 72,
+            "text": "assert.equal(normalizeIdentityText(\"  OLAPLEX   Nº. 5 -- Leave-In  \"), \"olaplex no 5 leave in\")"
+          },
+          {
+            "line": 73,
+            "text": "assert.equal(\n    normalizeIdentityText(\"OLAPLEX N°5 Bond Maintenance\"),\n    \"olaplex no 5 bond maintenance\",\n  )"
+          },
+          {
+            "line": 77,
+            "text": "assert.equal(normalizeIdentityText(\"Olaplex No 5 Leave In\"), \"olaplex no 5 leave in\")"
+          },
+          {
+            "line": 78,
+            "text": "assert.equal(normalizeIdentityText(\"Garnier Fructis / Hair-Food\"), \"garnier fructis hair food\")"
+          }
+        ]
+      },
+      {
+        "name": "normalizeIdentityText matches L'Oreal variants without broad unsafe rewrites",
+        "line": 81,
+        "start": 3626,
+        "end": 3956,
+        "body": "test(\"normalizeIdentityText matches L'Oreal variants without broad unsafe rewrites\", () => {\n  assert.equal(normalizeIdentityText(\"L'Oréal\"), \"loreal\")\n  assert.equal(normalizeIdentityText(\"L’Oréal\"), \"loreal\")\n  assert.equal(normalizeIdentityText(\"LʼOréal\"), \"loreal\")\n  assert.equal(normalizeIdentityText(\"Loreal\"), \"loreal\")\n})",
+        "sha256": "b34b89e572b633b7a3b902660444bfd1d1fb1cf3bb2c36027dd7f2568fdab6b5",
+        "assertions": [
+          {
+            "line": 82,
+            "text": "assert.equal(normalizeIdentityText(\"L'Oréal\"), \"loreal\")"
+          },
+          {
+            "line": 83,
+            "text": "assert.equal(normalizeIdentityText(\"L’Oréal\"), \"loreal\")"
+          },
+          {
+            "line": 84,
+            "text": "assert.equal(normalizeIdentityText(\"LʼOréal\"), \"loreal\")"
+          },
+          {
+            "line": 85,
+            "text": "assert.equal(normalizeIdentityText(\"Loreal\"), \"loreal\")"
+          }
+        ]
+      },
+      {
+        "name": "normalizeIdentifier returns stable snake-case identifiers",
+        "line": 88,
+        "start": 3958,
+        "end": 4349,
+        "body": "test(\"normalizeIdentifier returns stable snake-case identifiers\", () => {\n  assert.equal(normalizeIdentifier(\"Deep Cleansing Shampoo\"), \"deep_cleansing_shampoo\")\n  assert.equal(normalizeIdentifier(\"  Öle + Pflege  \"), \"ole_pflege\")\n  assert.equal(normalizeIdentifier(\"leave_in\"), \"leave_in\")\n  assert.equal(normalizeIdentifier(null), \"\")\n  assert.equal(normalizeIdentifier(undefined), \"\")\n})",
+        "sha256": "433e96b44137a770c957ee347fcadc98d1099eea504a8dcdfb8a16cbe567776d",
+        "assertions": [
+          {
+            "line": 89,
+            "text": "assert.equal(normalizeIdentifier(\"Deep Cleansing Shampoo\"), \"deep_cleansing_shampoo\")"
+          },
+          {
+            "line": 90,
+            "text": "assert.equal(normalizeIdentifier(\"  Öle + Pflege  \"), \"ole_pflege\")"
+          },
+          {
+            "line": 91,
+            "text": "assert.equal(normalizeIdentifier(\"leave_in\"), \"leave_in\")"
+          },
+          {
+            "line": 92,
+            "text": "assert.equal(normalizeIdentifier(null), \"\")"
+          },
+          {
+            "line": 93,
+            "text": "assert.equal(normalizeIdentifier(undefined), \"\")"
+          }
+        ]
+      },
+      {
+        "name": "tokenizeProductName returns normalized searchable product-name tokens",
+        "line": 96,
+        "start": 4351,
+        "end": 4761,
+        "body": "test(\"tokenizeProductName returns normalized searchable product-name tokens\", () => {\n  assert.deepEqual(tokenizeProductName(\"Garnier Fructis Hair-Food Aloe\"), [\n    \"garnier\",\n    \"fructis\",\n    \"hair\",\n    \"food\",\n    \"aloe\",\n  ])\n  assert.deepEqual(tokenizeProductName(\"L'Oréal Professionnel\"), [\"loreal\", \"professionnel\"])\n  assert.deepEqual(tokenizeProductName(\"OLAPLEX No. 5\"), [\"olaplex\", \"no\", \"5\"])\n})",
+        "sha256": "7d30b9ab0e7da16affeab1168dba301e2c4c52a909e2d3b13f88c519d5594bc2",
+        "assertions": [
+          {
+            "line": 97,
+            "text": "assert.deepEqual(tokenizeProductName(\"Garnier Fructis Hair-Food Aloe\"), [\n    \"garnier\",\n    \"fructis\",\n    \"hair\",\n    \"food\",\n    \"aloe\",\n  ])"
+          },
+          {
+            "line": 104,
+            "text": "assert.deepEqual(tokenizeProductName(\"L'Oréal Professionnel\"), [\"loreal\", \"professionnel\"])"
+          },
+          {
+            "line": 105,
+            "text": "assert.deepEqual(tokenizeProductName(\"OLAPLEX No. 5\"), [\"olaplex\", \"no\", \"5\"])"
+          }
+        ]
+      },
+      {
+        "name": "cleanProductDisplayName removes exact brand and product line prefixes conservatively",
+        "line": 108,
+        "start": 4763,
+        "end": 5744,
+        "body": "test(\"cleanProductDisplayName removes exact brand and product line prefixes conservatively\", () => {\n  assert.equal(\n    cleanProductDisplayName(\"Olaplex No. 5 Leave-In Conditioner\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Leave-In Conditioner\",\n  )\n\n  assert.equal(\n    cleanProductDisplayName(\"Olaplex Bond Maintenance Shampoo\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Bond Maintenance Shampoo\",\n  )\n\n  assert.equal(\n    cleanProductDisplayName(\"The Ordinary Ordinary Shampoo\", {\n      brand: \"Ordinary\",\n    }),\n    \"The Ordinary Ordinary Shampoo\",\n  )\n\n  assert.equal(\n    cleanProductDisplayName(\"Olaplexx No. 5 Leave-In Conditioner\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Olaplexx No. 5 Leave-In Conditioner\",\n  )\n\n  assert.equal(\n    cleanProductDisplayName(\"L'Oréal Paris Elvital Dream Length\", {\n      brand: \"Loreal Paris\",\n      productLine: \"Elvital\",\n    }),\n    \"Dream Length\",\n  )\n})",
+        "sha256": "debc7c37b4914b7c1ded8545eb022786bc27f75477fb2a2b157d808a126bf7ad",
+        "assertions": [
+          {
+            "line": 109,
+            "text": "assert.equal(\n    cleanProductDisplayName(\"Olaplex No. 5 Leave-In Conditioner\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Leave-In Conditioner\",\n  )"
+          },
+          {
+            "line": 117,
+            "text": "assert.equal(\n    cleanProductDisplayName(\"Olaplex Bond Maintenance Shampoo\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Bond Maintenance Shampoo\",\n  )"
+          },
+          {
+            "line": 125,
+            "text": "assert.equal(\n    cleanProductDisplayName(\"The Ordinary Ordinary Shampoo\", {\n      brand: \"Ordinary\",\n    }),\n    \"The Ordinary Ordinary Shampoo\",\n  )"
+          },
+          {
+            "line": 132,
+            "text": "assert.equal(\n    cleanProductDisplayName(\"Olaplexx No. 5 Leave-In Conditioner\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Olaplexx No. 5 Leave-In Conditioner\",\n  )"
+          },
+          {
+            "line": 140,
+            "text": "assert.equal(\n    cleanProductDisplayName(\"L'Oréal Paris Elvital Dream Length\", {\n      brand: \"Loreal Paris\",\n      productLine: \"Elvital\",\n    }),\n    \"Dream Length\",\n  )"
+          }
+        ]
+      }
+    ],
+    "tests/product-identity-resolution.test.ts": [
+      {
+        "name": "resolveBrandFromText returns an exact brand and product line prefix match",
+        "line": 24,
+        "start": 463,
+        "end": 967,
+        "body": "test(\"resolveBrandFromText returns an exact brand and product line prefix match\", () => {\n  const resolution = resolveBrandFromText(\"Olaplex Nr. 5 Leave-In Conditioner\", brands)\n\n  assert.equal(resolution.match, \"brand_line\")\n  assert.equal(resolution.brand?.key, \"olaplex\")\n  assert.equal(resolution.productLine?.key, \"no_5\")\n  assert.equal(resolution.matchedText, \"Olaplex Nr. 5\")\n  assert.equal(resolution.confidence, \"high\")\n  assert.equal(resolution.reason, \"canonical_brand_with_line_inference\")\n})",
+        "sha256": "487cbe942d18c60b005ac5f1b13ae5dbf9a6ef84c9fb12a3b4626359ec167433",
+        "assertions": [
+          {
+            "line": 27,
+            "text": "assert.equal(resolution.match, \"brand_line\")"
+          },
+          {
+            "line": 28,
+            "text": "assert.equal(resolution.brand?.key, \"olaplex\")"
+          },
+          {
+            "line": 29,
+            "text": "assert.equal(resolution.productLine?.key, \"no_5\")"
+          },
+          {
+            "line": 30,
+            "text": "assert.equal(resolution.matchedText, \"Olaplex Nr. 5\")"
+          },
+          {
+            "line": 31,
+            "text": "assert.equal(resolution.confidence, \"high\")"
+          },
+          {
+            "line": 32,
+            "text": "assert.equal(resolution.reason, \"canonical_brand_with_line_inference\")"
+          }
+        ]
+      },
+      {
+        "name": "resolveBrandFromText returns an exact brand match without over-matching inside words",
+        "line": 35,
+        "start": 969,
+        "end": 1696,
+        "body": "test(\"resolveBrandFromText returns an exact brand match without over-matching inside words\", () => {\n  const resolution = resolveBrandFromText(\"K 18 Leave-in Molecular Repair Hair Oil\", brands)\n  assert.equal(resolution.match, \"brand\")\n  assert.equal(resolution.brand?.key, \"k18\")\n  assert.equal(resolution.productLine, null)\n  assert.equal(resolution.reason, \"brand_alias_exact\")\n\n  const nonMatch = resolveBrandFromText(\"SK18 Leave-in Molecular Repair Hair Oil\", brands)\n  assert.equal(nonMatch.match, \"none\")\n  assert.equal(nonMatch.brand, null)\n  assert.equal(nonMatch.confidence, \"none\")\n  assert.equal(nonMatch.reason, \"unresolved\")\n  assert.equal(nonMatch.unresolvedRawText, \"SK18 Leave-in Molecular Repair Hair Oil\")\n})",
+        "sha256": "dc57efea35efd6126771d20aae5b3eeebdfff9e8ec4c9ed2015a5f5a70f96daf",
+        "assertions": [
+          {
+            "line": 37,
+            "text": "assert.equal(resolution.match, \"brand\")"
+          },
+          {
+            "line": 38,
+            "text": "assert.equal(resolution.brand?.key, \"k18\")"
+          },
+          {
+            "line": 39,
+            "text": "assert.equal(resolution.productLine, null)"
+          },
+          {
+            "line": 40,
+            "text": "assert.equal(resolution.reason, \"brand_alias_exact\")"
+          },
+          {
+            "line": 43,
+            "text": "assert.equal(nonMatch.match, \"none\")"
+          },
+          {
+            "line": 44,
+            "text": "assert.equal(nonMatch.brand, null)"
+          },
+          {
+            "line": 45,
+            "text": "assert.equal(nonMatch.confidence, \"none\")"
+          },
+          {
+            "line": 46,
+            "text": "assert.equal(nonMatch.reason, \"unresolved\")"
+          },
+          {
+            "line": 47,
+            "text": "assert.equal(nonMatch.unresolvedRawText, \"SK18 Leave-in Molecular Repair Hair Oil\")"
+          }
+        ]
+      },
+      {
+        "name": "resolveBrandFromText resolves Phase 0 aliases before canonical brand names",
+        "line": 50,
+        "start": 1698,
+        "end": 3484,
+        "body": "test(\"resolveBrandFromText resolves Phase 0 aliases before canonical brand names\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      { id: \"brand-pantene\", canonical_name: \"Pantene\", normalized_name: \"pantene\" },\n      { id: \"brand-garnier\", canonical_name: \"Garnier\", normalized_name: \"garnier\" },\n    ],\n    productLines: [\n      {\n        id: \"line-pro-v\",\n        brand_id: \"brand-pantene\",\n        canonical_name: \"Pro-V\",\n        normalized_name: \"pro v\",\n      },\n      {\n        id: \"line-fructis\",\n        brand_id: \"brand-garnier\",\n        canonical_name: \"Fructis\",\n        normalized_name: \"fructis\",\n      },\n    ],\n    brandAliases: [\n      {\n        brand_id: \"brand-garnier\",\n        product_line_id: \"line-fructis\",\n        alias: \"Fructis\",\n        normalized_alias: \"fructis\",\n      },\n    ],\n  })\n\n  const proV = resolveBrandFromText(\"Pantene Pro-V Repair & Care Shampoo\", catalog)\n  assert.equal(proV.match, \"brand_line\")\n  assert.equal(proV.brand?.id, \"brand-pantene\")\n  assert.equal(proV.productLine?.id, \"line-pro-v\")\n  assert.equal(proV.reason, \"canonical_brand_with_line_inference\")\n\n  const garnierFructis = resolveBrandFromText(\"Garnier Fructis Aloe Hydra Bomb\", catalog)\n  assert.equal(garnierFructis.match, \"brand_line\")\n  assert.equal(garnierFructis.brand?.id, \"brand-garnier\")\n  assert.equal(garnierFructis.productLine?.id, \"line-fructis\")\n  assert.equal(garnierFructis.reason, \"canonical_brand_with_line_inference\")\n\n  const fructisAlias = resolveBrandFromText(\"Fructis Aloe Hydra Bomb\", catalog)\n  assert.equal(fructisAlias.match, \"brand_line\")\n  assert.equal(fructisAlias.brand?.id, \"brand-garnier\")\n  assert.equal(fructisAlias.productLine?.id, \"line-fructis\")\n  assert.equal(fructisAlias.reason, \"brand_line_alias_exact\")\n})",
+        "sha256": "3f78b2f953b0ee8ad45d9cca98a5be37fe41de012df62ae37dbffce5d5bd02a7",
+        "assertions": [
+          {
+            "line": 81,
+            "text": "assert.equal(proV.match, \"brand_line\")"
+          },
+          {
+            "line": 82,
+            "text": "assert.equal(proV.brand?.id, \"brand-pantene\")"
+          },
+          {
+            "line": 83,
+            "text": "assert.equal(proV.productLine?.id, \"line-pro-v\")"
+          },
+          {
+            "line": 84,
+            "text": "assert.equal(proV.reason, \"canonical_brand_with_line_inference\")"
+          },
+          {
+            "line": 87,
+            "text": "assert.equal(garnierFructis.match, \"brand_line\")"
+          },
+          {
+            "line": 88,
+            "text": "assert.equal(garnierFructis.brand?.id, \"brand-garnier\")"
+          },
+          {
+            "line": 89,
+            "text": "assert.equal(garnierFructis.productLine?.id, \"line-fructis\")"
+          },
+          {
+            "line": 90,
+            "text": "assert.equal(garnierFructis.reason, \"canonical_brand_with_line_inference\")"
+          },
+          {
+            "line": 93,
+            "text": "assert.equal(fructisAlias.match, \"brand_line\")"
+          },
+          {
+            "line": 94,
+            "text": "assert.equal(fructisAlias.brand?.id, \"brand-garnier\")"
+          },
+          {
+            "line": 95,
+            "text": "assert.equal(fructisAlias.productLine?.id, \"line-fructis\")"
+          },
+          {
+            "line": 96,
+            "text": "assert.equal(fructisAlias.reason, \"brand_line_alias_exact\")"
+          }
+        ]
+      },
+      {
+        "name": "unknown brand returns unresolved raw text with no confidence",
+        "line": 99,
+        "start": 3486,
+        "end": 4041,
+        "body": "test(\"unknown brand returns unresolved raw text with no confidence\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [{ id: \"brand-garnier\", canonical_name: \"Garnier\", normalized_name: \"garnier\" }],\n    productLines: [],\n    brandAliases: [],\n  })\n\n  const resolution = resolveBrandFromText(\"Unbekannte Pflegecreme\", catalog)\n\n  assert.equal(resolution.match, \"none\")\n  assert.equal(resolution.confidence, \"none\")\n  assert.equal(resolution.reason, \"unresolved\")\n  assert.equal(resolution.unresolvedRawText, \"Unbekannte Pflegecreme\")\n})",
+        "sha256": "355895870d4f6ac90c06f210033ba697942ac160d4e7f8f8d3198acf8f4c06dd",
+        "assertions": [
+          {
+            "line": 108,
+            "text": "assert.equal(resolution.match, \"none\")"
+          },
+          {
+            "line": 109,
+            "text": "assert.equal(resolution.confidence, \"none\")"
+          },
+          {
+            "line": 110,
+            "text": "assert.equal(resolution.reason, \"unresolved\")"
+          },
+          {
+            "line": 111,
+            "text": "assert.equal(resolution.unresolvedRawText, \"Unbekannte Pflegecreme\")"
+          }
+        ]
+      },
+      {
+        "name": "conflicting aliases are reported and excluded from usable alias resolution",
+        "line": 114,
+        "start": 4043,
+        "end": 4974,
+        "body": "test(\"conflicting aliases are reported and excluded from usable alias resolution\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      { id: \"brand-first\", canonical_name: \"First\", normalized_name: \"first\" },\n      { id: \"brand-second\", canonical_name: \"Second\", normalized_name: \"second\" },\n    ],\n    productLines: [],\n    brandAliases: [\n      {\n        brand_id: \"brand-first\",\n        product_line_id: null,\n        alias: \"Shared\",\n        normalized_alias: \"shared\",\n      },\n      {\n        brand_id: \"brand-second\",\n        product_line_id: null,\n        alias: \"Shared\",\n        normalized_alias: \"shared\",\n      },\n    ],\n  })\n\n  assert.deepEqual(\n    catalog.conflicts.map((conflict) => conflict.normalizedAlias),\n    [\"shared\"],\n  )\n\n  const resolution = resolveBrandFromText(\"Shared Shampoo\", catalog)\n  assert.equal(resolution.match, \"none\")\n  assert.equal(resolution.reason, \"unresolved\")\n})",
+        "sha256": "7a5ad4e9696df95d10f8451232edd975fe7c5dfd520400d0ae35eebed6ecb182",
+        "assertions": [
+          {
+            "line": 137,
+            "text": "assert.deepEqual(\n    catalog.conflicts.map((conflict) => conflict.normalizedAlias),\n    [\"shared\"],\n  )"
+          },
+          {
+            "line": 143,
+            "text": "assert.equal(resolution.match, \"none\")"
+          },
+          {
+            "line": 144,
+            "text": "assert.equal(resolution.reason, \"unresolved\")"
+          }
+        ]
+      },
+      {
+        "name": "resolver uses Phase 0 normalized brand and line fields for punctuation variants",
+        "line": 147,
+        "start": 4976,
+        "end": 6328,
+        "body": "test(\"resolver uses Phase 0 normalized brand and line fields for punctuation variants\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      {\n        id: \"brand-loreal-paris\",\n        canonical_name: \"Loreal Paris\",\n        normalized_name: \"loreal paris\",\n      },\n    ],\n    productLines: [\n      {\n        id: \"line-elvital\",\n        brand_id: \"brand-loreal-paris\",\n        canonical_name: \"Elvital\",\n        normalized_name: \"elvital\",\n      },\n    ],\n    brandAliases: [],\n  })\n\n  const resolution = resolveBrandFromText(\"Loreal Paris Elvital Dream Length\", catalog)\n\n  assert.equal(resolution.match, \"brand_line\")\n  assert.equal(resolution.brand?.id, \"brand-loreal-paris\")\n  assert.equal(resolution.productLine?.id, \"line-elvital\")\n  assert.equal(resolution.matchedText, \"Loreal Paris Elvital\")\n  assert.equal(resolution.reason, \"canonical_brand_with_line_inference\")\n\n  const apostropheResolution = resolveBrandFromText(\"L'Oréal Paris Elvital Dream Length\", catalog)\n  assert.equal(apostropheResolution.match, \"brand_line\")\n  assert.equal(apostropheResolution.brand?.id, \"brand-loreal-paris\")\n  assert.equal(apostropheResolution.productLine?.id, \"line-elvital\")\n  assert.equal(apostropheResolution.matchedText, \"L'Oréal Paris Elvital\")\n  assert.equal(apostropheResolution.reason, \"canonical_brand_with_line_inference\")\n})",
+        "sha256": "90fe7fcabbc8122807a97e0decef49a9c4ca22aeb8a716c56d7cf4b0ffe553ae",
+        "assertions": [
+          {
+            "line": 169,
+            "text": "assert.equal(resolution.match, \"brand_line\")"
+          },
+          {
+            "line": 170,
+            "text": "assert.equal(resolution.brand?.id, \"brand-loreal-paris\")"
+          },
+          {
+            "line": 171,
+            "text": "assert.equal(resolution.productLine?.id, \"line-elvital\")"
+          },
+          {
+            "line": 172,
+            "text": "assert.equal(resolution.matchedText, \"Loreal Paris Elvital\")"
+          },
+          {
+            "line": 173,
+            "text": "assert.equal(resolution.reason, \"canonical_brand_with_line_inference\")"
+          },
+          {
+            "line": 176,
+            "text": "assert.equal(apostropheResolution.match, \"brand_line\")"
+          },
+          {
+            "line": 177,
+            "text": "assert.equal(apostropheResolution.brand?.id, \"brand-loreal-paris\")"
+          },
+          {
+            "line": 178,
+            "text": "assert.equal(apostropheResolution.productLine?.id, \"line-elvital\")"
+          },
+          {
+            "line": 179,
+            "text": "assert.equal(apostropheResolution.matchedText, \"L'Oréal Paris Elvital\")"
+          },
+          {
+            "line": 180,
+            "text": "assert.equal(apostropheResolution.reason, \"canonical_brand_with_line_inference\")"
+          }
+        ]
+      },
+      {
+        "name": "alias collisions with canonical brand names are reported and excluded",
+        "line": 183,
+        "start": 6330,
+        "end": 7405,
+        "body": "test(\"alias collisions with canonical brand names are reported and excluded\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      { id: \"brand-garnier\", canonical_name: \"Garnier\", normalized_name: \"garnier\" },\n      { id: \"brand-fructis\", canonical_name: \"Fructis\", normalized_name: \"fructis\" },\n    ],\n    productLines: [\n      {\n        id: \"line-fructis\",\n        brand_id: \"brand-garnier\",\n        canonical_name: \"Fructis\",\n        normalized_name: \"fructis\",\n      },\n    ],\n    brandAliases: [\n      {\n        brand_id: \"brand-garnier\",\n        product_line_id: \"line-fructis\",\n        alias: \"Fructis\",\n        normalized_alias: \"fructis\",\n      },\n    ],\n  })\n\n  assert.deepEqual(\n    catalog.conflicts.map((conflict) => conflict.normalizedAlias),\n    [\"fructis\"],\n  )\n\n  const resolution = resolveBrandFromText(\"Fructis Shampoo\", catalog)\n  assert.equal(resolution.match, \"brand\")\n  assert.equal(resolution.brand?.id, \"brand-fructis\")\n  assert.equal(resolution.productLine, null)\n  assert.equal(resolution.reason, \"canonical_brand_exact\")\n})",
+        "sha256": "8aed896e1cf4bb208a5c7eb21898f487682fa1dd501e656e810db6f2474ae715",
+        "assertions": [
+          {
+            "line": 207,
+            "text": "assert.deepEqual(\n    catalog.conflicts.map((conflict) => conflict.normalizedAlias),\n    [\"fructis\"],\n  )"
+          },
+          {
+            "line": 213,
+            "text": "assert.equal(resolution.match, \"brand\")"
+          },
+          {
+            "line": 214,
+            "text": "assert.equal(resolution.brand?.id, \"brand-fructis\")"
+          },
+          {
+            "line": 215,
+            "text": "assert.equal(resolution.productLine, null)"
+          },
+          {
+            "line": 216,
+            "text": "assert.equal(resolution.reason, \"canonical_brand_exact\")"
+          }
+        ]
+      },
+      {
+        "name": "line-specific aliases with missing product lines are excluded",
+        "line": 219,
+        "start": 7407,
+        "end": 8120,
+        "body": "test(\"line-specific aliases with missing product lines are excluded\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      {\n        id: \"brand-loreal-paris\",\n        canonical_name: \"L'Oréal Paris\",\n        normalized_name: \"loreal paris\",\n      },\n    ],\n    productLines: [],\n    brandAliases: [\n      {\n        brand_id: \"brand-loreal-paris\",\n        product_line_id: \"line-elvital\",\n        alias: \"Elvital\",\n        normalized_alias: \"elvital\",\n      },\n    ],\n  })\n\n  assert.equal(catalog.aliases.length, 0)\n\n  const resolution = resolveBrandFromText(\"Elvital Dream Length Shampoo\", catalog)\n  assert.equal(resolution.match, \"none\")\n  assert.equal(resolution.reason, \"unresolved\")\n})",
+        "sha256": "49b880c67811a5aa0c2a956e78c7c21e03293e215c3fdd075a45c3f874bba361",
+        "assertions": [
+          {
+            "line": 239,
+            "text": "assert.equal(catalog.aliases.length, 0)"
+          },
+          {
+            "line": 242,
+            "text": "assert.equal(resolution.match, \"none\")"
+          },
+          {
+            "line": 243,
+            "text": "assert.equal(resolution.reason, \"unresolved\")"
+          }
+        ]
+      },
+      {
+        "name": "resolver handles corrected Phase A catalog aliases",
+        "line": 246,
+        "start": 8122,
+        "end": 12714,
+        "body": "test(\"resolver handles corrected Phase A catalog aliases\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      {\n        id: \"brand-garnier\",\n        canonical_name: \"Garnier\",\n        normalized_name: \"garnier\",\n      },\n      {\n        id: \"brand-gliss\",\n        canonical_name: \"Schwarzkopf GLISS\",\n        normalized_name: \"schwarzkopf gliss\",\n      },\n      {\n        id: \"brand-monday\",\n        canonical_name: \"MONDAY\",\n        normalized_name: \"monday\",\n      },\n      {\n        id: \"brand-loreal-paris\",\n        canonical_name: \"L'Oréal Paris\",\n        normalized_name: \"loreal paris\",\n      },\n      {\n        id: \"brand-loreal-professionnel\",\n        canonical_name: \"L'Oréal Professionnel\",\n        normalized_name: \"loreal professionnel\",\n      },\n      {\n        id: \"brand-balea\",\n        canonical_name: \"Balea\",\n        normalized_name: \"balea\",\n      },\n    ],\n    productLines: [\n      {\n        id: \"line-fructis\",\n        brand_id: \"brand-garnier\",\n        canonical_name: \"Fructis\",\n        normalized_name: \"fructis\",\n      },\n      {\n        id: \"line-wahre\",\n        brand_id: \"brand-garnier\",\n        canonical_name: \"Wahre Schätze\",\n        normalized_name: \"wahre schatze\",\n      },\n      {\n        id: \"line-elvital\",\n        brand_id: \"brand-loreal-paris\",\n        canonical_name: \"Elvital\",\n        normalized_name: \"elvital\",\n      },\n      {\n        id: \"line-metal-dx\",\n        brand_id: \"brand-loreal-professionnel\",\n        canonical_name: \"Metal DX\",\n        normalized_name: \"metal dx\",\n      },\n      {\n        id: \"line-professional\",\n        brand_id: \"brand-balea\",\n        canonical_name: \"Professional\",\n        normalized_name: \"professional\",\n      },\n    ],\n    brandAliases: [\n      {\n        brand_id: \"brand-garnier\",\n        product_line_id: \"line-fructis\",\n        alias: \"Fructis\",\n        normalized_alias: \"fructis\",\n      },\n      {\n        brand_id: \"brand-garnier\",\n        product_line_id: \"line-fructis\",\n        alias: \"Garnier Hair Food\",\n        normalized_alias: \"garnier hair food\",\n      },\n      {\n        brand_id: \"brand-garnier\",\n        product_line_id: \"line-wahre\",\n        alias: \"Wahre Schätze\",\n        normalized_alias: \"wahre schatze\",\n      },\n      {\n        brand_id: \"brand-gliss\",\n        product_line_id: null,\n        alias: \"Glisskur\",\n        normalized_alias: \"glisskur\",\n      },\n      {\n        brand_id: \"brand-monday\",\n        product_line_id: null,\n        alias: \"Monday Haircare\",\n        normalized_alias: \"monday haircare\",\n      },\n      {\n        brand_id: \"brand-loreal-paris\",\n        product_line_id: null,\n        alias: \"L'Oréal\",\n        normalized_alias: \"loreal\",\n      },\n      {\n        brand_id: \"brand-loreal-paris\",\n        product_line_id: \"line-elvital\",\n        alias: \"Elvital\",\n        normalized_alias: \"elvital\",\n      },\n      {\n        brand_id: \"brand-loreal-professionnel\",\n        product_line_id: \"line-metal-dx\",\n        alias: \"Serie Expert Metal DX\",\n        normalized_alias: \"serie expert metal dx\",\n      },\n      {\n        brand_id: \"brand-balea\",\n        product_line_id: \"line-professional\",\n        alias: \"Balea Aqua\",\n        normalized_alias: \"balea aqua\",\n      },\n    ],\n  })\n\n  const fructis = resolveBrandFromText(\"Garnier Hair Food Aloe Vera\", catalog)\n  assert.equal(fructis.match, \"brand_line\")\n  assert.equal(fructis.brand?.id, \"brand-garnier\")\n  assert.equal(fructis.productLine?.id, \"line-fructis\")\n\n  const wahre = resolveBrandFromText(\"Wahre Schätze Avocado\", catalog)\n  assert.equal(wahre.match, \"brand_line\")\n  assert.equal(wahre.productLine?.id, \"line-wahre\")\n\n  const gliss = resolveBrandFromText(\"Glisskur Liquid Silk\", catalog)\n  assert.equal(gliss.match, \"brand\")\n  assert.equal(gliss.brand?.id, \"brand-gliss\")\n  assert.equal(gliss.productLine, null)\n\n  const monday = resolveBrandFromText(\"Monday Haircare Volume Shampoo\", catalog)\n  assert.equal(monday.match, \"brand\")\n  assert.equal(monday.brand?.id, \"brand-monday\")\n\n  const elvital = resolveBrandFromText(\"Elvital Öl Magique\", catalog)\n  assert.equal(elvital.match, \"brand_line\")\n  assert.equal(elvital.productLine?.id, \"line-elvital\")\n\n  const metalDx = resolveBrandFromText(\"Serie Expert Metal DX Shampoo\", catalog)\n  assert.equal(metalDx.match, \"brand_line\")\n  assert.equal(metalDx.brand?.id, \"brand-loreal-professionnel\")\n  assert.equal(metalDx.productLine?.id, \"line-metal-dx\")\n\n  const balea = resolveBrandFromText(\"Balea Aqua Hyaluron\", catalog)\n  assert.equal(balea.match, \"brand_line\")\n  assert.equal(balea.productLine?.id, \"line-professional\")\n})",
+        "sha256": "aa15e96f406812499fe82cf61bfc2d3d5aa101e7119456313017d2ca696f5351",
+        "assertions": [
+          {
+            "line": 371,
+            "text": "assert.equal(fructis.match, \"brand_line\")"
+          },
+          {
+            "line": 372,
+            "text": "assert.equal(fructis.brand?.id, \"brand-garnier\")"
+          },
+          {
+            "line": 373,
+            "text": "assert.equal(fructis.productLine?.id, \"line-fructis\")"
+          },
+          {
+            "line": 376,
+            "text": "assert.equal(wahre.match, \"brand_line\")"
+          },
+          {
+            "line": 377,
+            "text": "assert.equal(wahre.productLine?.id, \"line-wahre\")"
+          },
+          {
+            "line": 380,
+            "text": "assert.equal(gliss.match, \"brand\")"
+          },
+          {
+            "line": 381,
+            "text": "assert.equal(gliss.brand?.id, \"brand-gliss\")"
+          },
+          {
+            "line": 382,
+            "text": "assert.equal(gliss.productLine, null)"
+          },
+          {
+            "line": 385,
+            "text": "assert.equal(monday.match, \"brand\")"
+          },
+          {
+            "line": 386,
+            "text": "assert.equal(monday.brand?.id, \"brand-monday\")"
+          },
+          {
+            "line": 389,
+            "text": "assert.equal(elvital.match, \"brand_line\")"
+          },
+          {
+            "line": 390,
+            "text": "assert.equal(elvital.productLine?.id, \"line-elvital\")"
+          },
+          {
+            "line": 393,
+            "text": "assert.equal(metalDx.match, \"brand_line\")"
+          },
+          {
+            "line": 394,
+            "text": "assert.equal(metalDx.brand?.id, \"brand-loreal-professionnel\")"
+          },
+          {
+            "line": 395,
+            "text": "assert.equal(metalDx.productLine?.id, \"line-metal-dx\")"
+          },
+          {
+            "line": 398,
+            "text": "assert.equal(balea.match, \"brand_line\")"
+          },
+          {
+            "line": 399,
+            "text": "assert.equal(balea.productLine?.id, \"line-professional\")"
+          }
+        ]
+      }
+    ],
+    "tests/product-identity-schema.test.ts": [
+      {
+        "name": "product identity migration creates the phase 0 identity tables",
+        "line": 20,
+        "start": 704,
+        "end": 1070,
+        "body": "test(\"product identity migration creates the phase 0 identity tables\", () => {\n  for (const table of [\n    \"product_categories\",\n    \"brands\",\n    \"product_lines\",\n    \"brand_aliases\",\n    \"product_identifiers\",\n  ]) {\n    assertIncludes(`create table if not exists public.${table}`)\n    assertIncludes(`alter table public.${table} enable row level security`)\n  }\n})",
+        "sha256": "b6d4d96d8cad177c24293423b171643aab158ba1a0a4a902ab266351fd6c8fbc",
+        "assertions": []
+      },
+      {
+        "name": "product identity migration exposes only public-safe identity tables to public clients",
+        "line": 33,
+        "start": 1072,
+        "end": 2127,
+        "body": "test(\"product identity migration exposes only public-safe identity tables to public clients\", () => {\n  for (const table of [\"product_categories\", \"brands\"]) {\n    assertIncludes(`grant select on table public.${table} to anon, authenticated`)\n    assert.match(\n      normalizedSql,\n      new RegExp(\n        `create\\\\s+policy\\\\s+${table}_select_public\\\\s+on\\\\s+public\\\\.${table}\\\\s+for\\\\s+select\\\\s+to\\\\s+anon,\\\\s+authenticated\\\\s+using\\\\s+\\\\(true\\\\)`,\n        \"i\",\n      ),\n    )\n    assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(\n        `create\\\\s+policy\\\\s+\\\\w+\\\\s+on\\\\s+public\\\\.${table}\\\\s+for\\\\s+(insert|update|delete)`,\n        \"i\",\n      ),\n    )\n  }\n\n  for (const table of [\"product_lines\", \"brand_aliases\", \"product_identifiers\"]) {\n    assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`grant\\\\s+select\\\\s+on\\\\s+table\\\\s+public\\\\.${table}\\\\s+to\\\\s+anon`, \"i\"),\n    )\n    assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`create\\\\s+policy\\\\s+${table}_select_public\\\\s+on\\\\s+public\\\\.${table}`, \"i\"),\n    )\n  }\n})",
+        "sha256": "41621040685126f3988a805990f6cf3b66812bd4eb71eda24858dd1d8e869ca8",
+        "assertions": [
+          {
+            "line": 36,
+            "text": "assert.match(\n      normalizedSql,\n      new RegExp(\n        `create\\\\s+policy\\\\s+${table}_select_public\\\\s+on\\\\s+public\\\\.${table}\\\\s+for\\\\s+select\\\\s+to\\\\s+anon,\\\\s+authenticated\\\\s+using\\\\s+\\\\(true\\\\)`,\n        \"i\",\n      ),\n    )"
+          },
+          {
+            "line": 43,
+            "text": "assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(\n        `create\\\\s+policy\\\\s+\\\\w+\\\\s+on\\\\s+public\\\\.${table}\\\\s+for\\\\s+(insert|update|delete)`,\n        \"i\",\n      ),\n    )"
+          },
+          {
+            "line": 53,
+            "text": "assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`grant\\\\s+select\\\\s+on\\\\s+table\\\\s+public\\\\.${table}\\\\s+to\\\\s+anon`, \"i\"),\n    )"
+          },
+          {
+            "line": 57,
+            "text": "assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`create\\\\s+policy\\\\s+${table}_select_public\\\\s+on\\\\s+public\\\\.${table}`, \"i\"),\n    )"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration keeps non-recommended products out of public product reads",
+        "line": 64,
+        "start": 2129,
+        "end": 2599,
+        "body": "test(\"product identity migration keeps non-recommended products out of public product reads\", () => {\n  assert.match(normalizedSql, /drop\\s+policy\\s+if\\s+exists\\s+\"products_select_active\"/)\n  assert.match(\n    normalizedSql,\n    /create\\s+policy\\s+\"products_select_active\"\\s+on\\s+public\\.products\\s+for\\s+select\\s+to\\s+authenticated\\s+using\\s+\\(\\s*is_active\\s+=\\s+true\\s+and\\s+is_chaarlie_recommended\\s+=\\s+true\\s+and\\s+auth\\.role\\(\\)\\s+=\\s+'authenticated'\\s+\\)/,\n  )\n})",
+        "sha256": "bcf212eee60c8177aea3884d48a884a30355bdf776f12f491f2ceec238949da9",
+        "assertions": [
+          {
+            "line": 65,
+            "text": "assert.match(normalizedSql, /drop\\s+policy\\s+if\\s+exists\\s+\"products_select_active\"/)"
+          },
+          {
+            "line": 66,
+            "text": "assert.match(\n    normalizedSql,\n    /create\\s+policy\\s+\"products_select_active\"\\s+on\\s+public\\.products\\s+for\\s+select\\s+to\\s+authenticated\\s+using\\s+\\(\\s*is_active\\s+=\\s+true\\s+and\\s+is_chaarlie_recommended\\s+=\\s+true\\s+and\\s+auth\\.role\\(\\)\\s+=\\s+'authenticated'\\s+\\)/,\n  )"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration keeps semantic product matching aligned with catalog visibility",
+        "line": 72,
+        "start": 2601,
+        "end": 3056,
+        "body": "test(\"product identity migration keeps semantic product matching aligned with catalog visibility\", () => {\n  assert.match(normalizedSql, /drop\\s+function\\s+if\\s+exists\\s+public\\.match_products/)\n  assert.match(normalizedSql, /create\\s+or\\s+replace\\s+function\\s+public\\.match_products/)\n  assert.match(\n    normalizedSql,\n    /where\\s+p\\.is_active\\s+=\\s+true\\s+and\\s+p\\.is_chaarlie_recommended\\s+=\\s+true\\s+and\\s+p\\.lifecycle_status\\s+=\\s+'active'/,\n  )\n})",
+        "sha256": "a5c7bf70fb642cea8f8c88c7d0f551fa962039fd11e4890006319231f9b9c4b7",
+        "assertions": [
+          {
+            "line": 73,
+            "text": "assert.match(normalizedSql, /drop\\s+function\\s+if\\s+exists\\s+public\\.match_products/)"
+          },
+          {
+            "line": 74,
+            "text": "assert.match(normalizedSql, /create\\s+or\\s+replace\\s+function\\s+public\\.match_products/)"
+          },
+          {
+            "line": 75,
+            "text": "assert.match(\n    normalizedSql,\n    /where\\s+p\\.is_active\\s+=\\s+true\\s+and\\s+p\\.is_chaarlie_recommended\\s+=\\s+true\\s+and\\s+p\\.lifecycle_status\\s+=\\s+'active'/,\n  )"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration extends products without contracting legacy fields",
+        "line": 81,
+        "start": 3058,
+        "end": 4187,
+        "body": "test(\"product identity migration extends products without contracting legacy fields\", () => {\n  for (const column of [\n    \"category_key\",\n    \"brand_id\",\n    \"product_line_id\",\n    \"origin\",\n    \"is_chaarlie_recommended\",\n  ]) {\n    assertIncludes(`add column if not exists ${column}`)\n  }\n\n  assertIncludes(\"add column if not exists is_chaarlie_recommended boolean not null default true\")\n  assert.match(normalizedSql, /origin\\s+=\\s+coalesce\\(origin,\\s+'curated'\\)/)\n  assertIncludes(\"is_chaarlie_recommended = true\")\n  assertIncludes(\"add constraint products_origin_check\")\n  assert.match(normalizedSql, /check\\s+\\(origin\\s+in\\s+\\('curated',\\s+'user_submitted'\\)\\)/)\n  assertIncludes(\"add constraint products_category_key_fkey\")\n  assertIncludes(\"add constraint products_brand_id_fkey\")\n  assertIncludes(\"add constraint products_product_line_matches_brand\")\n\n  assert.doesNotMatch(normalizedSql, /drop\\s+column\\s+(if\\s+exists\\s+)?brand\\b/)\n  assert.doesNotMatch(normalizedSql, /drop\\s+column\\s+(if\\s+exists\\s+)?category\\b/)\n  assert.doesNotMatch(normalizedSql, /alter\\s+column\\s+(category_key|brand_id)\\s+set\\s+not\\s+null/)\n})",
+        "sha256": "13e6538f833e57940035131a6fc1037c7fc7a86193a7a91948a08d81786cb3db",
+        "assertions": [
+          {
+            "line": 93,
+            "text": "assert.match(normalizedSql, /origin\\s+=\\s+coalesce\\(origin,\\s+'curated'\\)/)"
+          },
+          {
+            "line": 96,
+            "text": "assert.match(normalizedSql, /check\\s+\\(origin\\s+in\\s+\\('curated',\\s+'user_submitted'\\)\\)/)"
+          },
+          {
+            "line": 101,
+            "text": "assert.doesNotMatch(normalizedSql, /drop\\s+column\\s+(if\\s+exists\\s+)?brand\\b/)"
+          },
+          {
+            "line": 102,
+            "text": "assert.doesNotMatch(normalizedSql, /drop\\s+column\\s+(if\\s+exists\\s+)?category\\b/)"
+          },
+          {
+            "line": 103,
+            "text": "assert.doesNotMatch(normalizedSql, /alter\\s+column\\s+(category_key|brand_id)\\s+set\\s+not\\s+null/)"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration keeps product lines and identifiers compatible",
+        "line": 106,
+        "start": 4189,
+        "end": 4827,
+        "body": "test(\"product identity migration keeps product lines and identifiers compatible\", () => {\n  assert.match(normalizedSql, /unique\\s+\\(id,\\s+brand_id\\)/)\n  assert.match(normalizedSql, /foreign\\s+key\\s+\\(product_line_id,\\s+brand_id\\)/)\n  assert.match(normalizedSql, /on\\s+delete\\s+set\\s+null\\s+\\(product_line_id\\)/)\n  assertIncludes(\"normalized_identifier_value\")\n  assertIncludes(\"idx_product_identifiers_product_type_value\")\n  assertIncludes(\"idx_product_identifiers_lookup\")\n  assert.doesNotMatch(\n    normalizedSql,\n    /unique\\s+index\\s+\\w+\\s+on\\s+public\\.product_identifiers\\s+\\(identifier_type,\\s*normalized_identifier_value\\)/,\n  )\n})",
+        "sha256": "605f39014516365f59cbf177d081eab835a152799f3500c83fc372112c670ff2",
+        "assertions": [
+          {
+            "line": 107,
+            "text": "assert.match(normalizedSql, /unique\\s+\\(id,\\s+brand_id\\)/)"
+          },
+          {
+            "line": 108,
+            "text": "assert.match(normalizedSql, /foreign\\s+key\\s+\\(product_line_id,\\s+brand_id\\)/)"
+          },
+          {
+            "line": 109,
+            "text": "assert.match(normalizedSql, /on\\s+delete\\s+set\\s+null\\s+\\(product_line_id\\)/)"
+          },
+          {
+            "line": 113,
+            "text": "assert.doesNotMatch(\n    normalizedSql,\n    /unique\\s+index\\s+\\w+\\s+on\\s+public\\.product_identifiers\\s+\\(identifier_type,\\s*normalized_identifier_value\\)/,\n  )"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration stores script-normalized identity values",
+        "line": 119,
+        "start": 4829,
+        "end": 5303,
+        "body": "test(\"product identity migration stores script-normalized identity values\", () => {\n  assert.match(\n    normalizedSql,\n    /canonical_name\\s+text\\s+not\\s+null,\\s+normalized_name\\s+text\\s+not\\s+null/,\n  )\n  assert.match(normalizedSql, /alias\\s+text\\s+not\\s+null,\\s+normalized_alias\\s+text\\s+not\\s+null/)\n  assert.doesNotMatch(normalizedSql, /normalized_name\\s+text\\s+generated\\s+always/)\n  assert.doesNotMatch(normalizedSql, /normalized_alias\\s+text\\s+generated\\s+always/)\n})",
+        "sha256": "7c9bad695f9c8f8e76e972c7efe7c2bfa823052be4cae74d94d0b5bab4bf9406",
+        "assertions": [
+          {
+            "line": 120,
+            "text": "assert.match(\n    normalizedSql,\n    /canonical_name\\s+text\\s+not\\s+null,\\s+normalized_name\\s+text\\s+not\\s+null/,\n  )"
+          },
+          {
+            "line": 124,
+            "text": "assert.match(normalizedSql, /alias\\s+text\\s+not\\s+null,\\s+normalized_alias\\s+text\\s+not\\s+null/)"
+          },
+          {
+            "line": 125,
+            "text": "assert.doesNotMatch(normalizedSql, /normalized_name\\s+text\\s+generated\\s+always/)"
+          },
+          {
+            "line": 126,
+            "text": "assert.doesNotMatch(normalizedSql, /normalized_alias\\s+text\\s+generated\\s+always/)"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration seeds all phase 0 product categories",
+        "line": 129,
+        "start": 5305,
+        "end": 5776,
+        "body": "test(\"product identity migration seeds all phase 0 product categories\", () => {\n  for (const categoryKey of [\n    \"shampoo\",\n    \"conditioner\",\n    \"mask\",\n    \"leave_in\",\n    \"oil\",\n    \"dry_shampoo\",\n    \"deep_cleansing_shampoo\",\n    \"bondbuilder\",\n    \"heat_protectant\",\n    \"serum\",\n    \"scrub\",\n    \"peeling\",\n    \"styling_gel\",\n    \"styling_mousse\",\n    \"styling_cream\",\n    \"hairspray\",\n  ]) {\n    assert.match(normalizedSql, new RegExp(`'${categoryKey}'`))\n  }\n})",
+        "sha256": "3371f01ca674c61f8ce1e70a1d70f28ddf7e28aa3598f4cd99a0ec8237ce4890",
+        "assertions": [
+          {
+            "line": 148,
+            "text": "assert.match(normalizedSql, new RegExp(`'${categoryKey}'`))"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration stays inside the phase 0 boundary",
+        "line": 152,
+        "start": 5778,
+        "end": 6058,
+        "body": "test(\"product identity migration stays inside the phase 0 boundary\", () => {\n  assert.doesNotMatch(normalizedSql, /product_submissions/)\n  assert.doesNotMatch(normalizedSql, /user_product_usage/)\n  assert.doesNotMatch(normalizedSql, /alter\\s+table\\s+public\\.product_\\w+_specs/)\n})",
+        "sha256": "858205caa0269e24beebad80c1f34d22d5037c212ab2f8a9c0978ce3d8a1e2e9",
+        "assertions": [
+          {
+            "line": 153,
+            "text": "assert.doesNotMatch(normalizedSql, /product_submissions/)"
+          },
+          {
+            "line": 154,
+            "text": "assert.doesNotMatch(normalizedSql, /user_product_usage/)"
+          },
+          {
+            "line": 155,
+            "text": "assert.doesNotMatch(normalizedSql, /alter\\s+table\\s+public\\.product_\\w+_specs/)"
+          }
+        ]
+      }
+    ],
+    "tests/product-identity-title.test.ts": [
+      {
+        "name": "product identity title composes brand, line and name without visible duplication",
+        "line": 6,
+        "start": 159,
+        "end": 930,
+        "body": "test(\"product identity title composes brand, line and name without visible duplication\", () => {\n  assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Neqi\",\n      productLine: \"NEQI x @_the.beautiful.people\",\n      name: \"Leave-In Moisturizing Mist\",\n    }),\n    \"NEQI x @_the.beautiful.people Leave-In Moisturizing Mist\",\n  )\n  assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Garnier Wahre Schätze\",\n      productLine: \"Wahre Schätze\",\n      name: \"Honig Schätze Shampoo\",\n    }),\n    \"Garnier Wahre Schätze Honig Schätze Shampoo\",\n  )\n  assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Syoss\",\n      productLine: \"Intense Fullness\",\n      name: \"Syoss Intense Fullness Shampoo\",\n    }),\n    \"Syoss Intense Fullness Shampoo\",\n  )\n})",
+        "sha256": "f28515ce89185fae7e08314d25dad834a27eef7594657de5e67fe77be6e1c32c",
+        "assertions": [
+          {
+            "line": 7,
+            "text": "assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Neqi\",\n      productLine: \"NEQI x @_the.beautiful.people\",\n      name: \"Leave-In Moisturizing Mist\",\n    }),\n    \"NEQI x @_the.beautiful.people Leave-In Moisturizing Mist\",\n  )"
+          },
+          {
+            "line": 15,
+            "text": "assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Garnier Wahre Schätze\",\n      productLine: \"Wahre Schätze\",\n      name: \"Honig Schätze Shampoo\",\n    }),\n    \"Garnier Wahre Schätze Honig Schätze Shampoo\",\n  )"
+          },
+          {
+            "line": 23,
+            "text": "assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Syoss\",\n      productLine: \"Intense Fullness\",\n      name: \"Syoss Intense Fullness Shampoo\",\n    }),\n    \"Syoss Intense Fullness Shampoo\",\n  )"
+          }
+        ]
+      },
+      {
+        "name": "product identity title ignores blank identity parts",
+        "line": 33,
+        "start": 932,
+        "end": 1137,
+        "body": "test(\"product identity title ignores blank identity parts\", () => {\n  assert.equal(\n    composeProductIdentityTitle({ brand: \"  \", productLine: null, name: \"Repair Shampoo\" }),\n    \"Repair Shampoo\",\n  )\n})",
+        "sha256": "4ed7cb5db9a7c4389c4a582fe5e9f26872364796b5bb6caca92e2078d0ec7d00",
+        "assertions": [
+          {
+            "line": 34,
+            "text": "assert.equal(\n    composeProductIdentityTitle({ brand: \"  \", productLine: null, name: \"Repair Shampoo\" }),\n    \"Repair Shampoo\",\n  )"
+          }
+        ]
+      }
+    ],
+    "tests/product-identity-correction.test.ts": [
+      {
+        "name": "canonical correction apply guard requires the production project confirmation",
+        "line": 10,
+        "start": 229,
+        "end": 1014,
+        "body": "test(\"canonical correction apply guard requires the production project confirmation\", () => {\n  assert.doesNotThrow(() =>\n    assertCanonicalCorrectionApplyTarget({\n      apply: false,\n      confirmProject: null,\n      supabaseUrl: \"https://example.supabase.co\",\n    }),\n  )\n\n  assert.throws(\n    () =>\n      assertCanonicalCorrectionApplyTarget({\n        apply: true,\n        confirmProject: \"wrong\",\n        supabaseUrl: \"https://pqdkhefxsxkyeqelqegq.supabase.co\",\n      }),\n    /Writes require --confirm-project=pqdkhefxsxkyeqelqegq/,\n  )\n\n  assert.throws(\n    () =>\n      assertCanonicalCorrectionApplyTarget({\n        apply: true,\n        confirmProject: \"pqdkhefxsxkyeqelqegq\",\n        supabaseUrl: \"https://other.supabase.co\",\n      }),\n    /unexpected Supabase project/,\n  )\n})",
+        "sha256": "57c074a89a7439593faa0955cbf4f2d7c7b792c9ef0d9ecda8058714cd14c2db",
+        "assertions": [
+          {
+            "line": 11,
+            "text": "assert.doesNotThrow(() =>\n    assertCanonicalCorrectionApplyTarget({\n      apply: false,\n      confirmProject: null,\n      supabaseUrl: \"https://example.supabase.co\",\n    }),\n  )"
+          },
+          {
+            "line": 19,
+            "text": "assert.throws(\n    () =>\n      assertCanonicalCorrectionApplyTarget({\n        apply: true,\n        confirmProject: \"wrong\",\n        supabaseUrl: \"https://pqdkhefxsxkyeqelqegq.supabase.co\",\n      }),\n    /Writes require --confirm-project=pqdkhefxsxkyeqelqegq/,\n  )"
+          },
+          {
+            "line": 29,
+            "text": "assert.throws(\n    () =>\n      assertCanonicalCorrectionApplyTarget({\n        apply: true,\n        confirmProject: \"pqdkhefxsxkyeqelqegq\",\n        supabaseUrl: \"https://other.supabase.co\",\n      }),\n    /unexpected Supabase project/,\n  )"
+          }
+        ]
+      },
+      {
+        "name": "canonical correction product patch never writes live product names or legacy fields",
+        "line": 40,
+        "start": 1016,
+        "end": 1455,
+        "body": "test(\"canonical correction product patch never writes live product names or legacy fields\", () => {\n  const patch = buildProductPatch({\n    brandId: \"brand-id\",\n    productLineId: \"line-id\",\n  }) as Record<string, unknown>\n\n  assert.deepEqual(patch, {\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n  })\n  assert.equal(\"name\" in patch, false)\n  assert.equal(\"brand\" in patch, false)\n  assert.equal(\"category\" in patch, false)\n})",
+        "sha256": "fc2859cdd4e9033c6b82efda6cc001b136e9e482355e62d965658f930bfd64df",
+        "assertions": [
+          {
+            "line": 46,
+            "text": "assert.deepEqual(patch, {\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n  })"
+          },
+          {
+            "line": 50,
+            "text": "assert.equal(\"name\" in patch, false)"
+          },
+          {
+            "line": 51,
+            "text": "assert.equal(\"brand\" in patch, false)"
+          },
+          {
+            "line": 52,
+            "text": "assert.equal(\"category\" in patch, false)"
+          }
+        ]
+      },
+      {
+        "name": "canonical correction alias upsert rows only include database columns",
+        "line": 55,
+        "start": 1457,
+        "end": 2003,
+        "body": "test(\"canonical correction alias upsert rows only include database columns\", () => {\n  const row = brandAliasWriteRow({\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n    alias: \"Garnier Hair Food\",\n    normalized_alias: \"garnier hair food\",\n    source: \"curated\",\n    target_brand_name: \"Garnier\",\n    target_product_line_name: \"Fructis\",\n  })\n\n  assert.deepEqual(row, {\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n    alias: \"Garnier Hair Food\",\n    normalized_alias: \"garnier hair food\",\n    source: \"curated\",\n  })\n})",
+        "sha256": "2759695dc620e99abfd60574716733dd5fd3a9fc159ffe18debf806f034572aa",
+        "assertions": [
+          {
+            "line": 66,
+            "text": "assert.deepEqual(row, {\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n    alias: \"Garnier Hair Food\",\n    normalized_alias: \"garnier hair food\",\n    source: \"curated\",\n  })"
+          }
+        ]
+      }
+    ]
+  },
+  "cut": {
+    "tests/product-identity-normalize.test.ts": [
+      {
+        "name": "canonical category constants include supported and known unsupported keys",
+        "line": 16,
+        "start": 357,
+        "end": 1225,
+        "body": "test(\"canonical category constants include supported and known unsupported keys\", () => {\n  assert.deepEqual(SUPPORTED_PRODUCT_CATEGORY_KEYS, [\n    \"shampoo\",\n    \"conditioner\",\n    \"leave_in\",\n    \"mask\",\n    \"oil\",\n    \"dry_shampoo\",\n    \"deep_cleansing_shampoo\",\n    \"bondbuilder\",\n    \"heat_protectant\",\n    \"scalp_care\",\n  ])\n\n  assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes(\"heat_protectant\"), true)\n  assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes(\"hairspray\"), true)\n  assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.leave_in, \"Leave-in\")\n  assert.equal(SUPPORTED_PRODUCT_CATEGORY_KEYS.includes(\"heat_protectant\"), true)\n  assert.equal(SUPPORTED_PRODUCT_CATEGORY_KEYS.includes(\"scalp_care\"), true)\n  assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.heat_protectant, \"Hitzeschutz\")\n  assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.scalp_care, \"Kopfhautpflege\")\n})",
+        "sha256": "8c6c4308e487858a9ce3d36eeb685f2c71c5f90fc12b284aba81eede0b1807fc",
+        "assertions": [
+          {
+            "line": 17,
+            "text": "assert.deepEqual(SUPPORTED_PRODUCT_CATEGORY_KEYS, [\n    \"shampoo\",\n    \"conditioner\",\n    \"leave_in\",\n    \"mask\",\n    \"oil\",\n    \"dry_shampoo\",\n    \"deep_cleansing_shampoo\",\n    \"bondbuilder\",\n    \"heat_protectant\",\n    \"scalp_care\",\n  ])"
+          },
+          {
+            "line": 30,
+            "text": "assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes(\"heat_protectant\"), true)"
+          },
+          {
+            "line": 31,
+            "text": "assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes(\"hairspray\"), true)"
+          },
+          {
+            "line": 32,
+            "text": "assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.leave_in, \"Leave-in\")"
+          },
+          {
+            "line": 33,
+            "text": "assert.equal(SUPPORTED_PRODUCT_CATEGORY_KEYS.includes(\"heat_protectant\"), true)"
+          },
+          {
+            "line": 34,
+            "text": "assert.equal(SUPPORTED_PRODUCT_CATEGORY_KEYS.includes(\"scalp_care\"), true)"
+          },
+          {
+            "line": 35,
+            "text": "assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.heat_protectant, \"Hitzeschutz\")"
+          },
+          {
+            "line": 36,
+            "text": "assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.scalp_care, \"Kopfhautpflege\")"
+          }
+        ]
+      },
+      {
+        "name": "normalizeCategoryKey maps production labels, canonical keys, and simple oil aliases",
+        "line": 39,
+        "start": 1227,
+        "end": 2872,
+        "body": "test(\"normalizeCategoryKey maps production labels, canonical keys, and simple oil aliases\", () => {\n  assert.equal(normalizeCategoryKey(\"Shampoo\"), \"shampoo\")\n  assert.equal(normalizeCategoryKey(\"Conditioner (Drogerie)\"), \"conditioner\")\n  assert.equal(normalizeCategoryKey(\"Leave-in\"), \"leave_in\")\n  assert.equal(normalizeCategoryKey(\"Maske\"), \"mask\")\n  assert.equal(normalizeCategoryKey(\"Öle\"), \"oil\")\n  assert.equal(normalizeCategoryKey(\"Trockenshampoo\"), \"dry_shampoo\")\n  assert.equal(normalizeCategoryKey(\"Tiefenreinigungsshampoo\"), \"deep_cleansing_shampoo\")\n  assert.equal(normalizeCategoryKey(\"Bondbuilder\"), \"bondbuilder\")\n  assert.equal(normalizeCategoryKey(\"Hitzeschutz\"), \"heat_protectant\")\n  assert.equal(normalizeCategoryKey(\"Kopfhautpflege\"), \"scalp_care\")\n  assert.equal(normalizeCategoryKey(\"Scalp Care\"), \"scalp_care\")\n  assert.equal(normalizeCategoryKey(\"Serum\"), \"serum\")\n  assert.equal(normalizeCategoryKey(\"Scrub\"), \"scrub\")\n  assert.equal(normalizeCategoryKey(\"Peeling\"), \"peeling\")\n  assert.equal(normalizeCategoryKey(\"Styling-Gel\"), \"styling_gel\")\n  assert.equal(normalizeCategoryKey(\"Styling Mousse\"), \"styling_mousse\")\n  assert.equal(normalizeCategoryKey(\"Styling-Creme\"), \"styling_cream\")\n  assert.equal(normalizeCategoryKey(\"Haarspray\"), \"hairspray\")\n  assert.equal(normalizeCategoryKey(\"dry_shampoo\"), \"dry_shampoo\")\n  assert.equal(normalizeCategoryKey(\"Deep Cleansing Shampoo\"), \"deep_cleansing_shampoo\")\n  assert.equal(normalizeCategoryKey(\"Öl\"), \"oil\")\n  assert.equal(normalizeCategoryKey(\"Oele\"), \"oil\")\n  assert.equal(normalizeCategoryKey(\"Ole\"), \"oil\")\n  assert.equal(normalizeCategoryKey(\"Unbekannt\"), null)\n})",
+        "sha256": "74fd331b916d361c02b071267bc79de983e73d1335dcab3604cb33d5f056c27e",
+        "assertions": [
+          {
+            "line": 40,
+            "text": "assert.equal(normalizeCategoryKey(\"Shampoo\"), \"shampoo\")"
+          },
+          {
+            "line": 41,
+            "text": "assert.equal(normalizeCategoryKey(\"Conditioner (Drogerie)\"), \"conditioner\")"
+          },
+          {
+            "line": 42,
+            "text": "assert.equal(normalizeCategoryKey(\"Leave-in\"), \"leave_in\")"
+          },
+          {
+            "line": 43,
+            "text": "assert.equal(normalizeCategoryKey(\"Maske\"), \"mask\")"
+          },
+          {
+            "line": 44,
+            "text": "assert.equal(normalizeCategoryKey(\"Öle\"), \"oil\")"
+          },
+          {
+            "line": 45,
+            "text": "assert.equal(normalizeCategoryKey(\"Trockenshampoo\"), \"dry_shampoo\")"
+          },
+          {
+            "line": 46,
+            "text": "assert.equal(normalizeCategoryKey(\"Tiefenreinigungsshampoo\"), \"deep_cleansing_shampoo\")"
+          },
+          {
+            "line": 47,
+            "text": "assert.equal(normalizeCategoryKey(\"Bondbuilder\"), \"bondbuilder\")"
+          },
+          {
+            "line": 48,
+            "text": "assert.equal(normalizeCategoryKey(\"Hitzeschutz\"), \"heat_protectant\")"
+          },
+          {
+            "line": 49,
+            "text": "assert.equal(normalizeCategoryKey(\"Kopfhautpflege\"), \"scalp_care\")"
+          },
+          {
+            "line": 50,
+            "text": "assert.equal(normalizeCategoryKey(\"Scalp Care\"), \"scalp_care\")"
+          },
+          {
+            "line": 51,
+            "text": "assert.equal(normalizeCategoryKey(\"Serum\"), \"serum\")"
+          },
+          {
+            "line": 52,
+            "text": "assert.equal(normalizeCategoryKey(\"Scrub\"), \"scrub\")"
+          },
+          {
+            "line": 53,
+            "text": "assert.equal(normalizeCategoryKey(\"Peeling\"), \"peeling\")"
+          },
+          {
+            "line": 54,
+            "text": "assert.equal(normalizeCategoryKey(\"Styling-Gel\"), \"styling_gel\")"
+          },
+          {
+            "line": 55,
+            "text": "assert.equal(normalizeCategoryKey(\"Styling Mousse\"), \"styling_mousse\")"
+          },
+          {
+            "line": 56,
+            "text": "assert.equal(normalizeCategoryKey(\"Styling-Creme\"), \"styling_cream\")"
+          },
+          {
+            "line": 57,
+            "text": "assert.equal(normalizeCategoryKey(\"Haarspray\"), \"hairspray\")"
+          },
+          {
+            "line": 58,
+            "text": "assert.equal(normalizeCategoryKey(\"dry_shampoo\"), \"dry_shampoo\")"
+          },
+          {
+            "line": 59,
+            "text": "assert.equal(normalizeCategoryKey(\"Deep Cleansing Shampoo\"), \"deep_cleansing_shampoo\")"
+          },
+          {
+            "line": 60,
+            "text": "assert.equal(normalizeCategoryKey(\"Öl\"), \"oil\")"
+          },
+          {
+            "line": 61,
+            "text": "assert.equal(normalizeCategoryKey(\"Oele\"), \"oil\")"
+          },
+          {
+            "line": 62,
+            "text": "assert.equal(normalizeCategoryKey(\"Ole\"), \"oil\")"
+          },
+          {
+            "line": 63,
+            "text": "assert.equal(normalizeCategoryKey(\"Unbekannt\"), null)"
+          }
+        ]
+      },
+      {
+        "name": "normalizeText folds accents, punctuation, case, and spacing",
+        "line": 66,
+        "start": 2874,
+        "end": 3117,
+        "body": "test(\"normalizeText folds accents, punctuation, case, and spacing\", () => {\n  assert.equal(normalizeText(\"  Öl / Leave-in -- Nº 5  \"), \"ol leave in no 5\")\n  assert.equal(normalizeText(\"Tiefenreinigungs-Shampoo\"), \"tiefenreinigungs shampoo\")\n})",
+        "sha256": "b8ed8d473a998b61f481f8ae989a473a9cd84468677bfc3768f530f7657410fd",
+        "assertions": [
+          {
+            "line": 67,
+            "text": "assert.equal(normalizeText(\"  Öl / Leave-in -- Nº 5  \"), \"ol leave in no 5\")"
+          },
+          {
+            "line": 68,
+            "text": "assert.equal(normalizeText(\"Tiefenreinigungs-Shampoo\"), \"tiefenreinigungs shampoo\")"
+          }
+        ]
+      },
+      {
+        "name": "normalizeIdentityText is stable for case, whitespace, punctuation, and safe diacritics",
+        "line": 71,
+        "start": 3119,
+        "end": 3624,
+        "body": "test(\"normalizeIdentityText is stable for case, whitespace, punctuation, and safe diacritics\", () => {\n  assert.equal(normalizeIdentityText(\"  OLAPLEX   Nº. 5 -- Leave-In  \"), \"olaplex no 5 leave in\")\n  assert.equal(\n    normalizeIdentityText(\"OLAPLEX N°5 Bond Maintenance\"),\n    \"olaplex no 5 bond maintenance\",\n  )\n  assert.equal(normalizeIdentityText(\"Olaplex No 5 Leave In\"), \"olaplex no 5 leave in\")\n  assert.equal(normalizeIdentityText(\"Garnier Fructis / Hair-Food\"), \"garnier fructis hair food\")\n})",
+        "sha256": "5011d4a1e73e0076d8068fc88fd2bd9bdebfdf28f19d5fcc686cf6d87073f3e7",
+        "assertions": [
+          {
+            "line": 72,
+            "text": "assert.equal(normalizeIdentityText(\"  OLAPLEX   Nº. 5 -- Leave-In  \"), \"olaplex no 5 leave in\")"
+          },
+          {
+            "line": 73,
+            "text": "assert.equal(\n    normalizeIdentityText(\"OLAPLEX N°5 Bond Maintenance\"),\n    \"olaplex no 5 bond maintenance\",\n  )"
+          },
+          {
+            "line": 77,
+            "text": "assert.equal(normalizeIdentityText(\"Olaplex No 5 Leave In\"), \"olaplex no 5 leave in\")"
+          },
+          {
+            "line": 78,
+            "text": "assert.equal(normalizeIdentityText(\"Garnier Fructis / Hair-Food\"), \"garnier fructis hair food\")"
+          }
+        ]
+      },
+      {
+        "name": "normalizeIdentityText matches L'Oreal variants without broad unsafe rewrites",
+        "line": 81,
+        "start": 3626,
+        "end": 3956,
+        "body": "test(\"normalizeIdentityText matches L'Oreal variants without broad unsafe rewrites\", () => {\n  assert.equal(normalizeIdentityText(\"L'Oréal\"), \"loreal\")\n  assert.equal(normalizeIdentityText(\"L’Oréal\"), \"loreal\")\n  assert.equal(normalizeIdentityText(\"LʼOréal\"), \"loreal\")\n  assert.equal(normalizeIdentityText(\"Loreal\"), \"loreal\")\n})",
+        "sha256": "b34b89e572b633b7a3b902660444bfd1d1fb1cf3bb2c36027dd7f2568fdab6b5",
+        "assertions": [
+          {
+            "line": 82,
+            "text": "assert.equal(normalizeIdentityText(\"L'Oréal\"), \"loreal\")"
+          },
+          {
+            "line": 83,
+            "text": "assert.equal(normalizeIdentityText(\"L’Oréal\"), \"loreal\")"
+          },
+          {
+            "line": 84,
+            "text": "assert.equal(normalizeIdentityText(\"LʼOréal\"), \"loreal\")"
+          },
+          {
+            "line": 85,
+            "text": "assert.equal(normalizeIdentityText(\"Loreal\"), \"loreal\")"
+          }
+        ]
+      },
+      {
+        "name": "normalizeIdentifier returns stable snake-case identifiers",
+        "line": 88,
+        "start": 3958,
+        "end": 4349,
+        "body": "test(\"normalizeIdentifier returns stable snake-case identifiers\", () => {\n  assert.equal(normalizeIdentifier(\"Deep Cleansing Shampoo\"), \"deep_cleansing_shampoo\")\n  assert.equal(normalizeIdentifier(\"  Öle + Pflege  \"), \"ole_pflege\")\n  assert.equal(normalizeIdentifier(\"leave_in\"), \"leave_in\")\n  assert.equal(normalizeIdentifier(null), \"\")\n  assert.equal(normalizeIdentifier(undefined), \"\")\n})",
+        "sha256": "433e96b44137a770c957ee347fcadc98d1099eea504a8dcdfb8a16cbe567776d",
+        "assertions": [
+          {
+            "line": 89,
+            "text": "assert.equal(normalizeIdentifier(\"Deep Cleansing Shampoo\"), \"deep_cleansing_shampoo\")"
+          },
+          {
+            "line": 90,
+            "text": "assert.equal(normalizeIdentifier(\"  Öle + Pflege  \"), \"ole_pflege\")"
+          },
+          {
+            "line": 91,
+            "text": "assert.equal(normalizeIdentifier(\"leave_in\"), \"leave_in\")"
+          },
+          {
+            "line": 92,
+            "text": "assert.equal(normalizeIdentifier(null), \"\")"
+          },
+          {
+            "line": 93,
+            "text": "assert.equal(normalizeIdentifier(undefined), \"\")"
+          }
+        ]
+      },
+      {
+        "name": "tokenizeProductName returns normalized searchable product-name tokens",
+        "line": 96,
+        "start": 4351,
+        "end": 4761,
+        "body": "test(\"tokenizeProductName returns normalized searchable product-name tokens\", () => {\n  assert.deepEqual(tokenizeProductName(\"Garnier Fructis Hair-Food Aloe\"), [\n    \"garnier\",\n    \"fructis\",\n    \"hair\",\n    \"food\",\n    \"aloe\",\n  ])\n  assert.deepEqual(tokenizeProductName(\"L'Oréal Professionnel\"), [\"loreal\", \"professionnel\"])\n  assert.deepEqual(tokenizeProductName(\"OLAPLEX No. 5\"), [\"olaplex\", \"no\", \"5\"])\n})",
+        "sha256": "7d30b9ab0e7da16affeab1168dba301e2c4c52a909e2d3b13f88c519d5594bc2",
+        "assertions": [
+          {
+            "line": 97,
+            "text": "assert.deepEqual(tokenizeProductName(\"Garnier Fructis Hair-Food Aloe\"), [\n    \"garnier\",\n    \"fructis\",\n    \"hair\",\n    \"food\",\n    \"aloe\",\n  ])"
+          },
+          {
+            "line": 104,
+            "text": "assert.deepEqual(tokenizeProductName(\"L'Oréal Professionnel\"), [\"loreal\", \"professionnel\"])"
+          },
+          {
+            "line": 105,
+            "text": "assert.deepEqual(tokenizeProductName(\"OLAPLEX No. 5\"), [\"olaplex\", \"no\", \"5\"])"
+          }
+        ]
+      },
+      {
+        "name": "cleanProductDisplayName removes exact brand and product line prefixes conservatively",
+        "line": 108,
+        "start": 4763,
+        "end": 5744,
+        "body": "test(\"cleanProductDisplayName removes exact brand and product line prefixes conservatively\", () => {\n  assert.equal(\n    cleanProductDisplayName(\"Olaplex No. 5 Leave-In Conditioner\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Leave-In Conditioner\",\n  )\n\n  assert.equal(\n    cleanProductDisplayName(\"Olaplex Bond Maintenance Shampoo\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Bond Maintenance Shampoo\",\n  )\n\n  assert.equal(\n    cleanProductDisplayName(\"The Ordinary Ordinary Shampoo\", {\n      brand: \"Ordinary\",\n    }),\n    \"The Ordinary Ordinary Shampoo\",\n  )\n\n  assert.equal(\n    cleanProductDisplayName(\"Olaplexx No. 5 Leave-In Conditioner\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Olaplexx No. 5 Leave-In Conditioner\",\n  )\n\n  assert.equal(\n    cleanProductDisplayName(\"L'Oréal Paris Elvital Dream Length\", {\n      brand: \"Loreal Paris\",\n      productLine: \"Elvital\",\n    }),\n    \"Dream Length\",\n  )\n})",
+        "sha256": "debc7c37b4914b7c1ded8545eb022786bc27f75477fb2a2b157d808a126bf7ad",
+        "assertions": [
+          {
+            "line": 109,
+            "text": "assert.equal(\n    cleanProductDisplayName(\"Olaplex No. 5 Leave-In Conditioner\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Leave-In Conditioner\",\n  )"
+          },
+          {
+            "line": 117,
+            "text": "assert.equal(\n    cleanProductDisplayName(\"Olaplex Bond Maintenance Shampoo\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Bond Maintenance Shampoo\",\n  )"
+          },
+          {
+            "line": 125,
+            "text": "assert.equal(\n    cleanProductDisplayName(\"The Ordinary Ordinary Shampoo\", {\n      brand: \"Ordinary\",\n    }),\n    \"The Ordinary Ordinary Shampoo\",\n  )"
+          },
+          {
+            "line": 132,
+            "text": "assert.equal(\n    cleanProductDisplayName(\"Olaplexx No. 5 Leave-In Conditioner\", {\n      brand: \"Olaplex\",\n      productLine: \"No. 5\",\n    }),\n    \"Olaplexx No. 5 Leave-In Conditioner\",\n  )"
+          },
+          {
+            "line": 140,
+            "text": "assert.equal(\n    cleanProductDisplayName(\"L'Oréal Paris Elvital Dream Length\", {\n      brand: \"Loreal Paris\",\n      productLine: \"Elvital\",\n    }),\n    \"Dream Length\",\n  )"
+          }
+        ]
+      }
+    ],
+    "tests/product-identity-resolution.test.ts": [
+      {
+        "name": "resolveBrandFromText returns an exact brand and product line prefix match",
+        "line": 24,
+        "start": 463,
+        "end": 967,
+        "body": "test(\"resolveBrandFromText returns an exact brand and product line prefix match\", () => {\n  const resolution = resolveBrandFromText(\"Olaplex Nr. 5 Leave-In Conditioner\", brands)\n\n  assert.equal(resolution.match, \"brand_line\")\n  assert.equal(resolution.brand?.key, \"olaplex\")\n  assert.equal(resolution.productLine?.key, \"no_5\")\n  assert.equal(resolution.matchedText, \"Olaplex Nr. 5\")\n  assert.equal(resolution.confidence, \"high\")\n  assert.equal(resolution.reason, \"canonical_brand_with_line_inference\")\n})",
+        "sha256": "487cbe942d18c60b005ac5f1b13ae5dbf9a6ef84c9fb12a3b4626359ec167433",
+        "assertions": [
+          {
+            "line": 27,
+            "text": "assert.equal(resolution.match, \"brand_line\")"
+          },
+          {
+            "line": 28,
+            "text": "assert.equal(resolution.brand?.key, \"olaplex\")"
+          },
+          {
+            "line": 29,
+            "text": "assert.equal(resolution.productLine?.key, \"no_5\")"
+          },
+          {
+            "line": 30,
+            "text": "assert.equal(resolution.matchedText, \"Olaplex Nr. 5\")"
+          },
+          {
+            "line": 31,
+            "text": "assert.equal(resolution.confidence, \"high\")"
+          },
+          {
+            "line": 32,
+            "text": "assert.equal(resolution.reason, \"canonical_brand_with_line_inference\")"
+          }
+        ]
+      },
+      {
+        "name": "resolveBrandFromText returns an exact brand match without over-matching inside words",
+        "line": 35,
+        "start": 969,
+        "end": 1696,
+        "body": "test(\"resolveBrandFromText returns an exact brand match without over-matching inside words\", () => {\n  const resolution = resolveBrandFromText(\"K 18 Leave-in Molecular Repair Hair Oil\", brands)\n  assert.equal(resolution.match, \"brand\")\n  assert.equal(resolution.brand?.key, \"k18\")\n  assert.equal(resolution.productLine, null)\n  assert.equal(resolution.reason, \"brand_alias_exact\")\n\n  const nonMatch = resolveBrandFromText(\"SK18 Leave-in Molecular Repair Hair Oil\", brands)\n  assert.equal(nonMatch.match, \"none\")\n  assert.equal(nonMatch.brand, null)\n  assert.equal(nonMatch.confidence, \"none\")\n  assert.equal(nonMatch.reason, \"unresolved\")\n  assert.equal(nonMatch.unresolvedRawText, \"SK18 Leave-in Molecular Repair Hair Oil\")\n})",
+        "sha256": "dc57efea35efd6126771d20aae5b3eeebdfff9e8ec4c9ed2015a5f5a70f96daf",
+        "assertions": [
+          {
+            "line": 37,
+            "text": "assert.equal(resolution.match, \"brand\")"
+          },
+          {
+            "line": 38,
+            "text": "assert.equal(resolution.brand?.key, \"k18\")"
+          },
+          {
+            "line": 39,
+            "text": "assert.equal(resolution.productLine, null)"
+          },
+          {
+            "line": 40,
+            "text": "assert.equal(resolution.reason, \"brand_alias_exact\")"
+          },
+          {
+            "line": 43,
+            "text": "assert.equal(nonMatch.match, \"none\")"
+          },
+          {
+            "line": 44,
+            "text": "assert.equal(nonMatch.brand, null)"
+          },
+          {
+            "line": 45,
+            "text": "assert.equal(nonMatch.confidence, \"none\")"
+          },
+          {
+            "line": 46,
+            "text": "assert.equal(nonMatch.reason, \"unresolved\")"
+          },
+          {
+            "line": 47,
+            "text": "assert.equal(nonMatch.unresolvedRawText, \"SK18 Leave-in Molecular Repair Hair Oil\")"
+          }
+        ]
+      },
+      {
+        "name": "resolveBrandFromText resolves Phase 0 aliases before canonical brand names",
+        "line": 50,
+        "start": 1698,
+        "end": 3484,
+        "body": "test(\"resolveBrandFromText resolves Phase 0 aliases before canonical brand names\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      { id: \"brand-pantene\", canonical_name: \"Pantene\", normalized_name: \"pantene\" },\n      { id: \"brand-garnier\", canonical_name: \"Garnier\", normalized_name: \"garnier\" },\n    ],\n    productLines: [\n      {\n        id: \"line-pro-v\",\n        brand_id: \"brand-pantene\",\n        canonical_name: \"Pro-V\",\n        normalized_name: \"pro v\",\n      },\n      {\n        id: \"line-fructis\",\n        brand_id: \"brand-garnier\",\n        canonical_name: \"Fructis\",\n        normalized_name: \"fructis\",\n      },\n    ],\n    brandAliases: [\n      {\n        brand_id: \"brand-garnier\",\n        product_line_id: \"line-fructis\",\n        alias: \"Fructis\",\n        normalized_alias: \"fructis\",\n      },\n    ],\n  })\n\n  const proV = resolveBrandFromText(\"Pantene Pro-V Repair & Care Shampoo\", catalog)\n  assert.equal(proV.match, \"brand_line\")\n  assert.equal(proV.brand?.id, \"brand-pantene\")\n  assert.equal(proV.productLine?.id, \"line-pro-v\")\n  assert.equal(proV.reason, \"canonical_brand_with_line_inference\")\n\n  const garnierFructis = resolveBrandFromText(\"Garnier Fructis Aloe Hydra Bomb\", catalog)\n  assert.equal(garnierFructis.match, \"brand_line\")\n  assert.equal(garnierFructis.brand?.id, \"brand-garnier\")\n  assert.equal(garnierFructis.productLine?.id, \"line-fructis\")\n  assert.equal(garnierFructis.reason, \"canonical_brand_with_line_inference\")\n\n  const fructisAlias = resolveBrandFromText(\"Fructis Aloe Hydra Bomb\", catalog)\n  assert.equal(fructisAlias.match, \"brand_line\")\n  assert.equal(fructisAlias.brand?.id, \"brand-garnier\")\n  assert.equal(fructisAlias.productLine?.id, \"line-fructis\")\n  assert.equal(fructisAlias.reason, \"brand_line_alias_exact\")\n})",
+        "sha256": "3f78b2f953b0ee8ad45d9cca98a5be37fe41de012df62ae37dbffce5d5bd02a7",
+        "assertions": [
+          {
+            "line": 81,
+            "text": "assert.equal(proV.match, \"brand_line\")"
+          },
+          {
+            "line": 82,
+            "text": "assert.equal(proV.brand?.id, \"brand-pantene\")"
+          },
+          {
+            "line": 83,
+            "text": "assert.equal(proV.productLine?.id, \"line-pro-v\")"
+          },
+          {
+            "line": 84,
+            "text": "assert.equal(proV.reason, \"canonical_brand_with_line_inference\")"
+          },
+          {
+            "line": 87,
+            "text": "assert.equal(garnierFructis.match, \"brand_line\")"
+          },
+          {
+            "line": 88,
+            "text": "assert.equal(garnierFructis.brand?.id, \"brand-garnier\")"
+          },
+          {
+            "line": 89,
+            "text": "assert.equal(garnierFructis.productLine?.id, \"line-fructis\")"
+          },
+          {
+            "line": 90,
+            "text": "assert.equal(garnierFructis.reason, \"canonical_brand_with_line_inference\")"
+          },
+          {
+            "line": 93,
+            "text": "assert.equal(fructisAlias.match, \"brand_line\")"
+          },
+          {
+            "line": 94,
+            "text": "assert.equal(fructisAlias.brand?.id, \"brand-garnier\")"
+          },
+          {
+            "line": 95,
+            "text": "assert.equal(fructisAlias.productLine?.id, \"line-fructis\")"
+          },
+          {
+            "line": 96,
+            "text": "assert.equal(fructisAlias.reason, \"brand_line_alias_exact\")"
+          }
+        ]
+      },
+      {
+        "name": "conflicting aliases are reported and excluded from usable alias resolution",
+        "line": 99,
+        "start": 3486,
+        "end": 4417,
+        "body": "test(\"conflicting aliases are reported and excluded from usable alias resolution\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      { id: \"brand-first\", canonical_name: \"First\", normalized_name: \"first\" },\n      { id: \"brand-second\", canonical_name: \"Second\", normalized_name: \"second\" },\n    ],\n    productLines: [],\n    brandAliases: [\n      {\n        brand_id: \"brand-first\",\n        product_line_id: null,\n        alias: \"Shared\",\n        normalized_alias: \"shared\",\n      },\n      {\n        brand_id: \"brand-second\",\n        product_line_id: null,\n        alias: \"Shared\",\n        normalized_alias: \"shared\",\n      },\n    ],\n  })\n\n  assert.deepEqual(\n    catalog.conflicts.map((conflict) => conflict.normalizedAlias),\n    [\"shared\"],\n  )\n\n  const resolution = resolveBrandFromText(\"Shared Shampoo\", catalog)\n  assert.equal(resolution.match, \"none\")\n  assert.equal(resolution.reason, \"unresolved\")\n})",
+        "sha256": "7a5ad4e9696df95d10f8451232edd975fe7c5dfd520400d0ae35eebed6ecb182",
+        "assertions": [
+          {
+            "line": 122,
+            "text": "assert.deepEqual(\n    catalog.conflicts.map((conflict) => conflict.normalizedAlias),\n    [\"shared\"],\n  )"
+          },
+          {
+            "line": 128,
+            "text": "assert.equal(resolution.match, \"none\")"
+          },
+          {
+            "line": 129,
+            "text": "assert.equal(resolution.reason, \"unresolved\")"
+          }
+        ]
+      },
+      {
+        "name": "resolver uses Phase 0 normalized brand and line fields for punctuation variants",
+        "line": 132,
+        "start": 4419,
+        "end": 5771,
+        "body": "test(\"resolver uses Phase 0 normalized brand and line fields for punctuation variants\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      {\n        id: \"brand-loreal-paris\",\n        canonical_name: \"Loreal Paris\",\n        normalized_name: \"loreal paris\",\n      },\n    ],\n    productLines: [\n      {\n        id: \"line-elvital\",\n        brand_id: \"brand-loreal-paris\",\n        canonical_name: \"Elvital\",\n        normalized_name: \"elvital\",\n      },\n    ],\n    brandAliases: [],\n  })\n\n  const resolution = resolveBrandFromText(\"Loreal Paris Elvital Dream Length\", catalog)\n\n  assert.equal(resolution.match, \"brand_line\")\n  assert.equal(resolution.brand?.id, \"brand-loreal-paris\")\n  assert.equal(resolution.productLine?.id, \"line-elvital\")\n  assert.equal(resolution.matchedText, \"Loreal Paris Elvital\")\n  assert.equal(resolution.reason, \"canonical_brand_with_line_inference\")\n\n  const apostropheResolution = resolveBrandFromText(\"L'Oréal Paris Elvital Dream Length\", catalog)\n  assert.equal(apostropheResolution.match, \"brand_line\")\n  assert.equal(apostropheResolution.brand?.id, \"brand-loreal-paris\")\n  assert.equal(apostropheResolution.productLine?.id, \"line-elvital\")\n  assert.equal(apostropheResolution.matchedText, \"L'Oréal Paris Elvital\")\n  assert.equal(apostropheResolution.reason, \"canonical_brand_with_line_inference\")\n})",
+        "sha256": "90fe7fcabbc8122807a97e0decef49a9c4ca22aeb8a716c56d7cf4b0ffe553ae",
+        "assertions": [
+          {
+            "line": 154,
+            "text": "assert.equal(resolution.match, \"brand_line\")"
+          },
+          {
+            "line": 155,
+            "text": "assert.equal(resolution.brand?.id, \"brand-loreal-paris\")"
+          },
+          {
+            "line": 156,
+            "text": "assert.equal(resolution.productLine?.id, \"line-elvital\")"
+          },
+          {
+            "line": 157,
+            "text": "assert.equal(resolution.matchedText, \"Loreal Paris Elvital\")"
+          },
+          {
+            "line": 158,
+            "text": "assert.equal(resolution.reason, \"canonical_brand_with_line_inference\")"
+          },
+          {
+            "line": 161,
+            "text": "assert.equal(apostropheResolution.match, \"brand_line\")"
+          },
+          {
+            "line": 162,
+            "text": "assert.equal(apostropheResolution.brand?.id, \"brand-loreal-paris\")"
+          },
+          {
+            "line": 163,
+            "text": "assert.equal(apostropheResolution.productLine?.id, \"line-elvital\")"
+          },
+          {
+            "line": 164,
+            "text": "assert.equal(apostropheResolution.matchedText, \"L'Oréal Paris Elvital\")"
+          },
+          {
+            "line": 165,
+            "text": "assert.equal(apostropheResolution.reason, \"canonical_brand_with_line_inference\")"
+          }
+        ]
+      },
+      {
+        "name": "alias collisions with canonical brand names are reported and excluded",
+        "line": 168,
+        "start": 5773,
+        "end": 6848,
+        "body": "test(\"alias collisions with canonical brand names are reported and excluded\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      { id: \"brand-garnier\", canonical_name: \"Garnier\", normalized_name: \"garnier\" },\n      { id: \"brand-fructis\", canonical_name: \"Fructis\", normalized_name: \"fructis\" },\n    ],\n    productLines: [\n      {\n        id: \"line-fructis\",\n        brand_id: \"brand-garnier\",\n        canonical_name: \"Fructis\",\n        normalized_name: \"fructis\",\n      },\n    ],\n    brandAliases: [\n      {\n        brand_id: \"brand-garnier\",\n        product_line_id: \"line-fructis\",\n        alias: \"Fructis\",\n        normalized_alias: \"fructis\",\n      },\n    ],\n  })\n\n  assert.deepEqual(\n    catalog.conflicts.map((conflict) => conflict.normalizedAlias),\n    [\"fructis\"],\n  )\n\n  const resolution = resolveBrandFromText(\"Fructis Shampoo\", catalog)\n  assert.equal(resolution.match, \"brand\")\n  assert.equal(resolution.brand?.id, \"brand-fructis\")\n  assert.equal(resolution.productLine, null)\n  assert.equal(resolution.reason, \"canonical_brand_exact\")\n})",
+        "sha256": "8aed896e1cf4bb208a5c7eb21898f487682fa1dd501e656e810db6f2474ae715",
+        "assertions": [
+          {
+            "line": 192,
+            "text": "assert.deepEqual(\n    catalog.conflicts.map((conflict) => conflict.normalizedAlias),\n    [\"fructis\"],\n  )"
+          },
+          {
+            "line": 198,
+            "text": "assert.equal(resolution.match, \"brand\")"
+          },
+          {
+            "line": 199,
+            "text": "assert.equal(resolution.brand?.id, \"brand-fructis\")"
+          },
+          {
+            "line": 200,
+            "text": "assert.equal(resolution.productLine, null)"
+          },
+          {
+            "line": 201,
+            "text": "assert.equal(resolution.reason, \"canonical_brand_exact\")"
+          }
+        ]
+      },
+      {
+        "name": "line-specific aliases with missing product lines are excluded",
+        "line": 204,
+        "start": 6850,
+        "end": 7563,
+        "body": "test(\"line-specific aliases with missing product lines are excluded\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      {\n        id: \"brand-loreal-paris\",\n        canonical_name: \"L'Oréal Paris\",\n        normalized_name: \"loreal paris\",\n      },\n    ],\n    productLines: [],\n    brandAliases: [\n      {\n        brand_id: \"brand-loreal-paris\",\n        product_line_id: \"line-elvital\",\n        alias: \"Elvital\",\n        normalized_alias: \"elvital\",\n      },\n    ],\n  })\n\n  assert.equal(catalog.aliases.length, 0)\n\n  const resolution = resolveBrandFromText(\"Elvital Dream Length Shampoo\", catalog)\n  assert.equal(resolution.match, \"none\")\n  assert.equal(resolution.reason, \"unresolved\")\n})",
+        "sha256": "49b880c67811a5aa0c2a956e78c7c21e03293e215c3fdd075a45c3f874bba361",
+        "assertions": [
+          {
+            "line": 224,
+            "text": "assert.equal(catalog.aliases.length, 0)"
+          },
+          {
+            "line": 227,
+            "text": "assert.equal(resolution.match, \"none\")"
+          },
+          {
+            "line": 228,
+            "text": "assert.equal(resolution.reason, \"unresolved\")"
+          }
+        ]
+      },
+      {
+        "name": "resolver handles corrected Phase A catalog aliases",
+        "line": 231,
+        "start": 7565,
+        "end": 12157,
+        "body": "test(\"resolver handles corrected Phase A catalog aliases\", () => {\n  const catalog = buildBrandResolutionCatalog({\n    brands: [\n      {\n        id: \"brand-garnier\",\n        canonical_name: \"Garnier\",\n        normalized_name: \"garnier\",\n      },\n      {\n        id: \"brand-gliss\",\n        canonical_name: \"Schwarzkopf GLISS\",\n        normalized_name: \"schwarzkopf gliss\",\n      },\n      {\n        id: \"brand-monday\",\n        canonical_name: \"MONDAY\",\n        normalized_name: \"monday\",\n      },\n      {\n        id: \"brand-loreal-paris\",\n        canonical_name: \"L'Oréal Paris\",\n        normalized_name: \"loreal paris\",\n      },\n      {\n        id: \"brand-loreal-professionnel\",\n        canonical_name: \"L'Oréal Professionnel\",\n        normalized_name: \"loreal professionnel\",\n      },\n      {\n        id: \"brand-balea\",\n        canonical_name: \"Balea\",\n        normalized_name: \"balea\",\n      },\n    ],\n    productLines: [\n      {\n        id: \"line-fructis\",\n        brand_id: \"brand-garnier\",\n        canonical_name: \"Fructis\",\n        normalized_name: \"fructis\",\n      },\n      {\n        id: \"line-wahre\",\n        brand_id: \"brand-garnier\",\n        canonical_name: \"Wahre Schätze\",\n        normalized_name: \"wahre schatze\",\n      },\n      {\n        id: \"line-elvital\",\n        brand_id: \"brand-loreal-paris\",\n        canonical_name: \"Elvital\",\n        normalized_name: \"elvital\",\n      },\n      {\n        id: \"line-metal-dx\",\n        brand_id: \"brand-loreal-professionnel\",\n        canonical_name: \"Metal DX\",\n        normalized_name: \"metal dx\",\n      },\n      {\n        id: \"line-professional\",\n        brand_id: \"brand-balea\",\n        canonical_name: \"Professional\",\n        normalized_name: \"professional\",\n      },\n    ],\n    brandAliases: [\n      {\n        brand_id: \"brand-garnier\",\n        product_line_id: \"line-fructis\",\n        alias: \"Fructis\",\n        normalized_alias: \"fructis\",\n      },\n      {\n        brand_id: \"brand-garnier\",\n        product_line_id: \"line-fructis\",\n        alias: \"Garnier Hair Food\",\n        normalized_alias: \"garnier hair food\",\n      },\n      {\n        brand_id: \"brand-garnier\",\n        product_line_id: \"line-wahre\",\n        alias: \"Wahre Schätze\",\n        normalized_alias: \"wahre schatze\",\n      },\n      {\n        brand_id: \"brand-gliss\",\n        product_line_id: null,\n        alias: \"Glisskur\",\n        normalized_alias: \"glisskur\",\n      },\n      {\n        brand_id: \"brand-monday\",\n        product_line_id: null,\n        alias: \"Monday Haircare\",\n        normalized_alias: \"monday haircare\",\n      },\n      {\n        brand_id: \"brand-loreal-paris\",\n        product_line_id: null,\n        alias: \"L'Oréal\",\n        normalized_alias: \"loreal\",\n      },\n      {\n        brand_id: \"brand-loreal-paris\",\n        product_line_id: \"line-elvital\",\n        alias: \"Elvital\",\n        normalized_alias: \"elvital\",\n      },\n      {\n        brand_id: \"brand-loreal-professionnel\",\n        product_line_id: \"line-metal-dx\",\n        alias: \"Serie Expert Metal DX\",\n        normalized_alias: \"serie expert metal dx\",\n      },\n      {\n        brand_id: \"brand-balea\",\n        product_line_id: \"line-professional\",\n        alias: \"Balea Aqua\",\n        normalized_alias: \"balea aqua\",\n      },\n    ],\n  })\n\n  const fructis = resolveBrandFromText(\"Garnier Hair Food Aloe Vera\", catalog)\n  assert.equal(fructis.match, \"brand_line\")\n  assert.equal(fructis.brand?.id, \"brand-garnier\")\n  assert.equal(fructis.productLine?.id, \"line-fructis\")\n\n  const wahre = resolveBrandFromText(\"Wahre Schätze Avocado\", catalog)\n  assert.equal(wahre.match, \"brand_line\")\n  assert.equal(wahre.productLine?.id, \"line-wahre\")\n\n  const gliss = resolveBrandFromText(\"Glisskur Liquid Silk\", catalog)\n  assert.equal(gliss.match, \"brand\")\n  assert.equal(gliss.brand?.id, \"brand-gliss\")\n  assert.equal(gliss.productLine, null)\n\n  const monday = resolveBrandFromText(\"Monday Haircare Volume Shampoo\", catalog)\n  assert.equal(monday.match, \"brand\")\n  assert.equal(monday.brand?.id, \"brand-monday\")\n\n  const elvital = resolveBrandFromText(\"Elvital Öl Magique\", catalog)\n  assert.equal(elvital.match, \"brand_line\")\n  assert.equal(elvital.productLine?.id, \"line-elvital\")\n\n  const metalDx = resolveBrandFromText(\"Serie Expert Metal DX Shampoo\", catalog)\n  assert.equal(metalDx.match, \"brand_line\")\n  assert.equal(metalDx.brand?.id, \"brand-loreal-professionnel\")\n  assert.equal(metalDx.productLine?.id, \"line-metal-dx\")\n\n  const balea = resolveBrandFromText(\"Balea Aqua Hyaluron\", catalog)\n  assert.equal(balea.match, \"brand_line\")\n  assert.equal(balea.productLine?.id, \"line-professional\")\n})",
+        "sha256": "aa15e96f406812499fe82cf61bfc2d3d5aa101e7119456313017d2ca696f5351",
+        "assertions": [
+          {
+            "line": 356,
+            "text": "assert.equal(fructis.match, \"brand_line\")"
+          },
+          {
+            "line": 357,
+            "text": "assert.equal(fructis.brand?.id, \"brand-garnier\")"
+          },
+          {
+            "line": 358,
+            "text": "assert.equal(fructis.productLine?.id, \"line-fructis\")"
+          },
+          {
+            "line": 361,
+            "text": "assert.equal(wahre.match, \"brand_line\")"
+          },
+          {
+            "line": 362,
+            "text": "assert.equal(wahre.productLine?.id, \"line-wahre\")"
+          },
+          {
+            "line": 365,
+            "text": "assert.equal(gliss.match, \"brand\")"
+          },
+          {
+            "line": 366,
+            "text": "assert.equal(gliss.brand?.id, \"brand-gliss\")"
+          },
+          {
+            "line": 367,
+            "text": "assert.equal(gliss.productLine, null)"
+          },
+          {
+            "line": 370,
+            "text": "assert.equal(monday.match, \"brand\")"
+          },
+          {
+            "line": 371,
+            "text": "assert.equal(monday.brand?.id, \"brand-monday\")"
+          },
+          {
+            "line": 374,
+            "text": "assert.equal(elvital.match, \"brand_line\")"
+          },
+          {
+            "line": 375,
+            "text": "assert.equal(elvital.productLine?.id, \"line-elvital\")"
+          },
+          {
+            "line": 378,
+            "text": "assert.equal(metalDx.match, \"brand_line\")"
+          },
+          {
+            "line": 379,
+            "text": "assert.equal(metalDx.brand?.id, \"brand-loreal-professionnel\")"
+          },
+          {
+            "line": 380,
+            "text": "assert.equal(metalDx.productLine?.id, \"line-metal-dx\")"
+          },
+          {
+            "line": 383,
+            "text": "assert.equal(balea.match, \"brand_line\")"
+          },
+          {
+            "line": 384,
+            "text": "assert.equal(balea.productLine?.id, \"line-professional\")"
+          }
+        ]
+      }
+    ],
+    "tests/product-identity-schema.test.ts": [
+      {
+        "name": "product identity migration creates the phase 0 identity tables",
+        "line": 20,
+        "start": 704,
+        "end": 1070,
+        "body": "test(\"product identity migration creates the phase 0 identity tables\", () => {\n  for (const table of [\n    \"product_categories\",\n    \"brands\",\n    \"product_lines\",\n    \"brand_aliases\",\n    \"product_identifiers\",\n  ]) {\n    assertIncludes(`create table if not exists public.${table}`)\n    assertIncludes(`alter table public.${table} enable row level security`)\n  }\n})",
+        "sha256": "b6d4d96d8cad177c24293423b171643aab158ba1a0a4a902ab266351fd6c8fbc",
+        "assertions": []
+      },
+      {
+        "name": "product identity migration exposes only public-safe identity tables to public clients",
+        "line": 33,
+        "start": 1072,
+        "end": 2127,
+        "body": "test(\"product identity migration exposes only public-safe identity tables to public clients\", () => {\n  for (const table of [\"product_categories\", \"brands\"]) {\n    assertIncludes(`grant select on table public.${table} to anon, authenticated`)\n    assert.match(\n      normalizedSql,\n      new RegExp(\n        `create\\\\s+policy\\\\s+${table}_select_public\\\\s+on\\\\s+public\\\\.${table}\\\\s+for\\\\s+select\\\\s+to\\\\s+anon,\\\\s+authenticated\\\\s+using\\\\s+\\\\(true\\\\)`,\n        \"i\",\n      ),\n    )\n    assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(\n        `create\\\\s+policy\\\\s+\\\\w+\\\\s+on\\\\s+public\\\\.${table}\\\\s+for\\\\s+(insert|update|delete)`,\n        \"i\",\n      ),\n    )\n  }\n\n  for (const table of [\"product_lines\", \"brand_aliases\", \"product_identifiers\"]) {\n    assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`grant\\\\s+select\\\\s+on\\\\s+table\\\\s+public\\\\.${table}\\\\s+to\\\\s+anon`, \"i\"),\n    )\n    assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`create\\\\s+policy\\\\s+${table}_select_public\\\\s+on\\\\s+public\\\\.${table}`, \"i\"),\n    )\n  }\n})",
+        "sha256": "41621040685126f3988a805990f6cf3b66812bd4eb71eda24858dd1d8e869ca8",
+        "assertions": [
+          {
+            "line": 36,
+            "text": "assert.match(\n      normalizedSql,\n      new RegExp(\n        `create\\\\s+policy\\\\s+${table}_select_public\\\\s+on\\\\s+public\\\\.${table}\\\\s+for\\\\s+select\\\\s+to\\\\s+anon,\\\\s+authenticated\\\\s+using\\\\s+\\\\(true\\\\)`,\n        \"i\",\n      ),\n    )"
+          },
+          {
+            "line": 43,
+            "text": "assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(\n        `create\\\\s+policy\\\\s+\\\\w+\\\\s+on\\\\s+public\\\\.${table}\\\\s+for\\\\s+(insert|update|delete)`,\n        \"i\",\n      ),\n    )"
+          },
+          {
+            "line": 53,
+            "text": "assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`grant\\\\s+select\\\\s+on\\\\s+table\\\\s+public\\\\.${table}\\\\s+to\\\\s+anon`, \"i\"),\n    )"
+          },
+          {
+            "line": 57,
+            "text": "assert.doesNotMatch(\n      normalizedSql,\n      new RegExp(`create\\\\s+policy\\\\s+${table}_select_public\\\\s+on\\\\s+public\\\\.${table}`, \"i\"),\n    )"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration keeps non-recommended products out of public product reads",
+        "line": 64,
+        "start": 2129,
+        "end": 2599,
+        "body": "test(\"product identity migration keeps non-recommended products out of public product reads\", () => {\n  assert.match(normalizedSql, /drop\\s+policy\\s+if\\s+exists\\s+\"products_select_active\"/)\n  assert.match(\n    normalizedSql,\n    /create\\s+policy\\s+\"products_select_active\"\\s+on\\s+public\\.products\\s+for\\s+select\\s+to\\s+authenticated\\s+using\\s+\\(\\s*is_active\\s+=\\s+true\\s+and\\s+is_chaarlie_recommended\\s+=\\s+true\\s+and\\s+auth\\.role\\(\\)\\s+=\\s+'authenticated'\\s+\\)/,\n  )\n})",
+        "sha256": "bcf212eee60c8177aea3884d48a884a30355bdf776f12f491f2ceec238949da9",
+        "assertions": [
+          {
+            "line": 65,
+            "text": "assert.match(normalizedSql, /drop\\s+policy\\s+if\\s+exists\\s+\"products_select_active\"/)"
+          },
+          {
+            "line": 66,
+            "text": "assert.match(\n    normalizedSql,\n    /create\\s+policy\\s+\"products_select_active\"\\s+on\\s+public\\.products\\s+for\\s+select\\s+to\\s+authenticated\\s+using\\s+\\(\\s*is_active\\s+=\\s+true\\s+and\\s+is_chaarlie_recommended\\s+=\\s+true\\s+and\\s+auth\\.role\\(\\)\\s+=\\s+'authenticated'\\s+\\)/,\n  )"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration keeps semantic product matching aligned with catalog visibility",
+        "line": 72,
+        "start": 2601,
+        "end": 3056,
+        "body": "test(\"product identity migration keeps semantic product matching aligned with catalog visibility\", () => {\n  assert.match(normalizedSql, /drop\\s+function\\s+if\\s+exists\\s+public\\.match_products/)\n  assert.match(normalizedSql, /create\\s+or\\s+replace\\s+function\\s+public\\.match_products/)\n  assert.match(\n    normalizedSql,\n    /where\\s+p\\.is_active\\s+=\\s+true\\s+and\\s+p\\.is_chaarlie_recommended\\s+=\\s+true\\s+and\\s+p\\.lifecycle_status\\s+=\\s+'active'/,\n  )\n})",
+        "sha256": "a5c7bf70fb642cea8f8c88c7d0f551fa962039fd11e4890006319231f9b9c4b7",
+        "assertions": [
+          {
+            "line": 73,
+            "text": "assert.match(normalizedSql, /drop\\s+function\\s+if\\s+exists\\s+public\\.match_products/)"
+          },
+          {
+            "line": 74,
+            "text": "assert.match(normalizedSql, /create\\s+or\\s+replace\\s+function\\s+public\\.match_products/)"
+          },
+          {
+            "line": 75,
+            "text": "assert.match(\n    normalizedSql,\n    /where\\s+p\\.is_active\\s+=\\s+true\\s+and\\s+p\\.is_chaarlie_recommended\\s+=\\s+true\\s+and\\s+p\\.lifecycle_status\\s+=\\s+'active'/,\n  )"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration extends products without contracting legacy fields",
+        "line": 81,
+        "start": 3058,
+        "end": 4187,
+        "body": "test(\"product identity migration extends products without contracting legacy fields\", () => {\n  for (const column of [\n    \"category_key\",\n    \"brand_id\",\n    \"product_line_id\",\n    \"origin\",\n    \"is_chaarlie_recommended\",\n  ]) {\n    assertIncludes(`add column if not exists ${column}`)\n  }\n\n  assertIncludes(\"add column if not exists is_chaarlie_recommended boolean not null default true\")\n  assert.match(normalizedSql, /origin\\s+=\\s+coalesce\\(origin,\\s+'curated'\\)/)\n  assertIncludes(\"is_chaarlie_recommended = true\")\n  assertIncludes(\"add constraint products_origin_check\")\n  assert.match(normalizedSql, /check\\s+\\(origin\\s+in\\s+\\('curated',\\s+'user_submitted'\\)\\)/)\n  assertIncludes(\"add constraint products_category_key_fkey\")\n  assertIncludes(\"add constraint products_brand_id_fkey\")\n  assertIncludes(\"add constraint products_product_line_matches_brand\")\n\n  assert.doesNotMatch(normalizedSql, /drop\\s+column\\s+(if\\s+exists\\s+)?brand\\b/)\n  assert.doesNotMatch(normalizedSql, /drop\\s+column\\s+(if\\s+exists\\s+)?category\\b/)\n  assert.doesNotMatch(normalizedSql, /alter\\s+column\\s+(category_key|brand_id)\\s+set\\s+not\\s+null/)\n})",
+        "sha256": "13e6538f833e57940035131a6fc1037c7fc7a86193a7a91948a08d81786cb3db",
+        "assertions": [
+          {
+            "line": 93,
+            "text": "assert.match(normalizedSql, /origin\\s+=\\s+coalesce\\(origin,\\s+'curated'\\)/)"
+          },
+          {
+            "line": 96,
+            "text": "assert.match(normalizedSql, /check\\s+\\(origin\\s+in\\s+\\('curated',\\s+'user_submitted'\\)\\)/)"
+          },
+          {
+            "line": 101,
+            "text": "assert.doesNotMatch(normalizedSql, /drop\\s+column\\s+(if\\s+exists\\s+)?brand\\b/)"
+          },
+          {
+            "line": 102,
+            "text": "assert.doesNotMatch(normalizedSql, /drop\\s+column\\s+(if\\s+exists\\s+)?category\\b/)"
+          },
+          {
+            "line": 103,
+            "text": "assert.doesNotMatch(normalizedSql, /alter\\s+column\\s+(category_key|brand_id)\\s+set\\s+not\\s+null/)"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration keeps product lines and identifiers compatible",
+        "line": 106,
+        "start": 4189,
+        "end": 4827,
+        "body": "test(\"product identity migration keeps product lines and identifiers compatible\", () => {\n  assert.match(normalizedSql, /unique\\s+\\(id,\\s+brand_id\\)/)\n  assert.match(normalizedSql, /foreign\\s+key\\s+\\(product_line_id,\\s+brand_id\\)/)\n  assert.match(normalizedSql, /on\\s+delete\\s+set\\s+null\\s+\\(product_line_id\\)/)\n  assertIncludes(\"normalized_identifier_value\")\n  assertIncludes(\"idx_product_identifiers_product_type_value\")\n  assertIncludes(\"idx_product_identifiers_lookup\")\n  assert.doesNotMatch(\n    normalizedSql,\n    /unique\\s+index\\s+\\w+\\s+on\\s+public\\.product_identifiers\\s+\\(identifier_type,\\s*normalized_identifier_value\\)/,\n  )\n})",
+        "sha256": "605f39014516365f59cbf177d081eab835a152799f3500c83fc372112c670ff2",
+        "assertions": [
+          {
+            "line": 107,
+            "text": "assert.match(normalizedSql, /unique\\s+\\(id,\\s+brand_id\\)/)"
+          },
+          {
+            "line": 108,
+            "text": "assert.match(normalizedSql, /foreign\\s+key\\s+\\(product_line_id,\\s+brand_id\\)/)"
+          },
+          {
+            "line": 109,
+            "text": "assert.match(normalizedSql, /on\\s+delete\\s+set\\s+null\\s+\\(product_line_id\\)/)"
+          },
+          {
+            "line": 113,
+            "text": "assert.doesNotMatch(\n    normalizedSql,\n    /unique\\s+index\\s+\\w+\\s+on\\s+public\\.product_identifiers\\s+\\(identifier_type,\\s*normalized_identifier_value\\)/,\n  )"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration stores script-normalized identity values",
+        "line": 119,
+        "start": 4829,
+        "end": 5303,
+        "body": "test(\"product identity migration stores script-normalized identity values\", () => {\n  assert.match(\n    normalizedSql,\n    /canonical_name\\s+text\\s+not\\s+null,\\s+normalized_name\\s+text\\s+not\\s+null/,\n  )\n  assert.match(normalizedSql, /alias\\s+text\\s+not\\s+null,\\s+normalized_alias\\s+text\\s+not\\s+null/)\n  assert.doesNotMatch(normalizedSql, /normalized_name\\s+text\\s+generated\\s+always/)\n  assert.doesNotMatch(normalizedSql, /normalized_alias\\s+text\\s+generated\\s+always/)\n})",
+        "sha256": "7c9bad695f9c8f8e76e972c7efe7c2bfa823052be4cae74d94d0b5bab4bf9406",
+        "assertions": [
+          {
+            "line": 120,
+            "text": "assert.match(\n    normalizedSql,\n    /canonical_name\\s+text\\s+not\\s+null,\\s+normalized_name\\s+text\\s+not\\s+null/,\n  )"
+          },
+          {
+            "line": 124,
+            "text": "assert.match(normalizedSql, /alias\\s+text\\s+not\\s+null,\\s+normalized_alias\\s+text\\s+not\\s+null/)"
+          },
+          {
+            "line": 125,
+            "text": "assert.doesNotMatch(normalizedSql, /normalized_name\\s+text\\s+generated\\s+always/)"
+          },
+          {
+            "line": 126,
+            "text": "assert.doesNotMatch(normalizedSql, /normalized_alias\\s+text\\s+generated\\s+always/)"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration seeds all phase 0 product categories",
+        "line": 129,
+        "start": 5305,
+        "end": 5776,
+        "body": "test(\"product identity migration seeds all phase 0 product categories\", () => {\n  for (const categoryKey of [\n    \"shampoo\",\n    \"conditioner\",\n    \"mask\",\n    \"leave_in\",\n    \"oil\",\n    \"dry_shampoo\",\n    \"deep_cleansing_shampoo\",\n    \"bondbuilder\",\n    \"heat_protectant\",\n    \"serum\",\n    \"scrub\",\n    \"peeling\",\n    \"styling_gel\",\n    \"styling_mousse\",\n    \"styling_cream\",\n    \"hairspray\",\n  ]) {\n    assert.match(normalizedSql, new RegExp(`'${categoryKey}'`))\n  }\n})",
+        "sha256": "3371f01ca674c61f8ce1e70a1d70f28ddf7e28aa3598f4cd99a0ec8237ce4890",
+        "assertions": [
+          {
+            "line": 148,
+            "text": "assert.match(normalizedSql, new RegExp(`'${categoryKey}'`))"
+          }
+        ]
+      },
+      {
+        "name": "product identity migration stays inside the phase 0 boundary",
+        "line": 152,
+        "start": 5778,
+        "end": 6058,
+        "body": "test(\"product identity migration stays inside the phase 0 boundary\", () => {\n  assert.doesNotMatch(normalizedSql, /product_submissions/)\n  assert.doesNotMatch(normalizedSql, /user_product_usage/)\n  assert.doesNotMatch(normalizedSql, /alter\\s+table\\s+public\\.product_\\w+_specs/)\n})",
+        "sha256": "858205caa0269e24beebad80c1f34d22d5037c212ab2f8a9c0978ce3d8a1e2e9",
+        "assertions": [
+          {
+            "line": 153,
+            "text": "assert.doesNotMatch(normalizedSql, /product_submissions/)"
+          },
+          {
+            "line": 154,
+            "text": "assert.doesNotMatch(normalizedSql, /user_product_usage/)"
+          },
+          {
+            "line": 155,
+            "text": "assert.doesNotMatch(normalizedSql, /alter\\s+table\\s+public\\.product_\\w+_specs/)"
+          }
+        ]
+      }
+    ],
+    "tests/product-identity-title.test.ts": [
+      {
+        "name": "product identity title composes brand, line and name without visible duplication",
+        "line": 6,
+        "start": 159,
+        "end": 930,
+        "body": "test(\"product identity title composes brand, line and name without visible duplication\", () => {\n  assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Neqi\",\n      productLine: \"NEQI x @_the.beautiful.people\",\n      name: \"Leave-In Moisturizing Mist\",\n    }),\n    \"NEQI x @_the.beautiful.people Leave-In Moisturizing Mist\",\n  )\n  assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Garnier Wahre Schätze\",\n      productLine: \"Wahre Schätze\",\n      name: \"Honig Schätze Shampoo\",\n    }),\n    \"Garnier Wahre Schätze Honig Schätze Shampoo\",\n  )\n  assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Syoss\",\n      productLine: \"Intense Fullness\",\n      name: \"Syoss Intense Fullness Shampoo\",\n    }),\n    \"Syoss Intense Fullness Shampoo\",\n  )\n})",
+        "sha256": "f28515ce89185fae7e08314d25dad834a27eef7594657de5e67fe77be6e1c32c",
+        "assertions": [
+          {
+            "line": 7,
+            "text": "assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Neqi\",\n      productLine: \"NEQI x @_the.beautiful.people\",\n      name: \"Leave-In Moisturizing Mist\",\n    }),\n    \"NEQI x @_the.beautiful.people Leave-In Moisturizing Mist\",\n  )"
+          },
+          {
+            "line": 15,
+            "text": "assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Garnier Wahre Schätze\",\n      productLine: \"Wahre Schätze\",\n      name: \"Honig Schätze Shampoo\",\n    }),\n    \"Garnier Wahre Schätze Honig Schätze Shampoo\",\n  )"
+          },
+          {
+            "line": 23,
+            "text": "assert.equal(\n    composeProductIdentityTitle({\n      brand: \"Syoss\",\n      productLine: \"Intense Fullness\",\n      name: \"Syoss Intense Fullness Shampoo\",\n    }),\n    \"Syoss Intense Fullness Shampoo\",\n  )"
+          }
+        ]
+      },
+      {
+        "name": "product identity title ignores blank identity parts",
+        "line": 33,
+        "start": 932,
+        "end": 1137,
+        "body": "test(\"product identity title ignores blank identity parts\", () => {\n  assert.equal(\n    composeProductIdentityTitle({ brand: \"  \", productLine: null, name: \"Repair Shampoo\" }),\n    \"Repair Shampoo\",\n  )\n})",
+        "sha256": "4ed7cb5db9a7c4389c4a582fe5e9f26872364796b5bb6caca92e2078d0ec7d00",
+        "assertions": [
+          {
+            "line": 34,
+            "text": "assert.equal(\n    composeProductIdentityTitle({ brand: \"  \", productLine: null, name: \"Repair Shampoo\" }),\n    \"Repair Shampoo\",\n  )"
+          }
+        ]
+      }
+    ],
+    "tests/product-identity-correction.test.ts": [
+      {
+        "name": "canonical correction apply guard requires the production project confirmation",
+        "line": 10,
+        "start": 229,
+        "end": 1014,
+        "body": "test(\"canonical correction apply guard requires the production project confirmation\", () => {\n  assert.doesNotThrow(() =>\n    assertCanonicalCorrectionApplyTarget({\n      apply: false,\n      confirmProject: null,\n      supabaseUrl: \"https://example.supabase.co\",\n    }),\n  )\n\n  assert.throws(\n    () =>\n      assertCanonicalCorrectionApplyTarget({\n        apply: true,\n        confirmProject: \"wrong\",\n        supabaseUrl: \"https://pqdkhefxsxkyeqelqegq.supabase.co\",\n      }),\n    /Writes require --confirm-project=pqdkhefxsxkyeqelqegq/,\n  )\n\n  assert.throws(\n    () =>\n      assertCanonicalCorrectionApplyTarget({\n        apply: true,\n        confirmProject: \"pqdkhefxsxkyeqelqegq\",\n        supabaseUrl: \"https://other.supabase.co\",\n      }),\n    /unexpected Supabase project/,\n  )\n})",
+        "sha256": "57c074a89a7439593faa0955cbf4f2d7c7b792c9ef0d9ecda8058714cd14c2db",
+        "assertions": [
+          {
+            "line": 11,
+            "text": "assert.doesNotThrow(() =>\n    assertCanonicalCorrectionApplyTarget({\n      apply: false,\n      confirmProject: null,\n      supabaseUrl: \"https://example.supabase.co\",\n    }),\n  )"
+          },
+          {
+            "line": 19,
+            "text": "assert.throws(\n    () =>\n      assertCanonicalCorrectionApplyTarget({\n        apply: true,\n        confirmProject: \"wrong\",\n        supabaseUrl: \"https://pqdkhefxsxkyeqelqegq.supabase.co\",\n      }),\n    /Writes require --confirm-project=pqdkhefxsxkyeqelqegq/,\n  )"
+          },
+          {
+            "line": 29,
+            "text": "assert.throws(\n    () =>\n      assertCanonicalCorrectionApplyTarget({\n        apply: true,\n        confirmProject: \"pqdkhefxsxkyeqelqegq\",\n        supabaseUrl: \"https://other.supabase.co\",\n      }),\n    /unexpected Supabase project/,\n  )"
+          }
+        ]
+      },
+      {
+        "name": "canonical correction product patch never writes live product names or legacy fields",
+        "line": 40,
+        "start": 1016,
+        "end": 1455,
+        "body": "test(\"canonical correction product patch never writes live product names or legacy fields\", () => {\n  const patch = buildProductPatch({\n    brandId: \"brand-id\",\n    productLineId: \"line-id\",\n  }) as Record<string, unknown>\n\n  assert.deepEqual(patch, {\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n  })\n  assert.equal(\"name\" in patch, false)\n  assert.equal(\"brand\" in patch, false)\n  assert.equal(\"category\" in patch, false)\n})",
+        "sha256": "fc2859cdd4e9033c6b82efda6cc001b136e9e482355e62d965658f930bfd64df",
+        "assertions": [
+          {
+            "line": 46,
+            "text": "assert.deepEqual(patch, {\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n  })"
+          },
+          {
+            "line": 50,
+            "text": "assert.equal(\"name\" in patch, false)"
+          },
+          {
+            "line": 51,
+            "text": "assert.equal(\"brand\" in patch, false)"
+          },
+          {
+            "line": 52,
+            "text": "assert.equal(\"category\" in patch, false)"
+          }
+        ]
+      },
+      {
+        "name": "canonical correction alias upsert rows only include database columns",
+        "line": 55,
+        "start": 1457,
+        "end": 2003,
+        "body": "test(\"canonical correction alias upsert rows only include database columns\", () => {\n  const row = brandAliasWriteRow({\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n    alias: \"Garnier Hair Food\",\n    normalized_alias: \"garnier hair food\",\n    source: \"curated\",\n    target_brand_name: \"Garnier\",\n    target_product_line_name: \"Fructis\",\n  })\n\n  assert.deepEqual(row, {\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n    alias: \"Garnier Hair Food\",\n    normalized_alias: \"garnier hair food\",\n    source: \"curated\",\n  })\n})",
+        "sha256": "2759695dc620e99abfd60574716733dd5fd3a9fc159ffe18debf806f034572aa",
+        "assertions": [
+          {
+            "line": 66,
+            "text": "assert.deepEqual(row, {\n    brand_id: \"brand-id\",\n    product_line_id: \"line-id\",\n    alias: \"Garnier Hair Food\",\n    normalized_alias: \"garnier hair food\",\n    source: \"curated\",\n  })"
+          }
+        ]
+      }
+    ]
+  }
+}

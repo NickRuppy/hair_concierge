@@ -1,0 +1,140 @@
+[
+  {
+    "id": "C1",
+    "find": "  return data !== null",
+    "replace": "  return false",
+    "keeper": 3,
+    "assertion": "assert.equal(await hasUsedFreeReveal(client as never, \"user-1\"), true)",
+    "operator": "strictEqual",
+    "actual": false,
+    "expected": true,
+    "owner": "src/lib/entitlements/free-reveal.ts",
+    "ownerSha256": "9e0adf219ce1576f080bcf959a7d7c5b47d8a7a29bac3dae4a9ba5ca168ff93e",
+    "mutantPath": "/tmp/test-audit-offer-experiments87/mutants/C1.ts",
+    "mutantSha256": "4c22ccd65f92a8fdb22e8543cd8d89679f3a1505cb3b40efaab773aa65caac01",
+    "file": "tests/free-reveal.test.ts",
+    "testTitle": "hasUsedFreeReveal: does not leak across users",
+    "expectedErrorCode": "ERR_ASSERTION",
+    "oracle": {
+      "transfer": {
+        "file": "tests/free-reveal.test.ts",
+        "line": 102,
+        "column": 3,
+        "assertion": "assert.equal(await hasUsedFreeReveal(client as never, \"user-1\"), true)"
+      },
+      "cut": {
+        "file": "tests/free-reveal.test.ts",
+        "line": 95,
+        "column": 3,
+        "assertion": "assert.equal(await hasUsedFreeReveal(client as never, \"user-1\"), true)"
+      }
+    },
+    "scope": "Representative real-owner fault only. Static parsed, not run. Exact assertion first keeper frame must be checked by main; clean selected test must produce one test before and after fault."
+  },
+  {
+    "id": "C2",
+    "find": ".insert({ user_id: userId, product_id: productId })",
+    "replace": ".insert({ user_id: userId, product_id: productId === \"product-a\" ? \"wrong-product\" : productId })",
+    "keeper": 5,
+    "assertion": "assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })",
+    "operator": "deepStrictEqual",
+    "actual": {
+      "user_id": "user-1",
+      "product_id": "wrong-product"
+    },
+    "expected": {
+      "user_id": "user-1",
+      "product_id": "product-a"
+    },
+    "owner": "src/lib/entitlements/free-reveal.ts",
+    "ownerSha256": "9e0adf219ce1576f080bcf959a7d7c5b47d8a7a29bac3dae4a9ba5ca168ff93e",
+    "mutantPath": "/tmp/test-audit-offer-experiments87/mutants/C2.ts",
+    "mutantSha256": "64e7a1deee8ea966e653dc713e0c7a6725598cf9187bc7b6141dfb1f0f9474bf",
+    "file": "tests/free-reveal.test.ts",
+    "testTitle": "consumeFreeReveal: second consume for the same user returns already_used",
+    "expectedErrorCode": "ERR_ASSERTION",
+    "oracle": {
+      "transfer": {
+        "file": "tests/free-reveal.test.ts",
+        "line": 126,
+        "column": 3,
+        "assertion": "assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })"
+      },
+      "cut": {
+        "file": "tests/free-reveal.test.ts",
+        "line": 109,
+        "column": 3,
+        "assertion": "assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })"
+      }
+    },
+    "scope": "Representative real-owner fault only. Static parsed, not run. Exact assertion first keeper frame must be checked by main; clean selected test must produce one test before and after fault."
+  },
+  {
+    "id": "C3",
+    "find": "): Promise<ConsumeFreeRevealResult> {\n  const { error }",
+    "replace": "): Promise<ConsumeFreeRevealResult> {\n  await client.from(\"scan_free_reveals\").select(\"user_id\").eq(\"user_id\", userId).maybeSingle()\n  const { error }",
+    "keeper": 5,
+    "assertion": "assert.equal(fake.selectCalls, 0)",
+    "operator": "strictEqual",
+    "actual": 2,
+    "expected": 0,
+    "owner": "src/lib/entitlements/free-reveal.ts",
+    "ownerSha256": "9e0adf219ce1576f080bcf959a7d7c5b47d8a7a29bac3dae4a9ba5ca168ff93e",
+    "mutantPath": "/tmp/test-audit-offer-experiments87/mutants/C3.ts",
+    "mutantSha256": "63ffe5cf452f8e58ff28f93c94d52f273739e8f8f8379e366fe01e3817df6146",
+    "file": "tests/free-reveal.test.ts",
+    "testTitle": "consumeFreeReveal: second consume for the same user returns already_used",
+    "expectedErrorCode": "ERR_ASSERTION",
+    "oracle": {
+      "transfer": {
+        "file": "tests/free-reveal.test.ts",
+        "line": 139,
+        "column": 3,
+        "assertion": "assert.equal(fake.selectCalls, 0)"
+      },
+      "cut": {
+        "file": "tests/free-reveal.test.ts",
+        "line": 122,
+        "column": 3,
+        "assertion": "assert.equal(fake.selectCalls, 0)"
+      }
+    },
+    "scope": "Representative real-owner fault only. Static parsed, not run. Exact assertion first keeper frame must be checked by main; clean selected test must produce one test before and after fault."
+  },
+  {
+    "id": "C4",
+    "find": "  return row ? { productId: row.product_id } : null",
+    "replace": "  return row ? { productId: \"wrong-product\" } : null",
+    "keeper": 11,
+    "assertion": "assert.deepEqual(await loadFreeRevealRecord(client as never, \"user-1\"), {",
+    "operator": "deepStrictEqual",
+    "actual": {
+      "productId": "wrong-product"
+    },
+    "expected": {
+      "productId": "product-a"
+    },
+    "owner": "src/lib/entitlements/free-reveal.ts",
+    "ownerSha256": "9e0adf219ce1576f080bcf959a7d7c5b47d8a7a29bac3dae4a9ba5ca168ff93e",
+    "mutantPath": "/tmp/test-audit-offer-experiments87/mutants/C4.ts",
+    "mutantSha256": "2d35fb145fa5368fcd65ee04971b206141f70aec47161e1679564bce04e7fa18",
+    "file": "tests/free-reveal.test.ts",
+    "testTitle": "loadFreeRevealRecord: does not leak across users",
+    "expectedErrorCode": "ERR_ASSERTION",
+    "oracle": {
+      "transfer": {
+        "file": "tests/free-reveal.test.ts",
+        "line": 207,
+        "column": 3,
+        "assertion": "assert.deepEqual(await loadFreeRevealRecord(client as never, \"user-1\"), {"
+      },
+      "cut": {
+        "file": "tests/free-reveal.test.ts",
+        "line": 175,
+        "column": 3,
+        "assertion": "assert.deepEqual(await loadFreeRevealRecord(client as never, \"user-1\"), {"
+      }
+    },
+    "scope": "Representative real-owner fault only. Static parsed, not run. Exact assertion first keeper frame must be checked by main; clean selected test must produce one test before and after fault."
+  }
+]

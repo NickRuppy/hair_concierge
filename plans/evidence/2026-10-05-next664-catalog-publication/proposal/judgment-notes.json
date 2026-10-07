@@ -1,0 +1,99 @@
+{
+"tests/expansion-apply-batch.test.ts":[
+"Existing mask fixture admission keeper: total partition, exactly one exclusion, named identifier gap and no parked/emitted overlap. Receives C3; same five rows, supplement, builder and serialization.",
+"Injected packaging deviation must park the exact target with deviation_requires_review; ordinary exclusion fixture never exercises this review veto.",
+"External image URL must park all products with missing_finalized_image; own-bucket happy path cannot detect an image-boundary bypass.",
+"Removed Garnier supplement must yield the exact sole missing_operator_supplement gap; distinct from malformed present image.",
+"Removing manifest/protocol/operator quote sources must park; catches fabricated evidence fallback, not merely schema acceptance.",
+"Conflicting fallback text must lose to actual manifest source_text; precedence differs from the no-quote rejection.",
+"Empty operator evidence override must be rescued by the original manifest quote; catches an overly strict supplement requirement.",
+"Explicit quarantined existing-product target must park; new-product identity checks do not execute this disposition path.",
+"Canonical identifier belongs to another product; ownership collision is independent of same-name identity.",
+"Active same-brand/name record with no identifier collision must park; separate duplicate identity admission rule.",
+"Oil manifest non-mask protocols must publish all expected roles with no protocol_stamp_failed; category path and fixture differ from masks.",
+"Stray mask wait copy on oil supplement must not corrupt its non-mask stamp; keeper oil input has no stray field.",
+"Leave-in manifest damp protocol must publish Garnier with exact post_wash_leave_in role; separate category validator and manifest.",
+"C3: complete two-assertion union into existing identical maskManifest/supplementFor/buildExpansionApplyBatch keeper. No extra read/build/fixture call.",
+"Armed, clean, matching reviewed head must produce empty blockers; preserves positive gate independently from denials.",
+"Undefined/disabled execution flag with otherwise armed inputs must independently block; CLI confirm cannot substitute for arming.",
+"Mismatched well-formed reviewed head must block even when armed and clean; no other gate input exercises this comparison.",
+"Dirty checkout with matching head and enabled switch must block; separate write-safety gate."
+],
+"tests/expansion-apply-templates.test.ts":[
+"Existing all-eleven default-slot schema/product-scope keeper; retains version/locale/scoping/evidence/empty-reserved fields and receives C1/C2 on the existing row/payload only.",
+"C1: default oil leave-on payload and schema parse already occur inside all-eleven keeper. Preserve exact ordered four-day literal on that existing iteration.",
+"C2: same eleven default rows already exist in keeper. Preserve row-vs-meta role/category for each row plus both literal MASK vocabularies using existing MASK row.",
+"Column-to-payload consistency includes rinse exception, generated/source column omission, cadence/modifiers and heat reapplication; schema validity alone does not imply these bindings. No extra Object.keys/isHeat calls added to another keeper.",
+"V2 conversion reaches its own family/sourceRole/scope mapping, unlike V1 schema parse. Keep its existing full input loop.",
+"German wait-copy parser output exact ranges and null precedence are not proven by family equality; preserves six concrete template windows and conditioner opt-in.",
+"Null numeric time with range/maximum copy uses two existing literal rows; exact-default mask input cannot reach either parsing branch.",
+"Both damp-only and either-state heat builds plus V2 heat object and copy completeness; preserves explicit dry-use facts and array order.",
+"Negative required slots, evidence, UUID, cross-template fields, source type/date and exact-time copy validation; positive builds cannot prove throws.",
+"Unknown template ID must throw before stamping; no known-template keeper reaches absent metadata/builders."
+],
+"tests/admin-product-category-write-policy.test.ts":["Same-category aliases preserve edits under canonical normalization; positive path differs from unresolved or cross-category values.","Cross-category and unresolved legacy category must require guarded repair; no alias-success assertion detects fail-open recategorization."],
+"tests/admin-product-support-specs.test.ts":[
+"Complete bondbuilder payload survives category-specific schema with full output object; independent enum and field vocabulary.","Leave-in fit schema accepts canonical relationship/benefits; different category dispatch than mask or bondbuilder.","Mask engine-native weights/concentration/flags output is preserved; does not share operative schema with other specs.","Nullable purchase-link health fields survive without category specs; metadata output contract is independent from category rejection.","Missing and unmapped category are rejected; positive category fixtures cannot detect normalization fail-open.","Deep-cleansing category without its spec must reject; present-but-invalid specs use a different guard.","Partial deep-cleansing spec must reject missing fit fields; preserves schema field completeness independent from absent object.","Complete deep-cleansing reset object must accept; catches over-restrictive validation left invisible by negative cases.","Dry-shampoo canonical fields survive while unsupported shape is rejected; preserve both alternatives and output projection.","Peeling category requires canonical peeling type vocabulary; no other category reaches its schema.","Profile-only concerns rejected on product input; domain taxonomy boundary is distinct from valid-category tests.","Tangling accepted for leave-in and rejected for shampoo; exact category-conditioned eligibility, not generic concern membership.","Dryness accepted on shampoo; prevents negative taxonomy tests from permitting over-broad rejection."
+],
+"tests/catalog-authority-historical-repair-migration.test.ts":[
+"Retained bounded hold: existence predicate is duplicated by all four SQL keepers. A separate artifact-absence consolidation could preserve its explicit diagnostic; not included in current content-mutant packet, no independent-contract claim or removal credit.",
+"Legacy weight/relationship conflict messages, generated canonical relationship and absence of destructive benefits/table rewrites; later convergence migration does not consume these source bytes.",
+"Four demonstrated composite thickness index definitions; source receipt lookup patterns do not prove these exact migration definitions.",
+"Historical repair must defer validation/NOT NULL until receipts; later closure intentionally validates, so combining across migration phases would lose ordering.",
+"Recommendation requires active lifecycle as NOT VALID at expand; preserve exact boolean predicate and defer validation, separate from closure migration."
+],
+"tests/catalog-authority-legacy-sync-retirement-migration.test.ts":[
+"Retire every named destructive legacy trigger/function while keeping transitional compatibility paths; migration source contract not interchangeable with runtime schema state.",
+"Guard Neqi product/category/three thicknesses and assert canonical oil row count; preserves bounded historical identity and safety checks.",
+"Explicit deferred validations then NOT NULL promotion/drop old check; independent final-phase migration shape.",
+"TypeScript required validated schema inventory matches closure and excludes redundant not-null check; cross-language inventory drift is not checked by SQL alone."
+],
+"tests/catalog-authority-lifecycle-repair.test.ts":["Exact nineteen source UUIDs in both preflight and repair plus drift/target/relationship receipt fields; transaction guard test does not bind cohort identity.","Serializable transaction, advisory lock, row count guards, commit, no DELETE/TRUNCATE and exact two-table write set; UUID presence does not prove write bounds."],
+"tests/catalog-authority-product-spec-relationship-verification.test.ts":["Explicit matching nonproduction project required, with missing/production/mismatch denials; relation-shape helper does not enforce target safety.","Representative rows required and exact singleton-object/array cardinalities checked, including negative shapes; target checks cannot detect PostgREST embed drift."],
+"tests/catalog-authority-relationship-convergence-migration.test.ts":["Every fourteen-table composite validation precedes matching legacy FK removal; source order and complete inventory survive independently from current schema contract.","Schema receipt explicitly inspects each forbidden legacy FK; migration drops do not prove the audit can report regression."],
+"tests/catalog-authority-repair.test.ts":[
+"Approved manifest binds reviewer content and live authority fingerprint; positive execution contract and exact returned manifest.",
+"Changing intended authority invalidates approved content fingerprint; caller-read live state equality alone cannot detect stale review.",
+"Duplicate manifest identities and missing live authority each stop entire slice; preserve both no-partial-apply preconditions.",
+"Draft or incomplete review metadata cannot execute; independent approval-state fail-closed checks.",
+"Category slice rejects foreign lane entries; valid approved oil fixture does not cover wrong category.",
+"Object insertion-order canonicalization equal hash; lifecycle validation does not compare reordered equal authority.",
+"Unicode-equivalent but distinct key spellings retain distinct fingerprints in every insertion order; catches localeCompare key-collision ambiguity.",
+"Undefined/nonfinite/non-JSON fingerprint input throws; preserves rejection rather than silent JSON coercion.",
+"Manifest schema rejects non-JSON intended authority; direct hash helper rejection does not prove schema input boundary.",
+"Explicit expected current authority object must agree with old fingerprint before execution; separate from live actual authority mismatch."
+],
+"tests/catalog-authority-schema-foundations-migration.test.ts":[
+"Normalized eligibility tables, RLS, public/anon/auth denial, service CRUD, natural keys and value checks; no PGlite keeper installs this migration.",
+"Idempotent legacy-array plus category-matched contextual backfill; preserves conflict targets and category filters independent from table definition.",
+"Spine uniqueness and expand-before-validate nullable identity ordering; later closure has deliberately different requirements.",
+"Thirteen category facts require literal category column/check, composite NOT VALID FK and index; repeated literal table rows are original domain inventory.",
+"Schema receipt must inspect pg_index and both supporting object patterns; definition creation alone does not prove audit observability.",
+"Protocol generated category alias and composite FK must bind exact protocol to product; protocol differs from constant category tables.",
+"Four contextual thickness FKs must be deferrable/deferred and remain NOT VALID in expand; separate authority relation and deletion behavior.",
+"Insert category fallback, dual ordered sync triggers, contextual maintenance/pruning and revoked helper privileges; historical migration compatibility remains replay contract, no retirement-by-age inference."
+],
+"tests/catalog-apply-executor-hardening-postgres.test.ts":[
+"Dynamic inventory of reviewer-gated apply executors equals thirteen unique parsed harden calls and historical production hash keys; per-body mutation tests cannot detect omitted executor.",
+"Every rebuilt pre-hardening prosrc matches recorded production md5 (scan-expansion comment normalization explicit); mutation roundtrip only proves relative equality, not correct starting bytes.",
+"Actual hardening migration parses/applies to reconstructed definitions, inverse listed edits yield byte-exact originals and existing service grant persists; independent from final lock/guard predicates.",
+"All patched bodies take shared lock first/once ahead of writes and own lock, no unsafe NULL reviewer/fingerprint guards; edit roundtrip could preserve an incorrect listed patch. check_function_bodies=off means definition proof only, not executor behavior/concurrency."
+],
+"tests/product-identifier-global-ownership-migration.test.ts":[
+"Expand SQL generated canonical GTIN/checksum/invalid-row hold contracts; narrow in-memory runtime fixture does not prove every source index/immutability clause.",
+"Writer source preflights canonical owners including inactive, applies scanned IDs before delegate and protects net-content update; stub delegate is not full product approval proof.",
+"Retired Heat/Scalp executors revoked also from service_role; PGlite ownership test does not query those exact privileges.",
+"Crossproduct/same-product duplicate cleanup checks precede partial unique owner index and temporary lookup drop; runtime successful fresh fixture cannot exercise dirty migration preflight.",
+"Actual three migrations execute against explicit fake base delegates and enforce checksum, dedup, net-content null clearing, invalid scan denial and crossproduct uniqueness. SQL substrings cannot replace these effects; not remote PostgreSQL/full schema proof."
+],
+"tests/audit-product-metadata-script.test.ts":[
+"Null/malformed links classified unavailable without manufacturing fetch result; preserve unusable input branch.",
+"Known retailer HTML reaches actual hostname classifier; fake fetch supplies text/status only, expected classification remains real owner.",
+"dm unavailable phrase wins over cart markup; mixed evidence precedence absent from ordinary available HTML.",
+"Mueller unavailable phrase wins over cart markup; distinct hostname and pattern branch.",
+"Rossmann generic unavailable phrase wins over cart markup; different retailer predicate, cannot infer parity from dm.",
+"Non-OK, inconclusive or throwing fetch returns manual-review null; unavailable link and confident content statuses do not imply this fallback."
+],
+"tests/product-metadata-health.test.ts":["Footnote marker positive and ordinary-name negative; actual audit fixture does not cover full helper alternatives.","Numeric numbers/comma strings/empty input normalization; downstream known null-price fixture is not equivalent.","Actual audit combines name/URL/image/price/stale metadata findings; helper tests do not prove collector output.","Watched price upper bound distinguishes stale/nonstale exact numbers; unrelated missing-price finding does not reach comparison."],
+"tests/product-metadata-ingest-identity.test.ts":["Explicit ID missing must reject without fallback; explicit authority selection differs from alias or no authority.","Alias-selected ID missing must reject without name fallback; alias branch is separately consumed.","No explicit ID/alias permits name/category lookup and resolution source; denials cannot prove fallback works.","Existing commercial fields preserved unless force=true, with missing values filled; preserves both overwrite states and exact null/value output."]
+}

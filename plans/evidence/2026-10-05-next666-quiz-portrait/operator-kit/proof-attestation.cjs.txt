@@ -1,0 +1,37 @@
+'use strict';
+// In-memory parser shapes ONLY: no Node test runner, owner import, or native assertion execution.
+const fs=require('node:fs'),util=require('node:util'),proof=require('./operator-proof.cjs'),g=require('./operator-guard.cjs'),controls=JSON.parse(fs.readFileSync(__dirname+'/operator-controls-normalized.json'));
+let checks=0;function ok(x,label){checks++;if(!x)throw Error(label)}
+function html(c){let h='<button data-hair-length-card="true" class="h-[184px]" aria-describedby="desc"><div data-hair-portrait-media="true"><svg aria-hidden="true"></svg></div><span>Taille oder länger.</span></button>';if(c.id==='C1-fixed-responsive-frame')h=h.replace('184','183');if(c.id==='C1-description-association')h=h.replace(' aria-describedby="desc"','');if(c.id==='C1-decorative-body')h=h.replace('<svg aria-hidden="true"','<svg aria-hidden="false"');return h}
+function tap(c,phase,h=html(c)){const o=c.oracles[phase],msg=c.messageHeader+' Input:\n\n'+util.inspect(h)+'\n';return `TAP version 13\n# Subtest: ${c.test.name}\nnot ok 1 - ${c.test.name}\n  ---\n  error: |-\n    ${msg.replaceAll('\n','\n    ')}\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: ${util.inspect(h,{breakLength:Infinity})}\n  operator: 'match'\n  stack: |-\n    TestContext.<anonymous> (${g.ROOT}/${c.test.file}:${o.startLine}:10)\n    Test.run (node:internal/test_runner/test:1000:1)\n  ...\n1..1\n# tests 1\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n`}
+function run(text,extra={}){return{status:1,signal:null,timedOut:false,spawnError:null,...proof.parseTAP(text),text,...extra}}
+for(const c of controls)for(const phase of ['transfer','cut']){
+ const text=tap(c,phase),o=c.oracles[phase],reject=(s,label)=>ok(!proof.intended(c,run(s),phase).accepted,c.id+' '+phase+' rejects '+label);
+ ok(proof.intended(c,run(text),phase).accepted,c.id+' '+phase+' exact synthetic shape');
+ for(const extra of [{status:0},{status:null},{timedOut:true},{signal:'SIGKILL'},{spawnError:'setup'}])ok(!proof.intended(c,run(text,extra),phase).accepted,'runtime status rejected');
+ for(const [from,to,label]of [
+  ["code: 'ERR_ASSERTION'","code: 'ERR_TEST_FAILURE'",'generic wrapper'],["code: 'ERR_ASSERTION'","code: 'ERR_MODULE_NOT_FOUND'",'import'],["operator: 'match'","operator: 'doesNotMatch'",'operator'],
+  [c.messageHeader,c.messageHeader.replace(c.expectedRegex,'/wrong/'),'wrong literal regex'],[c.messageHeader,'prefixed '+c.messageHeader,'nonexact header'],
+  [c.test.file+':'+o.startLine+':10',c.test.file+':1:10','wrong FIRST frame'],[g.ROOT+'/'+c.test.file,'/forged/'+c.test.file,'forged filename prefix'],['TestContext.<anonymous>','Setup.<anonymous>','setup function at claimed line'],
+  ['# tests 1','# tests 0','zero selection'],['# skipped 0','# skipped 1','skip'],['# cancelled 0','# cancelled 1','cancel'],['# todo 0','# todo 1','todo'],['# pass 0','# pass 1','pass'],['# fail 1','# fail 2','extra failure'],
+  ['# Subtest: '+c.test.name,'# Subtest: Wrong test','wrong name'],['  error: |-','  error: >-','unknown message scalar'],
+  ['  expected:\n','  expected: true\n','typed expected boolean'],['  expected:\n','  expected: /wrong/\n','expected not empty'],['  expected:\n','  expected:\n    0: true\n','expected array'],
+  [/^  actual: .*$/m,'  actual: true','actual boolean'],[/^  actual: .*$/m,'  actual: {}','actual object'],[/^  actual: .*$/m,'  actual: <button data-hair-length-card="true">Taille oder länger.','unquoted actual'],[/^  actual: .*$/m,'  actual: |-\n    '+html(c),'unsupported block actual']
+ ])reject(text.replace(from,to),label);
+ reject(text.replace('  operator:',"  code: 'ERR_ASSERTION'\n  operator:"),'duplicate code');
+ reject(text.replace('  operator:',"  actual: 'forged'\n  operator:"),'duplicate actual');
+ reject(text.replace('  operator:',"  expected:\n  operator:"),'duplicate expected');
+ const nested=text.replace(/^  actual: .*$/m,'  actual:\n    code: \'ERR_ASSERTION\'\n    operator: \'match\'\n    stack: |-\n      TestContext.<anonymous> ('+g.ROOT+'/'+c.test.file+':'+o.startLine+':10)');reject(nested,'nested exception actual');
+ const forgedFirst=text.replace('    TestContext.<anonymous> (','    Setup.<anonymous> (src/setup.ts:1:1)\n    TestContext.<anonymous> (');reject(forgedFirst,'correct later frame cannot rescue wrong first');
+ reject(text.replace('  stack: |-','  stack: |-\n    Setup.<anonymous> (src/setup.ts:1:1)'),'first outer setup frame');
+ const tooLong=html(c)+'x'.repeat(11000);reject(tap(c,phase,tooLong),'truncated10000 actual');
+ const wrongHtml=html(c).replace('data-hair-length-card="true"','data-unrelated="true"');reject(tap(c,phase,wrongHtml),'wrong actual branch');
+ if(c.id==='C1-fixed-responsive-frame')reject(tap(c,phase,html(c)+'h-[184px]'),'forbidden original frame appears');
+ if(c.id==='C1-description-association')reject(tap(c,phase,html(c)+'aria-describedby="still-present"'),'association retained');
+ if(c.id==='C1-decorative-body')reject(tap(c,phase,html(c)+'<svg aria-hidden="true"'),'decoration retained');
+ reject(tap(c,phase,html(c).replace('Taille oder länger.','missing')),'description missing');
+ const msg=proof.errorMessage(text);const quoted=text.replace(/  error: \|-\n[\s\S]*?(?=  code:)/,'  error: '+JSON.stringify(msg)+'\n');ok(proof.intended(c,run(quoted),phase).accepted,'JSON quoted exact message accepted');
+ const plainRelative=text.replace(g.ROOT+'/', '');ok(proof.intended(c,run(plainRelative),phase).accepted,'exact relative frame accepted');
+ const cleanText=`TAP version 13\n# Subtest: ${c.test.name}\nok 1 - ${c.test.name}\n1..1\n# tests 1\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n`;ok(proof.clean(c,run(cleanText,{status:0})),'clean1 shape');ok(!proof.clean(c,run(cleanText.replace('# tests 1','# tests 0'),{status:0})),'zero clean rejected');
+}
+console.log(JSON.stringify({status:'PASS_SYNTHETIC_SHAPES_ONLY',controls:3,phases:2,checks,repositoryWrites:0,children:0,ownerImports:0,network:0,nativeRuns:0,limits:'Synthetic hand-authored HTML and TAP only. Does not prove real SSR output length, native formatter compatibility or fault sensitivity.'},null,2));

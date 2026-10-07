@@ -1,0 +1,738 @@
+{
+  "changedPaths549to564": {
+    "scripts/scanner-catalog-coverage/readiness-export.ts": {
+      "before": {
+        "lines": {
+          "total": 376,
+          "covered": 193,
+          "skipped": 0,
+          "pct": 51.32
+        },
+        "functions": {
+          "total": 21,
+          "covered": 15,
+          "skipped": 0,
+          "pct": 71.42
+        },
+        "statements": {
+          "total": 376,
+          "covered": 193,
+          "skipped": 0,
+          "pct": 51.32
+        },
+        "branches": {
+          "total": 49,
+          "covered": 42,
+          "skipped": 0,
+          "pct": 85.71
+        }
+      },
+      "after": {
+        "lines": {
+          "total": 359,
+          "covered": 176,
+          "skipped": 0,
+          "pct": 49.02
+        },
+        "functions": {
+          "total": 19,
+          "covered": 13,
+          "skipped": 0,
+          "pct": 68.42
+        },
+        "statements": {
+          "total": 359,
+          "covered": 176,
+          "skipped": 0,
+          "pct": 49.02
+        },
+        "branches": {
+          "total": 45,
+          "covered": 38,
+          "skipped": 0,
+          "pct": 84.44
+        }
+      },
+      "sameZeroCountBranchLocationsAfterSourceShift": true,
+      "zeroCountBranchLocations": [
+        {
+          "type": "branch",
+          "line": 1,
+          "loc": {
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 1,
+              "column": 27
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 1,
+                "column": 0
+              },
+              "end": {
+                "line": 1,
+                "column": 27
+              }
+            }
+          ]
+        },
+        {
+          "type": "branch",
+          "line": 100,
+          "loc": {
+            "start": {
+              "line": 100,
+              "column": 53
+            },
+            "end": {
+              "line": 100,
+              "column": 65
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 100,
+                "column": 53
+              },
+              "end": {
+                "line": 100,
+                "column": 65
+              }
+            }
+          ]
+        },
+        {
+          "type": "branch",
+          "line": 175,
+          "loc": {
+            "start": {
+              "line": 175,
+              "column": 52
+            },
+            "end": {
+              "line": 175,
+              "column": 59
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 175,
+                "column": 52
+              },
+              "end": {
+                "line": 175,
+                "column": 59
+              }
+            }
+          ]
+        },
+        {
+          "type": "branch",
+          "line": 176,
+          "loc": {
+            "start": {
+              "line": 176,
+              "column": 52
+            },
+            "end": {
+              "line": 176,
+              "column": 59
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 176,
+                "column": 52
+              },
+              "end": {
+                "line": 176,
+                "column": 59
+              }
+            }
+          ]
+        },
+        {
+          "type": "branch",
+          "line": 372,
+          "loc": {
+            "start": {
+              "line": 372,
+              "column": 19
+            },
+            "end": {
+              "line": 372,
+              "column": 28
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 372,
+                "column": 19
+              },
+              "end": {
+                "line": 372,
+                "column": 28
+              }
+            }
+          ]
+        },
+        {
+          "type": "branch",
+          "line": 373,
+          "loc": {
+            "start": {
+              "line": 373,
+              "column": 2
+            },
+            "end": {
+              "line": 376,
+              "column": 4
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 373,
+                "column": 2
+              },
+              "end": {
+                "line": 376,
+                "column": 4
+              }
+            }
+          ]
+        },
+        {
+          "type": "branch",
+          "line": 376,
+          "loc": {
+            "start": {
+              "line": 376,
+              "column": 3
+            },
+            "end": {
+              "line": 376,
+              "column": 4
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 376,
+                "column": 3
+              },
+              "end": {
+                "line": 376,
+                "column": 4
+              }
+            }
+          ]
+        }
+      ],
+      "lostCoveredFunctionRecords": [
+        {
+          "decl": {
+            "end": {
+              "column": 27,
+              "line": 1
+            },
+            "start": {
+              "column": 0,
+              "line": 1
+            }
+          },
+          "line": 1,
+          "loc": {
+            "end": {
+              "column": 27,
+              "line": 1
+            },
+            "start": {
+              "column": 0,
+              "line": 1
+            }
+          },
+          "name": "classifyCandidate"
+        },
+        {
+          "decl": {
+            "end": {
+              "column": 1,
+              "line": 168
+            },
+            "start": {
+              "column": 7,
+              "line": 154
+            }
+          },
+          "line": 154,
+          "loc": {
+            "end": {
+              "column": 1,
+              "line": 168
+            },
+            "start": {
+              "column": 7,
+              "line": 154
+            }
+          },
+          "name": "classifyCandidate"
+        }
+      ]
+    },
+    "src/lib/scan/identifier-lookup.ts": {
+      "before": {
+        "lines": {
+          "total": 97,
+          "covered": 97,
+          "skipped": 0,
+          "pct": 100
+        },
+        "functions": {
+          "total": 9,
+          "covered": 9,
+          "skipped": 0,
+          "pct": 100
+        },
+        "statements": {
+          "total": 97,
+          "covered": 97,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 39,
+          "covered": 32,
+          "skipped": 0,
+          "pct": 82.05
+        }
+      },
+      "after": {
+        "lines": {
+          "total": 97,
+          "covered": 97,
+          "skipped": 0,
+          "pct": 100
+        },
+        "functions": {
+          "total": 9,
+          "covered": 9,
+          "skipped": 0,
+          "pct": 100
+        },
+        "statements": {
+          "total": 97,
+          "covered": 97,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 38,
+          "covered": 31,
+          "skipped": 0,
+          "pct": 81.57
+        }
+      },
+      "sameZeroCountBranchLocationsAfterSourceShift": true,
+      "zeroCountBranchLocations": [
+        {
+          "type": "branch",
+          "line": 1,
+          "loc": {
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 1,
+              "column": 59
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 1,
+                "column": 0
+              },
+              "end": {
+                "line": 1,
+                "column": 59
+              }
+            }
+          ]
+        },
+        {
+          "type": "branch",
+          "line": 46,
+          "loc": {
+            "start": {
+              "line": 46,
+              "column": 23
+            },
+            "end": {
+              "line": 46,
+              "column": 71
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 46,
+                "column": 23
+              },
+              "end": {
+                "line": 46,
+                "column": 71
+              }
+            }
+          ]
+        },
+        {
+          "type": "branch",
+          "line": 49,
+          "loc": {
+            "start": {
+              "line": 49,
+              "column": 17
+            },
+            "end": {
+              "line": 49,
+              "column": 66
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 49,
+                "column": 17
+              },
+              "end": {
+                "line": 49,
+                "column": 66
+              }
+            }
+          ]
+        },
+        {
+          "type": "branch",
+          "line": 62,
+          "loc": {
+            "start": {
+              "line": 62,
+              "column": 20
+            },
+            "end": {
+              "line": 62,
+              "column": 68
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 62,
+                "column": 20
+              },
+              "end": {
+                "line": 62,
+                "column": 68
+              }
+            }
+          ]
+        },
+        {
+          "type": "branch",
+          "line": 64,
+          "loc": {
+            "start": {
+              "line": 64,
+              "column": 26
+            },
+            "end": {
+              "line": 64,
+              "column": 66
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 64,
+                "column": 26
+              },
+              "end": {
+                "line": 64,
+                "column": 66
+              }
+            }
+          ]
+        },
+        {
+          "type": "branch",
+          "line": 67,
+          "loc": {
+            "start": {
+              "line": 67,
+              "column": 67
+            },
+            "end": {
+              "line": 67,
+              "column": 92
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 67,
+                "column": 67
+              },
+              "end": {
+                "line": 67,
+                "column": 92
+              }
+            }
+          ]
+        },
+        {
+          "type": "branch",
+          "line": 88,
+          "loc": {
+            "start": {
+              "line": 88,
+              "column": 16
+            },
+            "end": {
+              "line": 88,
+              "column": 33
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 88,
+                "column": 16
+              },
+              "end": {
+                "line": 88,
+                "column": 33
+              }
+            }
+          ]
+        }
+      ],
+      "lostCoveredFunctionRecords": []
+    },
+    "src/lib/discovery/refined-routine.ts": {
+      "before": {
+        "lines": {
+          "total": 657,
+          "covered": 657,
+          "skipped": 0,
+          "pct": 100
+        },
+        "functions": {
+          "total": 31,
+          "covered": 27,
+          "skipped": 0,
+          "pct": 87.09
+        },
+        "statements": {
+          "total": 657,
+          "covered": 657,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 233,
+          "covered": 228,
+          "skipped": 0,
+          "pct": 97.85
+        }
+      },
+      "after": {
+        "lines": {
+          "total": 657,
+          "covered": 657,
+          "skipped": 0,
+          "pct": 100
+        },
+        "functions": {
+          "total": 31,
+          "covered": 27,
+          "skipped": 0,
+          "pct": 87.09
+        },
+        "statements": {
+          "total": 657,
+          "covered": 657,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 234,
+          "covered": 229,
+          "skipped": 0,
+          "pct": 97.86
+        }
+      },
+      "sameZeroCountBranchLocationsAfterSourceShift": true,
+      "zeroCountBranchLocations": [
+        {
+          "type": "branch",
+          "line": 1,
+          "loc": {
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 1,
+              "column": 32
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 1,
+                "column": 0
+              },
+              "end": {
+                "line": 1,
+                "column": 32
+              }
+            }
+          ]
+        },
+        {
+          "type": "branch",
+          "line": 223,
+          "loc": {
+            "start": {
+              "line": 223,
+              "column": 56
+            },
+            "end": {
+              "line": 223,
+              "column": 61
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 223,
+                "column": 56
+              },
+              "end": {
+                "line": 223,
+                "column": 61
+              }
+            }
+          ]
+        },
+        {
+          "type": "branch",
+          "line": 235,
+          "loc": {
+            "start": {
+              "line": 235,
+              "column": 71
+            },
+            "end": {
+              "line": 235,
+              "column": 77
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 235,
+                "column": 71
+              },
+              "end": {
+                "line": 235,
+                "column": 77
+              }
+            }
+          ]
+        },
+        {
+          "type": "branch",
+          "line": 555,
+          "loc": {
+            "start": {
+              "line": 555,
+              "column": 12
+            },
+            "end": {
+              "line": 555,
+              "column": 38
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 555,
+                "column": 12
+              },
+              "end": {
+                "line": 555,
+                "column": 38
+              }
+            }
+          ]
+        },
+        {
+          "type": "branch",
+          "line": 649,
+          "loc": {
+            "start": {
+              "line": 649,
+              "column": 16
+            },
+            "end": {
+              "line": 649,
+              "column": 40
+            }
+          },
+          "locations": [
+            {
+              "start": {
+                "line": 649,
+                "column": 16
+              },
+              "end": {
+                "line": 649,
+                "column": 40
+              }
+            }
+          ]
+        }
+      ],
+      "lostCoveredFunctionRecords": []
+    }
+  },
+  "rawFlagsBefore": 39,
+  "rawFlagsAfter": 42,
+  "newRawFlags": [
+    [
+      "scripts/scanner-catalog-coverage/readiness-export.ts",
+      "functions"
+    ],
+    [
+      "scripts/scanner-catalog-coverage/readiness-export.ts",
+      "lines"
+    ],
+    [
+      "scripts/scanner-catalog-coverage/readiness-export.ts",
+      "statements"
+    ]
+  ],
+  "limits": "Raw per-file guard remains false. Three new readiness raw flags arise after removing17covered compatibility-wrapper lines and two covered V8 records (real function and generated export getter). This is source retirement, not newly uncovered retained code. Two unchanged source files have covered-only V8 branch-shape changes; exact zero-count locations remain identical. Aggregate and conservative original-denominator checks are separate."
+}

@@ -1,0 +1,31 @@
+TAP version 13
+# Subtest: payment monitor uses uncapped incident counters when requiring Sentry receipts
+not ok 1 - payment monitor uses uncapped incident counters when requiring Sentry receipts
+  ---
+  duration_ms: 3.933417
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/payment-monitor-route.test.ts:2:11612'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/payment-monitor-route.test.ts:428:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 590.165417

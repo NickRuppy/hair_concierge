@@ -1,0 +1,219 @@
+{
+  "phase": "transfer",
+  "receipts": [
+    {
+      "id": "C1-drop-newest",
+      "source": "src/lib/analytics/runtime/bounded-fifo.ts",
+      "sourceBefore": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4",
+      "mutant": "754b92727ff0078d9d4dc1a1fc37835eeb00c1212c202b9baaaa13cab1b3f79e",
+      "phase": "transfer",
+      "oracle": {
+        "line": 175,
+        "text": "assert.equal((captures[0]?.[1] as Error).message, \"second\")",
+        "message": null,
+        "operator": "strictEqual"
+      },
+      "backup": "/tmp/test-audit-telemetry44-controls-transfer-vfcJIZ/C1-drop-newest/originals/src/lib/analytics/runtime/bounded-fifo.ts",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-telemetry44-controls-transfer-vfcJIZ/C1-drop-newest-before.tap",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "applied": true,
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-telemetry44-controls-transfer-vfcJIZ/C1-drop-newest-fault.tap",
+        "tests": 1,
+        "pass": 0,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "assertion": {
+        "accepted": true,
+        "oracle": {
+          "line": 175,
+          "text": "assert.equal((captures[0]?.[1] as Error).message, \"second\")",
+          "message": null,
+          "operator": "strictEqual"
+        },
+        "expectedFirstFrame": "tests/sentry-client-runtime.test.ts:175:",
+        "firstFrame": "    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/sentry-client-runtime.test.ts:175:10)",
+        "title": true,
+        "message": true
+      },
+      "restoredSHA": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4",
+      "exactRestored": true,
+      "after": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-telemetry44-controls-transfer-vfcJIZ/C1-drop-newest-after.tap",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "cleanAfter": true,
+      "verified": true
+    },
+    {
+      "id": "C1-no-warning",
+      "source": "src/lib/analytics/runtime/bounded-fifo.ts",
+      "sourceBefore": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4",
+      "mutant": "2b160a20c5865e64bd3cd52a231c32ada865044684648a2abc5e81cda19a0c20",
+      "phase": "transfer",
+      "oracle": {
+        "line": 174,
+        "text": "assert.equal(harness.calls.filter(([name]) => name === \"warn\").length, 1, \"one overflow warning\")",
+        "message": "one overflow warning",
+        "operator": "strictEqual"
+      },
+      "backup": "/tmp/test-audit-telemetry44-controls-transfer-vfcJIZ/C1-no-warning/originals/src/lib/analytics/runtime/bounded-fifo.ts",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-telemetry44-controls-transfer-vfcJIZ/C1-no-warning-before.tap",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "applied": true,
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-telemetry44-controls-transfer-vfcJIZ/C1-no-warning-fault.tap",
+        "tests": 1,
+        "pass": 0,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "assertion": {
+        "accepted": true,
+        "oracle": {
+          "line": 174,
+          "text": "assert.equal(harness.calls.filter(([name]) => name === \"warn\").length, 1, \"one overflow warning\")",
+          "message": "one overflow warning",
+          "operator": "strictEqual"
+        },
+        "expectedFirstFrame": "tests/sentry-client-runtime.test.ts:174:",
+        "firstFrame": "    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/sentry-client-runtime.test.ts:174:10)",
+        "title": true,
+        "message": true
+      },
+      "restoredSHA": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4",
+      "exactRestored": true,
+      "after": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-telemetry44-controls-transfer-vfcJIZ/C1-no-warning-after.tap",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "cleanAfter": true,
+      "verified": true
+    },
+    {
+      "id": "D1-accept-invalid-correlation",
+      "source": "src/lib/observability/app-performance.ts",
+      "sourceBefore": "323268e41054677312d0609bd2422c2244faf6d0bbd4c343c0d1b22d7476739a",
+      "mutant": "a05b392c7dfbaed95c6eae064a6a88d7154bd80912c6f73d945b02a48219ae44",
+      "phase": "transfer",
+      "oracle": {
+        "line": 60,
+        "text": "assert.throws(\n    () =>\n      createAppPerformanceEvent({\n        routeGroup: \"routine\",\n        operation: \"proxy_auth\",\n        outcome: \"success\",\n        durationMs: 1,\n        correlationId: \"lead_123@example.com\",\n      }),\n    /correlationId/,\n  )",
+        "message": "Missing expected exception",
+        "operator": "throws"
+      },
+      "backup": "/tmp/test-audit-telemetry44-controls-transfer-vfcJIZ/D1-accept-invalid-correlation/originals/src/lib/observability/app-performance.ts",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-telemetry44-controls-transfer-vfcJIZ/D1-accept-invalid-correlation-before.tap",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "applied": true,
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-telemetry44-controls-transfer-vfcJIZ/D1-accept-invalid-correlation-fault.tap",
+        "tests": 1,
+        "pass": 0,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "assertion": {
+        "accepted": true,
+        "oracle": {
+          "line": 60,
+          "text": "assert.throws(\n    () =>\n      createAppPerformanceEvent({\n        routeGroup: \"routine\",\n        operation: \"proxy_auth\",\n        outcome: \"success\",\n        durationMs: 1,\n        correlationId: \"lead_123@example.com\",\n      }),\n    /correlationId/,\n  )",
+          "message": "Missing expected exception",
+          "operator": "throws"
+        },
+        "expectedFirstFrame": "tests/app-performance-telemetry.test.ts:60:",
+        "firstFrame": "    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/app-performance-telemetry.test.ts:60:10)",
+        "title": true,
+        "message": true
+      },
+      "restoredSHA": "323268e41054677312d0609bd2422c2244faf6d0bbd4c343c0d1b22d7476739a",
+      "exactRestored": true,
+      "after": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "spawnError": null,
+        "log": "/tmp/test-audit-telemetry44-controls-transfer-vfcJIZ/D1-accept-invalid-correlation-after.tap",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "cleanAfter": true,
+      "verified": true
+    }
+  ],
+  "interrupted": null
+}

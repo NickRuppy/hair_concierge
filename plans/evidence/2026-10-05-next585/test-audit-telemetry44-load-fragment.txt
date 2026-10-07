@@ -1,0 +1,27 @@
+function load(){
+ same(PLAN,PLAN_SHA);const p=JSON.parse(fs.readFileSync(PLAN));identity(p)
+ for(const[f,h]of Object.entries(p.dependencies))same(f,h)
+ const ts=require(ROOT+'/node_modules/typescript'),snapshots={},counts={before:0,transfer:0,cut:0}
+ for(const phase of Object.keys(counts)){snapshots[phase]={};for(const[file,entry]of Object.entries(p.phases[phase])){same(entry.path,entry.sha);const bytes=fs.readFileSync(entry.path),rows=sites(ts,file,bytes.toString());if(rows.length!==entry.sites.length)fail('Count drift');for(const r of rows){const pin=entry.sites.find(x=>x.name===r.name);if(!pin||sha(r.body)!==pin.bodySha||sha(r.callback)!==pin.callbackSha)fail('Callback drift');}snapshots[phase][file]={bytes,rows};counts[phase]+=rows.length}}
+ if(JSON.stringify(counts)!==JSON.stringify(p.counts)||Object.keys(snapshots.before).length!==7)fail('Full seven-file phase conservation')
+ if(p.candidates.length!==2||p.candidates.map(c=>c.id).join()!=='C1,D1'||p.controls.length!==3||p.controls.some(c=>c.id.startsWith('C2')))fail('Proposal scope drift')
+ let untouched=0
+ for(const[file,b]of Object.entries(snapshots.before)){
+  const t=snapshots.transfer[file],c=snapshots.cut[file];let text=b.bytes.toString()
+  const keepers=p.candidates.filter(x=>x.keeperFile===file)
+  for(const k of keepers){if(b.rows.find(r=>r.name===k.keeperBefore.title)?.body!==k.keeperBefore.body)fail('Keeper identity drift');if(k.keeperBefore.body===k.keeperAfter.body)continue;
+   if(k.id!=='C1')fail('Only C1 assertion transfer permitted')
+   const reverse=once(k.keeperAfter.body,'  assert.equal(harness.calls.filter(([name]) => name === "warn").length, 1, "one overflow warning")\n','')
+   if(reverse!==k.keeperBefore.body)fail('Keeper added anything beyond exact warn assertion')
+   text=once(text,k.keeperBefore.body,k.keeperAfter.body)
+  }
+  if(text!==t.bytes.toString())fail('Transfer whole-file reconstruction '+file)
+  for(const donor of p.candidates.filter(x=>x.file===file)){if(b.rows.find(r=>r.name===donor.donor.title)?.body!==donor.donor.body)fail('Donor mismatch');text=once(text,donor.donor.body+(donor.mark==='D'?'\n':'\n\n'),'')}
+  if(file==='tests/analytics-runtime.test.ts')text=once(text,'import { createBoundedFifo } from "../src/lib/analytics/runtime/bounded-fifo"\n','')
+  if(text!==c.bytes.toString())fail('Cut whole-file reconstruction '+file)
+  for(const r of b.rows){if(p.candidates.some(x=>x.file===file&&x.donor.title===r.name))continue;if(c.rows.find(x=>x.name===r.name)?.body!==t.rows.find(x=>x.name===r.name)?.body)fail('Cut modified survivor');if(keepers.some(k=>k.keeperBefore.title===r.name&&k.keeperBefore.body!==k.keeperAfter.body))continue;if(t.rows.find(x=>x.name===r.name)?.body!==r.body)fail('Unrelated callback changed');untouched++}
+ }
+ if(untouched!==41)fail('Unrelated callback conservation')
+ function current(overrides={}){identity(p);for(const[f,h]of Object.entries(p.dependencies))same(f,h);for(const[f,h]of Object.entries(p.guards))same(f,overrides[f]||h);const matches=Object.keys(counts).filter(phase=>Object.entries(snapshots[phase]).every(([f,s])=>fs.readFileSync(ROOT+'/'+f).equals(s.bytes)));if(matches.length!==1)fail('Mixed/unknown cohort phase');return matches[0]}
+ return{p,ts,snapshots,counts,current,untouched}
+}

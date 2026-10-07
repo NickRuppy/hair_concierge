@@ -4,7 +4,6 @@ import { createTrialOfferSnapshot } from "../src/lib/billing/trial-offer"
 import {
   beginPayPalTrialPaidRecovery as begin,
   reconcilePayPalTrialPaidRecovery as reconcile,
-  abandonPayPalTrialPaidRecovery as abandon,
   paypalPaidPeriodEnd,
   paypalPaidRecoveryOverrides,
   assertPayPalPaidRecoveryPlan,
@@ -375,16 +374,6 @@ test("committed retry repairs interrupted billing projection", async () => {
   f.setProjectionFail(false)
   assert.equal((await reconcile(f.input, f.deps)).status, "committed")
   assert.equal(f.calls.filter((c) => c.rpc === "commit_trial_paid_recovery_operation").length, 1)
-})
-test("paid abandonment remains reconciliation debt; zero-charge candidate can abandon after cancellation", async () => {
-  const paid = fixture()
-  await begin(paid.input, paid.deps)
-  paid.approve()
-  assert.equal((await abandon(paid.input, paid.deps)).status, "reconciliation_required")
-  const free = fixture("repair_paid")
-  await begin(free.input, free.deps)
-  assert.equal((await abandon(free.input, free.deps)).status, "abandoned")
-  assert.equal(free.subs.new.status, "CANCELLED")
 })
 test("annual introductory paid cycle is rejected as renewal-only continuation", () => {
   const f = fixture()

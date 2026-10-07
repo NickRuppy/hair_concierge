@@ -1,0 +1,500 @@
+[
+  {
+    "id": "C1-no-session-not-outage",
+    "file": "src/lib/partner-access/journey.ts",
+    "from": "if (!user?.id) return { kind: \"none\" }",
+    "to": "if (!user?.id) return { kind: \"unavailable\" }",
+    "sourceSha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "mutantSha256": "6586b0a448ab1be51250ff1b6c5d5d14e0ed013f94fb2daf1ca37a419e062d04",
+    "testFile": "tests/partner-access-journey.test.ts",
+    "testName": "no auth session is an ordinary signed-out visit, not an outage",
+    "expectedAssertion": "assert.deepEqual(resolution, { kind: \"none\" })",
+    "reason": "Both donor null stub and real missing-session keeper reach same outer no-user guard; actual adapter remains exercised.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": {
+        "line": 211,
+        "text": "assert.deepEqual(resolution, { kind: \"none\" })"
+      },
+      "transfer": {
+        "line": 211,
+        "text": "assert.deepEqual(resolution, { kind: \"none\" })"
+      },
+      "cut": {
+        "line": 179,
+        "text": "assert.deepEqual(resolution, { kind: \"none\" })"
+      }
+    }
+  },
+  {
+    "id": "C2-projection-invitationId",
+    "file": "src/lib/partner-access/journey.ts",
+    "from": "invitationId: data.id,",
+    "to": "invitationId: \"audit-wrong-invitationId\",",
+    "sourceSha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "mutantSha256": "a7e0b6a0a9b17d56d52593bb170f2ed3692770d7ecc3b396df9465faf49ff757",
+    "testFile": "tests/partner-access-journey.test.ts",
+    "testName": "the default getUser path carries app_metadata through to the hint check",
+    "expectedAssertion": "assert.deepEqual(resolution, {",
+    "reason": "Transferred full authorized object must detect corruption of invitationId at actual resolver projection; baseline kind-only keeper survives by design, donor does not.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": null,
+      "transfer": {
+        "line": 238,
+        "text": "assert.deepEqual(resolution, {\n    kind: \"authorized\",\n    invitationId: invitationRow.id,\n    userId: \"creator-user\",\n    name: invitationRow.display_name,\n    email: invitationRow.normalized_email,\n    funnelSessionId: invitationRow.funnel_session_id,\n  })"
+      },
+      "cut": {
+        "line": 206,
+        "text": "assert.deepEqual(resolution, {\n    kind: \"authorized\",\n    invitationId: invitationRow.id,\n    userId: \"creator-user\",\n    name: invitationRow.display_name,\n    email: invitationRow.normalized_email,\n    funnelSessionId: invitationRow.funnel_session_id,\n  })"
+      }
+    }
+  },
+  {
+    "id": "C2-projection-userId",
+    "file": "src/lib/partner-access/journey.ts",
+    "from": "userId: user.id,",
+    "to": "userId: \"audit-wrong-userId\",",
+    "sourceSha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "mutantSha256": "cd7e68db37fc9d139bdbe2ac133601c2320c6d8d7d5ad03e3e702fc34e01ab60",
+    "testFile": "tests/partner-access-journey.test.ts",
+    "testName": "the default getUser path carries app_metadata through to the hint check",
+    "expectedAssertion": "assert.deepEqual(resolution, {",
+    "reason": "Transferred full authorized object must detect corruption of userId at actual resolver projection; baseline kind-only keeper survives by design, donor does not.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": null,
+      "transfer": {
+        "line": 238,
+        "text": "assert.deepEqual(resolution, {\n    kind: \"authorized\",\n    invitationId: invitationRow.id,\n    userId: \"creator-user\",\n    name: invitationRow.display_name,\n    email: invitationRow.normalized_email,\n    funnelSessionId: invitationRow.funnel_session_id,\n  })"
+      },
+      "cut": {
+        "line": 206,
+        "text": "assert.deepEqual(resolution, {\n    kind: \"authorized\",\n    invitationId: invitationRow.id,\n    userId: \"creator-user\",\n    name: invitationRow.display_name,\n    email: invitationRow.normalized_email,\n    funnelSessionId: invitationRow.funnel_session_id,\n  })"
+      }
+    }
+  },
+  {
+    "id": "C2-projection-name",
+    "file": "src/lib/partner-access/journey.ts",
+    "from": "name: data.display_name,",
+    "to": "name: \"audit-wrong-name\",",
+    "sourceSha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "mutantSha256": "fd11be3a318ce522ec0a79875a3b9cd7d29ef9f7798e0135f720fba402d553a4",
+    "testFile": "tests/partner-access-journey.test.ts",
+    "testName": "the default getUser path carries app_metadata through to the hint check",
+    "expectedAssertion": "assert.deepEqual(resolution, {",
+    "reason": "Transferred full authorized object must detect corruption of name at actual resolver projection; baseline kind-only keeper survives by design, donor does not.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": null,
+      "transfer": {
+        "line": 238,
+        "text": "assert.deepEqual(resolution, {\n    kind: \"authorized\",\n    invitationId: invitationRow.id,\n    userId: \"creator-user\",\n    name: invitationRow.display_name,\n    email: invitationRow.normalized_email,\n    funnelSessionId: invitationRow.funnel_session_id,\n  })"
+      },
+      "cut": {
+        "line": 206,
+        "text": "assert.deepEqual(resolution, {\n    kind: \"authorized\",\n    invitationId: invitationRow.id,\n    userId: \"creator-user\",\n    name: invitationRow.display_name,\n    email: invitationRow.normalized_email,\n    funnelSessionId: invitationRow.funnel_session_id,\n  })"
+      }
+    }
+  },
+  {
+    "id": "C2-projection-email",
+    "file": "src/lib/partner-access/journey.ts",
+    "from": "email: data.normalized_email,",
+    "to": "email: \"audit-wrong-email\",",
+    "sourceSha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "mutantSha256": "e4bfbe5f158cc03d015ec6180281dd785d5c4aff4834552361569ece7d37ef65",
+    "testFile": "tests/partner-access-journey.test.ts",
+    "testName": "the default getUser path carries app_metadata through to the hint check",
+    "expectedAssertion": "assert.deepEqual(resolution, {",
+    "reason": "Transferred full authorized object must detect corruption of email at actual resolver projection; baseline kind-only keeper survives by design, donor does not.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": null,
+      "transfer": {
+        "line": 238,
+        "text": "assert.deepEqual(resolution, {\n    kind: \"authorized\",\n    invitationId: invitationRow.id,\n    userId: \"creator-user\",\n    name: invitationRow.display_name,\n    email: invitationRow.normalized_email,\n    funnelSessionId: invitationRow.funnel_session_id,\n  })"
+      },
+      "cut": {
+        "line": 206,
+        "text": "assert.deepEqual(resolution, {\n    kind: \"authorized\",\n    invitationId: invitationRow.id,\n    userId: \"creator-user\",\n    name: invitationRow.display_name,\n    email: invitationRow.normalized_email,\n    funnelSessionId: invitationRow.funnel_session_id,\n  })"
+      }
+    }
+  },
+  {
+    "id": "C2-projection-funnelSessionId",
+    "file": "src/lib/partner-access/journey.ts",
+    "from": "funnelSessionId: data.funnel_session_id,",
+    "to": "funnelSessionId: \"audit-wrong-funnelSessionId\",",
+    "sourceSha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "mutantSha256": "d4ea186a967aed3ec8e1dfe8fa79e39a98fe5a3a1250afa216fd9a0bb4618ae4",
+    "testFile": "tests/partner-access-journey.test.ts",
+    "testName": "the default getUser path carries app_metadata through to the hint check",
+    "expectedAssertion": "assert.deepEqual(resolution, {",
+    "reason": "Transferred full authorized object must detect corruption of funnelSessionId at actual resolver projection; baseline kind-only keeper survives by design, donor does not.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": null,
+      "transfer": {
+        "line": 238,
+        "text": "assert.deepEqual(resolution, {\n    kind: \"authorized\",\n    invitationId: invitationRow.id,\n    userId: \"creator-user\",\n    name: invitationRow.display_name,\n    email: invitationRow.normalized_email,\n    funnelSessionId: invitationRow.funnel_session_id,\n  })"
+      },
+      "cut": {
+        "line": 206,
+        "text": "assert.deepEqual(resolution, {\n    kind: \"authorized\",\n    invitationId: invitationRow.id,\n    userId: \"creator-user\",\n    name: invitationRow.display_name,\n    email: invitationRow.normalized_email,\n    funnelSessionId: invitationRow.funnel_session_id,\n  })"
+      }
+    }
+  },
+  {
+    "id": "C3-auth-fault-not-none",
+    "file": "src/lib/partner-access/journey.ts",
+    "from": "return { kind: \"unavailable\" }",
+    "to": "return { kind: \"none\" }",
+    "sourceSha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "mutantSha256": "231b17861c9efe7ec12a17d6eeee828a433df0a27dc99dc13b9a9e1f216a9ab6",
+    "testFile": "tests/partner-access-journey.test.ts",
+    "testName": "a real auth failure on the default getUser path is unavailable, not none",
+    "expectedAssertion": "assert.deepEqual(resolution, { kind: \"unavailable\" })",
+    "reason": "Real defaultGetUser throws into same resolver catch as generic donor; no asserted dependency error message.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": {
+        "line": 224,
+        "text": "assert.deepEqual(resolution, { kind: \"unavailable\" })"
+      },
+      "transfer": {
+        "line": 224,
+        "text": "assert.deepEqual(resolution, { kind: \"unavailable\" })"
+      },
+      "cut": {
+        "line": 192,
+        "text": "assert.deepEqual(resolution, { kind: \"unavailable\" })"
+      }
+    }
+  },
+  {
+    "id": "C4-unstamped-lookup",
+    "file": "src/lib/partner-access/journey.ts",
+    "from": "if (!hasPartnerAccessQuizHint(user)) return { kind: \"none\" }",
+    "to": "if (!hasPartnerAccessQuizHint(user)) { await loadInvitation(user.id); return { kind: \"none\" } }",
+    "sourceSha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "mutantSha256": "6bb214a2a86b4e457aec93e2f40187211cba71be2a08dd3a04f444a0129dcb26",
+    "testFile": "tests/partner-access-journey.test.ts",
+    "testName": "a signed-in user without the claim stamp never reads the invitation table",
+    "expectedAssertion": "assert.equal(lookups, 0)",
+    "reason": "Preserve exact ordinary result while making forbidden real-owner lookup. Retained monotonic count fails1!=0; donor throw collaborator instead yielded unavailable. This isolates read suppression beyond result status.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": {
+        "line": 253,
+        "text": "assert.equal(lookups, 0)"
+      },
+      "transfer": {
+        "line": 260,
+        "text": "assert.equal(lookups, 0)"
+      },
+      "cut": {
+        "line": 228,
+        "text": "assert.equal(lookups, 0)"
+      }
+    }
+  },
+  {
+    "id": "C4-stamped-read-fault",
+    "file": "src/lib/partner-access/journey.ts",
+    "from": "return { kind: \"unavailable\" }",
+    "to": "return { kind: \"none\" }",
+    "sourceSha256": "e622b693b63ff6c055af00b26ae05f6687bd1c98dc128151dad8364844288e3e",
+    "mutantSha256": "231b17861c9efe7ec12a17d6eeee828a433df0a27dc99dc13b9a9e1f216a9ab6",
+    "testFile": "tests/partner-access-journey.test.ts",
+    "testName": "a read error is unavailable, not none or a thrown exception",
+    "expectedAssertion": "assert.deepEqual(resolution, { kind: \"unavailable\" })",
+    "reason": "Existing stamped read-error keeper preserves second donor call exactly; selected separately from auth-error control.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": {
+        "line": 163,
+        "text": "assert.deepEqual(resolution, { kind: \"unavailable\" })"
+      },
+      "transfer": {
+        "line": 163,
+        "text": "assert.deepEqual(resolution, { kind: \"unavailable\" })"
+      },
+      "cut": {
+        "line": 143,
+        "text": "assert.deepEqual(resolution, { kind: \"unavailable\" })"
+      }
+    }
+  },
+  {
+    "id": "C5-unpaid-restart",
+    "file": "src/app/api/partner-access/claim/route.ts",
+    "from": ": !(await (overrides.hasCurrentPaidAppAccess ?? hasPaidAppAccessForUser)(user.id))",
+    "to": ": Boolean(await (overrides.hasCurrentPaidAppAccess ?? hasPaidAppAccessForUser)(user.id))",
+    "sourceSha256": "d9349e8c887e3e9e4a77389c4fe890dcf9d1b6a17778cb08eeb7b6312d79908e",
+    "mutantSha256": "ec669c917211f71229ef456562c704e644495afce3ad7bc4a05770fecf3f21e6",
+    "testFile": "tests/partner-access-claim-route.test.ts",
+    "testName": "authenticated continuation completes only the invitation email account",
+    "expectedAssertion": "(calls.find(([name]) => name === \"complete\")?.[1] as { freshStart: boolean }).freshStart,",
+    "reason": "Factory false and donor explicit false are identical actual billing decision input; changed boolean must break freshStart true.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": {
+        "line": 188,
+        "text": "assert.equal(\n    (calls.find(([name]) => name === \"complete\")?.[1] as { freshStart: boolean }).freshStart,\n    true,\n  )"
+      },
+      "transfer": {
+        "line": 198,
+        "text": "assert.equal(\n    (calls.find(([name]) => name === \"complete\")?.[1] as { freshStart: boolean }).freshStart,\n    true,\n  )"
+      },
+      "cut": {
+        "line": 184,
+        "text": "assert.equal(\n    (calls.find(([name]) => name === \"complete\")?.[1] as { freshStart: boolean }).freshStart,\n    true,\n  )"
+      }
+    }
+  },
+  {
+    "id": "C6-new-account-billing-read",
+    "file": "src/app/api/partner-access/claim/route.ts",
+    "from": "password !== null\n          ? true",
+    "to": "password !== null\n          ? (await (overrides.hasCurrentPaidAppAccess ?? hasPaidAppAccessForUser)(user.id), true)",
+    "sourceSha256": "d9349e8c887e3e9e4a77389c4fe890dcf9d1b6a17778cb08eeb7b6312d79908e",
+    "mutantSha256": "620213e6cc869f907a6a811890b89e6b52b3a9f67d862112f9a253afcd7ca4d3",
+    "testFile": "tests/partner-access-claim-route.test.ts",
+    "testName": "new creator claim creates and signs into the exact named account without an email roundtrip",
+    "expectedAssertion": "assert.equal(response.status, 200)",
+    "reason": "Preserves computed true when collaborator returns false. The moved forbidden-read throw forces actual route503; old canonical keeper alone would pass, original donor fails. No new request/input.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": {
+        "line": 78,
+        "text": "assert.equal(response.status, 200)"
+      },
+      "transfer": {
+        "line": 82,
+        "text": "assert.equal(response.status, 200)"
+      },
+      "cut": {
+        "line": 82,
+        "text": "assert.equal(response.status, 200)"
+      }
+    }
+  },
+  {
+    "id": "C7-visible-email",
+    "file": "src/app/partner/einladung/partner-invitation-client.tsx",
+    "from": "<p className=\"mt-5 break-all font-semibold\">{email}</p>",
+    "to": "<p className=\"mt-5 break-all font-semibold\">anderes@example.test</p>",
+    "sourceSha256": "602df4dbe7658b3d1f414ee6aa8c5a86f40f48db4928a8acb63c2bd72316ddb7",
+    "mutantSha256": "e17636be5c5f25dc5f2ce1de968cfeb051b5236e7c931a43375509bb7b97c86d",
+    "testFile": "tests/partner-access-ui.test.tsx",
+    "testName": "creator invitation greets a full-name account by first name",
+    "expectedAssertion": "assert.match(html, /lea@example\\.test/)",
+    "reason": "Exact same retained email input and ready branch; transplanted regex detects wrong delivery.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": null,
+      "transfer": {
+        "line": 36,
+        "text": "assert.match(html, /lea@example\\.test/)"
+      },
+      "cut": {
+        "line": 17,
+        "text": "assert.match(html, /lea@example\\.test/)"
+      }
+    }
+  },
+  {
+    "id": "C7-change-email-copy",
+    "file": "src/app/partner/einladung/partner-invitation-client.tsx",
+    "from": "Nicht deine E-Mail? Ändern",
+    "to": "Adresse bearbeiten",
+    "sourceSha256": "602df4dbe7658b3d1f414ee6aa8c5a86f40f48db4928a8acb63c2bd72316ddb7",
+    "mutantSha256": "975b0bc3c9e676174bd7ab9a5383978531f2aad9639aa1c6fc40d4deea75ba60",
+    "testFile": "tests/partner-access-ui.test.tsx",
+    "testName": "creator invitation greets a full-name account by first name",
+    "expectedAssertion": "assert.match(html, /Nicht deine E-Mail\\? Ändern/)",
+    "reason": "Fixed German edit label transferred without relying on event handlers.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": null,
+      "transfer": {
+        "line": 37,
+        "text": "assert.match(html, /Nicht deine E-Mail\\? Ändern/)"
+      },
+      "cut": {
+        "line": 18,
+        "text": "assert.match(html, /Nicht deine E-Mail\\? Ändern/)"
+      }
+    }
+  },
+  {
+    "id": "C7-start-copy",
+    "file": "src/app/partner/einladung/partner-invitation-client.tsx",
+    "from": "{mode === \"claiming\" ? \"Wird geöffnet …\" : \"Los geht’s\"}",
+    "to": "{mode === \"claiming\" ? \"Wird geöffnet …\" : \"Weiter\"}",
+    "sourceSha256": "602df4dbe7658b3d1f414ee6aa8c5a86f40f48db4928a8acb63c2bd72316ddb7",
+    "mutantSha256": "7b747807bdbfbb32e203965daa96153b2762675f30da4747314a58d5da7273da",
+    "testFile": "tests/partner-access-ui.test.tsx",
+    "testName": "creator invitation greets a full-name account by first name",
+    "expectedAssertion": "assert.match(html, /Los geht’s/)",
+    "reason": "Same ready mode emits wrong start CTA.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": null,
+      "transfer": {
+        "line": 38,
+        "text": "assert.match(html, /Los geht’s/)"
+      },
+      "cut": {
+        "line": 19,
+        "text": "assert.match(html, /Los geht’s/)"
+      }
+    }
+  },
+  {
+    "id": "C7-account-copy",
+    "file": "src/app/partner/einladung/partner-invitation-client.tsx",
+    "from": "Damit erstellst du dein Chaarlie Konto mit dieser E-Mail. Hast du schon eins, startest\n            du damit neu.",
+    "to": "Damit erstellst du dein Chaarlie Konto mit dieser E-Mail.",
+    "sourceSha256": "602df4dbe7658b3d1f414ee6aa8c5a86f40f48db4928a8acb63c2bd72316ddb7",
+    "mutantSha256": "9e517f9408e488b425ebb8f39a448c4ce15877d161ca75473ad467a999913357",
+    "testFile": "tests/partner-access-ui.test.tsx",
+    "testName": "creator invitation greets a full-name account by first name",
+    "expectedAssertion": "/Damit erstellst du dein Chaarlie Konto mit dieser E-Mail\\. Hast du schon eins, startest du damit neu\\./,",
+    "reason": "Full account-reset disclosure retained; missing reset sentence fails.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": null,
+      "transfer": {
+        "line": 39,
+        "text": "assert.match(\n    html,\n    /Damit erstellst du dein Chaarlie Konto mit dieser E-Mail\\. Hast du schon eins, startest du damit neu\\./,\n  )"
+      },
+      "cut": {
+        "line": 20,
+        "text": "assert.match(\n    html,\n    /Damit erstellst du dein Chaarlie Konto mit dieser E-Mail\\. Hast du schon eins, startest du damit neu\\./,\n  )"
+      }
+    }
+  },
+  {
+    "id": "C7-noncommercial-copy",
+    "file": "src/app/partner/einladung/partner-invitation-client.tsx",
+    "from": "Nicht deine E-Mail? Ändern",
+    "to": "Nicht deine E-Mail? Ändern – Abo",
+    "sourceSha256": "602df4dbe7658b3d1f414ee6aa8c5a86f40f48db4928a8acb63c2bd72316ddb7",
+    "mutantSha256": "1db3c7c345d51b7889f551cbaa3d7cbcf278c51fe6282704e6a7392eaba3b1d8",
+    "testFile": "tests/partner-access-ui.test.tsx",
+    "testName": "creator invitation greets a full-name account by first name",
+    "expectedAssertion": "assert.doesNotMatch(html, /Abo|Zahlung|lebenslang|Produkttest|kostenlos/i)",
+    "reason": "Positive edit-label regex still matches; only full forbidden commercial-copy union rejects added Abo.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": null,
+      "transfer": {
+        "line": 43,
+        "text": "assert.doesNotMatch(html, /Abo|Zahlung|lebenslang|Produkttest|kostenlos/i)"
+      },
+      "cut": {
+        "line": 24,
+        "text": "assert.doesNotMatch(html, /Abo|Zahlung|lebenslang|Produkttest|kostenlos/i)"
+      }
+    }
+  },
+  {
+    "id": "C8-mail-status",
+    "file": "src/app/api/partner-access/claim/route.ts",
+    "from": "{ status: 202, headers: NO_STORE_HEADERS }",
+    "to": "{ status: 200, headers: NO_STORE_HEADERS }",
+    "sourceSha256": "d9349e8c887e3e9e4a77389c4fe890dcf9d1b6a17778cb08eeb7b6312d79908e",
+    "mutantSha256": "43543d99fdeda65b5e2872b4b14c8a0e8e52727940adcdc78652138081d06a5d",
+    "testFile": "tests/partner-access-claim-route.test.ts",
+    "testName": "an existing-account email can resume the claim in a different browser",
+    "expectedAssertion": "assert.equal(firstResponse.status, 202)",
+    "reason": "First existing handoff leg response currently ignored; transferred status oracle catches wrong202 without affecting redirect construction.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": null,
+      "transfer": {
+        "line": 126,
+        "text": "assert.equal(firstResponse.status, 202)"
+      },
+      "cut": {
+        "line": 112,
+        "text": "assert.equal(firstResponse.status, 202)"
+      }
+    }
+  },
+  {
+    "id": "C8-mail-required",
+    "file": "src/app/api/partner-access/claim/route.ts",
+    "from": "{ requiresEmail: true, email: input.invitation.email }",
+    "to": "{ requiresEmail: false, email: input.invitation.email }",
+    "sourceSha256": "d9349e8c887e3e9e4a77389c4fe890dcf9d1b6a17778cb08eeb7b6312d79908e",
+    "mutantSha256": "bb01879b77d452e1846fd041f2cf6a45c7f0fcc6fcbe39ea6bcb9270379b4b9e",
+    "testFile": "tests/partner-access-claim-route.test.ts",
+    "testName": "an existing-account email can resume the claim in a different browser",
+    "expectedAssertion": "assert.deepEqual(await firstResponse.json(), { requiresEmail: true, email: \"lea@example.test\" })",
+    "reason": "Real first response body must retain mailbox requirement while actual handoff token remains generated.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": null,
+      "transfer": {
+        "line": 127,
+        "text": "assert.deepEqual(await firstResponse.json(), { requiresEmail: true, email: \"lea@example.test\" })"
+      },
+      "cut": {
+        "line": 113,
+        "text": "assert.deepEqual(await firstResponse.json(), { requiresEmail: true, email: \"lea@example.test\" })"
+      }
+    }
+  },
+  {
+    "id": "C8-mail-address",
+    "file": "src/app/api/partner-access/claim/route.ts",
+    "from": "{ requiresEmail: true, email: input.invitation.email }",
+    "to": "{ requiresEmail: true, email: \"other@example.test\" }",
+    "sourceSha256": "d9349e8c887e3e9e4a77389c4fe890dcf9d1b6a17778cb08eeb7b6312d79908e",
+    "mutantSha256": "91c85f684265a70d66bae020300b848bb272a8ea0a8d891ad14fc426a8e8b2c8",
+    "testFile": "tests/partner-access-claim-route.test.ts",
+    "testName": "an existing-account email can resume the claim in a different browser",
+    "expectedAssertion": "assert.deepEqual(await firstResponse.json(), { requiresEmail: true, email: \"lea@example.test\" })",
+    "reason": "Body identity wrong independently of magic link recipient; exact transferred JSON detects it.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": null,
+      "transfer": {
+        "line": 127,
+        "text": "assert.deepEqual(await firstResponse.json(), { requiresEmail: true, email: \"lea@example.test\" })"
+      },
+      "cut": {
+        "line": 113,
+        "text": "assert.deepEqual(await firstResponse.json(), { requiresEmail: true, email: \"lea@example.test\" })"
+      }
+    }
+  },
+  {
+    "id": "C8-release-before-mail",
+    "file": "src/app/api/partner-access/claim/route.ts",
+    "from": "        try {\n          await (overrides.release ?? releaseClaim)({ intent, attemptId })\n        } catch {\n          return copyResponseCookies(\n            response,\n            jsonError(\"Dein Zugang konnte nicht geöffnet werden.\", 503),\n          )\n        }\n        return sendExistingAccountLink({",
+    "to": "        try {\n          await Promise.resolve()\n        } catch {\n          return copyResponseCookies(\n            response,\n            jsonError(\"Dein Zugang konnte nicht geöffnet werden.\", 503),\n          )\n        }\n        return sendExistingAccountLink({",
+    "sourceSha256": "d9349e8c887e3e9e4a77389c4fe890dcf9d1b6a17778cb08eeb7b6312d79908e",
+    "mutantSha256": "f85275f325b5a6f385d95864c3ce1bf532985e2edca11fc387ea83d761bd30a5",
+    "testFile": "tests/partner-access-claim-route.test.ts",
+    "testName": "an existing-account email can resume the claim in a different browser",
+    "expectedAssertion": "first.calls.map(([name]) => name),",
+    "reason": "Successful202 and exact response remain intact but actual first-leg order loses release. Transferred observed calls must fail, not token/parser setup.",
+    "status": "static recipe only; never executed",
+    "oracles": {
+      "before": null,
+      "transfer": {
+        "line": 128,
+        "text": "assert.deepEqual(\n    first.calls.map(([name]) => name),\n    [\"reserve\", \"release\", \"magicLink\"],\n  )"
+      },
+      "cut": {
+        "line": 114,
+        "text": "assert.deepEqual(\n    first.calls.map(([name]) => name),\n    [\"reserve\", \"release\", \"magicLink\"],\n  )"
+      }
+    }
+  }
+]

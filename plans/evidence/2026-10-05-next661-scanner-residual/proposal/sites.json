@@ -1,0 +1,2395 @@
+[
+  {
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "title": "deriveAlternativeComparison: no criteria yields an empty comparison with a zero score",
+    "line": 20,
+    "start": 555,
+    "end": 774,
+    "body": "test(\"deriveAlternativeComparison: no criteria yields an empty comparison with a zero score\", () => {\n  const comparison = deriveAlternativeComparison([])\n  assert.deepEqual(comparison, { rows: [], summaryScore: 0 })\n})",
+    "sha256": "bd11fa9fea1568f35fd3e40edb7da22a48f882bacc201e7e9ee9572e9645f7b6",
+    "assertions": [
+      {
+        "line": 22,
+        "text": "assert.deepEqual(comparison, { rows: [], summaryScore: 0 })"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "title": "deriveAlternativeComparison: a pass criterion becomes a match row",
+    "line": 25,
+    "start": 776,
+    "end": 1114,
+    "body": "test(\"deriveAlternativeComparison: a pass criterion becomes a match row\", () => {\n  const comparison = deriveAlternativeComparison([criterion({ result: \"pass\" })])\n  assert.deepEqual(comparison.rows, [\n    { rowId: \"conditioner.care_direction\", label: \"Pflegerichtung\", state: \"match\" },\n  ])\n  assert.equal(comparison.summaryScore, 1)\n})",
+    "sha256": "467685d63abe628ae23b9dd5a6553b380d9f4ddfa6a421cfacc9c4f6e448bce1",
+    "assertions": [
+      {
+        "line": 27,
+        "text": "assert.deepEqual(comparison.rows, [\n    { rowId: \"conditioner.care_direction\", label: \"Pflegerichtung\", state: \"match\" },\n  ])"
+      },
+      {
+        "line": 30,
+        "text": "assert.equal(comparison.summaryScore, 1)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "title": "deriveAlternativeComparison: caution/fail/unknown map to partial/mismatch/unknown",
+    "line": 33,
+    "start": 1116,
+    "end": 1546,
+    "body": "test(\"deriveAlternativeComparison: caution/fail/unknown map to partial/mismatch/unknown\", () => {\n  const comparison = deriveAlternativeComparison([\n    criterion({ criterionId: \"a\", result: \"caution\" }),\n    criterion({ criterionId: \"b\", result: \"fail\" }),\n    criterion({ criterionId: \"c\", result: \"unknown\" }),\n  ])\n  assert.deepEqual(\n    comparison.rows.map((row) => row.state),\n    [\"partial\", \"mismatch\", \"unknown\"],\n  )\n})",
+    "sha256": "1769db287075f1e3861a999cc55f69ec508d6293bf2d842151b4ce646c39a82e",
+    "assertions": [
+      {
+        "line": 39,
+        "text": "assert.deepEqual(\n    comparison.rows.map((row) => row.state),\n    [\"partial\", \"mismatch\", \"unknown\"],\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "title": "deriveAlternativeComparison: summary score is the fraction of matching rows",
+    "line": 45,
+    "start": 1548,
+    "end": 1958,
+    "body": "test(\"deriveAlternativeComparison: summary score is the fraction of matching rows\", () => {\n  const comparison = deriveAlternativeComparison([\n    criterion({ criterionId: \"a\", result: \"pass\" }),\n    criterion({ criterionId: \"b\", result: \"pass\" }),\n    criterion({ criterionId: \"c\", result: \"fail\" }),\n    criterion({ criterionId: \"d\", result: \"unknown\" }),\n  ])\n  assert.equal(comparison.summaryScore, 0.5)\n})",
+    "sha256": "af9fb4aa9f2558b3f8329334efb4e68818e6dc4d8e166c7dacd5081fd257a34f",
+    "assertions": [
+      {
+        "line": 52,
+        "text": "assert.equal(comparison.summaryScore, 0.5)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "title": "deriveAlternativeComparison: preserves criteria order and copies id/label verbatim",
+    "line": 55,
+    "start": 1960,
+    "end": 2490,
+    "body": "test(\"deriveAlternativeComparison: preserves criteria order and copies id/label verbatim\", () => {\n  const comparison = deriveAlternativeComparison([\n    criterion({ criterionId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\" }),\n    criterion({ criterionId: \"shampoo.cleansing_intensity\", label: \"Reinigungsstärke\" }),\n  ])\n  assert.deepEqual(\n    comparison.rows.map((row) => [row.rowId, row.label]),\n    [\n      [\"shampoo.scalp_route\", \"Kopfhaut-Fokus\"],\n      [\"shampoo.cleansing_intensity\", \"Reinigungsstärke\"],\n    ],\n  )\n})",
+    "sha256": "6cf8d4cabecdb85c988c95726257ec4e2d84b8b51e5564667859fa0182982f74",
+    "assertions": [
+      {
+        "line": 60,
+        "text": "assert.deepEqual(\n    comparison.rows.map((row) => [row.rowId, row.label]),\n    [\n      [\"shampoo.scalp_route\", \"Kopfhaut-Fokus\"],\n      [\"shampoo.cleansing_intensity\", \"Reinigungsstärke\"],\n    ],\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "title": "deriveAlternativeComparison: a row never carries anything beyond rowId/label/state",
+    "line": 69,
+    "start": 2492,
+    "end": 2784,
+    "body": "test(\"deriveAlternativeComparison: a row never carries anything beyond rowId/label/state\", () => {\n  const comparison = deriveAlternativeComparison([criterion()])\n  const row = comparison.rows[0] as ScanComparisonRow\n  assert.deepEqual(Object.keys(row).sort(), [\"label\", \"rowId\", \"state\"])\n})",
+    "sha256": "cd1fb731efb10eac375837ba8c22b0974fc84a68c3fbfb4554d375af39ec1f24",
+    "assertions": [
+      {
+        "line": 72,
+        "text": "assert.deepEqual(Object.keys(row).sort(), [\"label\", \"rowId\", \"state\"])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "title": "deriveAlternativeComparison: is a pure function — same input, same output, no mutation",
+    "line": 75,
+    "start": 2786,
+    "end": 3123,
+    "body": "test(\"deriveAlternativeComparison: is a pure function — same input, same output, no mutation\", () => {\n  const input = [criterion({ criterionId: \"x\" })]\n  const frozen = Object.freeze([...input])\n  const first = deriveAlternativeComparison(frozen)\n  const second = deriveAlternativeComparison(frozen)\n  assert.deepEqual(first, second)\n})",
+    "sha256": "eb5f7b397166dab0ec4675c843a6dfeeaeef8557bd80916a04c2d680e569944d",
+    "assertions": [
+      {
+        "line": 80,
+        "text": "assert.deepEqual(first, second)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-analytics.test.ts",
+    "title": "Scan analytics is PostHog-only",
+    "line": 47,
+    "start": 1379,
+    "end": 1572,
+    "body": "test(\"Scan analytics is PostHog-only\", () => {\n  for (const eventName of scanEventNames) {\n    assert.deepEqual(eventRoutes[eventName], { customerio: false, meta: false, posthog: true })\n  }\n})",
+    "sha256": "8ed8202284961b1e70345a27c7a12df2f19e51bc814e8648117c7757870970f6",
+    "assertions": [
+      {
+        "line": 49,
+        "text": "assert.deepEqual(eventRoutes[eventName], { customerio: false, meta: false, posthog: true })"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-analytics.test.ts",
+    "title": "noOpScanAnalytics never forwards events",
+    "line": 53,
+    "start": 1574,
+    "end": 2035,
+    "body": "test(\"noOpScanAnalytics never forwards events\", () => {\n  const calls: unknown[] = []\n  const originalCapture = posthog.capture\n  posthog.capture = ((...args: unknown[]) => {\n    calls.push(args)\n    return true\n  }) as typeof posthog.capture\n\n  try {\n    noOpScanAnalytics.track(\"scan_started\", {})\n    noOpScanAnalytics.track(\"scan_buy_clicked\", { verdict: \"ideal\" })\n  } finally {\n    posthog.capture = originalCapture\n  }\n\n  assert.equal(calls.length, 0)\n})",
+    "sha256": "aadd90b824b03fe516cd30d6bd82348a8156988e32d516b51d54868c262c28fa",
+    "assertions": [
+      {
+        "line": 68,
+        "text": "assert.equal(calls.length, 0)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-analytics.test.ts",
+    "title": "Scan analytics factory only fires with analytics consent",
+    "line": 71,
+    "start": 2037,
+    "end": 5105,
+    "body": "test(\"Scan analytics factory only fires with analytics consent\", () => {\n  const calls: Array<{ eventName: string; payload: object }> = []\n  const recordingTrackAppEvent = ((eventName: string, payload: object) =>\n    calls.push({ eventName, payload })) as ScanAnalyticsPort[\"track\"]\n\n  const declined = createConsentAwareScanAnalytics({\n    loadConsent: () => ({ essential: true, analytics: false, marketing: false, ts: 0 }),\n    trackAppEvent: recordingTrackAppEvent,\n  })\n  declined.track(\"scan_started\", {})\n  declined.track(\"scan_buy_clicked\", { verdict: \"ideal\" })\n  declined.track(\"scan_not_found\", unknownJourney)\n  declined.track(\"scan_submission_created\", { category: \"conditioner\", ...submittedJourney })\n  assert.equal(calls.length, 0)\n\n  const unset = createConsentAwareScanAnalytics({\n    loadConsent: () => null,\n    trackAppEvent: recordingTrackAppEvent,\n  })\n  unset.track(\"scan_started\", {})\n  assert.equal(calls.length, 0)\n\n  const consented = createConsentAwareScanAnalytics({\n    loadConsent: () => ({ essential: true, analytics: true, marketing: false, ts: 0 }),\n    trackAppEvent: recordingTrackAppEvent,\n  })\n  consented.track(\"scan_started\", {})\n  consented.track(\"scan_decoded\", { msToDecode: 812, format: \"ean_13\" })\n  consented.track(\"scan_result_shown\", {\n    verdict: \"ideal\",\n    category: \"shampoo\",\n    inCatalog: true,\n    snapshotSource: \"refined\",\n  })\n  consented.track(\"scan_not_found\", unknownJourney)\n  consented.track(\"scan_retailer_search\", {\n    catalogCount: 1,\n    retailerCount: 2,\n    outcome: \"ok\",\n    durationMs: 340,\n    trigger: \"auto\",\n  })\n  consented.track(\"scan_retailer_result_opened\", { categoryLabel: \"Conditioner\" })\n  consented.track(\"scan_submission_created\", { category: \"conditioner\", ...submittedJourney })\n  consented.track(\"scan_fallback_search_used\", { trigger: \"timeout\" })\n  consented.track(\"scan_saved\", { kind: \"routine\", verdict: \"ideal\" })\n  consented.track(\"scan_buy_clicked\", { verdict: \"mismatch\" })\n\n  assert.deepEqual(calls, [\n    { eventName: \"scan_started\", payload: {} },\n    { eventName: \"scan_decoded\", payload: { msToDecode: 812, format: \"ean_13\" } },\n    {\n      eventName: \"scan_result_shown\",\n      payload: {\n        verdict: \"ideal\",\n        category: \"shampoo\",\n        inCatalog: true,\n        snapshotSource: \"refined\",\n      },\n    },\n    { eventName: \"scan_not_found\", payload: unknownJourney },\n    {\n      eventName: \"scan_retailer_search\",\n      payload: {\n        catalogCount: 1,\n        retailerCount: 2,\n        outcome: \"ok\",\n        durationMs: 340,\n        trigger: \"auto\",\n      },\n    },\n    {\n      eventName: \"scan_retailer_result_opened\",\n      payload: { categoryLabel: \"Conditioner\" },\n    },\n    {\n      eventName: \"scan_submission_created\",\n      payload: { category: \"conditioner\", ...submittedJourney },\n    },\n    { eventName: \"scan_fallback_search_used\", payload: { trigger: \"timeout\" } },\n    { eventName: \"scan_saved\", payload: { kind: \"routine\", verdict: \"ideal\" } },\n    { eventName: \"scan_buy_clicked\", payload: { verdict: \"mismatch\" } },\n  ])\n})",
+    "sha256": "4ef929f2ce208666e669e412964d4432da1401dc8e96d5721664e069714b5f9b",
+    "assertions": [
+      {
+        "line": 84,
+        "text": "assert.equal(calls.length, 0)"
+      },
+      {
+        "line": 91,
+        "text": "assert.equal(calls.length, 0)"
+      },
+      {
+        "line": 119,
+        "text": "assert.deepEqual(calls, [\n    { eventName: \"scan_started\", payload: {} },\n    { eventName: \"scan_decoded\", payload: { msToDecode: 812, format: \"ean_13\" } },\n    {\n      eventName: \"scan_result_shown\",\n      payload: {\n        verdict: \"ideal\",\n        category: \"shampoo\",\n        inCatalog: true,\n        snapshotSource: \"refined\",\n      },\n    },\n    { eventName: \"scan_not_found\", payload: unknownJourney },\n    {\n      eventName: \"scan_retailer_search\",\n      payload: {\n        catalogCount: 1,\n        retailerCount: 2,\n        outcome: \"ok\",\n        durationMs: 340,\n        trigger: \"auto\",\n      },\n    },\n    {\n      eventName: \"scan_retailer_result_opened\",\n      payload: { categoryLabel: \"Conditioner\" },\n    },\n    {\n      eventName: \"scan_submission_created\",\n      payload: { category: \"conditioner\", ...submittedJourney },\n    },\n    { eventName: \"scan_fallback_search_used\", payload: { trigger: \"timeout\" } },\n    { eventName: \"scan_saved\", payload: { kind: \"routine\", verdict: \"ideal\" } },\n    { eventName: \"scan_buy_clicked\", payload: { verdict: \"mismatch\" } },\n  ])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-analytics.test.ts",
+    "title": "Scan events map to PostHog with the documented snake_case properties",
+    "line": 156,
+    "start": 5107,
+    "end": 7602,
+    "body": "test(\"Scan events map to PostHog with the documented snake_case properties\", () => {\n  const originalCapture = posthog.capture\n  const calls: unknown[][] = []\n  posthog.capture = ((...args: unknown[]) => {\n    calls.push(args)\n    return true\n  }) as typeof posthog.capture\n\n  try {\n    postHogDestination.track(\"scan_started\", {})\n    postHogDestination.track(\"scan_decoded\", { msToDecode: 900, format: \"ean_8\" })\n    postHogDestination.track(\"scan_result_shown\", {\n      verdict: \"not_needed\",\n      category: \"oil\",\n      inCatalog: false,\n      snapshotSource: \"initial\",\n    })\n    postHogDestination.track(\"scan_not_found\", unknownJourney)\n    postHogDestination.track(\"scan_retailer_search\", {\n      catalogCount: 3,\n      retailerCount: 5,\n      outcome: \"unavailable\",\n      durationMs: 902,\n      trigger: \"submit\",\n    })\n    postHogDestination.track(\"scan_retailer_result_opened\", { categoryLabel: null })\n    postHogDestination.track(\"scan_submission_created\", { category: \"mask\", ...submittedJourney })\n    postHogDestination.track(\"scan_fallback_search_used\", { trigger: \"manual\" })\n    postHogDestination.track(\"scan_saved\", { kind: \"merkliste\", verdict: \"supportive\" })\n    postHogDestination.track(\"scan_buy_clicked\", { verdict: \"merkliste\" })\n  } finally {\n    posthog.capture = originalCapture\n  }\n\n  assert.deepEqual(calls, [\n    [\"scan_started\", {}],\n    [\"scan_decoded\", { ms_to_decode: 900, format: \"ean_8\" }],\n    [\n      \"scan_result_shown\",\n      { verdict: \"not_needed\", category: \"oil\", in_catalog: false, snapshot_source: \"initial\" },\n    ],\n    [\n      \"scan_not_found\",\n      {\n        identified: true,\n        suggested_category: \"shampoo\",\n        scan_interaction_id: \"test-sheet-1\",\n        ms_to_unknown_sheet_ready: 430,\n      },\n    ],\n    [\n      \"scan_retailer_search\",\n      {\n        catalog_count: 3,\n        retailer_count: 5,\n        outcome: \"unavailable\",\n        duration_ms: 902,\n        trigger: \"submit\",\n      },\n    ],\n    [\"scan_retailer_result_opened\", { category_label: null }],\n    [\n      \"scan_submission_created\",\n      {\n        category: \"mask\",\n        suggested_category: \"shampoo\",\n        selection_path: \"grid\",\n        scan_interaction_id: \"test-sheet-1\",\n        ms_confirmation_to_pending: 180,\n        intake_path: \"scan\",\n      },\n    ],\n    [\"scan_fallback_search_used\", { trigger: \"manual\" }],\n    [\"scan_saved\", { kind: \"merkliste\", verdict: \"supportive\" }],\n    [\"scan_buy_clicked\", { verdict: \"merkliste\" }],\n  ])\n})",
+    "sha256": "00cf246eee88c6ff5be1d6f42ed14ae82af99ec7b610c15543c3edff1034c64f",
+    "assertions": [
+      {
+        "line": 190,
+        "text": "assert.deepEqual(calls, [\n    [\"scan_started\", {}],\n    [\"scan_decoded\", { ms_to_decode: 900, format: \"ean_8\" }],\n    [\n      \"scan_result_shown\",\n      { verdict: \"not_needed\", category: \"oil\", in_catalog: false, snapshot_source: \"initial\" },\n    ],\n    [\n      \"scan_not_found\",\n      {\n        identified: true,\n        suggested_category: \"shampoo\",\n        scan_interaction_id: \"test-sheet-1\",\n        ms_to_unknown_sheet_ready: 430,\n      },\n    ],\n    [\n      \"scan_retailer_search\",\n      {\n        catalog_count: 3,\n        retailer_count: 5,\n        outcome: \"unavailable\",\n        duration_ms: 902,\n        trigger: \"submit\",\n      },\n    ],\n    [\"scan_retailer_result_opened\", { category_label: null }],\n    [\n      \"scan_submission_created\",\n      {\n        category: \"mask\",\n        suggested_category: \"shampoo\",\n        selection_path: \"grid\",\n        scan_interaction_id: \"test-sheet-1\",\n        ms_confirmation_to_pending: 180,\n        intake_path: \"scan\",\n      },\n    ],\n    [\"scan_fallback_search_used\", { trigger: \"manual\" }],\n    [\"scan_saved\", { kind: \"merkliste\", verdict: \"supportive\" }],\n    [\"scan_buy_clicked\", { verdict: \"merkliste\" }],\n  ])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-analytics.test.ts",
+    "title": "scan_submission_created's intakePath distinguishes the barcode-scan unknown flow from the search sheet's name-based recovery",
+    "line": 234,
+    "start": 7604,
+    "end": 8589,
+    "body": "test(\"scan_submission_created's intakePath distinguishes the barcode-scan unknown flow from the search sheet's name-based recovery\", () => {\n  const originalCapture = posthog.capture\n  const calls: unknown[][] = []\n  posthog.capture = ((...args: unknown[]) => {\n    calls.push(args)\n    return true\n  }) as typeof posthog.capture\n\n  try {\n    postHogDestination.track(\"scan_submission_created\", {\n      category: \"shampoo\",\n      suggestedCategory: null,\n      selectionPath: \"grid\",\n      scanInteractionId: \"test-name-search-1\",\n      msConfirmationToPending: 240,\n      intakePath: \"name_search\",\n    })\n  } finally {\n    posthog.capture = originalCapture\n  }\n\n  assert.deepEqual(calls, [\n    [\n      \"scan_submission_created\",\n      {\n        category: \"shampoo\",\n        suggested_category: null,\n        selection_path: \"grid\",\n        scan_interaction_id: \"test-name-search-1\",\n        ms_confirmation_to_pending: 240,\n        intake_path: \"name_search\",\n      },\n    ],\n  ])\n})",
+    "sha256": "627181cbdb5cf5da30ffd3336dea2bf707c4017ac056383b04129abe69628d4d",
+    "assertions": [
+      {
+        "line": 255,
+        "text": "assert.deepEqual(calls, [\n    [\n      \"scan_submission_created\",\n      {\n        category: \"shampoo\",\n        suggested_category: null,\n        selection_path: \"grid\",\n        scan_interaction_id: \"test-name-search-1\",\n        ms_confirmation_to_pending: 240,\n        intake_path: \"name_search\",\n      },\n    ],\n  ])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-analytics.test.ts",
+    "title": "scan_result_shown reports a not_needed verdict as a catalog hit, not a miss",
+    "line": 270,
+    "start": 8591,
+    "end": 9151,
+    "body": "test(\"scan_result_shown reports a not_needed verdict as a catalog hit, not a miss\", () => {\n  const product = { productId: \"prod-1\", name: \"Shampoo X\" }\n  // Both verdict branches only exist once the barcode resolved to a catalog product.\n  assert.equal(scanResultShownInCatalog({ kind: \"in_catalog\", product }), true)\n  assert.equal(scanResultShownInCatalog({ kind: \"not_needed\", product }), true)\n  // Defensive: no product header means no catalog resolution happened.\n  assert.equal(scanResultShownInCatalog({ kind: \"not_needed\", product: null }), false)\n})",
+    "sha256": "0cb68bdaad04be39fc73416a24deb864975434a0e0c61277fe277afda852efe7",
+    "assertions": [
+      {
+        "line": 273,
+        "text": "assert.equal(scanResultShownInCatalog({ kind: \"in_catalog\", product }), true)"
+      },
+      {
+        "line": 274,
+        "text": "assert.equal(scanResultShownInCatalog({ kind: \"not_needed\", product }), true)"
+      },
+      {
+        "line": 276,
+        "text": "assert.equal(scanResultShownInCatalog({ kind: \"not_needed\", product: null }), false)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-catalog-search-typo.test.ts",
+    "title": "`matchCatalogProducts typo table: ${label} (\"${query}\")`",
+    "line": 71,
+    "start": 2486,
+    "end": 2604,
+    "body": "test(`matchCatalogProducts typo table: ${label} (\"${query}\")`, () => {\n    assert.deepEqual(ids(query), expected)\n  })",
+    "sha256": "348c9729f3bda59cdb51defb60c4d7cb37fe552aacc13be1a7d584768667a4f5",
+    "assertions": [
+      {
+        "line": 72,
+        "text": "assert.deepEqual(ids(query), expected)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-catalog-search-typo.test.ts",
+    "title": "matchCatalogProducts: tokens under 5 chars compare whole words, not word prefixes",
+    "line": 76,
+    "start": 2608,
+    "end": 2992,
+    "body": "test(\"matchCatalogProducts: tokens under 5 chars compare whole words, not word prefixes\", () => {\n  // Prefix matching would let \"oil\" (1 edit) hit \"Olaplex\" via \"ol\".\n  assert.deepEqual(ids(\"oil\"), [])\n  // A whole-word typo still matches: \"olaplx\" is 6 chars, \"glss\" a whole-word deletion.\n  assert.deepEqual(ids(\"olaplx\"), [\"olaplex\"])\n  assert.deepEqual(ids(\"glss\"), [\"gliss\"])\n})",
+    "sha256": "64998bb35fdc88175ad765d2db2fdbd2df48c95202ee9c1574ee56e86dd6dc3b",
+    "assertions": [
+      {
+        "line": 78,
+        "text": "assert.deepEqual(ids(\"oil\"), [])"
+      },
+      {
+        "line": 80,
+        "text": "assert.deepEqual(ids(\"olaplx\"), [\"olaplex\"])"
+      },
+      {
+        "line": 81,
+        "text": "assert.deepEqual(ids(\"glss\"), [\"gliss\"])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-catalog-search-typo.test.ts",
+    "title": "matchCatalogProducts: very short tokens (< 3 chars) get no typo tolerance",
+    "line": 84,
+    "start": 2994,
+    "end": 3207,
+    "body": "test(\"matchCatalogProducts: very short tokens (< 3 chars) get no typo tolerance\", () => {\n  // With 1 edit, \"xy\" would match any title token that merely starts with \"x\" or \"y\".\n  assert.deepEqual(ids(\"xy\"), [])\n})",
+    "sha256": "b29b745f2eeafa88eae96c7b2663507cfc2f6d81b1e2ce88d68611fca3150b03",
+    "assertions": [
+      {
+        "line": 86,
+        "text": "assert.deepEqual(ids(\"xy\"), [])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-catalog-search-typo.test.ts",
+    "title": "matchCatalogProducts: exact title → substring → token → typo-only tiers, sort_order only breaks ties within a tier",
+    "line": 89,
+    "start": 3209,
+    "end": 3825,
+    "body": "test(\"matchCatalogProducts: exact title → substring → token → typo-only tiers, sort_order only breaks ties within a tier\", () => {\n  const rows = [\n    row(\"typo-only\", \"Shampo Deluxe\", \"Marke\", { sort_order: 0 }),\n    row(\"token-reordered\", \"Deluxe Shampoo\", \"Marke\", { sort_order: 0 }),\n    row(\"substring\", \"Shampoo Deluxe Plus\", \"Marke\", { sort_order: 5 }),\n    row(\"exact\", \"Shampoo Deluxe\", \"Marke\", { sort_order: 9 }),\n  ]\n  const ranked = matchCatalogProducts(rows, \"marke shampoo deluxe\").map((candidate) => candidate.id)\n  assert.deepEqual(ranked, [\"exact\", \"substring\", \"token-reordered\", \"typo-only\"])\n})",
+    "sha256": "7742388d728c6e6a7e09ade7d96b9ce80d65d2d5e18e8732984df699c2236b14",
+    "assertions": [
+      {
+        "line": 97,
+        "text": "assert.deepEqual(ranked, [\"exact\", \"substring\", \"token-reordered\", \"typo-only\"])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-catalog-search-typo.test.ts",
+    "title": "matchCatalogProducts: within the typo tier the existing sort_order → name → id tiebreak holds",
+    "line": 100,
+    "start": 3827,
+    "end": 4243,
+    "body": "test(\"matchCatalogProducts: within the typo tier the existing sort_order → name → id tiebreak holds\", () => {\n  const rows = [\n    row(\"b\", \"Shampo B\", \"Marke\", { sort_order: 2 }),\n    row(\"a\", \"Shampo A\", \"Marke\", { sort_order: 2 }),\n    row(\"c\", \"Shampo C\", \"Marke\", { sort_order: 1 }),\n  ]\n  assert.deepEqual(\n    matchCatalogProducts(rows, \"shampoo\").map((candidate) => candidate.id),\n    [\"c\", \"a\", \"b\"],\n  )\n})",
+    "sha256": "a167cbd1d1a7c678fe87769af0a397055b7eaa0ab9396dbaa7f6d72eb24f7094",
+    "assertions": [
+      {
+        "line": 106,
+        "text": "assert.deepEqual(\n    matchCatalogProducts(rows, \"shampoo\").map((candidate) => candidate.id),\n    [\"c\", \"a\", \"b\"],\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-catalog-search-typo.test.ts",
+    "title": "matchCatalogProducts: plain substring matching is unchanged (case-insensitive, over the identity title)",
+    "line": 112,
+    "start": 4245,
+    "end": 4468,
+    "body": "test(\"matchCatalogProducts: plain substring matching is unchanged (case-insensitive, over the identity title)\", () => {\n  assert.deepEqual(ids(\"PURE SHAMP\"), [\"elvital\"])\n  assert.deepEqual(ids(\"aqua revive\"), [\"gliss\"])\n})",
+    "sha256": "56c045ea901e0c2b90ce0a226a0628b214368ddf25a038c0669bfee8e8d0ac7a",
+    "assertions": [
+      {
+        "line": 113,
+        "text": "assert.deepEqual(ids(\"PURE SHAMP\"), [\"elvital\"])"
+      },
+      {
+        "line": 114,
+        "text": "assert.deepEqual(ids(\"aqua revive\"), [\"gliss\"])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-catalog-search-typo.test.ts",
+    "title": "matchCatalogProducts: numbers never match by typo — sizes and product numbers are exact",
+    "line": 117,
+    "start": 4470,
+    "end": 5285,
+    "body": "test(\"matchCatalogProducts: numbers never match by typo — sizes and product numbers are exact\", () => {\n  const rows = [\n    row(\"100\", \"Repair Shampoo 100 ml\", \"Marke\"),\n    row(\"200\", \"Repair Shampoo 200 ml\", \"Marke\"),\n    row(\"no3\", \"No. 3 Hair Perfector\", \"Olaplex\"),\n    row(\"no4\", \"No. 4 Bond Maintenance Shampoo\", \"Olaplex\"),\n  ]\n  const match = (query: string) =>\n    matchCatalogProducts(rows, query).map((candidate) => candidate.id)\n  assert.deepEqual(match(\"shampoo 100\"), [\"100\"])\n  assert.deepEqual(match(\"shampoo 200\"), [\"200\"])\n  assert.deepEqual(match(\"shampoo 300\"), [])\n  // Digits inside a token get no typo budget either, in the query or in the title.\n  assert.deepEqual(match(\"olaplex no3\"), [])\n  assert.deepEqual(match(\"olaplex no5\"), [])\n  assert.deepEqual(match(\"olaplex no 3\"), [\"no3\"])\n})",
+    "sha256": "e6124fe00c03d0b83df63c93889ec6823b7af110835f8aa0f3a2e145cc65843b",
+    "assertions": [
+      {
+        "line": 126,
+        "text": "assert.deepEqual(match(\"shampoo 100\"), [\"100\"])"
+      },
+      {
+        "line": 127,
+        "text": "assert.deepEqual(match(\"shampoo 200\"), [\"200\"])"
+      },
+      {
+        "line": 128,
+        "text": "assert.deepEqual(match(\"shampoo 300\"), [])"
+      },
+      {
+        "line": 130,
+        "text": "assert.deepEqual(match(\"olaplex no3\"), [])"
+      },
+      {
+        "line": 131,
+        "text": "assert.deepEqual(match(\"olaplex no5\"), [])"
+      },
+      {
+        "line": 132,
+        "text": "assert.deepEqual(match(\"olaplex no 3\"), [\"no3\"])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-masked-alternative.test.ts",
+    "title": "maskAlternative: withholds identity, productId, image, price and net content",
+    "line": 34,
+    "start": 895,
+    "end": 1128,
+    "body": "test(\"maskAlternative: withholds identity, productId, image, price and net content\", () => {\n  const masked = maskAlternative(alternative())\n  assert.deepEqual(Object.keys(masked).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])\n})",
+    "sha256": "aea7852f96a98ff0aecd08d4e14da0f111ef9563fd17c81359b612f86c485994",
+    "assertions": [
+      {
+        "line": 36,
+        "text": "assert.deepEqual(Object.keys(masked).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-masked-alternative.test.ts",
+    "title": "maskAlternative: keeps the alternative's own verdict and verdict label",
+    "line": 39,
+    "start": 1130,
+    "end": 1442,
+    "body": "test(\"maskAlternative: keeps the alternative's own verdict and verdict label\", () => {\n  const masked = maskAlternative(\n    alternative({ verdict: \"supportive\", verdictLabel: \"Passt eingeschränkt\" }),\n  )\n  assert.equal(masked.verdict, \"supportive\")\n  assert.equal(masked.verdictLabel, \"Passt eingeschränkt\")\n})",
+    "sha256": "ba68a0355154eb3bce7a9813146e74c794fb9dad028e3f8978cae9d98ed427ed",
+    "assertions": [
+      {
+        "line": 43,
+        "text": "assert.equal(masked.verdict, \"supportive\")"
+      },
+      {
+        "line": 44,
+        "text": "assert.equal(masked.verdictLabel, \"Passt eingeschränkt\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-masked-alternative.test.ts",
+    "title": "maskAlternative: derives comparison rows from the alternative's own criteria",
+    "line": 47,
+    "start": 1444,
+    "end": 1766,
+    "body": "test(\"maskAlternative: derives comparison rows from the alternative's own criteria\", () => {\n  const masked = maskAlternative(alternative())\n  assert.deepEqual(masked.comparison.rows, [\n    { rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" },\n  ])\n  assert.equal(masked.comparison.summaryScore, 1)\n})",
+    "sha256": "f5ea0c4c2aa355115d7b6030929465616582f1986e062e91d5afd043ce2bf66d",
+    "assertions": [
+      {
+        "line": 49,
+        "text": "assert.deepEqual(masked.comparison.rows, [\n    { rowId: \"shampoo.scalp_route\", label: \"Kopfhaut-Fokus\", state: \"match\" },\n  ])"
+      },
+      {
+        "line": 52,
+        "text": "assert.equal(masked.comparison.summaryScore, 1)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-masked-alternative.test.ts",
+    "title": "maskAlternative: an alternative with no carried criteria yields an empty comparison",
+    "line": 55,
+    "start": 1768,
+    "end": 2010,
+    "body": "test(\"maskAlternative: an alternative with no carried criteria yields an empty comparison\", () => {\n  const masked = maskAlternative(alternative({ criteria: undefined }))\n  assert.deepEqual(masked.comparison, { rows: [], summaryScore: 0 })\n})",
+    "sha256": "0abfca9727993099427b024d820211a7223e3b487eed6c69d3c9e8411d4926e5",
+    "assertions": [
+      {
+        "line": 57,
+        "text": "assert.deepEqual(masked.comparison, { rows: [], summaryScore: 0 })"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-masked-alternative.test.ts",
+    "title": "maskAlternative: does not mutate the input",
+    "line": 60,
+    "start": 2012,
+    "end": 2221,
+    "body": "test(\"maskAlternative: does not mutate the input\", () => {\n  const source = alternative()\n  const snapshot = JSON.parse(JSON.stringify(source))\n  maskAlternative(source)\n  assert.deepEqual(source, snapshot)\n})",
+    "sha256": "42a69e09bdd7213df2b78ed133667b9705c1488c6e148b8a75a2d6f416b4a0ef",
+    "assertions": [
+      {
+        "line": 64,
+        "text": "assert.deepEqual(source, snapshot)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-masked-alternative.test.ts",
+    "title": "maskScanVerdictPayload: masks every alternative, leaves every other field untouched",
+    "line": 83,
+    "start": 2717,
+    "end": 3279,
+    "body": "test(\"maskScanVerdictPayload: masks every alternative, leaves every other field untouched\", () => {\n  const masked = maskScanVerdictPayload(inCatalogVerdict)\n  assert.equal(masked.alternatives.length, 2)\n  assert.equal(masked.verdictTitle, inCatalogVerdict.verdictTitle)\n  assert.equal(masked.coverage, inCatalogVerdict.coverage)\n  assert.equal(masked.dimensions, inCatalogVerdict.dimensions)\n  for (const entry of masked.alternatives as ScanMaskedAlternative[]) {\n    assert.deepEqual(Object.keys(entry).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])\n  }\n})",
+    "sha256": "075ffd2af6a0cf8e878b29ea13147454cc75ca1b0ad82715e5539093751a3f7e",
+    "assertions": [
+      {
+        "line": 85,
+        "text": "assert.equal(masked.alternatives.length, 2)"
+      },
+      {
+        "line": 86,
+        "text": "assert.equal(masked.verdictTitle, inCatalogVerdict.verdictTitle)"
+      },
+      {
+        "line": 87,
+        "text": "assert.equal(masked.coverage, inCatalogVerdict.coverage)"
+      },
+      {
+        "line": 88,
+        "text": "assert.equal(masked.dimensions, inCatalogVerdict.dimensions)"
+      },
+      {
+        "line": 90,
+        "text": "assert.deepEqual(Object.keys(entry).sort(), [\"comparison\", \"verdict\", \"verdictLabel\"])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-masked-alternative.test.ts",
+    "title": "maskScanVerdictPayload: an empty alternatives list stays empty",
+    "line": 94,
+    "start": 3281,
+    "end": 3489,
+    "body": "test(\"maskScanVerdictPayload: an empty alternatives list stays empty\", () => {\n  const masked = maskScanVerdictPayload({ ...inCatalogVerdict, alternatives: [] })\n  assert.deepEqual(masked.alternatives, [])\n})",
+    "sha256": "1b0db810a55d9de25675860d7db15190ca5a0387decf8f0e573dbadc1b89ed25",
+    "assertions": [
+      {
+        "line": 96,
+        "text": "assert.deepEqual(masked.alternatives, [])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: identifier-based scan rows are unaffected (byte-identical EAN lane)",
+    "line": 48,
+    "start": 1779,
+    "end": 2383,
+    "body": "test(\"scan name-only submission migration: identifier-based scan rows are unaffected (byte-identical EAN lane)\", async (t) => {\n  const pg = await database()\n  t.after(async () => pg.close())\n\n  await pg.query(\n    `INSERT INTO public.product_submissions\n       (user_id, category, source, status, scanned_identifier_type, scanned_identifier_value)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'ean', '4006381333931')`,\n    [userA],\n  )\n  const rows = await pg.query(\"SELECT count(*)::int AS count FROM public.product_submissions\")\n  assert.equal((rows.rows[0] as { count: number }).count, 1)\n})",
+    "sha256": "3ebff1d75e7be6f4c55330f2fecec624dffec0c2c34a41f19510a30fbe469676",
+    "assertions": [
+      {
+        "line": 59,
+        "text": "assert.equal((rows.rows[0] as { count: number }).count, 1)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: a name-only scan row (no identifier) is now accepted",
+    "line": 62,
+    "start": 2385,
+    "end": 2956,
+    "body": "test(\"scan name-only submission migration: a name-only scan row (no identifier) is now accepted\", async (t) => {\n  const pg = await database()\n  t.after(async () => pg.close())\n\n  await pg.query(\n    `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'Kérastase', 'Ciment Thermique')`,\n    [userA],\n  )\n  const rows = await pg.query(\"SELECT count(*)::int AS count FROM public.product_submissions\")\n  assert.equal((rows.rows[0] as { count: number }).count, 1)\n})",
+    "sha256": "3cf68cccf33d5e70aa92266afb6132117a2404de76026748ee5afc3a2a8434f5",
+    "assertions": [
+      {
+        "line": 72,
+        "text": "assert.equal((rows.rows[0] as { count: number }).count, 1)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: a scan row with neither identifier nor brand+name still fails the CHECK",
+    "line": 75,
+    "start": 2958,
+    "end": 3419,
+    "body": "test(\"scan name-only submission migration: a scan row with neither identifier nor brand+name still fails the CHECK\", async (t) => {\n  const pg = await database()\n  t.after(async () => pg.close())\n\n  await assert.rejects(\n    pg.query(\n      `INSERT INTO public.product_submissions (user_id, category, source, status)\n       VALUES ($1, 'shampoo', 'scan', 'pending_review')`,\n      [userA],\n    ),\n    /product_submissions_scan_requires_identifier_check/,\n  )\n})",
+    "sha256": "f19a060b36dca16d1ebe83083526a0190c24dab5369a6feb462a944d07ec8416",
+    "assertions": [
+      {
+        "line": 79,
+        "text": "assert.rejects(\n    pg.query(\n      `INSERT INTO public.product_submissions (user_id, category, source, status)\n       VALUES ($1, 'shampoo', 'scan', 'pending_review')`,\n      [userA],\n    ),\n    /product_submissions_scan_requires_identifier_check/,\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: a scan row with only brand_text (no product_name_text, no identifier) still fails",
+    "line": 89,
+    "start": 3421,
+    "end": 3917,
+    "body": "test(\"scan name-only submission migration: a scan row with only brand_text (no product_name_text, no identifier) still fails\", async (t) => {\n  const pg = await database()\n  t.after(async () => pg.close())\n\n  await assert.rejects(\n    pg.query(\n      `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text)\n       VALUES ($1, 'shampoo', 'scan', 'pending_review', 'Kérastase')`,\n      [userA],\n    ),\n    /product_submissions_scan_requires_identifier_check/,\n  )\n})",
+    "sha256": "a479d3f590107a2381901b3a2fc5a4298cf9a9669a7f3cc3d15944a4ccd3196c",
+    "assertions": [
+      {
+        "line": 93,
+        "text": "assert.rejects(\n    pg.query(\n      `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text)\n       VALUES ($1, 'shampoo', 'scan', 'pending_review', 'Kérastase')`,\n      [userA],\n    ),\n    /product_submissions_scan_requires_identifier_check/,\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: non-scan sources are untouched by the relaxed CHECK (the rule only ever constrains source='scan')",
+    "line": 103,
+    "start": 3919,
+    "end": 4649,
+    "body": "test(\"scan name-only submission migration: non-scan sources are untouched by the relaxed CHECK (the rule only ever constrains source='scan')\", async (t) => {\n  const pg = await database()\n  t.after(async () => pg.close())\n\n  // No identifier and no brand/name at all -- would fail for source='scan', but this\n  // constraint's `source <> 'scan'` branch means it never applies to another source.\n  await pg.query(\n    `INSERT INTO public.product_submissions (user_id, category, source, status)\n     VALUES ($1, 'shampoo', 'onboarding', 'pending_review')`,\n    [userA],\n  )\n  const rows = await pg.query(\"SELECT count(*)::int AS count FROM public.product_submissions\")\n  assert.equal((rows.rows[0] as { count: number }).count, 1)\n})",
+    "sha256": "bbc0b3f49abdbfce1fe987ea1faca36406b9f591b0e95291a8ec3e8d5f63f92a",
+    "assertions": [
+      {
+        "line": 115,
+        "text": "assert.equal((rows.rows[0] as { count: number }).count, 1)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: one-open-name-only-submission index rejects a second open duplicate (case-insensitive)",
+    "line": 118,
+    "start": 4651,
+    "end": 5416,
+    "body": "test(\"scan name-only submission migration: one-open-name-only-submission index rejects a second open duplicate (case-insensitive)\", async (t) => {\n  const pg = await database()\n  t.after(async () => pg.close())\n\n  await pg.query(\n    `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'Kérastase', 'Ciment Thermique')`,\n    [userA],\n  )\n\n  await assert.rejects(\n    pg.query(\n      `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)\n       VALUES ($1, 'shampoo', 'scan', 'researching', 'kérastase', 'ciment thermique')`,\n      [userA],\n    ),\n    /idx_product_submissions_one_open_scan_name/,\n  )\n})",
+    "sha256": "37c38e2ebecc5280c1533428fa886c9872910b0d9e513ec4ca404b4a37b2cd86",
+    "assertions": [
+      {
+        "line": 128,
+        "text": "assert.rejects(\n    pg.query(\n      `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)\n       VALUES ($1, 'shampoo', 'scan', 'researching', 'kérastase', 'ciment thermique')`,\n      [userA],\n    ),\n    /idx_product_submissions_one_open_scan_name/,\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: the index scopes to (user, category, brand, name) -- a different user, category, brand, or name is not blocked",
+    "line": 138,
+    "start": 5418,
+    "end": 6862,
+    "body": "test(\"scan name-only submission migration: the index scopes to (user, category, brand, name) -- a different user, category, brand, or name is not blocked\", async (t) => {\n  const pg = await database()\n  t.after(async () => pg.close())\n\n  await pg.query(\n    `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'Kérastase', 'Ciment Thermique')`,\n    [userA],\n  )\n\n  // Different user -- allowed.\n  await pg.query(\n    `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'Kérastase', 'Ciment Thermique')`,\n    [userB],\n  )\n  // Different category -- allowed.\n  await pg.query(\n    `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)\n     VALUES ($1, 'conditioner', 'scan', 'pending_review', 'Kérastase', 'Ciment Thermique')`,\n    [userA],\n  )\n  // Different product name -- allowed.\n  await pg.query(\n    `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'Kérastase', 'Bain Densité')`,\n    [userA],\n  )\n\n  const rows = await pg.query(\"SELECT count(*)::int AS count FROM public.product_submissions\")\n  assert.equal((rows.rows[0] as { count: number }).count, 4)\n})",
+    "sha256": "a313b27424599811459bf9cccbdf530aa501d557abe991b81e9fd53590b3068a",
+    "assertions": [
+      {
+        "line": 168,
+        "text": "assert.equal((rows.rows[0] as { count: number }).count, 4)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: a CLOSED prior submission (not in the open-status set) does not block a new one",
+    "line": 171,
+    "start": 6864,
+    "end": 7826,
+    "body": "test(\"scan name-only submission migration: a CLOSED prior submission (not in the open-status set) does not block a new one\", async (t) => {\n  const pg = await database()\n  t.after(async () => pg.close())\n\n  await pg.query(\n    `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)\n     VALUES ($1, 'shampoo', 'scan', 'rejected', 'Kérastase', 'Ciment Thermique')`,\n    [userA],\n  )\n  // The prior row is closed (rejected is not in the open-status set), so a fresh open\n  // request for the same identity is allowed.\n  await pg.query(\n    `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'Kérastase', 'Ciment Thermique')`,\n    [userA],\n  )\n\n  const rows = await pg.query(\"SELECT count(*)::int AS count FROM public.product_submissions\")\n  assert.equal((rows.rows[0] as { count: number }).count, 2)\n})",
+    "sha256": "7ffc534da6a64f31a7246e6826f41793898011cfc1b8b79224594ca6b046aaee",
+    "assertions": [
+      {
+        "line": 189,
+        "text": "assert.equal((rows.rows[0] as { count: number }).count, 2)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-name-only-submission-migration.test.ts",
+    "title": "scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category",
+    "line": 192,
+    "start": 7828,
+    "end": 8842,
+    "body": "test(\"scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category\", async (t) => {\n  const pg = await database()\n  t.after(async () => pg.close())\n\n  await pg.query(\n    `INSERT INTO public.product_submissions\n       (user_id, category, source, status, scanned_identifier_type, scanned_identifier_value)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'ean', '4006381333931')`,\n    [userA],\n  )\n  // A name-only row for the same user/category is unaffected by the identifier-scoped\n  // index (scanned_identifier_value IS NULL predicate excludes it).\n  await pg.query(\n    `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)\n     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'Kérastase', 'Ciment Thermique')`,\n    [userA],\n  )\n\n  const rows = await pg.query(\"SELECT count(*)::int AS count FROM public.product_submissions\")\n  assert.equal((rows.rows[0] as { count: number }).count, 2)\n})",
+    "sha256": "ca7a42d9af7c7608f2046e2f0618dad57967c4c62b2cdb6c5e89204daf4caaa0",
+    "assertions": [
+      {
+        "line": 211,
+        "text": "assert.equal((rows.rows[0] as { count: number }).count, 2)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-observability.test.ts",
+    "title": "captureScanException tags and scopes the event under scan.*",
+    "line": 10,
+    "start": 200,
+    "end": 1318,
+    "body": "test(\"captureScanException tags and scopes the event under scan.*\", () => {\n  const thrown = new Error(\"scan_resolve_decision_missing\")\n  const tags: Record<string, string> = {}\n  let context: Record<string, unknown> | null = null\n  let level: string | null = null\n  let captured: unknown = null\n\n  captureScanException(\n    thrown,\n    { route: \"resolve\", status: 503, reason: \"resolve_failed\", userId: \"user-1\" },\n    {\n      captureException: (error) => {\n        captured = error\n      },\n      withScope: (callback) =>\n        callback({\n          setContext: (_name, value) => {\n            context = value\n          },\n          setLevel: (value) => {\n            level = value\n          },\n          setTag: (key, value) => {\n            tags[key] = value\n          },\n        }),\n    },\n  )\n\n  assert.equal(captured, thrown)\n  assert.equal(level, \"error\")\n  assert.deepEqual(tags, {\n    \"scan.route\": \"resolve\",\n    \"scan.status\": \"503\",\n    \"scan.reason\": \"resolve_failed\",\n  })\n  assert.deepEqual(context, {\n    route: \"resolve\",\n    status: 503,\n    reason: \"resolve_failed\",\n    user_id: \"user-1\",\n  })\n})",
+    "sha256": "7b4ee5382d2416b43f3fb6e9192a0b645503dd0a6c3244799be39ba04b9f01c5",
+    "assertions": [
+      {
+        "line": 39,
+        "text": "assert.equal(captured, thrown)"
+      },
+      {
+        "line": 40,
+        "text": "assert.equal(level, \"error\")"
+      },
+      {
+        "line": 41,
+        "text": "assert.deepEqual(tags, {\n    \"scan.route\": \"resolve\",\n    \"scan.status\": \"503\",\n    \"scan.reason\": \"resolve_failed\",\n  })"
+      },
+      {
+        "line": 46,
+        "text": "assert.deepEqual(context, {\n    route: \"resolve\",\n    status: 503,\n    reason: \"resolve_failed\",\n    user_id: \"user-1\",\n  })"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-observability.test.ts",
+    "title": "captureScanException honours an explicit warning level, without leaking it into tags/context",
+    "line": 54,
+    "start": 1320,
+    "end": 2423,
+    "body": "test(\"captureScanException honours an explicit warning level, without leaking it into tags/context\", () => {\n  const tags: Record<string, string> = {}\n  let context: Record<string, unknown> | null = null\n  let level: string | null = null\n\n  captureScanException(\n    new Error(\"attempt log unavailable\"),\n    { route: \"resolve\", status: 200, reason: \"attempt_log_write_failed\", level: \"warning\" },\n    {\n      captureException: () => {},\n      withScope: (callback) =>\n        callback({\n          setContext: (_name, value) => {\n            context = value\n          },\n          setLevel: (value) => {\n            level = value\n          },\n          setTag: (key, value) => {\n            tags[key] = value\n          },\n        }),\n    },\n  )\n\n  // A fail-open telemetry write must not read as a scan error in Sentry.\n  assert.equal(level, \"warning\")\n  assert.deepEqual(tags, {\n    \"scan.route\": \"resolve\",\n    \"scan.status\": \"200\",\n    \"scan.reason\": \"attempt_log_write_failed\",\n  })\n  assert.deepEqual(context, {\n    route: \"resolve\",\n    status: 200,\n    reason: \"attempt_log_write_failed\",\n  })\n})",
+    "sha256": "62265034ad8d5214b1b512e2dc787b32e9d489e3fabe962b064d2c557a83ada0",
+    "assertions": [
+      {
+        "line": 80,
+        "text": "assert.equal(level, \"warning\")"
+      },
+      {
+        "line": 81,
+        "text": "assert.deepEqual(tags, {\n    \"scan.route\": \"resolve\",\n    \"scan.status\": \"200\",\n    \"scan.reason\": \"attempt_log_write_failed\",\n  })"
+      },
+      {
+        "line": 86,
+        "text": "assert.deepEqual(context, {\n    route: \"resolve\",\n    status: 200,\n    reason: \"attempt_log_write_failed\",\n  })"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-observability.test.ts",
+    "title": "buildScanSentryPayload omits reason/userId when absent, never emits empty tag values",
+    "line": 93,
+    "start": 2425,
+    "end": 2762,
+    "body": "test(\"buildScanSentryPayload omits reason/userId when absent, never emits empty tag values\", () => {\n  const payload = buildScanSentryPayload({ route: \"wishlist\", status: 500 })\n  assert.deepEqual(payload.tags, { \"scan.route\": \"wishlist\", \"scan.status\": \"500\" })\n  assert.deepEqual(payload.context, { route: \"wishlist\", status: 500 })\n})",
+    "sha256": "2bc166992dbd0ee8ac23c1941e566bdbbacdbc8cd2d65700f7f2b741c1c5f2a5",
+    "assertions": [
+      {
+        "line": 95,
+        "text": "assert.deepEqual(payload.tags, { \"scan.route\": \"wishlist\", \"scan.status\": \"500\" })"
+      },
+      {
+        "line": 96,
+        "text": "assert.deepEqual(payload.context, { route: \"wishlist\", status: 500 })"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-observability.test.ts",
+    "title": "buildScanSentryPayload carries a distinct tag per scan route, for filtering",
+    "line": 99,
+    "start": 2764,
+    "end": 3091,
+    "body": "test(\"buildScanSentryPayload carries a distinct tag per scan route, for filtering\", () => {\n  const routes = [\"resolve\", \"search\", \"submit\", \"save\", \"wishlist\"] as const\n  for (const route of routes) {\n    const payload = buildScanSentryPayload({ route, status: 503 })\n    assert.equal(payload.tags[\"scan.route\"], route)\n  }\n})",
+    "sha256": "90a849448f8f93d4feecb18e59bdb8f3a09c6edd8449ab2c6939c8d544629826",
+    "assertions": [
+      {
+        "line": 103,
+        "text": "assert.equal(payload.tags[\"scan.route\"], route)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-observability.test.ts",
+    "title": "dm lookup warnings capture only a fixed message and low-cardinality reason, once per window",
+    "line": 107,
+    "start": 3093,
+    "end": 4001,
+    "body": "test(\"dm lookup warnings capture only a fixed message and low-cardinality reason, once per window\", () => {\n  const captured: Array<{ error: unknown; details: unknown }> = []\n  const capture = ((error: unknown, details: unknown) => {\n    captured.push({ error, details })\n  }) as typeof captureScanException\n\n  reportRetailerLookupWarning({ route: \"resolve\", reason: \"malformed\" }, capture, () => 100_000)\n  reportRetailerLookupWarning({ route: \"resolve\", reason: \"malformed\" }, capture, () => 100_100)\n  assert.equal(captured.length, 1)\n  assert.equal((captured[0]?.error as Error).message, \"scan_retailer_lookup_failed\")\n  assert.deepEqual(captured[0]?.details, {\n    route: \"resolve\",\n    status: 200,\n    reason: \"retailer_lookup_malformed\",\n    level: \"warning\",\n  })\n\n  reportRetailerLookupWarning({ route: \"resolve\", reason: \"malformed\" }, capture, () => 160_001)\n  assert.equal(captured.length, 2)\n})",
+    "sha256": "432691cf8f451d85ec2fd9ad2d27b17a385195de282635b2347e7a52601b91df",
+    "assertions": [
+      {
+        "line": 115,
+        "text": "assert.equal(captured.length, 1)"
+      },
+      {
+        "line": 116,
+        "text": "assert.equal((captured[0]?.error as Error).message, \"scan_retailer_lookup_failed\")"
+      },
+      {
+        "line": 117,
+        "text": "assert.deepEqual(captured[0]?.details, {\n    route: \"resolve\",\n    status: 200,\n    reason: \"retailer_lookup_malformed\",\n    level: \"warning\",\n  })"
+      },
+      {
+        "line": 125,
+        "text": "assert.equal(captured.length, 2)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-pending-submission.test.ts",
+    "title": "findOpenScanSubmission: open submission found",
+    "line": 31,
+    "start": 766,
+    "end": 1504,
+    "body": "test(\"findOpenScanSubmission: open submission found\", async () => {\n  const { client, filters } = stubClient({\n    data: { id: \"sub-1\", status: \"researching\" },\n    error: null,\n  })\n\n  const result = await findOpenScanSubmission(client as never, \"user-1\", \"4006381333931\")\n\n  assert.deepEqual(result, { submissionId: \"sub-1\", status: \"researching\" })\n  assert.equal(filters.get(\"user_id\"), \"user-1\")\n  // Every GTIN spelling of the same number (see the variants test below).\n  assert.deepEqual(filters.get(\"scanned_identifier_value\"), [\"4006381333931\", \"04006381333931\"])\n  assert.deepEqual([...(filters.get(\"status\") as string[])].sort(), [\n    \"needs_more_info\",\n    \"pending_review\",\n    \"ready_for_review\",\n    \"researching\",\n  ])\n})",
+    "sha256": "9883b8ad86fa15200e2dff32880a466e79a4d17f8832bebb0cadff0af0533e87",
+    "assertions": [
+      {
+        "line": 39,
+        "text": "assert.deepEqual(result, { submissionId: \"sub-1\", status: \"researching\" })"
+      },
+      {
+        "line": 40,
+        "text": "assert.equal(filters.get(\"user_id\"), \"user-1\")"
+      },
+      {
+        "line": 42,
+        "text": "assert.deepEqual(filters.get(\"scanned_identifier_value\"), [\"4006381333931\", \"04006381333931\"])"
+      },
+      {
+        "line": 43,
+        "text": "assert.deepEqual([...(filters.get(\"status\") as string[])].sort(), [\n    \"needs_more_info\",\n    \"pending_review\",\n    \"ready_for_review\",\n    \"researching\",\n  ])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-pending-submission.test.ts",
+    "title": "findOpenScanSubmission: no open submission is null",
+    "line": 51,
+    "start": 1506,
+    "end": 1763,
+    "body": "test(\"findOpenScanSubmission: no open submission is null\", async () => {\n  const { client } = stubClient({ data: null, error: null })\n\n  const result = await findOpenScanSubmission(client as never, \"user-1\", \"4006381333931\")\n\n  assert.equal(result, null)\n})",
+    "sha256": "bc87ee349f0c90a25154ecebd2a58a456adc59e45ccf30212accffe7694a62f7",
+    "assertions": [
+      {
+        "line": 56,
+        "text": "assert.equal(result, null)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-pending-submission.test.ts",
+    "title": "findOpenScanSubmission: queries every GTIN spelling of the same number",
+    "line": 59,
+    "start": 1765,
+    "end": 2137,
+    "body": "test(\"findOpenScanSubmission: queries every GTIN spelling of the same number\", async () => {\n  const { client, filters } = stubClient({ data: null, error: null })\n\n  await findOpenScanSubmission(client as never, \"user-1\", \"0022796976116\")\n\n  assert.deepEqual(filters.get(\"scanned_identifier_value\"), [\n    \"0022796976116\",\n    \"00022796976116\",\n    \"022796976116\",\n  ])\n})",
+    "sha256": "33a8b17835e38913e532f0dae8d444eb8d2b73812ecffd15378fef18081e89f2",
+    "assertions": [
+      {
+        "line": 64,
+        "text": "assert.deepEqual(filters.get(\"scanned_identifier_value\"), [\n    \"0022796976116\",\n    \"00022796976116\",\n    \"022796976116\",\n  ])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-presentation-rows.test.ts",
+    "title": "the active-product lookup requires both the active flag and the active lifecycle",
+    "line": 55,
+    "start": 1552,
+    "end": 2218,
+    "body": "test(\"the active-product lookup requires both the active flag and the active lifecycle\", async () => {\n  const { client, recorded } = fakeClient({\n    data: { id: \"product-1\", category_key: \"shampoo\" },\n    error: null,\n  })\n  const load = createActiveProductByIdLoader(\"scan_resolve_product_lookup_failed\")\n\n  assert.deepEqual(await load(client, \"product-1\"), { id: \"product-1\", category: \"shampoo\" })\n  assert.equal(recorded.table, \"products\")\n  assert.equal(recorded.columns, \"id, category_key\")\n  assert.deepEqual(recorded.eq, [\n    [\"id\", \"product-1\"],\n    [\"is_active\", true],\n    [\"lifecycle_status\", \"active\"],\n  ])\n  assert.equal(recorded.maybeSingle, 1)\n})",
+    "sha256": "60eb25ec9227ce509a56d6683947933adcbd4e08b578507c644e97acd5a239bf",
+    "assertions": [
+      {
+        "line": 62,
+        "text": "assert.deepEqual(await load(client, \"product-1\"), { id: \"product-1\", category: \"shampoo\" })"
+      },
+      {
+        "line": 63,
+        "text": "assert.equal(recorded.table, \"products\")"
+      },
+      {
+        "line": 64,
+        "text": "assert.equal(recorded.columns, \"id, category_key\")"
+      },
+      {
+        "line": 65,
+        "text": "assert.deepEqual(recorded.eq, [\n    [\"id\", \"product-1\"],\n    [\"is_active\", true],\n    [\"lifecycle_status\", \"active\"],\n  ])"
+      },
+      {
+        "line": 70,
+        "text": "assert.equal(recorded.maybeSingle, 1)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-presentation-rows.test.ts",
+    "title": "the active-product lookup reports a miss as null and a query failure as the caller's error code",
+    "line": 73,
+    "start": 2220,
+    "end": 2730,
+    "body": "test(\"the active-product lookup reports a miss as null and a query failure as the caller's error code\", async () => {\n  const miss = fakeClient({ data: null, error: null })\n  assert.equal(await createActiveProductByIdLoader(\"boom\")(miss.client, \"product-1\"), null)\n\n  const failing = fakeClient({ data: null, error: new Error(\"db down\") })\n  await assert.rejects(\n    () => createActiveProductByIdLoader(\"scan_reveal_product_lookup_failed\")(failing.client, \"p\"),\n    /scan_reveal_product_lookup_failed/,\n  )\n})",
+    "sha256": "204530d12b7c3ee1ba857d394df7f791dd1e730359ed86f9d9a9874027e56976",
+    "assertions": [
+      {
+        "line": 75,
+        "text": "assert.equal(await createActiveProductByIdLoader(\"boom\")(miss.client, \"product-1\"), null)"
+      },
+      {
+        "line": 78,
+        "text": "assert.rejects(\n    () => createActiveProductByIdLoader(\"scan_reveal_product_lookup_failed\")(failing.client, \"p\"),\n    /scan_reveal_product_lookup_failed/,\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-presentation-rows.test.ts",
+    "title": "presentation rows select the full commerce column list, dedupe ids and normalize the link status",
+    "line": 84,
+    "start": 2732,
+    "end": 4226,
+    "body": "test(\"presentation rows select the full commerce column list, dedupe ids and normalize the link status\", async () => {\n  const { client, recorded } = fakeClient({\n    data: [\n      {\n        id: \"product-1\",\n        name: \"Shampoo\",\n        brand: \"Marke\",\n        category_key: \"shampoo\",\n        image_url: null,\n        price_eur: 12,\n        currency: \"EUR\",\n        affiliate_link: \"https://shop.test/a\",\n        purchase_link_status: \"available\",\n        price_checked_at: \"2026-09-01T00:00:00.000Z\",\n      },\n      {\n        id: \"product-2\",\n        name: \"Maske\",\n        brand: null,\n        category_key: \"mask\",\n        image_url: null,\n        price_eur: null,\n        currency: null,\n        affiliate_link: null,\n        // Anything outside the two known states must normalize to null.\n        purchase_link_status: \"pending\",\n        price_checked_at: null,\n      },\n    ],\n    error: null,\n  })\n\n  const rows = await createPresentationRowLoader(\"scan_resolve_presentation_lookup_failed\")(\n    client,\n    [\"product-1\", \"product-2\", \"product-1\"],\n  )\n\n  assert.equal(\n    recorded.columns,\n    \"id, name, brand, category_key, image_url, price_eur, currency, affiliate_link, purchase_link_status, price_checked_at\",\n  )\n  assert.deepEqual(recorded.in, [[\"id\", [\"product-1\", \"product-2\"]]])\n  assert.deepEqual(\n    rows.map((row) => [row.id, row.category, row.purchaseLinkStatus]),\n    [\n      [\"product-1\", \"shampoo\", \"available\"],\n      [\"product-2\", \"mask\", null],\n    ],\n  )\n})",
+    "sha256": "efc6a824bac3bd9a75d5e91600266f1c2215e7cdf6ec39d2b99a88a0dc37b4c6",
+    "assertions": [
+      {
+        "line": 121,
+        "text": "assert.equal(\n    recorded.columns,\n    \"id, name, brand, category_key, image_url, price_eur, currency, affiliate_link, purchase_link_status, price_checked_at\",\n  )"
+      },
+      {
+        "line": 125,
+        "text": "assert.deepEqual(recorded.in, [[\"id\", [\"product-1\", \"product-2\"]]])"
+      },
+      {
+        "line": 126,
+        "text": "assert.deepEqual(\n    rows.map((row) => [row.id, row.category, row.purchaseLinkStatus]),\n    [\n      [\"product-1\", \"shampoo\", \"available\"],\n      [\"product-2\", \"mask\", null],\n    ],\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-presentation-rows.test.ts",
+    "title": "presentation rows short-circuit on an empty id list and surface the caller's error code",
+    "line": 135,
+    "start": 4228,
+    "end": 4818,
+    "body": "test(\"presentation rows short-circuit on an empty id list and surface the caller's error code\", async () => {\n  const { client, recorded } = fakeClient({ data: null, error: null })\n  assert.deepEqual(await createPresentationRowLoader(\"boom\")(client, []), [])\n  assert.equal(recorded.table, null, \"no query for an empty id list\")\n\n  const failing = fakeClient({ data: null, error: new Error(\"db down\") })\n  await assert.rejects(\n    () =>\n      createPresentationRowLoader(\"scan_reveal_presentation_lookup_failed\")(failing.client, [\"p\"]),\n    /scan_reveal_presentation_lookup_failed/,\n  )\n})",
+    "sha256": "6558d9ad0029a4c3578948af65de23e7c2a9e8fbd0b0cb11f4d8f1f430eac74a",
+    "assertions": [
+      {
+        "line": 137,
+        "text": "assert.deepEqual(await createPresentationRowLoader(\"boom\")(client, []), [])"
+      },
+      {
+        "line": 138,
+        "text": "assert.equal(recorded.table, null, \"no query for an empty id list\")"
+      },
+      {
+        "line": 141,
+        "text": "assert.rejects(\n    () =>\n      createPresentationRowLoader(\"scan_reveal_presentation_lookup_failed\")(failing.client, [\"p\"]),\n    /scan_reveal_presentation_lookup_failed/,\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-product-presentation.test.ts",
+    "title": "product header renders name, brand, category label and commerce",
+    "line": 70,
+    "start": 1769,
+    "end": 2176,
+    "body": "test(\"product header renders name, brand, category label and commerce\", () => {\n  const header = toScanProductHeader(row())\n  assert.deepEqual(header, {\n    productId: scannedId,\n    name: \"Repair Shampoo\",\n    brand: \"Olaplex\",\n    category: \"shampoo\",\n    categoryLabel: \"Shampoo\",\n    imageUrl: \"https://example.test/a.jpg\",\n    priceLabel: \"24,90\\u00a0€\",\n    purchaseUrl: \"https://shop.test/a\",\n  })\n})",
+    "sha256": "42be5c043e90b99a5b46b6572c10dcd8b723d815ce302e0fd6a3de07b3f03e75",
+    "assertions": [
+      {
+        "line": 72,
+        "text": "assert.deepEqual(header, {\n    productId: scannedId,\n    name: \"Repair Shampoo\",\n    brand: \"Olaplex\",\n    category: \"shampoo\",\n    categoryLabel: \"Shampoo\",\n    imageUrl: \"https://example.test/a.jpg\",\n    priceLabel: \"24,90\\u00a0€\",\n    purchaseUrl: \"https://shop.test/a\",\n  })"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-product-presentation.test.ts",
+    "title": "product header hides the purchase link when the link is not available",
+    "line": 84,
+    "start": 2178,
+    "end": 2500,
+    "body": "test(\"product header hides the purchase link when the link is not available\", () => {\n  const header = toScanProductHeader(row({ purchaseLinkStatus: \"unavailable\" }))\n  assert.equal(header.purchaseUrl, null)\n  // A known price stays visible even without a buyable link.\n  assert.equal(header.priceLabel, \"24,90\\u00a0€\")\n})",
+    "sha256": "cc99383ed3a10782d3ddaa7d574681bd15e226bc1f9c727130e87230404d96f7",
+    "assertions": [
+      {
+        "line": 86,
+        "text": "assert.equal(header.purchaseUrl, null)"
+      },
+      {
+        "line": 88,
+        "text": "assert.equal(header.priceLabel, \"24,90\\u00a0€\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-product-presentation.test.ts",
+    "title": "product header drops a price without a currency instead of assuming EUR",
+    "line": 91,
+    "start": 2502,
+    "end": 2670,
+    "body": "test(\"product header drops a price without a currency instead of assuming EUR\", () => {\n  assert.equal(toScanProductHeader(row({ currency: null })).priceLabel, null)\n})",
+    "sha256": "ab4076d7f5e7a956b67b135937e40cef888fa5b81381c801ade3f98e4a0e25f8",
+    "assertions": [
+      {
+        "line": 92,
+        "text": "assert.equal(toScanProductHeader(row({ currency: null })).priceLabel, null)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-product-presentation.test.ts",
+    "title": "presented verdict joins brand and purchase url onto alternatives",
+    "line": 95,
+    "start": 2672,
+    "end": 3390,
+    "body": "test(\"presented verdict joins brand and purchase url onto alternatives\", () => {\n  const presented = presentScanVerdictPayload(inCatalog, [\n    row(),\n    row({\n      id: alternativeId,\n      name: \"Sanftes Shampoo\",\n      brand: \"Kérastase\",\n      affiliateLink: \"https://shop.test/b\",\n    }),\n  ])\n  assert.equal(presented.kind, \"in_catalog\")\n  if (presented.kind !== \"in_catalog\") return\n  assert.equal(presented.alternatives[0].brand, \"Kérastase\")\n  assert.equal(presented.alternatives[0].purchaseUrl, \"https://shop.test/b\")\n  // Verdict-core fields pass through untouched.\n  assert.equal(presented.alternatives[0].priceLabel, \"18,00\\u00a0€\")\n  assert.equal(presented.verdictTitle, \"Passt nicht zu deinem Haar\")\n})",
+    "sha256": "d9436fb804262594c7a7d22cadd22270bc5c42ad6ac5470e7f29b648cb35c390",
+    "assertions": [
+      {
+        "line": 105,
+        "text": "assert.equal(presented.kind, \"in_catalog\")"
+      },
+      {
+        "line": 107,
+        "text": "assert.equal(presented.alternatives[0].brand, \"Kérastase\")"
+      },
+      {
+        "line": 108,
+        "text": "assert.equal(presented.alternatives[0].purchaseUrl, \"https://shop.test/b\")"
+      },
+      {
+        "line": 110,
+        "text": "assert.equal(presented.alternatives[0].priceLabel, \"18,00\\u00a0€\")"
+      },
+      {
+        "line": 111,
+        "text": "assert.equal(presented.verdictTitle, \"Passt nicht zu deinem Haar\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-product-presentation.test.ts",
+    "title": "presented verdict leaves alternatives without a catalog row quiet, not broken",
+    "line": 114,
+    "start": 3392,
+    "end": 3746,
+    "body": "test(\"presented verdict leaves alternatives without a catalog row quiet, not broken\", () => {\n  const presented = presentScanVerdictPayload(inCatalog, [row()])\n  if (presented.kind !== \"in_catalog\") throw new Error(\"expected in_catalog\")\n  assert.equal(presented.alternatives[0].brand, null)\n  assert.equal(presented.alternatives[0].purchaseUrl, null)\n})",
+    "sha256": "c2621c88191639649c686355e931466247893227374bebec6e590f6743a7df87",
+    "assertions": [
+      {
+        "line": 117,
+        "text": "assert.equal(presented.alternatives[0].brand, null)"
+      },
+      {
+        "line": 118,
+        "text": "assert.equal(presented.alternatives[0].purchaseUrl, null)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-product-presentation.test.ts",
+    "title": "presented verdict passes the not_needed payload through unchanged",
+    "line": 121,
+    "start": 3748,
+    "end": 3939,
+    "body": "test(\"presented verdict passes the not_needed payload through unchanged\", () => {\n  const presented = presentScanVerdictPayload(notNeeded, [row()])\n  assert.deepEqual(presented, notNeeded)\n})",
+    "sha256": "12909378c7abb4b6804fff943ff0dc1b0d0d554bfe8a03981d741287ab0cae0f",
+    "assertions": [
+      {
+        "line": 123,
+        "text": "assert.deepEqual(presented, notNeeded)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-profile-context.test.ts",
+    "title": "loadScanEvaluationContext: refined source takes precedence and preserves every evaluated category decision",
+    "line": 62,
+    "start": 2125,
+    "end": 2756,
+    "body": "test(\"loadScanEvaluationContext: refined source takes precedence and preserves every evaluated category decision\", async () => {\n  const source = await fixture()\n  const context = await loadScanEvaluationContext(stubClient(source) as never, \"owner\")\n  assert.equal(context?.snapshotSource, \"refined\")\n  assert.equal(context?.refinedVersionId, \"scanner-version\")\n  assert.match(context!.refinedInputHash, /^[a-f0-9]{64}$/)\n  assert.deepEqual(context?.snapshot.decisions, source.refined!.output_snapshot.decisions)\n  assert.deepEqual(\n    context?.snapshot.profile.routine,\n    source.refined!.output_snapshot.profile.routine,\n  )\n})",
+    "sha256": "597f7f2c6fb89d5e47400d9276c222f6ddf28553ec2f69e12d7a7878f9b4d71d",
+    "assertions": [
+      {
+        "line": 65,
+        "text": "assert.equal(context?.snapshotSource, \"refined\")"
+      },
+      {
+        "line": 66,
+        "text": "assert.equal(context?.refinedVersionId, \"scanner-version\")"
+      },
+      {
+        "line": 67,
+        "text": "assert.match(context!.refinedInputHash, /^[a-f0-9]{64}$/)"
+      },
+      {
+        "line": 68,
+        "text": "assert.deepEqual(context?.snapshot.decisions, source.refined!.output_snapshot.decisions)"
+      },
+      {
+        "line": 69,
+        "text": "assert.deepEqual(\n    context?.snapshot.profile.routine,\n    source.refined!.output_snapshot.profile.routine,\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-profile-context.test.ts",
+    "title": "loadScanEvaluationContext: initial fallback without refined head preserves initial category decisions",
+    "line": 75,
+    "start": 2758,
+    "end": 3225,
+    "body": "test(\"loadScanEvaluationContext: initial fallback without refined head preserves initial category decisions\", async () => {\n  const source = await fixture()\n  source.plan!.current_refined_need_version_id = null\n  source.refined = null\n  const context = await loadScanEvaluationContext(stubClient(source) as never, \"owner\")\n  assert.equal(context?.snapshotSource, \"initial\")\n  assert.deepEqual(context?.snapshot.decisions, source.initial!.output_snapshot.decisions)\n})",
+    "sha256": "f60ada051bc4f323bd88940ebcca5b5a6e40b46402c08e3b4f522e3b2ab6cb61",
+    "assertions": [
+      {
+        "line": 80,
+        "text": "assert.equal(context?.snapshotSource, \"initial\")"
+      },
+      {
+        "line": 81,
+        "text": "assert.deepEqual(context?.snapshot.decisions, source.initial!.output_snapshot.decisions)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-profile-context.test.ts",
+    "title": "loadScanEvaluationContext: genuinely absent refined source falls back to compatible initial",
+    "line": 84,
+    "start": 3227,
+    "end": 3636,
+    "body": "test(\"loadScanEvaluationContext: genuinely absent refined source falls back to compatible initial\", async () => {\n  const source = await fixture()\n  source.refined = null\n  const context = await loadScanEvaluationContext(stubClient(source) as never, \"owner\")\n  assert.equal(context?.snapshotSource, \"initial\")\n  assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)\n})",
+    "sha256": "20af9d97b387a8ab231e9e243aa0549494d11b40fc5a2831edbf2f5793b18bc4",
+    "assertions": [
+      {
+        "line": 88,
+        "text": "assert.equal(context?.snapshotSource, \"initial\")"
+      },
+      {
+        "line": 89,
+        "text": "assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-profile-context.test.ts",
+    "title": "loadScanEvaluationContext: no plan and no completed source is null",
+    "line": 92,
+    "start": 3638,
+    "end": 4029,
+    "body": "test(\"loadScanEvaluationContext: no plan and no completed source is null\", async () => {\n  const source = await fixture()\n  Object.assign(source, { plan: null, initial: null, refined: null, profile: null })\n  const client = stubClient(source)\n  assert.equal(await loadScanEvaluationContext(client as never, \"owner\"), null)\n  assert.deepEqual(client.calls, [\"scanner_context_read_source\"])\n})",
+    "sha256": "89e31794f247f835bc708aba48d5ee4f5b0118d4b0ed574930d5f7fd25b98e25",
+    "assertions": [
+      {
+        "line": 96,
+        "text": "assert.equal(await loadScanEvaluationContext(client as never, \"owner\"), null)"
+      },
+      {
+        "line": 97,
+        "text": "assert.deepEqual(client.calls, [\"scanner_context_read_source\"])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-profile-context.test.ts",
+    "title": "loadScanEvaluationContext: plan without need versions or completed source is null",
+    "line": 100,
+    "start": 4031,
+    "end": 4433,
+    "body": "test(\"loadScanEvaluationContext: plan without need versions or completed source is null\", async () => {\n  const source = await fixture()\n  Object.assign(source.plan!, {\n    current_initial_need_version_id: null,\n    current_refined_need_version_id: null,\n  })\n  source.initial = null\n  source.refined = null\n  assert.equal(await loadScanEvaluationContext(stubClient(source) as never, \"owner\"), null)\n})",
+    "sha256": "f58f850832a069197357acb6ba115af6662e2c28ed87838ea7ec5a5907699be7",
+    "assertions": [
+      {
+        "line": 108,
+        "text": "assert.equal(await loadScanEvaluationContext(stubClient(source) as never, \"owner\"), null)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-profile-context.test.ts",
+    "title": "loadScanEvaluationContext: failed source reads and invalid hashes are retry, never missing profile",
+    "line": 111,
+    "start": 4435,
+    "end": 4940,
+    "body": "test(\"loadScanEvaluationContext: failed source reads and invalid hashes are retry, never missing profile\", async () => {\n  await assert.rejects(\n    loadScanEvaluationContext(\n      { rpc: async () => ({ data: null, error: new Error(\"read failed\") }) } as never,\n      \"owner\",\n    ),\n    /unavailable/,\n  )\n  const source = await fixture()\n  source.refined!.input_hash = \"0\".repeat(64)\n  await assert.rejects(\n    loadScanEvaluationContext(stubClient(source) as never, \"owner\"),\n    /unavailable/,\n  )\n})",
+    "sha256": "ab62a2a6ad9770b7192996037167215c91258eaa299fe066a42a5ffe69d57eef",
+    "assertions": [
+      {
+        "line": 112,
+        "text": "assert.rejects(\n    loadScanEvaluationContext(\n      { rpc: async () => ({ data: null, error: new Error(\"read failed\") }) } as never,\n      \"owner\",\n    ),\n    /unavailable/,\n  )"
+      },
+      {
+        "line": 121,
+        "text": "assert.rejects(\n    loadScanEvaluationContext(stubClient(source) as never, \"owner\"),\n    /unavailable/,\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-resolve-anti-leak.test.ts",
+    "title": "anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree",
+    "line": 284,
+    "start": 9052,
+    "end": 10226,
+    "body": "test(\"anti-leak: a masked response contains none of the withheld alternatives' identity strings anywhere in the JSON tree\", async () => {\n  await withFlag(\"true\", async () => {\n    const handler = createScanResolveRouteHandler(baseDeps())\n    const response = await handler(request({ productId }))\n    assert.equal(response.status, 200)\n    const raw = await response.text()\n    const body = JSON.parse(raw)\n\n    for (const forbidden of FORBIDDEN_SUBSTRINGS) {\n      assert.equal(\n        raw.includes(forbidden),\n        false,\n        `masked response leaked \"${forbidden}\" somewhere in the raw JSON`,\n      )\n    }\n\n    // The scanned product's OWN identity is explicitly allowed — only the alternatives are\n    // masked (binding constraint). Confirms the walk above isn't vacuously trivial.\n    assert.ok(raw.includes(SCANNED_NAME))\n    assert.ok(raw.includes(SCANNED_BRAND))\n\n    everyStringLeaf(body, (leaf, path) => {\n      for (const forbidden of FORBIDDEN_SUBSTRINGS) {\n        assert.equal(\n          leaf.includes(forbidden),\n          false,\n          `string leaf at ${path} (\"${leaf}\") contains withheld value \"${forbidden}\"`,\n        )\n      }\n    })\n  })\n})",
+    "sha256": "59352288d570fdc3e3ad4bb4039088c6ac53986ac1992ba25dd7b16d15791aea",
+    "assertions": [
+      {
+        "line": 288,
+        "text": "assert.equal(response.status, 200)"
+      },
+      {
+        "line": 293,
+        "text": "assert.equal(\n        raw.includes(forbidden),\n        false,\n        `masked response leaked \"${forbidden}\" somewhere in the raw JSON`,\n      )"
+      },
+      {
+        "line": 302,
+        "text": "assert.ok(raw.includes(SCANNED_NAME))"
+      },
+      {
+        "line": 303,
+        "text": "assert.ok(raw.includes(SCANNED_BRAND))"
+      },
+      {
+        "line": 307,
+        "text": "assert.equal(\n          leaf.includes(forbidden),\n          false,\n          `string leaf at ${path} (\"${leaf}\") contains withheld value \"${forbidden}\"`,\n        )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-resolve-anti-leak.test.ts",
+    "title": "anti-leak: no alternative entry carries an identity/resolvable key at any depth",
+    "line": 317,
+    "start": 10228,
+    "end": 11064,
+    "body": "test(\"anti-leak: no alternative entry carries an identity/resolvable key at any depth\", async () => {\n  await withFlag(\"true\", async () => {\n    const handler = createScanResolveRouteHandler(baseDeps())\n    const response = await handler(request({ productId }))\n    const body = await response.json()\n    assert.equal(body.alternatives.length, 2)\n\n    const keysSeen = new Set<string>()\n    everyKey(body.alternatives, keysSeen)\n    for (const forbidden of FORBIDDEN_ALTERNATIVE_KEYS) {\n      assert.equal(\n        keysSeen.has(forbidden),\n        false,\n        `masked alternatives carried forbidden key \"${forbidden}\"`,\n      )\n    }\n    assert.deepEqual([...keysSeen].sort(), [\n      \"comparison\",\n      \"label\",\n      \"rowId\",\n      \"rows\",\n      \"state\",\n      \"summaryScore\",\n      \"verdict\",\n      \"verdictLabel\",\n    ])\n  })\n})",
+    "sha256": "6ef3bbd23071b6c02b754e2c97ad0de2e83f2d6d646c883e58affaf6e3fc4c30",
+    "assertions": [
+      {
+        "line": 322,
+        "text": "assert.equal(body.alternatives.length, 2)"
+      },
+      {
+        "line": 327,
+        "text": "assert.equal(\n        keysSeen.has(forbidden),\n        false,\n        `masked alternatives carried forbidden key \"${forbidden}\"`,\n      )"
+      },
+      {
+        "line": 333,
+        "text": "assert.deepEqual([...keysSeen].sort(), [\n      \"comparison\",\n      \"label\",\n      \"rowId\",\n      \"rows\",\n      \"state\",\n      \"summaryScore\",\n      \"verdict\",\n      \"verdictLabel\",\n    ])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-resolve-anti-leak.test.ts",
+    "title": "anti-leak: comparison row labels come only from the fixture's generic criterion labels, never product names",
+    "line": 346,
+    "start": 11066,
+    "end": 11675,
+    "body": "test(\"anti-leak: comparison row labels come only from the fixture's generic criterion labels, never product names\", async () => {\n  await withFlag(\"true\", async () => {\n    const handler = createScanResolveRouteHandler(baseDeps())\n    const response = await handler(request({ productId }))\n    const body = await response.json()\n    const labels = (\n      body.alternatives as Array<{ comparison: { rows: Array<{ label: string }> } }>\n    ).flatMap((alternative) => alternative.comparison.rows.map((row) => row.label))\n    assert.deepEqual(labels.sort(), [\"Kopfhaut-Fokus\", \"Reinigungsstärke\"].sort())\n  })\n})",
+    "sha256": "98e1ad6cd83d90e832624d447f131146b94a405c2ed668ed8b240936858250aa",
+    "assertions": [
+      {
+        "line": 354,
+        "text": "assert.deepEqual(labels.sort(), [\"Kopfhaut-Fokus\", \"Reinigungsstärke\"].sort())"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-resolve-anti-leak.test.ts",
+    "title": "anti-leak: an alternative's raw EAN/GTIN-shaped identifier never reaches the masked response",
+    "line": 358,
+    "start": 11677,
+    "end": 12082,
+    "body": "test(\"anti-leak: an alternative's raw EAN/GTIN-shaped identifier never reaches the masked response\", async () => {\n  await withFlag(\"true\", async () => {\n    const handler = createScanResolveRouteHandler(baseDeps())\n    const response = await handler(request({ identifier: { type: \"ean\", value: ALT_A_EAN } }))\n    const raw = await response.text()\n    assert.equal(raw.includes(ALT_A_EAN), false)\n  })\n})",
+    "sha256": "7d5e74a4cddf835565ba234cf96479ef3ee41b27c67b17c89aa0c6a03a81d2f7",
+    "assertions": [
+      {
+        "line": 363,
+        "text": "assert.equal(raw.includes(ALT_A_EAN), false)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-resolve-anti-leak.test.ts",
+    "title": "anti-leak: masking survives an alternative whose productId collides with a substring used elsewhere (no accidental UUID leak)",
+    "line": 367,
+    "start": 12084,
+    "end": 13011,
+    "body": "test(\"anti-leak: masking survives an alternative whose productId collides with a substring used elsewhere (no accidental UUID leak)\", async () => {\n  await withFlag(\"true\", async () => {\n    const trickyId = productId // same id family shape as the scanned product, sanity check only\n    const verdictWithSharedShapeId = {\n      ...inCatalogVerdict,\n      alternatives: [{ ...inCatalogVerdict.alternatives[0], productId: trickyId }],\n    }\n    const handler = createScanResolveRouteHandler(\n      baseDeps({ buildScanVerdict: () => verdictWithSharedShapeId }),\n    )\n    const response = await handler(request({ productId }))\n    const body = await response.json()\n    // The scanned product's own id is legitimately present (product.productId) — the point\n    // is that the alternative carries no id field of its own to compare against at all.\n    assert.equal(Object.hasOwn(body.alternatives[0], \"productId\"), false)\n  })\n})",
+    "sha256": "442125fd1851a1b6e0ceeb74a2066f88b227439604bc855550c3c4dd6c503071",
+    "assertions": [
+      {
+        "line": 381,
+        "text": "assert.equal(Object.hasOwn(body.alternatives[0], \"productId\"), false)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-resolve-anti-leak.test.ts",
+    "title": "anti-leak: dm-identified unknown exposes only the product-row subset",
+    "line": 385,
+    "start": 13013,
+    "end": 14520,
+    "body": "test(\"anti-leak: dm-identified unknown exposes only the product-row subset\", async () => {\n  const handler = createScanResolveRouteHandler(\n    baseDeps({\n      lookupCatalogProductByIdentifier: async () => null,\n      resolveRetailerEnrichment: async () => ({\n        outcome: \"hit\",\n        durationMs: 220,\n        deadlineMs: 1500,\n        enrichment: {\n          source: \"dm\",\n          fetchedAt: \"2026-09-17T10:00:00.000Z\",\n          gtin: \"04006381333931\",\n          dan: \"1234567\",\n          productName: \"Repair Shampoo\",\n          brand: \"WELEDA\",\n          imageUrl: \"https://products.dm-static.com/images/repair.jpg\",\n          productUrl: \"https://dm.de/secret-product-url\",\n          ingredientsText: \"Sensitive secret ingredients\",\n          description: \"Sensitive secret description\",\n          keyBenefits: \"Sensitive secret benefit\",\n          suggestedCategory: \"shampoo\",\n        },\n      }),\n    }),\n  )\n  const response = await handler(request({ identifier: { type: \"ean\", value: ALT_A_EAN } }))\n  assert.equal(response.status, 200)\n  const raw = await response.text()\n  const body = JSON.parse(raw)\n  assert.deepEqual(Object.keys(body.identified).sort(), [\n    \"brand\",\n    \"dan\",\n    \"imageUrl\",\n    \"productName\",\n    \"source\",\n    \"suggestedCategory\",\n  ])\n  for (const secret of [\n    \"Sensitive secret ingredients\",\n    \"Sensitive secret description\",\n    \"Sensitive secret benefit\",\n    \"secret-product-url\",\n  ]) {\n    assert.equal(raw.includes(secret), false, secret)\n  }\n})",
+    "sha256": "3b53cb58fed9d200341d6dc3354fbea94fc71b70e559dfd1d1e6eb1f21612e6a",
+    "assertions": [
+      {
+        "line": 411,
+        "text": "assert.equal(response.status, 200)"
+      },
+      {
+        "line": 414,
+        "text": "assert.deepEqual(Object.keys(body.identified).sort(), [\n    \"brand\",\n    \"dan\",\n    \"imageUrl\",\n    \"productName\",\n    \"source\",\n    \"suggestedCategory\",\n  ])"
+      },
+      {
+        "line": 428,
+        "text": "assert.equal(raw.includes(secret), false, secret)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "an evaluation status without a verdict scans as unknown",
+    "line": 86,
+    "start": 2367,
+    "end": 2954,
+    "body": "test(\"an evaluation status without a verdict scans as unknown\", () => {\n  assert.equal(scanVerdictForEvaluation(known(\"ideal\")), \"ideal\")\n  assert.equal(scanVerdictForEvaluation(known(\"supportive\")), \"supportive\")\n  assert.equal(scanVerdictForEvaluation(known(\"mismatch\")), \"mismatch\")\n  assert.equal(scanVerdictForEvaluation(known(\"unknown\")), \"unknown\")\n  assert.equal(scanVerdictForEvaluation(unresolved(\"unknown\")), \"unknown\")\n  assert.equal(scanVerdictForEvaluation(unresolved(\"pending\")), \"unknown\")\n  assert.equal(scanVerdictForEvaluation(unresolved(\"unsupported\")), \"unknown\")\n})",
+    "sha256": "5bf9c2fb867ad21cdba228b26144d771ea79bfd177cd9e55a0b2ff81d779536a",
+    "assertions": [
+      {
+        "line": 87,
+        "text": "assert.equal(scanVerdictForEvaluation(known(\"ideal\")), \"ideal\")"
+      },
+      {
+        "line": 88,
+        "text": "assert.equal(scanVerdictForEvaluation(known(\"supportive\")), \"supportive\")"
+      },
+      {
+        "line": 89,
+        "text": "assert.equal(scanVerdictForEvaluation(known(\"mismatch\")), \"mismatch\")"
+      },
+      {
+        "line": 90,
+        "text": "assert.equal(scanVerdictForEvaluation(known(\"unknown\")), \"unknown\")"
+      },
+      {
+        "line": 91,
+        "text": "assert.equal(scanVerdictForEvaluation(unresolved(\"unknown\")), \"unknown\")"
+      },
+      {
+        "line": 92,
+        "text": "assert.equal(scanVerdictForEvaluation(unresolved(\"pending\")), \"unknown\")"
+      },
+      {
+        "line": 93,
+        "text": "assert.equal(scanVerdictForEvaluation(unresolved(\"unsupported\")), \"unknown\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "no evaluated role selects nothing",
+    "line": 96,
+    "start": 2956,
+    "end": 3059,
+    "body": "test(\"no evaluated role selects nothing\", () => {\n  assert.equal(selectBestRoleEvaluation([]), null)\n})",
+    "sha256": "ddfb2e96cc84acb10a19cc5bc90dbf448a3c16bbdf9e175265d8c9cae14f819d",
+    "assertions": [
+      {
+        "line": 97,
+        "text": "assert.equal(selectBestRoleEvaluation([]), null)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "a single evaluated role is the winner regardless of its verdict",
+    "line": 100,
+    "start": 3061,
+    "end": 3263,
+    "body": "test(\"a single evaluated role is the winner regardless of its verdict\", () => {\n  const only = entry(\"conditioner_rinse_out\", known(\"mismatch\"))\n  assert.equal(selectBestRoleEvaluation([only]), only)\n})",
+    "sha256": "c10c091b56158ebf68005a85817e5717dfa3072787c037e3bac17e03beb1e87e",
+    "assertions": [
+      {
+        "line": 102,
+        "text": "assert.equal(selectBestRoleEvaluation([only]), only)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "ideal beats supportive",
+    "line": 105,
+    "start": 3265,
+    "end": 3507,
+    "body": "test(\"ideal beats supportive\", () => {\n  const ideal = entry(\"pre_heat_application\", known(\"ideal\"))\n  const supportive = entry(\"post_wash_leave_in\", known(\"supportive\"))\n  assert.equal(selectBestRoleEvaluation([supportive, ideal]), ideal)\n})",
+    "sha256": "8be8ba027bf91de46a01f354dac1564e05f46847cf456ee1b52f707bdc883280",
+    "assertions": [
+      {
+        "line": 108,
+        "text": "assert.equal(selectBestRoleEvaluation([supportive, ideal]), ideal)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "supportive beats unknown",
+    "line": 111,
+    "start": 3509,
+    "end": 3764,
+    "body": "test(\"supportive beats unknown\", () => {\n  const supportive = entry(\"post_wash_leave_in\", known(\"supportive\"))\n  const unknown = entry(\"pre_heat_application\", known(\"unknown\"))\n  assert.equal(selectBestRoleEvaluation([unknown, supportive]), supportive)\n})",
+    "sha256": "c8faf3cbcc76112af370d4ab18e540c0c5a41bafa0e0f0fe33733178f9b703f8",
+    "assertions": [
+      {
+        "line": 114,
+        "text": "assert.equal(selectBestRoleEvaluation([unknown, supportive]), supportive)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "unknown beats mismatch so a mixed role result never overclaims a rejection",
+    "line": 117,
+    "start": 3766,
+    "end": 4067,
+    "body": "test(\"unknown beats mismatch so a mixed role result never overclaims a rejection\", () => {\n  const unknown = entry(\"pre_heat_application\", unresolved(\"unknown\"))\n  const mismatch = entry(\"post_wash_leave_in\", known(\"mismatch\"))\n  assert.equal(selectBestRoleEvaluation([mismatch, unknown]), unknown)\n})",
+    "sha256": "9c871dee5b0273ca66f92e12f946c731c5a461651ef736cfdbbf23e05647426a",
+    "assertions": [
+      {
+        "line": 120,
+        "text": "assert.equal(selectBestRoleEvaluation([mismatch, unknown]), unknown)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "all roles mismatching stays a mismatch on the first role",
+    "line": 123,
+    "start": 4069,
+    "end": 4435,
+    "body": "test(\"all roles mismatching stays a mismatch on the first role\", () => {\n  const first = entry(\"post_wash_leave_in\", known(\"mismatch\"))\n  const second = entry(\"pre_heat_application\", known(\"mismatch\"))\n  const winner = selectBestRoleEvaluation([first, second])\n  assert.equal(winner, first)\n  assert.equal(scanVerdictForEvaluation(winner!.evaluation), \"mismatch\")\n})",
+    "sha256": "b4e4f32604005a13d07b2a8cd6d2ffe77a45fc29b029bae3712be08b0698fece",
+    "assertions": [
+      {
+        "line": 127,
+        "text": "assert.equal(winner, first)"
+      },
+      {
+        "line": 128,
+        "text": "assert.equal(scanVerdictForEvaluation(winner!.evaluation), \"mismatch\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "an equal verdict is broken by the higher target coverage",
+    "line": 131,
+    "start": 4437,
+    "end": 4755,
+    "body": "test(\"an equal verdict is broken by the higher target coverage\", () => {\n  const thin = entry(\"post_wash_leave_in\", known(\"supportive\"), { matches: 1, total: 3 })\n  const wide = entry(\"pre_heat_application\", known(\"supportive\"), { matches: 3, total: 3 })\n  assert.equal(selectBestRoleEvaluation([thin, wide]), wide)\n})",
+    "sha256": "d25a57135b731a6578c789382a41de6e651c45e184e0ca13a83c1a7a8d60567f",
+    "assertions": [
+      {
+        "line": 134,
+        "text": "assert.equal(selectBestRoleEvaluation([thin, wide]), wide)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "a missing coverage loses against measured coverage on an equal verdict",
+    "line": 137,
+    "start": 4757,
+    "end": 5093,
+    "body": "test(\"a missing coverage loses against measured coverage on an equal verdict\", () => {\n  const unmeasured = entry(\"post_wash_leave_in\", known(\"supportive\"), null)\n  const measured = entry(\"pre_heat_application\", known(\"supportive\"), { matches: 1, total: 3 })\n  assert.equal(selectBestRoleEvaluation([unmeasured, measured]), measured)\n})",
+    "sha256": "96b18751d32cb07549974380a4d0000be09aa82a233dceb2455abdc7907bdd31",
+    "assertions": [
+      {
+        "line": 140,
+        "text": "assert.equal(selectBestRoleEvaluation([unmeasured, measured]), measured)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "an equal verdict and coverage is broken by fewer caution criteria",
+    "line": 143,
+    "start": 5095,
+    "end": 5486,
+    "body": "test(\"an equal verdict and coverage is broken by fewer caution criteria\", () => {\n  const cautious = entry(\"post_wash_leave_in\", known(\"supportive\", { cautions: 2 }), {\n    matches: 2,\n    total: 3,\n  })\n  const calm = entry(\"pre_heat_application\", known(\"supportive\", { cautions: 1 }), {\n    matches: 2,\n    total: 3,\n  })\n  assert.equal(selectBestRoleEvaluation([cautious, calm]), calm)\n})",
+    "sha256": "7fb827de41e6b4b197283ae613675463ddfdd1176b0097bf7cbb1754acca1b6d",
+    "assertions": [
+      {
+        "line": 152,
+        "text": "assert.equal(selectBestRoleEvaluation([cautious, calm]), calm)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "a full tie keeps the given role order",
+    "line": 155,
+    "start": 5488,
+    "end": 5916,
+    "body": "test(\"a full tie keeps the given role order\", () => {\n  const first = entry(\"post_wash_leave_in\", known(\"supportive\", { cautions: 1 }), {\n    matches: 2,\n    total: 3,\n  })\n  const second = entry(\"pre_heat_application\", known(\"supportive\", { cautions: 1 }), {\n    matches: 2,\n    total: 3,\n  })\n  assert.equal(selectBestRoleEvaluation([first, second]), first)\n  assert.equal(selectBestRoleEvaluation([second, first]), second)\n})",
+    "sha256": "73425d000dd6ec4b4ddfd9df0b1b8f67773a80758a9372a934bef1853606222a",
+    "assertions": [
+      {
+        "line": 164,
+        "text": "assert.equal(selectBestRoleEvaluation([first, second]), first)"
+      },
+      {
+        "line": 165,
+        "text": "assert.equal(selectBestRoleEvaluation([second, first]), second)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-role-selection.test.ts",
+    "title": "selecting does not reorder the caller's entries",
+    "line": 168,
+    "start": 5918,
+    "end": 6225,
+    "body": "test(\"selecting does not reorder the caller's entries\", () => {\n  const first = entry(\"post_wash_leave_in\", known(\"mismatch\"))\n  const second = entry(\"pre_heat_application\", known(\"ideal\"))\n  const entries = [first, second]\n  selectBestRoleEvaluation(entries)\n  assert.deepEqual(entries, [first, second])\n})",
+    "sha256": "9239a94ff69849840d614a04039657361be5f3379c91efcf3d19c72ffe66a0c8",
+    "assertions": [
+      {
+        "line": 173,
+        "text": "assert.deepEqual(entries, [first, second])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-submit-dm-event-log.test.ts",
+    "title": "writes only the privacy-safe submit lookup measurement",
+    "line": 19,
+    "start": 484,
+    "end": 1215,
+    "body": "test(\"writes only the privacy-safe submit lookup measurement\", async () => {\n  let inserted: unknown = null\n  let table: string | null = null\n  const client = {\n    from(name: string) {\n      table = name\n      return {\n        insert: async (row: unknown) => {\n          inserted = row\n          return { error: null }\n        },\n      }\n    },\n  }\n\n  await recordScanSubmitDmLookupEvent(client as never, {\n    outcome: \"timeout\",\n    durationMs: 1500,\n    deadlineMs: 1500,\n    createdAt: \"2026-09-17T08:00:00.000Z\",\n  })\n\n  assert.equal(table, \"scan_submit_dm_lookup_events\")\n  assert.deepEqual(inserted, {\n    outcome: \"timeout\",\n    duration_ms: 1500,\n    deadline_ms: 1500,\n    created_at: \"2026-09-17T08:00:00.000Z\",\n  })\n})",
+    "sha256": "18e2cdcb6888dfdc7531840c5c9bc7ebdcb71404ca7c03bbd8e86eea806c07ad",
+    "assertions": [
+      {
+        "line": 41,
+        "text": "assert.equal(table, \"scan_submit_dm_lookup_events\")"
+      },
+      {
+        "line": 42,
+        "text": "assert.deepEqual(inserted, {\n    outcome: \"timeout\",\n    duration_ms: 1500,\n    deadline_ms: 1500,\n    created_at: \"2026-09-17T08:00:00.000Z\",\n  })"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-submit-dm-event-log.test.ts",
+    "title": "is fail-open and rate-limits a degraded submit telemetry warning",
+    "line": 50,
+    "start": 1217,
+    "end": 2310,
+    "body": "test(\"is fail-open and rate-limits a degraded submit telemetry warning\", async () => {\n  resetSubmitDmLookupCaptureThrottleForTests()\n  const { capture, calls } = captureStub()\n  const warnings: unknown[][] = []\n  const originalWarn = console.warn\n  console.warn = (...args) => {\n    warnings.push(args)\n  }\n  const client = {\n    from() {\n      return {\n        insert: async () => ({ error: { message: \"sensitive-provider-detail\" } }),\n      }\n    },\n  }\n  const event = { outcome: \"disabled\" as const, durationMs: null, deadlineMs: null }\n\n  try {\n    await assert.doesNotReject(recordScanSubmitDmLookupEvent(client as never, event, capture))\n    await assert.doesNotReject(recordScanSubmitDmLookupEvent(client as never, event, capture))\n  } finally {\n    console.warn = originalWarn\n  }\n\n  assert.equal(calls.length, 1)\n  assert.equal(JSON.stringify(warnings).includes(\"sensitive-provider-detail\"), false)\n  assert.deepEqual((calls[0] as { details: unknown }).details, {\n    route: \"submit\",\n    status: 200,\n    reason: \"submit_dm_lookup_event_write_failed\",\n    level: \"warning\",\n  })\n})",
+    "sha256": "71609adff50108a62c7519808d14fef9f6118d94213465c77907342525201250",
+    "assertions": [
+      {
+        "line": 68,
+        "text": "assert.doesNotReject(recordScanSubmitDmLookupEvent(client as never, event, capture))"
+      },
+      {
+        "line": 69,
+        "text": "assert.doesNotReject(recordScanSubmitDmLookupEvent(client as never, event, capture))"
+      },
+      {
+        "line": 74,
+        "text": "assert.equal(calls.length, 1)"
+      },
+      {
+        "line": 75,
+        "text": "assert.equal(JSON.stringify(warnings).includes(\"sensitive-provider-detail\"), false)"
+      },
+      {
+        "line": 76,
+        "text": "assert.deepEqual((calls[0] as { details: unknown }).details, {\n    route: \"submit\",\n    status: 200,\n    reason: \"submit_dm_lookup_event_write_failed\",\n    level: \"warning\",\n  })"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-trigger-cards-ui.test.tsx",
+    "title": "ScanProactiveTriggerCard: renders a card for every proactive trigger id with its own copy",
+    "line": 80,
+    "start": 2960,
+    "end": 3931,
+    "body": "test(\"ScanProactiveTriggerCard: renders a card for every proactive trigger id with its own copy\", () => {\n  for (const id of PROACTIVE_IDS) {\n    const tree = deepRender(ScanProactiveTriggerCard({ id, onOpenSheet: () => {} }))\n    const card = findByData(tree, \"data-scan-trigger-card\")\n    assert.equal(card.length, 1)\n    assert.equal(card[0].props[\"data-scan-trigger-card\"], id)\n    assert.ok(textContent(card[0]).length > 0)\n    // F8: the section has an accessible name — no more anonymous region in the a11y tree.\n    assert.ok(\n      typeof card[0].props[\"aria-label\"] === \"string\" && card[0].props[\"aria-label\"].length > 0,\n    )\n    // F8: the CTA's data attribute is namespaced per trigger id, not a bare \"\" shared\n    // across every card (a future Playwright selector on it would otherwise match many).\n    const cta = findByData(tree, \"data-scan-trigger-cta\")\n    assert.equal(cta.length, 1)\n    assert.equal(cta[0].props[\"data-scan-trigger-cta\"], id)\n  }\n})",
+    "sha256": "91017fcce87bbafe33b8cfe85ec0f5bfd39a011a4f3907dde26fde0feb0addb6",
+    "assertions": [
+      {
+        "line": 84,
+        "text": "assert.equal(card.length, 1)"
+      },
+      {
+        "line": 85,
+        "text": "assert.equal(card[0].props[\"data-scan-trigger-card\"], id)"
+      },
+      {
+        "line": 86,
+        "text": "assert.ok(textContent(card[0]).length > 0)"
+      },
+      {
+        "line": 88,
+        "text": "assert.ok(\n      typeof card[0].props[\"aria-label\"] === \"string\" && card[0].props[\"aria-label\"].length > 0,\n    )"
+      },
+      {
+        "line": 94,
+        "text": "assert.equal(cta.length, 1)"
+      },
+      {
+        "line": 95,
+        "text": "assert.equal(cta[0].props[\"data-scan-trigger-cta\"], id)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-trigger-cards-ui.test.tsx",
+    "title": "ScanProactiveTriggerCard: kategorien_luecke links into /routine instead of opening the sheet",
+    "line": 99,
+    "start": 3933,
+    "end": 4398,
+    "body": "test(\"ScanProactiveTriggerCard: kategorien_luecke links into /routine instead of opening the sheet\", () => {\n  let opened = 0\n  const tree = deepRender(\n    ScanProactiveTriggerCard({ id: \"kategorien_luecke\", onOpenSheet: () => (opened += 1) }),\n  )\n  const cta = findByHref(tree)\n  assert.equal(cta.length, 1)\n  assert.equal(cta[0].props.href, \"/routine\")\n  assert.equal(findAll(tree, (element) => element.type === \"button\").length, 0)\n  assert.equal(opened, 0)\n})",
+    "sha256": "3eda7d10d7e8843b39b05508c62ea4e6b2276ed2ededfa0782e2dcf80352bf2e",
+    "assertions": [
+      {
+        "line": 105,
+        "text": "assert.equal(cta.length, 1)"
+      },
+      {
+        "line": 106,
+        "text": "assert.equal(cta[0].props.href, \"/routine\")"
+      },
+      {
+        "line": 107,
+        "text": "assert.equal(findAll(tree, (element) => element.type === \"button\").length, 0)"
+      },
+      {
+        "line": 108,
+        "text": "assert.equal(opened, 0)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-trigger-cards-ui.test.tsx",
+    "title": "ScanProactiveTriggerCard: passt_gut_moment/frust_serie/wiederkehrer open the sheet via a button",
+    "line": 111,
+    "start": 4400,
+    "end": 4991,
+    "body": "test(\"ScanProactiveTriggerCard: passt_gut_moment/frust_serie/wiederkehrer open the sheet via a button\", () => {\n  for (const id of [\"passt_gut_moment\", \"frust_serie\", \"wiederkehrer\"] as const) {\n    let opened = 0\n    const tree = deepRender(ScanProactiveTriggerCard({ id, onOpenSheet: () => (opened += 1) }))\n    const cta = findAll(tree, (element) => element.type === \"button\")\n    assert.equal(cta.length, 1, `expected exactly one button for ${id}`)\n    assert.equal(findAll(tree, (element) => element.type === \"a\").length, 0)\n    cta[0].props.onClick()\n    assert.equal(opened, 1)\n  }\n})",
+    "sha256": "9bdbe2b0e36d897f5c965503f4f6d9247e94775daec0b8f8cf45a1bf92427ce9",
+    "assertions": [
+      {
+        "line": 116,
+        "text": "assert.equal(cta.length, 1, `expected exactly one button for ${id}`)"
+      },
+      {
+        "line": 117,
+        "text": "assert.equal(findAll(tree, (element) => element.type === \"a\").length, 0)"
+      },
+      {
+        "line": 119,
+        "text": "assert.equal(opened, 1)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-trigger-cards-ui.test.tsx",
+    "title": "ScanCategoryRepeatCard: renders its own card, names the repeated category, and opens the sheet on tap",
+    "line": 125,
+    "start": 5076,
+    "end": 5980,
+    "body": "test(\"ScanCategoryRepeatCard: renders its own card, names the repeated category, and opens the sheet on tap\", () => {\n  let opened = 0\n  const tree = deepRender(\n    ScanCategoryRepeatCard({ categoryLabel: \"Shampoo\", onOpenSheet: () => (opened += 1) }),\n  )\n  const card = findByData(tree, \"data-scan-trigger-card\")\n  assert.equal(card.length, 1)\n  assert.equal(card[0].props[\"data-scan-trigger-card\"], \"zwei_scans_gleiche_kategorie\")\n  // F3/F7: an honest, non-debug-label title that names the actual repeated category.\n  assert.ok(textContent(card[0]).includes(\"Shampoo\"))\n\n  const cta = findAll(tree, (element) => element.type === \"button\")\n  assert.equal(cta.length, 1)\n  // F8: the CTA's data attribute is namespaced, not a bare \"\" shared with the other card.\n  assert.equal(cta[0].props[\"data-scan-trigger-cta\"], \"zwei_scans_gleiche_kategorie\")\n  cta[0].props.onClick()\n  assert.equal(opened, 1)\n})",
+    "sha256": "a0d1b02fef5d3f58d35b629be6de9dd8cc37b6ce7470b9977e8a5234caf47c3a",
+    "assertions": [
+      {
+        "line": 131,
+        "text": "assert.equal(card.length, 1)"
+      },
+      {
+        "line": 132,
+        "text": "assert.equal(card[0].props[\"data-scan-trigger-card\"], \"zwei_scans_gleiche_kategorie\")"
+      },
+      {
+        "line": 134,
+        "text": "assert.ok(textContent(card[0]).includes(\"Shampoo\"))"
+      },
+      {
+        "line": 137,
+        "text": "assert.equal(cta.length, 1)"
+      },
+      {
+        "line": 139,
+        "text": "assert.equal(cta[0].props[\"data-scan-trigger-cta\"], \"zwei_scans_gleiche_kategorie\")"
+      },
+      {
+        "line": 141,
+        "text": "assert.equal(opened, 1)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "recordScanSession: the first call on fresh storage is session 1",
+    "line": 26,
+    "start": 866,
+    "end": 1106,
+    "body": "test(\"recordScanSession: the first call on fresh storage is session 1\", () => {\n  const storage = createMemoryScanTriggerStorage()\n  assert.equal(recordScanSession(storage, 1_000), 1)\n  assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY))\n})",
+    "sha256": "2997300c1974d8ab1ec53ea467cfb4991182f8d558a8dcd4a4c4aeb44c931b08",
+    "assertions": [
+      {
+        "line": 28,
+        "text": "assert.equal(recordScanSession(storage, 1_000), 1)"
+      },
+      {
+        "line": 29,
+        "text": "assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY))"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "recordScanSession: a call more than 30 minutes later is session 2",
+    "line": 32,
+    "start": 1108,
+    "end": 1353,
+    "body": "test(\"recordScanSession: a call more than 30 minutes later is session 2\", () => {\n  const storage = createMemoryScanTriggerStorage()\n  recordScanSession(storage, 1_000)\n  assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)\n})",
+    "sha256": "cf445376510670cf0d8125fe3bd9491f59e4c4b2e5051eab4f9ce3ebd59a63c8",
+    "assertions": [
+      {
+        "line": 35,
+        "text": "assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "recordScanSession: a call within 30 minutes stays the SAME session (no increment)",
+    "line": 38,
+    "start": 1355,
+    "end": 1773,
+    "body": "test(\"recordScanSession: a call within 30 minutes stays the SAME session (no increment)\", () => {\n  const storage = createMemoryScanTriggerStorage()\n  recordScanSession(storage, 1_000)\n  assert.equal(recordScanSession(storage, 1_000 + TWENTY_NINE_MINUTES), 1)\n  // An ordinary remount seconds later is emphatically the same session.\n  assert.equal(recordScanSession(storage, 1_000 + TWENTY_NINE_MINUTES + 5_000), 1)\n})",
+    "sha256": "abbbb7251d3a0905f0ec28a6720b50d2be028e9136eb641b757f82a2503fa768",
+    "assertions": [
+      {
+        "line": 41,
+        "text": "assert.equal(recordScanSession(storage, 1_000 + TWENTY_NINE_MINUTES), 1)"
+      },
+      {
+        "line": 43,
+        "text": "assert.equal(recordScanSession(storage, 1_000 + TWENTY_NINE_MINUTES + 5_000), 1)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "recordScanSession: the count keeps climbing across further 30-minute gaps",
+    "line": 46,
+    "start": 1775,
+    "end": 2089,
+    "body": "test(\"recordScanSession: the count keeps climbing across further 30-minute gaps\", () => {\n  const storage = createMemoryScanTriggerStorage()\n  recordScanSession(storage, 1_000)\n  recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES)\n  assert.equal(recordScanSession(storage, 1_000 + 2 * THIRTY_ONE_MINUTES), 3)\n})",
+    "sha256": "49b99c03857937e65b793e2c9cf8d8fcf0ad719e7a44029194c21014fd5f62a7",
+    "assertions": [
+      {
+        "line": 50,
+        "text": "assert.equal(recordScanSession(storage, 1_000 + 2 * THIRTY_ONE_MINUTES), 3)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "recordScanSession: null storage (SSR, private mode) is always session 1, never crashes",
+    "line": 53,
+    "start": 2091,
+    "end": 2239,
+    "body": "test(\"recordScanSession: null storage (SSR, private mode) is always session 1, never crashes\", () => {\n  assert.equal(recordScanSession(null), 1)\n})",
+    "sha256": "b6a338d005aabb57d85eb35e71c488d8f8eecf2efccd7f5f9cdd1c17cf0294a6",
+    "assertions": [
+      {
+        "line": 54,
+        "text": "assert.equal(recordScanSession(null), 1)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "recordScanSession: a storage that throws is treated as session 1, never crashes",
+    "line": 57,
+    "start": 2241,
+    "end": 2523,
+    "body": "test(\"recordScanSession: a storage that throws is treated as session 1, never crashes\", () => {\n  const throwing = {\n    getItem() {\n      throw new Error(\"blocked\")\n    },\n    setItem() {\n      throw new Error(\"blocked\")\n    },\n  }\n  assert.equal(recordScanSession(throwing), 1)\n})",
+    "sha256": "0b61d47b80adba175a64dee7d1463bddbf6ebfc0f3811a695795cc96ff68e44d",
+    "assertions": [
+      {
+        "line": 66,
+        "text": "assert.equal(recordScanSession(throwing), 1)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "recordScanSession: corrupt/garbage JSON in storage is treated as no prior record",
+    "line": 69,
+    "start": 2525,
+    "end": 2783,
+    "body": "test(\"recordScanSession: corrupt/garbage JSON in storage is treated as no prior record\", () => {\n  const storage = createMemoryScanTriggerStorage()\n  storage.setItem(SCAN_SESSION_RECORD_KEY, \"not json\")\n  assert.equal(recordScanSession(storage, 1_000), 1)\n})",
+    "sha256": "599551b85b86f4bd1954a946fba35e1380eaeb8720dc671e1c90c3a0254a7869",
+    "assertions": [
+      {
+        "line": 72,
+        "text": "assert.equal(recordScanSession(storage, 1_000), 1)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "readScanFatigueBudget: nothing persisted yet answers null",
+    "line": 77,
+    "start": 2873,
+    "end": 3053,
+    "body": "test(\"readScanFatigueBudget: nothing persisted yet answers null\", () => {\n  const storage = createMemoryScanTriggerStorage()\n  assert.equal(readScanFatigueBudget(storage), null)\n})",
+    "sha256": "77a4e52e2e0d4e3d6cd9889f18c35b695d74facce0e94f2d7cc4c8829c5eae4e",
+    "assertions": [
+      {
+        "line": 79,
+        "text": "assert.equal(readScanFatigueBudget(storage), null)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "writeScanFatigueBudget + readScanFatigueBudget: round-trips a persisted trigger id",
+    "line": 82,
+    "start": 3055,
+    "end": 3390,
+    "body": "test(\"writeScanFatigueBudget + readScanFatigueBudget: round-trips a persisted trigger id\", () => {\n  const storage = createMemoryScanTriggerStorage()\n  writeScanFatigueBudget(storage, \"frust_serie\")\n  assert.equal(readScanFatigueBudget(storage), \"frust_serie\")\n  assert.equal(storage.getItem(SCAN_FATIGUE_BUDGET_KEY), \"frust_serie\")\n})",
+    "sha256": "b71d5d860bb22ead119c46e7b91c4fa8e48c2e43fbe27a309f983210bed9852d",
+    "assertions": [
+      {
+        "line": 85,
+        "text": "assert.equal(readScanFatigueBudget(storage), \"frust_serie\")"
+      },
+      {
+        "line": 86,
+        "text": "assert.equal(storage.getItem(SCAN_FATIGUE_BUDGET_KEY), \"frust_serie\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "readScanFatigueBudget: null storage (SSR) or garbage content is always a safe null",
+    "line": 89,
+    "start": 3392,
+    "end": 3715,
+    "body": "test(\"readScanFatigueBudget: null storage (SSR) or garbage content is always a safe null\", () => {\n  assert.equal(readScanFatigueBudget(null), null)\n  const storage = createMemoryScanTriggerStorage()\n  storage.setItem(SCAN_FATIGUE_BUDGET_KEY, \"not-a-real-trigger-id\")\n  assert.equal(readScanFatigueBudget(storage), null)\n})",
+    "sha256": "d0a47930232fb15552298db7eeec1d4c96f25272c5d75947143b70b513861eef",
+    "assertions": [
+      {
+        "line": 90,
+        "text": "assert.equal(readScanFatigueBudget(null), null)"
+      },
+      {
+        "line": 93,
+        "text": "assert.equal(readScanFatigueBudget(storage), null)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "readScanFatigueBudget/writeScanFatigueBudget: a storage that throws never crashes",
+    "line": 96,
+    "start": 3717,
+    "end": 4086,
+    "body": "test(\"readScanFatigueBudget/writeScanFatigueBudget: a storage that throws never crashes\", () => {\n  const throwing = {\n    getItem() {\n      throw new Error(\"blocked\")\n    },\n    setItem() {\n      throw new Error(\"blocked\")\n    },\n  }\n  assert.equal(readScanFatigueBudget(throwing), null)\n  assert.doesNotThrow(() => writeScanFatigueBudget(throwing, \"wiederkehrer\"))\n})",
+    "sha256": "e5a7766807a2582780dcef5eceb585ca82efda62864b8c40a7b3d72179afd91a",
+    "assertions": [
+      {
+        "line": 105,
+        "text": "assert.equal(readScanFatigueBudget(throwing), null)"
+      },
+      {
+        "line": 106,
+        "text": "assert.doesNotThrow(() => writeScanFatigueBudget(throwing, \"wiederkehrer\"))"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-trigger-session-marker.test.ts",
+    "title": "F1: the fatigue budget survives being read back by a fresh storage read (simulates a remount)",
+    "line": 109,
+    "start": 4088,
+    "end": 4579,
+    "body": "test(\"F1: the fatigue budget survives being read back by a fresh storage read (simulates a remount)\", () => {\n  // The whole point of F1: two independent reads against the SAME underlying storage (a\n  // real sessionStorage is exactly this — one object surviving a component remount).\n  const storage = createMemoryScanTriggerStorage()\n  writeScanFatigueBudget(storage, \"kategorien_luecke\")\n  const freshRead = readScanFatigueBudget(storage)\n  assert.equal(freshRead, \"kategorien_luecke\")\n})",
+    "sha256": "0736d4cb55851f781103472a41506f38c1975f16fdf2754397fafa070168dffc",
+    "assertions": [
+      {
+        "line": 115,
+        "text": "assert.equal(freshRead, \"kategorien_luecke\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-verdict-access.test.ts",
+    "title": "isMaskedScanVerdict: only a response carrying freeRevealAvailable is masked",
+    "line": 71,
+    "start": 1932,
+    "end": 2291,
+    "body": "test(\"isMaskedScanVerdict: only a response carrying freeRevealAvailable is masked\", () => {\n  assert.equal(isMaskedScanVerdict(maskedResult), true)\n  assert.equal(isMaskedScanVerdict({ ...maskedResult, freeRevealAvailable: false }), true)\n  assert.equal(isMaskedScanVerdict(premiumResult), false)\n  assert.equal(isMaskedScanVerdict(notNeededResult), false)\n})",
+    "sha256": "e6c6fb5538db3d087daae46774465664c04337597d3b2c30522ed66662c51584",
+    "assertions": [
+      {
+        "line": 72,
+        "text": "assert.equal(isMaskedScanVerdict(maskedResult), true)"
+      },
+      {
+        "line": 73,
+        "text": "assert.equal(isMaskedScanVerdict({ ...maskedResult, freeRevealAvailable: false }), true)"
+      },
+      {
+        "line": 74,
+        "text": "assert.equal(isMaskedScanVerdict(premiumResult), false)"
+      },
+      {
+        "line": 75,
+        "text": "assert.equal(isMaskedScanVerdict(notNeededResult), false)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-verdict-access.test.ts",
+    "title": "scanTierSignal: an in_catalog verdict is the only evidence of a tier",
+    "line": 78,
+    "start": 2293,
+    "end": 3011,
+    "body": "test(\"scanTierSignal: an in_catalog verdict is the only evidence of a tier\", () => {\n  assert.equal(scanTierSignal(maskedResult), \"free\")\n  assert.equal(scanTierSignal(premiumResult), \"premium\")\n  // `not_needed` is served identically to both tiers, so it proves nothing either way.\n  assert.equal(scanTierSignal(notNeededResult), \"unknown\")\n  assert.equal(\n    scanTierSignal({\n      kind: \"unknown_product\",\n      identifier: { type: \"ean\", value: \"4006381333931\" },\n      categories: [],\n    }),\n    \"unknown\",\n  )\n  assert.equal(\n    scanTierSignal({\n      kind: \"pending_submission\",\n      submissionId: \"s1\",\n      headline: \"Wir schauen uns das an\",\n      status: \"pending_review\",\n    }),\n    \"unknown\",\n  )\n})",
+    "sha256": "9a5e1616ed3c763c160b51cd01c22e94bd5f2c6107dabecd4a1ef48e3c233579",
+    "assertions": [
+      {
+        "line": 79,
+        "text": "assert.equal(scanTierSignal(maskedResult), \"free\")"
+      },
+      {
+        "line": 80,
+        "text": "assert.equal(scanTierSignal(premiumResult), \"premium\")"
+      },
+      {
+        "line": 82,
+        "text": "assert.equal(scanTierSignal(notNeededResult), \"unknown\")"
+      },
+      {
+        "line": 83,
+        "text": "assert.equal(\n    scanTierSignal({\n      kind: \"unknown_product\",\n      identifier: { type: \"ean\", value: \"4006381333931\" },\n      categories: [],\n    }),\n    \"unknown\",\n  )"
+      },
+      {
+        "line": 91,
+        "text": "assert.equal(\n    scanTierSignal({\n      kind: \"pending_submission\",\n      submissionId: \"s1\",\n      headline: \"Wir schauen uns das an\",\n      status: \"pending_review\",\n    }),\n    \"unknown\",\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-verdict-access.test.ts",
+    "title": "nextScanTierSignal: a proven tier survives a later verdict that carries no evidence",
+    "line": 102,
+    "start": 3013,
+    "end": 3519,
+    "body": "test(\"nextScanTierSignal: a proven tier survives a later verdict that carries no evidence\", () => {\n  assert.equal(nextScanTierSignal(\"free\", \"unknown\"), \"free\")\n  assert.equal(nextScanTierSignal(\"premium\", \"unknown\"), \"premium\")\n  assert.equal(nextScanTierSignal(\"unknown\", \"free\"), \"free\")\n  assert.equal(nextScanTierSignal(\"unknown\", \"premium\"), \"premium\")\n  // A real change of evidence still wins (the same session after a purchase).\n  assert.equal(nextScanTierSignal(\"free\", \"premium\"), \"premium\")\n})",
+    "sha256": "e31af54b186fb530a30b7bd08f7af63437475e0a39848a8dab5e28493867c4ae",
+    "assertions": [
+      {
+        "line": 103,
+        "text": "assert.equal(nextScanTierSignal(\"free\", \"unknown\"), \"free\")"
+      },
+      {
+        "line": 104,
+        "text": "assert.equal(nextScanTierSignal(\"premium\", \"unknown\"), \"premium\")"
+      },
+      {
+        "line": 105,
+        "text": "assert.equal(nextScanTierSignal(\"unknown\", \"free\"), \"free\")"
+      },
+      {
+        "line": 106,
+        "text": "assert.equal(nextScanTierSignal(\"unknown\", \"premium\"), \"premium\")"
+      },
+      {
+        "line": 108,
+        "text": "assert.equal(nextScanTierSignal(\"free\", \"premium\"), \"premium\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/scan-verdict-access.test.ts",
+    "title": "scanRevealCta: the reveal is offered only while the credit is genuinely unspent",
+    "line": 111,
+    "start": 3521,
+    "end": 3985,
+    "body": "test(\"scanRevealCta: the reveal is offered only while the credit is genuinely unspent\", () => {\n  assert.equal(scanRevealCta({ freeRevealAvailable: true, revealUnavailable: false }), \"reveal\")\n  assert.equal(scanRevealCta({ freeRevealAvailable: false, revealUnavailable: false }), \"premium\")\n  // 409 `already_used`: the server has since proven the credit is gone.\n  assert.equal(scanRevealCta({ freeRevealAvailable: true, revealUnavailable: true }), \"premium\")\n})",
+    "sha256": "2ffb539d403b7755467fa51da6ec8b4b32e9fdfc31929ef1f0a69c17a75cceba",
+    "assertions": [
+      {
+        "line": 112,
+        "text": "assert.equal(scanRevealCta({ freeRevealAvailable: true, revealUnavailable: false }), \"reveal\")"
+      },
+      {
+        "line": 113,
+        "text": "assert.equal(scanRevealCta({ freeRevealAvailable: false, revealUnavailable: false }), \"premium\")"
+      },
+      {
+        "line": 115,
+        "text": "assert.equal(scanRevealCta({ freeRevealAvailable: true, revealUnavailable: true }), \"premium\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-analytics-context.test.ts",
+    "title": "durable original source wins after touch consumed or replaced; only safe acquisition fields leave server",
+    "line": 20,
+    "start": 448,
+    "end": 1129,
+    "body": "test(\"durable original source wins after touch consumed or replaced; only safe acquisition fields leave server\", () => {\n  const row = {\n    entry_path: \"/lp/scan\",\n    first_touch: { utm_source: \"facebook\", utm_campaign: \"original\", fbclid: \"private\" },\n    first_seen_at: \"2026-09-15T10:00:00Z\",\n    is_internal_test: false,\n    test_kind: null,\n  }\n  for (const pending of [null, touch]) {\n    const result = buildScannerAnalyticsContext(context, row, pending)\n    assert.equal(result.utmSource, \"facebook\")\n    assert.equal(result.utmCampaign, \"original\")\n    assert.equal(result.entryPath, \"/lp/scan\")\n    assert.equal(JSON.stringify(result).includes(\"private\"), false)\n  }\n})",
+    "sha256": "d6822b1d77bbf71eab2ef634460791bbd8a2254390ae691f863bfd3831698f2b",
+    "assertions": [
+      {
+        "line": 30,
+        "text": "assert.equal(result.utmSource, \"facebook\")"
+      },
+      {
+        "line": 31,
+        "text": "assert.equal(result.utmCampaign, \"original\")"
+      },
+      {
+        "line": 32,
+        "text": "assert.equal(result.entryPath, \"/lp/scan\")"
+      },
+      {
+        "line": 33,
+        "text": "assert.equal(JSON.stringify(result).includes(\"private\"), false)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-analytics-context.test.ts",
+    "title": "new scanner context uses signed matching touch, never a different journey or failed lookup fallback",
+    "line": 36,
+    "start": 1130,
+    "end": 1701,
+    "body": "test(\"new scanner context uses signed matching touch, never a different journey or failed lookup fallback\", () => {\n  assert.equal(buildScannerAnalyticsContext(context, null, touch).utmSource, \"meta\")\n  assert.equal(\n    buildScannerAnalyticsContext(context, null, { ...touch, sessionId: \"other\" }).utmSource,\n    undefined,\n  )\n  assert.equal(buildScannerAnalyticsContext(context, null, touch, true).utmSource, undefined)\n  assert.equal(\n    buildScannerAnalyticsContext({ ...context, packageKey: \"default_organic\" }, null, touch)\n      .utmSource,\n    undefined,\n  )\n})",
+    "sha256": "e6fb4e0a6be9070de89ca3b623c9d53ea5fd6e7fd1bd9d006d8cdfc6819d9376",
+    "assertions": [
+      {
+        "line": 37,
+        "text": "assert.equal(buildScannerAnalyticsContext(context, null, touch).utmSource, \"meta\")"
+      },
+      {
+        "line": 38,
+        "text": "assert.equal(\n    buildScannerAnalyticsContext(context, null, { ...touch, sessionId: \"other\" }).utmSource,\n    undefined,\n  )"
+      },
+      {
+        "line": 42,
+        "text": "assert.equal(buildScannerAnalyticsContext(context, null, touch, true).utmSource, undefined)"
+      },
+      {
+        "line": 43,
+        "text": "assert.equal(\n    buildScannerAnalyticsContext({ ...context, packageKey: \"default_organic\" }, null, touch)\n      .utmSource,\n    undefined,\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-analytics-context.test.ts",
+    "title": "safe source does not reveal raw dynamic paths, querystrings or unsupported values",
+    "line": 49,
+    "start": 1702,
+    "end": 2398,
+    "body": "test(\"safe source does not reveal raw dynamic paths, querystrings or unsupported values\", () => {\n  const result = buildScannerAnalyticsContext(\n    context,\n    {\n      entry_path: \"/result/private?token=secret\",\n      first_touch: { utm_campaign: { secret: \"value\" }, utm_source: \"  meta  \" },\n      is_internal_test: true,\n      test_kind: \"partner\",\n    },\n    null,\n  )\n  assert.equal(result.entryPath, undefined)\n  assert.equal(result.utmCampaign, undefined)\n  assert.equal(result.utmSource, \"meta\")\n  assert.equal(result.isInternalTest, true)\n  assert.equal(result.testKind, \"partner\")\n  assert.equal(result.funnelSessionId, \"session\")\n  assert.equal(result.funnelPackageKey, \"scan_v1\")\n})",
+    "sha256": "b9d1e2ba51508115adcf0adb71ffb9eaaf05cc8a3f49deb81716d9444aeb8859",
+    "assertions": [
+      {
+        "line": 60,
+        "text": "assert.equal(result.entryPath, undefined)"
+      },
+      {
+        "line": 61,
+        "text": "assert.equal(result.utmCampaign, undefined)"
+      },
+      {
+        "line": 62,
+        "text": "assert.equal(result.utmSource, \"meta\")"
+      },
+      {
+        "line": 63,
+        "text": "assert.equal(result.isInternalTest, true)"
+      },
+      {
+        "line": 64,
+        "text": "assert.equal(result.testKind, \"partner\")"
+      },
+      {
+        "line": 65,
+        "text": "assert.equal(result.funnelSessionId, \"session\")"
+      },
+      {
+        "line": 66,
+        "text": "assert.equal(result.funnelPackageKey, \"scan_v1\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-analytics-context.test.ts",
+    "title": "scanner metadata readiness distinguishes a database failure from a confirmed empty acquisition",
+    "line": 69,
+    "start": 2400,
+    "end": 2708,
+    "body": "test(\"scanner metadata readiness distinguishes a database failure from a confirmed empty acquisition\", () => {\n  assert.equal(buildScannerAnalyticsContext(context, null, null, true).analyticsContextReady, false)\n  assert.equal(buildScannerAnalyticsContext(context, null, null).analyticsContextReady, true)\n})",
+    "sha256": "02caee42656d2f746aed62bf0a2d5f62c542a004a47a17f8e3228426ab364c16",
+    "assertions": [
+      {
+        "line": 70,
+        "text": "assert.equal(buildScannerAnalyticsContext(context, null, null, true).analyticsContextReady, false)"
+      },
+      {
+        "line": 71,
+        "text": "assert.equal(buildScannerAnalyticsContext(context, null, null).analyticsContextReady, true)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-offer-analytics.test.ts",
+    "title": "scanner offer content events are PostHog-only",
+    "line": 21,
+    "start": 601,
+    "end": 873,
+    "body": "test(\"scanner offer content events are PostHog-only\", () => {\n  for (const eventName of [\"offer_content_interacted\", \"offer_content_viewed\"] as const)\n    assert.deepEqual(eventRoutes[eventName], {\n      customerio: false,\n      meta: false,\n      posthog: true,\n    })\n})",
+    "sha256": "1201037baba5a5907b88d973692fc757e96af59b86adfea98ed279bad3ae4a9d",
+    "assertions": [
+      {
+        "line": 23,
+        "text": "assert.deepEqual(eventRoutes[eventName], {\n      customerio: false,\n      meta: false,\n      posthog: true,\n    })"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-offer-analytics.test.ts",
+    "title": "scanner offer content interactions retain the offer envelope and omit an absent section",
+    "line": 30,
+    "start": 875,
+    "end": 3061,
+    "body": "test(\"scanner offer content interactions retain the offer envelope and omit an absent section\", () => {\n  const calls: { eventName: string; properties: Record<string, unknown> }[] = []\n  const originalCapture = posthog.capture\n  posthog.capture = ((eventName: string, properties: Record<string, unknown>) => {\n    calls.push({ eventName, properties })\n    return true\n  }) as typeof posthog.capture\n\n  try {\n    postHogDestination.track(\"offer_content_interacted\", {\n      ...context,\n      action: \"clicked\",\n      actionIndex: 3,\n      contentType: \"scanner_whatsapp\",\n      funnelEventId: \"event-1\",\n      placement: \"floating\",\n    })\n    postHogDestination.track(\"offer_content_viewed\", {\n      ...context,\n      contentId: \"chat\",\n      contentType: \"scanner_benefit_carousel\",\n      funnelEventId: \"event-2\",\n      sourceSection: \"product_tour\",\n    })\n  } finally {\n    posthog.capture = originalCapture\n  }\n\n  assert.equal(calls.length, 2)\n  assert.equal(calls[0].eventName, \"offer_content_interacted\")\n  assert.deepEqual(\n    {\n      action: calls[0].properties.action,\n      actionIndex: calls[0].properties.action_index,\n      contentType: calls[0].properties.content_type,\n      offerViewId: calls[0].properties.offer_view_id,\n      placement: calls[0].properties.placement,\n      sourceSection: calls[0].properties.source_section,\n    },\n    {\n      action: \"clicked\",\n      actionIndex: 3,\n      contentType: \"scanner_whatsapp\",\n      offerViewId: \"offer-view-1\",\n      placement: \"floating\",\n      sourceSection: undefined,\n    },\n  )\n  assert.equal(calls[0].properties.$insert_id, \"event-1\")\n  assert.equal(calls[0].properties.funnel_session_id, \"scanner-session\")\n  assert.equal(calls[0].properties.funnel_package_key, \"scan_v1\")\n\n  assert.equal(calls[1].eventName, \"offer_content_viewed\")\n  assert.deepEqual(\n    {\n      contentId: calls[1].properties.content_id,\n      contentType: calls[1].properties.content_type,\n      sourceSection: calls[1].properties.source_section,\n    },\n    {\n      contentId: \"chat\",\n      contentType: \"scanner_benefit_carousel\",\n      sourceSection: \"product_tour\",\n    },\n  )\n  assert.equal(calls[1].properties.$insert_id, \"event-2\")\n})",
+    "sha256": "0fa45f80a31818599d0c4c30c5ba66811cbb5a5833e024dbef4f6634840bf669",
+    "assertions": [
+      {
+        "line": 58,
+        "text": "assert.equal(calls.length, 2)"
+      },
+      {
+        "line": 59,
+        "text": "assert.equal(calls[0].eventName, \"offer_content_interacted\")"
+      },
+      {
+        "line": 60,
+        "text": "assert.deepEqual(\n    {\n      action: calls[0].properties.action,\n      actionIndex: calls[0].properties.action_index,\n      contentType: calls[0].properties.content_type,\n      offerViewId: calls[0].properties.offer_view_id,\n      placement: calls[0].properties.placement,\n      sourceSection: calls[0].properties.source_section,\n    },\n    {\n      action: \"clicked\",\n      actionIndex: 3,\n      contentType: \"scanner_whatsapp\",\n      offerViewId: \"offer-view-1\",\n      placement: \"floating\",\n      sourceSection: undefined,\n    },\n  )"
+      },
+      {
+        "line": 78,
+        "text": "assert.equal(calls[0].properties.$insert_id, \"event-1\")"
+      },
+      {
+        "line": 79,
+        "text": "assert.equal(calls[0].properties.funnel_session_id, \"scanner-session\")"
+      },
+      {
+        "line": 80,
+        "text": "assert.equal(calls[0].properties.funnel_package_key, \"scan_v1\")"
+      },
+      {
+        "line": 82,
+        "text": "assert.equal(calls[1].eventName, \"offer_content_viewed\")"
+      },
+      {
+        "line": 83,
+        "text": "assert.deepEqual(\n    {\n      contentId: calls[1].properties.content_id,\n      contentType: calls[1].properties.content_type,\n      sourceSection: calls[1].properties.source_section,\n    },\n    {\n      contentId: \"chat\",\n      contentType: \"scanner_benefit_carousel\",\n      sourceSection: \"product_tour\",\n    },\n  )"
+      },
+      {
+        "line": 95,
+        "text": "assert.equal(calls[1].properties.$insert_id, \"event-2\")"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-quiz-view.test.ts",
+    "title": "scanner quiz view emits once with event-time timestamp only for scan_v1",
+    "line": 8,
+    "start": 356,
+    "end": 1852,
+    "body": "test(\"scanner quiz view emits once with event-time timestamp only for scan_v1\", async () => {\n  const events: unknown[] = []\n  const tracker = createScannerQuizViewTracker({\n    bootstrap: async () => ({\n      entryPath: \"/lp/scan\",\n      funnelPackageKey: \"scan_v1\",\n      funnelSessionId: \"session-1\",\n      isInternalTest: true,\n      issuedAt: Date.parse(\"2026-09-15T09:30:00.000Z\"),\n      testKind: \"field_test\",\n      utmCampaign: \"scanner-launch\",\n      utmContent: \"video-a\",\n      utmMedium: \"paid_social\",\n      utmSource: \"meta\",\n      utmTerm: \"haarausfall\",\n    }),\n    createId: () => \"view-1\",\n    now: () => \"2026-09-15T10:00:00.000Z\",\n    track: ((_: string, payload: unknown) => events.push(payload)) as never,\n  })\n  tracker({ displayedFunnelPackageKey: \"scan_v1\", step: 17, resumed: true })\n  tracker({ displayedFunnelPackageKey: \"scan_v1\", step: 18, resumed: true })\n  await Promise.resolve()\n  assert.deepEqual(events, [\n    {\n      entryAt: \"2026-09-15T09:30:00.000Z\",\n      entryPath: \"/lp/scan\",\n      funnelEventId: \"view-1\",\n      funnelPackageKey: \"scan_v1\",\n      funnelSessionId: \"session-1\",\n      isResumed: true,\n      isInternalTest: true,\n      quizStep: 17,\n      quizViewId: \"view-1\",\n      scannerTrackingVersion: 1,\n      testKind: \"field_test\",\n      utmCampaign: \"scanner-launch\",\n      utmContent: \"video-a\",\n      utmMedium: \"paid_social\",\n      utmSource: \"meta\",\n      utmTerm: \"haarausfall\",\n      viewedAt: \"2026-09-15T10:00:00.000Z\",\n    },\n  ])\n})",
+    "sha256": "0d42e963b33abc053a163c34585368af362c7ac0d904f4b077d4971792db5f05",
+    "assertions": [
+      {
+        "line": 31,
+        "text": "assert.deepEqual(events, [\n    {\n      entryAt: \"2026-09-15T09:30:00.000Z\",\n      entryPath: \"/lp/scan\",\n      funnelEventId: \"view-1\",\n      funnelPackageKey: \"scan_v1\",\n      funnelSessionId: \"session-1\",\n      isResumed: true,\n      isInternalTest: true,\n      quizStep: 17,\n      quizViewId: \"view-1\",\n      scannerTrackingVersion: 1,\n      testKind: \"field_test\",\n      utmCampaign: \"scanner-launch\",\n      utmContent: \"video-a\",\n      utmMedium: \"paid_social\",\n      utmSource: \"meta\",\n      utmTerm: \"haarausfall\",\n      viewedAt: \"2026-09-15T10:00:00.000Z\",\n    },\n  ])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-quiz-view.test.ts",
+    "title": "an ordinary displayed quiz never emits even if a late lookup identifies scan_v1",
+    "line": 54,
+    "start": 1854,
+    "end": 2323,
+    "body": "test(\"an ordinary displayed quiz never emits even if a late lookup identifies scan_v1\", async () => {\n  const events: unknown[] = []\n  createScannerQuizViewTracker({\n    bootstrap: async () => ({ funnelPackageKey: \"scan_v1\", funnelSessionId: \"session-2\" }),\n    track: ((_: string, payload: unknown) => events.push(payload)) as never,\n  })({ displayedFunnelPackageKey: \"organic_v1\", step: 2, resumed: false })\n  await Promise.resolve()\n  assert.deepEqual(events, [])\n})",
+    "sha256": "77c399d23eaa018e5036b5604a92538077df1afdf0979887203795f41324ec98",
+    "assertions": [
+      {
+        "line": 61,
+        "text": "assert.deepEqual(events, [])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-quiz-view.test.ts",
+    "title": "a no-longer-current scanner mount is not backdated after context resolves",
+    "line": 64,
+    "start": 2325,
+    "end": 3141,
+    "body": "test(\"a no-longer-current scanner mount is not backdated after context resolves\", async () => {\n  const events: unknown[] = []\n  let resolveContext: (value: { funnelPackageKey: string; funnelSessionId: string }) => void\n  const context = new Promise<{ funnelPackageKey: string; funnelSessionId: string }>((resolve) => {\n    resolveContext = resolve\n  })\n  let current = true\n  const tracker = createScannerQuizViewTracker({\n    bootstrap: () => context,\n    track: ((_: string, payload: unknown) => events.push(payload)) as never,\n  })\n  tracker({\n    displayedFunnelPackageKey: \"scan_v1\",\n    isCurrent: () => current,\n    step: 2,\n    resumed: false,\n  })\n  current = false\n  resolveContext!({ funnelPackageKey: \"scan_v1\", funnelSessionId: \"session-2\" })\n  await Promise.resolve()\n  assert.deepEqual(events, [])\n})",
+    "sha256": "67e5b88ab15c19437f86e66d1405dfff211d54ff4f52816a9ceca142c0470e45",
+    "assertions": [
+      {
+        "line": 84,
+        "text": "assert.deepEqual(events, [])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-quiz-view.test.ts",
+    "title": "a failed context lookup retries with the original mount snapshot",
+    "line": 87,
+    "start": 3143,
+    "end": 4150,
+    "body": "test(\"a failed context lookup retries with the original mount snapshot\", async () => {\n  const events: unknown[] = []\n  let calls = 0\n  const tracker = createScannerQuizViewTracker({\n    bootstrap: async () => {\n      calls += 1\n      return calls === 1 ? null : { funnelPackageKey: \"scan_v1\", funnelSessionId: \"session-3\" }\n    },\n    createId: () => \"view-retry\",\n    now: () => \"2026-09-15T10:15:00.000Z\",\n    retry: (callback) => callback(),\n    track: ((_: string, payload: unknown) => events.push(payload)) as never,\n  })\n\n  tracker({ displayedFunnelPackageKey: \"scan_v1\", step: 4, resumed: false })\n  for (let index = 0; index < 4; index += 1) await Promise.resolve()\n  assert.equal(calls, 2)\n  assert.deepEqual(events, [\n    {\n      funnelEventId: \"view-retry\",\n      funnelPackageKey: \"scan_v1\",\n      funnelSessionId: \"session-3\",\n      isResumed: false,\n      quizStep: 4,\n      quizViewId: \"view-retry\",\n      scannerTrackingVersion: 1,\n      viewedAt: \"2026-09-15T10:15:00.000Z\",\n    },\n  ])\n})",
+    "sha256": "72e0e7e729896e18ab6c0cded49f2ded9a01954041647e9942a3062c4c5eda0e",
+    "assertions": [
+      {
+        "line": 103,
+        "text": "assert.equal(calls, 2)"
+      },
+      {
+        "line": 104,
+        "text": "assert.deepEqual(events, [\n    {\n      funnelEventId: \"view-retry\",\n      funnelPackageKey: \"scan_v1\",\n      funnelSessionId: \"session-3\",\n      isResumed: false,\n      quizStep: 4,\n      quizViewId: \"view-retry\",\n      scannerTrackingVersion: 1,\n      viewedAt: \"2026-09-15T10:15:00.000Z\",\n    },\n  ])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-quiz-view.test.ts",
+    "title": "each rendered mount gets one distinct scanner view",
+    "line": 118,
+    "start": 4152,
+    "end": 5165,
+    "body": "test(\"each rendered mount gets one distinct scanner view\", async () => {\n  const events: unknown[] = []\n  let nextId = 0\n  const options = {\n    bootstrap: async () => ({ funnelPackageKey: \"scan_v1\", funnelSessionId: \"session-4\" }),\n    createId: () => `view-${++nextId}`,\n    track: ((_: string, payload: unknown) => events.push(payload)) as never,\n  }\n  const firstMount = createScannerQuizViewTracker(options)\n  const secondMount = createScannerQuizViewTracker(options)\n\n  firstMount({ displayedFunnelPackageKey: \"scan_v1\", step: 2, resumed: false })\n  firstMount({ displayedFunnelPackageKey: \"scan_v1\", step: 3, resumed: true })\n  secondMount({ displayedFunnelPackageKey: \"scan_v1\", step: 6, resumed: true })\n  await Promise.resolve()\n\n  assert.deepEqual(\n    (events as Array<{ quizViewId: string; quizStep: number }>).map(({ quizViewId, quizStep }) => ({\n      quizStep,\n      quizViewId,\n    })),\n    [\n      { quizStep: 2, quizViewId: \"view-1\" },\n      { quizStep: 6, quizViewId: \"view-2\" },\n    ],\n  )\n})",
+    "sha256": "24e4f23619d0631445f77b50a5c8b5d1f310eedf958fc24a537f93ae1b07ebeb",
+    "assertions": [
+      {
+        "line": 134,
+        "text": "assert.deepEqual(\n    (events as Array<{ quizViewId: string; quizStep: number }>).map(({ quizViewId, quizStep }) => ({\n      quizStep,\n      quizViewId,\n    })),\n    [\n      { quizStep: 2, quizViewId: \"view-1\" },\n      { quizStep: 6, quizViewId: \"view-2\" },\n    ],\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-quiz-view.test.ts",
+    "title": "scanner quiz views are PostHog-only and map their bounded snapshot",
+    "line": 146,
+    "start": 5167,
+    "end": 6900,
+    "body": "test(\"scanner quiz views are PostHog-only and map their bounded snapshot\", () => {\n  assert.deepEqual(eventRoutes.scanner_quiz_viewed, {\n    customerio: false,\n    meta: false,\n    posthog: true,\n  })\n  const calls: Array<{ eventName: string; properties: Record<string, unknown> }> = []\n  const originalCapture = posthog.capture\n  posthog.capture = ((eventName: string, properties: Record<string, unknown>) => {\n    calls.push({ eventName, properties })\n    return true\n  }) as typeof posthog.capture\n  try {\n    postHogDestination.track(\"scanner_quiz_viewed\", {\n      entryAt: \"2026-09-15T09:30:00.000Z\",\n      entryPath: \"/lp/scan\",\n      funnelEventId: \"view-5\",\n      funnelPackageKey: \"scan_v1\",\n      funnelSessionId: \"session-5\",\n      isInternalTest: false,\n      isResumed: false,\n      quizStep: 2,\n      quizViewId: \"view-5\",\n      scannerTrackingVersion: 1,\n      testKind: \"partner\",\n      utmCampaign: \"scanner-launch\",\n      utmMedium: \"paid_social\",\n      utmSource: \"meta\",\n      viewedAt: \"2026-09-15T10:00:00.000Z\",\n    })\n  } finally {\n    posthog.capture = originalCapture\n  }\n  assert.deepEqual(calls, [\n    {\n      eventName: \"scanner_quiz_viewed\",\n      properties: {\n        $insert_id: \"view-5\",\n        entry_at: \"2026-09-15T09:30:00.000Z\",\n        entry_path: \"/lp/scan\",\n        funnel_package_key: \"scan_v1\",\n        funnel_session_id: \"session-5\",\n        is_internal_test: false,\n        is_resumed: false,\n        quiz_step: 2,\n        quiz_view_id: \"view-5\",\n        scanner_tracking_version: 1,\n        test_kind: \"partner\",\n        utm_campaign: \"scanner-launch\",\n        utm_medium: \"paid_social\",\n        utm_source: \"meta\",\n        viewed_at: \"2026-09-15T10:00:00.000Z\",\n      },\n    },\n  ])\n})",
+    "sha256": "27c4d2826c7a7c277c8c579ce5c4258711a614f3a74bea0e377111a9a64706da",
+    "assertions": [
+      {
+        "line": 147,
+        "text": "assert.deepEqual(eventRoutes.scanner_quiz_viewed, {\n    customerio: false,\n    meta: false,\n    posthog: true,\n  })"
+      },
+      {
+        "line": 179,
+        "text": "assert.deepEqual(calls, [\n    {\n      eventName: \"scanner_quiz_viewed\",\n      properties: {\n        $insert_id: \"view-5\",\n        entry_at: \"2026-09-15T09:30:00.000Z\",\n        entry_path: \"/lp/scan\",\n        funnel_package_key: \"scan_v1\",\n        funnel_session_id: \"session-5\",\n        is_internal_test: false,\n        is_resumed: false,\n        quiz_step: 2,\n        quiz_view_id: \"view-5\",\n        scanner_tracking_version: 1,\n        test_kind: \"partner\",\n        utm_campaign: \"scanner-launch\",\n        utm_medium: \"paid_social\",\n        utm_source: \"meta\",\n        viewed_at: \"2026-09-15T10:00:00.000Z\",\n      },\n    },\n  ])"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-quiz-view.test.ts",
+    "title": "incomplete scanner metadata retries before capture and persistent failure emits no view",
+    "line": 203,
+    "start": 6902,
+    "end": 7874,
+    "body": "test(\"incomplete scanner metadata retries before capture and persistent failure emits no view\", async () => {\n  for (const recover of [true, false]) {\n    let calls = 0\n    const events: unknown[] = []\n    const tracker = createScannerQuizViewTracker({\n      bootstrap: async () => ({\n        funnelSessionId: \"session-partial\",\n        funnelPackageKey: \"scan_v1\",\n        analyticsContextReady: ++calls > 1 && recover,\n        ...(calls > 1 && recover ? { isInternalTest: true, utmSource: \"meta\" } : {}),\n      }),\n      retry: (callback) => callback(),\n      track: ((_: string, payload: unknown) => events.push(payload)) as never,\n    })\n    tracker({ displayedFunnelPackageKey: \"scan_v1\", step: 2, resumed: false })\n    for (let i = 0; i < 10; i += 1) await Promise.resolve()\n    assert.equal(events.length, recover ? 1 : 0)\n    assert.equal(calls, recover ? 2 : 3)\n    if (recover) assert.equal((events[0] as { isInternalTest: boolean }).isInternalTest, true)\n  }\n})",
+    "sha256": "b99c61eec197561f6fe4c631f5fafb2ff32dbd464d4eeaebe3a99a4c085923c3",
+    "assertions": [
+      {
+        "line": 219,
+        "text": "assert.equal(events.length, recover ? 1 : 0)"
+      },
+      {
+        "line": 220,
+        "text": "assert.equal(calls, recover ? 2 : 3)"
+      },
+      {
+        "line": 221,
+        "text": "assert.equal((events[0] as { isInternalTest: boolean }).isInternalTest, true)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-result-artifact-email.test.ts",
+    "title": "builds the dedicated scanner transactional payload without organic focus or caller package",
+    "line": 14,
+    "start": 442,
+    "end": 1192,
+    "body": "test(\"builds the dedicated scanner transactional payload without organic focus or caller package\", () => {\n  const previous = process.env[SCANNER_RESULT_ARTIFACT_MESSAGE_ID_ENV]\n  process.env[SCANNER_RESULT_ARTIFACT_MESSAGE_ID_ENV] = \"18\"\n\n  try {\n    const payload = buildScannerResultArtifactEmailPayload({\n      leadId: \"lead/with spaces\",\n      email: \"lea@example.com\",\n      siteUrl: \"https://chaarlie.de\",\n    })\n\n    assert.equal(payload.to, \"lea@example.com\")\n    assert.equal(payload.transactionalMessageId, 18)\n    assert.deepEqual(payload.messageData, {\n      lead_id: \"lead/with spaces\",\n      result_url: \"https://chaarlie.de/result/lead%2Fwith%20spaces?entry=result_email\",\n    })\n  } finally {\n    restoreMessageIdEnv(previous)\n  }\n})",
+    "sha256": "220eb22d3ad97c17207d299c1949e15d8938dec5d1cd30b1cacfab2d9fc2faa8",
+    "assertions": [
+      {
+        "line": 25,
+        "text": "assert.equal(payload.to, \"lea@example.com\")"
+      },
+      {
+        "line": 26,
+        "text": "assert.equal(payload.transactionalMessageId, 18)"
+      },
+      {
+        "line": 27,
+        "text": "assert.deepEqual(payload.messageData, {\n      lead_id: \"lead/with spaces\",\n      result_url: \"https://chaarlie.de/result/lead%2Fwith%20spaces?entry=result_email\",\n    })"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-result-artifact-email.test.ts",
+    "title": "requires an explicit scanner message id instead of falling back to the organic template",
+    "line": 36,
+    "start": 1194,
+    "end": 1757,
+    "body": "test(\"requires an explicit scanner message id instead of falling back to the organic template\", () => {\n  const previous = process.env[SCANNER_RESULT_ARTIFACT_MESSAGE_ID_ENV]\n  delete process.env[SCANNER_RESULT_ARTIFACT_MESSAGE_ID_ENV]\n\n  try {\n    assert.throws(\n      () =>\n        buildScannerResultArtifactEmailPayload({\n          leadId: \"lead-1\",\n          email: \"lea@example.com\",\n          siteUrl: \"https://chaarlie.de\",\n        }),\n      /CUSTOMERIO_SCANNER_RESULT_TRANSACTIONAL_MESSAGE_ID/,\n    )\n  } finally {\n    restoreMessageIdEnv(previous)\n  }\n})",
+    "sha256": "c3081d6663d2ed8dc3883ee21ba611c44e232614b1378d657f19d131f7b38e88",
+    "assertions": [
+      {
+        "line": 41,
+        "text": "assert.throws(\n      () =>\n        buildScannerResultArtifactEmailPayload({\n          leadId: \"lead-1\",\n          email: \"lea@example.com\",\n          siteUrl: \"https://chaarlie.de\",\n        }),\n      /CUSTOMERIO_SCANNER_RESULT_TRANSACTIONAL_MESSAGE_ID/,\n    )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-trial-offer.test.tsx",
+    "title": "scanner presentation uses the controlled selection and only the compact tariff layout",
+    "line": 38,
+    "start": 1258,
+    "end": 2401,
+    "body": "test(\"scanner presentation uses the controlled selection and only the compact tariff layout\", () => {\n  const selected: string[] = []\n  const offer = ScannerTrialOffer({\n    onContinue: () => {},\n    onSelect: (interval) => selected.push(interval),\n    pricing,\n    selectedInterval: \"year\",\n  })\n\n  assert.equal(\n    findByDataAttribute(offer, \"data-trial-offer-plan\", \"year\").props[\"aria-pressed\"],\n    true,\n  )\n  ;(findByDataAttribute(offer, \"data-trial-offer-plan\", \"month\").props.onClick as () => void)()\n  assert.deepEqual(selected, [\"month\"])\n\n  const html = renderToStaticMarkup(offer)\n  // Both cards anchor on the monthly figure; the year card's subline carries the full amounts.\n  assert.match(html, /5,83\\s€/)\n  // Negative lookbehind: the bare 9,99 must not be satisfied by the 99,99 renewal amount.\n  assert.match(html, /(?<![\\d,])9,99\\s€/)\n  assert.match(html, /Spare 42\\s?%/i)\n  assert.match(html, /69,99.*im ersten Jahr, danach 99,99.*Jahr/i)\n  assert.match(html, /Monatlich kündbar/i)\n  assert.match(html, /Karte oder PayPal zum Teststart erforderlich/i)\n  assert.doesNotMatch(html, /trial-scanner\\.webp|Teste chaarlie/i)\n})",
+    "sha256": "a5d47fe2e6a364ee9f7dc853941c1d41cf07251d35e526d3c815e1491743b44c",
+    "assertions": [
+      {
+        "line": 47,
+        "text": "assert.equal(\n    findByDataAttribute(offer, \"data-trial-offer-plan\", \"year\").props[\"aria-pressed\"],\n    true,\n  )"
+      },
+      {
+        "line": 52,
+        "text": "assert.deepEqual(selected, [\"month\"])"
+      },
+      {
+        "line": 56,
+        "text": "assert.match(html, /5,83\\s€/)"
+      },
+      {
+        "line": 58,
+        "text": "assert.match(html, /(?<![\\d,])9,99\\s€/)"
+      },
+      {
+        "line": 59,
+        "text": "assert.match(html, /Spare 42\\s?%/i)"
+      },
+      {
+        "line": 60,
+        "text": "assert.match(html, /69,99.*im ersten Jahr, danach 99,99.*Jahr/i)"
+      },
+      {
+        "line": 61,
+        "text": "assert.match(html, /Monatlich kündbar/i)"
+      },
+      {
+        "line": 62,
+        "text": "assert.match(html, /Karte oder PayPal zum Teststart erforderlich/i)"
+      },
+      {
+        "line": 63,
+        "text": "assert.doesNotMatch(html, /trial-scanner\\.webp|Teste chaarlie/i)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-trial-offer.test.tsx",
+    "title": "scanner presentation without introductory annual price anchors on the renewal equivalent",
+    "line": 66,
+    "start": 2403,
+    "end": 2895,
+    "body": "test(\"scanner presentation without introductory annual price anchors on the renewal equivalent\", () => {\n  const html = renderToStaticMarkup(\n    ScannerTrialOffer({\n      onContinue: () => {},\n      onSelect: () => {},\n      pricing: { ...pricing, annualFirstAmountMinor: 9999 },\n      selectedInterval: \"year\",\n    }),\n  )\n  assert.match(html, /Spare 17\\s?%/i)\n  assert.match(html, /8,33\\s€/)\n  assert.match(html, /99,99\\s€ \\/ Jahr/)\n  assert.doesNotMatch(html, /im ersten Jahr|danach/i)\n})",
+    "sha256": "6a835fb2b352d8ea8654c0a5e667012b8c46253d31d250922a5838e5b3b85510",
+    "assertions": [
+      {
+        "line": 75,
+        "text": "assert.match(html, /Spare 17\\s?%/i)"
+      },
+      {
+        "line": 76,
+        "text": "assert.match(html, /8,33\\s€/)"
+      },
+      {
+        "line": 77,
+        "text": "assert.match(html, /99,99\\s€ \\/ Jahr/)"
+      },
+      {
+        "line": 78,
+        "text": "assert.doesNotMatch(html, /im ersten Jahr|danach/i)"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-trial-offer.test.tsx",
+    "title": "scanner presentation propagates pending state and selected dynamic monthly terms",
+    "line": 81,
+    "start": 2897,
+    "end": 3697,
+    "body": "test(\"scanner presentation propagates pending state and selected dynamic monthly terms\", () => {\n  let continued = 0\n  const pending = ScannerTrialOffer({\n    onContinue: () => continued++,\n    onSelect: () => {},\n    pending: true,\n    pricing,\n    selectedInterval: \"month\",\n  })\n  const button = findByDataAttribute(pending, \"data-trial-offer-continue\", \"\")\n  assert.equal(button.props.disabled, true)\n  ;(button.props.onClick as () => void)()\n  assert.equal(continued, 0)\n  assert.match(renderToStaticMarkup(pending), /dann 9,99.*Monat/i)\n\n  assert.match(\n    renderToStaticMarkup(\n      <TrialOffer\n        onContinue={() => {}}\n        onSelect={() => {}}\n        presentation=\"scanner\"\n        pricing={pricing}\n        selectedInterval=\"month\"\n      />,\n    ),\n    /dann 9,99.*Monat/i,\n  )\n})",
+    "sha256": "740a55e68dd52aea2842a65d17bb86d84f9fbdbfa95a603dfef006c5bf38e3c1",
+    "assertions": [
+      {
+        "line": 91,
+        "text": "assert.equal(button.props.disabled, true)"
+      },
+      {
+        "line": 93,
+        "text": "assert.equal(continued, 0)"
+      },
+      {
+        "line": 94,
+        "text": "assert.match(renderToStaticMarkup(pending), /dann 9,99.*Monat/i)"
+      },
+      {
+        "line": 96,
+        "text": "assert.match(\n    renderToStaticMarkup(\n      <TrialOffer\n        onContinue={() => {}}\n        onSelect={() => {}}\n        presentation=\"scanner\"\n        pricing={pricing}\n        selectedInterval=\"month\"\n      />,\n    ),\n    /dann 9,99.*Monat/i,\n  )"
+      }
+    ]
+  },
+  {
+    "file": "tests/scanner-trial-offer.test.tsx",
+    "title": "scanner trial continue is the pricing CTA and carries the selected interval",
+    "line": 110,
+    "start": 3699,
+    "end": 4277,
+    "body": "test(\"scanner trial continue is the pricing CTA and carries the selected interval\", () => {\n  const offer = ScannerTrialOffer({\n    onContinue: () => {},\n    onSelect: () => {},\n    pricing,\n    selectedInterval: \"month\",\n  })\n  const button = findByDataAttribute(offer, \"data-trial-offer-continue\", \"\")\n  assert.equal(button.props[\"data-offer-cta\"], \"pricing_primary\")\n  assert.equal(button.props[\"data-offer-destination\"], \"checkout\")\n  assert.equal(button.props[\"data-offer-source-section\"], \"pricing\")\n  assert.equal(button.props[\"data-offer-selected-interval\"], \"month\")\n})",
+    "sha256": "b809c8c8bd36e1bd75733a90c714c4436ed09fd10b8e32dc95c65a68ecb410d9",
+    "assertions": [
+      {
+        "line": 118,
+        "text": "assert.equal(button.props[\"data-offer-cta\"], \"pricing_primary\")"
+      },
+      {
+        "line": 119,
+        "text": "assert.equal(button.props[\"data-offer-destination\"], \"checkout\")"
+      },
+      {
+        "line": 120,
+        "text": "assert.equal(button.props[\"data-offer-source-section\"], \"pricing\")"
+      },
+      {
+        "line": 121,
+        "text": "assert.equal(button.props[\"data-offer-selected-interval\"], \"month\")"
+      }
+    ]
+  }
+]

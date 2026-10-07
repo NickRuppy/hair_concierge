@@ -1,0 +1,2 @@
+{"files":["operator-edit.cjs","operator-guard.cjs","operator-proof.cjs","operator-readonly-preload.cjs","operator-run-controls.cjs","prepare-data-pins.cjs"],"parseDiagnostics":0,"repositoryImports":0,"childrenStarted":0}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}

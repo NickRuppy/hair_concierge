@@ -1,0 +1,76 @@
+{
+  "mode": "transfer",
+  "from": "before",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "2b8a775ac83ec817b274a8e881aa782e011f7109065645b947208414b53eff8c",
+  "prerequisite": null,
+  "files": [
+    {
+      "file": "tests/stripe-trial-invoice.test.ts",
+      "before": "4e801d34fe02adbb862106f9c328c7404eef12113c5ee591107f7b6175b13d51",
+      "after": "6d0cb2013d4c46a2c2ecc544934238e882f231897d2ef33168439fd90976a31d"
+    },
+    {
+      "file": "tests/stripe-trial-account-activation.test.ts",
+      "before": "7891ab86622d9d708a75e8d92b964cb8c3f7c4498d2c228830c9979056968ab4",
+      "after": "b501af7ceb20a13b51776bc55659f9d911b0c1e44a81bd0ed042afd6fb9e8fb2"
+    },
+    {
+      "file": "tests/stripe-trial-subscription-lifecycle.test.ts",
+      "before": "fa5206bb4626cdb32c5c6a7f4e1d18c0f19522d98aa34ec881fc26c06c524651",
+      "after": "fa5206bb4626cdb32c5c6a7f4e1d18c0f19522d98aa34ec881fc26c06c524651"
+    },
+    {
+      "file": "tests/stripe-trial-continuation.test.ts",
+      "before": "2adaa26b3787d1b866360f06f5a7b5325701bc673cddd106a9e43c40a52dc036",
+      "after": "2adaa26b3787d1b866360f06f5a7b5325701bc673cddd106a9e43c40a52dc036"
+    },
+    {
+      "file": "tests/stripe-trial-authorization.test.ts",
+      "before": "cc503f5aaffafde6c89351aaafcb05a002c94294807bd6e621c4329778d625ba",
+      "after": "2892f7bd5e3ec2e4e8f9888d89b6a3d4808c9a19603eede5fa8d305a5a391f35"
+    },
+    {
+      "file": "tests/stripe-trial-checkout.test.ts",
+      "before": "b7ca67b634e0381d0a60a56fa1b2f977a9e43530868b4719b1dffa58e1f95292",
+      "after": "b7ca67b634e0381d0a60a56fa1b2f977a9e43530868b4719b1dffa58e1f95292"
+    },
+    {
+      "file": "tests/stripe-trial-continuation-reconcile.test.ts",
+      "before": "2fb3d2e2b1813994b02b581dbe0e338f8b18b5802d827274af28fbe49789d250",
+      "after": "2fb3d2e2b1813994b02b581dbe0e338f8b18b5802d827274af28fbe49789d250"
+    },
+    {
+      "file": "tests/stripe-trial-management.test.ts",
+      "before": "fdcc0443934d110adc0adbaa2e3b003432ebef2cc5efa7b745bba3e6ac0d2855",
+      "after": "fdcc0443934d110adc0adbaa2e3b003432ebef2cc5efa7b745bba3e6ac0d2855"
+    },
+    {
+      "file": "tests/stripe-trial-cancellation.test.ts",
+      "before": "aa683f1e596ff838934812921ce7d2baf5ea081ff8a2db515ab9ec9255705767",
+      "after": "aa683f1e596ff838934812921ce7d2baf5ea081ff8a2db515ab9ec9255705767"
+    },
+    {
+      "file": "tests/stripe-trial-prior-paid-history.test.ts",
+      "before": "6b24bb9eae7e2fb3b1c2ece6f43532d809b64766cceae626c6d81eef81ad87f7",
+      "after": "6b24bb9eae7e2fb3b1c2ece6f43532d809b64766cceae626c6d81eef81ad87f7"
+    },
+    {
+      "file": "tests/stripe-trial-checkout-route.test.ts",
+      "before": "9ecb370408c14ef478200373ac33bc74b583294b23da2f7e18681ab2a187d571",
+      "after": "9ecb370408c14ef478200373ac33bc74b583294b23da2f7e18681ab2a187d571"
+    },
+    {
+      "file": "tests/stripe-trial-checkout-session-params.test.ts",
+      "before": "a6924fe6bcff65baecb70a7845d7293c4190c76cd6fad0a16fa1ff1ff51e9066",
+      "after": "a6924fe6bcff65baecb70a7845d7293c4190c76cd6fad0a16fa1ff1ff51e9066"
+    },
+    {
+      "file": "tests/stripe-trial-catalog.test.ts",
+      "before": "7d69cb89ee4618f690fcfd1d542a569959716a0cf9754867edcef152219ad2e7",
+      "after": "7d69cb89ee4618f690fcfd1d542a569959716a0cf9754867edcef152219ad2e7"
+    }
+  ]
+}

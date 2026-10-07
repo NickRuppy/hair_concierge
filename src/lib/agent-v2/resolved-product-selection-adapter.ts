@@ -169,33 +169,6 @@ export function buildActiveProductContextFromTrustedSelection(
   }
 }
 
-export function buildActiveResolvedProductContextFromLookup(params: {
-  result:
-    | {
-        status: string
-        product?: {
-          id: string
-          name: string
-          category_key?: string | null
-        } | null
-      }
-    | null
-    | undefined
-  inputCategory: string | null
-  originalUserMessage: string
-  displayName: string | null
-}): AgentV2ActiveResolvedProductContext | null {
-  if (params.result?.status !== "found_exact" || !params.result.product) return null
-
-  return {
-    source: "product_lookup_selection",
-    product_id: params.result.product.id,
-    name: params.displayName?.trim() || params.result.product.name,
-    category: params.result.product.category_key ?? params.inputCategory ?? null,
-    original_user_message: params.originalUserMessage,
-  }
-}
-
 export function buildActiveProductContextFromLookup(params: {
   result:
     | {
@@ -351,19 +324,6 @@ function activeProductContextPendingIdentityKey(
   return [context.category?.trim() ?? "", context.brand_text?.trim() ?? "", productName]
     .join(":")
     .toLocaleLowerCase("de-DE")
-}
-
-export function buildNextActiveResolvedProductContext(params: {
-  previous: AgentV2ActiveResolvedProductContext | null
-  trustedSelectedProductContext?: AgentV2TrustedSelectedProductContext | null
-  deterministicResolvedProductContext: AgentV2ActiveResolvedProductContext | null
-  latestMessageNamesActionableProduct: boolean
-}): AgentV2ActiveResolvedProductContext | null {
-  const selectedContext = buildActiveResolvedProductContext(params.trustedSelectedProductContext)
-  if (selectedContext) return selectedContext
-  if (params.deterministicResolvedProductContext) return params.deterministicResolvedProductContext
-  if (params.latestMessageNamesActionableProduct) return null
-  return params.previous
 }
 
 export function buildStoredProjectionForTrustedSelectedProduct(

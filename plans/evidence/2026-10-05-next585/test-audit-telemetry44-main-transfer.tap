@@ -1,0 +1,230 @@
+TAP version 13
+# Subtest: browser vendor analytics stay disabled on local hosts unless explicitly enabled
+ok 1 - browser vendor analytics stay disabled on local hosts unless explicitly enabled
+  ---
+  duration_ms: 0.401125
+  ...
+# Subtest: analytics coordinator applies the environment gate to all vendor releases
+ok 2 - analytics coordinator applies the environment gate to all vendor releases
+  ---
+  duration_ms: 0.138583
+  ...
+# Subtest: bounded FIFO drops the oldest item and warns when full
+ok 3 - bounded FIFO drops the oldest item and warns when full
+  ---
+  duration_ms: 0.849417
+  ...
+# Subtest: post-paint scheduling releases only after two animation frames
+ok 4 - post-paint scheduling releases only after two animation frames
+  ---
+  duration_ms: 0.117542
+  ...
+# Subtest: PostHog registers settled funnel context before one FIFO flush
+ok 5 - PostHog registers settled funnel context before one FIFO flush
+  ---
+  duration_ms: 0.369166
+  ...
+# Subtest: PostHog registers a later successful context after an initial bootstrap failure
+ok 6 - PostHog registers a later successful context after an initial bootstrap failure
+  ---
+  duration_ms: 0.130625
+  ...
+# Subtest: PostHog ignores a stale context that settles after a newer navigation
+ok 7 - PostHog ignores a stale context that settles after a newer navigation
+  ---
+  duration_ms: 2.087166
+  ...
+# Subtest: PostHog registers the newest context that settles before its client and preserves explicit events
+ok 8 - PostHog registers the newest context that settles before its client and preserves explicit events
+  ---
+  duration_ms: 0.131083
+  ...
+# Subtest: PostHog preserves identify and reset ordering before readiness
+ok 9 - PostHog preserves identify and reset ordering before readiness
+  ---
+  duration_ms: 0.194958
+  ...
+# Subtest: PostHog loader failure is isolated and stops accepting new calls
+ok 10 - PostHog loader failure is isolated and stops accepting new calls
+  ---
+  duration_ms: 0.104208
+  ...
+# Subtest: PostHog removes sensitive queries and fragments from automatic URL properties
+ok 11 - PostHog removes sensitive queries and fragments from automatic URL properties
+  ---
+  duration_ms: 0.410167
+  ...
+# Subtest: PostHog preserves the allowlisted quiz-return result context
+ok 12 - PostHog preserves the allowlisted quiz-return result context
+  ---
+  duration_ms: 0.33375
+  ...
+# Subtest: PostHog removes sensitive queries from session replay URLs
+ok 13 - PostHog removes sensitive queries from session replay URLs
+  ---
+  duration_ms: 0.075875
+  ...
+# Subtest: PostHog masks replay inputs unless unmasking is explicitly enabled
+ok 14 - PostHog masks replay inputs unless unmasking is explicitly enabled
+  ---
+  duration_ms: 0.046208
+  ...
+# Subtest: Customer.io bridges page, identify, track, and reset in FIFO order
+ok 15 - Customer.io bridges page, identify, track, and reset in FIFO order
+  ---
+  duration_ms: 0.213375
+  ...
+# Subtest: Customer.io browser loader unwraps the SDK tuple before flushing queued calls
+ok 16 - Customer.io browser loader unwraps the SDK tuple before flushing queued calls
+  ---
+  duration_ms: 0.18525
+  ...
+# Subtest: Customer.io loader is single-flight and connects the client once
+ok 17 - Customer.io loader is single-flight and connects the client once
+  ---
+  duration_ms: 0.067333
+  ...
+# Subtest: Customer.io loader failure is isolated and disables its queue
+ok 18 - Customer.io loader failure is isolated and disables its queue
+  ---
+  duration_ms: 0.121375
+  ...
+# Subtest: accepts only the bounded performance vocabulary and falls back to unknown region
+ok 19 - accepts only the bounded performance vocabulary and falls back to unknown region
+  ---
+  duration_ms: 0.689917
+  ...
+# Subtest: rejects invalid enum values and identifiers from the telemetry envelope
+ok 20 - rejects invalid enum values and identifiers from the telemetry envelope
+  ---
+  duration_ms: 0.253875
+  ...
+# Subtest: keeps correlation IDs out of Server-Timing and public-safe sink payloads
+ok 21 - keeps correlation IDs out of Server-Timing and public-safe sink payloads
+  ---
+  duration_ms: 0.184542
+  ...
+# Subtest: maps only the seven approved routes to performance groups
+ok 22 - maps only the seven approved routes to performance groups
+  ---
+  duration_ms: 0.06875
+  ...
+# Subtest: maps response status to the bounded outcome without free-form details
+ok 23 - maps response status to the bounded outcome without free-form details
+  ---
+  duration_ms: 0.098208
+  ...
+# Subtest: accepts only generated UUID v4 correlation identifiers
+ok 24 - accepts only generated UUID v4 correlation identifiers
+  ---
+  duration_ms: 0.043917
+  ...
+# Subtest: browser helpers queue before readiness and flush clean payloads in order
+ok 25 - browser helpers queue before readiness and flush clean payloads in order
+  ---
+  duration_ms: 0.880208
+  ...
+# Subtest: browser helpers stop accepting calls after loader failure disables the runtime
+ok 26 - browser helpers stop accepting calls after loader failure disables the runtime
+  ---
+  duration_ms: 0.117292
+  ...
+# Subtest: Customer.io calls override production SDK page enrichment with a credential-free context
+ok 27 - Customer.io calls override production SDK page enrichment with a credential-free context
+  ---
+  duration_ms: 0.46275
+  ...
+# Subtest: client beforeSend filters Meta bridge noise before scrubbing retained events
+ok 28 - client beforeSend filters Meta bridge noise before scrubbing retained events
+  ---
+  duration_ms: 1.100375
+  ...
+# Subtest: landing client entry points keep Sentry behind a dynamic import boundary
+ok 29 - landing client entry points keep Sentry behind a dynamic import boundary
+  ---
+  duration_ms: 0.216167
+  ...
+# Subtest: Sentry starts in a task after the post-paint frame boundary
+ok 30 - Sentry starts in a task after the post-paint frame boundary
+  ---
+  duration_ms: 0.3445
+  ...
+# Subtest: exact landing routes wait for post-paint while every other route starts immediately
+ok 31 - exact landing routes wait for post-paint while every other route starts immediately
+  ---
+  duration_ms: 0.81425
+  ...
+# Subtest: the first early browser error force-loads and flushes once with its mechanism
+ok 32 - the first early browser error force-loads and flushes once with its mechanism
+  ---
+  duration_ms: 0.456125
+  ...
+# Subtest: fallback browser errors retain source location without serializing event objects
+ok 33 - fallback browser errors retain source location without serializing event objects
+  ---
+  duration_ms: 0.155
+  ...
+# Subtest: bounded FIFO drops the oldest exception and preserves rejection order
+ok 34 - bounded FIFO drops the oldest exception and preserves rejection order
+  ---
+  duration_ms: 0.325958
+  ...
+# Subtest: React-boundary capture uses the shared facade and force-starts loading
+ok 35 - React-boundary capture uses the shared facade and force-starts loading
+  ---
+  duration_ms: 0.145875
+  ...
+# Subtest: the shared facade warns in development when no runtime is registered
+ok 36 - the shared facade warns in development when no runtime is registered
+  ---
+  duration_ms: 0.061083
+  ...
+# Subtest: concurrent releases share one load and later router transitions forward
+ok 37 - concurrent releases share one load and later router transitions forward
+  ---
+  duration_ms: 0.14125
+  ...
+# Subtest: loader failure removes listeners, clears queued errors, and never throws
+ok 38 - loader failure removes listeners, clears queued errors, and never throws
+  ---
+  duration_ms: 0.084042
+  ...
+# Subtest: initialization failure is isolated after temporary listeners are removed
+ok 39 - initialization failure is isolated after temporary listeners are removed
+  ---
+  duration_ms: 0.2695
+  ...
+# Subtest: root layout renders exactly one ungated Speed Insights component
+ok 40 - root layout renders exactly one ungated Speed Insights component
+  ---
+  duration_ms: 0.785083
+  ...
+# Subtest: Speed Insights keeps only canonical URLs for public pages and measured app areas
+ok 41 - Speed Insights keeps only canonical URLs for public pages and measured app areas
+  ---
+  duration_ms: 0.673583
+  ...
+# Subtest: Speed Insights retains the page origin for preview deployments
+ok 42 - Speed Insights retains the page origin for preview deployments
+  ---
+  duration_ms: 0.102416
+  ...
+# Subtest: Speed Insights drops auth, payment-return, result, nested public paths, and unknown URLs
+ok 43 - Speed Insights drops auth, payment-return, result, nested public paths, and unknown URLs
+  ---
+  duration_ms: 0.085667
+  ...
+# Subtest: privacy notice accurately describes anonymous Speed Insights measurement
+ok 44 - privacy notice accurately describes anonymous Speed Insights measurement
+  ---
+  duration_ms: 0.429917
+  ...
+1..44
+# tests 44
+# suites 0
+# pass 44
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 471.065792

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "C1",
+    "donor": 2,
+    "keeper": 3,
+    "union": "The donor consumes user-1/product-a then queries user-1 true. Keeper performs exactly that same prefix before querying user-2 false. Existing first keeper assertion is identical in value, owner, fake columns, row and call order. No transfer edits.",
+    "inputReadset": "One fresh Map; consume insert user-1/product-a; select user_id eq user-1 returns {user_id:user-1}. Later user-2 lookup cannot affect the completed earlier assertion.",
+    "file": "tests/free-reveal.test.ts",
+    "donorTitle": "\"hasUsedFreeReveal: true once a reveal has been consumed\"",
+    "donorBody": "test(\"hasUsedFreeReveal: true once a reveal has been consumed\", async () => {\n  const { client } = createFakeFreeRevealClient()\n\n  await consumeFreeReveal(client as never, { userId: \"user-1\", productId: \"product-a\" })\n  const result = await hasUsedFreeReveal(client as never, \"user-1\")\n\n  assert.equal(result, true)\n})",
+    "donorSha256": "a9f96f25efe94992311fabe25244917b587e512c2acce3404c11dbada86b1d71",
+    "keeperTitle": "\"hasUsedFreeReveal: does not leak across users\"",
+    "keeperBefore": "test(\"hasUsedFreeReveal: does not leak across users\", async () => {\n  const { client } = createFakeFreeRevealClient()\n\n  await consumeFreeReveal(client as never, { userId: \"user-1\", productId: \"product-a\" })\n\n  assert.equal(await hasUsedFreeReveal(client as never, \"user-1\"), true)\n  assert.equal(await hasUsedFreeReveal(client as never, \"user-2\"), false)\n})",
+    "keeperTransfer": "test(\"hasUsedFreeReveal: does not leak across users\", async () => {\n  const { client } = createFakeFreeRevealClient()\n\n  await consumeFreeReveal(client as never, { userId: \"user-1\", productId: \"product-a\" })\n\n  assert.equal(await hasUsedFreeReveal(client as never, \"user-1\"), true)\n  assert.equal(await hasUsedFreeReveal(client as never, \"user-2\"), false)\n})",
+    "keeperCut": "test(\"hasUsedFreeReveal: does not leak across users\", async () => {\n  const { client } = createFakeFreeRevealClient()\n\n  await consumeFreeReveal(client as never, { userId: \"user-1\", productId: \"product-a\" })\n\n  assert.equal(await hasUsedFreeReveal(client as never, \"user-1\"), true)\n  assert.equal(await hasUsedFreeReveal(client as never, \"user-2\"), false)\n})"
+  },
+  {
+    "id": "C2",
+    "donor": 4,
+    "keeper": 5,
+    "union": "Donor consumed result is keeper first result; preserve donor row observation immediately after the existing first call and before second consume. Existing final row assertion remains; no new product or owner call.",
+    "inputReadset": "Both begin a fresh Map and first INSERT user-1/product-a. Added deepEqual rows.get is the original donor observation, not a new SUT call. Second existing INSERT user-1/product-b remains after the transferred row assertion.",
+    "file": "tests/free-reveal.test.ts",
+    "donorTitle": "\"consumeFreeReveal: first consume for a user returns consumed\"",
+    "donorBody": "test(\"consumeFreeReveal: first consume for a user returns consumed\", async () => {\n  const { client, rows } = createFakeFreeRevealClient()\n\n  const result = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-a\",\n  })\n\n  assert.equal(result, \"consumed\")\n  assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })\n})",
+    "donorSha256": "c068a2992d63d4c00370c306bf636f67064461a1bb345c0d2dd2d04ce27f3760",
+    "keeperTitle": "\"consumeFreeReveal: second consume for the same user returns already_used\"",
+    "keeperBefore": "test(\"consumeFreeReveal: second consume for the same user returns already_used\", async () => {\n  const { client, rows } = createFakeFreeRevealClient()\n\n  const first = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-a\",\n  })\n  const second = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-b\",\n  })\n\n  assert.equal(first, \"consumed\")\n  assert.equal(second, \"already_used\")\n  // The original row stands -- a second consume never overwrites what the\n  // credit was spent on.\n  assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })\n})",
+    "keeperTransfer": "test(\"consumeFreeReveal: second consume for the same user returns already_used\", async () => {\n  const fake = createFakeFreeRevealClient()\n  const { client, rows } = fake\n\n  const first = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-a\",\n  })\n  assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })\n  const second = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-b\",\n  })\n\n  assert.equal(first, \"consumed\")\n  assert.equal(second, \"already_used\")\n  // The original row stands -- a second consume never overwrites what the\n  // credit was spent on.\n  assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })\n\n  assert.equal(fake.insertCalls, 2)\n  assert.equal(fake.selectCalls, 0)\n})",
+    "keeperCut": "test(\"consumeFreeReveal: second consume for the same user returns already_used\", async () => {\n  const fake = createFakeFreeRevealClient()\n  const { client, rows } = fake\n\n  const first = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-a\",\n  })\n  assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })\n  const second = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-b\",\n  })\n\n  assert.equal(first, \"consumed\")\n  assert.equal(second, \"already_used\")\n  // The original row stands -- a second consume never overwrites what the\n  // credit was spent on.\n  assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })\n\n  assert.equal(fake.insertCalls, 2)\n  assert.equal(fake.selectCalls, 0)\n})"
+  },
+  {
+    "id": "C3",
+    "donor": 6,
+    "keeper": 5,
+    "union": "Expose the existing fixture object as fake (same one creation), retain client/rows destructuring from it, transfer exact insertCalls===2 and selectCalls===0 clauses after the same two awaited consumes. All keeper result and row assertions remain.",
+    "inputReadset": "Both invoke consume(user-1,product-a), consume(user-1,product-b) on one fresh fake with identical private counters, Map conflict and error23505. Counter getters are unchanged observations. No new calls to owner/client or fixture.",
+    "file": "tests/free-reveal.test.ts",
+    "donorTitle": "\"consumeFreeReveal: relies on the insert's own PK conflict, never reads first\"",
+    "donorBody": "test(\"consumeFreeReveal: relies on the insert's own PK conflict, never reads first\", async () => {\n  const fake = createFakeFreeRevealClient()\n\n  await consumeFreeReveal(fake.client as never, { userId: \"user-1\", productId: \"product-a\" })\n  await consumeFreeReveal(fake.client as never, { userId: \"user-1\", productId: \"product-b\" })\n\n  assert.equal(fake.insertCalls, 2)\n  assert.equal(fake.selectCalls, 0)\n})",
+    "donorSha256": "fa4721375faea849dc7ce721f06ab2780b0b9572d1d35cbf56f4b6c61e84fe48",
+    "keeperTitle": "\"consumeFreeReveal: second consume for the same user returns already_used\"",
+    "keeperBefore": "test(\"consumeFreeReveal: second consume for the same user returns already_used\", async () => {\n  const { client, rows } = createFakeFreeRevealClient()\n\n  const first = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-a\",\n  })\n  const second = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-b\",\n  })\n\n  assert.equal(first, \"consumed\")\n  assert.equal(second, \"already_used\")\n  // The original row stands -- a second consume never overwrites what the\n  // credit was spent on.\n  assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })\n})",
+    "keeperTransfer": "test(\"consumeFreeReveal: second consume for the same user returns already_used\", async () => {\n  const fake = createFakeFreeRevealClient()\n  const { client, rows } = fake\n\n  const first = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-a\",\n  })\n  assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })\n  const second = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-b\",\n  })\n\n  assert.equal(first, \"consumed\")\n  assert.equal(second, \"already_used\")\n  // The original row stands -- a second consume never overwrites what the\n  // credit was spent on.\n  assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })\n\n  assert.equal(fake.insertCalls, 2)\n  assert.equal(fake.selectCalls, 0)\n})",
+    "keeperCut": "test(\"consumeFreeReveal: second consume for the same user returns already_used\", async () => {\n  const fake = createFakeFreeRevealClient()\n  const { client, rows } = fake\n\n  const first = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-a\",\n  })\n  assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })\n  const second = await consumeFreeReveal(client as never, {\n    userId: \"user-1\",\n    productId: \"product-b\",\n  })\n\n  assert.equal(first, \"consumed\")\n  assert.equal(second, \"already_used\")\n  // The original row stands -- a second consume never overwrites what the\n  // credit was spent on.\n  assert.deepEqual(rows.get(\"user-1\"), { user_id: \"user-1\", product_id: \"product-a\" })\n\n  assert.equal(fake.insertCalls, 2)\n  assert.equal(fake.selectCalls, 0)\n})"
+  },
+  {
+    "id": "C4",
+    "donor": 10,
+    "keeper": 11,
+    "union": "Donor consumes user-1/product-a then loads user-1 {productId:product-a}. Keeper has exactly this prefix and assertion before cross-user user-2 null. No transfer edits.",
+    "inputReadset": "One fresh Map; first INSERT user-1/product-a, select product_id eq user-1 returns product-a. Later foreign-user query does not affect prefix result.",
+    "file": "tests/free-reveal.test.ts",
+    "donorTitle": "\"loadFreeRevealRecord: returns the ledgered productId once a reveal has been consumed\"",
+    "donorBody": "test(\"loadFreeRevealRecord: returns the ledgered productId once a reveal has been consumed\", async () => {\n  const { client } = createFakeFreeRevealClient()\n\n  await consumeFreeReveal(client as never, { userId: \"user-1\", productId: \"product-a\" })\n  const result = await loadFreeRevealRecord(client as never, \"user-1\")\n\n  assert.deepEqual(result, { productId: \"product-a\" })\n})",
+    "donorSha256": "16e9a7c1f249e0fc430a0a9b3911a37b7189b810b93ac5729da0b0f51c126a00",
+    "keeperTitle": "\"loadFreeRevealRecord: does not leak across users\"",
+    "keeperBefore": "test(\"loadFreeRevealRecord: does not leak across users\", async () => {\n  const { client } = createFakeFreeRevealClient()\n\n  await consumeFreeReveal(client as never, { userId: \"user-1\", productId: \"product-a\" })\n\n  assert.deepEqual(await loadFreeRevealRecord(client as never, \"user-1\"), {\n    productId: \"product-a\",\n  })\n  assert.equal(await loadFreeRevealRecord(client as never, \"user-2\"), null)\n})",
+    "keeperTransfer": "test(\"loadFreeRevealRecord: does not leak across users\", async () => {\n  const { client } = createFakeFreeRevealClient()\n\n  await consumeFreeReveal(client as never, { userId: \"user-1\", productId: \"product-a\" })\n\n  assert.deepEqual(await loadFreeRevealRecord(client as never, \"user-1\"), {\n    productId: \"product-a\",\n  })\n  assert.equal(await loadFreeRevealRecord(client as never, \"user-2\"), null)\n})",
+    "keeperCut": "test(\"loadFreeRevealRecord: does not leak across users\", async () => {\n  const { client } = createFakeFreeRevealClient()\n\n  await consumeFreeReveal(client as never, { userId: \"user-1\", productId: \"product-a\" })\n\n  assert.deepEqual(await loadFreeRevealRecord(client as never, \"user-1\"), {\n    productId: \"product-a\",\n  })\n  assert.equal(await loadFreeRevealRecord(client as never, \"user-2\"), null)\n})"
+  }
+]

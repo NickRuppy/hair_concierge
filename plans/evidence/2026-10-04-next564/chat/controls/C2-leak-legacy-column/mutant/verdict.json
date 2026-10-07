@@ -1,0 +1,8 @@
+{
+  "ok": true,
+  "kind": "node",
+  "exactSelected": 1,
+  "expectedOutcome": "intended assertion failure",
+  "stdout": "/tmp/test-audit-chat18-controls-q0Mukt/C2-leak-legacy-column/mutant/stdout.txt",
+  "stderr": "/tmp/test-audit-chat18-controls-q0Mukt/C2-leak-legacy-column/mutant/stderr.txt"
+}

@@ -1,0 +1,1229 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "expectedHead": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "expectedBranch": "codex/test-audit-pruning",
+  "counts": {
+    "before": 210,
+    "transfer": 210,
+    "cut": 207
+  },
+  "unchangedCallbacks": 206,
+  "repoWrites": 0,
+  "ownerExecutions": 0,
+  "testRuns": 0,
+  "parse": "All 31 files in all three prospective phases and all four source mutants parsed as TypeScript/TSX. Syntax only; not typecheck or runtime evidence.",
+  "files": [
+    {
+      "file": "tests/billing-trial-required-notices.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "25aecfc553d2da2644647cfd84c59191315f315199fface654076532d07d13c8",
+          "count": 16,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-required-notices.test.ts"
+        },
+        "transfer": {
+          "sha256": "a15b8bd4f60f3cdf5a7848eeea985e63655f856de2af8e0e813b9c55fa65a186",
+          "count": 16,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-required-notices.test.ts"
+        },
+        "cut": {
+          "sha256": "6d928e6657417c53ad58f39c4d468c5adc241d53cb8ccad04413d438f0ed0239",
+          "count": 15,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-required-notices.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-admission-postgres.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "8d93d7fd495017bf38594450300a4a4483ca4bbeb932781c12409614c329a5f1",
+          "count": 14,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-admission-postgres.test.ts"
+        },
+        "transfer": {
+          "sha256": "8d93d7fd495017bf38594450300a4a4483ca4bbeb932781c12409614c329a5f1",
+          "count": 14,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-admission-postgres.test.ts"
+        },
+        "cut": {
+          "sha256": "38058edac4dd80694462b97060d94fd6bd2f30c1f58d568beb234f72e4f73bb3",
+          "count": 13,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-admission-postgres.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-payment-events.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "b921857dbe62edcd1c13d2c0654fec7341d4e86b99100f1bb98407756f07acae",
+          "count": 14,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-payment-events.test.ts"
+        },
+        "transfer": {
+          "sha256": "b921857dbe62edcd1c13d2c0654fec7341d4e86b99100f1bb98407756f07acae",
+          "count": 14,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-payment-events.test.ts"
+        },
+        "cut": {
+          "sha256": "b921857dbe62edcd1c13d2c0654fec7341d4e86b99100f1bb98407756f07acae",
+          "count": 14,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-payment-events.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-identity-rights.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "78b4b162ab52aaf1572d50efa9b523e72f14c4fc64582f78fb1bd95f396856ed",
+          "count": 12,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-identity-rights.test.ts"
+        },
+        "transfer": {
+          "sha256": "78b4b162ab52aaf1572d50efa9b523e72f14c4fc64582f78fb1bd95f396856ed",
+          "count": 12,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-identity-rights.test.ts"
+        },
+        "cut": {
+          "sha256": "78b4b162ab52aaf1572d50efa9b523e72f14c4fc64582f78fb1bd95f396856ed",
+          "count": 12,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-identity-rights.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-policy.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "93d6967667e8348c3643e720a235455d3ef27b11d43da3fe8ad79dd8fdeefabb",
+          "count": 11,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-policy.test.ts"
+        },
+        "transfer": {
+          "sha256": "93d6967667e8348c3643e720a235455d3ef27b11d43da3fe8ad79dd8fdeefabb",
+          "count": 11,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-policy.test.ts"
+        },
+        "cut": {
+          "sha256": "9c9c63dd3e657b27248b374b0c1425054c70134e5a1eae718961e3d6c43d068c",
+          "count": 10,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-policy.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-lifecycle-analytics-postgres.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "907a695e40b2e1c1ecebecce3b44a484460f3d3aecdfd645eca69f5434d26d33",
+          "count": 10,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-lifecycle-analytics-postgres.test.ts"
+        },
+        "transfer": {
+          "sha256": "907a695e40b2e1c1ecebecce3b44a484460f3d3aecdfd645eca69f5434d26d33",
+          "count": 10,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-lifecycle-analytics-postgres.test.ts"
+        },
+        "cut": {
+          "sha256": "907a695e40b2e1c1ecebecce3b44a484460f3d3aecdfd645eca69f5434d26d33",
+          "count": 10,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-lifecycle-analytics-postgres.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-management-postgres.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "1821b56e6585914d50dcce8f558fdcd1c0fa68495d4b30cddafcf33166722eba",
+          "count": 10,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-management-postgres.test.ts"
+        },
+        "transfer": {
+          "sha256": "1821b56e6585914d50dcce8f558fdcd1c0fa68495d4b30cddafcf33166722eba",
+          "count": 10,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-management-postgres.test.ts"
+        },
+        "cut": {
+          "sha256": "1821b56e6585914d50dcce8f558fdcd1c0fa68495d4b30cddafcf33166722eba",
+          "count": 10,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-management-postgres.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-access-postgres.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "903dc6506821e3794867d3539fd41dfd2d8f001dd951267efba6ef281f10c130",
+          "count": 8,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-access-postgres.test.ts"
+        },
+        "transfer": {
+          "sha256": "903dc6506821e3794867d3539fd41dfd2d8f001dd951267efba6ef281f10c130",
+          "count": 8,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-access-postgres.test.ts"
+        },
+        "cut": {
+          "sha256": "903dc6506821e3794867d3539fd41dfd2d8f001dd951267efba6ef281f10c130",
+          "count": 8,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-access-postgres.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-cancellation-reconcile.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "d22fa6014c3804485185b15cc06f9b9be8a8358ff538a8d62edd99a03727c8ed",
+          "count": 8,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-cancellation-reconcile.test.ts"
+        },
+        "transfer": {
+          "sha256": "d22fa6014c3804485185b15cc06f9b9be8a8358ff538a8d62edd99a03727c8ed",
+          "count": 8,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-cancellation-reconcile.test.ts"
+        },
+        "cut": {
+          "sha256": "d22fa6014c3804485185b15cc06f9b9be8a8358ff538a8d62edd99a03727c8ed",
+          "count": 8,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-cancellation-reconcile.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-offer.test.tsx",
+      "phases": {
+        "before": {
+          "sha256": "4e0f44a1821d12517f85a00198c0dc0d3252b5a2b5ba3bb482db9c9c955d42f4",
+          "count": 8,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-offer.test.tsx"
+        },
+        "transfer": {
+          "sha256": "4e0f44a1821d12517f85a00198c0dc0d3252b5a2b5ba3bb482db9c9c955d42f4",
+          "count": 8,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-offer.test.tsx"
+        },
+        "cut": {
+          "sha256": "4e0f44a1821d12517f85a00198c0dc0d3252b5a2b5ba3bb482db9c9c955d42f4",
+          "count": 8,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-offer.test.tsx"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-paid-recovery-postgres.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "e4015a5afb5ebc958cc664c05aafa6d9b3674e7f32aad3d4c43d44feb73f8be7",
+          "count": 8,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-paid-recovery-postgres.test.ts"
+        },
+        "transfer": {
+          "sha256": "e4015a5afb5ebc958cc664c05aafa6d9b3674e7f32aad3d4c43d44feb73f8be7",
+          "count": 8,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-paid-recovery-postgres.test.ts"
+        },
+        "cut": {
+          "sha256": "e4015a5afb5ebc958cc664c05aafa6d9b3674e7f32aad3d4c43d44feb73f8be7",
+          "count": 8,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-paid-recovery-postgres.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-management-route.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "c05a7ba3a478a2d031192a201881a6928b8995e54b0a6e0c6467c500f3fe9549",
+          "count": 7,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-management-route.test.ts"
+        },
+        "transfer": {
+          "sha256": "c05a7ba3a478a2d031192a201881a6928b8995e54b0a6e0c6467c500f3fe9549",
+          "count": 7,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-management-route.test.ts"
+        },
+        "cut": {
+          "sha256": "c05a7ba3a478a2d031192a201881a6928b8995e54b0a6e0c6467c500f3fe9549",
+          "count": 7,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-management-route.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-membership.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "597200ce003698d1faecc346ab83bedca950fb875c8fe5207af8512bef9ab81e",
+          "count": 7,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-membership.test.ts"
+        },
+        "transfer": {
+          "sha256": "597200ce003698d1faecc346ab83bedca950fb875c8fe5207af8512bef9ab81e",
+          "count": 7,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-membership.test.ts"
+        },
+        "cut": {
+          "sha256": "597200ce003698d1faecc346ab83bedca950fb875c8fe5207af8512bef9ab81e",
+          "count": 7,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-membership.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-access-projection.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "28dd9a4b37dae54d8c7e7c69120b22b5735329e5ff83499e0394113eb80e27de",
+          "count": 6,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-access-projection.test.ts"
+        },
+        "transfer": {
+          "sha256": "28dd9a4b37dae54d8c7e7c69120b22b5735329e5ff83499e0394113eb80e27de",
+          "count": 6,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-access-projection.test.ts"
+        },
+        "cut": {
+          "sha256": "28dd9a4b37dae54d8c7e7c69120b22b5735329e5ff83499e0394113eb80e27de",
+          "count": 6,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-access-projection.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-history-backfill.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "599f7805df0b5c8786d7383448bc5424e4d05b9b17d1d78c5fbc0efe74df15d7",
+          "count": 6,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-history-backfill.test.ts"
+        },
+        "transfer": {
+          "sha256": "599f7805df0b5c8786d7383448bc5424e4d05b9b17d1d78c5fbc0efe74df15d7",
+          "count": 6,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-history-backfill.test.ts"
+        },
+        "cut": {
+          "sha256": "599f7805df0b5c8786d7383448bc5424e4d05b9b17d1d78c5fbc0efe74df15d7",
+          "count": 6,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-history-backfill.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-identity-claims.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "b871f27a410d1e4a97344547d577a5c4be3d594c7051ffb0783c5937fd3a839a",
+          "count": 6,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-identity-claims.test.ts"
+        },
+        "transfer": {
+          "sha256": "b871f27a410d1e4a97344547d577a5c4be3d594c7051ffb0783c5937fd3a839a",
+          "count": 6,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-identity-claims.test.ts"
+        },
+        "cut": {
+          "sha256": "b871f27a410d1e4a97344547d577a5c4be3d594c7051ffb0783c5937fd3a839a",
+          "count": 6,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-identity-claims.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-paid-cancellation.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "e29cc24580dca1c9ec4a967b712d5d93310343086aed3b95611158e61deff549",
+          "count": 6,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-paid-cancellation.test.ts"
+        },
+        "transfer": {
+          "sha256": "e29cc24580dca1c9ec4a967b712d5d93310343086aed3b95611158e61deff549",
+          "count": 6,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-paid-cancellation.test.ts"
+        },
+        "cut": {
+          "sha256": "e29cc24580dca1c9ec4a967b712d5d93310343086aed3b95611158e61deff549",
+          "count": 6,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-paid-cancellation.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-subscription-access.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "506de1abfee4a6ed711b2cb40e3e642bb35b3eaa110c271b6fa3fa4a8db56644",
+          "count": 6,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-subscription-access.test.ts"
+        },
+        "transfer": {
+          "sha256": "506de1abfee4a6ed711b2cb40e3e642bb35b3eaa110c271b6fa3fa4a8db56644",
+          "count": 6,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-subscription-access.test.ts"
+        },
+        "cut": {
+          "sha256": "506de1abfee4a6ed711b2cb40e3e642bb35b3eaa110c271b6fa3fa4a8db56644",
+          "count": 6,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-subscription-access.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-cancellation-route.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "4d7a5df43e4b6dfeed31f9714615007c960402e6ad348ff428385ac414d15072",
+          "count": 5,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-cancellation-route.test.ts"
+        },
+        "transfer": {
+          "sha256": "4d7a5df43e4b6dfeed31f9714615007c960402e6ad348ff428385ac414d15072",
+          "count": 5,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-cancellation-route.test.ts"
+        },
+        "cut": {
+          "sha256": "4d7a5df43e4b6dfeed31f9714615007c960402e6ad348ff428385ac414d15072",
+          "count": 5,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-cancellation-route.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-required-notices-postgres.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "9e172d6237a58873d149d84ed8b891ee48bbd3c59557eb0dae197a9f3d764e6d",
+          "count": 5,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-required-notices-postgres.test.ts"
+        },
+        "transfer": {
+          "sha256": "9e172d6237a58873d149d84ed8b891ee48bbd3c59557eb0dae197a9f3d764e6d",
+          "count": 5,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-required-notices-postgres.test.ts"
+        },
+        "cut": {
+          "sha256": "9e172d6237a58873d149d84ed8b891ee48bbd3c59557eb0dae197a9f3d764e6d",
+          "count": 5,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-required-notices-postgres.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-analytics-delivery.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "6e0c496acb84acea7e723936cc3b8b241dfb5ba55c292d6bde21e230446c8905",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-analytics-delivery.test.ts"
+        },
+        "transfer": {
+          "sha256": "6e0c496acb84acea7e723936cc3b8b241dfb5ba55c292d6bde21e230446c8905",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-analytics-delivery.test.ts"
+        },
+        "cut": {
+          "sha256": "6e0c496acb84acea7e723936cc3b8b241dfb5ba55c292d6bde21e230446c8905",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-analytics-delivery.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-cancellation-declarations.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "9bf629b81df0c4f8099a7443df129e7d200132e9bf0d3bc3e9eb3faf2063be4b",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-cancellation-declarations.test.ts"
+        },
+        "transfer": {
+          "sha256": "9bf629b81df0c4f8099a7443df129e7d200132e9bf0d3bc3e9eb3faf2063be4b",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-cancellation-declarations.test.ts"
+        },
+        "cut": {
+          "sha256": "9bf629b81df0c4f8099a7443df129e7d200132e9bf0d3bc3e9eb3faf2063be4b",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-cancellation-declarations.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-cancellation-provider-operations.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "d1f674c6422e2f6cec8cf3717091dd0e58b84e256a60d29b7520163d3ee8f7b2",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-cancellation-provider-operations.test.ts"
+        },
+        "transfer": {
+          "sha256": "d1f674c6422e2f6cec8cf3717091dd0e58b84e256a60d29b7520163d3ee8f7b2",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-cancellation-provider-operations.test.ts"
+        },
+        "cut": {
+          "sha256": "d1f674c6422e2f6cec8cf3717091dd0e58b84e256a60d29b7520163d3ee8f7b2",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-cancellation-provider-operations.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-checkout-attempt.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "c9cb9905f8d4006575afc4d60dbec8a8a4dd588d190485731e70f3ff506443cb",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-checkout-attempt.test.ts"
+        },
+        "transfer": {
+          "sha256": "c9cb9905f8d4006575afc4d60dbec8a8a4dd588d190485731e70f3ff506443cb",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-checkout-attempt.test.ts"
+        },
+        "cut": {
+          "sha256": "c9cb9905f8d4006575afc4d60dbec8a8a4dd588d190485731e70f3ff506443cb",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-checkout-attempt.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-paid-continuations-postgres.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "d093c6ca336b35dda0965cd1731f99d580130d6a13da88231ad32d9de80de027",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-paid-continuations-postgres.test.ts"
+        },
+        "transfer": {
+          "sha256": "d093c6ca336b35dda0965cd1731f99d580130d6a13da88231ad32d9de80de027",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-paid-continuations-postgres.test.ts"
+        },
+        "cut": {
+          "sha256": "d093c6ca336b35dda0965cd1731f99d580130d6a13da88231ad32d9de80de027",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-paid-continuations-postgres.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-paid-migration-authority.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "4dee59983cec6e7882bc63e3cfeba1677a526b77fb90fe7d79c6d943c3cbb09d",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-paid-migration-authority.test.ts"
+        },
+        "transfer": {
+          "sha256": "4dee59983cec6e7882bc63e3cfeba1677a526b77fb90fe7d79c6d943c3cbb09d",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-paid-migration-authority.test.ts"
+        },
+        "cut": {
+          "sha256": "4dee59983cec6e7882bc63e3cfeba1677a526b77fb90fe7d79c6d943c3cbb09d",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-paid-migration-authority.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-paid-recovery-route.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "023bdac0906989c9d81711f9841f6766bb642d8582676ef816d052cc023ff5d0",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-paid-recovery-route.test.ts"
+        },
+        "transfer": {
+          "sha256": "023bdac0906989c9d81711f9841f6766bb642d8582676ef816d052cc023ff5d0",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-paid-recovery-route.test.ts"
+        },
+        "cut": {
+          "sha256": "023bdac0906989c9d81711f9841f6766bb642d8582676ef816d052cc023ff5d0",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-paid-recovery-route.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-prior-paid-history.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "c4d3fd7b26495b752f1e8a4b275c98fba5a16518c49f043827ee3414ddc63341",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-prior-paid-history.test.ts"
+        },
+        "transfer": {
+          "sha256": "c4d3fd7b26495b752f1e8a4b275c98fba5a16518c49f043827ee3414ddc63341",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-prior-paid-history.test.ts"
+        },
+        "cut": {
+          "sha256": "c4d3fd7b26495b752f1e8a4b275c98fba5a16518c49f043827ee3414ddc63341",
+          "count": 4,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-prior-paid-history.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-effective-payment-contract.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "1476e83892f86bfa1f4c6abf5253814b5a2412013b92a47887d97b23ac342305",
+          "count": 2,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-effective-payment-contract.test.ts"
+        },
+        "transfer": {
+          "sha256": "1476e83892f86bfa1f4c6abf5253814b5a2412013b92a47887d97b23ac342305",
+          "count": 2,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-effective-payment-contract.test.ts"
+        },
+        "cut": {
+          "sha256": "1476e83892f86bfa1f4c6abf5253814b5a2412013b92a47887d97b23ac342305",
+          "count": 2,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-effective-payment-contract.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-payment-reconciliation.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "2fee8faec59833a1a13629b49298b4150284c013a92fea98cdabae8f8d9d2928",
+          "count": 2,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-payment-reconciliation.test.ts"
+        },
+        "transfer": {
+          "sha256": "2fee8faec59833a1a13629b49298b4150284c013a92fea98cdabae8f8d9d2928",
+          "count": 2,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-payment-reconciliation.test.ts"
+        },
+        "cut": {
+          "sha256": "2fee8faec59833a1a13629b49298b4150284c013a92fea98cdabae8f8d9d2928",
+          "count": 2,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-payment-reconciliation.test.ts"
+        }
+      }
+    },
+    {
+      "file": "tests/billing-trial-analytics-postgres.test.ts",
+      "phases": {
+        "before": {
+          "sha256": "b84bae5b7f915b07b72b9d8d4fd74b569d3fcaa96942f99139b5a0d73f0ec9bc",
+          "count": 1,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/before/tests/billing-trial-analytics-postgres.test.ts"
+        },
+        "transfer": {
+          "sha256": "b84bae5b7f915b07b72b9d8d4fd74b569d3fcaa96942f99139b5a0d73f0ec9bc",
+          "count": 1,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/transfer/tests/billing-trial-analytics-postgres.test.ts"
+        },
+        "cut": {
+          "sha256": "b84bae5b7f915b07b72b9d8d4fd74b569d3fcaa96942f99139b5a0d73f0ec9bc",
+          "count": 1,
+          "path": "/tmp/test-audit-billing-trial210-proposal-pj1NC1/cut/tests/billing-trial-analytics-postgres.test.ts"
+        }
+      }
+    }
+  ],
+  "readset": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": ".nvmrc",
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "docs/free-trial-launch-runbook.md",
+      "sha256": "a1c60fbc2dc832110fbff6566df0cde37ba3e167debb5cf747f0e0afe9fba668",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "docs/trial-notices-and-claims-operations.md",
+      "sha256": "965c7d487f796c49b3b92c65874cccaa583b7340dbd508459d29561b2077ab04",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "scripts/billing/trial-history-backfill.ts",
+      "sha256": "d793f381e2498057504346cd6fcbcef3b378c26d6c89ed7a3eb67219c2f77028",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "scripts/billing/trial-identity-rights.ts",
+      "sha256": "0979f567332b1c47d6467a5d8db1082a8c031d1adf6aa8cb98bc337690bb3416",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "scripts/billing/trial-payment-reconciliation.ts",
+      "sha256": "0dc2642aed572123066eb4204666dbb32150dbeefc55cd60238bbf4c0d4e2281",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/app/api/billing/membership/route.ts",
+      "sha256": "decca8220b32471d6c76037e67268190c7de093830ee53e94d4db733da4a1328",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/app/api/billing/trial-cancellation/reconcile/route.ts",
+      "sha256": "5fadb29f61566c1e18398e0c92134f2d75e15423c65feaa122767d17077cadfe",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/app/api/billing/trial-cancellation/route.ts",
+      "sha256": "49fc858b1e3ae04ca219b8dfc8230204c26230fb95580fab37631b2bef986046",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/app/api/billing/trial-management/route.ts",
+      "sha256": "3b27ba8b1478a37f9ae70c0735dc8b1558cb27b77da9fb8748f310997c2e27f2",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/app/api/billing/trial-paid-cancellation/route.ts",
+      "sha256": "240d45f60196df1fdfcb842c853e079a556f77d7ab5da8789535e9266487bd12",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/app/api/billing/trial-paid-recovery/route.ts",
+      "sha256": "2b03ec794f55036252e71704c46630694082a2aace29c60393e4dc181e2d0547",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/app/api/billing/trial-required-notices/reconcile/route.ts",
+      "sha256": "a4f95b1283d16177e0df7e63cd0ef4ae0dacd830ddeae7b5a3c9d6e3333fc0a8",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/components/billing/trial-offer.tsx",
+      "sha256": "4051ca8d025e47a2d1bd1d32796bdba7791953087493980148d672837a05374a",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/components/quiz/result-offer-pricing.tsx",
+      "sha256": "461bf77fd54505e7fdcaa10c0630bfc942803fdb13ddc546ba7c745c6e91d33a",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/customerio.ts",
+      "sha256": "901525211d4267c62f57504167c75b2b06a5bc6b21874cfb1b0a64e339adff5c",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/meta-capi.ts",
+      "sha256": "ad26d75c65085e730d105abb929483bde3f73769e14af3bff8ec36209e5d81f1",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/posthog-server.ts",
+      "sha256": "1ad0407338d9e27d8a0a3f55a15bfbbfb5274ef806af21862e2bcd0a2158887c",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/subscriptions.ts",
+      "sha256": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-access-projection.ts",
+      "sha256": "6bd7a205a589005d2301cf77511709b26f63076538f953e1da77d57e567ba17f",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-admission.ts",
+      "sha256": "00dea2cbb5dad16446ee405f289aa7912c9cb895774653512d549ddea02d0017",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-analytics-context.ts",
+      "sha256": "8fa707d663a6c657540fc45715f5a6a4e8022604ad0ccdad5cee777eb6bd0647",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-cancellation-declarations.ts",
+      "sha256": "d8d5ebe26c29137f6c5e024dc91307c857fe493946db1fcb9a0ce3323fb5b7f7",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-cancellation-reconcile.ts",
+      "sha256": "2680be571a30e235678c6b5e072bffc73b509db2d567d6ef56ae5132c2a33b31",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-checkout-attempt.ts",
+      "sha256": "84ba2d9f52efceb8bc64a499176c5d2c24b479d9907185b8998da05320ac76a9",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-identity-claims.ts",
+      "sha256": "7e04ea1029da7e6c2c2864b860926fa83297d46c7174ea7310130d2c3536e963",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-management-operations.ts",
+      "sha256": "d89bcbcea01fc6e5cb1ec864212c32e2277cfceea6ff0ab21b3a4149a28d6e3c",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-membership.ts",
+      "sha256": "1e5a8d19e1bd9e04ecc4d727a3460b28bfa70a6af955b355e605c79aaf4fdc05",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-offer.ts",
+      "sha256": "14083f0eb5677db3063e22ab585ca9779a51fac4e04ab8852ee2e11f087d4725",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-paid-cancellation.ts",
+      "sha256": "de39001781de5e37e204a4482ce5637f81ecb9bb68547ce91209261d041c0993",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-paid-recovery-operations.ts",
+      "sha256": "ffed95f6ff851cacb280993434f17d354d223f8a6c8fb77bc4e97caa891d6089",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-payment-events.ts",
+      "sha256": "4118cf4fca3745bc1aced3cf8a3f86e4ec684733f8f565bf1d61071dabb4bc9c",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-policy.ts",
+      "sha256": "a88f33d5abfefd705629a0ca8ef739b893dd1908aeec639627916fc815daef02",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-prior-paid-history.ts",
+      "sha256": "d95863b5c82dbdf4e88a28a6cc6f49ac4016da6f7316e0b4c160fd20fda8b904",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-required-notices-delivery.ts",
+      "sha256": "a3373f462b91cbd8cb3cd4aa0ce73bbe9b95012fb098a2e9bea8196934539b83",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-required-notices-terms.ts",
+      "sha256": "266b22ba746208ead6de85b15a2bddb63c7f1111680d782cc22be35d6724197a",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-required-notices.ts",
+      "sha256": "c7b2d3f9b9818a2cd5d72839f6c772c8ceb48b7a5aa4442c0eefdc200837a7fa",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/trial-runtime.ts",
+      "sha256": "0dae1fdc8a90e3b71a6faf4a20fafa9c655c165650fbe952a3b36e66b29bffe0",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/billing/types.ts",
+      "sha256": "f99c6f799c5c79a4218a2425fbd1b4ad4565c7f0592d1419b45ae6cb09e5047b",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/customerio/transactional.ts",
+      "sha256": "5756d3bda21c0be6cbc1ed8885846a646edd8560f22c8b7fc5ac6601c62b95e2",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/paypal/prior-paid-history.ts",
+      "sha256": "841d3317bd0cc74fe967a3067f86eceac952fe4e0a45ab2628dcbc58aef59f50",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/paypal/subscription-shapes.ts",
+      "sha256": "bb879599956c47bb212a7b83fafa991403adb2a71c34c3b423190eb9f04217f5",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/paypal/trial-collection-start.ts",
+      "sha256": "d22659e8282e0f18b69971b8948ba5afc4b284774aa1d2330f434ed3358513bc",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/stripe/trial-cancellation.ts",
+      "sha256": "6e8da65a276dc23ac3ce4face961c1059b533cde765705ecb005a8f0a958fcaf",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "src/lib/stripe/trial-prior-paid-history.ts",
+      "sha256": "422692df369d638699e4d232c73143ea6b664d65ae96ccb325f047656e4afaf0",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260527_add_billing_subscriptions.sql",
+      "sha256": "164b2a27a91e9ed5dd9447da3c87c9d6f56f2e6c4737f48c0202cc8c8d528593",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260603120000_add_provider_subscriber_email.sql",
+      "sha256": "68f1830be9952abf83da17ae64ceb1d6026ffcf328b95c67931ab714492ce8ac",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260708133700_billing_analytics_outbox.sql",
+      "sha256": "02f8ca1df907dc85c56b1d8b60db49bd3e7b2cc3c272ee9f45344bc89f9ed351",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260716120000_add_billing_cancel_scheduled_at.sql",
+      "sha256": "bef71345afea323075bc24b5d6ddad0ec41ebccdb9f6b7f425e160638b32fca3",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260822140000_billing_subscriptions_classified_views.sql",
+      "sha256": "403092c7d01154ac3651c11fab860e07cf3320ce80c430e14984d287eb0b8ee6",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260828104243_personal_plan_paid_migration_admission.sql",
+      "sha256": "258af22e01b0287330b59753d645c13b51ab4da8ae564bcd2576c9e02086d39a",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914044650_trial_admission_foundation.sql",
+      "sha256": "a791ee5abfeb6d9b7c240460f6271cae7a7953148bdfe928b72d4771e70b86f9",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914051220_trial_access_projection.sql",
+      "sha256": "d412662b0e8a1ef162bec731a4603e82a23a0d3d11b97379a3d4771da1bf1c2f",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914051731_trial_paid_migration_authority.sql",
+      "sha256": "d23a8823cbd0e91e9eec6e423c319e5cecafb8cecb3b467c033d3949efd57686",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914085036_trial_started_analytics.sql",
+      "sha256": "e5ac05d7cd1288660b64912cea067569f6510b8811db44d4371874532215a90a",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914090614_trial_cancellation_declarations.sql",
+      "sha256": "3d018b95ea5475b7011934dc2855427c6c16b9b27de395da2115a882d8d21c5f",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914091103_trial_checkout_attempt.sql",
+      "sha256": "3548399f50d88186ccd586a47833dfa3f418d58145fc9968311e60f5a262d6e7",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914093927_trial_cancellation_provider_operations.sql",
+      "sha256": "d3ef6379140aed99d2d076ccad0cef655fbfbaae82535171644454105b1b376c",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914094203_trial_payment_events.sql",
+      "sha256": "7d1118c8ffb7b7dc0af7531dc9ece12b9019f7d60dcfa4ce526bb4f206cd8cb0",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914101500_trial_cancellation_provider_retry.sql",
+      "sha256": "f9527c1be1b115e9f62a3c7545dbc78175e50d3c691c887f0b8f3512f0fb5c8d",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914135114_stripe_trial_continuation_operations.sql",
+      "sha256": "8b12c0e8aa57b18b64f84096751a21202e09797f82d3df6560230a4ae9bbe4da",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914135123_trial_paid_continuation_links.sql",
+      "sha256": "a6e36ae7ac72e5c8b15422758c5ce1eb9d7104ddab770129e2f26ad490db1d97",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914135527_trial_required_notices.sql",
+      "sha256": "9dc9fac57e78c164dfc3e8d15b83324e21cab18c6595c7fdbf8edef33b899e5f",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914140320_trial_management_operations.sql",
+      "sha256": "06fa6573682fc8ea8bfb405f8c199603c03ec0517b5cf47f7a408d3fcdd9810f",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914141036_trial_required_notice_revisions.sql",
+      "sha256": "b2ac556ee86803e31acab647a8303c5aa885ca33300f3a1629867840ff303d94",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914141149_trial_effective_payment_contract.sql",
+      "sha256": "452b54ef8e2be6277912120b1a6c42cdedc9b76af053c49f59181bd52a5215fc",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914141408_trial_effective_cancellation_contract.sql",
+      "sha256": "52a12b0bd5bde59a7e8fdbada7a8f901fdfca826bf2b7e8734cb91d5766a2f96",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914142559_trial_prior_paid_claims.sql",
+      "sha256": "de396becc8297ae95546eb978b5929532d5140ea680ef4b4dda4f4c2e1038575",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914142808_trial_paid_recovery_operations.sql",
+      "sha256": "71ddb560ffd3f2c7ea8ebbdd72faf1b871fa09fbcdc9a5c4dfa0744b862edf8d",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914143515_trial_paid_recovery_ledger.sql",
+      "sha256": "7e27fb0f78a1e5c7640ecb36325f2d8c461ee1d0ed2b933d11402735b6f5333f",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914143741_trial_paid_recovery_continuation_transition.sql",
+      "sha256": "838e2c09c50f129fec7869238278be2db2e50edc6bc262c278a42ebc8544f0c5",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914144351_trial_identity_rights_lifecycle.sql",
+      "sha256": "7c14fc04f91285d166d4a9171b3b2e1565b1b6827831e2b3e8ec1c6587c792ec",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914144833_trial_paid_cancellation_declarations.sql",
+      "sha256": "9deb62bb7bfbfe779d13766bd977782fead7589d521916816c7e32c225c90ec6",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914151514_stripe_trial_lifecycle_cancellation_fence.sql",
+      "sha256": "80470b30f8cb01f1abb94a7143e827b3b1b9efd463ba5c45e45d622d7805b4ca",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260914153229_trial_identity_key_registry_safe_updates.sql",
+      "sha256": "88459b8920871613f6e5cfe39bfff5e78d731f47d7e3fa5640ef41b8add17a25",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260915070715_admission_recovery_reason.sql",
+      "sha256": "6182065bdc7d835e1374cc9628f2bbf3eb12e92838bf52952cb863c6a72aaae0",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260915113126_trial_lifecycle_analytics.sql",
+      "sha256": "bb6a715b37376f351c704df612a61316476c36e2043b25401e7fef0ce187da52",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260915141251_openai_ads_consent_context.sql",
+      "sha256": "61c286bba22f14e1ba4b00834f21ff9f9b65dd5325fbec15934bf9cb57cd3a6d",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260915141328_openai_ads_billing_delivery.sql",
+      "sha256": "825003754dc66bfdd496f8c371affeebc463193d4a1593c6a74ccba2ab2fbaf1",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260915145322_openai_ads_canonical_test_exclusion.sql",
+      "sha256": "ae22b68365a7304960fd108d71c2cf04c114dc094a8eb2637fbd50a2a5a9b1f8",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260915145501_trial_access_first_collection_bridge.sql",
+      "sha256": "c8405c7e85401a0ab3538ba886a8ff0f238cf67b87e6ae58c2c6926f797b1c95",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "supabase/migrations/20260915190000_paypal_trial_frozen_end.sql",
+      "sha256": "a594cc604734bb54126fc0232b84ec6453b68c06a9c0f0a7d8fadc22e85b4558",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-access-postgres.test.ts",
+      "sha256": "903dc6506821e3794867d3539fd41dfd2d8f001dd951267efba6ef281f10c130",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-access-projection.test.ts",
+      "sha256": "28dd9a4b37dae54d8c7e7c69120b22b5735329e5ff83499e0394113eb80e27de",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-admission-postgres.test.ts",
+      "sha256": "8d93d7fd495017bf38594450300a4a4483ca4bbeb932781c12409614c329a5f1",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-analytics-delivery.test.ts",
+      "sha256": "6e0c496acb84acea7e723936cc3b8b241dfb5ba55c292d6bde21e230446c8905",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-analytics-postgres.test.ts",
+      "sha256": "b84bae5b7f915b07b72b9d8d4fd74b569d3fcaa96942f99139b5a0d73f0ec9bc",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-cancellation-declarations.test.ts",
+      "sha256": "9bf629b81df0c4f8099a7443df129e7d200132e9bf0d3bc3e9eb3faf2063be4b",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-cancellation-provider-operations.test.ts",
+      "sha256": "d1f674c6422e2f6cec8cf3717091dd0e58b84e256a60d29b7520163d3ee8f7b2",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-cancellation-reconcile.test.ts",
+      "sha256": "d22fa6014c3804485185b15cc06f9b9be8a8358ff538a8d62edd99a03727c8ed",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-cancellation-route.test.ts",
+      "sha256": "4d7a5df43e4b6dfeed31f9714615007c960402e6ad348ff428385ac414d15072",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-checkout-attempt.test.ts",
+      "sha256": "c9cb9905f8d4006575afc4d60dbec8a8a4dd588d190485731e70f3ff506443cb",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-effective-payment-contract.test.ts",
+      "sha256": "1476e83892f86bfa1f4c6abf5253814b5a2412013b92a47887d97b23ac342305",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-history-backfill.test.ts",
+      "sha256": "599f7805df0b5c8786d7383448bc5424e4d05b9b17d1d78c5fbc0efe74df15d7",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-identity-claims.test.ts",
+      "sha256": "b871f27a410d1e4a97344547d577a5c4be3d594c7051ffb0783c5937fd3a839a",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-identity-rights.test.ts",
+      "sha256": "78b4b162ab52aaf1572d50efa9b523e72f14c4fc64582f78fb1bd95f396856ed",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-lifecycle-analytics-postgres.test.ts",
+      "sha256": "907a695e40b2e1c1ecebecce3b44a484460f3d3aecdfd645eca69f5434d26d33",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-management-postgres.test.ts",
+      "sha256": "1821b56e6585914d50dcce8f558fdcd1c0fa68495d4b30cddafcf33166722eba",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-management-route.test.ts",
+      "sha256": "c05a7ba3a478a2d031192a201881a6928b8995e54b0a6e0c6467c500f3fe9549",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-membership.test.ts",
+      "sha256": "597200ce003698d1faecc346ab83bedca950fb875c8fe5207af8512bef9ab81e",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-offer.test.tsx",
+      "sha256": "4e0f44a1821d12517f85a00198c0dc0d3252b5a2b5ba3bb482db9c9c955d42f4",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-paid-cancellation.test.ts",
+      "sha256": "e29cc24580dca1c9ec4a967b712d5d93310343086aed3b95611158e61deff549",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-paid-continuations-postgres.test.ts",
+      "sha256": "d093c6ca336b35dda0965cd1731f99d580130d6a13da88231ad32d9de80de027",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-paid-migration-authority.test.ts",
+      "sha256": "4dee59983cec6e7882bc63e3cfeba1677a526b77fb90fe7d79c6d943c3cbb09d",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-paid-recovery-postgres.test.ts",
+      "sha256": "e4015a5afb5ebc958cc664c05aafa6d9b3674e7f32aad3d4c43d44feb73f8be7",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-paid-recovery-route.test.ts",
+      "sha256": "023bdac0906989c9d81711f9841f6766bb642d8582676ef816d052cc023ff5d0",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-payment-events.test.ts",
+      "sha256": "b921857dbe62edcd1c13d2c0654fec7341d4e86b99100f1bb98407756f07acae",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-payment-reconciliation.test.ts",
+      "sha256": "2fee8faec59833a1a13629b49298b4150284c013a92fea98cdabae8f8d9d2928",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-policy.test.ts",
+      "sha256": "93d6967667e8348c3643e720a235455d3ef27b11d43da3fe8ad79dd8fdeefabb",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-prior-paid-history.test.ts",
+      "sha256": "c4d3fd7b26495b752f1e8a4b275c98fba5a16518c49f043827ee3414ddc63341",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-required-notices-postgres.test.ts",
+      "sha256": "9e172d6237a58873d149d84ed8b891ee48bbd3c59557eb0dae197a9f3d764e6d",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-required-notices.test.ts",
+      "sha256": "25aecfc553d2da2644647cfd84c59191315f315199fface654076532d07d13c8",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/billing-trial-subscription-access.test.ts",
+      "sha256": "506de1abfee4a6ed711b2cb40e3e642bb35b3eaa110c271b6fa3fa4a8db56644",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/helpers/customerio-liquid.ts",
+      "sha256": "8d3d288cc309fed2a4b9d4347db8da6fac37dd5a405aef15a7c426bad72bfb6d",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+      "note": "Hash pin only does not establish full read; consult read-limits in layer plan."
+    }
+  ]
+}

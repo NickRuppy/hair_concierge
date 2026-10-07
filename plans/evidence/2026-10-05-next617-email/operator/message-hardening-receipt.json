@@ -1,0 +1,10 @@
+{
+  "pinsSHA": "d78a79b4a1411f0b004711bf14e2a7793a190b85221467d1489bf36ad1f41e90",
+  "controls": 20,
+  "changedOnly": "normalized message predicates; TAP error scalar decoding; dependent tool artifact pins",
+  "unchangedIdentitySourceTestDependencyPins": true,
+  "independentReportSHA": "36d9d5a315092a9ec20fd37b5cadd3b89979d8c67de317c69bfc4c6f5e4d7060",
+  "independentStaticSHA": "c05fced3159d54ea9f164da7c83002d64b0386051f55de1218cdda14df698d66",
+  "proposalManifestSHA": "682498b63ba6b141d5a88ce476fa824e0a2e623156d8d1cefb94f24459b627ea",
+  "runtimeProof": false
+}

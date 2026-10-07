@@ -1,0 +1,22 @@
+{
+  "moderator": "/tmp/test-audit-moderator183-tools-p18tq7i2",
+  "moderatorPinsSHA256": "d91f665b1db983e127884d01bb171b510cddb4fc7ec58606ae86396b24740432",
+  "files": {
+    "operator-guard.cjs": "042c0a65c9685f722b4edff5a58f9c8afe84f006fcd1aca32d8258f58c64db15",
+    "operator-edit.cjs": "6228cac3b2fa59f58f7fb7624281b9f3693397671835349645c6162b7cbf410d",
+    "operator-proof.cjs": "5996f0f10ad76dc01639cd8205ec6ded6a4b906d5179ddb9664bb96dc70dcfdc",
+    "operator-run-controls.cjs": "488e06544e45bf5f20761638a700400280b7dd448d96fec41d6b4312537c6e5d",
+    "operator-readonly-preload.cjs": "e1d17e207ee830cae3197a07bb0c142ba1288dc972958cefac0951abbfda4d6c"
+  },
+  "decodedMessageReference": {
+    "path": "/tmp/test-audit-email94-tools-c435q0q0/operator-proof.cjs",
+    "sha256": "7358f9d79d532f9c7b01a7a31d3f2a4b91d29d4e4d07f5cb7c67ad984eee71d1"
+  },
+  "note": "Shared checkFile function adopted verbatim from current root-reviewed Moderator guard; original pre-policy comparison copies also retained.",
+  "reviewedMetadataPolicy": {
+    "guardSHA256": "4c19cce3fc2d79c7dfddc5556f9d69ddb63fbb1a72d6263341169bb3e09fee20",
+    "pinsSHA256": "37dcec58febab9809b5a64510fd18a288f6b3756c9a19bb7a00cfadfbba8c20f",
+    "policy": "/tmp/test-audit-shared-config-relevant-policy-z7_zg39o/disposition.json",
+    "policySHA256": "04de875c4e62e53c69af322fcc215bf0c04f8098c0ebd3bc3ef46eba730f1ecf"
+  }
+}

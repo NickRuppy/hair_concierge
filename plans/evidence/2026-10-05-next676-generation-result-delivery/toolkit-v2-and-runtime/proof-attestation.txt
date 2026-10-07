@@ -1,0 +1,13 @@
+{
+  "status": "PASS_STATIC_SYNTHETIC_ONLY",
+  "controls": 18,
+  "phases": 2,
+  "assertions": 1538,
+  "repositoryWrites": 0,
+  "children": 0,
+  "ownerImports": 0,
+  "nativeRuns": 0,
+  "limits": "Predicted literal reporter projections only. No actual owner, Zod or native execution. Object/array and undefined serialization limitations remain explicit."
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

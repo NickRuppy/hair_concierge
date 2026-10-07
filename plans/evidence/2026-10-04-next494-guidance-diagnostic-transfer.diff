@@ -1,0 +1,19 @@
+--- a/tests/agent-guidance.spec.ts
++++ b/tests/agent-guidance.spec.ts
+@@
+ test("current-turn separated hair-loss wording loads safety overlay without model focus", async () => {
+@@
+-  assert.ok(guidance.loaded_guidance_ids.includes("overlay:hair_loss_or_thinning_guardrail"))
+-  assert.ok(guidance.avoid.some((line) => /diagnose|regrowth|hair-loss/i.test(line)))
++  assert.ok(
++    guidance.loaded_guidance_ids.includes("overlay:hair_loss_or_thinning_guardrail"),
++    "current-turn separated hair-loss wording must select the safety overlay without model focus",
++  )
++  assert.ok(
++    guidance.avoid.some((line) => /diagnose|regrowth|hair-loss/i.test(line)),
++    "selected hair-loss guardrail must retain its parsed avoidance receipt",
++  )
+ })
+
+# This transfer intentionally changes only diagnostics on the keeper's two existing assertions.
+# It keeps its message, profile, input, call count, assertion predicates, and the suite count at 32.

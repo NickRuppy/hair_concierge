@@ -1,0 +1,5 @@
+# Next349 plan review disposition
+
+Claude high reviewed the thirteen-test assertion-union batch read-only and approved with minor revisions, identifying no new consequential decision or technical blocker. Main corrected the false V3/V4 import statement: these operators have independent implementations. Removal of private transformO2 rests on zero module references and absence from the actual V2 dispatch. The old Heat batch inventory row is explicitly marked historical, with the surviving keeper and package-script routing described.
+
+Heat controls target actual manifest/index generation and asset loading, not just database rows. Main runs both original cohorts, transferred cohorts, every intended owner fault and restored green, then exact cuts and affected package commands. Regex dashboard controls preserve the original independent literal assertions; they do not establish remote HogQL execution. Existing deferred F findings remain quality debt. No renewed approval gate is needed under Nick's standing campaign authorization. Review output remains outside the repository at /tmp/test-audit-next349-plan-review.md.

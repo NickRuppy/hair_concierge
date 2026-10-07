@@ -1,0 +1,684 @@
+[
+  {
+    "id": "header-brand",
+    "file": "src/components/premium-sheet/premium-sheet.tsx",
+    "sourceSha256": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/premium-sheet-component.test.tsx",
+    "testName": "tapping a plan row moves the selection and the CTA label with it",
+    "expectedAssertion": "transferred header brand regex",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^tapping\\ a\\ plan\\ row\\ moves\\ the\\ selection\\ and\\ the\\ CTA\\ label\\ with\\ it$",
+      "tests/premium-sheet-component.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "              Chaarlie Premium\n",
+    "to": "              Chaarlie Plus\n",
+    "test": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "intendedAssertion": "transferred header brand regex"
+  },
+  {
+    "id": "header-promise",
+    "file": "src/components/premium-sheet/premium-sheet.tsx",
+    "sourceSha256": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/premium-sheet-component.test.tsx",
+    "testName": "tapping a plan row moves the selection and the CTA label with it",
+    "expectedAssertion": "transferred approved heading regex",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^tapping\\ a\\ plan\\ row\\ moves\\ the\\ selection\\ and\\ the\\ CTA\\ label\\ with\\ it$",
+      "tests/premium-sheet-component.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": ">Alles f\u00fcr dein Haar.</BottomSheetTitle>",
+    "to": ">Dein Angebot.</BottomSheetTitle>",
+    "test": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "intendedAssertion": "transferred approved heading regex"
+  },
+  {
+    "id": "plan-order",
+    "file": "src/lib/premium-sheet/pricing.ts",
+    "sourceSha256": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/premium-sheet-component.test.tsx",
+    "testName": "tapping a plan row moves the selection and the CTA label with it",
+    "expectedAssertion": "transferred initialRows interval array exact order",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^tapping\\ a\\ plan\\ row\\ moves\\ the\\ selection\\ and\\ the\\ CTA\\ label\\ with\\ it$",
+      "tests/premium-sheet-component.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "= [\"year\", \"quarter\", \"month\"]",
+    "to": "= [\"month\", \"quarter\", \"year\"]",
+    "test": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "intendedAssertion": "transferred initialRows interval array exact order"
+  },
+  {
+    "id": "plan-name",
+    "file": "src/lib/premium-sheet/pricing.ts",
+    "sourceSha256": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/premium-sheet-component.test.tsx",
+    "testName": "tapping a plan row moves the selection and the CTA label with it",
+    "expectedAssertion": "transferred exact rendered quarter row text",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^tapping\\ a\\ plan\\ row\\ moves\\ the\\ selection\\ and\\ the\\ CTA\\ label\\ with\\ it$",
+      "tests/premium-sheet-component.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "  quarter: \"Viertelj\u00e4hrlich\",",
+    "to": "  quarter: \"Quartal\",",
+    "test": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "intendedAssertion": "transferred exact rendered quarter row text"
+  },
+  {
+    "id": "row-month-detail",
+    "file": "src/lib/premium-sheet/pricing.ts",
+    "sourceSha256": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/premium-sheet-component.test.tsx",
+    "testName": "tapping a plan row moves the selection and the CTA label with it",
+    "expectedAssertion": "transferred exact monthly single-line row string",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^tapping\\ a\\ plan\\ row\\ moves\\ the\\ selection\\ and\\ the\\ CTA\\ label\\ with\\ it$",
+      "tests/premium-sheet-component.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "detail: plan.savings ? formatStripePlanDetail(plan) : \"\",",
+    "to": "detail: formatStripePlanDetail(plan),",
+    "test": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "intendedAssertion": "transferred exact monthly single-line row string"
+  },
+  {
+    "id": "default-selection",
+    "file": "src/lib/premium-sheet/pricing.ts",
+    "sourceSha256": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/premium-sheet-component.test.tsx",
+    "testName": "tapping a plan row moves the selection and the CTA label with it",
+    "expectedAssertion": "actual initial selection quarter array and CTA interval",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^tapping\\ a\\ plan\\ row\\ moves\\ the\\ selection\\ and\\ the\\ CTA\\ label\\ with\\ it$",
+      "tests/premium-sheet-component.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "PREMIUM_SHEET_DEFAULT_INTERVAL: BillingInterval = \"quarter\"",
+    "to": "PREMIUM_SHEET_DEFAULT_INTERVAL: BillingInterval = \"year\"",
+    "test": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "intendedAssertion": "actual initial selection quarter array and CTA interval"
+  },
+  {
+    "id": "recommended-selection",
+    "file": "src/lib/premium-sheet/pricing.ts",
+    "sourceSha256": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/premium-sheet-component.test.tsx",
+    "testName": "tapping a plan row moves the selection and the CTA label with it",
+    "expectedAssertion": "exact badge belongs to quarter rendered row, not year",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^tapping\\ a\\ plan\\ row\\ moves\\ the\\ selection\\ and\\ the\\ CTA\\ label\\ with\\ it$",
+      "tests/premium-sheet-component.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "PREMIUM_SHEET_RECOMMENDED_INTERVAL: BillingInterval = \"quarter\"",
+    "to": "PREMIUM_SHEET_RECOMMENDED_INTERVAL: BillingInterval = \"year\"",
+    "test": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "intendedAssertion": "exact badge belongs to quarter rendered row, not year"
+  },
+  {
+    "id": "recommended-copy",
+    "file": "src/lib/premium-sheet/pricing.ts",
+    "sourceSha256": "decc778b56d5274d62b4a80aff4d543715f064f374667267b083ae540bd6bfc6",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/premium-sheet-component.test.tsx",
+    "testName": "tapping a plan row moves the selection and the CTA label with it",
+    "expectedAssertion": "exact rendered badge copy/row",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^tapping\\ a\\ plan\\ row\\ moves\\ the\\ selection\\ and\\ the\\ CTA\\ label\\ with\\ it$",
+      "tests/premium-sheet-component.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "PREMIUM_SHEET_RECOMMENDED_BADGE = \"Beliebteste Wahl\"",
+    "to": "PREMIUM_SHEET_RECOMMENDED_BADGE = \"Empfohlen\"",
+    "test": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "intendedAssertion": "exact rendered badge copy/row"
+  },
+  {
+    "id": "badge-nowrap",
+    "file": "src/components/premium-sheet/premium-sheet.tsx",
+    "sourceSha256": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/premium-sheet-component.test.tsx",
+    "testName": "tapping a plan row moves the selection and the CTA label with it",
+    "expectedAssertion": "transferred actual badge class nowrap assertion",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^tapping\\ a\\ plan\\ row\\ moves\\ the\\ selection\\ and\\ the\\ CTA\\ label\\ with\\ it$",
+      "tests/premium-sheet-component.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "className=\"ml-2 inline-block whitespace-nowrap rounded-full",
+    "to": "className=\"ml-2 inline-block rounded-full",
+    "test": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "intendedAssertion": "transferred actual badge class nowrap assertion"
+  },
+  {
+    "id": "badge-inline",
+    "file": "src/components/premium-sheet/premium-sheet.tsx",
+    "sourceSha256": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/premium-sheet-component.test.tsx",
+    "testName": "tapping a plan row moves the selection and the CTA label with it",
+    "expectedAssertion": "transferred actual badge inline-block assertion",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^tapping\\ a\\ plan\\ row\\ moves\\ the\\ selection\\ and\\ the\\ CTA\\ label\\ with\\ it$",
+      "tests/premium-sheet-component.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "className=\"ml-2 inline-block whitespace-nowrap rounded-full",
+    "to": "className=\"ml-2 whitespace-nowrap rounded-full",
+    "test": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "tapping a plan row moves the selection and the CTA label with it"
+    },
+    "intendedAssertion": "transferred actual badge inline-block assertion"
+  },
+  {
+    "id": "checkout-unexpected-close",
+    "file": "src/components/premium-sheet/premium-sheet.tsx",
+    "sourceSha256": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/premium-sheet-component.test.tsx",
+    "testName": "T14: the mid-payment escape returns to the plan rows instead of closing the sheet",
+    "expectedAssertion": "transferred closed===0 before escape, before later keeper count",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^T14:\\ the\\ mid\\-payment\\ escape\\ returns\\ to\\ the\\ plan\\ rows\\ instead\\ of\\ closing\\ the\\ sheet$",
+      "tests/premium-sheet-component.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "  const startCheckout = useCallback(() => {",
+    "to": "  const startCheckout = useCallback(() => {\n    onClose()",
+    "test": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "T14: the mid-payment escape returns to the plan rows instead of closing the sheet"
+    },
+    "intendedAssertion": "transferred closed===0 before escape, before later keeper count"
+  },
+  {
+    "id": "checkout-cta-retained",
+    "file": "src/components/premium-sheet/premium-sheet.tsx",
+    "sourceSha256": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/premium-sheet-component.test.tsx",
+    "testName": "T14: the mid-payment escape returns to the plan rows instead of closing the sheet",
+    "expectedAssertion": "transferred absent CTA count while starting",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^T14:\\ the\\ mid\\-payment\\ escape\\ returns\\ to\\ the\\ plan\\ rows\\ instead\\ of\\ closing\\ the\\ sheet$",
+      "tests/premium-sheet-component.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "            {planSelectionActive ? (",
+    "to": "            {planSelectionActive || purchase.phase === \"starting\" ? (",
+    "test": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "T14: the mid-payment escape returns to the plan rows instead of closing the sheet"
+    },
+    "intendedAssertion": "transferred absent CTA count while starting"
+  },
+  {
+    "id": "checkout-escape-copy",
+    "file": "src/lib/premium-sheet/purchase-copy.ts",
+    "sourceSha256": "9cdd10c706fa2d21b5fb784f2659b8465dd60ba8510d150f565030ef98d7fff7",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/premium-sheet-component.test.tsx",
+    "testName": "T14: the mid-payment escape returns to the plan rows instead of closing the sheet",
+    "expectedAssertion": "transferred exact Plan \u00e4ndern label",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^T14:\\ the\\ mid\\-payment\\ escape\\ returns\\ to\\ the\\ plan\\ rows\\ instead\\ of\\ closing\\ the\\ sheet$",
+      "tests/premium-sheet-component.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "  backToPlans: \"Plan \u00e4ndern\",",
+    "to": "  backToPlans: \"Zur\u00fcck\",",
+    "test": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "T14: the mid-payment escape returns to the plan rows instead of closing the sheet"
+    },
+    "intendedAssertion": "transferred exact Plan \u00e4ndern label"
+  },
+  {
+    "id": "null-benefit-order",
+    "file": "src/lib/premium-sheet/ordered-benefits.ts",
+    "sourceSha256": "ca43fea17931ebfab41a86a119f18673d8e1b65396f9c799df7dec0ebb4c164a",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/premium-sheet-component.test.tsx",
+    "testName": "a null context still shows three benefits (the core order)",
+    "expectedAssertion": "fixed null-context rendered ID order; prior component helper-generated oracle alone would correlate",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^a\\ null\\ context\\ still\\ shows\\ three\\ benefits\\ \\(the\\ core\\ order\\)$",
+      "tests/premium-sheet-component.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "if (ctx === null) return CORE_ORDER.slice(0, 3)",
+    "to": "if (ctx === null) return CORE_ORDER.slice(1, 4)",
+    "test": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "a null context still shows three benefits (the core order)"
+    },
+    "intendedAssertion": "fixed null-context rendered ID order; prior component helper-generated oracle alone would correlate"
+  },
+  {
+    "id": "benefit-core-order",
+    "file": "src/lib/premium-sheet/ordered-benefits.ts",
+    "sourceSha256": "ca43fea17931ebfab41a86a119f18673d8e1b65396f9c799df7dec0ebb4c164a",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/premium-sheet-component.test.tsx",
+    "testName": "every feature shows exactly three registry benefits, tapped first and plum-accented",
+    "expectedAssertion": "fixed literal feature-specific rendered IDs; unchanged seven render inputs",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^every\\ feature\\ shows\\ exactly\\ three\\ registry\\ benefits,\\ tapped\\ first\\ and\\ plum\\-accented$",
+      "tests/premium-sheet-component.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "= [\"routine\", \"empfehlungen\", \"chat\", \"anwendung\"]",
+    "to": "= [\"empfehlungen\", \"routine\", \"chat\", \"anwendung\"]",
+    "test": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "every feature shows exactly three registry benefits, tapped first and plum-accented"
+    },
+    "intendedAssertion": "fixed literal feature-specific rendered IDs; unchanged seven render inputs"
+  },
+  {
+    "id": "benefit-duplicate",
+    "file": "src/lib/premium-sheet/ordered-benefits.ts",
+    "sourceSha256": "ca43fea17931ebfab41a86a119f18673d8e1b65396f9c799df7dec0ebb4c164a",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/premium-sheet-component.test.tsx",
+    "testName": "every feature shows exactly three registry benefits, tapped first and plum-accented",
+    "expectedAssertion": "fixed rendered ID order/dedup; actual output can repeat tapped core feature without a React hook/provider error",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^every\\ feature\\ shows\\ exactly\\ three\\ registry\\ benefits,\\ tapped\\ first\\ and\\ plum\\-accented$",
+      "tests/premium-sheet-component.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "CORE_ORDER.filter((feature) => feature !== ctx.feature).slice(0, 2)",
+    "to": "CORE_ORDER.slice(0, 2)",
+    "test": {
+      "file": "tests/premium-sheet-component.test.tsx",
+      "name": "every feature shows exactly three registry benefits, tapped first and plum-accented"
+    },
+    "intendedAssertion": "fixed rendered ID order/dedup; actual output can repeat tapped core feature without a React hook/provider error"
+  },
+  {
+    "id": "selector-reference-amount",
+    "file": "src/components/checkout/subscription-plan-selector.tsx",
+    "sourceSha256": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/subscription-plan-selector.test.tsx",
+    "testName": "selector exposes stable motion hooks without changing selected plan layout",
+    "expectedAssertion": "transferred s-label array diverges from original reference-price formatter expectation",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^selector\\ exposes\\ stable\\ motion\\ hooks\\ without\\ changing\\ selected\\ plan\\ layout$",
+      "tests/subscription-plan-selector.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "formatQuizResultReferencePrice(referencePrices[plan.interval])",
+    "to": "formatQuizResultReferencePrice(referencePrices[plan.interval] + 1)",
+    "test": {
+      "file": "tests/subscription-plan-selector.test.tsx",
+      "name": "selector exposes stable motion hooks without changing selected plan layout"
+    },
+    "intendedAssertion": "transferred s-label array diverges from original reference-price formatter expectation"
+  },
+  {
+    "id": "selector-discount-visible",
+    "file": "src/components/checkout/subscription-plan-selector.tsx",
+    "sourceSha256": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/subscription-plan-selector.test.tsx",
+    "testName": "selector exposes stable motion hooks without changing selected plan layout",
+    "expectedAssertion": "transferred exact visible discount text",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^selector\\ exposes\\ stable\\ motion\\ hooks\\ without\\ changing\\ selected\\ plan\\ layout$",
+      "tests/subscription-plan-selector.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "JETZT MIND. 20 % RABATT SICHERN",
+    "to": "RABATT SICHERN",
+    "test": {
+      "file": "tests/subscription-plan-selector.test.tsx",
+      "name": "selector exposes stable motion hooks without changing selected plan layout"
+    },
+    "intendedAssertion": "transferred exact visible discount text"
+  },
+  {
+    "id": "selector-discount-accessible",
+    "file": "src/components/checkout/subscription-plan-selector.tsx",
+    "sourceSha256": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/subscription-plan-selector.test.tsx",
+    "testName": "selector exposes stable motion hooks without changing selected plan layout",
+    "expectedAssertion": "transferred accessible discount text",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^selector\\ exposes\\ stable\\ motion\\ hooks\\ without\\ changing\\ selected\\ plan\\ layout$",
+      "tests/subscription-plan-selector.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "Jetzt mindestens 20 Prozent Rabatt sichern",
+    "to": "Rabatt sichern",
+    "test": {
+      "file": "tests/subscription-plan-selector.test.tsx",
+      "name": "selector exposes stable motion hooks without changing selected plan layout"
+    },
+    "intendedAssertion": "transferred accessible discount text"
+  },
+  {
+    "id": "selector-comparison-wording",
+    "file": "src/components/checkout/subscription-plan-selector.tsx",
+    "sourceSha256": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/subscription-plan-selector.test.tsx",
+    "testName": "selector exposes stable motion hooks without changing selected plan layout",
+    "expectedAssertion": "transferred forbidden Regul\u00e4rer Vergleichspreis regex",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^selector\\ exposes\\ stable\\ motion\\ hooks\\ without\\ changing\\ selected\\ plan\\ layout$",
+      "tests/subscription-plan-selector.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": ": \"Vergleichspreis \"",
+    "to": ": \"Regul\u00e4rer Vergleichspreis \"",
+    "test": {
+      "file": "tests/subscription-plan-selector.test.tsx",
+      "name": "selector exposes stable motion hooks without changing selected plan layout"
+    },
+    "intendedAssertion": "transferred forbidden Regul\u00e4rer Vergleichspreis regex"
+  },
+  {
+    "id": "selector-reference-style",
+    "file": "src/components/checkout/subscription-plan-selector.tsx",
+    "sourceSha256": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/subscription-plan-selector.test.tsx",
+    "testName": "selector exposes stable motion hooks without changing selected plan layout",
+    "expectedAssertion": "transferred exact readable class count3",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^selector\\ exposes\\ stable\\ motion\\ hooks\\ without\\ changing\\ selected\\ plan\\ layout$",
+      "tests/subscription-plan-selector.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "className=\"text-[14px] font-medium leading-none text-muted-foreground\"",
+    "to": "className=\"text-[12px] font-medium leading-none text-muted-foreground\"",
+    "test": {
+      "file": "tests/subscription-plan-selector.test.tsx",
+      "name": "selector exposes stable motion hooks without changing selected plan layout"
+    },
+    "intendedAssertion": "transferred exact readable class count3"
+  },
+  {
+    "id": "selector-empty-comparison-leak",
+    "file": "src/components/checkout/subscription-plan-selector.tsx",
+    "sourceSha256": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1
+    },
+    "testFile": "tests/subscription-plan-selector.test.tsx",
+    "testName": "idle selector keeps the selected plan action label",
+    "expectedAssertion": "transferred idle absent s/comparison assertions; default CTA still valid",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^idle\\ selector\\ keeps\\ the\\ selected\\ plan\\ action\\ label$",
+      "tests/subscription-plan-selector.test.tsx"
+    ],
+    "status": "static proposal only; require selected before-green/intended-red/restored-green and byte hash equality",
+    "from": "      <div className=\"grid gap-2.5\">",
+    "to": "      {!referencePrices ? <s>Vergleichspreis</s> : null}\n      <div className=\"grid gap-2.5\">",
+    "test": {
+      "file": "tests/subscription-plan-selector.test.tsx",
+      "name": "idle selector keeps the selected plan action label"
+    },
+    "intendedAssertion": "transferred idle absent s/comparison assertions; default CTA still valid"
+  }
+]

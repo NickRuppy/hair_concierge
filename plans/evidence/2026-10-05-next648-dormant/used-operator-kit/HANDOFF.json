@@ -1,0 +1,7 @@
+{
+  "directory": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi",
+  "pinsSHA256": "1d93d7ae5effb128241fa0e24922e385b618f25d362ff6966bd0ffda03293af6",
+  "nonMetadataPinsUnchanged": true,
+  "sourceRepins": 0,
+  "runtimeRuns": 0
+}

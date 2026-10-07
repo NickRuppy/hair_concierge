@@ -1,0 +1,4 @@
+0d72bb53f452799a00cf60dd059d06b2e8e53e01 2026-09-17T13:37:24+02:00 feat(ios): add free scanner pilot with shared accounts and profiles (#584)
+521f8da8a7e5bd27a0da4a0693348859927e5b79 2026-09-11T15:16:59+02:00 Freemium scanner-first PR6: free registration + cutover under the flag + flip runbook (#530)
+a68c6d04186be57ef46c64fcb5368c8b7ab6e389 2026-09-11T14:57:04+02:00 Freemium scanner-first PR4: PremiumSheet final + contextual purchase completion (#528)
+f37907841a527187b8a971151463b59fe843a2a2 2026-09-11T14:47:01+02:00 Freemium scanner-first PR2: free scanner core (snapshot provisioning, reveal credit, masked alternatives, free verdict UI, triggers) (#526)

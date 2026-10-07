@@ -1,0 +1,14 @@
+--- a/tests/freemium-sheet-checkout-contract.test.ts
++++ b/tests/freemium-sheet-checkout-contract.test.ts
+@@ -64,6 +64,11 @@
+       source: "premium_sheet",
+       launchPricingEnabled,
+     })
++    assert.equal(
++      catalog,
++      "standard",
++      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,
++    )
+     for (const row of premiumSheetPlans()) {
+       const plan = getStripePricingPlan(row.interval, catalog)
+       assert.equal(

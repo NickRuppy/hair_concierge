@@ -1,0 +1,13 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),crypto=require('node:crypto');
+const D=__dirname,P='/tmp/test-audit-residual-care102-ezeu563r',sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p));
+const old=read(D+'/template-originals/operator-pins.json'),pins=read(D+'/operator-pins.json');
+const parsed=[];for(const n of fs.readdirSync(D).filter(n=>n.endsWith('.cjs'))){new vm.Script(fs.readFileSync(D+'/'+n,'utf8'),{filename:n});parsed.push(n)}
+const prefix=s=>s.slice(0,s.indexOf('function validateTransferReceipt('));if(prefix(fs.readFileSync(D+'/operator-proof.cjs','utf8'))!==prefix(fs.readFileSync(D+'/template-originals/operator-proof.cjs','utf8')))throw Error('Strict decoded FULL message/FIRST frame policy changed');
+if(JSON.stringify(pins.original83Guards)!==JSON.stringify(read(P+'/read-scope.json').readset))throw Error('Original83 repinned');
+for(const k of ['head','branch','gitDir','commonDir','node','typescriptVersion','metadataPolicy','identityFiles'])if(JSON.stringify(pins[k])!==JSON.stringify(old[k]))throw Error('Existing identity/policy drift '+k);
+for(const p of old.dependencies)if(!pins.dependencies.some(q=>JSON.stringify(p)===JSON.stringify(q)))throw Error('Existing dependency changed');
+if(JSON.stringify(old.dependencyTrees)!==JSON.stringify(pins.dependencyTrees))throw Error('Existing distribution changed');
+const controls=read(D+'/operator-controls-normalized.json');if(controls.length!==13||new Set(controls.map(x=>x.mutatedSha256)).size!==13)throw Error('13 unique controls');
+for(const c of controls)if(sha(fs.readFileSync(c.fullMutantPath))!==c.mutatedSha256)throw Error('Full mutant drift');
+console.log(JSON.stringify({status:'PASS_STATIC',pinsSHA:sha(fs.readFileSync(D+'/operator-pins.json')),parsedToolFiles:parsed,original83GuardsUnchanged:true,templateIdentityRuntimeDependenciesUnchanged:true,strictProofPredicateDecoderByteIdentical:true,sourceControls:13,repositoryWrites:0,children:0,ownerImports:0,nativeRuns:0},null,2));

@@ -1,5 +1,10 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { JSDOM } from "jsdom"
+import { createElement } from "react"
+import { renderToStaticMarkup } from "react-dom/server"
+
+import { RhythmBand, WeekStrip } from "../src/components/tracker/tracker-widgets"
 
 import { buildRhythmSummary } from "../src/lib/tracking/rhythm"
 import type { TrackerLogDay } from "../src/lib/tracking/types"
@@ -84,7 +89,12 @@ test("custom and unconfirmed drafts do not affect current rhythm", () => {
 })
 
 test("no target and less-than-monthly targets stay neutral", () => {
-  assert.equal(buildRhythmSummary([], null, "2026-07-08").kind, "no_target")
+  const summary = buildRhythmSummary([], null, "2026-07-08")
+  assert.equal(summary.kind, "no_target")
+  assert.match(
+    renderToStaticMarkup(createElement(RhythmBand, { summary })),
+    /Dein persönlicher Rhythmus/,
+  )
   const rare = buildRhythmSummary(
     [],
     {
@@ -96,4 +106,59 @@ test("no target and less-than-monthly targets stay neutral", () => {
   )
   assert.equal(rare.kind, "less_than_monthly")
   assert.equal(rare.encouragement, "Dein empfohlener Rhythmus ist seltener als monatlich.")
+})
+
+test("tracker renders the in-range headline from confirmed washes", () => {
+  const summary = buildRhythmSummary(
+    [wash("2026-07-06"), wash("2026-07-07"), wash("2026-07-08")],
+    weekly34,
+    "2026-07-08",
+  )
+  const html = renderToStaticMarkup(createElement(RhythmBand, { summary }))
+  assert.match(html, /Du bist in deinem Rhythmus/)
+  assert.match(html, /Im Zielbereich/)
+})
+
+test("tracker day strip labels activities and keeps future days disabled", () => {
+  const html = renderToStaticMarkup(
+    createElement(WeekStrip, {
+      days: [
+        { date: "2026-07-06", dayType: "wash", isToday: false, isFuture: false, isEditable: true },
+        {
+          date: "2026-07-07",
+          dayType: "custom",
+          customActivityName: "Sauna",
+          isToday: false,
+          isFuture: false,
+          isEditable: true,
+        },
+        { date: "2026-07-08", dayType: "none", isToday: true, isFuture: false, isEditable: true },
+        { date: "2026-07-09", dayType: null, isToday: false, isFuture: true, isEditable: false },
+      ],
+      selectedDate: "2026-07-06",
+      onSelect: () => {},
+    }),
+  )
+  const document = new JSDOM(html).window.document
+  assert.equal(
+    document.querySelector('[role="tablist"]')?.getAttribute("aria-label"),
+    "Letzte acht Tage",
+  )
+  const tabs = Array.from(document.querySelectorAll('[role="tab"]'))
+  assert.equal(
+    tabs
+      .find((tab) => tab.getAttribute("aria-label") === "Montag, 6. Juli, Haare gewaschen")
+      ?.getAttribute("aria-selected"),
+    "true",
+  )
+  assert.ok(
+    tabs.some(
+      (tab) => tab.getAttribute("aria-label") === "Dienstag, 7. Juli, eigene Aktivität: Sauna",
+    ),
+  )
+  assert.ok(
+    tabs
+      .find((tab) => tab.getAttribute("aria-label") === "Donnerstag, 9. Juli, kein Eintrag")
+      ?.hasAttribute("disabled"),
+  )
 })

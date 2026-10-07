@@ -1,0 +1,1790 @@
+[
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "no subscription row summarizes as none",
+    "line": 60,
+    "start": 1722,
+    "end": 1947,
+    "body": "test(\"no subscription row summarizes as none\", () => {\n  assert.deepEqual(summarizeAdminUserBilling(null, NOW), {\n    status: \"none\",\n    trial_ends_at: null,\n    period_end: null,\n    provider_subscriber_email: null,\n  })\n})",
+    "sha256": "735d0e93aaf06a84d7a0a616d9c22731cb38c6463fd863629d3dd00d8f65c48c",
+    "assertions": [
+      "assert.deepEqual(summarizeAdminUserBilling(null, NOW), {\n    status: \"none\",\n    trial_ends_at: null,\n    period_end: null,\n    provider_subscriber_email: null,\n  })"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "active trial reports trial status with the trial end date",
+    "line": 69,
+    "start": 1949,
+    "end": 2192,
+    "body": "test(\"active trial reports trial status with the trial end date\", () => {\n  const summary = summarizeAdminUserBilling(trialRow(), NOW)\n  assert.equal(summary.status, \"trial\")\n  assert.equal(summary.trial_ends_at, \"2026-09-29T10:00:00.000Z\")\n})",
+    "sha256": "8dee558089fa4dee34817d189c5642433602912c8fe646f00eec6cf8dc4e6253",
+    "assertions": [
+      "assert.equal(summary.status, \"trial\")",
+      "assert.equal(summary.trial_ends_at, \"2026-09-29T10:00:00.000Z\")"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "trial canceled before its end reports trial_canceled and keeps the end date",
+    "line": 75,
+    "start": 2194,
+    "end": 2491,
+    "body": "test(\"trial canceled before its end reports trial_canceled and keeps the end date\", () => {\n  const summary = summarizeAdminUserBilling(trialRow({ cancelAtPeriodEnd: true }), NOW)\n  assert.equal(summary.status, \"trial_canceled\")\n  assert.equal(summary.trial_ends_at, \"2026-09-29T10:00:00.000Z\")\n})",
+    "sha256": "d6618e066f8191cfbdb32fa8962f042511b2f23f20b45cb1eec8dd242b663c34",
+    "assertions": [
+      "assert.equal(summary.status, \"trial_canceled\")",
+      "assert.equal(summary.trial_ends_at, \"2026-09-29T10:00:00.000Z\")"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "converted trial reports active with paid-through as period end",
+    "line": 81,
+    "start": 2493,
+    "end": 2965,
+    "body": "test(\"converted trial reports active with paid-through as period end\", () => {\n  const summary = summarizeAdminUserBilling(\n    trialRow({\n      originalTrialEndAt: \"2026-09-20T10:00:00.000Z\",\n      firstPaymentSucceededAt: \"2026-09-21T10:00:00.000Z\",\n      paidThroughAt: \"2026-10-21T10:00:00.000Z\",\n    }),\n    NOW,\n  )\n  assert.equal(summary.status, \"active\")\n  assert.equal(summary.trial_ends_at, null)\n  assert.equal(summary.period_end, \"2026-10-21T10:00:00.000Z\")\n})",
+    "sha256": "121ed2dc5176c64a9cda0a78e27b650a049491a4b3b471b322aeef868def12fb",
+    "assertions": [
+      "assert.equal(summary.status, \"active\")",
+      "assert.equal(summary.trial_ends_at, null)",
+      "assert.equal(summary.period_end, \"2026-10-21T10:00:00.000Z\")"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "converted trial with pending cancellation reports canceled_at_period_end",
+    "line": 95,
+    "start": 2967,
+    "end": 3389,
+    "body": "test(\"converted trial with pending cancellation reports canceled_at_period_end\", () => {\n  const summary = summarizeAdminUserBilling(\n    trialRow({\n      originalTrialEndAt: \"2026-09-20T10:00:00.000Z\",\n      firstPaymentSucceededAt: \"2026-09-21T10:00:00.000Z\",\n      paidThroughAt: \"2026-10-21T10:00:00.000Z\",\n      cancelAtPeriodEnd: true,\n    }),\n    NOW,\n  )\n  assert.equal(summary.status, \"canceled_at_period_end\")\n})",
+    "sha256": "3cff860972d418271fb2177a3e2941ab4467058bf03814d95fc941d04259118c",
+    "assertions": [
+      "assert.equal(summary.status, \"canceled_at_period_end\")"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "trial in renewal grace reports past_due",
+    "line": 108,
+    "start": 3391,
+    "end": 3883,
+    "body": "test(\"trial in renewal grace reports past_due\", () => {\n  const summary = summarizeAdminUserBilling(\n    trialRow({\n      originalTrialEndAt: \"2026-07-20T10:00:00.000Z\",\n      authorizationSucceededAt: \"2026-07-06T10:00:00.000Z\",\n      firstPaymentSucceededAt: \"2026-07-21T10:00:00.000Z\",\n      paidThroughAt: \"2026-09-21T10:00:00.000Z\",\n      renewalGraceEndsAt: \"2026-09-28T10:00:00.000Z\",\n      renewalPaymentFailed: true,\n    }),\n    NOW,\n  )\n  assert.equal(summary.status, \"past_due\")\n})",
+    "sha256": "5ac4973f8e24ac04be5916a2dfb8abcb32f3659815e88be1c3c2ab42b334eaab",
+    "assertions": [
+      "assert.equal(summary.status, \"past_due\")"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "trial that ran out without payment and was canceled reports expired",
+    "line": 123,
+    "start": 3885,
+    "end": 4239,
+    "body": "test(\"trial that ran out without payment and was canceled reports expired\", () => {\n  const summary = summarizeAdminUserBilling(\n    trialRow({\n      authorizationSucceededAt: \"2026-08-15T10:00:00.000Z\",\n      originalTrialEndAt: \"2026-08-29T10:00:00.000Z\",\n      cancelAtPeriodEnd: true,\n    }),\n    NOW,\n  )\n  assert.equal(summary.status, \"expired\")\n})",
+    "sha256": "d64423bb3ca3f7d4f5c58defac883e1239f18524c8c232c48f3edf3fcde8f4c2",
+    "assertions": [
+      "assert.equal(summary.status, \"expired\")"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "plain active subscription reports active",
+    "line": 135,
+    "start": 4241,
+    "end": 4535,
+    "body": "test(\"plain active subscription reports active\", () => {\n  const summary = summarizeAdminUserBilling(\n    subscriptionRow({ current_period_end: \"2026-10-10T00:00:00.000Z\" }),\n    NOW,\n  )\n  assert.equal(summary.status, \"active\")\n  assert.equal(summary.period_end, \"2026-10-10T00:00:00.000Z\")\n})",
+    "sha256": "8ca602f5fef8dab1eaf5d02c1bf58e309d3fb3a8f58c354a2c0f93e3b9527ff2",
+    "assertions": [
+      "assert.equal(summary.status, \"active\")",
+      "assert.equal(summary.period_end, \"2026-10-10T00:00:00.000Z\")"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "legacy active subscription without period end reports active",
+    "line": 144,
+    "start": 4537,
+    "end": 4699,
+    "body": "test(\"legacy active subscription without period end reports active\", () => {\n  assert.equal(summarizeAdminUserBilling(subscriptionRow(), NOW).status, \"active\")\n})",
+    "sha256": "c87a1642eb13d3528d156017ed9dcf282ba996ff23f89c1804afdf61346ee4fa",
+    "assertions": [
+      "assert.equal(summarizeAdminUserBilling(subscriptionRow(), NOW).status, \"active\")"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "past_due entitlement reports past_due",
+    "line": 148,
+    "start": 4701,
+    "end": 4889,
+    "body": "test(\"past_due entitlement reports past_due\", () => {\n  assert.equal(\n    summarizeAdminUserBilling(subscriptionRow({ entitlement_status: \"past_due\" }), NOW).status,\n    \"past_due\",\n  )\n})",
+    "sha256": "e6586294f0a58eef859a5fc9943db7f7a0983d9cb79084019cb067e19df2b3b8",
+    "assertions": [
+      "assert.equal(\n    summarizeAdminUserBilling(subscriptionRow({ entitlement_status: \"past_due\" }), NOW).status,\n    \"past_due\",\n  )"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "canceled subscription with remaining access reports canceled_at_period_end",
+    "line": 155,
+    "start": 4891,
+    "end": 5318,
+    "body": "test(\"canceled subscription with remaining access reports canceled_at_period_end\", () => {\n  const summary = summarizeAdminUserBilling(\n    subscriptionRow({\n      entitlement_status: \"canceled\",\n      cancel_at_period_end: true,\n      current_period_end: \"2026-10-05T00:00:00.000Z\",\n    }),\n    NOW,\n  )\n  assert.equal(summary.status, \"canceled_at_period_end\")\n  assert.equal(summary.period_end, \"2026-10-05T00:00:00.000Z\")\n})",
+    "sha256": "1da07ad66f77415da9a65c7cb5649885241616cc4bef67d14e00dbaec1ecf804",
+    "assertions": [
+      "assert.equal(summary.status, \"canceled_at_period_end\")",
+      "assert.equal(summary.period_end, \"2026-10-05T00:00:00.000Z\")"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "canceled subscription past its period end reports expired",
+    "line": 168,
+    "start": 5320,
+    "end": 5652,
+    "body": "test(\"canceled subscription past its period end reports expired\", () => {\n  const summary = summarizeAdminUserBilling(\n    subscriptionRow({\n      entitlement_status: \"canceled\",\n      cancel_at_period_end: true,\n      current_period_end: \"2026-08-05T00:00:00.000Z\",\n    }),\n    NOW,\n  )\n  assert.equal(summary.status, \"expired\")\n})",
+    "sha256": "ecf5445fa6c6889c65838ccb37ee0d0f59a46708e5effb2fd1f25a498d1cd32b",
+    "assertions": [
+      "assert.equal(summary.status, \"expired\")"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "active entitlement with lapsed period end reports expired",
+    "line": 180,
+    "start": 5654,
+    "end": 5903,
+    "body": "test(\"active entitlement with lapsed period end reports expired\", () => {\n  const summary = summarizeAdminUserBilling(\n    subscriptionRow({ current_period_end: \"2026-08-05T00:00:00.000Z\" }),\n    NOW,\n  )\n  assert.equal(summary.status, \"expired\")\n})",
+    "sha256": "51af2a64f65e9d73052a48c394956e32f5e0f9c54fbd66b1d63eb8b81c21d50b",
+    "assertions": [
+      "assert.equal(summary.status, \"expired\")"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "active entitlement within the 24h expiry grace still reports active",
+    "line": 188,
+    "start": 5905,
+    "end": 6238,
+    "body": "test(\"active entitlement within the 24h expiry grace still reports active\", () => {\n  // 12h past the period end: hasCurrentBillingAccess still grants access.\n  const summary = summarizeAdminUserBilling(\n    subscriptionRow({ current_period_end: \"2026-09-22T00:00:00.000Z\" }),\n    NOW,\n  )\n  assert.equal(summary.status, \"active\")\n})",
+    "sha256": "e4157422ed89b274f6379fded3044d177040dbabc724b5bf3d4ad4887c2908f1",
+    "assertions": [
+      "assert.equal(summary.status, \"active\")"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "active entitlement just beyond the 24h expiry grace reports expired",
+    "line": 197,
+    "start": 6240,
+    "end": 6499,
+    "body": "test(\"active entitlement just beyond the 24h expiry grace reports expired\", () => {\n  const summary = summarizeAdminUserBilling(\n    subscriptionRow({ current_period_end: \"2026-09-21T00:00:00.000Z\" }),\n    NOW,\n  )\n  assert.equal(summary.status, \"expired\")\n})",
+    "sha256": "7f220443b5f0c8e452f5deca7a74b139df0420486154c677afe12151bdbb1672",
+    "assertions": [
+      "assert.equal(summary.status, \"expired\")"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "past_due beyond the expiry grace reports expired instead of pending payment",
+    "line": 205,
+    "start": 6501,
+    "end": 7057,
+    "body": "test(\"past_due beyond the expiry grace reports expired instead of pending payment\", () => {\n  const withinGrace = summarizeAdminUserBilling(\n    subscriptionRow({\n      entitlement_status: \"past_due\",\n      current_period_end: \"2026-09-22T00:00:00.000Z\",\n    }),\n    NOW,\n  )\n  assert.equal(withinGrace.status, \"past_due\")\n\n  const beyondGrace = summarizeAdminUserBilling(\n    subscriptionRow({\n      entitlement_status: \"past_due\",\n      current_period_end: \"2026-09-20T00:00:00.000Z\",\n    }),\n    NOW,\n  )\n  assert.equal(beyondGrace.status, \"expired\")\n})",
+    "sha256": "8e53734b10803c5040eeb816d638573ea7b8d5f7ac65b09ed1c97456d023bdf0",
+    "assertions": [
+      "assert.equal(withinGrace.status, \"past_due\")",
+      "assert.equal(beyondGrace.status, \"expired\")"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "reserved trial admission reports trial_pending, not an active trial",
+    "line": 225,
+    "start": 7059,
+    "end": 7394,
+    "body": "test(\"reserved trial admission reports trial_pending, not an active trial\", () => {\n  const summary = summarizeAdminUserBilling(\n    subscriptionRow({\n      trial_enrollment_id: ENROLLMENT_ID,\n      trial_access_facts: trialFacts({ admissionStatus: \"reserved\" }),\n    }),\n    NOW,\n  )\n  assert.equal(summary.status, \"trial_pending\")\n})",
+    "sha256": "0773c0d6c26b7e872a88c8336a0aae04e29ebc976730d916a9c70bbb92320962",
+    "assertions": [
+      "assert.equal(summary.status, \"trial_pending\")"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "row pick prefers an active subscription over a later-ending canceled row",
+    "line": 236,
+    "start": 7396,
+    "end": 8056,
+    "body": "test(\"row pick prefers an active subscription over a later-ending canceled row\", () => {\n  const active = subscriptionRow({\n    id: \"sub-active\",\n    current_period_end: \"2026-10-10T00:00:00.000Z\",\n    updated_at: \"2026-09-01T00:00:00.000Z\",\n  })\n  const canceledLater = subscriptionRow({\n    id: \"sub-canceled\",\n    entitlement_status: \"canceled\",\n    cancel_at_period_end: true,\n    current_period_end: \"2026-11-01T00:00:00.000Z\",\n    updated_at: \"2026-09-10T00:00:00.000Z\",\n  })\n  assert.equal(pickAdminUserBillingRow([canceledLater, active], NOW)?.id, \"sub-active\")\n  assert.equal(pickAdminUserBillingRow([active, canceledLater], NOW)?.id, \"sub-active\")\n})",
+    "sha256": "3e9039740f4529a0c1f32cd1fc85521781b31ada90588f9fab3d048d29fb4087",
+    "assertions": [
+      "assert.equal(pickAdminUserBillingRow([canceledLater, active], NOW)?.id, \"sub-active\")",
+      "assert.equal(pickAdminUserBillingRow([active, canceledLater], NOW)?.id, \"sub-active\")"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "row pick prefers any access-holding row over lapsed rows",
+    "line": 253,
+    "start": 8058,
+    "end": 8689,
+    "body": "test(\"row pick prefers any access-holding row over lapsed rows\", () => {\n  const lapsed = subscriptionRow({\n    id: \"sub-lapsed\",\n    entitlement_status: \"canceled\",\n    current_period_end: \"2026-05-01T00:00:00.000Z\",\n    updated_at: \"2026-09-19T00:00:00.000Z\",\n  })\n  const canceledWithAccess = subscriptionRow({\n    id: \"sub-canceled-access\",\n    entitlement_status: \"canceled\",\n    cancel_at_period_end: true,\n    current_period_end: \"2026-10-01T00:00:00.000Z\",\n    updated_at: \"2026-06-01T00:00:00.000Z\",\n  })\n  assert.equal(\n    pickAdminUserBillingRow([lapsed, canceledWithAccess], NOW)?.id,\n    \"sub-canceled-access\",\n  )\n})",
+    "sha256": "9053fc04dec5f617b708f27d85cacc99e6e0429999bb4da228801858df585d91",
+    "assertions": [
+      "assert.equal(\n    pickAdminUserBillingRow([lapsed, canceledWithAccess], NOW)?.id,\n    \"sub-canceled-access\",\n  )"
+    ]
+  },
+  {
+    "file": "tests/admin-user-billing-summary.test.ts",
+    "title": "row pick falls back to the most recently updated lapsed row",
+    "line": 273,
+    "start": 8691,
+    "end": 9280,
+    "body": "test(\"row pick falls back to the most recently updated lapsed row\", () => {\n  const older = subscriptionRow({\n    id: \"sub-old\",\n    entitlement_status: \"canceled\",\n    current_period_end: \"2026-04-01T00:00:00.000Z\",\n    updated_at: \"2026-04-02T00:00:00.000Z\",\n  })\n  const newer = subscriptionRow({\n    id: \"sub-new\",\n    entitlement_status: \"canceled\",\n    current_period_end: \"2026-04-01T00:00:00.000Z\",\n    updated_at: \"2026-08-02T00:00:00.000Z\",\n  })\n  assert.equal(pickAdminUserBillingRow([older, newer], NOW)?.id, \"sub-new\")\n  assert.equal(pickAdminUserBillingRow([], NOW), null)\n})",
+    "sha256": "35b57b4464261d8d16e1da2c3ce23f52aaf8a7738769b0057aae96bfc275e6a3",
+    "assertions": [
+      "assert.equal(pickAdminUserBillingRow([older, newer], NOW)?.id, \"sub-new\")",
+      "assert.equal(pickAdminUserBillingRow([], NOW), null)"
+    ]
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "EXPIRED_ENTITLEMENT_GRACE_MS is exactly 1 day, matching the SQL grace window",
+    "line": 39,
+    "start": 1086,
+    "end": 1238,
+    "body": "test(\"EXPIRED_ENTITLEMENT_GRACE_MS is exactly 1 day, matching the SQL grace window\", () => {\n  assert.equal(EXPIRED_ENTITLEMENT_GRACE_MS, ONE_DAY_MS)\n})",
+    "sha256": "85ee59e0289c7c9977ad8c513a89986da24c0a511e832752cbbc94295f125b48",
+    "assertions": [
+      "assert.equal(EXPIRED_ENTITLEMENT_GRACE_MS, ONE_DAY_MS)"
+    ]
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentBillingAccess: active row with period end 2 days past has no access",
+    "line": 43,
+    "start": 1240,
+    "end": 1511,
+    "body": "test(\"hasCurrentBillingAccess: active row with period end 2 days past has no access\", () => {\n  const row = billingRow({\n    entitlement_status: \"active\",\n    current_period_end: isoOffset(-2 * ONE_DAY_MS),\n  })\n  assert.equal(hasCurrentBillingAccess(row, NOW), false)\n})",
+    "sha256": "8e147c1b9a8d664d9e60ccbe11cf367241f88e2e0924ce062df6bc35994a1824",
+    "assertions": [
+      "assert.equal(hasCurrentBillingAccess(row, NOW), false)"
+    ]
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentBillingAccess: active row 12 hours past is within the grace window",
+    "line": 51,
+    "start": 1513,
+    "end": 1787,
+    "body": "test(\"hasCurrentBillingAccess: active row 12 hours past is within the grace window\", () => {\n  const row = billingRow({\n    entitlement_status: \"active\",\n    current_period_end: isoOffset(-12 * 60 * 60 * 1000),\n  })\n  assert.equal(hasCurrentBillingAccess(row, NOW), true)\n})",
+    "sha256": "402e6cfa1ebbaa5444bf009060ce7cf40356a9bc036cec47d96f490bc8a394d8",
+    "assertions": [
+      "assert.equal(hasCurrentBillingAccess(row, NOW), true)"
+    ]
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentBillingAccess: active row with period end in the future has access",
+    "line": 59,
+    "start": 1789,
+    "end": 2053,
+    "body": "test(\"hasCurrentBillingAccess: active row with period end in the future has access\", () => {\n  const row = billingRow({\n    entitlement_status: \"active\",\n    current_period_end: isoOffset(ONE_DAY_MS),\n  })\n  assert.equal(hasCurrentBillingAccess(row, NOW), true)\n})",
+    "sha256": "496cc458fa29bf5e94584abc921ac0a3334908e497e598e950c05abaa24dd3ec",
+    "assertions": [
+      "assert.equal(hasCurrentBillingAccess(row, NOW), true)"
+    ]
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentBillingAccess: past_due row exactly at the grace boundary has access",
+    "line": 67,
+    "start": 2055,
+    "end": 2324,
+    "body": "test(\"hasCurrentBillingAccess: past_due row exactly at the grace boundary has access\", () => {\n  const row = billingRow({\n    entitlement_status: \"past_due\",\n    current_period_end: isoOffset(-ONE_DAY_MS),\n  })\n  assert.equal(hasCurrentBillingAccess(row, NOW), true)\n})",
+    "sha256": "22af85bba13c90d37118d8334c115054ca3bd6bde09d96c38f8dc25f143f1e46",
+    "assertions": [
+      "assert.equal(hasCurrentBillingAccess(row, NOW), true)"
+    ]
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentBillingAccess: past_due row just past the grace boundary has no access",
+    "line": 75,
+    "start": 2326,
+    "end": 2602,
+    "body": "test(\"hasCurrentBillingAccess: past_due row just past the grace boundary has no access\", () => {\n  const row = billingRow({\n    entitlement_status: \"past_due\",\n    current_period_end: isoOffset(-ONE_DAY_MS - 1),\n  })\n  assert.equal(hasCurrentBillingAccess(row, NOW), false)\n})",
+    "sha256": "0dc106bd0d122f447c60a4b1bda9fbbbb4e178b928fd76bb0bdd6777086035eb",
+    "assertions": [
+      "assert.equal(hasCurrentBillingAccess(row, NOW), false)"
+    ]
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentBillingAccess: canceled row with cancel_at_period_end until a future period end has access",
+    "line": 83,
+    "start": 2604,
+    "end": 2926,
+    "body": "test(\"hasCurrentBillingAccess: canceled row with cancel_at_period_end until a future period end has access\", () => {\n  const row = billingRow({\n    entitlement_status: \"canceled\",\n    cancel_at_period_end: true,\n    current_period_end: isoOffset(ONE_DAY_MS),\n  })\n  assert.equal(hasCurrentBillingAccess(row, NOW), true)\n})",
+    "sha256": "84d33cb5c26ac79d91402c0f8d5442e0d03a7cc1e4256b36b9c45fe7d0eb7c0b",
+    "assertions": [
+      "assert.equal(hasCurrentBillingAccess(row, NOW), true)"
+    ]
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentBillingAccess: canceled row past its period end has no access (existing behavior preserved)",
+    "line": 92,
+    "start": 2928,
+    "end": 3244,
+    "body": "test(\"hasCurrentBillingAccess: canceled row past its period end has no access (existing behavior preserved)\", () => {\n  const row = billingRow({\n    entitlement_status: \"canceled\",\n    cancel_at_period_end: true,\n    current_period_end: isoOffset(-1),\n  })\n  assert.equal(hasCurrentBillingAccess(row, NOW), false)\n})",
+    "sha256": "afe941ad7e1c86f42130bbbac83569a0e38dc6a849efedf2cc6f2b3fa13de144",
+    "assertions": [
+      "assert.equal(hasCurrentBillingAccess(row, NOW), false)"
+    ]
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentBillingAccess: canceled row without cancel_at_period_end has no access regardless of period end",
+    "line": 101,
+    "start": 3246,
+    "end": 3575,
+    "body": "test(\"hasCurrentBillingAccess: canceled row without cancel_at_period_end has no access regardless of period end\", () => {\n  const row = billingRow({\n    entitlement_status: \"canceled\",\n    cancel_at_period_end: false,\n    current_period_end: isoOffset(ONE_DAY_MS),\n  })\n  assert.equal(hasCurrentBillingAccess(row, NOW), false)\n})",
+    "sha256": "86c12def2c980ee5fdcfad0be9b68011c69869301ce2784837f8cf00e75cd824",
+    "assertions": [
+      "assert.equal(hasCurrentBillingAccess(row, NOW), false)"
+    ]
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentBillingAccess: active row with null current_period_end keeps existing (grantsaccess) behavior",
+    "line": 110,
+    "start": 3577,
+    "end": 4219,
+    "body": "test(\"hasCurrentBillingAccess: active row with null current_period_end keeps existing (grantsaccess) behavior\", () => {\n  // current_period_end null on an open-entitlement row is treated as\n  // legacy/incomplete billing_subscriptions data (e.g. rows backfilled from\n  // profiles before a first webhook populated the period). Grace-window\n  // enforcement only applies once we have a real period_end to measure\n  // against, so null rows fall back to the pre-existing status-only check.\n  const row = billingRow({\n    entitlement_status: \"active\",\n    current_period_end: null,\n  })\n  assert.equal(hasCurrentBillingAccess(row, NOW), true)\n})",
+    "sha256": "40f9aacd2569a0a79c0d3a38b0c10a401941d353107980069ffe43691285142f",
+    "assertions": [
+      "assert.equal(hasCurrentBillingAccess(row, NOW), true)"
+    ]
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentLegacyProfileAccess: active profile 2 days past period end has no access",
+    "line": 123,
+    "start": 4221,
+    "end": 4500,
+    "body": "test(\"hasCurrentLegacyProfileAccess: active profile 2 days past period end has no access\", () => {\n  const profile = {\n    subscription_status: \"active\",\n    current_period_end: isoOffset(-2 * ONE_DAY_MS),\n  }\n  assert.equal(hasCurrentLegacyProfileAccess(profile, NOW), false)\n})",
+    "sha256": "d0acce79a3106199431de569da852ca67fc711b8e3c0c05f104a9090d7dda9e5",
+    "assertions": [
+      "assert.equal(hasCurrentLegacyProfileAccess(profile, NOW), false)"
+    ]
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentLegacyProfileAccess: active profile 12 hours past period end is within grace",
+    "line": 131,
+    "start": 4502,
+    "end": 4789,
+    "body": "test(\"hasCurrentLegacyProfileAccess: active profile 12 hours past period end is within grace\", () => {\n  const profile = {\n    subscription_status: \"active\",\n    current_period_end: isoOffset(-12 * 60 * 60 * 1000),\n  }\n  assert.equal(hasCurrentLegacyProfileAccess(profile, NOW), true)\n})",
+    "sha256": "4df81a0e9a1a16dab18d617effae02bb23461ad9eac1aad3f8736946d2984caa",
+    "assertions": [
+      "assert.equal(hasCurrentLegacyProfileAccess(profile, NOW), true)"
+    ]
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentLegacyProfileAccess: active profile with null period end keeps existing (grants access) behavior",
+    "line": 139,
+    "start": 4791,
+    "end": 5060,
+    "body": "test(\"hasCurrentLegacyProfileAccess: active profile with null period end keeps existing (grants access) behavior\", () => {\n  const profile = { subscription_status: \"active\", current_period_end: null }\n  assert.equal(hasCurrentLegacyProfileAccess(profile, NOW), true)\n})",
+    "sha256": "61cf1d7479029a77c9f487c9710c1f60c2a928226cc7b42a51160d8762106cbf",
+    "assertions": [
+      "assert.equal(hasCurrentLegacyProfileAccess(profile, NOW), true)"
+    ]
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentLegacyProfileAccess: canceled profile past period end has no access (existing behavior preserved)",
+    "line": 144,
+    "start": 5062,
+    "end": 5344,
+    "body": "test(\"hasCurrentLegacyProfileAccess: canceled profile past period end has no access (existing behavior preserved)\", () => {\n  const profile = { subscription_status: \"canceled\", current_period_end: isoOffset(-1) }\n  assert.equal(hasCurrentLegacyProfileAccess(profile, NOW), false)\n})",
+    "sha256": "d2d6750f3a41d718f4564112b5fe3fd673344f2ea3d2d204938296e507f2c52c",
+    "assertions": [
+      "assert.equal(hasCurrentLegacyProfileAccess(profile, NOW), false)"
+    ]
+  },
+  {
+    "file": "tests/billing-subscriptions-access-grace.test.ts",
+    "title": "hasCurrentLegacyProfileAccess: canceled profile before a future period end has access",
+    "line": 149,
+    "start": 5346,
+    "end": 5613,
+    "body": "test(\"hasCurrentLegacyProfileAccess: canceled profile before a future period end has access\", () => {\n  const profile = { subscription_status: \"canceled\", current_period_end: isoOffset(ONE_DAY_MS) }\n  assert.equal(hasCurrentLegacyProfileAccess(profile, NOW), true)\n})",
+    "sha256": "d3789d3f73a094e6b8b69e694fd841b10f5203b59f6a02d9693b0e4a03e7f2c1",
+    "assertions": [
+      "assert.equal(hasCurrentLegacyProfileAccess(profile, NOW), true)"
+    ]
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile declares a 60 second maximum duration",
+    "line": 55,
+    "start": 1782,
+    "end": 1888,
+    "body": "test(\"billing reconcile declares a 60 second maximum duration\", () => {\n  assert.equal(maxDuration, 60)\n})",
+    "sha256": "ac494742581471d8c5fe184649406224a06bffedd343646d28dedfb14e197104",
+    "assertions": [
+      "assert.equal(maxDuration, 60)"
+    ]
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile reports bounded browser recovery cleanup without changing payment health",
+    "line": 59,
+    "start": 1890,
+    "end": 2580,
+    "body": "test(\"billing reconcile reports bounded browser recovery cleanup without changing payment health\", async () => {\n  const calls: string[] = []\n  const response = await handleBillingReconcile(\n    request(),\n    createDeps({\n      browserRecoveryCleanup: async (limit) => {\n        calls.push(`cleanup:${limit}`)\n        return {\n          quizDrafts: { ok: true, purged: 3 },\n          resultReturns: { ok: false, purged: 0 },\n        }\n      },\n    }),\n  )\n\n  assert.equal(response.status, 200)\n  assert.deepEqual(calls, [\"cleanup:500\"])\n  assert.deepEqual(response.body.browserRecoveryCleanup, {\n    quizDrafts: { ok: true, purged: 3 },\n    resultReturns: { ok: false, purged: 0 },\n  })\n})",
+    "sha256": "20206a5d80d936f59814ee3377f749f577108858fcece8d5369124366c7a3c05",
+    "assertions": [
+      "assert.equal(response.status, 200)",
+      "assert.deepEqual(calls, [\"cleanup:500\"])",
+      "assert.deepEqual(response.body.browserRecoveryCleanup, {\n    quizDrafts: { ok: true, purged: 3 },\n    resultReturns: { ok: false, purged: 0 },\n  })"
+    ]
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "browser recovery cleanup calls both purges once with the 500-row bound and isolates errors",
+    "line": 82,
+    "start": 2582,
+    "end": 3381,
+    "body": "test(\"browser recovery cleanup calls both purges once with the 500-row bound and isolates errors\", async () => {\n  const calls: Array<[string, unknown]> = []\n  const result = await runBrowserRecoveryCleanup(\n    {\n      rpc: async (name: string, args: unknown) => {\n        calls.push([name, args])\n        return name === \"purge_expired_personal_plan_quiz_drafts\"\n          ? { data: 500, error: null }\n          : { data: null, error: { code: \"database_error\" } }\n      },\n    } as never,\n    500,\n  )\n\n  assert.deepEqual(calls, [\n    [\"purge_expired_personal_plan_quiz_drafts\", { p_limit: 500 }],\n    [\"purge_expired_personal_plan_result_returns\", { p_limit: 500 }],\n  ])\n  assert.deepEqual(result, {\n    quizDrafts: { ok: true, purged: 500 },\n    resultReturns: { ok: false, purged: 0 },\n  })\n})",
+    "sha256": "2de401efcc33a1a997e5f9574ff26f34081dae26a92bfd5b51f617a77c5d5ebe",
+    "assertions": [
+      "assert.deepEqual(calls, [\n    [\"purge_expired_personal_plan_quiz_drafts\", { p_limit: 500 }],\n    [\"purge_expired_personal_plan_result_returns\", { p_limit: 500 }],\n  ])",
+      "assert.deepEqual(result, {\n    quizDrafts: { ok: true, purged: 500 },\n    resultReturns: { ok: false, purged: 0 },\n  })"
+    ]
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile keeps retry disabled by default and still runs integrity first",
+    "line": 106,
+    "start": 3383,
+    "end": 4933,
+    "body": "test(\"billing reconcile keeps retry disabled by default and still runs integrity first\", async () => {\n  let dispatches = 0\n  let integrityInput:\n    | Parameters<\n        NonNullable<Parameters<typeof handleBillingReconcile>[1][\"runPaymentIntegrity\"]>\n      >[0]\n    | undefined\n  const checkIns: unknown[] = []\n  const response = await handleBillingReconcile(\n    request(),\n    createDeps({\n      analyticsRetryEnabled: undefined,\n      runPaymentIntegrity: async (input) => {\n        integrityInput = input\n        return integrityResult()\n      },\n      captureCheckIn: (checkIn) => {\n        checkIns.push(checkIn)\n        return checkIns.length === 1 ? \"daily-check-in-id\" : undefined\n      },\n      dispatchAnalyticsDue: async () => {\n        dispatches += 1\n        return { processed: 1, delivered: 0, failed: 1 }\n      },\n    }),\n  )\n\n  assert.equal(response.status, 200)\n  assert.equal(integrityInput?.now, now)\n  assert.equal(integrityInput?.deadlineAt.getTime(), now.getTime() + 20_000)\n  assert.deepEqual(response.body, {\n    browserRecoveryCleanup: emptyBrowserRecoveryCleanup,\n    downgraded: 2,\n    paymentIntegrity: {\n      status: \"completed\",\n      counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 5 },\n    },\n  })\n  assert.deepEqual(checkIns, [\n    { monitorSlug: \"payment-integrity-daily\", status: \"in_progress\" },\n    {\n      monitorSlug: \"payment-integrity-daily\",\n      status: \"ok\",\n      checkInId: \"daily-check-in-id\",\n      duration: 0,\n    },\n  ])\n  assert.equal(dispatches, 0)\n})",
+    "sha256": "ba43a3a173e7414c40723ff8b7d6dd0d6a1c7bcdb1e269cb19d8f28c8a5b8afe",
+    "assertions": [
+      "assert.equal(response.status, 200)",
+      "assert.equal(integrityInput?.now, now)",
+      "assert.equal(integrityInput?.deadlineAt.getTime(), now.getTime() + 20_000)",
+      "assert.deepEqual(response.body, {\n    browserRecoveryCleanup: emptyBrowserRecoveryCleanup,\n    downgraded: 2,\n    paymentIntegrity: {\n      status: \"completed\",\n      counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 5 },\n    },\n  })",
+      "assert.deepEqual(checkIns, [\n    { monitorSlug: \"payment-integrity-daily\", status: \"in_progress\" },\n    {\n      monitorSlug: \"payment-integrity-daily\",\n      status: \"ok\",\n      checkInId: \"daily-check-in-id\",\n      duration: 0,\n    },\n  ])",
+      "assert.equal(dispatches, 0)"
+    ]
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile runs one-time fulfillment retry only behind its dedicated flag",
+    "line": 156,
+    "start": 4935,
+    "end": 5908,
+    "body": "test(\"billing reconcile runs one-time fulfillment retry only behind its dedicated flag\", async () => {\n  let retryRuns = 0\n  const response = await handleBillingReconcile(\n    request(),\n    createDeps({\n      oneTimeFulfillmentRetryEnabled: true,\n      reconcileOneTimeFulfillmentRetries: async (retryDeps) => {\n        retryRuns += 1\n        assert.ok(retryDeps.dispatchers.stripe)\n        assert.ok(retryDeps.dispatchers.paypal)\n        return oneTimeRetryStats({\n          claimed: 2,\n          active: { total: 1, stripe: 1, paypal: 0, unknown: 0 },\n          paidPending: { total: 1, stripe: 0, paypal: 1, unknown: 0 },\n        })\n      },\n    }),\n  )\n\n  assert.equal(response.status, 200)\n  assert.equal(retryRuns, 1)\n  assert.deepEqual(\n    response.body.oneTimeFulfillmentRetry,\n    oneTimeRetryStats({\n      claimed: 2,\n      active: { total: 1, stripe: 1, paypal: 0, unknown: 0 },\n      paidPending: { total: 1, stripe: 0, paypal: 1, unknown: 0 },\n    }),\n  )\n})",
+    "sha256": "e980205eff6c829fa254904be1152ee34e9d1f420d75ebacd3906954ae32cb44",
+    "assertions": [
+      "assert.ok(retryDeps.dispatchers.stripe)",
+      "assert.ok(retryDeps.dispatchers.paypal)",
+      "assert.equal(response.status, 200)",
+      "assert.equal(retryRuns, 1)",
+      "assert.deepEqual(\n    response.body.oneTimeFulfillmentRetry,\n    oneTimeRetryStats({\n      claimed: 2,\n      active: { total: 1, stripe: 1, paypal: 0, unknown: 0 },\n      paidPending: { total: 1, stripe: 0, paypal: 1, unknown: 0 },\n    }),\n  )"
+    ]
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile runs paid-access monitor after one-time fulfillment retry",
+    "line": 187,
+    "start": 5910,
+    "end": 7812,
+    "body": "test(\"billing reconcile runs paid-access monitor after one-time fulfillment retry\", async () => {\n  const order: string[] = []\n  const reported: unknown[] = []\n  let flushes = 0\n  const response = await handleBillingReconcile(\n    request(),\n    createDeps({\n      oneTimeFulfillmentRetryEnabled: true,\n      reconcileOneTimeFulfillmentRetries: async () => {\n        order.push(\"fulfillment\")\n        return oneTimeRetryStats({ claimed: 1 })\n      },\n      runPaidAccessMonitor: async () => {\n        order.push(\"paid-access\")\n        return {\n          status: \"completed\",\n          counters: {\n            purchasesListed: 1,\n            purchasesChecked: 1,\n            skippedInternalTest: 0,\n            active: 0,\n            findings: 1,\n            monitorFailures: 0,\n          },\n          findings: [\n            {\n              signal: \"paid_but_entitlement_not_active\",\n              provider: \"paypal\",\n              purchaseId: \"purchase_daily_receipt\",\n              reason: \"delivery_evidence_missing\",\n              paidAt: \"2026-08-01T10:00:00.000Z\",\n              isInternalTest: false,\n            },\n          ],\n          monitorFailures: [],\n        }\n      },\n      reportPaidAccessFinding: (finding) => {\n        reported.push(finding)\n        return \"abcdef0123456789abcdef0123456789\"\n      },\n      flushTelemetry: async () => {\n        flushes += 1\n        return true\n      },\n    }),\n  )\n\n  assert.equal(response.status, 200)\n  assert.deepEqual(order, [\"fulfillment\", \"paid-access\"])\n  assert.equal(reported.length, 1)\n  assert.equal(flushes, 1)\n  assert.deepEqual(response.body.paidAccess, {\n    status: \"completed\",\n    counters: {\n      purchasesListed: 1,\n      purchasesChecked: 1,\n      skippedInternalTest: 0,\n      active: 0,\n      findings: 1,\n      monitorFailures: 0,\n    },\n    findings: [{ provider: \"paypal\", reason: \"delivery_evidence_missing\" }],\n  })\n})",
+    "sha256": "df69acc9b1e756251b0639819d8486f6521e0c4b1feaf22411901a620d9da15b",
+    "assertions": [
+      "assert.equal(response.status, 200)",
+      "assert.deepEqual(order, [\"fulfillment\", \"paid-access\"])",
+      "assert.equal(reported.length, 1)",
+      "assert.equal(flushes, 1)",
+      "assert.deepEqual(response.body.paidAccess, {\n    status: \"completed\",\n    counters: {\n      purchasesListed: 1,\n      purchasesChecked: 1,\n      skippedInternalTest: 0,\n      active: 0,\n      findings: 1,\n      monitorFailures: 0,\n    },\n    findings: [{ provider: \"paypal\", reason: \"delivery_evidence_missing\" }],\n  })"
+    ]
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile does not start unattended branches before one-time fulfillment finishes",
+    "line": 253,
+    "start": 7814,
+    "end": 9588,
+    "body": "test(\"billing reconcile does not start unattended branches before one-time fulfillment finishes\", async () => {\n  const order: string[] = []\n  let fulfillmentFinished = false\n  const assertFulfillmentFinished = (branch: string) => {\n    order.push(branch)\n    assert.equal(fulfillmentFinished, true)\n  }\n\n  const response = await handleBillingReconcile(\n    request(),\n    createDeps({\n      analyticsRetryEnabled: true,\n      oneTimeFulfillmentRetryEnabled: true,\n      reconcileOneTimeFulfillmentRetries: async () => {\n        order.push(\"fulfillment\")\n        await Promise.resolve()\n        fulfillmentFinished = true\n        return oneTimeRetryStats({ claimed: 1 })\n      },\n      runPaymentIntegrity: async () => {\n        assertFulfillmentFinished(\"integrity\")\n        return integrityResult()\n      },\n      getFreeTierId: async () => {\n        assertFulfillmentFinished(\"entitlement\")\n        return \"tier-free\"\n      },\n      dispatchAnalyticsDue: async () => {\n        assertFulfillmentFinished(\"analytics\")\n        return { processed: 0, delivered: 0, failed: 0 }\n      },\n      runPaidAccessMonitor: async () => {\n        assertFulfillmentFinished(\"paid-access\")\n        return {\n          status: \"completed\",\n          counters: {\n            purchasesListed: 0,\n            purchasesChecked: 0,\n            skippedInternalTest: 0,\n            active: 0,\n            findings: 0,\n            monitorFailures: 0,\n          },\n          findings: [],\n          monitorFailures: [],\n        }\n      },\n    }),\n  )\n\n  assert.equal(response.status, 200)\n  assert.equal(order[0], \"fulfillment\")\n  assert.ok(order.includes(\"integrity\"))\n  assert.ok(order.includes(\"entitlement\"))\n  assert.ok(order.includes(\"analytics\"))\n  assert.ok(order.includes(\"paid-access\"))\n})",
+    "sha256": "5aea47b066022d3fe78dc3a52a3747914b26b7502ea4ffb92ee542f9b073d427",
+    "assertions": [
+      "assert.equal(fulfillmentFinished, true)",
+      "assert.equal(response.status, 200)",
+      "assert.equal(order[0], \"fulfillment\")",
+      "assert.ok(order.includes(\"integrity\"))",
+      "assert.ok(order.includes(\"entitlement\"))",
+      "assert.ok(order.includes(\"analytics\"))",
+      "assert.ok(order.includes(\"paid-access\"))"
+    ]
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "default one-time fulfillment dispatchers pass quiz linking to both provider processors",
+    "line": 311,
+    "start": 9590,
+    "end": 10672,
+    "body": "test(\"default one-time fulfillment dispatchers pass quiz linking to both provider processors\", async () => {\n  const linkQuizToProfile = async () => {}\n  let stripeLink: unknown\n  let paypalLink: unknown\n  const dispatchers = defaultOneTimeFulfillmentDispatchers(\n    createDeps({\n      oneTimeFulfillmentRuntime: {\n        linkQuizToProfile,\n        loadStripeProcessor: async () => ({\n          getStripe: () => ({}) as never,\n          processStripeOneTimeFulfillmentJob: async (_job, processorDeps) => {\n            stripeLink = processorDeps.linkQuizToProfile\n            return {} as never\n          },\n        }),\n        loadPayPalProcessor: async () => ({\n          processPayPalOneTimeFulfillmentJob: async (_job, processorDeps) => {\n            paypalLink = processorDeps.linkQuizToProfile\n            return {} as never\n          },\n        }),\n      },\n    }),\n  )\n\n  await dispatchers.stripe?.(oneTimeFulfillmentJob())\n  await dispatchers.paypal?.(oneTimeFulfillmentJob())\n\n  assert.equal(stripeLink, linkQuizToProfile)\n  assert.equal(paypalLink, linkQuizToProfile)\n})",
+    "sha256": "4e28664afb1b740fb9d046e3360828eb7c340ba2b25a40eec6fd5b0c34763ceb",
+    "assertions": [
+      "assert.equal(stripeLink, linkQuizToProfile)",
+      "assert.equal(paypalLink, linkQuizToProfile)"
+    ]
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile drains all destinations with a limit of ten when enabled",
+    "line": 343,
+    "start": 10674,
+    "end": 12318,
+    "body": "test(\"billing reconcile drains all destinations with a limit of ten when enabled\", async () => {\n  const calls: Array<{ destination?: BillingAnalyticsDestination; limit?: number }> = []\n  const response = await handleBillingReconcile(\n    request(),\n    createDeps({\n      analyticsRetryEnabled: true,\n      dispatchAnalyticsDue: async (_supabase, options) => {\n        if (!options) throw new Error(\"analytics retry options are required\")\n        calls.push({ destination: options.destination, limit: options.limit })\n        return options.destination === \"customerio\"\n          ? { processed: 3, delivered: 2, failed: 1 }\n          : options.destination === \"posthog\"\n            ? { processed: 2, delivered: 2, failed: 0 }\n            : { processed: 1, delivered: 0, failed: 1 }\n      },\n    }),\n  )\n\n  assert.deepEqual(calls, [\n    { destination: \"customerio\", limit: 10 },\n    { destination: \"posthog\", limit: 10 },\n    { destination: \"meta\", limit: 10 },\n    { destination: \"funnel\", limit: 10 },\n    { destination: \"openai\", limit: 10 },\n  ])\n  assert.deepEqual(response.body, {\n    browserRecoveryCleanup: emptyBrowserRecoveryCleanup,\n    downgraded: 2,\n    paymentIntegrity: {\n      status: \"completed\",\n      counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 5 },\n    },\n    analyticsRetry: {\n      customerio: { processed: 3, delivered: 2, failed: 1 },\n      posthog: { processed: 2, delivered: 2, failed: 0 },\n      meta: { processed: 1, delivered: 0, failed: 1 },\n      funnel: { processed: 1, delivered: 0, failed: 1 },\n      openai: { processed: 1, delivered: 0, failed: 1 },\n    },\n  })\n})",
+    "sha256": "e35f9082140448b89de5f4c2fb47d5d4a8649853d528eab6f751cd7dd663a400",
+    "assertions": [
+      "assert.deepEqual(calls, [\n    { destination: \"customerio\", limit: 10 },\n    { destination: \"posthog\", limit: 10 },\n    { destination: \"meta\", limit: 10 },\n    { destination: \"funnel\", limit: 10 },\n    { destination: \"openai\", limit: 10 },\n  ])",
+      "assert.deepEqual(response.body, {\n    browserRecoveryCleanup: emptyBrowserRecoveryCleanup,\n    downgraded: 2,\n    paymentIntegrity: {\n      status: \"completed\",\n      counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 5 },\n    },\n    analyticsRetry: {\n      customerio: { processed: 3, delivered: 2, failed: 1 },\n      posthog: { processed: 2, delivered: 2, failed: 0 },\n      meta: { processed: 1, delivered: 0, failed: 1 },\n      funnel: { processed: 1, delivered: 0, failed: 1 },\n      openai: { processed: 1, delivered: 0, failed: 1 },\n    },\n  })"
+    ]
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile isolates and sanitizes one analytics destination rejection",
+    "line": 385,
+    "start": 12320,
+    "end": 13665,
+    "body": "test(\"billing reconcile isolates and sanitizes one analytics destination rejection\", async () => {\n  const completed: BillingAnalyticsDestination[] = []\n  const response = await handleBillingReconcile(\n    request(),\n    createDeps({\n      analyticsRetryEnabled: true,\n      dispatchAnalyticsDue: async (_supabase, options) => {\n        if (!options) throw new Error(\"analytics retry options are required\")\n        if (options.destination === \"posthog\") throw new Error(\"posthog unavailable\")\n        completed.push(options.destination!)\n        return { processed: 4, delivered: 3, failed: 1 }\n      },\n    }),\n  )\n\n  assert.equal(response.status, 500)\n  assert.deepEqual(completed.sort(), [\"customerio\", \"funnel\", \"meta\", \"openai\"])\n  assert.deepEqual(response.body, {\n    browserRecoveryCleanup: emptyBrowserRecoveryCleanup,\n    downgraded: 2,\n    paymentIntegrity: {\n      status: \"completed\",\n      counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 5 },\n    },\n    analyticsRetry: {\n      customerio: { processed: 4, delivered: 3, failed: 1 },\n      posthog: { processed: 0, delivered: 0, failed: 0, status: \"error\" },\n      meta: { processed: 4, delivered: 3, failed: 1 },\n      funnel: { processed: 4, delivered: 3, failed: 1 },\n      openai: { processed: 4, delivered: 3, failed: 1 },\n    },\n  })\n})",
+    "sha256": "6623e82341675dd889bfb65e92a385450af867437025a8233c1b85077b6dc0ef",
+    "assertions": [
+      "assert.equal(response.status, 500)",
+      "assert.deepEqual(completed.sort(), [\"customerio\", \"funnel\", \"meta\", \"openai\"])",
+      "assert.deepEqual(response.body, {\n    browserRecoveryCleanup: emptyBrowserRecoveryCleanup,\n    downgraded: 2,\n    paymentIntegrity: {\n      status: \"completed\",\n      counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 5 },\n    },\n    analyticsRetry: {\n      customerio: { processed: 4, delivered: 3, failed: 1 },\n      posthog: { processed: 0, delivered: 0, failed: 0, status: \"error\" },\n      meta: { processed: 4, delivered: 3, failed: 1 },\n      funnel: { processed: 4, delivered: 3, failed: 1 },\n      openai: { processed: 4, delivered: 3, failed: 1 },\n    },\n  })"
+    ]
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile authenticates before entitlement, integrity, analytics, and one-time retry work",
+    "line": 419,
+    "start": 13667,
+    "end": 14902,
+    "body": "test(\"billing reconcile authenticates before entitlement, integrity, analytics, and one-time retry work\", async () => {\n  let entitlementRuns = 0\n  let analyticsRuns = 0\n  let integrityRuns = 0\n  let oneTimeRetryRuns = 0\n  let checkIns = 0\n  const response = await handleBillingReconcile(\n    request(\"wrong\"),\n    createDeps({\n      reconcileEntitlements: async () => {\n        entitlementRuns += 1\n        return { downgraded: 0 }\n      },\n      analyticsRetryEnabled: true,\n      dispatchAnalyticsDue: async () => {\n        analyticsRuns += 1\n        return { processed: 0, delivered: 0, failed: 0 }\n      },\n      runPaymentIntegrity: async () => {\n        integrityRuns += 1\n        return integrityResult()\n      },\n      oneTimeFulfillmentRetryEnabled: true,\n      reconcileOneTimeFulfillmentRetries: async () => {\n        oneTimeRetryRuns += 1\n        return oneTimeRetryStats()\n      },\n      captureCheckIn: () => {\n        checkIns += 1\n      },\n    }),\n  )\n\n  assert.equal(response.status, 401)\n  assert.deepEqual(response.body, { error: \"unauthorized\" })\n  assert.equal(entitlementRuns, 0)\n  assert.equal(analyticsRuns, 0)\n  assert.equal(integrityRuns, 0)\n  assert.equal(oneTimeRetryRuns, 0)\n  assert.equal(checkIns, 0)\n})",
+    "sha256": "f837ab7641d4b930a3867e4470c1892ead196fa78e70cab8fbfdf8d56622b99d",
+    "assertions": [
+      "assert.equal(response.status, 401)",
+      "assert.deepEqual(response.body, { error: \"unauthorized\" })",
+      "assert.equal(entitlementRuns, 0)",
+      "assert.equal(analyticsRuns, 0)",
+      "assert.equal(integrityRuns, 0)",
+      "assert.equal(oneTimeRetryRuns, 0)",
+      "assert.equal(checkIns, 0)"
+    ]
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile isolates entitlement failure from integrity, analytics, and one-time retry",
+    "line": 461,
+    "start": 14904,
+    "end": 16728,
+    "body": "test(\"billing reconcile isolates entitlement failure from integrity, analytics, and one-time retry\", async () => {\n  let integrityRuns = 0\n  let analyticsRuns = 0\n  let oneTimeRetryRuns = 0\n\n  const response = await handleBillingReconcile(\n    request(),\n    createDeps({\n      reconcileEntitlements: async () => {\n        throw new Error(\"entitlement secret must not leak\")\n      },\n      analyticsRetryEnabled: true,\n      runPaymentIntegrity: async () => {\n        integrityRuns += 1\n        return integrityResult()\n      },\n      oneTimeFulfillmentRetryEnabled: true,\n      reconcileOneTimeFulfillmentRetries: async () => {\n        oneTimeRetryRuns += 1\n        return oneTimeRetryStats({ claimed: 1 })\n      },\n      dispatchAnalyticsDue: async () => {\n        analyticsRuns += 1\n        return { processed: 0, delivered: 0, failed: 0 }\n      },\n    }),\n  )\n\n  assert.equal(response.status, 500)\n  assert.equal(integrityRuns, 1)\n  assert.equal(analyticsRuns, 5)\n  assert.equal(oneTimeRetryRuns, 1)\n  assert.equal(JSON.stringify(response.body).includes(\"entitlement secret\"), false)\n  assert.deepEqual(response.body, {\n    browserRecoveryCleanup: emptyBrowserRecoveryCleanup,\n    downgraded: 0,\n    paymentIntegrity: {\n      status: \"completed\",\n      counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 5 },\n    },\n    oneTimeFulfillmentRetry: oneTimeRetryStats({ claimed: 1 }),\n    analyticsRetry: {\n      customerio: { processed: 0, delivered: 0, failed: 0 },\n      posthog: { processed: 0, delivered: 0, failed: 0 },\n      meta: { processed: 0, delivered: 0, failed: 0 },\n      funnel: { processed: 0, delivered: 0, failed: 0 },\n      openai: { processed: 0, delivered: 0, failed: 0 },\n    },\n    entitlements: { status: \"error\", reason: \"entitlement_reconcile_failed\" },\n  })\n})",
+    "sha256": "cf2d3c70922c49db01d9d0f22200f4352e1b2e7a1f76cee1c8f414c3b3090525",
+    "assertions": [
+      "assert.equal(response.status, 500)",
+      "assert.equal(integrityRuns, 1)",
+      "assert.equal(analyticsRuns, 5)",
+      "assert.equal(oneTimeRetryRuns, 1)",
+      "assert.equal(JSON.stringify(response.body).includes(\"entitlement secret\"), false)",
+      "assert.deepEqual(response.body, {\n    browserRecoveryCleanup: emptyBrowserRecoveryCleanup,\n    downgraded: 0,\n    paymentIntegrity: {\n      status: \"completed\",\n      counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 5 },\n    },\n    oneTimeFulfillmentRetry: oneTimeRetryStats({ claimed: 1 }),\n    analyticsRetry: {\n      customerio: { processed: 0, delivered: 0, failed: 0 },\n      posthog: { processed: 0, delivered: 0, failed: 0 },\n      meta: { processed: 0, delivered: 0, failed: 0 },\n      funnel: { processed: 0, delivered: 0, failed: 0 },\n      openai: { processed: 0, delivered: 0, failed: 0 },\n    },\n    entitlements: { status: \"error\", reason: \"entitlement_reconcile_failed\" },\n  })"
+    ]
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile captures the entitlement branch failure to Sentry instead of swallowing it",
+    "line": 513,
+    "start": 16730,
+    "end": 17538,
+    "body": "test(\"billing reconcile captures the entitlement branch failure to Sentry instead of swallowing it\", async () => {\n  const capturedErrors: unknown[] = []\n  const thrown = new Error(\"db connection reset mid-run\")\n\n  const response = await handleBillingReconcile(\n    request(),\n    createDeps({\n      reconcileEntitlements: async () => {\n        throw thrown\n      },\n      captureEntitlementBranchFailure: (error) => {\n        capturedErrors.push(error)\n      },\n    }),\n  )\n\n  assert.equal(response.status, 500)\n  assert.deepEqual(capturedErrors, [thrown])\n  assert.deepEqual(response.body.entitlements, {\n    status: \"error\",\n    reason: \"entitlement_reconcile_failed\",\n  })\n  assert.equal(response.body.downgraded, 0)\n  assert.equal(JSON.stringify(response.body).includes(\"db connection reset\"), false)\n})",
+    "sha256": "936ee08a6b0f723245737e6ff87fa5e34e6eb508d698961c3d2345c84dd1ec73",
+    "assertions": [
+      "assert.equal(response.status, 500)",
+      "assert.deepEqual(capturedErrors, [thrown])",
+      "assert.deepEqual(response.body.entitlements, {\n    status: \"error\",\n    reason: \"entitlement_reconcile_failed\",\n  })",
+      "assert.equal(response.body.downgraded, 0)",
+      "assert.equal(JSON.stringify(response.body).includes(\"db connection reset\"), false)"
+    ]
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile isolates one-time fulfillment failure from other branches",
+    "line": 539,
+    "start": 17540,
+    "end": 18672,
+    "body": "test(\"billing reconcile isolates one-time fulfillment failure from other branches\", async () => {\n  let entitlementRuns = 0\n  let analyticsRuns = 0\n  let integrityRuns = 0\n  const response = await handleBillingReconcile(\n    request(),\n    createDeps({\n      oneTimeFulfillmentRetryEnabled: true,\n      reconcileOneTimeFulfillmentRetries: async () => {\n        throw new Error(\"fulfillment secret must not leak\")\n      },\n      reconcileEntitlements: async () => {\n        entitlementRuns += 1\n        return { downgraded: 1 }\n      },\n      runPaymentIntegrity: async () => {\n        integrityRuns += 1\n        return integrityResult()\n      },\n      analyticsRetryEnabled: true,\n      dispatchAnalyticsDue: async () => {\n        analyticsRuns += 1\n        return { processed: 0, delivered: 0, failed: 0 }\n      },\n    }),\n  )\n\n  assert.equal(response.status, 500)\n  assert.equal(entitlementRuns, 1)\n  assert.equal(integrityRuns, 1)\n  assert.equal(analyticsRuns, 5)\n  assert.equal(JSON.stringify(response.body).includes(\"fulfillment secret\"), false)\n  assert.deepEqual(response.body.oneTimeFulfillmentRetry, { status: \"error\" })\n})",
+    "sha256": "3d8bc49e2316faf75201725db67fb929568ad9c6ff77cabba909a0156032d5ac",
+    "assertions": [
+      "assert.equal(response.status, 500)",
+      "assert.equal(entitlementRuns, 1)",
+      "assert.equal(integrityRuns, 1)",
+      "assert.equal(analyticsRuns, 5)",
+      "assert.equal(JSON.stringify(response.body).includes(\"fulfillment secret\"), false)",
+      "assert.deepEqual(response.body.oneTimeFulfillmentRetry, { status: \"error\" })"
+    ]
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "billing reconcile isolates integrity failure and marks the daily check-in error",
+    "line": 574,
+    "start": 18674,
+    "end": 21075,
+    "body": "test(\"billing reconcile isolates integrity failure and marks the daily check-in error\", async () => {\n  let entitlementRuns = 0\n  let analyticsRuns = 0\n  const checkIns: unknown[] = []\n  const monitorFailures: unknown[] = []\n  const response = await handleBillingReconcile(\n    request(),\n    createDeps({\n      analyticsRetryEnabled: true,\n      clock: () => now.getTime(),\n      reconcileEntitlements: async () => {\n        entitlementRuns += 1\n        return { downgraded: 3 }\n      },\n      runPaymentIntegrity: async () => {\n        throw new Error(\"provider secret must not leak\")\n      },\n      captureCheckIn: (checkIn) => {\n        checkIns.push(checkIn)\n        return checkIns.length === 1 ? \"daily-check-in-id\" : undefined\n      },\n      reportMonitorFailure: (failure) => {\n        monitorFailures.push(failure)\n        return \"0123456789abcdef0123456789abcdef\"\n      },\n      flushTelemetry: async () => true,\n      dispatchAnalyticsDue: async () => {\n        analyticsRuns += 1\n        return { processed: 1, delivered: 1, failed: 0 }\n      },\n    }),\n  )\n\n  assert.equal(response.status, 500)\n  assert.equal(entitlementRuns, 1)\n  assert.equal(analyticsRuns, 5)\n  assert.equal(JSON.stringify(response.body).includes(\"provider secret\"), false)\n  assert.deepEqual(response.body, {\n    browserRecoveryCleanup: emptyBrowserRecoveryCleanup,\n    downgraded: 3,\n    paymentIntegrity: {\n      status: \"error\",\n      counters: emptyPaymentIntegrityCounters(),\n      failures: [\n        {\n          provider: \"unknown\",\n          reason: \"provider_error\",\n          errorFamily: \"unknown\",\n        },\n      ],\n    },\n    analyticsRetry: {\n      customerio: { processed: 1, delivered: 1, failed: 0 },\n      posthog: { processed: 1, delivered: 1, failed: 0 },\n      meta: { processed: 1, delivered: 1, failed: 0 },\n      funnel: { processed: 1, delivered: 1, failed: 0 },\n      openai: { processed: 1, delivered: 1, failed: 0 },\n    },\n  })\n  assert.deepEqual(checkIns, [\n    { monitorSlug: \"payment-integrity-daily\", status: \"in_progress\" },\n    {\n      monitorSlug: \"payment-integrity-daily\",\n      status: \"error\",\n      checkInId: \"daily-check-in-id\",\n      duration: 0,\n    },\n  ])\n  assert.equal(monitorFailures.length, 1)\n  assert.deepEqual(monitorFailures[0], {\n    signal: \"payment_monitor_failed\",\n    provider: \"unknown\",\n    reason: \"provider_error\",\n    errorFamily: \"unknown\",\n  })\n})",
+    "sha256": "754e768e3851858d54a6b7395dd58293974ab0db8d811490ff073cb6af6ee352",
+    "assertions": [
+      "assert.equal(response.status, 500)",
+      "assert.equal(entitlementRuns, 1)",
+      "assert.equal(analyticsRuns, 5)",
+      "assert.equal(JSON.stringify(response.body).includes(\"provider secret\"), false)",
+      "assert.deepEqual(response.body, {\n    browserRecoveryCleanup: emptyBrowserRecoveryCleanup,\n    downgraded: 3,\n    paymentIntegrity: {\n      status: \"error\",\n      counters: emptyPaymentIntegrityCounters(),\n      failures: [\n        {\n          provider: \"unknown\",\n          reason: \"provider_error\",\n          errorFamily: \"unknown\",\n        },\n      ],\n    },\n    analyticsRetry: {\n      customerio: { processed: 1, delivered: 1, failed: 0 },\n      posthog: { processed: 1, delivered: 1, failed: 0 },\n      meta: { processed: 1, delivered: 1, failed: 0 },\n      funnel: { processed: 1, delivered: 1, failed: 0 },\n      openai: { processed: 1, delivered: 1, failed: 0 },\n    },\n  })",
+      "assert.deepEqual(checkIns, [\n    { monitorSlug: \"payment-integrity-daily\", status: \"in_progress\" },\n    {\n      monitorSlug: \"payment-integrity-daily\",\n      status: \"error\",\n      checkInId: \"daily-check-in-id\",\n      duration: 0,\n    },\n  ])",
+      "assert.equal(monitorFailures.length, 1)",
+      "assert.deepEqual(monitorFailures[0], {\n    signal: \"payment_monitor_failed\",\n    provider: \"unknown\",\n    reason: \"provider_error\",\n    errorFamily: \"unknown\",\n  })"
+    ]
+  },
+  {
+    "file": "tests/billing-reconcile-analytics.test.ts",
+    "title": "OpenAI cleanup reports deletion and isolates database failures",
+    "line": 693,
+    "start": 22065,
+    "end": 22912,
+    "body": "test(\"OpenAI cleanup reports deletion and isolates database failures\", async () => {\n  const success = await handleBillingReconcile(\n    request(),\n    createDeps({\n      analyticsRetryEnabled: true,\n      cleanupOpenAIAdsContext: async () => 3,\n    }),\n  )\n  assert.deepEqual((success.body.analyticsRetry as Record<string, unknown>).openaiCleanup, {\n    deleted: 3,\n  })\n  const failure = await handleBillingReconcile(\n    request(),\n    createDeps({\n      analyticsRetryEnabled: true,\n      cleanupOpenAIAdsContext: async () => {\n        throw new Error(\"private database detail\")\n      },\n    }),\n  )\n  assert.deepEqual((failure.body.analyticsRetry as Record<string, unknown>).openaiCleanup, {\n    status: \"error\",\n  })\n  assert.equal(failure.body.downgraded, 2)\n  assert.ok(!JSON.stringify(failure.body).includes(\"private database detail\"))\n})",
+    "sha256": "2a93aefb68f1647eaf2af72649a4342c075025e288bca7f0a8a5aa7ff38d6ea7",
+    "assertions": [
+      "assert.deepEqual((success.body.analyticsRetry as Record<string, unknown>).openaiCleanup, {\n    deleted: 3,\n  })",
+      "assert.deepEqual((failure.body.analyticsRetry as Record<string, unknown>).openaiCleanup, {\n    status: \"error\",\n  })",
+      "assert.equal(failure.body.downgraded, 2)",
+      "assert.ok(!JSON.stringify(failure.body).includes(\"private database detail\"))"
+    ]
+  },
+  {
+    "file": "tests/billing-slack-supabase-ownership.test.ts",
+    "title": "Vercel cannot query or claim Slack deliveries even when explicitly requested",
+    "line": 6,
+    "start": 240,
+    "end": 738,
+    "body": "test(\"Vercel cannot query or claim Slack deliveries even when explicitly requested\", async () => {\n  let databaseCalls = 0\n  const supabase = {\n    from() {\n      databaseCalls++\n      throw new Error(\"Slack queue belongs to Supabase Edge\")\n    },\n  } as unknown as SupabaseBillingAnalyticsClient\n  const result = await dispatchBillingAnalyticsDueWithStats(supabase, { destination: \"slack\" })\n  assert.deepEqual(result, { processed: 0, delivered: 0, failed: 0 })\n  assert.equal(databaseCalls, 0)\n})",
+    "sha256": "d8badb538e9dd459e33d01acece17caf0360f8976da273379f37e855dfe61168",
+    "assertions": [
+      "assert.deepEqual(result, { processed: 0, delivered: 0, failed: 0 })",
+      "assert.equal(databaseCalls, 0)"
+    ]
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "settlement grace skips recent provider success without local lookup",
+    "line": 46,
+    "start": 1135,
+    "end": 1882,
+    "body": "test(\"settlement grace skips recent provider success without local lookup\", async () => {\n  let localLookups = 0\n  const result = await reconcilePaymentIntegrity({\n    now,\n    deadlineAt,\n    providers: [\n      {\n        provider: \"stripe\",\n        listCandidates: async () => ({\n          candidates: [\n            candidate(\"recent\", { occurredAt: new Date(now.getTime() - 59 * 60 * 1000) }),\n          ],\n        }),\n      },\n    ],\n    local: {\n      getState: async () => {\n        localLookups += 1\n        return localState({ billingSucceeded: false, activeEntitlement: false })\n      },\n    },\n  })\n\n  assert.equal(localLookups, 0)\n  assert.equal(result.counters.skippedInSettlementGrace, 1)\n  assert.equal(result.counters.findings, 0)\n})",
+    "sha256": "906b662a5379cf0c858656f096bf0c152a379d219c251a2493376498e8303a1d",
+    "assertions": [
+      "assert.equal(localLookups, 0)",
+      "assert.equal(result.counters.skippedInSettlementGrace, 1)",
+      "assert.equal(result.counters.findings, 0)"
+    ]
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "subscription provider success requires billing success and active entitlement",
+    "line": 74,
+    "start": 1884,
+    "end": 3106,
+    "body": "test(\"subscription provider success requires billing success and active entitlement\", async () => {\n  const result = await reconcilePaymentIntegrity({\n    now,\n    deadlineAt,\n    providers: [\n      {\n        provider: \"stripe\",\n        listCandidates: async () => ({\n          candidates: [\n            candidate(\"missing-billing\"),\n            candidate(\"missing-entitlement\"),\n            candidate(\"healthy\"),\n          ],\n        }),\n      },\n    ],\n    local: {\n      getState: async (payment) => {\n        if (payment.checkoutAttemptId === \"missing-billing\") {\n          return localState({ billingSucceeded: false, activeEntitlement: false })\n        }\n        if (payment.checkoutAttemptId === \"missing-entitlement\") {\n          return localState({ billingSucceeded: true, activeEntitlement: false })\n        }\n        return localState()\n      },\n    },\n  })\n\n  assert.deepEqual(\n    result.findings.map((finding) => [finding.invariant, finding.boundary, finding.errorFamily]),\n    [\n      [\"provider_success_without_billing_success\", \"billing\", \"billing_state\"],\n      [\"provider_success_without_active_entitlement\", \"entitlement\", \"entitlement_state\"],\n    ],\n  )\n  assert.equal(result.counters.findings, 2)\n})",
+    "sha256": "e3e4c7124c076745c8bffe7ac55142aa144ac239f254574fd1fc08fbe7e72cd0",
+    "assertions": [
+      "assert.deepEqual(\n    result.findings.map((finding) => [finding.invariant, finding.boundary, finding.errorFamily]),\n    [\n      [\"provider_success_without_billing_success\", \"billing\", \"billing_state\"],\n      [\"provider_success_without_active_entitlement\", \"entitlement\", \"entitlement_state\"],\n    ],\n  )",
+      "assert.equal(result.counters.findings, 2)"
+    ]
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "duplicate provider representations produce one finding per subscription invariant",
+    "line": 113,
+    "start": 3108,
+    "end": 4282,
+    "body": "test(\"duplicate provider representations produce one finding per subscription invariant\", async () => {\n  const sharedDigest = \"d\".repeat(64)\n  const reported: string[] = []\n  const result = await reconcilePaymentIntegrity({\n    now,\n    deadlineAt,\n    providers: [\n      {\n        provider: \"stripe\",\n        listCandidates: async () => ({\n          candidates: [\n            candidate(\"checkout-representation\", { providerReferenceDigest: sharedDigest }),\n            candidate(\"invoice-representation\", {\n              checkoutAttemptId: null,\n              providerReferenceDigest: sharedDigest,\n            }),\n          ],\n        }),\n      },\n    ],\n    local: {\n      getState: async () => localState({ billingSucceeded: true, activeEntitlement: false }),\n    },\n    reporter: {\n      reportFinding: (finding) => {\n        reported.push(finding.providerReferenceDigest ?? \"missing\")\n      },\n    },\n  })\n\n  assert.equal(result.counters.candidatesChecked, 2)\n  assert.equal(result.counters.findings, 1)\n  assert.equal(result.findings.length, 1)\n  assert.equal(result.findings[0]?.providerReferenceDigest, sharedDigest)\n  assert.deepEqual(reported, [sharedDigest])\n})",
+    "sha256": "493349e301822b033498fe0430cc7477ab5b2ba7a01baeb50eec44c29e41162c",
+    "assertions": [
+      "assert.equal(result.counters.candidatesChecked, 2)",
+      "assert.equal(result.counters.findings, 1)",
+      "assert.equal(result.findings.length, 1)",
+      "assert.equal(result.findings[0]?.providerReferenceDigest, sharedDigest)",
+      "assert.deepEqual(reported, [sharedDigest])"
+    ]
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "local funnel classification promotes historical provider findings to internal tests",
+    "line": 150,
+    "start": 4284,
+    "end": 4871,
+    "body": "test(\"local funnel classification promotes historical provider findings to internal tests\", async () => {\n  const result = await reconcilePaymentIntegrity({\n    now,\n    deadlineAt,\n    providers: [\n      {\n        provider: \"stripe\",\n        listCandidates: async () => ({ candidates: [candidate(\"historical-qa\")] }),\n      },\n    ],\n    local: {\n      getState: async () =>\n        localState({ billingSucceeded: false, activeEntitlement: false, isInternalTest: true }),\n    },\n  })\n\n  assert.equal(result.findings.length, 1)\n  assert.equal(result.findings[0]?.isInternalTest, true)\n})",
+    "sha256": "83319bd9f082304f855e41e1216ee530cedc953cf28927328886bf63dbe681d5",
+    "assertions": [
+      "assert.equal(result.findings.length, 1)",
+      "assert.equal(result.findings[0]?.isInternalTest, true)"
+    ]
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "one-time provider success depends only on its paid purchase record",
+    "line": 170,
+    "start": 4873,
+    "end": 6143,
+    "body": "test(\"one-time provider success depends only on its paid purchase record\", async () => {\n  const result = await reconcilePaymentIntegrity({\n    now,\n    deadlineAt,\n    candidateCapPerProvider: DEFAULT_PAYMENT_INTEGRITY_CANDIDATE_CAP + 50,\n    providers: [\n      {\n        provider: \"paypal\",\n        listCandidates: async () => ({\n          candidates: [\n            candidate(\"missing-purchase\", {\n              provider: \"paypal\",\n              commerceKind: \"one_time\",\n              method: \"paypal\",\n            }),\n            candidate(\"one-time-healthy\", {\n              provider: \"paypal\",\n              commerceKind: \"one_time\",\n              method: \"paypal\",\n            }),\n          ],\n        }),\n      },\n    ],\n    local: {\n      getState: async (payment) => {\n        if (payment.checkoutAttemptId === \"missing-purchase\") {\n          return localState({\n            paidOneTimePurchase: false,\n          })\n        }\n        return localState({\n          paidOneTimePurchase: true,\n          activeEntitlement: true,\n        })\n      },\n    },\n  })\n\n  assert.deepEqual(\n    result.findings.map((finding) => [finding.invariant, finding.provider, finding.boundary]),\n    [[\"provider_success_without_paid_one_time_purchase\", \"paypal\", \"billing\"]],\n  )\n})",
+    "sha256": "c46b0825884833dbe4f642469b141da724f5b144ba1959c56295fed8dc661590",
+    "assertions": [
+      "assert.deepEqual(\n    result.findings.map((finding) => [finding.invariant, finding.provider, finding.boundary]),\n    [[\"provider_success_without_paid_one_time_purchase\", \"paypal\", \"billing\"]],\n  )"
+    ]
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "provider failure conflicts only with same-commerce billing success, not retained access",
+    "line": 215,
+    "start": 6145,
+    "end": 7354,
+    "body": "test(\"provider failure conflicts only with same-commerce billing success, not retained access\", async () => {\n  const result = await reconcilePaymentIntegrity({\n    now,\n    deadlineAt,\n    providers: [\n      {\n        provider: \"stripe\",\n        listCandidates: async () => ({\n          candidates: [\n            candidate(\"clean-failure\", { outcome: \"failed\" }),\n            candidate(\"retained-access\", { outcome: \"failed\" }),\n            candidate(\"conflicting-failure\", { outcome: \"failed\" }),\n          ],\n        }),\n      },\n    ],\n    local: {\n      getState: async (payment) => {\n        if (payment.checkoutAttemptId === \"conflicting-failure\") {\n          return localState({ billingSucceeded: true, activeEntitlement: true })\n        }\n        if (payment.checkoutAttemptId === \"retained-access\") {\n          return localState({ billingSucceeded: false, activeEntitlement: true })\n        }\n        return localState({ billingSucceeded: false, activeEntitlement: false })\n      },\n    },\n  })\n\n  assert.equal(result.counters.providerFailures, 3)\n  assert.deepEqual(\n    result.findings.map((finding) => finding.invariant),\n    [\"provider_failure_conflicts_with_local_subscription_success\"],\n  )\n})",
+    "sha256": "c121784db7b03e6cd8ed96cfef46c824baa7f9c87ac72541b7dc0af05b982180",
+    "assertions": [
+      "assert.equal(result.counters.providerFailures, 3)",
+      "assert.deepEqual(\n    result.findings.map((finding) => finding.invariant),\n    [\"provider_failure_conflicts_with_local_subscription_success\"],\n  )"
+    ]
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "provider lookup errors become monitor failures, not payment findings",
+    "line": 251,
+    "start": 7356,
+    "end": 8174,
+    "body": "test(\"provider lookup errors become monitor failures, not payment findings\", async () => {\n  const result = await reconcilePaymentIntegrity({\n    now,\n    deadlineAt,\n    providers: [\n      {\n        provider: \"stripe\",\n        listCandidates: async () => {\n          throw new Error(\"Stripe outage: cs_live_secret\")\n        },\n      },\n    ],\n    local: {\n      getState: async () => localState(),\n    },\n  })\n\n  assert.equal(result.counters.providerErrors, 1)\n  assert.equal(result.counters.monitorFailures, 1)\n  assert.equal(result.counters.findings, 0)\n  assert.deepEqual(result.monitorFailures[0], {\n    signal: \"payment_monitor_failed\",\n    provider: \"stripe\",\n    reason: \"provider_error\",\n    errorFamily: \"provider_unavailable\",\n  })\n  assert.equal(JSON.stringify(result).includes(\"cs_live_secret\"), false)\n})",
+    "sha256": "999e834437f34a22d7609402fe0f36570cdd9c147d41ba340f483938a64cd6ee",
+    "assertions": [
+      "assert.equal(result.counters.providerErrors, 1)",
+      "assert.equal(result.counters.monitorFailures, 1)",
+      "assert.equal(result.counters.findings, 0)",
+      "assert.deepEqual(result.monitorFailures[0], {\n    signal: \"payment_monitor_failed\",\n    provider: \"stripe\",\n    reason: \"provider_error\",\n    errorFamily: \"provider_unavailable\",\n  })",
+      "assert.equal(JSON.stringify(result).includes(\"cs_live_secret\"), false)"
+    ]
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "incomplete pagination and cap overflow are monitor failures and only the hard cap is checked",
+    "line": 280,
+    "start": 8176,
+    "end": 9204,
+    "body": "test(\"incomplete pagination and cap overflow are monitor failures and only the hard cap is checked\", async () => {\n  const candidates = Array.from(\n    { length: DEFAULT_PAYMENT_INTEGRITY_CANDIDATE_CAP + 5 },\n    (_, index) => candidate(`attempt-${index}`, { provider: \"paypal\", method: \"paypal\" }),\n  )\n  let checked = 0\n\n  const result = await reconcilePaymentIntegrity({\n    now,\n    deadlineAt,\n    providers: [\n      {\n        provider: \"paypal\",\n        listCandidates: async () => ({ candidates, hasMore: true, incomplete: true }),\n      },\n    ],\n    local: {\n      getState: async () => {\n        checked += 1\n        return localState()\n      },\n    },\n  })\n\n  assert.equal(checked, DEFAULT_PAYMENT_INTEGRITY_CANDIDATE_CAP)\n  assert.equal(result.counters.candidatesChecked, DEFAULT_PAYMENT_INTEGRITY_CANDIDATE_CAP)\n  assert.equal(result.counters.cappedProviders, 1)\n  assert.equal(result.counters.incompleteProviders, 1)\n  assert.equal(result.counters.monitorFailures, 2)\n  assert.equal(result.counters.findings, 0)\n})",
+    "sha256": "083713d52b9cedb887d1a9d00c640308305b9f1e2748d05b15223fc9c70d0df7",
+    "assertions": [
+      "assert.equal(checked, DEFAULT_PAYMENT_INTEGRITY_CANDIDATE_CAP)",
+      "assert.equal(result.counters.candidatesChecked, DEFAULT_PAYMENT_INTEGRITY_CANDIDATE_CAP)",
+      "assert.equal(result.counters.cappedProviders, 1)",
+      "assert.equal(result.counters.incompleteProviders, 1)",
+      "assert.equal(result.counters.monitorFailures, 2)",
+      "assert.equal(result.counters.findings, 0)"
+    ]
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "deadline exhaustion stops remaining checks and reports monitor failure",
+    "line": 312,
+    "start": 9206,
+    "end": 10137,
+    "body": "test(\"deadline exhaustion stops remaining checks and reports monitor failure\", async () => {\n  const times = [now.getTime(), now.getTime(), now.getTime(), deadlineAt.getTime() + 1]\n  const checked: string[] = []\n\n  const result = await reconcilePaymentIntegrity({\n    now,\n    deadlineAt,\n    clock: () => times.shift() ?? deadlineAt.getTime() + 1,\n    maxConcurrency: 1,\n    providers: [\n      {\n        provider: \"stripe\",\n        listCandidates: async () => ({\n          candidates: [candidate(\"first-attempt\"), candidate(\"second-attempt\")],\n        }),\n      },\n    ],\n    local: {\n      getState: async (payment) => {\n        checked.push(payment.checkoutAttemptId ?? \"missing\")\n        return localState()\n      },\n    },\n  })\n\n  assert.deepEqual(checked, [\"first-attempt\"])\n  assert.equal(result.counters.deadlineExhausted, 1)\n  assert.equal(result.counters.monitorFailures, 1)\n  assert.equal(result.counters.findings, 0)\n})",
+    "sha256": "70934b05494d594ce61beca5cb2cc1299cafc28f53d99fe4f0073072252d4d46",
+    "assertions": [
+      "assert.deepEqual(checked, [\"first-attempt\"])",
+      "assert.equal(result.counters.deadlineExhausted, 1)",
+      "assert.equal(result.counters.monitorFailures, 1)",
+      "assert.equal(result.counters.findings, 0)"
+    ]
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "candidate checks are bounded to concurrency four by default",
+    "line": 343,
+    "start": 10139,
+    "end": 11329,
+    "body": "test(\"candidate checks are bounded to concurrency four by default\", async () => {\n  let active = 0\n  let observedMax = 0\n  let autoRelease = false\n  const release: Array<() => void> = []\n\n  const run = reconcilePaymentIntegrity({\n    now,\n    deadlineAt,\n    maxConcurrency: DEFAULT_PAYMENT_INTEGRITY_MAX_CONCURRENCY + 10,\n    providers: [\n      {\n        provider: \"stripe\",\n        listCandidates: async () => ({\n          candidates: Array.from({ length: 10 }, (_, index) => candidate(`attempt-${index}`)),\n        }),\n      },\n    ],\n    local: {\n      getState: async () => {\n        active += 1\n        observedMax = Math.max(observedMax, active)\n        if (!autoRelease) {\n          await new Promise<void>((resolve) => release.push(resolve))\n        }\n        active -= 1\n        return localState()\n      },\n    },\n  })\n\n  while (release.length < DEFAULT_PAYMENT_INTEGRITY_MAX_CONCURRENCY) {\n    await new Promise((resolve) => setImmediate(resolve))\n  }\n  assert.equal(observedMax, DEFAULT_PAYMENT_INTEGRITY_MAX_CONCURRENCY)\n  autoRelease = true\n  while (release.length > 0) release.shift()?.()\n  await run\n  assert.equal(observedMax, DEFAULT_PAYMENT_INTEGRITY_MAX_CONCURRENCY)\n})",
+    "sha256": "b4c000b75e1bb182b5f04f93014804fd0fbe29fb60a88b3b4cc8f94b9c5bf553",
+    "assertions": [
+      "assert.equal(observedMax, DEFAULT_PAYMENT_INTEGRITY_MAX_CONCURRENCY)",
+      "assert.equal(observedMax, DEFAULT_PAYMENT_INTEGRITY_MAX_CONCURRENCY)"
+    ]
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "reporter throws are contained and do not abort the scan",
+    "line": 384,
+    "start": 11331,
+    "end": 12356,
+    "body": "test(\"reporter throws are contained and do not abort the scan\", async () => {\n  const reported: string[] = []\n  const result = await reconcilePaymentIntegrity({\n    now,\n    deadlineAt,\n    providers: [\n      {\n        provider: \"stripe\",\n        listCandidates: async () => ({\n          candidates: [candidate(\"missing-billing\"), candidate(\"healthy-attempt\")],\n        }),\n      },\n    ],\n    local: {\n      getState: async (payment) =>\n        payment.checkoutAttemptId === \"missing-billing\"\n          ? localState({ billingSucceeded: false, activeEntitlement: false })\n          : localState(),\n    },\n    reporter: {\n      reportFinding: async (finding) => {\n        reported.push(finding.checkoutAttemptId ?? \"missing\")\n        throw new Error(\"sink failed\")\n      },\n      reportMonitorFailure: async () => {\n        throw new Error(\"sink failed\")\n      },\n    },\n  })\n\n  assert.deepEqual(reported, [\"missing-billing\"])\n  assert.equal(result.counters.findings, 1)\n  assert.equal(result.counters.candidatesChecked, 2)\n})",
+    "sha256": "6bac6c4346ccc3df016809a7a15e09b42a1c173b0a04400233b50848a8068bbd",
+    "assertions": [
+      "assert.deepEqual(reported, [\"missing-billing\"])",
+      "assert.equal(result.counters.findings, 1)",
+      "assert.equal(result.counters.candidatesChecked, 2)"
+    ]
+  },
+  {
+    "file": "tests/payment-integrity.test.ts",
+    "title": "result and reporter payloads expose only aggregates and bounded opaque descriptors",
+    "line": 419,
+    "start": 12358,
+    "end": 13831,
+    "body": "test(\"result and reporter payloads expose only aggregates and bounded opaque descriptors\", async () => {\n  const reported: unknown[] = []\n  const rawCandidate = {\n    ...candidate(\"attempt-raw\", {\n      checkoutAttemptId: null,\n      providerReferenceDigest: \"a\".repeat(64),\n    }),\n    rawProviderReference: \"pi_secret_raw_reference\",\n    providerObject: { id: \"cs_raw_secret\" },\n  } as PaymentIntegrityCandidate\n\n  const result = await reconcilePaymentIntegrity({\n    now,\n    deadlineAt,\n    maxFindings: 1,\n    providers: [\n      {\n        provider: \"stripe\",\n        listCandidates: async () => ({\n          candidates: [\n            rawCandidate,\n            candidate(\"attempt-two\", { providerReferenceDigest: \"b\".repeat(64) }),\n          ],\n        }),\n      },\n    ],\n    local: {\n      getState: async () => localState({ billingSucceeded: false, activeEntitlement: false }),\n    },\n    reporter: {\n      reportFinding: async (finding) => reported.push(finding),\n      reportMonitorFailure: async (failure) => reported.push(failure),\n    },\n  })\n\n  assert.equal(result.counters.findings, 2)\n  assert.equal(result.findings.length, 1)\n  assert.equal(result.findings[0]?.providerReferenceDigest, \"a\".repeat(64))\n  assert.equal(result.findings[0]?.checkoutAttemptId, undefined)\n  const serialized = JSON.stringify({ result, reported })\n  assert.equal(serialized.includes(\"pi_secret_raw_reference\"), false)\n  assert.equal(serialized.includes(\"cs_raw_secret\"), false)\n})",
+    "sha256": "1919c20821945a31a02b797239b73543eb9c7b0fdc5e273ca50187a6ef1b3852",
+    "assertions": [
+      "assert.equal(result.counters.findings, 2)",
+      "assert.equal(result.findings.length, 1)",
+      "assert.equal(result.findings[0]?.providerReferenceDigest, \"a\".repeat(64))",
+      "assert.equal(result.findings[0]?.checkoutAttemptId, undefined)",
+      "assert.equal(serialized.includes(\"pi_secret_raw_reference\"), false)",
+      "assert.equal(serialized.includes(\"cs_raw_secret\"), false)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor reserves response time around its 40 second work deadline",
+    "line": 39,
+    "start": 1091,
+    "end": 1215,
+    "body": "test(\"payment monitor reserves response time around its 40 second work deadline\", () => {\n  assert.equal(maxDuration, 60)\n})",
+    "sha256": "483f354ceca4ed44d95b28788dee98755824a471b0a3c84bf4a91fe93a912492",
+    "assertions": [
+      "assert.equal(maxDuration, 60)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "paid-access finding live tag follows the finding provider only",
+    "line": 43,
+    "start": 1217,
+    "end": 1760,
+    "body": "test(\"paid-access finding live tag follows the finding provider only\", () => {\n  assert.equal(\n    resolvePaidAccessFindingLive(\"paypal\", { stripeLive: true, paypalLive: false }),\n    false,\n  )\n  assert.equal(\n    resolvePaidAccessFindingLive(\"stripe\", { stripeLive: false, paypalLive: true }),\n    false,\n  )\n  assert.equal(\n    resolvePaidAccessFindingLive(\"paypal\", { stripeLive: false, paypalLive: true }),\n    true,\n  )\n  assert.equal(\n    resolvePaidAccessFindingLive(\"stripe\", { stripeLive: true, paypalLive: false }),\n    true,\n  )\n})",
+    "sha256": "1de14b09a248bcfbeab606e4001b601c2484603355a12fb81f0aa6b8f42a9390",
+    "assertions": [
+      "assert.equal(\n    resolvePaidAccessFindingLive(\"paypal\", { stripeLive: true, paypalLive: false }),\n    false,\n  )",
+      "assert.equal(\n    resolvePaidAccessFindingLive(\"stripe\", { stripeLive: false, paypalLive: true }),\n    false,\n  )",
+      "assert.equal(\n    resolvePaidAccessFindingLive(\"paypal\", { stripeLive: false, paypalLive: true }),\n    true,\n  )",
+      "assert.equal(\n    resolvePaidAccessFindingLive(\"stripe\", { stripeLive: true, paypalLive: false }),\n    true,\n  )"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor uses fixed-size constant-time auth comparison input",
+    "line": 62,
+    "start": 1762,
+    "end": 2145,
+    "body": "test(\"payment monitor uses fixed-size constant-time auth comparison input\", () => {\n  const compared: Array<[number, number]> = []\n  const matched = safeBearerTokenMatches(\"Bearer short\", \"a-much-longer-secret\", (left, right) => {\n    compared.push([left.byteLength, right.byteLength])\n    return false\n  })\n\n  assert.equal(matched, false)\n  assert.deepEqual(compared, [[32, 32]])\n})",
+    "sha256": "4438eda7aa412db62c9e34fa713cdd234ac89d1d0cb51182f3ed3254e3345871",
+    "assertions": [
+      "assert.equal(matched, false)",
+      "assert.deepEqual(compared, [[32, 32]])"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor rejects auth failures before rate limit, work, or check-in",
+    "line": 73,
+    "start": 2147,
+    "end": 2804,
+    "body": "test(\"payment monitor rejects auth failures before rate limit, work, or check-in\", async () => {\n  let rateLimitChecks = 0\n  let runs = 0\n  let checkIns = 0\n\n  const response = await handlePaymentMonitor(request(\"wrong\"), {\n    triggerSecret: secret,\n    checkRateLimit: () => {\n      rateLimitChecks += 1\n      return { allowed: true }\n    },\n    runPaymentIntegrity: async () => {\n      runs += 1\n      return result()\n    },\n    captureCheckIn: () => {\n      checkIns += 1\n    },\n  })\n\n  assert.deepEqual(response, { status: 401, body: { error: \"unauthorized\" } })\n  assert.equal(rateLimitChecks, 0)\n  assert.equal(runs, 0)\n  assert.equal(checkIns, 0)\n})",
+    "sha256": "e1e99fb55d46a4d71544bb92d1a29af2319364ffbd57f139f7a6eb99c1ced828",
+    "assertions": [
+      "assert.deepEqual(response, { status: 401, body: { error: \"unauthorized\" } })",
+      "assert.equal(rateLimitChecks, 0)",
+      "assert.equal(runs, 0)",
+      "assert.equal(checkIns, 0)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor rate limits before payment work or Sentry check-in",
+    "line": 99,
+    "start": 2806,
+    "end": 3416,
+    "body": "test(\"payment monitor rate limits before payment work or Sentry check-in\", async () => {\n  let runs = 0\n  let checkIns = 0\n  const response = await handlePaymentMonitor(request(), {\n    triggerSecret: secret,\n    checkRateLimit: (identifier) => {\n      assert.equal(identifier, \"203.0.113.9\")\n      return { allowed: false }\n    },\n    runPaymentIntegrity: async () => {\n      runs += 1\n      return result()\n    },\n    captureCheckIn: () => {\n      checkIns += 1\n    },\n  })\n\n  assert.deepEqual(response, { status: 429, body: { error: \"rate_limited\" } })\n  assert.equal(runs, 0)\n  assert.equal(checkIns, 0)\n})",
+    "sha256": "231ca642b45a7cc7c7c48a1524b0086a414248df1cca90ba72ddc93537c2f6f1",
+    "assertions": [
+      "assert.equal(identifier, \"203.0.113.9\")",
+      "assert.deepEqual(response, { status: 429, body: { error: \"rate_limited\" } })",
+      "assert.equal(runs, 0)",
+      "assert.equal(checkIns, 0)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor runs with a 40 second deadline and returns aggregate-only counters",
+    "line": 122,
+    "start": 3418,
+    "end": 4700,
+    "body": "test(\"payment monitor runs with a 40 second deadline and returns aggregate-only counters\", async () => {\n  const checkIns: unknown[] = []\n  let runInput: Parameters<RunPaymentIntegrity>[0] | undefined\n\n  const response = await handlePaymentMonitor(request(), {\n    triggerSecret: secret,\n    now: () => now,\n    clock: () => now.getTime(),\n    checkRateLimit: () => ({ allowed: true }),\n    runPaymentIntegrity: async (input) => {\n      runInput = input\n      return result()\n    },\n    captureCheckIn: (checkIn) => {\n      checkIns.push(checkIn)\n      return checkIns.length === 1 ? \"check-in-id\" : undefined\n    },\n  })\n\n  assert.equal(runInput?.now, now)\n  assert.equal(runInput?.deadlineAt.getTime(), now.getTime() + 40_000)\n  assert.equal(response.status, 200)\n  assert.deepEqual(response.body, {\n    paymentIntegrity: {\n      status: \"completed\",\n      counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 4 },\n    },\n  })\n  assert.equal(JSON.stringify(response.body).includes(\"must_not_leak\"), false)\n  assert.deepEqual(checkIns, [\n    { monitorSlug: \"payment-integrity-local\", status: \"in_progress\" },\n    {\n      monitorSlug: \"payment-integrity-local\",\n      status: \"ok\",\n      checkInId: \"check-in-id\",\n      duration: 0,\n    },\n  ])\n})",
+    "sha256": "306a741788e7323f827460eff89f1520c2d4401d28ae423c1c4943d88b578941",
+    "assertions": [
+      "assert.equal(runInput?.now, now)",
+      "assert.equal(runInput?.deadlineAt.getTime(), now.getTime() + 40_000)",
+      "assert.equal(response.status, 200)",
+      "assert.deepEqual(response.body, {\n    paymentIntegrity: {\n      status: \"completed\",\n      counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 4 },\n    },\n  })",
+      "assert.equal(JSON.stringify(response.body).includes(\"must_not_leak\"), false)",
+      "assert.deepEqual(checkIns, [\n    { monitorSlug: \"payment-integrity-local\", status: \"in_progress\" },\n    {\n      monitorSlug: \"payment-integrity-local\",\n      status: \"ok\",\n      checkInId: \"check-in-id\",\n      duration: 0,\n    },\n  ])"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "production monitor mode requires start and finish check-in receipts plus a flushed transport",
+    "line": 162,
+    "start": 4702,
+    "end": 6005,
+    "body": "test(\"production monitor mode requires start and finish check-in receipts plus a flushed transport\", async () => {\n  let checkInCount = 0\n  let flushCount = 0\n  const delivered = await runPaymentIntegrityBranch({\n    monitorSlug: \"payment-integrity-daily\",\n    deadlineMs: 20_000,\n    runPaymentIntegrity: async () => result(),\n    captureCheckIn: () => {\n      checkInCount += 1\n      return checkInCount === 1 ? \"start-id\" : \"finish-id\"\n    },\n    flushTelemetry: async () => {\n      flushCount += 1\n      return true\n    },\n    requireCheckInReceipt: true,\n    now: () => now,\n    clock: () => now.getTime(),\n  })\n\n  assert.equal(delivered.ok, true)\n  assert.equal(flushCount, 1)\n\n  const missingReceipt = await runPaymentIntegrityBranch({\n    monitorSlug: \"payment-integrity-daily\",\n    deadlineMs: 20_000,\n    runPaymentIntegrity: async () => result(),\n    captureCheckIn: () => undefined,\n    flushTelemetry: async () => true,\n    requireCheckInReceipt: true,\n    now: () => now,\n    clock: () => now.getTime(),\n  })\n\n  assert.equal(missingReceipt.ok, false)\n  assert.equal(missingReceipt.summary.status, \"monitor_failed\")\n  assert.deepEqual(missingReceipt.summary.failures, [\n    {\n      provider: \"unknown\",\n      reason: \"telemetry_delivery_failed\",\n      errorFamily: \"unknown\",\n    },\n  ])\n})",
+    "sha256": "9f45721e907810d32287076be9e17ee1d79438b5267a58ab0043226b58e743d3",
+    "assertions": [
+      "assert.equal(delivered.ok, true)",
+      "assert.equal(flushCount, 1)",
+      "assert.equal(missingReceipt.ok, false)",
+      "assert.equal(missingReceipt.summary.status, \"monitor_failed\")",
+      "assert.deepEqual(missingReceipt.summary.failures, [\n    {\n      provider: \"unknown\",\n      reason: \"telemetry_delivery_failed\",\n      errorFamily: \"unknown\",\n    },\n  ])"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor contains runner and Sentry failures without exposing errors",
+    "line": 207,
+    "start": 6007,
+    "end": 7585,
+    "body": "test(\"payment monitor contains runner and Sentry failures without exposing errors\", async () => {\n  const checkIns: unknown[] = []\n  const monitorFailures: unknown[] = []\n  const response = await handlePaymentMonitor(request(), {\n    triggerSecret: secret,\n    now: () => now,\n    clock: () => now.getTime(),\n    checkRateLimit: () => ({ allowed: true }),\n    runPaymentIntegrity: async () => {\n      throw new Error(\"stripe secret must not leak\")\n    },\n    captureCheckIn: (checkIn) => {\n      checkIns.push(checkIn)\n      throw new Error(\"sentry unavailable\")\n    },\n    reportMonitorFailure: (failure) => {\n      monitorFailures.push(failure)\n      return \"0123456789abcdef0123456789abcdef\"\n    },\n    flushTelemetry: async () => true,\n  })\n\n  assert.equal(response.status, 500)\n  assert.deepEqual(response.body, {\n    paymentIntegrity: {\n      status: \"error\",\n      counters: emptyPaymentIntegrityCounters(),\n      failures: [\n        {\n          provider: \"unknown\",\n          reason: \"provider_error\",\n          errorFamily: \"unknown\",\n        },\n      ],\n    },\n  })\n  assert.equal(JSON.stringify(response.body).includes(\"stripe secret\"), false)\n  assert.deepEqual(checkIns, [\n    { monitorSlug: \"payment-integrity-local\", status: \"in_progress\" },\n    {\n      monitorSlug: \"payment-integrity-local\",\n      status: \"error\",\n      checkInId: undefined,\n      duration: 0,\n    },\n  ])\n  assert.deepEqual(monitorFailures, [\n    {\n      signal: \"payment_monitor_failed\",\n      provider: \"unknown\",\n      reason: \"provider_error\",\n      errorFamily: \"unknown\",\n    },\n  ])\n})",
+    "sha256": "34b6f11a0e2c7208d343cdf2126964b38da5a44d070d75265380b05864d0a41f",
+    "assertions": [
+      "assert.equal(response.status, 500)",
+      "assert.deepEqual(response.body, {\n    paymentIntegrity: {\n      status: \"error\",\n      counters: emptyPaymentIntegrityCounters(),\n      failures: [\n        {\n          provider: \"unknown\",\n          reason: \"provider_error\",\n          errorFamily: \"unknown\",\n        },\n      ],\n    },\n  })",
+      "assert.equal(JSON.stringify(response.body).includes(\"stripe secret\"), false)",
+      "assert.deepEqual(checkIns, [\n    { monitorSlug: \"payment-integrity-local\", status: \"in_progress\" },\n    {\n      monitorSlug: \"payment-integrity-local\",\n      status: \"error\",\n      checkInId: undefined,\n      duration: 0,\n    },\n  ])",
+      "assert.deepEqual(monitorFailures, [\n    {\n      signal: \"payment_monitor_failed\",\n      provider: \"unknown\",\n      reason: \"provider_error\",\n      errorFamily: \"unknown\",\n    },\n  ])"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor returns safe failure categories and flushes telemetry before responding",
+    "line": 263,
+    "start": 7587,
+    "end": 8958,
+    "body": "test(\"payment monitor returns safe failure categories and flushes telemetry before responding\", async () => {\n  let flushes = 0\n  const response = await handlePaymentMonitor(request(), {\n    triggerSecret: secret,\n    checkRateLimit: () => ({ allowed: true }),\n    runPaymentIntegrity: async () =>\n      result({\n        status: \"monitor_failed\",\n        counters: {\n          ...emptyPaymentIntegrityCounters(),\n          monitorFailures: 1,\n          providerErrors: 1,\n        },\n        monitorFailures: [\n          {\n            signal: \"payment_monitor_failed\",\n            provider: \"stripe\",\n            reason: \"provider_error\",\n            errorFamily: \"provider_unavailable\",\n          },\n        ],\n        telemetryEventIds: [\"0123456789abcdef0123456789abcdef\"],\n      }),\n    captureCheckIn: () => undefined,\n    flushTelemetry: async () => {\n      flushes += 1\n      return flushes > 1\n    },\n  })\n\n  assert.equal(response.status, 500)\n  assert.deepEqual(response.body, {\n    paymentIntegrity: {\n      status: \"monitor_failed\",\n      counters: {\n        ...emptyPaymentIntegrityCounters(),\n        monitorFailures: 1,\n        providerErrors: 1,\n      },\n      failures: [\n        {\n          provider: \"stripe\",\n          reason: \"provider_error\",\n          errorFamily: \"provider_unavailable\",\n        },\n      ],\n    },\n  })\n  assert.equal(flushes, 2)\n})",
+    "sha256": "d64ffdc2f9de5fa430b32d926bd4d6a71218da6724fed8315f9790686a7ab9ab",
+    "assertions": [
+      "assert.equal(response.status, 500)",
+      "assert.deepEqual(response.body, {\n    paymentIntegrity: {\n      status: \"monitor_failed\",\n      counters: {\n        ...emptyPaymentIntegrityCounters(),\n        monitorFailures: 1,\n        providerErrors: 1,\n      },\n      failures: [\n        {\n          provider: \"stripe\",\n          reason: \"provider_error\",\n          errorFamily: \"provider_unavailable\",\n        },\n      ],\n    },\n  })",
+      "assert.equal(flushes, 2)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor fails closed when an emitted incident has no Sentry receipt",
+    "line": 314,
+    "start": 8960,
+    "end": 10293,
+    "body": "test(\"payment monitor fails closed when an emitted incident has no Sentry receipt\", async () => {\n  const response = await handlePaymentMonitor(request(), {\n    triggerSecret: secret,\n    checkRateLimit: () => ({ allowed: true }),\n    runPaymentIntegrity: async () =>\n      result({\n        status: \"monitor_failed\",\n        counters: {\n          ...emptyPaymentIntegrityCounters(),\n          monitorFailures: 1,\n          incompleteProviders: 1,\n        },\n        monitorFailures: [\n          {\n            signal: \"payment_monitor_failed\",\n            provider: \"paypal\",\n            reason: \"incomplete_pagination\",\n            errorFamily: \"unknown\",\n          },\n        ],\n      }),\n    captureCheckIn: () => undefined,\n    flushTelemetry: async () => true,\n  })\n\n  assert.equal(response.status, 500)\n  assert.deepEqual(response.body, {\n    paymentIntegrity: {\n      status: \"monitor_failed\",\n      counters: {\n        ...emptyPaymentIntegrityCounters(),\n        monitorFailures: 2,\n        incompleteProviders: 1,\n      },\n      failures: [\n        {\n          provider: \"paypal\",\n          reason: \"incomplete_pagination\",\n          errorFamily: \"unknown\",\n        },\n        {\n          provider: \"unknown\",\n          reason: \"telemetry_delivery_failed\",\n          errorFamily: \"unknown\",\n        },\n      ],\n    },\n  })\n})",
+    "sha256": "56639072cb24e8e0d621eef8b1c7c73eeaf9c3d1b1bc1644abac69f6996c17ab",
+    "assertions": [
+      "assert.equal(response.status, 500)",
+      "assert.deepEqual(response.body, {\n    paymentIntegrity: {\n      status: \"monitor_failed\",\n      counters: {\n        ...emptyPaymentIntegrityCounters(),\n        monitorFailures: 2,\n        incompleteProviders: 1,\n      },\n      failures: [\n        {\n          provider: \"paypal\",\n          reason: \"incomplete_pagination\",\n          errorFamily: \"unknown\",\n        },\n        {\n          provider: \"unknown\",\n          reason: \"telemetry_delivery_failed\",\n          errorFamily: \"unknown\",\n        },\n      ],\n    },\n  })"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor flushes completed integrity findings before returning success",
+    "line": 364,
+    "start": 10295,
+    "end": 11583,
+    "body": "test(\"payment monitor flushes completed integrity findings before returning success\", async () => {\n  let flushes = 0\n  const response = await handlePaymentMonitor(request(), {\n    triggerSecret: secret,\n    checkRateLimit: () => ({ allowed: true }),\n    runPaymentIntegrity: async () =>\n      result({\n        counters: {\n          ...emptyPaymentIntegrityCounters(),\n          providersScanned: 2,\n          candidatesChecked: 4,\n          findings: 1,\n        },\n        findings: [\n          {\n            signal: \"payment_integrity_mismatch\",\n            provider: \"stripe\",\n            commerceKind: \"subscription\",\n            boundary: \"billing\",\n            errorFamily: \"billing_state\",\n            invariant: \"provider_success_without_billing_success\",\n            providerReferenceDigest:\n              \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n            method: \"card\",\n            truth: \"succeeded\",\n            live: true,\n            isInternalTest: false,\n          },\n        ],\n        telemetryEventIds: [\"0123456789abcdef0123456789abcdef\"],\n      }),\n    captureCheckIn: () => undefined,\n    flushTelemetry: async () => {\n      flushes += 1\n      return true\n    },\n  })\n\n  assert.equal(response.status, 200)\n  assert.equal(flushes, 1)\n})",
+    "sha256": "1092d0a81e53c3337c2ce6fc314eacb15603eff3835941b77d5b3e1675fed95d",
+    "assertions": [
+      "assert.equal(response.status, 200)",
+      "assert.equal(flushes, 1)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor uses uncapped incident counters when requiring Sentry receipts",
+    "line": 406,
+    "start": 11585,
+    "end": 12273,
+    "body": "test(\"payment monitor uses uncapped incident counters when requiring Sentry receipts\", async () => {\n  let flushes = 0\n  const response = await handlePaymentMonitor(request(), {\n    triggerSecret: secret,\n    checkRateLimit: () => ({ allowed: true }),\n    runPaymentIntegrity: async () =>\n      result({\n        counters: {\n          ...emptyPaymentIntegrityCounters(),\n          findings: 1,\n        },\n        findings: [],\n        telemetryEventIds: [\"0123456789abcdef0123456789abcdef\"],\n      }),\n    captureCheckIn: () => undefined,\n    flushTelemetry: async () => {\n      flushes += 1\n      return true\n    },\n  })\n\n  assert.equal(response.status, 200)\n  assert.equal(flushes, 1)\n})",
+    "sha256": "3386c69f68c413ab9dceb3fd16070f7df0b889d16d971c4a257d40ff8043836c",
+    "assertions": [
+      "assert.equal(response.status, 200)",
+      "assert.equal(flushes, 1)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor runs paid-access branch with aggregate-only output",
+    "line": 431,
+    "start": 12275,
+    "end": 14223,
+    "body": "test(\"payment monitor runs paid-access branch with aggregate-only output\", async () => {\n  let flushes = 0\n  const response = await handlePaymentMonitor(request(), {\n    triggerSecret: secret,\n    checkRateLimit: () => ({ allowed: true }),\n    runPaymentIntegrity: async () => result(),\n    runPaidAccessMonitor: async () => ({\n      status: \"completed\",\n      counters: {\n        purchasesListed: 1,\n        purchasesChecked: 1,\n        skippedInternalTest: 0,\n        active: 0,\n        findings: 1,\n        monitorFailures: 0,\n      },\n      findings: [\n        {\n          signal: \"paid_but_entitlement_not_active\",\n          provider: \"paypal\",\n          purchaseId: \"purchase_12345678\",\n          reason: \"delivery_evidence_missing\",\n          userId: \"user_12345678\",\n          leadId: \"lead_12345678\",\n          paidAt: \"2026-08-07T10:00:00.000Z\",\n          isInternalTest: false,\n        },\n      ],\n      monitorFailures: [],\n      telemetryEventIds: [\"0123456789abcdef0123456789abcdef\"],\n    }),\n    captureCheckIn: () => undefined,\n    flushTelemetry: async () => {\n      flushes += 1\n      return true\n    },\n  })\n\n  assert.equal(response.status, 200)\n  assert.deepEqual(response.body, {\n    paymentIntegrity: {\n      status: \"completed\",\n      counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 4 },\n    },\n    paidAccess: {\n      status: \"completed\",\n      counters: {\n        purchasesListed: 1,\n        purchasesChecked: 1,\n        skippedInternalTest: 0,\n        active: 0,\n        findings: 1,\n        monitorFailures: 0,\n      },\n      findings: [{ provider: \"paypal\", reason: \"delivery_evidence_missing\" }],\n    },\n  })\n  assert.equal(JSON.stringify(response.body).includes(\"purchase_12345678\"), false)\n  assert.equal(JSON.stringify(response.body).includes(\"user_12345678\"), false)\n  assert.equal(JSON.stringify(response.body).includes(\"lead_12345678\"), false)\n  assert.equal(flushes, 1)\n})",
+    "sha256": "1e7548b5d3c933959a2b6f77f2a190a5bd166a2490136506d6e1fc1e11e339eb",
+    "assertions": [
+      "assert.equal(response.status, 200)",
+      "assert.deepEqual(response.body, {\n    paymentIntegrity: {\n      status: \"completed\",\n      counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 4 },\n    },\n    paidAccess: {\n      status: \"completed\",\n      counters: {\n        purchasesListed: 1,\n        purchasesChecked: 1,\n        skippedInternalTest: 0,\n        active: 0,\n        findings: 1,\n        monitorFailures: 0,\n      },\n      findings: [{ provider: \"paypal\", reason: \"delivery_evidence_missing\" }],\n    },\n  })",
+      "assert.equal(JSON.stringify(response.body).includes(\"purchase_12345678\"), false)",
+      "assert.equal(JSON.stringify(response.body).includes(\"user_12345678\"), false)",
+      "assert.equal(JSON.stringify(response.body).includes(\"lead_12345678\"), false)",
+      "assert.equal(flushes, 1)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor branch emits paid-access findings when runner returns no receipt",
+    "line": 494,
+    "start": 14225,
+    "end": 15873,
+    "body": "test(\"payment monitor branch emits paid-access findings when runner returns no receipt\", async () => {\n  const reported: unknown[] = []\n  let flushes = 0\n  const response = await handlePaymentMonitor(request(), {\n    triggerSecret: secret,\n    checkRateLimit: () => ({ allowed: true }),\n    runPaymentIntegrity: async () => result(),\n    runPaidAccessMonitor: async () => ({\n      status: \"completed\",\n      counters: {\n        purchasesListed: 1,\n        purchasesChecked: 1,\n        skippedInternalTest: 0,\n        active: 0,\n        findings: 1,\n        monitorFailures: 0,\n      },\n      findings: [\n        {\n          signal: \"paid_but_entitlement_not_active\",\n          provider: \"paypal\",\n          purchaseId: \"purchase_branch_receipt\",\n          reason: \"delivery_evidence_missing\",\n          paidAt: \"2026-08-07T10:00:00.000Z\",\n          isInternalTest: false,\n        },\n      ],\n      monitorFailures: [],\n    }),\n    reportPaidAccessFinding: (finding) => {\n      reported.push(finding)\n      return \"abcdef0123456789abcdef0123456789\"\n    },\n    captureCheckIn: () => undefined,\n    flushTelemetry: async () => {\n      flushes += 1\n      return true\n    },\n  })\n\n  assert.equal(response.status, 200)\n  assert.equal(reported.length, 1)\n  assert.equal(flushes, 1)\n  assert.ok(\"paymentIntegrity\" in response.body)\n  assert.deepEqual(response.body.paidAccess, {\n    status: \"completed\",\n    counters: {\n      purchasesListed: 1,\n      purchasesChecked: 1,\n      skippedInternalTest: 0,\n      active: 0,\n      findings: 1,\n      monitorFailures: 0,\n    },\n    findings: [{ provider: \"paypal\", reason: \"delivery_evidence_missing\" }],\n  })\n})",
+    "sha256": "beb210bff811bbd163206052ae79adf37b3ba00fa4b6f722448690b62e9da2df",
+    "assertions": [
+      "assert.equal(response.status, 200)",
+      "assert.equal(reported.length, 1)",
+      "assert.equal(flushes, 1)",
+      "assert.ok(\"paymentIntegrity\" in response.body)",
+      "assert.deepEqual(response.body.paidAccess, {\n    status: \"completed\",\n    counters: {\n      purchasesListed: 1,\n      purchasesChecked: 1,\n      skippedInternalTest: 0,\n      active: 0,\n      findings: 1,\n      monitorFailures: 0,\n    },\n    findings: [{ provider: \"paypal\", reason: \"delivery_evidence_missing\" }],\n  })"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor fails closed on partial paid-access receipts without duplicate reporting",
+    "line": 552,
+    "start": 15875,
+    "end": 17702,
+    "body": "test(\"payment monitor fails closed on partial paid-access receipts without duplicate reporting\", async () => {\n  const reported: unknown[] = []\n  const response = await handlePaymentMonitor(request(), {\n    triggerSecret: secret,\n    checkRateLimit: () => ({ allowed: true }),\n    runPaymentIntegrity: async () => result(),\n    runPaidAccessMonitor: async () => ({\n      status: \"completed\",\n      counters: {\n        purchasesListed: 2,\n        purchasesChecked: 2,\n        skippedInternalTest: 0,\n        active: 0,\n        findings: 2,\n        monitorFailures: 0,\n      },\n      findings: [\n        {\n          signal: \"paid_but_entitlement_not_active\",\n          provider: \"paypal\",\n          purchaseId: \"purchase_partial_receipt_1\",\n          reason: \"delivery_evidence_missing\",\n          paidAt: \"2026-08-07T10:00:00.000Z\",\n          isInternalTest: false,\n        },\n        {\n          signal: \"paid_but_entitlement_not_active\",\n          provider: \"paypal\",\n          purchaseId: \"purchase_partial_receipt_2\",\n          reason: \"confirmation_pending\",\n          paidAt: \"2026-08-07T10:05:00.000Z\",\n          isInternalTest: false,\n        },\n      ],\n      monitorFailures: [],\n      telemetryEventIds: [\"0123456789abcdef0123456789abcdef\"],\n    }),\n    reportPaidAccessFinding: (finding) => {\n      reported.push(finding)\n      return \"abcdef0123456789abcdef0123456789\"\n    },\n    captureCheckIn: () => undefined,\n    flushTelemetry: async () => true,\n  })\n\n  assert.equal(response.status, 500)\n  assert.equal(reported.length, 0)\n  assert.ok(\"paymentIntegrity\" in response.body)\n  assert.equal(response.body.paidAccess?.status, \"monitor_failed\")\n  assert.deepEqual(response.body.paidAccess?.failures, [\n    {\n      provider: \"unknown\",\n      reason: \"local_lookup_error\",\n      errorFamily: \"unknown\",\n    },\n  ])\n})",
+    "sha256": "851b7580d35281c3d0677c497fbc87ec47b32e66c8309e4f20b4f7824edf033c",
+    "assertions": [
+      "assert.equal(response.status, 500)",
+      "assert.equal(reported.length, 0)",
+      "assert.ok(\"paymentIntegrity\" in response.body)",
+      "assert.equal(response.body.paidAccess?.status, \"monitor_failed\")",
+      "assert.deepEqual(response.body.paidAccess?.failures, [\n    {\n      provider: \"unknown\",\n      reason: \"local_lookup_error\",\n      errorFamily: \"unknown\",\n    },\n  ])"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor fails closed when paid-access finding has no Sentry receipt",
+    "line": 610,
+    "start": 17704,
+    "end": 19342,
+    "body": "test(\"payment monitor fails closed when paid-access finding has no Sentry receipt\", async () => {\n  const response = await handlePaymentMonitor(request(), {\n    triggerSecret: secret,\n    checkRateLimit: () => ({ allowed: true }),\n    runPaymentIntegrity: async () => result(),\n    runPaidAccessMonitor: async () => ({\n      status: \"completed\",\n      counters: {\n        purchasesListed: 1,\n        purchasesChecked: 1,\n        skippedInternalTest: 0,\n        active: 0,\n        findings: 1,\n        monitorFailures: 0,\n      },\n      findings: [\n        {\n          signal: \"paid_but_entitlement_not_active\",\n          provider: \"stripe\",\n          purchaseId: \"purchase_no_receipt\",\n          reason: \"binding_missing\",\n          paidAt: \"2026-08-07T10:00:00.000Z\",\n          isInternalTest: false,\n        },\n      ],\n      monitorFailures: [],\n    }),\n    captureCheckIn: () => undefined,\n    flushTelemetry: async () => true,\n  })\n\n  assert.equal(response.status, 500)\n  assert.deepEqual(response.body, {\n    paymentIntegrity: {\n      status: \"completed\",\n      counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 4 },\n    },\n    paidAccess: {\n      status: \"monitor_failed\",\n      counters: {\n        purchasesListed: 1,\n        purchasesChecked: 1,\n        skippedInternalTest: 0,\n        active: 0,\n        findings: 1,\n        monitorFailures: 1,\n      },\n      findings: [{ provider: \"stripe\", reason: \"binding_missing\" }],\n      failures: [\n        {\n          provider: \"unknown\",\n          reason: \"local_lookup_error\",\n          errorFamily: \"unknown\",\n        },\n      ],\n    },\n  })\n})",
+    "sha256": "1a5af41d6211751ac93b5e91c6640dcf4595f121b1d7a38d331006f99d3d115a",
+    "assertions": [
+      "assert.equal(response.status, 500)",
+      "assert.deepEqual(response.body, {\n    paymentIntegrity: {\n      status: \"completed\",\n      counters: { ...emptyPaymentIntegrityCounters(), providersScanned: 2, candidatesChecked: 4 },\n    },\n    paidAccess: {\n      status: \"monitor_failed\",\n      counters: {\n        purchasesListed: 1,\n        purchasesChecked: 1,\n        skippedInternalTest: 0,\n        active: 0,\n        findings: 1,\n        monitorFailures: 1,\n      },\n      findings: [{ provider: \"stripe\", reason: \"binding_missing\" }],\n      failures: [\n        {\n          provider: \"unknown\",\n          reason: \"local_lookup_error\",\n          errorFamily: \"unknown\",\n        },\n      ],\n    },\n  })"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor preserves a canonical paid-access conflict category",
+    "line": 669,
+    "start": 19344,
+    "end": 21048,
+    "body": "test(\"payment monitor preserves a canonical paid-access conflict category\", async () => {\n  const response = await handlePaymentMonitor(request(), {\n    triggerSecret: secret,\n    checkRateLimit: () => ({ allowed: true }),\n    runPaymentIntegrity: async () => result(),\n    runPaidAccessMonitor: async () => ({\n      status: \"monitor_failed\",\n      counters: {\n        purchasesListed: 1,\n        purchasesChecked: 1,\n        skippedInternalTest: 0,\n        active: 0,\n        findings: 1,\n        monitorFailures: 1,\n      },\n      findings: [\n        {\n          signal: \"paid_but_entitlement_not_active\",\n          provider: \"paypal\",\n          purchaseId: \"purchase_conflict\",\n          reason: \"delivery_evidence_missing\",\n          paidAt: \"2026-08-07T10:00:00.000Z\",\n          isInternalTest: false,\n        },\n      ],\n      monitorFailures: [\n        {\n          signal: \"payment_monitor_failed\",\n          provider: \"paypal\",\n          reason: \"canonical_access_conflict\",\n          errorFamily: \"unknown\",\n          purchaseId: \"purchase_conflict\",\n        },\n      ],\n    }),\n    reportPaidAccessFinding: () => \"0123456789abcdef0123456789abcdef\",\n    reportPaidAccessMonitorFailure: () => \"abcdef0123456789abcdef0123456789\",\n    captureCheckIn: () => undefined,\n    flushTelemetry: async () => true,\n  })\n\n  assert.equal(response.status, 500)\n  assert.ok(\"paidAccess\" in response.body)\n  if (!(\"paidAccess\" in response.body)) return\n  assert.deepEqual(response.body.paidAccess?.failures, [\n    {\n      provider: \"paypal\",\n      reason: \"canonical_access_conflict\",\n      errorFamily: \"unknown\",\n    },\n  ])\n  assert.equal(JSON.stringify(response.body).includes(\"purchase_conflict\"), false)\n})",
+    "sha256": "c50e6eb68696be97d0e945df63ce4f2e53d7d2cd623638a8df612e48e484071a",
+    "assertions": [
+      "assert.equal(response.status, 500)",
+      "assert.ok(\"paidAccess\" in response.body)",
+      "assert.deepEqual(response.body.paidAccess?.failures, [\n    {\n      provider: \"paypal\",\n      reason: \"canonical_access_conflict\",\n      errorFamily: \"unknown\",\n    },\n  ])",
+      "assert.equal(JSON.stringify(response.body).includes(\"purchase_conflict\"), false)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-route.test.ts",
+    "title": "payment monitor omits unexpected runtime failure categories from its response",
+    "line": 723,
+    "start": 21050,
+    "end": 22119,
+    "body": "test(\"payment monitor omits unexpected runtime failure categories from its response\", async () => {\n  const response = await handlePaymentMonitor(request(), {\n    triggerSecret: secret,\n    checkRateLimit: () => ({ allowed: true }),\n    runPaymentIntegrity: async () =>\n      result({\n        status: \"monitor_failed\",\n        monitorFailures: [\n          {\n            signal: \"payment_monitor_failed\",\n            provider: \"raw-provider-secret\",\n            reason: \"raw-error-secret\",\n            errorFamily: \"raw-family-secret\",\n          } as never,\n        ],\n        telemetryEventIds: [\"0123456789abcdef0123456789abcdef\"],\n      }),\n    captureCheckIn: () => undefined,\n    flushTelemetry: async () => true,\n  })\n\n  assert.equal(response.status, 500)\n  assert.deepEqual(response.body, {\n    paymentIntegrity: {\n      status: \"monitor_failed\",\n      counters: {\n        ...emptyPaymentIntegrityCounters(),\n        providersScanned: 2,\n        candidatesChecked: 4,\n      },\n    },\n  })\n  assert.equal(JSON.stringify(response.body).includes(\"secret\"), false)\n})",
+    "sha256": "7d916d5f1449e98e5762324ff7b87b20376732d3e4ffd009f8f60d7f9939aa1d",
+    "assertions": [
+      "assert.equal(response.status, 500)",
+      "assert.deepEqual(response.body, {\n    paymentIntegrity: {\n      status: \"monitor_failed\",\n      counters: {\n        ...emptyPaymentIntegrityCounters(),\n        providersScanned: 2,\n        candidatesChecked: 4,\n      },\n    },\n  })",
+      "assert.equal(JSON.stringify(response.body).includes(\"secret\"), false)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "title": "local trigger encloses the server monitor deadline",
+    "line": 23,
+    "start": 484,
+    "end": 596,
+    "body": "test(\"local trigger encloses the server monitor deadline\", () => {\n  assert.equal(REQUEST_TIMEOUT_MS, 50_000)\n})",
+    "sha256": "71d1e116aac2a76892b73c480ae3515d7f3acd5b1c4193290d2cdce04ca4c88c",
+    "assertions": [
+      "assert.equal(REQUEST_TIMEOUT_MS, 50_000)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "title": "runs the HTTPS monitor with a Keychain secret that never enters argv or logs",
+    "line": 27,
+    "start": 598,
+    "end": 2075,
+    "body": "test(\"runs the HTTPS monitor with a Keychain secret that never enters argv or logs\", async () => {\n  let keychainArgs: string[] | undefined\n  let request: { url: string; init?: RequestInit } | undefined\n  const { logger, output } = loggerOutput()\n\n  const result = await runPaymentMonitor({\n    endpoint,\n    getKeychainSecret: async (serviceName) => {\n      keychainArgs = [\"find-generic-password\", \"-s\", serviceName, \"-w\"]\n      return secret\n    },\n    fetch: async (url, init) => {\n      request = { url: String(url), init }\n      return new Response(\"customer data must not be read\", { status: 200 })\n    },\n  })\n\n  assert.equal(result.status, 200)\n  assert.deepEqual(keychainArgs, [\"find-generic-password\", \"-s\", KEYCHAIN_SERVICE_NAME, \"-w\"])\n  assert.equal(request?.url, endpoint)\n  assert.equal(request?.init?.method, \"POST\")\n  assert.equal(request?.init?.redirect, \"error\")\n  assert.equal(new Headers(request?.init?.headers).get(\"authorization\"), `Bearer ${secret}`)\n  assert.equal(JSON.stringify(request).includes(secret), true)\n\n  const exitCode = await main([\"--endpoint\", endpoint], {\n    getKeychainSecret: async () => secret,\n    fetch: async () => new Response(\"response body is private\", { status: 200 }),\n    logger,\n  })\n  assert.equal(exitCode, 0)\n  assert.equal(output.join(\"\\n\").includes(secret), false)\n  assert.equal(output.join(\"\\n\").includes(\"response body is private\"), false)\n  assert.match(output[0], /^\\d{4}-\\d{2}-\\d{2}T.* success status=200$/)\n})",
+    "sha256": "87f205684b5bd37e827fe827bf2e92e0b04b085daa699cc7cc7b1f27c63afaf5",
+    "assertions": [
+      "assert.equal(result.status, 200)",
+      "assert.deepEqual(keychainArgs, [\"find-generic-password\", \"-s\", KEYCHAIN_SERVICE_NAME, \"-w\"])",
+      "assert.equal(request?.url, endpoint)",
+      "assert.equal(request?.init?.method, \"POST\")",
+      "assert.equal(request?.init?.redirect, \"error\")",
+      "assert.equal(new Headers(request?.init?.headers).get(\"authorization\"), `Bearer ${secret}`)",
+      "assert.equal(JSON.stringify(request).includes(secret), true)",
+      "assert.equal(exitCode, 0)",
+      "assert.equal(output.join(\"\\n\").includes(secret), false)",
+      "assert.equal(output.join(\"\\n\").includes(\"response body is private\"), false)",
+      "assert.match(output[0], /^\\d{4}-\\d{2}-\\d{2}T.* success status=200$/)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "title": "rejects non-HTTPS endpoints before Keychain access",
+    "line": 63,
+    "start": 2077,
+    "end": 2576,
+    "body": "test(\"rejects non-HTTPS endpoints before Keychain access\", async () => {\n  let keychainCalled = false\n\n  await assert.rejects(\n    () =>\n      runPaymentMonitor({\n        endpoint: \"http://chaarlie.de/api/billing/payment-monitor\",\n        getKeychainSecret: async () => {\n          keychainCalled = true\n          return secret\n        },\n        fetch: async () => new Response(null, { status: 204 }),\n      }),\n    { message: \"configuration_failure\" },\n  )\n  assert.equal(keychainCalled, false)\n})",
+    "sha256": "630d85b69b807de44667fca7024bab8d0a57d614e5c14faea55ca6e52ed414e6",
+    "assertions": [
+      "assert.rejects(\n    () =>\n      runPaymentMonitor({\n        endpoint: \"http://chaarlie.de/api/billing/payment-monitor\",\n        getKeychainSecret: async () => {\n          keychainCalled = true\n          return secret\n        },\n        fetch: async () => new Response(null, { status: 204 }),\n      }),\n    { message: \"configuration_failure\" },\n  )",
+      "assert.equal(keychainCalled, false)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "title": "rejects every HTTPS host, path, query, or fragment except the production monitor route",
+    "line": 81,
+    "start": 2578,
+    "end": 3408,
+    "body": "test(\"rejects every HTTPS host, path, query, or fragment except the production monitor route\", async () => {\n  const rejected = [\n    \"https://example.com/api/billing/payment-monitor\",\n    \"https://www.chaarlie.de/api/billing/payment-monitor\",\n    \"https://chaarlie.de/api/billing/reconcile\",\n    `${endpoint}?redirect=https://example.com`,\n    `${endpoint}#fragment`,\n  ]\n\n  for (const candidate of rejected) {\n    let keychainCalled = false\n    await assert.rejects(\n      () =>\n        runPaymentMonitor({\n          endpoint: candidate,\n          getKeychainSecret: async () => {\n            keychainCalled = true\n            return secret\n          },\n          fetch: async () => new Response(null, { status: 204 }),\n        }),\n      { message: \"configuration_failure\" },\n    )\n    assert.equal(keychainCalled, false)\n  }\n})",
+    "sha256": "3d6024fb9b5e917f6cbc730a200387c0d3dd241ec13bdc3bf5a938915b9a38e5",
+    "assertions": [
+      "assert.rejects(\n      () =>\n        runPaymentMonitor({\n          endpoint: candidate,\n          getKeychainSecret: async () => {\n            keychainCalled = true\n            return secret\n          },\n          fetch: async () => new Response(null, { status: 204 }),\n        }),\n      { message: \"configuration_failure\" },\n    )",
+      "assert.equal(keychainCalled, false)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "title": "returns a nonzero, secret-free result for Keychain, network, and HTTP failures",
+    "line": 108,
+    "start": 3410,
+    "end": 4768,
+    "body": "test(\"returns a nonzero, secret-free result for Keychain, network, and HTTP failures\", async () => {\n  const cases = [\n    {\n      expected: \"keychain_failure\",\n      getKeychainSecret: async () => {\n        throw new Error(`Keychain could not find ${secret}`)\n      },\n      fetch: async () => new Response(null, { status: 204 }),\n    },\n    {\n      expected: \"network_failure\",\n      getKeychainSecret: async () => secret,\n      fetch: async () => {\n        throw new Error(`Network rejected ${secret}`)\n      },\n    },\n    {\n      expected: \"http_failure status=503\",\n      getKeychainSecret: async () => secret,\n      fetch: async () => {\n        const response = new Response(\"response body must not be consumed\", { status: 503 })\n        Object.defineProperty(response, \"text\", {\n          value: async () => {\n            throw new Error(\"response body must not be consumed\")\n          },\n        })\n        return response\n      },\n    },\n  ]\n\n  for (const scenario of cases) {\n    const { logger, output } = loggerOutput()\n    const exitCode = await main([\"--endpoint\", endpoint], {\n      getKeychainSecret: scenario.getKeychainSecret,\n      fetch: scenario.fetch,\n      logger,\n    })\n\n    assert.equal(exitCode, 1)\n    assert.match(output[0], new RegExp(` ${scenario.expected}$`))\n    assert.equal(output.join(\"\\n\").includes(secret), false)\n  }\n})",
+    "sha256": "b59d463cfd4d1ad6b5db5bdd052217990e89b191890ba93cdfbfbeeb214c4fd1",
+    "assertions": [
+      "assert.equal(exitCode, 1)",
+      "assert.match(output[0], new RegExp(` ${scenario.expected}$`))",
+      "assert.equal(output.join(\"\\n\").includes(secret), false)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "title": "logs only privacy-safe monitor failure categories from the authenticated endpoint",
+    "line": 153,
+    "start": 4770,
+    "end": 5900,
+    "body": "test(\"logs only privacy-safe monitor failure categories from the authenticated endpoint\", async () => {\n  const { logger, output } = loggerOutput()\n  const exitCode = await main([\"--endpoint\", endpoint], {\n    getKeychainSecret: async () => secret,\n    fetch: async () =>\n      Response.json(\n        {\n          paymentIntegrity: {\n            status: \"monitor_failed\",\n            counters: { findings: 0 },\n            failures: [\n              {\n                provider: \"stripe\",\n                reason: \"provider_error\",\n                errorFamily: \"provider_unavailable\",\n                rawProviderReference: \"must-not-leak\",\n              },\n            ],\n            customerEmail: \"must-not-leak@example.com\",\n          },\n        },\n        { status: 500 },\n      ),\n    logger,\n  })\n\n  assert.equal(exitCode, 1)\n  assert.match(\n    output[0],\n    / http_failure status=500 failures=stripe:provider_error:provider_unavailable$/,\n  )\n  assert.equal(output.join(\"\\n\").includes(\"must-not-leak\"), false)\n  assert.equal(output.join(\"\\n\").includes(\"@\"), false)\n  assert.equal(output.join(\"\\n\").includes(secret), false)\n})",
+    "sha256": "dd1afe434c5084f696fb256e9a170bf4642228254aa36c39034b98bc09586670",
+    "assertions": [
+      "assert.equal(exitCode, 1)",
+      "assert.match(\n    output[0],\n    / http_failure status=500 failures=stripe:provider_error:provider_unavailable$/,\n  )",
+      "assert.equal(output.join(\"\\n\").includes(\"must-not-leak\"), false)",
+      "assert.equal(output.join(\"\\n\").includes(\"@\"), false)",
+      "assert.equal(output.join(\"\\n\").includes(secret), false)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "title": "logs paid-access monitor failures with stable dedupe",
+    "line": 189,
+    "start": 5902,
+    "end": 7460,
+    "body": "test(\"logs paid-access monitor failures with stable dedupe\", async () => {\n  const { logger, output } = loggerOutput()\n  const exitCode = await main([\"--endpoint\", endpoint], {\n    getKeychainSecret: async () => secret,\n    fetch: async () =>\n      Response.json(\n        {\n          paymentIntegrity: {\n            failures: [\n              {\n                provider: \"unknown\",\n                reason: \"local_lookup_error\",\n                errorFamily: \"unknown\",\n              },\n            ],\n          },\n          paidAccess: {\n            failures: [\n              {\n                provider: \"unknown\",\n                reason: \"local_lookup_error\",\n                errorFamily: \"unknown\",\n                rawProviderReference: \"must-not-leak\",\n              },\n              {\n                provider: \"unknown\",\n                reason: \"candidate_cap\",\n                errorFamily: \"unknown\",\n              },\n              {\n                provider: \"paypal\",\n                reason: \"canonical_access_conflict\",\n                errorFamily: \"unknown\",\n                purchaseId: \"must-not-leak\",\n              },\n            ],\n          },\n        },\n        { status: 500 },\n      ),\n    logger,\n  })\n\n  assert.equal(exitCode, 1)\n  assert.match(\n    output[0],\n    / http_failure status=500 failures=unknown:local_lookup_error:unknown,unknown:candidate_cap:unknown,paypal:canonical_access_conflict:unknown$/,\n  )\n  assert.equal(output.join(\"\\n\").includes(\"must-not-leak\"), false)\n  assert.equal(output.join(\"\\n\").includes(secret), false)\n})",
+    "sha256": "8c0938d525c0cd705aa84aefc8b3f992df32afd84f5af69e34115b3e9d6b51eb",
+    "assertions": [
+      "assert.equal(exitCode, 1)",
+      "assert.match(\n    output[0],\n    / http_failure status=500 failures=unknown:local_lookup_error:unknown,unknown:candidate_cap:unknown,paypal:canonical_access_conflict:unknown$/,\n  )",
+      "assert.equal(output.join(\"\\n\").includes(\"must-not-leak\"), false)",
+      "assert.equal(output.join(\"\\n\").includes(secret), false)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-trigger.test.ts",
+    "title": "requires the endpoint argument and does not place a Keychain value in process arguments",
+    "line": 241,
+    "start": 7462,
+    "end": 8011,
+    "body": "test(\"requires the endpoint argument and does not place a Keychain value in process arguments\", async () => {\n  const { logger, output } = loggerOutput()\n  const before = [...process.argv]\n  const exitCode = await main([], {\n    getKeychainSecret: async () => secret,\n    fetch: async () => new Response(null, { status: 204 }),\n    logger,\n  })\n\n  assert.equal(exitCode, 1)\n  assert.deepEqual(process.argv, before)\n  assert.match(output[0], /^\\d{4}-\\d{2}-\\d{2}T.* configuration_failure$/)\n  assert.equal(output.join(\"\\n\").includes(secret), false)\n})",
+    "sha256": "55011a4efa465fd6f6eda5e2654a51ca42d7120f2ddcf9be49e9ded954df5630",
+    "assertions": [
+      "assert.equal(exitCode, 1)",
+      "assert.deepEqual(process.argv, before)",
+      "assert.match(output[0], /^\\d{4}-\\d{2}-\\d{2}T.* configuration_failure$/)",
+      "assert.equal(output.join(\"\\n\").includes(secret), false)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-paypal-test-classification.test.ts",
+    "title": "PayPal test classification dry-run is PII-safe and does not write",
+    "line": 24,
+    "start": 677,
+    "end": 1419,
+    "body": "test(\"PayPal test classification dry-run is PII-safe and does not write\", async () => {\n  let writes = 0\n  const summary = await runPayPalTestClassification([subscriptionArg], {\n    environment: {},\n    now: () => new Date(\"2026-08-02T12:00:00.000Z\"),\n    listRows: async () => [row],\n    updateMetadata: async () => {\n      writes += 1\n    },\n  })\n\n  assert.deepEqual(summary, {\n    mode: \"dry-run\",\n    matched: 1,\n    eligible: 1,\n    already_classified: 0,\n    provider: \"paypal\",\n    provider_status: \"ACTIVE\",\n    entitlement_status: \"active\",\n    created_month: \"2026-05\",\n  })\n  assert.equal(writes, 0)\n  assert.equal(JSON.stringify(summary).includes(\"I-RAW\"), false)\n  assert.equal(JSON.stringify(summary).includes(row.id), false)\n})",
+    "sha256": "89666706a21c72ed5a650152793d96f7797835b4f8c95f72e050e4bb91a5040e",
+    "assertions": [
+      "assert.deepEqual(summary, {\n    mode: \"dry-run\",\n    matched: 1,\n    eligible: 1,\n    already_classified: 0,\n    provider: \"paypal\",\n    provider_status: \"ACTIVE\",\n    entitlement_status: \"active\",\n    created_month: \"2026-05\",\n  })",
+      "assert.equal(writes, 0)",
+      "assert.equal(JSON.stringify(summary).includes(\"I-RAW\"), false)",
+      "assert.equal(JSON.stringify(summary).includes(row.id), false)"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-paypal-test-classification.test.ts",
+    "title": "PayPal test classification apply requires every production gate",
+    "line": 50,
+    "start": 1421,
+    "end": 2366,
+    "body": "test(\"PayPal test classification apply requires every production gate\", async () => {\n  const baseEnvironment = {\n    NEXT_PUBLIC_SUPABASE_URL: `https://${EXPECTED_SUPABASE_PROJECT_ID}.supabase.co`,\n    [PRODUCTION_WRITE_GATE]: \"1\",\n  }\n  const requiredArgs = [\n    subscriptionArg,\n    \"--apply\",\n    \"--confirm-internal-test\",\n    `--confirm-project=${EXPECTED_SUPABASE_PROJECT_ID}`,\n  ]\n\n  for (const args of [\n    requiredArgs.filter((arg) => arg !== \"--confirm-internal-test\"),\n    requiredArgs.filter((arg) => !arg.startsWith(\"--confirm-project=\")),\n    requiredArgs,\n  ]) {\n    const environment =\n      args === requiredArgs ? { ...baseEnvironment, [PRODUCTION_WRITE_GATE]: \"0\" } : baseEnvironment\n    await assert.rejects(\n      runPayPalTestClassification(args, {\n        environment,\n        listRows: async () => [row],\n        updateMetadata: async () => undefined,\n      }),\n      /requires the production write gate/,\n    )\n  }\n})",
+    "sha256": "f6472b94d316e8677aa1fa0f9828206a9b2c357b070566c250e7274e241063c6",
+    "assertions": [
+      "assert.rejects(\n      runPayPalTestClassification(args, {\n        environment,\n        listRows: async () => [row],\n        updateMetadata: async () => undefined,\n      }),\n      /requires the production write gate/,\n    )"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-paypal-test-classification.test.ts",
+    "title": "PayPal test classification applies a metadata-only optimistic update",
+    "line": 80,
+    "start": 2368,
+    "end": 3459,
+    "body": "test(\"PayPal test classification applies a metadata-only optimistic update\", async () => {\n  const writes: unknown[] = []\n  const summary = await runPayPalTestClassification(\n    [\n      subscriptionArg,\n      \"--apply\",\n      \"--confirm-internal-test\",\n      `--confirm-project=${EXPECTED_SUPABASE_PROJECT_ID}`,\n    ],\n    {\n      environment: {\n        NEXT_PUBLIC_SUPABASE_URL: `https://${EXPECTED_SUPABASE_PROJECT_ID}.supabase.co`,\n        [PRODUCTION_WRITE_GATE]: \"1\",\n      },\n      now: () => new Date(\"2026-08-02T12:00:00.000Z\"),\n      listRows: async () => [row],\n      updateMetadata: async (id, metadata, expectedUpdatedAt) => {\n        writes.push({ id, metadata, expectedUpdatedAt })\n      },\n    },\n  )\n\n  assert.equal(summary.mode, \"apply\")\n  assert.deepEqual(writes, [\n    {\n      id: row.id,\n      expectedUpdatedAt: row.updated_at,\n      metadata: {\n        pricing_catalog: \"standard\",\n        is_internal_test: true,\n        payment_monitor_exclusion_reason: \"pre_cutover_rest_app\",\n        payment_monitor_excluded_at: \"2026-08-02T12:00:00.000Z\",\n      },\n    },\n  ])\n})",
+    "sha256": "8a284ef7a7da35df1a24472d922a78e77fec64f2de1ba7a42b31bf87f7a11f96",
+    "assertions": [
+      "assert.equal(summary.mode, \"apply\")",
+      "assert.deepEqual(writes, [\n    {\n      id: row.id,\n      expectedUpdatedAt: row.updated_at,\n      metadata: {\n        pricing_catalog: \"standard\",\n        is_internal_test: true,\n        payment_monitor_exclusion_reason: \"pre_cutover_rest_app\",\n        payment_monitor_excluded_at: \"2026-08-02T12:00:00.000Z\",\n      },\n    },\n  ])"
+    ]
+  },
+  {
+    "file": "tests/payment-monitor-paypal-test-classification.test.ts",
+    "title": "PayPal test classification refuses ambiguous, post-cutover, or non-PayPal rows",
+    "line": 117,
+    "start": 3461,
+    "end": 4111,
+    "body": "test(\"PayPal test classification refuses ambiguous, post-cutover, or non-PayPal rows\", async () => {\n  for (const rows of [\n    [],\n    [row, { ...row, id: \"another-row\" }],\n    [{ ...row, provider: \"stripe\" }],\n    [{ ...row, provider_status: \"CANCELLED\" }],\n    [{ ...row, entitlement_status: \"canceled\" }],\n    [{ ...row, created_at: \"2026-06-01T00:00:00.000Z\" }],\n  ]) {\n    await assert.rejects(\n      runPayPalTestClassification([subscriptionArg], {\n        environment: {},\n        listRows: async () => rows as PayPalTestSubscriptionRow[],\n        updateMetadata: async () => undefined,\n      }),\n      /refusing classification/,\n    )\n  }\n})",
+    "sha256": "01e387101dc458761dc613bd0a190ba9c0fec7db3b861fe0ffebf04f1e841098",
+    "assertions": [
+      "assert.rejects(\n      runPayPalTestClassification([subscriptionArg], {\n        environment: {},\n        listRows: async () => rows as PayPalTestSubscriptionRow[],\n        updateMetadata: async () => undefined,\n      }),\n      /refusing classification/,\n    )"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "title": "trusted match validates owner and freezes original submitted time and verification reference",
+    "line": 106,
+    "start": 4339,
+    "end": 5259,
+    "body": "test(\"trusted match validates owner and freezes original submitted time and verification reference\", async (t) => {\n  const pg = await setup(t)\n  await assert.rejects(match(pg, OTHER))\n  await assert.rejects(match(pg, USER, \"\"))\n  assert.equal(await status(pg), \"pending\")\n  await pg.exec(\"SET ROLE service_role\")\n  await match(pg)\n  await match(pg)\n  assert.equal(await status(pg), \"in_review\")\n  await assert.rejects(match(pg, USER, \"different_reference\"))\n  const m = (\n    await pg.query<{ submitted_at: Date }>(\n      \"SELECT submitted_at FROM private.public_contract_declaration_matches\",\n    )\n  ).rows[0]!\n  assert.equal(new Date(m.submitted_at).toISOString(), \"2024-01-07T00:00:00.000Z\")\n  await assert.rejects(\n    pg.exec(\n      \"UPDATE private.public_contract_declaration_matches SET verification_reference='rewrite'\",\n    ),\n  )\n  await pg.exec(\"SET ROLE authenticated\")\n  await assert.rejects(match(pg))\n})",
+    "sha256": "cc0208af7f704115e030c1dadaffa535441b97dd665fa332bad2127750a1bf32",
+    "assertions": [
+      "assert.rejects(match(pg, OTHER))",
+      "assert.rejects(match(pg, USER, \"\"))",
+      "assert.equal(await status(pg), \"pending\")",
+      "assert.equal(await status(pg), \"in_review\")",
+      "assert.rejects(match(pg, USER, \"different_reference\"))",
+      "assert.equal(new Date(m.submitted_at).toISOString(), \"2024-01-07T00:00:00.000Z\")",
+      "assert.rejects(\n    pg.exec(\n      \"UPDATE private.public_contract_declaration_matches SET verification_reference='rewrite'\",\n    ),\n  )",
+      "assert.rejects(match(pg))"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "title": "late processing of timely unpaid trial cancellation preserves original declaration time and queues provider work once",
+    "line": 130,
+    "start": 5260,
+    "end": 6789,
+    "body": "test(\"late processing of timely unpaid trial cancellation preserves original declaration time and queues provider work once\", async (t) => {\n  const pg = await setup(t)\n  await match(pg)\n  const before = (\n    await pg.query(\"SELECT receipt_payload FROM private.public_contract_declaration_receipts\")\n  ).rows[0]\n  const result = await apply(pg)\n  assert.equal(result.outcome, \"provider_operation_queued\")\n  assert.deepEqual(await apply(pg), result)\n  const d = (\n    await pg.query<{ submitted_at: Date; effective_end_at: Date }>(\n      \"SELECT submitted_at,effective_end_at FROM private.trial_cancellation_declarations\",\n    )\n  ).rows[0]!\n  assert.equal(new Date(d.submitted_at).toISOString(), \"2024-01-07T00:00:00.000Z\")\n  assert.equal(new Date(d.effective_end_at).toISOString(), \"2024-01-08T00:00:00.000Z\")\n  assert.equal(\n    (await pg.query(\"SELECT * FROM private.trial_cancellation_provider_operations\")).rows.length,\n    1,\n  )\n  assert.equal(await status(pg), \"in_review\")\n  assert.deepEqual(\n    (await pg.query(\"SELECT receipt_payload FROM private.public_contract_declaration_receipts\"))\n      .rows[0],\n    before,\n  )\n  await assert.rejects(complete(pg), /provider|completion|evidence/i)\n  await pg.exec(\n    \"UPDATE private.trial_cancellation_provider_operations SET status='confirmed',reconciled_at=now()\",\n  )\n  assert.equal(await complete(pg), true)\n  assert.equal(await status(pg), \"resolved\")\n  assert.equal(await complete(pg), true)\n  await assert.rejects(complete(pg, { completionReference: \"changed\" }))\n})",
+    "sha256": "1c2dbd3cd1c7cd0f637bfb355c1454cc51b5d876492b5d3bc101639c5b47ee6f",
+    "assertions": [
+      "assert.equal(result.outcome, \"provider_operation_queued\")",
+      "assert.deepEqual(await apply(pg), result)",
+      "assert.equal(new Date(d.submitted_at).toISOString(), \"2024-01-07T00:00:00.000Z\")",
+      "assert.equal(new Date(d.effective_end_at).toISOString(), \"2024-01-08T00:00:00.000Z\")",
+      "assert.equal(\n    (await pg.query(\"SELECT * FROM private.trial_cancellation_provider_operations\")).rows.length,\n    1,\n  )",
+      "assert.equal(await status(pg), \"in_review\")",
+      "assert.deepEqual(\n    (await pg.query(\"SELECT receipt_payload FROM private.public_contract_declaration_receipts\"))\n      .rows[0],\n    before,\n  )",
+      "assert.rejects(complete(pg), /provider|completion|evidence/i)",
+      "assert.equal(await complete(pg), true)",
+      "assert.equal(await status(pg), \"resolved\")",
+      "assert.equal(await complete(pg), true)",
+      "assert.rejects(complete(pg, { completionReference: \"changed\" }))"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "title": "charge winning before apply never creates unpaid cancellation; paid and withdrawal require external completion/refund evidence",
+    "line": 165,
+    "start": 6790,
+    "end": 7545,
+    "body": "test(\"charge winning before apply never creates unpaid cancellation; paid and withdrawal require external completion/refund evidence\", async (t) => {\n  const pg = await setup(t, \"ordinary_cancellation\", true)\n  await match(pg)\n  assert.equal((await apply(pg)).outcome, \"payment_review_required\")\n  assert.equal(\n    (await pg.query(\"SELECT * FROM private.trial_cancellation_declarations\")).rows.length,\n    0,\n  )\n  assert.equal(await status(pg), \"in_review\")\n  await pg.exec(\"UPDATE public.trial_enrollments SET cancel_at_period_end=true\")\n  await assert.rejects(complete(pg), /refund|evidence/i)\n  assert.equal(\n    await complete(pg, {\n      refundDisposition: \"completed\",\n      refundReference: \"stripe_refund_verified_re_1\",\n    }),\n    true,\n  )\n})",
+    "sha256": "f4983b218baa5b4e1d12c21743ca20d9df0b44c2099f7abba24c05deb9b0ccc1",
+    "assertions": [
+      "assert.equal((await apply(pg)).outcome, \"payment_review_required\")",
+      "assert.equal(\n    (await pg.query(\"SELECT * FROM private.trial_cancellation_declarations\")).rows.length,\n    0,\n  )",
+      "assert.equal(await status(pg), \"in_review\")",
+      "assert.rejects(complete(pg), /refund|evidence/i)",
+      "assert.equal(\n    await complete(pg, {\n      refundDisposition: \"completed\",\n      refundReference: \"stripe_refund_verified_re_1\",\n    }),\n    true,\n  )"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "title": "withdrawal and extraordinary declarations never enter ordinary-trial cancellation queue or resolve from email state",
+    "line": 184,
+    "start": 7546,
+    "end": 8139,
+    "body": "test(\"withdrawal and extraordinary declarations never enter ordinary-trial cancellation queue or resolve from email state\", async (t) => {\n  for (const kind of [\"withdrawal\", \"extraordinary_cancellation\"]) {\n    const pg = await setup(t, kind)\n    await match(pg)\n    assert.equal((await apply(pg)).outcome, \"external_review_required\")\n    await assert.rejects(complete(pg, { providerTerminationReference: \"\" }))\n    assert.equal(await status(pg), \"in_review\")\n    await pg.exec(\"UPDATE public.trial_enrollments SET cancel_at_period_end=true\")\n    assert.equal(await complete(pg), true)\n  }\n})",
+    "sha256": "b60e3af4e5d16420c5715f32110fe4e857217906a32bf2d0f93f965df7e10b70",
+    "assertions": [
+      "assert.equal((await apply(pg)).outcome, \"external_review_required\")",
+      "assert.rejects(complete(pg, { providerTerminationReference: \"\" }))",
+      "assert.equal(await status(pg), \"in_review\")",
+      "assert.equal(await complete(pg), true)"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "title": "a successful in-flight charge after accepted cancellation prevents resolution until refund evidence exists",
+    "line": 196,
+    "start": 8141,
+    "end": 9085,
+    "body": "test(\"a successful in-flight charge after accepted cancellation prevents resolution until refund evidence exists\", async (t) => {\n  const pg = await setup(t)\n  await match(pg)\n  await apply(pg)\n  await pg.query(\n    `INSERT INTO private.trial_payment_events(enrollment_id,provider,source_event_id,source_object_id,outcome,occurred_at,amount_minor,currency,period_start_at,period_end_at,result,phase)\n VALUES($1,'stripe','late_evt','late_invoice','succeeded','2024-01-08Z',999,'EUR','2024-01-08Z','2024-02-08Z','reconciliation_required','none')`,\n    [ENROLLMENT],\n  )\n  await pg.exec(\n    \"UPDATE private.trial_cancellation_provider_operations SET status='confirmed',reconciled_at=now()\",\n  )\n  await assert.rejects(complete(pg), /refund/)\n  assert.equal(await status(pg), \"in_review\")\n  assert.equal(\n    await complete(pg, {\n      refundDisposition: \"completed\",\n      refundReference: \"verified_late_payment_refund\",\n    }),\n    true,\n  )\n})",
+    "sha256": "7abfa1c462031f95a74a4ad2b328f9452cb2427e044c29e6f7a89d1f72bc9071",
+    "assertions": [
+      "assert.rejects(complete(pg), /refund/)",
+      "assert.equal(await status(pg), \"in_review\")",
+      "assert.equal(\n    await complete(pg, {\n      refundDisposition: \"completed\",\n      refundReference: \"verified_late_payment_refund\",\n    }),\n    true,\n  )"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "title": "null/queued-mail evidence cannot resolve, and direct status updates still require match/completion records",
+    "line": 219,
+    "start": 9087,
+    "end": 9973,
+    "body": "test(\"null/queued-mail evidence cannot resolve, and direct status updates still require match/completion records\", async (t) => {\n  const pg = await setup(t)\n  await pg.exec(\"SET ROLE service_role\")\n  await assert.rejects(\n    pg.exec(\"UPDATE private.public_contract_declaration_reviews SET status='in_review'\"),\n    /match/,\n  )\n  await match(pg)\n  await apply(pg)\n  await assert.rejects(\n    pg.exec(\n      \"UPDATE private.public_contract_declaration_reviews SET status='resolved',resolved_at=now(),resolution_reference='email_queued'\",\n    ),\n    /evidence/,\n  )\n  await pg.exec(\n    \"UPDATE private.trial_cancellation_provider_operations SET status='confirmed',reconciled_at=now()\",\n  )\n  await assert.rejects(complete(pg, { refundDisposition: null }), /evidence/)\n  await assert.rejects(complete(pg, { receiptQueued: true }), /evidence/)\n  assert.equal(await complete(pg), true)\n})",
+    "sha256": "2eecf6d8f1a9f6964415e034d55250a89ae6d8c13647b2148782045c979378c5",
+    "assertions": [
+      "assert.rejects(\n    pg.exec(\"UPDATE private.public_contract_declaration_reviews SET status='in_review'\"),\n    /match/,\n  )",
+      "assert.rejects(\n    pg.exec(\n      \"UPDATE private.public_contract_declaration_reviews SET status='resolved',resolved_at=now(),resolution_reference='email_queued'\",\n    ),\n    /evidence/,\n  )",
+      "assert.rejects(complete(pg, { refundDisposition: null }), /evidence/)",
+      "assert.rejects(complete(pg, { receiptQueued: true }), /evidence/)",
+      "assert.equal(await complete(pg), true)"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-resolution.test.ts",
+    "title": "operator commands validate exact scope and require a complete evidence file; they never dispatch providers",
+    "line": 242,
+    "start": 9975,
+    "end": 12033,
+    "body": "test(\"operator commands validate exact scope and require a complete evidence file; they never dispatch providers\", async () => {\n  const { runPublicContractDeclarationCommand } =\n    await import(\"../scripts/billing/public-contract-declarations\")\n  const calls: Array<{ name: string; args: Record<string, unknown> }> = []\n  const client = {\n    async rpc(name: string, args: Record<string, unknown>) {\n      calls.push({ name, args })\n      return {\n        data:\n          name === \"complete_public_contract_declaration_resolution\"\n            ? true\n            : { declarationId: DECLARATION, status: \"in_review\" },\n        error: null,\n      }\n    },\n  }\n  await assert.rejects(\n    runPublicContractDeclarationCommand(\n      [\"match\", `--declaration=${DECLARATION}`, `--user=${USER}`, `--enrollment=${ENROLLMENT}`],\n      client,\n    ),\n  )\n  await assert.rejects(\n    runPublicContractDeclarationCommand(\n      [\"inspect\", `--declaration=${DECLARATION}`, \"--send=true\"],\n      client,\n    ),\n  )\n  assert.equal(calls.length, 0)\n  await runPublicContractDeclarationCommand(\n    [\n      \"match\",\n      `--declaration=${DECLARATION}`,\n      `--user=${USER}`,\n      `--enrollment=${ENROLLMENT}`,\n      \"--verification-reference=verified_case_1\",\n    ],\n    client,\n  )\n  assert.equal(calls[0]!.name, \"match_public_contract_declaration\")\n  assert.equal(calls[0]!.args.p_verified_user_id, USER)\n  await assert.rejects(\n    runPublicContractDeclarationCommand(\n      [\"complete\", `--declaration=${DECLARATION}`, \"--evidence-file=case.json\"],\n      client,\n      async () => JSON.stringify({ receiptQueued: true }),\n    ),\n  )\n  assert.equal(calls.length, 1)\n  const result = await runPublicContractDeclarationCommand(\n    [\"complete\", `--declaration=${DECLARATION}`, \"--evidence-file=case.json\"],\n    client,\n    async () => JSON.stringify(evidence),\n  )\n  assert.deepEqual(result, {\n    mode: \"complete\",\n    result: { declarationId: DECLARATION, status: \"resolved\" },\n  })\n  assert.equal(calls[1]!.name, \"complete_public_contract_declaration_resolution\")\n})",
+    "sha256": "c3e5b5a3bd8eeaceade1c8bc7a8424fb73d5b5fcc7d0aa3d80cc5b971768660c",
+    "assertions": [
+      "assert.rejects(\n    runPublicContractDeclarationCommand(\n      [\"match\", `--declaration=${DECLARATION}`, `--user=${USER}`, `--enrollment=${ENROLLMENT}`],\n      client,\n    ),\n  )",
+      "assert.rejects(\n    runPublicContractDeclarationCommand(\n      [\"inspect\", `--declaration=${DECLARATION}`, \"--send=true\"],\n      client,\n    ),\n  )",
+      "assert.equal(calls.length, 0)",
+      "assert.equal(calls[0]!.name, \"match_public_contract_declaration\")",
+      "assert.equal(calls[0]!.args.p_verified_user_id, USER)",
+      "assert.rejects(\n    runPublicContractDeclarationCommand(\n      [\"complete\", `--declaration=${DECLARATION}`, \"--evidence-file=case.json\"],\n      client,\n      async () => JSON.stringify({ receiptQueued: true }),\n    ),\n  )",
+      "assert.equal(calls.length, 1)",
+      "assert.deepEqual(result, {\n    mode: \"complete\",\n    result: { declarationId: DECLARATION, status: \"resolved\" },\n  })",
+      "assert.equal(calls[1]!.name, \"complete_public_contract_declaration_resolution\")"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-route.test.ts",
+    "title": "no-cookie public request returns only its own durable receipt after both limits pass",
+    "line": 29,
+    "start": 1038,
+    "end": 1819,
+    "body": "test(\"no-cookie public request returns only its own durable receipt after both limits pass\", async () => {\n  const calls: string[] = []\n  const response = await handlePublicContractDeclaration(request(), {\n    rateLimit: async (identifier, config) => {\n      assert.match(identifier, /^[a-f0-9]{64}$/)\n      calls.push(config.prefix)\n      return { allowed: true }\n    },\n    submit: async (input) => {\n      assert.deepEqual(input, declaration)\n      calls.push(\"save\")\n      return receipt\n    },\n  })\n  assert.equal(response.status, 200)\n  assert.equal(response.headers.get(\"cache-control\"), \"no-store\")\n  assert.deepEqual(await response.json(), { receipt, deliveryStatus: \"queued\" })\n  assert.deepEqual(calls, [\"public-declaration-ip\", \"public-declaration-address\", \"save\"])\n})",
+    "sha256": "22c9cf977ae212ec75329d77cdcaba00d27f25ad684a3e190fd477ded95025d9",
+    "assertions": [
+      "assert.match(identifier, /^[a-f0-9]{64}$/)",
+      "assert.deepEqual(input, declaration)",
+      "assert.equal(response.status, 200)",
+      "assert.equal(response.headers.get(\"cache-control\"), \"no-store\")",
+      "assert.deepEqual(await response.json(), { receipt, deliveryStatus: \"queued\" })",
+      "assert.deepEqual(calls, [\"public-declaration-ip\", \"public-declaration-address\", \"save\"])"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-route.test.ts",
+    "title": "database failure cannot report a received declaration or reveal internal account data",
+    "line": 49,
+    "start": 1821,
+    "end": 2260,
+    "body": "test(\"database failure cannot report a received declaration or reveal internal account data\", async () => {\n  const response = await handlePublicContractDeclaration(request(), {\n    rateLimit: async () => ({ allowed: true }),\n    submit: async () => {\n      throw new Error(\"private customer account exists\")\n    },\n  })\n  assert.equal(response.status, 503)\n  assert.deepEqual(await response.json(), { error: \"submission_unavailable\" })\n})",
+    "sha256": "0c746caf32038d87fe56c4096295856472895485a6e34509ddd34e2c889cc9c4",
+    "assertions": [
+      "assert.equal(response.status, 503)",
+      "assert.deepEqual(await response.json(), { error: \"submission_unavailable\" })"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-route.test.ts",
+    "title": "rate limits and unavailable rate storage stop persistence; address budget is shared across kinds",
+    "line": 60,
+    "start": 2262,
+    "end": 3376,
+    "body": "test(\"rate limits and unavailable rate storage stop persistence; address budget is shared across kinds\", async () => {\n  for (const failingIndex of [1, 2])\n    for (const unavailable of [false, true]) {\n      let calls = 0\n      const response = await handlePublicContractDeclaration(request(), {\n        rateLimit: async () =>\n          ++calls === failingIndex\n            ? { allowed: false, ...(unavailable ? { error: \"db-down\" } : {}) }\n            : { allowed: true },\n        submit: async () => {\n          assert.fail(\"must not save\")\n        },\n      })\n      assert.equal(response.status, unavailable ? 503 : 429)\n      if (!unavailable) assert.ok(Number(response.headers.get(\"retry-after\")) > 0)\n    }\n  const keys: string[] = []\n  for (const body of [declaration, { ...declaration, kind: \"withdrawal\", requestedEnd: null }]) {\n    await handlePublicContractDeclaration(request(body), {\n      rateLimit: async (id, c) => {\n        if (c.prefix.includes(\"address\")) keys.push(id)\n        return { allowed: true }\n      },\n      submit: async () => receipt,\n    })\n  }\n  assert.equal(keys[0], keys[1])\n})",
+    "sha256": "3f0f6560c6c8ccd9e77962931c1dedd96450be39aeec739879e68dbf8f571fdb",
+    "assertions": [
+      "assert.fail(\"must not save\")",
+      "assert.equal(response.status, unavailable ? 503 : 429)",
+      "assert.ok(Number(response.headers.get(\"retry-after\")) > 0)",
+      "assert.equal(keys[0], keys[1])"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-route.test.ts",
+    "title": "rejects cross-site requests, oversized bodies and account-authority fields before persistence",
+    "line": 89,
+    "start": 3378,
+    "end": 4082,
+    "body": "test(\"rejects cross-site requests, oversized bodies and account-authority fields before persistence\", async () => {\n  for (const req of [\n    request(declaration, { origin: \"https://elsewhere.test\" }),\n    request(declaration, { \"sec-fetch-site\": \"cross-site\" }),\n    request({ ...declaration, userId: \"victim\" }),\n    request({ ...declaration, contract: \"x\".repeat(20000) }),\n    request(declaration, { \"content-type\": \"text/plain\" }),\n  ]) {\n    const response = await handlePublicContractDeclaration(req, {\n      rateLimit: async () => ({ allowed: true }),\n      submit: async () => {\n        assert.fail(\"must not save\")\n      },\n    })\n    assert.ok([400, 403, 413].includes(response.status))\n  }\n})",
+    "sha256": "3997ce9da55bd83c9bf610bd4bd76cee8db46eb3d222b5bb1bd0258dfd9518a2",
+    "assertions": [
+      "assert.fail(\"must not save\")",
+      "assert.ok([400, 403, 413].includes(response.status))"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declaration-route.test.ts",
+    "title": "public legal pages and exact submission API bypass auth, including during auth outages",
+    "line": 107,
+    "start": 4084,
+    "end": 5228,
+    "body": "test(\"public legal pages and exact submission API bypass auth, including during auth outages\", async () => {\n  const environment = { nodeEnv: \"production\", localDevLoginEnabled: false }\n  const update = createUpdateSession({\n    createServerClient: () => {\n      assert.fail(\"public declarations must not initialize authentication\")\n    },\n    hasCurrentAppAccess: async () => {\n      assert.fail(\"no access lookup\")\n    },\n    resolveOneTimeAccessState: async () => {\n      assert.fail(\"no entitlement lookup\")\n    },\n    getRouteEnvironment: () => environment,\n  })\n  for (const path of [\"/kuendigen\", \"/widerruf/erklaeren\", \"/api/billing/contract-declarations\"]) {\n    assert.equal(classifyRoute(path, environment), \"public\")\n    const response = await update(new NextRequest(`https://chaarlie.de${path}`))\n    assert.equal(response.headers.get(\"x-middleware-next\"), \"1\")\n    assert.equal(response.headers.get(\"location\"), null)\n  }\n  assert.equal(\n    classifyRoute(\"/api/billing/contract-declarations/private\", environment),\n    \"protected\",\n  )\n  assert.equal(classifyRoute(\"/api/billing/trial-cancellation\", environment), \"protected\")\n})",
+    "sha256": "73b0bfbfc5b2dd52ab3fc41d14c7b2109ad6d179a99092ae86d14c8f2c46c7aa",
+    "assertions": [
+      "assert.fail(\"public declarations must not initialize authentication\")",
+      "assert.fail(\"no access lookup\")",
+      "assert.fail(\"no entitlement lookup\")",
+      "assert.equal(classifyRoute(path, environment), \"public\")",
+      "assert.equal(response.headers.get(\"x-middleware-next\"), \"1\")",
+      "assert.equal(response.headers.get(\"location\"), null)",
+      "assert.equal(\n    classifyRoute(\"/api/billing/contract-declarations/private\", environment),\n    \"protected\",\n  )",
+      "assert.equal(classifyRoute(\"/api/billing/trial-cancellation\", environment), \"protected\")"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declaration.test.ts",
+    "title": "accepts a cancellation without authentication and normalizes only surrounding whitespace/email",
+    "line": 15,
+    "start": 443,
+    "end": 742,
+    "body": "test(\"accepts a cancellation without authentication and normalizes only surrounding whitespace/email\", () => {\n  assert.deepEqual(parsePublicContractDeclaration(input), {\n    ...input,\n    name: \"Marie Beispiel\",\n    email: \"marie@example.com\",\n    contract: \"Chaarlie Jahresabo · CH-12345\",\n  })\n})",
+    "sha256": "b3e3906e1e515d338981481b9065d0ec90f25b912d188fdf668b4bcf620005e2",
+    "assertions": [
+      "assert.deepEqual(parsePublicContractDeclaration(input), {\n    ...input,\n    name: \"Marie Beispiel\",\n    email: \"marie@example.com\",\n    contract: \"Chaarlie Jahresabo · CH-12345\",\n  })"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declaration.test.ts",
+    "title": "keeps withdrawal separate; rejects cancellation timing/reason and unknown account-authority fields",
+    "line": 24,
+    "start": 744,
+    "end": 1692,
+    "body": "test(\"keeps withdrawal separate; rejects cancellation timing/reason and unknown account-authority fields\", () => {\n  assert.equal(parsePublicContractDeclaration({ ...input, kind: \"withdrawal\" }), null)\n  assert.equal(parsePublicContractDeclaration({ ...input, userId: \"someone-else\" }), null)\n  assert.equal(parsePublicContractDeclaration({ ...input, effectiveEndAt: \"2099-01-01\" }), null)\n  assert.equal(\n    parsePublicContractDeclaration({ ...input, kind: \"ordinary_cancellation\", reason: \"reason\" }),\n    null,\n  )\n  assert.equal(parsePublicContractDeclaration({ ...input, kind: \"refund\" }), null)\n  const withdrawal = { ...input, kind: \"withdrawal\", requestedEnd: null, reason: null }\n  assert.equal(parsePublicContractDeclaration(withdrawal)?.kind, \"withdrawal\")\n  assert.equal(\n    parsePublicContractDeclaration({\n      ...input,\n      kind: \"extraordinary_cancellation\",\n      reason: \"Mein Grund\",\n    })?.reason,\n    \"Mein Grund\",\n  )\n})",
+    "sha256": "ad5a42f39b0cf90445c37f2d8c4519d3d3ce5286a3fae486c904488200c9abea",
+    "assertions": [
+      "assert.equal(parsePublicContractDeclaration({ ...input, kind: \"withdrawal\" }), null)",
+      "assert.equal(parsePublicContractDeclaration({ ...input, userId: \"someone-else\" }), null)",
+      "assert.equal(parsePublicContractDeclaration({ ...input, effectiveEndAt: \"2099-01-01\" }), null)",
+      "assert.equal(\n    parsePublicContractDeclaration({ ...input, kind: \"ordinary_cancellation\", reason: \"reason\" }),\n    null,\n  )",
+      "assert.equal(parsePublicContractDeclaration({ ...input, kind: \"refund\" }), null)",
+      "assert.equal(parsePublicContractDeclaration(withdrawal)?.kind, \"withdrawal\")",
+      "assert.equal(\n    parsePublicContractDeclaration({\n      ...input,\n      kind: \"extraordinary_cancellation\",\n      reason: \"Mein Grund\",\n    })?.reason,\n    \"Mein Grund\",\n  )"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declaration.test.ts",
+    "title": "bounds untrusted text, requires usable contact/contract, and rejects control characters",
+    "line": 45,
+    "start": 1694,
+    "end": 2174,
+    "body": "test(\"bounds untrusted text, requires usable contact/contract, and rejects control characters\", () => {\n  for (const changes of [\n    { email: \"a@example.com\\r\\nBcc: victim@example.com\" },\n    { email: \"not-an-email\" },\n    { name: \" \" },\n    { contract: \" \" },\n    { contract: \"x\".repeat(501) },\n    { name: \"hello\\u0000world\" },\n    { requestedEnd: \" \" },\n    { requestId: \"predictable\" },\n  ])\n    assert.equal(parsePublicContractDeclaration({ ...input, ...changes }), null)\n})",
+    "sha256": "db9084a3fc11d67367a25e119bae4deb462ce7cf67caea64b7b7e9a032f622ea",
+    "assertions": [
+      "assert.equal(parsePublicContractDeclaration({ ...input, ...changes }), null)"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declarations-postgres.test.ts",
+    "title": "durably saves unmatched declaration and receipt atomically; identical replay keeps original timestamp",
+    "line": 58,
+    "start": 2019,
+    "end": 3415,
+    "body": "test(\"durably saves unmatched declaration and receipt atomically; identical replay keeps original timestamp\", async (t) => {\n  const { pg, client } = await harness(t)\n  const before = Date.now()\n  const receipt = await submitPublicContractDeclaration(input, client)\n  assert.ok(Date.parse(receipt.submittedAt) >= before)\n  assert.ok(Date.parse(receipt.submittedAt) <= Date.now())\n  assert.deepEqual(await submitPublicContractDeclaration(input, client), receipt)\n  const rows = await pg.query<{ receipt_payload: unknown; delivery_status: string }>(\n    \"SELECT * FROM private.public_contract_declaration_receipts\",\n  )\n  assert.equal(rows.rows.length, 1)\n  assert.equal(rows.rows[0].delivery_status, \"pending\")\n  const snapshot = rows.rows[0].receipt_payload as typeof receipt\n  assert.deepEqual(snapshot.declaration, receipt.declaration)\n  assert.equal(Date.parse(snapshot.submittedAt), Date.parse(receipt.submittedAt))\n  assert.match(publicDeclarationReceiptText(receipt), /ordentlich/)\n  assert.match(publicDeclarationReceiptText(receipt), /Nach sicherer Zuordnung/)\n  assert.doesNotMatch(\n    publicDeclarationReceiptText(receipt),\n    /wurde.*gesendet|Rückerstattung|Vertragsende: \\d/,\n  )\n  await assert.rejects(\n    submitPublicContractDeclaration({ ...input, email: \"attacker@example.com\" }, client),\n  )\n  assert.deepEqual(await submitPublicContractDeclaration(input, client), receipt)\n})",
+    "sha256": "44acbb5abd53072832484f236c8516f15a77b5de73ee704070e821dc94f9ae3c",
+    "assertions": [
+      "assert.ok(Date.parse(receipt.submittedAt) >= before)",
+      "assert.ok(Date.parse(receipt.submittedAt) <= Date.now())",
+      "assert.deepEqual(await submitPublicContractDeclaration(input, client), receipt)",
+      "assert.equal(rows.rows.length, 1)",
+      "assert.equal(rows.rows[0].delivery_status, \"pending\")",
+      "assert.deepEqual(snapshot.declaration, receipt.declaration)",
+      "assert.equal(Date.parse(snapshot.submittedAt), Date.parse(receipt.submittedAt))",
+      "assert.match(publicDeclarationReceiptText(receipt), /ordentlich/)",
+      "assert.match(publicDeclarationReceiptText(receipt), /Nach sicherer Zuordnung/)",
+      "assert.doesNotMatch(\n    publicDeclarationReceiptText(receipt),\n    /wurde.*gesendet|Rückerstattung|Vertragsende: \\d/,\n  )",
+      "assert.rejects(\n    submitPublicContractDeclaration({ ...input, email: \"attacker@example.com\" }, client),\n  )",
+      "assert.deepEqual(await submitPublicContractDeclaration(input, client), receipt)"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declarations-postgres.test.ts",
+    "title": "receipt enqueue failure rolls back acceptance; retry can then succeed",
+    "line": 85,
+    "start": 3417,
+    "end": 4067,
+    "body": "test(\"receipt enqueue failure rolls back acceptance; retry can then succeed\", async (t) => {\n  const { pg, client } = await harness(t)\n  await pg.exec(\n    \"ALTER TABLE private.public_contract_declaration_receipts ADD CONSTRAINT forced_failure CHECK (false)\",\n  )\n  await assert.rejects(submitPublicContractDeclaration(input, client))\n  assert.equal(\n    (await pg.query(\"SELECT * FROM private.public_contract_declarations\")).rows.length,\n    0,\n  )\n  await pg.exec(\n    \"ALTER TABLE private.public_contract_declaration_receipts DROP CONSTRAINT forced_failure\",\n  )\n  assert.ok((await submitPublicContractDeclaration(input, client)).declarationId)\n})",
+    "sha256": "3f852cdd994e3f13eebe6b2b31aa31439d82fac44c10daa65dc391eded0fa043",
+    "assertions": [
+      "assert.rejects(submitPublicContractDeclaration(input, client))",
+      "assert.equal(\n    (await pg.query(\"SELECT * FROM private.public_contract_declarations\")).rows.length,\n    0,\n  )",
+      "assert.ok((await submitPublicContractDeclaration(input, client)).declarationId)"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declarations-postgres.test.ts",
+    "title": "unprivileged roles cannot read or submit; service can submit but cannot rewrite immutable snapshots",
+    "line": 101,
+    "start": 4069,
+    "end": 5001,
+    "body": "test(\"unprivileged roles cannot read or submit; service can submit but cannot rewrite immutable snapshots\", async (t) => {\n  const { pg, client } = await harness(t)\n  for (const role of [\"anon\", \"authenticated\"]) {\n    await pg.exec(`SET ROLE ${role}`)\n    await assert.rejects(submitPublicContractDeclaration(input, client))\n    await assert.rejects(pg.query(\"SELECT * FROM private.public_contract_declarations\"))\n    await assert.rejects(pg.query(\"SELECT * FROM private.public_contract_declaration_receipts\"))\n    await pg.exec(\"RESET ROLE\")\n  }\n  await pg.exec(\"SET ROLE service_role\")\n  await submitPublicContractDeclaration(input, client)\n  await assert.rejects(\n    pg.exec(\"UPDATE private.public_contract_declarations SET submitted_at = now()\"),\n  )\n  await assert.rejects(\n    pg.exec(\n      \"UPDATE private.public_contract_declaration_receipts SET receipt_payload = '{}'::jsonb\",\n    ),\n  )\n  await pg.exec(\"RESET ROLE\")\n})",
+    "sha256": "66eb52f812f3a60672dc72dace1eeb4268581678a97362106475a9a8a89523c3",
+    "assertions": [
+      "assert.rejects(submitPublicContractDeclaration(input, client))",
+      "assert.rejects(pg.query(\"SELECT * FROM private.public_contract_declarations\"))",
+      "assert.rejects(pg.query(\"SELECT * FROM private.public_contract_declaration_receipts\"))",
+      "assert.rejects(\n    pg.exec(\"UPDATE private.public_contract_declarations SET submitted_at = now()\"),\n  )",
+      "assert.rejects(\n    pg.exec(\n      \"UPDATE private.public_contract_declaration_receipts SET receipt_payload = '{}'::jsonb\",\n    ),\n  )"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declarations-postgres.test.ts",
+    "title": "withdrawal and extraordinary declarations keep their distinct text without asserting refund/effective date",
+    "line": 123,
+    "start": 5003,
+    "end": 6040,
+    "body": "test(\"withdrawal and extraordinary declarations keep their distinct text without asserting refund/effective date\", async (t) => {\n  const { client } = await harness(t)\n  const withdrawal = await submitPublicContractDeclaration(\n    { ...input, kind: \"withdrawal\", requestedEnd: null },\n    client,\n  )\n  assert.match(publicDeclarationReceiptText(withdrawal), /Hiermit widerrufe ich/)\n  assert.doesNotMatch(publicDeclarationReceiptText(withdrawal), /Hiermit kündige|Rückerstattung/)\n  await assert.rejects(\n    submitPublicContractDeclaration({ ...input, kind: \"extraordinary_cancellation\" }, client),\n  )\n  const special = await submitPublicContractDeclaration(\n    {\n      ...input,\n      requestId: \"00000000-0000-4000-8000-000000000002\",\n      kind: \"extraordinary_cancellation\",\n      requestedEnd: \"30.09.2026\",\n      reason: \"Mein Grund\",\n    },\n    client,\n  )\n  assert.match(publicDeclarationReceiptText(special), /außerordentlich/)\n  assert.match(publicDeclarationReceiptText(special), /Gewünschtes Vertragsende: 30.09.2026/)\n})",
+    "sha256": "c3044c57e413441b61639f0c24da83daf88e8da0109449da32021d76d53dc0b3",
+    "assertions": [
+      "assert.match(publicDeclarationReceiptText(withdrawal), /Hiermit widerrufe ich/)",
+      "assert.doesNotMatch(publicDeclarationReceiptText(withdrawal), /Hiermit kündige|Rückerstattung/)",
+      "assert.rejects(\n    submitPublicContractDeclaration({ ...input, kind: \"extraordinary_cancellation\" }, client),\n  )",
+      "assert.match(publicDeclarationReceiptText(special), /außerordentlich/)",
+      "assert.match(publicDeclarationReceiptText(special), /Gewünschtes Vertragsende: 30.09.2026/)"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declarations-postgres.test.ts",
+    "title": "operator review queue stays pending after receipt delivery and exposes details only to service-role exact reads",
+    "line": 148,
+    "start": 6042,
+    "end": 7745,
+    "body": "test(\"operator review queue stays pending after receipt delivery and exposes details only to service-role exact reads\", async (t) => {\n  const { pg, client } = await harness(t)\n  const receipt = await submitPublicContractDeclaration(input, client)\n  await pg.exec(\n    \"UPDATE private.public_contract_declaration_receipts SET delivery_status = 'sent', sent_at = now()\",\n  )\n  const list = () =>\n    pg.query<Record<string, unknown>>(\n      \"SELECT * FROM public.list_public_contract_declarations_for_review(100)\",\n    )\n  const detail = () =>\n    pg.query<Record<string, unknown>>(\n      \"SELECT * FROM public.get_public_contract_declaration_for_review($1::uuid)\",\n      [receipt.declarationId],\n    )\n  for (const role of [\"anon\", \"authenticated\"]) {\n    await pg.exec(`SET ROLE ${role}`)\n    await assert.rejects(list())\n    await assert.rejects(detail())\n    await pg.exec(\"RESET ROLE\")\n  }\n  await pg.exec(\"SET ROLE service_role\")\n  const rows = (await list()).rows\n  assert.equal(rows.length, 1)\n  assert.equal(rows[0].review_status, \"pending\")\n  assert.equal(rows[0].receipt_delivery_status, \"sent\")\n  assert.deepEqual(Object.keys(rows[0]).sort(), [\n    \"declaration_id\",\n    \"kind\",\n    \"receipt_delivery_status\",\n    \"review_status\",\n    \"submitted_at\",\n  ])\n  assert.doesNotMatch(JSON.stringify(rows), /marie|Beispiel|CH-12345/)\n  assert.deepEqual((await detail()).rows[0].payload, {\n    kind: input.kind,\n    name: input.name,\n    email: input.email,\n    contract: input.contract,\n    requestedEnd: input.requestedEnd,\n    reason: null,\n  })\n  await assert.rejects(\n    pg.exec(\"UPDATE private.public_contract_declaration_reviews SET status = 'resolved'\"),\n  )\n  await pg.exec(\"RESET ROLE\")\n})",
+    "sha256": "797f22bfcee70f8ad7329718412f2018ee77d73f509c99e082e1337ca9047251",
+    "assertions": [
+      "assert.rejects(list())",
+      "assert.rejects(detail())",
+      "assert.equal(rows.length, 1)",
+      "assert.equal(rows[0].review_status, \"pending\")",
+      "assert.equal(rows[0].receipt_delivery_status, \"sent\")",
+      "assert.deepEqual(Object.keys(rows[0]).sort(), [\n    \"declaration_id\",\n    \"kind\",\n    \"receipt_delivery_status\",\n    \"review_status\",\n    \"submitted_at\",\n  ])",
+      "assert.doesNotMatch(JSON.stringify(rows), /marie|Beispiel|CH-12345/)",
+      "assert.deepEqual((await detail()).rows[0].payload, {\n    kind: input.kind,\n    name: input.name,\n    email: input.email,\n    contract: input.contract,\n    requestedEnd: input.requestedEnd,\n    reason: null,\n  })",
+      "assert.rejects(\n    pg.exec(\"UPDATE private.public_contract_declaration_reviews SET status = 'resolved'\"),\n  )"
+    ]
+  },
+  {
+    "file": "tests/billing-public-contract-declarations-postgres.test.ts",
+    "title": "read-only operator CLI rejects mutation arguments without calling the database",
+    "line": 196,
+    "start": 7747,
+    "end": 8636,
+    "body": "test(\"read-only operator CLI rejects mutation arguments without calling the database\", async () => {\n  for (const args of [[\"--resolve\"], [\"--list\", \"--apply\"], [\"--declaration=arbitrary\"], []]) {\n    await assert.rejects(\n      readPublicContractDeclarations(args, {\n        rpc: async () => {\n          assert.fail(\"invalid command must not call database\")\n        },\n      }),\n    )\n  }\n  const calls: string[] = []\n  const client = {\n    rpc: async (name: string) => {\n      calls.push(name)\n      return { data: [], error: null }\n    },\n  }\n  assert.deepEqual(await readPublicContractDeclarations([\"--list\"], client), {\n    mode: \"read-only\",\n    rows: [],\n  })\n  await readPublicContractDeclarations([`--declaration=${input.requestId}`], client)\n  assert.deepEqual(calls, [\n    \"list_public_contract_declarations_for_review\",\n    \"get_public_contract_declaration_for_review\",\n  ])\n})",
+    "sha256": "90fc477e31a453b838904b57e5ec0881063451e74b4607ae3a9234febccd8fdb",
+    "assertions": [
+      "assert.rejects(\n      readPublicContractDeclarations(args, {\n        rpc: async () => {\n          assert.fail(\"invalid command must not call database\")\n        },\n      }),\n    )",
+      "assert.fail(\"invalid command must not call database\")",
+      "assert.deepEqual(await readPublicContractDeclarations([\"--list\"], client), {\n    mode: \"read-only\",\n    rows: [],\n  })",
+      "assert.deepEqual(calls, [\n    \"list_public_contract_declarations_for_review\",\n    \"get_public_contract_declaration_for_review\",\n  ])"
+    ]
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "the durable declaration starts locally queued and only a later matching provider confirmation can mark it sent",
+    "line": 65,
+    "start": 2567,
+    "end": 6504,
+    "body": "test(\"the durable declaration starts locally queued and only a later matching provider confirmation can mark it sent\", async (t) => {\n  const pg = await database(t)\n  const request = receiptPayload.declaration.requestId\n  const payload = { ...receiptPayload.declaration }\n  delete (payload as Partial<typeof payload>).requestId\n  await pg.exec(\"SET ROLE service_role\")\n  const submitted = await pg.query<{ declaration_id: string }>(\n    \"SELECT * FROM public.submit_public_contract_declaration($1::uuid, $2::jsonb)\",\n    [request, JSON.stringify(payload)],\n  )\n  const id = submitted.rows[0]!.declaration_id\n  const initial = await pg.query<{\n    delivery_status: string\n    provider_delivery_id: string | null\n    sent_at: string | null\n  }>(\n    \"SELECT delivery_status, provider_delivery_id, sent_at FROM private.public_contract_declaration_receipts\",\n  )\n  assert.deepEqual(initial.rows[0], {\n    delivery_status: \"queued\",\n    provider_delivery_id: null,\n    sent_at: null,\n  })\n\n  const claimed = await pg.query<{ declaration_id: string; attempt_id: string }>(\n    \"SELECT * FROM public.claim_public_contract_declaration_receipt_deliveries(1, 60)\",\n  )\n  assert.equal(claimed.rows.length, 1)\n  assert.equal(\n    (\n      await pg.query<{ complete: boolean }>(\n        \"SELECT public.complete_public_contract_declaration_receipt_delivery($1::uuid, $2::uuid, 'queued', '', 'cio-1', '2026-09-14T12:01:00Z') AS complete\",\n        [id, claimed.rows[0]!.attempt_id],\n      )\n    ).rows[0]!.complete,\n    true,\n  )\n  const queued = await pg.query<{\n    delivery_status: string\n    provider_delivery_id: string\n    sent_at: string | null\n  }>(\n    \"SELECT delivery_status, provider_delivery_id, sent_at FROM private.public_contract_declaration_receiptS\",\n  )\n  assert.deepEqual(queued.rows[0], {\n    delivery_status: \"queued\",\n    provider_delivery_id: \"cio-1\",\n    sent_at: null,\n  })\n  assert.equal(\n    (\n      await pg.query<{ confirmed: boolean }>(\n        \"SELECT public.confirm_public_contract_declaration_receipt_delivery($1::uuid, 'wrong') AS confirmed\",\n        [id],\n      )\n    ).rows[0]!.confirmed,\n    false,\n  )\n  assert.equal(\n    (\n      await pg.query<{ confirmed: boolean }>(\n        \"SELECT public.confirm_public_contract_declaration_receipt_delivery($1::uuid, 'cio-1') AS confirmed\",\n        [id],\n      )\n    ).rows[0]!.confirmed,\n    true,\n  )\n  assert.equal(\n    (\n      await pg.query<{ delivery_status: string }>(\n        \"SELECT delivery_status FROM private.public_contract_declaration_receipts\",\n      )\n    ).rows[0]!.delivery_status,\n    \"sent\",\n  )\n  const retryRequest = \"44444444-4444-4444-8444-444444444444\"\n  const retrySubmitted = await pg.query<{ declaration_id: string }>(\n    \"SELECT * FROM public.submit_public_contract_declaration($1::uuid, $2::jsonb)\",\n    [retryRequest, JSON.stringify(payload)],\n  )\n  const retryClaim = await pg.query<{ attempt_id: string }>(\n    \"SELECT * FROM public.claim_public_contract_declaration_receipt_deliveries(1, 60)\",\n  )\n  assert.equal(\n    (\n      await pg.query<{ complete: boolean }>(\n        \"SELECT public.complete_public_contract_declaration_receipt_delivery($1::uuid, $2::uuid, 'retryable_error', 'customerio_http_5xx', '', '') AS complete\",\n        [retrySubmitted.rows[0]!.declaration_id, retryClaim.rows[0]!.attempt_id],\n      )\n    ).rows[0]!.complete,\n    true,\n  )\n  const retryable = await pg.query<{ delivery_status: string; failed_at: string | null }>(\n    \"SELECT delivery_status, failed_at FROM private.public_contract_declaration_receipts WHERE declaration_id = $1::uuid\",\n    [retrySubmitted.rows[0]!.declaration_id],\n  )\n  assert.equal(retryable.rows[0]!.delivery_status, \"retryable_error\")\n  assert.notEqual(retryable.rows[0]!.failed_at, null)\n  await pg.exec(\"SET ROLE anon\")\n  await assert.rejects(\n    () =>\n      pg.query(\"SELECT * FROM public.claim_public_contract_declaration_receipt_deliveries(1, 60)\"),\n    /permission denied/,\n  )\n})",
+    "sha256": "22f42e6d5c30919c4afa589a32b48ba596e7896009141683a7128c86c1fa1531",
+    "assertions": [
+      "assert.deepEqual(initial.rows[0], {\n    delivery_status: \"queued\",\n    provider_delivery_id: null,\n    sent_at: null,\n  })",
+      "assert.equal(claimed.rows.length, 1)",
+      "assert.equal(\n    (\n      await pg.query<{ complete: boolean }>(\n        \"SELECT public.complete_public_contract_declaration_receipt_delivery($1::uuid, $2::uuid, 'queued', '', 'cio-1', '2026-09-14T12:01:00Z') AS complete\",\n        [id, claimed.rows[0]!.attempt_id],\n      )\n    ).rows[0]!.complete,\n    true,\n  )",
+      "assert.deepEqual(queued.rows[0], {\n    delivery_status: \"queued\",\n    provider_delivery_id: \"cio-1\",\n    sent_at: null,\n  })",
+      "assert.equal(\n    (\n      await pg.query<{ confirmed: boolean }>(\n        \"SELECT public.confirm_public_contract_declaration_receipt_delivery($1::uuid, 'wrong') AS confirmed\",\n        [id],\n      )\n    ).rows[0]!.confirmed,\n    false,\n  )",
+      "assert.equal(\n    (\n      await pg.query<{ confirmed: boolean }>(\n        \"SELECT public.confirm_public_contract_declaration_receipt_delivery($1::uuid, 'cio-1') AS confirmed\",\n        [id],\n      )\n    ).rows[0]!.confirmed,\n    true,\n  )",
+      "assert.equal(\n    (\n      await pg.query<{ delivery_status: string }>(\n        \"SELECT delivery_status FROM private.public_contract_declaration_receipts\",\n      )\n    ).rows[0]!.delivery_status,\n    \"sent\",\n  )",
+      "assert.equal(\n    (\n      await pg.query<{ complete: boolean }>(\n        \"SELECT public.complete_public_contract_declaration_receipt_delivery($1::uuid, $2::uuid, 'retryable_error', 'customerio_http_5xx', '', '') AS complete\",\n        [retrySubmitted.rows[0]!.declaration_id, retryClaim.rows[0]!.attempt_id],\n      )\n    ).rows[0]!.complete,\n    true,\n  )",
+      "assert.equal(retryable.rows[0]!.delivery_status, \"retryable_error\")",
+      "assert.notEqual(retryable.rows[0]!.failed_at, null)",
+      "assert.rejects(\n    () =>\n      pg.query(\"SELECT * FROM public.claim_public_contract_declaration_receipt_deliveries(1, 60)\"),\n    /permission denied/,\n  )"
+    ]
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "a Customer.io acknowledgement records queued, never sent, and uses the declared recipient",
+    "line": 171,
+    "start": 6506,
+    "end": 7979,
+    "body": "test(\"a Customer.io acknowledgement records queued, never sent, and uses the declared recipient\", async () => {\n  const sent: Array<{\n    email: string\n    messageId: string\n    receiptText: string\n    requiredNotice: RequiredNoticePresentation\n  }> = []\n  const settled: unknown[] = []\n  const result = await dispatchPublicContractDeclarationReceipts({\n    messageId: \"legal-declaration-receipt\",\n    apiKeyPresent: true,\n    claim: async () => [claimedRow],\n    send: async (input) => {\n      sent.push(input)\n      return { deliveryId: \"cio-1\", queuedAt: 1_786_272_000 }\n    },\n    settle: async (_claim, outcome) => {\n      settled.push(outcome)\n    },\n  })\n\n  assert.deepEqual(result, {\n    claimed: 1,\n    queued: 1,\n    retryable: 0,\n    supportRequired: 0,\n    blocked: false,\n  })\n  assert.deepEqual(\n    sent.map(({ email, messageId }) => ({ email, messageId })),\n    [\n      {\n        email: \"marie@example.com\",\n        messageId: \"legal-declaration-receipt\",\n      },\n    ],\n  )\n  assert.match(sent[0]!.receiptText, /Eingangsbestätigung/)\n  assert.match(sent[0]!.receiptText, /Marie Beispiel/)\n  assert.equal(sent[0]!.requiredNotice.title, \"Wir haben deine Kündigung erhalten.\")\n  assert.deepEqual(sent[0]!.requiredNotice.primaryAction, {\n    kind: \"contact\",\n    label: \"Kontakt aufnehmen\",\n  })\n  assert.deepEqual(settled, [\n    {\n      status: \"queued\",\n      deliveryId: \"cio-1\",\n      queuedAt: new Date(1_786_272_000 * 1000).toISOString(),\n    },\n  ])\n})",
+    "sha256": "ae4ffd550eaeef2e108e37bd2641f4d4f2c1b8a7a059ab2771f0ac8065d4b595",
+    "assertions": [
+      "assert.deepEqual(result, {\n    claimed: 1,\n    queued: 1,\n    retryable: 0,\n    supportRequired: 0,\n    blocked: false,\n  })",
+      "assert.deepEqual(\n    sent.map(({ email, messageId }) => ({ email, messageId })),\n    [\n      {\n        email: \"marie@example.com\",\n        messageId: \"legal-declaration-receipt\",\n      },\n    ],\n  )",
+      "assert.match(sent[0]!.receiptText, /Eingangsbestätigung/)",
+      "assert.match(sent[0]!.receiptText, /Marie Beispiel/)",
+      "assert.equal(sent[0]!.requiredNotice.title, \"Wir haben deine Kündigung erhalten.\")",
+      "assert.deepEqual(sent[0]!.requiredNotice.primaryAction, {\n    kind: \"contact\",\n    label: \"Kontakt aufnehmen\",\n  })",
+      "assert.deepEqual(settled, [\n    {\n      status: \"queued\",\n      deliveryId: \"cio-1\",\n      queuedAt: new Date(1_786_272_000 * 1000).toISOString(),\n    },\n  ])"
+    ]
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "missing receipt-template configuration fails closed before a declaration is claimed",
+    "line": 224,
+    "start": 7981,
+    "end": 8591,
+    "body": "test(\"missing receipt-template configuration fails closed before a declaration is claimed\", async () => {\n  let claims = 0\n  const result = await dispatchPublicContractDeclarationReceipts({\n    messageId: \"\",\n    apiKeyPresent: true,\n    claim: async () => {\n      claims++\n      return [claimedRow]\n    },\n    send: async () => {\n      throw new Error(\"must not send\")\n    },\n    settle: async () => {\n      throw new Error(\"must not settle\")\n    },\n  })\n  assert.deepEqual(result, {\n    claimed: 0,\n    queued: 0,\n    retryable: 0,\n    supportRequired: 0,\n    blocked: true,\n  })\n  assert.equal(claims, 0)\n})",
+    "sha256": "66b12319286afae12e8350ac5483e2f5c07cea821e85669e973b4d6bd15e6f32",
+    "assertions": [
+      "assert.deepEqual(result, {\n    claimed: 0,\n    queued: 0,\n    retryable: 0,\n    supportRequired: 0,\n    blocked: true,\n  })",
+      "assert.equal(claims, 0)"
+    ]
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "missing Customer.io credentials fail closed before a declaration is claimed",
+    "line": 250,
+    "start": 8593,
+    "end": 9132,
+    "body": "test(\"missing Customer.io credentials fail closed before a declaration is claimed\", async () => {\n  let claims = 0\n  const result = await dispatchPublicContractDeclarationReceipts({\n    messageId: \"legal-declaration-receipt\",\n    apiKeyPresent: false,\n    claim: async () => {\n      claims++\n      return [claimedRow]\n    },\n    send: async () => {\n      throw new Error(\"must not send\")\n    },\n    settle: async () => {\n      throw new Error(\"must not settle\")\n    },\n  })\n  assert.equal(result.blocked, true)\n  assert.equal(claims, 0)\n})",
+    "sha256": "cfad0177ad79a3dca71e70ddf84d3e7838d3b39eb6a5745ae951bf6b93a27cc8",
+    "assertions": [
+      "assert.equal(result.blocked, true)",
+      "assert.equal(claims, 0)"
+    ]
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "ambiguous Customer.io outcomes are parked for support and are never blindly retried",
+    "line": 270,
+    "start": 9134,
+    "end": 9785,
+    "body": "test(\"ambiguous Customer.io outcomes are parked for support and are never blindly retried\", async () => {\n  const settled: unknown[] = []\n  const result = await dispatchPublicContractDeclarationReceipts({\n    messageId: \"legal-declaration-receipt\",\n    apiKeyPresent: true,\n    claim: async () => [claimedRow],\n    send: async () => {\n      throw new CustomerIoAmbiguousDeliveryError(\"connection reset\")\n    },\n    settle: async (_claim, outcome) => {\n      settled.push(outcome)\n    },\n  })\n  assert.equal(result.supportRequired, 1)\n  assert.deepEqual(settled, [\n    { status: \"support_required\", errorCode: \"customerio_delivery_ambiguous\" },\n  ])\n})",
+    "sha256": "8687fb14d56e7b3c6f19c6d48e94c7263c6ab2ade08cc1de708c8b4852e6f9b8",
+    "assertions": [
+      "assert.equal(result.supportRequired, 1)",
+      "assert.deepEqual(settled, [\n    { status: \"support_required\", errorCode: \"customerio_delivery_ambiguous\" },\n  ])"
+    ]
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "Customer.io HTTP failures are parked without retaining provider text because acceptance is unconfirmed",
+    "line": 289,
+    "start": 9787,
+    "end": 10458,
+    "body": "test(\"Customer.io HTTP failures are parked without retaining provider text because acceptance is unconfirmed\", async () => {\n  const settled: unknown[] = []\n  const result = await dispatchPublicContractDeclarationReceipts({\n    messageId: \"legal-declaration-receipt\",\n    apiKeyPresent: true,\n    claim: async () => [claimedRow],\n    send: async () => {\n      throw new CustomerIoHttpError(503, \"recipient=marie@example.com\")\n    },\n    settle: async (_claim, outcome) => {\n      settled.push(outcome)\n    },\n  })\n  assert.equal(result.supportRequired, 1)\n  assert.deepEqual(settled, [\n    { status: \"support_required\", errorCode: \"customerio_http_unconfirmed\" },\n  ])\n})",
+    "sha256": "756cd11fe1ca8f1d9dd7ca0bfaee336071bf306814ece28afb174fbc26737ec3",
+    "assertions": [
+      "assert.equal(result.supportRequired, 1)",
+      "assert.deepEqual(settled, [\n    { status: \"support_required\", errorCode: \"customerio_http_unconfirmed\" },\n  ])"
+    ]
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "a malformed claim aborts the whole invocation before any receipt can be sent",
+    "line": 308,
+    "start": 10460,
+    "end": 11054,
+    "body": "test(\"a malformed claim aborts the whole invocation before any receipt can be sent\", async () => {\n  let sends = 0\n  await assert.rejects(\n    () =>\n      dispatchPublicContractDeclarationReceipts({\n        messageId: \"legal-declaration-receipt\",\n        apiKeyPresent: true,\n        claim: async () => [claimedRow, { declaration_id: \"not-a-uuid\" }],\n        send: async () => {\n          sends++\n          return { deliveryId: \"cio-1\", queuedAt: 1 }\n        },\n        settle: async () => undefined,\n      }),\n    /Malformed declaration receipt delivery claim/,\n  )\n  assert.equal(sends, 0)\n})",
+    "sha256": "da1e51ead53ef27d68ac3072fd816797bd520b3eb31ff6d097f60aa089fad219",
+    "assertions": [
+      "assert.rejects(\n    () =>\n      dispatchPublicContractDeclarationReceipts({\n        messageId: \"legal-declaration-receipt\",\n        apiKeyPresent: true,\n        claim: async () => [claimedRow, { declaration_id: \"not-a-uuid\" }],\n        send: async () => {\n          sends++\n          return { deliveryId: \"cio-1\", queuedAt: 1 }\n        },\n        settle: async () => undefined,\n      }),\n    /Malformed declaration receipt delivery claim/,\n  )",
+      "assert.equal(sends, 0)"
+    ]
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "a settlement failure after a queue acknowledgement aborts without a second settlement",
+    "line": 327,
+    "start": 11056,
+    "end": 11632,
+    "body": "test(\"a settlement failure after a queue acknowledgement aborts without a second settlement\", async () => {\n  let settles = 0\n  await assert.rejects(\n    () =>\n      dispatchPublicContractDeclarationReceipts({\n        messageId: \"legal-declaration-receipt\",\n        apiKeyPresent: true,\n        claim: async () => [claimedRow],\n        send: async () => ({ deliveryId: \"cio-1\", queuedAt: 1 }),\n        settle: async () => {\n          settles++\n          throw new Error(\"database unavailable\")\n        },\n      }),\n    /database unavailable/,\n  )\n  assert.equal(settles, 1)\n})",
+    "sha256": "a0f7ac0e877d35ae68c362845d5dad85c1ccd24db35502c544cc8dc2619c343e",
+    "assertions": [
+      "assert.rejects(\n    () =>\n      dispatchPublicContractDeclarationReceipts({\n        messageId: \"legal-declaration-receipt\",\n        apiKeyPresent: true,\n        claim: async () => [claimedRow],\n        send: async () => ({ deliveryId: \"cio-1\", queuedAt: 1 }),\n        settle: async () => {\n          settles++\n          throw new Error(\"database unavailable\")\n        },\n      }),\n    /database unavailable/,\n  )",
+      "assert.equal(settles, 1)"
+    ]
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "the worker uses one bounded active claim and a lease longer than its route budget",
+    "line": 346,
+    "start": 11634,
+    "end": 11863,
+    "body": "test(\"the worker uses one bounded active claim and a lease longer than its route budget\", () => {\n  assert.equal(PUBLIC_DECLARATION_RECEIPT_DELIVERY_LIMIT, 1)\n  assert.ok(PUBLIC_DECLARATION_RECEIPT_DELIVERY_LEASE_SECONDS > 60)\n})",
+    "sha256": "9027aa3196e7ccc03fdbb442332fbe3a05a4914efe6a1eb8f8e1856b97eb0932",
+    "assertions": [
+      "assert.equal(PUBLIC_DECLARATION_RECEIPT_DELIVERY_LIMIT, 1)",
+      "assert.ok(PUBLIC_DECLARATION_RECEIPT_DELIVERY_LEASE_SECONDS > 60)"
+    ]
+  },
+  {
+    "file": "tests/public-contract-declaration-receipt-delivery.test.ts",
+    "title": "the cron route requires its secret and exposes aggregates only",
+    "line": 351,
+    "start": 11865,
+    "end": 12795,
+    "body": "test(\"the cron route requires its secret and exposes aggregates only\", async () => {\n  const unauthorized = await handlePublicContractDeclarationReceiptReconcile(\n    new Request(\"https://x\"),\n    {\n      cronSecret: \"worker-secret\",\n    },\n  )\n  assert.deepEqual(unauthorized, { status: 401, body: { error: \"unauthorized\" } })\n  const authorized = await handlePublicContractDeclarationReceiptReconcile(\n    new Request(\"https://x\", { headers: { authorization: \"Bearer worker-secret\" } }),\n    {\n      cronSecret: \"worker-secret\",\n      dispatch: async () => ({\n        claimed: 1,\n        queued: 1,\n        retryable: 0,\n        supportRequired: 0,\n        blocked: false,\n      }),\n    },\n  )\n  assert.deepEqual(authorized, {\n    status: 200,\n    body: {\n      declarationReceiptDelivery: {\n        claimed: 1,\n        queued: 1,\n        retryable: 0,\n        supportRequired: 0,\n        blocked: false,\n      },\n    },\n  })\n})",
+    "sha256": "58aec6c482c7bde1e477f568059ec234c736fddffd0047191f8342b78e07dc56",
+    "assertions": [
+      "assert.deepEqual(unauthorized, { status: 401, body: { error: \"unauthorized\" } })",
+      "assert.deepEqual(authorized, {\n    status: 200,\n    body: {\n      declarationReceiptDelivery: {\n        claimed: 1,\n        queued: 1,\n        retryable: 0,\n        supportRequired: 0,\n        blocked: false,\n      },\n    },\n  })"
+    ]
+  }
+]

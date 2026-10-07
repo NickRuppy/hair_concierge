@@ -1,0 +1,41 @@
+from pathlib import Path
+D=Path('/tmp/test-audit-scanner-intake26-tools-y8mclofg');p=D/'operator-guard.cjs';s=p.read_text().replace('/tmp/test-audit-moderator183-tools-p18tq7i2/operator',str(D)+'/operator').replace('/tmp/test-audit-moderator-fieldtest183','/tmp/test-audit-scanner-intake26')
+s=s.replace('candidates.length!==1||controls.length!==2','candidates.length!==4||controls.length!==14').replace("  const changedFile='tests/personal-plan-field-test-ui.test.tsx',snapshots={}","  const snapshots={}")
+s=s.replace("if(keepers.size!==1)fail('One canonical keeper required')","if(keepers.size!==2)fail('Two canonical keepers required')")
+s=s.replace("const bytes=fs.readFileSync(file===changedFile?BASE+'-'+phase+'.ts':path.join(ROOT,file)),rows=registrations(ts,file,bytes.toString())","const bytes=fs.readFileSync(PROPOSAL+'/snapshots/'+phase+'/'+file),rows=registrations(ts,file,bytes.toString())")
+a=s.index('    const {before,transfer,cut}=snapshots[file];');b=s.index('  function guards(overrides={})',a)
+s=s[:a]+'''    const {before,transfer,cut}=snapshots[file],local=candidates.filter(c=>c.file===file);let reconstructed=before.bytes.toString()
+    const localKeepers=new Map(local.map(c=>[c.keeper.name,c]))
+    for(const c of local){if(before.rows.get(c.keeper.name)?.statement!==c.keeper.body||sha(c.keeper.body)!==c.keeper.sha256||before.rows.get(c.donor.name)?.statement!==c.donor.body||sha(c.donor.body)!==c.donor.sha256)fail('Original callback identity')}
+    for(const c of localKeepers.values())reconstructed=replaceOnce(reconstructed,c.keeper.body,c.keeperAfter,'keeper union')
+    if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated bytes')
+    for(const c of local){const suffix=reconstructed.includes(c.donor.body+'\\n\\n')?'\\n\\n':'\\n';reconstructed=replaceOnce(reconstructed,c.donor.body+suffix,'',c.id)}
+    if(reconstructed!==cut.bytes.toString())fail('Cut changed unrelated bytes')
+    for(const [name,row]of before.rows){const t=transfer.rows.get(name),k=cut.rows.get(name)
+      if(local.some(c=>c.donor.name===name)){if(k||t?.statement!==row.statement)fail('Donor phase mismatch');continue}
+      const candidate=localKeepers.get(name)
+      if(candidate){if(t?.statement!==candidate.keeperAfter||k?.statement!==candidate.keeperAfter)fail('Keeper phase mismatch');continue}
+      if(t?.statement!==row.statement||k?.statement!==row.statement)fail('Unrelated callback changed');unrelated++;unchangedRetained++
+    }
+  }
+  if(Object.keys(snapshots).length!==2||JSON.stringify(counts)!=='{"before":26,"transfer":26,"cut":22}'||unrelated!==20||keepers.size!==2)fail('Phase conservation mismatch')
+  const normalize=s=>s.replaceAll('renderToStaticMarkup(tree.value)','markup')
+  function ownerCalls(file,text){const sf=parse(ts,file,text),calls=[];function walk(n){if(ts.isCallExpression(n)&&['renderForm','renderFlow','renderToStaticMarkup','withClientHooks','ScanUnknownFlow','ScanResearchIntakeForm'].includes(n.expression.getText(sf)))calls.push(n.getText(sf));ts.forEachChild(n,walk)}walk(sf);return calls}
+  for(const c of candidates)for(const phase of ['transfer','cut'])if(snapshots[c.file][phase].rows.get(c.keeper.name)?.statement!==c.keeperAfter)fail('All candidate union agreement')
+  for(const c of keepers.values()){
+    const b=snapshots[c.file].before.rows,k=b.get(c.keeper.name),donors=candidates.filter(x=>x.file===c.file&&x.keeper.name===c.keeper.name).map(x=>b.get(x.donor.name))
+    const expected=[...donors.flatMap(d=>d.assertions),...k.assertions].map(a=>normalize(a.text))
+    for(const phase of ['transfer','cut']){const row=snapshots[c.file][phase].rows.get(c.keeper.name);if(JSON.stringify(row.assertions.map(a=>normalize(a.text)))!==JSON.stringify(expected))fail('Full ordered assertion union lost');if(JSON.stringify(ownerCalls(c.file,k.statement))!==JSON.stringify(ownerCalls(c.file,row.statement)))fail('Owner/fixture/render call topology changed')}
+  }
+  const held=readJSON(PROPOSAL+'/judgments.json').filter(j=>j.mark==='F');if(held.length!==1)fail('Held F count')
+  for(const j of held)for(const phase of Object.keys(counts))if(sha(snapshots[j.file][phase].rows.get(j.title)?.callback||'')!==j.callbackSha256)fail('Held F changed')
+''' +s[b:]
+a=s.index('  function walk(n){if(ctx.ts.isFunctionDeclaration(n)');b=s.index('  const n=found[0]',a)
+s=s[:a]+'''  function walk(n){
+    if(c.anchor.kind==='function'&&ctx.ts.isFunctionDeclaration(n)&&n.name?.text===c.anchor.scope)found.push(n)
+    if(c.anchor.kind==='variable'&&ctx.ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>ctx.ts.isIdentifier(d.name)&&d.name.text===c.anchor.scope))found.push(n)
+    ctx.ts.forEachChild(n,walk)
+  }walk(sf)
+  if(found.length!==1||sha(found[0].getText(sf))!==c.anchor.scopeSha256||found[0].getText(sf).split(c.from).length!==2)fail('Unique owner anchor drift')
+''' +s[b:]
+p.write_text(s)

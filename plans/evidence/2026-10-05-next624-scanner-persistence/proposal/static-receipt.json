@@ -1,0 +1,26 @@
+{
+  "status": "static-pass",
+  "snapshots": 18,
+  "ownedCounts": [
+    46,
+    46,
+    40
+  ],
+  "sixFileCounts": [
+    90,
+    90,
+    84
+  ],
+  "fullOwnedLedger": 46,
+  "selectedSupportingKeepers": 1,
+  "conditionalCuts": 6,
+  "unchangedSurvivingCallbacks": 82,
+  "heldFExact": 5,
+  "currentGuards": 45,
+  "controls": 7,
+  "tsParseOnly": true,
+  "ownersImported": 0,
+  "testsRun": 0,
+  "childrenSpawned": 0,
+  "repositoryWrites": 0
+}

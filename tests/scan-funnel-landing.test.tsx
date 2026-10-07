@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
-import { hasLandingVariant, renderLandingVariant } from "../src/funnels/landing/registry"
+import { renderLandingVariant } from "../src/funnels/landing/registry"
 
 const landingSource = readFileSync(
   new URL("../src/funnels/landing/scan-regal.tsx", import.meta.url),
@@ -17,7 +17,6 @@ function renderScanRegal() {
 }
 
 test("the scan landing renders through the registry with its approved hero copy", () => {
-  assert.equal(hasLandingVariant("scan-regal"), true)
   const html = renderScanRegal()
 
   assert.match(html, /Drogerie-Regal/)

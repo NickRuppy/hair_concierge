@@ -1,0 +1,121 @@
+{
+  "readOnly": true,
+  "diagnosticMessages": [
+    "pilot rows retain verified GTIN status and rank",
+    "every row retains nonempty exact PDP evidence",
+    "PDP evidence excludes brand and category routes",
+    "dry shampoo rows retain exact PDP evidence",
+    "heat005 evidence row exists",
+    "heat005 retains the exact Rossmann product route",
+    "heat005 excludes category evidence routes"
+  ],
+  "guardedManifestSha256": "178a9f2642414241a7ad55c4e37b6d986b35527ba1f6d71699dbc303a742c69d",
+  "evidenceSha256": "48891096684e13b96c5b2d53d5621b361b9cb269f3f1ae0ad5b5fe7b03908ef4",
+  "counts": {
+    "before": 25,
+    "transfer": 25,
+    "cut": 17
+  },
+  "assertions": {
+    "before": 92,
+    "cut": 92
+  },
+  "untouchedCallbacks": 13,
+  "keepers": [
+    {
+      "file": "tests/scanner-catalog-coverage-existing-ledger.test.ts",
+      "name": "research lanes are complete, category-disjoint, and stable",
+      "originalOwnerCalls": [
+        "build()",
+        "build(\"2030-01-01T00:00:00.000Z\")",
+        "buildResearchLanes(first, \"2026-08-26T00:00:00.000Z\")",
+        "buildResearchLanes(first, \"2030-01-01T00:00:00.000Z\")"
+      ],
+      "bodyAfterSha256": "61a1d50fa655168d4729e0aab115f736b7dff4c9a6d7cd0cbedff4e2047d3ccf"
+    },
+    {
+      "file": "tests/scanner-catalog-coverage-phase1a-ledger.test.ts",
+      "name": "Phase 1A content fingerprint is stable across capture times",
+      "originalOwnerCalls": [
+        "buildPhase1aLedger({\n    baseline,\n    readiness,\n    pilotResearch,\n    generatedAt: \"2026-08-26T00:00:00.000Z\",\n  })",
+        "buildPhase1aLedger({\n    baseline,\n    readiness,\n    pilotResearch,\n    generatedAt: \"2030-01-01T00:00:00.000Z\",\n  })"
+      ],
+      "bodyAfterSha256": "dfcca282d14b29c3e3ec3dd3d040708a4b61f81c6a132cab3e0ed8e3a9b26c59"
+    },
+    {
+      "file": "tests/scanner-catalog-coverage-phase1b-ledger.test.ts",
+      "name": "Phase 1B and the 25-product frozen pilot fingerprints are stable across capture times",
+      "originalOwnerCalls": [
+        "ledger(\"2026-08-26T00:00:00.000Z\")",
+        "ledger(\"2030-01-01T00:00:00.000Z\")",
+        "buildPilotManifest({\n    phase1a,\n    phase1b: first,\n    generatedAt: \"2026-08-26T00:00:00.000Z\",\n  })",
+        "buildPilotManifest({\n    phase1a,\n    phase1b: second,\n    generatedAt: \"2030-01-01T00:00:00.000Z\",\n  })"
+      ],
+      "bodyAfterSha256": "c80d9a40f6904387a097ff4dd335d3bfba9b1f0c0e1cb47b739206c066e52134"
+    },
+    {
+      "file": "tests/scanner-catalog-coverage-live-baseline.test.ts",
+      "name": "baseline is deterministic, supported-active-only, and reconciles barcode rows",
+      "originalOwnerCalls": [
+        "buildBaseline(input)",
+        "buildBaseline(input)"
+      ],
+      "bodyAfterSha256": "c2981ed6d31e1c3b58a7a5ef1cbab63a794c5c6b46619b382678eea82bfb65a2"
+    }
+  ],
+  "ownerHashes": 6,
+  "fixtureHashes": 18,
+  "faults": [
+    {
+      "id": "C1",
+      "kind": "typescript-owner",
+      "sourceHash": "d66dd1418b5c9cbd0a1e747b92a5842ca97d1d8d1836f63b2ee9d57cae8d6c50",
+      "staticUniqueAnchor": true
+    },
+    {
+      "id": "C2",
+      "kind": "typescript-owner",
+      "sourceHash": "596b13aba49602429f2d6681140b6ab4bd946755cfc74abb1d8f5529f419996d",
+      "staticUniqueAnchor": true
+    },
+    {
+      "id": "C3",
+      "kind": "typescript-owner",
+      "sourceHash": "596b13aba49602429f2d6681140b6ab4bd946755cfc74abb1d8f5529f419996d",
+      "staticUniqueAnchor": true
+    },
+    {
+      "id": "C4",
+      "kind": "typescript-owner",
+      "sourceHash": "e44c648923106515fce105e13d2f7f5c1927caf9a0787592fa0baecb1ab30ed8",
+      "staticUniqueAnchor": true
+    },
+    {
+      "id": "C5",
+      "kind": "typescript-owner",
+      "sourceHash": "e44c648923106515fce105e13d2f7f5c1927caf9a0787592fa0baecb1ab30ed8",
+      "staticUniqueAnchor": true
+    },
+    {
+      "id": "C6",
+      "kind": "json-data",
+      "sourceHash": "2ce75e32a84313db37eab8afa7bed17bddd1297f4c1c1c95c9c514b9b3c25207",
+      "staticUniqueAnchor": true
+    },
+    {
+      "id": "C7",
+      "kind": "json-data",
+      "sourceHash": "2ce75e32a84313db37eab8afa7bed17bddd1297f4c1c1c95c9c514b9b3c25207",
+      "staticUniqueAnchor": true
+    },
+    {
+      "id": "C8",
+      "kind": "typescript-owner",
+      "sourceHash": "f10367982e221aec2aba4c3bcfcdd651e7d4be7ee36f4d0e08bf3c6a87c9a634",
+      "staticUniqueAnchor": true
+    }
+  ],
+  "dependencyHash": "817e15aed0f145308fb7e971ac9ab6171ddb0d3f0b2c043e9e06377b765d69db",
+  "testsOrOwnerExecution": false,
+  "repoWrites": false
+}

@@ -1,0 +1,61 @@
+TAP version 13
+# Subtest: the loading screen reuses the real screen's layout classes and has no controls
+not ok 1 - the loading screen reuses the real screen's layout classes and has no controls
+  ---
+  duration_ms: 14.010625
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-products-loading.test.tsx:2:2260'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   'Deine Pflegeprodukte',
+    -   'Deine Produkte',
+        'Produkt suchen',
+        'Scannen',
+        'Shampoo',
+        'Conditioner',
+        'Leave-in',
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'Deine Produkte'
+    1: 'Produkt suchen'
+    2: 'Scannen'
+    3: 'Shampoo'
+    4: 'Conditioner'
+    5: 'Leave-in'
+    6: 'Maske'
+    7: 'Öl'
+    8: 'Hitzeschutz'
+    9: 'Weiteres'
+  actual:
+    0: 'Deine Pflegeprodukte'
+    1: 'Produkt suchen'
+    2: 'Scannen'
+    3: 'Shampoo'
+    4: 'Conditioner'
+    5: 'Leave-in'
+    6: 'Maske'
+    7: 'Öl'
+    8: 'Hitzeschutz'
+    9: 'Weiteres'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-products-loading.test.tsx:55:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 307.881458

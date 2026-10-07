@@ -1,0 +1,20 @@
+{
+  "status": "PASS static only",
+  "counts": {
+    "before": 84,
+    "transfer": 84,
+    "cut": 76
+  },
+  "nativeCounts": {
+    "before": 80,
+    "transfer": 80,
+    "cut": 72
+  },
+  "snapshotsParsed": 48,
+  "unchangedCallbacks": 72,
+  "mutantsParsed": 20,
+  "newOwnerCallsOnTransfer": 0,
+  "newCases": 0,
+  "repositoryWrites": 0,
+  "runtimeRuns": 0
+}

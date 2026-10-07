@@ -1,0 +1,7 @@
+[
+  {
+    "file": "tests/scan-alternative-comparison.test.ts",
+    "from": "  type ScanComparisonRow,\n",
+    "to": ""
+  }
+]

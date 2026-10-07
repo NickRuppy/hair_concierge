@@ -11,12 +11,10 @@ import {
   getApplePayAvailability,
   getStripeExpressCheckoutExceptionReason,
   getStripeOfferElementsErrorMessage,
-  hasApplePayMethod,
   isWalletDebugEnabled,
   isWalletExpressDomProbeEnabled,
   isWalletPaymentEligibilityProbeEnabled,
   normalizeWalletDebugMethods,
-  reconcilePaymentElementApplePayAvailability,
   StripeOfferElementsCheckoutContent,
   stripeOfferCheckoutAppearance,
   stripeOfferExpressCheckoutOptions,
@@ -62,8 +60,6 @@ const applePayAvailable = {
 }
 
 test("offer Checkout Elements helpers keep Apple Pay gated and submit labels session-backed", () => {
-  assert.equal(hasApplePayMethod({ availablePaymentMethods: undefined }), false)
-  assert.equal(hasApplePayMethod({ availablePaymentMethods: applePayAvailable }), true)
   assert.equal(getApplePayAvailability({ availablePaymentMethods: undefined }), "unavailable")
   assert.equal(
     getApplePayAvailability({
@@ -449,39 +445,6 @@ test("wallet diagnostics stay query-gated and retain only availability booleans"
     },
   )
   assert.equal(normalizeWalletDebugMethods(undefined), null)
-})
-
-test("Payment Element availability does not hide Apple Pay before its later available event", () => {
-  const applePayUnavailable = {
-    paymentMethods: {
-      applePay: { available: false },
-    },
-  }
-  const applePayAvailable = {
-    paymentMethods: {
-      applePay: { available: true },
-    },
-  }
-
-  let availability: "pending" | "available" | "unavailable" | "failed" = "pending"
-  availability = reconcilePaymentElementApplePayAvailability(availability, applePayUnavailable)
-  assert.equal(availability, "pending")
-
-  availability = reconcilePaymentElementApplePayAvailability(availability, applePayAvailable)
-  assert.equal(availability, "available")
-
-  assert.equal(
-    reconcilePaymentElementApplePayAvailability("available", applePayUnavailable),
-    "available",
-  )
-  assert.equal(
-    reconcilePaymentElementApplePayAvailability("unavailable", applePayAvailable),
-    "unavailable",
-  )
-  assert.equal(
-    reconcilePaymentElementApplePayAvailability("pending", { paymentMethods: undefined }),
-    "pending",
-  )
 })
 
 test("Apple Pay availability changes and failures remove it from the exposure gate", () => {

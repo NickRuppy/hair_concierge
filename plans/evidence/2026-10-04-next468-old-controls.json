@@ -1,0 +1,359 @@
+{
+  "oldFalsePasses": 7,
+  "controls": [
+    {
+      "id": "D2-removes-direct-object-protection",
+      "lane": "context",
+      "phase": "old",
+      "intended": "Keeper containing dann gains stale context and fails exact equality; original donor without referential cue still passes fallback, showing redundant weaker sensitivity.",
+      "source": "src/lib/agent-v2/runtime/product-tool-context.ts",
+      "selectedTest": {
+        "file": "tests/agent-v2-product-tool-context.spec.ts",
+        "name": "direct product messages are passed through unchanged"
+      },
+      "originalHash": "7b102a089a0680524bc379937f193d8f420ce63dd98432c044e9b2b2f16283b3",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-context-mutations-old/D2-removes-direct-object-protection-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-context-mutations-old/D2-removes-direct-object-protection-fault.tap"
+      },
+      "restoredHash": "7b102a089a0680524bc379937f193d8f420ce63dd98432c044e9b2b2f16283b3",
+      "after": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-context-mutations-old/D2-removes-direct-object-protection-after.tap"
+      },
+      "expectedFalsePass": true
+    },
+    {
+      "id": "empty-dismissals-invented-habits",
+      "lane": "journey",
+      "phase": "old",
+      "intended": "Transferred exact empty array fails [habits] != []; existing products false alone would pass.",
+      "source": "src/lib/personal-plan/lifecycle/repository.ts",
+      "selectedTest": {
+        "file": "tests/personal-plan-lifecycle-marks.test.ts",
+        "name": "dismissals are scoped per user: another user's dismissal never hides this user's banner"
+      },
+      "originalHash": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-journey-mutations-old/empty-dismissals-invented-habits-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-journey-mutations-old/empty-dismissals-invented-habits-fault.tap"
+      },
+      "restoredHash": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+      "after": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-journey-mutations-old/empty-dismissals-invented-habits-after.tap"
+      },
+      "expectedFalsePass": true
+    },
+    {
+      "id": "wishlist-flag-bypass",
+      "lane": "scanner",
+      "phase": "old",
+      "intended": "Transferred countundefined or zero-counter fails; with ORIGINAL selected Z1 throwing fixture this fault should pass (old oracle control).",
+      "source": "src/components/scan/scan-flow.tsx",
+      "selectedTest": {
+        "file": "tests/scan-flow-ui.test.tsx",
+        "name": "Z1 flag off: the unlocked bookmark opens the in-flow Merkliste sheet and never deep-links"
+      },
+      "originalHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-scanner-mutations-old/wishlist-flag-bypass-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-scanner-mutations-old/wishlist-flag-bypass-fault.tap"
+      },
+      "restoredHash": "73aad3d04e1237d377fa104ec99d339f49ef9e0ca90cafae34f6f5ddedd5a876",
+      "after": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-scanner-mutations-old/wishlist-flag-bypass-after.tap"
+      },
+      "expectedFalsePass": true
+    },
+    {
+      "id": "C1-full-validity-guidance-reversed",
+      "lane": "validator",
+      "phase": "old",
+      "intended": "Transferred ok=true fails on required_guidance_loaded; old keeper checking only absence of product_lookup_unresolved remains green.",
+      "source": "src/lib/agent-v2/validation/final-answer-validator.ts",
+      "selectedTest": {
+        "file": "tests/agent-v2-final-answer-validator.spec.ts",
+        "name": "validator allows claims for exact lookup products when another lookup is unresolved"
+      },
+      "originalHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-validator-mutations-old/C1-full-validity-guidance-reversed-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-validator-mutations-old/C1-full-validity-guidance-reversed-fault.tap"
+      },
+      "restoredHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+      "after": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-validator-mutations-old/C1-full-validity-guidance-reversed-after.tap"
+      },
+      "expectedFalsePass": true
+    },
+    {
+      "id": "F2-routine-missing-name-masked-by-offer",
+      "lane": "validator",
+      "phase": "old",
+      "intended": "Transferred missingProduct assertion fails while the unrelated hidden-offer visible_payload_not_rendered remains.",
+      "source": "src/lib/agent-v2/validation/final-answer-validator.ts",
+      "selectedTest": {
+        "file": "tests/agent-v2-final-answer-validator.spec.ts",
+        "name": "validator blocks incomplete routine product deep dive prose that omits the product"
+      },
+      "originalHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-validator-mutations-old/F2-routine-missing-name-masked-by-offer-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-validator-mutations-old/F2-routine-missing-name-masked-by-offer-fault.tap"
+      },
+      "restoredHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+      "after": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-validator-mutations-old/F2-routine-missing-name-masked-by-offer-after.tap"
+      },
+      "expectedFalsePass": true
+    },
+    {
+      "id": "F3-wrong-memory-record-accepted",
+      "lane": "validator",
+      "phase": "old",
+      "intended": "Exact accepted and sanitized memory contents fail: wrong array element (unverified hair-texture write) was retained with same lengths.",
+      "source": "src/lib/agent-v2/validation/final-answer-validator.ts",
+      "selectedTest": {
+        "file": "tests/agent-v2-final-answer-validator.spec.ts",
+        "name": "validator drops invalid session memory without blocking valid final answer"
+      },
+      "originalHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-validator-mutations-old/F3-wrong-memory-record-accepted-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-validator-mutations-old/F3-wrong-memory-record-accepted-fault.tap"
+      },
+      "restoredHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+      "after": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-validator-mutations-old/F3-wrong-memory-record-accepted-after.tap"
+      },
+      "expectedFalsePass": true
+    },
+    {
+      "id": "F3-wrong-memory-drop-attribution",
+      "lane": "validator",
+      "phase": "old",
+      "intended": "Exact dropped.write fails when receipt attributes the rejected second write to the first valid write.",
+      "source": "src/lib/agent-v2/validation/final-answer-validator.ts",
+      "selectedTest": {
+        "file": "tests/agent-v2-final-answer-validator.spec.ts",
+        "name": "validator drops invalid session memory without blocking valid final answer"
+      },
+      "originalHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-validator-mutations-old/F3-wrong-memory-drop-attribution-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-validator-mutations-old/F3-wrong-memory-drop-attribution-fault.tap"
+      },
+      "restoredHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+      "after": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-validator-mutations-old/F3-wrong-memory-drop-attribution-after.tap"
+      },
+      "expectedFalsePass": true
+    }
+  ],
+  "heldMalformedDiagnostic": [
+    {
+      "id": "F1-extra-field-strictness-diagnostic",
+      "lane": "validator",
+      "phase": "diagnostic",
+      "intended": "EXPECTED GREEN for this selected original test: missing assessment_kind and assessed_product_ids still cause terminal_schema.",
+      "source": "src/lib/agent-v2/contracts.ts",
+      "selectedTest": {
+        "file": "tests/agent-v2-final-answer-validator.spec.ts",
+        "name": "validator rejects recommendation-card payload fields for product assessment"
+      },
+      "originalHash": "4fe98f5eeaf5ad7487ff3b44359d66035d63ecbee564b3746a6aad4e1f4f7cd2",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-validator-mutations-diagnostic/F1-extra-field-strictness-diagnostic-before.tap"
+      },
+      "fault": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-validator-mutations-diagnostic/F1-extra-field-strictness-diagnostic-fault.tap"
+      },
+      "restoredHash": "4fe98f5eeaf5ad7487ff3b44359d66035d63ecbee564b3746a6aad4e1f4f7cd2",
+      "after": {
+        "status": 0,
+        "signal": null,
+        "timedOut": false,
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "assert": false,
+        "log": "/tmp/test-audit-next468-validator-mutations-diagnostic/F1-extra-field-strictness-diagnostic-after.tap"
+      },
+      "expectedFalsePass": true
+    }
+  ]
+}

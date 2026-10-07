@@ -1,0 +1,3 @@
+694cb9a63a64c9625e9f3ed0a0b9c0830fae9568 2026-09-29 feat(beratung,scan): Verdict-Schicht — ehrliche Masken-Richtung, Preise & Sortierung, Frequenz-Chips, neutrale Cockpit-Stimme (Slice 3) (#621)
+cf7f4604e9bcefd6aa30620626b47413b1926fd8 2026-09-27 feat(beratung): mehrere Produkte pro Routine-Schritt in Cockpit und PDF (batch 9) (#616)
+2bb16f1064e1c7189ac9186da862abb7250ed435 2026-09-24 feat(beratung): flat product checklist — auto-classified usage, review + confirm, Kategorie offen (#608)

@@ -1,0 +1,97 @@
+from pathlib import Path
+import json,hashlib,difflib
+D=Path('/tmp/test-audit-quiz-portrait43-ygKLUS');R=Path('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning');site=json.loads((D/'site-map.json').read_text());sha=lambda b:hashlib.sha256(b).hexdigest()
+# Each item names the independent observable and credible fault, not a title-only classification.
+contracts={
+'hair-length-option-card.test.tsx':[
+('C','Regular complete-frame markup, responsive classes, decorative SVG/image and false pressed/described state.','Same observations transfer into existing QuizOptionCard portrait render; all 10 donor assertions mapped, 2 already present. Texture-selected src is unasserted; both ownBody=false. Retained manifest and asset geometry tests protect coily-specific data.'),
+('R','Very-short own-body figure resolves straight pixie and omits added SVG body.','HairPortrait uses a separate PortraitArtworkComposition implementation; a regression adding SVG only in HairPortraitFigure survives that sibling. This figure also renders Personal Plan midpoint.'),
+('F','Personal Plan variant, 24px selector and pressed selection; selected plum-ice treatment intended.','Variant/size/pressed checks remain independent. Whole-html background regex can match unconditional media background even if selected button loses its tint. Hold unchanged; source-only false-pass observation, no repair or deletion credit.')],
+'hair-portrait-assets.test.ts':[
+('R','All 4×5 canonical texture/length tuples resolve exact filenames.','Swapping wavy-long to another valid existing file passes filesystem membership and gallery counts; this mapping oracle catches it.'),
+('R','Exactly20 manifest entries and21 runtime WebP filenames, with generic.','Extra stale runtime WebP or missing generic is not detected by 20 successful resolver calls; physical inventory and exported manifest remain separate.'),
+('R','Only straight/wavy/curly very-short assets own body; generic does not.','Coily or long asset accidentally owning body hides a needed outline. Current direct/wrapper render samples cannot check every manifest flag.'),
+('R','Each21 asset record has scalp/lengths/ends and all x/y coordinates in18..82.','Offscreen marker on an unrendered texture/length still produces gallery marker counts; independent spatial manifest contract.'),
+('R','Perm, chemical straightening, contradictory-treatment natural fallback and incomplete generic mapping reach actual resolver.','Config returning correct treated pattern does not prove resolver consumes it; choosing naturalRootPattern instead breaks perm/straightened assets. Generic identity branch also remains.')],
+'hair-portrait-gallery.test.tsx':[
+('R','Protected lab route retains explicit shared access helper call and notFound boundary.','Removing either source binding fails independently of successful gallery SSR. Cheap architecture presence guard; it does not prove allowlist polarity or runtime request admission, and no browser replacement is claimed.'),
+('R','Gallery mounts21 personalized/generic cells with63 real marker buttons and white diagnostic default/toggle copy.','Missing matrix cell or marker rendering can pass per-component samples. Lab is current callable dev/Preview/CI surface; no age-only retirement.')],
+'hair-portrait-length-progression.test.ts':[
+('R','20 physical assets keep720px alpha canvases, approved416..672 endpoints,64px gaps, stable widths/tops.','Canonical filename and SSR checks cannot detect raster pixel geometry changes. Sharp measurement is calibration-bound but observes actual data; never removed for static/slow reasons.')],
+'hair-portrait.test.tsx':[
+('R','Generated decorative next/image path/preload and exactly-once summary/treatment copy for perm config.','Image URI/preload, decorative accessibility or duplicated sr-only copy can regress while asset resolver alone remains correct. Prior C09 union remains intact.'),
+('R','Hair-only composition body/image/leader/marker order and exact layer vectors.','Moving leaders under image or dropping body SVG leaves filenames and labels intact. This is separate renderer from HairPortraitFigure.'),
+('R','Own-body pixie omits shared body but retains leaders and marker layers.','Shared composition can double-draw shoulders only for ownBody assets; simple figure test does not call this implementation.'),
+('R','Three native marker buttons, single selected state, minimum hit geometry/focus and semantic labels.','Wrong button count/pressed state or marker positions survive decorative image checks. SSR protects markup, not click or focus effects.'),
+('R','Supplied potential score labels/percentages enter marker accessible names and wider layout.','Ignoring markerScores preserves fallback labels but drops independent user-accessible score data.'),
+('R','Incomplete axes use generic image/body and deliberately unspecific alternative copy.','Generic asset alone does not prove absence of concrete texture/treatment claims in summary.'),
+('R','Legacy/isFallback priorities show neutral Basis/Pflege/Routine labels.','Mapping old families to current concern labels changes existing compatibility behavior; current gallery defaults are not a substitute.'),
+('R','Actual image-failure boundary accepts same-origin matching absolute URL and rejects different path/cross origin.','Normalizer-only equality is weaker than dispatching a failure; cross-origin event must not advance state. Prior C11 input/union retained.'),
+('R','Once generic renders, duplicate/stale selected-image failures cannot advance to hidden.','Lifecycle renderedSrc comparison protects races that one selected→generic case does not exercise.'),
+('R','Rendered generic failure hides and terminal hidden state stays idempotent.','Resurrection or repeated generic fallback escapes selected-only tests. Prior C10 union retained.'),
+('R','Initially generic selection becomes hidden on its first matching image failure.','Two-step selected→generic→hidden does not exercise initial generic state with empty selectedSrc.'),
+('R','Low/high density chooses same asset and suppresses density prose.','Config deliberately preserves density; renderer must independently ignore density when choosing visual copy/asset. Config equality tests cannot replace this contrast.')],
+'portrait-config.test.ts':[
+('R','All60 length×pattern×density combinations produce complete personalized natural config.','Resolver matrix fixes density medium and observes src only; density field or natural/treatment defaults could regress independently.'),
+('R','Perm/straightening preserve natural roots while changing treated pattern/state.','Resolver only asserts selected src, not preserved roots or treatmentState; field contracts used by summary remain independent. No new helper/assertion call rewrite introduced merely to cut.'),
+('R','Contradictory shape treatments stay personalized with natural fallback state.','Returning generic or wrong treatmentState can still share a fallback filename elsewhere; explicit state/original roots protected.'),
+('R','Colour/bleach separately and together do not change portrait config.','These treatment inputs are absent in existing resolver render keepers; removal would lose invariance.'),
+('R','Nine missing/invalid axes yield exact generic config.','Generic one missing density and one incomplete SSR input do not cover each validation boundary or treatment malformed/empty values.'),
+('R','Concerns/goals/scalp/thickness/diagnostic inputs leave portrait config equal.','Accidental diagnostic-driven visual personalization is invisible in axis-only tables. No existing same-input keeper consumes these ignored signals.')],
+'quiz-option-card.test.tsx':[
+('R','Sibling trailing info, label/description IDs, native button topology, row rail/alignment and InfoTip source bindings.','Current full keeper already absorbs prior three cuts; moving trailing tip inside selectable button breaks independent nesting/propagation contract.'),
+('R','Image grid compact mobile/footer dimensions and accessible hidden description.','Portrait delegate and thumbnail branches differ; actual browser visibility does not prove aria association/default class contract.'),
+('R','Actual grid portrait wrapper delegates to shared length-card/figure and preserves complete composition.','Primary C1 keeper; retains all existing6 assertions and receives8 missing direct-frame oracles on the same existing render. Wrong wrapper delegation stays independently detectable.'),
+('R','Thumbnail explanatory text remains visible on mobile.','Grid hidden-sm class policy is intentionally opposite; no same operative layout in other keeper.'),
+('F','SingleSelectScreen prop reconciliation and cancelling delayed answer on Back.','Deleting cancelPendingAdvance() call from handleBack still leaves helper declaration text matching the unscoped regex; current source scan cannot prove event cancellation. Hold unchanged as prior static-ledger F; no new interaction test/cut.'),
+('R','Tool image grid always shows description and grows row height.','alwaysShowDescription=true changes classes and flexible sizing; ordinary grid/thumbnail cannot replace.'),
+('R','Tool option missing image falls back to row/icon without img.','True alwaysShowDescription plus absent visual follows different branch from normal image grid; preserving absence matters.'),
+('R','Default card fade with60ms stagger versus explicit animateIn=false.','Whole-step motion tokens do not prove component default/override or inline delay suppression.'),
+('R','Pending selected parent preserves active styling/pressed and aria-disabled without native disable or dimming.','Disabled and selected independently take different paths; static portrait/frame test is not a pending-event contract.')],
+'quiz-motion-tokens.test.ts':[
+('R','Four literal source owners consume shared settle token and exclude known private delays.','Changing one owner to old220/260/300/400 delay escapes tests of main-problem-sheet interaction only. Keep literal4-row registration; no table packing.'),
+('R','Both quiz shells retain outgoing layer until shared incoming duration.','Reverting shell timeout to stepOut would remove outgoing too soon even with correct CSS; both source bindings remain.'),
+('R','Both transition directions consume correct enter/exit CSS token pairs.','Correct TypeScript timer values do not ensure animation declarations use shared duration/easing; separate generated style contract.')],
+'personal-plan-option-card-layout.test.ts':[
+('R','Standard Personal Plan selector row is full width, flex text shrink and fixed selector sizing.','Private OptionCard standard branch differs from shared HairLengthOptionCard; mobile shrink-wrap regression survives regular QuizOptionCard SSR.'),
+('R','Both local OptionCard markup branches retain press and selected-check motion hooks.','One thumbnail or standard branch can lose hook while global CSS remains; count contract is source-bound architecture, not visual animation proof.')]
+}
+ledger=[]
+for file,rows in site['before'].items():
+ data=contracts[Path(file).name];assert len(rows)==len(data)
+ for i,(r,(mark,contract,reason)) in enumerate(zip(rows,data)):
+  ledger.append({'file':file,'line':r['line'],'title':r['title'],'classification':mark,'contract':contract,'credibleRegressionAndKeeperDecision':reason,'body':r['body'],'bodySHA256':r['sha256'],'assertionCount':len(r['assertions']),'runtimeRows':4 if file.endswith('quiz-motion-tokens.test.ts') and i==0 else 1,'priorScope':'Recovered complete prior option/result lane, refreshed current bodies and new layer question' if file.endswith(('quiz-option-card.test.tsx','hair-portrait.test.tsx','hair-portrait-gallery.test.tsx')) else 'Current complete declaration semantic review; earlier named supporting reads retained where documented'})
+assert len(ledger)==43
+(D/'ledger.json').write_text(json.dumps(ledger,indent=2,ensure_ascii=False)+'\n')
+md=['# Quiz option / portrait43 declaration ledger','', '43 declarations;46 literal runtime registrations. **40R / 2F held unchanged / 1C conditional / 0D**. No runtime or removal credit. Full original callbacks and hashes are in ledger.json; all fixtures/helpers are in the nine full frozen snapshots.','', '| File:line | Class | Exact declaration | Independent contract / credible failure |','|---|:---:|---|---|']
+for x in ledger:md.append('| '+x['file']+':'+str(x['line'])+' | '+x['classification']+' | '+x['title'].replace('|','\\|')+' | '+x['contract']+' '+x['credibleRegressionAndKeeperDecision']+' |')
+(D/'ledger.md').write_text('\n'.join(md)+'\n')
+# Add only newly inspected dependencies/caller evidence. Verify every original67 pin unchanged first.
+pins=json.loads((D/'readset.json').read_text())
+for x in pins:assert sha((R/x['file']).read_bytes())==x['sha256'],x['file']
+extra={
+ 'node_modules/react-dom/server.node.js':('full dependency export routing',None),
+ 'node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js':('bounded SSR useId and static-render implementation',[[9722,9748],[9860,9880]]),
+ 'node_modules/clsx/dist/clsx.mjs':('full class assembly implementation',None),
+ 'node_modules/tailwind-merge/dist/bundle-cjs.js':('bounded merge entry and height/min-height groups',[[460,490],[1425,1443]]),
+ 'src/lib/vocabulary/hair-length.ts':('full axis/label contract',None),
+ 'scripts/portrait/normalize-hair-endpoint.mjs':('full read-only caller inspection; script never executed',None),
+ 'src/app/quiz/page.tsx':('bounded actual QuizQuestion entry dispatch',[[360,391]]),
+ 'src/app/quiz/layout.tsx':('full route shell mounting',None),
+ 'tests/personal-plan-quiz-funnel-entry.test.ts':('bounded sibling shared-portrait source-binding test',[[258,279]]),
+ 'src/funnels/landing/personal-plan-quiz.tsx':('full active registry landing component',None),
+ 'src/funnels/landing/registry.ts':('full registry renderer',None),
+ 'src/funnels/landing/registry.generated.ts':('generated registration membership',None),
+ 'src/components/personal-plan-quiz/personal-plan-quiz-entry.tsx':('bounded progressive continuation caller',[[1,14],[30,90],[261,286]]),
+ 'src/components/personal-plan-quiz/personal-plan-quiz-continuation.ts':('bounded literal dynamic import closures',[[1,38]]),
+ 'src/app/lp/[slug]/page.tsx':('bounded registered landing route/flag entry',[[1,80]])}
+for f,(depth,ranges) in extra.items():
+ b=(R/f).read_bytes();out=D/'snapshots/readset'/f;out.parent.mkdir(parents=True,exist_ok=True);out.write_bytes(b);pins.append({'file':f,'sha256':sha(b),'bytes':len(b),'readDepth':depth,**({'ranges':ranges} if ranges else {})})
+(D/'readset.json').write_text(json.dumps(pins,indent=2)+'\n');m=json.loads((D/'manifest.json').read_text());m['readset']=pins;m['classification']={'R':40,'F':2,'C':1,'D':0};m['heldFUnchanged']=True;m['status']='conditional read-only proposal; main proof pending';(D/'manifest.json').write_text(json.dumps(m,indent=2)+'\n')
+for name,ph1,ph2 in [('transfer.diff','before','transfer'),('cut.diff','transfer','cut'),('complete.diff','before','cut')]:
+ parts=[]
+ for f in m['files']:
+  a=(D/'snapshots'/ph1/f).read_text();b=(D/'snapshots'/ph2/f).read_text();parts.extend(difflib.unified_diff(a.splitlines(True),b.splitlines(True),fromfile=ph1+'/'+f,tofile=ph2+'/'+f))
+ (D/name).write_text(''.join(parts))
+(D/'write-ledger.py').write_text(Path('/tmp/write-quiz-portrait43-ledger.py').read_text())
+print(json.dumps({'ledger':len(ledger),'counts':m['classification'],'guards':len(pins)},indent=2))

@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: deriveViewfinderPresentation: the confirm window keeps the box the decode was read at
+ok 1 - deriveViewfinderPresentation: the confirm window keeps the box the decode was read at
+  ---
+  duration_ms: 0.78975
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 166.10575

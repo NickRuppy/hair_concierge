@@ -2,10 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { buildAgenticToolDefinitions } from "../src/lib/agent/orchestrator/tool-definitions"
-import {
-  AGENTIC_TOOL_LOOP_PROMPT,
-  AGENT_ROUTE_CLASSIFIER_PROMPT,
-} from "../src/lib/agent/orchestrator/prompt"
+import { AGENT_ROUTE_CLASSIFIER_PROMPT } from "../src/lib/agent/orchestrator/prompt"
 import { isGuidanceId } from "../src/lib/agent/contracts"
 import { buildAgenticConsultationBrief } from "../src/lib/agent/orchestrator/agentic-consultation-brief"
 import { extractCurrentTurnContextOverlay } from "../src/lib/agent/orchestrator/current-turn-context"
@@ -238,31 +235,6 @@ test("current-turn extractor detects explicit minimal routine and saved-routine 
   assert.match(overlay.routine_products?.evidence ?? "", /nur Shampoo und Conditioner/i)
 })
 
-test("current-turn extractor captures direct care signals without inventing reset", () => {
-  const overlay = extractCurrentTurnContextOverlay({
-    message:
-      "Ich habe lockiges Haar, Frizz und verknotete Spitzen. Was waere der naechste sinnvollste Schritt?",
-    savedProfile: null,
-  })
-
-  assert.ok(
-    overlay.active_concerns.some(
-      (signal) => signal.field === "hair_texture" && signal.value === "curly",
-    ),
-  )
-  assert.ok(
-    overlay.active_concerns.some(
-      (signal) => signal.field === "concerns" && signal.value === "frizz",
-    ),
-  )
-  assert.ok(
-    overlay.active_concerns.some(
-      (signal) => signal.field === "concerns" && signal.value === "tangling",
-    ),
-  )
-  assert.deepEqual(overlay.safety_overlay_ids, [])
-})
-
 test("current-turn scalp context preserves dandruff and irritation together", () => {
   const overlay = extractCurrentTurnContextOverlay({
     message: "Meine Kopfhaut juckt und ich habe Schuppen.",
@@ -320,44 +292,6 @@ test("current-turn extractor does not mark absent saved routine as a conflict", 
   assert.deepEqual(overlay.routine_products?.saved_value, [])
 })
 
-test("consultation brief distinguishes conceptual leave-in interest from product selection", async () => {
-  const brief = await buildAgenticConsultationBrief({
-    message: "ja ich habe gehoert leave in soll gut sein",
-    recentMessages: [{ role: "assistant", content: "Wir passen deine Routine an." }],
-    userContext: createUserContext({
-      profile: {
-        hair_texture: "straight",
-        thickness: "fine",
-        goals: ["shine"],
-        current_routine_products: ["shampoo", "conditioner"],
-      } as NonNullable<UserContextProjection["profile"]>,
-      suggested_overlays: ["overlay:fine_hair"],
-    }),
-    conversationState: createRoutineState({ active_topic: "routine", routine_layer: "basics" }),
-  })
-
-  assert.equal(brief.charter.length > 0, true)
-  assert.equal(brief.product_vs_education.length > 0, true)
-  assert.ok(brief.candidate_guidance.some((item) => item.id === "topic:leave_in"))
-  assert.ok(brief.profile_overlays.some((item) => item.id === "overlay:fine_hair"))
-  assert.ok(brief.candidate_guidance.every((item) => item.content.length <= 1200))
-})
-
-test("consultation brief includes routine staging for broad routine requests", async () => {
-  const brief = await buildAgenticConsultationBrief({
-    message: "ich moechte meine routine anpassen",
-    recentMessages: [],
-    userContext: createUserContext(),
-    conversationState: null,
-  })
-
-  assert.ok(brief.routine_staging.some((line) => /shampoo/i.test(line)))
-  assert.ok(brief.routine_staging.some((line) => /conditioner/i.test(line)))
-  assert.ok(brief.routine_staging.some((line) => /highest-impact extra lever/i.test(line)))
-  assert.ok(brief.routine_staging.some((line) => /goals or problems/i.test(line)))
-  assert.ok(brief.candidate_guidance.some((item) => item.id === "playbook:build_or_fix_routine"))
-})
-
 test("consultation brief treats broad additional-products questions as routine basics context", async () => {
   const brief = await buildAgenticConsultationBrief({
     message: "andere produkte zusaetzlich zu shampoo?",
@@ -409,30 +343,6 @@ test("consultation brief treats broad what-else-to-add questions as routine basi
   assert.ok(
     englishBrief.candidate_guidance.some((item) => item.id === "playbook:build_or_fix_routine"),
   )
-})
-
-test("agentic tool-loop prompt routes broad additional-products questions to routine basics", () => {
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /zusaetzlich zu Shampoo/i)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /hinzufuegen/i)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /what else should I add/i)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /build_or_fix_routine mit layer="basics"/i)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /load_advisor_guidance.*konzeptuelle/i)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /answer_context.*Beratungshilfe/i)
-})
-
-test("agentic tool-loop prompt requires structured helpful rendering", () => {
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /kurze Einordnung/i)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /klar struktur/i)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /genau einen.*naechsten Schritt/i)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /Fallback.*nie/i)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /Nach einem select_products-Tool/i)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /nicht.*zusaetzlich.*load_advisor_guidance/i)
-})
-
-test("agentic prompt asks for multi-category guidance on category comparisons", () => {
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /categories\[\].*alle explizit genannten Kategorien/i)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /advisor_guidance\.category_sections/i)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /Maske oder Oel/i)
 })
 
 test("route classifier prompt exposes night protection as a known topic", () => {
@@ -639,6 +549,81 @@ test("tool-loop sends consultation brief before the model chooses tools", async 
   assert.match(serialized, /overlay:fine_hair/)
   assert.equal(result.tool_calls.length, 0)
   assert.match(JSON.stringify(result.trace.consultation_brief), /topic:leave_in/)
+
+  // agentic tool-loop prompt lets current intent win over prior state
+  assert.match(firstRequest.systemPrompt, /aktuelle Nutzerfrage semantisch/)
+  assert.match(firstRequest.systemPrompt, /aktuelle Nutzerwunsch hat Vorrang/)
+  assert.match(firstRequest.systemPrompt, /conversation_state hilft nur.*mehrdeutig/i)
+
+  // agentic tool-loop prompt requires tool-sourced products and terminal answers
+  assert.match(firstRequest.systemPrompt, /Nutze select_products/)
+  assert.match(firstRequest.systemPrompt, /Erfinde keine Produkte und keine Produktclaims/)
+  assert.match(firstRequest.systemPrompt, /Nutze submit_final_answer fuer jede finale Antwort/)
+  assert.match(firstRequest.systemPrompt, /fachlich nah beieinander/)
+  assert.match(firstRequest.systemPrompt, /lass es mich wissen/)
+
+  // agentic tool-loop prompt hides internal labels
+  assert.match(firstRequest.systemPrompt, /Antworte natuerlich auf Deutsch/)
+  assert.match(firstRequest.systemPrompt, /interne Labels/i)
+
+  // agentic tool-loop prompt treats answer context as composition guidance
+  assert.match(firstRequest.systemPrompt, /answer_context/)
+  assert.match(firstRequest.systemPrompt, /Kompositionsbriefing/)
+  assert.match(firstRequest.systemPrompt, /keine Vorlage/)
+
+  // agentic tool-loop prompt treats consultation brief as candidate context
+  assert.match(firstRequest.systemPrompt, /consultation_brief/)
+  assert.match(firstRequest.systemPrompt, /candidate context/i)
+  assert.match(firstRequest.systemPrompt, /not a route/i)
+
+  // agentic tool-loop prompt prioritizes conversational fit before guidance
+  assert.match(firstRequest.systemPrompt, /latest_user_message.*vorherige Assistant-Nachricht/i)
+  assert.match(firstRequest.systemPrompt, /Gespraechsform vor Wissensform/i)
+  assert.match(firstRequest.systemPrompt, /nicht als eigenstaendigen Kategorieartikel/i)
+
+  const initialMessage = firstRequest.messages[0]
+  assert.ok(
+    initialMessage && typeof initialMessage.content === "string",
+    "Initial model message must contain the serialized brief",
+  )
+  const deliveredBrief = (
+    JSON.parse(initialMessage.content) as {
+      consultation_brief: Awaited<ReturnType<typeof buildAgenticConsultationBrief>> | null
+    }
+  ).consultation_brief
+  assert.ok(deliveredBrief, "Initial model request must deliver a consultation brief")
+  assert.equal(deliveredBrief.charter.length > 0, true)
+  assert.equal(deliveredBrief.product_vs_education.length > 0, true)
+  assert.ok(
+    deliveredBrief.candidate_guidance.some((item) => item.id === "topic:leave_in"),
+    "Delivered brief must include Leave-in guidance",
+  )
+  assert.ok(
+    deliveredBrief.profile_overlays.some((item) => item.id === "overlay:fine_hair"),
+    "Delivered brief must include the fine-hair overlay",
+  )
+  assert.ok(
+    deliveredBrief.candidate_guidance.every((item) => item.content.length <= 1200),
+    "Delivered candidate guidance must stay within 1200 characters",
+  )
+
+  assert.match(firstRequest.systemPrompt, /zusaetzlich zu Shampoo/i)
+  assert.match(firstRequest.systemPrompt, /hinzufuegen/i)
+  assert.match(firstRequest.systemPrompt, /what else should I add/i)
+  assert.match(firstRequest.systemPrompt, /build_or_fix_routine mit layer="basics"/i)
+  assert.match(firstRequest.systemPrompt, /load_advisor_guidance.*konzeptuelle/i)
+  assert.match(firstRequest.systemPrompt, /answer_context.*Beratungshilfe/i)
+
+  assert.match(firstRequest.systemPrompt, /kurze Einordnung/i)
+  assert.match(firstRequest.systemPrompt, /klar struktur/i)
+  assert.match(firstRequest.systemPrompt, /genau einen.*naechsten Schritt/i)
+  assert.match(firstRequest.systemPrompt, /Fallback.*nie/i)
+  assert.match(firstRequest.systemPrompt, /Nach einem select_products-Tool/i)
+  assert.match(firstRequest.systemPrompt, /nicht.*zusaetzlich.*load_advisor_guidance/i)
+
+  assert.match(firstRequest.systemPrompt, /categories\[\].*alle explizit genannten Kategorien/i)
+  assert.match(firstRequest.systemPrompt, /advisor_guidance\.category_sections/i)
+  assert.match(firstRequest.systemPrompt, /Maske oder Oel/i)
 })
 
 test("tool-loop accepts an explicit null consultation brief for baseline runs", async () => {
@@ -1805,6 +1790,13 @@ test("tool-loop injects answer context after product tools in inline mode", asyn
     "product.recommendation_shape",
     "category.conditioner.recommend",
   ])
+
+  assert.equal(
+    result.trace.answer_context?.capsule_ids.includes("followup.proactive_next_step"),
+    false,
+  )
+  assert.match(serializedMessages, /welcher Typ Conditioner/i)
+  assert.match(serializedMessages, /fachlich nah beieinander/i)
 })
 
 test("tool-loop routes prior product explanation followups through product facts", async () => {
@@ -2155,6 +2147,39 @@ test("tool-loop current frizz and tangling signals steer routine priority away f
   })
 
   assert.equal(selectedCategory, "leave_in")
+
+  const initialMessage = modelClient.requests[0]?.messages[0]
+  assert.ok(
+    initialMessage && typeof initialMessage.content === "string",
+    "Initial model message must contain serialized context",
+  )
+  const deliveredOverlay = (
+    JSON.parse(initialMessage.content) as {
+      current_turn_context: Pick<
+        ReturnType<typeof extractCurrentTurnContextOverlay>,
+        "active_concerns" | "safety_overlay_ids"
+      >
+    }
+  ).current_turn_context
+  assert.ok(
+    deliveredOverlay.active_concerns.some(
+      (signal) => signal.field === "hair_texture" && signal.value === "curly",
+    ),
+    "Delivered context must include curly hair",
+  )
+  assert.ok(
+    deliveredOverlay.active_concerns.some(
+      (signal) => signal.field === "concerns" && signal.value === "frizz",
+    ),
+    "Delivered context must include frizz",
+  )
+  assert.ok(
+    deliveredOverlay.active_concerns.some(
+      (signal) => signal.field === "concerns" && signal.value === "tangling",
+    ),
+    "Delivered context must include tangling",
+  )
+  assert.deepEqual(deliveredOverlay.safety_overlay_ids, [])
 })
 
 test("answer context includes current-turn conflict capsule only for conflicting routine inventory", async () => {
@@ -2614,6 +2639,38 @@ test("tool loop normalizes routine basics state after build_or_fix_routine basic
   assert.equal(result.state_transition.next_state.routine_layer, "basics")
   assert.equal(result.state_transition.next_state.pending_offer, "routine_goals_or_problems")
   assert.equal(result.state_transition.next_state.last_assistant_action, "answered_routine_basics")
+
+  const initialMessage = modelClient.requests[0]?.messages[0]
+  assert.ok(
+    initialMessage && typeof initialMessage.content === "string",
+    "Initial routine message must contain the serialized brief",
+  )
+  const deliveredBrief = (
+    JSON.parse(initialMessage.content) as {
+      consultation_brief: Awaited<ReturnType<typeof buildAgenticConsultationBrief>> | null
+    }
+  ).consultation_brief
+  assert.ok(deliveredBrief, "Initial routine request must deliver a consultation brief")
+  assert.ok(
+    deliveredBrief.routine_staging.some((line) => /shampoo/i.test(line)),
+    "Delivered routine staging must include Shampoo",
+  )
+  assert.ok(
+    deliveredBrief.routine_staging.some((line) => /conditioner/i.test(line)),
+    "Delivered routine staging must include Conditioner",
+  )
+  assert.ok(
+    deliveredBrief.routine_staging.some((line) => /highest-impact extra lever/i.test(line)),
+    "Delivered routine staging must include the highest-impact extra lever",
+  )
+  assert.ok(
+    deliveredBrief.routine_staging.some((line) => /goals or problems/i.test(line)),
+    "Delivered routine staging must include goals or problems",
+  )
+  assert.ok(
+    deliveredBrief.candidate_guidance.some((item) => item.id === "playbook:build_or_fix_routine"),
+    "Delivered brief must include the routine playbook",
+  )
 })
 
 test("tool loop does not normalize routine basics state when a later product tool runs", async () => {
@@ -2714,10 +2771,18 @@ test("tool-loop composer mode rewrites final answer without changing state", asy
   assert.equal(result.state_transition.next_state.active_topic, "conditioner")
   assert.equal(result.trace.answer_composition_mode, "composer_context")
   assert.equal(modelClient.composeRequests.length, 1)
+  const composerRequest = modelClient.composeRequests[0]
+  assert.ok(composerRequest)
   assert.match(
     JSON.stringify(modelClient.composeRequests[0]?.answerContext),
     /category.conditioner.recommend/,
   )
+
+  // agentic contextual composer prompt preserves tool authority
+  assert.match(composerRequest.systemPrompt, /Tool-Fakten/)
+  assert.match(composerRequest.systemPrompt, /answer_context/)
+  assert.match(composerRequest.systemPrompt, /keine starre Vorlage/)
+  assert.match(composerRequest.systemPrompt, /Erfinde keine Produkte/)
 })
 
 test("tool-loop lets a tool-less topic pivot update state from the terminal patch", async () => {

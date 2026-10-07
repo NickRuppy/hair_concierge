@@ -1,0 +1,130 @@
+TAP version 13
+# Subtest: partner access retains its routing exemption when the account also has a trial
+ok 1 - partner access retains its routing exemption when the account also has a trial
+  ---
+  duration_ms: 0.915375
+  ...
+# Subtest: unpaid paypal trial resolves its exact quiz without paid attribution
+ok 2 - unpaid paypal trial resolves its exact quiz without paid attribution
+  ---
+  duration_ms: 1.146667
+  ...
+# Subtest: unpaid stripe trial resolves its exact quiz without paid attribution
+ok 3 - unpaid stripe trial resolves its exact quiz without paid attribution
+  ---
+  duration_ms: 0.208875
+  ...
+# Subtest: trial source rejects mismatched enrollment, malformed payload and changed lead ownership
+ok 4 - trial source rejects mismatched enrollment, malformed payload and changed lead ownership
+  ---
+  duration_ms: 0.934583
+  ...
+# Subtest: revoked and expired trial projections never resolve a plan source
+ok 5 - revoked and expired trial projections never resolve a plan source
+  ---
+  duration_ms: 0.956416
+  ...
+# Subtest: trial read failures remain errors rather than an absent source
+ok 6 - trial read failures remain errors rather than an absent source
+  ---
+  duration_ms: 0.414416
+  ...
+# Subtest: trial legacy eligibility cannot inherit the historical-paid migration bypass
+ok 7 - trial legacy eligibility cannot inherit the historical-paid migration bypass
+  ---
+  duration_ms: 0.445875
+  ...
+# Subtest: trial routing recognizes ready and pending plans while retaining ordinary cohort gates
+ok 8 - trial routing recognizes ready and pending plans while retaining ordinary cohort gates
+  ---
+  duration_ms: 0.172833
+  ...
+# Subtest: Stripe launch memberships use the checkout session reference persisted at activation
+ok 9 - Stripe launch memberships use the checkout session reference persisted at activation
+  ---
+  duration_ms: 0.262125
+  ...
+# Subtest: the launch membership is selected even when a standard subscription sorts ahead of it
+ok 10 - the launch membership is selected even when a standard subscription sorts ahead of it
+  ---
+  duration_ms: 7.401167
+  ...
+# Subtest: standard subscriptions and membership purchases without exact Personal Plan attribution fail closed
+ok 11 - standard subscriptions and membership purchases without exact Personal Plan attribution fail closed
+  ---
+  duration_ms: 0.375459
+  ...
+# Subtest: an unapplied field-test relation preserves ordinary non-Personal-Plan enrollment
+ok 12 - an unapplied field-test relation preserves ordinary non-Personal-Plan enrollment
+  ---
+  duration_ms: 0.164541
+  ...
+# Subtest: an unapplied regular-quiz field-test relation preserves ordinary enrollment
+ok 13 - an unapplied regular-quiz field-test relation preserves ordinary enrollment
+  ---
+  duration_ms: 0.1465
+  ...
+# Subtest: a stale PostgREST partner relationship hint preserves ordinary enrollment
+ok 14 - a stale PostgREST partner relationship hint preserves ordinary enrollment
+  ---
+  duration_ms: 0.184791
+  ...
+# Subtest: an active partner grant admits the exact legacy quiz indefinitely without cohort gates
+ok 15 - an active partner grant admits the exact legacy quiz indefinitely without cohort gates
+  ---
+  duration_ms: 0.154708
+  ...
+# Subtest: a claimed partner's revoked tester enrollments never resurrect the old tester lead
+ok 16 - a claimed partner's revoked tester enrollments never resurrect the old tester lead
+  ---
+  duration_ms: 0.120209
+  ...
+# Subtest: a post-cutoff owned legacy lead is eligible only behind the independent cutover
+ok 17 - a post-cutoff owned legacy lead is eligible only behind the independent cutover
+  ---
+  duration_ms: 0.249958
+  ...
+# Subtest: historical paid legacy enrollment and frontier agree when migration replaces the old cutover
+ok 18 - historical paid legacy enrollment and frontier agree when migration replaces the old cutover
+  ---
+  duration_ms: 0.220791
+  ...
+# Subtest: historical legacy eligibility still requires owner, valid date, app rollout and live payment
+ok 19 - historical legacy eligibility still requires owner, valid date, app rollout and live payment
+  ---
+  duration_ms: 0.306708
+  ...
+# Subtest: a legacy moderator enrollment uses its persisted source discriminator
+ok 20 - a legacy moderator enrollment uses its persisted source discriminator
+  ---
+  duration_ms: 0.096167
+  ...
+# Subtest: an unknown moderator enrollment source discriminator fails closed
+ok 21 - an unknown moderator enrollment source discriminator fails closed
+  ---
+  duration_ms: 0.0815
+  ...
+# Subtest: field-test enrollment reads still fail closed on unrelated database errors
+ok 22 - field-test enrollment reads still fail closed on unrelated database errors
+  ---
+  duration_ms: 0.104708
+  ...
+# Subtest: an existing paid migration keeps its immutable source even when another launch purchase exists
+ok 23 - an existing paid migration keeps its immutable source even when another launch purchase exists
+  ---
+  duration_ms: 0.100625
+  ...
+# Subtest: an unavailable migration authority never substitutes another purchase as the Plan source
+ok 24 - an unavailable migration authority never substitutes another purchase as the Plan source
+  ---
+  duration_ms: 0.0675
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 519.869667

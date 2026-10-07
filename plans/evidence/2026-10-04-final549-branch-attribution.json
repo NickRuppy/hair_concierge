@@ -1,0 +1,92 @@
+[
+  {
+    "path": "src/lib/mobile/research-delivery-worker.ts",
+    "before": {
+      "lines": {
+        "total": 329,
+        "covered": 298,
+        "skipped": 0,
+        "pct": 90.57
+      },
+      "functions": {
+        "total": 14,
+        "covered": 12,
+        "skipped": 0,
+        "pct": 85.71
+      },
+      "statements": {
+        "total": 329,
+        "covered": 298,
+        "skipped": 0,
+        "pct": 90.57
+      },
+      "branches": {
+        "total": 85,
+        "covered": 70,
+        "skipped": 0,
+        "pct": 82.35
+      }
+    },
+    "after": {
+      "lines": {
+        "total": 329,
+        "covered": 298,
+        "skipped": 0,
+        "pct": 90.57
+      },
+      "functions": {
+        "total": 14,
+        "covered": 12,
+        "skipped": 0,
+        "pct": 85.71
+      },
+      "statements": {
+        "total": 329,
+        "covered": 298,
+        "skipped": 0,
+        "pct": 90.57
+      },
+      "branches": {
+        "total": 84,
+        "covered": 69,
+        "skipped": 0,
+        "pct": 82.14
+      }
+    },
+    "beforeUncoveredRanges": [
+      "{\"end\": {\"column\": 11, \"line\": 299}, \"start\": {\"column\": 10, \"line\": 297}}",
+      "{\"end\": {\"column\": 15, \"line\": 287}, \"start\": {\"column\": 8, \"line\": 285}}",
+      "{\"end\": {\"column\": 38, \"line\": 281}, \"start\": {\"column\": 16, \"line\": 280}}",
+      "{\"end\": {\"column\": 46, \"line\": 254}, \"start\": {\"column\": 22, \"line\": 253}}",
+      "{\"end\": {\"column\": 5, \"line\": 215}, \"start\": {\"column\": 4, \"line\": 212}}",
+      "{\"end\": {\"column\": 52, \"line\": 272}, \"start\": {\"column\": 32, \"line\": 272}}",
+      "{\"end\": {\"column\": 56, \"line\": 103}, \"start\": {\"column\": 22, \"line\": 103}}",
+      "{\"end\": {\"column\": 66, \"line\": 176}, \"start\": {\"column\": 19, \"line\": 176}}",
+      "{\"end\": {\"column\": 66, \"line\": 195}, \"start\": {\"column\": 37, \"line\": 195}}",
+      "{\"end\": {\"column\": 67, \"line\": 163}, \"start\": {\"column\": 46, \"line\": 163}}",
+      "{\"end\": {\"column\": 7, \"line\": 1}, \"start\": {\"column\": 0, \"line\": 1}}",
+      "{\"end\": {\"column\": 7, \"line\": 263}, \"start\": {\"column\": 6, \"line\": 261}}",
+      "{\"end\": {\"column\": 71, \"line\": 162}, \"start\": {\"column\": 37, \"line\": 162}}",
+      "{\"end\": {\"column\": 73, \"line\": 164}, \"start\": {\"column\": 36, \"line\": 164}}",
+      "{\"end\": {\"column\": 87, \"line\": 282}, \"start\": {\"column\": 63, \"line\": 282}}"
+    ],
+    "afterUncoveredRanges": [
+      "{\"end\": {\"column\": 11, \"line\": 299}, \"start\": {\"column\": 10, \"line\": 297}}",
+      "{\"end\": {\"column\": 15, \"line\": 287}, \"start\": {\"column\": 8, \"line\": 285}}",
+      "{\"end\": {\"column\": 38, \"line\": 281}, \"start\": {\"column\": 16, \"line\": 280}}",
+      "{\"end\": {\"column\": 46, \"line\": 254}, \"start\": {\"column\": 22, \"line\": 253}}",
+      "{\"end\": {\"column\": 5, \"line\": 215}, \"start\": {\"column\": 4, \"line\": 212}}",
+      "{\"end\": {\"column\": 52, \"line\": 272}, \"start\": {\"column\": 32, \"line\": 272}}",
+      "{\"end\": {\"column\": 56, \"line\": 103}, \"start\": {\"column\": 22, \"line\": 103}}",
+      "{\"end\": {\"column\": 66, \"line\": 176}, \"start\": {\"column\": 19, \"line\": 176}}",
+      "{\"end\": {\"column\": 66, \"line\": 195}, \"start\": {\"column\": 37, \"line\": 195}}",
+      "{\"end\": {\"column\": 67, \"line\": 163}, \"start\": {\"column\": 46, \"line\": 163}}",
+      "{\"end\": {\"column\": 7, \"line\": 1}, \"start\": {\"column\": 0, \"line\": 1}}",
+      "{\"end\": {\"column\": 7, \"line\": 263}, \"start\": {\"column\": 6, \"line\": 261}}",
+      "{\"end\": {\"column\": 71, \"line\": 162}, \"start\": {\"column\": 37, \"line\": 162}}",
+      "{\"end\": {\"column\": 73, \"line\": 164}, \"start\": {\"column\": 36, \"line\": 164}}",
+      "{\"end\": {\"column\": 87, \"line\": 282}, \"start\": {\"column\": 63, \"line\": 282}}"
+    ],
+    "sameUncoveredRanges": true
+  }
+]

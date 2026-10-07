@@ -3728,6 +3728,9 @@ test("AgentV2 runtime injects profile-grounded answer quality guidance", async (
   const content = String(qualityItem?.content ?? "")
   assert.match(content, /2-3 materially relevant profile facts/)
   assert.match(content, /wash rhythm/)
+  assert.match(content, /drying method/)
+  assert.match(content, /usage cadence/)
+  assert.match(content, /Avoid stacking many bold subheaders/)
   assert.match(content, /Do not invent a user preference/)
   assert.match(content, /calm answer shape/)
   assert.match(content, /reread the complete visible answer/i)
@@ -6220,20 +6223,6 @@ test("AgentV2 runtime drops invalid session memory without using repair turn", a
   assert.equal(result.trace.session_memory_writes.length, 0)
   assert.equal(result.trace.dropped_session_memory_writes.length, 1)
   assert.equal(result.trace.repair_attempts.length, 0)
-})
-
-test("AgentV2 runtime stores local trace even when Langfuse is unavailable", async () => {
-  const result = await runAgentV2ResponsesTurn({
-    client: fakeResponsesClientWithOutputs([terminalGeneralAdvice("call_1")]),
-    message: "Brauche ich eine Maske?",
-    recentMessages: [],
-    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
-    tools: fakeAgentV2Tools(),
-    langfuseMode: "disabled",
-  })
-
-  assert.equal(result.trace.engine, "agent_v2")
-  assert.equal(result.trace.langfuse.enabled, false)
 })
 
 test("AgentV2 runtime observes executable tool calls without hidden context", async () => {

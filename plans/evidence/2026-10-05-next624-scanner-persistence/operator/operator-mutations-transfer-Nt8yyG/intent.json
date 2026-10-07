@@ -1,0 +1,24 @@
+{
+  "phase": "transfer",
+  "controls": [
+    "M1-start-rejection",
+    "M2-start-warning-severity",
+    "M3-completion-rejection",
+    "M4-default-created-at",
+    "M5-legacy-version",
+    "M6-legacy-resolution",
+    "M7-premium-prediction"
+  ],
+  "originalHashes": {
+    "tests/scan-resolve-event-log.test.ts": "8c6cdd84752d9ba41ca0d0879271796a838b602a23b4927874838df0e8e8aeba",
+    "tests/scan-resolve-events-migration.test.ts": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189",
+    "tests/scan-resolve-auto-save.test.ts": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf",
+    "tests/scan-wishlist-auto-save-postgres.test.ts": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+    "tests/scan-wishlist-route.test.ts": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+    "tests/scan-resolve-route.test.ts": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add",
+    "src/lib/scan/resolve-event-log.ts": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d",
+    "supabase/migrations/20260826093828_scan_resolve_terminal_telemetry_expand.sql": "f337fd3fb67c4f026c20e99a63bab8b534fde509e19e28aa3178d3a7d8a2a717",
+    "src/app/api/scan/resolve/route.ts": "9502eac574fbc19276f1c994b47a82f9c7c22e29a4f7bf89438203ed5a835ad4"
+  },
+  "pinsSHA": "e17df846d1944a146f0f760dbd16d77c404a1d1cafea73b9fefedf12a8b8fcb3"
+}

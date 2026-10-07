@@ -1,0 +1,920 @@
+TAP version 13
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'auth.createCheckoutUser', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 1 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 1 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000001',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'e045418c6181',
+#   userId: '00000000-0000-4000-8000-000000000001',
+#   profileLinkMode: 'await',
+#   durationMs: 6
+# }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'auth.createCheckoutUser', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000001',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'e045418c6181',
+#   userId: '00000000-0000-4000-8000-000000000001',
+#   profileLinkMode: 'await',
+#   durationMs: 1
+# }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'auth.createCheckoutUser', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000001',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'e045418c6181',
+#   userId: '00000000-0000-4000-8000-000000000001',
+#   profileLinkMode: 'await',
+#   durationMs: 1
+# }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'auth.createCheckoutUser', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'auth.createCheckoutUser', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'auth.createCheckoutUser', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'auth.createCheckoutUser', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'auth.createCheckoutUser', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'auth.createCheckoutUser', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'auth.createCheckoutUser', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'auth.createCheckoutUser', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'auth.createCheckoutUser', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'auth.createCheckoutUser', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000001',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'e045418c6181',
+#   userId: '00000000-0000-4000-8000-000000000001',
+#   profileLinkMode: 'await',
+#   durationMs: 0
+# }
+# [checkout-activation] step { label: 'profiles.findExisting', durationMs: 0 }
+# [checkout-activation] step { label: 'auth.createCheckoutUser', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 0 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000001',
+#   hasLeadId: true,
+#   durationMs: 0
+# }
+# personal_plan_legacy_quiz_transition {
+#   provider: 'stripe',
+#   quizSourceKind: 'legacy',
+#   transitionState: 'cutover_eligible',
+#   reasonCode: 'eligible'
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'e045418c6181',
+#   userId: '00000000-0000-4000-8000-000000000001',
+#   profileLinkMode: 'await',
+#   durationMs: 1
+# }
+# Subtest: verified zero trial uses existing account/quiz flow after admission and billing, without paid migration
+ok 1 - verified zero trial uses existing account/quiz flow after admission and billing, without paid migration
+  ---
+  duration_ms: 7.959166
+  ...
+# Subtest: activation retry after profile outage reuses account, admission and original clock
+ok 2 - activation retry after profile outage reuses account, admission and original clock
+  ---
+  duration_ms: 2.573083
+  ...
+# Subtest: a paid zero-total checkout activates trial access without marking the first payment successful
+ok 3 - a paid zero-total checkout activates trial access without marking the first payment successful
+  ---
+  duration_ms: 1.3655
+  ...
+# Subtest: unexpected Stripe admission state requires reconciliation without neutralizing the agreement
+ok 4 - unexpected Stripe admission state requires reconciliation without neutralizing the agreement
+  ---
+  duration_ms: 0.561
+  ...
+# Subtest: missing runtime, foreign enrollment, revoked admission and invalid card proof fail before account writes
+ok 5 - missing runtime, foreign enrollment, revoked admission and invalid card proof fail before account writes
+  ---
+  duration_ms: 7.960083
+  ...
+# Subtest: unsafe Stripe authorization proof is terminal reconciliation and preserves its proof cause
+ok 6 - unsafe Stripe authorization proof is terminal reconciliation and preserves its proof cause
+  ---
+  duration_ms: 0.19875
+  ...
+# Subtest: competing enrollment ownership cannot be overwritten or grant product access
+ok 7 - competing enrollment ownership cannot be overwritten or grant product access
+  ---
+  duration_ms: 0.476833
+  ...
+# Subtest: lost cancellation response or claim release failure converges from persisted denial on redelivery
+ok 8 - lost cancellation response or claim release failure converges from persisted denial on redelivery
+  ---
+  duration_ms: 0.925583
+  ...
+# Subtest: a successful payment discovered while neutralizing remains a reconciliation case
+ok 9 - a successful payment discovered while neutralizing remains a reconciliation case
+  ---
+  duration_ms: 0.446167
+  ...
+# Subtest: existing independent paid access cancels the duplicate trial and leaves original access intact
+ok 10 - existing independent paid access cancels the duplicate trial and leaves original access intact
+  ---
+  duration_ms: 0.805834
+  ...
+# Subtest: read-only Stripe return recovery exposes a released prior-use denial only after binding proof
+ok 11 - read-only Stripe return recovery exposes a released prior-use denial only after binding proof
+  ---
+  duration_ms: 0.741208
+  ...
+# Subtest: read-only Stripe return recovery sends outstanding cleanup and unsafe replay bindings to reconciliation
+ok 12 - read-only Stripe return recovery sends outstanding cleanup and unsafe replay bindings to reconciliation
+  ---
+  duration_ms: 0.826417
+  ...
+# Subtest: persisted Stripe existing-access reason does not outrank outstanding cleanup
+ok 13 - persisted Stripe existing-access reason does not outrank outstanding cleanup
+  ---
+  duration_ms: 0.252458
+  ...
+# Subtest: a deleted or missing bound owner never recreates an account on late trial callbacks
+ok 14 - a deleted or missing bound owner never recreates an account on late trial callbacks
+  ---
+  duration_ms: 0.167
+  ...
+# Subtest: accepted trial callbacks use configured runtime even when new enrollment is disabled
+ok 15 - accepted trial callbacks use configured runtime even when new enrollment is disabled
+  ---
+  duration_ms: 0.514417
+  ...
+# Subtest: trial authorization timestamp qualifies a legacy-quiz lead for the plan destination cutover
+ok 16 - trial authorization timestamp qualifies a legacy-quiz lead for the plan destination cutover
+  ---
+  duration_ms: 0.429459
+  ...
+# Subtest: requires Stripe's exact seven-day provider interval and the current time to remain inside it
+ok 17 - requires Stripe's exact seven-day provider interval and the current time to remain inside it
+  ---
+  duration_ms: 6.531625
+  ...
+# Subtest: rejects untrusted completion, binding, identity, price, or saved-card mismatches
+ok 18 - rejects untrusted completion, binding, identity, price, or saved-card mismatches
+  ---
+  duration_ms: 0.337375
+  ...
+# Subtest: accepts Stripe's paid status for a completed zero-total checkout with a verified trial
+ok 19 - accepts Stripe's paid status for a completed zero-total checkout with a verified trial
+  ---
+  duration_ms: 7.6075
+  ...
+# Subtest: accepts no pending setup intent with a saved card, but requires any present intent to succeed and bind
+ok 20 - accepts no pending setup intent with a saved card, but requires any present intent to succeed and bind
+  ---
+  duration_ms: 0.237625
+  ...
+# Subtest: requires flexible billing and the expected Stripe mode on every retrieved authority object
+ok 21 - requires flexible billing and the expected Stripe mode on every retrieved authority object
+  ---
+  duration_ms: 0.06775
+  ...
+# Subtest: requires the accepted once coupon on annual introductory terms and no discount on monthly terms
+ok 22 - requires the accepted once coupon on annual introductory terms and no discount on monthly terms
+  ---
+  duration_ms: 0.108083
+  ...
+# Subtest: requires immutable provider terms while allowing an already-attached Price or Coupon to retire
+ok 23 - requires immutable provider terms while allowing an already-attached Price or Coupon to retire
+  ---
+  duration_ms: 0.154625
+  ...
+# Subtest: retrieves provider authorities itself before returning verified trial facts
+ok 24 - retrieves provider authorities itself before returning verified trial facts
+  ---
+  duration_ms: 0.173375
+  ...
+# Subtest: provider evidence retrieval fails closed for cross-customer and unresolved setup authorities
+ok 25 - provider evidence retrieval fails closed for cross-customer and unresolved setup authorities
+  ---
+  duration_ms: 0.218167
+  ...
+# Subtest: a provider outage remains retryable instead of becoming an authorization denial
+ok 26 - a provider outage remains retryable instead of becoming an authorization denial
+  ---
+  duration_ms: 0.447916
+  ...
+# Subtest: cancellation capability binds a stable request to its enrollment
+ok 27 - cancellation capability binds a stable request to its enrollment
+  ---
+  duration_ms: 3.905917
+  ...
+# Subtest: reconciliation schedules and re-verifies the immutable trial deadline before confirmation
+ok 28 - reconciliation schedules and re-verifies the immutable trial deadline before confirmation
+  ---
+  duration_ms: 0.547625
+  ...
+# Subtest: reconciliation fails closed for wrong provider ownership, deadline, mode, or ineffective mutation
+ok 29 - reconciliation fails closed for wrong provider ownership, deadline, mode, or ineffective mutation
+  ---
+  duration_ms: 0.314959
+  ...
+# Subtest: configuration failure and a lost provider response remain pending without confirmation
+ok 30 - configuration failure and a lost provider response remain pending without confirmation
+  ---
+  duration_ms: 0.081792
+  ...
+# Subtest: a no-op provider update never confirms cancellation
+ok 31 - a no-op provider update never confirms cancellation
+  ---
+  duration_ms: 0.125916
+  ...
+# Subtest: a lost update response reconciles the already scheduled cancellation on retry
+ok 32 - a lost update response reconciles the already scheduled cancellation on retry
+  ---
+  duration_ms: 0.213375
+  ...
+# Subtest: already canceled free agreement uses ended_at and checks remaining invoices
+ok 33 - already canceled free agreement uses ended_at and checks remaining invoices
+  ---
+  duration_ms: 0.265875
+  ...
+# Subtest: attests a sellable annual trial catalog and returns identities only
+ok 34 - attests a sellable annual trial catalog and returns identities only
+  ---
+  duration_ms: 1.764875
+  ...
+# Subtest: requires every new-sale price and coupon fact without leaking mismatch detail
+ok 35 - requires every new-sale price and coupon fact without leaking mismatch detail
+  ---
+  duration_ms: 0.529125
+  ...
+# Subtest: does not retrieve a coupon for a no-discount monthly offer and propagates provider failures
+ok 36 - does not retrieve a coupon for a no-discount monthly offer and propagates provider failures
+  ---
+  duration_ms: 0.160958
+  ...
+# Subtest: explicit trial intent dispatches the frozen trial service using server-resolved identity
+ok 37 - explicit trial intent dispatches the frozen trial service using server-resolved identity
+  ---
+  duration_ms: 751.904125
+  ...
+# Subtest: disabled or unverified restricted trial requests never create a legacy paid checkout
+ok 38 - disabled or unverified restricted trial requests never create a legacy paid checkout
+  ---
+  duration_ms: 700.138208
+  ...
+# Subtest: anonymous public trial keeps the lead flow without treating its email as verified
+ok 39 - anonymous public trial keeps the lead flow without treating its email as verified
+  ---
+  duration_ms: 139.008209
+  ...
+# Subtest: trial checkout preserves acquisition context and records zero current revenue
+ok 40 - trial checkout preserves acquisition context and records zero current revenue
+  ---
+  duration_ms: 123.589791
+  ...
+# Subtest: trial intent rejects unsupported protocols and propagates trial failures without paid fallback
+ok 41 - trial intent rejects unsupported protocols and propagates trial failures without paid fallback
+  ---
+  duration_ms: 554.982708
+  ...
+# Subtest: builds the server-pinned annual seven-day trial Checkout request
+ok 42 - builds the server-pinned annual seven-day trial Checkout request
+  ---
+  duration_ms: 1.061709
+  ...
+# Subtest: builds the monthly 9.99 trial without a coupon
+ok 43 - builds the monthly 9.99 trial without a coupon
+  ---
+  duration_ms: 0.179125
+  ...
+# Subtest: rejects quarterly and mismatched offer snapshots
+ok 44 - rejects quarterly and mismatched offer snapshots
+  ---
+  duration_ms: 0.203916
+  ...
+# Subtest: rejects raw one-time and client-price overrides
+ok 45 - rejects raw one-time and client-price overrides
+  ---
+  duration_ms: 0.069334
+  ...
+# Subtest: leaves the legacy builder's paid subscription request unchanged
+ok 46 - leaves the legacy builder's paid subscription request unchanged
+  ---
+  duration_ms: 0.058458
+  ...
+# Subtest: freezes accepted trial terms before Stripe and binds the verified session
+ok 47 - freezes accepted trial terms before Stripe and binds the verified session
+  ---
+  duration_ms: 6.26125
+  ...
+# Subtest: lost provider response retries identical frozen request after offer and caller changes
+ok 48 - lost provider response retries identical frozen request after offer and caller changes
+  ---
+  duration_ms: 0.718167
+  ...
+# Subtest: rollout and eligibility failures cannot fall through to paid checkout
+ok 49 - rollout and eligibility failures cannot fall through to paid checkout
+  ---
+  duration_ms: 0.519542
+  ...
+# Subtest: expired ambiguous attempts and foreign provider bindings do not create or expose another session
+ok 50 - expired ambiguous attempts and foreign provider bindings do not create or expose another session
+  ---
+  duration_ms: 0.809541
+  ...
+# Subtest: a retry may keep an old coupon but cannot silently select a different interval or owner
+ok 51 - a retry may keep an old coupon but cannot silently select a different interval or owner
+  ---
+  duration_ms: 0.131917
+  ...
+# Subtest: a completed bound session resumes without attempting to reserve an already consumed trial again
+ok 52 - a completed bound session resumes without attempting to reserve an already consumed trial again
+  ---
+  duration_ms: 3.36025
+  ...
+# Subtest: a failed durable binding cannot expose a client secret
+ok 53 - a failed durable binding cannot expose a client secret
+  ---
+  duration_ms: 0.204
+  ...
+# Subtest: confirmed uncompleted session expiry frees the reserved trial without consuming eligibility
+ok 54 - confirmed uncompleted session expiry frees the reserved trial without consuming eligibility
+  ---
+  duration_ms: 0.337334
+  ...
+# Subtest: frozen management offers survive runtime price and coupon changes before a request freeze retry
+ok 55 - frozen management offers survive runtime price and coupon changes before a request freeze retry
+  ---
+  duration_ms: 0.398959
+  ...
+# Subtest: SQL only leases ledger debt once, preserves full paid period, and fences stale workers
+ok 56 - SQL only leases ledger debt once, preserves full paid period, and fences stale workers
+  ---
+  duration_ms: 969.996167
+  ...
+# Subtest: SQL cancellation prevents creation and binding while retaining the received paid period
+ok 57 - SQL cancellation prevents creation and binding while retaining the received paid period
+  ---
+  duration_ms: 439.512458
+  ...
+# Subtest: SQL binding is idempotent, preserves the original link, and resolves durable debt
+ok 58 - SQL binding is idempotent, preserves the original link, and resolves durable debt
+  ---
+  duration_ms: 397.874459
+  ...
+# Subtest: authenticated retry route invokes consumer and leaves failed repair scheduled without changing payment access
+ok 59 - authenticated retry route invokes consumer and leaves failed repair scheduled without changing payment access
+  ---
+  duration_ms: 1.236291
+  ...
+# Subtest: consumer releases pending operations through the fenced retry checkpoint
+ok 60 - consumer releases pending operations through the fenced retry checkpoint
+  ---
+  duration_ms: 0.16675
+  ...
+# Subtest: paid cancellation SQL verifies owner and persists paid-through access before provider work
+ok 61 - paid cancellation SQL verifies owner and persists paid-through access before provider work
+  ---
+  duration_ms: 404.572458
+  ...
+# Subtest: paid cancellation confirmation waits for an uncertain hidden successor to be neutralized
+ok 62 - paid cancellation confirmation waits for an uncertain hidden successor to be neutralized
+  ---
+  duration_ms: 405.948125
+  ...
+# Subtest: restoration SQL freezes setup/subscription requests, rejects a new trial, and fences newer cancellation
+ok 63 - restoration SQL freezes setup/subscription requests, rejects a new trial, and fences newer cancellation
+  ---
+  duration_ms: 392.257125
+  ...
+# Subtest: recovery SQL freezes exactly one request and excludes automatic repair while recovery is pending
+ok 64 - recovery SQL freezes exactly one request and excludes automatic repair while recovery is pending
+  ---
+  duration_ms: 429.357125
+  ...
+# Subtest: paid first year continues once at the exact paid-through boundary without coupon, trial, or immediate invoice
+ok 65 - paid first year continues once at the exact paid-through boundary without coupon, trial, or immediate invoice
+  ---
+  duration_ms: 2.869083
+  ...
+# Subtest: lost create response is reconciled by stable operation metadata without another subscription
+ok 66 - lost create response is reconciled by stable operation metadata without another subscription
+  ---
+  duration_ms: 0.407708
+  ...
+# Subtest: cancellation racing the successor bind cancels the new subscription and preserves the debt
+ok 67 - cancellation racing the successor bind cancels the new subscription and preserves the debt
+  ---
+  duration_ms: 0.214416
+  ...
+# Subtest: merchant prevents new collection
+ok 68 - merchant prevents new collection
+  ---
+  duration_ms: 0.088792
+  ...
+# Subtest: discount prevents new collection
+ok 69 - discount prevents new collection
+  ---
+  duration_ms: 0.123917
+  ...
+# Subtest: late prevents new collection
+ok 70 - late prevents new collection
+  ---
+  duration_ms: 0.126209
+  ...
+# Subtest: canceled prevents new collection
+ok 71 - canceled prevents new collection
+  ---
+  duration_ms: 0.125792
+  ...
+# Subtest: expired idempotency window never recreates an uncertain absent subscription
+ok 72 - expired idempotency window never recreates an uncertain absent subscription
+  ---
+  duration_ms: 0.417792
+  ...
+# Subtest: late customer cancellation compensates an already bound successor without altering the paid period
+ok 73 - late customer cancellation compensates an already bound successor without altering the paid period
+  ---
+  duration_ms: 0.414125
+  ...
+# Subtest: cancellation after a lost create response discovers and stops the successor
+ok 74 - cancellation after a lost create response discovers and stops the successor
+  ---
+  duration_ms: 0.417625
+  ...
+# Subtest: ambiguous bind response is retried without canceling a possibly committed successor
+ok 75 - ambiguous bind response is retried without canceling a possibly committed successor
+  ---
+  duration_ms: 0.735583
+  ...
+# Subtest: an external cancellation of the source is never treated as permission for a new agreement
+ok 76 - an external cancellation of the source is never treated as permission for a new agreement
+  ---
+  duration_ms: 0.112375
+  ...
+# Subtest: provider source neutralization failure prevents successor creation
+ok 77 - provider source neutralization failure prevents successor creation
+  ---
+  duration_ms: 0.146166
+  ...
+# Subtest: incorrect successor anchor is canceled rather than left to collect at an unaccepted date
+ok 78 - incorrect successor anchor is canceled rather than left to collect at an unaccepted date
+  ---
+  duration_ms: 0.15525
+  ...
+# Subtest: unrelated customer pages do not hide a successor after a lost response
+ok 79 - unrelated customer pages do not hide a successor after a lost response
+  ---
+  duration_ms: 0.229792
+  ...
+# Subtest: uses retrieved payment success time and invoice service boundaries, never webhook arrival
+ok 80 - uses retrieved payment success time and invoice service boundaries, never webhook arrival
+  ---
+  duration_ms: 2.657584
+  ...
+# Subtest: unpaid first invoice enters payment ledger without paid conversion
+ok 81 - unpaid first invoice enters payment ledger without paid conversion
+  ---
+  duration_ms: 0.204292
+  ...
+# Subtest: legacy paid invoices work with trial runtime absent or configured
+ok 82 - legacy paid invoices work with trial runtime absent or configured
+  ---
+  duration_ms: 0.124958
+  ...
+# Subtest: wrong merchant never grants access or falls through to legacy revenue
+ok 83 - wrong merchant never grants access or falls through to legacy revenue
+  ---
+  duration_ms: 0.265084
+  ...
+# Subtest: unlinked trial never grants access or falls through to legacy revenue
+ok 84 - unlinked trial never grants access or falls through to legacy revenue
+  ---
+  duration_ms: 0.167875
+  ...
+# Subtest: wrong owner never grants access or falls through to legacy revenue
+ok 85 - wrong owner never grants access or falls through to legacy revenue
+  ---
+  duration_ms: 0.095875
+  ...
+# Subtest: wrong customer never grants access or falls through to legacy revenue
+ok 86 - wrong customer never grants access or falls through to legacy revenue
+  ---
+  duration_ms: 0.152167
+  ...
+# Subtest: wrong mode never grants access or falls through to legacy revenue
+ok 87 - wrong mode never grants access or falls through to legacy revenue
+  ---
+  duration_ms: 0.091375
+  ...
+# Subtest: wrong subscription marker never grants access or falls through to legacy revenue
+ok 88 - wrong subscription marker never grants access or falls through to legacy revenue
+  ---
+  duration_ms: 0.480583
+  ...
+# Subtest: wrong price never grants access or falls through to legacy revenue
+ok 89 - wrong price never grants access or falls through to legacy revenue
+  ---
+  duration_ms: 0.391334
+  ...
+# Subtest: additional lines never grants access or falls through to legacy revenue
+ok 90 - additional lines never grants access or falls through to legacy revenue
+  ---
+  duration_ms: 0.11375
+  ...
+# Subtest: proration never grants access or falls through to legacy revenue
+ok 91 - proration never grants access or falls through to legacy revenue
+  ---
+  duration_ms: 0.118917
+  ...
+# Subtest: invoice beyond provider end never grants access or falls through to legacy revenue
+ok 92 - invoice beyond provider end never grants access or falls through to legacy revenue
+  ---
+  duration_ms: 0.118625
+  ...
+# Subtest: out of band payment never grants access or falls through to legacy revenue
+ok 93 - out of band payment never grants access or falls through to legacy revenue
+  ---
+  duration_ms: 0.090209
+  ...
+# Subtest: unsettled intent never grants access or falls through to legacy revenue
+ok 94 - unsettled intent never grants access or falls through to legacy revenue
+  ---
+  duration_ms: 0.081209
+  ...
+# Subtest: refunded charge never grants access or falls through to legacy revenue
+ok 95 - refunded charge never grants access or falls through to legacy revenue
+  ---
+  duration_ms: 0.079083
+  ...
+# Subtest: canceled subscription never grants access or falls through to legacy revenue
+ok 96 - canceled subscription never grants access or falls through to legacy revenue
+  ---
+  duration_ms: 0.065709
+  ...
+# Subtest: wrong paid amount never grants access or falls through to legacy revenue
+ok 97 - wrong paid amount never grants access or falls through to legacy revenue
+  ---
+  duration_ms: 0.083541
+  ...
+# Subtest: short delayed-payment period remains retryable reconciliation, without an invented renewal
+ok 98 - short delayed-payment period remains retryable reconciliation, without an invented renewal
+  ---
+  duration_ms: 0.106416
+  ...
+# Subtest: invoked success webhook routes the trial payment through the canonical ledger
+ok 99 - invoked success webhook routes the trial payment through the canonical ledger
+  ---
+  duration_ms: 0.873125
+  ...
+# Subtest: invoked failure webhook never applies legacy grace or optional failure messages to a trial
+ok 100 - invoked failure webhook never applies legacy grace or optional failure messages to a trial
+  ---
+  duration_ms: 0.167958
+  ...
+# Subtest: invoked webhook propagates reconciliation so its event claim can be retried
+ok 101 - invoked webhook propagates reconciliation so its event claim can be retried
+  ---
+  duration_ms: 0.252
+  ...
+# Subtest: approved continuation renewal uses original enrollment and current provider agreement
+ok 102 - approved continuation renewal uses original enrollment and current provider agreement
+  ---
+  duration_ms: 0.103917
+  ...
+# Subtest: unbound provider continuation cannot use metadata alone to grant paid access
+ok 103 - unbound provider continuation cannot use metadata alone to grant paid access
+  ---
+  duration_ms: 0.064333
+  ...
+# Subtest: duplicate source invoice still reaches dedup after verified repair cancellation
+ok 104 - duplicate source invoice still reaches dedup after verified repair cancellation
+  ---
+  duration_ms: 0.086167
+  ...
+# Subtest: verified first-payment failure immediately dispatches its atomic outbox key with analytics enabled
+ok 105 - verified first-payment failure immediately dispatches its atomic outbox key with analytics enabled
+  ---
+  duration_ms: 0.290417
+  ...
+# Subtest: late failure retrieving paid truth dispatches Purchase, while absent failure facts stay a no-op
+ok 106 - late failure retrieving paid truth dispatches Purchase, while absent failure facts stay a no-op
+  ---
+  duration_ms: 0.249542
+  ...
+# Subtest: missing initial binding is typed retryable and restored binding succeeds without payment
+ok 107 - missing initial binding is typed retryable and restored binding succeeds without payment
+  ---
+  duration_ms: 0.199708
+  ...
+# Subtest: database error never becomes a billing-link-pending warning
+ok 108 - database error never becomes a billing-link-pending warning
+  ---
+  duration_ms: 0.075833
+  ...
+# Subtest: candidate database error never becomes a billing-link-pending warning
+ok 109 - candidate database error never becomes a billing-link-pending warning
+  ---
+  duration_ms: 0.060917
+  ...
+# Subtest: candidate absent never becomes a billing-link-pending warning
+ok 110 - candidate absent never becomes a billing-link-pending warning
+  ---
+  duration_ms: 0.057209
+  ...
+# Subtest: effective contract database error never becomes a billing-link-pending warning
+ok 111 - effective contract database error never becomes a billing-link-pending warning
+  ---
+  duration_ms: 0.064416
+  ...
+# Subtest: wrong mode never becomes a billing-link-pending warning
+ok 112 - wrong mode never becomes a billing-link-pending warning
+  ---
+  duration_ms: 0.051125
+  ...
+# Subtest: nontrial status never becomes a billing-link-pending warning
+ok 113 - nontrial status never becomes a billing-link-pending warning
+  ---
+  duration_ms: 0.139584
+  ...
+# Subtest: revoked enrollment never becomes a billing-link-pending warning
+ok 114 - revoked enrollment never becomes a billing-link-pending warning
+  ---
+  duration_ms: 0.052792
+  ...
+# Subtest: released enrollment never becomes a billing-link-pending warning
+ok 115 - released enrollment never becomes a billing-link-pending warning
+  ---
+  duration_ms: 0.052917
+  ...
+# Subtest: blocked enrollment never becomes a billing-link-pending warning
+ok 116 - blocked enrollment never becomes a billing-link-pending warning
+  ---
+  duration_ms: 0.05025
+  ...
+# Subtest: missing active user never becomes a billing-link-pending warning
+ok 117 - missing active user never becomes a billing-link-pending warning
+  ---
+  duration_ms: 0.053416
+  ...
+# Subtest: canceled at trial end never becomes a billing-link-pending warning
+ok 118 - canceled at trial end never becomes a billing-link-pending warning
+  ---
+  duration_ms: 0.055291
+  ...
+# Subtest: wrong provider never becomes a billing-link-pending warning
+ok 119 - wrong provider never becomes a billing-link-pending warning
+  ---
+  duration_ms: 0.049916
+  ...
+# Subtest: wrong agreement never becomes a billing-link-pending warning
+ok 120 - wrong agreement never becomes a billing-link-pending warning
+  ---
+  duration_ms: 0.054625
+  ...
+# Subtest: missing cohort never becomes a billing-link-pending warning
+ok 121 - missing cohort never becomes a billing-link-pending warning
+  ---
+  duration_ms: 0.053583
+  ...
+# Subtest: continuation ambiguity never becomes a billing-link-pending warning
+ok 122 - continuation ambiguity never becomes a billing-link-pending warning
+  ---
+  duration_ms: 0.055916
+  ...
+# Subtest: recovery ambiguity never becomes a billing-link-pending warning
+ok 123 - recovery ambiguity never becomes a billing-link-pending warning
+  ---
+  duration_ms: 0.059875
+  ...
+# Subtest: missing runtime with an absent binding retains reconciliation alert
+ok 124 - missing runtime with an absent binding retains reconciliation alert
+  ---
+  duration_ms: 0.071542
+  ...
+# Subtest: actual missing-binding handler failure releases for retry, then binding restoration succeeds
+ok 125 - actual missing-binding handler failure releases for retry, then binding restoration succeeds
+  ---
+  duration_ms: 15.619
+  ...
+# Subtest: existing partial billing row does not become pending
+ok 126 - existing partial billing row does not become pending
+  ---
+  duration_ms: 0.129541
+  ...
+# Subtest: reserved enrollment can wait for initial binding before a user exists
+ok 127 - reserved enrollment can wait for initial binding before a user exists
+  ---
+  duration_ms: 0.082584
+  ...
+# Subtest: Stripe month to year switch preserves deadline and first-payment coupon without immediate billing
+ok 128 - Stripe month to year switch preserves deadline and first-payment coupon without immediate billing
+  ---
+  duration_ms: 1.553541
+  ...
+# Subtest: Stripe year to month switch preserves deadline and first-payment coupon without immediate billing
+ok 129 - Stripe year to month switch preserves deadline and first-payment coupon without immediate billing
+  ---
+  duration_ms: 0.220042
+  ...
+# Subtest: restore clears both Stripe cancellation forms and leaves the original deadline
+ok 130 - restore clears both Stripe cancellation forms and leaves the original deadline
+  ---
+  duration_ms: 0.152708
+  ...
+# Subtest: fully canceled Stripe source needs fresh hosted approval and cannot silently become collectible
+ok 131 - fully canceled Stripe source needs fresh hosted approval and cannot silently become collectible
+  ---
+  duration_ms: 0.111583
+  ...
+# Subtest: lost update response is read back and committed without reapplying the discount
+ok 132 - lost update response is read back and committed without reapplying the discount
+  ---
+  duration_ms: 0.325833
+  ...
+# Subtest: a newer cancellation prevents commit and leaves the original deadline noncollectible
+ok 133 - a newer cancellation prevents commit and leaves the original deadline noncollectible
+  ---
+  duration_ms: 0.304833
+  ...
+# Subtest: wrong future total rolls back to the existing offer and reports an abandoned change
+ok 134 - wrong future total rolls back to the existing offer and reports an abandoned change
+  ---
+  duration_ms: 0.151458
+  ...
+# Subtest: guard prevents changes to a trial operation
+ok 135 - guard prevents changes to a trial operation
+  ---
+  duration_ms: 0.129167
+  ...
+# Subtest: merchant prevents changes to a trial operation
+ok 136 - merchant prevents changes to a trial operation
+  ---
+  duration_ms: 0.380583
+  ...
+# Subtest: paid prevents changes to a trial operation
+ok 137 - paid prevents changes to a trial operation
+  ---
+  duration_ms: 0.295542
+  ...
+# Subtest: paid cancellation persists before provider work and cancels only the owned successor at paidThrough
+ok 138 - paid cancellation persists before provider work and cancels only the owned successor at paidThrough
+  ---
+  duration_ms: 0.326167
+  ...
+# Subtest: dry run verifies historical canceled membership without writing; apply uses actual captured card and verified canonical owner
+ok 139 - dry run verifies historical canceled membership without writing; apply uses actual captured card and verified canonical owner
+  ---
+  duration_ms: 1.302542
+  ...
+# Subtest: processing approval gates even provider reads; free and non-subscription invoices cannot seed history
+ok 140 - processing approval gates even provider reads; free and non-subscription invoices cannot seed history
+  ---
+  duration_ms: 0.109917
+  ...
+# Subtest: identity mismatch, unverified email, failed or disputed capture, future timestamp and partial invoice evidence never write
+ok 141 - identity mismatch, unverified email, failed or disputed capture, future timestamp and partial invoice evidence never write
+  ---
+  duration_ms: 0.92325
+  ...
+# Subtest: older direct charge invoices and refunds retain genuine prior use; absent card fingerprint writes only owner claims
+ok 142 - older direct charge invoices and refunds retain genuine prior use; absent card fingerprint writes only owner claims
+  ---
+  duration_ms: 0.174333
+  ...
+# Subtest: manual payment records and truncated invoice payment collections require review
+ok 143 - manual payment records and truncated invoice payment collections require review
+  ---
+  duration_ms: 0.691625
+  ...
+# Subtest: explicit existing QA seed classification excludes history but real profile backfills remain eligible for verification
+ok 144 - explicit existing QA seed classification excludes history but real profile backfills remain eligible for verification
+  ---
+  duration_ms: 0.413041
+  ...
+# [stripe] trial subscription lifecycle marker is incomplete or unlinked { subscriptionId: 'sub_trial' }
+# [stripe] trial subscription lifecycle enrollment mismatch {
+#   subscriptionId: 'sub_trial',
+#   enrollmentId: '11111111-1111-4111-8111-111111111111'
+# }
+# [stripe] trial subscription lifecycle marker is incomplete or unlinked { subscriptionId: 'sub_trial' }
+# [stripe] trial subscription lifecycle enrollment mismatch {
+#   subscriptionId: 'sub_trial',
+#   enrollmentId: '11111111-1111-4111-8111-111111111111'
+# }
+# [stripe] trial subscription lifecycle marker is incomplete or unlinked { subscriptionId: 'sub_trial' }
+# [stripe] trial subscription lifecycle enrollment mismatch {
+#   subscriptionId: 'sub_trial',
+#   enrollmentId: '11111111-1111-4111-8111-111111111111'
+# }
+# Subtest: trial marker before activation cannot create an unlinked legacy billing row
+ok 145 - trial marker before activation cannot create an unlinked legacy billing row
+  ---
+  duration_ms: 1.310833
+  ...
+# Subtest: deleted trial preserves canonical deadline and premium mirror while access remains valid
+ok 146 - deleted trial preserves canonical deadline and premium mirror while access remains valid
+  ---
+  duration_ms: 2.522167
+  ...
+# Subtest: provider active after trial expiry does not fabricate a paid entitlement
+ok 147 - provider active after trial expiry does not fabricate a paid entitlement
+  ---
+  duration_ms: 0.278625
+  ...
+# Subtest: owner mismatch stays fail-closed and cannot reach legacy profile writes
+ok 148 - owner mismatch stays fail-closed and cannot reach legacy profile writes
+  ---
+  duration_ms: 0.292125
+  ...
+# Subtest: any partial trial marker is quarantined instead of taking the legacy lifecycle path
+ok 149 - any partial trial marker is quarantined instead of taking the legacy lifecycle path
+  ---
+  duration_ms: 0.130166
+  ...
+# Subtest: mismatched provider customer cannot update the linked trial lifecycle
+ok 150 - mismatched provider customer cannot update the linked trial lifecycle
+  ---
+  duration_ms: 0.149625
+  ...
+# Subtest: valid trial metadata cannot attach an unlinked legacy billing row
+ok 151 - valid trial metadata cannot attach an unlinked legacy billing row
+  ---
+  duration_ms: 0.170333
+  ...
+# Subtest: provider cancellation only sets canonical cancellation and keeps the immutable trial deadline
+ok 152 - provider cancellation only sets canonical cancellation and keeps the immutable trial deadline
+  ---
+  duration_ms: 0.238417
+  ...
+# Subtest: blocked trial enrollment cannot refresh billing or profile access
+ok 153 - blocked trial enrollment cannot refresh billing or profile access
+  ---
+  duration_ms: 0.364333
+  ...
+# Subtest: restoration committed after Stripe retrieval fences stale cancellation and all mirrors
+ok 154 - restoration committed after Stripe retrieval fences stale cancellation and all mirrors
+  ---
+  duration_ms: 0.372583
+  ...
+# Subtest: restore completed before fence capture is resolved by a fresh provider read
+ok 155 - restore completed before fence capture is resolved by a fresh provider read
+  ---
+  duration_ms: 0.107333
+  ...
+# Subtest: a newer cancellation declaration invalidates the snapshot even without changing revision
+ok 156 - a newer cancellation declaration invalidates the snapshot even without changing revision
+  ---
+  duration_ms: 0.096042
+  ...
+# Subtest: database cancellation CAS rejects a snapshot taken before an actual restore commit
+ok 157 - database cancellation CAS rejects a snapshot taken before an actual restore commit
+  ---
+  duration_ms: 921.734459
+  ...
+# Subtest: technical source cancellation appearing during the fresh read never becomes customer cancellation
+ok 158 - technical source cancellation appearing during the fresh read never becomes customer cancellation
+  ---
+  duration_ms: 0.568708
+  ...
+1..158
+# tests 158
+# suites 0
+# pass 158
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6200.231375

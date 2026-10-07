@@ -1,0 +1,11 @@
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const ROOT='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning';
+const ts=require(path.join(ROOT,'node_modules/typescript'));
+const nav=JSON.parse(fs.readFileSync('/tmp/test-audit-navigation598-cohorts.json','utf8'));
+const cohort=nav.find(x=>x.id==='email_delivery'); if(!cohort)throw Error('cohort missing');
+const sha=s=>crypto.createHash('sha256').update(s).digest('hex');
+function parse(file,text){const sf=ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true);if(sf.parseDiagnostics.length)throw Error(file+' parse');const out=[];function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'&&ts.isStringLiteral(n.arguments[0])){const cb=n.arguments.find(a=>ts.isArrowFunction(a)||ts.isFunctionExpression(a));if(cb){const start=n.getStart(sf),end=n.end;out.push({name:n.arguments[0].text,start,end,line:sf.getLineAndCharacterOfPosition(start).line+1,body:text.slice(start,end),sha256:sha(text.slice(start,end)),callback:cb.getText(sf),callbackSha256:sha(cb.getText(sf))});}}ts.forEachChild(n,walk)}walk(sf);return out}
+const files=cohort.files.map(x=>{const text=fs.readFileSync(path.join(ROOT,x.file),'utf8');return {file:x.file,sha256:sha(text),navigationMatch:sha(text)===x.sha256,lines:text.split('\n').length-1,sites:parse(x.file,text)}});
+fs.writeFileSync('/tmp/test-audit-email-delivery94/inventory.json',JSON.stringify({root:ROOT,files,total:files.reduce((n,x)=>n+x.sites.length,0)},null,2)+'\n');
+for(const f of files){console.log(f.file+' ['+f.sites.length+']');for(const [i,s] of f.sites.entries())console.log(`${i+1}@${s.line} ${s.name}`)}
+module.exports={ROOT,ts,sha,parse};

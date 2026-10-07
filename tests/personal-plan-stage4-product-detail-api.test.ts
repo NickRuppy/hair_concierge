@@ -227,7 +227,7 @@ test("detail does not turn an invalid current commerce URL into an outbound link
   assert.equal(result.detail.commerce.availabilityLabel, "Derzeit kein verifizierter Produktlink")
 })
 
-test("a planned exact catalog product is allowed current commerce; foreign, no-plan, and forged item keys remain unavailable", async () => {
+test("a planned exact catalog product is allowed current commerce; no-plan and forged item keys remain unavailable", async () => {
   const plannedDb = client({
     plan: {
       id: ids.plan,

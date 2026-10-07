@@ -1,0 +1,214 @@
+--- transfer/tests/scan-alternative-comparison.test.ts
++++ cut/tests/scan-alternative-comparison.test.ts
+@@ -3,7 +3,6 @@
+ 
+ import {
+   deriveAlternativeComparison,
+-  type ScanComparisonRow,
+ } from "../src/lib/scan/alternative-comparison"
+ import type { Stage3CriterionResult } from "../src/lib/personal-plan/products/contracts"
+ 
+@@ -16,19 +15,6 @@
+     ...overrides,
+   }
+ }
+-
+-test("deriveAlternativeComparison: no criteria yields an empty comparison with a zero score", () => {
+-  const comparison = deriveAlternativeComparison([])
+-  assert.deepEqual(comparison, { rows: [], summaryScore: 0 })
+-})
+-
+-test("deriveAlternativeComparison: a pass criterion becomes a match row", () => {
+-  const comparison = deriveAlternativeComparison([criterion({ result: "pass" })])
+-  assert.deepEqual(comparison.rows, [
+-    { rowId: "conditioner.care_direction", label: "Pflegerichtung", state: "match" },
+-  ])
+-  assert.equal(comparison.summaryScore, 1)
+-})
+ 
+ test("deriveAlternativeComparison: caution/fail/unknown map to partial/mismatch/unknown", () => {
+   const comparison = deriveAlternativeComparison([
+@@ -66,12 +52,6 @@
+   )
+ })
+ 
+-test("deriveAlternativeComparison: a row never carries anything beyond rowId/label/state", () => {
+-  const comparison = deriveAlternativeComparison([criterion()])
+-  const row = comparison.rows[0] as ScanComparisonRow
+-  assert.deepEqual(Object.keys(row).sort(), ["label", "rowId", "state"])
+-})
+-
+ test("deriveAlternativeComparison: is a pure function — same input, same output, no mutation", () => {
+   const input = [criterion({ criterionId: "x" })]
+   const frozen = Object.freeze([...input])
+--- transfer/tests/scan-masked-alternative.test.ts
++++ cut/tests/scan-masked-alternative.test.ts
+@@ -30,27 +30,6 @@
+     ...overrides,
+   }
+ }
+-
+-test("maskAlternative: withholds identity, productId, image, price and net content", () => {
+-  const masked = maskAlternative(alternative())
+-  assert.deepEqual(Object.keys(masked).sort(), ["comparison", "verdict", "verdictLabel"])
+-})
+-
+-test("maskAlternative: keeps the alternative's own verdict and verdict label", () => {
+-  const masked = maskAlternative(
+-    alternative({ verdict: "supportive", verdictLabel: "Passt eingeschränkt" }),
+-  )
+-  assert.equal(masked.verdict, "supportive")
+-  assert.equal(masked.verdictLabel, "Passt eingeschränkt")
+-})
+-
+-test("maskAlternative: derives comparison rows from the alternative's own criteria", () => {
+-  const masked = maskAlternative(alternative())
+-  assert.deepEqual(masked.comparison.rows, [
+-    { rowId: "shampoo.scalp_route", label: "Kopfhaut-Fokus", state: "match" },
+-  ])
+-  assert.equal(masked.comparison.summaryScore, 1)
+-})
+ 
+ test("maskAlternative: an alternative with no carried criteria yields an empty comparison", () => {
+   const masked = maskAlternative(alternative({ criteria: undefined }))
+--- transfer/tests/scan-name-only-submission-migration.test.ts
++++ cut/tests/scan-name-only-submission-migration.test.ts
+@@ -44,33 +44,6 @@
+ 
+ const userA = "11111111-1111-4111-8111-111111111111"
+ const userB = "22222222-2222-4222-8222-222222222222"
+-
+-test("scan name-only submission migration: identifier-based scan rows are unaffected (byte-identical EAN lane)", async (t) => {
+-  const pg = await database()
+-  t.after(async () => pg.close())
+-
+-  await pg.query(
+-    `INSERT INTO public.product_submissions
+-       (user_id, category, source, status, scanned_identifier_type, scanned_identifier_value)
+-     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'ean', '4006381333931')`,
+-    [userA],
+-  )
+-  const rows = await pg.query("SELECT count(*)::int AS count FROM public.product_submissions")
+-  assert.equal((rows.rows[0] as { count: number }).count, 1)
+-})
+-
+-test("scan name-only submission migration: a name-only scan row (no identifier) is now accepted", async (t) => {
+-  const pg = await database()
+-  t.after(async () => pg.close())
+-
+-  await pg.query(
+-    `INSERT INTO public.product_submissions (user_id, category, source, status, brand_text, product_name_text)
+-     VALUES ($1, 'shampoo', 'scan', 'pending_review', 'Kérastase', 'Ciment Thermique')`,
+-    [userA],
+-  )
+-  const rows = await pg.query("SELECT count(*)::int AS count FROM public.product_submissions")
+-  assert.equal((rows.rows[0] as { count: number }).count, 1)
+-})
+ 
+ test("scan name-only submission migration: a scan row with neither identifier nor brand+name still fails the CHECK", async (t) => {
+   const pg = await database()
+--- transfer/tests/scan-pending-submission.test.ts
++++ cut/tests/scan-pending-submission.test.ts
+@@ -48,14 +48,6 @@
+   ])
+ })
+ 
+-test("findOpenScanSubmission: no open submission is null", async () => {
+-  const { client } = stubClient({ data: null, error: null })
+-
+-  const result = await findOpenScanSubmission(client as never, "user-1", "4006381333931")
+-
+-  assert.equal(result, null)
+-})
+-
+ test("findOpenScanSubmission: queries every GTIN spelling of the same number", async () => {
+   const { client, filters } = stubClient({ data: null, error: null })
+ 
+--- transfer/tests/scan-profile-context.test.ts
++++ cut/tests/scan-profile-context.test.ts
+@@ -82,14 +82,6 @@
+   assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)
+ })
+ 
+-test("loadScanEvaluationContext: genuinely absent refined source falls back to compatible initial", async () => {
+-  const source = await fixture()
+-  source.refined = null
+-  const context = await loadScanEvaluationContext(stubClient(source) as never, "owner")
+-  assert.equal(context?.snapshotSource, "initial")
+-  assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)
+-})
+-
+ test("loadScanEvaluationContext: no plan and no completed source is null", async () => {
+   const source = await fixture()
+   Object.assign(source, { plan: null, initial: null, refined: null, profile: null })
+--- transfer/tests/scan-resolve-anti-leak.test.ts
++++ cut/tests/scan-resolve-anti-leak.test.ts
+@@ -341,47 +341,6 @@
+   })
+ })
+ 
+-test("anti-leak: no alternative entry carries an identity/resolvable key at any depth", async () => {
+-  await withFlag("true", async () => {
+-    const handler = createScanResolveRouteHandler(baseDeps())
+-    const response = await handler(request({ productId }))
+-    const body = await response.json()
+-    assert.equal(body.alternatives.length, 2)
+-
+-    const keysSeen = new Set<string>()
+-    everyKey(body.alternatives, keysSeen)
+-    for (const forbidden of FORBIDDEN_ALTERNATIVE_KEYS) {
+-      assert.equal(
+-        keysSeen.has(forbidden),
+-        false,
+-        `masked alternatives carried forbidden key "${forbidden}"`,
+-      )
+-    }
+-    assert.deepEqual([...keysSeen].sort(), [
+-      "comparison",
+-      "label",
+-      "rowId",
+-      "rows",
+-      "state",
+-      "summaryScore",
+-      "verdict",
+-      "verdictLabel",
+-    ])
+-  })
+-})
+-
+-test("anti-leak: comparison row labels come only from the fixture's generic criterion labels, never product names", async () => {
+-  await withFlag("true", async () => {
+-    const handler = createScanResolveRouteHandler(baseDeps())
+-    const response = await handler(request({ productId }))
+-    const body = await response.json()
+-    const labels = (
+-      body.alternatives as Array<{ comparison: { rows: Array<{ label: string }> } }>
+-    ).flatMap((alternative) => alternative.comparison.rows.map((row) => row.label))
+-    assert.deepEqual(labels.sort(), ["Kopfhaut-Fokus", "Reinigungsstärke"].sort())
+-  })
+-})
+-
+ test("anti-leak: an alternative's raw EAN/GTIN-shaped identifier never reaches the masked response", async () => {
+   await withFlag("true", async () => {
+     const handler = createScanResolveRouteHandler(baseDeps())
+--- transfer/tests/scan-trigger-session-marker.test.ts
++++ cut/tests/scan-trigger-session-marker.test.ts
+@@ -22,18 +22,6 @@
+ const TWENTY_NINE_MINUTES = 29 * 60 * 1000
+ 
+ // --- recordScanSession (localStorage record) ---------------------------------------
+-
+-test("recordScanSession: the first call on fresh storage is session 1", () => {
+-  const storage = createMemoryScanTriggerStorage()
+-  assert.equal(recordScanSession(storage, 1_000), 1)
+-  assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY))
+-})
+-
+-test("recordScanSession: a call more than 30 minutes later is session 2", () => {
+-  const storage = createMemoryScanTriggerStorage()
+-  recordScanSession(storage, 1_000)
+-  assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)
+-})
+ 
+ test("recordScanSession: a call within 30 minutes stays the SAME session (no increment)", () => {
+   const storage = createMemoryScanTriggerStorage()

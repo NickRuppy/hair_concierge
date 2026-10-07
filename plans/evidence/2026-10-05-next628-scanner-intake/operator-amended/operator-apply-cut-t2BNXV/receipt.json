@@ -1,0 +1,29 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "phase": "cut",
+  "counts": {
+    "before": 26,
+    "transfer": 26,
+    "cut": 22
+  },
+  "pinsSHA": "68a3621c1a438274ec566d261ee5087b84f0a8d54424d85fc5ed81c8ffdd44bb",
+  "prerequisite": {
+    "dir": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-mutations-transfer-NF5TPK",
+    "completionSHA": "ccf42a7cb72984a5266b71a25080756613b67013282ae2e1b101bfcfbdb00be7",
+    "verified": 14,
+    "logFiles": 42,
+    "phase": "transfer"
+  },
+  "changed": [
+    "tests/scan-unknown-flow-ui.test.tsx",
+    "tests/scan-research-intake-form-ui.test.tsx"
+  ],
+  "allTestHashes": {
+    "tests/scan-unknown-flow-ui.test.tsx": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf",
+    "tests/scan-research-intake-form-ui.test.tsx": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-apply-cut-t2BNXV/originals"
+}

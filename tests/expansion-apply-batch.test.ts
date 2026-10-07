@@ -116,6 +116,8 @@ test("the reviewed mask manifest parks only its excluded-identifier product", as
   assert.ok(
     result.batch.items.every((item) => !result.parked.some((p) => p.item_key === item.item_key)),
   )
+  assert.ok(result.batch.items.length > 0)
+  assert.doesNotMatch(result.batchJson, /is_chaarlie_recommended/)
 })
 
 test("a deviation-flagged protocol parks the product for Nick's review (R4/F-06)", async () => {
@@ -433,13 +435,6 @@ test("a leave-in product's TPL-LEAVEIN-DAMP protocol stamps instead of parking (
   const item = result.batch.items.find((entry) => entry.item_key === key)
   assert.ok(item, `${key} must publish — parked: ${JSON.stringify(result.parked)}`)
   assert.deepEqual(protocolRoles(item), ["post_wash_leave_in"])
-})
-
-test("the emitted batch never carries a recommendation flag (R3)", async () => {
-  const manifest = await maskManifest()
-  const result = buildExpansionApplyBatch({ manifest, supplement: supplementFor(manifest) })
-  assert.ok(result.batch.items.length > 0)
-  assert.doesNotMatch(result.batchJson, /is_chaarlie_recommended/)
 })
 
 // ---------------------------------------------------------------------------

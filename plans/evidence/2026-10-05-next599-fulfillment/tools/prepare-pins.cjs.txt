@@ -1,0 +1,72 @@
+'use strict'
+// TMP AUTHORING ONLY: TypeScript parsing/text reads; no product/test imports, children, or repository writes.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),{createRequire}=require('node:module')
+const R='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',D=__dirname,P='/tmp/test-audit-one-time-fulfillment75'
+const sha=x=>crypto.createHash('sha256').update(x).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p,'utf8')),fail=s=>{throw Error(s)}
+const g=require('./operator-guard.cjs'),ts=require(R+'/node_modules/typescript'),req=createRequire(R+'/package.json')
+const M=read(P+'/manifest.json'),C=read(P+'/candidates.json')[0]
+if(sha(fs.readFileSync(P+'/manifest.json'))!=='d99a84f33b1df17782ecf58aded698d6409927718e962f3920ef28605878dfa7')fail('Original manifest drift')
+for(const r of M.readset)if(sha(fs.readFileSync(R+'/'+r.file))!==r.sha256)fail('Original readset drift '+r.file)
+const write=(name,x)=>fs.writeFileSync(D+'/'+name,x,{flag:'wx',mode:0o444})
+const E={root:M.root,head:M.head,branch:M.branch,phases:Object.fromEntries(Object.entries(M.phases).map(([p,files])=>[p,Object.fromEntries(Object.entries(files).map(([f,m])=>[f,m.sha256]))]))}
+for(const phase of ['before','transfer','cut']){const meta=M.phases[phase][C.file],bytes=fs.readFileSync(meta.path);if(sha(bytes)!==meta.sha256)fail('Snapshot drift');write('operator-'+phase+'.ts',bytes)}
+write('operator-evidence.json',JSON.stringify(E,null,2)+'\n')
+const controls=read(P+'/controls.json').map(c=>{
+ const text=fs.readFileSync(R+'/'+c.owner,'utf8'),sf=g.parse(ts,c.owner,text),found=[]
+ function walk(n){if(ts.isFunctionDeclaration(n)&&n.name?.text===c.scope.name)found.push(n);ts.forEachChild(n,walk)}walk(sf)
+ if(found.length!==1||sha(text)!==c.ownerSha256)fail('Owner identity '+c.id)
+ const fn=found[0],body=fn.getText(sf),replacement=g.replaceOnce(body,c.from,c.to,c.id),mutant=text.slice(0,fn.getStart(sf))+replacement+text.slice(fn.end)
+ if(sha(mutant)!==c.mutantSha256)fail('Fault hash '+c.id);g.parse(ts,c.owner,mutant)
+ const oracles={}
+ for(const phase of ['transfer','cut']){const bytes=fs.readFileSync(D+'/operator-'+phase+'.ts'),row=g.registrations(ts,c.testFile,bytes.toString()).get(c.testName),o=c.expected.firstKeeperFrame[phase],a=row?.assertions.filter(a=>a.startLine===o.startLine)
+ if(sha(row?.statement||'')!==o.keeperBodySha256||a?.length!==1||!a[0].text.startsWith(o.text))fail('Original exact oracle '+c.id)
+ oracles[phase]={startLine:o.startLine,text:a[0].text,keeperSha256:sha(row.statement),testFileSha256:sha(bytes)} }
+ const escaped=c.testName.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
+ return {id:c.id,file:c.owner,sourceSha256:c.ownerSha256,mutatedSha256:c.mutantSha256,anchor:{kind:'function',scope:fn.name.text,scopeSha256:sha(body),expectedOccurrences:1},from:c.from,to:c.to,test:{file:c.testFile,name:c.testName},command:['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-name-pattern=^'+escaped+'$',c.testFile],oracles,expectedOperator:c.expected.operator,errorMessageIncludes:[c.expected.messageContains],intendedAssertion:c.intent,proofKind:c.id.startsWith('receipt-')?'transferred donor oracle':'original keeper oracle'}
+})
+write('operator-controls-normalized.json',JSON.stringify(controls,null,2)+'\n')
+function pin(p){return fs.existsSync(p)?{path:p,realpath:fs.realpathSync(p),sha:sha(fs.readFileSync(p))}:{path:p,realpath:null,sha:null}}
+const gitFile=R+'/.git',gitDir=path.resolve(R,fs.readFileSync(gitFile,'utf8').trim().replace(/^gitdir: /,'')),commonFile=gitDir+'/commondir',commonDir=path.resolve(gitDir,fs.readFileSync(commonFile,'utf8').trim())
+const identityFiles=[gitFile,gitDir+'/HEAD',commonFile,commonDir+'/config',commonDir+'/refs/heads/'+M.branch,commonDir+'/packed-refs'].map(pin)
+const cohort=new Set(Object.keys(E.phases.before)),readset=new Map(M.readset.filter(x=>!cohort.has(x.file)).map(x=>[x.file,x.sha256]))
+// Exact selected local import closure only, not a recursive source/data directory census.
+const queue=[C.file,'tests/server-only-register.cjs'],seen=new Set(),edges=[],externals=new Set(),nonliteral=[]
+const opts={moduleResolution:ts.ModuleResolutionKind.Bundler,module:ts.ModuleKind.ESNext,baseUrl:R,paths:{'@/*':['src/*']},allowJs:true,resolveJsonModule:true}
+while(queue.length){const file=queue.shift();if(seen.has(file))continue;seen.add(file);if(seen.size>300)fail('Local closure exceeds bounded 300-file preparation limit')
+ const full=R+'/'+file,text=fs.readFileSync(full,'utf8');if(!cohort.has(file))readset.set(file,sha(text))
+ if(file.endsWith('.json'))continue
+ const sf=g.parse(ts,file,text)
+ function add(spec,kind){if(spec.startsWith('node:'))return
+  if(!spec.startsWith('.')&&!spec.startsWith('@/')){externals.add(spec);return}
+  const found=ts.resolveModuleName(spec,full,opts,ts.sys).resolvedModule?.resolvedFileName
+  if(!found||!found.startsWith(R+'/')||found.includes('/node_modules/'))fail('Unresolved local import '+file+' '+spec)
+  const dest=path.relative(R,found);edges.push({from:file,to:dest,spec,kind});queue.push(dest)
+ }
+ function walk(n){if((ts.isImportDeclaration(n)||ts.isExportDeclaration(n))&&n.moduleSpecifier&&ts.isStringLiteralLike(n.moduleSpecifier))add(n.moduleSpecifier.text,'static including type')
+  if(ts.isCallExpression(n)&&(n.expression.kind===ts.SyntaxKind.ImportKeyword||n.expression.getText(sf)==='require')){if(n.arguments.length&&ts.isStringLiteralLike(n.arguments[0]))add(n.arguments[0].text,'literal dynamic');else nonliteral.push({file,line:sf.getLineAndCharacterOfPosition(n.getStart(sf)).line+1})}
+  ts.forEachChild(n,walk)}walk(sf)
+}
+for(const f of ['.nvmrc','package.json','package-lock.json','tsconfig.json'])readset.set(f,sha(fs.readFileSync(R+'/'+f)))
+const dependencyFiles=new Set(),externalPins=[]
+// Bound runtime loader/transpiler trees. SDKs use exact resolved entry + package metadata pins, not whole vendor trees.
+const dependencyTrees=['tsx/dist','esbuild/lib','esbuild/bin','@esbuild/darwin-arm64/bin','get-tsconfig/dist','resolve-pkg-maps/dist'].filter(n=>fs.existsSync(R+'/node_modules/'+n)).map(n=>({path:R+'/node_modules/'+n,names:g.inventory(R+'/node_modules/'+n)}))
+for(const t of dependencyTrees)for(const n of t.names)dependencyFiles.add(t.path+'/'+n)
+for(const spec of [...externals,'tsx','typescript','esbuild','get-tsconfig','resolve-pkg-maps']){
+ let entry;try{entry=req.resolve(spec)}catch(e){fail('Cannot pin selected external '+spec)}
+ if(!path.isAbsolute(entry))continue
+ dependencyFiles.add(entry)
+ const pkgName=spec.startsWith('@')?spec.split('/').slice(0,2).join('/'):spec.split('/')[0],pkg=R+'/node_modules/'+pkgName+'/package.json'
+ if(fs.existsSync(pkg))dependencyFiles.add(pkg)
+ externalPins.push({specifier:spec,entry,package:pkg})
+}
+for(const x of M.readset)if(x.file.startsWith('node_modules/'))dependencyFiles.add(R+'/'+x.file)
+const closure={selectedTest:C.file,localFiles:[...seen].sort(),edges,externalPins,nonliteralImports:nonliteral,scope:'Static local literal import/export closure (includes type-only/untaken imports conservatively); bounded loader trees plus SDK resolved entries/manifests. No whole-vendor or recursive source/data tree pinning. Remaining SDK internals rely on unchanged lockfile/frozen main runtime, not a complete vendor transitive hash proof.'}
+write('operator-selected-closure.json',JSON.stringify(closure,null,2)+'\n')
+const artifactHashes={}
+for(const name of ['handoff-receipt.json','manifest.json','sites.json','candidates.json','controls.json','judgments.json','layer-plan.md','complete-ledger.md','complete.diff','static-check.json'])artifactHashes[P+'/'+name]=sha(fs.readFileSync(P+'/'+name))
+for(const name of ['operator-guard.cjs','operator-proof.cjs','operator-readonly-preload.cjs','operator-controls-normalized.json','operator-evidence.json','operator-selected-closure.json','operator-before.ts','operator-transfer.ts','operator-cut.ts'])artifactHashes[D+'/'+name]=sha(fs.readFileSync(D+'/'+name))
+const entrypointTemplateHashes={};for(const f of ['operator-edit.cjs','operator-run-controls.cjs'])entrypointTemplateHashes[D+'/'+f]=sha(fs.readFileSync(D+'/'+f))
+const pins={root:R,head:M.head,branch:M.branch,gitDir,commonDir,identityFiles,node:{version:process.version,realpath:fs.realpathSync(process.execPath),sha:sha(fs.readFileSync(process.execPath))},typescriptVersion:ts.version,originalReadset49:M.readset,readset:[...readset].sort(([a],[b])=>a.localeCompare(b)).map(([file,sha])=>({file,sha})),dependencies:[...dependencyFiles].sort().map(pin),dependencyTrees,repositoryTrees:[],artifactHashes,entrypointTemplateHashes,limits:closure.scope}
+const raw=JSON.stringify(pins,null,2)+'\n',pinSHA=sha(raw);write('operator-pins.json',raw)
+for(const f of ['operator-edit.cjs','operator-run-controls.cjs'])fs.writeFileSync(D+'/'+f,fs.readFileSync(D+'/'+f,'utf8').replace("const PIN_SHA='PIN_SHA_PLACEHOLDER'","const PIN_SHA='"+pinSHA+"'"))
+console.log(JSON.stringify({dir:D,pinSHA,originalReadset:M.readset.length,fixedReadset:pins.readset.length,localClosure:seen.size,dependencies:pins.dependencies.length,nonliteralImports:nonliteral,controls:controls.length,repositoryWrites:0,ownerImports:0,children:0},null,2))

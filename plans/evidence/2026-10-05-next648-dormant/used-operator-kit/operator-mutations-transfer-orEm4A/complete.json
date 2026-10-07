@@ -1,0 +1,1840 @@
+{
+  "phase": "transfer",
+  "verified": 14,
+  "controlIds": [
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P6",
+    "P7",
+    "P8",
+    "P9",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P14"
+  ],
+  "cleanRuns": 28,
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "1d93d7ae5effb128241fa0e24922e385b618f25d362ff6966bd0ffda03293af6",
+  "receiptSHA256": "089a931c25846ad792893914a7e1567517b38dbc6c6354d9c7b441baf39987cf",
+  "allFileHashes": {
+    "src/lib/personal-plan/rollout-access.ts": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+    "src/lib/personal-plan/journey-access-loader.ts": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "src/lib/personal-plan/release.ts": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+    "tests/personal-plan-journey-access-loader.test.ts": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67",
+    "tests/personal-plan-stage3-release.test.ts": "d25fd6ac50e6ba5a09c3870b83ae55cbc729a72b55cb0329b2d6c414b4dc2f1e",
+    "tests/auth-middleware-personal-plan-routine.test.ts": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+    "tests/freemium-enrollment-admission.test.ts": "fcc6c0f7c564fa5078c7c81823991341ab1859d414d6e00c33f72c369b8a2389",
+    "tests/personal-plan-trial-stage1-journey.test.ts": "ce32342ee184872e96bc13191d0f5dc25d0d863a8acaa477e4ccd8df62bf9fc0",
+    "tests/personal-plan-field-test-access.test.ts": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a",
+    "tests/personal-plan-rollout-access.test.ts": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41"
+  },
+  "sourceGuards": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": "apps/product-intake-review/package.json",
+      "sha": "91c61d53213e982d1921ae14dcbac138f7fbdce56242e37ec839c03c14433e24"
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/src/PostgrestClient.ts",
+      "sha": "50121d8145aa9fd4b4f6b9382270db0343a6fdd6e2f56b5f0e8c872dc683d9c8"
+    },
+    {
+      "file": "node_modules/@supabase/postgrest-js/src/PostgrestFilterBuilder.ts",
+      "sha": "49b784b351661bddfd0e223f6395eebde85f8c4a348462cf8e5e83ec850402f8"
+    },
+    {
+      "file": "node_modules/@supabase/supabase-js/src/SupabaseClient.ts",
+      "sha": "6471325c10145a7a6c4f92d1e332fc6d51203ef0c2e7cf022ade5511217c2a60"
+    },
+    {
+      "file": "package.json",
+      "sha": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "packages/product-intake-core/package.json",
+      "sha": "75eda71a0f651afbcceac419049055fc9f7025c991762a119737a66846388798"
+    },
+    {
+      "file": "plans/2026-08-08-personal-plan-five-stage-consolidation.md",
+      "sha": "fe0b8e14ac9a0a4eea4e85975bf0994d194de3f758345dadf33b6871258d5b2e"
+    },
+    {
+      "file": "plans/2026-08-13-personal-plan-stage5-production-activation.md",
+      "sha": "4aa53e7896e017765617e8b0af3e481a19135113a4a3fc30904b59e3bba5536d"
+    },
+    {
+      "file": "src/app/api/personal-plan/accept-ideal-plan/route.ts",
+      "sha": "d84506635617890e66e2e1d8b8e0d9fc59d730ed5e167cce7075a35f0638856e"
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/attention/route.ts",
+      "sha": "08c46b9f253f6e531d342473b27808ac4576210c829f6985d8407e4fea7f1c18"
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/items/[itemKey]/route.ts",
+      "sha": "05edf54ab8fb801d69b4e9bb7095f905c7ff3d3533a15c44dd70c4e68e488afd"
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/planned-items/[itemKey]/acquire/route.ts",
+      "sha": "3f49ece54f7b0412f3b093da1a52a07c06391d8e569713749b75913eaee73143"
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/proposals/[proposalId]/resolve/route.ts",
+      "sha": "ef6a5bfb87ed626317989e70544a4110388014236eaaf7064e9ad9f9e1387f4e"
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/proposals/route.ts",
+      "sha": "0d706c7448ac56733e6baf14c5bfd47558597c71a127be102ba9f2cb05d098e9"
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/route.ts",
+      "sha": "8a206d41c69b4a7bebed90d1336bc5d62cabc77ca4f57427418c7c2e2f8603d2"
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/sync/route.ts",
+      "sha": "bb55d1b9b50eab56cc7bcc5bf994fcb71f752da809bcc3706b3a8dd2ba01407c"
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-1/previews/route.ts",
+      "sha": "d3c200648e5c2f84456418e927b723c5ea108112ada5587f7afb131cdc902f68"
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-1/route.ts",
+      "sha": "137f11e14738d7622d0605fa98817647c71a66db3bf2d38ab6fd9b3a6b9de617"
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-2/complete/route.ts",
+      "sha": "c27c00ced04c2fdd61d67cc9935ace5cf53c00f4eb1c02d7246da6dc54db886b"
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-2/optional-entry/route.ts",
+      "sha": "8c0c9e26249ab2ce9de99b466354a051fb4864c93d506fb2d3d106b246ef5bb3"
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-2/route.ts",
+      "sha": "6bb8a2252349518846e421d17c721f9fb3af3d4185610695e66b1ba9bf54657a"
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-3/complete/route.ts",
+      "sha": "a0653505278aeeb0b59fd2d9088cb8fe984b14532aedc3e84ccd9d4c3560c13c"
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-3/intake/route.ts",
+      "sha": "7157b48d55f094d10dfd56bd3abbf859a34416c6a7a25e15c300656644e165ec"
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-3/optional-entry/route.ts",
+      "sha": "5fae02a31b527300a118cd2d40b43599cc3291462870faf2889a629ce96d3167"
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-3/route.ts",
+      "sha": "269a3c9f3d6b91692935b624a572d1ca6bb1689a7e7d635f136113ce0c77d7be"
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-3/search/route.ts",
+      "sha": "d1f36cfeba19ddc986fd0220993a24704cf6c5e794bd57d0755d806597ba1419"
+    },
+    {
+      "file": "src/app/api/scan/wishlist/route.ts",
+      "sha": "38a949d65ac30fb119fd80630e174957b133613eb29d3e8e97ea65f71d45ad7e"
+    },
+    {
+      "file": "src/app/auth/confirm/route.ts",
+      "sha": "00170301a97f17888e15dd83fd7e93dc45c98313878213a8953bd9c7042f15e2"
+    },
+    {
+      "file": "src/app/plan-bereit/page.tsx",
+      "sha": "3266d35f5b0a8f5312e6415d40bc52224dc660a830134dc44089600343d96289"
+    },
+    {
+      "file": "src/app/plan-bereit/readiness.ts",
+      "sha": "aec3ee617b8d3eecc9e60116a00214d08a481b28981c20f707f342d299bea08e"
+    },
+    {
+      "file": "src/app/plan-bereit/status/route.ts",
+      "sha": "1b8f09e7bde788b2ec359a3d937fc84a58fa1ae1b14aa9c7d79c997260f22bff"
+    },
+    {
+      "file": "src/app/plan-start/page.tsx",
+      "sha": "e6ebf8b770c94fe4be6b65b411bf0d1b5314fb88ea3fdcbdc0a1c89860ee89af"
+    },
+    {
+      "file": "src/app/routine/page.tsx",
+      "sha": "298522d8399b3638fdd03d1d4605df4e3b74d766e7b2947ea71e01331ca0b8de"
+    },
+    {
+      "file": "src/app/welcome/page.tsx",
+      "sha": "e6c5c768deee6f4f304e1dc5a4ed27ba8c0a186938069fec0c579ed560fda24e"
+    },
+    {
+      "file": "src/components/chat/product-display-model.ts",
+      "sha": "1cbaf5d6200b26b902834cb1d7d5fb33d57f6d626f7ad73f3a38e5c818e68d8b"
+    },
+    {
+      "file": "src/components/checkout/active-subscription-dialog.tsx",
+      "sha": "384d027758879c6ea1e7df1b44aa7e276274a8e2198de7c9b3300077d5d3ba79"
+    },
+    {
+      "file": "src/components/checkout/payment-feedback-card.tsx",
+      "sha": "824ffc5a6f01137cee22d96c76689e0555f06c2324f6a68efd68670eb3e33834"
+    },
+    {
+      "file": "src/components/checkout/payment-method-checkout.tsx",
+      "sha": "93a3cc1c82fc6b0e8db03ec6af00b48a863496ccea37faaed17f5f9ce289f3b4"
+    },
+    {
+      "file": "src/components/checkout/payment-option-exposure.tsx",
+      "sha": "66a8621f37b4f4bc78765bcf653b236710fb32a405b30997be06b29de309bb05"
+    },
+    {
+      "file": "src/components/checkout/paypal-script-failure.ts",
+      "sha": "948dfcd8c7c9a479cc0a91cf2e36630bdb0778b592c8a217b4f6719c9c8fdbc5"
+    },
+    {
+      "file": "src/components/checkout/paypal-subscription-button.tsx",
+      "sha": "df81932a397efbe358f595927ce40ad73425bcdf0e64aeafc2fe7fd9db11fae1"
+    },
+    {
+      "file": "src/components/checkout/stripe-offer-elements-checkout.tsx",
+      "sha": "640d0f6e54f5dbedec2ca4a81fb0c2ec2acf71871e4d5b38a1a3913aba0b34b3"
+    },
+    {
+      "file": "src/components/checkout/use-payment-support-report.ts",
+      "sha": "55a3f51ade14a7e4049f3a05a2401afa9b804a867791a3a369d823f8d2ff8307"
+    },
+    {
+      "file": "src/components/checkout/use-plan-selection.ts",
+      "sha": "0146c5bbe05892ab2b74305a0530f64c02c2ab0b4ee129f264a7fbb270052884"
+    },
+    {
+      "file": "src/components/gated-preview/gated-preview.tsx",
+      "sha": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba"
+    },
+    {
+      "file": "src/components/gated-preview/gated-routine-example.tsx",
+      "sha": "15342e414e066d4fb72698550324e3003bf1441b958486d9dda81c1590a6d342"
+    },
+    {
+      "file": "src/components/gated-preview/inert-example.tsx",
+      "sha": "cda657ac78bf346c137cc43b51944d0764f4a71a1b2ec33b15d5624288e805ee"
+    },
+    {
+      "file": "src/components/keepsake/keepsake-lock-badge.tsx",
+      "sha": "6d6cef59194d272c3ff60996b68cb7f31d2a979ad602508bb520b937aec5358b"
+    },
+    {
+      "file": "src/components/personal-plan-journey/accept-ideal-plan.ts",
+      "sha": "fe28b5740c75c7bf45f11443d61432aa4c786abdfeab0e79b3803149fa9e4dc0"
+    },
+    {
+      "file": "src/components/personal-plan-journey/index.ts",
+      "sha": "34545dbab0999bbe645bbd5f2fc53a1560ea38211f8d6b90da559abb9653159c"
+    },
+    {
+      "file": "src/components/personal-plan-journey/journey-content.ts",
+      "sha": "eb4ae6c439469e3c2e53f48092af591d883d12b2fbd1dbfaf9416b8905036476"
+    },
+    {
+      "file": "src/components/personal-plan-journey/journey-header.tsx",
+      "sha": "82b306804db19852b829dbda63193db876abacf72db2b4f828c449c317d51bb6"
+    },
+    {
+      "file": "src/components/personal-plan-journey/plan-opening-ring.tsx",
+      "sha": "ec3ee7056b41529ed97e76d3c563825c55bfd38a3b0578468f38b2a3364b249b"
+    },
+    {
+      "file": "src/components/personal-plan-journey/stage-entrance.tsx",
+      "sha": "21987054ab7751e4ec5af4f84309479772edeaebf2a6a9563b2c8756ab145cf8"
+    },
+    {
+      "file": "src/components/personal-plan-journey/view-transition.tsx",
+      "sha": "2cea9a34c040c643d3c692ca93f3138e5a65f11c7adc43dbb89cad3a57ce19bc"
+    },
+    {
+      "file": "src/components/personal-plan-products/index.tsx",
+      "sha": "469b037449827d42cb3d720083cdbcc26ea1896d1697130756d26a6da43b36aa"
+    },
+    {
+      "file": "src/components/personal-plan-products/oil-group-review.tsx",
+      "sha": "d5239dee71b520b38fb0271ae89f5b8f0d58325fde2f4fa1adebe02b5910cf55"
+    },
+    {
+      "file": "src/components/personal-plan-products/product-fit-comparison.tsx",
+      "sha": "332588380ec3c3a8ccb40ed3c3df9dc43baf05fcaab01763b45c5fc85d164df8"
+    },
+    {
+      "file": "src/components/personal-plan-products/stage3-decision-controller.ts",
+      "sha": "f9704454f0b2293eb6f49a1cc15f3db13f9c066f44ed26225cbea499edc2023a"
+    },
+    {
+      "file": "src/components/personal-plan-products/stage3-preparation-recovery.tsx",
+      "sha": "cc79c4c8ccc30d8a443bbdaf2942d57db1fa5d5143faac113a0477049804511e"
+    },
+    {
+      "file": "src/components/personal-plan-products/stage3-preview-projection.ts",
+      "sha": "e12c27063449494b24ffb21dd0452168e7398f6b5cd373a1dda3651624783467"
+    },
+    {
+      "file": "src/components/personal-plan-products/stage3-product-copy.ts",
+      "sha": "e20722dc17605dbab0c49a7302f3f93691ed95cfda05596f3cc75e083cd868c2"
+    },
+    {
+      "file": "src/components/personal-plan-products/stage3-products-flow.tsx",
+      "sha": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d"
+    },
+    {
+      "file": "src/components/personal-plan-products/stage3-sticky-action.tsx",
+      "sha": "cbe9fd86359f5bc9ecacb7e36b2c4ebc62984d815455473f83e46dd3eddc7edb"
+    },
+    {
+      "file": "src/components/personal-plan-products/use-stage3-category-capture-controller.ts",
+      "sha": "d30898c19b094f20cba983336d2c22f36438f8baf53868d02d4b77ce18cd6941"
+    },
+    {
+      "file": "src/components/personal-plan-quiz/quiz-data.ts",
+      "sha": "aa4e80b540d84cb6205235ba671ed53b1c6045b50df6bb3a1c269dac3a954b58"
+    },
+    {
+      "file": "src/components/personal-plan-quiz/texture-question.ts",
+      "sha": "56749d2b7c09a21e66488691d93b25bedb55d299e394e08e6c3fcb98e1c923e3"
+    },
+    {
+      "file": "src/components/personal-plan-refinement/refinement-flow.tsx",
+      "sha": "2a295e4034394ba379c9494773df734453ae7aa0f01a2dd4076faadcd18c1462"
+    },
+    {
+      "file": "src/components/personal-plan-refinement/refinement-options.tsx",
+      "sha": "69986e944655e5008b64e3724447dfba80daf7ff55a17f3b5232e4f7de043857"
+    },
+    {
+      "file": "src/components/personal-plan-refinement/refinement-question.tsx",
+      "sha": "fb9d6f4cfdc58051af5d746d99cd2a151850f08c23b530d8833b61fa51b94522"
+    },
+    {
+      "file": "src/components/personal-plan-start/index.tsx",
+      "sha": "f1a183625e50a08bd4dbc35f30938457fd0029cea9bea75034943d2bd03c3e0d"
+    },
+    {
+      "file": "src/components/personal-plan-start/need-card.tsx",
+      "sha": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4"
+    },
+    {
+      "file": "src/components/personal-plan-start/need-plan-screen.tsx",
+      "sha": "aef2027e8ba788faab32c1113e638421f61bfbaf11e81a263bc4da4849be0679"
+    },
+    {
+      "file": "src/components/personal-plan-start/plan-start-cards.ts",
+      "sha": "efb0714531d7597a4d43e90fa51f8d2999f919c391816b246ddd08163e83935b"
+    },
+    {
+      "file": "src/components/personal-plan-start/plan-start-flow.tsx",
+      "sha": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40"
+    },
+    {
+      "file": "src/components/personal-plan-start/plan-start-opening.tsx",
+      "sha": "166189cc8fae95c642e6d20d1ae431959ede75bd9b6f3cc4b79b42534276cf42"
+    },
+    {
+      "file": "src/components/personal-plan-start/product-detail-sheet.tsx",
+      "sha": "0e5d38d6de495245efedb25214040faa286605c2b04fd4446d36e86907180f9a"
+    },
+    {
+      "file": "src/components/personal-plan-start/snapshot-adapter.ts",
+      "sha": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739"
+    },
+    {
+      "file": "src/components/premium-sheet/premium-sheet-checkout.tsx",
+      "sha": "041a27d443222535a4f4cde5d50f0452b8dbfc4167bc6d982a6e54ac52ef5e19"
+    },
+    {
+      "file": "src/components/premium-sheet/premium-sheet.tsx",
+      "sha": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566"
+    },
+    {
+      "file": "src/components/providers/payment-runtime-provider.tsx",
+      "sha": "9b4d251a31c5e817a93d1a61ca98aaeca7c51746e94e575c5f5a161c5f41915c"
+    },
+    {
+      "file": "src/components/quiz/hair-length-option-card.tsx",
+      "sha": "76884c108303c0e08dbfd58edec3492e321a7be4d7fad38204352d2297f450b2"
+    },
+    {
+      "file": "src/components/quiz/hair-portrait-figure.tsx",
+      "sha": "7a782bfc42c3de2d640462da3da463e70f5ba039ff0e7b8364ced4c0569c8495"
+    },
+    {
+      "file": "src/components/quiz/legacy-quiz-visuals.ts",
+      "sha": "e75ed193f9527dfda71029a5bb782f750491973aece3eaf3fc6de42752696ebb"
+    },
+    {
+      "file": "src/components/quiz/offer-tracking-provider.tsx",
+      "sha": "f37765d1a238f67e48d99fbef9310311b56f4e994674ca879bb075b8b1af3995"
+    },
+    {
+      "file": "src/components/quiz/quiz-option-card.tsx",
+      "sha": "d3886b23445bfa5c3346cc9fa435968e0dbad35a6cecdb2d5a4ebf4dd0e391af"
+    },
+    {
+      "file": "src/components/quiz/tool-visuals.ts",
+      "sha": "d737df7b91eb39109b189d8fd14af6f93f00055d2a902ad89d00eda28b5b05bb"
+    },
+    {
+      "file": "src/components/routine/gemerkt-section.tsx",
+      "sha": "44a4b16054c8d199286944d3b86490306e0fbfa890bb740b3b4ff2e99fe066e6"
+    },
+    {
+      "file": "src/components/routine/personal-plan/index.ts",
+      "sha": "cee4c2ca79d7519cbb4d3ff18ea0c844701bb36951e49645e80c05b74d4baba2"
+    },
+    {
+      "file": "src/components/routine/personal-plan/personal-plan-routine-client.tsx",
+      "sha": "35b2b982260a289dbb8068e66809cf1ca7744e635f763cb1397ebd029618a94d"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-attention-indicator.tsx",
+      "sha": "573d37574e855ed23c248052ec9ad1321548e31cb86dd91bcecade94171641ab"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-editor.tsx",
+      "sha": "a47f1d6b99984e0d832bd7cd1d3fdd103860cb003ea4561b6de38714f1348fc8"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-item-card.tsx",
+      "sha": "6f93d8d0073557e65964661275bc8acb520524d81bc8856a781b95d07c9aadda"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-page.tsx",
+      "sha": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-plan-updated-toast.tsx",
+      "sha": "d38fd896a878b8c0040d7b8980bf74efcfdedf99ce52db113c3e4b497901e9b5"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-product-detail.tsx",
+      "sha": "f433e3c5794dc5f00c52642cddb5f0c35cf0d7b413db81127ba227d34f878ed0"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-proposal-sheet.tsx",
+      "sha": "992331ddccc3cef4630b817fbaf3eb4be3a18ed4475ea579719e758bb63fdbfd"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-refinement-banner.tsx",
+      "sha": "8b37e2bffee1bfd52a41e54fa1f91c781c03cd8a0f894dc1ad2386a592b74d0a"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-section.tsx",
+      "sha": "5ddfc9757d16494eac2162b89b422e9588f660df22c006b53e4bc481574413a2"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-status.tsx",
+      "sha": "f66adab8c09d2cc0001d90894537ab8428f062f74e2b459773802aef4aed34bb"
+    },
+    {
+      "file": "src/components/routine/routine-card-model.ts",
+      "sha": "b38ae094871496ccd794d89b7613c55c1f9ee90465864477c18394be0a61b14d"
+    },
+    {
+      "file": "src/components/routine/routine-card.tsx",
+      "sha": "452af8967d194f116a39d0792213c95b1d51e2bfad35875f7ff5e91d7693a3d4"
+    },
+    {
+      "file": "src/components/routine/routine-drawer.tsx",
+      "sha": "d32b79108a5cd2437a78e4a72c9c7ae1d5df3cf450f51df847791c54d47ccf77"
+    },
+    {
+      "file": "src/components/routine/routine-frequency-control.tsx",
+      "sha": "e725811d32915ee0fefcf00e3e3759d6dbc07e16296843a4dfd6625e7f4beacc"
+    },
+    {
+      "file": "src/components/routine/routine-page-client.tsx",
+      "sha": "8a3e12536eb42fb385ce4eaa517ce121edb10372f184ef1692bf06f2deac10fa"
+    },
+    {
+      "file": "src/components/scan/scan-product-thumb.tsx",
+      "sha": "879f42afc873074cb547bcaa90e98acb44273694e18cb635ed9883cad5af5962"
+    },
+    {
+      "file": "src/components/scan/scan-save-sheet.tsx",
+      "sha": "87315dde699f26d08380697537794261270045e2abfee34d52600b25c4ee63ff"
+    },
+    {
+      "file": "src/components/ui/bottom-sheet.tsx",
+      "sha": "373944ebf90fab3c4347599cba20ef2e162db35c43f722d1f190585817caa625"
+    },
+    {
+      "file": "src/components/ui/button.tsx",
+      "sha": "7328a21e4aa02dad2cb657ae7af61280b71288b16ae4d38c5d31895c9d6535df"
+    },
+    {
+      "file": "src/components/ui/card.tsx",
+      "sha": "f38557d8e29dd87f32d01dbcb170385a9383f31307e8ee4277dee87142322c77"
+    },
+    {
+      "file": "src/components/ui/dialog.tsx",
+      "sha": "a4b7de55068c01e6ec9fa79c5966f9b9a5ae9ec842f6e75a29c8803ae210eabe"
+    },
+    {
+      "file": "src/components/ui/frequency-slider-field.tsx",
+      "sha": "4e96c3072dd3a74b5a70a13edee5c70a3ee471f285224ea8c51f39968d4943b1"
+    },
+    {
+      "file": "src/components/ui/icon.tsx",
+      "sha": "4db2f41605245aae7210dd610d5ee26423f8b1883e6b0e632c50f6a28c7b953e"
+    },
+    {
+      "file": "src/components/ui/info-tip.tsx",
+      "sha": "c4493cb1d20e32e1d105b673598aee09b8636638b72c5f22e16a6082a77bcd7b"
+    },
+    {
+      "file": "src/components/ui/retry-refresh-button.tsx",
+      "sha": "320223f8f5ef3c7d5fe65f60c2a66faf59688631a5584c07aa688c28743c21f9"
+    },
+    {
+      "file": "src/components/ui/slider.tsx",
+      "sha": "dabca6c51683046b19b5a69734c2f9b0c5051b95f212da922f9884b9dc566aca"
+    },
+    {
+      "file": "src/funnels/packages.json",
+      "sha": "fd299fc9fd61f06531fcc9b66fd497fd14c25a38214f8db241dab4e3a0131811"
+    },
+    {
+      "file": "src/funnels/quizzes/registry.json",
+      "sha": "4dce2f7f0eaf19ba28dc063b8a9cd70884a8a468bb401b8ff214853601c44947"
+    },
+    {
+      "file": "src/funnels/quizzes/registry.ts",
+      "sha": "225fa3638b4406aa711b4afda77ef748e24dd35e6b29bcd46f4d3ac6fe320bbe"
+    },
+    {
+      "file": "src/lib/analytics/checkout-attempt.ts",
+      "sha": "16866c953671cd2acda88699368a0f9e08bfa11599344024bc6748f23c737bfd"
+    },
+    {
+      "file": "src/lib/analytics/destinations/customerio.ts",
+      "sha": "06847f20cd2c8c2e0f11947469c787cbb8d357eefc9b65a241efec5bc4c6543b"
+    },
+    {
+      "file": "src/lib/analytics/destinations/meta.ts",
+      "sha": "5988b93df2bc11dba72bc719cc9d7b098190fa4d09267b5f12c6c2d2372227f0"
+    },
+    {
+      "file": "src/lib/analytics/destinations/posthog.ts",
+      "sha": "50a10cb0bdebec1ae539d8fbf83e1987b632995758d6a7bc5b1f3bd6d49db766"
+    },
+    {
+      "file": "src/lib/analytics/events.ts",
+      "sha": "48ce55be88f197549909df5014cfd51334d3238efc6b7ecb63456b48ad137238"
+    },
+    {
+      "file": "src/lib/analytics/meta-offer-view-client.ts",
+      "sha": "320ea8d68143153d486d771fadcedc64877205ebf288dfc1da090b7d2a5a0565"
+    },
+    {
+      "file": "src/lib/analytics/meta-offer-view-id.ts",
+      "sha": "3456cc669f5cdf679cc7192c7b02a2ccec6383e303f5e827b662d08aaec6d127"
+    },
+    {
+      "file": "src/lib/analytics/observe-once-engaged.ts",
+      "sha": "7795f7cf0912e68e9f5b38a7ef349d0adc2bc5e163a58fed80accbaf0ef17d25"
+    },
+    {
+      "file": "src/lib/analytics/offer-engagement.ts",
+      "sha": "e8396f8cdff7d2cae540cac9c58c52c2f97882fc908abe7e16527ec411f2e4a8"
+    },
+    {
+      "file": "src/lib/analytics/offer-payment-option-view.ts",
+      "sha": "6394a77aea0b700cc508a6ee33d0f3e360709855f603740121ae9c70d125d29f"
+    },
+    {
+      "file": "src/lib/analytics/offer-section-order.ts",
+      "sha": "1494d1984f4aaf437f2de3d8b7e3d638bc6ce0d80c7056eb0c56e9e5156ec167"
+    },
+    {
+      "file": "src/lib/analytics/offer-tracking-claims.ts",
+      "sha": "cefab73151409d50140d7c563815852037cd8900d5f0b4222e8406da120ea127"
+    },
+    {
+      "file": "src/lib/analytics/offer-viewed-payload.ts",
+      "sha": "db1fc7e9fa3c8c6cb20b51ab5f106bac713c5a8ce5bec859288092f0251aa6ac"
+    },
+    {
+      "file": "src/lib/analytics/page-url.ts",
+      "sha": "1cdde9d294fca5daf861b63bfb178a4458a6b8fd44d14b37b3d30d05a4551428"
+    },
+    {
+      "file": "src/lib/analytics/routes.ts",
+      "sha": "b1ea998155308a84bb64fe1a0c96469cb431dfc0992dbc29b9e2d7efdaa9acf2"
+    },
+    {
+      "file": "src/lib/analytics/runtime/bounded-fifo.ts",
+      "sha": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4"
+    },
+    {
+      "file": "src/lib/analytics/runtime/environment.ts",
+      "sha": "ff05a8672de300fddd0779669947a4ee0f2b0e62276c881fa94d525d48f11a4f"
+    },
+    {
+      "file": "src/lib/analytics/runtime/posthog.ts",
+      "sha": "0d2152292c62cec544e5bcb44f07f5c28238684ef1d1272826cf14f575c04591"
+    },
+    {
+      "file": "src/lib/analytics/track-app-event.ts",
+      "sha": "d72b4009f31a5f4fbbfc953956e46a5962282d72bf9d9daf0382500eadf4969d"
+    },
+    {
+      "file": "src/lib/auth/authenticated-app-route-access.ts",
+      "sha": "1c29afa7beb170c72e628560261dca22c1ae08c981d4ca0be917cccd79e8c49a"
+    },
+    {
+      "file": "src/lib/auth/intake-state.ts",
+      "sha": "536e205c575026bd76a56fec5e25b62c234bae0ac05e18797e918fd26c11eab2"
+    },
+    {
+      "file": "src/lib/auth/route-classification.ts",
+      "sha": "6a5c8c0a283054ab108779a6a8f23764a4919b67adea2f0a94cb389abb4d57a6"
+    },
+    {
+      "file": "src/lib/auth/unauthenticated-redirect.ts",
+      "sha": "bd6703ab7d835709100f2870c7ad950b1b66837f6e2f0b9f78836f8cdb6a1231"
+    },
+    {
+      "file": "src/lib/billing/payment-runtime-config.ts",
+      "sha": "2f5f9414aee446b43f337e5fa3ade5e5a2b6a7e6d1b0685dcf4ed611fcfd0e07"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-consent-copy.ts",
+      "sha": "de99a4ad49ef4720b0f5bf08420b1805ceb691b670a575bba1aa89fc87b25fc9"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "sha": "9780ca72927361d64c493de99f1780e7b9a58800e3fb52ea0fbad8227b97a544"
+    },
+    {
+      "file": "src/lib/billing/pricing-catalog.ts",
+      "sha": "bf01815cb824ef9cd3346be051d8f94868c9b916c593b2d2cd8e1140bc8dfae7"
+    },
+    {
+      "file": "src/lib/billing/purchases.ts",
+      "sha": "3c4ef0bc20b982ec38e7eff8f3a1e00b40b47412fc5d822151e117e85e53a6b6"
+    },
+    {
+      "file": "src/lib/billing/subscriptions.ts",
+      "sha": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c"
+    },
+    {
+      "file": "src/lib/billing/trial-access-projection.ts",
+      "sha": "6bd7a205a589005d2301cf77511709b26f63076538f953e1da77d57e567ba17f"
+    },
+    {
+      "file": "src/lib/billing/trial-policy.ts",
+      "sha": "a88f33d5abfefd705629a0ca8ef739b893dd1908aeec639627916fc815daef02"
+    },
+    {
+      "file": "src/lib/billing/types.ts",
+      "sha": "f99c6f799c5c79a4218a2425fbd1b4ad4565c7f0592d1419b45ae6cb09e5047b"
+    },
+    {
+      "file": "src/lib/bondbuilder/constants.ts",
+      "sha": "f08d9c9133b6a3a937be2591d5ccc3d9520303049e256bfe8adf96d809d95400"
+    },
+    {
+      "file": "src/lib/checkout/access-recovery.ts",
+      "sha": "dc8936f36a3516493cdbdbae5a4b9835e379c71d7d137ea406dd8c56cf636b76"
+    },
+    {
+      "file": "src/lib/checkout/payment-feedback.ts",
+      "sha": "88e3803bd9c586499b24492fabe48491810ed0f437a0343e02027322deabe95f"
+    },
+    {
+      "file": "src/lib/conditioner/constants.ts",
+      "sha": "755f034a482a19d41e25bcfaef244227ea3884f6a410983b63011d8b7cb065bb"
+    },
+    {
+      "file": "src/lib/cookie-consent.ts",
+      "sha": "d5759e5e356628f91ffc58a37cd8ad25720078f60499c5a260bfd4c14094161c"
+    },
+    {
+      "file": "src/lib/customerio-tracking.ts",
+      "sha": "499afed0161ee2fabaae9d89d4b96934bb697258638b01261e91f20b58e0c93a"
+    },
+    {
+      "file": "src/lib/customerio/offer-engagement-client.ts",
+      "sha": "5b4980168838c29f962b5234c81b4d3d25627106233ad43f982967efd811abdf"
+    },
+    {
+      "file": "src/lib/deep-cleansing-shampoo/constants.ts",
+      "sha": "1b332ae25648ec77cd7ad3a30a2fde906630bf265614506a52dc0dfd1381a25f"
+    },
+    {
+      "file": "src/lib/discovery/flag.ts",
+      "sha": "899bfb16057f87e035f0ee3f114dd0c223acf99059d16de000663fa36d26926f"
+    },
+    {
+      "file": "src/lib/discovery/participant.ts",
+      "sha": "2e46130e2b8329f74873be55915632ca658a45c399e7b41e915b1cef053386c1"
+    },
+    {
+      "file": "src/lib/dry-shampoo/constants.ts",
+      "sha": "c2a05fc0941545369abe2cbc996eb9367e7a33227ca9305a9e14479201b5c25f"
+    },
+    {
+      "file": "src/lib/email-deliverability-shared.ts",
+      "sha": "97928eee799f71cb6a2fc3b01f9506e410d31b630bcb29f633f7c45e067a2afa"
+    },
+    {
+      "file": "src/lib/entitlements/access.ts",
+      "sha": "57b8489a23e69849cfeaa1f4a82df9ba7845c8a52cbcd96cea8c19e6a4657083"
+    },
+    {
+      "file": "src/lib/entitlements/entitlements.ts",
+      "sha": "faa22816f34f6a818bbf80bdebac6b627aaa1a12470cef7ae7ead627cb49cf59"
+    },
+    {
+      "file": "src/lib/entitlements/flag.ts",
+      "sha": "77e346855d4d309cb4cf87044f64a7a26478382875e8145ce64d3dd263937214"
+    },
+    {
+      "file": "src/lib/entitlements/index.ts",
+      "sha": "3fd0df6a57b4a211830d17917e166fffe9337e7aeaa4de8cc66f2fad6fb48087"
+    },
+    {
+      "file": "src/lib/freemium/checkout-return.ts",
+      "sha": "70ddd2ca8499e4de2031e885ce76a7124590e68fcbd5f04c5695857dbb3b6f62"
+    },
+    {
+      "file": "src/lib/funnel/client.ts",
+      "sha": "9c3728cffff3810d829afd198c2406e35cf6edb3d4c68dbfc5a1cfa845e100a8"
+    },
+    {
+      "file": "src/lib/funnel/cookie.ts",
+      "sha": "522741b96f60560c02f92a5445428380de02231b2b3724b4143dfc6da14f7b48"
+    },
+    {
+      "file": "src/lib/funnel/flags.ts",
+      "sha": "981bd9436dae7c1fc7cbd8d6dc60e3d6bbaa9dc3bea994e0a33fac525f02528d"
+    },
+    {
+      "file": "src/lib/funnel/journey-kind.ts",
+      "sha": "6088e7e2554b37b0d2da5231dd5361fdeed8cd2ebf1dae5286e107d7543efe88"
+    },
+    {
+      "file": "src/lib/funnel/offer-presentation.ts",
+      "sha": "e38f85f885a9e94b35abef31ed3a73368fb24a8c23bcebe3ba88e5d6602eb4f4"
+    },
+    {
+      "file": "src/lib/funnel/organic-offer-media-experiment.ts",
+      "sha": "8e0882803faa756e7c103c53a16b857a73db8ac9e5f9c261ea013743f7902887"
+    },
+    {
+      "file": "src/lib/funnel/packages.ts",
+      "sha": "66cab34518f29604a37c7a32721f74ca5c930f82a12dcf293db69e3b90a080be"
+    },
+    {
+      "file": "src/lib/funnel/personal-plan-pricing-experiment.ts",
+      "sha": "2df4e53841c87e421524c1cbaaeb0daeed9ac6d2a467cd8ae4da849faf2af516"
+    },
+    {
+      "file": "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+      "sha": "ac0fce778e1594083573a8b4fdb1f8ed5aa00e8d9427338856f8ae22781a0cf4"
+    },
+    {
+      "file": "src/lib/funnel/server.ts",
+      "sha": "775feb24b57ae2c7d71c4dec2f5ef4a8781fefaf355699331718fc44f92380dd"
+    },
+    {
+      "file": "src/lib/gated-preview/example-copy.ts",
+      "sha": "fc1b9a2002676f39a87bd277f3d570ea5ada45e720d03dcb3d816bd1fe513280"
+    },
+    {
+      "file": "src/lib/gated-preview/fixtures/example-products.ts",
+      "sha": "458dc1afd9ba6c1b130412c09931b7b2f8f1455311dc2e4caafad82a102dd06b"
+    },
+    {
+      "file": "src/lib/gated-preview/fixtures/routine-example.ts",
+      "sha": "b5bd102c62e62fa59cf07362dbe7cf2eb80dbbbf8e3006f3b37a06ca79c55cb0"
+    },
+    {
+      "file": "src/lib/gated-preview/gate.ts",
+      "sha": "26cbca953a542d67d0043b9c9bc87673829cf5e6784831681fd1f6b2c8d54d86"
+    },
+    {
+      "file": "src/lib/hair-profile/derived.ts",
+      "sha": "407f9e87c1196cd8347c04aeded6ac2e897fd39e1b249321fff9adea667e9971"
+    },
+    {
+      "file": "src/lib/help/info-tips.ts",
+      "sha": "897afb7bd7bbf9f336fe01b66ad95b8872cf6b7a264313716b88e4c338abfe1e"
+    },
+    {
+      "file": "src/lib/labs/personal-plan-stage3-access.ts",
+      "sha": "b0e8f0e1f760e640b5328a959904f656122ed38a0b00208e03ee344b18bd8730"
+    },
+    {
+      "file": "src/lib/leave-in/constants.ts",
+      "sha": "9ccffc3c5faaa69ab6ed436f7af56aa0fa867ae6e898a71f2bd8a7d78410a7f4"
+    },
+    {
+      "file": "src/lib/mask/constants.ts",
+      "sha": "f557bc2ae0818d96819360ac4c015ac3fa53c580352ba024993465503911b63c"
+    },
+    {
+      "file": "src/lib/meta-pixel.ts",
+      "sha": "56bc9d532d658f0a2d9d8278d01a437b1ec10b9e781ec8ec4476396f3569016c"
+    },
+    {
+      "file": "src/lib/observability/checkout-watchdog.ts",
+      "sha": "d45406e6c6551cecb0c49ffd4c9c3e8c27ddd34defa3d5ece40fdf19aa7fd1d8"
+    },
+    {
+      "file": "src/lib/observability/checkout.ts",
+      "sha": "34c41d9cc134da4df6762251af4ba11dcffd5180f21bffd1bb5e8b5f8484d49d"
+    },
+    {
+      "file": "src/lib/observability/offer-experiment.ts",
+      "sha": "9c0d5f6b8038b8dcbeafa3ac0efd7de126965e50022dbed7d2117e606ea20487"
+    },
+    {
+      "file": "src/lib/observability/payment-client.ts",
+      "sha": "aa15ad9a6be014b430f0ae9aaeb29278879c3fca0b96aa62f177a0ba5daa25f2"
+    },
+    {
+      "file": "src/lib/observability/payment.ts",
+      "sha": "866ebbd656bcd23b9d46efa8804b99ae39cbe7cef4424f64cc86b031e7c9f316"
+    },
+    {
+      "file": "src/lib/observability/personal-plan-stage3.ts",
+      "sha": "50f6391a60dab7ca0bb17af35cefa679abd100b24fefc98257ace6642180f12c"
+    },
+    {
+      "file": "src/lib/observability/scan.ts",
+      "sha": "ef86d2acf76deb1a0862d0118a8d64d6c0dc889f4687b517e490337bce525e1d"
+    },
+    {
+      "file": "src/lib/observability/sentry-client-runtime.ts",
+      "sha": "4d1dd7bdd0b10169040d108b0b1b81dd707bf1c1a530a5b4ce3d0ad0c703ee1c"
+    },
+    {
+      "file": "src/lib/observability/sentry-scrubbing.ts",
+      "sha": "3980e1d096344f18c4288226d63f9577037fc486bb049a67316d8e157b6a8c60"
+    },
+    {
+      "file": "src/lib/oil/constants.ts",
+      "sha": "eada5f14cff4a56fb7b43ad8eb1c6def195a1f27f30bcb98165ca6f418036286"
+    },
+    {
+      "file": "src/lib/oil/purpose.ts",
+      "sha": "39f4444ff6570fadf0fefc267e671c98638d510fa68f8f832fcdf2b58dfe295c"
+    },
+    {
+      "file": "src/lib/onboarding/goal-flow.ts",
+      "sha": "18d310d2dbd9382b54aa068d453d480c8a3d5fdf9d0a0c8d82c064371bf5ccea"
+    },
+    {
+      "file": "src/lib/onboarding/product-options.ts",
+      "sha": "14d2fbd0c363cef13e0e24d2fea5f9bd5960cf8c15d4d16f6493d8068db00273"
+    },
+    {
+      "file": "src/lib/openai-ads/browser.ts",
+      "sha": "30c0a0b871aac8a5bf6f2131d7c48a6643f71dc7c31cca298196bed4ab288ab3"
+    },
+    {
+      "file": "src/lib/paypal/checkout-intents.ts",
+      "sha": "a26c67160595e5d4f620d461d42141009dbe4a4ee26f666d1d11246becb25765"
+    },
+    {
+      "file": "src/lib/paypal/trial-collection-start.ts",
+      "sha": "d22659e8282e0f18b69971b8948ba5afc4b284774aa1d2330f434ed3358513bc"
+    },
+    {
+      "file": "src/lib/peeling/constants.ts",
+      "sha": "856037856c8fecabe9f3b03040f5c80318e77222786bf4f4d47c0dd85d99a4ce"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/errors.ts",
+      "sha": "1e9b1f458e6adb52ee76ecf725c3a6007e91aab6ccb5f89a6dd00232691c93a1"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/moderator-contract.ts",
+      "sha": "d0b5f90ae45555be0e52945a2ff11c510ff8a98acee369eefd26b7c1e7fb8e9c"
+    },
+    {
+      "file": "src/lib/personal-plan-field-test/moderator.ts",
+      "sha": "dba5f364f8111b31ab8e640c3b2aab237ca6e0186f0ba5b3de86e2653d4ca628"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/assessment-copy.ts",
+      "sha": "77c25aa207451e902d4f378e5afab5a6bc32563459599886fc8fe3b4b6772480"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/draft.ts",
+      "sha": "0e7229ba64337d19f8704790819dffdc3a98daca633860db330e21247bd5a60a"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/flow.ts",
+      "sha": "f027cfed94da99a0d1339124e4536c104f62ddcc52468788303b31988956715e"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/hair-assessment.ts",
+      "sha": "c79a891137127fcfa30110a41ddd1744640b7cbe2f76aafa1b4c30544604c3b5"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/index.ts",
+      "sha": "d64ffbed216a9dcbcc0cd73495e2f022d3ba9f8efba674cdbf308da3f969b8be"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/loading-timeline.ts",
+      "sha": "d00955e60c6e01c95c1fb1574b00faae65f0037a9081a6d9c901e00cbf883a04"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/offer-adapter.ts",
+      "sha": "67cce9c3515c8bb2aff287131fda1be77c7c81188732b3fc9e66b1e3afefa6f4"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/option-intensity.ts",
+      "sha": "667b1c30503c0d1dc13a3188a390a59b867b00a800b9946c9a6c365c0ebf5e55"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/persistence.ts",
+      "sha": "9783d531cfaf8ed1b8d91b133b030758fd2bf3c128b5eee10cd4b0e6f5883335"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/prepared-plan.ts",
+      "sha": "9dd47b8ccd7af0a1b2b82c22b1f279bb02f19d025b1fa4ceee3f077ff3fb0ba4"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/primary-concern.ts",
+      "sha": "3f6757b22ae9ba0c1c1951f1813c13c9c3102cfdd8f02c929fdefbbfbde456df"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/profile-summary.ts",
+      "sha": "078c1d0b2c8189233b192484eaf6f94c22c9ab24522c0b3cf4c85338aa484ea1"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/return-artifact-repair.ts",
+      "sha": "00a0862020a5335eae09b49c44f04037b26e4d6dd7f9977547217e7088364ace"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/server-draft-client.ts",
+      "sha": "2f528abcd79e7bbc81a3dde00f1dab5bfa44da3df0324fb14bf14d0c4e445da9"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/types.ts",
+      "sha": "19565073dbad675141bcbbb94a796a73da7727569164a01e0622a4e471736c46"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/bondbuilder.ts",
+      "sha": "eb8708468838e41be8639d82ec5f76dfb31f761a58db92ddf29c65cbfbd2b008"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/conditioner.ts",
+      "sha": "1b7eff19ee348d21259cf6627cfcc9d73fa0d4010b5b225fb15c66640a2ac948"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/deep-cleansing.ts",
+      "sha": "f67e39e7b71ff657d7ce74421dd849b7e12c6dc3a66ed89552b3fab81ffb677c"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/dry-shampoo.ts",
+      "sha": "c3702c9e006d85ac5a92d01f27c548425d45d92e0dbdc51a33977ae671945a95"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/heat-protectant.ts",
+      "sha": "954ddca783f5add18b9474eb1c7a8ed921463b4e1bc185e81f2d440174681e84"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/leave-in.ts",
+      "sha": "60d4bae5d58b444e2dd8d1be4cf89130695aab45bfd878f0da587fceea8c8720"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/mask.ts",
+      "sha": "2174f2693764f805acb6476ca5390261fb9fbf45706f8f9924c620161970a319"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/oil.ts",
+      "sha": "fd6f808c9e9c60610dfcab5af8c29f640eb32c2a7c0faa6e6d51210b8bfa04e2"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/scalp-care.ts",
+      "sha": "6993f65a0719275a8abb017392b167433073987187704b119567f7d5bb5fb606"
+    },
+    {
+      "file": "src/lib/personal-plan/categories/shampoo.ts",
+      "sha": "3935814efcd21647610854dd8f56b040edad26930c8714586ea04ab5f4d9e14b"
+    },
+    {
+      "file": "src/lib/personal-plan/compute-stage1.ts",
+      "sha": "3618dbc5d3e1c035ea60b79dffe6a356ced57c3e19b8d591c512d688936a4bcc"
+    },
+    {
+      "file": "src/lib/personal-plan/decision-presentation.ts",
+      "sha": "59f31da07e7dc79be68ef3f5ebe9bf66073ecdab6168559a25646616475edbf5"
+    },
+    {
+      "file": "src/lib/personal-plan/direct-acceptance/accept.ts",
+      "sha": "4505a95912e96178aa412db827656bf7f74c857228c165eea55558a46a0b8afb"
+    },
+    {
+      "file": "src/lib/personal-plan/direct-acceptance/defaults.ts",
+      "sha": "3609a4a566f8650e8b9f7b4f4c4576eef549901ad08e846a97403a6772eb1cf3"
+    },
+    {
+      "file": "src/lib/personal-plan/enrollment.ts",
+      "sha": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3"
+    },
+    {
+      "file": "src/lib/personal-plan/freemium-enrollment.ts",
+      "sha": "c0f4f0d3f45f97001365ffc1bc492e9ded164d09f6f2ab7708198cd43c217b50"
+    },
+    {
+      "file": "src/lib/personal-plan/frontier-routing-loader.ts",
+      "sha": "3602786d58e9ad2ac489a148b52ada98fb2f0b3f3fff2b915e8bc2ebfd57c135"
+    },
+    {
+      "file": "src/lib/personal-plan/frontier-routing.ts",
+      "sha": "532aaf2f53973c532b1f5269cb81cb74c3f1483ad29c35fa27766b4d7b5489aa"
+    },
+    {
+      "file": "src/lib/personal-plan/input.ts",
+      "sha": "22743980e01019fc9834a5a5f6ad3ef566def3757be3b17a2c5994f11ac95c6f"
+    },
+    {
+      "file": "src/lib/personal-plan/journey-access.ts",
+      "sha": "abf839a86f4c28178223b97d43fed5d579e7317a78f8d8e95ccf29f7fcec2baf"
+    },
+    {
+      "file": "src/lib/personal-plan/keepsake-content.ts",
+      "sha": "8778cb3f4d807e4216d4f644dcbb1438610717abbf124de67c282668acc1cc0b"
+    },
+    {
+      "file": "src/lib/personal-plan/legacy-cutover-eligibility.ts",
+      "sha": "c23956ed706e32be5b522c3391baa9778d12dc21043f4a18e955ac6c2826d319"
+    },
+    {
+      "file": "src/lib/personal-plan/lifecycle/repository.ts",
+      "sha": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84"
+    },
+    {
+      "file": "src/lib/personal-plan/migration-admission.ts",
+      "sha": "c55ef64c0bbe0322694b490f7645f08198854c0bac9791d6321ae92bc9b39140"
+    },
+    {
+      "file": "src/lib/personal-plan/migration-quiz-context.ts",
+      "sha": "c27223753d2fefd96f6150bc2712bd5c09c9666bdac7a9c7c97f8a5485ec9633"
+    },
+    {
+      "file": "src/lib/personal-plan/navigation-access.ts",
+      "sha": "419d254254478cd628089a24064c3afcbec5d68f8e597fa3b5c4f1d2a3f4ca2b"
+    },
+    {
+      "file": "src/lib/personal-plan/needs.ts",
+      "sha": "e79fb582f70dbd85f78c5771f3f32b350c503e365540e2f43e9a8d8541f1e1af"
+    },
+    {
+      "file": "src/lib/personal-plan/oil-heat-context.ts",
+      "sha": "a2f40e58447f39af89129b00911bb53ea3a2e99975f5d955a3b34f85d9665adc"
+    },
+    {
+      "file": "src/lib/personal-plan/persistence/index.ts",
+      "sha": "c8200edcb8b4ad98a218f659b44190227092b047c89ad3c7914e134a7e8eba5b"
+    },
+    {
+      "file": "src/lib/personal-plan/persistence/refinement-status-read.ts",
+      "sha": "b4cbcd8a8efd7460042761436d04f1ce9bcb78fb5156599938f017c78b2be4de"
+    },
+    {
+      "file": "src/lib/personal-plan/persistence/stage1-service.ts",
+      "sha": "aa383e1b9be24658a5b16bbfa817e6a3ff8c5ce2edd59c1701751e604b445438"
+    },
+    {
+      "file": "src/lib/personal-plan/persistence/stage1-supabase.ts",
+      "sha": "c5822578a28f1302335128ddd3d33fc5e70c3434a5d529b3de234654f3097699"
+    },
+    {
+      "file": "src/lib/personal-plan/persistence/stage2-refinement-service.ts",
+      "sha": "9aa1af4895e7ebc9976879f42c8160a8800e1f084e38a8cb923261a156d11aa6"
+    },
+    {
+      "file": "src/lib/personal-plan/persistence/stage2-refinement-supabase.ts",
+      "sha": "9da3baa346175deb49f5c9b9759e281d9accb068fbcf455ce1ea82d27fda9cbc"
+    },
+    {
+      "file": "src/lib/personal-plan/portfolio.ts",
+      "sha": "3ac73a406d694767684066bf9e3caa1c8d9eec7ab1279ddb3e0dc977c0917146"
+    },
+    {
+      "file": "src/lib/personal-plan/product-preview-contract.ts",
+      "sha": "8e75e3be77b6ac7d61a1ea41b7aef280e9210b6fa271deb4d9f5cb57141e6995"
+    },
+    {
+      "file": "src/lib/personal-plan/product-previews.ts",
+      "sha": "7c0b484dcb14e2704c5b67aaca17c1e7b5e735c816ec1279530ce5b04f406f0c"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authorities.ts",
+      "sha": "46722afc73e14c5f10b83fd220bc4e5f82c3de001086881190cd1fb769b91e2b"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/catalog-batching.ts",
+      "sha": "32ec67618c9750051803cc9e3be628bbcbbc475d49beb613d07471e66ae805e1"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "sha": "b9a8edeb5c656644fd877a47c157c305b67e178bd59cf172cdb668f0b12864f0"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/axis-fit.ts",
+      "sha": "10ad21613384fc1316dfb8ef209adee0e25015aae8b0587e14545718ce3a96fb"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/bondbuilder.ts",
+      "sha": "6983634f2da4d3c3fabbafe319f131fc3f58f3b3467b2a0c3ebea3f407beedc5"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+      "sha": "810cae1dbcf14b696e6a8af57ae7ed2df822336210b5ab0b4313519edcec549d"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/deep-cleansing-shampoo.ts",
+      "sha": "755c8081e2a3ebf6b9a2cbd705f8bfb607882da70d963fe6d62a74cb6bb7d2da"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/dry-shampoo.ts",
+      "sha": "94e4793bd0ad3eb15f70edcd0c80a6a00c12c6cc3675ce8e65e6b6797fb0b354"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/heat-protectant.ts",
+      "sha": "ab49ebd3d9abc083fb4253450c6a4bb39a1a539d660d03e6183948dcfeead33c"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/leave-in.ts",
+      "sha": "64cb24981836f777f5f5da176e1f6ebf7b156b87199c83a7956312c27aaf74be"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/mask.ts",
+      "sha": "b46752474c4a905706b66b150ab7caa44abf584794183d577f0f2d528e8e525b"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/oil.ts",
+      "sha": "8fa2b25d1f6d85192074d624b5f90fde8079fd322c27300be42b8b3ec36ac188"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/scalp-care.ts",
+      "sha": "c06b5770e787518e07aa23724ab0f71cf033f7794379eb7409cddad8709a3a95"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/shampoo-spec-target.ts",
+      "sha": "b2dc806b5a32f053398ac380f890708b1f0e956238b5e4f761ba15df6eed86cb"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/categories/shampoo.ts",
+      "sha": "e5384f86847aed2c4692016fc518f4bd3ca1db5e9eb37151b48c0b1814bbbaf0"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/category-decision-schema.ts",
+      "sha": "1d006b79ebce50904ab195fb80f3885e59a34956efdca1a57a95641c6cf6a425"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/contracts.ts",
+      "sha": "300032e978090b8226f72f4880c6cdf310beb95438786b9e966d594bc3416781"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/evaluate.ts",
+      "sha": "878ee44a482141dffe20a944ff9a16a03aff1b91d01ce7ec604fa10782f52eaa"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/shared.ts",
+      "sha": "ea6f846f838c39a8a00e56371d628159c1773141f7c1b65221002b3619abeb16"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/snapshot.ts",
+      "sha": "e155d2e6918a31d86b5275b3b10874f7d202cded2a7d13220723db4025755f65"
+    },
+    {
+      "file": "src/lib/personal-plan/products/authority/supportive-owned-recommendation.ts",
+      "sha": "03ef27cb44d397b40d859d5e5c9ff1667797ad8b5196668453540478dead8790"
+    },
+    {
+      "file": "src/lib/personal-plan/products/bootstrap-recovery.ts",
+      "sha": "94210209a4abf6e5be657a63b2f6461aad242da9628fe18586a56800a7b7002f"
+    },
+    {
+      "file": "src/lib/personal-plan/products/bootstrap-response.ts",
+      "sha": "87ded6dcd5a6984de2cc445a2c5c1b32f84fc84774bbbc12b5df3879a97a023f"
+    },
+    {
+      "file": "src/lib/personal-plan/products/candidate-ranking.ts",
+      "sha": "bdf223c43ea9f15a3c76148692e249be65f0b819f3eee6a0366141a5fdf95bce"
+    },
+    {
+      "file": "src/lib/personal-plan/products/category-capture-queue.ts",
+      "sha": "62a7c515656542a4e4c6f489b50b1e58dc45f8d08dd914634621a105217fb483"
+    },
+    {
+      "file": "src/lib/personal-plan/products/comparison-dimensions.ts",
+      "sha": "1f7ab06b6e33e59512d95d57c8de3b1ed73a165d4a8cdd86a7757f4a42d85a54"
+    },
+    {
+      "file": "src/lib/personal-plan/products/contracts.ts",
+      "sha": "bc4291e12db65a3e220c884344255403e4ea3c3eb19d24fb3c5a4605ae011366"
+    },
+    {
+      "file": "src/lib/personal-plan/products/fit-comparison-schema.ts",
+      "sha": "1c857dcd3399fed695aecc0f2e7f6848eb0b3fec9ecca95de9df4e412606ac5b"
+    },
+    {
+      "file": "src/lib/personal-plan/products/fit-comparison.ts",
+      "sha": "9d805c246fed2e938937d09863b084f0ab995ed4f5e382dded4c703e23e9c3cb"
+    },
+    {
+      "file": "src/lib/personal-plan/products/gateway.ts",
+      "sha": "bff434c8d3a4c80124987b3326ff5df926c3d9b11cad6defc48ac869690b1f59"
+    },
+    {
+      "file": "src/lib/personal-plan/products/http-gateway.ts",
+      "sha": "2e5ea138aadb944e6aa8e9b7a2055ce5dfeeb0dd009016e943009f27185fcbff"
+    },
+    {
+      "file": "src/lib/personal-plan/products/oil-review-group.ts",
+      "sha": "cf1522aea294451e6dc548b61dd508b9aad873999607fc8cfbea06e86444e07a"
+    },
+    {
+      "file": "src/lib/personal-plan/products/pending-recovery.ts",
+      "sha": "efa157e8b69c06c17026af4d0040f3ba37e658f15f9c3107202a43ad0b56ddf0"
+    },
+    {
+      "file": "src/lib/personal-plan/products/portfolio.ts",
+      "sha": "def1694650494cb397b4b8cee4ab828efda3b2a9f3fbab8b1613902d36cb7ac3"
+    },
+    {
+      "file": "src/lib/personal-plan/products/product-load-resolution.ts",
+      "sha": "871f29da53673db8995f477cc61b8e13a2497935d24544d2357fbf4dd09d6059"
+    },
+    {
+      "file": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "sha": "ff627d68d5172015d33b6c049a8611a2155e4d79fff5bab4d7b88112379c161a"
+    },
+    {
+      "file": "src/lib/personal-plan/products/recovery-desired-state.ts",
+      "sha": "556da32412ee4b65411600a0d7c87e8d556845cac2b5721a5f5c0b870937ff3b"
+    },
+    {
+      "file": "src/lib/personal-plan/products/review-draft.ts",
+      "sha": "44159fa33856009b9d352619191eac20c8021be29ab1c1772c5810bb6aa52ace"
+    },
+    {
+      "file": "src/lib/personal-plan/products/stage2-entry-adapter.ts",
+      "sha": "db84e42db42b11bb2031b6f75eb7b918f9034d49f0f3b7c3d6d0d42e3dc48e6a"
+    },
+    {
+      "file": "src/lib/personal-plan/products/stage3-analytics.ts",
+      "sha": "ed73efa494f958a8963e17f043b9892e8050dc00760c717aaa6eb41f08e700df"
+    },
+    {
+      "file": "src/lib/personal-plan/products/stage3-bootstrap-review-contract.ts",
+      "sha": "7a72ade9c72e4eb533c15708d1fa5093ff25e687978406804fb5cf59e96aeda2"
+    },
+    {
+      "file": "src/lib/personal-plan/products/state-machine.ts",
+      "sha": "9f6180af77fcdb0decb53daa806d9f1e5330e63aa98839b2167637030ea6f6f3"
+    },
+    {
+      "file": "src/lib/personal-plan/reasons.ts",
+      "sha": "c631f3d70952947e3acf5cc0a5b93c394f8f57ad2ca1be8fde2c94b65008d3f4"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/answer-provenance.ts",
+      "sha": "40602c54408d6698ae801265981ece7b021f35212fba6a8eeb7f6c19e6f80a9e"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/assumed-defaults.ts",
+      "sha": "cb345e2890e715e51055fea93f7f5867dfc46cb0f2e13be5ad7db0ff2b830ff0"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/gateway.ts",
+      "sha": "0cf71dd3e743200625c79818846e1a42a2a5d211b3ae76e3ed3ab8b4673f2aa4"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/heat-events.ts",
+      "sha": "310d834790d9b61a1e5de03be6371ee3e92ab927a902bf3b8afb2f3f567f5e7c"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/http-gateway.ts",
+      "sha": "c36add39ffde49ea10821ecf75143eed0e96dae76d29e4ea8f6bf69458d4ee33"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/module-scope.ts",
+      "sha": "57a55e98d7c0297ebe4ae910300d640ad59f0beb31adc7f5ac295b48fffa550c"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/module-status.ts",
+      "sha": "0d5e6b0d50555c348beb5a56c38134fb5da4627de4fcd6f95674b8f8c3e1b82e"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/module1-stage3-resume.ts",
+      "sha": "92135680ac8e368f6f67ed1a7fcee6ceea5c1616add5ccb061aca8bd5305361e"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/production-persistence-gateway.ts",
+      "sha": "04c5180fdb3d1845f448cd441ba3f1b48c28ccc4cff1a788ea08e31b8fe34d69"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/question-path.ts",
+      "sha": "cea18c0b65de59d4b2e2c1b502c81d4c2f1886e564235041334932b2e8be56c1"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/refinement-status-loader.ts",
+      "sha": "eb62f74386d63437e718550e19fdf2b8471728a93f64a967090f2c0fb6712891"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+      "sha": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/session.ts",
+      "sha": "2988e410830d68e04a380934fd7f3ac51236901e10c91d629e1cf6a2fcac0712"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/stage1-adapter.ts",
+      "sha": "e894e1b2a8a898f31157665af548cc145b897f58eebe2664b0fd1d6efd6f458c"
+    },
+    {
+      "file": "src/lib/personal-plan/refinement/types.ts",
+      "sha": "9d19d1249ac0ee2f43fbcaa8ff03417df5afd143f3fb6e9da26be0618db24f04"
+    },
+    {
+      "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "sha": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034"
+    },
+    {
+      "file": "src/lib/personal-plan/routine-proposal-stager.ts",
+      "sha": "d3c010b03572ef4a593484da0fb7f3463b2c1bd4d78e5bd6c8b41be42e57408b"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/analytics.ts",
+      "sha": "1e07e04747ebb3e8c52855ef245c580916b56d54c68a31ad501d08a26c59f45b"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/cadence-authority.ts",
+      "sha": "47963bd799293399568ebefed0eae54de58ff57c966fc6c69302200a689d558f"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/cadence.ts",
+      "sha": "0bdcd8ba171ba21dff3570de738996adc65a415b982025a0cd0e7dfec1a3fa0c"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/canonicalize.ts",
+      "sha": "e4121a385e6c86c957143147994132d9ec1695de1cc7d51d3801d0ad51b451ae"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/commerce.ts",
+      "sha": "54887c47fed101a272b7b61bf8b9c36aad54dba3723f77476316a6cfd71bf0ed"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/contracts.ts",
+      "sha": "9ab203657876cd2b7834690a44a14dd73cb96679a0f601a7f48136c38ef781a6"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/diff.ts",
+      "sha": "b893394ec965315d96689b1e56d097ae5651195d95d47138e5bbd2d09c470d59"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/editor.ts",
+      "sha": "456a2db8fe593d486457eba1c1297f52156fca89db465a96274181921894ddff"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/labels.ts",
+      "sha": "de38fea05833306169e902cbe73424bc78e0ebfc741c484800f0b37fe667cb90"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/load-view.ts",
+      "sha": "1ec86bbde0f102aedfdf39213cb32234f7dec5ae7d8f110da5db5ec7165d08b7"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/plan-updated-signal.ts",
+      "sha": "18ab84ae43660083cb1c56abb07c32ec7e63b7cf2a8b8c6b3c2ff18d790f5f00"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+      "sha": "2cb625b1bc8232d48395bcb205e14cd7fa7302549c2a7f5fe19f141a1b8954d6"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/product-detail-service.ts",
+      "sha": "b8ffa0583ff442b79b1ea7f60cc1e02b8ada43b1693de2b8e752d66eb1c34090"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/repository.ts",
+      "sha": "5573df42d2948ac531c040766336627b60621743519baf8c4291f36640facb25"
+    },
+    {
+      "file": "src/lib/personal-plan/stage-navigation-intent.ts",
+      "sha": "5b0b5a4db6ecba41b55aa6bb977dfda70192bda83453339ba0369034e243e4c9"
+    },
+    {
+      "file": "src/lib/personal-plan/stage5-access.ts",
+      "sha": "b9e58bda03ed7f9c0f01b5ad546b807abfc9abc42db13026aa1248b474ed884b"
+    },
+    {
+      "file": "src/lib/personal-plan/transition-performance.ts",
+      "sha": "fc737132f2d7a77b361f4690789bdd4dcb36364a4dcd5d0a4344527c9cdf8b18"
+    },
+    {
+      "file": "src/lib/personal-plan/types.ts",
+      "sha": "40297a7f5b93d2ae223603fe818111f8a546c21299579d4eaf1da3d6089e2389"
+    },
+    {
+      "file": "src/lib/premium-sheet/checkout-context-storage.ts",
+      "sha": "22bd345bd42c30a584952702180a92ce26d0d0da3476dc57d74c14ad1f45c0b9"
+    },
+    {
+      "file": "src/lib/premium-sheet/context.ts",
+      "sha": "6b42505f8b3e5ad10411d7586f6133b1a1fefba238109948bc7f73622a37a6ae"
+    },
+    {
+      "file": "src/lib/premium-sheet/dismiss-label.ts",
+      "sha": "40ea59af2d5c6fce9b03b8ceb5c954e7cd59aeda38115b50704b91d87bea2bb8"
+    },
+    {
+      "file": "src/lib/premium-sheet/ordered-benefits.ts",
+      "sha": "ca43fea17931ebfab41a86a119f18673d8e1b65396f9c799df7dec0ebb4c164a"
+    },
+    {
+      "file": "src/lib/premium-sheet/pricing.ts",
+      "sha": "30de9f064cb467c1ed61832b3ea7beffe855fd1703377f80c04e104957f60432"
+    },
+    {
+      "file": "src/lib/premium-sheet/purchase-copy.ts",
+      "sha": "9cdd10c706fa2d21b5fb784f2659b8465dd60ba8510d150f565030ef98d7fff7"
+    },
+    {
+      "file": "src/lib/premium-sheet/purchase-poll.ts",
+      "sha": "88bb28dae91fae7417d1b1f4c7ab49459915e2c2c31a4a9dac16a9890541a4aa"
+    },
+    {
+      "file": "src/lib/premium-sheet/purchase-reference.ts",
+      "sha": "f05e82869368e1c06dba11e1918f0291e896110c4723781831069ecdd1066ce4"
+    },
+    {
+      "file": "src/lib/premium-sheet/purchase-state.ts",
+      "sha": "19f77813d0c7e261f02ca3321ab772504dca91a011f55ff54637cf49c707b43e"
+    },
+    {
+      "file": "src/lib/product-identity/brand-resolution.ts",
+      "sha": "5182615a8419b477e73b0a00e05e78bb9436d8b7ad9c3c7f2d35850f65e48b8a"
+    },
+    {
+      "file": "src/lib/product-identity/index.ts",
+      "sha": "fd7c23ab66221159b693d8f3c076ad1169160e1d2ed1cd1de7b923d1e3a82d46"
+    },
+    {
+      "file": "src/lib/product-identity/normalize.ts",
+      "sha": "817e15aed0f145308fb7e971ac9ab6171ddb0d3f0b2c043e9e06377b765d69db"
+    },
+    {
+      "file": "src/lib/product-intake/errors.ts",
+      "sha": "71c735c4bb3c303cff2e914b17265bc70b30a1d710c4883363d0c1eed958c6e9"
+    },
+    {
+      "file": "src/lib/product-intake/product-matching.ts",
+      "sha": "216efda432f30a2bfebcc6a1f6cf3a3557605e61d3ae733b743c898b74294f29"
+    },
+    {
+      "file": "src/lib/product-intake/repository-types.ts",
+      "sha": "c382335f44a76883829036a831c7c3611e86a9decfee0f741297737e6370ba67"
+    },
+    {
+      "file": "src/lib/product-intake/schemas.ts",
+      "sha": "4677e315cf32dbcdc4af1b7b0e55ea601979d1cfb7e9cf6a80177fbc1fe43eba"
+    },
+    {
+      "file": "src/lib/product-intake/submissions.ts",
+      "sha": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3"
+    },
+    {
+      "file": "src/lib/product-intake/types.ts",
+      "sha": "3d21c662b45fb8f12c8b59b763303dc371e7dc531e6985ead4fbb479a7c9f996"
+    },
+    {
+      "file": "src/lib/product-intake/upload-paths.ts",
+      "sha": "a5a096b823218cf583b96075710badf8744f701d833212828de6e266929fdd44"
+    },
+    {
+      "file": "src/lib/product-specs/constants.ts",
+      "sha": "3c9c5637b689901f7995aa04da9e41bc34d34b91fc85e474489e02cd6e62613d"
+    },
+    {
+      "file": "src/lib/product-usage/routine-identity.ts",
+      "sha": "6883a04596d1376d1c6e4539dc77beebaae908fcebde0e2404742869d6945045"
+    },
+    {
+      "file": "src/lib/product-usage/shampoo-fallback.ts",
+      "sha": "2480aea9af037a2217ffd5a6e3d3014a7d42e01c3a760a383680ee30a5ba3c07"
+    },
+    {
+      "file": "src/lib/profile/brush-type.ts",
+      "sha": "8fb3d151addf0d2a0a7cfa0dd4565f1d1792e3886606e33f7fa5d3407ed2529b"
+    },
+    {
+      "file": "src/lib/profile/chemical-treatment.ts",
+      "sha": "b50c624c6955692ace304835c40632ce4176e5fda20603ec9170a9394ada9382"
+    },
+    {
+      "file": "src/lib/profile/signal-derivations.ts",
+      "sha": "2e004b739a17b20065c86ca12968734cf36c5f60514f2991ad6866e7337c3cc5"
+    },
+    {
+      "file": "src/lib/quiz/completion.ts",
+      "sha": "7915034821dac7078888f084451ac86984007a736cbce379673585ba6a169b33"
+    },
+    {
+      "file": "src/lib/quiz/diagnostic-input.ts",
+      "sha": "964652bf5d3e3d8cd9bc233b18977e59e3cf7264a97ec7de5d5c4ac6cea7149e"
+    },
+    {
+      "file": "src/lib/quiz/guided-story-copy.ts",
+      "sha": "e26caaed736a258d4f9946d38d7c52d18f625095f7cc5006f88c5bded86633ed"
+    },
+    {
+      "file": "src/lib/quiz/guided-story-priorities.ts",
+      "sha": "5c57a5bf4914419be68c61498e8499ad9cbc4ea658a8c201c7516d32d7c14ad3"
+    },
+    {
+      "file": "src/lib/quiz/guided-story-products.ts",
+      "sha": "6a7ed616b6beff00fdc5d456acf4f9fa3682fa7f38783305e5585a4cd6b11c7b"
+    },
+    {
+      "file": "src/lib/quiz/hair-portrait-assets.ts",
+      "sha": "668a06934525cfccf0a134a49255792f239b4ded7186d01a0bd03e505483d960"
+    },
+    {
+      "file": "src/lib/quiz/lead-capture-mode.ts",
+      "sha": "b7bc45bd5f06b200b15e746bd2619890e2e07735b0414c57fe07734057455c78"
+    },
+    {
+      "file": "src/lib/quiz/link-to-profile.ts",
+      "sha": "5813a8c45eb51d5b3e0e2f8b712d1c2e8e2169cd878c09647da2d7914da3132a"
+    },
+    {
+      "file": "src/lib/quiz/need-lane.ts",
+      "sha": "01e69e7f79db4d5919a629f2a568c140bdb1a17e05aaf88cbeec387123251344"
+    },
+    {
+      "file": "src/lib/quiz/normalization.ts",
+      "sha": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239"
+    },
+    {
+      "file": "src/lib/quiz/offer-preview-products.ts",
+      "sha": "e9b527dc1c8e30a8905bd93d7e8bfbc3e6e0aeff3a6a0001abb4ee826f17b6d1"
+    },
+    {
+      "file": "src/lib/quiz/offer-preview-types.ts",
+      "sha": "d96d432053eb464859bbecb7b4c10a62e32fc75d93728dd9b343939bce4d49b4"
+    },
+    {
+      "file": "src/lib/quiz/portrait-config.ts",
+      "sha": "942805bc7427df2587da558526a5fb5db8d00d002e7b7de742f66ca6a68b2fba"
+    },
+    {
+      "file": "src/lib/quiz/primary-concern.ts",
+      "sha": "fc33b4465dec57bcc2797ca11ab7d521280189c97495ba8c30b41dd4671207d1"
+    },
+    {
+      "file": "src/lib/quiz/questions.ts",
+      "sha": "49d978c9ad9f02c716213e81fdf0abe392ed9e8803f8dbea69c9e07576acf683"
+    },
+    {
+      "file": "src/lib/quiz/screen-order.ts",
+      "sha": "78bc469add4d51a92b8b9e19b2d9376553453b5595c9ac1661e037c60630e204"
+    },
+    {
+      "file": "src/lib/quiz/types.ts",
+      "sha": "11ec81f1d6f0e5480132ec892301a2437852c2fc80bf95c22abf2207e6b1fce2"
+    },
+    {
+      "file": "src/lib/rate-limit.ts",
+      "sha": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08"
+    },
+    {
+      "file": "src/lib/reactivation/return-destination.ts",
+      "sha": "48b88020e14c0e29db0744e616ce9a94d4399d8e52952c2eed95233d307807ab"
+    },
+    {
+      "file": "src/lib/recommendation-engine/adapters/from-persistence.ts",
+      "sha": "a65f81e45a0cc1576b64f4f20d7806cfe0fcfaddf2ac21df49459157ff34bb1e"
+    },
+    {
+      "file": "src/lib/recommendation-engine/assessments/care-needs.ts",
+      "sha": "dea3fdd77a5c6fa68d0300bb2ad1beac729567c48c381643e00da3fa685e5461"
+    },
+    {
+      "file": "src/lib/recommendation-engine/assessments/damage.ts",
+      "sha": "b366d5c32e34329004b22db0a054beaec5eb6b1de2b3ee67b8eb5529568db5a7"
+    },
+    {
+      "file": "src/lib/recommendation-engine/assessments/reset.ts",
+      "sha": "f1388c2f5778cb3406538bd5c63a42cb2113c2c2b9c2ffe494e847d465d159fe"
+    },
+    {
+      "file": "src/lib/recommendation-engine/care-balance/evaluators.ts",
+      "sha": "a9dba468514a551ce2e5110b879dfdc1d293c608740be4b555428fd172521543"
+    },
+    {
+      "file": "src/lib/recommendation-engine/care-balance/frequency-targets.ts",
+      "sha": "8a7cf237fb19a1a74a02d53d7c52dcc9b2160732eee03c8b67d665d02b78f500"
+    },
+    {
+      "file": "src/lib/recommendation-engine/care-balance/index.ts",
+      "sha": "17ccdaa839e57c0398058f4ceede06aa7c382bb5492b34ecc978d8c931e7d888"
+    },
+    {
+      "file": "src/lib/recommendation-engine/care-balance/shared.ts",
+      "sha": "d51d7b1a9a084d40e268ad34c9ead7e1a68004c3e67d23b0d2afb9cdf8988e02"
+    },
+    {
+      "file": "src/lib/recommendation-engine/categories/bondbuilder.ts",
+      "sha": "7ad96f8fce6e1a41315be795544e3b38ebc9d80e83241321ebe13087591db4c1"
+    },
+    {
+      "file": "src/lib/recommendation-engine/categories/conditioner.ts",
+      "sha": "46f4d93ac19d2c6d51123295a220f2e17d6ec609789776b1e54993a96de94080"
+    },
+    {
+      "file": "src/lib/recommendation-engine/categories/deep-cleansing-shampoo.ts",
+      "sha": "28f5280a72feecefa278486c06122558a9d3459c0536c9503a01f4aa2b23664b"
+    },
+    {
+      "file": "src/lib/recommendation-engine/categories/dry-shampoo.ts",
+      "sha": "ad614bf351635e4b9f35a4c546e049f9da7d16ee9633b0616df211c002a23c84"
+    },
+    {
+      "file": "src/lib/recommendation-engine/categories/index.ts",
+      "sha": "57d08a87b2c02e47c479d521bd28ae907cda6ce0534112858a7c4d7e14e2de52"
+    },
+    {
+      "file": "src/lib/recommendation-engine/categories/leave-in.ts",
+      "sha": "2f152a32b7eecf621a2383d1439ba3e5f9b05ce9fee15e52d038af7e80d91124"
+    },
+    {
+      "file": "src/lib/recommendation-engine/categories/mask.ts",
+      "sha": "93a7d445a9350f22df4d6c6cb90e85cf2766f1783d753b01fd42f4d4ea033438"
+    },
+    {
+      "file": "src/lib/recommendation-engine/categories/oil.ts",
+      "sha": "04389837f1097d92828c3a6d8546c9ee03277639d73e850a6defbb33b54f3265"
+    },
+    {
+      "file": "src/lib/recommendation-engine/categories/peeling.ts",
+      "sha": "85440bd466fce120a88ae752add7019c5ac57ae32d72a8843470639d3b9a9b9a"
+    },
+    {
+      "file": "src/lib/recommendation-engine/categories/shampoo.ts",
+      "sha": "804256278115d6dd2e2b14bc1b732e2c8a362e04c3f8959513d4bda04767771e"
+    },
+    {
+      "file": "src/lib/recommendation-engine/categories/shared.ts",
+      "sha": "d9c09d91541fa50a1fd22cbb132060ff65fa967264c154af6b3ab3b8a5e63c8b"
+    },
+    {
+      "file": "src/lib/recommendation-engine/contracts.ts",
+      "sha": "c057d4aa0c25c44bdb60432a11b1cda1521a0d59d533826f6383dfd639c4d30e"
+    },
+    {
+      "file": "src/lib/recommendation-engine/effective-care-context.ts",
+      "sha": "336150087c020583754bab880500a60c3526c79cfc9ba9810560fe0ee6796d88"
+    },
+    {
+      "file": "src/lib/recommendation-engine/normalize.ts",
+      "sha": "c4fe06f4325887972a8b2fee1f12680930d43eeef48a45c0c7de2aad5ba4e0a7"
+    },
+    {
+      "file": "src/lib/recommendation-engine/planner/intervention.ts",
+      "sha": "3ba33391b65904d7ba346ee96f701a82e6d44c1d70c5b9f1a0b24695ec899710"
+    },
+    {
+      "file": "src/lib/recommendation-engine/request-context.ts",
+      "sha": "8e4713f228bef9b1091e5a514a914b645a4f6d76d218deaef491fbdaf3a1045f"
+    },
+    {
+      "file": "src/lib/recommendation-engine/runtime.ts",
+      "sha": "31edfca374f832a31e715583a1b49f8faddad002e2ee70a44c4512bda6aeea41"
+    },
+    {
+      "file": "src/lib/recommendation-engine/shampoo-cadence.ts",
+      "sha": "5dff9e6d423e674e7e232bdfeece6e344dc6aa5fd64c158fa72ce8a7f5c317c9"
+    },
+    {
+      "file": "src/lib/recommendation-engine/types.ts",
+      "sha": "4d945a6198871e362ead2b1f575b3907ccce8e61b804e2add40fbc3de674a648"
+    },
+    {
+      "file": "src/lib/recommendation-engine/utils/levels.ts",
+      "sha": "48eb656d8cb96bcf98b858fb841fe525e296402ab812bb3a024927615c3f1371"
+    },
+    {
+      "file": "src/lib/routines/chat-triggers.ts",
+      "sha": "3d583c478788434e3911352a373ac6195532265ec3d138d0cf817fdc08f344e0"
+    },
+    {
+      "file": "src/lib/routines/personal-plan/application/contracts.ts",
+      "sha": "752971bf0c26f18e8ef4ba9ec282b2652a96c25a20206d5467ea8f3751aecf68"
+    },
+    {
+      "file": "src/lib/routines/types.ts",
+      "sha": "994db28dbd5cfd16065776e5ac966a52402e14a8d89b11959b14a4b4e88ae81e"
+    },
+    {
+      "file": "src/lib/scan/catalog-eligibility.ts",
+      "sha": "0bcee33a0110e82bf580ac2a978866670829a91a592c1261fe9242ec6500741d"
+    },
+    {
+      "file": "src/lib/scan/enrichment/types.ts",
+      "sha": "088127332ce2cb21ee1ac89a08d51fa6de0a2380024c8124409bbd1f354957ed"
+    },
+    {
+      "file": "src/lib/scan/pending-submission.ts",
+      "sha": "849cbb78f7fd710238aa91168c5ca67383fc825025c112ae779731b4d6f486fa"
+    },
+    {
+      "file": "src/lib/scan/profile-context.ts",
+      "sha": "897769a982848d5b5ebb27b47502190be45a26fb85dc6c94a10f72e820774aea"
+    },
+    {
+      "file": "src/lib/scan/result-presentation.ts",
+      "sha": "98021046f65d15836dcd345685aee3ef337fc833d48da756895bbc496a4b1be6"
+    },
+    {
+      "file": "src/lib/scan/route.ts",
+      "sha": "fe5d062ff939962807c453c1feaabaf6bde3cd4e76dac9b9831e9316b3efadb3"
+    },
+    {
+      "file": "src/lib/scan/saved-state.ts",
+      "sha": "873535b9d443df33d5821e1430ffc245f1f157e8a2be8220a264adcd6ca4674c"
+    },
+    {
+      "file": "src/lib/scan/scanner-context-supabase.ts",
+      "sha": "895b2afc2c1c3893601715da2236ae7b8e903292369e67203d159d2c6a0ab539"
+    },
+    {
+      "file": "src/lib/scan/scanner-context.ts",
+      "sha": "f77e2a27db12dc68cc8b4deab30c25c45e12796053b32bf43fd71f7d4b7e73ce"
+    },
+    {
+      "file": "src/lib/scan/types.ts",
+      "sha": "dce26c3380df9386a8296b52c79cb702c47fc9a6ab49fb4f04ea1a250d2e2c02"
+    },
+    {
+      "file": "src/lib/scan/use-latest-request.ts",
+      "sha": "ff7431bbce6bf021e7ebbd6a4fe802740cb94cf926d25494a82aa97c6113e268"
+    },
+    {
+      "file": "src/lib/shampoo/constants.ts",
+      "sha": "9959a578b18747184e176ff52756cae5950bff1a723a027d8e1ac0fd3a7b7ca6"
+    },
+    {
+      "file": "src/lib/stripe/intervals.ts",
+      "sha": "c6bc97592febb4666b6e9ae9f85e5ce3ffbcaf8bc9cfeaef5db0bde41c3d568a"
+    },
+    {
+      "file": "src/lib/stripe/offer-client-loader.ts",
+      "sha": "a9a093ef1091516a68e849d2d0e2e903dabdb01f35f920894029d0fcf3a1d9c2"
+    },
+    {
+      "file": "src/lib/stripe/prepared-checkout-credential.ts",
+      "sha": "894e6b63de98e2d307cdebf89c49a53a4a2e15e161f0d51b52558e24935b1053"
+    },
+    {
+      "file": "src/lib/stripe/pricing-plans.ts",
+      "sha": "5852bc9d1f9da7d76a0620df8f2e329cb641f044018804ff832140249bb4b90b"
+    },
+    {
+      "file": "src/lib/supabase/admin.ts",
+      "sha": "bd6ec1538d65a01f82b3f55b2839f0ac347d617c6de29d13cea4b0eff737386a"
+    },
+    {
+      "file": "src/lib/supabase/middleware.ts",
+      "sha": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7"
+    },
+    {
+      "file": "src/lib/supabase/server.ts",
+      "sha": "ab2e4b8ccc17f8fb4a43d2a755a563a8549f2ea02feedb9df44ee2112501aa9a"
+    },
+    {
+      "file": "src/lib/trustpilot-reviews.ts",
+      "sha": "c286b29db2ea115a574d2516488756d389ae4c115751669487464d1bfea41270"
+    },
+    {
+      "file": "src/lib/types.ts",
+      "sha": "80ce0439bebeb683290f086cc1bab20f3d03a29c577e750ceaa8f73d48243d93"
+    },
+    {
+      "file": "src/lib/ui/modal-layer-manager.ts",
+      "sha": "91279f8beb6559de02df719111dbaf523985f20f28dfc228ae4001e8965cf7c2"
+    },
+    {
+      "file": "src/lib/utils.ts",
+      "sha": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d"
+    },
+    {
+      "file": "src/lib/vocabulary/concerns-goals.ts",
+      "sha": "f588c309f78685855551f8270f8dec4fc5e046d5c1165d734a63f168315f28e8"
+    },
+    {
+      "file": "src/lib/vocabulary/errors.ts",
+      "sha": "79aa0a1fe9ddc787d7f487df6d91d608a2c8d2cb9ea2ac4f06411683395b68aa"
+    },
+    {
+      "file": "src/lib/vocabulary/frequencies.ts",
+      "sha": "d79bb3584473a8f6541feecff58a40633736f9376981ff190b645114dc0eb3a9"
+    },
+    {
+      "file": "src/lib/vocabulary/hair-length.ts",
+      "sha": "3dd675892cb15b6021d7365203bdc225e86805bfb15beec305cc90e83d74c9e4"
+    },
+    {
+      "file": "src/lib/vocabulary/hair-types.ts",
+      "sha": "36c517006e2cf2717a7f9527fe0484c7c117ba7caa8b7ed7008445950cd79b72"
+    },
+    {
+      "file": "src/lib/vocabulary/index.ts",
+      "sha": "5e011545b7a6a94b96720af7b225dc12c025dbf0509f8b20cdd352bbcfa3109b"
+    },
+    {
+      "file": "src/lib/vocabulary/onboarding-care.ts",
+      "sha": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547"
+    },
+    {
+      "file": "src/lib/vocabulary/onboarding-goals.ts",
+      "sha": "71ead0b61b4aeffeb47b53c63acb6fe84acae797e18ea774fa25104854c8a098"
+    },
+    {
+      "file": "src/lib/vocabulary/profile-labels.ts",
+      "sha": "e0e8d5df461dc19c3e0eb1a85a8dbac8c5f32316c12cd90352bcec506ac5e466"
+    },
+    {
+      "file": "src/lib/vocabulary/source-labels.ts",
+      "sha": "b4cce749ac8d49b3f0dd3a9a2e1e6e9cea64f6ae76858bc161d7f173b22475f1"
+    },
+    {
+      "file": "src/providers/toast-provider.tsx",
+      "sha": "62dbc9a438910f2da6882dc8e9cf25d196d50099041b19d9c8a6e54e9a07a42e"
+    },
+    {
+      "file": "supabase/migrations/20260915202841_personal_plan_trial_source.sql",
+      "sha": "e58ce88db4ae3cb707b4d9a34808347753d46570036f8cf0ebeff8c0c32f421b"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    }
+  ]
+}

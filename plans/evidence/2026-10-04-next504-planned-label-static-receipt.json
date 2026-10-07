@@ -1,0 +1,34 @@
+{
+  "counts": {
+    "before": 69,
+    "after": 68,
+    "targetFileBefore": 9,
+    "targetFileAfter": 8,
+    "cutDeclarations": 1,
+    "changedRetainedCallbacks": 3,
+    "removedObsoleteAssertions": 4
+  },
+  "repositoryWrites": 0,
+  "nativeOrMutationRuns": 0,
+  "allSnapshotsParsed": true,
+  "sourceGuards": 29,
+  "artifacts": {
+    "/tmp/test-audit-routine-planned-label-retirement-manifest.json": "202ca66d400c4b04342d12e17cad193b7d06feec7730c97765174061b1959dc7",
+    "/tmp/test-audit-routine-planned-label-retirement-edit.cjs": "febd4b9fcf881f574e219277a3cc562f0cc28b0347ee2287b925e70b90fccb29",
+    "/tmp/test-audit-routine-planned-label-retirement-complete.diff": "0d7afde9b6838179ed9e4c9fdb5103f96a25e6d055bbe740cd88319ce597c56b",
+    "/tmp/test-audit-routine-planned-label-retirement-closure.json": "2f958eb97a98dc536c4ef743525c3a5561967d5f32268453ac8ccc7ba70a7270",
+    "/tmp/test-audit-routine-planned-label-retirement-plan.md": "d320995e1ecfce4789ab606a9518fef2ffd1625c1ff14f397f0a632ab32bba64"
+  },
+  "targets": [
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "before": "79bb2e6629cf6e168f0112fa3f2e95bf887b897b118f3fad2b625a172128ea1a",
+      "after": "266b1e8ca8c8fc96aed8dadad605b8b212f6b38f5042c908c28aeb317894430d"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+      "before": "4c677c8272a0b0db20ae25d2a7eab4abca805dcd6736ef2652f0fbfa48a382a6",
+      "after": "2cb625b1bc8232d48395bcb205e14cd7fa7302549c2a7f5fe19f141a1b8954d6"
+    }
+  ]
+}

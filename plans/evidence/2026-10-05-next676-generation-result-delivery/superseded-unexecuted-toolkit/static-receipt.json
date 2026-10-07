@@ -1,0 +1,405 @@
+{
+  "status": "STATIC_PREPARATION_PASS_RUNTIME_DIAGNOSTIC_BLOCKED",
+  "pinsSHA256": "04fa5cb7e922f757827213f81d5eda7421e159408c146a11da8ea5e53a669a50",
+  "checks": [
+    {
+      "name": "edit-check",
+      "exitCode": 0,
+      "log": "/tmp/test-audit-generation157-tools-xwq0stb7/edit-check.txt",
+      "sha256": "660fbbea616e4053f48209dd9871caf178a4c8f6f22dce5d9097265014f38c85",
+      "result": {
+        "mode": "check",
+        "phase": "before",
+        "counts": {
+          "before": 157,
+          "transfer": 157,
+          "cut": 150
+        },
+        "unrelatedCallbacks": 139,
+        "unchangedRetainedCallbacks": 143,
+        "parsedPhaseFiles": 81,
+        "sourceControlsParsed": 18,
+        "readsetGuards": 280,
+        "dependencyFiles": 5022,
+        "repositoryWrites": 0,
+        "childrenStarted": 0
+      },
+      "preload": [
+        {
+          "staticReadOnlyEnforced": true,
+          "attemptedWrites": 0,
+          "attemptedChildren": 0
+        },
+        {
+          "attemptedOwnerImports": 0,
+          "attemptedNetworkCalls": 0
+        }
+      ]
+    },
+    {
+      "name": "controls-check",
+      "exitCode": 0,
+      "log": "/tmp/test-audit-generation157-tools-xwq0stb7/controls-check.txt",
+      "sha256": "076ab78fd132a926f211b65d0e1111609cc622e3dc45625c25d6a85fba37f982",
+      "result": {
+        "mode": "check",
+        "phase": "before",
+        "controls": 18,
+        "tsMutantsParsed": 18,
+        "sqlByteRecipes": 0,
+        "allControlsPrepared": true,
+        "phaseOracles": "exact assertion startLine and text in transfer/cut",
+        "selectedTestCount": 1,
+        "repositoryWrites": 0,
+        "runtimeRuns": 0,
+        "childrenStarted": 0
+      },
+      "preload": [
+        {
+          "staticReadOnlyEnforced": true,
+          "attemptedWrites": 0,
+          "attemptedChildren": 0
+        },
+        {
+          "attemptedOwnerImports": 0,
+          "attemptedNetworkCalls": 0
+        }
+      ]
+    },
+    {
+      "name": "proof-attestation",
+      "exitCode": 0,
+      "log": "/tmp/test-audit-generation157-tools-xwq0stb7/proof-attestation.txt",
+      "sha256": "925cc020e1cd3a8ace6a7db05753b0aa2c2840c39621dee6ed8a016cc590c847",
+      "result": {
+        "status": "PASS_STATIC_SYNTHETIC_PARSER_ONLY",
+        "controls": 18,
+        "phases": 2,
+        "assertions": 622,
+        "children": 0,
+        "ownerImports": 0,
+        "repositoryWrites": 0,
+        "runtimeClaims": 0,
+        "note": "Diagnostic-shape rejection checks only, not native fault sensitivity or real TAP evidence."
+      },
+      "preload": [
+        {
+          "staticReadOnlyEnforced": true,
+          "attemptedWrites": 0,
+          "attemptedChildren": 0
+        },
+        {
+          "attemptedOwnerImports": 0,
+          "attemptedNetworkCalls": 0
+        }
+      ]
+    },
+    {
+      "name": "static-integrity",
+      "exitCode": 0,
+      "log": "/tmp/test-audit-generation157-tools-xwq0stb7/static-integrity.txt",
+      "sha256": "e4037fe87cd5d6256caf4d3005291a890570487f7db74e8ccfbedc39f14d6f55",
+      "result": {
+        "status": "PASS_STATIC",
+        "pinsSHA": "04fa5cb7e922f757827213f81d5eda7421e159408c146a11da8ea5e53a669a50",
+        "parsedToolFiles": [
+          "operator-edit.cjs",
+          "operator-guard.cjs",
+          "operator-native-proof.cjs",
+          "operator-proof.cjs",
+          "operator-readonly-preload.cjs",
+          "operator-run-controls.cjs",
+          "prepare-pins.cjs",
+          "proof-attestation.cjs",
+          "static-integrity.cjs"
+        ],
+        "original109GuardsUnchanged": true,
+        "templateIdentityRuntimeDependenciesUnchanged": true,
+        "baseCounterCleanDecoderByteIdentical": true,
+        "unresolvedDiagnosticBlocked": [
+          "D1-required-thickness"
+        ],
+        "sourceControls": 18,
+        "repositoryWrites": 0,
+        "children": 0,
+        "ownerImports": 0,
+        "nativeRuns": 0
+      },
+      "preload": [
+        {
+          "staticReadOnlyEnforced": true,
+          "attemptedWrites": 0,
+          "attemptedChildren": 0
+        },
+        {
+          "attemptedOwnerImports": 0,
+          "attemptedNetworkCalls": 0
+        }
+      ]
+    }
+  ],
+  "originalReadsetsPreserved": 109,
+  "phaseFiles": 81,
+  "ASTCounts": [
+    157,
+    157,
+    150
+  ],
+  "nativeTitleCounts": [
+    158,
+    158,
+    151
+  ],
+  "defaultNativePassCounts": [
+    157,
+    157,
+    150
+  ],
+  "unchangedExplicitPgSkip": 1,
+  "changedKeepers": 7,
+  "namedPreservationKeepers": 11,
+  "unchangedRetained": 143,
+  "unrelatedExcludingEveryNamedKeeper": 139,
+  "heldFUnchanged": 11,
+  "controls": 18,
+  "unresolvedDiagnostics": [
+    "D1-required-thickness"
+  ],
+  "readsetPins": 280,
+  "localClosurePins": 269,
+  "runtimeDependencyPins": 5022,
+  "preservedTemplateRuntimePins": 5020,
+  "runtimeTrees": 32,
+  "originalSnapshotDisposition": "27 original tests use before snapshots,81 supporting originals use original-readsets; sole TypeScript JS9MB entry intentionally has a mechanical hash only and no original byte snapshot. Its exact109 source pin and existing installed-runtime pin are preserved; no semantic reading credit.",
+  "readDepth": "Tool-preparation reads of reviewed infrastructure, full candidate/keeper/diff/oracles and targeted parser/schema/fixture slices. Not a second full157 semantic audit; author readsets retain their original full/selected/mechanical distinctions.",
+  "normalizationLimits": "17 literal/custom-message predictions plus1 explicitly unresolved success envelope. Synthetic TAP checks are not actual owner/native evidence. C4 custom messages do not claim whole actual SSR HTML.",
+  "intendedFrames": [
+    {
+      "id": "C1-unknown-heat-state",
+      "test": {
+        "file": "tests/personal-plan/needs.test.ts",
+        "name": "INITIAL-02: quiz-led Shampoo cadence keeps current behavior unknown",
+        "registrationName": "INITIAL-02: quiz-led Shampoo cadence keeps current behavior unknown"
+      },
+      "operator": "deepStrictEqual",
+      "diagnosticReady": true,
+      "transfer": 39,
+      "cut": 39
+    },
+    {
+      "id": "C2-default-reason",
+      "test": {
+        "file": "tests/personal-plan/input.test.ts",
+        "name": "INITIAL-01: a valid V3 paid quiz becomes a quiz-faithful initial profile",
+        "registrationName": "INITIAL-01: a valid V3 paid quiz becomes a quiz-faithful initial profile"
+      },
+      "operator": "deepStrictEqual",
+      "diagnosticReady": true,
+      "transfer": 28,
+      "cut": 28
+    },
+    {
+      "id": "C3-ip-prefix",
+      "test": {
+        "file": "tests/personal-plan-prepare-route.test.ts",
+        "name": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity",
+        "registrationName": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+      },
+      "operator": "deepStrictEqual",
+      "diagnosticReady": true,
+      "transfer": 160,
+      "cut": 147
+    },
+    {
+      "id": "C3-ip-limit",
+      "test": {
+        "file": "tests/personal-plan-prepare-route.test.ts",
+        "name": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity",
+        "registrationName": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+      },
+      "operator": "deepStrictEqual",
+      "diagnosticReady": true,
+      "transfer": 160,
+      "cut": 147
+    },
+    {
+      "id": "C3-ip-window",
+      "test": {
+        "file": "tests/personal-plan-prepare-route.test.ts",
+        "name": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity",
+        "registrationName": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+      },
+      "operator": "deepStrictEqual",
+      "diagnosticReady": true,
+      "transfer": 160,
+      "cut": 147
+    },
+    {
+      "id": "C3-journey-prefix",
+      "test": {
+        "file": "tests/personal-plan-prepare-route.test.ts",
+        "name": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity",
+        "registrationName": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+      },
+      "operator": "deepStrictEqual",
+      "diagnosticReady": true,
+      "transfer": 160,
+      "cut": 147
+    },
+    {
+      "id": "C3-journey-limit",
+      "test": {
+        "file": "tests/personal-plan-prepare-route.test.ts",
+        "name": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity",
+        "registrationName": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+      },
+      "operator": "deepStrictEqual",
+      "diagnosticReady": true,
+      "transfer": 160,
+      "cut": 147
+    },
+    {
+      "id": "C3-journey-window",
+      "test": {
+        "file": "tests/personal-plan-prepare-route.test.ts",
+        "name": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity",
+        "registrationName": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+      },
+      "operator": "deepStrictEqual",
+      "diagnosticReady": true,
+      "transfer": 160,
+      "cut": 147
+    },
+    {
+      "id": "C3-lead-namespace",
+      "test": {
+        "file": "tests/personal-plan-prepare-route.test.ts",
+        "name": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity",
+        "registrationName": "prepare applies the IP ceiling before journey resolution and persists the browser replay identity"
+      },
+      "operator": "notStrictEqual",
+      "diagnosticReady": true,
+      "transfer": 164,
+      "cut": 151
+    },
+    {
+      "id": "C4-progressbar",
+      "test": {
+        "file": "tests/personal-plan-ready-server-first.test.tsx",
+        "name": "server-first pending envelope renders approved static copy and no-JS recovery",
+        "registrationName": "server-first pending envelope renders approved static copy and no-JS recovery"
+      },
+      "operator": "doesNotMatch",
+      "diagnosticReady": true,
+      "transfer": 99,
+      "cut": 99
+    },
+    {
+      "id": "C4-retry-progressbar",
+      "test": {
+        "file": "tests/personal-plan-ready-server-first.test.tsx",
+        "name": "timeout and transient states lead with a retry state instead of a live check",
+        "registrationName": "timeout and transient states lead with a retry state instead of a live check"
+      },
+      "operator": "doesNotMatch",
+      "diagnosticReady": true,
+      "transfer": 242,
+      "cut": 242
+    },
+    {
+      "id": "C4-retired-label",
+      "test": {
+        "file": "tests/personal-plan-ready-server-first.test.tsx",
+        "name": "missing source facts ask for the fact without claiming no action is needed",
+        "registrationName": "missing source facts ask for the fact without claiming no action is needed"
+      },
+      "operator": "doesNotMatch",
+      "diagnosticReady": true,
+      "transfer": 188,
+      "cut": 188
+    },
+    {
+      "id": "C4-wordmark",
+      "test": {
+        "file": "tests/personal-plan-ready-server-first.test.tsx",
+        "name": "forbidden and invalid states show support without waiting or payment claims",
+        "registrationName": "forbidden and invalid states show support without waiting or payment claims"
+      },
+      "operator": "match",
+      "diagnosticReady": true,
+      "transfer": 215,
+      "cut": 215
+    },
+    {
+      "id": "D1-typed-failure",
+      "test": {
+        "file": "tests/personal-plan/input.test.ts",
+        "name": "mask-missing-thickness: required Mask target input fails closed at the shared parser",
+        "registrationName": "`mask-missing-${field}: required Mask target input fails closed at the shared parser`"
+      },
+      "operator": "deepStrictEqual",
+      "diagnosticReady": true,
+      "transfer": 87,
+      "cut": 77
+    },
+    {
+      "id": "D1-required-thickness",
+      "test": {
+        "file": "tests/personal-plan/input.test.ts",
+        "name": "mask-missing-thickness: required Mask target input fails closed at the shared parser",
+        "registrationName": "`mask-missing-${field}: required Mask target input fails closed at the shared parser`"
+      },
+      "operator": "deepStrictEqual",
+      "diagnosticReady": false,
+      "transfer": 87,
+      "cut": 77
+    },
+    {
+      "id": "D2-numeric-message-id",
+      "test": {
+        "file": "tests/quiz-result-artifact-route.test.ts",
+        "name": "claims, sends, and marks the result artifact email sent",
+        "registrationName": "claims, sends, and marks the result artifact email sent"
+      },
+      "operator": "strictEqual",
+      "diagnosticReady": true,
+      "transfer": 184,
+      "cut": 184
+    },
+    {
+      "id": "D3-null-claim-result",
+      "test": {
+        "file": "tests/quiz-result-artifact-route.test.ts",
+        "name": "skips a failed result artifact email until manual retry resets it",
+        "registrationName": "skips a failed result artifact email until manual retry resets it"
+      },
+      "operator": "deepStrictEqual",
+      "diagnosticReady": true,
+      "transfer": 386,
+      "cut": 368
+    },
+    {
+      "id": "D3-production-null-filter",
+      "test": {
+        "file": "tests/quiz-result-artifact-route.test.ts",
+        "name": "the production claim excludes moderator-owned legacy leads",
+        "registrationName": "the production claim excludes moderator-owned legacy leads"
+      },
+      "operator": "deepStrictEqual",
+      "diagnosticReady": true,
+      "transfer": 155,
+      "cut": 155
+    }
+  ],
+  "preparationCorrections": "Static preparer initially expected test originals under support snapshots and a TS mechanical-only snapshot. Corrected path routing/explicit documented TS omission before pins were created; no source/test/identity/dependency repin. Final four checks closed0.",
+  "writes": {
+    "repository": 0,
+    "sealedProposal": 0,
+    "runtimeNative": 0,
+    "ownerImports": 0,
+    "network": 0
+  },
+  "currentDeltaMatchesFinalExecutables": true,
+  "noPostDeltaPinSubstitution": true,
+  "requiredRootGates": "Independent semantic acceptance, code review, D1 diagnostic resolution, whole native baseline/transfer/cut, all18 clean-red-restored-clean controls on transfer and cut, fresh whole CI/coverage."
+}

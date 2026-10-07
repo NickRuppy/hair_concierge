@@ -100,19 +100,6 @@ test("offer payment overlay exposes separate abort and plan-change callbacks", (
   assert.match(source, /requestAnimationFrame\(probeVisibility\)/)
 })
 
-test("offer payment overlay offers descendants only the dismissal action seam", () => {
-  const source = readFileSync(
-    new URL("../src/components/checkout/offer-payment-overlay.tsx", import.meta.url),
-    "utf8",
-  )
-
-  assert.match(source, /export type OfferPaymentOverlayRenderActions = \{\n  requestDismissal:/)
-  assert.match(
-    source,
-    /typeof children === "function" \? children\(\{ requestDismissal \}\) : children/,
-  )
-})
-
 test("offer payment overlay keeps payment children mounted and inert under confirmation", () => {
   const source = readFileSync(
     new URL("../src/components/checkout/offer-payment-overlay.tsx", import.meta.url),

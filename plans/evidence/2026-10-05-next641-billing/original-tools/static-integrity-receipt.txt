@@ -1,0 +1,48 @@
+{
+  "status": "PASS_STATIC_INTEGRITY",
+  "pinsSHA256": "873f158cc84d4346588d02675130a9c33a5da5178536c744e106b1626affd09b",
+  "original55GuardsUnchanged": true,
+  "priorRuntimeIdentitySharedConfigAndDependenciesUnchanged": true,
+  "strictDecoderAndFIRSTOuterAssertionPredicateByteIdentical": true,
+  "parsedCJS": [
+    "operator-edit.cjs",
+    "operator-guard.cjs",
+    "operator-proof.cjs",
+    "operator-readonly-preload.cjs",
+    "operator-run-controls.cjs",
+    "prepare-pins.cjs",
+    "proof-attestation.cjs",
+    "static-integrity.cjs"
+  ],
+  "phaseFiles": 13,
+  "snapshots": 39,
+  "counts": {
+    "before": 125,
+    "transfer": 125,
+    "cut": 119
+  },
+  "heldF": 5,
+  "exactSurvivors": 119,
+  "unrelatedCallbacks": 114,
+  "localClosure": 160,
+  "unresolvedDynamicImports": [],
+  "sourceReadsets": 165,
+  "priorDependencies": 3489,
+  "dependencyFiles": 3495,
+  "addedSelectedDependencyEntries": [
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/node/build/cjs/index.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/@sentry/node/package.json",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/pdf-lib/cjs/index.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/pdf-lib/package.json",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/stripe/cjs/stripe.cjs.node.js",
+    "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/stripe/package.json"
+  ],
+  "dependencyTrees": 28,
+  "sourceControls": 5,
+  "repositoryWrites": 0,
+  "childrenStarted": 0,
+  "ownerImports": 0,
+  "runtimeProof": false
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: Leave-In queue API returns the queue and the selected detail in development
+not ok 1 - Leave-In queue API returns the queue and the selected detail in development
+  ---
+  duration_ms: 127.942792
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/leave-in-research-api.test.ts:2:3509'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    14 !== 15
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 15
+  actual: 14
+  operator: 'strictEqual'
+  stack: |-
+    <anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/leave-in-research-api.test.ts:73:12)
+    async withNodeEnv (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/leave-in-research-api.test.ts:21:5)
+    async withReviewStore (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/leave-in-research-api.test.ts:34:5)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 284.90075

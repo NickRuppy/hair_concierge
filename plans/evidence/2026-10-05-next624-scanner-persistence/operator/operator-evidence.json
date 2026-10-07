@@ -1,0 +1,64 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "ownedFiles": [
+    "tests/scan-resolve-event-log.test.ts",
+    "tests/scan-resolve-events-migration.test.ts",
+    "tests/scan-resolve-auto-save.test.ts",
+    "tests/scan-wishlist-auto-save-postgres.test.ts",
+    "tests/scan-wishlist-route.test.ts"
+  ],
+  "phases": {
+    "before": {
+      "tests/scan-resolve-event-log.test.ts": "321d812b581bedba43c2cd48022b870033300cdf5994a56546c5f4dab945e6cb",
+      "tests/scan-resolve-events-migration.test.ts": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189",
+      "tests/scan-resolve-auto-save.test.ts": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf",
+      "tests/scan-wishlist-auto-save-postgres.test.ts": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+      "tests/scan-wishlist-route.test.ts": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+      "tests/scan-resolve-route.test.ts": "6f0ff0518c70ebf8e25d08e888c17742d15761762a06ad66820b59a4da949a88"
+    },
+    "transfer": {
+      "tests/scan-resolve-event-log.test.ts": "8c6cdd84752d9ba41ca0d0879271796a838b602a23b4927874838df0e8e8aeba",
+      "tests/scan-resolve-events-migration.test.ts": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189",
+      "tests/scan-resolve-auto-save.test.ts": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf",
+      "tests/scan-wishlist-auto-save-postgres.test.ts": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+      "tests/scan-wishlist-route.test.ts": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+      "tests/scan-resolve-route.test.ts": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add"
+    },
+    "cut": {
+      "tests/scan-resolve-event-log.test.ts": "00316a1edf13965567845b2513b846a94d7ab3074f2fff05f5452ca87b0fce0e",
+      "tests/scan-resolve-events-migration.test.ts": "bbf36aaadfe6ef1d0c335267e6f584a4eddce708820af1cf8887867c1b3aff8f",
+      "tests/scan-resolve-auto-save.test.ts": "de4d4d0a8bf10bcec4edcf2543e7fb759d06bce3e98f22d4e8e882d4a0fe4dba",
+      "tests/scan-wishlist-auto-save-postgres.test.ts": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+      "tests/scan-wishlist-route.test.ts": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+      "tests/scan-resolve-route.test.ts": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add"
+    }
+  },
+  "snapshotPaths": {
+    "before": {
+      "tests/scan-resolve-event-log.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/before/tests/scan-resolve-event-log.test.ts",
+      "tests/scan-resolve-events-migration.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/before/tests/scan-resolve-events-migration.test.ts",
+      "tests/scan-resolve-auto-save.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/before/tests/scan-resolve-auto-save.test.ts",
+      "tests/scan-wishlist-auto-save-postgres.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/before/tests/scan-wishlist-auto-save-postgres.test.ts",
+      "tests/scan-wishlist-route.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/before/tests/scan-wishlist-route.test.ts",
+      "tests/scan-resolve-route.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/before/tests/scan-resolve-route.test.ts"
+    },
+    "transfer": {
+      "tests/scan-resolve-event-log.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/transfer/tests/scan-resolve-event-log.test.ts",
+      "tests/scan-resolve-events-migration.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/transfer/tests/scan-resolve-events-migration.test.ts",
+      "tests/scan-resolve-auto-save.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/transfer/tests/scan-resolve-auto-save.test.ts",
+      "tests/scan-wishlist-auto-save-postgres.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/transfer/tests/scan-wishlist-auto-save-postgres.test.ts",
+      "tests/scan-wishlist-route.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/transfer/tests/scan-wishlist-route.test.ts",
+      "tests/scan-resolve-route.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/transfer/tests/scan-resolve-route.test.ts"
+    },
+    "cut": {
+      "tests/scan-resolve-event-log.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/cut/tests/scan-resolve-event-log.test.ts",
+      "tests/scan-resolve-events-migration.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/cut/tests/scan-resolve-events-migration.test.ts",
+      "tests/scan-resolve-auto-save.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/cut/tests/scan-resolve-auto-save.test.ts",
+      "tests/scan-wishlist-auto-save-postgres.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/cut/tests/scan-wishlist-auto-save-postgres.test.ts",
+      "tests/scan-wishlist-route.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/cut/tests/scan-wishlist-route.test.ts",
+      "tests/scan-resolve-route.test.ts": "/tmp/test-audit-scanner46-proposal-RDeysZ/cut/tests/scan-resolve-route.test.ts"
+    }
+  }
+}

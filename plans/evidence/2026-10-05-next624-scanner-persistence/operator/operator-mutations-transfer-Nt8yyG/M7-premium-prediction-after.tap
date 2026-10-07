@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: scan resolve auto-save: a write failure is caught and reported, never turned into a 5xx
+ok 1 - scan resolve auto-save: a write failure is caught and reported, never turned into a 5xx
+  ---
+  duration_ms: 17.100167
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 807.974709

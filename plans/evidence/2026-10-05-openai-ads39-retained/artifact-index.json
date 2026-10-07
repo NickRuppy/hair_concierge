@@ -1,0 +1,242 @@
+[
+  {
+    "original": "/tmp/test-audit-openai-ads39/build-report.py",
+    "archive": "build-report.py.txt",
+    "sha256": "03845d57d2d5335af3ca8c0c5a1f7843c5e67be5748379122fa0fd2ffefea434",
+    "bytes": 24624
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/build-static.cjs",
+    "archive": "build-static.cjs.txt",
+    "sha256": "2495e2dd3694214f64146679215c295b2c03e7d462676650053618b7f3a8347d",
+    "bytes": 2900
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/candidates.json",
+    "archive": "candidates.json",
+    "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "bytes": 3
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/complete-ledger.md",
+    "archive": "complete-ledger.md",
+    "sha256": "88dc55272478ee0bf914b7b86d0ebc4098c4a3deadb4822387a88a6bb6260a3d",
+    "bytes": 16627
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/complete.diff",
+    "archive": "complete.diff",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/controls.json",
+    "archive": "controls.json",
+    "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "bytes": 3
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/cut.diff",
+    "archive": "cut.diff",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/handoff-receipt.json",
+    "archive": "handoff-receipt.json",
+    "sha256": "e7bace0fc42f85a6b3c2da9a20d34f61f96ae8b9d1ef067554e5a43dc511be61",
+    "bytes": 506
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/inventory.json",
+    "archive": "inventory.json",
+    "sha256": "f568cd3e4978ea637a7a626a8e4f02f6ab12a262efa44c667c80367d994b66c0",
+    "bytes": 40752
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/judgments.json",
+    "archive": "judgments.json",
+    "sha256": "5fadba86988e4bcc04846843da4ec27e01980ef6d4ccebb9800e96bae02d55c6",
+    "bytes": 55400
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/layer-plan.md",
+    "archive": "layer-plan.md",
+    "sha256": "8fbdecbb7a2cfaf6c0e5f11900833836e45352e40ebf0c5978997cf80af18ad3",
+    "bytes": 6693
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/manifest.json",
+    "archive": "manifest.json",
+    "sha256": "46d4e786c2d9c56b76bb8d49565416792b6109544d1afac88e6acc839a7cfec8",
+    "bytes": 22480
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/phase-files.json",
+    "archive": "phase-files.json",
+    "sha256": "77c2ba0698e728a4cf963de3cef7301e6ccf5f1a2d24210283effaa86e86d187",
+    "bytes": 5938
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/read-scope.json",
+    "archive": "read-scope.json",
+    "sha256": "894fcc491531dbbf2281a1c349f77c5304f9f0aec65720199487532c85e0b565",
+    "bytes": 16079
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/before/tests/openai-ads-browser-integration.test.ts",
+    "archive": "snapshots/before/tests/openai-ads-browser-integration.test.ts.txt",
+    "sha256": "79bec4c6528447448c437d0b62dd2422e0314adb105d5e3c9c31338c6407da74",
+    "bytes": 11218
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/before/tests/openai-ads-browser.test.ts",
+    "archive": "snapshots/before/tests/openai-ads-browser.test.ts.txt",
+    "sha256": "853c8174781df2bc02643c4670a27689229fa9bf05fbf4dacfa1309941c951d7",
+    "bytes": 7429
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/before/tests/openai-ads-capi.test.ts",
+    "archive": "snapshots/before/tests/openai-ads-capi.test.ts.txt",
+    "sha256": "37f05512230822da2f55ae588e09fd4504ee0ea929c763597ff1a492d55e3f63",
+    "bytes": 7232
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/before/tests/openai-ads-consent-cookie.test.ts",
+    "archive": "snapshots/before/tests/openai-ads-consent-cookie.test.ts.txt",
+    "sha256": "a7e331e2582b73560eb16f3b781550ff26d216bce7488c49573d7691b75dd3c5",
+    "bytes": 1283
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/before/tests/openai-ads-context-postgres.test.ts",
+    "archive": "snapshots/before/tests/openai-ads-context-postgres.test.ts.txt",
+    "sha256": "6f71e8abf2c6745df293a6f1d112679de27ac506b9ad09e45dec71d304fc86a0",
+    "bytes": 5806
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/before/tests/openai-ads-context-route.test.ts",
+    "archive": "snapshots/before/tests/openai-ads-context-route.test.ts.txt",
+    "sha256": "c3a5b4c7286a3e6ba850ca429682f4d831a67949e872f43f0da6909a3399a186",
+    "bytes": 5819
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/before/tests/openai-ads-event-payload.test.ts",
+    "archive": "snapshots/before/tests/openai-ads-event-payload.test.ts.txt",
+    "sha256": "c1bc131cd9816082b1b43b2b6a4640d42509fc86ffbbc2548ac38fcfe5523fc4",
+    "bytes": 6020
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/before/tests/openai-ads-live-postgres.test.ts",
+    "archive": "snapshots/before/tests/openai-ads-live-postgres.test.ts.txt",
+    "sha256": "d8e70ba913504e9188afb2408399c3d4615db7f78e49a421efe18102a62db89c",
+    "bytes": 14591
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/cut/tests/openai-ads-browser-integration.test.ts",
+    "archive": "snapshots/cut/tests/openai-ads-browser-integration.test.ts.txt",
+    "sha256": "79bec4c6528447448c437d0b62dd2422e0314adb105d5e3c9c31338c6407da74",
+    "bytes": 11218
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/cut/tests/openai-ads-browser.test.ts",
+    "archive": "snapshots/cut/tests/openai-ads-browser.test.ts.txt",
+    "sha256": "853c8174781df2bc02643c4670a27689229fa9bf05fbf4dacfa1309941c951d7",
+    "bytes": 7429
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/cut/tests/openai-ads-capi.test.ts",
+    "archive": "snapshots/cut/tests/openai-ads-capi.test.ts.txt",
+    "sha256": "37f05512230822da2f55ae588e09fd4504ee0ea929c763597ff1a492d55e3f63",
+    "bytes": 7232
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/cut/tests/openai-ads-consent-cookie.test.ts",
+    "archive": "snapshots/cut/tests/openai-ads-consent-cookie.test.ts.txt",
+    "sha256": "a7e331e2582b73560eb16f3b781550ff26d216bce7488c49573d7691b75dd3c5",
+    "bytes": 1283
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/cut/tests/openai-ads-context-postgres.test.ts",
+    "archive": "snapshots/cut/tests/openai-ads-context-postgres.test.ts.txt",
+    "sha256": "6f71e8abf2c6745df293a6f1d112679de27ac506b9ad09e45dec71d304fc86a0",
+    "bytes": 5806
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/cut/tests/openai-ads-context-route.test.ts",
+    "archive": "snapshots/cut/tests/openai-ads-context-route.test.ts.txt",
+    "sha256": "c3a5b4c7286a3e6ba850ca429682f4d831a67949e872f43f0da6909a3399a186",
+    "bytes": 5819
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/cut/tests/openai-ads-event-payload.test.ts",
+    "archive": "snapshots/cut/tests/openai-ads-event-payload.test.ts.txt",
+    "sha256": "c1bc131cd9816082b1b43b2b6a4640d42509fc86ffbbc2548ac38fcfe5523fc4",
+    "bytes": 6020
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/cut/tests/openai-ads-live-postgres.test.ts",
+    "archive": "snapshots/cut/tests/openai-ads-live-postgres.test.ts.txt",
+    "sha256": "d8e70ba913504e9188afb2408399c3d4615db7f78e49a421efe18102a62db89c",
+    "bytes": 14591
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/transfer/tests/openai-ads-browser-integration.test.ts",
+    "archive": "snapshots/transfer/tests/openai-ads-browser-integration.test.ts.txt",
+    "sha256": "79bec4c6528447448c437d0b62dd2422e0314adb105d5e3c9c31338c6407da74",
+    "bytes": 11218
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/transfer/tests/openai-ads-browser.test.ts",
+    "archive": "snapshots/transfer/tests/openai-ads-browser.test.ts.txt",
+    "sha256": "853c8174781df2bc02643c4670a27689229fa9bf05fbf4dacfa1309941c951d7",
+    "bytes": 7429
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/transfer/tests/openai-ads-capi.test.ts",
+    "archive": "snapshots/transfer/tests/openai-ads-capi.test.ts.txt",
+    "sha256": "37f05512230822da2f55ae588e09fd4504ee0ea929c763597ff1a492d55e3f63",
+    "bytes": 7232
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/transfer/tests/openai-ads-consent-cookie.test.ts",
+    "archive": "snapshots/transfer/tests/openai-ads-consent-cookie.test.ts.txt",
+    "sha256": "a7e331e2582b73560eb16f3b781550ff26d216bce7488c49573d7691b75dd3c5",
+    "bytes": 1283
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/transfer/tests/openai-ads-context-postgres.test.ts",
+    "archive": "snapshots/transfer/tests/openai-ads-context-postgres.test.ts.txt",
+    "sha256": "6f71e8abf2c6745df293a6f1d112679de27ac506b9ad09e45dec71d304fc86a0",
+    "bytes": 5806
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/transfer/tests/openai-ads-context-route.test.ts",
+    "archive": "snapshots/transfer/tests/openai-ads-context-route.test.ts.txt",
+    "sha256": "c3a5b4c7286a3e6ba850ca429682f4d831a67949e872f43f0da6909a3399a186",
+    "bytes": 5819
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/transfer/tests/openai-ads-event-payload.test.ts",
+    "archive": "snapshots/transfer/tests/openai-ads-event-payload.test.ts.txt",
+    "sha256": "c1bc131cd9816082b1b43b2b6a4640d42509fc86ffbbc2548ac38fcfe5523fc4",
+    "bytes": 6020
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/snapshots/transfer/tests/openai-ads-live-postgres.test.ts",
+    "archive": "snapshots/transfer/tests/openai-ads-live-postgres.test.ts.txt",
+    "sha256": "d8e70ba913504e9188afb2408399c3d4615db7f78e49a421efe18102a62db89c",
+    "bytes": 14591
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/static-check.json",
+    "archive": "static-check.json",
+    "sha256": "67d7681737a87103bc6ae65568c065c7d19cd4723e5a555ada582007b11fcd48",
+    "bytes": 494
+  },
+  {
+    "original": "/tmp/test-audit-openai-ads39/transfer.diff",
+    "archive": "transfer.diff",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  }
+]

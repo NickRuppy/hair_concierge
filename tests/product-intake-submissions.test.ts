@@ -528,18 +528,6 @@ test("scan intake schema keeps brand and product name optional, requires categor
   )
 })
 
-test("scan intake schema is a passthrough validator: it trims the identifier value but does not normalize it", () => {
-  const parsed = scanProductIntakeSubmissionSchema.parse({
-    category: "mask",
-    frequency_range: "weekly_1x",
-    scannedIdentifier: { type: "barcode", value: "  ABC-123  " },
-  })
-
-  // Only whitespace is trimmed here; case-folding/whitespace-collapse happens once in
-  // submissions.ts via normalizeIdentifierValue before persist/match (see there).
-  assert.equal(parsed.scannedIdentifier?.value, "ABC-123")
-})
-
 test("matched manual intake links user usage to the existing product without creating a submission", async () => {
   const fake = createFakeRepository()
 
@@ -552,6 +540,7 @@ test("matched manual intake links user usage to the existing product without cre
   })
 
   assert.equal(result.status, "matched")
+  assert.equal(result.source, "onboarding")
   assert.equal(result.matched_product_id, "product-garnier-mask")
   assert.equal(result.submission, null)
   assert.equal(fake.usage?.product_id, "product-garnier-mask")
@@ -663,41 +652,6 @@ test("unknown manual intake creates a pending submission and pending usage slot"
   assert.equal(fake.usage?.match_status, "pending_review")
 })
 
-test("photo intake creates a pending submission with image paths and uncertain validation", async () => {
-  const fake = createFakeRepository()
-  const input = onboardingProductIntakeSubmissionSchema.parse({
-    intake_method: "photo",
-    category: "mask",
-    frequency_range: "weekly_1x",
-    front_image_path: `tmp/${USER_ID}/front.jpg`,
-    barcode_image_path: `tmp/${USER_ID}/barcode.jpg`,
-  })
-
-  const result = await submitProductIntake({
-    userId: USER_ID,
-    source: "onboarding",
-    input,
-    repository: fake.repository,
-    now: () => "2026-06-13T10:00:00.000Z",
-  })
-
-  assert.equal(result.status, "pending_review")
-  assert.equal(result.intake_method, "photo")
-  assert.equal(fake.submissions[0].intake_method, "photo")
-  assert.equal(
-    fake.submissions[0].front_image_path,
-    `${USER_ID}/${fake.submissions[0].id}/front-front.jpg`,
-  )
-  assert.equal(
-    fake.submissions[0].barcode_image_path,
-    `${USER_ID}/${fake.submissions[0].id}/barcode-barcode.jpg`,
-  )
-  assert.equal(fake.submissions[0].front_image_validation_status, "uncertain")
-  assert.equal(fake.submissions[0].barcode_image_validation_status, "uncertain")
-  assert.equal(fake.usage?.front_image_path, `${USER_ID}/${fake.submissions[0].id}/front-front.jpg`)
-  assert.equal(fake.usage?.match_status, "pending_review")
-})
-
 test("photo intake cleans committed front image and does not create review row if barcode commit fails", async () => {
   const frontPath = `tmp/${USER_ID}/front.jpg`
   const barcodePath = `tmp/${USER_ID}/barcode.jpg`
@@ -800,7 +754,7 @@ test("photo intake persists only server-derived uncertain validation state", asy
     },
   })
 
-  await submitProductIntake({
+  const result = await submitProductIntake({
     userId: USER_ID,
     source: "onboarding",
     input,
@@ -808,6 +762,19 @@ test("photo intake persists only server-derived uncertain validation state", asy
     now: () => "2026-06-13T10:00:00.000Z",
   })
 
+  assert.equal(result.status, "pending_review")
+  assert.equal(result.intake_method, "photo")
+  assert.equal(fake.submissions[0].intake_method, "photo")
+  assert.equal(
+    fake.submissions[0].front_image_path,
+    `${USER_ID}/${fake.submissions[0].id}/front-front.jpg`,
+  )
+  assert.equal(
+    fake.submissions[0].barcode_image_path,
+    `${USER_ID}/${fake.submissions[0].id}/barcode-barcode.jpg`,
+  )
+  assert.equal(fake.usage?.front_image_path, `${USER_ID}/${fake.submissions[0].id}/front-front.jpg`)
+  assert.equal(fake.usage?.match_status, "pending_review")
   assert.equal(fake.submissions[0].front_image_validation_status, "uncertain")
   assert.deepEqual(fake.submissions[0].front_image_validation_metadata, {})
   assert.equal(fake.submissions[0].barcode_image_validation_status, "uncertain")
@@ -818,27 +785,6 @@ test("photo intake persists only server-derived uncertain validation state", asy
   }
   assert.equal(historyEntry.at, "2026-06-13T10:00:00.000Z")
   assert.equal(historyEntry.fields?.front_image_validation_status, "uncertain")
-})
-
-test("photo intake rejects image paths that do not belong to the user", async () => {
-  const fake = createFakeRepository()
-  const input = onboardingProductIntakeSubmissionSchema.parse({
-    intake_method: "photo",
-    category: "mask",
-    frequency_range: "weekly_1x",
-    front_image_path: "tmp/someone-else/front.jpg",
-  })
-
-  await assert.rejects(
-    () =>
-      submitProductIntake({
-        userId: USER_ID,
-        source: "onboarding",
-        input,
-        repository: fake.repository,
-      }),
-    /Bildpfad gehört nicht zu diesem Nutzer/,
-  )
 })
 
 test("photo intake rejects stale committed image paths instead of reusing old submission photos", async () => {
@@ -861,31 +807,6 @@ test("photo intake rejects stale committed image paths instead of reusing old su
     /temporären Upload/,
   )
 
-  assert.equal(fake.submissions.length, 0)
-  assert.equal(fake.usage, null)
-})
-
-test("photo intake verifies tmp uploads exist before creating submission rows", async () => {
-  const fake = createFakeRepository({ uploadedPaths: [] })
-  const input = onboardingProductIntakeSubmissionSchema.parse({
-    intake_method: "photo",
-    category: "mask",
-    frequency_range: "weekly_1x",
-    front_image_path: `tmp/${USER_ID}/guessed.jpg`,
-  })
-
-  await assert.rejects(
-    () =>
-      submitProductIntake({
-        userId: USER_ID,
-        source: "onboarding",
-        input,
-        repository: fake.repository,
-      }),
-    /Upload nicht gefunden/,
-  )
-
-  assert.deepEqual(fake.calls, [`verify_image:tmp/${USER_ID}/guessed.jpg`])
   assert.equal(fake.submissions.length, 0)
   assert.equal(fake.usage, null)
 })
@@ -1795,13 +1716,16 @@ test("scan submission normalizes the scanned identifier once before it is matche
   const fake = createFakeRepository()
   const rawValue = "  AB-12  "
 
+  const input = scanProductIntakeSubmissionSchema.parse({
+    category: "mask",
+    frequency_range: "weekly_1x",
+    scannedIdentifier: { type: "barcode", value: rawValue },
+  })
+  assert.equal(input.scannedIdentifier?.value, "AB-12")
+
   const result = await submitScanProductIntake({
     userId: USER_ID,
-    input: scanProductIntakeSubmissionSchema.parse({
-      category: "mask",
-      frequency_range: "weekly_1x",
-      scannedIdentifier: { type: "barcode", value: rawValue },
-    }),
+    input,
     repository: fake.repository,
     isMatchScanEligible: async () => {
       throw new Error("must not be called: no product matched")
@@ -1840,23 +1764,6 @@ test("scan submission omits scanned_identifier columns and matchProductIntake's 
   assert.equal(result.match.reason, "insufficient_identity")
   assert.equal(fake.submissions[0].scanned_identifier_type, null)
   assert.equal(fake.submissions[0].scanned_identifier_value, null)
-})
-
-test("existing onboarding/chat submitProductIntake behavior is unchanged by the scan-anchor fix", async () => {
-  const fake = createFakeRepository()
-
-  const result = await submitProductIntake({
-    userId: USER_ID,
-    source: "onboarding",
-    input: onboardingProductIntakeSubmissionSchema.parse(manualInput()),
-    repository: fake.repository,
-    now: () => "2026-06-13T10:00:00.000Z",
-  })
-
-  assert.equal(result.status, "matched")
-  assert.equal(result.source, "onboarding")
-  assert.equal(fake.usage?.product_id, "product-garnier-mask")
-  assert.deepEqual(fake.calls, ["replace_usage_matched:product-garnier-mask"])
 })
 
 test("route handler returns controlled disabled response before auth or persistence", async () => {
@@ -2110,6 +2017,9 @@ test("route handler returns controlled expired response for missing tmp uploads"
   assert.equal(response.status, 410)
   assert.equal(body.code, "product_intake_upload_expired")
   assert.match(body.error, /Upload nicht gefunden/)
+  assert.deepEqual(fake.calls, [`verify_image:tmp/${USER_ID}/missing.jpg`])
+  assert.equal(fake.submissions.length, 0)
+  assert.equal(fake.usage, null)
 })
 
 test("route handler keeps storage verification failures as persistence errors", async () => {

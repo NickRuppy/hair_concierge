@@ -1,0 +1,50 @@
+TAP version 13
+# Subtest: records a started attempt with canonical value
+not ok 1 - records a started attempt with canonical value
+  ---
+  duration_ms: 2.256042
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-event-log.test.ts:2:1808'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        canonical_value: '00022796976116',
+    +   created_at: '2026-09-04T10:00:00.000Z',
+        id: '00000000-0000-4000-8000-000000000001',
+        identifier_type: 'ean',
+        raw_value: '0022796976116',
+        user_id: 'user-1'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    id: '00000000-0000-4000-8000-000000000001'
+    user_id: 'user-1'
+    identifier_type: 'ean'
+    raw_value: '0022796976116'
+    canonical_value: '00022796976116'
+  actual:
+    id: '00000000-0000-4000-8000-000000000001'
+    user_id: 'user-1'
+    identifier_type: 'ean'
+    raw_value: '0022796976116'
+    canonical_value: '00022796976116'
+    created_at: '2026-09-04T10:00:00.000Z'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-event-log.test.ts:56:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 563.779208

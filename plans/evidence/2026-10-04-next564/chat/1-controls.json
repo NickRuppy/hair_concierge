@@ -1,0 +1,122 @@
+[
+  {
+    "id": "C1-return-null",
+    "file": "src/lib/chat-runtime/user-memory.ts",
+    "sourceSha256": "dad4d98013840fc99bfac1d9d839f04e23c9196534e9a0f04004c7e3b403aab2",
+    "anchor": {
+      "kind": "function",
+      "scope": "updateUserMemoryEntry",
+      "expectedOccurrences": 1
+    },
+    "from": "return data as UserMemoryEntry",
+    "to": "return null",
+    "mutatedSha256": "1a5eea808a62c8dceeb29a649fe014fb2bfcbf3fea76842cd77c5fca4157c251",
+    "test": {
+      "file": "tests/user-memory.spec.ts",
+      "name": "manual edits clear hidden product metadata and rebuild cache"
+    },
+    "intendedAssertion": "Transferred result.not.toBeNull fails; original row/cache assertions still pass.",
+    "oracle": {
+      "kind": "pw",
+      "anchor": "expect(result).not.toBeNull()",
+      "lines": {
+        "transfer": 437,
+        "cut": 437
+      },
+      "tokens": [
+        "toBeNull",
+        "null"
+      ]
+    }
+  },
+  {
+    "id": "C1-overwrite-id",
+    "file": "src/lib/chat-runtime/user-memory.ts",
+    "sourceSha256": "dad4d98013840fc99bfac1d9d839f04e23c9196534e9a0f04004c7e3b403aab2",
+    "anchor": {
+      "kind": "function",
+      "scope": "updateUserMemoryEntry",
+      "expectedOccurrences": 1
+    },
+    "from": ".update({\n      content: nextContent,",
+    "to": ".update({\n      id: `${memoryId}-wrong`,\n      content: nextContent,",
+    "mutatedSha256": "a6803833beebe61007e8adb12b8d56725c18ec4af8f46e688a8ffa603237bb9a",
+    "test": {
+      "file": "tests/user-memory.spec.ts",
+      "name": "manual edits clear hidden product metadata and rebuild cache"
+    },
+    "intendedAssertion": "Transferred stored id memory-1 expectation fails; real owner emits wrong update payload.",
+    "oracle": {
+      "kind": "pw",
+      "anchor": "expect(fake.tables.user_memory_entries?.[0]).toEqual(",
+      "lines": {
+        "transfer": 438,
+        "cut": 438
+      },
+      "tokens": [
+        "toEqual",
+        "memory-1-wrong"
+      ]
+    }
+  },
+  {
+    "id": "C2-leak-legacy-column",
+    "file": "src/lib/chat-runtime/message-context.ts",
+    "sourceSha256": "c433278aec3f0c5957da01e4fcbd039119410a6b8682b12b2ebd9c48513fb5f7",
+    "anchor": {
+      "kind": "function",
+      "scope": "normalizeMessageContextRow",
+      "expectedOccurrences": 1
+    },
+    "from": "Reflect.deleteProperty(rest, \"rag_context\")",
+    "to": "// Fault: obsolete transport column retained",
+    "mutatedSha256": "1928c46258c0b5a4f37b85dde0e4a68621ae0873517b6f15271d5b7d6622b28b",
+    "test": {
+      "file": "tests/message-context.test.ts",
+      "name": "legacy fallback strips source payloads and their rendered markers"
+    },
+    "intendedAssertion": "Transferred whole object deep equality rejects extra rag_context; content/context-only original assertions would pass.",
+    "oracle": {
+      "kind": "node",
+      "anchor": "assert.deepEqual(normalized, {",
+      "lines": {
+        "transfer": 49,
+        "cut": 49
+      },
+      "tokens": [
+        "rag_context",
+        "deepStrictEqual"
+      ]
+    }
+  },
+  {
+    "id": "C2-drop-preserved-id",
+    "file": "src/lib/chat-runtime/message-context.ts",
+    "sourceSha256": "c433278aec3f0c5957da01e4fcbd039119410a6b8682b12b2ebd9c48513fb5f7",
+    "anchor": {
+      "kind": "function",
+      "scope": "normalizeMessageContextRow",
+      "expectedOccurrences": 1
+    },
+    "from": "Reflect.deleteProperty(rest, \"message_context\")",
+    "to": "Reflect.deleteProperty(rest, \"message_context\")\n  Reflect.deleteProperty(rest, \"id\")",
+    "mutatedSha256": "e89553382d3f8a44c337849c0674c447cbcab200db242ad727b69e25fc1f995b",
+    "test": {
+      "file": "tests/message-context.test.ts",
+      "name": "legacy fallback strips source payloads and their rendered markers"
+    },
+    "intendedAssertion": "Transferred whole object equality rejects missing original id; existing content/context-only assertions would pass.",
+    "oracle": {
+      "kind": "node",
+      "anchor": "assert.deepEqual(normalized, {",
+      "lines": {
+        "transfer": 49,
+        "cut": 49
+      },
+      "tokens": [
+        "message-legacy",
+        "deepStrictEqual"
+      ]
+    }
+  }
+]

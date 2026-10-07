@@ -1,0 +1,19 @@
+{
+  "mode": "check",
+  "phase": "before",
+  "counts": {
+    "before": 43,
+    "transfer": 43,
+    "cut": 42
+  },
+  "unrelatedCallbacks": 41,
+  "unchangedRetainedCallbacks": 41,
+  "parsedPhaseFiles": 27,
+  "sourceControlsParsed": 3,
+  "readsetGuards": 90,
+  "dependencyFiles": 5129,
+  "repositoryWrites": 0,
+  "childrenStarted": 0
+}
+{"staticReadOnlyEnforced":true,"attemptedWrites":0,"attemptedChildren":0}
+{"attemptedOwnerImports":0,"attemptedNetworkCalls":0}

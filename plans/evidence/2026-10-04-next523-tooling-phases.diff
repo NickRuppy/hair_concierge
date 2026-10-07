@@ -1,0 +1,119 @@
+--- before/tests/worktree-new.test.ts
++++ transfer/tests/worktree-new.test.ts
+@@ -141,4 +141,8 @@
+ 
+   assert.equal(result.status, 0, result.stderr)
+   assert.equal(git(fixture.primary, ["rev-parse", "HEAD"]).stdout.trim(), fixture.freshSha)
++  assert.equal(
++    git(join(fixture.primary, ".worktrees", "origin-only"), ["rev-parse", "HEAD"]).stdout.trim(),
++    fixture.freshSha,
++  )
+ })
+--- transfer/tests/worktree-new.test.ts
++++ cut/tests/worktree-new.test.ts
+@@ -69,16 +69,6 @@
+   return command(primary, process.execPath, [newWorktreeScript, slug, "--no-install"], true)
+ }
+ 
+-test("fetches and fast-forwards clean root main before creating from fresh origin/main", (t) => {
+-  const fixture = createFixture(t)
+-  const result = runNew(fixture.primary, "fresh-task")
+-  const taskWorktree = join(fixture.primary, ".worktrees", "fresh-task")
+-
+-  assert.equal(result.status, 0, result.stderr)
+-  assert.equal(git(fixture.primary, ["rev-parse", "HEAD"]).stdout.trim(), fixture.freshSha)
+-  assert.equal(git(taskWorktree, ["rev-parse", "HEAD"]).stdout.trim(), fixture.freshSha)
+-})
+-
+ test("refuses a fully dirty root without creating task artifacts", (t) => {
+   const fixture = createFixture(t)
+   writeFileSync(join(fixture.primary, "local-plan.md"), "keep me\n")
+--- before/tests/worktree-finish.test.ts
++++ transfer/tests/worktree-finish.test.ts
+@@ -413,6 +413,12 @@
+   assert.equal(
+     git(fixture.primary, ["worktree", "list", "--porcelain"]).stdout.includes(detached),
+     true,
++  )
++  assert.match(result.stdout, /FINISHED/)
++  assert.equal(git(fixture.primary, ["rev-parse", "HEAD"]).stdout.trim(), fixture.mergeSha)
++  assert.equal(
++    git(fixture.primary, ["worktree", "list", "--porcelain"]).stdout.includes(fixture.taskWorktree),
++    false,
+   )
+ })
+ 
+--- transfer/tests/worktree-finish.test.ts
++++ cut/tests/worktree-finish.test.ts
+@@ -208,21 +208,6 @@
+   assert.equal(localRef(fixture), fixture.headSha)
+   assert.equal(remoteRef(fixture), fixture.headSha)
+   assert.equal(git(fixture.primary, ["rev-parse", "HEAD"]).stdout.trim(), fixture.baseSha)
+-})
+-
+-test("apply fast-forwards root and removes exact task artifacts", (t) => {
+-  const fixture = createFixture(t, 3)
+-  const result = runFinish(fixture, { apply: true })
+-
+-  assert.equal(result.status, 0, result.stderr)
+-  assert.match(result.stdout, /FINISHED/)
+-  assert.equal(localRef(fixture), null)
+-  assert.equal(remoteRef(fixture), null)
+-  assert.equal(git(fixture.primary, ["rev-parse", "HEAD"]).stdout.trim(), fixture.mergeSha)
+-  assert.equal(
+-    git(fixture.primary, ["worktree", "list", "--porcelain"]).stdout.includes(fixture.taskWorktree),
+-    false,
+-  )
+ })
+ 
+ test("a completed cleanup is idempotent", (t) => {
+--- before/tests/ci-path-rules.test.ts
++++ transfer/tests/ci-path-rules.test.ts
+@@ -116,6 +116,7 @@
+ test("Personal Plan journey scope remains targeted to runtime and presentation changes", () => {
+   const migration = classifyCiScope(["supabase/migrations/20260810000000_example.sql"])
+   assert.equal(migration.personal_plan_journey, true)
++  assert.equal(Object.hasOwn(migration, "personal_plan_db"), false)
+ 
+   const persistence = classifyCiScope(["src/lib/personal-plan/persistence/plan-repository.ts"])
+   assert.equal(persistence.personal_plan_journey, true)
+--- transfer/tests/ci-path-rules.test.ts
++++ cut/tests/ci-path-rules.test.ts
+@@ -80,12 +80,6 @@
+   assert.equal(classifyCiScope(["package-lock.json"]).security_scan, true)
+ })
+ 
+-test("CI scope no longer exposes a local database gate", () => {
+-  const scope = classifyCiScope(["supabase/migrations/20260810000000_example.sql"])
+-  assert.equal(Object.hasOwn(scope, "personal_plan_db"), false)
+-  assert.equal(scope.personal_plan_journey, true)
+-})
+-
+ test("integrated Personal Plan runtime paths run the persisted journey", () => {
+   for (const path of [
+     "src/lib/personal-plan/journey-access-loader.ts",
+--- transfer/tests/stripe-webhook-config-check.test.ts
++++ cut/tests/stripe-webhook-config-check.test.ts
+@@ -144,22 +144,3 @@
+   assert.deepEqual(captured, [result])
+ })
+ 
+-test("verifyStripeWebhookConfig does not capture an issue for the ok result", async () => {
+-  let captureCalls = 0
+-  await verifyStripeWebhookConfig({
+-    webhookUrl: "https://app.example.com/api/stripe/webhook",
+-    listWebhookEndpoints: async () => [
+-      {
+-        id: "we_1",
+-        url: "https://app.example.com/api/stripe/webhook",
+-        status: "enabled",
+-        enabled_events: [...REQUIRED_STRIPE_WEBHOOK_EVENTS],
+-      },
+-    ],
+-    captureIssue: () => {
+-      captureCalls += 1
+-    },
+-  })
+-
+-  assert.equal(captureCalls, 0)
+-})

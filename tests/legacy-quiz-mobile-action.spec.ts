@@ -404,27 +404,16 @@ test.describe("@ci regular quiz mobile parity", () => {
     expect(geometry.buttonLeft).toBeLessThan(geometry.viewportWidth / 2)
   })
 
-  test("silently restores a draft and maps browser Back to the previous quiz screen", async ({
-    page,
-  }) => {
-    await openDraft(page, 7, { width: 390, height: 844 })
-    await expect(
-      page.getByRole("heading", { name: "Sind deine Haare chemisch behandelt?" }),
-    ).toBeVisible()
-    await expect(page.getByText("Angefangener Haar-Check")).toHaveCount(0)
-
-    await page.goBack()
-    await expect(page.getByRole("heading", { name: "Wie elastisch ist dein Haar?" })).toBeVisible()
-    await expect(page).toHaveURL(/\/quiz$/)
-  })
-
   test("keeps browser Forward from desynchronizing the rendered quiz screen", async ({ page }) => {
     await openDraft(page, 7, { width: 390, height: 844 })
     await expect(
       page.getByRole("heading", { name: "Sind deine Haare chemisch behandelt?" }),
     ).toBeVisible()
+    await expect(page.getByText("Angefangener Haar-Check")).toHaveCount(0)
     await page.goBack()
     await expect(page.getByRole("heading", { name: "Wie elastisch ist dein Haar?" })).toBeVisible()
+
+    await expect(page).toHaveURL(/\/quiz$/)
 
     await page.goForward()
     await expect(page.getByRole("heading", { name: "Wie elastisch ist dein Haar?" })).toBeVisible()

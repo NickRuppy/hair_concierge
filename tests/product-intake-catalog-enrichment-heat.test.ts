@@ -91,15 +91,6 @@ test("Heat package accepts the seven reviewed manifests with no fabricated thick
   assert.equal(pkg.package.products[0]?.image_asset.manifest_batch_id, "personal-plan-launch-v1")
 })
 
-test("Heat cohort fingerprint is independent of manifest input order", async () => {
-  const manifests = await loadHeatManifests()
-  const contents = await Promise.all(
-    manifests.map(({ manifest }) => readFile(asHeatManifest(manifest).image.local_asset_path)),
-  )
-  assert.equal(contents.length, 7)
-  assert.equal(HEAT_COHORT_INDEX_FINGERPRINT.length, 64)
-})
-
 test("seven real Heat manifests select deterministically by semantic catalog order", async () => {
   const manifests = await loadHeatManifests()
   const candidates = manifests.map(({ manifest: rawManifest }, index) => {
@@ -461,6 +452,16 @@ test("absent-mode preflight accepts migration-safe missing Heat identity seeds",
   const result = await run()
 
   assert.equal(result.ok, true, result.blockers.join("\n"))
+  assert.ok(result.package)
+  assert.equal(result.package.package.products.length, 7)
+  assert.ok(
+    result.package.package.products.every((product) => product.category_key === "heat_protectant"),
+  )
+  assert.equal(
+    result.cohort_index_fingerprint,
+    "f4edd43d54f9604b6287a86e5187a18bd44b4084260b0458ccbcde56cb6ee5f7",
+  )
+  assert.equal(HEAT_COHORT_INDEX_FINGERPRINT.length, 64)
 
   const collision = await run({
     rows: {

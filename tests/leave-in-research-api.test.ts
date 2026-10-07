@@ -64,6 +64,43 @@ test("Leave-In queue API returns the queue and the selected detail in developmen
     const listResponse = await GET(new Request("http://localhost/api/labs/leave-in-research/queue"))
     assert.equal(listResponse.status, 200)
     const list = await listResponse.json()
+    const data: import("../src/lib/labs/leave-in-research-access").LeaveInResearchLabData = list
+    // Batch 1 (gold-set, 13) + Batch 2 (unseen-test, 6) = 19.
+    assert.equal(data.summary.products, 19)
+    assert.equal(data.queueItems.length, 19)
+    // gold-set: 11 in-category + 2 excluded. unseen-test: 4 in-category
+    // (u1, u4, u5, u6) + 2 excluded (u2, u3). See unseen-test-report.md.
+    assert.equal(data.summary.inCategory, 15)
+    assert.equal(data.summary.excluded, 4)
+    assert.equal(data.summary.reviewCounts.needsReview, 19)
+    // Approval persistence key: kept at the v1.0-fixture stamp so approvals survive.
+    assert.equal(data.meta.standardVersion, "leave-in-inci-v0.4")
+    // The visible standard is the effective one (v1.1 = v1.0 + T20 overlay).
+    assert.equal(data.meta.effectiveStandard, "leave-in-inci-v1.1 (Standard v1.0 + T20-Overlay)")
+    assert.equal(
+      data.meta.effectiveStandardOverlay,
+      "docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md",
+    )
+    assert.equal(data.initialDetail.effectiveStandard, data.meta.effectiveStandard)
+    assert.equal(data.meta.keyVersion, "reference-key-2026-09-05-r4")
+    assert.equal(data.meta.derivedFromRun, "reference-key-2026-09-04-r3")
+
+    const goldSet = data.queueItems.filter((item) => item.batch === "gold-set")
+    const unseenTest = data.queueItems.filter((item) => item.batch === "unseen-test")
+    assert.equal(goldSet.length, 13)
+    assert.equal(unseenTest.length, 6)
+    assert.deepEqual(
+      goldSet.map((item) => item.slot),
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+    )
+    assert.deepEqual(
+      unseenTest.map((item) => item.slot),
+      [14, 15, 16, 17, 18, 19],
+    )
+    assert.equal(goldSet.filter((item) => item.excluded).length, 2)
+    assert.equal(unseenTest.filter((item) => item.excluded).length, 2)
+    for (const item of unseenTest)
+      assert.ok(item.productId.startsWith("unseen-0"), `${item.productId} missing unseen-0N prefix`)
     assert.equal(list.queueItems.length, 19)
     assert.equal(list.detail.productId, list.initialDetail.productId)
 

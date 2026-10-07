@@ -1,0 +1,125 @@
+import { z } from "zod"
+import {
+  QUIZ_STRUCTURE_VALUES,
+  QUIZ_THICKNESS_VALUES,
+  QUIZ_DENSITY_VALUES,
+  QUIZ_HAIR_LENGTH_VALUES,
+  QUIZ_FINGERTEST_VALUES,
+  QUIZ_PULLTEST_VALUES,
+  QUIZ_ANSWER_CONCERN_VALUES,
+  QUIZ_GOAL_VALUES,
+  QUIZ_SCALP_TYPE_VALUES,
+  QUIZ_SCALP_CONDITION_VALUES,
+  QUIZ_TREATMENT_VALUES,
+} from "./normalization"
+
+const baseQuizAnswersShape = {
+  structure: z.enum(QUIZ_STRUCTURE_VALUES),
+  thickness: z.enum(QUIZ_THICKNESS_VALUES),
+  density: z.enum(QUIZ_DENSITY_VALUES),
+  fingertest: z.enum(QUIZ_FINGERTEST_VALUES),
+  pulltest: z.enum(QUIZ_PULLTEST_VALUES),
+  scalp_type: z.enum(QUIZ_SCALP_TYPE_VALUES),
+  has_scalp_issue: z.boolean(),
+  scalp_condition: z.enum(QUIZ_SCALP_CONDITION_VALUES).optional(),
+  concerns: z.array(z.enum(QUIZ_ANSWER_CONCERN_VALUES)),
+  // Her stated main problem (F1). Deliberately no "must be one of concerns" rule: a
+  // stale pick is dropped by canonicalisation, never a reason to reject the answers.
+  primary_concern: z.enum(QUIZ_ANSWER_CONCERN_VALUES).optional(),
+  concerns_other_text: z.string().trim().max(50, "Bitte bleib bei maximal 50 Zeichen").optional(),
+  treatment: z
+    .array(z.enum(QUIZ_TREATMENT_VALUES))
+    .min(1, "Bitte waehle mindestens eine Behandlung"),
+  goals: z.array(z.enum(QUIZ_GOAL_VALUES)).min(1, "Bitte waehle mindestens ein Ziel").optional(),
+} satisfies z.ZodRawShape
+
+function applyQuizAnswerRules<T extends z.ZodRawShape>(schema: z.ZodObject<T>) {
+  return schema.strict().superRefine((rawAnswers, ctx) => {
+    const answers = rawAnswers as {
+      treatment: string[]
+      concerns: string[]
+      has_scalp_issue: boolean
+      scalp_condition?: string
+      goals?: string[]
+    }
+
+    if (new Set(answers.treatment).size !== answers.treatment.length) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Behandlungen duerfen nicht doppelt vorkommen",
+        path: ["treatment"],
+      })
+    }
+
+    if (answers.treatment.includes("natur") && answers.treatment.length > 1) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Naturhaar kann nicht mit chemischen Behandlungen kombiniert werden",
+        path: ["treatment"],
+      })
+    }
+
+    if (new Set(answers.concerns).size !== answers.concerns.length) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Bedenken duerfen nicht doppelt vorkommen",
+        path: ["concerns"],
+      })
+    }
+
+    if (answers.has_scalp_issue && !answers.scalp_condition) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Bitte waehle eine konkrete Kopfhaut-Beschwerde",
+        path: ["scalp_condition"],
+      })
+    }
+
+    if (!answers.has_scalp_issue && answers.scalp_condition) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Ohne aktive Kopfhaut-Beschwerde darf kein Problem gesetzt sein",
+        path: ["scalp_condition"],
+      })
+    }
+
+    if (answers.goals) {
+      if (new Set(answers.goals).size !== answers.goals.length) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Ziele duerfen nicht doppelt vorkommen",
+          path: ["goals"],
+        })
+      }
+
+      if (answers.goals.includes("volume") && answers.goals.includes("less_volume")) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Mehr und weniger Volumen schliessen sich aus",
+          path: ["goals"],
+        })
+      }
+    }
+  })
+}
+
+export const quizAnswersSchema = applyQuizAnswerRules(
+  z.object({
+    ...baseQuizAnswersShape,
+    hair_length: z.enum(QUIZ_HAIR_LENGTH_VALUES),
+  }),
+)
+
+export const storedQuizAnswersSchema = applyQuizAnswerRules(
+  z.object({
+    ...baseQuizAnswersShape,
+    hair_length: z.enum(QUIZ_HAIR_LENGTH_VALUES).optional(),
+  }),
+)
+
+export const leadSchema = z.object({
+  name: z.string().min(1, "Name ist erforderlich"),
+  email: z.string().email("Bitte gib eine gueltige E-Mail-Adresse ein"),
+  marketingConsent: z.boolean(),
+  quizAnswers: quizAnswersSchema,
+})

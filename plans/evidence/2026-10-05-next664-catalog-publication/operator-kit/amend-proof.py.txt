@@ -1,0 +1,42 @@
+from pathlib import Path
+D=Path('/tmp/test-audit-catalog99-tools-k9e7uyhg');p=D/'operator-proof.cjs';s=p.read_text();a=s.index(' function scalar(value){');b=s.index(" if(['|-','|','|+'].includes(tail))",a)
+s=s[:a]+r''' function scalar(value){
+   const quote=value[0]
+   if(["'",'"','`'].includes(quote)){
+     let out='',i=1,closed=false
+     for(;i<value.length;i++){
+       const char=value[i];if(char===quote){closed=true;i++;break}
+       if(char!=='\\'){out+=char;continue}
+       const e=value[++i],simple={'n':'\n','r':'\r','t':'\t','b':'\b','f':'\f','v':'\v','0':'\0','\\':'\\',"'":"'",'"':'"','`':'`'}
+       if(Object.hasOwn(simple,e)){out+=simple[e];continue}
+       if(e==='x'||e==='u'){const n=e==='x'?2:4,hex=value.slice(i+1,i+1+n);if(hex.length!==n||!/^[a-fA-F0-9]+$/.test(hex))return{ok:false};out+=String.fromCharCode(parseInt(hex,16));i+=n;continue}
+       return{ok:false}
+     }
+     if(!closed)return{ok:false}
+     const suffix=value.slice(i)
+     if(!suffix)return{ok:true,value:out,truncated:false}
+     const truncated=suffix.match(/^\.\.\. ([1-9]\d*) more characters$/)
+     if(truncated&&out.length===10000)return{ok:true,value:out,truncated:true,remainingCharacters:Number(truncated[1])}
+     return{ok:false}
+   }
+   if(value==='true'||value==='false'||value==='null')return{ok:true,value:JSON.parse(value)}
+   if(/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/.test(value))return{ok:true,value:Number(value)}
+   if(value&&!/^[>|&*!{[]/.test(value))return{ok:true,value}
+   return{ok:false}
+ }
+''' +s[b:]
+s=s.replace("return values.length?{ok:true,value:values}:{ok:false}","return values.length?{ok:true,value:values}:{ok:true,value:{},emptyObject:true}")
+s=s.replace("?expected.value==='/is_chaarlie_recommended/'&&typeof actual.value==='string'&&actual.value.includes('\"is_chaarlie_recommended\":false')&&(()=>{try{return JSON.parse(actual.value).is_chaarlie_recommended===false}catch{return false}})()", "?expected.emptyObject===true&&typeof actual.value==='string'&&actual.value.startsWith('{\"is_chaarlie_recommended\":false,\"schema_version\":\"scan-db-expansion-batch-v1\",')&&(!actual.truncated?(()=>{try{return JSON.parse(actual.value).is_chaarlie_recommended===false}catch{return false}})():actual.value.length===10000&&actual.remainingCharacters>0)")
+s=s.replace(":JSON.stringify(expected.value)===JSON.stringify(control.expectedValue)",":!expected.truncated&&!actual.truncated&&JSON.stringify(expected.value)===JSON.stringify(control.expectedValue)")
+s=s.replace(" return{accepted,expected,actual}"," const header='The input was expected to not match the regular expression /is_chaarlie_recommended/. Input:'\n return{accepted:accepted&&(control.expectedOperator!=='doesNotMatch'||errorMessage(text)?.startsWith(header)),expected,actual}")
+p.write_text(s)
+p=D/'prepare-pins.cjs';s=p.read_text();s=s.replace("const controls=read(P+'/controls.json').map(c=>{",r'''const amendment=read(D+'/c3-approved-amendment/disposition.json');
+if(sha(fs.readFileSync(D+'/c3-approved-amendment/disposition.json'))!=='31d64ada9026e651aedfe7d1f9ef8ecab89335b5c9f4f24c4538e94e2745e639'||sha(fs.readFileSync(D+'/c3-approved-amendment/controls.json'))!==amendment.revisedControlsSHA256)fail('Approved C3 amendment drift');
+const revised=read(D+'/c3-approved-amendment/controls.json'),priorControls=read(P+'/controls.json');
+for(let i=0;i<revised.length;i++){const copy={...revised[i]},prior=priorControls[i];if(copy.id==='C3-recommendation-serialization'){for(const k of ['new','mutantSHA256','actualPredicate','messagePredicate'])copy[k]=prior[k];if(revised[i].new!=='  const batchJson = JSON.stringify({ is_chaarlie_recommended: false, ...batch })')fail('C3 revision outside approved prefix')}if(JSON.stringify(copy)!==JSON.stringify(prior))fail('Unapproved control revision')}
+const controls=revised.map(c=>{''')
+s=s.replace("sha(fs.readFileSync(P+'/snapshots/mutants/'+c.id+'.ts'))!==c.mutantSHA256", "sha(fs.readFileSync(c.id==='C3-recommendation-serialization'?D+'/c3-approved-amendment/'+c.id+'.ts':P+'/snapshots/mutants/'+c.id+'.ts'))!==c.mutantSHA256")
+s=s.replace("for(const c of controls)artifacts[P+'/snapshots/mutants/'+c.id+'.ts']=c.mutatedSha256;", "for(const c of priorControls)artifacts[P+'/snapshots/mutants/'+c.id+'.ts']=c.mutantSHA256;for(const n of fs.readdirSync(D+'/c3-approved-amendment'))artifacts[D+'/c3-approved-amendment/'+n]=sha(fs.readFileSync(D+'/c3-approved-amendment/'+n));")
+p.write_text(s)
+# Preserve authoring procedure as a new full source artifact.
+(D/'amend-proof.py').write_text(Path('/tmp/catalog99-proof-amendment.py').read_text())

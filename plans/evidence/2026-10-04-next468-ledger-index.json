@@ -1,0 +1,50 @@
+[
+  {
+    "lane": "journey",
+    "kind": "ledger",
+    "path": "plans/evidence/2026-10-04-next468-journey-ledger.md",
+    "sha256": "a9d787543ac1ac835627f9b230cdfdd725e431fb05239ee69b4c33319476a975"
+  },
+  {
+    "lane": "journey",
+    "kind": "candidates",
+    "path": "plans/evidence/2026-10-04-next468-journey-candidates.json",
+    "sha256": "4dfdc5466c54ce740b47a673a327a8a862a71cd1e4db3d026efc3856b404569d"
+  },
+  {
+    "lane": "context",
+    "kind": "ledger",
+    "path": "plans/evidence/2026-10-04-next468-context-ledger.md",
+    "sha256": "a73e61edda6afa271a8345af24cfab285c291e07d9de92b2df2a3d29a40095d8"
+  },
+  {
+    "lane": "context",
+    "kind": "candidates",
+    "path": "plans/evidence/2026-10-04-next468-context-candidates.json",
+    "sha256": "f1fb15c0e684ee620a3f4b4ece490b9d14809bce615f5038d9a024210d370ab2"
+  },
+  {
+    "lane": "scanner",
+    "kind": "ledger",
+    "path": "plans/evidence/2026-10-04-next468-scanner-ledger.md",
+    "sha256": "2db85b19a917042f6b980bd1d7090e4632d4320822b7f590dcfc638848c3576e"
+  },
+  {
+    "lane": "scanner",
+    "kind": "candidates",
+    "path": "plans/evidence/2026-10-04-next468-scanner-candidates.json",
+    "sha256": "58be55864d5d01fd0099881ac2ffd085afd3da97a9aa97702b94ff6c1a09eff0"
+  },
+  {
+    "lane": "validator",
+    "kind": "ledger",
+    "path": "plans/evidence/2026-10-04-next468-validator-ledger.md",
+    "sha256": "ce7c2c416ad96ed9eb6fa79ed45a02cecaa0417cfcab24a5dddb484b993bb73d"
+  },
+  {
+    "lane": "validator",
+    "kind": "candidates",
+    "path": "plans/evidence/2026-10-04-next468-validator-candidates.json",
+    "sha256": "774d7860d4d90ec06641fe16bcff17be2f788d2a1a61cf56c5be58c6c487a23f"
+  }
+]

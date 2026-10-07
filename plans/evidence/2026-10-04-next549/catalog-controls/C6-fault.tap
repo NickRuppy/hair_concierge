@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: Phase 1B and the 25-product frozen pilot fingerprints are stable across capture times
+not ok 1 - Phase 1B and the 25-product frozen pilot fingerprints are stable across capture times
+  ---
+  duration_ms: 16.512625
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scanner-catalog-coverage-phase1b-ledger.test.ts:2:4812'
+  failureType: 'testCodeFailure'
+  error: |-
+    dry-shampoo-002
+    + actual - expected
+    
+    + 'https://www.rossmann.de/de/pflege-und-duft-got2b-trockenshampoo-trocken-waesche-anderes-produkt/p/4015100800203'
+    - 'https://www.rossmann.de/de/pflege-und-duft-got2b-trockenshampoo-trocken-waesche-extra-frisch/p/4015100800203'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'https://www.rossmann.de/de/pflege-und-duft-got2b-trockenshampoo-trocken-waesche-extra-frisch/p/4015100800203'
+  actual: 'https://www.rossmann.de/de/pflege-und-duft-got2b-trockenshampoo-trocken-waesche-anderes-produkt/p/4015100800203'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scanner-catalog-coverage-phase1b-ledger.test.ts:192:29)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 195.19725

@@ -19,7 +19,6 @@ import { knownCareAnswers, type KnownCareAnswers } from "../src/lib/user-facts/k
 import {
   DIRECT_ACCEPTANCE_WET_WASH_FREQUENCY,
   buildDirectAcceptanceStage2Defaults,
-  directAcceptanceAssumptions,
 } from "../src/lib/personal-plan/direct-acceptance/defaults"
 import { createPersistedStage2RefinementGateway } from "../src/lib/personal-plan/refinement/production-persistence-gateway"
 import { Stage2RefinementError } from "../src/lib/personal-plan/refinement/gateway"
@@ -44,7 +43,6 @@ import type {
   Stage3AuthoritySemanticIntent,
 } from "../src/lib/personal-plan/products/authority/contracts"
 import type { Stage3ProductDraft } from "../src/lib/personal-plan/products/contracts"
-import { PRODUCT_FREQUENCY_LABELS } from "../src/lib/vocabulary/frequencies"
 
 const ARTIFACT_ID = "11111111-1111-4111-8111-111111111111"
 const PERSONAL_PLAN_ID = "22222222-2222-4222-8222-222222222222"
@@ -204,60 +202,6 @@ test("resolving the deferred scalp question can still add Scalp Care for an oily
   assert.deepEqual(scalpCare?.roles, ["scalp_flake_oil_adjunct"])
   // The "normal" default at least keeps the irritation-driven comfort role out.
   assert.equal(scalpCare?.roles.includes("scalp_comfort"), false)
-})
-
-/* ── Defaults: German assumption labels ── */
-
-test("assumption labels stay honest to the chosen defaults", () => {
-  const assumptions = directAcceptanceAssumptions({
-    relevantCategories: ["shampoo"],
-    hasReportedIrritatedScalp: false,
-    dryShampooBridgeEligibility: "ineligible",
-  })
-
-  assert.ok(assumptions.length >= 4)
-  for (const assumption of assumptions) {
-    assert.ok(assumption.id.length > 0)
-    assert.ok(assumption.label.trim().length > 0)
-  }
-  const washAssumption = assumptions.find((item) => item.id === "wet_wash_frequency")
-  assert.ok(washAssumption)
-  assert.ok(
-    washAssumption.label.includes(PRODUCT_FREQUENCY_LABELS[DIRECT_ACCEPTANCE_WET_WASH_FREQUENCY]),
-    `wash label must name the actual default frequency, got "${washAssumption.label}"`,
-  )
-  assert.equal(
-    assumptions.some((item) => item.id === "scalp_irritation_detail"),
-    false,
-  )
-  assert.equal(
-    assumptions.some((item) => item.id === "dry_shampoo_bridge_preference"),
-    false,
-  )
-})
-
-test("assumption labels disclose the conditional Stage 2 answers", () => {
-  const assumptions = directAcceptanceAssumptions({
-    relevantCategories: ["shampoo", "scalp_care"],
-    hasReportedIrritatedScalp: true,
-    dryShampooBridgeEligibility: "eligible",
-  })
-
-  assert.ok(assumptions.some((item) => item.id === "scalp_irritation_detail"))
-  assert.ok(assumptions.some((item) => item.id === "dry_shampoo_bridge_preference"))
-})
-
-test("every assumption maps to an answered default question", () => {
-  for (const variant of TRIGGER_CONTEXT_VARIANTS) {
-    const defaults = buildDirectAcceptanceStage2Defaults(variant.triggerContext)
-    const answered = new Set<string>(defaults.completedQuestionIds)
-    for (const assumption of directAcceptanceAssumptions(variant.triggerContext)) {
-      assert.ok(
-        answered.has(assumption.id),
-        `${variant.name}: assumption ${assumption.id} is not an answered question`,
-      )
-    }
-  }
 })
 
 /* ── Per-role resolution ── */

@@ -1,0 +1,178 @@
+[
+  {
+    "id": "none-match",
+    "file": "src/lib/product-identity/brand-resolution.ts",
+    "sourceSHA256": "5182615a8419b477e73b0a00e05e78bb9436d8b7ad9c3c7f2d35850f65e48b8a",
+    "function": "none",
+    "functionAnchor": "function none(rawText: string): BrandResolution {\n  return {\n    match: \"none\",\n    brand: null,\n    productLine: null,\n    matchedText: null,\n    confidence: \"none\",\n    reason: \"unresolved\",\n    unresolvedRawText: rawText,\n  }\n}",
+    "from": "match: \"none\",",
+    "to": "match: \"brand\",",
+    "mutatedSHA256": "4370e93bf150884d54d71603da12720bf1650420a88a957db6bc03465f5d391e",
+    "test": {
+      "file": "tests/product-identity-resolution.test.ts",
+      "name": "resolveBrandFromText returns an exact brand match without over-matching inside words"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^resolveBrandFromText returns an exact brand match without over-matching inside words$",
+      "tests/product-identity-resolution.test.ts"
+    ],
+    "selectedASTCount": 1,
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "strictEqual",
+    "expected": "none",
+    "actual": "brand",
+    "firstKeeperFrameRequired": true,
+    "oracles": {
+      "transfer": {
+        "startLine": 43,
+        "text": "assert.equal(nonMatch.match, \"none\")",
+        "keeperSHA256": "dc57efea35efd6126771d20aae5b3eeebdfff9e8ec4c9ed2015a5f5a70f96daf"
+      },
+      "cut": {
+        "startLine": 43,
+        "text": "assert.equal(nonMatch.match, \"none\")",
+        "keeperSHA256": "dc57efea35efd6126771d20aae5b3eeebdfff9e8ec4c9ed2015a5f5a70f96daf"
+      }
+    },
+    "status": "STATIC_ONLY_NOT_EXECUTED"
+  },
+  {
+    "id": "none-confidence",
+    "file": "src/lib/product-identity/brand-resolution.ts",
+    "sourceSHA256": "5182615a8419b477e73b0a00e05e78bb9436d8b7ad9c3c7f2d35850f65e48b8a",
+    "function": "none",
+    "functionAnchor": "function none(rawText: string): BrandResolution {\n  return {\n    match: \"none\",\n    brand: null,\n    productLine: null,\n    matchedText: null,\n    confidence: \"none\",\n    reason: \"unresolved\",\n    unresolvedRawText: rawText,\n  }\n}",
+    "from": "confidence: \"none\",",
+    "to": "confidence: \"high\",",
+    "mutatedSHA256": "9e28ca334a856319e97dc505a13adb4fc387143b676dbb35a1fb45267e321aa1",
+    "test": {
+      "file": "tests/product-identity-resolution.test.ts",
+      "name": "resolveBrandFromText returns an exact brand match without over-matching inside words"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^resolveBrandFromText returns an exact brand match without over-matching inside words$",
+      "tests/product-identity-resolution.test.ts"
+    ],
+    "selectedASTCount": 1,
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "strictEqual",
+    "expected": "none",
+    "actual": "high",
+    "firstKeeperFrameRequired": true,
+    "oracles": {
+      "transfer": {
+        "startLine": 45,
+        "text": "assert.equal(nonMatch.confidence, \"none\")",
+        "keeperSHA256": "dc57efea35efd6126771d20aae5b3eeebdfff9e8ec4c9ed2015a5f5a70f96daf"
+      },
+      "cut": {
+        "startLine": 45,
+        "text": "assert.equal(nonMatch.confidence, \"none\")",
+        "keeperSHA256": "dc57efea35efd6126771d20aae5b3eeebdfff9e8ec4c9ed2015a5f5a70f96daf"
+      }
+    },
+    "status": "STATIC_ONLY_NOT_EXECUTED"
+  },
+  {
+    "id": "none-reason",
+    "file": "src/lib/product-identity/brand-resolution.ts",
+    "sourceSHA256": "5182615a8419b477e73b0a00e05e78bb9436d8b7ad9c3c7f2d35850f65e48b8a",
+    "function": "none",
+    "functionAnchor": "function none(rawText: string): BrandResolution {\n  return {\n    match: \"none\",\n    brand: null,\n    productLine: null,\n    matchedText: null,\n    confidence: \"none\",\n    reason: \"unresolved\",\n    unresolvedRawText: rawText,\n  }\n}",
+    "from": "reason: \"unresolved\",",
+    "to": "reason: \"canonical_brand_exact\",",
+    "mutatedSHA256": "7aae0f6e3adeec38b981f017188f38a560114a990b8a62e38c34819a304ffd2d",
+    "test": {
+      "file": "tests/product-identity-resolution.test.ts",
+      "name": "resolveBrandFromText returns an exact brand match without over-matching inside words"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^resolveBrandFromText returns an exact brand match without over-matching inside words$",
+      "tests/product-identity-resolution.test.ts"
+    ],
+    "selectedASTCount": 1,
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "strictEqual",
+    "expected": "unresolved",
+    "actual": "canonical_brand_exact",
+    "firstKeeperFrameRequired": true,
+    "oracles": {
+      "transfer": {
+        "startLine": 46,
+        "text": "assert.equal(nonMatch.reason, \"unresolved\")",
+        "keeperSHA256": "dc57efea35efd6126771d20aae5b3eeebdfff9e8ec4c9ed2015a5f5a70f96daf"
+      },
+      "cut": {
+        "startLine": 46,
+        "text": "assert.equal(nonMatch.reason, \"unresolved\")",
+        "keeperSHA256": "dc57efea35efd6126771d20aae5b3eeebdfff9e8ec4c9ed2015a5f5a70f96daf"
+      }
+    },
+    "status": "STATIC_ONLY_NOT_EXECUTED"
+  },
+  {
+    "id": "none-raw-preservation",
+    "file": "src/lib/product-identity/brand-resolution.ts",
+    "sourceSHA256": "5182615a8419b477e73b0a00e05e78bb9436d8b7ad9c3c7f2d35850f65e48b8a",
+    "function": "none",
+    "functionAnchor": "function none(rawText: string): BrandResolution {\n  return {\n    match: \"none\",\n    brand: null,\n    productLine: null,\n    matchedText: null,\n    confidence: \"none\",\n    reason: \"unresolved\",\n    unresolvedRawText: rawText,\n  }\n}",
+    "from": "unresolvedRawText: rawText,",
+    "to": "unresolvedRawText: rawText.toLowerCase(),",
+    "mutatedSHA256": "a85a7113f997f71e0b91b501165adfa0cfef554d5a07d3c998ff5ca590025d5a",
+    "test": {
+      "file": "tests/product-identity-resolution.test.ts",
+      "name": "resolveBrandFromText returns an exact brand match without over-matching inside words"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^resolveBrandFromText returns an exact brand match without over-matching inside words$",
+      "tests/product-identity-resolution.test.ts"
+    ],
+    "selectedASTCount": 1,
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "strictEqual",
+    "expected": "SK18 Leave-in Molecular Repair Hair Oil",
+    "actual": "sk18 leave-in molecular repair hair oil",
+    "firstKeeperFrameRequired": true,
+    "oracles": {
+      "transfer": {
+        "startLine": 47,
+        "text": "assert.equal(nonMatch.unresolvedRawText, \"SK18 Leave-in Molecular Repair Hair Oil\")",
+        "keeperSHA256": "dc57efea35efd6126771d20aae5b3eeebdfff9e8ec4c9ed2015a5f5a70f96daf"
+      },
+      "cut": {
+        "startLine": 47,
+        "text": "assert.equal(nonMatch.unresolvedRawText, \"SK18 Leave-in Molecular Repair Hair Oil\")",
+        "keeperSHA256": "dc57efea35efd6126771d20aae5b3eeebdfff9e8ec4c9ed2015a5f5a70f96daf"
+      }
+    },
+    "status": "STATIC_ONLY_NOT_EXECUTED"
+  }
+]

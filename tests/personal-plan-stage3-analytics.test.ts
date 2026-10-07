@@ -97,16 +97,6 @@ test("Stage 3 baseline analytics is consent-aware and suppresses verbose events"
   ])
 })
 
-test("Stage 3 handoff outcomes keep pending products and gaps non-blocking", () => {
-  const outcomes: AppEventMap["personal_plan_stage3_handoff"]["outcome"][] = [
-    "ready_for_routine",
-    "ready_with_pending",
-    "ready_with_gap",
-  ]
-
-  assert.deepEqual(outcomes, ["ready_for_routine", "ready_with_pending", "ready_with_gap"])
-})
-
 test("Stage 3 structural analytics maps only its bounded privacy-safe contract", () => {
   const payloads: { [E in (typeof verboseStage3EventNames)[number]]: AppEventMap[E] } = {
     personal_plan_stage3_decision_selected: { decisionType: "override", stepKey: "fit_decision" },
@@ -136,6 +126,8 @@ test("Stage 3 structural analytics maps only its bounded privacy-safe contract",
     for (const eventName of verboseStage3EventNames) {
       postHogDestination.track(eventName, payloads[eventName])
     }
+    postHogDestination.track("personal_plan_stage3_handoff", { outcome: "ready_with_pending" })
+    postHogDestination.track("personal_plan_stage3_handoff", { outcome: "ready_with_gap" })
   } finally {
     posthog.capture = originalCapture
   }
@@ -165,6 +157,8 @@ test("Stage 3 structural analytics maps only its bounded privacy-safe contract",
       },
     ],
     ["personal_plan_stage3_handoff", { outcome: "ready_for_routine" }],
+    ["personal_plan_stage3_handoff", { outcome: "ready_with_pending" }],
+    ["personal_plan_stage3_handoff", { outcome: "ready_with_gap" }],
   ])
 
   const mappedPropertyKeys = calls.flatMap(([, properties]) => Object.keys(properties as object))

@@ -1,0 +1,10 @@
+{
+  "phase": "transfer",
+  "verified": 3,
+  "planSHA": "967d28feebe953f3296657d442fa673d3e1f20000b04eb78a18f957dda4c8fdc",
+  "controls": [
+    "C1-drop-newest",
+    "C1-no-warning",
+    "D1-accept-invalid-correlation"
+  ]
+}

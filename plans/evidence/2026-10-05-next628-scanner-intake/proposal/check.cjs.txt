@@ -1,0 +1,9 @@
+'use strict'
+const fs=require('node:fs'),crypto=require('node:crypto'),ts=require('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript')
+const D='/tmp/test-audit-scanner-intake26',R='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=f=>JSON.parse(fs.readFileSync(f))
+let parsed=0
+for(const c of read(D+'/controls.json')){const original=fs.readFileSync(R+'/'+c.owner,'utf8'),mutant=fs.readFileSync(D+'/prospective-mutants/'+c.id+'/'+c.owner,'utf8');if(sha(original)!==c.ownerSha256||sha(mutant)!==c.mutatedSha256||original.split(c.anchor).length!==2||original.replace(c.anchor,c.replacement)!==mutant)throw Error(c.id+' anchor');const sf=ts.createSourceFile(c.owner,mutant,ts.ScriptTarget.Latest,true,c.owner.endsWith('.tsx')?ts.ScriptKind.TSX:ts.ScriptKind.TS);if(sf.parseDiagnostics.length)throw Error(c.id+' parse');for(const phase of ['transfer','cut']){const rows=read(D+'/'+phase+'-ast.json'),pattern=new RegExp(c.command.at(-2).slice('--test-name-pattern='.length));if(rows.filter(r=>pattern.test(r.title)).length!==1)throw Error(c.id+' selection')}parsed++}
+for(const p of read(D+'/read-scope.json').readSet)if(sha(fs.readFileSync(R+'/'+p.file))!==p.sha256)throw Error('readset drift '+p.file)
+const nav=read('/tmp/test-audit-navigation607-next-cohorts.json').cohorts[1]
+for(const p of nav.files)if(sha(fs.readFileSync(R+'/'+p.file))!==p.sha256)throw Error('navigation drift')
+console.log(JSON.stringify({mutantsParsed:parsed,uniqueAnchors:parsed,exactSelectionsInTransferAndCut:parsed*2,readsetGuards:25,navigationTestPinsUnchanged:true,repositoryWrites:0,ownerOrTestImports:0,runtimeTests:0,actualFaults:0,childrenStarted:0}))

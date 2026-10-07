@@ -1,0 +1,38 @@
+# Personal Plan result / offer / quiz source-surface audit — read-only
+
+Baseline `21e0e41fa996ec6a725c258ab3766971f0edb94d`. No repository edits, test runners, provider calls, or live reads.
+
+## Scope accounting
+
+Targeted census: root test files named for Personal Plan, premium, result, offer, quiz, refinement, or start that use `readFile*`, `renderToStaticMarkup`, or `render`; excluded scanner, Stage 3, Stage 5, migrations/PGlite/Postgres, field-test, billing/payment, Customer.io/PostHog, and earlier retired guided-story leaves. That finds **81 files / 829 top-level `test()` declarations**. The census is a candidate map, not a claim that all 829 were fully read.
+
+Complete-read and production-owner tracing in this pass: **11 files / 56 declarations**: `offer-experiment` (1), `quiz-result-cta` (2), `quiz-result-routing` (4), `quiz-result-navigation` (7), `quiz-motion-tokens` (3), `quiz-motivation-copy` (3), `quiz-offer-preview` (9), `quiz-funnel-copy` (9), `quiz-result-transformation-card` (2), `quiz-results-view` (1), and `result-page-client` (10), plus the current `tracker-page` and `eval-chat` keepers needed for the D finding.
+
+**D 2 declarations; C 0; F 0; R 54** among those 56 fully read declarations. The broad 773-declaration remainder remains triaged only and is not a deletion claim.
+
+## D — complete, evidence-ready legacy absence checks
+
+| Test | Failure it currently detects | Why deletion is safe / current keeper | History, cleanup, risk, validation |
+| --- | --- | --- | --- |
+| `tests/offer-experiment.test.ts:9`, `the retired guided-story experiment has no active assignment or runtime flag` (**1**) | Merely finds three removed identifier strings in `src/lib/funnel/flags.ts` / `server.ts`; it invokes no flag, assignment, route, or event behavior. | `git grep` at baseline finds the three identifiers only in this test. The retired implementation was deleted by `2ae521b5` (2026-08-28): flag, imports, resolver, assignment and its experiment module were removed from the active server path. Current offer experiments are independently exercised through their live functions and routes; this absence grep cannot prove their behavior. No assertion transfer is needed. | Delete the whole test file. No source cleanup is unlocked because the guarded owners are already gone. Risk is only a future deliberate reintroduction, which requires production code and should receive a new behavioral test. Focused validation: `node --import ./tests/server-only-register.cjs --import tsx --test tests/offer-experiment.test.ts` before deletion; then `npm run test:node`. |
+| `tests/quiz-result-cta.test.ts:15`, `the retired three-step unlock CTA is gone, not merely unreachable` (**1**) | Searches `src/lib/quiz/result-cta.ts` for prior literal copy and the obsolete per-access CTA branch. It does not execute a route or render a result. | The retained declaration in the same file (`:8`) executes the only current `QUIZ_RESULT_CTA`; both live consumers import it: `src/components/quiz/quiz-results.tsx:7,135` and `src/app/result/[leadId]/result-client.tsx:23,241-264`. `tests/result-page-client.test.tsx:54-71` renders the entitled result through its onboarding CTA, while `tests/quiz-result-routing.test.ts:11-64` exercises the access redirect decision. Together they own the current user-visible destination and CTA; a literal non-match for former copy adds no distinct failure. | Retire only this declaration; keep `the result CTA sends the reader into routine setup`. `2ae521b5` replaced the access-conditioned helper with the sole CTA after the founder’s 27 Aug flow ruling. No source cleanup. Risk: copy or route changes should update the retained runtime CTA/result tests. Focused validation: `node --import ./tests/server-only-register.cjs --import tsx --test tests/quiz-result-cta.test.ts tests/quiz-result-routing.test.ts tests/result-page-client.test.tsx`. |
+
+## R — fully read active contracts
+
+| Test(s), declarations | Owner and concrete live seam | Why retained |
+| --- | --- | --- |
+| `quiz-result-routing` (4), `quiz-result-navigation` (7) | `src/components/quiz/quiz-results.tsx` redirects no-access completions; `src/app/result/[leadId]/page.tsx` parses focus/entry/retake context; `src/app/result/[leadId]/result-client.tsx` consumes it. | Tests encode URL escaping, repeated-param handling and open-redirect rejection. The source checks additionally bind validated retake context to the server-to-client handoff. These are distinct access/security contracts. |
+| `result-page-client` (10) | `ResultPageClient`, reached by `/result/[leadId]`; it selects entitlements, regular/partner availability, scanner return presentation and organic offer. | Each render covers distinct entitlement/result state. The two source checks protect reset ordering and empty-tracking prevention, neither duplicated by a generic route render. Preserve. |
+| `quiz-offer-preview` (9) | `buildQuizOfferPreview`, `deriveOfferPreviewNeedProfile`, and `OfferPreviewRoutine`; live result/offer presentation selects current product examples. | The table inputs cover distinct scalp/thickness/conditioner axes, safety wording and a rendered omission of the suggested product. They are deterministic owner contracts, not cosmetic copy snapshots. |
+| `quiz-funnel-copy` (9) | `getQuizFunnelCopy` feeds `QuizFunnelPackageProvider` and `QuizInfoStrip` on active `/quiz` / funnel routes. | Package-specific German copy includes an explicit pre-payment claim boundary; SSR tests ensure first paint receives the package context. Retain even where exact wording is asserted. |
+| `quiz-motion-tokens` (3) | `MOTION_MS`, active regular and Personal Plan quiz shells, and CSS transition classes. | A shared timing-token policy protects single-tap/back behavior across two independently mounted shells. No executable browser test currently asserts the private-delay prohibition across all four owners. |
+| `quiz-motivation-copy` (3) | `src/lib/quiz/questions` and rendered goals/options. | The first two validate derived question count/index logic; the source check preserves `aria-pressed` selection semantics. No same named keeper. |
+| `quiz-result-transformation-card` (2), `quiz-results-view` (1) | Rendered by `QuizResultsView`, itself consumed by both legacy results and `/result/[leadId]/result-client.tsx`. | Structural output verifies rows, labels, action nesting and accessible connector; retired-visual assertions live inside active render contracts rather than being standalone absence checks. Retain. |
+
+## Triage boundaries and non-findings
+
+The larger candidates `personal-plan-start-ui` (59), `personal-plan-start-resume` (36), `personal-plan-stage2-module-entry` (32), `personal-plan-stage4-ui` (27), `personal-plan-product-fit-comparison` (27), `personal-plan-accept-ideal-plan` (28), `personal-plan-one-time-checkout` (28), and `personal-plan-offer-page` (19) were inventoried but not promoted without full read. Their names and import seams show active Plan Start, refined product, offer and checkout ownership; this pass does not convert their static/render style into a deletion conclusion.
+
+Likewise, source-looking assertions in `personal-plan-ready-server-first`, Stage 4 release, consent, result-return, and quiz-server-draft files were retained from this pass because they cover access, recovery, data persistence, release gates or transaction/route composition. They require a separate whole-file audit before any declaration can be marked D.
+
+Native focused commands above use the repository’s actual Node/tsx loader. The full Personal Plan lane is `npm run test:personal-plan` plus its nested runner, and the browser journey command is `npm run test:playwright:personal-plan-stage3`; none were run here.

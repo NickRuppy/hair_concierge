@@ -6,7 +6,6 @@ import { tmpdir } from "node:os"
 import { readReviewPackage } from "../scripts/product-intake/review-app"
 
 import {
-  parseProductIntakeResearchedPayload,
   validateProductIntakeApprovalPayload,
   type ProductIntakeReviewCategoryKey,
 } from "../src/lib/product-intake/category-validators"
@@ -828,11 +827,13 @@ test("Shampoo rejects an extra protocol for a role unsupported by its reviewed b
 
 test("Mask and Leave-in emit every canonical v3 fact", () => {
   for (const category of ["mask", "leave_in"] as const) {
-    const result = validateProductIntakeApprovalPayload(
-      reviewedPayload(category, validCategorySpecs(category)),
-    )
+    const payload = reviewedPayload(category, validCategorySpecs(category))
+    const result = validateProductIntakeApprovalPayload(payload)
     assert.equal(result.ok, true)
     if (!result.ok) continue
+    if (category === "mask") {
+      assert.deepEqual(result.normalizedPayload.draft, payload.draft)
+    }
     const row = result.targetSpecOperations.find(
       (operation) =>
         operation.table === (category === "mask" ? "product_mask_specs" : "product_leave_in_specs"),
@@ -1033,18 +1034,6 @@ test("manual review flag is required before approval", () => {
 
   assert.equal(result.ok, false)
   assert.ok(result.missingFields.includes("final.review.manual_reviewed"))
-})
-
-test("researched payload parser keeps draft and final JSON payloads", () => {
-  const payload = reviewedPayload("mask", validCategorySpecs("mask"))
-
-  const parsed = parseProductIntakeResearchedPayload(payload)
-  const validated = validateProductIntakeApprovalPayload(payload)
-
-  assert.ok(parsed.ok)
-  assert.deepEqual(parsed.payload.draft, payload.draft)
-  assert.ok(validated.ok)
-  assert.deepEqual(validated.normalizedPayload.draft, payload.draft)
 })
 
 test("each supported category emits expected target table operation shapes", () => {

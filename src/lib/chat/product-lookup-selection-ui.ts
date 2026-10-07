@@ -157,24 +157,6 @@ export function hasPendingProductIntakeReview(messages: Message[]): boolean {
   return false
 }
 
-export function buildResolvedProductLookupSelectionByMessageId(
-  messages: Message[],
-): Map<string, ProductLookupSelectionContext> {
-  const states = buildProductLookupClarificationStateByMessageId(messages)
-  const resolvedSelections = new Map<string, ProductLookupSelectionContext>()
-  for (const [messageId, state] of states) {
-    if (state.resolvedSelection) resolvedSelections.set(messageId, state.resolvedSelection)
-  }
-  return resolvedSelections
-}
-
-export function findResolvedProductLookupSelectionForMessage(
-  messages: Message[],
-  sourceMessage: Message,
-): ProductLookupSelectionContext | null {
-  return buildResolvedProductLookupSelectionByMessageId(messages).get(sourceMessage.id) ?? null
-}
-
 function isResolvedProductIntakeReview(
   value: unknown,
 ): value is ProductLookupIntakeReviewResolution {

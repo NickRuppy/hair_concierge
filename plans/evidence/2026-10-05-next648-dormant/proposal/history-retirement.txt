@@ -1,0 +1,205 @@
+commit 05da162ec509999e062da560cbadaa6500d52c2b
+Author:     NickRuppy <149665130+NickRuppy@users.noreply.github.com>
+AuthorDate: Thu Aug 13 09:35:01 2026 +0200
+Commit:     GitHub <noreply@github.com>
+CommitDate: Thu Aug 13 09:35:01 2026 +0200
+
+    Activate the complete Personal Plan journey (#382)
+    
+    ## Why
+    
+    The five-stage Personal Plan was merged but remained unavailable because
+    its top-level and Stage 5 launch flags were empty, and the reviewed V2
+    application catalog had never been applied. Stage 5 also still had a
+    runtime V1/V2 fork after its canonical instructions were approved.
+    
+    ## What changed
+    
+    - Retire the obsolete Personal Plan app and Stage 2–5 launch flags;
+    eligible owners now follow the released five-stage journey by default.
+    - Make Anwendung use the V2 contract exclusively, with shared canonical
+    family instructions for ordinary products and exact steps only for the
+    five reviewed workflows.
+    - Remove the duplicate generic label-time caution when a targeted
+    shampoo already renders its reviewed timing.
+    - Add a service-role-only, atomic, idempotent V2 artifact executor plus
+    guarded operator apply/readback tooling.
+    - Preserve the new-buyer cutoff, legacy-quiz cutover, owner
+    authorization, and initial-Routine write gate as real independent
+    boundaries.
+    
+    ## Verification
+    
+    - `npm run typecheck`
+    - `npm run test:node` — 3,624 passed before rebasing onto PR #381
+    - `npm run test:personal-plan` — 1,259 passed before rebasing onto PR
+    #381
+    - `npm run test:personal-plan-stage5` — 193 passed on current head
+    - `npm run lint` — no errors; four pre-existing warnings
+    - `npm run build` — 125 pages built on current head
+    - `npm run personal-plan:application-audit` — 273 rows, 272 composable,
+    one explicit blocker
+    - Live read-only preflight — zero blockers across 224 products / 273
+    roles
+    - Production migration `20260813060630` applied
+    - Production artifact first apply and exact retry both returned 23
+    families / 273 pointers / 273 ledger rows with exact readback
+    - Independent Claude whole-branch review; all blocking findings resolved
+    
+    ## Risks / follow-up
+    
+    - Rollback is revert-and-redeploy; V1 data remains intact for that path.
+    - OLAPLEX No.0 remains the one explicit non-executable workflow until
+    its real companion is verified.
+    - Product Intake’s future-publication V2 invariant is an immediate
+    separate follow-up so this activation remains independently revertible.
+    - PR #381 intentionally removed Docker-backed pgTAP and persisted Stage
+    4/5 browser harnesses. This branch preserves that deletion and relies on
+    migration source contracts plus guarded production-first apply/readback.
+
+diff --git a/src/lib/personal-plan/release.ts b/src/lib/personal-plan/release.ts
+index 8c9091f2..ceeae017 100644
+--- a/src/lib/personal-plan/release.ts
++++ b/src/lib/personal-plan/release.ts
+@@ -1,33 +1,18 @@
+ type PersonalPlanAppReleaseEnvironment = {
+   [key: string]: string | undefined
+-  PERSONAL_PLAN_APP_V1_ENABLED?: string
+-  PERSONAL_PLAN_APP_V1_ROLLOUT?: string
+   PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS?: string
+   PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF?: string
+   PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED?: string
+-  PERSONAL_PLAN_STAGE2_ENABLED?: string
+-  PERSONAL_PLAN_STAGE3_ENABLED?: string
+-  PERSONAL_PLAN_STAGE4_ENABLED?: string
+   PERSONAL_PLAN_STAGE4_AUTO_ACTIVATE_INITIAL?: string
+ }
+ 
+ export type PersonalPlanAppV1Rollout = "off" | "internal" | "all"
+ 
+-const APP_ROLLOUT_VALUES = new Set<PersonalPlanAppV1Rollout>(["off", "internal", "all"])
+-
+ export function resolvePersonalPlanAppV1Rollout(
+-  environment: PersonalPlanAppReleaseEnvironment = process.env,
++  _environment: PersonalPlanAppReleaseEnvironment = process.env,
+ ): PersonalPlanAppV1Rollout {
+-  const configured = environment.PERSONAL_PLAN_APP_V1_ROLLOUT
+-  if (configured !== undefined) {
+-    return APP_ROLLOUT_VALUES.has(configured as PersonalPlanAppV1Rollout)
+-      ? (configured as PersonalPlanAppV1Rollout)
+-      : "off"
+-  }
+-
+-  // Preserve the reviewed boolean release contract for existing test and
+-  // deployment environments that do not configure a cohort rollout yet.
+-  return environment.PERSONAL_PLAN_APP_V1_ENABLED === "true" ? "all" : "off"
++  void _environment
++  return "all"
+ }
+ 
+ export function canAccessPersonalPlanAppV1Rollout(input: {
+@@ -51,44 +36,43 @@ export function resolvePersonalPlanAppV1InternalEmails(
+ }
+ 
+ export function isPersonalPlanStage2Enabled(
+-  environment: PersonalPlanAppReleaseEnvironment = process.env,
++  _environment: PersonalPlanAppReleaseEnvironment = process.env,
+ ): boolean {
+-  return environment.PERSONAL_PLAN_STAGE2_ENABLED === "true"
++  void _environment
++  return true
+ }
+ 
+ export function isPersonalPlanStage3Enabled(
+-  environment: PersonalPlanAppReleaseEnvironment = process.env,
++  _environment: PersonalPlanAppReleaseEnvironment = process.env,
+ ): boolean {
+-  return environment.PERSONAL_PLAN_STAGE3_ENABLED === "true"
++  void _environment
++  return true
+ }
+ 
+ export function isPersonalPlanStage4Enabled(
+-  environment: PersonalPlanAppReleaseEnvironment = process.env,
++  _environment: PersonalPlanAppReleaseEnvironment = process.env,
+ ): boolean {
+-  return environment.PERSONAL_PLAN_STAGE4_ENABLED === "true"
++  void _environment
++  return true
+ }
+ 
+ /**
+- * Keeps first-Routine auto-activation independently reversible while refusing
+- * to create a Routine that the Stage 4 journey cannot expose. The migration is
+- * additive; with either flag absent or disabled callers retain the legacy
+- * pending-proposal completion RPC.
++ * Keeps first-Routine auto-activation independently reversible. This controls
++ * a write behavior, not whether a released journey stage is visible.
+  */
+ export function isPersonalPlanStage4AutoActivateInitialEnabled(
+   environment: PersonalPlanAppReleaseEnvironment = process.env,
+ ): boolean {
+-  return (
+-    isPersonalPlanStage4Enabled(environment) &&
+-    environment.PERSONAL_PLAN_STAGE4_AUTO_ACTIVATE_INITIAL === "true"
+-  )
++  return environment.PERSONAL_PLAN_STAGE4_AUTO_ACTIVATE_INITIAL === "true"
+ }
+ 
+ const UTC_INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/
+ 
+ export function isPersonalPlanAppV1Enabled(
+-  environment: PersonalPlanAppReleaseEnvironment = process.env,
++  _environment: PersonalPlanAppReleaseEnvironment = process.env,
+ ): boolean {
+-  return environment.PERSONAL_PLAN_APP_V1_ENABLED === "true"
++  void _environment
++  return true
+ }
+ 
+ /** Separate default-off rollback gate for regular-quiz buyers. */
+diff --git a/src/lib/personal-plan/rollout-access.ts b/src/lib/personal-plan/rollout-access.ts
+index 01c7a451..29576e97 100644
+--- a/src/lib/personal-plan/rollout-access.ts
++++ b/src/lib/personal-plan/rollout-access.ts
+@@ -1,13 +1,7 @@
+ import "server-only"
+ 
+ import { isMissingPersonalPlanFieldTestRelation } from "@/lib/personal-plan-field-test/errors"
+-import { createAdminClient } from "@/lib/supabase/admin"
+-import {
+-  canAccessPersonalPlanAppV1Rollout,
+-  isPersonalPlanAppV1Enabled,
+-  resolvePersonalPlanAppV1Rollout,
+-  resolvePersonalPlanAppV1InternalEmails,
+-} from "./release"
++import { resolvePersonalPlanAppV1InternalEmails } from "./release"
+ 
+ export type PersonalPlanInternalUserClient = {
+   from: (table: "profiles") => {
+@@ -139,20 +133,10 @@ export async function isPersonalPlanInternalUser(
+ }
+ 
+ export async function isPersonalPlanAppV1AllowedForUser(
+-  userId: string,
+-  client?: PersonalPlanInternalUserClient,
++  _userId: string,
++  _client?: PersonalPlanInternalUserClient,
+ ): Promise<boolean> {
+-  const appEnabled = isPersonalPlanAppV1Enabled()
+-  const rollout = resolvePersonalPlanAppV1Rollout()
+-  if (!appEnabled || rollout === "off") return false
+-  if (rollout === "all") return true
+-
+-  return canAccessPersonalPlanAppV1Rollout({
+-    appEnabled,
+-    rollout,
+-    isInternal: await isPersonalPlanInternalUser(
+-      userId,
+-      client ?? (createAdminClient() as unknown as PersonalPlanInternalUserClient),
+-    ),
+-  })
++  void _userId
++  void _client
++  return true
+ }

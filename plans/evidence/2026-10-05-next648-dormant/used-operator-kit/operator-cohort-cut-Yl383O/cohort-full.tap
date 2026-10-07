@@ -1,0 +1,548 @@
+TAP version 13
+# [billing] app access check failed Error: trial history unavailable
+#     at Object.hasTrialBillingHistory (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/auth-middleware-personal-plan-routine.test.ts:159:42)
+#     at updateSession (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/supabase/middleware.ts:631:58)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/auth-middleware-personal-plan-routine.test.ts:416:25)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# [personal-plan] routine access check failed { message: 'database unavailable' }
+# [personal-plan] routine access check failed Error: personal plan lookup unavailable
+#     at Object.maybeSingle (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/auth-middleware-personal-plan-routine.test.ts:136:51)
+#     at updateSession (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/supabase/middleware.ts:846:16)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/auth-middleware-personal-plan-routine.test.ts:776:20)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# [personal-plan] routing frontier unavailable { message: 'routing source unavailable' }
+# [personal-plan] routing frontier unavailable { message: 'routing source unavailable' }
+# [personal-plan] routing frontier unavailable { message: 'routing source unavailable' }
+# [personal-plan] routing frontier unavailable { message: 'routing source unavailable' }
+# Subtest: released routing ignores obsolete internal rollout environment
+ok 1 - released routing ignores obsolete internal rollout environment
+  ---
+  duration_ms: 4.277625
+  ...
+# Subtest: field-test user with current access and a pending proposal reaches /routine
+ok 2 - field-test user with current access and a pending proposal reaches /routine
+  ---
+  duration_ms: 0.557958
+  ...
+# Subtest: tracker skips proxy intake and Personal Plan frontier reads
+ok 3 - tracker skips proxy intake and Personal Plan frontier reads
+  ---
+  duration_ms: 0.226459
+  ...
+# Subtest: flag off: FREEMIUM_SCANNER_FIRST_ENABLED unset still redirects tracker to reactivate (byte-identical)
+ok 4 - flag off: FREEMIUM_SCANNER_FIRST_ENABLED unset still redirects tracker to reactivate (byte-identical)
+  ---
+  duration_ms: 0.548083
+  ...
+# Subtest: flag on: a free authenticated user (no current access) reaches /tracker instead of being sent to reactivate
+ok 5 - flag on: a free authenticated user (no current access) reaches /tracker instead of being sent to reactivate
+  ---
+  duration_ms: 2.878208
+  ...
+# Subtest: flag on: a free authenticated user without current access is still gated on a non-admitted route (POST /api/chat stays subscription_required)
+ok 6 - flag on: a free authenticated user without current access is still gated on a non-admitted route (POST /api/chat stays subscription_required)
+  ---
+  duration_ms: 2.193667
+  ...
+# Subtest: expired trial cannot fall back to free pages or keepsake APIs; recovery stays reachable
+ok 7 - expired trial cannot fall back to free pages or keepsake APIs; recovery stays reachable
+  ---
+  duration_ms: 1.599167
+  ...
+# Subtest: verified current access takes precedence over trial history and unavailable history never opens previews
+ok 8 - verified current access takes precedence over trial history and unavailable history never opens previews
+  ---
+  duration_ms: 3.327208
+  ...
+# Subtest: flag on: GET /api/chat and GET /api/chat/[id] are admitted for keepsake reads (T17)
+ok 9 - flag on: GET /api/chat and GET /api/chat/[id] are admitted for keepsake reads (T17)
+  ---
+  duration_ms: 0.386542
+  ...
+# Subtest: flag off: GET /api/chat is still subscription_required (byte-identical)
+ok 10 - flag off: GET /api/chat is still subscription_required (byte-identical)
+  ---
+  duration_ms: 0.4045
+  ...
+# Subtest: flag on: a free authenticated user reaches the /scan page shell without being bounced to onboarding
+ok 11 - flag on: a free authenticated user reaches the /scan page shell without being bounced to onboarding
+  ---
+  duration_ms: 0.190625
+  ...
+# Subtest: flag on: needs_onboarding + no paid access reaches /anwendung without being bounced to onboarding
+ok 12 - flag on: needs_onboarding + no paid access reaches /anwendung without being bounced to onboarding
+  ---
+  duration_ms: 0.124917
+  ...
+# Subtest: flag on: a one-time-access owner (active, but hasCurrentAppAccess false) at needs_onboarding is still redirected to /onboarding from /anwendung (I1 regression)
+ok 13 - flag on: a one-time-access owner (active, but hasCurrentAppAccess false) at needs_onboarding is still redirected to /onboarding from /anwendung (I1 regression)
+  ---
+  duration_ms: 0.136375
+  ...
+# Subtest: flag off: a one-time-access owner at needs_onboarding is redirected to /onboarding from /anwendung (baseline)
+ok 14 - flag off: a one-time-access owner at needs_onboarding is redirected to /onboarding from /anwendung (baseline)
+  ---
+  duration_ms: 0.12425
+  ...
+# Subtest: chat retains proxy intake and preserves redirect query parameters
+ok 15 - chat retains proxy intake and preserves redirect query parameters
+  ---
+  duration_ms: 0.203875
+  ...
+# Subtest: a pending proposal does not grant /anwendung before an active routine exists
+ok 16 - a pending proposal does not grant /anwendung before an active routine exists
+  ---
+  duration_ms: 0.192666
+  ...
+# Subtest: field-test access fails closed when the app-access check is false
+ok 17 - field-test access fails closed when the app-access check is false
+  ---
+  duration_ms: 0.143791
+  ...
+# Subtest: email-bound moderator access reaches gated app routes without a synthetic guest marker
+ok 18 - email-bound moderator access reaches gated app routes without a synthetic guest marker
+  ---
+  duration_ms: 0.089666
+  ...
+# Subtest: an ended moderator cannot retain access through its still-active tester grant
+ok 19 - an ended moderator cannot retain access through its still-active tester grant
+  ---
+  duration_ms: 0.144125
+  ...
+# Subtest: an unavailable moderator lookup with only its tester grant returns unavailable
+ok 20 - an unavailable moderator lookup with only its tester grant returns unavailable
+  ---
+  duration_ms: 0.193625
+  ...
+# Subtest: an ended moderator with independently verified paid access remains admitted
+ok 21 - an ended moderator with independently verified paid access remains admitted
+  ---
+  duration_ms: 0.091791
+  ...
+# Subtest: an ended moderator with an active partner grant remains admitted
+ok 22 - an ended moderator with an active partner grant remains admitted
+  ---
+  duration_ms: 0.093042
+  ...
+# Subtest: an ended moderator without paid or partner access is still routed to the ended screen
+ok 23 - an ended moderator without paid or partner access is still routed to the ended screen
+  ---
+  duration_ms: 0.110292
+  ...
+# Subtest: a partner grant with a fresh-start profile is routed from /chat to /quiz, not /reactivate or /onboarding
+ok 24 - a partner grant with a fresh-start profile is routed from /chat to /quiz, not /reactivate or /onboarding
+  ---
+  duration_ms: 0.124125
+  ...
+# Subtest: a currently paying account that also carries partner metadata keeps ordinary /chat access
+ok 25 - a currently paying account that also carries partner metadata keeps ordinary /chat access
+  ---
+  duration_ms: 0.100791
+  ...
+# Subtest: an ended moderator with independently verified paid access and partner metadata passes through /chat unredirected
+ok 26 - an ended moderator with independently verified paid access and partner metadata passes through /chat unredirected
+  ---
+  duration_ms: 0.099417
+  ...
+# Subtest: an ended moderator with partner metadata but no independently verified access is still routed to the ended screen
+ok 27 - an ended moderator with partner metadata but no independently verified access is still routed to the ended screen
+  ---
+  duration_ms: 0.112959
+  ...
+# Subtest: a moderator access lookup outage is unavailable rather than an expiry or paywall
+ok 28 - a moderator access lookup outage is unavailable rather than an expiry or paywall
+  ---
+  duration_ms: 0.315833
+  ...
+# Subtest: a personal-plan lookup error preserves legacy onboarding protection
+ok 29 - a personal-plan lookup error preserves legacy onboarding protection
+  ---
+  duration_ms: 0.267375
+  ...
+# Subtest: a thrown personal-plan lookup preserves legacy onboarding protection
+ok 30 - a thrown personal-plan lookup preserves legacy onboarding protection
+  ---
+  duration_ms: 0.2715
+  ...
+# Subtest: an eligible new buyer follows the Personal Plan frontier instead of legacy onboarding
+ok 31 - an eligible new buyer follows the Personal Plan frontier instead of legacy onboarding
+  ---
+  duration_ms: 0.200167
+  ...
+# Subtest: a Stage 1 frontier no longer bounces chat into the Personal Plan flow
+ok 32 - a Stage 1 frontier no longer bounces chat into the Personal Plan flow
+  ---
+  duration_ms: 0.111459
+  ...
+# Subtest: an activated moderator returns to the saved plan instead of legacy onboarding
+ok 33 - an activated moderator returns to the saved plan instead of legacy onboarding
+  ---
+  duration_ms: 0.128792
+  ...
+# Subtest: an activated moderator return stays in recovery while its plan is not ready
+ok 34 - an activated moderator return stays in recovery while its plan is not ready
+  ---
+  duration_ms: 0.128417
+  ...
+# Subtest: an activated moderator return cannot fall through to legacy onboarding on a routing outage
+ok 35 - an activated moderator return cannot fall through to legacy onboarding on a routing outage
+  ---
+  duration_ms: 0.248791
+  ...
+# Subtest: an eligible buyer with an unready source stays in readiness recovery
+ok 36 - an eligible buyer with an unready source stays in readiness recovery
+  ---
+  duration_ms: 0.197625
+  ...
+# Subtest: a routing-frontier outage cannot silently fall through to legacy onboarding
+ok 37 - a routing-frontier outage cannot silently fall through to legacy onboarding
+  ---
+  duration_ms: 0.439459
+  ...
+# Subtest: a routing-frontier outage leaves chat to the intake gate
+ok 38 - a routing-frontier outage leaves chat to the intake gate
+  ---
+  duration_ms: 0.357416
+  ...
+# Subtest: chat stays reachable across the Personal Plan frontier
+ok 39 - chat stays reachable across the Personal Plan frontier
+  ---
+  duration_ms: 1.701084
+  ...
+# Subtest: chat without a routine pointer, quiz or entitlement keeps the intake gate
+ok 40 - chat without a routine pointer, quiz or entitlement keeps the intake gate
+  ---
+  duration_ms: 0.330125
+  ...
+# Subtest: explicit legacy onboarding edits are not intercepted by the Personal Plan frontier
+ok 41 - explicit legacy onboarding edits are not intercepted by the Personal Plan frontier
+  ---
+  duration_ms: 0.114625
+  ...
+# Subtest: synthetic guest access does not depend on the unrelated moderator membership lookup
+ok 42 - synthetic guest access does not depend on the unrelated moderator membership lookup
+  ---
+  duration_ms: 0.091334
+  ...
+# Subtest: flag off: a subscription buyer at needs_onboarding reaches /scan without a personal_plans lookup
+ok 43 - flag off: a subscription buyer at needs_onboarding reaches /scan without a personal_plans lookup
+  ---
+  duration_ms: 0.14325
+  ...
+# Subtest: flag off: the same subscription buyer is still sent to /onboarding from /chat and /anwendung
+ok 44 - flag off: the same subscription buyer is still sent to /onboarding from /chat and /anwendung
+  ---
+  duration_ms: 0.202208
+  ...
+# Subtest: flag off: a user without any paid access is still bounced off /scan by the paywall
+ok 45 - flag off: a user without any paid access is still bounced off /scan by the paywall
+  ---
+  duration_ms: 0.693959
+  ...
+# Subtest: an admitted buyer with current paid authority is a plan owner
+ok 46 - an admitted buyer with current paid authority is a plan owner
+  ---
+  duration_ms: 0.762667
+  ...
+# Subtest: the source id is the admission, not the provider reference
+ok 47 - the source id is the admission, not the provider reference
+  ---
+  duration_ms: 0.07925
+  ...
+# Subtest: flag off: nothing resolves, and the admission table is never read
+ok 48 - flag off: nothing resolves, and the admission table is never read
+  ---
+  duration_ms: 0.100916
+  ...
+# Subtest: a lapsed subscription loses the plan even with the record in place
+ok 49 - a lapsed subscription loses the plan even with the record in place
+  ---
+  duration_ms: 0.055167
+  ...
+# Subtest: no admission record means no freemium enrollment — legacy standard subscribers are untouched
+ok 50 - no admission record means no freemium enrollment — legacy standard subscribers are untouched
+  ---
+  duration_ms: 0.048542
+  ...
+# Subtest: a malformed admission row resolves to nothing rather than a half-enrollment
+ok 51 - a malformed admission row resolves to nothing rather than a half-enrollment
+  ---
+  duration_ms: 0.0425
+  ...
+# Subtest: a provisioned freemium buyer reaches Stage 4 and Stage 5 — the gates open
+ok 52 - a provisioned freemium buyer reaches Stage 4 and Stage 5 — the gates open
+  ---
+  duration_ms: 0.761292
+  ...
+# Subtest: without the accepted Routine the same buyer stops short of Stage 4
+ok 53 - without the accepted Routine the same buyer stops short of Stage 4
+  ---
+  duration_ms: 0.080875
+  ...
+# Subtest: server-recommended acceptance plans every buyable role and defers the rest honestly
+ok 54 - server-recommended acceptance plans every buyable role and defers the rest honestly
+  ---
+  duration_ms: 0.240708
+  ...
+# Subtest: D1: a refinement-required category is never auto-provisioned, even when buyable
+ok 55 - D1: a refinement-required category is never auto-provisioned, even when buyable
+  ---
+  duration_ms: 0.275917
+  ...
+# Subtest: a role whose authority forbids leaving it uncovered is not forged into a decision
+ok 56 - a role whose authority forbids leaving it uncovered is not forged into a decision
+  ---
+  duration_ms: 0.048458
+  ...
+# Subtest: two evaluations for one subject are a server invariant violation, not a merge
+ok 57 - two evaluations for one subject are a server invariant violation, not a merge
+  ---
+  duration_ms: 0.101541
+  ...
+# Subtest: an active field-test enrollment uses its activation time without inventing paid access
+ok 58 - an active field-test enrollment uses its activation time without inventing paid access
+  ---
+  duration_ms: 1.102375
+  ...
+# Subtest: an active regular-quiz field test enters the Personal Plan with legacy source provenance
+ok 59 - an active regular-quiz field test enters the Personal Plan with legacy source provenance
+  ---
+  duration_ms: 0.163917
+  ...
+# Subtest: expired, revoked, or manually revoked field-test enrollment fails closed
+ok 60 - expired, revoked, or manually revoked field-test enrollment fails closed
+  ---
+  duration_ms: 0.865
+  ...
+# Subtest: field-test activation qualifies Stage 1 and the journey without a payment timestamp
+ok 61 - field-test activation qualifies Stage 1 and the journey without a payment timestamp
+  ---
+  duration_ms: 2.523083
+  ...
+# Subtest: a currently paid bound migration keeps Stage 2 access independently of the old cutoff
+ok 62 - a currently paid bound migration keeps Stage 2 access independently of the old cutoff
+  ---
+  duration_ms: 1.132792
+  ...
+# Subtest: verified normal paid pre-cutoff sources enter the journey only while migration is enabled
+ok 63 - verified normal paid pre-cutoff sources enter the journey only while migration is enabled
+  ---
+  duration_ms: 7.606792
+  ...
+# Subtest: Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing
+ok 64 - Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing
+  ---
+  duration_ms: 0.203167
+  ...
+# Subtest: Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads
+ok 65 - Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads
+  ---
+  duration_ms: 0.604792
+  ...
+# Subtest: journey access accepts a current Stage 3 draft with a valid product-load overlay
+ok 66 - journey access accepts a current Stage 3 draft with a valid product-load overlay
+  ---
+  duration_ms: 1.214542
+  ...
+# Subtest: journey access accepts a product-load upgrade of an existing base category
+ok 67 - journey access accepts a product-load upgrade of an existing base category
+  ---
+  duration_ms: 0.374167
+  ...
+# Subtest: journey access still rejects a semantically stale product-load overlay
+ok 68 - journey access still rejects a semantically stale product-load overlay
+  ---
+  duration_ms: 0.311
+  ...
+# Subtest: full journey access reports non-identifying Stage 3 sub-phase timings in dependency order
+ok 69 - full journey access reports non-identifying Stage 3 sub-phase timings in dependency order
+  ---
+  duration_ms: 0.232125
+  ...
+# Subtest: full journey access stops access timing after an early entitlement denial
+ok 70 - full journey access stops access timing after an early entitlement denial
+  ---
+  duration_ms: 0.239167
+  ...
+# Subtest: full journey access reports the reached sub-phase when a dependency throws
+ok 71 - full journey access reports the reached sub-phase when a dependency throws
+  ---
+  duration_ms: 0.314917
+  ...
+# Subtest: loader starts independent current refined-need and product-draft reads together
+ok 72 - loader starts independent current refined-need and product-draft reads together
+  ---
+  duration_ms: 2.986375
+  ...
+# personal_plan_transition_performance {
+#   layer: 'server',
+#   operation: 'stage3_access_entitlement',
+#   outcome: 'eligible',
+#   duration_ms: 0.06
+# }
+# personal_plan_transition_performance {
+#   layer: 'server',
+#   operation: 'stage3_access_artifact_plan',
+#   outcome: 'ready',
+#   duration_ms: 0.06
+# }
+# personal_plan_transition_performance {
+#   layer: 'server',
+#   operation: 'stage3_access_refined_draft',
+#   outcome: 'ready',
+#   duration_ms: 0.07
+# }
+# personal_plan_transition_performance {
+#   layer: 'server',
+#   operation: 'stage3_access_entitlement',
+#   outcome: 'eligible',
+#   duration_ms: 0.05
+# }
+# personal_plan_transition_performance {
+#   layer: 'server',
+#   operation: 'stage3_access_artifact_plan',
+#   outcome: 'ready',
+#   duration_ms: 0.02
+# }
+# personal_plan_transition_performance {
+#   layer: 'server',
+#   operation: 'stage3_access_refined_draft',
+#   outcome: 'ready',
+#   duration_ms: 0.04
+# }
+# Subtest: loader starts independent prepared-artifact and plan reads together
+ok 73 - loader starts independent prepared-artifact and plan reads together
+  ---
+  duration_ms: 0.538334
+  ...
+# Subtest: loader keeps paid-pending buyers on the compact wait route and throws on authoritative read failure
+ok 74 - loader keeps paid-pending buyers on the compact wait route and throws on authoritative read failure
+  ---
+  duration_ms: 0.221958
+  ...
+# Subtest: full journey keeps an active enrollment without an attached artifact lead on legacy routing
+ok 75 - full journey keeps an active enrollment without an attached artifact lead on legacy routing
+  ---
+  duration_ms: 0.050208
+  ...
+# Subtest: a valid refined source admits Stage 3 before a draft exists and while its current draft is active
+ok 76 - a valid refined source admits Stage 3 before a draft exists and while its current draft is active
+  ---
+  duration_ms: 0.153042
+  ...
+# Subtest: an accepted Routine keeps Stage 4/5 reachable while a malformed successor resumes at the Stage 2 bridge
+ok 77 - an accepted Routine keeps Stage 4/5 reachable while a malformed successor resumes at the Stage 2 bridge
+  ---
+  duration_ms: 0.340542
+  ...
+# Subtest: an accepted active Routine retains Stage 3 when its current successor authority is valid
+ok 78 - an accepted active Routine retains Stage 3 when its current successor authority is valid
+  ---
+  duration_ms: 0.102667
+  ...
+# Subtest: the Routine page reads and renders an accepted Routine when only its successor Stage 3 access is degraded
+ok 79 - the Routine page reads and renders an accepted Routine when only its successor Stage 3 access is degraded
+  ---
+  duration_ms: 0.21625
+  ...
+# Subtest: a pending proposal remains fail-closed when its successor source is unavailable
+ok 80 - a pending proposal remains fail-closed when its successor source is unavailable
+  ---
+  duration_ms: 0.13325
+  ...
+# Subtest: Supabase draft selection ignores stale rows while retaining a current row, and treats stale-only as absent
+ok 81 - Supabase draft selection ignores stale rows while retaining a current row, and treats stale-only as absent
+  ---
+  duration_ms: 0.200209
+  ...
+# Subtest: Supabase loader keeps every journey fact owner and aggregate scoped
+ok 82 - Supabase loader keeps every journey fact owner and aggregate scoped
+  ---
+  duration_ms: 1.538792
+  ...
+# Subtest: released Personal Plan access no longer reads internal rollout state
+ok 83 - released Personal Plan access no longer reads internal rollout state
+  ---
+  duration_ms: 0.594042
+  ...
+# Subtest: the released Personal Plan app ignores obsolete launch flags
+ok 84 - the released Personal Plan app ignores obsolete launch flags
+  ---
+  duration_ms: 0.422208
+  ...
+# Subtest: the legacy-quiz Personal Plan cutover is independently strict and default-off
+ok 85 - the legacy-quiz Personal Plan cutover is independently strict and default-off
+  ---
+  duration_ms: 0.063875
+  ...
+# Subtest: the released Personal Plan rollout is all and ignores obsolete cohort flags
+ok 86 - the released Personal Plan rollout is all and ignores obsolete cohort flags
+  ---
+  duration_ms: 0.095084
+  ...
+# Subtest: released Stage 2 and Stage 3 ignore obsolete launch flags
+ok 87 - released Stage 2 and Stage 3 ignore obsolete launch flags
+  ---
+  duration_ms: 0.064541
+  ...
+# Subtest: complete Stage 3 catalogue authority has no retired environment or persistence branch
+ok 88 - complete Stage 3 catalogue authority has no retired environment or persistence branch
+  ---
+  duration_ms: 0.896708
+  ...
+# Subtest: current Stage 3 plans contain no obsolete complete-catalogue activation instructions
+ok 89 - current Stage 3 plans contain no obsolete complete-catalogue activation instructions
+  ---
+  duration_ms: 1.456083
+  ...
+# Subtest: Stage 3 thumbnail delivery is a strict default-off rollback gate
+ok 90 - Stage 3 thumbnail delivery is a strict default-off rollback gate
+  ---
+  duration_ms: 0.060917
+  ...
+# Subtest: new-buyer cutoff accepts only real ISO-8601 UTC instants
+ok 91 - new-buyer cutoff accepts only real ISO-8601 UTC instants
+  ---
+  duration_ms: 0.807834
+  ...
+# Subtest: Stage 3 fixture lab is available only in dev, Preview, or explicitly flagged CI
+ok 92 - Stage 3 fixture lab is available only in dev, Preview, or explicitly flagged CI
+  ---
+  duration_ms: 0.182417
+  ...
+# Subtest: an active post-cutoff trial creates Stage 1 from its exact legacy lead and pins the stable enrollment id
+ok 93 - an active post-cutoff trial creates Stage 1 from its exact legacy lead and pins the stable enrollment id
+  ---
+  duration_ms: 11.492708
+  ...
+# Subtest: the actual trial resolver reaches readiness and Stage 1 without a paid funnel-session correlation
+ok 94 - the actual trial resolver reaches readiness and Stage 1 without a paid funnel-session correlation
+  ---
+  duration_ms: 4.469375
+  ...
+# Subtest: a trial remains subject to the normal new-buyer cutoff even while paid migration is enabled
+ok 95 - a trial remains subject to the normal new-buyer cutoff even while paid migration is enabled
+  ---
+  duration_ms: 0.098333
+  ...
+# Subtest: an active post-cutoff trial reaches the existing Stage 1 CTA; expired trial access stays denied
+ok 96 - an active post-cutoff trial reaches the existing Stage 1 CTA; expired trial access stays denied
+  ---
+  duration_ms: 0.444709
+  ...
+# Subtest: plan readiness keeps an active trial on its exact source lead and never discovers a replacement lead
+ok 97 - plan readiness keeps an active trial on its exact source lead and never discovers a replacement lead
+  ---
+  duration_ms: 0.668
+  ...
+1..97
+# tests 97
+# suites 0
+# pass 97
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3569.856125

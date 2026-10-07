@@ -1,0 +1,37 @@
+f02ed787493a5c07a5208021b267b13f54850803
+Add restrained motion to the personal-plan quiz and offer (#280)
+
+## Problem
+
+The personal-plan quiz and offer changed state abruptly on mobile, with
+limited response feedback and no coordinated motion across pricing or
+FAQ interactions.
+
+## Behavior changes
+
+- Adds direction-aware, inert two-layer quiz transitions plus option,
+milestone, analysis, and profile-summary feedback.
+- Adds restrained membership selector motion and a fixed-size sticky CTA
+that preserves pricing-navigation versus checkout-intent semantics
+across membership and one-time arms.
+- Animates the existing native FAQ disclosure while retaining keyboard
+access, open/toggle state, analytics, and reduced-motion behavior.
+- Preserves the approved plan and mockups with the implementation.
+- Keeps Slice B checkout-dismissal behavior out of this PR.
+
+## Verification
+
+- npm run test:node — 2,132 passed
+- npm run ci:verify — typecheck, lint, and production build passed; four
+unrelated existing warnings remain
+- Mandatory Chromium matrix — 48 passed across mobile-ux,
+personal-plan-offer-motion, and offer-payment-overlay specs
+- Read-only Claude whole-branch review — no hard defects; accepted minor
+findings were fixed and all gates rerun
+
+## Risks and follow-up
+
+- Native iPhone Safari motion and FAQ behavior remains the final
+platform-specific delivery risk.
+- Slice B will handle pristine-versus-engaged checkout dismissal on a
+separate payment-safety branch after this slice.

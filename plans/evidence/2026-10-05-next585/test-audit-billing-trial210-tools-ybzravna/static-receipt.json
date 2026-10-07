@@ -1,0 +1,52 @@
+{
+  "scope": "Main-only billing trial210 guarded tooling; static validation only",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "proposal": "/tmp/test-audit-billing-trial210-proposal-pj1NC1",
+  "artifactSHA256": {
+    "/tmp/test-audit-billing-trial210-tools-ybzravna/operator-editor-pins.json": "d3d69c9f8268ba893e5d34e0469631e3cc6159a5b8af42194933126034ec2ed4",
+    "/tmp/test-audit-billing-trial210-tools-ybzravna/operator-guard.cjs": "69e363f38c1dbe4ef50e1f05e4c879963ade6cc4985aa99101e9edbf9a75de8b",
+    "/tmp/test-audit-billing-trial210-tools-ybzravna/operator-edit.cjs": "da14dccf0077e0abb159c834a56e4faece5950bbee6c82f4c65c188ff72f95a2",
+    "/tmp/test-audit-billing-trial210-tools-ybzravna/operator-run-controls.cjs": "fc871855da3c6498f598faf48ddb620fc6a847755d6fa667f2473b8a9194d69f",
+    "/tmp/test-audit-billing-trial210-tools-ybzravna/operator-controls-normalized.json": "5802deaafde85dcaedc3f2a682e69b2ccb136e57c7f93d4767e6ea06a2d72725",
+    "/tmp/test-audit-billing-trial210-tools-ybzravna/operator-readonly-preload.cjs": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "/tmp/test-audit-billing-trial210-tools-ybzravna/parser-static-check.cjs": "3fecb0b24f63015350e37cf24a20a8804020f2bb8e98779150726da27a2c1d12"
+  },
+  "counts": {
+    "files": 31,
+    "phaseSnapshots": 93,
+    "before": 210,
+    "transfer": 210,
+    "cut": 207,
+    "untouchedCallbacks": 206,
+    "controls": 4,
+    "sourceReadsetGuards": 88,
+    "installedDependencyFiles": 1193,
+    "gitIdentityFiles": 8
+  },
+  "validation": {
+    "cjsSyntax": "three operator modules parsed successfully",
+    "enforcedReadonlyChecks": "editor and driver --check each passed in before phase, attempted writes 0, attempted children 0",
+    "parserSyntheticOnly": {
+      "positiveAccepted": 8,
+      "negativeRejected": 104,
+      "runtimeProof": false
+    },
+    "wrongCwdRejected": true,
+    "repositoryWrites": 0,
+    "nativeTestRuns": 0,
+    "candidateFaultRuns": 0,
+    "productImports": 0,
+    "providerCalls": 0
+  },
+  "runtimeProof": "Not performed. Main independent semantic acceptance, tool inspection, transfer/controls/cut/controls and suite verification remain required.",
+  "limits": [
+    "Four representative faults only; not an all-field mutation claim.",
+    "C3 keeper uses real in-process PGlite SQL setup; setup/SQL errors must be rejected, not counted as intended red.",
+    "Static parser checks use synthetic TAP and do not establish actual Node assertion diagnostics.",
+    "CAS and shared token lock require exclusive cooperating operators; uncooperative writers can race the check/rename window.",
+    "SIGKILL or process/host loss cannot execute JavaScript finally; originals and owned lock are preserved for manual recovery.",
+    "No force-clear or automatic recovery from a foreign lock; no repinning proposed bytes."
+  ]
+}

@@ -1,0 +1,62 @@
+--- before/tests/gated-example-pages.test.tsx
++++ transfer/tests/gated-example-pages.test.tsx
+@@ -289,6 +289,11 @@
+   // No feedback affordance and no product card: both need live handlers.
+   assert.doesNotMatch(html, /Antwort positiv bewerten/)
+   assert.doesNotMatch(html, /weitere Empfehlungen/)
++
++  for (const message of GATED_CHAT_EXAMPLE_MESSAGES) {
++    assert.equal(message.created_at, "")
++  }
++  assert.doesNotMatch(html, /type-caption text-muted-foreground">\d\d:\d\d/)
+ })
+ 
+ test("no example message carries a timestamp — a formatted one would mismatch on hydration", () => {
+--- before/tests/gated-pages-zero-mutation.test.tsx
++++ transfer/tests/gated-pages-zero-mutation.test.tsx
+@@ -132,6 +132,11 @@
+       `gated ${name} must issue zero requests, got ${JSON.stringify(calls)}`,
+     )
+     assert.ok(result.length > 0, "the composition renders something")
++
++    // A mutation needs a transport: fetch (trapped above) or a form. Neither exists.
++    assert.doesNotMatch(result, /<form/i)
++    assert.doesNotMatch(result, /type="submit"/i)
++    assert.doesNotMatch(result, /formaction=/i)
+   })
+ 
+   test(`gated ${name} renders no form and no submit control`, () => {
+--- before/tests/gated-preview-component.test.tsx
++++ transfer/tests/gated-preview-component.test.tsx
+@@ -136,6 +136,31 @@
+   const section = requireByData(tree, "data-gated-preview")
+   assert.equal(section.props["data-gated-preview"], "routine")
+   assert.match(section.props.className as string, /100dvh/)
++
++  const scroll = requireByData(tree, "data-gated-preview-scroll")
++  assert.match(scroll.props.className as string, /overflow-y-auto/)
++  // Flex child that may shrink below its content — otherwise the frame grows instead.
++  assert.match(scroll.props.className as string, /min-h-0/)
++
++  // Keyboard users must be able to reach and scroll the region.
++  assert.equal(scroll.props.role, "region")
++  // T11 review F2 (final cleanup batch): the region's name REFERENCES the visible
++  // „Beispiel" band instead of repeating its text in a separate `aria-label` — a screen
++  // reader announced the same string twice back to back before this.
++  assert.equal(scroll.props["aria-label"], undefined)
++  assert.equal(scroll.props["aria-labelledby"], label.props.id)
++  assert.ok(label.props.id, "the band needs an id for the region to reference")
++  assert.equal(scroll.props.tabIndex, 0)
++
++  const child = findByData(scroll, "data-example-child")
++  assert.equal(child.length, 1, "children render inside the scroll container, not beside it")
++
++  // No second scroller anywhere in the tree.
++  assert.equal(
++    findAll(tree, (element) => /overflow-y-auto/.test(String(element.props.className ?? "")))
++      .length,
++    1,
++  )
+ })
+ 
+ test("the example content sits inside the one in-frame scroll container", () => {

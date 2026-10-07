@@ -1,6 +1,5 @@
 import assert from "node:assert/strict"
 import { readFile } from "node:fs/promises"
-import { readdirSync } from "node:fs"
 import test from "node:test"
 import { PGlite } from "@electric-sql/pglite"
 
@@ -130,21 +129,6 @@ async function frequencyOf(pg: PGlite, itemId: string) {
   )
   return result.rows[0].frequency
 }
-
-test("the batch-7 migration has a unique version that sorts after every migration", () => {
-  const versions = readdirSync(dir)
-    .filter((name) => name.endsWith(".sql"))
-    .map((name) => name.split("_")[0])
-  const own = OWN.split("_")[0]
-  assert.equal(versions.filter((version) => version === own).length, 1)
-  // Was "sorts after every migration" when it was the newest; its batch-7 follow-up, the call-decision, call-sheet, iOS paywall and catalog-hardening
-  // migrations now follow it, so what still matters is that it follows its chain.
-  const predecessors = CHAIN.slice(0, CHAIN.indexOf(OWN)).map((name) => name.split("_")[0])
-  assert.ok(
-    predecessors.every((version) => version < own),
-    "must sort after its prerequisites",
-  )
-})
 
 test("the frequency CHECK lists exactly the app vocabulary: PRODUCT_FREQUENCIES plus unknown", async () => {
   const sql = await readFile(`${dir}/${OWN}`, "utf8")

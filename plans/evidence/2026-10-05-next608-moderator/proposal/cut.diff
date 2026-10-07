@@ -1,0 +1,23 @@
+--- a/tests/personal-plan-field-test-ui.test.tsx
++++ b/tests/personal-plan-field-test-ui.test.tsx
+@@ -5,7 +5,6 @@
+ 
+ import { PersonalPlanFieldTestBanner } from "../src/components/personal-plan-quiz/personal-plan-quiz"
+ import { PersonalPlanOffer } from "../src/components/personal-plan-offer/personal-plan-offer"
+-import { PersonalPlanFieldTestEnded } from "../src/components/personal-plan-field-test/personal-plan-field-test-ended"
+ import { ResultPageClient } from "../src/app/result/[leadId]/result-client"
+ 
+ const quizSource = readFileSync(
+@@ -94,12 +93,6 @@
+   assert.doesNotMatch(html, /Abo|Zahlung|Stripe|PayPal|Preis/)
+ })
+ 
+-test("dedicated field-test end surface stays concise and payment-free", () => {
+-  const html = renderToStaticMarkup(<PersonalPlanFieldTestEnded />)
+-  assert.match(html, /Testzeitraum ist beendet oder der Zugang wurde geschlossen/)
+-  assert.doesNotMatch(html, /Abo|Zahlung|Stripe|PayPal|Preis/)
+-})
+-
+ test("field-test lead binding must succeed before the quiz can open a result", () => {
+   const attachmentGuard = quizSource.indexOf("fieldTest && fieldTestAttached !== true")
+   const resultNavigation = quizSource.indexOf(

@@ -1,0 +1,82 @@
+--- a/tests/personal-plan-routine-candidate-compiler.test.ts
++++ b/tests/personal-plan-routine-candidate-compiler.test.ts
+@@ -344,79 +344,6 @@
+     ],
+   })
+   assert.notEqual(candidate.sourceFingerprint, changed.sourceFingerprint)
+-})
+-
+-test("initial Routine preserves Stage-3 choices and canonical Basis then Optional ordering", async () => {
+-  const candidate = await compileInitialRoutineCandidate(compilerInput())
+-  const payload = candidate.payload as Record<string, any>
+-
+-  assert.deepEqual(payload.sections, [
+-    { key: "basis", itemKeys: ["item:conditioner:conditioner_rinse_out:captured-a"] },
+-    {
+-      key: "optional",
+-      itemKeys: [
+-        "item:oil:dry_finish:planned-a",
+-        "item:heat_protectant:pre_heat_protection:captured-pending-a",
+-      ],
+-    },
+-  ])
+-  assert.deepEqual(payload.source.renderedOrder, ["conditioner", "oil", "heat_protectant"])
+-  assert.deepEqual(
+-    payload.intent.categories.map((entry: Record<string, unknown>) => entry.category),
+-    ["conditioner", "oil", "heat_protectant"],
+-  )
+-  assert.deepEqual(
+-    payload.items.map((item: Record<string, any>) => ({
+-      key: item.itemKey,
+-      assessment: item.state.systemAssessment,
+-      inclusion: item.state.inclusion,
+-      availability: item.state.availability,
+-      fitDecision: item.state.fitDecision,
+-      executable: item.executable,
+-      productKind: item.product.kind,
+-    })),
+-    [
+-      {
+-        key: "item:conditioner:conditioner_rinse_out:captured-a",
+-        assessment: "basis",
+-        inclusion: "included",
+-        availability: "owned",
+-        fitDecision: "informed_override",
+-        executable: true,
+-        productKind: "owned",
+-      },
+-      {
+-        key: "item:oil:dry_finish:planned-a",
+-        assessment: "optional",
+-        inclusion: "included",
+-        availability: "planned",
+-        fitDecision: "standard",
+-        executable: false,
+-        productKind: "planned",
+-      },
+-      {
+-        key: "item:heat_protectant:pre_heat_protection:captured-pending-a",
+-        assessment: "optional",
+-        inclusion: "included",
+-        availability: "pending_review",
+-        fitDecision: "standard",
+-        executable: false,
+-        productKind: "pending_review",
+-      },
+-      {
+-        key: "item:mask:intensive_conditioning_mask:none",
+-        assessment: "not_recommended",
+-        inclusion: "excluded",
+-        availability: "none",
+-        fitDecision: "standard",
+-        executable: false,
+-        productKind: "none",
+-      },
+-    ],
+-  )
+-  assert.equal("applicationOrder" in payload, false)
+-  assert.equal("dayTypes" in payload, false)
+-  assert.equal("user_product_usage" in payload, false)
+ })
+ 
+ test("source revision participates in the compiler fingerprint", async () => {

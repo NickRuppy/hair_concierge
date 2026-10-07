@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: activation-aware delegating RPC permits no proposal pointer for first activation
+not ok 1 - activation-aware delegating RPC permits no proposal pointer for first activation
+  ---
+  duration_ms: 3.969542
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan/persistence/routine-proposal-stager.test.ts:2:3146'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   status: 'temporarily_unavailable'
+    -   portfolioVersionId: 'portfolio-1',
+    -   revision: 5,
+    -   routineProposalId: null,
+    -   routineVersionId: 'routine-1',
+    -   status: 'completed'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    status: 'completed'
+    portfolioVersionId: 'portfolio-1'
+    routineVersionId: 'routine-1'
+    routineProposalId: ~
+    revision: 5
+  actual:
+    status: 'temporarily_unavailable'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan/persistence/routine-proposal-stager.test.ts:118:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 268.993166

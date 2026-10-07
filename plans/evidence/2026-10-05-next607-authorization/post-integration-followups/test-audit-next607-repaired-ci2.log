@@ -1,0 +1,353 @@
+
+> chaarlie@0.1.0 ci:verify
+> npm run typecheck && npm run lint && npm run build
+
+
+> chaarlie@0.1.0 typecheck
+> tsc --noEmit
+
+
+> chaarlie@0.1.0 lint
+> eslint .
+
+
+/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/plans/scanner-funnel-consolidation/preview/frame.js
+  74:52  warning  'i' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/stripe/create-checkout-session/route.ts
+  1528:16  warning  'preparedCheckoutProviderLocked' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/onboarding/onboarding-flow.tsx
+  14:3  warning  'SHAMPOO_CATEGORY' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/components/ui/avatar.tsx
+  30:7  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent-v2/production/chat-pipeline.ts
+  833:10  warning  'isAmbiguousProductFitFollowup' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/agent/orchestrator/model-client.ts
+  20:3  warning  'AGENTIC_TOOL_LOOP_PROMPT' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 6 problems (0 errors, 6 warnings)
+
+
+> chaarlie@0.1.0 build
+> next build
+
+▲ Next.js 16.2.4 (Turbopack)
+- Environments: .env.local
+- Experiments (use with caution):
+  · clientTraceMetadata
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 32.3s
+  Running next.config.js provided runAfterProductionCompile ...
+✓ Completed runAfterProductionCompile in 25.6s
+  Running TypeScript ...
+  Finished TypeScript in 56s ...
+  Collecting page data using 9 workers ...
+(node:81499) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:81497) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+  Generating static pages using 9 workers (0/221) ...
+  Generating static pages using 9 workers (55/221) 
+  Generating static pages using 9 workers (110/221) 
+(node:81500) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+  Generating static pages using 9 workers (165/221) 
+(node:81498) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+✓ Generating static pages using 9 workers (221/221) in 696ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /admin
+├ ○ /admin/articles
+├ ƒ /admin/beratung
+├ ƒ /admin/beratung/[enrollmentId]
+├ ƒ /admin/beratung/[enrollmentId]/pdf
+├ ○ /admin/conversations
+├ ƒ /admin/conversations/[id]
+├ ○ /admin/partner-access
+├ ○ /admin/products
+├ ○ /admin/quotes
+├ ○ /admin/users
+├ ○ /agb
+├ ƒ /anwendung
+├ ƒ /anwendung/[dayType]
+├ ƒ /api/account-deletion/reconcile
+├ ƒ /api/admin/articles
+├ ƒ /api/admin/articles/[id]
+├ ƒ /api/admin/beratung/[enrollmentId]/call-sheet
+├ ƒ /api/admin/beratung/[enrollmentId]/consult-brief
+├ ƒ /api/admin/beratung/[enrollmentId]/decisions
+├ ƒ /api/admin/beratung/[enrollmentId]/finalize
+├ ƒ /api/admin/beratung/[enrollmentId]/items/[itemId]
+├ ƒ /api/admin/beratung/[enrollmentId]/items/[itemId]/frequency
+├ ƒ /api/admin/beratung/[enrollmentId]/research
+├ ƒ /api/admin/beratung/invites
+├ ƒ /api/admin/conversations
+├ ƒ /api/admin/conversations/[id]
+├ ƒ /api/admin/partner-access
+├ ƒ /api/admin/products
+├ ƒ /api/admin/products/[id]
+├ ƒ /api/admin/quotes
+├ ƒ /api/admin/quotes/[id]
+├ ƒ /api/admin/users
+├ ƒ /api/analytics/meta-offer-view
+├ ƒ /api/analytics/offer-engaged
+├ ƒ /api/app-store/notifications
+├ ƒ /api/auth/callback
+├ ƒ /api/auth/free-registration
+├ ƒ /api/auth/send-magic-link
+├ ƒ /api/auth/send-setup-link
+├ ƒ /api/auth/set-checkout-password
+├ ƒ /api/beratung/claim
+├ ƒ /api/beratung/identify
+├ ƒ /api/beratung/intake/heat-styling
+├ ƒ /api/beratung/intake/items
+├ ƒ /api/beratung/intake/items/[itemId]
+├ ƒ /api/beratung/intake/submit
+├ ƒ /api/beratung/quiz-context
+├ ƒ /api/beratung/resolve
+├ ƒ /api/billing/access
+├ ƒ /api/billing/change-plan
+├ ƒ /api/billing/change-plan/paypal/cancel
+├ ƒ /api/billing/change-plan/paypal/return
+├ ƒ /api/billing/contract-declarations
+├ ƒ /api/billing/membership
+├ ƒ /api/billing/one-time-activation-status
+├ ƒ /api/billing/payment-monitor
+├ ƒ /api/billing/payment-support
+├ ƒ /api/billing/public-contract-declaration-receipts/reconcile
+├ ƒ /api/billing/reconcile
+├ ƒ /api/billing/stripe-trial-continuation/reconcile
+├ ƒ /api/billing/trial-cancellation
+├ ƒ /api/billing/trial-cancellation/reconcile
+├ ƒ /api/billing/trial-management
+├ ƒ /api/billing/trial-paid-cancellation
+├ ƒ /api/billing/trial-paid-recovery
+├ ƒ /api/billing/trial-reminders/reconcile
+├ ƒ /api/billing/trial-required-notices/reconcile
+├ ƒ /api/calendly/webhook
+├ ƒ /api/chat
+├ ƒ /api/chat/[id]
+├ ƒ /api/chat/feedback
+├ ƒ /api/chat/product-selection
+├ ƒ /api/chat/trigger
+├ ƒ /api/checkout/eligibility
+├ ƒ /api/customerio/profile-sync/reconcile
+├ ƒ /api/debug/build-info
+├ ƒ /api/dev/login
+├ ƒ /api/feedback
+├ ƒ /api/freemium/purchase/complete
+├ ƒ /api/funnel/session
+├ ƒ /api/labs/agent-compare
+├ ƒ /api/labs/agent-compare/judgments
+├ ƒ /api/labs/conditioner-research/queue
+├ ƒ /api/labs/conditioner-research/review
+├ ƒ /api/labs/leave-in-research/queue
+├ ƒ /api/labs/leave-in-research/review
+├ ƒ /api/labs/shampoo-research/review
+├ ƒ /api/memory
+├ ƒ /api/memory/[id]
+├ ƒ /api/mobile/v1/account/delete
+├ ƒ /api/mobile/v1/account/delete/[requestId]
+├ ƒ /api/mobile/v1/account/delete/preflight
+├ ƒ /api/mobile/v1/app-store/transactions
+├ ƒ /api/mobile/v1/auth/logout
+├ ƒ /api/mobile/v1/auth/refresh
+├ ƒ /api/mobile/v1/auth/start
+├ ƒ /api/mobile/v1/auth/verify
+├ ƒ /api/mobile/v1/bootstrap
+├ ƒ /api/mobile/v1/profile
+├ ƒ /api/mobile/v1/profile/complete
+├ ƒ /api/mobile/v1/profile/edit
+├ ƒ /api/mobile/v1/push/registration
+├ ƒ /api/mobile/v1/registration/complete
+├ ƒ /api/mobile/v1/registration/start
+├ ƒ /api/mobile/v1/registration/verify
+├ ƒ /api/mobile/v1/research-delivery/reconcile
+├ ƒ /api/mobile/v1/scan/history
+├ ƒ /api/mobile/v1/scan/history/[entryId]
+├ ƒ /api/mobile/v1/scan/research-result/[submissionId]
+├ ƒ /api/mobile/v1/scan/resolve
+├ ƒ /api/mobile/v1/scan/search
+├ ƒ /api/mobile/v1/scan/submit
+├ ƒ /api/og/result/[leadId]
+├ ƒ /api/openai-ads/context
+├ ƒ /api/partner-access/activate
+├ ƒ /api/partner-access/claim
+├ ƒ /api/partner-access/email-change
+├ ƒ /api/partner-access/email-change/confirm
+├ ƒ /api/partner-access/quiz-context
+├ ƒ /api/partner-access/resolve
+├ ƒ /api/paypal/activation-status
+├ ƒ /api/paypal/approve-subscription
+├ ƒ /api/paypal/cancel-subscription
+├ ƒ /api/paypal/capture-order
+├ ƒ /api/paypal/create-order-intent
+├ ƒ /api/paypal/create-subscription-intent
+├ ƒ /api/paypal/webhook
+├ ƒ /api/personal-plan/accept-ideal-plan
+├ ƒ /api/personal-plan/field-test/activate
+├ ƒ /api/personal-plan/field-test/moderator/activate
+├ ƒ /api/personal-plan/field-test/moderator/activate-organic
+├ ƒ /api/personal-plan/field-test/moderator/start
+├ ƒ /api/personal-plan/migration-quiz-context
+├ ƒ /api/personal-plan/portfolio-presentation
+├ ƒ /api/personal-plan/refinement-presentation
+├ ƒ /api/personal-plan/refinement-status
+├ ƒ /api/personal-plan/refinement-status/dismiss
+├ ƒ /api/personal-plan/routine
+├ ƒ /api/personal-plan/routine/attention
+├ ƒ /api/personal-plan/routine/items/[itemKey]
+├ ƒ /api/personal-plan/routine/planned-items/[itemKey]/acquire
+├ ƒ /api/personal-plan/routine/proposals
+├ ƒ /api/personal-plan/routine/proposals/[proposalId]/resolve
+├ ƒ /api/personal-plan/routine/sync
+├ ƒ /api/personal-plan/stage-1
+├ ƒ /api/personal-plan/stage-1/previews
+├ ƒ /api/personal-plan/stage-2
+├ ƒ /api/personal-plan/stage-2/complete
+├ ƒ /api/personal-plan/stage-2/optional-entry
+├ ƒ /api/personal-plan/stage-3
+├ ƒ /api/personal-plan/stage-3/complete
+├ ƒ /api/personal-plan/stage-3/intake
+├ ƒ /api/personal-plan/stage-3/optional-entry
+├ ƒ /api/personal-plan/stage-3/search
+├ ƒ /api/product-intake/brand-options
+├ ƒ /api/product-intake/chat
+├ ƒ /api/product-intake/onboarding
+├ ƒ /api/product-intake/onboarding/cancel
+├ ƒ /api/product-intake/upload
+├ ƒ /api/products
+├ ƒ /api/profile
+├ ƒ /api/profile/answers
+├ ƒ /api/quiz/analyze
+├ ƒ /api/quiz/email-return/choose
+├ ƒ /api/quiz/email-return/context
+├ ƒ /api/quiz/field-test/activate
+├ ƒ /api/quiz/lead
+├ ƒ /api/quiz/personal-plan-draft
+├ ƒ /api/quiz/personal-plan-draft/resume
+├ ƒ /api/quiz/personal-plan-email-precheck
+├ ƒ /api/quiz/personal-plan-lead
+├ ƒ /api/quiz/personal-plan-prepare
+├ ƒ /api/quiz/personal-plan-result-artifact
+├ ƒ /api/quiz/personal-plan-result-return/reset
+├ ƒ /api/quiz/result-artifact
+├ ƒ /api/routine
+├ ƒ /api/routine/products
+├ ƒ /api/routine/products/[id]
+├ ƒ /api/routine/suggestions/[category]/dismiss
+├ ƒ /api/scan/resolve
+├ ƒ /api/scan/reveal
+├ ƒ /api/scan/save
+├ ƒ /api/scan/search
+├ ƒ /api/scan/search-retailer
+├ ƒ /api/scan/submit
+├ ƒ /api/scan/wishlist
+├ ƒ /api/stripe/create-checkout-session
+├ ƒ /api/stripe/portal-session
+├ ƒ /api/stripe/session
+├ ƒ /api/stripe/webhook
+├ ƒ /api/tracker
+├ ƒ /api/tracker/dismiss-nudge
+├ ƒ /api/tracker/log
+├ ƒ /api/waitlist
+├ ƒ /api/waitlist/survey
+├ ƒ /api/waitlist/survey-access
+├ ƒ /app/research/[submissionId]
+├ ƒ /auth
+├ ƒ /auth/confirm
+├ ƒ /auth/update-password
+├ ƒ /beratung/einladung
+├ ƒ /beratung/produkte
+├ ƒ /beratung/weiter
+├ ƒ /chat
+├ ƒ /chat/[conversationId]
+├ ○ /datenschutz
+├ ○ /icon
+├ ○ /impressum
+├ ○ /kontakt
+├ ○ /kuendigen
+├ ○ /labs/activation-recovery
+├ ○ /labs/agent-compare
+├ ○ /labs/app-proof
+├ ○ /labs/conditioner-research
+├ ○ /labs/feinschliff-journey
+├ ○ /labs/gated-preview
+├ ○ /labs/leave-in-research
+├ ○ /labs/offer-page
+├ ○ /labs/partner-access
+├ ○ /labs/personal-plan-application
+├ ƒ /labs/personal-plan-application/[dayType]
+├ ○ /labs/personal-plan-routine-editor
+├ ○ /labs/personal-plan-stage-1-2
+├ ○ /labs/personal-plan-stage-2
+├ ○ /labs/personal-plan-stage-3-recovery
+├ ○ /labs/personal-plan-start
+├ ○ /labs/personal-plan-view-transition
+├ ○ /labs/personal-plan/stage-3
+├ ○ /labs/plan-bereit-ankunft
+├ ○ /labs/plan-start-opening
+├ ○ /labs/portrait
+├ ○ /labs/premium-sheet
+├ ○ /labs/profile-haarprofil
+├ ○ /labs/profile-reactivation
+├ ○ /labs/scan
+├ ○ /labs/scanner-refinement
+├ ○ /labs/shampoo-research
+├ ○ /labs/trial-offer
+├ ƒ /lp/[slug]
+├ ƒ /lp/[slug]/angebot
+├ ○ /methodik
+├ ƒ /onboarding
+├ ○ /opengraph-image
+├ ƒ /partner/e-mail-bestaetigen
+├ ƒ /partner/einladung
+├ ƒ /partner/weiter
+├ ƒ /plan-bereit
+├ ƒ /plan-bereit/status
+├ ƒ /plan-start
+├ ƒ /pricing
+├ ƒ /profile
+├ ƒ /profile/edit/goals
+├ ƒ /quiz
+├ ƒ /quiz/return
+├ ƒ /reactivate
+├ ƒ /registrierung
+├ ƒ /result/[leadId]
+├ ƒ /result/[leadId]/reveal
+├ ○ /robots.txt
+├ ƒ /routine
+├ ƒ /scan
+├ ○ /sitemap.xml
+├ ƒ /test/haarplan/[token]
+├ ○ /test/haarplan/beendet
+├ ƒ /test/haarplan/konto
+├ ƒ /test/quiz/[token]
+├ ○ /test/quiz/beendet
+├ ƒ /test/quiz/beendet/normal
+├ ƒ /test/quiz/session
+├ ƒ /tracker
+├ ○ /twitter-image
+├ ○ /warteliste
+├ ○ /warteliste/b
+├ ○ /warteliste/danke
+├ ○ /warteliste/umfrage
+├ ƒ /welcome
+├ ○ /widerruf
+└ ○ /widerruf/erklaeren
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -26,11 +26,11 @@ export type OfferPaymentOverlayDismissalReason =
 
 export type OfferPaymentOverlayDismissalOutcome = "confirm" | "abort" | "plan_change"
 
-export type OfferPaymentOverlayRenderActions = {
+type OfferPaymentOverlayRenderActions = {
   requestDismissal: (reason: OfferPaymentOverlayDismissalReason) => void
 }
 
-export type OfferPaymentOverlayChildren =
+type OfferPaymentOverlayChildren =
   | React.ReactNode
   | ((actions: OfferPaymentOverlayRenderActions) => React.ReactNode)
 

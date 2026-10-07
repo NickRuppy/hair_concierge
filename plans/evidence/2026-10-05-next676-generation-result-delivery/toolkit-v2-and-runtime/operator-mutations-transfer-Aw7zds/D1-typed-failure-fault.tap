@@ -1,0 +1,49 @@
+TAP version 13
+# Subtest: mask-missing-thickness: required Mask target input fails closed at the shared parser
+not ok 1 - mask-missing-thickness: required Mask target input fails closed at the shared parser
+  ---
+  duration_ms: 3.227458
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan/input.test.ts:2:3649'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        error: {
+    +     code: 'unsupported_quiz_version',
+    -     code: 'invalid_quiz_envelope',
+          quizVersion: 3
+        },
+        ok: false
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    ok: false
+    error:
+      code: 'invalid_quiz_envelope'
+      quizVersion: 3
+  actual:
+    ok: false
+    error:
+      code: 'unsupported_quiz_version'
+      quizVersion: 3
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan/input.test.ts:87:12)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 319.828417

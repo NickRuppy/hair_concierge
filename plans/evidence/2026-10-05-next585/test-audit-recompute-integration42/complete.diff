@@ -1,0 +1,109 @@
+--- /tmp/test-audit-recompute-integration42/snapshots/before/tests/personal-plan-refinement-recompute-activation.test.ts	2026-10-04 14:30:37
++++ /tmp/test-audit-recompute-integration42/snapshots/cut/tests/personal-plan-refinement-recompute-activation.test.ts	2026-10-04 14:30:37
+@@ -56,13 +56,7 @@
+   assert.doesNotMatch(source, /SELECT public\.personal_plan_complete_draft_activate_v2/)
+ })
+ 
+-test("the recompute-activation migration keeps the provenance write out of the revision CAS", async () => {
+-  const source = await readFile(migrationPath, "utf8")
+-  const provenanceWrite = source.slice(source.indexOf("IF p_mark_unrefined_direct_accept THEN"))
+ 
+-  assert.match(provenanceWrite, /UPDATE public\.personal_plans/)
+-  assert.doesNotMatch(provenanceWrite, /revision = revision \+ 1/)
+-})
+ 
+ /* ── Behavioral mirror of the SQL, driven through the real stager adapter ── */
+ 
+@@ -248,54 +242,10 @@
+     proposalDelta: { kind: "recompute" },
+   },
+ }
+-
+-test("a module-driven recompute activates the successor immediately instead of proposing it", async () => {
+-  const world = emptyWorld("routine-active")
+-  const stager = createRoutineProposalStagerRpcAdapter({
+-    client: createV2Client({
+-      productDraftRefinedVersionId: "refined-module-2",
+-      refinementDrafts: [
+-        {
+-          moduleProjections: { products: { needVersionId: "refined-module-1" } },
+-          resultRefinedNeedVersionId: "refined-module-2",
+-        },
+-      ],
+-      world,
+-    }),
+-  })
+ 
+-  const result = await stager.stage(stageRequest)
+-
+-  assert.equal(result.status, "completed")
+-  assert.equal(result.status === "completed" ? result.routineProposalId : "unset", null)
+-  assert.equal(world.plan.activeRoutineVersionId, world.routineVersions.at(-1))
+-  assert.equal(world.plan.pendingProposalId, null)
+-  assert.deepEqual(
+-    world.proposals.map((proposal) => proposal.status),
+-    ["accepted"],
+-  )
+-})
+ 
+-test("a module-1 projection activates immediately even before the closing module", async () => {
+-  const world = emptyWorld("routine-active")
+-  const stager = createRoutineProposalStagerRpcAdapter({
+-    client: createV2Client({
+-      productDraftRefinedVersionId: "refined-module-1",
+-      refinementDrafts: [
+-        {
+-          moduleProjections: { products: { needVersionId: "refined-module-1" } },
+-          resultRefinedNeedVersionId: null,
+-        },
+-      ],
+-      world,
+-    }),
+-  })
+ 
+-  const result = await stager.stage(stageRequest)
+ 
+-  assert.equal(result.status === "completed" ? result.routineProposalId : "unset", null)
+-  assert.equal(world.plan.pendingProposalId, null)
+-})
+ 
+ test("today's linear refinement keeps its pending proposal", async () => {
+   const world = emptyWorld("routine-active")
+@@ -508,22 +458,8 @@
+   assert.equal(world.plan.revision, 4)
+ })
+ 
+-test("the direct-accept provenance is written by the same transaction that activates", async () => {
+-  const world = emptyWorld(null)
+-  const stager = createRoutineProposalStagerRpcAdapter({
+-    client: createV2Client({
+-      productDraftRefinedVersionId: "refined-1",
+-      refinementDrafts: [],
+-      world,
+-    }),
+-  })
+ 
+-  await stager.stage({ ...stageRequest, markUnrefinedDirectAccept: true })
+ 
+-  assert.equal(world.plan.unrefinedDirectAccept, true)
+-  assert.equal(world.plan.activeRoutineVersionId, "routine-1")
+-})
+-
+ test("a failing provenance write rolls the whole completion back", async () => {
+   const world = emptyWorld(null)
+   const stager = createRoutineProposalStagerRpcAdapter({
+--- /tmp/test-audit-recompute-integration42/snapshots/before/tests/personal-plan-refinement-recompute-activation-migration.test.ts	2026-10-04 14:30:37
++++ /tmp/test-audit-recompute-integration42/snapshots/cut/tests/personal-plan-refinement-recompute-activation-migration.test.ts	2026-10-04 14:30:37
+@@ -669,6 +669,12 @@
+ 
+   const after = await readPlan(pg, initial.personalPlanId)
+   assert.equal(after.unrefined_direct_accept, true)
++  assert.ok(after.active_routine_version_id, "the provenance write leaves an active Routine")
++  assert.equal(
++    after.active_routine_version_id,
++    result.routineVersionId,
++    "the provenance write accompanies the activated Routine",
++  )
+   assert.equal(
+     after.revision,
+     result.revision,

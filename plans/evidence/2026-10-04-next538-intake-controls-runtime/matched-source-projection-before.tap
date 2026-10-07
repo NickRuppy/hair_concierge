@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: matched manual intake links user usage to the existing product without creating a submission
+ok 1 - matched manual intake links user usage to the existing product without creating a submission
+  ---
+  duration_ms: 4.231916
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 481.212167

@@ -1,13 +1,13 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
+import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
+import { createProposedProductPortfolio } from "../src/lib/personal-plan/products/portfolio"
+import { resolveStage3ProductLoadResolution } from "../src/lib/personal-plan/products/product-load-resolution"
 import {
-  CATEGORY_ROLE_POLICIES,
-  createProposedProductPortfolio,
-  resolveStage3ProductLoadResolution,
   type Stage3CategoryRequirement,
   type Stage3ProductDraft,
-} from "../src/lib/personal-plan/products"
+} from "../src/lib/personal-plan/products/contracts"
 import {
   parseProposedProductPortfolio,
   type Stage3AuthoritySnapshotV1,

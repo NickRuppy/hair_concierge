@@ -1,0 +1,80 @@
+{
+  "files": [
+    {
+      "file": "tests/scan-alternative-comparison.test.ts",
+      "beforeSHA256": "e320644703a003625cfb34beeb7eb1e84cdae701a5bdb90c31ce02081ffbbfc6",
+      "afterSHA256": "fb0f5b0a981de29a2eabdc5b37cdad32d42acc1438b09008e62389c3043b7543",
+      "changed": true
+    },
+    {
+      "file": "tests/scan-masked-alternative.test.ts",
+      "beforeSHA256": "49af07e5dd6197d82e27d7dfc4fee4851b60561096b74933460fb53c364d9ba0",
+      "afterSHA256": "49af07e5dd6197d82e27d7dfc4fee4851b60561096b74933460fb53c364d9ba0",
+      "changed": false
+    },
+    {
+      "file": "tests/scan-name-only-submission-migration.test.ts",
+      "beforeSHA256": "6b8bbe5a6850617220ed2b081d71af17501e34de4e7bcade5c16399b43d715cd",
+      "afterSHA256": "6b8bbe5a6850617220ed2b081d71af17501e34de4e7bcade5c16399b43d715cd",
+      "changed": false
+    },
+    {
+      "file": "tests/scan-pending-submission.test.ts",
+      "beforeSHA256": "f3cf3e2a66495a21fc329ceae68928fe8e36cc03125df21f8ac4919a8da261c6",
+      "afterSHA256": "382038a70a5e55b1317722cbf3454e74084d32f5b013df889392b43e89c417c0",
+      "changed": true
+    },
+    {
+      "file": "tests/scan-profile-context.test.ts",
+      "beforeSHA256": "1220a4bb1c2eb038cf109e82b86799049a2a00a7028d41c1cefdc9bd85485131",
+      "afterSHA256": "1220a4bb1c2eb038cf109e82b86799049a2a00a7028d41c1cefdc9bd85485131",
+      "changed": false
+    },
+    {
+      "file": "tests/scan-resolve-anti-leak.test.ts",
+      "beforeSHA256": "1394f54f526b9ec84959439e655c0697b59203de11c3caf8e8b6af6b167b4c12",
+      "afterSHA256": "1394f54f526b9ec84959439e655c0697b59203de11c3caf8e8b6af6b167b4c12",
+      "changed": false
+    },
+    {
+      "file": "tests/scan-trigger-session-marker.test.ts",
+      "beforeSHA256": "55feedcdc07e9f5d310830382e83e4419a843d7f2ef90cf6ed95abc5c6ad91ce",
+      "afterSHA256": "e4ed6fe3f89a3cbd2ae5b2a6e08cd8f1502556f3121c7fe150aa6671ee0d8cdc",
+      "changed": true
+    },
+    {
+      "file": "tests/expansion-apply-batch.test.ts",
+      "beforeSHA256": "bcbe4a6111c1ba2e7d30d2de1834910f19adc0ad7ce6d4d12060c90b469df6f5",
+      "afterSHA256": "5c6bfd739feac4ae4ddb1dc5e762181a04d6ebc6bfb2ffd0b2763b4d4a228cf8",
+      "changed": true
+    },
+    {
+      "file": "tests/expansion-apply-templates.test.ts",
+      "beforeSHA256": "a590852fd6258fb798e7781131a6e07307049e3c0b6b093cf658a041bb6b77d4",
+      "afterSHA256": "3dd4aad24db89f39228cec7888121c4ebca8f07c044bbba3da57ae684e90517b",
+      "changed": true
+    },
+    {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "beforeSHA256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d",
+      "afterSHA256": "341ee7e205df8a10e7aa6c534a17fc36347e365a09ef1ed05d56a00136fb378d",
+      "changed": false
+    },
+    {
+      "file": "tests/hair-length-option-card.test.tsx",
+      "beforeSHA256": "6f576124ad635d5558c86f77f6f0f6bb9fa40a6d25611f8a55564ff92a374588",
+      "afterSHA256": "d983876837f805e14911a022560062675f54805c0fe06965a491037087c14e0b",
+      "changed": true
+    },
+    {
+      "file": "tests/quiz-option-card.test.tsx",
+      "beforeSHA256": "d6087e2170a0afa7c535ad98f19c670c15462366e107527c2bd801e2f3acfb8b",
+      "afterSHA256": "d6087e2170a0afa7c535ad98f19c670c15462366e107527c2bd801e2f3acfb8b",
+      "changed": false
+    }
+  ],
+  "allASTShapesEqual": true,
+  "sourceWrites": 0,
+  "newInputsCallsOrTestRegistrations": 0,
+  "phaseProof": "Earlier native/fault proof was on archived preformat cut bytes. Fresh whole native/c8 checks these formatted bytes."
+}

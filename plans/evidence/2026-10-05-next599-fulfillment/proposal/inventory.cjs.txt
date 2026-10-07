@@ -1,0 +1,9 @@
+const fs=require('fs'),p=require('path'),crypto=require('crypto');
+const root='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning';
+const ts=require(p.join(root,'node_modules/typescript'));
+const files=['stripe-one-time-confirmation','one-time-recovery-command','billing-one-time-fulfillment-reconcile','one-time-activation-status-route','personal-plan-one-time-confirmation','one-time-paid-pending-ux','one-time-payment-recovery-migration','personal-plan-one-time-first-access'].map(x=>'tests/'+x+'.test.ts');
+const sha=s=>crypto.createHash('sha256').update(s).digest('hex');
+function sites(file,source){let sf=ts.createSourceFile(file,source,ts.ScriptTarget.Latest,true);if(sf.parseDiagnostics.length)throw Error(file);let out=[];function visit(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'&&n.arguments.length>=2){out.push({file,line:sf.getLineAndCharacterOfPosition(n.getStart(sf)).line+1,name:n.arguments[0].text??n.arguments[0].getText(sf),start:n.getStart(sf),end:n.end,body:n.getText(sf),sha256:sha(n.getText(sf))});}ts.forEachChild(n,visit)}visit(sf);return out}
+let all=files.flatMap(file=>sites(file,fs.readFileSync(p.join(root,file),'utf8')));fs.writeFileSync('/tmp/test-audit-one-time-fulfillment75/sites.json',JSON.stringify(all,null,2)+'\n');
+for(let file of files)console.log(file,all.filter(x=>x.file===file).length,sha(fs.readFileSync(p.join(root,file))));
+module.exports={root,ts,files,sha,sites};

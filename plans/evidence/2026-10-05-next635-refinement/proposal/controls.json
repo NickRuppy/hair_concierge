@@ -1,0 +1,680 @@
+[
+  {
+    "id": "C1-open-count",
+    "candidateId": "C1",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSHA256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "scope": "buildRefinementStatusResponse",
+    "scopeAnchor": "export function buildRefinementStatusResponse(input: {\n  moduleStatusInput: Stage2ModuleStatusInput\n  moduleProjections: Stage2ModuleProjections\n  bannerDismissals: ModuleBannerDismissalState\n}): RefinementStatusResponse {\n  const states = stage2ModuleStates(input.moduleStatusInput)\n  const modules: RefinementModuleStatus[] = STAGE2_MODULES.map((stage2Module) => ({\n    module: stage2Module,\n    status: states[stage2Module].status,\n    openQuestionCount: states[stage2Module].openQuestionIds.length,\n  }))\n  const completedModuleCount = modules.filter((entry) => entry.status === \"complete\").length\n\n  // The banner always points at the first open module in canonical order\n  // (products, then habits) — \"the next open module\" from module-status.ts's\n  // per-module dismissal contract.\n  const nextOpenModule =\n    STAGE2_MODULES.find((stage2Module) => states[stage2Module].status === \"open\") ?? null\n  const dismissed = nextOpenModule\n    ? isModuleBannerDismissed(input.bannerDismissals, nextOpenModule)\n    : false\n\n  return refinementStatusResponseSchema.parse({\n    modules,\n    progress: {\n      completedSteps: BASE_COMPLETED_STEPS + completedModuleCount,\n      totalSteps: TOTAL_STEPS,\n    },\n    module1HandedOff: input.moduleProjections.products?.stage3Handoff === true,\n    banner: {\n      visible: nextOpenModule !== null && !dismissed,\n      module: nextOpenModule,\n      dismissed,\n    },\n  })\n}",
+    "scopeSHA256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+    "from": "openQuestionCount: states[stage2Module].openQuestionIds.length,",
+    "to": "openQuestionCount: 0,",
+    "mutatedSHA256": "248664ca032d24fe9ea1b943ac4706bb478e3d060c8097e5150444167de58cf7",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "fresh plan with no refinement draft: both modules open, progress 2/4"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^fresh plan with no refinement draft: both modules open, progress 2/4$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "line": 134,
+        "text": "assert.ok(body.modules[0].openQuestionCount > 0, \"fresh products module must expose open questions\")",
+        "keeperSha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "line": 134,
+        "text": "assert.ok(body.modules[0].openQuestionCount > 0, \"fresh products module must expose open questions\")",
+        "keeperSha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "==",
+    "expected": true,
+    "actual": false,
+    "message": "fresh products module must expose open questions",
+    "firstKeeperFrameRequired": true,
+    "status": "STATIC_ONLY_NOT_RUN"
+  },
+  {
+    "id": "C1-schema",
+    "candidateId": "C1",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSHA256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "scope": "buildRefinementStatusResponse",
+    "scopeAnchor": "export function buildRefinementStatusResponse(input: {\n  moduleStatusInput: Stage2ModuleStatusInput\n  moduleProjections: Stage2ModuleProjections\n  bannerDismissals: ModuleBannerDismissalState\n}): RefinementStatusResponse {\n  const states = stage2ModuleStates(input.moduleStatusInput)\n  const modules: RefinementModuleStatus[] = STAGE2_MODULES.map((stage2Module) => ({\n    module: stage2Module,\n    status: states[stage2Module].status,\n    openQuestionCount: states[stage2Module].openQuestionIds.length,\n  }))\n  const completedModuleCount = modules.filter((entry) => entry.status === \"complete\").length\n\n  // The banner always points at the first open module in canonical order\n  // (products, then habits) — \"the next open module\" from module-status.ts's\n  // per-module dismissal contract.\n  const nextOpenModule =\n    STAGE2_MODULES.find((stage2Module) => states[stage2Module].status === \"open\") ?? null\n  const dismissed = nextOpenModule\n    ? isModuleBannerDismissed(input.bannerDismissals, nextOpenModule)\n    : false\n\n  return refinementStatusResponseSchema.parse({\n    modules,\n    progress: {\n      completedSteps: BASE_COMPLETED_STEPS + completedModuleCount,\n      totalSteps: TOTAL_STEPS,\n    },\n    module1HandedOff: input.moduleProjections.products?.stage3Handoff === true,\n    banner: {\n      visible: nextOpenModule !== null && !dismissed,\n      module: nextOpenModule,\n      dismissed,\n    },\n  })\n}",
+    "scopeSHA256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+    "from": "openQuestionCount: states[stage2Module].openQuestionIds.length,",
+    "to": "openQuestionCount: states[stage2Module].openQuestionIds.length + 0.5,",
+    "mutatedSHA256": "e31acfbc0ae93dca6a8fd92946bbbd44b9a1370aeb3195d058525720789a9ea8",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "fresh plan with no refinement draft: both modules open, progress 2/4"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^fresh plan with no refinement draft: both modules open, progress 2/4$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "line": 125,
+        "text": "assert.equal(res.status, 200)",
+        "keeperSha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "line": 125,
+        "text": "assert.equal(res.status, 200)",
+        "keeperSha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "strictEqual",
+    "expected": 200,
+    "actual": 503,
+    "message": "Schema integer rejection reaches real unavailable HTTP503, expected200",
+    "firstKeeperFrameRequired": true,
+    "status": "STATIC_ONLY_NOT_RUN"
+  },
+  {
+    "id": "C1-order",
+    "candidateId": "C1",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSHA256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "scope": "buildRefinementStatusResponse",
+    "scopeAnchor": "export function buildRefinementStatusResponse(input: {\n  moduleStatusInput: Stage2ModuleStatusInput\n  moduleProjections: Stage2ModuleProjections\n  bannerDismissals: ModuleBannerDismissalState\n}): RefinementStatusResponse {\n  const states = stage2ModuleStates(input.moduleStatusInput)\n  const modules: RefinementModuleStatus[] = STAGE2_MODULES.map((stage2Module) => ({\n    module: stage2Module,\n    status: states[stage2Module].status,\n    openQuestionCount: states[stage2Module].openQuestionIds.length,\n  }))\n  const completedModuleCount = modules.filter((entry) => entry.status === \"complete\").length\n\n  // The banner always points at the first open module in canonical order\n  // (products, then habits) — \"the next open module\" from module-status.ts's\n  // per-module dismissal contract.\n  const nextOpenModule =\n    STAGE2_MODULES.find((stage2Module) => states[stage2Module].status === \"open\") ?? null\n  const dismissed = nextOpenModule\n    ? isModuleBannerDismissed(input.bannerDismissals, nextOpenModule)\n    : false\n\n  return refinementStatusResponseSchema.parse({\n    modules,\n    progress: {\n      completedSteps: BASE_COMPLETED_STEPS + completedModuleCount,\n      totalSteps: TOTAL_STEPS,\n    },\n    module1HandedOff: input.moduleProjections.products?.stage3Handoff === true,\n    banner: {\n      visible: nextOpenModule !== null && !dismissed,\n      module: nextOpenModule,\n      dismissed,\n    },\n  })\n}",
+    "scopeSHA256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+    "from": "STAGE2_MODULES.map((stage2Module)",
+    "to": "[...STAGE2_MODULES].reverse().map((stage2Module)",
+    "mutatedSHA256": "125bedfd421af5ca84cc2c2ee4edd726e2803b024db68118b9fd5d66a4e16c2e",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "fresh plan with no refinement draft: both modules open, progress 2/4"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^fresh plan with no refinement draft: both modules open, progress 2/4$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "line": 127,
+        "text": "assert.deepEqual(\n    body.modules.map((m: { module: string; status: string }) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )",
+        "keeperSha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "line": 127,
+        "text": "assert.deepEqual(\n    body.modules.map((m: { module: string; status: string }) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )",
+        "keeperSha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "deepStrictEqual",
+    "expected": [
+      [
+        "products",
+        "open"
+      ],
+      [
+        "habits",
+        "open"
+      ]
+    ],
+    "actual": [
+      [
+        "habits",
+        "open"
+      ],
+      [
+        "products",
+        "open"
+      ]
+    ],
+    "message": "Ordered product/habit pairs",
+    "firstKeeperFrameRequired": true,
+    "status": "STATIC_ONLY_NOT_RUN"
+  },
+  {
+    "id": "C1-progress",
+    "candidateId": "C1",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSHA256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "scope": "BASE_COMPLETED_STEPS",
+    "scopeAnchor": "const BASE_COMPLETED_STEPS = 2",
+    "scopeSHA256": "dd8ab8131d84cae67a174285cdabcf9587f296531015bb642fd6cf61ef02d2ee",
+    "from": "const BASE_COMPLETED_STEPS = 2",
+    "to": "const BASE_COMPLETED_STEPS = 1",
+    "mutatedSHA256": "8dc12b1ab1962e36f4f17fd79414ed1bb5b3df788fab923955a41226e0ec6738",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "fresh plan with no refinement draft: both modules open, progress 2/4"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^fresh plan with no refinement draft: both modules open, progress 2/4$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "line": 135,
+        "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })",
+        "keeperSha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "line": 135,
+        "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })",
+        "keeperSha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "deepStrictEqual",
+    "expected": {
+      "completedSteps": 2,
+      "totalSteps": 4
+    },
+    "actual": {
+      "completedSteps": 1,
+      "totalSteps": 4
+    },
+    "message": "Fixed Haar-Analyse/Idealplan credit",
+    "firstKeeperFrameRequired": true,
+    "status": "STATIC_ONLY_NOT_RUN"
+  },
+  {
+    "id": "C2-open-count",
+    "candidateId": "C2",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSHA256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "scope": "buildRefinementStatusResponse",
+    "scopeAnchor": "export function buildRefinementStatusResponse(input: {\n  moduleStatusInput: Stage2ModuleStatusInput\n  moduleProjections: Stage2ModuleProjections\n  bannerDismissals: ModuleBannerDismissalState\n}): RefinementStatusResponse {\n  const states = stage2ModuleStates(input.moduleStatusInput)\n  const modules: RefinementModuleStatus[] = STAGE2_MODULES.map((stage2Module) => ({\n    module: stage2Module,\n    status: states[stage2Module].status,\n    openQuestionCount: states[stage2Module].openQuestionIds.length,\n  }))\n  const completedModuleCount = modules.filter((entry) => entry.status === \"complete\").length\n\n  // The banner always points at the first open module in canonical order\n  // (products, then habits) — \"the next open module\" from module-status.ts's\n  // per-module dismissal contract.\n  const nextOpenModule =\n    STAGE2_MODULES.find((stage2Module) => states[stage2Module].status === \"open\") ?? null\n  const dismissed = nextOpenModule\n    ? isModuleBannerDismissed(input.bannerDismissals, nextOpenModule)\n    : false\n\n  return refinementStatusResponseSchema.parse({\n    modules,\n    progress: {\n      completedSteps: BASE_COMPLETED_STEPS + completedModuleCount,\n      totalSteps: TOTAL_STEPS,\n    },\n    module1HandedOff: input.moduleProjections.products?.stage3Handoff === true,\n    banner: {\n      visible: nextOpenModule !== null && !dismissed,\n      module: nextOpenModule,\n      dismissed,\n    },\n  })\n}",
+    "scopeSHA256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+    "from": "openQuestionCount: states[stage2Module].openQuestionIds.length,",
+    "to": "openQuestionCount: states[stage2Module].openQuestionIds.length + 1,",
+    "mutatedSHA256": "da3e84be46cd38443bc48a78fa8815c09c817e97491c476aa2904b62baea9a3f",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "partial products user-answers: products open with the correct open-question count"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^partial products user-answers: products open with the correct open-question count$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "line": 162,
+        "text": "assert.equal(products.openQuestionCount, 1)",
+        "keeperSha256": "f1454bc0bd680f377be7ca39d9b0f2affeb1b42b0652f98c2583c2aa243eec32",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "line": 162,
+        "text": "assert.equal(products.openQuestionCount, 1)",
+        "keeperSha256": "f1454bc0bd680f377be7ca39d9b0f2affeb1b42b0652f98c2583c2aa243eec32",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "strictEqual",
+    "expected": 1,
+    "actual": 2,
+    "message": "One remaining product question",
+    "firstKeeperFrameRequired": true,
+    "status": "STATIC_ONLY_NOT_RUN"
+  },
+  {
+    "id": "C3-handoff",
+    "candidateId": "C3",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSHA256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "scope": "buildRefinementStatusResponse",
+    "scopeAnchor": "export function buildRefinementStatusResponse(input: {\n  moduleStatusInput: Stage2ModuleStatusInput\n  moduleProjections: Stage2ModuleProjections\n  bannerDismissals: ModuleBannerDismissalState\n}): RefinementStatusResponse {\n  const states = stage2ModuleStates(input.moduleStatusInput)\n  const modules: RefinementModuleStatus[] = STAGE2_MODULES.map((stage2Module) => ({\n    module: stage2Module,\n    status: states[stage2Module].status,\n    openQuestionCount: states[stage2Module].openQuestionIds.length,\n  }))\n  const completedModuleCount = modules.filter((entry) => entry.status === \"complete\").length\n\n  // The banner always points at the first open module in canonical order\n  // (products, then habits) — \"the next open module\" from module-status.ts's\n  // per-module dismissal contract.\n  const nextOpenModule =\n    STAGE2_MODULES.find((stage2Module) => states[stage2Module].status === \"open\") ?? null\n  const dismissed = nextOpenModule\n    ? isModuleBannerDismissed(input.bannerDismissals, nextOpenModule)\n    : false\n\n  return refinementStatusResponseSchema.parse({\n    modules,\n    progress: {\n      completedSteps: BASE_COMPLETED_STEPS + completedModuleCount,\n      totalSteps: TOTAL_STEPS,\n    },\n    module1HandedOff: input.moduleProjections.products?.stage3Handoff === true,\n    banner: {\n      visible: nextOpenModule !== null && !dismissed,\n      module: nextOpenModule,\n      dismissed,\n    },\n  })\n}",
+    "scopeSHA256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+    "from": "module1HandedOff: input.moduleProjections.products?.stage3Handoff === true,",
+    "to": "module1HandedOff: false,",
+    "mutatedSHA256": "699121350ed02290cc288ab07534d8ec6213ea16bc4b14843ee0959a492c478b",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "products module complete via lineage: 3/4 and the handoff marker is set"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^products module complete via lineage: 3/4 and the handoff marker is set$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "line": 194,
+        "text": "assert.equal(body.module1HandedOff, true)",
+        "keeperSha256": "974961a1b80cd15af0e79c4db7195db243b9e0e483f3fad7cf40e1fac6997f58",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "line": 194,
+        "text": "assert.equal(body.module1HandedOff, true)",
+        "keeperSha256": "974961a1b80cd15af0e79c4db7195db243b9e0e483f3fad7cf40e1fac6997f58",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "strictEqual",
+    "expected": true,
+    "actual": false,
+    "message": "Persistent products handoff",
+    "firstKeeperFrameRequired": true,
+    "status": "STATIC_ONLY_NOT_RUN"
+  },
+  {
+    "id": "C3-next-module",
+    "candidateId": "C3",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSHA256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "scope": "buildRefinementStatusResponse",
+    "scopeAnchor": "export function buildRefinementStatusResponse(input: {\n  moduleStatusInput: Stage2ModuleStatusInput\n  moduleProjections: Stage2ModuleProjections\n  bannerDismissals: ModuleBannerDismissalState\n}): RefinementStatusResponse {\n  const states = stage2ModuleStates(input.moduleStatusInput)\n  const modules: RefinementModuleStatus[] = STAGE2_MODULES.map((stage2Module) => ({\n    module: stage2Module,\n    status: states[stage2Module].status,\n    openQuestionCount: states[stage2Module].openQuestionIds.length,\n  }))\n  const completedModuleCount = modules.filter((entry) => entry.status === \"complete\").length\n\n  // The banner always points at the first open module in canonical order\n  // (products, then habits) — \"the next open module\" from module-status.ts's\n  // per-module dismissal contract.\n  const nextOpenModule =\n    STAGE2_MODULES.find((stage2Module) => states[stage2Module].status === \"open\") ?? null\n  const dismissed = nextOpenModule\n    ? isModuleBannerDismissed(input.bannerDismissals, nextOpenModule)\n    : false\n\n  return refinementStatusResponseSchema.parse({\n    modules,\n    progress: {\n      completedSteps: BASE_COMPLETED_STEPS + completedModuleCount,\n      totalSteps: TOTAL_STEPS,\n    },\n    module1HandedOff: input.moduleProjections.products?.stage3Handoff === true,\n    banner: {\n      visible: nextOpenModule !== null && !dismissed,\n      module: nextOpenModule,\n      dismissed,\n    },\n  })\n}",
+    "scopeSHA256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+    "from": "STAGE2_MODULES.find((stage2Module) => states[stage2Module].status === \"open\") ?? null",
+    "to": "STAGE2_MODULES[0]",
+    "mutatedSHA256": "2077ed8f384fbcd28fe6d7ac7e35d58211207eee85cd25dfd0f4aa2150bb6a9b",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "products module complete via lineage: 3/4 and the handoff marker is set"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^products module complete via lineage: 3/4 and the handoff marker is set$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "line": 195,
+        "text": "assert.deepEqual(body.banner, { visible: true, module: \"habits\", dismissed: false })",
+        "keeperSha256": "974961a1b80cd15af0e79c4db7195db243b9e0e483f3fad7cf40e1fac6997f58",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "line": 195,
+        "text": "assert.deepEqual(body.banner, { visible: true, module: \"habits\", dismissed: false })",
+        "keeperSha256": "974961a1b80cd15af0e79c4db7195db243b9e0e483f3fad7cf40e1fac6997f58",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "deepStrictEqual",
+    "expected": {
+      "visible": true,
+      "module": "habits",
+      "dismissed": false
+    },
+    "actual": {
+      "visible": true,
+      "module": "products",
+      "dismissed": false
+    },
+    "message": "Banner advances to open habits",
+    "firstKeeperFrameRequired": true,
+    "status": "STATIC_ONLY_NOT_RUN"
+  },
+  {
+    "id": "C4-progress",
+    "candidateId": "C4",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSHA256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "scope": "buildRefinementStatusResponse",
+    "scopeAnchor": "export function buildRefinementStatusResponse(input: {\n  moduleStatusInput: Stage2ModuleStatusInput\n  moduleProjections: Stage2ModuleProjections\n  bannerDismissals: ModuleBannerDismissalState\n}): RefinementStatusResponse {\n  const states = stage2ModuleStates(input.moduleStatusInput)\n  const modules: RefinementModuleStatus[] = STAGE2_MODULES.map((stage2Module) => ({\n    module: stage2Module,\n    status: states[stage2Module].status,\n    openQuestionCount: states[stage2Module].openQuestionIds.length,\n  }))\n  const completedModuleCount = modules.filter((entry) => entry.status === \"complete\").length\n\n  // The banner always points at the first open module in canonical order\n  // (products, then habits) — \"the next open module\" from module-status.ts's\n  // per-module dismissal contract.\n  const nextOpenModule =\n    STAGE2_MODULES.find((stage2Module) => states[stage2Module].status === \"open\") ?? null\n  const dismissed = nextOpenModule\n    ? isModuleBannerDismissed(input.bannerDismissals, nextOpenModule)\n    : false\n\n  return refinementStatusResponseSchema.parse({\n    modules,\n    progress: {\n      completedSteps: BASE_COMPLETED_STEPS + completedModuleCount,\n      totalSteps: TOTAL_STEPS,\n    },\n    module1HandedOff: input.moduleProjections.products?.stage3Handoff === true,\n    banner: {\n      visible: nextOpenModule !== null && !dismissed,\n      module: nextOpenModule,\n      dismissed,\n    },\n  })\n}",
+    "scopeSHA256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+    "from": "const completedModuleCount = modules.filter((entry) => entry.status === \"complete\").length",
+    "to": "const completedModuleCount = Math.min(1, modules.filter((entry) => entry.status === \"complete\").length)",
+    "mutatedSHA256": "96da3dc52c4e88311ad9560279ab0096ed4663ab0d4cb1037f911228168dcfb0",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "both modules complete: 4/4"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^both modules complete: 4/4$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "line": 241,
+        "text": "assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })",
+        "keeperSha256": "3586d769766ff39e1819555a96a17c0364f2b328097d001ec07483f68793c0b2",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "line": 241,
+        "text": "assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })",
+        "keeperSha256": "3586d769766ff39e1819555a96a17c0364f2b328097d001ec07483f68793c0b2",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "deepStrictEqual",
+    "expected": {
+      "completedSteps": 4,
+      "totalSteps": 4
+    },
+    "actual": {
+      "completedSteps": 3,
+      "totalSteps": 4
+    },
+    "message": "Both user-complete modules credited",
+    "firstKeeperFrameRequired": true,
+    "status": "STATIC_ONLY_NOT_RUN"
+  },
+  {
+    "id": "C4-dismissed",
+    "candidateId": "C4",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSHA256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "scope": "buildRefinementStatusResponse",
+    "scopeAnchor": "export function buildRefinementStatusResponse(input: {\n  moduleStatusInput: Stage2ModuleStatusInput\n  moduleProjections: Stage2ModuleProjections\n  bannerDismissals: ModuleBannerDismissalState\n}): RefinementStatusResponse {\n  const states = stage2ModuleStates(input.moduleStatusInput)\n  const modules: RefinementModuleStatus[] = STAGE2_MODULES.map((stage2Module) => ({\n    module: stage2Module,\n    status: states[stage2Module].status,\n    openQuestionCount: states[stage2Module].openQuestionIds.length,\n  }))\n  const completedModuleCount = modules.filter((entry) => entry.status === \"complete\").length\n\n  // The banner always points at the first open module in canonical order\n  // (products, then habits) — \"the next open module\" from module-status.ts's\n  // per-module dismissal contract.\n  const nextOpenModule =\n    STAGE2_MODULES.find((stage2Module) => states[stage2Module].status === \"open\") ?? null\n  const dismissed = nextOpenModule\n    ? isModuleBannerDismissed(input.bannerDismissals, nextOpenModule)\n    : false\n\n  return refinementStatusResponseSchema.parse({\n    modules,\n    progress: {\n      completedSteps: BASE_COMPLETED_STEPS + completedModuleCount,\n      totalSteps: TOTAL_STEPS,\n    },\n    module1HandedOff: input.moduleProjections.products?.stage3Handoff === true,\n    banner: {\n      visible: nextOpenModule !== null && !dismissed,\n      module: nextOpenModule,\n      dismissed,\n    },\n  })\n}",
+    "scopeSHA256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+    "from": "    : false\n\n  return refinementStatusResponseSchema.parse({",
+    "to": "    : true\n\n  return refinementStatusResponseSchema.parse({",
+    "mutatedSHA256": "a57741c9e2b8b418e4bf1e1f72a1a6efd295a79c75866898b0a8e60ec280f09f",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "both modules complete: 4/4"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^both modules complete: 4/4$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "line": 243,
+        "text": "assert.deepEqual(body.banner, { visible: false, module: null, dismissed: false })",
+        "keeperSha256": "3586d769766ff39e1819555a96a17c0364f2b328097d001ec07483f68793c0b2",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "line": 243,
+        "text": "assert.deepEqual(body.banner, { visible: false, module: null, dismissed: false })",
+        "keeperSha256": "3586d769766ff39e1819555a96a17c0364f2b328097d001ec07483f68793c0b2",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "deepStrictEqual",
+    "expected": {
+      "visible": false,
+      "module": null,
+      "dismissed": false
+    },
+    "actual": {
+      "visible": false,
+      "module": null,
+      "dismissed": true
+    },
+    "message": "No next module is not a dismissal",
+    "firstKeeperFrameRequired": true,
+    "status": "STATIC_ONLY_NOT_RUN"
+  },
+  {
+    "id": "C5-dismissal",
+    "candidateId": "C5",
+    "file": "src/lib/personal-plan/lifecycle/repository.ts",
+    "sourceSHA256": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "scope": "isModuleBannerDismissed",
+    "scopeAnchor": "export function isModuleBannerDismissed(\n  state: ModuleBannerDismissalState,\n  module: Stage2Module,\n): boolean {\n  return state.dismissedModules.has(module)\n}",
+    "scopeSHA256": "825968d6dfd856296d86b06b87b9850573b4f2c6e416435ed66fd41d28bc622c",
+    "from": "return state.dismissedModules.has(module)",
+    "to": "return false",
+    "mutatedSHA256": "6e42e7fc318c7f9d94b1e674005c27f8290feb42213cb546bbaf4d2c5085fce4",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "banner reflects a stored dismissal for the current open module"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^banner reflects a stored dismissal for the current open module$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "line": 262,
+        "text": "assert.deepEqual(body.banner, { visible: false, module: \"products\", dismissed: true })",
+        "keeperSha256": "77289bcdf398868005f31dce5a2a5ebeb0ca345e24a43936211e38dfbcbba9eb",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "line": 262,
+        "text": "assert.deepEqual(body.banner, { visible: false, module: \"products\", dismissed: true })",
+        "keeperSha256": "77289bcdf398868005f31dce5a2a5ebeb0ca345e24a43936211e38dfbcbba9eb",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "deepStrictEqual",
+    "expected": {
+      "visible": false,
+      "module": "products",
+      "dismissed": true
+    },
+    "actual": {
+      "visible": true,
+      "module": "products",
+      "dismissed": false
+    },
+    "message": "Stored dismissal is honored",
+    "firstKeeperFrameRequired": true,
+    "status": "STATIC_ONLY_NOT_RUN"
+  },
+  {
+    "id": "C5-status",
+    "candidateId": "C5",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSHA256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "scope": "buildRefinementStatusResponse",
+    "scopeAnchor": "export function buildRefinementStatusResponse(input: {\n  moduleStatusInput: Stage2ModuleStatusInput\n  moduleProjections: Stage2ModuleProjections\n  bannerDismissals: ModuleBannerDismissalState\n}): RefinementStatusResponse {\n  const states = stage2ModuleStates(input.moduleStatusInput)\n  const modules: RefinementModuleStatus[] = STAGE2_MODULES.map((stage2Module) => ({\n    module: stage2Module,\n    status: states[stage2Module].status,\n    openQuestionCount: states[stage2Module].openQuestionIds.length,\n  }))\n  const completedModuleCount = modules.filter((entry) => entry.status === \"complete\").length\n\n  // The banner always points at the first open module in canonical order\n  // (products, then habits) — \"the next open module\" from module-status.ts's\n  // per-module dismissal contract.\n  const nextOpenModule =\n    STAGE2_MODULES.find((stage2Module) => states[stage2Module].status === \"open\") ?? null\n  const dismissed = nextOpenModule\n    ? isModuleBannerDismissed(input.bannerDismissals, nextOpenModule)\n    : false\n\n  return refinementStatusResponseSchema.parse({\n    modules,\n    progress: {\n      completedSteps: BASE_COMPLETED_STEPS + completedModuleCount,\n      totalSteps: TOTAL_STEPS,\n    },\n    module1HandedOff: input.moduleProjections.products?.stage3Handoff === true,\n    banner: {\n      visible: nextOpenModule !== null && !dismissed,\n      module: nextOpenModule,\n      dismissed,\n    },\n  })\n}",
+    "scopeSHA256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+    "from": "status: states[stage2Module].status,",
+    "to": "status: input.bannerDismissals.dismissedModules.has(stage2Module) ? \"complete\" : states[stage2Module].status,",
+    "mutatedSHA256": "2b7f51a99431281c48ccceea95e7a4189bd66b682a1544f2299984bc903813ba",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "banner reflects a stored dismissal for the current open module"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^banner reflects a stored dismissal for the current open module$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "line": 263,
+        "text": "assert.equal(body.modules.find((m: { module: string }) => m.module === \"products\").status, \"open\")",
+        "keeperSha256": "77289bcdf398868005f31dce5a2a5ebeb0ca345e24a43936211e38dfbcbba9eb",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "line": 263,
+        "text": "assert.equal(body.modules.find((m: { module: string }) => m.module === \"products\").status, \"open\")",
+        "keeperSha256": "77289bcdf398868005f31dce5a2a5ebeb0ca345e24a43936211e38dfbcbba9eb",
+        "fileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "strictEqual",
+    "expected": "open",
+    "actual": "complete",
+    "message": "Dismissal does not complete product questions",
+    "firstKeeperFrameRequired": true,
+    "status": "STATIC_ONLY_NOT_RUN"
+  },
+  {
+    "id": "D1-assumptions",
+    "candidateId": "D1",
+    "file": "src/lib/personal-plan/refinement/module-status.ts",
+    "sourceSHA256": "0d5e6b0d50555c348beb5a56c38134fb5da4627de4fcd6f95674b8f8c3e1b82e",
+    "scope": "stage2AssumptionsActive",
+    "scopeAnchor": "export function stage2AssumptionsActive(input: Stage2ModuleStatusInput): boolean {\n  const states = stage2ModuleStates(input)\n  return STAGE2_MODULES.some((stage2Module) => states[stage2Module].status !== \"complete\")\n}",
+    "scopeSHA256": "f76464eb5a13e9275e138adb0be44ad74cfb57e8f6f18fdb578c76c6fe244d3e",
+    "from": "return STAGE2_MODULES.some((stage2Module) => states[stage2Module].status !== \"complete\")",
+    "to": "return false",
+    "mutatedSHA256": "405565bf6ed82bcea0a18e8e24835d8f4f7666d1e3539037b733c8842c8b1d52",
+    "test": {
+      "file": "tests/personal-plan/refinement/module-status.test.ts",
+      "name": "a fully auto-accepted draft leaves both modules open and assumptions active"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^a fully auto-accepted draft leaves both modules open and assumptions active$",
+      "tests/personal-plan/refinement/module-status.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "line": 56,
+        "text": "assert.equal(stage2AssumptionsActive(input), true)",
+        "keeperSha256": "954c9646b451e08f3b856d97c9bb17d093b190fbb70ca48c92a2e0b842a80148",
+        "fileSha256": "279643c605895bd33b1a7f66f5e9a1e423e565689be834fb020bb7db59f3cfa7"
+      },
+      "cut": {
+        "line": 56,
+        "text": "assert.equal(stage2AssumptionsActive(input), true)",
+        "keeperSha256": "954c9646b451e08f3b856d97c9bb17d093b190fbb70ca48c92a2e0b842a80148",
+        "fileSha256": "3b1eee6eec64647981ea91b6d2b921df324c247930a63102053de6cefc59c67f"
+      }
+    },
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "strictEqual",
+    "expected": true,
+    "actual": false,
+    "message": "All-assumed draft still reports assumptions",
+    "firstKeeperFrameRequired": true,
+    "status": "STATIC_ONLY_NOT_RUN"
+  },
+  {
+    "id": "D2-no-routine",
+    "candidateId": "D2",
+    "file": "src/app/api/personal-plan/refinement-presentation/route.ts",
+    "sourceSHA256": "0a0410de7b32d02ee2da0b68f4e04df952042864e3b42396d0509bc3d52f7c44",
+    "scope": "createRefinementPresentationRouteHandlers",
+    "scopeAnchor": "export function createRefinementPresentationRouteHandlers(deps: RefinementPresentationRouteDeps) {\n  return {\n    async GET() {\n      const userId = await deps.getUserId()\n      if (!userId) return response({ error: \"unauthorized\" }, 401)\n      try {\n        const client = deps.client()\n        const plan = await loadOwnerPlan(client, userId)\n\n        let answers: PersonalPlanRefinementAnswersV1 | null = null\n        let completedQuestionIds: string[] = []\n        if (plan?.current_refined_need_version_id) {\n          const draft = await loadCompletedDraft(\n            client,\n            plan.id,\n            plan.current_refined_need_version_id,\n          )\n          if (draft) {\n            answers = (draft.answers ?? {}) as PersonalPlanRefinementAnswersV1\n            completedQuestionIds = Array.isArray(draft.completed_question_ids)\n              ? (draft.completed_question_ids as string[])\n              : []\n          }\n        }\n\n        // Reuse the same server loader that feeds the Routine page's `view` prop\n        // (src/lib/personal-plan/routine/load-view.ts). This keeps /profile and /routine\n        // consistent: when the frozen active Routine no longer matches its immutable source\n        // (authority_repair_required), the loader nulls out activeVersion rather than\n        // returning a possibly-stale product list, and /profile must not show it as confirmed\n        // either.\n        const view = await loadPersonalPlanRoutineView({\n          client: client as unknown as PersonalPlanRoutineReadClient,\n          userId,\n          enabled: true,\n          includePendingProposal: false,\n        })\n        const activeRoutinePayload =\n          view.status === \"no_personal_plan\" ? null : (view.activeVersion?.payload ?? null)\n        const routineProducts: RoutineProductSummary[] | null = activeRoutinePayload\n          ? activeRoutinePayload.items\n              .filter((item) => item.state.inclusion === \"included\")\n              .map(routineProductSummary)\n              .filter((summary): summary is RoutineProductSummary => summary !== null)\n          : null\n\n        return response({ answers, completedQuestionIds, routineProducts })\n      } catch {\n        return response({ error: \"temporarily_unavailable\" }, 503)\n      }\n    },\n  }\n}",
+    "scopeSHA256": "2803b618781a0c51ce1b507f726326dfb1fe39c60224417d96e792aec0fbc2ab",
+    "from": "          : null\n\n        return response({ answers, completedQuestionIds, routineProducts })",
+    "to": "          : []\n\n        return response({ answers, completedQuestionIds, routineProducts })",
+    "mutatedSHA256": "c85da30a5f634bbe7ccc288fbec719f00b095e2d9f3a018b4ba7c06410f92def",
+    "test": {
+      "file": "tests/personal-plan-refinement-presentation-route.test.ts",
+      "name": "returns null answers when no complete draft matches the pointer"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^returns null answers when no complete draft matches the pointer$",
+      "tests/personal-plan-refinement-presentation-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "line": 248,
+        "text": "assert.equal(body.routineProducts, null)",
+        "keeperSha256": "f105c2ebabac5c1c3d97bc3a98e94f3af89a1800bd4d45e4ef9a23d5a9e550ea",
+        "fileSha256": "b829abbe2a409006725f60b00dcae90a304068050a752f7215bab0f5bd30a0be"
+      },
+      "cut": {
+        "line": 248,
+        "text": "assert.equal(body.routineProducts, null)",
+        "keeperSha256": "f105c2ebabac5c1c3d97bc3a98e94f3af89a1800bd4d45e4ef9a23d5a9e550ea",
+        "fileSha256": "0b1c469904918e19bb964040d41df3f67f94711868e09863c4d45f411572802b"
+      }
+    },
+    "expectedCode": "ERR_ASSERTION",
+    "expectedOperator": "strictEqual",
+    "expected": null,
+    "actual": [],
+    "message": "Absent active version returns null, not an empty list",
+    "firstKeeperFrameRequired": true,
+    "status": "STATIC_ONLY_NOT_RUN"
+  }
+]

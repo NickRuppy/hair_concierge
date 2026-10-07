@@ -1,0 +1,42 @@
+7287c8e1ca1be69e2363eff1fd5c5ef1ae3b2b47
+Clarify hair length progression across quiz portraits (#284)
+
+## Why
+
+Adjacent hair-length choices were visually inconsistent in the quiz:
+curly `Mittellang` and `Lang` were almost indistinguishable, while later
+Coily review exposed scratchy short contours and rectangular
+medium-to-very-long silhouettes.
+
+## What changed
+
+- Re-authored the out-of-tolerance canonical portrait cells around one
+consistent five-step endpoint ladder.
+- Replaced Coily `Mittellang`, `Lang`, and `Sehr lang` with the approved
+rounded, gently tapered family while retaining the measured progression.
+- Removed the personal-plan-only curly/coily `very long` overrides so
+every portrait surface uses the shared canonical manifest.
+- Added a repeatable hair-fill measurement oracle, offline endpoint
+finalizer, geometry regression coverage, the approved plan/mockup, and
+final light/dark 20-cell review boards.
+
+## Verification
+
+- Focused portrait and personal-plan suite: 17/17 passed.
+- Full Node suite: 2,126/2,126 passed.
+- `npm run ci:verify`: typecheck, lint, and production build passed;
+lint retained four unrelated pre-existing warnings and zero errors.
+- Canonical `/labs/portrait` gallery inspected on white and dark
+backgrounds; the final Coily row uses the shared asset URLs and produced
+no browser-console errors.
+- Independent whole-worktree Claude review: no blocking findings.
+
+## Risk and follow-up
+
+- Raster quality remains partly visual; the selected progression was
+explicitly approved and the final light/dark boards are committed.
+- The offline measurement oracle is calibrated to the current lilac
+palette, and the optional finalizer requires visual re-review after any
+aspect adjustment.
+- No migrations, production-data changes, deployment, or runtime image
+generation are included.

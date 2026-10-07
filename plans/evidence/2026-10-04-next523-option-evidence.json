@@ -1,0 +1,312 @@
+{
+  "readOnly": true,
+  "counts": {
+    "before": 13,
+    "transfer": 13,
+    "cut": 9
+  },
+  "hashes": {
+    "tests/quiz-option-card.test.tsx": "04a807f03985a6eeca2b1a5cb3027f258ec3048220e8ee1e70b77c3fe2a28924",
+    "src/components/quiz/quiz-option-card.tsx": "d3886b23445bfa5c3346cc9fa435968e0dbad35a6cecdb2d5a4ebf4dd0e391af",
+    "src/components/quiz/hair-length-option-card.tsx": "76884c108303c0e08dbfd58edec3492e321a7be4d7fad38204352d2297f450b2",
+    "src/components/quiz/hair-portrait-figure.tsx": "7a782bfc42c3de2d640462da3da463e70f5ba039ff0e7b8364ced4c0569c8495",
+    "src/components/ui/info-tip.tsx": "c4493cb1d20e32e1d105b673598aee09b8636638b72c5f22e16a6082a77bcd7b",
+    "src/components/onboarding/screens/single-select-screen.tsx": "a1844574362f8e94236327a1dc4af339c833fd32f3423f05b99563c13faff365",
+    "tests/legacy-quiz-mobile-action.spec.ts": "13da779df8e53ce24b5c6aa8e21e80446e58ce0c7ab6b81263956eb7cd854bb4",
+    "package.json": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    ".github/workflows/ci.yml": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+  },
+  "decisions": [
+    {
+      "title": "quiz option card centers the icon row against single-line labels",
+      "line": 8,
+      "start": 244,
+      "end": 618,
+      "body": "{\n  const html = renderToStaticMarkup(\n    <QuizOptionCard icon=\"product-shampoo\" label=\"Shampoo\" active={false} onClick={() => {}} />,\n  )\n\n  assert.match(html, /grid-cols-\\[auto_minmax\\(0,1fr\\)_auto\\]/)\n  assert.match(html, /\\bitems-center\\b/)\n  assert.doesNotMatch(html, /\\bitems-start\\b/)\n}",
+      "callback": "test(\"quiz option card centers the icon row against single-line labels\", () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard icon=\"product-shampoo\" label=\"Shampoo\" active={false} onClick={() => {}} />,\n  )\n\n  assert.match(html, /grid-cols-\\[auto_minmax\\(0,1fr\\)_auto\\]/)\n  assert.match(html, /\\bitems-center\\b/)\n  assert.doesNotMatch(html, /\\bitems-start\\b/)\n})",
+      "assertions": [
+        "assert.match(html, /grid-cols-\\[auto_minmax\\(0,1fr\\)_auto\\]/)",
+        "assert.match(html, /\\bitems-center\\b/)",
+        "assert.doesNotMatch(html, /\\bitems-start\\b/)"
+      ],
+      "bodyEnd": 616,
+      "classification": "C",
+      "keeper": "quiz option card keeps trailing info outside the selectable card button"
+    },
+    {
+      "title": "quiz option card centers descriptive rows against the full text block",
+      "line": 18,
+      "start": 620,
+      "end": 1078,
+      "body": "{\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      icon=\"hair-wavy\"\n      label=\"Wellig\"\n      description=\"Bildet eine S-Kurve, keine 3D-Windung\"\n      active={false}\n      onClick={() => {}}\n    />,\n  )\n\n  assert.match(html, /grid-cols-\\[auto_minmax\\(0,1fr\\)_auto\\]/)\n  assert.match(html, /\\bitems-center\\b/)\n  assert.doesNotMatch(html, /\\bitems-start\\b/)\n}",
+      "callback": "test(\"quiz option card centers descriptive rows against the full text block\", () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      icon=\"hair-wavy\"\n      label=\"Wellig\"\n      description=\"Bildet eine S-Kurve, keine 3D-Windung\"\n      active={false}\n      onClick={() => {}}\n    />,\n  )\n\n  assert.match(html, /grid-cols-\\[auto_minmax\\(0,1fr\\)_auto\\]/)\n  assert.match(html, /\\bitems-center\\b/)\n  assert.doesNotMatch(html, /\\bitems-start\\b/)\n})",
+      "assertions": [
+        "assert.match(html, /grid-cols-\\[auto_minmax\\(0,1fr\\)_auto\\]/)",
+        "assert.match(html, /\\bitems-center\\b/)",
+        "assert.doesNotMatch(html, /\\bitems-start\\b/)"
+      ],
+      "bodyEnd": 1076,
+      "classification": "C",
+      "keeper": "quiz option card keeps trailing info outside the selectable card button"
+    },
+    {
+      "title": "quiz option card reserves a fixed right action rail for trailing info",
+      "line": 34,
+      "start": 1080,
+      "end": 1610,
+      "body": "{\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      icon=\"product-conditioner\"\n      label=\"Conditioner\"\n      active={false}\n      onClick={() => {}}\n      trailing={<button type=\"button\">i</button>}\n    />,\n  )\n\n  assert.match(html, /grid-cols-\\[auto_minmax\\(0,1fr\\)_auto\\]/)\n  assert.match(html, /min-w-\\[4\\.25rem\\]/)\n  assert.match(html, /\\bjustify-end\\b/)\n  assert.match(html, /<p id=\"[^\"]+\" class=\"break-words hyphens-auto/)\n}",
+      "callback": "test(\"quiz option card reserves a fixed right action rail for trailing info\", () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      icon=\"product-conditioner\"\n      label=\"Conditioner\"\n      active={false}\n      onClick={() => {}}\n      trailing={<button type=\"button\">i</button>}\n    />,\n  )\n\n  assert.match(html, /grid-cols-\\[auto_minmax\\(0,1fr\\)_auto\\]/)\n  assert.match(html, /min-w-\\[4\\.25rem\\]/)\n  assert.match(html, /\\bjustify-end\\b/)\n  assert.match(html, /<p id=\"[^\"]+\" class=\"break-words hyphens-auto/)\n})",
+      "assertions": [
+        "assert.match(html, /grid-cols-\\[auto_minmax\\(0,1fr\\)_auto\\]/)",
+        "assert.match(html, /min-w-\\[4\\.25rem\\]/)",
+        "assert.match(html, /\\bjustify-end\\b/)",
+        "assert.match(html, /<p id=\"[^\"]+\" class=\"break-words hyphens-auto/)"
+      ],
+      "bodyEnd": 1608,
+      "classification": "C",
+      "keeper": "quiz option card keeps trailing info outside the selectable card button"
+    },
+    {
+      "title": "quiz option card keeps trailing info outside the selectable card button",
+      "line": 51,
+      "start": 1612,
+      "end": 2893,
+      "body": "{\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      icon=\"product-conditioner\"\n      label=\"Conditioner\"\n      description=\"Pflege nach dem Shampoo\"\n      active={false}\n      onClick={() => {}}\n      trailing={<button type=\"button\">i</button>}\n    />,\n  )\n  const source = await readFile(\"src/components/ui/info-tip.tsx\", \"utf8\")\n  const accessibleButtonMatch = html.match(\n    /<button type=\"button\" aria-labelledby=\"([^\"]+)\" aria-describedby=\"([^\"]+)\"/,\n  )\n\n  assert.ok(accessibleButtonMatch)\n  assert.match(html, new RegExp(`<p id=\"${accessibleButtonMatch[1]}\"[^>]*>Conditioner</p>`))\n  assert.match(\n    html,\n    new RegExp(`<p id=\"${accessibleButtonMatch[2]}\"[^>]*>Pflege nach dem Shampoo</p>`),\n  )\n  assert.match(html, /<button type=\"button\">i<\\/button>/)\n  assert.match(html, /<\\/button><div class=\"pointer-events-none relative z-10 grid/)\n  assert.doesNotMatch(html, /role=\"button\"/)\n  assert.match(source, /event\\.stopPropagation\\(\\)/)\n  assert.match(source, /event\\.key === \"Escape\"/)\n  assert.match(source, /aria-describedby=\\{open \\? popupId : undefined\\}/)\n  assert.match(html, /\\bfocus-visible:ring-inset\\b/)\n  assert.match(html, /\\baria-pressed=\"false\"/)\n}",
+      "callback": "test(\"quiz option card keeps trailing info outside the selectable card button\", async () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      icon=\"product-conditioner\"\n      label=\"Conditioner\"\n      description=\"Pflege nach dem Shampoo\"\n      active={false}\n      onClick={() => {}}\n      trailing={<button type=\"button\">i</button>}\n    />,\n  )\n  const source = await readFile(\"src/components/ui/info-tip.tsx\", \"utf8\")\n  const accessibleButtonMatch = html.match(\n    /<button type=\"button\" aria-labelledby=\"([^\"]+)\" aria-describedby=\"([^\"]+)\"/,\n  )\n\n  assert.ok(accessibleButtonMatch)\n  assert.match(html, new RegExp(`<p id=\"${accessibleButtonMatch[1]}\"[^>]*>Conditioner</p>`))\n  assert.match(\n    html,\n    new RegExp(`<p id=\"${accessibleButtonMatch[2]}\"[^>]*>Pflege nach dem Shampoo</p>`),\n  )\n  assert.match(html, /<button type=\"button\">i<\\/button>/)\n  assert.match(html, /<\\/button><div class=\"pointer-events-none relative z-10 grid/)\n  assert.doesNotMatch(html, /role=\"button\"/)\n  assert.match(source, /event\\.stopPropagation\\(\\)/)\n  assert.match(source, /event\\.key === \"Escape\"/)\n  assert.match(source, /aria-describedby=\\{open \\? popupId : undefined\\}/)\n  assert.match(html, /\\bfocus-visible:ring-inset\\b/)\n  assert.match(html, /\\baria-pressed=\"false\"/)\n})",
+      "assertions": [
+        "assert.ok(accessibleButtonMatch)",
+        "assert.match(html, new RegExp(`<p id=\"${accessibleButtonMatch[1]}\"[^>]*>Conditioner</p>`))",
+        "assert.match(\n    html,\n    new RegExp(`<p id=\"${accessibleButtonMatch[2]}\"[^>]*>Pflege nach dem Shampoo</p>`),\n  )",
+        "assert.match(html, /<button type=\"button\">i<\\/button>/)",
+        "assert.match(html, /<\\/button><div class=\"pointer-events-none relative z-10 grid/)",
+        "assert.doesNotMatch(html, /role=\"button\"/)",
+        "assert.match(source, /event\\.stopPropagation\\(\\)/)",
+        "assert.match(source, /event\\.key === \"Escape\"/)",
+        "assert.match(source, /aria-describedby=\\{open \\? popupId : undefined\\}/)",
+        "assert.match(html, /\\bfocus-visible:ring-inset\\b/)",
+        "assert.match(html, /\\baria-pressed=\"false\"/)"
+      ],
+      "bodyEnd": 2891,
+      "classification": "R",
+      "keeper": null
+    },
+    {
+      "title": "grid image cards use the compact mobile footer while keeping their description accessible",
+      "line": 83,
+      "start": 2895,
+      "end": 3603,
+      "body": "{\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Wellig\"\n      description=\"Bildet eine S-Kurve, keine 3D-Windung\"\n      active={false}\n      onClick={() => {}}\n      visual={{\n        kind: \"image\",\n        src: \"/images/funnels/personal-plan-quiz/texture-wavy.webp\",\n        alt: \"Welliges Haar\",\n      }}\n      visualLayout=\"grid\"\n    />,\n  )\n\n  assert.match(html, /h-\\[184px\\]/)\n  assert.match(html, /h-\\[140px\\]/)\n  assert.match(html, /\\[@media\\(max-height:700px\\)\\]:h-\\[152px\\]/)\n  assert.match(html, /\\bhidden sm:block\\b/)\n  assert.match(html, /aria-describedby=\"[^\"]+\"/)\n}",
+      "callback": "test(\"grid image cards use the compact mobile footer while keeping their description accessible\", () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Wellig\"\n      description=\"Bildet eine S-Kurve, keine 3D-Windung\"\n      active={false}\n      onClick={() => {}}\n      visual={{\n        kind: \"image\",\n        src: \"/images/funnels/personal-plan-quiz/texture-wavy.webp\",\n        alt: \"Welliges Haar\",\n      }}\n      visualLayout=\"grid\"\n    />,\n  )\n\n  assert.match(html, /h-\\[184px\\]/)\n  assert.match(html, /h-\\[140px\\]/)\n  assert.match(html, /\\[@media\\(max-height:700px\\)\\]:h-\\[152px\\]/)\n  assert.match(html, /\\bhidden sm:block\\b/)\n  assert.match(html, /aria-describedby=\"[^\"]+\"/)\n})",
+      "assertions": [
+        "assert.match(html, /h-\\[184px\\]/)",
+        "assert.match(html, /h-\\[140px\\]/)",
+        "assert.match(html, /\\[@media\\(max-height:700px\\)\\]:h-\\[152px\\]/)",
+        "assert.match(html, /\\bhidden sm:block\\b/)",
+        "assert.match(html, /aria-describedby=\"[^\"]+\"/)"
+      ],
+      "bodyEnd": 3601,
+      "classification": "R",
+      "keeper": null
+    },
+    {
+      "title": "grid portrait cards fit the complete silhouette to the fixed media height",
+      "line": 106,
+      "start": 3605,
+      "end": 4497,
+      "body": "{\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Sehr lang\"\n      description=\"Taille oder länger.\"\n      active={false}\n      onClick={() => {}}\n      visual={{\n        kind: \"portrait\",\n        alt: \"Haarlängen-Illustration\",\n        config: {\n          kind: \"personalized\",\n          density: \"medium\",\n          length: \"very_long\",\n          naturalRootPattern: \"wavy\",\n          treatedLengthPattern: \"wavy\",\n          treatmentState: \"none\",\n        },\n      }}\n      visualLayout=\"grid\"\n    />,\n  )\n\n  assert.match(html, /data-hair-length-card=\"true\"/)\n  assert.match(html, /data-hair-portrait-media=\"true\"/)\n  assert.match(html, /data-hair-portrait-art=\"true\"/)\n  assert.match(html, /class=\"relative block h-full w-full object-contain\"/)\n  assert.match(html, /alt=\"\"/)\n}",
+      "callback": "test(\"grid portrait cards fit the complete silhouette to the fixed media height\", () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Sehr lang\"\n      description=\"Taille oder länger.\"\n      active={false}\n      onClick={() => {}}\n      visual={{\n        kind: \"portrait\",\n        alt: \"Haarlängen-Illustration\",\n        config: {\n          kind: \"personalized\",\n          density: \"medium\",\n          length: \"very_long\",\n          naturalRootPattern: \"wavy\",\n          treatedLengthPattern: \"wavy\",\n          treatmentState: \"none\",\n        },\n      }}\n      visualLayout=\"grid\"\n    />,\n  )\n\n  assert.match(html, /data-hair-length-card=\"true\"/)\n  assert.match(html, /data-hair-portrait-media=\"true\"/)\n  assert.match(html, /data-hair-portrait-art=\"true\"/)\n  assert.match(html, /class=\"relative block h-full w-full object-contain\"/)\n  assert.match(html, /alt=\"\"/)\n})",
+      "assertions": [
+        "assert.match(html, /data-hair-length-card=\"true\"/)",
+        "assert.match(html, /data-hair-portrait-media=\"true\"/)",
+        "assert.match(html, /data-hair-portrait-art=\"true\"/)",
+        "assert.match(html, /class=\"relative block h-full w-full object-contain\"/)",
+        "assert.match(html, /alt=\"\"/)"
+      ],
+      "bodyEnd": 4495,
+      "classification": "R",
+      "keeper": null
+    },
+    {
+      "title": "grid portrait cards reserve breathing room around the complete portrait composition",
+      "line": 136,
+      "start": 4499,
+      "end": 5415,
+      "body": "{\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Sehr lang\"\n      description=\"Taille oder länger.\"\n      active={false}\n      onClick={() => {}}\n      visual={{\n        kind: \"portrait\",\n        alt: \"Haarlängen-Illustration\",\n        config: {\n          kind: \"personalized\",\n          density: \"medium\",\n          length: \"very_long\",\n          naturalRootPattern: \"wavy\",\n          treatedLengthPattern: \"wavy\",\n          treatmentState: \"none\",\n        },\n      }}\n      visualLayout=\"grid\"\n    />,\n  )\n\n  // The image and shared shoulder outline must shrink as one composition, so\n  // long portraits retain a visible margin before the label footer.\n  assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )\n}",
+      "callback": "test(\"grid portrait cards reserve breathing room around the complete portrait composition\", () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Sehr lang\"\n      description=\"Taille oder länger.\"\n      active={false}\n      onClick={() => {}}\n      visual={{\n        kind: \"portrait\",\n        alt: \"Haarlängen-Illustration\",\n        config: {\n          kind: \"personalized\",\n          density: \"medium\",\n          length: \"very_long\",\n          naturalRootPattern: \"wavy\",\n          treatedLengthPattern: \"wavy\",\n          treatmentState: \"none\",\n        },\n      }}\n      visualLayout=\"grid\"\n    />,\n  )\n\n  // The image and shared shoulder outline must shrink as one composition, so\n  // long portraits retain a visible margin before the label footer.\n  assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )\n})",
+      "assertions": [
+        "assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )"
+      ],
+      "bodyEnd": 5413,
+      "classification": "C",
+      "keeper": "grid portrait cards fit the complete silhouette to the fixed media height"
+    },
+    {
+      "title": "thumbnail image cards keep their explanatory description visible on mobile",
+      "line": 167,
+      "start": 5417,
+      "end": 5996,
+      "body": "{\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Fein\"\n      description=\"Kaum spürbar – dünner als ein Nähfaden\"\n      active={false}\n      onClick={() => {}}\n      visual={{\n        kind: \"image\",\n        src: \"/images/funnels/personal-plan-quiz/thickness-fine.webp\",\n        alt: \"Feines Haar\",\n      }}\n      visualLayout=\"thumbnail\"\n    />,\n  )\n\n  assert.doesNotMatch(html, /\\bhidden sm:block\\b/)\n  assert.match(html, /Kaum spürbar – dünner als ein Nähfaden/)\n}",
+      "callback": "test(\"thumbnail image cards keep their explanatory description visible on mobile\", () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Fein\"\n      description=\"Kaum spürbar – dünner als ein Nähfaden\"\n      active={false}\n      onClick={() => {}}\n      visual={{\n        kind: \"image\",\n        src: \"/images/funnels/personal-plan-quiz/thickness-fine.webp\",\n        alt: \"Feines Haar\",\n      }}\n      visualLayout=\"thumbnail\"\n    />,\n  )\n\n  assert.doesNotMatch(html, /\\bhidden sm:block\\b/)\n  assert.match(html, /Kaum spürbar – dünner als ein Nähfaden/)\n})",
+      "assertions": [
+        "assert.doesNotMatch(html, /\\bhidden sm:block\\b/)",
+        "assert.match(html, /Kaum spürbar – dünner als ein Nähfaden/)"
+      ],
+      "bodyEnd": 5994,
+      "classification": "R",
+      "keeper": null
+    },
+    {
+      "title": "single-select screen syncs prop changes and cancels delayed selection on back",
+      "line": 187,
+      "start": 5998,
+      "end": 6463,
+      "body": "{\n  const source = await readFile(\n    \"src/components/onboarding/screens/single-select-screen.tsx\",\n    \"utf8\",\n  )\n\n  assert.match(source, /useEffect\\(\\(\\) => \\{\\s*setLocalSelected\\(selected\\)/)\n  assert.match(source, /clearTimeout\\(advanceTimerRef\\.current\\)/)\n  assert.match(source, /function handleBack\\(\\)/)\n  assert.match(source, /cancelPendingAdvance\\(\\)/)\n}",
+      "callback": "test(\"single-select screen syncs prop changes and cancels delayed selection on back\", async () => {\n  const source = await readFile(\n    \"src/components/onboarding/screens/single-select-screen.tsx\",\n    \"utf8\",\n  )\n\n  assert.match(source, /useEffect\\(\\(\\) => \\{\\s*setLocalSelected\\(selected\\)/)\n  assert.match(source, /clearTimeout\\(advanceTimerRef\\.current\\)/)\n  assert.match(source, /function handleBack\\(\\)/)\n  assert.match(source, /cancelPendingAdvance\\(\\)/)\n})",
+      "assertions": [
+        "assert.match(source, /useEffect\\(\\(\\) => \\{\\s*setLocalSelected\\(selected\\)/)",
+        "assert.match(source, /clearTimeout\\(advanceTimerRef\\.current\\)/)",
+        "assert.match(source, /function handleBack\\(\\)/)",
+        "assert.match(source, /cancelPendingAdvance\\(\\)/)"
+      ],
+      "bodyEnd": 6461,
+      "classification": "R",
+      "keeper": null
+    },
+    {
+      "title": "tool image grid cards keep their description visible on mobile and fill the row height",
+      "line": 199,
+      "start": 6465,
+      "end": 7195,
+      "body": "{\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Detangling-Bürste\"\n      description=\"Flexible Borsten, z. B. Tangle Teezer.\"\n      active={false}\n      multi\n      onClick={() => {}}\n      visual={{\n        kind: \"image\",\n        src: \"/images/tools/detangling.webp\",\n        alt: \"Detangling-Bürste\",\n      }}\n      visualLayout=\"grid\"\n      alwaysShowDescription\n    />,\n  )\n\n  assert.doesNotMatch(html, /\\bhidden sm:block\\b/)\n  assert.match(html, /Flexible Borsten, z\\. B\\. Tangle Teezer\\./)\n  assert.match(html, /\\bh-full min-h-\\[184px\\] flex-col\\b/)\n  assert.doesNotMatch(html, /\\bh-\\[184px\\]\\b/)\n}",
+      "callback": "test(\"tool image grid cards keep their description visible on mobile and fill the row height\", () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Detangling-Bürste\"\n      description=\"Flexible Borsten, z. B. Tangle Teezer.\"\n      active={false}\n      multi\n      onClick={() => {}}\n      visual={{\n        kind: \"image\",\n        src: \"/images/tools/detangling.webp\",\n        alt: \"Detangling-Bürste\",\n      }}\n      visualLayout=\"grid\"\n      alwaysShowDescription\n    />,\n  )\n\n  assert.doesNotMatch(html, /\\bhidden sm:block\\b/)\n  assert.match(html, /Flexible Borsten, z\\. B\\. Tangle Teezer\\./)\n  assert.match(html, /\\bh-full min-h-\\[184px\\] flex-col\\b/)\n  assert.doesNotMatch(html, /\\bh-\\[184px\\]\\b/)\n})",
+      "assertions": [
+        "assert.doesNotMatch(html, /\\bhidden sm:block\\b/)",
+        "assert.match(html, /Flexible Borsten, z\\. B\\. Tangle Teezer\\./)",
+        "assert.match(html, /\\bh-full min-h-\\[184px\\] flex-col\\b/)",
+        "assert.doesNotMatch(html, /\\bh-\\[184px\\]\\b/)"
+      ],
+      "bodyEnd": 7193,
+      "classification": "R",
+      "keeper": null
+    },
+    {
+      "title": "tool grid options without an image fall back to the icon row card",
+      "line": 223,
+      "start": 7197,
+      "end": 7639,
+      "body": "{\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      icon=\"brush-round\"\n      label=\"Föhnbürste\"\n      description=\"Föhn und Bürste in einem Gerät.\"\n      active={false}\n      multi\n      onClick={() => {}}\n      alwaysShowDescription\n    />,\n  )\n\n  assert.match(html, /grid-cols-\\[auto_minmax\\(0,1fr\\)_auto\\]/)\n  assert.doesNotMatch(html, /<img/)\n}",
+      "callback": "test(\"tool grid options without an image fall back to the icon row card\", () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      icon=\"brush-round\"\n      label=\"Föhnbürste\"\n      description=\"Föhn und Bürste in einem Gerät.\"\n      active={false}\n      multi\n      onClick={() => {}}\n      alwaysShowDescription\n    />,\n  )\n\n  assert.match(html, /grid-cols-\\[auto_minmax\\(0,1fr\\)_auto\\]/)\n  assert.doesNotMatch(html, /<img/)\n})",
+      "assertions": [
+        "assert.match(html, /grid-cols-\\[auto_minmax\\(0,1fr\\)_auto\\]/)",
+        "assert.doesNotMatch(html, /<img/)"
+      ],
+      "bodyEnd": 7637,
+      "classification": "R",
+      "keeper": null
+    },
+    {
+      "title": "batch 8: the card's own fade-in is on by default and can be switched off",
+      "line": 240,
+      "start": 7641,
+      "end": 8157,
+      "body": "{\n  const withFade = renderToStaticMarkup(\n    <QuizOptionCard label=\"Glatt\" active={false} onClick={() => {}} animationDelay={60} />,\n  )\n  assert.match(withFade, /class=\"animate-fade-in-up\" style=\"animation-delay:60ms\"/)\n\n  const without = renderToStaticMarkup(\n    <QuizOptionCard label=\"Glatt\" active={false} onClick={() => {}} animateIn={false} />,\n  )\n  assert.doesNotMatch(without, /animate-fade-in-up|animation-delay/)\n}",
+      "callback": "test(\"batch 8: the card's own fade-in is on by default and can be switched off\", () => {\n  const withFade = renderToStaticMarkup(\n    <QuizOptionCard label=\"Glatt\" active={false} onClick={() => {}} animationDelay={60} />,\n  )\n  assert.match(withFade, /class=\"animate-fade-in-up\" style=\"animation-delay:60ms\"/)\n\n  const without = renderToStaticMarkup(\n    <QuizOptionCard label=\"Glatt\" active={false} onClick={() => {}} animateIn={false} />,\n  )\n  assert.doesNotMatch(without, /animate-fade-in-up|animation-delay/)\n})",
+      "assertions": [
+        "assert.match(withFade, /class=\"animate-fade-in-up\" style=\"animation-delay:60ms\"/)",
+        "assert.doesNotMatch(without, /animate-fade-in-up|animation-delay/)"
+      ],
+      "bodyEnd": 8155,
+      "classification": "R",
+      "keeper": null
+    },
+    {
+      "title": "batch 8: a pending parent keeps the selected card clearly selected and not dimmed",
+      "line": 252,
+      "start": 8159,
+      "end": 8556,
+      "body": "{\n  const html = renderToStaticMarkup(\n    <QuizOptionCard label=\"Glatt\" active pending onClick={() => {}} />,\n  )\n  assert.match(html, /quiz-card-active/)\n  assert.match(html, /aria-pressed=\"true\"/)\n  assert.match(html, /aria-disabled=\"true\"/)\n  assert.doesNotMatch(html, /opacity-60|disabled=\"\"/)\n}",
+      "callback": "test(\"batch 8: a pending parent keeps the selected card clearly selected and not dimmed\", () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard label=\"Glatt\" active pending onClick={() => {}} />,\n  )\n  assert.match(html, /quiz-card-active/)\n  assert.match(html, /aria-pressed=\"true\"/)\n  assert.match(html, /aria-disabled=\"true\"/)\n  assert.doesNotMatch(html, /opacity-60|disabled=\"\"/)\n})",
+      "assertions": [
+        "assert.match(html, /quiz-card-active/)",
+        "assert.match(html, /aria-pressed=\"true\"/)",
+        "assert.match(html, /aria-disabled=\"true\"/)",
+        "assert.doesNotMatch(html, /opacity-60|disabled=\"\"/)"
+      ],
+      "bodyEnd": 8554,
+      "classification": "R",
+      "keeper": null
+    }
+  ],
+  "transfers": [
+    {
+      "keeper": "quiz option card keeps trailing info outside the selectable card button",
+      "assertions": [
+        "assert.match(html, /grid-cols-\\[auto_minmax\\(0,1fr\\)_auto\\]/)",
+        "assert.match(html, /\\bitems-center\\b/)",
+        "assert.doesNotMatch(html, /\\bitems-start\\b/)",
+        "assert.match(html, /min-w-\\[4\\.25rem\\]/)",
+        "assert.match(html, /\\bjustify-end\\b/)",
+        "assert.match(html, /<p id=\"[^\"]+\" class=\"break-words hyphens-auto/)"
+      ]
+    },
+    {
+      "keeper": "grid portrait cards fit the complete silhouette to the fixed media height",
+      "assertions": [
+        "assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )"
+      ]
+    }
+  ],
+  "controls": [
+    {
+      "path": "src/components/quiz/quiz-option-card.tsx",
+      "from": "grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3",
+      "to": "grid grid-cols-2 items-center gap-3",
+      "assertion": "grid-cols regex in retained trailing-info callback",
+      "anchorOccurrences": 1
+    },
+    {
+      "path": "src/components/quiz/quiz-option-card.tsx",
+      "from": "grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3",
+      "to": "grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-3",
+      "assertion": "doesNotMatch items-start in retained trailing-info callback",
+      "anchorOccurrences": 1
+    },
+    {
+      "path": "src/components/quiz/quiz-option-card.tsx",
+      "from": "pointer-events-auto min-w-[4.25rem]",
+      "to": "pointer-events-auto min-w-0",
+      "assertion": "min-w 4.25rem regex in retained trailing-info callback",
+      "anchorOccurrences": 1
+    },
+    {
+      "path": "src/components/quiz/quiz-option-card.tsx",
+      "from": "flex shrink-0 items-center justify-end gap-2",
+      "to": "flex shrink-0 items-center justify-start gap-2",
+      "assertion": "justify-end regex in retained trailing-info callback",
+      "anchorOccurrences": 1
+    },
+    {
+      "path": "src/components/quiz/quiz-option-card.tsx",
+      "from": "className=\"break-words hyphens-auto text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]\"",
+      "to": "className=\"hyphens-auto text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]\"",
+      "assertion": "p label starts break-words hyphens-auto regex in retained trailing-info callback",
+      "anchorOccurrences": 1
+    },
+    {
+      "path": "src/components/quiz/hair-length-option-card.tsx",
+      "from": "flex h-full w-full items-center justify-center scale-[0.9]",
+      "to": "flex h-full w-full items-center justify-center scale-[1]",
+      "assertion": "scale0.9 exact composition regex in retained wrapper portrait callback",
+      "anchorOccurrences": 1
+    }
+  ],
+  "execution": "NOT RUN. Proposed text parsed only; no repository file changed.",
+  "staticVerification": {
+    "before13": true,
+    "transfer13": true,
+    "cut9": true,
+    "untouchedCallbacksByteIdentical": true,
+    "retainedCallbacksByteIdenticalAcrossCut": true,
+    "productionExecution": false
+  }
+}
