@@ -67,6 +67,7 @@ export const APPLICATION_FAMILIES = [
   "pre_shampoo_booster_plus_treatment",
   "post_shampoo_rinse_out_treatment",
   "post_shampoo_timed_leave_in",
+  "overnight_leave_in_treatment",
   "leave_on_scalp_care",
   "rinse_off_scalp_care",
   "styling_product",
@@ -108,6 +109,7 @@ export const BONDBUILDER_APPLICATION_FAMILIES = [
   "pre_shampoo_booster_plus_treatment",
   "post_shampoo_rinse_out_treatment",
   "post_shampoo_timed_leave_in",
+  "overnight_leave_in_treatment",
 ] as const
 
 export const exactContactTimeSchema = z.discriminatedUnion("kind", [

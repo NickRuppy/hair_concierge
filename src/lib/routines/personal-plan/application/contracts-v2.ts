@@ -63,6 +63,7 @@ const FAMILY_CATEGORIES = {
   pre_shampoo_booster_plus_treatment: ["bondbuilder"],
   post_shampoo_rinse_out_treatment: ["bondbuilder"],
   post_shampoo_timed_leave_in: ["bondbuilder"],
+  overnight_leave_in_treatment: ["bondbuilder"],
   leave_on_scalp_care: ["scalp_care"],
   rinse_off_scalp_care: ["scalp_care"],
   styling_product: [],
@@ -364,6 +365,28 @@ export const productApplicationPointerV2Schema = z
           path: ["facts", "rinse"],
           message: "Leave-in treatment cannot have a standalone rinse",
         })
+      }
+      if (value.applicationFamily === "overnight_leave_in_treatment") {
+        if (
+          value.facts.rinse !== "leave_in" ||
+          value.facts.overnightAllowed !== true ||
+          value.facts.contactTime !== null ||
+          value.facts.shampooAfterTreatment !== undefined ||
+          value.facts.dilution !== undefined ||
+          value.requiredCompanionProductId !== null ||
+          value.runtimeBlockerCode !== null ||
+          value.exactSteps.some((s) => s.action === "rinse") ||
+          value.facts.conditionerSequence?.before === "forbidden" ||
+          value.facts.conditionerSequence?.after === "required" ||
+          value.facts.conditionerSequence?.after === "recommended" ||
+          value.facts.conditionerPolicy === "conditioner_before"
+        ) {
+          context.addIssue({
+            code: "custom",
+            path: ["applicationFamily"],
+            message: "Overnight leave-in treatment must remain a standalone, unrinsed bedtime step",
+          })
+        }
       }
       if (value.facts.shampooAfterTreatment && !value.applicationFamily.startsWith("pre_shampoo")) {
         context.addIssue({

@@ -1,0 +1,22 @@
+{
+  "version": "bondbuilder-protocol-source-observation-v1",
+  "checked_at": "2026-10-07",
+  "source": {
+    "id": "D07-P08-PARTNER-FAQ",
+    "url": "https://www.kerastase.de/produktlinien/produktlinien/premiere/concentre-decalcifiant-ultra-reparateur/KER_00277.html",
+    "type": "manufacturer_partner_faq_2026_10_07",
+    "scope": "product",
+    "access": "full_text",
+    "author": null,
+    "authority": "manufacturer",
+    "affiliation": "Kérastase Germany",
+    "commercial_context": "Producer directions and FAQ; not independent efficacy evidence.",
+    "checked_date": "2026-10-07",
+    "observation": "The German producer FAQ on using Concentré Décalcifiant Ultra-Réparateur alone recommends Première shampoo for maximum effectiveness. It describes five minutes before shampoo layering, no initial rinse, and then rinsing. The application section puts conditioner or mask after that rinse. This supports recommended branded-partner semantics, not proof of equivalent efficacy with every alternative shampoo.",
+    "limitations": [
+      "Used narrowly for partner semantics and corroborating sequence, not exact selected 250 ml formula, dose, frequency or hair-state replacement.",
+      "Travel-title and 45/250 ml selector ambiguity, damp wording and mismatched formula block remain separate from selected N01 wet-length directions.",
+      "Nick's 2026-10-07 clarification authorizes normal shampoo as the routine companion; producer does not test every alternative shampoo."
+    ]
+  }
+}

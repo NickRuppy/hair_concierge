@@ -670,7 +670,7 @@ test("uses a source-bound supportive Mask for both optional and required (basis)
   assert.equal(basisRecommendation.verdict, "supportive")
 })
 
-test("returns an exact-fit Bondbuilder preview and falls back on an unsuitable thickness", async () => {
+test("Bondbuilder previews ignore legacy diameter fit but still require verified application", async () => {
   const result = computeNeedPlan({
     rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
     artifactId: "11111111-1111-4111-8111-111111111111",
@@ -730,28 +730,43 @@ test("returns an exact-fit Bondbuilder preview and falls back on an unsuitable t
     snapshot,
     loadCandidates: async () => [candidate],
   })
-  const unsuitable = await computeStage1ProductExamplePreviews({
-    personalPlanId: "plan-1",
-    sourceNeedVersionId: "need-1",
-    snapshot,
-    loadCandidates: async () => [
-      {
-        ...candidate,
-        suitableThicknesses: [
-          result.snapshot.profile.hair.thickness === "coarse" ? "fine" : "coarse",
-        ],
-      },
-    ],
-  })
-
   assert.equal(exactFit.previews.length, 1)
   const recommendation = asRecommendation(exactFit.previews[0]!)
   assert.equal(recommendation.productId, "bondbuilder-profile-fit")
   assert.equal(recommendation.imageUrl, "https://example.com/bondbuilder-profile-fit.webp")
   assert.equal(recommendation.verdict, "ideal")
 
-  assert.equal(unsuitable.previews.length, 1)
-  assert.equal(asFallback(unsuitable.previews[0]!).fallback, "post_refinement")
+  for (const thickness of ["fine", "normal", "coarse"] as const) {
+    const categoryEligible = await computeStage1ProductExamplePreviews({
+      personalPlanId: "plan-1",
+      sourceNeedVersionId: "need-1",
+      snapshot: {
+        ...snapshot,
+        profile: {
+          ...snapshot.profile,
+          hair: { ...snapshot.profile.hair, thickness },
+        },
+      },
+      loadCandidates: async () => [
+        { ...candidate, suitableThicknesses: [thickness === "coarse" ? "fine" : "coarse"] },
+      ],
+    })
+    assert.equal(categoryEligible.previews.length, 1, thickness)
+    assert.equal(
+      asRecommendation(categoryEligible.previews[0]!).productId,
+      candidate.productId,
+      thickness,
+    )
+  }
+
+  const incomplete = await computeStage1ProductExamplePreviews({
+    personalPlanId: "plan-1",
+    sourceNeedVersionId: "need-1",
+    snapshot,
+    loadCandidates: async () => [{ ...candidate, protocols: [] }],
+  })
+  assert.equal(incomplete.previews.length, 1)
+  assert.equal(asFallback(incomplete.previews[0]!).fallback, "post_refinement")
 })
 
 test("a tied Bondbuilder shortlist previews the authority's tie default, not an illustration", async () => {

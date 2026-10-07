@@ -560,7 +560,7 @@ test("only owned-fit authority policies advance for this semantic correction", (
       mask: "personal-plan.mask.v4",
       scalp_care: "personal-plan.scalp-care.v3",
       dry_shampoo: "personal-plan.dry-shampoo.v2",
-      bondbuilder: "personal-plan.bondbuilder.v2",
+      bondbuilder: "personal-plan.bondbuilder.v3",
       deep_cleansing_shampoo: "personal-plan.deep-cleansing.v2",
     },
   )
@@ -1537,6 +1537,40 @@ test("standalone Heat does not require a suitable-thickness fact", () => {
   if (result.status !== "known") return
   assert.equal(result.verdict, "ideal")
   assert.deepEqual(result.allowedActions, ["keep_owned"])
+})
+
+test("Bondbuilder category suitability covers every diameter without inventing producer verification", () => {
+  for (const hairThickness of ["fine", "normal", "coarse", undefined] as const) {
+    for (const suitableThicknesses of [null, [], ["normal"]] as const) {
+      const owned = input("bondbuilder", "known")
+      if (owned.productFacts?.category !== "bondbuilder") throw new Error("fixture")
+      owned.hairThickness = hairThickness
+      owned.productFacts.suitableThicknesses =
+        suitableThicknesses === null ? null : [...suitableThicknesses]
+      const result = evaluateStage3Authority(owned)
+      assert.equal(result.status, "known", `${hairThickness}/${suitableThicknesses}`)
+      if (result.status !== "known") continue
+      assert.equal(result.verdict, "ideal")
+      assert.deepEqual(result.allowedActions, ["keep_owned"])
+      const diameter = result.criteria.find(
+        (entry) => entry.criterionId === "bondbuilder.thickness",
+      )
+      assert.equal(diameter?.result, "pass")
+      assert.doesNotMatch(diameter?.explanation ?? "", /verifiziert/)
+    }
+  }
+  const candidate = bondbuilderCandidate("reviewed-entry-point", "Bond Treatment")
+  candidate.suitableThicknesses = []
+  const gap = bondbuilderGapInput([candidate])
+  gap.hairThickness = "coarse"
+  const recommended = evaluateStage3Authority(gap)
+  assert.equal(recommended.status, "known")
+  if (recommended.status !== "known") throw new Error("expected recommendation")
+  assert.equal(recommended.recommendation?.productId, candidate.productId)
+  candidate.recommendable = false
+  const unreviewed = evaluateStage3Authority(gap)
+  assert.equal(unreviewed.status, "known")
+  if (unreviewed.status === "known") assert.equal(unreviewed.recommendation, null)
 })
 
 test("Dry Shampoo does not fabricate or require a hair-thickness fit dimension", () => {

@@ -147,19 +147,20 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
   const products = entries.map((entry) => entry.product)
   const alternatives = selectedCandidates.map(publicSelectedCandidate)
   const dimensions = comparisonDimensions(authorityInput, entries)
-  const evidenceRows =
-    dimensions.length > 0
-      ? evidenceRowsFromDimensions(
-          authorityInput,
-          dimensions,
-          entries,
-          authorityEvaluation,
-          selectedCandidates,
-          context,
-        )
-      : compactEvidenceRows(authorityInput, authorityEvaluation, entries, selectedCandidates)
+  // Bondbuilders retain their application row even when no property axis separates them.
+  const hasComparisonEvidence = dimensions.length > 0 || authorityInput.category === "bondbuilder"
+  const evidenceRows = hasComparisonEvidence
+    ? evidenceRowsFromDimensions(
+        authorityInput,
+        dimensions,
+        entries,
+        authorityEvaluation,
+        selectedCandidates,
+        context,
+      )
+    : compactEvidenceRows(authorityInput, authorityEvaluation, entries, selectedCandidates)
 
-  if (dimensions.length > 0) {
+  if (hasComparisonEvidence) {
     return {
       schemaVersion: 1,
       mode: "comparison",
@@ -746,8 +747,9 @@ function bondbuilderApplicationEvidenceRow(
     rowId: "bondbuilder.application",
     label: "Anwendung",
     target: {
-      valueLabel: "beides möglich",
-      rationale: "Beide Anwendungen erfüllen die Bond-Rolle. Entscheide nach deinem Alltag.",
+      valueLabel: "nach deinem Alltag",
+      rationale:
+        "Die passende Anwendung hängt von deinem Alltag ab, nicht von deinem Haardurchmesser.",
       profileEvidenceLabels: [],
     },
     productValues: entries.map(({ product, facts }) => {
@@ -782,6 +784,8 @@ function bondbuilderApplication(spec: {
   applicationMode: string | null
   treatmentMode: string | null
 }): string | null {
+  if (spec.applicationMode === "bedtime_leave_in" && spec.treatmentMode === "leave_in")
+    return "Abends, über Nacht im Haar"
   const applicationBucket = bondbuilderApplicationModeBucket(spec.applicationMode)
   const treatmentBucket = bondbuilderTreatmentModeBucket(spec.treatmentMode)
   // Both axes are independent, unconstrained columns (see the admin form and migration CHECK

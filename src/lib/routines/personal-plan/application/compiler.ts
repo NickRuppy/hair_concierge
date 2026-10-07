@@ -607,6 +607,46 @@ function compileDay(
           }
         : block,
     )
+    // A layered treatment stays on through cleansing. Its source-backed
+    // aftercare instruction belongs after the joint rinse, not in pre-wash.
+    // Keep it in place when no resolved shampoo rinse can carry it.
+    const shampoo = [...internalProductBlocks]
+      .reverse()
+      .find(
+        (block) =>
+          block.roles.includes("cleanse") && block.steps.some((step) => step.action === "rinse"),
+      )
+    if (shampoo) {
+      const aftercareGuidanceKeys = new Set(
+        resolved
+          .filter(({ protocol }) => {
+            const after = protocol.protocolFacts.conditionerSequence?.after
+            return (
+              protocol.protocolFacts.shampooAfterTreatment === "layer_without_rinsing" &&
+              (after === "required" || after === "recommended" || after === "optional")
+            )
+          })
+          .map(({ protocol }) => protocol.guidanceKey),
+      )
+      const aftercare: CompiledProductStep[] = []
+      internalProductBlocks = internalProductBlocks.map((block) => {
+        if (!aftercareGuidanceKeys.has(block.guidanceKey)) return block
+        return {
+          ...block,
+          steps: block.steps.filter((step) => {
+            if (step.stepKey !== "conditioner-after" || step.action !== "section") return true
+            aftercare.push(step)
+            return false
+          }),
+        }
+      })
+      const rinseIndex = shampoo.steps.map((step) => step.action).lastIndexOf("rinse")
+      shampoo.steps = [
+        ...shampoo.steps.slice(0, rinseIndex + 1),
+        ...aftercare,
+        ...shampoo.steps.slice(rinseIndex + 1),
+      ]
+    }
   }
   if (key === "refresh_day" || key === "between_wash_care_day") {
     const betweenWashFamilies = new Set(["between_wash_dry_care", "between_wash_damp_refresh"])

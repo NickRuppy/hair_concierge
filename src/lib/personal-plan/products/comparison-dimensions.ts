@@ -73,16 +73,28 @@ export function candidateDimensionCoverage(
     facts: candidate,
   }
   const dimensions = renderedDimensions(comparisonDimensions(input, [entry]))
-  if (dimensions.length > 0) {
+  if (dimensions.length > 0 || input.category === "bondbuilder") {
     const targetDimensions = dimensions.filter(
       (dimension) => dimension.targetPosition && dimension.targetPosition.kind !== "unknown",
     )
+    // The application row is displayed outside the axis model. Keep verified Bondbuilders
+    // selectable after removing diameter; do not substitute an invisible fit criterion.
+    const applicationMatches =
+      input.category === "bondbuilder" &&
+      criteria.some(
+        (criterion) =>
+          criterion.criterionId === "bondbuilder.protocol" && criterion.result === "pass",
+      )
+        ? 1
+        : 0
     return {
-      total: targetDimensions.length,
-      matches: targetDimensions.filter((dimension) => {
-        const position = dimension.productPositions[0]?.position ?? { kind: "unknown" as const }
-        return positionsOverlap(position, dimension.targetPosition!)
-      }).length,
+      total: targetDimensions.length + (input.category === "bondbuilder" ? 1 : 0),
+      matches:
+        applicationMatches +
+        targetDimensions.filter((dimension) => {
+          const position = dimension.productPositions[0]?.position ?? { kind: "unknown" as const }
+          return positionsOverlap(position, dimension.targetPosition!)
+        }).length,
     }
   }
 
@@ -114,7 +126,7 @@ export function comparisonDimensions(
     case "oil":
       return oilDimensions(input, entries)
     case "bondbuilder":
-      return bondbuilderDimensions(input, entries)
+      return bondbuilderDimensions(entries)
     case "heat_protectant":
     case "scalp_care":
     case "dry_shampoo":
@@ -401,26 +413,14 @@ function oilDimensions(
 }
 
 function bondbuilderDimensions(
-  input: Stage3AuthorityInput,
   entries: readonly ComparisonProductEntry[],
 ): Stage3FitComparisonDimension[] {
-  const thickness = dimension(
-    "bondbuilder.suitable_thicknesses",
-    "Geeignete Haardicke",
-    "set",
-    THICKNESS_STOPS,
-    input.hairThickness ?? null,
-    entries,
-    (facts) => facts.suitableThicknesses,
-    "Die Haardicken-Eignung nutzt nur gespeicherte Katalogwerte.",
-  )
   // The standalone axis only earns a row when it actually separates the displayed products.
   const showsRelationship = entries.some(
     (entry) => entry.facts.category === "bondbuilder" && entry.facts.spec.relationship === "add_on",
   )
-  if (!showsRelationship) return [thickness]
+  if (!showsRelationship) return []
   return [
-    thickness,
     dimension(
       "bondbuilder.relationship",
       "Wirkt eigenständig",

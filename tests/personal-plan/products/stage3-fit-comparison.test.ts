@@ -138,7 +138,7 @@ for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCatego
 
       if (RICH_COMPARISON_CATEGORY_ROLES.has(`${category}/${role}`)) {
         assert.equal(comparison.mode, "comparison")
-        assert.ok(comparison.dimensions.length > 0)
+        if (category !== "bondbuilder") assert.ok(comparison.dimensions.length > 0)
       } else {
         assert.equal(comparison.mode, "compact")
         assert.deepEqual(comparison.dimensions, [])
@@ -872,12 +872,6 @@ for (const scenario of [
     role: "intensive_conditioning_mask" as const,
     overrides: { weight: "medium" },
   },
-  {
-    name: "Bondbuilder",
-    category: "bondbuilder" as const,
-    role: "specialized_bond_treatment" as const,
-    overrides: { relationship: "add_on" as const },
-  },
 ]) {
   test(`complete comparison rejects a ${scenario.name} candidate that excludes the confirmed thickness`, () => {
     const input = authorityInput(scenario.category, scenario.role, {
@@ -1216,7 +1210,7 @@ for (const role of [
   })
 }
 
-test("Bondbuilder compares application and thickness instead of engine criterion labels", () => {
+test("Bondbuilder compares application without a non-differentiating diameter axis", () => {
   const comparison = buildStage3FitComparison(
     authorityInput("bondbuilder", "specialized_bond_treatment", {
       productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
@@ -1232,17 +1226,17 @@ test("Bondbuilder compares application and thickness instead of engine criterion
   assert.equal(comparison.mode, "comparison")
   assert.deepEqual(
     comparison.dimensions.map((dimension) => dimension.dimensionId),
-    ["bondbuilder.suitable_thicknesses"],
+    [],
   )
 
   const rows = comparison.evidenceRows ?? []
   assert.deepEqual(
     rows.map((row) => row.rowId),
-    ["bondbuilder.application", "bondbuilder.suitable_thicknesses"],
+    ["bondbuilder.application"],
   )
   assert.deepEqual(
     rows.map((row) => row.label),
-    ["Anwendung", "Geeignete Haardicke"],
+    ["Anwendung"],
   )
   assert.equal(
     rows.some((row) =>
@@ -1253,18 +1247,39 @@ test("Bondbuilder compares application and thickness instead of engine criterion
 
   const application = rows[0]
   assert.ok(application)
-  assert.equal(application.target?.valueLabel, "beides möglich")
+  assert.equal(application.target?.valueLabel, "nach deinem Alltag")
   assert.deepEqual(application.productValues, [
     { productId: "owned", valueLabel: "Vorwäsche, ausspülen", relation: "in_target" },
     { productId: "candidate", valueLabel: "Leave-in nach der Wäsche", relation: "in_target" },
   ])
+})
 
-  const thickness = rows[1]
-  assert.ok(thickness)
-  assert.equal(thickness.target?.valueLabel, "mittel")
-  assert.deepEqual(
-    thickness.productValues.map((value) => value.valueLabel),
-    ["fein, mittel", "fein, mittel"],
+test("Bondbuilder bedtime leave-in is distinct from post-wash use and never overrides a contradictory rinse", () => {
+  const comparison = buildStage3FitComparison(
+    authorityInput("bondbuilder", "specialized_bond_treatment", {
+      productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+      candidates: [
+        factsFor("bondbuilder", "specialized_bond_treatment", "overnight", {
+          applicationMode: "bedtime_leave_in",
+          treatmentMode: "leave_in",
+        }),
+        factsFor("bondbuilder", "specialized_bond_treatment", "contradictory", {
+          applicationMode: "bedtime_leave_in",
+          treatmentMode: "rinse_out",
+        }),
+      ],
+    }),
+  )
+  const values = comparison.evidenceRows?.find(
+    (row) => row.rowId === "bondbuilder.application",
+  )?.productValues
+  assert.equal(
+    values?.find((value) => value.productId === "overnight")?.valueLabel,
+    "Abends, über Nacht im Haar",
+  )
+  assert.equal(
+    values?.find((value) => value.productId === "contradictory")?.valueLabel,
+    "Ausspülen",
   )
 })
 
@@ -1287,6 +1302,7 @@ test("Bondbuilder shows the standalone row only when a displayed product is an a
       candidates: [
         factsFor("bondbuilder", "specialized_bond_treatment", "add-on-candidate", {
           relationship: "add_on",
+          suitableThicknesses: ["coarse"],
         }),
       ],
     }),
