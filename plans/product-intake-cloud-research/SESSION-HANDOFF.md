@@ -12,6 +12,6 @@ ssh: `ssh chaarlie-hetzner …` works from any Claude session once this branch's
 
 ## Still open
 
-- Deploy Slice 0 (this branch) after merge: apply migrations `20261005190000` and `20261005190100` BEFORE switching the worker release (heartbeat/renew RPCs otherwise log errors every minute).
+- Deploy Slice 0 (this branch) after merge: apply migrations applied 2026-10-06 as `20261006112322` and `20261006112337`; release `20261006-880a07c46cff` deployed, heartbeat verified.
 - Codify units + drop-in into `deploy/product-intake/` (0.2), host budget (0.7), Codex CLI upgrade on the server.
 - Backlog products: see the program memory for per-product state (images approved; values being completed by research; publish via `approve-package` package flow).
