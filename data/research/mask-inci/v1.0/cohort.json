@@ -1,0 +1,755 @@
+{
+  "cohortId": "mask-gold-set-calibration-v0.1",
+  "frozen": "2026-09-05",
+  "standard": "mask-inci-v0.1-draft",
+  "charter": "docs/research/mask-inci/v1.0/00_category_charter.md",
+  "approval": "Nick 2026-09-04 (plans/mask-inci/calibration-cohort-proposal.md Approval record; interview rulings in plans/mask-inci/phase3-decision-coverage.md)",
+  "openG0Question": "12-guhl-panthenol-reparatur-2in1: captured dual-mode directions (30s Spülung / 2-3min Kur) may flip charter exclusion — both lanes must run the F1 five-step G0 test and record the outcome; a flip goes to Nick as a charter correction, never silently adopted.",
+  "products": [
+    {
+      "id": "01-hask-argan-oil-sachet",
+      "productNumber": 1,
+      "role": "primary",
+      "archetypeSlots": [
+        "1 - rich oil/butter, high anchor"
+      ],
+      "identity": {
+        "brand": "HASK",
+        "productName": "HASK Haarkur Argan Oil, Sachet, 50 ml (dm.de also lists as \"HASK Kursachet Argan Oil\")",
+        "packSize": "50 ml sachet",
+        "gtinEan": "071164333068",
+        "eanSourceNote": "No EAN independently confirmed this pass. dm.de product identifier is the internal article number 71164333068 (used in the dm.de URL slug p71164333068) plus a second alternate dm article id 1474980 seen in a different dm.de URL pattern for what appears to be the same sachet - both are dm-internal IDs, not confirmed as the retail EAN/GTIN barcode. Requires direct barcode confirmation at freeze time.",
+        "market": "DE (dm.de, dm.at)",
+        "gtinVerified": "dm.de rendered page 2026-09-04"
+      },
+      "status": "captured",
+      "isReserve": false,
+      "formulaOfRecord": {
+        "rawInci": "AQUA, CETEARYL ALCOHOL, LANOLIN, CETRIMONIUM CHLORIDE, QUATERNIUM-18, PARFUM, ARGANIA SPINOSA KERNEL OIL, HYDROXYPROPYLTRIMONIUM HYDROLYZED ORYZA SATIVA PROTEIN/SILOXYSILICATE, ORYZA SATIVA EXTRACT, HYDROLYZED COLLAGEN, HYDROLYZED KERATIN, SILK AMINO ACIDS, HYDROLYZED SOY PROTEIN, SODIUM LAUROYL OAT AMINO ACIDS, JUGLANS NIGRA LEAF EXTRACT, LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE, POPULUS TREMULOIDES BARK EXTRACT, CITRIC ACID, GLYCERIN, PANTHENOL, ISOPROPYL PALMITATE, SODIUM PCA, TETRASODIUM EDTA, DMDM HYDANTOIN, BUTYLENE GLYCOL, ETHYLHEXYLGLYCERIN, SODIUM BENZOATE, PHENOXYETHANOL, BENZYL ALCOHOL, POTASSIUM SORBATE, BENZYL BENZOATE, LIMONENE, CARAMEL, CI 19140",
+        "source": {
+          "url": "https://www.hautschutzengel.de/hask-argan-oil-repairing-deep-conditioner-sachet-50-ml-inhaltsstoffe/produkt/215446.html",
+          "accessDate": "2026-09-04",
+          "tier": "hautschutzengel (fallback)",
+          "notes": "dm.de product page (https://www.dm.de/hask-haarkur-argan-oil-sachet-p71164333068.html) is JS-rendered and returned only header/logo markup on fetch, per the known dm.de limitation. This hautschutzengel page is explicitly titled '...Sachet 50 ml' and lists a sachet-specific formula, confirmed DISTINCT from the 355 ml bottle's INCI captured separately in data/research/shampoo-inci (different ingredient set entirely - bottle is a sulfate-conditioner-style formula, sachet is this lanolin/cetrimonium-chloride formula). Per Nick's ruling (approval record item 4), the sachet's own INCI is used, never merged from the bottle."
+        },
+        "tier": null
+      },
+      "directions": {
+        "text": "Nach der Haarwäsche in das handtuchtrockene/nasse Haar einmassieren und bis zu 10 Minuten einwirken lassen, danach gründlich ausspülen. Zur Anwendung 1-2 Mal pro Woche. Ein Sachet (50 ml) reicht für ca. 5-8 Anwendungen (bzw. laut anderer Quelle 2-3 Anwendungen).",
+        "contactTimeFound": true,
+        "contactTimeMinutes": "up to 10 (exact wording varies by source: 'bis zu 10 Minuten')",
+        "source": "Aggregated from dm.de listing copy and secondary retailer/review sites (pinkmelon.de, kaufland.de) via search - NOT independently verified by a direct verbatim fetch of the dm.de product page, since that page is JS-rendered and did not return body content this pass.",
+        "confidence": "moderate - contact time is corroborated across multiple independent retail copy blocks but not confirmed by a single primary-source verbatim fetch"
+      },
+      "claims": [
+        "nährt und revitalisiert trockenes, strapaziertes, geschädigtes Haar",
+        "reich an Antioxidantien, Fettsäuren, Vitamin E (Arganöl)",
+        "verbessert sichtbar die Haarstruktur",
+        "entwirrt und zähmt widerspenstiges Haar"
+      ],
+      "conflicts": [
+        {
+          "type": "identity/EAN",
+          "description": "dm.de shows at least two distinct internal identifiers for what appears to be the same 50ml sachet (URL slug number 71164333068 vs. a separate product-detail ID 1474980 found via a different dm.de URL pattern 'dm.de/p/d/1474980/hask-kursachet-argan-oil'). Neither resolved to a verbatim retail barcode/EAN in this pass. Not treated as two different products, but flagged as an unresolved identifier gap.",
+          "resolution": "unresolved - needs direct barcode scan or dm.de JS-rendered fetch at freeze time"
+        }
+      ],
+      "rawInciSha256": "dff721bdfab13f3787504c66f69836544149bba23c2e483dd93ea1e9c1e59131",
+      "verificationNote": "GTIN adopted; INCI remains hautschutzengel-tier as captured."
+    },
+    {
+      "id": "02-gliss-7sekunden-express-repair",
+      "productNumber": 2,
+      "role": "primary",
+      "archetypeSlots": [
+        "2 - light express Kur <=1 min (F2), 7 sec is the extreme low-dwell case"
+      ],
+      "identity": {
+        "brand": "Schwarzkopf Gliss Kur",
+        "productName": "7 Sekunden Express-Repair Kur, Ultimate Repair",
+        "packSize": "200 ml",
+        "gtinEan": "4015100813319",
+        "eanSourceNote": "dm.de rendered page, dm-Artikelnummer 1581143, 2026-09-04 (verification addendum); supersedes slug EAN 4015100433456 = older Pearl formula version",
+        "market": "DE"
+      },
+      "status": "captured_with_conflict",
+      "isReserve": false,
+      "formulaOfRecord": {
+        "rawInci": "Propylene Glycol, Alcohol denat., Myristyl Alcohol, Dicaprylyl Carbonate, Aqua (Water, Eau), Glycerin, Caprylic/Capric Triglyceride, Parfum (Fragrance), Cetrimonium Chloride, PEG-7 Glyceryl Cocoate, Hydroxypropylgluconamide, Hydroxypropylammonium Gluconate, Hydrolyzed Keratin, Lauryl Alcohol, Cetyl Alcohol, Tetramethyl Acetyloctahydronaphthalenes, Citrus Aurantium Peel Oil, Limonene, Citric Acid, Geranyl Acetate, Benzyl Alcohol, Sodium Benzoate, Potassium Sorbate, Phenoxyethanol",
+        "source": "https://www.dm.de/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair (GTIN and INCI read from rendered page, 2026-09-04)",
+        "tier": "dm",
+        "supersededVersion": {
+          "gtin": "4015100433456",
+          "rawInci": "PROPYLENE GLYCOL, ALCOHOL DENAT., MYRISTYL ALCOHOL, DICAPRYLYL CARBONATE, AQUA, GLYCERIN, CAPRYLIC/CAPRIC TRIGLYCERIDE, CETRIMONIUM CHLORIDE, PARFUM, PEG-7 GLYCERYL COCOATE, HYDROLYZED PEARL, HYDROLYZED KERATIN, CETYL ALCOHOL, CITRIC ACID, LAURYL ALCOHOL, SORBIC ACID, POTASSIUM SORBATE, PHENOXYETHANOL, GERANIOL, BENZYL ALCOHOL, LINALOOL, LIMONENE, ALPHA-ISOMETHYL IONONE, HEXYL CINNAMAL, BENZYL SALICYLATE",
+          "note": "older formula version (Hydrolyzed Pearl, no bond pair)"
+        }
+      },
+      "directions": {
+        "text": "Nach dem Shampoonieren auf das handtuchtrockene/feuchte Haar auftragen, bis sich eine cremige Textur bildet, 7 Sekunden einwirken lassen, gründlich ausspülen.",
+        "contactTimeFound": true,
+        "contactTimeMinutes": "7 seconds (the product's defining marketing claim - 'as effective as a 5-minute treatment in 7 seconds')",
+        "source": "Aggregated from schwarzkopf.de and multiple independent retailer copy blocks (all consistent on '7 Sekunden' as both product name and contact time) - schwarzkopf.de direct fetch did not render the Anwendung body text, so this is search-aggregated rather than a single verbatim page fetch, but the figure is the universal branded claim, not disputed anywhere found.",
+        "confidence": "high - the contact time is literally the product's name and is repeated identically across every independent source found"
+      },
+      "claims": [
+        "100% stärkeres Haar",
+        "7x weniger Haarbruch",
+        "silikonfrei",
+        "flüssiges Keratin & Perlenextrakt (HaptIQ System)",
+        "wirkt wie eine 5-Minuten-Kur in nur 7 Sekunden"
+      ],
+      "conflicts": [
+        {
+          "type": "EAN",
+          "description": "Proposal/dm.de use EAN 4015100433456. Independent ingredient databases (incidecoder.com original domain, openbeautyfacts.org) list EAN 4015100813319 for what appears by name, pack size, and formula description to be the identical product ('GLISS 7sec Express Repair - Ultimate Repair', Schwarzkopf, 200ml). Both EANs were searched independently and each resolves consistently to this same product name across multiple sources - suggests either a barcode reissue/repack over time, or a market/batch variant, not two different formulas.",
+          "resolution": "unresolved - recording both EANs; using 4015100433456 (dm.de-sourced, matches proposal) as the primary identifier since it is the higher-tier source"
+        }
+      ],
+      "rawInciSha256": "5575f0ae3fb2120388b88a18dbd4a0bd6081c16987e1a5f77c081a9c0ba57155",
+      "verificationNote": "Calibrate the CURRENT dm product: GTIN 4015100813319 with the dm-verbatim INCI below (source tier: dm, direct page extraction). The older EAN/formula is retained as superseded-version provenance in the capture file; lists are never merged across versions."
+    },
+    {
+      "id": "03-bali-curls-sos-protein-treatment",
+      "productNumber": 3,
+      "role": "primary",
+      "archetypeSlots": [
+        "3 - protein-forward 'protein bomb'"
+      ],
+      "identity": {
+        "brand": "Bali Curls (by Hank Ge) / Bali Care",
+        "productName": "Total Repair SOS Protein Treatment",
+        "packSize": "20 ml sachet",
+        "gtinEan": "4262391991114",
+        "eanSourceNote": "Proposal figure, sourced from an INCI-database product-URL number, not a retailer/brand-direct EAN listing. Not independently re-confirmed this pass (brand site product page did not display an EAN).",
+        "market": "DE (specialty curly-hair retail: brand site bali-care.com, Lockenbox, CurlyTools; not sold at dm/Rossmann/Müller - approved below-tier sourcing per Nick's ruling)",
+        "gtinVerified": "dm.de rendered page 2026-09-04"
+      },
+      "status": "captured_with_conflict",
+      "isReserve": false,
+      "formulaOfRecord": {
+        "rawInci": "AQUA, CETEARYL ALCOHOL, GLYCINE SOJA OIL, GLYCERIN, BUTYROSPERMUM PARKII BUTTER, CETRIMONIUM CHLORIDE, COCOS NUCIFERA OIL, BETAINE, BEHENTRIMONIUM METHOSULFATE, PARFUM, PANTHENOL, SODIUM BENZOATE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, GLYCERYL STEARATE SE, HYDROLYZED VEGETABLE PROTEIN, POTASSIUM SORBATE, HYDROLYZED SWEET ALMOND PROTEIN, LACTIC ACID, LINALOOL, CITRIC ACID, LIMONENE, AMYL SALICYLATE, LINALYL ACETATE, CANANGA ODORATA FLOWER EXTRACT, BENZOIC ACID, METHYL BENZOATE",
+        "source": {
+          "url": "https://www.bali-care.com/de-de/products/total-repair-sos-protein-treatment",
+          "accessDate": "2026-09-04",
+          "tier": "brand-direct (upgraded from hautschutzengel-only; Bali Curls below-tier sourcing approved by Nick)",
+          "notes": "Cross-confirmed verbatim identical against hautschutzengel.de/en/bali-curls-total-repair-sos-protein-treatment-inhaltsstoffe/produkt/354177.html. Two named hydrolyzed proteins present (Hydrolyzed Vegetable Protein, Hydrolyzed Sweet Almond Protein) confirming protein-forward archetype."
+        },
+        "tier": null
+      },
+      "directions": {
+        "text": "Nach der Haarwäsche die Haarmaske in das nasse Haar einarbeiten, besonders in die Längen und Spitzen. Drei Minuten einwirken lassen und anschließend mit warmem Wasser gründlich ausspülen.",
+        "contactTimeFound": true,
+        "contactTimeMinutes": "3 (per the DE-market brand site, fetched verbatim)",
+        "source": "bali-care.com/de-de official German product page (direct fetch, verbatim)",
+        "confidence": "high for the DE-site figure - but see conflict below"
+      },
+      "claims": [
+        "SOS-Protein-Behandlung für strapaziertes, überstrapaziertes Haar",
+        "empfohlen alle 2-4 Wochen oder wenn Locken schlaff/überdehnt/zu nass wirken"
+      ],
+      "conflicts": [
+        {
+          "type": "directions/contact time",
+          "description": "A separate (apparently English-market) bali-care.com product summary found via web search states 'Apply to clean, damp hair, leave on for 10-20 minutes, rinse thoroughly' for this same product - directly conflicting with the DE-site's fetched '3 Minuten' figure. Both are attributed to the same brand (Bali Care) but for different storefront locales. Not merged/averaged.",
+          "resolution": "unresolved - recording the DE-market page's verbatim text (3 minutes) as primary since it is the directly-fetched German-language source matching this cohort's market scope; flagging the EN-market 10-20 minute figure as a discrepancy for orchestrator review"
+        }
+      ],
+      "rawInciSha256": "029a074b089cb3bcc25f958b70f6ce697e67a1e20a1b4e0fc8386e5f3ac9b4b9",
+      "verificationNote": "Per the DE/EU market rule, the DE brand page figure (3 minutes) governs; the EN figure is preserved as a recorded conflict, not averaged."
+    },
+    {
+      "id": "04-gliss-liquid-silk-4in1",
+      "productNumber": 4,
+      "role": "primary",
+      "archetypeSlots": [
+        "4a - named-bond mask (gluconamide)",
+        "11 - multi-use 4in1, mode-scoped"
+      ],
+      "identity": {
+        "brand": "Schwarzkopf Gliss",
+        "productName": "Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+        "packSize": "400 ml",
+        "gtinEan": "4015100813913",
+        "eanSourceNote": "Proposal figure; dm.de and Rossmann.de both list this EAN in their URL slugs (cross-agreement per original proposal), though neither page's body content could be fetched directly this pass (dm.de JS-blocked, Rossmann.de Cloudflare-blocked).",
+        "market": "DE (dm.de + Rossmann.de)"
+      },
+      "status": "captured",
+      "isReserve": false,
+      "formulaOfRecord": {
+        "rawInci": "AQUA, CETEARYL ALCOHOL, GLYCERIN, BEHENTRIMONIUM CHLORIDE, DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE, ISOPROPYL MYRISTATE, BEHENAMIDOPROPYL DIMETHYLAMINE, HYDROXYPROPYLGLUCONAMIDE, HYDROXYPROPYLAMMONIUM GLUCONATE, GLYCOSPHINGOLIPIDS, HYDROLYZED SILK, SERICIN, PARFUM, AMODIMETHICONE, BUTYROSPERMUM PARKII BUTTER, LACTIC ACID, ISOPROPYL ALCOHOL, PRUNUS ARMENIACA KERNEL OIL, BUTYLENE GLYCOL, SODIUM BENZOATE, CETEARETH-20, TRIDECETH-10, PHENOXYETHANOL, BENZYL ALCOHOL, ALPHA-ISOMETHYL IONONE, LIMONENE, POTASSIUM SORBATE, METHYLPARABEN, PROPYLPARABEN",
+        "source": {
+          "url": "https://www.hautschutzengel.de/gliss-kur-haarmaske-4-in-1-liquid-silk-inhaltsstoffe/produkt/325099.html",
+          "accessDate": "2026-09-04",
+          "tier": "hautschutzengel (fallback - dm.de and Rossmann.de both blocked this pass)",
+          "notes": "Confirms the named-bond marker: HYDROXYPROPYLGLUCONAMIDE and HYDROXYPROPYLAMMONIUM GLUCONATE both present, above the midpoint of the list - archetype 4a coverage solid."
+        },
+        "tier": null
+      },
+      "directions": {
+        "text": "Nach dem Waschen sanft auf das nasse Haar auftragen und 2 bis 3 Minuten einwirken lassen, gründlich ausspülen. 2-3 Mal pro Woche anwenden. Kann zusätzlich als Pre-Shampoo-Behandlung, als Spülung nach dem Shampoonieren, oder als Leave-in verwendet werden (4-in-1).",
+        "contactTimeFound": true,
+        "contactTimeMinutes": "2-3 (mask mode)",
+        "source": "Aggregated from schwarzkopf.de and retailer copy (bipa.at, drogeriedepot.de) - schwarzkopf.de direct fetch rendered the page shell/claims but not the Anwendung body text, so this is search-aggregated, not a single verbatim page fetch.",
+        "confidence": "moderate-high - consistent across multiple independent retailer copy blocks"
+      },
+      "claims": [
+        "ölfrei",
+        "ohne Mineralöle",
+        "ohne Farbstoffe",
+        "ohne Aluminium",
+        "ohne Mikroplastik",
+        "ohne Palmöl",
+        "HaptIQ System & Seide",
+        "4-in-1 Anwendung: Pre-Shampoo, Spülung, Maske, Leave-in"
+      ],
+      "conflicts": [],
+      "rawInciSha256": "f5a2c0caea8013e3a1a1bc1322d72f2781d26e5aa307bd4c5b44ed6925d96ee5"
+    },
+    {
+      "id": "05-isana-mandelmilch-3in1",
+      "productNumber": 5,
+      "role": "primary",
+      "archetypeSlots": [
+        "3 - protein-forward secondary (two named hydrolyzed proteins)",
+        "11 - multi-use 3in1, protein-flavored"
+      ],
+      "identity": {
+        "brand": "Isana (Rossmann own brand)",
+        "productName": "Haarmaske 3in1 Mandelmilch (Milchprotein & Mandel)",
+        "packSize": "250 ml",
+        "gtinEan": "4305615609775",
+        "eanSourceNote": "Confirmed via the codecheck.info URL, which embeds the EAN directly in its path.",
+        "market": "DE (Rossmann own brand)"
+      },
+      "status": "captured",
+      "isReserve": false,
+      "formulaOfRecord": {
+        "rawInci": "AQUA, CETEARYL ALCOHOL, DICAPRYLYL ETHER, COCOCAPRYLATE, BEHENTRIMONIUM CHLORIDE, HYDROLYZED MILK PROTEIN, COCOS NUCIFERA OIL, PRUNUS AMYGDALUS DULCIS OIL, HELIANTHUS ANNUUS SEED OIL, LAURDIMONIUM HYDROXYPROPYL HYDROLYZED WHEAT PROTEIN, PANTHENOL, THEOBROMA CACAO SEED BUTTER, STEARAMIDOPROPYL DIMETHYLAMINE, ISOPROPYL ALCOHOL, CITRIC ACID, PARFUM, LINALOOL, BENZYL SALICYLATE, BENZYL ALCOHOL, SODIUM BENZOATE, PHENOXYETHANOL, POTASSIUM SORBATE, TOCOPHEROL",
+        "source": {
+          "url": "https://www.codecheck.info/kosmetik_koerperpflege/haarpflege/kuren_masken/ean_4305615609775/id_2370850630/Isana_Haarmaske_Mandelmilch_3in1.pro",
+          "accessDate": "2026-09-04",
+          "tier": "codecheck",
+          "notes": "Page marks the product 'Älteres Produkt, ggf. nicht mehr erhältlich' (older product, possibly no longer available) - flagged as a possible discontinued-SKU risk for the calibration set. Two named hydrolyzed proteins confirmed: Hydrolyzed Milk Protein and Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein."
+        },
+        "tier": null
+      },
+      "directions": {
+        "text": "Drei Anwendungsarten: (1) Intensivpflege - ins nasse Haar einmassieren, 3-5 Minuten einwirken lassen, mit warmem Wasser ausspülen. (2) Für leichtes Kämmen - ins handtuchtrockene Haar verteilen, nicht ausspülen. (3) Zum Bändigen - ins trockene Haar verteilen, nicht ausspülen.",
+        "contactTimeFound": true,
+        "contactTimeMinutes": "3-5 (mask/intensive-care mode)",
+        "source": "Aggregated Rossmann retailer copy via web search - not a single verbatim page fetch.",
+        "confidence": "moderate"
+      },
+      "claims": [
+        "Für trockenes, strapaziertes Haar",
+        "mit Kakaobutter",
+        "silikonfrei",
+        "3in1 (Maske / Leave-in / Bändigen)"
+      ],
+      "conflicts": [],
+      "rawInciSha256": "12053a7e706c4c1092fb14cea15a9f5415a6d87614a70ca1053084c3259ecc3a"
+    },
+    {
+      "id": "06-monday-smooth-anti-frizz",
+      "productNumber": 6,
+      "role": "primary",
+      "archetypeSlots": [
+        "6 - silicone-heavy smoothing/anti-frizz"
+      ],
+      "identity": {
+        "brand": "MONDAY Haircare",
+        "productName": "Smooth Anti-Frizz Haarmaske",
+        "packSize": "250 ml",
+        "gtinEan": "4895248003991",
+        "eanSourceNote": "Confirmed via incibeauty.com product URL (produit/4895248003991, titled 'Monday Haircare Smooth Anti-frizz Haarmaske - 250 ml') and matches the Rossmann.de URL slug from the proposal. New-to-system product per approval record.",
+        "market": "DE (Rossmann.de)"
+      },
+      "status": "captured_with_conflict",
+      "isReserve": false,
+      "formulaOfRecord": {
+        "rawInci": "AQUA, GLYCERIN, CETEARYL ALCOHOL, DIMETHICONE, DIMETHICONOL, ISOPROPYL MYRISTATE, BUTYROSPERMUM PARKII (SHEA) BUTTER, COCOS NUCIFERA (COCONUT) OIL, SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL, PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL, PHENOXYETHANOL, BEHENTRIMONIUM CHLORIDE, DIGLYCERIN, HYDROXYETHYLCELLULOSE, PARFUM (FRAGRANCE), PEG-100 STEARATE, GLYCERYL STEARATE, AMODIMETHICONE, CHLORPHENESIN, ISOPROPYL ALCOHOL, TRIDECETH-10, TEA-DODECYLBENZENESULFONATE, LAURETH-23, DISODIUM EDTA, TRIDECETH-3, BENZYL ALCOHOL, ETHYLHEXYLGLYCERIN, POLYSORBATE 60, DISODIUM PHOSPHATE, CITRIC ACID, ACETIC ACID, SODIUM PHOSPHATE, HEXYL CINNAMAL, LINALOOL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+        "source": {
+          "url": "https://incibeauty.com/en/produit/4895248003991",
+          "accessDate": "2026-09-04",
+          "tier": "database fallback (incibeauty, via search aggregation - below hautschutzengel/codecheck in the requested tier order)",
+          "notes": "IMPORTANT SOURCE-MATCH CAUTION: a hautschutzengel.de URL matching this product's name pattern (hautschutzengel.de/monday-haircare-smooth-antifrizz-inhaltsstoffe/produkt/316997.html) was directly fetched and found to be the SMOOTH ANTIFRIZZ SHAMPOO (a sulfate/betaine surfactant-cleanser formula), not the hair mask - that page's content was discarded and NOT used, since it would have been a wrong-product-type conflation. Rossmann.de direct fetch was Cloudflare-blocked. Dimethicone, Dimethiconol, AND Amodimethicone are all confirmed present, fully supporting the silicone-heavy archetype marker."
+        },
+        "tier": null
+      },
+      "directions": {
+        "text": "1-2 Mal wöchentlich auf feuchtes/handtuchtrockenes Haar auftragen, in Längen und Spitzen einmassieren, 10 Minuten einwirken lassen und ausspülen.",
+        "contactTimeFound": true,
+        "contactTimeMinutes": "10",
+        "source": "Aggregated Rossmann.de product-copy via web search (direct Rossmann.de fetch was Cloudflare-blocked).",
+        "confidence": "moderate"
+      },
+      "claims": [
+        "hilft bei Spliss und Haarbruch",
+        "Jojobaöl beugt Frizz vor und versiegelt die Haarkutikula",
+        "ohne Silikone (NOTE: front-of-pack/marketing claim contradicts the confirmed INCI, which contains Dimethicone/Dimethiconol/Amodimethicone - see conflict below)"
+      ],
+      "conflicts": [
+        {
+          "type": "source-mismatch (not a formula conflict, but a research caution)",
+          "description": "A same-brand, similarly-named hautschutzengel.de page for 'MONDAY HAIRCARE Smooth Antifrizz' turned out to be the shampoo, not the mask, and was excluded rather than used or merged.",
+          "resolution": "excluded from this record"
+        },
+        {
+          "type": "marketing claim vs INCI",
+          "description": "MONDAY's general brand marketing (seen across multiple MONDAY product pages/retailers, not confirmed specifically on this SKU's own packaging text) emphasizes 'silicone-free' formulas, but the confirmed INCI for this specific mask contains Dimethicone, Dimethiconol, and Amodimethicone - three silicone ingredients. This may be a brand-wide claim that does not apply to every SKU, or a genuine claim/formula mismatch. Not resolved this pass; flagged for the classification standard's claim-vs-INCI discrimination logic (this is exactly the kind of case F-rules are meant to catch)."
+        }
+      ],
+      "rawInciSha256": "1db41588c8f03b4a8af6078a830816c0f082e16727bca0de6f3a68ed4421fd17",
+      "verificationNote": "EAN accepted with single-source flag retained. The silicone-free-claim-vs-INCI mismatch is recorded as a claim/formula discrimination case for the run, not an identity blocker."
+    },
+    {
+      "id": "07-pantene-molecular-bond-repair",
+      "productNumber": 7,
+      "role": "primary",
+      "archetypeSlots": [
+        "5 - 'bond'-branded without named chemistry (discrimination stress)"
+      ],
+      "identity": {
+        "brand": "Pantene Pro-V",
+        "productName": "Miracles Molecular Bond Repair Intensive Haarmaske",
+        "packSize": "300 ml",
+        "gtinEan": "8700216173476",
+        "eanSourceNote": "Confirmed by direct mueller.de fetch (exact product name and EAN both matched on-page). Proposal also noted an alternate EAN 8700216334525 seen for a differently-named product family ('Pantene Miracle Rescue Bond Repair Mask') - not the same SKU, not merged.",
+        "market": "DE (dm.de + Rossmann.de + Müller)"
+      },
+      "status": "captured",
+      "isReserve": false,
+      "formulaOfRecord": {
+        "rawInci": "AQUA, STEARYL ALCOHOL, STEARAMIDOPROPYL DIMETHYLAMINE, CETYL ALCOHOL, BIS-AMINOPROPYL DIMETHICONE, GLUTAMIC ACID, PARFUM, BENZYL ALCOHOL, SODIUM BENZOATE, CITRIC ACID, BEHENTRIMONIUM METHOSULFATE, DISODIUM EDTA, POLYSORBATE 20, HEXYL CINNAMAL, PANTHENOL, PANTHENYL ETHYL ETHER, ISOPROPYL ALCOHOL, HISTIDINE, BENZYL SALICYLATE, CI 77492, LIMONENE, BIOTIN, METHICONE",
+        "source": {
+          "url": "https://www.mueller.de/p/pantene-pro-v-miracles-molecular-bond-repair-intensive-haarmaske-IPN2964989/",
+          "accessDate": "2026-09-04",
+          "tier": "Müller (direct retailer fetch, verbatim)",
+          "notes": "HIGH CONFIDENCE - both INCI and directions came from the same direct, successful mueller.de page fetch. Active chemistry is Bis-Aminopropyl Dimethicone, a silicone-amine - NOT an established named bond agent (no gluconamide, no maleate) - confirming this product is a 'bond'-branded discrimination-stress case as intended by the archetype."
+        },
+        "tier": null
+      },
+      "directions": {
+        "text": "In den Händen verreiben, um die Pro-V Perlen aufzulösen. Auf das nasse Haar auftragen. 2 Minuten einwirken lassen. Ausspülen.",
+        "contactTimeFound": true,
+        "contactTimeMinutes": "2",
+        "source": "mueller.de official product page (direct fetch, verbatim)",
+        "confidence": "high"
+      },
+      "claims": [
+        "5.000+ Pro-V Nutri-Pearls, lösen sich beim Auftragen auf",
+        "Molecular Repair Technology",
+        "mit Biotin"
+      ],
+      "conflicts": [
+        {
+          "type": "identity (distinct SKU, not merged)",
+          "description": "A separately-named product, 'PANTENE PRO-V Haarmaske Miracles Intense Hair Rescue' (160 ml, per codecheck.info), has an almost-but-not-identical INCI (missing Behentrimonium Methosulfate, Disodium EDTA, Polysorbate 20, Isopropyl Alcohol, Benzyl Salicylate, CI 77492, Methicone; includes additional Rubus Idaeus Fruit Extract and Hydrolyzed Silk not present in the 300 ml version). This is a genuinely different pack-size/market-variant SKU, not the calibration target, and was NOT merged into this record.",
+          "resolution": "kept separate, excluded from this product's rawInci"
+        }
+      ],
+      "rawInciSha256": "7be31024068a8a96a303b7637c4993c7efcc8896713e283da8bc136f2f9c400f"
+    },
+    {
+      "id": "08-sante-intense-hydration",
+      "productNumber": 8,
+      "role": "primary",
+      "archetypeSlots": [
+        "7 - silicone-free natural-positioned"
+      ],
+      "identity": {
+        "brand": "Sante Naturkosmetik",
+        "productName": "Intense Hydration Maske Hyaluron + 3-Fach Protein Komplex",
+        "packSize": "150 ml (jar)",
+        "gtinEan": "4055297220682",
+        "eanSourceNote": "Confirmed via direct sante.de official product page fetch (product code 40628).",
+        "market": "DE (brand-direct sante.de, pro-biomarkt.de and other Naturkosmetik retailers)"
+      },
+      "status": "captured",
+      "isReserve": false,
+      "formulaOfRecord": {
+        "rawInci": "Aqua (Water), Cetearyl Alcohol, Glycerin, Distearoylethyl Dimonium Chloride, Behenyl Alcohol, Betaine, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Lactic Acid, Arginine, Sodium Lactate, Sodium Hyaluronate, Aloe Barbadensis Leaf Juice Powder*, Leuconostoc/Radish Root Ferment Filtrate, Tocopherol, Helianthus Annuus (Sunflower) Seed Oil, Potassium Sorbate, Parfum (Fragrance)**, Linalool**, Benzyl Salicylate**",
+        "source": {
+          "url": "https://www.sante.de/intense-hydration-maske-hyaluron-3-fach-protein-komplex/40628",
+          "accessDate": "2026-09-04",
+          "tier": "brand-direct",
+          "notes": "Direct successful fetch of the official 150 ml jar product page (product code 40628), distinct from the 20 ml '1 Minute Wonder Mask' sachet (product code 40762, EAN 4025089005896). Page noted the 150 ml jar as currently out of stock ('In Kürze wieder verfügbar') but still an active, current SKU. No silicones in the INCI - confirms silicone-free archetype."
+        },
+        "tier": null
+      },
+      "directions": {
+        "text": "Maske in feuchten Haarlängen verteilen. 1 Minute einwirken lassen. Ausspülen. Fertig.",
+        "contactTimeFound": true,
+        "contactTimeMinutes": "1",
+        "source": "sante.de official product page (direct fetch, verbatim)",
+        "confidence": "high"
+      },
+      "claims": [
+        "Feuchtigkeitsbooster für trockenes Haar",
+        "mit Aloe Vera und Bio-Mangoextrakt",
+        "glättet die Haarstruktur & wirkt Frizz entgegen",
+        "schützt langanhaltend vor dem Austrocknen",
+        "verbessert die Kämmbarkeit ohne zu beschweren",
+        "NATRUE-zertifizierte Naturkosmetik, vegan"
+      ],
+      "conflicts": [],
+      "rawInciSha256": "0e17431414ade3807ea46a45aaede128f3029769275fe7861085bb98466e5c9a"
+    },
+    {
+      "id": "09-balea-professional-aqua-hyaluron",
+      "productNumber": 9,
+      "role": "primary",
+      "archetypeSlots": [
+        "8 - moisture/humectant-forward Feuchtigkeitsmaske"
+      ],
+      "identity": {
+        "brand": "Balea Professional (dm own brand)",
+        "productName": "Haarmaske 3in1 Aqua Hyaluron",
+        "packSize": "150 ml",
+        "gtinEan": "4066447668315",
+        "eanSourceNote": "Carried from the proposal; not independently re-confirmed this pass. dm.de product page was tried at both known URL patterns (slug-based and /p/d/1417521/ ID-based) and both returned JS header-only markup with no product content.",
+        "market": "DE (dm own brand)",
+        "gtinVerified": "dm.de rendered page 2026-09-04"
+      },
+      "status": "captured",
+      "isReserve": false,
+      "formulaOfRecord": {
+        "rawInci": "AQUA, CETEARYL ALCOHOL, GLYCERIN, DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE, PANTHENOL, ALOE BARBADENSIS LEAF JUICE POWDER, SODIUM HYALURONATE, HELIANTHUS ANNUUS HYBRID OIL, PARFUM, ISOAMYL LAURATE, BEHENTRIMONIUM CHLORIDE, CETRIMONIUM CHLORIDE, ISOPROPYL ALCOHOL, SODIUM BENZOATE, CITRIC ACID",
+        "source": {
+          "url": "https://www.hautschutzengel.de/balea-professional-haarmaske-3in1-aqua-hyaluron-150-ml-inhaltsstoffe/produkt/312508.html",
+          "accessDate": "2026-09-04",
+          "tier": "hautschutzengel (fallback - dm.de JS-blocked on both known URL patterns, consistent with the proposal's own §4.6 note)",
+          "notes": "Sodium Hyaluronate confirmed present, plus Aloe Barbadensis Leaf Juice Powder - moisture/humectant archetype marker confirmed."
+        },
+        "tier": null
+      },
+      "directions": {
+        "text": "Als Haarmaske: auf das nasse Haar auftragen, 3 Minuten einwirken lassen und gründlich ausspülen. Als Leave-in-Pflege: eine kleine Menge in das handtuchtrockene/trockene Haar einmassieren, nicht ausspülen. Auch als Over-Night-Pflege verwendbar.",
+        "contactTimeFound": true,
+        "contactTimeMinutes": "3 (mask mode)",
+        "source": "Aggregated retailer/dm-marketing copy via web search - not a single verbatim page fetch.",
+        "confidence": "moderate"
+      },
+      "claims": [
+        "feuchtigkeitsspendende Pflegeformel",
+        "verbessert die Kämmbarkeit",
+        "geschmeidiges und glänzendes Haar",
+        "ohne Mikroplastik und wasserlösliche rein synthetische Polymere"
+      ],
+      "conflicts": [],
+      "rawInciSha256": "533a24fbb1c2f90826f3fe5cb4963022f329095b071f91f8d93f9346c8ccd429",
+      "verificationNote": "Identity dm-confirmed; INCI remains hautschutzengel + fresh-store two-source corroboration."
+    },
+    {
+      "id": "10-bali-curls-deep-repair-mask",
+      "productNumber": 10,
+      "role": "primary",
+      "archetypeSlots": [
+        "9 - curl mask"
+      ],
+      "identity": {
+        "brand": "Bali Curls (by Hank Ge) / Bali Care",
+        "productName": "Deep Repair Mask (official current name per bali-care.com; see naming conflict below)",
+        "packSize": "200 ml",
+        "gtinEan": "4262391990001",
+        "eanSourceNote": "Proposal figure, sourced from an INCI-database product-URL number. A dm.de listing URL (dm.de/bali-curls-haarmaske-deep-repair-p4262391990001.html) surfaced in search results using this same EAN - see tier-upgrade flag below.",
+        "market": "Primarily specialty curly-hair retail (brand site bali-care.com, Lockenbox, CurlyTools) per approved below-tier sourcing; a dm.de listing for this exact EAN was found in search results this pass but could not be confirmed live (see notes).",
+        "gtinVerified": "dm.de rendered page 2026-09-04"
+      },
+      "status": "captured_with_conflict",
+      "isReserve": false,
+      "formulaOfRecord": {
+        "rawInci": "AQUA, CETEARYL ALCOHOL, GLYCERIN, BUTYROSPERMUM PARKII BUTTER, COCOS NUCIFERA OIL, GLYCINE SOJA OIL, PERSEA GRATISSIMA OIL, CETRIMONIUM CHLORIDE, BETAINE, BEHENTRIMONIUM METHOSULFATE, PANTHENOL, SODIUM BENZOATE, PARFUM, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, GLYCERYL STEARATE SE, POTASSIUM SORBATE, LACTIC ACID, LINALOOL, CITRIC ACID, LIMONENE, CANANGA ODORATA FLOWER EXTRACT, BENZOIC ACID",
+        "source": {
+          "url": "https://www.bali-care.com/de-de/products/deep-hydration-mask",
+          "accessDate": "2026-09-04",
+          "tier": "brand-direct (upgraded from hautschutzengel-only; Bali Curls below-tier sourcing approved by Nick)",
+          "notes": "URL slug still says 'deep-hydration-mask' (legacy name) but the page's own body content confirms the current official product name is 'DEEP REPAIR MASK'. Cross-confirmed against hautschutzengel.de/en/bali-curls-inhaltsstoffe/marke/14479777.html and an incibeauty.com/en/produit/4262391990001 search snippet, both listing the same core ingredient set (the incibeauty snippet additionally listed 'AMYL SALICYLATE, LINALYL ACETATE, METHYL BENZOATE' at the tail, which the brand-direct page's list did not show - likely a truncation artifact rather than a true formula difference, not resolved with full certainty)."
+        },
+        "tier": null
+      },
+      "directions": {
+        "text": "Trage die Haarmaske in die Längen und Spitzen des gewaschenen, handtuchtrockenen Haares auf und lasse sie 2-3 Minuten einwirken. Spüle sie dann im Anschluss gründlich aus.",
+        "contactTimeFound": true,
+        "contactTimeMinutes": "2-3",
+        "source": "bali-care.com/de-de official German product page (direct fetch, verbatim)",
+        "confidence": "high"
+      },
+      "claims": [
+        "vegan",
+        "mit Sheabutter, Kokosöl & Avocadoöl",
+        "tiefenpflegend für Locken & trockenes Haar",
+        "mit Ylang-Ylang-Extrakt"
+      ],
+      "conflicts": [
+        {
+          "type": "naming",
+          "description": "hautschutzengel.de titles this product 'Deep Hydration Mask' (an older/legacy name), while bali-care.com's own current page content, dm.de's listing, and the calibration proposal all use 'Deep Repair Mask' for the same EAN and formula. Treated as a naming discrepancy, not a formula conflict - the INCI matches across all sources.",
+          "resolution": "using 'Deep Repair Mask' as the current official name, per brand-direct page content"
+        },
+        {
+          "type": "sourcing tier (positive finding, needs confirmation)",
+          "description": "A dm.de listing URL for this exact EAN (dm.de/bali-curls-haarmaske-deep-repair-p4262391990001.html) appeared in search results, which would contradict the proposal's §4.3 framing that Bali Curls is not sold at dm/Rossmann/Müller. The dm.de page itself could not be fetched (JS-blocked, returned header-only markup), so this is an UNCONFIRMED positive tier-upgrade signal, not a verified fact.",
+          "resolution": "unresolved - flagged for the orchestrator; if dm.de availability is confirmed at freeze time, this product's source tier should be upgraded from 'below-tier' to 'dm'"
+        }
+      ],
+      "rawInciSha256": "8a8a0d5399f68ecb7a7b87e362f2876718fdd44c7af6132886d059e010eb7c2b",
+      "verificationNote": "Identity dm-confirmed at dm tier; brand-direct INCI capture stands pending any dm INCI publication."
+    },
+    {
+      "id": "11-elvital-glycolic-gloss",
+      "productNumber": 11,
+      "role": "primary",
+      "archetypeSlots": [
+        "10 - gloss/lamination treatment (F4, claim-gated)"
+      ],
+      "identity": {
+        "brand": "L'Oréal Paris Elvital",
+        "productName": "Glycolic Gloss, 5-Minuten Haar-Laminierung",
+        "packSize": "200 ml",
+        "gtinEan": "3600524128500",
+        "eanSourceNote": "Proposal figure, dm.de + Rossmann.de agree per the URL slugs (both blocked on direct fetch this pass).",
+        "market": "DE (dm.de + Rossmann.de + Müller)"
+      },
+      "status": "captured",
+      "isReserve": false,
+      "formulaOfRecord": {
+        "rawInci": "AQUA/WATER, CETEARYL ALCOHOL, COCAMIDOPROPYL BETAINE, BEHENTRIMONIUM CHLORIDE, PROPYLENE GLYCOL, AMODIMETHICONE, CI 17200/RED 33, CI 19140/YELLOW 5, COCOS NUCIFERA OIL/COCONUT OIL, SODIUM CHLORIDE, HYDROXYPROPYL GUAR, HYDROXYCITRONELLAL, PHENOXYETHANOL, PPG-1 TRIDECETH-6, ETHANOLAMINE, TRIDECETH-6, POLYQUATERNIUM-37, LIMONENE, LINALOOL, ISOPROPYL ALCOHOL, PROPYLENE GLYCOL DICAPRYLATE/DICAPRATE, CAPRYLYL GLYCOL, ACRYLATES/STEARYL METHACRYLATE COPOLYMER, SORBITAN OLEATE, CETRIMONIUM CHLORIDE, CITRIC ACID, EDTA, HEXYL CINNAMAL, GLYCOLIC ACID, PARFUM/FRAGRANCE",
+        "source": {
+          "url": "aggregated: douglas.de/de/p/5011301009, rossmann.de listing copy, parfumdreams.de listing copy (via web search)",
+          "accessDate": "2026-09-04",
+          "tier": "retailer-aggregated (moderate confidence - direct dm.de and Rossmann.de fetches both blocked this pass; not a single-page verbatim fetch)",
+          "notes": "Glycolic Acid confirmed present near the tail of the list - supports the F4 claim-gated archetype (glycolic acid claim present in both name and formula). Recommend a direct verbatim re-fetch at freeze time if dm.de/Rossmann.de become reachable."
+        },
+        "tier": null
+      },
+      "directions": {
+        "text": "Großzügige Menge auf feuchtes Haar auftragen, um es von den Wurzeln bis in die Spitzen brillant zu versiegeln. 5 Minuten einwirken lassen, gründlich ausspülen.",
+        "contactTimeFound": true,
+        "contactTimeMinutes": "5 (also embedded directly in the product's own name, '5-Minuten Haar-Laminierung')",
+        "source": "Aggregated loreal-paris.de brand descriptions via web search - not a single verbatim page fetch, but the figure is also the branded product name itself.",
+        "confidence": "moderate-high"
+      },
+      "claims": [
+        "19% Gloss-Complex mit Glykolsäure",
+        "versiegelt die Haaroberfläche mit intensivem, langanhaltendem Glanz",
+        "erstes Haar-Laminierungs-Produkt von L'Oréal Paris für zuhause",
+        "für stumpfes, poröses Haar"
+      ],
+      "conflicts": [],
+      "rawInciSha256": "8ef9b78b553d932ae16173a202b55a6a38a9a4bf81b596c2aa8001f3a265a98d"
+    },
+    {
+      "id": "12-guhl-panthenol-reparatur-2in1",
+      "productNumber": 12,
+      "role": "primary",
+      "archetypeSlots": [
+        "12 - boundary stress: plausibly-just-a-conditioner (charter's own named exclusion example, F1-excluded)"
+      ],
+      "identity": {
+        "brand": "Guhl",
+        "productName": "Panthenol + Reparatur 2in1 Kur & Spülung",
+        "packSize": "200 ml",
+        "gtinEan": "4072600703403",
+        "eanSourceNote": "Proposal figure, dm.de + Rossmann.de + Müller all list this EAN consistently in their URLs (cross-agreement across three independent retailers).",
+        "market": "DE (dm.de + Rossmann.de + Müller)"
+      },
+      "status": "captured",
+      "isReserve": false,
+      "formulaOfRecord": {
+        "rawInci": "AQUA, CETEARYL ALCOHOL, BEHENTRIMONIUM CHLORIDE, DIPROPYLENE GLYCOL, CETYL ESTERS, PANTHENOL, TETRASODIUM GLUTAMATE DIACETATE, LACTIC ACID, ETHYLHEXYLGLYCERIN, GLYCINE, AVENA SATIVA KERNEL OIL, PHENOXYETHANOL, PARFUM, VANILLIN",
+        "source": {
+          "url": "https://www.hautschutzengel.de/guhl-haarkur-conditioner-2in1-panthenol-reparatur-inhaltsstoffe/produkt/363600.html",
+          "accessDate": "2026-09-04",
+          "tier": "hautschutzengel (fallback - dm.de and Rossmann.de both blocked this pass)",
+          "notes": "Short, simple ingredient list consistent with a light conditioner-style formula rather than a rich mask formula - supports the charter's own framing of this product as conditioner-engine territory."
+        },
+        "tier": null
+      },
+      "directions": {
+        "text": "Als Spülung (für sofortige Regeneration): ins gewaschene, nasse Haar einmassieren, kurz einwirken lassen (ca. 30 Sekunden) und gut ausspülen. Als Kur (für Tiefenregeneration): ins gewaschene, nasse Haar einmassieren, 2-3 Minuten einwirken lassen und genießen, dann ausspülen.",
+        "contactTimeFound": true,
+        "contactTimeMinutes": "dual-mode: ~0.5 (as Spülung/conditioner) or 2-3 (as Kur/treatment)",
+        "source": "Aggregated dm.de and guhl.com official copy via web search - not a single verbatim page fetch, but the dual-mode structure is consistent and repeated across every source found.",
+        "confidence": "high (dual-mode structure verified consistently across dm.de, guhl.com, and retailer copy, even without a single raw page fetch)"
+      },
+      "claims": [
+        "silikonfrei",
+        "dermatologisch bestätigt",
+        "schützt vor Haarbruch",
+        "mit Panthenol (Provitamin B5)"
+      ],
+      "conflicts": [],
+      "rawInciSha256": "aadf968d6f6e06ee4644e6f543679d6e6572c617846508e145c9a6128067d38e",
+      "verificationNote": "Kept as the boundary-stress case exactly because of this: under the F1 five-step directions test, a stated 2-3-min Kur mode WOULD be a qualifying mask mode, making the product mode-scoped eligible rather than excluded. The blind lane and key lane must both run the G0 test on the frozen directions; if eligibility flips vs. the charter's assumption, that goes to Nick — the charter's Guhl line cites the conditioner-engine-era directions reading and may need a correction rather than the test set being wrong."
+    },
+    {
+      "id": "13-olaplex-no3-hair-perfector",
+      "productNumber": 13,
+      "role": "primary-refuse-test",
+      "archetypeSlots": [
+        "G0 refuse-test - proves the F3/mask-boundary fence; the correct engine output is EXCLUSION, not a mask archetype classification"
+      ],
+      "identity": {
+        "brand": "Olaplex",
+        "productName": "No. 3 Hair Perfector",
+        "packSize": "Multiple formats seen in market (100 ml most common at Douglas/Flaconi; smaller 20/50 ml formats also seen at specialty retailers/salons) - exact pack size not pinned down to one SKU this pass, since this product is a refuse-test capture, not a candidate for classification.",
+        "gtinEan": null,
+        "eanSourceNote": "Not confirmed this pass - deliberately not chased further, since identity/EAN precision matters less for a refuse-test than for a real cohort candidate. Approval record confirms Olaplex is sold via Douglas/Flaconi/salons, not dm/Rossmann/Müller.",
+        "market": "DE (Douglas, Flaconi, salons - not drugstore per approval record)"
+      },
+      "status": "captured",
+      "isReserve": false,
+      "formulaOfRecord": {
+        "rawInci": "Water, Bis-Aminopropyl Diglycol Dimaleate, Propylene Glycol, Cetearyl Alcohol, Behentrimonium Methosulfate, Cetyl Alcohol, Phenoxyethanol, Glycerin, Hydroxyethyl Ethylcellulose, Stearamidopropyl Dimethylamine, Quaternium-91, Sodium Benzoate, Cetrimonium Methosulfate, Cetrimonium Chloride, Fragrance, Polyquaternium-37, Tetrasodium EDTA, Benzyl Benzoate, Etidronic Acid, Ascorbic Acid, Phytantriol, Tocopheryl Acetate, Aloe Barbadensis Leaf Juice, Panthenol, Simmondsia Chinensis Seed Oil, Citric Acid, Potassium Sorbate",
+        "source": {
+          "url": "https://www.hautschutzengel.de/olaplex-no-3-hair-perfector-inhaltsstoffe/produkt/389484.html",
+          "accessDate": "2026-09-04",
+          "tier": "hautschutzengel",
+          "notes": "CRITICAL FINDING: Bis-Aminopropyl Diglycol Dimaleate is present near the top of the list - this IS the maleate-based bond chemistry that the calibration cohort proposal (§4.1) noted has no drugstore-available mask example (archetype 4b gap). Olaplex No.3 confirms this chemistry exists in-market, but exclusively in a pre-shampoo bondbuilder product sold outside dm/Rossmann/Müller - consistent with, and reinforcing, Nick's accepted archetype-4b gap ruling rather than contradicting it."
+        },
+        "tier": null
+      },
+      "directions": {
+        "text": "Olaplex Hair Perfector N°3 großzügig im ungewaschenen, handtuchtrockenen Haar auftragen und durchkämmen. Mindestens 10 Minuten einwirken lassen (für einen intensiveren Effekt: über Nacht). Anschließend auswaschen, danach wie gewohnt shampoonieren und Conditioner/Kur auftragen.",
+        "contactTimeFound": true,
+        "contactTimeMinutes": "minimum 10 (up to overnight for intensified effect)",
+        "source": "olaplex.de official directions text, replicated identically across multiple independent German retailer product pages (aggregated via search, not a single direct fetch, but the wording is uniform everywhere found).",
+        "confidence": "high - this exact directions text is Olaplex's standard universal instruction and is not disputed anywhere found"
+      },
+      "claims": [
+        "Patented Bond Building Technology",
+        "professionelle Stärke für die Anwendung zuhause",
+        "repariert gebrochene Disulfidbrücken im Haar"
+      ],
+      "conflicts": [],
+      "rawInciSha256": "e44800d358fafdbc1ab451602a0793b73493d22c5267eb087a3c4c36a84e9a9d"
+    },
+    {
+      "id": "reserve-r2-balea-plex-care-2in1",
+      "productNumber": "R2",
+      "role": "reserve",
+      "archetypeSlots": null,
+      "identity": {
+        "brand": "Balea Professional (dm own brand)",
+        "productName": "Plex Care 2in1 Haarmaske",
+        "packSize": "250 ml",
+        "gtinEan": "4066447378771",
+        "eanSourceNote": "Proposal figure, confirmed to resolve to this product via multiple database listings (incibeauty, hautschutzengel, skinsort) under the same name.",
+        "market": "DE (dm own brand)"
+      },
+      "status": "captured",
+      "isReserve": true,
+      "formulaOfRecord": {
+        "rawInci": "AQUA, GLYCERIN, CETEARYL ALCOHOL, DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE, PANTHENOL, HYDROLYZED PEA PROTEIN, ARGININE, SERINE, COCOS NUCIFERA OIL, PARFUM, ISOAMYL LAURATE, POLYGLYCERYL-3 CAPRATE, PCA, GLYCINE, HISTIDINE, BEHENTRIMONIUM CHLORIDE, SILICONE QUATERNIUM-22, CETRIMONIUM CHLORIDE, ISOPROPYL ALCOHOL, DIPROPYLENE GLYCOL, HYDROLYZED KERATIN, COCAMIDOPROPYL BETAINE, HYDROLYZED VEGETABLE PROTEIN, SODIUM PCA, PALMITAMIDOPROPYLTRIMONIUM CHLORIDE, PROPYLENE GLYCOL, ASPARTIC ACID, ALANINE, HYDROLYZED SILK, VALINE, ISOLEUCINE, PROLINE, THREONINE, PHENYLALANINE, SODIUM BENZOATE, POTASSIUM SORBATE, PHENOXYETHANOL, CITRIC ACID, SODIUM LACTATE, PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE, LACTIC ACID",
+        "source": {
+          "url": "https://www.hautschutzengel.de/balea-professional-haarmaske-plex-care-inhaltsstoffe/produkt/360735.html",
+          "accessDate": "2026-09-04",
+          "tier": "hautschutzengel",
+          "notes": "No gluconamide or maleate chemistry found in the list - confirms the proposal's characterization as an 'unnamed bond chemistry' stand-in (Distearoylethyl Hydroxyethylmonium Methosulfate-based, same conditioning-agent family as several other products in this cohort, not a named bond agent)."
+        },
+        "tier": null
+      },
+      "directions": {
+        "text": null,
+        "contactTimeFound": false,
+        "source": "not sourced this pass - lighter reserve capture per instructions",
+        "confidence": null
+      },
+      "claims": [
+        "Intense Repair Technology mit dreifachem Proteinkomplex und Aminosäuren",
+        "für chemisch behandeltes und geschädigtes Haar",
+        "füllt Lücken in der geschädigten Haarstruktur",
+        "als Haarmaske und als Pre-Wash-Behandlung verwendbar"
+      ],
+      "conflicts": [],
+      "rawInciSha256": "e03564531c72ffdb298ecc41889f1ab813ac9ea4c96191a15b0b6d6e84161bff"
+    },
+    {
+      "id": "reserve-r3-wahre-schaetze-1-minute-kur",
+      "productNumber": "R3",
+      "role": "reserve",
+      "archetypeSlots": null,
+      "identity": {
+        "brand": "Garnier Wahre Schätze",
+        "productName": "1-Minute Haarkur, Kokosmilch & Macadamia",
+        "packSize": "340 ml",
+        "gtinEan": "3600542509350",
+        "eanSourceNote": "Proposal figure, confirmed via dm.de URL slug (dm.de/wahre-schaetze-haarkur-1-minute-kokosmilch-und-macadamia-p3600542509350.html) - page itself was JS-blocked on direct fetch, but the identifier is consistently used across multiple retailer/database sources for this exact product name.",
+        "market": "DE (dm.de)",
+        "gtinVerified": "dm.de rendered page 2026-09-04"
+      },
+      "status": "capture_failed",
+      "isReserve": true,
+      "formulaOfRecord": {
+        "rawInci": "AQUA/WATER, CETEARYL ALCOHOL, GLYCERIN, ISOPROPYL MYRISTATE, STEARAMIDOPROPYL DIMETHYLAMINE, GLYCINE SOJA OIL/SOYBEAN OIL, PARFUM/FRAGRANCE, MACADAMIA INTEGRIFOLIA SEED OIL, HELIANTHUS ANNUUS SEED OIL/SUNFLOWER SEED OIL, [REMAINDER OF LIST NOT CAPTURED THIS PASS - see status]",
+        "source": {
+          "url": "https://incibeauty.com/it/produit/3600542509350 (direct fetch returned HTTP 403 Forbidden; the partial list above is from a web-search snippet citing this page, not a verified direct fetch)",
+          "accessDate": "2026-09-04",
+          "tier": "database fallback (incibeauty, unconfirmed by direct fetch)",
+          "notes": "dm.de direct fetch was JS-blocked (header-only). incibeauty.com direct fetch was blocked with HTTP 403. Only a partial, search-snippet-truncated INCI list was obtainable this pass."
+        },
+        "tier": null
+      },
+      "directions": {
+        "text": "Nach dem Haare waschen großzügig im nassen Haar verteilen, kurz einmassieren. Anschließend die Haarkur 1-3 Minuten einwirken lassen und danach gründlich auswaschen. Kann auch als Leave-in auf handtuchtrockenem oder trockenem Haar verwendet werden.",
+        "contactTimeFound": true,
+        "contactTimeMinutes": "1-3 (product branded '1-Minute Kur')",
+        "source": "Aggregated Garnier.de brand copy via web search",
+        "confidence": "moderate"
+      },
+      "claims": [
+        "geschmeidigkeitsspendend für trockenes, strohiges Haar",
+        "97% natürliche Inhaltsstoffe",
+        "vegane Formel"
+      ],
+      "conflicts": [],
+      "rawInciSha256": "daeaeb9c9c2963a948369bc2c44d8c71edaf704b44f69657037d89a9c3f4468d",
+      "verificationNote": "Reserve stays DORMANT (not activatable) until a full INCI is sourced. Lower priority: its primary (#2) came out of verification stronger.",
+      "reserveState": "dormant"
+    },
+    {
+      "id": "reserve-r4-john-frieda-wunder-kur",
+      "productNumber": "R4",
+      "role": "reserve",
+      "archetypeSlots": null,
+      "identity": {
+        "brand": "John Frieda",
+        "productName": "Frizz Ease Wunder-Kur (Tiefenwirksame Wunder-Kur) - EXACT VARIANT NOT CONFIRMED, see conflict",
+        "packSize": "250 ml (per proposal; not independently confirmed on either source page found this pass)",
+        "gtinEan": null,
+        "eanSourceNote": "Proposal gave no EAN. Two DIFFERENT hautschutzengel.de pages were found under near-identical 'Frizz Ease Wunder-Kur' names, with two different (non-matching) ingredient lists - see conflict below. Neither was confirmed as the specific 250ml 'Tiefenwirksame' Müller-sold SKU the proposal describes.",
+        "market": "DE (Müller, per proposal)"
+      },
+      "status": "captured_with_conflict",
+      "isReserve": true,
+      "formulaOfRecord": {
+        "rawInci": "AMBIGUOUS - two candidate lists found, not resolved to one SKU this pass (see conflicts)",
+        "source": {
+          "url": "https://www.hautschutzengel.de/john-frieda-frizz-ease-wunder-kur-inhaltsstoffe/produkt/346138.html (candidate B, matches proposal's claimed marker chemistry) vs https://www.hautschutzengel.de/john-frieda-frizz-ease-wunder-kur-haarkur-inhaltsstoffe/produkt/87803.html (candidate A, EAN 5037156254273, does not match)",
+          "accessDate": "2026-09-04",
+          "tier": "hautschutzengel",
+          "notes": "Neither page's fetch confirmed pack size or a clearly-labeled 'Tiefenwirksame' variant name."
+        },
+        "tier": null
+      },
+      "directions": {
+        "text": null,
+        "contactTimeFound": false,
+        "source": "not sourced this pass - lighter reserve capture per instructions; a separate general web search (not tied to either specific variant with confidence) mentioned '3-5 Minuten einwirken lassen' for a John Frieda Frizz Ease deep treatment, but this could not be confidently attributed to one of the two candidate SKUs below",
+        "confidence": null
+      },
+      "claims": [],
+      "conflicts": [
+        {
+          "type": "identity + formula",
+          "description": "Candidate A ('JOHN FRIEDA Frizz Ease Wunder-Kur Haarkur', hautschutzengel produkt/87803, EAN 5037156254273) has INCI: AQUA, CETEARYL ALCOHOL, ERYTHRITOL, GLYCERIN, PARFUM, BEHENAMIDOPROPYL DIMETHYLAMINE, CETYL ESTERS, BEHENTRIMONIUM CHLORIDE, BENZYL ALCOHOL, DIPROPYLENE GLYCOL, LACTIC ACID, DISODIUM EDTA, DICETYLDIMONIUM CHLORIDE, DIMETHICONE, PROPYLENE GLYCOL, SODIUM HYDROXIDE, GLYCINE, STEAROXYPROPYL DIMETHYLAMINE, C14-28 ISOALKYL ACID, LAURETH-23, C14-28 ALKYL ACID, ALOE BARBADENSIS LEAF EXTRACT, LAURETH-4, STEARYL ALCOHOL, BENZOIC ACID, DIAZOLIDINYL UREA, PHENOXYETHANOL, IODOPROPYNYL BUTYLCARBAMATE, BUTYLPHENYL METHYLPROPIONAL, LIMONENE, LINALOOL - this has only Dimethicone (no Dimethiconol/Amodimethicone), NOT matching the proposal's stated marker chemistry for this reserve. Candidate B ('JOHN FRIEDA Frizz ease Wunder Kur', hautschutzengel produkt/346138, no EAN captured) has INCI: AQUA, CETEARYL ALCOHOL, DIMETHICONE, BEHENTRIMONIUM CHLORIDE, BEHENYL ALCOHOL, DIPROPYLENE GLYCOL, PARFUM, BIS(C13-15 ALKOXY) PG-AMODIMETHICONE, DIMETHICONOL, PEG-45M, TETRASODIUM GLUTAMATE DIACETATE, MALIC ACID, COCOS NUCIFERA OIL, OLEA EUROPAEA FRUIT OIL, RICINUS COMMUNIS SEED OIL, SODIUM HYDROXIDE, SILICA, CERAMIDE NG, CERAMIDE NP, TOCOPHEROL, METHYLCHLOROISOTHIAZOLINONE, METHYLISOTHIAZOLINONE, BENZYL SALICYLATE, LIMONENE, LINALOOL - this DOES contain Dimethicone + Dimethiconol + Amodimethicone, matching the proposal's claimed marker chemistry for R4. These are clearly two different John Frieda 'Wunder-Kur' products or reformulations, not the same SKU, and were NOT merged.",
+          "resolution": "unresolved - candidate B appears to be the intended product based on matching the proposal's chemistry claim, but pack size (250ml) and EAN were not confirmed for candidate B specifically. Recommend a direct Müller.de lookup at freeze/substitution time to pin down the exact SKU before use."
+        }
+      ],
+      "rawInciSha256": "284d799577660d5eb7720b536e8e5edcd0ec34b6c421f536d2bd16eb4e701545",
+      "verificationNote": "Reserve stays DORMANT; resolve via mueller.de only if substitution for #6 is ever triggered.",
+      "reserveState": "dormant"
+    }
+  ]
+}

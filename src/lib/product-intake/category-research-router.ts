@@ -251,7 +251,12 @@ function maskApprovalContract(): JsonRecord {
       balance_direction: [...PRODUCT_BALANCE_TARGETS, null],
       ingredient_flags: [...MASK_INGREDIENT_FLAGS],
       repair_support_level: ["low", "medium", "high"],
-      functional_benefits: ["smoothing_frizz_control", "detangling_slip", "shine"],
+      functional_benefits: [
+        "smoothing_frizz_control",
+        "detangling_slip",
+        "shine",
+        "moisture_softness",
+      ],
     },
     protocol_slots: PROTOCOL_SLOT_RESEARCH_CONTRACT,
   }

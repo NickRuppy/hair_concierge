@@ -80,11 +80,7 @@ export function CheckoutAccessRecoveryPanel({
           onClick={unavailable ? onRetry : onRecover}
           className="min-h-12 w-full rounded-[12px] bg-[var(--brand-plum)] px-4 text-sm font-bold text-white"
         >
-          {unavailable
-            ? "Erneut prüfen"
-            : account
-              ? "Zugang öffnen"
-              : "Einloggen und weiter"}
+          {unavailable ? "Erneut prüfen" : account ? "Zugang öffnen" : "Einloggen und weiter"}
         </Button>
       ) : null}
       <Button

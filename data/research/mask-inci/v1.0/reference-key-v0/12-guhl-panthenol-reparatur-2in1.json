@@ -1,0 +1,322 @@
+{
+  "schemaVersion": "mask-research-record-v0.1",
+  "lane": "reference_key",
+  "productId": "12-guhl-panthenol-reparatur-2in1",
+  "identity": {
+    "brand": "Guhl",
+    "productName": "Panthenol + Reparatur 2in1 Kur & Spülung",
+    "packSize": "200 ml",
+    "gtinEan": "4072600703403",
+    "market": "DE (dm.de + Rossmann.de + Müller, EAN cross-agreeing across all three)",
+    "formulaSource": "hautschutzengel.de produkt/363600 (fallback tier; dm.de and Rossmann.de both blocked), accessed 2026-09-04",
+    "rawInciSha256": "aadf968d6f6e06ee4644e6f543679d6e6572c617846508e145c9a6128067d38e",
+    "identityState": "verified_with_minor_source_difference",
+    "identityStateReason": "EAN cross-agrees across three independent retailers. The INCI rests on a single fallback-tier source; the directions are aggregated but the dual-mode structure is repeated consistently across dm.de, guhl.com and retailer copy."
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": true,
+    "multiUse": {
+      "multi_use": true,
+      "multi_use_covered_mode": "post_shampoo_rinse_out_mask",
+      "multi_use_uncovered_modes": ["conditioner (Als Spülung, ca. 30 Sekunden, für sofortige Regeneration)"],
+      "multi_use_directions_source_id": "aggregated dm.de + guhl.com official copy, 2026-09-04, cohort confidence: high (the dual-mode structure is verified consistently across all sources found)",
+      "scope_declaration": "This profile describes ONLY the 'Als Kur' rinse-out mask mode (2–3 minutes). The 30-second Spülung mode is uncovered and remains Conditioner-engine territory. Scope declaration, not a quality signal, not an input to any comparison field."
+    },
+    "rationale": "THE COHORT'S OPEN G0 QUESTION, RESOLVED AGAINST THE CHARTER'S ASSUMPTION. §2.2's five-step test run verbatim on the frozen directions. STEP 1 — authoritative directions located: 'Als Spülung (für sofortige Regeneration): ins gewaschene, nasse Haar einmassieren, kurz einwirken lassen (ca. 30 Sekunden) und gut ausspülen. Als Kur (für Tiefenregeneration): ins gewaschene, nasse Haar einmassieren, 2-3 Minuten einwirken lassen und genießen, dann ausspülen.' STEP 2 — test each stated mode against §2.1. Mode A 'Als Spülung': after cleansing YES ('ins gewaschene, nasse Haar'); stated contact time YES (ca. 30 Sekunden); rinse YES ('gut ausspülen'); but the mode is self-labelled a Spülung, i.e. a conditioner, and §2.1's category definition requires a rinse-out INTENSIVE TREATMENT (Haarkur/Maske). Mode A is a conditioner mode. Mode B 'Als Kur': after cleansing YES (identical wording); stated contact time YES (2–3 Minuten); rinse YES ('dann ausspülen'); self-labelled a Kur and explicitly purposed 'für Tiefenregeneration'. Mode B IS a qualifying rinse-out mask mode. STEP 3 — exactly one mode qualifies as a MASK mode → classify only that mode, record multi_use: true, name the uncovered mode. STEP 4 not reached (a mode does qualify). STEP 5 not reached: the directions are NOT ambiguous about which mode carries which dwell — the modes are separately named, separately purposed, and carry distinct stated contact times — so `multi_use_directions_ambiguity` does NOT fire. Charter F1 is what governs, and F1's own text says a multi-use product is eligible 'when authoritative directions state a distinct rinse-out mask mode with dwell'. These directions do exactly that.",
+    "evidenceSignals": [
+      "directions mode B verbatim: 'Als Kur (für Tiefenregeneration): ins gewaschene, nasse Haar einmassieren, 2-3 Minuten einwirken lassen und genießen, dann ausspülen'",
+      "directions mode A verbatim: 'Als Spülung (für sofortige Regeneration): … kurz einwirken lassen (ca. 30 Sekunden) und gut ausspülen'",
+      "the two modes are separately named ('Als Spülung' / 'Als Kur'), separately purposed ('sofortige Regeneration' / 'Tiefenregeneration'), and carry distinct contact times — they are separable, so §2.2 step 5 is not reached",
+      "charter F2 (binding): dwell is protocol metadata under P5 and is NEVER a boundary test, so the shortness of either mode cannot decide eligibility",
+      "charter F1: eligible when authoritative directions state a distinct rinse-out mask mode with dwell"
+    ],
+    "charterConflict": {
+      "conflictsWith": [
+        "00_category_charter.md, F1: 'A multi-use product whose only rinse-out mode is a short conditioner mode (e.g. Guhl Panthenol + Reparatur 2in1 Kur & Spülung) remains Conditioner-engine territory'",
+        "00_category_charter.md, Known boundary cases: 'Guhl Panthenol + Reparatur 2in1 Kur & Spülung: conditioner-mode only → excluded here, Conditioner-engine eligible'",
+        "mask-classification-standard.v0.1.md §2.1 Excluded list, final bullet, which names the same product"
+      ],
+      "finding": "The charter's exclusion rests on the factual premise that this product's ONLY rinse-out mode is a short conditioner mode. The frozen directions falsify that premise: there are two rinse-out modes, and the second is a self-labelled Kur with a 2–3 minute stated dwell and a Tiefenregeneration purpose. Applying F1's own five-step test to the frozen directions therefore yields ELIGIBLE, MODE-SCOPED — the opposite of the charter's named example.",
+      "escalation": "This goes to Nick as a CHARTER CORRECTION and is never silently adopted, per the cohort's openG0Question and the charter's own status as a binding ruled input this standard may not widen, narrow, or reinterpret. Two resolutions are available and they are materially different: (A) accept the directions and correct the charter's example — the product becomes a legitimate mode-scoped mask, and the charter loses its cleanest illustration of the conditioner-mode-only exclusion; (B) keep the exclusion and add an explicit rule that a self-labelled Spülung/conditioner mode alongside a Kur mode on the same pack keeps the product in Conditioner-engine territory regardless of the Kur mode's dwell — which would require the charter to say that mode LABELLING, not the five-step test, decides for 2in1 Kur-und-Spülung products. I applied (A) because §2.2 mandates the five-step test on the directions and F2 forbids dwell from acting as a boundary test; but (B) is a coherent position that better matches Nick's evident intent, and the classification below should be treated as provisional on his ruling.",
+      "downstreamNote": "If Nick rules (B), this record's entire profile is withdrawn and replaced by a boundary-evidence record like #13's. Nothing else in the cohort depends on this product."
+    }
+  },
+  "tailMarker": {
+    "ingredient": "PHENOXYETHANOL",
+    "rank": 12,
+    "anomalyNote": "No §3.1 anomaly. One notable rule interaction: TETRASODIUM GLUTAMATE DIACETATE at rank 7 is a chelator, and §3.1's tail-class list includes 'trace chelators' but enumerates only Disodium EDTA, Tetrasodium EDTA, Trisodium Ethylenediamine Disuccinate, Etidronic Acid and Phytic Acid — this species is on none of them, and the lexicon §0.2 omits chelators from the marker definition entirely. Read as a closed enumeration, it is not a marker and tail_index stays at 12. Had it counted, the credited segment would shrink from eleven entries to six, S3 would fail, and conditioning_level would drop from high to moderate. See AP-12-CHELATOR."
+  },
+  "aboveTailSegment": [
+    "1 AQUA",
+    "2 CETEARYL ALCOHOL",
+    "3 BEHENTRIMONIUM CHLORIDE",
+    "4 DIPROPYLENE GLYCOL",
+    "5 CETYL ESTERS",
+    "6 PANTHENOL",
+    "7 TETRASODIUM GLUTAMATE DIACETATE",
+    "8 LACTIC ACID",
+    "9 ETHYLHEXYLGLYCERIN",
+    "10 GLYCINE",
+    "11 AVENA SATIVA KERNEL OIL"
+  ],
+  "directProperties": {
+    "treatment_concentration_potential": { "value": "moderate", "note": "A short fourteen-entry list with one cationic, one fatty alcohol, a wax ester and one plant oil; the source note itself reads this as a light conditioner-style formula." },
+    "conditioning_deposition_potential": { "value": "moderate", "note": "Behentrimonium Chloride @3 with Cetearyl Alcohol @2 — a single-cationic base." },
+    "wet_slip_detangling_potential": { "value": "moderate", "note": "One permanent quat; no polymer, no second cationic. Wet evidence is not dry evidence." },
+    "dry_combability_potential": { "value": "moderate", "note": "No silicone at any rank ('silikonfrei' claim confirmed by the list); no dry endpoint." },
+    "surface_lubrication_softness_potential": { "value": "moderate", "note": "Cetyl Esters @5 (a wax ester, family 3 — explicitly NOT a fatty alcohol despite the name) plus Avena Sativa Kernel Oil @11." },
+    "smoothing_frizz_control_potential": { "value": "lower", "note": "No silicone, no substantive polymer, no film former." },
+    "shine_potential": { "value": "lower", "note": "No alignment-oriented route at any rank." },
+    "humectant_support_potential": { "value": "moderate", "note": "Dipropylene Glycol @4 and Panthenol @6 above the tail; two members is not a cluster. There is no glycerin in this formula." },
+    "weight_deposition_potential": { "value": "lower", "note": "One wax ester and one light plant oil; no butter, no heavy triglyceride, no occlusive, no silicone." },
+    "body_lightness_potential": { "value": "likely_preserving", "note": "Lean architecture, short list, no heavy lipid; no lightness positioning to corroborate." },
+    "repair_lubrication_protection": { "value": "candidate", "note": "Manageability route only, despite 'Reparatur' in the product name and 'schützt vor Haarbruch' in the claims." },
+    "repair_surface_film": { "value": "none_visible", "note": "No protein or peptide species at any rank. Glycine @10 is a free amino acid — an explicit non-qualifier." },
+    "bond_specific_support": { "value": "unknown", "note": "No named bond token and no bond positioning ('Reparatur' is not bond positioning)." },
+    "color_chemical_damage_protection": { "value": "general_conditioning", "note": "Lactic Acid @8 and the chelator @7 are pH/hard-water context; no colour endpoint." },
+    "fragrance_scalp_exposure": { "value": "fragrance_declared", "note": "Parfum @13 and Vanillin @14; no separately declared allergens." }
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, exact-market DE INCI of record (sha256 aadf968d…), above-tail ranks 1–11; category-relative to the German drugstore rinse-out mask shelf.",
+      "rationale": "Two of the three §9.1 structural signals are satisfied on the letter of the rule, so the value is `high` — for the cohort's shortest and, on any substantive reading, lightest formula. This is reported as the count rule's most uncomfortable result rather than argued away, and confidence is capped accordingly. E2 ceiling: comparative structural intensity potential, not measured treatment performance.",
+      "evidenceSignals": [
+        "CETEARYL ALCOHOL (rank 2) — long-chain fatty alcohol in the top three: S2 satisfied",
+        "CETYL ESTERS (rank 5) — a wax ester; lexicon family 2 states explicitly that Cetyl Esters is an ester (family 3), not a fatty alcohol, despite the similar name, so it counts toward S3",
+        "AVENA SATIVA KERNEL OIL (rank 11) — a second distinct non-fatty-alcohol lipid above the tail, at tail_index − 1: S3 satisfied",
+        "BEHENTRIMONIUM CHLORIDE (rank 3) — the only cationic species at any rank: S1 NOT satisfied",
+        "fourteen-entry list; the source note characterises it as 'a light conditioner-style formula rather than a rich mask formula'"
+      ],
+      "derivation": "S1 = NOT satisfied (one cationic). S2 = satisfied (Cetearyl Alcohol @2). S3 = satisfied (Cetyl Esters @5 + Avena Sativa Kernel Oil @11, two distinct non-fatty-alcohol lipids above the tail). Count = 2 of 3.",
+      "thresholdReasoning": [
+        "Clears `high` on the rule as written: ≥2 of {S1,S2,S3} with no material counter-signal. None of §9.1's three enumerated counter-signals applies — there is no rheology-only content, the list is short rather than long, and there is no sub-1% hero tail (the tail holds only Parfum and Vanillin).",
+        "`moderate` does not apply on the rule as written: two signals are satisfied, not one. I considered refusing `high` the way I did for #02, on an architecture-level counter-signal, and declined: unlike #02 this IS a conventional aqueous emulsion with water at rank 1, and the two credited lipids are genuinely above the marker. There is no principled architectural reason to override the count here — only an intuition that a fourteen-ingredient 2in1 should not sit at the top of the conditioning scale. Recording that intuition as a rule finding is more useful than silently acting on it.",
+        "`low` does not apply: S2 and S3 both hold.",
+        "Confidence is capped at `moderate` on two grounds: S3 rests on Avena Sativa Kernel Oil at tail_index − 1 (the lexicon §0.2 boundary-band caution, applied per this lane's policy as a confidence modifier only), and the alternative chelator reading of the tail marker (AP-12-CHELATOR) would remove S3 entirely and drop the value to `moderate`."
+      ],
+      "counterSignals": [
+        "S3 is carried by a wax ester at rank 5 and a plant oil at rank 11 — the thinnest lipid evidence to satisfy S3 anywhere in the cohort, against #10's four-lipid block or #05's six.",
+        "The whole value hinges on two independent judgment calls: that Cetyl Esters counts as a lipid rather than a fatty alcohol (it does, per lexicon family 2), and that Tetrasodium Glutamate Diacetate is not a tail marker (AP-12-CHELATOR).",
+        "Single fallback-tier source."
+      ],
+      "limitations": [
+        "A three-step concentration scale is at the edge of INCI support, and §18 open question 2 asks whether S1/S2/S3 produce a usable spread on the real shelf. This product answers that the failure mode is not collapse to `moderate` but inflation to `high` on thin evidence. See AP-12-HIGHFLOOR.",
+        "Downstream, this value projects to `concentration: high` for a product the charter describes as conditioner-engine territory."
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–11; an ingredient-informed matching prior, not a prediction of visible finish.",
+      "rationale": "The `high` anchor fails on its cationic leg and on both supporting alternatives; the `low` anchor fails on the cetearyl-class conjunct alone. `moderate` is the residual. E2 ceiling: weight deposition potential, never measured finish.",
+      "evidenceSignals": [
+        "BEHENTRIMONIUM CHLORIDE (rank 3) — a single cationic species (low-anchor conjunct 1: SATISFIED)",
+        "CETEARYL ALCOHOL (rank 2) — cetearyl-class fatty alcohol in the top three (low-anchor conjunct 2: FAILS)",
+        "no butter, heavy triglyceride, hydrogenated oil or occlusive hydrocarbon at any rank (low-anchor conjunct 3: SATISFIED)",
+        "CETYL ESTERS (5) — a light wax ester, explicitly not R4b; AVENA SATIVA KERNEL OIL (11) — a light/mid plant oil, not R4b",
+        "no silicone at any rank, so the occlusive-stack alternative is unavailable"
+      ],
+      "derivation": "§9.2 `high` required base leg 1 fails. §9.2 `low` conjuncts 1 and 3 hold, conjunct 2 fails. Residual = `moderate`.",
+      "thresholdReasoning": [
+        "Clears `moderate`: the residual bucket.",
+        "`high` does not apply: one cationic, no R4b lipid, no silicone.",
+        "`low` does not apply on the cetearyl conjunct alone — the fifth cohort instance of AP-07-LOWUNREACHABLE, and the one where `low` would most obviously have been the right answer: a fourteen-ingredient silicone-free 2in1 with a wax ester and an oat oil is a light product by any substantive reading.",
+        "§9.2 conflict fallback not engaged: no `high` reached."
+      ],
+      "counterSignals": ["The graded `weight_deposition_potential` reads `lower` against a profile value of `moderate`."],
+      "limitations": ["A soft preference with a stated reason, never an exclusion."]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–11; comparative care emphasis, never an assertion about a user's protein state (G6).",
+      "rationale": "No protein or peptide species exists at any rank; the single amino-acid token is an explicit non-qualifier. The credited direction is a fatty-alcohol/cationic/ester base with a humectant component — D6's coherent non-protein direction. E2 ceiling: comparative emphasis, not a delivered outcome.",
+      "evidenceSignals": [
+        "no hydrolyzed protein, peptide, keratin, or cationised protein at ANY rank",
+        "GLYCINE (rank 10) — free amino acid, explicit R5 non-qualifier under the mask delta",
+        "CETEARYL ALCOHOL (2), BEHENTRIMONIUM CHLORIDE (3), CETYL ESTERS (5), AVENA SATIVA KERNEL OIL (11) — the conditioning/emollient direction",
+        "DIPROPYLENE GLYCOL (4), PANTHENOL (6) — the humectant component; note there is no glycerin in this formula",
+        "LACTIC ACID (rank 8) — pH context. C3's amidoamine-neutraliser reading does NOT strictly apply, because Behentrimonium Chloride is a permanent quat rather than an amidoamine"
+      ],
+      "derivation": "§9.3 material-R5 test fails absolutely (no candidate species at any rank), closing `protein` and `balanced`. Residual = `moisture`.",
+      "thresholdReasoning": [
+        "Clears `moisture`: a coherent conditioning/humectant/emollient architecture without a dominant protein-film route.",
+        "`protein` does not apply: no protein exists. 'Reparatur' in the product name is E0, and §9.3's counter-signal rule directs repair/protein naming without a route to `moisture` with the claim recorded.",
+        "`balanced` does not apply: its first conjunct is the material R5 route.",
+        "Confidence `high`: resolved tail marker and an unambiguous route separation that survives any tail-marker reading, since the formula contains no protein at all."
+      ],
+      "counterSignals": [
+        "'Panthenol + Reparatur' naming and 'schützt vor Haarbruch' against a formula with no protein and no bond chemistry — recorded, never decisive.",
+        "D4 does not fire."
+      ],
+      "limitations": []
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only; comparative temporary damage-support route, not measured repair efficacy.",
+      "rationale": "No named bond chemistry, no protein species, and a free amino acid that is an explicit non-upgrader. Panthenol is named in §9.4's non-upgrader list. E2 ceiling: comparative formula potential, never efficacy.",
+      "evidenceSignals": [
+        "no maleate, gluconamide, or bond-positioned peptide token at any rank",
+        "no protein or peptide species at any rank",
+        "GLYCINE (10) — free amino acid, explicit non-upgrader",
+        "PANTHENOL (6) — explicit non-upgrader",
+        "claims: 'schützt vor Haarbruch', product name 'Reparatur' — E0"
+      ],
+      "derivation": "§9.4: bond_route = none closes `high`; no material R5 route closes `medium`. Residual = `low`.",
+      "thresholdReasoning": [
+        "Clears `low`: ordinary conditioning and lubrication only.",
+        "`medium` does not apply: no protein/peptide/keratin film route exists.",
+        "`high` does not apply: no named bond token exists.",
+        "Mask delta 3 applied: 'Reparatur' on the pack is not repair. Note the internal inconsistency this product creates: conditioning_level `high` alongside repair_support_level `low` is exactly what mask delta 1 prescribes, but here the `high` is itself questionable."
+      ],
+      "counterSignals": [],
+      "limitations": ["Banned wording observed: no 'repairs', 'rebuilds', 'restores structure'."]
+    },
+    "primaryFocus": {
+      "value": "general",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-first §9.5.2 hierarchy over above-tail ranks 1–11.",
+      "rationale": "Every special-purpose route fails, the D5 moisture guard fails on cluster size by one member, and neither the shine nor the smoothing threshold has any architecture to rest on. Step 8 is the honest answer. E2 ceiling: an honest fallback, not a quality judgment.",
+      "evidenceSignals": [
+        "humectants above the tail: DIPROPYLENE GLYCOL (4), PANTHENOL (6) — two, against a required three",
+        "GLYCINE (10) — a free amino acid, NOT counted toward the humectant cluster; ETHYLHEXYLGLYCERIN (9) — a preservative booster, discounted per lexicon family 7",
+        "no silicone, no cationic polymer, no film former at any rank",
+        "CETYL ESTERS (5), AVENA SATIVA KERNEL OIL (11) — a light emollient pair, not a substantial lipid route",
+        "claims: 'silikonfrei', 'dermatologisch bestätigt', 'schützt vor Haarbruch', 'mit Panthenol'"
+      ],
+      "derivation": "Step 1 baseline exclusion applied. Step 2: one M1 observation. Step 3: `repair` blocked (no route of any kind); `curl_support` blocked (single cationic, no polymer, no curl positioning); `color_care` blocked; `lightness` blocked (weight `moderate`, not `low` — though see the weight record, where `low` was refused on a single conjunct). Step 4 `moisture` blocked at cluster size. Step 5 `shine` blocked (no alignment-oriented route). Step 6 `smoothing` rejected (no distinct silicone, no substantive polymer, and a light ester pair is not a substantial lipid/emollient route beyond baseline). Step 7 `detangling` rejected (single cationic; slip is baseline). Step 8 → `general`.",
+      "thresholdReasoning": [
+        "Clears `general`: §9.5.2 step 8 — no differentiator clears threshold and the formula evidence is nonspecific.",
+        "`moisture` does not apply: the D5 guard needs ≥3 distinct humectants above the tail with ≥2 non-glycerin. Dipropylene Glycol @4 and Panthenol @6 give two. Counting Glycine would give three — and, since this formula contains no glycerin at all, §9.5.3's '≥2 non-glycerin' sub-condition would then be trivially satisfied. I did not count it: R9's enumeration does not list glycine, and lexicon family 5b allows free amino acids at most a very weak cluster contribution. This is the near-miss AP-05-NOGLYCERIN predicted.",
+        "`lightness` does not apply, but is worth flagging: it requires weight_potential `low` plus likely-preserving body. The body reading IS likely_preserving; only the weight anchor's cetearyl conjunct blocks it. This is the second product in the cohort (with #08) where `lightness` was refused solely because of AP-07-LOWUNREACHABLE rather than because the architecture is not light.",
+        "`smoothing` does not apply: no silicone, no polymer, and two light emollients do not constitute a substantial route beyond baseline."
+      ],
+      "counterSignals": [
+        "The 'silikonfrei' claim is confirmed by the list but creates nothing.",
+        "'dermatologisch bestätigt' is a testing claim about tolerance, not a care property, and is medically adjacent — kept entirely out of the classification (G6)."
+      ],
+      "limitations": ["`general` is a statement about evidence, not about product quality."]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Same hierarchy pass as primaryFocus.",
+      "rationale": "No candidate cleared a threshold as primary and §9.5.3 criterion 3 does not open a moisture secondary, since no richer route won.",
+      "evidenceSignals": ["two humectants above the tail; one M1 observation covering everything else"],
+      "derivation": "§9.5.3 criterion 1 fails; §6 rule 1 blocks a second bite at M1.",
+      "thresholdReasoning": ["Zero secondaries is correct."],
+      "counterSignals": [],
+      "limitations": []
+    },
+    "hairThicknessFit": {
+      "value": ["fine", "normal", "coarse"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.6); a desired-finish/dosage prior, not an exclusion.",
+      "rationale": "weight_potential `moderate` maps to the full set.",
+      "evidenceSignals": ["derived from weight_potential = moderate"],
+      "derivation": "§9.6 table row 2.",
+      "thresholdReasoning": [
+        "Clears {fine, normal, coarse}: the moderate row.",
+        "{fine, normal} does not apply: it requires weight_potential `low`, refused on the cetearyl conjunct.",
+        "{normal, coarse} does not apply: it requires weight_potential `high`."
+      ],
+      "counterSignals": [],
+      "limitations": ["Research-level prior; no production projection is authorized."]
+    },
+    "damageFit": {
+      "value": ["healthy", "moderately_damaged"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic policy derivation from conditioning_level and the specialist-route test (§9.7); a broad product prior, not a repair-efficacy claim.",
+      "rationale": "conditioning_level `high` with no qualifying specialist route selects the general-high row — which happens to give the same answer the `moderate` row would have given, so the questionable conditioning_level does not propagate here.",
+      "evidenceSignals": ["conditioning_level = high", "repair_support_level = low", "bond_route = none"],
+      "derivation": "§9.7 row 3.",
+      "thresholdReasoning": [
+        "Clears {healthy, moderately_damaged}: high without a specialist route.",
+        "{moderately_damaged, highly_damaged} does not apply: no specialist qualifier is present.",
+        "{healthy} alone does not apply: it requires conditioning_level `low`.",
+        "Useful robustness note: rows 2 and 3 of §9.7 produce the same output set, so this field is insensitive to the conditioning_level dispute in AP-12-HIGHFLOOR. Only `concentration` in projectedOutputs carries it downstream."
+      ],
+      "counterSignals": [],
+      "limitations": ["Watch-list item 1: fully computable from fields 1 and 4."]
+    },
+    "textureFit": {
+      "value": ["straight", "wavy", "curly"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.8); research-only.",
+      "rationale": "weight_potential `moderate` selects the balanced-architecture row.",
+      "evidenceSignals": ["weight_potential = moderate"],
+      "derivation": "§9.8 row 2.",
+      "thresholdReasoning": [
+        "Clears {straight, wavy, curly}: the balanced row.",
+        "{wavy, curly, coily} does not apply: weight is not `high` and there is no high-slip R1/R3 breadth.",
+        "{straight, wavy} does not apply: it requires weight_potential `low`."
+      ],
+      "counterSignals": [],
+      "limitations": ["Research-only; no current consumer."]
+    }
+  },
+  "bondRoute": { "value": "none", "token": null, "rank": null },
+  "focusCareVerdict": {
+    "value": "nonspecific",
+    "claimRole": "not_applicable",
+    "note": "Neither direction is supported: no protein of any kind, and two humectants against a required three. Generic light conditioning distinguishes neither. §9.5.1's hard rule applied — 'Reparatur' and 'schützt vor Haarbruch' could not create a repair focus. Resolved to `general` per §9.5.1, the dry-surface route not having cleared step 6."
+  },
+  "overloadCounterSignal": null,
+  "blindToFinalChanges": [
+    {
+      "field": "all nine profile fields",
+      "blindValue": "unchanged",
+      "finalValue": "unchanged",
+      "reason": "Unblinding changed no value. The shine threshold was never reached, no dual_supported tie existed, no bond claim was made, no lightness positioning existed, and no colour positioning existed. Note that the G0 determination is NOT a blind-to-final matter: §11 step 1 puts the directions facts needed for G0/§2.2 inside the blind packet precisely so eligibility is decided before identity is known — and it was."
+    }
+  ],
+  "projectedOutputs": {
+    "concentration": "high",
+    "weight": "medium",
+    "balance_direction": "moisture",
+    "repair_support_level": "low",
+    "functional_benefits": [],
+    "suitable_thicknesses": ["fine", "normal", "coarse"]
+  },
+  "adjudicationPoints": [
+    {
+      "id": "AP-12-CHARTERFLIP",
+      "title": "The charter's own conditioner-mode-only exclusion example is eligible under the charter's own test — ESCALATION TO NICK",
+      "body": "This is the cohort's designated open G0 question and it resolves against the charter. The charter twice names Guhl Panthenol + Reparatur 2in1 as excluded on the ground that its only rinse-out mode is a short conditioner mode, and §2.1's Excluded list repeats it. The frozen directions show two rinse-out modes: 'Als Spülung … ca. 30 Sekunden' and 'Als Kur (für Tiefenregeneration) … 2-3 Minuten'. Run through F1's five-step test, the Kur mode satisfies every §2.1 conjunct that any other cohort product satisfies, and F2 forbids dwell from acting as a boundary test — so a 2–3 minute Kur cannot be refused for being short when the charter admits 7-second and 30-second Kuren by name. Exactly one mode qualifies as an INTENSIVE treatment (the Spülung mode is self-labelled a conditioner), so §2.2 step 3 applies and step 5's ambiguity branch is not reached. Result: eligible, mode-scoped. I have classified it and flagged it; it must not be silently adopted. The choice for Nick is between correcting the charter's example (accepting that a 2in1 Kur & Spülung with a stated Kur mode is a mask in that mode) and adding an explicit label-based rule that keeps Kur-und-Spülung 2in1 products in Conditioner-engine territory regardless of the five-step test. The second preserves his evident intent but requires the charter to say that mode LABELLING overrides the directions test for this product shape — a real narrowing of F1 that should be written down rather than left as an example.",
+      "source": "charter F1 and Known boundary cases; §2.1 Excluded list; §2.2 five-step test; cohort openG0Question"
+    },
+    {
+      "id": "AP-12-HIGHFLOOR",
+      "title": "The S1/S2/S3 count gives the cohort's lightest formula a `high` conditioning level",
+      "body": "A fourteen-ingredient silicone-free 2in1 with one cationic, one fatty alcohol, one wax ester and one oat oil satisfies S2 and S3 and therefore scores `high` — the same value as #10's four-lipid, two-cationic butter mask and #04's three-cationic bond mask. §18 open question 2 asked whether the counting rule produces a usable spread or collapses to `moderate`; this cohort's answer is that it does neither cleanly. It produced five `high`, five `moderate` and zero `low` across twelve products, and the `high` bucket contains both the richest and the lightest formulas in the set. The specific defect is that S3 needs only two distinct non-fatty-alcohol lipids of any weight class at any above-tail rank, so a wax ester at rank 5 plus a plant oil at tail_index − 1 counts the same as a shea-plus-coconut block at ranks 4 and 5. Candidate fixes: weight S3 by lipid class (require at least one R4b, or two R4a within the first eight above-tail ranks); require S1 to be among the satisfied signals for `high` (see AP-06-NOCATIONIC); or accept a two-step scale, which evidence §2 says is closer to what INCI can support.",
+      "source": "§9.1 S1/S2/S3 [judgment call — review]; §18 open question 2"
+    },
+    {
+      "id": "AP-12-CHELATOR",
+      "title": "The standard and the lexicon disagree about whether chelators are tail-class, and neither list covers this product's chelator",
+      "body": "§3.1's tail-class enumeration includes a 'trace chelators' category listing five species. The lexicon §0.2's tail_marker definition includes fragrance, allergens, preservatives and colourants — and no chelators at all. This product declares Tetrasodium Glutamate Diacetate at rank 7, a common chelator on neither list. Reading §3.1's enumeration as closed, it is not a marker and tail_index is 12 (Phenoxyethanol). Reading it as illustrative, tail_index is 7, the credited segment shrinks from eleven entries to six, S3 fails, and conditioning_level drops from `high` to `moderate` — which happens to be the value AP-12-HIGHFLOOR argues is more honest. Two documents that disagree on a rule this load-bearing should be reconciled before the blind lane is scored; and whichever way it goes, the chelator list needs to be explicitly closed or explicitly open.",
+      "source": "§3.1 tail-class enumeration; lexicon §0.2"
+    }
+  ],
+  "uncertainFields": ["conditioningLevel", "weightPotential"],
+  "assumptionNotes": [
+    "THIS RECORD IS PROVISIONAL ON NICK'S RULING on AP-12-CHARTERFLIP. If he confirms the charter's exclusion, the profile above is withdrawn and replaced by a boundary-evidence record.",
+    "Reviewer policy applied to every record in this lane: §3.1's hard cut determines above-tail membership without exception; the lexicon §0.2 boundary-band caution is applied only as a confidence modifier and never moves a value. Avena Sativa Kernel Oil at tail_index − 1 is the clearest instance in the cohort where that policy matters — it carries S3 and therefore the `high` value.",
+    "Review triggers fired: product-form ambiguity (inherited Conditioner §12 — the G0 outcome contradicts a binding charter ruling and must go to Nick). NOT fired: `multi_use_directions_ambiguity` (the modes are separably named, purposed and timed, so §2.2 step 5 is not reached), `bond_claim_review`, `protein_payload_review`, `tail_marker_anomaly`, `low_confidence_field`.",
+    "Protocol metadata for traceability only, zero classification credit: contact time 2–3 minutes for the covered Kur mode; the 30-second Spülung mode's dwell belongs to the uncovered mode. Placement not stated in either mode; P5 owns it. Under P5 the covered mask mode takes the conditioner slot (`replaces_conditioner`) — note the oddity that the uncovered mode of the same product IS a conditioner.",
+    "'dermatologisch bestätigt' is a tolerance-testing claim, is medically adjacent, and was kept entirely out of the classification (G6)."
+  ]
+}

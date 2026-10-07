@@ -269,7 +269,10 @@ export async function POST(request: Request) {
 
   if (parsed.data.bondbuilder_specs?.research_profile) {
     return NextResponse.json(
-      { error: "Bondbuilder-Forschungsprofile müssen über den geschützten Intake-Prozess angelegt werden." },
+      {
+        error:
+          "Bondbuilder-Forschungsprofile müssen über den geschützten Intake-Prozess angelegt werden.",
+      },
       { status: 409 },
     )
   }

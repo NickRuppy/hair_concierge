@@ -23,7 +23,10 @@ import {
 } from "@/lib/agent/tools/care-balance-context"
 import { applyProductMemoryConstraints } from "@/lib/chat-runtime/user-memory"
 import type { MatchedProduct } from "@/lib/product-matching/matcher"
-import { projectBondbuilderResearchForChat, type BondbuilderChatResearch } from "@/lib/bondbuilder/research-facts"
+import {
+  projectBondbuilderResearchForChat,
+  type BondbuilderChatResearch,
+} from "@/lib/bondbuilder/research-facts"
 import { isMatchedRoutineUsage } from "@/lib/product-usage/routine-identity"
 import type { UserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import { attachProductLineNamesToProducts } from "@/lib/product-lines/display"

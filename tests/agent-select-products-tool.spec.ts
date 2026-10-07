@@ -36,16 +36,27 @@ import { makeBondbuilderProfile, sealProfile } from "./fixtures/bondbuilder-rese
 
 test("selected Bondbuilder facts retain bounded research context without changing selection order", () => {
   const profile = makeBondbuilderProfile()
-  profile.sources.unshift({ ...profile.sources[0], id: "uninspected-creator-lead", url: "https://example.com/uninspected-creator", access: "uninspected" })
+  profile.sources.unshift({
+    ...profile.sources[0],
+    id: "uninspected-creator-lead",
+    url: "https://example.com/uninspected-creator",
+    access: "uninspected",
+  })
   sealProfile(profile)
   const product = createMatchedProduct("epres-source-bound", 81, {
     category: "Bondbuilder",
     bondbuilder_specs: {
-      product_id: "epres-source-bound", bond_repair_intensity: "intensive",
-      bond_repair_axis: "disulfide_crosslink", application_mode: "pre_shampoo",
-      treatment_mode: "rinse_out", product_format: "spray_treatment", usage_protocol: "epres_spray",
-      technology_family: "maleate_ester", claim_trust_level: "high",
-      trust_basis: "owner_anchor", research_profile: profile,
+      product_id: "epres-source-bound",
+      bond_repair_intensity: "intensive",
+      bond_repair_axis: "disulfide_crosslink",
+      application_mode: "pre_shampoo",
+      treatment_mode: "rinse_out",
+      product_format: "spray_treatment",
+      usage_protocol: "epres_spray",
+      technology_family: "maleate_ester",
+      claim_trust_level: "high",
+      trust_basis: "owner_anchor",
+      research_profile: profile,
     },
   })
   const result = projectSelectedProducts([product], LOW_DAMAGE_PROFILE, "bondbuilder")

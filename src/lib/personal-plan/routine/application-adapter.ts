@@ -98,7 +98,9 @@ function factsFor(category: string, row: ProductRow) {
       : { facts: {}, provenance: {} }
   }
   if (category === "bondbuilder") {
-    const spec = first<import("@/lib/bondbuilder/constants").ProductBondbuilderSpecs>(row.product_bondbuilder_specs)
+    const spec = first<import("@/lib/bondbuilder/constants").ProductBondbuilderSpecs>(
+      row.product_bondbuilder_specs,
+    )
     return spec
       ? adaptCatalogApplicationFacts({ category: "bondbuilder", spec })
       : { facts: {}, provenance: {} }

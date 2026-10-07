@@ -1,0 +1,19 @@
+{
+  "productId": "05-isana-mandelmilch-3in1",
+  "identity": {
+    "brand": "Isana (Rossmann own brand)",
+    "productName": "Haarmaske 3in1 Mandelmilch (Milchprotein & Mandel)",
+    "packSize": "250 ml",
+    "gtinEan": "4305615609775",
+    "market": "DE (Rossmann own brand)"
+  },
+  "rawInci": "AQUA, CETEARYL ALCOHOL, DICAPRYLYL ETHER, COCOCAPRYLATE, BEHENTRIMONIUM CHLORIDE, HYDROLYZED MILK PROTEIN, COCOS NUCIFERA OIL, PRUNUS AMYGDALUS DULCIS OIL, HELIANTHUS ANNUUS SEED OIL, LAURDIMONIUM HYDROXYPROPYL HYDROLYZED WHEAT PROTEIN, PANTHENOL, THEOBROMA CACAO SEED BUTTER, STEARAMIDOPROPYL DIMETHYLAMINE, ISOPROPYL ALCOHOL, CITRIC ACID, PARFUM, LINALOOL, BENZYL SALICYLATE, BENZYL ALCOHOL, SODIUM BENZOATE, PHENOXYETHANOL, POTASSIUM SORBATE, TOCOPHEROL",
+  "directions": {
+    "text": "Drei Anwendungsarten: (1) Intensivpflege - ins nasse Haar einmassieren, 3-5 Minuten einwirken lassen, mit warmem Wasser ausspülen. (2) Für leichtes Kämmen - ins handtuchtrockene Haar verteilen, nicht ausspülen. (3) Zum Bändigen - ins trockene Haar verteilen, nicht ausspülen.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "3-5 (mask/intensive-care mode)",
+    "source": "Aggregated Rossmann retailer copy via web search - not a single verbatim page fetch.",
+    "confidence": "moderate"
+  },
+  "note": "Blind calibration packet. Contains identity, formula of record, and authoritative directions only. No archetype labels, no claims summaries, no prior assessments."
+}

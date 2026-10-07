@@ -1,0 +1,19 @@
+{
+  "productId": "03-bali-curls-sos-protein-treatment",
+  "identity": {
+    "brand": "Bali Curls (by Hank Ge) / Bali Care",
+    "productName": "Total Repair SOS Protein Treatment",
+    "packSize": "20 ml sachet",
+    "gtinEan": "4262391991114",
+    "market": "DE (specialty curly-hair retail: brand site bali-care.com, Lockenbox, CurlyTools; not sold at dm/Rossmann/Müller - approved below-tier sourcing per Nick's ruling)"
+  },
+  "rawInci": "AQUA, CETEARYL ALCOHOL, GLYCINE SOJA OIL, GLYCERIN, BUTYROSPERMUM PARKII BUTTER, CETRIMONIUM CHLORIDE, COCOS NUCIFERA OIL, BETAINE, BEHENTRIMONIUM METHOSULFATE, PARFUM, PANTHENOL, SODIUM BENZOATE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, GLYCERYL STEARATE SE, HYDROLYZED VEGETABLE PROTEIN, POTASSIUM SORBATE, HYDROLYZED SWEET ALMOND PROTEIN, LACTIC ACID, LINALOOL, CITRIC ACID, LIMONENE, AMYL SALICYLATE, LINALYL ACETATE, CANANGA ODORATA FLOWER EXTRACT, BENZOIC ACID, METHYL BENZOATE",
+  "directions": {
+    "text": "Nach der Haarwäsche die Haarmaske in das nasse Haar einarbeiten, besonders in die Längen und Spitzen. Drei Minuten einwirken lassen und anschließend mit warmem Wasser gründlich ausspülen.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "3 (per the DE-market brand site, fetched verbatim)",
+    "source": "bali-care.com/de-de official German product page (direct fetch, verbatim)",
+    "confidence": "high for the DE-site figure - but see conflict below"
+  },
+  "note": "Blind calibration packet. Contains identity, formula of record, and authoritative directions only. No archetype labels, no claims summaries, no prior assessments."
+}

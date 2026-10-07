@@ -1,0 +1,134 @@
+{
+  "productId": "05-isana-mandelmilch-3in1",
+  "lane": "blind-v1",
+  "standardVersion": "mask-inci-v0.5",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets/01-hask-argan-oil-sachet.json",
+      "data/research/mask-inci/v1.0/blind-packets/02-gliss-7sekunden-express-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/03-bali-curls-sos-protein-treatment.json",
+      "data/research/mask-inci/v1.0/blind-packets/04-gliss-liquid-silk-4in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/05-isana-mandelmilch-3in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/06-monday-smooth-anti-frizz.json",
+      "data/research/mask-inci/v1.0/blind-packets/07-pantene-molecular-bond-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/08-sante-intense-hydration.json",
+      "data/research/mask-inci/v1.0/blind-packets/09-balea-professional-aqua-hyaluron.json",
+      "data/research/mask-inci/v1.0/blind-packets/10-bali-curls-deep-repair-mask.json",
+      "data/research/mask-inci/v1.0/blind-packets/11-elvital-glycolic-gloss.json",
+      "data/research/mask-inci/v1.0/blind-packets/12-guhl-panthenol-reparatur-2in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/13-olaplex-no3-hair-perfector.json"
+    ]
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": true,
+    "coveredMode": "post_shampoo_rinse_out_mask",
+    "rationale": "3 modes. Mode 1 'Intensivpflege': into wet hair, 3–5 min, rinse with warm water → qualifies (after-cleansing read from wet-hair rinse-out use; not pre-shampoo). Modes 2 ('Für leichtes Kämmen', no rinse) and 3 ('Zum Bändigen', dry hair, no rinse) are leave-on. Exactly one qualifying mode → mode-scoped.",
+    "evidenceSignals": [
+      "mask mode: 3–5 min, 'ausspülen'",
+      "uncovered: two leave-in modes"
+    ]
+  },
+  "tailMarker": {
+    "ingredient": "PARFUM",
+    "index": 16,
+    "status": "plausible",
+    "note": "Earliest tail-class species PARFUM @16. All architecture species (Cetearyl @2, esters @3–4, Behentrimonium Chloride @5, oils @7–9, Cacao Butter @12, Stearamidopropyl Dimethylamine @13) outrank it; allergens follow. Plausible. tail_index−1 = Citric Acid @15 (no signal)."
+  },
+  "bondRoute": "none",
+  "profile": {
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "S1: Behentrimonium Chloride @5 + Stearamidopropyl Dimethylamine @13. S2: Cetearyl Alcohol @2. S3: Dicaprylyl Ether @3, Coco-Caprylate @4, Cocos Nucifera Oil @7, Almond Oil @8, Sunflower Oil @9, Theobroma Cacao Seed Butter @12. No boundary dependence, plausible marker, no material counter-signal → high.",
+      "evidenceSignals": [
+        "S1: @5, @13",
+        "S2: @2",
+        "S3: @3/@4/@7/@8/@9/@12"
+      ],
+      "counterSignals": []
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "R4b core: Cocos Nucifera Oil @7 and Theobroma Cacao Seed Butter @12 above PARFUM @16 (plus almond/sunflower oils). Completer: Cetearyl Alcohol @2 in the top three. → high; no lightness positioning conflict (a leave-in 'leichtes Kämmen' mode is an uncovered mode, not a finish claim).",
+      "evidenceSignals": [
+        "R4b: Coconut @7, Cacao Butter @12",
+        "dense base: Cetearyl @2"
+      ],
+      "counterSignals": []
+    },
+    "careDirection": {
+      "value": "protein",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Material R5: Hydrolyzed Milk Protein @6 (within first eight above-tail ranks) + Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein @10. Humectant cluster absent (Panthenol @11 only; no glycerin) → not balanced (a) → protein. D4 heavy payload (two R5 species above tail) caps confidence at moderate.",
+      "evidenceSignals": [
+        "Hydrolyzed Milk Protein @6",
+        "Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein @10"
+      ],
+      "counterSignals": [
+        "D4 protein payload",
+        "rich lipid base present (does not create balanced after R6)"
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "medium",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Distinct temporary protein film route (same material-R5 test as care_direction: milk @6 + quaternized wheat @10). No bond token → not high. Confidence follows care_direction.",
+      "evidenceSignals": [
+        "R5 @6, @10"
+      ],
+      "counterSignals": [
+        "no bond chemistry"
+      ]
+    },
+    "primaryFocus": {
+      "value": "repair",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Step 3 repair clears on a distinct two-species R5 film route above the tail (@6, @10); 'Milchprotein' naming corroborates only. Moisture fails criterion 1; shine fails (R4b present, no R2/R3); smoothing would only restate the M1 lipid base. focus_care_verdict: repair_supported; claim_role: corroborating.",
+      "evidenceSignals": [
+        "R5 @6, @10"
+      ],
+      "counterSignals": [
+        "D4 payload confidence cap"
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No secondary: no humectant cluster, no distinct film/optical route.",
+      "evidenceSignals": [],
+      "counterSignals": []
+    }
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "multi_use",
+        "value": "covered: post_shampoo_rinse_out_mask; uncovered: [leave_in ('Für leichtes Kämmen'), leave_in ('Zum Bändigen', dry hair)]",
+        "note": "Profile describes only the 3–5-min rinse-out Intensivpflege mode."
+      },
+      {
+        "flag": "protein_payload",
+        "value": "Hydrolyzed Milk Protein @6, Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein @10 (tail_index 16)",
+        "note": "D4 heavy protein payload: confidence cap on care_direction + review; not a diagnosis, moves no value."
+      }
+    ]
+  },
+  "reviewTriggers": [
+    "protein_payload_review",
+    "specialist_damage_fit"
+  ]
+}

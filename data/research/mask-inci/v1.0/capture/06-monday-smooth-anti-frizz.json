@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "mask-inci-capture-v1",
+  "productNumber": 6,
+  "role": "primary",
+  "archetypeSlots": ["6 - silicone-heavy smoothing/anti-frizz"],
+  "identity": {
+    "brand": "MONDAY Haircare",
+    "productName": "Smooth Anti-Frizz Haarmaske",
+    "packSize": "250 ml",
+    "gtinEan": "4895248003991",
+    "eanSourceNote": "Confirmed via incibeauty.com product URL (produit/4895248003991, titled 'Monday Haircare Smooth Anti-frizz Haarmaske - 250 ml') and matches the Rossmann.de URL slug from the proposal. New-to-system product per approval record.",
+    "market": "DE (Rossmann.de)"
+  },
+  "rawInci": "AQUA, GLYCERIN, CETEARYL ALCOHOL, DIMETHICONE, DIMETHICONOL, ISOPROPYL MYRISTATE, BUTYROSPERMUM PARKII (SHEA) BUTTER, COCOS NUCIFERA (COCONUT) OIL, SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL, PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL, PHENOXYETHANOL, BEHENTRIMONIUM CHLORIDE, DIGLYCERIN, HYDROXYETHYLCELLULOSE, PARFUM (FRAGRANCE), PEG-100 STEARATE, GLYCERYL STEARATE, AMODIMETHICONE, CHLORPHENESIN, ISOPROPYL ALCOHOL, TRIDECETH-10, TEA-DODECYLBENZENESULFONATE, LAURETH-23, DISODIUM EDTA, TRIDECETH-3, BENZYL ALCOHOL, ETHYLHEXYLGLYCERIN, POLYSORBATE 60, DISODIUM PHOSPHATE, CITRIC ACID, ACETIC ACID, SODIUM PHOSPHATE, HEXYL CINNAMAL, LINALOOL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+  "inciSource": {
+    "url": "https://incibeauty.com/en/produit/4895248003991",
+    "accessDate": "2026-09-04",
+    "tier": "database fallback (incibeauty, via search aggregation - below hautschutzengel/codecheck in the requested tier order)",
+    "notes": "IMPORTANT SOURCE-MATCH CAUTION: a hautschutzengel.de URL matching this product's name pattern (hautschutzengel.de/monday-haircare-smooth-antifrizz-inhaltsstoffe/produkt/316997.html) was directly fetched and found to be the SMOOTH ANTIFRIZZ SHAMPOO (a sulfate/betaine surfactant-cleanser formula), not the hair mask - that page's content was discarded and NOT used, since it would have been a wrong-product-type conflation. Rossmann.de direct fetch was Cloudflare-blocked. Dimethicone, Dimethiconol, AND Amodimethicone are all confirmed present, fully supporting the silicone-heavy archetype marker."
+  },
+  "directions": {
+    "text": "1-2 Mal wöchentlich auf feuchtes/handtuchtrockenes Haar auftragen, in Längen und Spitzen einmassieren, 10 Minuten einwirken lassen und ausspülen.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "10",
+    "source": "Aggregated Rossmann.de product-copy via web search (direct Rossmann.de fetch was Cloudflare-blocked).",
+    "confidence": "moderate"
+  },
+  "claims": [
+    "hilft bei Spliss und Haarbruch",
+    "Jojobaöl beugt Frizz vor und versiegelt die Haarkutikula",
+    "ohne Silikone (NOTE: front-of-pack/marketing claim contradicts the confirmed INCI, which contains Dimethicone/Dimethiconol/Amodimethicone - see conflict below)"
+  ],
+  "conflicts": [
+    {
+      "type": "source-mismatch (not a formula conflict, but a research caution)",
+      "description": "A same-brand, similarly-named hautschutzengel.de page for 'MONDAY HAIRCARE Smooth Antifrizz' turned out to be the shampoo, not the mask, and was excluded rather than used or merged.",
+      "resolution": "excluded from this record"
+    },
+    {
+      "type": "marketing claim vs INCI",
+      "description": "MONDAY's general brand marketing (seen across multiple MONDAY product pages/retailers, not confirmed specifically on this SKU's own packaging text) emphasizes 'silicone-free' formulas, but the confirmed INCI for this specific mask contains Dimethicone, Dimethiconol, and Amodimethicone - three silicone ingredients. This may be a brand-wide claim that does not apply to every SKU, or a genuine claim/formula mismatch. Not resolved this pass; flagged for the classification standard's claim-vs-INCI discrimination logic (this is exactly the kind of case F-rules are meant to catch)."
+    }
+  ],
+  "status": "captured_with_conflict",
+  "statusNotes": "INCI sourced via database aggregation rather than a single verbatim retailer fetch (hautschutzengel had the wrong product, dm.de/Rossmann.de both blocked) - moderate confidence. The silicone-free marketing claim vs confirmed silicone-heavy INCI is a genuine, notable discrepancy worth flagging to the orchestrator, independent of source-tier concerns."
+}

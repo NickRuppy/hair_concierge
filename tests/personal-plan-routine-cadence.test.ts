@@ -12,19 +12,50 @@ import { makeBondbuilderProfile, sealProfile } from "./fixtures/bondbuilder-rese
 
 test("research cadence preserves initial wash courses and does not fabricate a conditional default", () => {
   const profile = makeBondbuilderProfile()
-  profile.application.cadence.value = { status: "source_stated", initial: { kind: "consecutive_washes", count: 4 }, maintenance: { kind: "every_n_washes", minimum: 4, maximum: 4 }, branches: [] }
+  profile.application.cadence.value = {
+    status: "source_stated",
+    initial: { kind: "consecutive_washes", count: 4 },
+    maintenance: { kind: "every_n_washes", minimum: 4, maximum: 4 },
+    branches: [],
+  }
   sealProfile(profile)
   const cadence = projectBondbuilderCadence(profile)
   assert.equal(cadence?.kind, "label_course")
   assert.equal(cadence?.copy_de, "Bei den ersten 4 Haarwäschen, danach bei jeder 4. Haarwäsche.")
-  const resolved = resolveRoutineItemCadence(base({ authorityFacts: [{ productId: "bond-1", category: "bondbuilder", role: "specialized_bond_treatment", cadence }] }))
+  const resolved = resolveRoutineItemCadence(
+    base({
+      authorityFacts: [
+        {
+          productId: "bond-1",
+          category: "bondbuilder",
+          role: "specialized_bond_treatment",
+          cadence,
+        },
+      ],
+    }),
+  )
   assert.equal(resolved?.source, "exact_product_protocol")
   assert.equal(resolved?.copyDe, cadence?.copy_de)
   profile.application.cadence.value.status = "source_stated_conditional"
   sealProfile(profile)
   assert.equal(projectBondbuilderCadence(profile), null)
-  const fallback = resolveRoutineItemCadence(base({ authorityFacts: [{ productId: "bond-1", category: "bondbuilder", role: "specialized_bond_treatment", cadence: null }] }))
-  assert.deepEqual(fallback, { copyDe: "Nach Herstellerangabe", source: "safe_generic_fallback", gapCode: "exact_product_cadence_unavailable" })
+  const fallback = resolveRoutineItemCadence(
+    base({
+      authorityFacts: [
+        {
+          productId: "bond-1",
+          category: "bondbuilder",
+          role: "specialized_bond_treatment",
+          cadence: null,
+        },
+      ],
+    }),
+  )
+  assert.deepEqual(fallback, {
+    copyDe: "Nach Herstellerangabe",
+    source: "safe_generic_fallback",
+    gapCode: "exact_product_cadence_unavailable",
+  })
 })
 
 const base = (

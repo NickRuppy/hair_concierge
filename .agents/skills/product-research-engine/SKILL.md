@@ -1,6 +1,6 @@
 ---
 name: product-research-engine
-description: Use when researching product properties with an ingredient/INCI-based research engine — classifying a new Shampoo or Conditioner from its formula, running or replaying a production projection (Shampoo Production Light, Conditioner Production Adapter), working on classification standards/runbooks under docs/research/, or bootstrapping a research engine for a new category.
+description: Use when researching product properties with an ingredient/INCI-based research engine — classifying a new Shampoo, Conditioner, Leave-in or Mask from its formula, running or replaying a production projection (Shampoo Production Light, Conditioner, Leave-In or Mask Production Adapter), working on classification standards/runbooks under docs/research/, or bootstrapping a research engine for a new category.
 ---
 
 # Product Research Engine
@@ -18,8 +18,9 @@ Determine the product's category first, then load the category's contract of rec
 | Shampoo (regular, German market) | Shampoo v1.4 + Production Light v1 | `docs/research/shampoo-inci/README.md` → `v1.4/classification-standard.md` + `v1.4/new-product-research-runbook.md`, then `docs/product-intake-shampoo-production-light.md` | `npm run research:shampoo:production-light` |
 | Conditioner (conventional rinse-out, DE/EU) | Conditioner Standard v1.6 + Production Adapter v1 | `docs/research/conditioner-inci/README.md` → `v1.0/conditioner-classification-standard.md` + `v1.0/runbook.md`, then `docs/product-intake-conditioner-production-adapter.md` | `npm run research:conditioner:production-adapter` |
 | Leave-in (leave-on care, DE market) | Leave-In Standard v1.0 + Production Adapter v1 | `docs/research/leave-in-inci/README.md` → `v1.0/leave-in-classification-standard.md` + `v1.0/runbook.md`, then `docs/product-intake-leave-in-production-adapter.md` | `npm run research:leave-in:production-adapter` |
+| Mask (rinse-out Haarkur/Maske, DE/EU) | Mask Standard v1.0 + Production Adapter v1 (local replay; not wired into the intake worker) | `docs/research/mask-inci/README.md` → `v1.0/mask-classification-standard.md` + `v1.0/02_evidence_lexicon.v0.1.md`, then `docs/product-intake-mask-production-adapter.md` | `npm run research:mask:production-adapter` |
 | Bondbuilder (targeted at-home repair/reinforcement) | **v0.5 bounded owner-locked; full-profile routing code enabled, running release verified separately** | `docs/research/bondbuilder-inci/README.md` → `lock-2026-10-05.md`, `v0.5/standard.md` + synchronized guides; frozen runs retain provenance/amendments; `docs/product-intake-bondbuilder-production-adapter.md` owns the bridge | `npm run research:bondbuilder:production-adapter` — historical v0.4/v0.5 offline; enabled intake requires full current v0.5 exact-submission research; publication remains guarded |
-| Any other category (mask, oil, …) | **No engine yet** | `docs/research/category-classification-engine-template.md` | — |
+| Any other category (oil, …) | **No engine yet** | `docs/research/category-classification-engine-template.md` | — |
 
 Routing rules:
 

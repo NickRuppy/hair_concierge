@@ -173,7 +173,9 @@ export type Stage3BondbuilderFacts = Stage3AuthorityCommonProductFacts & {
     technologyFamily?: string | null
     claimTrustLevel?: string | null
     trustBasis?: string | null
-    researchProfile?: import("@/lib/bondbuilder-research/contracts").BondbuilderResearchProfile | null
+    researchProfile?:
+      | import("@/lib/bondbuilder-research/contracts").BondbuilderResearchProfile
+      | null
   }
 }
 

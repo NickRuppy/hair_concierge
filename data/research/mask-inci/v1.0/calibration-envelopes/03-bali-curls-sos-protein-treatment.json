@@ -1,0 +1,284 @@
+{
+  "version": "mask-research-envelope-v1.0",
+  "researchMethod": {
+    "policyId": "mask-classification-v1.0",
+    "modelVersion": "mask-inci-v1.0",
+    "policySha256": "d105ef3fdfc0e953591a54765004f59d107f049a9ea9007cf7c579dafa726ae0",
+    "lexiconSha256": "3dcaf54f8a7e4844f44d2731f30ca28c4a8565f17082d8fd0b27376ca3167ada"
+  },
+  "identity": {
+    "researchId": "mask-v1.0-03-bali-curls-sos-protein-treatment",
+    "market": "DE/EU",
+    "exactProductName": "Total Repair SOS Protein Treatment",
+    "brand": "Bali Curls (by Hank Ge) / Bali Care",
+    "gtin": "4262391991114",
+    "identityStatus": "verified_with_minor_source_difference",
+    "categoryBoundaryStatus": "eligible",
+    "exclusionReason": null,
+    "multiUse": false,
+    "uncoveredModes": [],
+    "confidence": "moderate",
+    "sourceIds": [
+      "bali-care.com/de-de brand-direct, cross-confirmed verbatim against hautschutzengel.de produkt/354177, accessed 2026-09-04"
+    ]
+  },
+  "formula": {
+    "status": "verified_with_minor_difference",
+    "rawInci": "AQUA, CETEARYL ALCOHOL, GLYCINE SOJA OIL, GLYCERIN, BUTYROSPERMUM PARKII BUTTER, CETRIMONIUM CHLORIDE, COCOS NUCIFERA OIL, BETAINE, BEHENTRIMONIUM METHOSULFATE, PARFUM, PANTHENOL, SODIUM BENZOATE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, GLYCERYL STEARATE SE, HYDROLYZED VEGETABLE PROTEIN, POTASSIUM SORBATE, HYDROLYZED SWEET ALMOND PROTEIN, LACTIC ACID, LINALOOL, CITRIC ACID, LIMONENE, AMYL SALICYLATE, LINALYL ACETATE, CANANGA ODORATA FLOWER EXTRACT, BENZOIC ACID, METHYL BENZOATE",
+    "normalizedIngredients": [
+      "AQUA",
+      "CETEARYL ALCOHOL",
+      "GLYCINE SOJA OIL",
+      "GLYCERIN",
+      "BUTYROSPERMUM PARKII BUTTER",
+      "CETRIMONIUM CHLORIDE",
+      "COCOS NUCIFERA OIL",
+      "BETAINE",
+      "BEHENTRIMONIUM METHOSULFATE",
+      "PARFUM",
+      "PANTHENOL",
+      "SODIUM BENZOATE",
+      "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "GLYCERYL STEARATE SE",
+      "HYDROLYZED VEGETABLE PROTEIN",
+      "POTASSIUM SORBATE",
+      "HYDROLYZED SWEET ALMOND PROTEIN",
+      "LACTIC ACID",
+      "LINALOOL",
+      "CITRIC ACID",
+      "LIMONENE",
+      "AMYL SALICYLATE",
+      "LINALYL ACETATE",
+      "CANANGA ODORATA FLOWER EXTRACT",
+      "BENZOIC ACID",
+      "METHYL BENZOATE"
+    ],
+    "formulaFingerprintSha256": "029a074b089cb3bcc25f958b70f6ce697e67a1e20a1b4e0fc8386e5f3ac9b4b9",
+    "rawInciSha256": "029a074b089cb3bcc25f958b70f6ce697e67a1e20a1b4e0fc8386e5f3ac9b4b9",
+    "sourceIds": [
+      "bali-care.com/de-de brand-direct, cross-confirmed verbatim against hautschutzengel.de produkt/354177, accessed 2026-09-04"
+    ]
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "Re-derived under v0.3 (E1, 2026-09-14). E1 withdraws R3's tail-edge exclusion, so BEHENTRIMONIUM METHOSULFATE @9 carries S1 in full alongside CETRIMONIUM CHLORIDE @6. With S1 satisfied and both S2 and S3 firing comfortably, the `high` bar is met with more headroom than any other product in the cohort that moved under E1. Confidence is capped at `moderate` because S1 is load-bearing on a boundary-position species: without BEHENTRIMONIUM METHOSULFATE @9 the value would be `moderate`. This reverses v0.2's value and closes AP-03-TAILEDGE. It also resolves the twin divergence: this product and its near-twin #10 Bali Curls Deep Repair now agree on field 1, as two near-identical formulas from one brand should. E2 ceiling: comparative structural intensity potential, never measured treatment performance.",
+      "evidenceSignals": [
+        "CETRIMONIUM CHLORIDE (rank 6) — long-chain cationic quat above the tail (tail_index 10, PARFUM): first distinct S1 species",
+        "BEHENTRIMONIUM METHOSULFATE (rank 9) — a second, structurally distinct long-chain cationic, declared at tail_index − 1. Under E1 (2026-09-14) it COUNTS in full; it is the species S1 hinges on, and the reason confidence is capped at `moderate`",
+        "S1 SATISFIED on those two distinct cationic species",
+        "CETEARYL ALCOHOL (rank 2) — long-chain fatty alcohol in the top three: S2 SATISFIED, and independent of the boundary band",
+        "GLYCINE SOJA OIL (3), BUTYROSPERMUM PARKII BUTTER (5), COCOS NUCIFERA OIL (7) — three distinct non-fatty-alcohol lipids above the tail, none of them at the boundary: S3 SATISFIED, also independent of the boundary band",
+        "PARFUM (rank 10) — tail marker, plausible under §3.1.1 on all three limbs (R2; third limb added E2)"
+      ],
+      "derivation": "§9.1 on the above-tail segment (ranks 1–9), under E1's boundary-position rule (no species is removed). S1 = SATISFIED: CETRIMONIUM CHLORIDE @6 and BEHENTRIMONIUM METHOSULFATE @9. S2 = SATISFIED: CETEARYL ALCOHOL @2. S3 = SATISFIED: three distinct lipids at ranks 3, 5 and 7. All three signals fire; `high` needs S1 plus one of S2/S3 and gets both. Load-bearing boundary check (E1): removing BEHENTRIMONIUM METHOSULFATE @9 would drop S1 and therefore the value (S2+S3 without S1 is explicitly `moderate`) → the species IS load-bearing → confidence capped at `moderate` and `boundary_position_ingredient` emitted. S2 and S3 are unaffected by the boundary in either direction.",
+      "thresholdReasoning": [
+        "Clears `high`: S1 mandatory plus at least one of S2/S3, with no material counter-signal. S1 fires on two distinct cationics and BOTH S2 and S3 fire independently of the boundary band. D1's multiple-independent-signals breadth is met three times over, across all three signal families.",
+        "`moderate` does not apply, and this is the value that MOVED: v0.2 read `moderate` only because R3's tail-edge exclusion struck BEHENTRIMONIUM METHOSULFATE @9 before the count, leaving S2+S3 without S1 — a combination §9.1 assigns to `moderate` precisely because S2 and S3 both read the fatty/emollient load that §9.2 owns. That reasoning is intact; what changed is that S1 now fires, so the `high` here is not a second reading of the richness already stated in `weight_potential: high`. It is the cationic-breadth reading S1 exists for.",
+        "`low` does not apply: all three signals hold.",
+        "Material counter-signals checked and NOT fired: resolved, plausible marker on all three §3.1.1 limbs; no §2.4.1 tier-2 conflict; no fired signal resting on a lexicon family-10 species (GLYCERYL STEARATE SE @14 is in the tail and was never counted).",
+        "Confidence is `moderate`, not `high`, under §9.1's E1-amended confidence rule: S1 would not fire without a tail_index − 1 species. The sub-drugstore sourcing tier is a second, independent reason the cap would hold anyway."
+      ],
+      "limitations": [
+        "A three-step concentration scale is at the edge of INCI support; no published dataset maps INCI patterns to validated low/medium/high thresholds (§9.1 honest limitation).",
+        "Rank is used qualitatively only. EU Art. 19 hides the 1 % boundary; no percentage, ratio, dose or deposited amount is inferable. That is precisely the uncertainty E1's confidence cap encodes on this record."
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "The §9.2 required base is met and is joined by two independent R4b heavy lipids above the tail. This is the cohort's cleanest `high` — no hinge, no unnamed ingredient class, no positioning conflict. E2 ceiling: weight deposition potential, never measured finish.",
+      "evidenceSignals": [
+        "CETRIMONIUM CHLORIDE (6) + BEHENTRIMONIUM METHOSULFATE (9) — two distinct cationics above the tail",
+        "CETEARYL ALCOHOL (rank 2) — cetearyl-class fatty alcohol in the top three",
+        "BUTYROSPERMUM PARKII BUTTER (rank 5) — R4b heavy lipid (plant butter) above the tail",
+        "COCOS NUCIFERA OIL (rank 7) — R4b heavy lauric triglyceride above the tail"
+      ],
+      "derivation": "§9.2 required base (≥2 distinct cationics above tail AND cetearyl-class fatty alcohol in the top three) is met; supporting alternative (a) an R4b heavy lipid above the tail is met twice over.",
+      "thresholdReasoning": [
+        "Clears `high`: base met, alternative (a) met, no material unresolved counter-signal.",
+        "`moderate` does not apply: it is the residual once the high anchor fails, and the anchor does not fail — both butter and coconut oil are named R4b species in §5's mask delta, at ranks 5 and 7, well above the marker at 10.",
+        "`low` does not apply: all three of its conjuncts fail (two cationics, cetearyl @2, two heavy lipids).",
+        "§9.2 conflict fallback not engaged: the positioning ('für strapaziertes, überstrapaziertes Haar') carries no lightness claim. The 'wenn Locken schlaff/überdehnt wirken' line was weighed and is not a material lightness contradiction — it describes when to use a protein treatment, not a finish promise.",
+        "Re-derived under v0.2 (R4): the value `high` STANDS, on a rebuilt anchor. Required core = an R4b heavy lipid above the marker: BUTYROSPERMUM PARKII BUTTER @5 and COCOS NUCIFERA OIL @7, two of them, both clear of tail_index − 1 (@9). Completer (a) dense fatty-alcohol base = CETEARYL ALCOHOL @2, within the top three ranks. Completer (b) is unavailable (no silicone at any rank) and unused. The cationic gate that carried part of v0.1's reasoning is removed and is not replaced by anything: under R4 cationic breadth is neither a weight signal nor a weight counter-signal. `low` fails on conjuncts 1 and 2 of the leanness test. No lightness positioning, so `weight_high_conflict` does not fire."
+      ],
+      "limitations": [
+        "A soft preference with a stated reason, never an exclusion (§9.2 wording rule)."
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "rationale": "The cohort's designated protein-forward archetype carries both of its hydrolyzed proteins below the tail marker, so no material R5 route exists and the credited architecture is a coherent lipid/cationic/humectant base. Under D6 that is `moisture`. E2 ceiling: comparative emphasis, not a delivered outcome.",
+      "evidenceSignals": [
+        "HYDROLYZED VEGETABLE PROTEIN (rank 15) — in the tail, five ranks below the marker",
+        "HYDROLYZED SWEET ALMOND PROTEIN (rank 17) — in the tail",
+        "GLYCINE SOJA OIL (3), BUTYROSPERMUM PARKII BUTTER (5), COCOS NUCIFERA OIL (7) — the material emollient direction",
+        "GLYCERIN (4), BETAINE (8) — two humectant members above the tail",
+        "claims: 'SOS-Protein-Behandlung für strapaziertes, überstrapaziertes Haar' — E0 positioning"
+      ],
+      "derivation": "§9.3 material-R5 test fails at its first conjunct: no qualifying R5 species above the tail. `protein` therefore unreachable; `balanced` unreachable because it takes the material R5 route as its first conjunct. Residual = `moisture`.",
+      "thresholdReasoning": [
+        "Clears `moisture`: a coherent conditioning/humectant/emollient architecture without a dominant protein-film route — D6's category default.",
+        "`protein` does not apply: both R5 species are in the tail, where §3.1 gives them zero credit and §9.3's counter-signal rule directs 'protein naming with the protein only in the tail → moisture, with the claim recorded'.",
+        "`balanced` does not apply: its first conjunct (material R5 route) is absent. Note that its SECOND conjunct — S3 satisfied — IS met here, which is why the value would jump straight to `balanced` rather than `protein` if the tail marker moved (see counter-signals).",
+        "Re-checked under v0.2 (R6). Reading (a) is unavailable: no R5 species above the tail (both hydrolyzed proteins are tail-side) and the humectant count is two (GLYCERIN @4, BETAINE @8) against a required three. Reading (b) fails at clause 2 — no silicone at any rank, and HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE @13 is in the tail — and would fail at clause 3 as well, on a three-species lipid stack above the tail. `moisture` is unchanged.",
+        "Re-checked under v0.3 (E1, field-uniform). E1's boundary-position rule applies to §9.3 as it does everywhere — and changes nothing here, in either direction. The two R5 species sit at ranks 15 and 17, five and seven ranks INSIDE the tail, not at its edge; the humectant count above the tail (GLYCERIN @4, BETAINE @8) is unaffected by the boundary; and BEHENTRIMONIUM METHOSULFATE @9, the record's one boundary-position species, is a cationic and carries no §9.3 test. `moisture` is unchanged, and so is its `moderate` confidence, which rests on the swing described in counterSignals rather than on the boundary band."
+      ],
+      "limitations": [
+        "D4 protein-payload counter-signal does not fire (no R5 species above the tail, none in the top five ranks) despite the product's name.",
+        "INCI discloses no molecular weight; even a credited protein could only support 'a protein film route is present'."
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "No named bond chemistry and no qualifying protein route above the tail. The rich R1/R4 base is an explicit non-upgrader. E2 ceiling: comparative formula potential, never efficacy.",
+      "evidenceSignals": [
+        "no maleate, gluconamide, or bond-positioned peptide token at any rank",
+        "HYDROLYZED VEGETABLE PROTEIN (15), HYDROLYZED SWEET ALMOND PROTEIN (17) — in the tail",
+        "BUTYROSPERMUM PARKII BUTTER (5), COCOS NUCIFERA OIL (7), two cationics — ordinary R1/R4 conditioning, explicit non-upgraders"
+      ],
+      "derivation": "§9.4: bond_route = none closes `high`; the §9.3 material R5 route is absent, closing `medium`. Residual = `low`.",
+      "thresholdReasoning": [
+        "Clears `low`: ordinary conditioning and lubrication only.",
+        "`medium` does not apply: no qualifying R5 species above the tail; a tail-position protein is an explicit non-upgrader.",
+        "`high` does not apply: no named bond token exists in this formula at any rank.",
+        "Mask delta applied: conditioning_level `high` alone is repair_support_level `low`. Being the richest kind of mask is not repair."
+      ],
+      "limitations": [
+        "Banned wording observed: no 'repairs', 'rebuilds', 'restores structure'."
+      ]
+    },
+    "focus": {
+      "value": {
+        "primary": "general",
+        "secondary": []
+      },
+      "confidence": "moderate",
+      "rationale": "Every special-purpose route fails its own test, the D5 moisture guard fails on cluster size, and neither the shine nor the smoothing threshold is reachable without a silicone, polymer, or film former above the tail. What remains is a rich, capable, conventional mask whose distinguishing feature — richness — is the category baseline. §9.5.2 step 8 is the honest answer. Secondary: No candidate cleared its threshold as primary, and every candidate would reuse the single M1 observation, so no secondary can add distinct matching information.",
+      "evidenceSignals": [
+        "no R5 species above the tail; bond_route none",
+        "humectants above the tail: GLYCERIN (4), BETAINE (8) — two, against a required three",
+        "no silicone at any rank; HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE (13) is the only polymer and it is in the tail",
+        "claims: 'wenn Locken schlaff/überdehnt/zu nass wirken' — curl positioning, corroboration only",
+        "one M1 observation covers the entire above-tail architecture"
+      ],
+      "derivation": "Step 1 baseline exclusion applied. Step 2: the four lipids, two cationics and fatty alcohol are ONE M1 observation, not four focus candidates (§6 rule 1). Step 3: `repair` blocked (no R5 above tail, no bond); `curl_support` rejected (see threshold reasoning); `color_care` blocked; `lightness` blocked (weight is `high`). Step 4 `moisture` blocked at cluster size. Step 5 `shine` blocked (§9.5.4 criterion 1 — no alignment-oriented route above the tail, and an R4b heavy lipid IS above the tail). Step 6 `smoothing` rejected. Step 7 `detangling` rejected. Step 8 → `general`. Secondary: §9.5.2 secondary rule: a secondary may share part of a mechanism but must add useful matching information. Here it would only restate the primary's rejected routes.",
+      "thresholdReasoning": [
+        "Clears `general`: §9.5.2 step 8 — a capable conventional mask where no differentiator clears threshold and the formula evidence is nonspecific.",
+        "`curl_support` is the closest competitor and is REFUSED on principle. Its test is 'high slip PLUS compatible weight/body architecture', with curl positioning as corroboration only. Both legs are literally satisfiable here — but they are satisfied by nothing except the category baseline (a two-cationic cetearyl base plus lipids), which is exactly what §9.5.2 step 1 forbids from creating a focus. The only thing distinguishing this product from #01 HASK, whose architecture is comparably rich and which gets `general`, is the curl claim — and step 9 states positioning may corroborate but never create. Awarding `curl_support` here would be claim-creation wearing a formula test. See AP-03-CURLBAR.",
+        "`moisture` does not apply: the D5 guard needs ≥3 distinct humectants above the tail with ≥2 non-glycerin. Glycerin @4 and Betaine @8 give two, and Panthenol @11 falls one rank below the marker.",
+        "`smoothing` does not apply: step 6 requires the architecture to extend materially beyond the ordinary mask base via a distinct silicone, substantive polymer, or substantial lipid/emollient route. The lipid route qualifies for that conjunct, but dry surface control is not this formula's clearest practical differentiator — there is no silicone, no polymer and no film former above the tail, and the credited route is softening rather than surface control.",
+        "`detangling` does not apply: slip is category baseline (§9.5.2 step 7's stated expectation), and nothing here makes it distinctive relative to competing routes.",
+        "Re-checked under v0.2 (R5). The `moisture` headline was already blocked at §9.5.3 criterion 1 (two above-tail humectants against a required three). Recorded for completeness: criterion 2 limb (i) would also fire, on BUTYROSPERMUM PARKII BUTTER @5 and COCOS NUCIFERA OIL @7 — two R4b heavy lipids above the marker. The headline is doubly blocked and the value is unchanged.",
+        "Zero secondaries is correct: `moisture` fails cluster size, `curl_support` was refused on the baseline-exclusion ground, and `smoothing`/`detangling` would double-count M1 (§6 rule 1)."
+      ],
+      "limitations": [
+        "`general` is a statement about evidence, not about product quality."
+      ]
+    },
+    "bondRoute": {
+      "value": "none",
+      "confidence": "moderate",
+      "rationale": "bond_route recorded `none` in reference-key-v1 (03-bali-curls-sos-protein-treatment): no named bond chemistry above the sub-1 % tail.",
+      "evidenceSignals": [
+        "reference-key-v1 03-bali-curls-sos-protein-treatment"
+      ],
+      "derivation": "Property set trace-level rule: `bond_route` is deterministic, by named INCI above the sub-1 % tail, and gates `repair_support_level: high`.",
+      "thresholdReasoning": [
+        "Recorded `none`.",
+        "Citric acid, 'Bond' naming and hydrolyzed protein alone never qualify."
+      ],
+      "limitations": [
+        "A named chemistry token is formula evidence (E2), never proof of bond repair."
+      ]
+    },
+    "hairThicknessFit": {
+      "value": [
+        "normal",
+        "coarse"
+      ],
+      "confidence": "high",
+      "rationale": "weight_potential `high` maps deterministically to normal + coarse; the parent value has no hinge here, so confidence carries through.",
+      "evidenceSignals": [
+        "derived from weight_potential = high (high confidence)"
+      ],
+      "derivation": "§9.6 table row 3.",
+      "thresholdReasoning": [
+        "Clears {normal, coarse}: the high row of a deterministic mapping.",
+        "{fine, normal, coarse} does not apply: it requires weight_potential `moderate`.",
+        "{fine, normal} does not apply: it requires weight_potential `low`."
+      ],
+      "limitations": [
+        "Research-level prior; no production projection is authorized.",
+        "Echo field under R9 (§9.5E): a deterministic projection of already-reviewed fields, displayed as a „→ ergibt:“ annotation on its driving row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    },
+    "damageFit": {
+      "value": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "confidence": "moderate",
+      "rationale": "Echo field (R9). Re-derived under v0.3 because its driver moved: conditioning_level is now `high` (E1). §9.7 row 3 governs — `high` WITHOUT a qualifying specialist route — and its output set is identical to row 2's, so the value does not move.",
+      "evidenceSignals": [
+        "conditioning_level = high (re-derived under E1, 2026-09-14; confidence capped at moderate)",
+        "repair_support_level = low",
+        "bond_route = none"
+      ],
+      "derivation": "§9.7 row 3 (`conditioning_level: high` WITHOUT a qualifying specialist route → exactly healthy + moderately_damaged).",
+      "thresholdReasoning": [
+        "Clears {healthy, moderately_damaged}: §9.7 row 3.",
+        "{moderately_damaged, highly_damaged} does not apply: no qualifying specialist route. Leg (a) fails — both hydrolyzed proteins are in the tail (@15, @17), so repair_support_level is `low`, not ≥ medium; leg (b) fails (bond_route `none`); legs (c) and (d) have no recorded fact, and under §9.8's echo caveat the echo step may not establish one. This is the whole point of the specialist gate: an 'SOS Protein Treatment' whose proteins earn nothing does not reach the highly_damaged prior.",
+        "{healthy} alone does not apply: it requires conditioning_level `low`.",
+        "This field has now read the same set under v0.1's `high`, v0.2's `moderate` and v0.3's `high` — §9.7 rows 2 and 3 have identical outputs, so it is insensitive to the conditioning_level question in either direction.",
+        "`specialist_damage_fit` does NOT fire."
+      ],
+      "limitations": [
+        "Echo field under R9: approving the driving fields approves this projection."
+      ]
+    },
+    "textureFit": {
+      "value": [
+        "wavy",
+        "curly",
+        "coily"
+      ],
+      "confidence": "high",
+      "rationale": "weight_potential `high` with a coherent high-slip R1 route selects the high-deposition row.",
+      "evidenceSignals": [
+        "weight_potential = high",
+        "CETRIMONIUM CHLORIDE (6) + BEHENTRIMONIUM METHOSULFATE (9) + CETEARYL ALCOHOL (2) — coherent high-slip R1 route"
+      ],
+      "derivation": "§9.8 row 3.",
+      "thresholdReasoning": [
+        "Clears {wavy, curly, coily}: both conjuncts of row 3 hold.",
+        "{straight, wavy, curly} does not apply: it requires weight_potential `moderate`.",
+        "{straight, wavy} does not apply: it requires weight_potential `low`.",
+        "Note the asymmetry worth reporting: this row reaches the same result the refused `curl_support` focus would have signalled, via a deterministic route that does not depend on the curl claim."
+      ],
+      "limitations": [
+        "Research-only; no current consumer.",
+        "Echo field under R9 (§9.5E): a deterministic projection of already-reviewed fields, displayed as a „→ ergibt:“ annotation on its driving row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    },
+    "uncertainFields": [
+      "conditioning_level",
+      "care_direction"
+    ],
+    "assumptionNotes": [
+      "Re-derived under v0.3 (E1 boundary-position rule, replacing R3's tail-edge exclusion, and applied field-uniformly per E5; E2 third plausibility limb checked and not fired; E4 checked against weight_potential and not engaging), not patched.",
+      "Fields whose value moved under v0.3: conditioningLevel (moderate → high, E1; confidence held at moderate by the boundary cap). Fields whose evidence text was re-derived: conditioningLevel (E1), damageFit (echo of the moved driver — output set unchanged, §9.7 rows 2 and 3 are identical), careDirection (E1 field-uniform re-check, no change), tailMarker (E2 limb checked). weightPotential was re-checked under E4 and does NOT move: the `low` leanness test fails at conjunct 1 on BUTYROSPERMUM PARKII BUTTER @5 and COCOS NUCIFERA OIL @7, two R4b heavy lipids above the marker, and independently at conjunct 3 (two cationic species above the tail). `high` stands on the unchanged R4 anchor.",
+      "Review triggers under v0.3 — FIRED: none newly. NOT fired: `tail_marker_anomaly`, `tail_marker_unresolved` (marker plausible on all three §3.1.1 limbs, including E2's new one), `protein_payload_review` (both proteins are tail-side; `protein_tail_only` applies instead), `bond_claim_review`, `specialist_damage_fit`, `weight_high_conflict` (no lightness positioning), `low_confidence_field` (the boundary dependence caps at `moderate`, it does not step down).",
+      "— carried forward from reference-key-v1 (Standard v0.2), retained as provenance —",
+      "Re-derived under v0.2 (R3 tail-edge exclusion; R4 weight anchors re-checked; R5 disqualifier checked; R6 readings checked; R8 `hinweise`; R2 plausibility prong; R9 echo markers). Under v0.2 conditioningLevel read `moderate` and AP-03-TAILEDGE escalated the divergence from the ruling ledger and from the twin #10; E1 closed both.",
+      "weightPotential was re-derived under R4's anchor structure and lands on `high` on a heavy-lipid core (shea @5, coconut @7) plus a dense fatty base (cetearyl @2) instead of on the removed cationic gate — unchanged under v0.3.",
+      "— carried forward from reference-key-v0 (Standard v0.1), retained as provenance —",
+      "Reviewer policy applied to every record in this lane: §3.1's hard cut determines above-tail membership without exception. NOTE (E1, 2026-09-14): the lexicon §0.2 boundary-band caution is again a confidence modifier only, as v0.1's policy had it, and is now the standard's own rule.",
+      "Protocol metadata for traceability only, zero classification credit: contact time 3 minutes per the DE brand page; the EN storefront's 10–20 minute figure is a recorded conflict, not averaged (§2.4). Placement stated as Längen und Spitzen, P5-compliant.",
+      "Sourcing tier is below drugstore by Nick's explicit approval; this affects coverage-target accounting, not the evidence ceiling."
+    ]
+  }
+}

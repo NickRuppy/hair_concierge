@@ -1,0 +1,19 @@
+{
+  "productId": "11-elvital-glycolic-gloss",
+  "identity": {
+    "brand": "L'Oréal Paris Elvital",
+    "productName": "Glycolic Gloss, 5-Minuten Haar-Laminierung",
+    "packSize": "200 ml",
+    "gtinEan": "3600524128500",
+    "market": "DE (dm.de + Rossmann.de + Müller)"
+  },
+  "rawInci": "AQUA/WATER, CETEARYL ALCOHOL, COCAMIDOPROPYL BETAINE, BEHENTRIMONIUM CHLORIDE, PROPYLENE GLYCOL, AMODIMETHICONE, CI 17200/RED 33, CI 19140/YELLOW 5, COCOS NUCIFERA OIL/COCONUT OIL, SODIUM CHLORIDE, HYDROXYPROPYL GUAR, HYDROXYCITRONELLAL, PHENOXYETHANOL, PPG-1 TRIDECETH-6, ETHANOLAMINE, TRIDECETH-6, POLYQUATERNIUM-37, LIMONENE, LINALOOL, ISOPROPYL ALCOHOL, PROPYLENE GLYCOL DICAPRYLATE/DICAPRATE, CAPRYLYL GLYCOL, ACRYLATES/STEARYL METHACRYLATE COPOLYMER, SORBITAN OLEATE, CETRIMONIUM CHLORIDE, CITRIC ACID, EDTA, HEXYL CINNAMAL, GLYCOLIC ACID, PARFUM/FRAGRANCE",
+  "directions": {
+    "text": "Großzügige Menge auf feuchtes Haar auftragen, um es von den Wurzeln bis in die Spitzen brillant zu versiegeln. 5 Minuten einwirken lassen, gründlich ausspülen.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "5 (also embedded directly in the product's own name, '5-Minuten Haar-Laminierung')",
+    "source": "Aggregated loreal-paris.de brand descriptions via web search - not a single verbatim page fetch, but the figure is also the branded product name itself.",
+    "confidence": "moderate-high"
+  },
+  "note": "Blind calibration packet. Contains identity, formula of record, and authoritative directions only. No archetype labels, no claims summaries, no prior assessments."
+}

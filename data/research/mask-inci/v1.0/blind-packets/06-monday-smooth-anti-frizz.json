@@ -1,0 +1,19 @@
+{
+  "productId": "06-monday-smooth-anti-frizz",
+  "identity": {
+    "brand": "MONDAY Haircare",
+    "productName": "Smooth Anti-Frizz Haarmaske",
+    "packSize": "250 ml",
+    "gtinEan": "4895248003991",
+    "market": "DE (Rossmann.de)"
+  },
+  "rawInci": "AQUA, GLYCERIN, CETEARYL ALCOHOL, DIMETHICONE, DIMETHICONOL, ISOPROPYL MYRISTATE, BUTYROSPERMUM PARKII (SHEA) BUTTER, COCOS NUCIFERA (COCONUT) OIL, SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL, PRUNUS AMYGDALUS DULCIS (SWEET ALMOND) OIL, PHENOXYETHANOL, BEHENTRIMONIUM CHLORIDE, DIGLYCERIN, HYDROXYETHYLCELLULOSE, PARFUM (FRAGRANCE), PEG-100 STEARATE, GLYCERYL STEARATE, AMODIMETHICONE, CHLORPHENESIN, ISOPROPYL ALCOHOL, TRIDECETH-10, TEA-DODECYLBENZENESULFONATE, LAURETH-23, DISODIUM EDTA, TRIDECETH-3, BENZYL ALCOHOL, ETHYLHEXYLGLYCERIN, POLYSORBATE 60, DISODIUM PHOSPHATE, CITRIC ACID, ACETIC ACID, SODIUM PHOSPHATE, HEXYL CINNAMAL, LINALOOL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+  "directions": {
+    "text": "1-2 Mal wöchentlich auf feuchtes/handtuchtrockenes Haar auftragen, in Längen und Spitzen einmassieren, 10 Minuten einwirken lassen und ausspülen.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "10",
+    "source": "Aggregated Rossmann.de product-copy via web search (direct Rossmann.de fetch was Cloudflare-blocked).",
+    "confidence": "moderate"
+  },
+  "note": "Blind calibration packet. Contains identity, formula of record, and authoritative directions only. No archetype labels, no claims summaries, no prior assessments."
+}

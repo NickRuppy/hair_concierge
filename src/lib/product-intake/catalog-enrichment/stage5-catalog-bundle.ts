@@ -19,7 +19,7 @@ const maskFactsSchema = z
   .object({
     repair_support_level: z.enum(["low", "medium", "high"]),
     functional_benefits: z
-      .array(z.enum(["smoothing_frizz_control", "detangling_slip", "shine"]))
+      .array(z.enum(["smoothing_frizz_control", "detangling_slip", "shine", "moisture_softness"]))
       .min(1),
   })
   .strict()

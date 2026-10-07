@@ -14,7 +14,10 @@ type DryShampooSpecRow = {
   format: "aerosol_spray" | "powder" | "foam_or_liquid"
 }
 
-type BondbuilderSpecRow = Pick<ProductBondbuilderSpecs, "application_mode" | "treatment_mode" | "product_format" | "usage_protocol">
+type BondbuilderSpecRow = Pick<
+  ProductBondbuilderSpecs,
+  "application_mode" | "treatment_mode" | "product_format" | "usage_protocol"
+>
 
 export type CatalogApplicationFacts = {
   facts: Record<string, unknown>

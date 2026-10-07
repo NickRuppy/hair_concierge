@@ -724,12 +724,14 @@ function categorySpecFromSnapshot(
         productFormat: text(row?.product_format),
         usageProtocol: text(row?.usage_protocol),
         relationship: classifyBondbuilderRelationship(relationships),
-        ...(row?.research_profile != null ? {
-          technologyFamily: profile?.assessment.technology_family ?? null,
-          claimTrustLevel: profile?.assessment.claim_trust_level ?? null,
-          trustBasis: profile?.assessment.trust_basis ?? null,
-          researchProfile: profile,
-        } : {}),
+        ...(row?.research_profile != null
+          ? {
+              technologyFamily: profile?.assessment.technology_family ?? null,
+              claimTrustLevel: profile?.assessment.claim_trust_level ?? null,
+              trustBasis: profile?.assessment.trust_basis ?? null,
+              researchProfile: profile,
+            }
+          : {}),
       }
     }
     case "deep_cleansing_shampoo": {

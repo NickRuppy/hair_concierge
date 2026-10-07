@@ -341,8 +341,12 @@ function factComplete(table: (typeof FACT_TABLES)[number], row: Row): boolean {
     case "product_bondbuilder_specs": {
       if (row.research_profile != null) {
         const profile = readBondbuilderResearchProfile(row)
-        return profile !== null && profile.assessment.claim_trust_level !== "low" &&
-          profile.assessment.trust_basis !== "owner_default" && profile.holds.protocol.length === 0
+        return (
+          profile !== null &&
+          profile.assessment.claim_trust_level !== "low" &&
+          profile.assessment.trust_basis !== "owner_default" &&
+          profile.holds.protocol.length === 0
+        )
       }
       return present(row, "application_mode", "treatment_mode", "product_format", "usage_protocol")
     }

@@ -91,8 +91,10 @@ async function enrichBondbuilderResearchProfile(input: {
   // A research-only operation must not smuggle spine/lifecycle/fit changes.
   // The complete CAS preimage is checked again inside the transactional RPC.
   for (const [key, value] of Object.entries(input.productPayload)) {
-    const existingValue = key === "price_eur" && existingProduct[key] !== null
-      ? Number(existingProduct[key]) : existingProduct[key]
+    const existingValue =
+      key === "price_eur" && existingProduct[key] !== null
+        ? Number(existingProduct[key])
+        : existingProduct[key]
     if (JSON.stringify(value) !== JSON.stringify(existingValue)) return null
   }
 
@@ -104,8 +106,11 @@ async function enrichBondbuilderResearchProfile(input: {
     p_reviewed_by: input.reviewedBy,
   })
   if (error) return null
-  const { data: specs, error: specsError } = await input.supabase.from("product_bondbuilder_specs")
-    .select("*").eq("product_id", input.productId).single()
+  const { data: specs, error: specsError } = await input.supabase
+    .from("product_bondbuilder_specs")
+    .select("*")
+    .eq("product_id", input.productId)
+    .single()
   if (specsError || !specs) return null
   return { product: { ...existingProduct, bondbuilder_specs: specs } }
 }
@@ -179,12 +184,21 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
   if (isBondbuilderCategory(nextCategory) && bondbuilder_specs?.research_profile != null) {
     const enriched = await enrichBondbuilderResearchProfile({
-      supabase: createAdminClient(), productId: id, profile: bondbuilder_specs.research_profile,
-      reviewedBy: user.id, productPayload,
+      supabase: createAdminClient(),
+      productId: id,
+      profile: bondbuilder_specs.research_profile,
+      reviewedBy: user.id,
+      productPayload,
     })
     return enriched
       ? NextResponse.json(enriched)
-      : NextResponse.json({ error: "Die Forschungsanreicherung benötigt unveränderte Produktdaten und einen gültigen geprüften Forschungsstand. Andere Änderungen bitte getrennt speichern." }, { status: 409 })
+      : NextResponse.json(
+          {
+            error:
+              "Die Forschungsanreicherung benötigt unveränderte Produktdaten und einen gültigen geprüften Forschungsstand. Andere Änderungen bitte getrennt speichern.",
+          },
+          { status: 409 },
+        )
   }
 
   if (isConditionerCategory(nextCategory) && conditioner_specs) {

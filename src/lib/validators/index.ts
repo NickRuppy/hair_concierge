@@ -125,7 +125,12 @@ const bondbuilderSpecsSchema = z
   })
   .strict()
   .superRefine((specs, ctx) => {
-    const newKeys = ["technology_family", "claim_trust_level", "trust_basis", "research_profile"] as const
+    const newKeys = [
+      "technology_family",
+      "claim_trust_level",
+      "trust_basis",
+      "research_profile",
+    ] as const
     const legacyKeys = [
       "bond_repair_intensity",
       "application_mode",
@@ -167,7 +172,7 @@ const bondbuilderSpecsSchema = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["research_profile"],
-        message: validation.error.issues.map(issue => issue.message).join("; "),
+        message: validation.error.issues.map((issue) => issue.message).join("; "),
       })
       return
     }
