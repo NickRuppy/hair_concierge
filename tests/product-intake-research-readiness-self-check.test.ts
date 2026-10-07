@@ -546,6 +546,19 @@ test("persisted pending-lock Shampoo and unavailable Mask payloads pass the stri
       payload.final.field_rationales["category_specs.product_shampoo_specs"] =
         "Durch Herstellerquelle belegt."
     }
+    // Templated categories get Chaarlie-stamped protocol rows from sourced draft slots.
+    ;(payload as JsonRecord).draft = {
+      protocol: {
+        evidence: [
+          {
+            sourceText: "In die Längen geben und ausspülen.",
+            sourceUrl: "https://example.test/product",
+            sourceType: "manufacturer",
+            checkedAt: "2026-10-05",
+          },
+        ],
+      },
+    }
     const normalized = normalizeResearchOutputForCategory(
       {
         summary: "Recherche fertig",

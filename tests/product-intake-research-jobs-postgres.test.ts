@@ -14,6 +14,7 @@ const MIGRATIONS = [
   "20261006112322_product_intake_job_attempt_hygiene.sql",
   "20261006112337_product_intake_worker_heartbeats.sql",
   "20261006141653_product_intake_job_engine_binding.sql",
+  "20261007062729_product_intake_stage_artifact_kinds.sql",
 ] as const
 const USER = "11111111-1111-4111-8111-111111111111"
 const PRODUCT = "22222222-2222-4222-8222-222222222222"

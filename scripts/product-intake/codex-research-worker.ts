@@ -1,25 +1,48 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
-import { basename, dirname, join, resolve, sep } from "node:path"
+import { join, resolve } from "node:path"
 import { hostname } from "node:os"
-import {
-  spawn,
-  type SpawnSyncOptionsWithStringEncoding,
-  type SpawnSyncReturns,
-} from "node:child_process"
 import { createHash } from "node:crypto"
 import { pathToFileURL } from "node:url"
-import sharp from "sharp"
 import * as Sentry from "@sentry/node"
 
 import {
-  buildBrandResolutionCatalog,
-  resolveBrandFromText,
-  type BrandResolutionCatalogInput,
-  type ProductIdentityBrandAlias,
-  type ProductIdentityBrand,
-  type ProductIdentityProductLine,
-} from "@/lib/product-identity/brand-resolution"
-import { normalizeIdentityText } from "@/lib/product-identity/normalize"
+  loadBrandResolutionContext,
+  applyIdentityStage,
+  type BrandResolutionPromptContext,
+} from "@/lib/product-intake/pipeline/identity"
+import {
+  runProtocolStage,
+  type ProtocolResearchDraft,
+} from "@/lib/product-intake/pipeline/protocol"
+import {
+  runCommerceStage,
+  applyCommerceWrites,
+  type CommerceStageDeps,
+} from "@/lib/product-intake/pipeline/commerce"
+import { createDmMcpClient } from "@/lib/scan/enrichment/dm-mcp-client"
+import { applyInciStage, type InciStageOptions } from "@/lib/product-intake/pipeline/inci"
+import type { BrandResolutionCatalogInput } from "@/lib/product-identity/brand-resolution"
+export type { BrandResolutionPromptContext } from "@/lib/product-intake/pipeline/identity"
+import {
+  cleanupStaleRembgContainers,
+  processApprovedImageForReview,
+  shouldAutoPrepareImage,
+} from "@/lib/product-intake/pipeline/image"
+import { runWorkerProcess, type WorkerSpawn } from "@/lib/product-intake/pipeline/process"
+import {
+  assertAllowedProductIntakeModel,
+  boundedNumber,
+  errorMessage,
+  hasFinalResearchPayload,
+  nonBlankEnv,
+  normalizeRecord,
+  optionalServiceTier,
+  parseJsonObject,
+  stringValue,
+  truncateDiagnostic,
+  type CodexResearchRuntimeConfig,
+} from "@/lib/product-intake/pipeline/shared"
+
 import {
   checkResearchReadiness,
   type ResearchReadinessSelfCheck,
@@ -45,7 +68,6 @@ import {
 } from "@chaarlie/product-intake-core"
 
 import { createSupabaseClientFromEnv, flagBool, flagInt, parseArgs, printJson } from "./cli"
-import { finalizeProductImageAsset } from "./finalize-package-image"
 import {
   CATEGORY_RESEARCH_REGISTRY,
   CATEGORY_SPEC_KEYS,
@@ -63,109 +85,30 @@ import {
   type ScannedIdentifierPacketValue,
 } from "./retailer-enrichment-packet"
 
-type WorkerSpawn = (
-  command: string,
-  args: string[],
-  options: SpawnSyncOptionsWithStringEncoding,
-) => SpawnSyncReturns<string> | Promise<SpawnSyncReturns<string>>
-
-// Preserve the result/error contract of spawnSync without blocking heartbeats.
-export function runWorkerProcess(
-  command: string,
-  args: string[],
-  options: SpawnSyncOptionsWithStringEncoding,
-): Promise<SpawnSyncReturns<string>> {
-  return new Promise((resolveResult) => {
-    const { timeout, maxBuffer = 1024 * 1024, encoding: _encoding, ...spawnOptions } = options
-    void _encoding
-    const stdout: Buffer[] = []
-    const stderr: Buffer[] = []
-    let stdoutSize = 0
-    let stderrSize = 0
-    let error: Error | undefined
-    let timer: ReturnType<typeof setTimeout> | undefined
-    let killTimer: ReturnType<typeof setTimeout> | undefined
-    let settleTimer: ReturnType<typeof setTimeout> | undefined
-    let settled = false
-    let terminated = false
-    const child = spawn(command, args, {
-      ...spawnOptions,
-      detached: true,
-      stdio: ["ignore", "pipe", "pipe"],
-    })
-    const signalGroup = (signal: NodeJS.Signals) => {
-      try {
-        if (!child.pid) throw new Error("Child has no process group")
-        process.kill(-child.pid, signal)
-      } catch {
-        child.kill(signal)
-      }
-    }
-    const finish = (status: number | null, signal: NodeJS.Signals | null) => {
-      if (settled) return
-      settled = true
-      clearTimeout(timer)
-      clearTimeout(killTimer)
-      clearTimeout(settleTimer)
-      if (terminated) signalGroup("SIGKILL")
-      child.stdout?.destroy()
-      child.stderr?.destroy()
-      resolveResult({
-        pid: child.pid ?? 0,
-        output: [],
-        stdout: Buffer.concat(stdout).toString("utf8"),
-        stderr: Buffer.concat(stderr).toString("utf8"),
-        status,
-        signal,
-        error,
-      })
-    }
-    const settleAfterGrace = () => {
-      // Pipes can outlive the leader, even after a process-group kill. Bound that wait.
-      settleTimer ??= setTimeout(() => finish(child.exitCode, child.signalCode), 2_000)
-    }
-    const terminate = (failure: Error) => {
-      if (error) return
-      error = failure
-      terminated = true
-      signalGroup("SIGTERM")
-      killTimer = setTimeout(() => signalGroup("SIGKILL"), 1_000)
-      settleAfterGrace()
-    }
-    const collect = (stream: "stdout" | "stderr", chunk: Buffer) => {
-      const size = stream === "stdout" ? stdoutSize : stderrSize
-      const remaining = Math.max(0, maxBuffer - size)
-      const accepted = chunk.subarray(0, remaining)
-      if (stream === "stdout") {
-        if (accepted.length) stdout.push(accepted)
-        stdoutSize += accepted.length
-      } else {
-        if (accepted.length) stderr.push(accepted)
-        stderrSize += accepted.length
-      }
-      if (chunk.length > remaining) {
-        terminate(
-          Object.assign(new Error(`${command} output exceeded maxBuffer`), { code: "ENOBUFS" }),
-        )
-      }
-    }
-    child.stdout?.on("data", (chunk: Buffer) => collect("stdout", chunk))
-    child.stderr?.on("data", (chunk: Buffer) => collect("stderr", chunk))
-    child.on("error", (failure) => {
-      error ??= failure
-    })
-    child.on("exit", () => {
-      if (error) settleAfterGrace()
-    })
-    child.on("close", finish)
-    if (timeout && timeout > 0) {
-      timer = setTimeout(
-        () => terminate(Object.assign(new Error(`${command} ETIMEDOUT`), { code: "ETIMEDOUT" })),
-        timeout,
-      )
-    }
-  })
-}
+export {
+  buildImageQualityJudgePrompt,
+  cleanupStaleRembgContainers,
+  finalizedImageOutputRoot,
+  imageQualityJudgeRuntimeConfig,
+  imageQualityPreparationDecision,
+  loadImageQualityReferenceSet,
+  normalizeImageQualityVerdict,
+  rembgContainerArgs,
+  rembgRuntimeConfig,
+  runRembgContainer,
+  shouldAutoPrepareImage,
+  type ImageQualityDefect,
+  type ImageQualityJudgeRuntimeConfig,
+  type ImageQualityReference,
+  type ImageQualityReferenceSet,
+  type ImageQualityVerdict,
+  type RembgRuntimeConfig,
+} from "@/lib/product-intake/pipeline/image"
+export { runWorkerProcess, type WorkerSpawn } from "@/lib/product-intake/pipeline/process"
+export {
+  assertAllowedProductIntakeModel,
+  type CodexResearchRuntimeConfig,
+} from "@/lib/product-intake/pipeline/shared"
 
 type HeartbeatClient = {
   rpc: (
@@ -504,53 +447,6 @@ type ModelEvaluationResult = {
   preferredLane?: ResearchLane | "tie"
 }
 
-export type CodexResearchRuntimeConfig = {
-  model: string
-  reasoningEffort: string
-  serviceTier: string | null
-}
-
-export type ImageQualityJudgeRuntimeConfig = CodexResearchRuntimeConfig & {
-  enabled: boolean
-}
-
-export type ImageQualityDefect = {
-  kind: string
-  region: string
-  severity: "minor" | "material" | "critical"
-  explanation: string
-}
-
-export type ImageQualityVerdict = {
-  verdict: "pass" | "rework" | "needs_human_review"
-  confidence: number
-  defects: ImageQualityDefect[]
-  rationale: string
-}
-
-export type ImageQualityReference = {
-  id: string
-  expectedVerdict: "pass" | "rework" | "needs_human_review"
-  imagePath: string
-  rationale: string
-  defects: Array<{ kind: string; region: string }>
-}
-
-export type ImageQualityReferenceSet = {
-  version: string | null
-  references: ImageQualityReference[]
-  warnings: string[]
-}
-
-export type RembgRuntimeConfig = {
-  enabled: boolean
-  dockerBin: string
-  image: string
-  model: "isnet-general-use"
-  modelDir: string
-  timeoutMs: number
-}
-
 type WorkerOptions = {
   executeCodex: boolean
   noComplete: boolean
@@ -596,17 +492,6 @@ export class WorkerClaimGate {
   }
 }
 
-export type BrandResolutionPromptContext = {
-  submitted_brand_text: string | null
-  submitted_product_name_text: string | null
-  scanned_identifier: ScannedIdentifierPacketValue
-  lookup_text: string
-  resolved_brand: JsonRecord | null
-  nearby_brand_options: JsonRecord[]
-  catalog_summary: JsonRecord
-  rules: string[]
-}
-
 export type ScanIntakeSeed = {
   scannedIdentifier: ScannedIdentifierPacketValue
   retailerEnrichment: RetailerEnrichmentPacket | null
@@ -617,17 +502,9 @@ const reportRetailerEnrichmentWarning = createRetailerEnrichmentWarningReporter(
   emit: (message, fields) => console.warn("[product-intake]", message, fields),
 })
 
-type SupabaseQueryResult<T> = {
-  data: T | null
-  error: { message?: string } | null
-}
-
 const CODEX_RESEARCH_TIMEOUT_MS = 5 * 60_000
 const CODEX_APP_BINARY = "/Applications/Codex.app/Contents/Resources/codex"
 const MODEL_EVALUATION_EXPERIMENT_ID = "product_intake_research_effort_v1"
-const REMBG_IMAGE =
-  "danielgatis/rembg@sha256:98e72b790093dec3b21967e22c8eb75a0a67d458fdba7ef5fcc1900cad76396b"
-const REMBG_MODEL = "isnet-general-use" as const
 
 const ARRAY_CATEGORY_SPEC_TABLES = new Set<string>([
   "product_shampoo_specs",
@@ -845,11 +722,12 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
           job.submission_id,
         )
         reportRetailerEnrichmentWarning(scanIntakeSeed.retailerEnrichmentWarning)
-        const brandResolutionContext = await loadBrandResolutionContext(
-          options.supabase,
-          detail,
-          scanIntakeSeed.scannedIdentifier,
-        )
+        const { catalog: brandCatalog, ...brandResolutionContext } =
+          await loadBrandResolutionContext(
+            options.supabase,
+            detail,
+            scanIntakeSeed.scannedIdentifier,
+          )
         const promptPacketPath = writePromptPacket(
           job,
           options.workerId,
@@ -899,17 +777,28 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
         if (job.stage === "image_judging") {
           let imageLeasedJob = job
           try {
-            const updated = await processApprovedImageForReview({
-              supabase: options.supabase,
-              job,
-              detail,
-              workerId: options.workerId,
-              promptPacketPath,
-              executeCodex: options.executeCodex,
-              onLeaseRefresh: (refreshedJob) => {
-                imageLeasedJob = refreshedJob
+            const updated = await processApprovedImageForReview(
+              {
+                supabase: options.supabase,
+                job,
+                detail,
+                workerId: options.workerId,
+                promptPacketPath,
+                executeCodex: options.executeCodex,
+                onLeaseRefresh: (refreshedJob) => {
+                  imageLeasedJob = refreshedJob
+                },
               },
-            })
+              {
+                appendResearchArtifact,
+                updateResearchJob,
+                measureModelRun,
+                refreshModelRunLease,
+                captureOptionalTelemetryFailure,
+                runCodexJson,
+                outputPathForModelLane,
+              },
+            )
             result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
           } catch (error) {
             options.claimGate.handleFailure(error)
@@ -968,13 +857,25 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
             })
           }
 
-          const researchOutput = normalizeResearchOutputForCategory(
+          let researchOutput = normalizeResearchOutputForCategory(
             rawResearchOutput,
             detail?.category,
             brandResolutionContext,
             detail?.decisions ?? [],
             job.submission_id,
+            {
+              retailerPacket: scanIntakeSeed.retailerEnrichment,
+              inciRetryAttempted: leasedJob.progress.inci_retry_attempted === true,
+              brandCatalog,
+            },
           )
+          // Enabled by default; only the exact env value "false" disables commerce confirmation.
+          if (process.env.PRODUCT_INTAKE_COMMERCE_CHECK_ENABLED !== "false") {
+            researchOutput = await applyCommerceStage(researchOutput, job.submission_id, {
+              dmSearch: (query) => workerDmClient().searchProducts(query),
+              now: () => new Date(),
+            })
+          }
           const updated = await completeResearchPass({
             supabase: options.supabase,
             job: leasedJob,
@@ -1451,290 +1352,6 @@ function toJsonRecord(value: unknown): JsonRecord {
   return normalized
 }
 
-function errorMessage(error: unknown): string {
-  return truncateDiagnostic(
-    error instanceof Error ? error.message : "Unknown model evaluation failure.",
-  )
-}
-
-async function processApprovedImageForReview(params: {
-  supabase: ReturnType<typeof createSupabaseClientFromEnv>
-  job: ProductIntakeResearchJob
-  detail: ProductIntakeSubmissionDetail | null
-  workerId: string
-  promptPacketPath: string
-  executeCodex: boolean
-  onLeaseRefresh?: (job: ProductIntakeResearchJob) => void
-}) {
-  let leasedJob = params.job
-  const sourceImageUrl = findApprovedSourceImageUrl(params.detail)
-  if (!sourceImageUrl) {
-    throw new Error("No approved source image URL found for image processing.")
-  }
-
-  const response = await fetch(sourceImageUrl, {
-    headers: {
-      // Some CDNs serve AVIF/HEIF variants for .jpg URLs when asked, and the
-      // local Sharp/libvips build can read metadata but fail during pixel decode.
-      accept: "image/jpeg,image/png,image/webp,*/*;q=0.8",
-      "user-agent": "ChaarlieProductIntakeReview/1.0",
-    },
-  })
-  if (!response.ok) {
-    throw new Error(`Download approved image failed: HTTP ${response.status}`)
-  }
-
-  const sourceBytes = Buffer.from(await response.arrayBuffer())
-  const sourceSha256 = createHash("sha256").update(sourceBytes).digest("hex")
-  const sourceAlphaStats = await processedImageAlphaStats(sourceBytes)
-  const sourceAlreadyTransparent = sourceAlphaStats.transparentRatio > 0.05
-  const workDir = join(
-    process.cwd(),
-    "tmp",
-    "product-intake-image-processing",
-    params.job.submission_id,
-  )
-  const sourceDir = join(workDir, "source")
-  const cutoutDir = join(workDir, "selected-nobg")
-  mkdirSync(sourceDir, { recursive: true })
-  mkdirSync(cutoutDir, { recursive: true })
-  const sourceExt = imageExtension(response.headers.get("content-type"), sourceImageUrl)
-  const sourceSlug = slugForProcessedImage(params.detail)
-  const sourceFile = join(sourceDir, `${sourceSlug}-${sourceSha256.slice(0, 12)}.${sourceExt}`)
-  writeFileSync(sourceFile, sourceBytes)
-
-  const preparedCutout = sourceAlreadyTransparent
-    ? null
-    : await runAutomaticBackgroundRemoval({
-        sourceFile,
-        outputDir: cutoutDir,
-        outputSlug: sourceSlug,
-      })
-  const preparedCutoutFile = preparedCutout?.file ?? null
-  const transparentBackgroundDetected = sourceAlreadyTransparent || Boolean(preparedCutoutFile)
-  const backgroundRemovalRequired = !sourceAlreadyTransparent && !preparedCutoutFile
-  if (backgroundRemovalRequired) {
-    const artifact = await appendResearchArtifact(params.supabase, {
-      jobId: params.job.id,
-      submissionId: params.job.submission_id,
-      kind: "processed_image",
-      status: "needs_image_work",
-      confidence: 0.2,
-      payload: {
-        source_image_url: sourceImageUrl,
-        source_sha256: sourceSha256,
-        final_image_ready: false,
-        background_action: "background_removal_required",
-        source_transparent_background_detected: false,
-        transparent_background_detected: false,
-        source_transparent_pixel_ratio: sourceAlphaStats.transparentRatio,
-        source_opaque_pixel_ratio: sourceAlphaStats.opaqueRatio,
-        notes:
-          "Source image has no usable alpha and automatic Vision background removal did not produce a cutout. Use Vision/rembg manually or select a cleaner image before final image review.",
-      },
-      sourceUrls: [sourceImageUrl],
-      model: "local-image-finalizer",
-      promptVersion: "product_intake_image_finalization_v1",
-    })
-
-    return updateResearchJob(params.supabase, {
-      jobId: params.job.id,
-      status: "waiting_for_review",
-      stage: "preview_build",
-      progress: {
-        ...params.job.progress,
-        message: "Bildverarbeitung braucht manuelle Hintergrundentfernung.",
-        prompt_packet_path: params.promptPacketPath,
-        worker_id: params.workerId,
-        mode: "local_image_processing",
-        processed_image_artifact_id: artifact.id,
-        processed_image_ready: false,
-        background_action: "background_removal_required",
-        processed_at: new Date().toISOString(),
-      },
-      lastError: null,
-      expectedLockedBy: params.job.locked_by,
-      expectedLockedAt: params.job.locked_at,
-    })
-  }
-
-  const backgroundAction = sourceAlreadyTransparent
-    ? "source_already_transparent"
-    : preparedCutout?.method === "rembg_isnet_general_use"
-      ? "rembg_isnet_general_use"
-      : "vision_background_removed"
-  const finalized = await finalizeProductImageAsset({
-    sourceFile,
-    preparedCutoutFile,
-    label: productLabelForImage(params.detail),
-    outputDir: join(finalizedImageOutputRoot(process.env), params.job.submission_id),
-    publicPathPrefix: `/product-intake-finalized/${params.job.submission_id}`,
-    dateFolder: dateFolderForJob(params.job),
-    submissionId: params.job.submission_id,
-    sourceImageUrl,
-    sourcePageUrl: findApprovedSourcePageUrl(params.detail),
-    sourceType: "retailer",
-    reviewedBy: "codex",
-  })
-  const deterministicReady = finalized.qualityGate.status === "pass"
-  const judgeConfig = imageQualityJudgeRuntimeConfig(process.env)
-  const visualJudgeEnabled = judgeConfig.enabled && params.executeCodex
-  let visualVerdict: ImageQualityVerdict | null = null
-  let visualJudgeError: string | null = null
-  let referenceSet: ImageQualityReferenceSet = { version: null, references: [], warnings: [] }
-
-  if (visualJudgeEnabled) {
-    const manifestPath =
-      optionalNonBlankString(process.env.PRODUCT_INTAKE_IMAGE_QA_REFERENCE_MANIFEST) ??
-      join(process.cwd(), "config", "product-intake-image-qa-references.v1.json")
-    const referenceRoot =
-      optionalNonBlankString(process.env.PRODUCT_INTAKE_IMAGE_QA_REFERENCE_ROOT) ??
-      finalizedImageOutputRoot(process.env)
-    const visualRun = await measureModelRun("image_judge", judgeConfig, () => {
-      referenceSet = loadImageQualityReferenceSet({
-        manifestPath,
-        rootDir: referenceRoot,
-        maxReferences: 5,
-      })
-      return runCodexImageQualityJudge({
-        promptPacketPath: params.promptPacketPath,
-        currentImagePaths: [sourceFile, finalized.qaFile, finalized.finalFile],
-        runtimeConfig: judgeConfig,
-        referenceSet,
-      })
-    })
-    leasedJob = await refreshModelRunLease({
-      supabase: params.supabase,
-      job: leasedJob,
-      workerId: params.workerId,
-      promptPacketPath: params.promptPacketPath,
-      message: "Sol/medium visual image judgment returned; worker lease refreshed.",
-    })
-    params.onLeaseRefresh?.(leasedJob)
-    if (visualRun.success) {
-      visualVerdict = visualRun.output
-    } else {
-      visualJudgeError = visualRun.error
-    }
-    await captureOptionalTelemetryFailure(() =>
-      appendResearchArtifact(params.supabase, {
-        jobId: leasedJob.id,
-        submissionId: leasedJob.submission_id,
-        kind: "image_judgment",
-        status: visualRun.success ? "completed" : "failed",
-        confidence: visualRun.success ? visualRun.output.confidence : null,
-        payload: {
-          verdict: visualRun.success ? visualRun.output.verdict : "needs_human_review",
-          confidence: visualRun.success ? visualRun.output.confidence : null,
-          defects: visualRun.success ? visualRun.output.defects : [],
-          rationale: visualRun.success
-            ? visualRun.output.rationale
-            : "Visual image judge failed; Nick must inspect the prepared image.",
-          error: visualRun.success ? null : visualRun.error,
-          duration_ms: visualRun.durationMs,
-          output_hash: visualRun.success ? visualRun.outputHash : null,
-          reference_set_version: referenceSet.version,
-          reference_ids: referenceSet.references.map((reference) => reference.id),
-          reference_warnings: referenceSet.warnings,
-          deterministic_quality_gate: finalized.qualityGate,
-          human_approval_required: true,
-        },
-        sourceUrls: [sourceImageUrl],
-        model: judgeConfig.model,
-        promptVersion: "product_intake_image_quality_judge_v1",
-      }),
-    )
-  }
-
-  const preparation = imageQualityPreparationDecision({
-    deterministicReady,
-    judgeEnabled: visualJudgeEnabled,
-    verdict: visualVerdict?.verdict ?? (visualJudgeEnabled ? "needs_human_review" : null),
-  })
-  const finalImageReady = preparation.finalImageReady
-
-  const artifact = await appendResearchArtifact(params.supabase, {
-    jobId: params.job.id,
-    submissionId: params.job.submission_id,
-    kind: "processed_image",
-    status: preparation.status,
-    confidence: visualVerdict?.confidence ?? (finalImageReady ? 0.9 : 0.4),
-    payload: {
-      public_review_url: finalized.finalReviewUrl,
-      final_review_url: finalized.finalReviewUrl,
-      qa_review_url: finalized.qaReviewUrl,
-      source_image_url: sourceImageUrl,
-      source_page_url: findApprovedSourcePageUrl(params.detail),
-      source_sha256: sourceSha256,
-      asset_sha256: finalized.sha256,
-      thumbnail_file: finalized.thumbnailFile,
-      thumbnail_storage_path: finalized.thumbnailStoragePath,
-      thumbnail_public_url: finalized.thumbnailPublicUrl,
-      thumbnail_asset_sha256: finalized.thumbnailSha256,
-      processing_method: "local_chaarlie_neutral_background_v1",
-      selection_mode: stringValue(params.job.progress?.image_selection_mode) ?? "reviewer_selected",
-      final_image_ready: finalImageReady,
-      background_action: backgroundAction,
-      background_removed: !sourceAlreadyTransparent,
-      source_transparent_background_detected: sourceAlreadyTransparent,
-      transparent_background_detected: transparentBackgroundDetected,
-      source_transparent_pixel_ratio: sourceAlphaStats.transparentRatio,
-      source_opaque_pixel_ratio: sourceAlphaStats.opaqueRatio,
-      final_file: finalized.finalFile,
-      qa_file: finalized.qaFile,
-      selected_nobg_file: finalized.selectedNoBgFile,
-      storage_bucket: "product-images",
-      storage_path: finalized.storagePath,
-      planned_public_url: finalized.publicUrl,
-      quality_gate: finalized.qualityGate,
-      visual_quality_judgment: visualJudgeEnabled
-        ? {
-            verdict: visualVerdict?.verdict ?? "needs_human_review",
-            confidence: visualVerdict?.confidence ?? null,
-            defects: visualVerdict?.defects ?? [],
-            rationale:
-              visualVerdict?.rationale ??
-              "Visual image judge failed; inspect the raw source, magenta QA, and final render.",
-            error: visualJudgeError,
-            reference_set_version: referenceSet.version,
-            human_approval_required: true,
-          }
-        : null,
-      chaarlie_neutral_background: true,
-      notes: sourceAlreadyTransparent
-        ? "Source image already had a transparent cutout. Final Chaarlie review asset was cropped, size-normalized, QA-rendered on magenta, and composited onto the neutral product background."
-        : preparedCutout?.method === "rembg_isnet_general_use"
-          ? "The isolated Hetzner rembg worker produced an isnet-general-use cutout. The final Chaarlie review asset was cropped, size-normalized, QA-rendered on magenta, and composited onto the neutral product background."
-          : "Vision produced a transparent cutout. Final Chaarlie review asset was cropped, size-normalized, QA-rendered on magenta, and composited onto the neutral product background.",
-    },
-    sourceUrls: [sourceImageUrl],
-    model: "local-image-finalizer",
-    promptVersion: "product_intake_image_finalization_v1",
-  })
-
-  return updateResearchJob(params.supabase, {
-    jobId: params.job.id,
-    status: "waiting_for_review",
-    stage: "preview_build",
-    progress: {
-      ...params.job.progress,
-      message: "Bildverarbeitung ist bereit fuer den finalen Bildcheck.",
-      prompt_packet_path: params.promptPacketPath,
-      worker_id: params.workerId,
-      mode: "local_image_processing",
-      processed_image_artifact_id: artifact.id,
-      processed_image_url: finalized.finalReviewUrl,
-      qa_image_url: finalized.qaReviewUrl,
-      processed_image_ready: finalImageReady,
-      background_action: backgroundAction,
-      processed_at: new Date().toISOString(),
-    },
-    lastError: null,
-    expectedLockedBy: leasedJob.locked_by,
-    expectedLockedAt: leasedJob.locked_at,
-  })
-}
-
 export function imageProcessingFailureUpdate(params: {
   job: Pick<ProductIntakeResearchJob, "id" | "stage" | "locked_by" | "locked_at"> &
     Partial<Pick<ProductIntakeResearchJob, "attempt_count" | "max_attempts">>
@@ -1770,27 +1387,6 @@ export function imageProcessingFailureUpdate(params: {
     lastError: message,
     expectedLockedBy: params.job.locked_by,
     expectedLockedAt: params.job.locked_at,
-  }
-}
-
-async function processedImageAlphaStats(bytes: Buffer) {
-  const { data, info } = await sharp(bytes, { failOn: "none" })
-    .ensureAlpha()
-    .raw()
-    .toBuffer({ resolveWithObject: true })
-  let transparent = 0
-  let opaque = 0
-
-  for (let index = 3; index < data.length; index += info.channels) {
-    const alpha = data[index]
-    if (alpha < 8) transparent += 1
-    if (alpha > 247) opaque += 1
-  }
-
-  const total = info.width * info.height
-  return {
-    transparentRatio: total > 0 ? transparent / total : 0,
-    opaqueRatio: total > 0 ? opaque / total : 0,
   }
 }
 
@@ -2114,33 +1710,99 @@ export function categoryApprovalContract(category: string | null | undefined): J
   }
 }
 
+let dmCommerceClient: ReturnType<typeof createDmMcpClient> | undefined
+
+function workerDmClient(): ReturnType<typeof createDmMcpClient> {
+  dmCommerceClient ??= createDmMcpClient({ deadlineMs: 20_000 })
+  return dmCommerceClient
+}
+
+export async function applyCommerceStage(
+  output: CodexResearchOutput,
+  submissionId: string,
+  deps: CommerceStageDeps,
+): Promise<CodexResearchOutput> {
+  if (!hasFinalResearchPayload(output.researched_payload)) return output
+  const final = normalizeRecord(output.researched_payload.final)!
+  let artifact: CodexResearchArtifactOutput
+  let blockers: string[] = []
+  try {
+    const result = await runCommerceStage({ submissionId, final, deps })
+    applyCommerceWrites(final, result.writes)
+    artifact = result.artifact
+    blockers = result.blockers
+  } catch (error) {
+    artifact = {
+      kind: "commerce_check",
+      status: "unconfirmed",
+      payload: { stage: "commerce", error: errorMessage(error) },
+    }
+    await captureOptionalTelemetryFailure(async () => {
+      if (Sentry.isInitialized()) Sentry.captureException(error)
+    })
+  }
+  return {
+    ...output,
+    artifacts: [
+      ...output.artifacts.filter(
+        (entry) => entry.kind !== "commerce_check" || entry.payload.stage !== "commerce",
+      ),
+      artifact,
+    ],
+    blockers: dedupeStrings([...output.blockers, ...blockers]),
+  }
+}
+
 export function normalizeResearchOutputForCategory(
   output: CodexResearchOutput,
   category: string | null | undefined,
   brandResolutionContext: BrandResolutionPromptContext,
   reviewDecisions: ProductIntakeReviewDecisionRow[],
   expectedResearchId: string,
+  options: InciStageOptions & { brandCatalog?: BrandResolutionCatalogInput } = {},
 ): CodexResearchOutput {
   const categoryKey = normalizeCategoryKey(category)
   if (!categoryKey) return output
 
-  const researchedPayload = normalizeCategoryResearchedPayload(
-    output.researched_payload,
-    categoryKey,
-    output.artifacts,
-  )
+  const researchedPayload =
+    normalizeCategoryResearchedPayload(output.researched_payload, categoryKey, output.artifacts) ??
+    {}
   const artifacts = [...output.artifacts]
-  const blockers = [...output.blockers]
+  let blockers = output.blockers.filter(
+    (blocker) => !/^inci_(missing_first_pass|unavailable):/.test(blocker),
+  )
   const final = normalizeRecord(researchedPayload?.final)
-  applyApprovedCanonicalBrand(final, brandResolutionContext, reviewDecisions)
-  enforceCanonicalBrandResolution(final, brandResolutionContext)
-  applyApprovedProductIdentity(final, brandResolutionContext, reviewDecisions)
-  const categorySpecs = normalizeRecord(final?.category_specs)
-
+  const identityBlocker = applyIdentityStage({
+    final,
+    context: brandResolutionContext,
+    reviewDecisions,
+    artifacts,
+    brandCatalog: options.brandCatalog,
+  })
+  if (identityBlocker) blockers.push(identityBlocker)
+  else if (
+    artifacts.some(
+      (artifact) =>
+        artifact.kind === "identity_candidate" &&
+        artifact.payload.stage === "identity" &&
+        artifact.status === "resolved",
+    )
+  ) {
+    blockers = blockers.filter(
+      (blocker) => !blocker.startsWith("canonical brand table resolution missing for:"),
+    )
+  }
   const engine = CATEGORY_RESEARCH_REGISTRY[categoryKey]
+  let projected = false
+  const projectionArtifact = artifacts.find(
+    (artifact) =>
+      artifact.kind === "property_synthesis" &&
+      artifact.payload[`${categoryKey}_research_envelope`] != null,
+  )
   if (final) {
     const adapterResult = engine.apply({ final, artifacts, expectedResearchId })
     blockers.push(...adapterResult.blockers)
+    projected = adapterResult.blockers.length === 0
     // Model-authored provenance cannot override the running server registry.
     delete final.engine
     const draft = normalizeRecord(researchedPayload?.draft)
@@ -2166,11 +1828,27 @@ export function normalizeResearchOutputForCategory(
   for (const artifact of artifacts) {
     if (artifact.kind !== "property_synthesis") continue
     if (engine.state === "active" && final) {
+      const projection =
+        projected && artifact === projectionArtifact
+          ? normalizeRecord(artifact.payload[`${categoryKey}_production_projection`])
+          : null
+      const profile = normalizeRecord(
+        normalizeRecord(projection?.category_specs)?.product_bondbuilder_specs,
+      )
+      const researchProfile = normalizeRecord(profile?.research_profile)
       artifact.payload.engine = {
         id: engine.engineId,
         methodology: engine.methodology,
         adapter: engine.adapter,
         state: engine.state,
+        input_hash:
+          categoryKey === "bondbuilder"
+            ? stringValue(normalizeRecord(researchProfile?.method)?.output_sha256)
+            : stringValue(projection?.research_input_sha256),
+        projection_hash:
+          categoryKey === "bondbuilder"
+            ? stringValue(normalizeRecord(researchProfile?.review)?.profile_sha256)
+            : stringValue(projection?.projection_sha256),
       }
     } else delete artifact.payload.engine
   }
@@ -2184,6 +1862,7 @@ export function normalizeResearchOutputForCategory(
   // fully valid table. Re-reading here validates the object the adapter
   // actually produced, for both the envelope path and the legacy/non-envelope
   // path (where the adapter never ran and this is unchanged from before).
+  const categorySpecs = normalizeRecord(final?.category_specs)
   const leaveInSpecs = normalizeRecord(categorySpecs?.product_leave_in_specs)
 
   if (leaveInSpecs) {
@@ -2193,6 +1872,39 @@ export function normalizeResearchOutputForCategory(
       blockers.push("leave_in application_stage has no valid value")
     }
   }
+  const protocol = final
+    ? runProtocolStage({
+        categoryKey,
+        categorySpecs: categorySpecs ?? {},
+        draft:
+          (normalizeRecord(researchedPayload.draft)?.protocol as
+            | ProtocolResearchDraft
+            | undefined) ?? null,
+        sources: final.sources,
+      })
+    : { status: "not_templated" as const, templateIds: [], rows: [], blockers: [], notes: [] }
+  if (categorySpecs && protocol.status !== "not_templated") {
+    categorySpecs.product_application_protocols = protocol.rows
+  }
+  blockers.push(...protocol.blockers)
+  for (let index = artifacts.length - 1; index >= 0; index--) {
+    if (
+      artifacts[index]!.kind === "protocol_template" &&
+      artifacts[index]!.payload.stage === "protocol"
+    )
+      artifacts.splice(index, 1)
+  }
+  artifacts.push({
+    kind: "protocol_template",
+    status: protocol.status,
+    payload: {
+      stage: "protocol",
+      status: protocol.status,
+      template_ids: protocol.templateIds,
+      blockers: protocol.blockers,
+      notes: protocol.notes,
+    },
+  })
   const missingSpecTables = missingCategorySpecTables(categorySpecs, categoryKey)
   if (missingSpecTables.length > 0) {
     blockers.push(`missing category_specs for ${categoryKey}: ${missingSpecTables.join(", ")}`)
@@ -2205,12 +1917,8 @@ export function normalizeResearchOutputForCategory(
   if (missingFinalSections.length > 0) {
     blockers.push(`missing final payload sections: ${missingFinalSections.join(", ")}`)
   }
-  const missingBrandResolution = canonicalBrandResolutionBlocker(
-    final,
-    brandResolutionContext,
-    reviewDecisions,
-  )
-  if (missingBrandResolution) blockers.push(missingBrandResolution)
+  const inciBlocker = applyInciStage(researchedPayload, artifacts, engine, options)
+  if (inciBlocker) blockers.push(inciBlocker)
 
   return {
     ...output,
@@ -2221,15 +1929,6 @@ export function normalizeResearchOutputForCategory(
     })),
     blockers: dedupeStrings(blockers),
   }
-}
-
-async function loadBrandResolutionContext(
-  supabase: ReturnType<typeof createSupabaseClientFromEnv>,
-  detail: ProductIntakeSubmissionDetail | null,
-  scannedIdentifier: ScannedIdentifierPacketValue,
-): Promise<BrandResolutionPromptContext> {
-  const catalogInput = await loadBrandResolutionCatalogForWorker(supabase)
-  return buildBrandResolutionPromptContext(detail, catalogInput, scannedIdentifier)
 }
 
 /**
@@ -2266,262 +1965,6 @@ export async function loadScanIntakeSeedForSubmission(
     retailerEnrichment: retailerEnrichment.packet,
     retailerEnrichmentWarning: retailerEnrichment.warning,
   }
-}
-
-async function loadBrandResolutionCatalogForWorker(
-  supabase: ReturnType<typeof createSupabaseClientFromEnv>,
-): Promise<BrandResolutionCatalogInput> {
-  const [brandsResult, productLinesResult, brandAliasesResult] = await Promise.all([
-    supabase.from("brands").select("id, canonical_name, normalized_name"),
-    supabase.from("product_lines").select("id, brand_id, canonical_name, normalized_name"),
-    supabase.from("brand_aliases").select("brand_id, product_line_id, alias, normalized_alias"),
-  ])
-
-  return {
-    brands: requireSupabaseData<ProductIdentityBrand[]>(
-      brandsResult as unknown as SupabaseQueryResult<ProductIdentityBrand[]>,
-      "load brands for product-intake Codex worker",
-    ),
-    productLines: requireSupabaseData<ProductIdentityProductLine[]>(
-      productLinesResult as unknown as SupabaseQueryResult<ProductIdentityProductLine[]>,
-      "load product lines for product-intake Codex worker",
-    ),
-    brandAliases: requireSupabaseData<ProductIdentityBrandAlias[]>(
-      brandAliasesResult as unknown as SupabaseQueryResult<ProductIdentityBrandAlias[]>,
-      "load brand aliases for product-intake Codex worker",
-    ),
-  }
-}
-
-function requireSupabaseData<T>(result: SupabaseQueryResult<T>, label: string): T {
-  if (result.error) {
-    throw new Error(`${label}: ${result.error.message ?? "unknown Supabase error"}`)
-  }
-  if (result.data === null) {
-    throw new Error(`${label}: no data returned`)
-  }
-  return result.data
-}
-
-function buildBrandResolutionPromptContext(
-  detail: ProductIntakeSubmissionDetail | null,
-  catalogInput: BrandResolutionCatalogInput,
-  scannedIdentifier: ScannedIdentifierPacketValue,
-): BrandResolutionPromptContext {
-  const catalog = buildBrandResolutionCatalog(catalogInput)
-  const submittedBrand = detail?.brand ?? null
-  const submittedProductName = detail?.product_name ?? null
-  const lookupText = [submittedBrand, submittedProductName].filter(Boolean).join(" ").trim()
-  const resolution = lookupText ? resolveBrandFromText(lookupText, catalog) : null
-  const resolvedBrand =
-    resolution && resolution.match !== "none" && resolution.brand
-      ? {
-          match: resolution.match,
-          confidence: resolution.confidence,
-          reason: resolution.reason,
-          matched_text: resolution.matchedText,
-          canonical_brand_id: brandIdValue(resolution.brand),
-          canonical_brand: brandLabel(resolution.brand),
-          product_line_id: resolution.productLine
-            ? productLineIdValue(resolution.productLine)
-            : null,
-          product_line: resolution.productLine ? productLineLabel(resolution.productLine) : null,
-        }
-      : null
-
-  return {
-    submitted_brand_text: submittedBrand,
-    submitted_product_name_text: submittedProductName,
-    scanned_identifier: scannedIdentifier,
-    lookup_text: lookupText,
-    resolved_brand: resolvedBrand,
-    nearby_brand_options: resolvedBrand ? [] : nearbyBrandOptions(lookupText, catalogInput.brands),
-    catalog_summary: {
-      brand_count: catalogInput.brands.length,
-      product_line_count: catalogInput.productLines?.length ?? 0,
-      brand_alias_count: catalogInput.brandAliases?.length ?? 0,
-      alias_conflict_count: catalog.conflicts.length,
-    },
-    rules: [
-      "Use resolved_brand.canonical_brand exactly for final.product.canonical_brand when resolved_brand is present.",
-      "Use resolved_brand.product_line exactly for final.product.product_line when resolved_brand.product_line is present.",
-      "If resolved_brand is null and review_decisions includes an approved product.canonical_brand, use that reviewed DB-ready brand spelling exactly.",
-      "If review_decisions includes approved product.product_line or product.clean_name, use those reviewed DB-ready product identity fields exactly.",
-      "If resolved_brand is null, do not invent a canonical brand spelling. Add a blocker requesting canonical brand resolution or new-brand approval.",
-      "The review cockpit must show DB-ready brand values, not prose explanations.",
-    ],
-  }
-}
-
-function enforceCanonicalBrandResolution(
-  final: JsonRecord | null | undefined,
-  brandResolutionContext: BrandResolutionPromptContext,
-): void {
-  const product = normalizeRecord(final?.product)
-  const resolved = normalizeRecord(brandResolutionContext.resolved_brand)
-  const canonicalBrand = stringValue(resolved?.canonical_brand)
-  if (!product || !canonicalBrand) return
-
-  product.canonical_brand = canonicalBrand
-  const productLine = stringValue(resolved?.product_line)
-  if (productLine) product.product_line = productLine
-}
-
-function applyApprovedCanonicalBrand(
-  final: JsonRecord | null | undefined,
-  brandResolutionContext: BrandResolutionPromptContext,
-  reviewDecisions: ProductIntakeReviewDecisionRow[],
-): void {
-  if (normalizeRecord(brandResolutionContext.resolved_brand)) return
-  const product = normalizeRecord(final?.product)
-  if (!product) return
-
-  const approvedBrand = approvedCanonicalBrandFromReview(reviewDecisions)
-  if (!approvedBrand) return
-
-  product.canonical_brand = approvedBrand
-}
-
-function applyApprovedProductIdentity(
-  final: JsonRecord | null | undefined,
-  brandResolutionContext: BrandResolutionPromptContext,
-  reviewDecisions: ProductIntakeReviewDecisionRow[],
-): void {
-  const product = normalizeRecord(final?.product)
-  if (!product) return
-
-  const identity = approvedProductIdentityFromReview(reviewDecisions)
-  if (!normalizeRecord(brandResolutionContext.resolved_brand) && identity.canonicalBrand) {
-    product.canonical_brand = identity.canonicalBrand
-  }
-  if (identity.hasProductLine) {
-    product.product_line = identity.productLine
-  }
-  if (identity.cleanName) {
-    product.clean_name = identity.cleanName
-  }
-}
-
-function approvedCanonicalBrandFromReview(
-  reviewDecisions: ProductIntakeReviewDecisionRow[],
-): string | null {
-  for (const decision of reviewDecisions) {
-    if (decision.field_path !== "product.canonical_brand") continue
-    if (decision.decision !== "approved") continue
-
-    const reviewerValue = normalizeRecord(decision.reviewer_value)
-    const proposedValue = normalizeRecord(decision.proposed_value)
-    const approvedBrand =
-      stringValue(reviewerValue?.canonical_brand) ??
-      stringValue(reviewerValue?.canonicalName) ??
-      stringValue(proposedValue?.canonical_brand) ??
-      stringValue(proposedValue?.canonicalName)
-    if (approvedBrand) return approvedBrand
-  }
-
-  return null
-}
-
-function approvedProductIdentityFromReview(reviewDecisions: ProductIntakeReviewDecisionRow[]): {
-  canonicalBrand: string | null
-  hasProductLine: boolean
-  productLine: string | null
-  cleanName: string | null
-} {
-  const identity = {
-    canonicalBrand: null as string | null,
-    hasProductLine: false,
-    productLine: null as string | null,
-    cleanName: null as string | null,
-  }
-
-  for (const decision of reviewDecisions) {
-    if (decision.decision !== "approved") continue
-    const reviewerValue = normalizeRecord(decision.reviewer_value)
-    const proposedValue = normalizeRecord(decision.proposed_value)
-
-    if (decision.field_path === "product.canonical_brand") {
-      identity.canonicalBrand =
-        stringValue(reviewerValue?.canonical_brand) ??
-        stringValue(reviewerValue?.canonicalName) ??
-        stringValue(proposedValue?.canonical_brand) ??
-        stringValue(proposedValue?.canonicalName) ??
-        identity.canonicalBrand
-    }
-
-    if (decision.field_path === "product.product_line") {
-      identity.hasProductLine = true
-      identity.productLine =
-        stringValue(reviewerValue?.product_line) ?? stringValue(proposedValue?.product_line)
-    }
-
-    if (decision.field_path === "product.clean_name") {
-      identity.cleanName =
-        stringValue(reviewerValue?.clean_name) ??
-        stringValue(reviewerValue?.cleanName) ??
-        stringValue(proposedValue?.clean_name) ??
-        stringValue(proposedValue?.cleanName) ??
-        identity.cleanName
-    }
-  }
-
-  return identity
-}
-
-function canonicalBrandResolutionBlocker(
-  final: JsonRecord | null | undefined,
-  brandResolutionContext: BrandResolutionPromptContext,
-  reviewDecisions: ProductIntakeReviewDecisionRow[],
-): string | null {
-  const product = normalizeRecord(final?.product)
-  if (!product) return null
-  if (normalizeRecord(brandResolutionContext.resolved_brand)) return null
-  if (approvedCanonicalBrandFromReview(reviewDecisions)) return null
-  if (!brandResolutionContext.lookup_text) return null
-  return `canonical brand table resolution missing for: ${brandResolutionContext.lookup_text}`
-}
-
-function nearbyBrandOptions(
-  lookupText: string,
-  brands: readonly ProductIdentityBrand[],
-): JsonRecord[] {
-  const lookupTokens = new Set(
-    normalizeIdentityText(lookupText)
-      .split(" ")
-      .filter((token) => token.length >= 3),
-  )
-  if (lookupTokens.size === 0) return []
-
-  return brands
-    .map((brand) => {
-      const label = brandLabel(brand)
-      const normalized = normalizeIdentityText(label)
-      const score = normalized.split(" ").filter((token) => lookupTokens.has(token)).length
-      return { brand, label, score }
-    })
-    .filter((candidate) => candidate.score > 0)
-    .sort((left, right) => right.score - left.score || left.label.localeCompare(right.label))
-    .slice(0, 20)
-    .map((candidate) => ({
-      canonical_brand_id: brandIdValue(candidate.brand),
-      canonical_brand: candidate.label,
-    }))
-}
-
-function brandIdValue(brand: ProductIdentityBrand): string | null {
-  return brand.id ?? brand.key ?? brand.canonical_name ?? brand.canonicalName ?? brand.name ?? null
-}
-
-function productLineIdValue(line: ProductIdentityProductLine): string | null {
-  return line.id ?? line.key ?? line.canonical_name ?? line.canonicalName ?? line.name ?? null
-}
-
-function brandLabel(brand: ProductIdentityBrand): string {
-  return brand.canonical_name ?? brand.canonicalName ?? brand.name ?? brand.key ?? brand.id ?? ""
-}
-
-function productLineLabel(line: ProductIdentityProductLine): string {
-  return line.canonical_name ?? line.canonicalName ?? line.name ?? line.key ?? line.id ?? ""
 }
 
 function normalizeCategoryResearchedPayload(
@@ -2796,25 +2239,6 @@ async function runCodexJudge(
   return normalizeModelJudgeVerdict(value, blindPacket.laneByCandidate)
 }
 
-async function runCodexImageQualityJudge(params: {
-  promptPacketPath: string
-  currentImagePaths: [string, string, string]
-  runtimeConfig: CodexResearchRuntimeConfig
-  referenceSet: ImageQualityReferenceSet
-}): Promise<ImageQualityVerdict> {
-  const value = await runCodexJson({
-    outputPath: outputPathForModelLane(params.promptPacketPath, "image_judge"),
-    prompt: buildImageQualityJudgePrompt({ referenceSet: params.referenceSet }),
-    runtimeConfig: params.runtimeConfig,
-    webSearch: "disabled",
-    imagePaths: [
-      ...params.currentImagePaths,
-      ...params.referenceSet.references.map((reference) => reference.imagePath),
-    ],
-  })
-  return normalizeImageQualityVerdict(value)
-}
-
 type CodexInfrastructureCode = "codex_timeout" | "infra_auth"
 
 class CodexInfrastructureError extends Error {
@@ -2832,10 +2256,6 @@ function codexInfrastructureCode(error: unknown): CodexInfrastructureCode | null
   if (error.message.startsWith("codex_timeout:")) return "codex_timeout"
   if (error.message.startsWith("infra_auth:")) return "infra_auth"
   return null
-}
-
-function truncateDiagnostic(message: string): string {
-  return message.length <= 4_000 ? message : `${message.slice(0, 3_997)}...`
 }
 
 function positiveDurationMs(raw: string | undefined, fallback: number): number {
@@ -2956,42 +2376,6 @@ export function modelEvaluationRuntimeConfig(
   }
 }
 
-export function imageQualityJudgeRuntimeConfig(
-  env: Readonly<Record<string, string | undefined>>,
-): ImageQualityJudgeRuntimeConfig {
-  const config = {
-    enabled: env.PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_ENABLED?.trim().toLowerCase() === "true",
-    model: nonBlankEnv(env.PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_MODEL, "gpt-6-sol"),
-    reasoningEffort: nonBlankEnv(env.PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_REASONING_EFFORT, "medium"),
-    serviceTier: optionalServiceTier(env.PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_SERVICE_TIER),
-  }
-  assertAllowedProductIntakeModel(config.model, "image quality judge")
-  return config
-}
-
-export function shouldAutoPrepareImage(params: {
-  enabled: boolean
-  researchOutput: CodexResearchOutput
-}): boolean {
-  if (!params.enabled || params.researchOutput.blockers.length > 0) return false
-  if (!hasFinalResearchPayload(params.researchOutput.researched_payload)) return false
-
-  const final = normalizeRecord(params.researchOutput.researched_payload?.final)
-  const product = normalizeRecord(final?.product)
-  if (stringValue(product?.image_url)) return true
-
-  return params.researchOutput.artifacts.some(
-    (artifact) =>
-      artifact.kind === "image_candidate" && Boolean(stringValue(artifact.payload.image_url)),
-  )
-}
-
-export function assertAllowedProductIntakeModel(model: string, lane: string): void {
-  if (model.trim().toLowerCase().startsWith("gpt-6-astra")) {
-    throw new Error(`GPT-6 Astra is disabled for Product Intake (${lane}).`)
-  }
-}
-
 function positiveIntegerEnv(value: string | undefined, fallback: number): number {
   const parsed = Number.parseInt(value?.trim() ?? "", 10)
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback
@@ -3059,165 +2443,6 @@ export function normalizeModelJudgeVerdict(
   }
 }
 
-export function normalizeImageQualityVerdict(value: JsonRecord): ImageQualityVerdict {
-  const verdict = value.verdict
-  if (verdict !== "pass" && verdict !== "rework" && verdict !== "needs_human_review") {
-    throw new Error("Image quality verdict requires verdict pass, rework, or needs_human_review.")
-  }
-  const confidence = boundedNumber(value.confidence, 0, 1, "image_quality.confidence")
-  if (typeof value.rationale !== "string" || value.rationale.trim().length === 0) {
-    throw new Error("Image quality verdict requires a non-empty rationale.")
-  }
-  if (!Array.isArray(value.defects)) {
-    throw new Error("Image quality verdict requires a defects array.")
-  }
-
-  const defects = value.defects.map((item, index): ImageQualityDefect => {
-    const defect = normalizeRecord(item)
-    if (!defect) throw new Error(`Image quality defect ${index} must be an object.`)
-    const kind = nonBlankString(defect.kind, `image_quality.defects[${index}].kind`)
-    const region = nonBlankString(defect.region, `image_quality.defects[${index}].region`)
-    const severity = defect.severity
-    if (severity !== "minor" && severity !== "material" && severity !== "critical") {
-      throw new Error(`Image quality defect ${index} has invalid severity.`)
-    }
-    const explanation = nonBlankString(
-      defect.explanation,
-      `image_quality.defects[${index}].explanation`,
-    )
-    return { kind, region, severity, explanation }
-  })
-
-  if (verdict === "pass" && defects.some((defect) => defect.severity !== "minor")) {
-    throw new Error("Image quality pass cannot contain material or critical defects.")
-  }
-
-  return {
-    verdict,
-    confidence,
-    defects,
-    rationale: value.rationale.trim(),
-  }
-}
-
-export function loadImageQualityReferenceSet(params: {
-  manifestPath: string
-  rootDir: string
-  maxReferences?: number
-}): ImageQualityReferenceSet {
-  if (!existsSync(params.manifestPath)) {
-    return {
-      version: null,
-      references: [],
-      warnings: [`Reference manifest not found: ${params.manifestPath}`],
-    }
-  }
-
-  const manifest = parseJsonObject(readFileSync(params.manifestPath, "utf8"))
-  const version = nonBlankString(manifest.version, "image reference manifest version")
-  if (!Array.isArray(manifest.references)) {
-    throw new Error("Image reference manifest requires a references array.")
-  }
-
-  const root = resolve(params.rootDir)
-  const limit = Math.min(Math.max(params.maxReferences ?? 5, 0), 5)
-  const references: ImageQualityReference[] = []
-  const warnings: string[] = []
-
-  for (const [index, item] of manifest.references.entries()) {
-    if (references.length >= limit) break
-    const entry = normalizeRecord(item)
-    if (!entry) throw new Error(`Image reference ${index} must be an object.`)
-    const id = nonBlankString(entry.id, `image reference ${index} id`)
-    const expectedVerdict = entry.expected_verdict
-    if (
-      expectedVerdict !== "pass" &&
-      expectedVerdict !== "rework" &&
-      expectedVerdict !== "needs_human_review"
-    ) {
-      throw new Error(`Image reference ${id} has an invalid expected verdict.`)
-    }
-    const relativePath = nonBlankString(entry.relative_path, `image reference ${id} relative_path`)
-    const imagePath = resolve(root, relativePath)
-    if (imagePath !== root && !imagePath.startsWith(`${root}${sep}`)) {
-      throw new Error(`Image reference ${id} resolves outside the configured root.`)
-    }
-    if (!existsSync(imagePath)) {
-      warnings.push(`Image reference ${id} is missing: ${imagePath}`)
-      continue
-    }
-    const expectedSha256 = optionalNonBlankString(entry.sha256)
-    if (expectedSha256) {
-      const actualSha256 = createHash("sha256").update(readFileSync(imagePath)).digest("hex")
-      if (actualSha256 !== expectedSha256.toLowerCase()) {
-        warnings.push(`Image reference ${id} failed SHA-256 validation.`)
-        continue
-      }
-    }
-    const rawDefects = Array.isArray(entry.defects) ? entry.defects : []
-    const defects = rawDefects.map((rawDefect, defectIndex) => {
-      const defect = normalizeRecord(rawDefect)
-      if (!defect) throw new Error(`Image reference ${id} defect ${defectIndex} is invalid.`)
-      return {
-        kind: nonBlankString(defect.kind, `image reference ${id} defect kind`),
-        region: nonBlankString(defect.region, `image reference ${id} defect region`),
-      }
-    })
-    references.push({
-      id,
-      expectedVerdict,
-      imagePath,
-      rationale: nonBlankString(entry.rationale, `image reference ${id} rationale`),
-      defects,
-    })
-  }
-
-  return { version, references, warnings }
-}
-
-export function imageQualityPreparationDecision(params: {
-  deterministicReady: boolean
-  judgeEnabled: boolean
-  verdict: ImageQualityVerdict["verdict"] | null
-}): { finalImageReady: boolean; status: "pending_review" | "needs_image_work" } {
-  const finalImageReady = params.judgeEnabled
-    ? params.verdict === "pass"
-    : params.deterministicReady
-  return {
-    finalImageReady,
-    status: finalImageReady ? "pending_review" : "needs_image_work",
-  }
-}
-
-export function buildImageQualityJudgePrompt(params: {
-  referenceSet: ImageQualityReferenceSet
-}): string {
-  return [
-    "You are the read-only visual quality judge for one processed Chaarlie product image.",
-    "Do not edit files, write databases, approve the image, or approve publication.",
-    "The first three attached images are, in order: (1) raw researched source, (2) transparent cutout rendered on magenta QA, and (3) final neutral-background render.",
-    "Any remaining attached images are labeled references described in the JSON below.",
-    "Inspect the whole product perimeter at high attention, especially the bottom and corners.",
-    "Return rework for removable floor shadows or reflections, outer box or secondary packaging, bundles or extra objects, edge residue or halos, rectangular background remnants, jagged edges, detached pixels, or product content cut away by the mask.",
-    "Do not mistake an intrinsic dark bottle base, cap, pump, label edge, or transparent packaging content for removable background residue.",
-    "Return needs_human_review when image identity or edge quality cannot be determined confidently.",
-    "Return exactly one JSON object with verdict (pass, rework, or needs_human_review), confidence (0..1), defects, and rationale.",
-    "Each defect must include kind, region, severity (minor, material, or critical), and explanation. A pass may contain only minor observations.",
-    "Reference examples:",
-    JSON.stringify({
-      version: params.referenceSet.version,
-      examples: params.referenceSet.references.map((reference, index) => ({
-        attachment_index: index + 4,
-        id: reference.id,
-        expected_verdict: reference.expectedVerdict,
-        rationale: reference.rationale,
-        defects: reference.defects,
-      })),
-      warnings: params.referenceSet.warnings,
-    }),
-  ].join("\n")
-}
-
 function normalizeJudgeDimensionScores(
   value: unknown,
   candidate: BlindCandidateLabel,
@@ -3230,34 +2455,6 @@ function normalizeJudgeDimensionScores(
     completeness: boundedNumber(scores.completeness, 0, 5, `${candidate}.completeness`),
     uncertainty: boundedNumber(scores.uncertainty, 0, 5, `${candidate}.uncertainty`),
   }
-}
-
-function boundedNumber(value: unknown, min: number, max: number, field: string): number {
-  if (typeof value !== "number" || !Number.isFinite(value) || value < min || value > max) {
-    throw new Error(`Model judge verdict has invalid ${field}.`)
-  }
-  return value
-}
-
-function nonBlankEnv(value: string | undefined, fallback: string): string {
-  const normalized = value?.trim()
-  return normalized ? normalized : fallback
-}
-
-function optionalServiceTier(value: string | undefined): string | null {
-  const normalized = value?.trim()
-  return normalized && normalized !== "standard" ? normalized : null
-}
-
-function nonBlankString(value: unknown, field: string): string {
-  if (typeof value !== "string" || value.trim().length === 0) {
-    throw new Error(`${field} must be a non-empty string.`)
-  }
-  return value.trim()
-}
-
-function optionalNonBlankString(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0 ? value.trim() : null
 }
 
 export function codexResearchExecArgs(params: {
@@ -3324,70 +2521,6 @@ function normalizeCodexOutput(value: JsonRecord): CodexResearchOutput {
   }
 }
 
-function parseJsonObject(raw: string): JsonRecord {
-  try {
-    const record = normalizeRecord(JSON.parse(raw) as unknown)
-    if (record) return record
-  } catch {
-    // Fall through to scanning for the first complete top-level object.
-  }
-
-  const stack: string[] = []
-  const firstBrace = raw.indexOf("{")
-  let firstBraceInCompleteArray = false
-  let start = -1
-  let inString = false
-  let escaped = false
-
-  for (let index = 0; index < raw.length; index += 1) {
-    const char = raw[index]
-    if (inString) {
-      if (escaped) escaped = false
-      else if (char === "\\") escaped = true
-      else if (char === '"') inString = false
-      continue
-    }
-    if (char === '"') {
-      inString = true
-      continue
-    }
-    if (char === "{" || char === "[") {
-      if (stack.length === 0) start = index
-      stack.push(char)
-      continue
-    }
-    if ((char !== "}" && char !== "]") || stack.length === 0) continue
-    const opening = stack.pop()
-    if ((opening === "{" && char !== "}") || (opening === "[" && char !== "]")) break
-    if (stack.length > 0) continue
-    if (raw[start] !== "{") {
-      if (firstBrace >= start && firstBrace <= index) firstBraceInCompleteArray = true
-      continue
-    }
-
-    try {
-      const record = normalizeRecord(JSON.parse(raw.slice(start, index + 1)) as unknown)
-      if (record) return record
-    } catch {
-      // Skip malformed complete candidates, never promote their nested objects.
-    }
-  }
-
-  // Preserve the slice fallback for stray prose delimiters, without extracting array elements.
-  if (!firstBraceInCompleteArray) {
-    const lastBrace = raw.lastIndexOf("}")
-    if (firstBrace >= 0 && lastBrace > firstBrace) {
-      try {
-        const record = normalizeRecord(JSON.parse(raw.slice(firstBrace, lastBrace + 1)) as unknown)
-        if (record) return record
-      } catch {
-        // The compatibility slice must also be a complete object.
-      }
-    }
-  }
-  throw new Error("Codex output contained no complete top-level JSON object.")
-}
-
 function projectJob(
   job: ProductIntakeResearchJob,
   promptPacketPath: string,
@@ -3400,286 +2533,6 @@ function projectJob(
     stage: job.stage,
     prompt_packet_path: promptPacketPath,
     mode: executeCodex ? "codex_cli" : "preview_only",
-  }
-}
-
-function hasFinalResearchPayload(value: JsonRecord | null | undefined): value is JsonRecord {
-  return Boolean(normalizeRecord(value)?.final && normalizeRecord(normalizeRecord(value)?.final))
-}
-
-function findApprovedSourceImageUrl(detail: ProductIntakeSubmissionDetail | null): string | null {
-  const final = normalizeRecord(detail?.payload?.final)
-  const product = normalizeRecord(final?.product)
-  const productImageUrl = stringValue(product?.image_url)
-  if (productImageUrl) return productImageUrl
-
-  for (const artifact of detail?.artifacts ?? []) {
-    if (artifact.kind !== "image_candidate") continue
-    const imageUrl = stringValue(artifact.payload.image_url)
-    if (imageUrl) return imageUrl
-  }
-
-  return null
-}
-
-function findApprovedSourcePageUrl(detail: ProductIntakeSubmissionDetail | null): string | null {
-  const final = normalizeRecord(detail?.payload?.final)
-  const sources = Array.isArray(final?.sources) ? final.sources : []
-  for (const source of sources) {
-    const record = normalizeRecord(source)
-    const url = stringValue(record?.url)
-    if (url) return url
-  }
-
-  for (const artifact of detail?.artifacts ?? []) {
-    if (artifact.kind !== "image_candidate") continue
-    const url = stringValue(artifact.payload.source_page_url)
-    if (url) return url
-  }
-
-  return null
-}
-
-function productLabelForImage(detail: ProductIntakeSubmissionDetail | null): string {
-  return (
-    [detail?.brand, detail?.product_name]
-      .filter((part): part is string => typeof part === "string" && part.trim().length > 0)
-      .join(" ")
-      .trim() || "product-image"
-  )
-}
-
-function slugForProcessedImage(detail: ProductIntakeSubmissionDetail | null): string {
-  const raw = productLabelForImage(detail)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-  return raw || "product-image"
-}
-
-function dateFolderForJob(job: ProductIntakeResearchJob): string {
-  const iso = job.created_at || new Date().toISOString()
-  return iso.slice(0, 10)
-}
-
-function imageExtension(
-  contentType: string | null,
-  imageUrl: string,
-): "avif" | "webp" | "png" | "jpg" {
-  const normalized = contentType?.toLowerCase() ?? ""
-  if (normalized.includes("avif")) return "avif"
-  if (normalized.includes("webp")) return "webp"
-  if (normalized.includes("png")) return "png"
-  if (normalized.includes("jpeg") || normalized.includes("jpg")) return "jpg"
-
-  try {
-    const path = new URL(imageUrl).pathname.toLowerCase()
-    const name = basename(path)
-    if (name.endsWith(".avif")) return "avif"
-    if (name.endsWith(".webp")) return "webp"
-    if (name.endsWith(".png")) return "png"
-  } catch {
-    // Fall through to the broadly supported default.
-  }
-  return "jpg"
-}
-
-async function runVisionBackgroundRemoval(params: {
-  sourceFile: string
-  outputDir: string
-  outputSlug: string
-}): Promise<string | null> {
-  const direct = await runWorkerProcess(
-    "swift",
-    ["scripts/product-images/removebg.swift", params.outputDir, params.sourceFile],
-    {
-      cwd: process.cwd(),
-      encoding: "utf8",
-      maxBuffer: 1024 * 1024 * 10,
-    },
-  )
-  const sourceBase = basename(params.sourceFile).replace(/\.[^.]+$/, "")
-  const directOutput = join(params.outputDir, `${sourceBase}.png`)
-  if (!direct.error && direct.status === 0 && existsSync(directOutput)) return directOutput
-
-  const paddedOutput = join(params.outputDir, `${params.outputSlug}-vision-padded.png`)
-  const padded = await runWorkerProcess(
-    "swift",
-    ["scripts/product-images/removebg-padded.swift", params.sourceFile, paddedOutput],
-    {
-      cwd: process.cwd(),
-      encoding: "utf8",
-      maxBuffer: 1024 * 1024 * 10,
-    },
-  )
-
-  if (!padded.error && padded.status === 0 && existsSync(paddedOutput)) return paddedOutput
-  return null
-}
-
-async function runAutomaticBackgroundRemoval(params: {
-  sourceFile: string
-  outputDir: string
-  outputSlug: string
-}): Promise<{ file: string; method: "vision" | "rembg_isnet_general_use" } | null> {
-  if (process.platform === "darwin") {
-    const visionFile = await runVisionBackgroundRemoval(params)
-    if (visionFile) return { file: visionFile, method: "vision" }
-  }
-
-  const rembg = await runRembgContainer({
-    sourceFile: params.sourceFile,
-    outputFile: join(params.outputDir, `${params.outputSlug}-rembg-isnet.png`),
-    config: rembgRuntimeConfig(process.env),
-  })
-  return rembg ? { file: rembg, method: "rembg_isnet_general_use" } : null
-}
-
-export function rembgRuntimeConfig(env: Record<string, string | undefined>): RembgRuntimeConfig {
-  const enabled = /^(1|true|yes|on)$/i.test(env.PRODUCT_INTAKE_REMBG_ENABLED?.trim() ?? "")
-  const parsedTimeout = Number.parseInt(env.PRODUCT_INTAKE_REMBG_TIMEOUT_MS ?? "", 10)
-  const timeoutMs = Number.isFinite(parsedTimeout)
-    ? Math.max(30_000, Math.min(parsedTimeout, 10 * 60_000))
-    : 3 * 60_000
-
-  return {
-    enabled,
-    dockerBin: env.PRODUCT_INTAKE_REMBG_DOCKER_BIN?.trim() || "docker",
-    image: REMBG_IMAGE,
-    model: REMBG_MODEL,
-    modelDir:
-      env.PRODUCT_INTAKE_REMBG_MODEL_DIR?.trim() ||
-      join(process.cwd(), "tmp", "product-intake-rembg-models"),
-    timeoutMs,
-  }
-}
-
-export function finalizedImageOutputRoot(
-  env: Readonly<Record<string, string | undefined>>,
-  cwd = process.cwd(),
-): string {
-  return (
-    env.PRODUCT_INTAKE_FINALIZED_IMAGE_DIR?.trim() ||
-    join(cwd, "apps/product-intake-review/public/product-intake-finalized")
-  )
-}
-
-export function rembgContainerArgs(params: {
-  config: RembgRuntimeConfig
-  sourceFile: string
-  outputFile: string
-}): string[] {
-  const sourceDir = resolve(dirname(params.sourceFile))
-  const outputDir = resolve(dirname(params.outputFile))
-  const modelDir = resolve(params.config.modelDir)
-
-  return [
-    "run",
-    "--rm",
-    "--network=none",
-    "--memory=2500m",
-    "--memory-swap=3g",
-    "--cpus=2",
-    "--pids-limit=256",
-    "--read-only",
-    "--name",
-    rembgContainerName(params.outputFile),
-    "--tmpfs=/tmp:rw,nosuid,nodev,size=256m",
-    "--tmpfs=/root/.cache:rw,nosuid,nodev,size=128m",
-    "--env",
-    "NUMBA_CACHE_DIR=/tmp/numba",
-    "--env",
-    "XDG_CACHE_HOME=/tmp/cache",
-    "-v",
-    `${sourceDir}:/input:ro`,
-    "-v",
-    `${outputDir}:/output`,
-    "-v",
-    `${modelDir}:/root/.rembg:ro`,
-    params.config.image,
-    "i",
-    "-m",
-    params.config.model,
-    `/input/${basename(params.sourceFile)}`,
-    `/output/${basename(params.outputFile)}`,
-  ]
-}
-
-export async function runRembgContainer(
-  params: {
-    config: RembgRuntimeConfig
-    sourceFile: string
-    outputFile: string
-  },
-  spawn: WorkerSpawn = runWorkerProcess,
-): Promise<string | null> {
-  if (!params.config.enabled) return null
-  mkdirSync(dirname(params.outputFile), { recursive: true })
-  mkdirSync(params.config.modelDir, { recursive: true })
-
-  const name = rembgContainerName(params.outputFile)
-  let detail = ""
-  try {
-    const result = await spawn(params.config.dockerBin, rembgContainerArgs(params), {
-      cwd: process.cwd(),
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-      maxBuffer: 1024 * 1024 * 10,
-      timeout: params.config.timeoutMs,
-    })
-    if (!result.error && result.status === 0 && existsSync(params.outputFile)) {
-      return params.outputFile
-    }
-    detail = [result.error?.message, result.stderr?.trim()]
-      .filter((value): value is string => Boolean(value))
-      .join("; ")
-  } catch (error) {
-    detail = errorMessage(error)
-  }
-  await removeRembgContainer(name, spawn, params.config.dockerBin)
-  console.error(`rembg background removal failed${detail ? `: ${detail}` : "."}`)
-  return null
-}
-
-function rembgContainerName(outputFile: string): string {
-  const id = createHash("sha256").update(resolve(outputFile)).digest("hex").slice(0, 24)
-  return `chaarlie-rembg-${id}`
-}
-
-async function removeRembgContainer(
-  name: string,
-  spawn: WorkerSpawn,
-  dockerBin: string,
-): Promise<void> {
-  try {
-    await spawn(dockerBin, ["rm", "-f", name], {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-      timeout: 10_000,
-    })
-  } catch {
-    // Cleanup is best effort, including when Docker is unavailable.
-  }
-}
-
-export async function cleanupStaleRembgContainers(
-  spawn: WorkerSpawn = runWorkerProcess,
-  dockerBin = rembgRuntimeConfig(process.env).dockerBin,
-): Promise<void> {
-  try {
-    const containers = await spawn(
-      dockerBin,
-      ["ps", "-a", "--filter", "name=chaarlie-rembg-", "--format", "{{.Names}}"],
-      { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], timeout: 10_000 },
-    )
-    if (containers.error || containers.status !== 0) return
-    for (const name of containers.stdout.split(/\r?\n/).map((value) => value.trim())) {
-      if (/^chaarlie-rembg-[a-zA-Z0-9_.-]+$/.test(name)) {
-        await removeRembgContainer(name, spawn, dockerBin)
-      }
-    }
-  } catch {
-    // A missing Docker binary must not prevent the research worker from starting.
   }
 }
 
@@ -3697,14 +2550,6 @@ function sanitizedResearchPayload(record: JsonRecord): JsonRecord {
   if (record.draft !== undefined) payload.draft = record.draft
   if (record.final !== undefined) payload.final = record.final
   return payload
-}
-
-function normalizeRecord(value: unknown): JsonRecord | null {
-  return value && typeof value === "object" && !Array.isArray(value) ? (value as JsonRecord) : null
-}
-
-function stringValue(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0 ? value : null
 }
 
 function normalizeConfidence(value: unknown): number | null {
@@ -3787,7 +2632,10 @@ export function isModelGeneratedArtifactKind(value: string): value is ProductInt
   return (
     PRODUCT_INTAKE_ARTIFACT_KINDS.includes(value as ProductIntakeArtifactKind) &&
     value !== "model_run" &&
-    value !== "model_judgment"
+    value !== "model_judgment" &&
+    value !== "formula" &&
+    value !== "commerce_check" &&
+    value !== "protocol_template"
   )
 }
 

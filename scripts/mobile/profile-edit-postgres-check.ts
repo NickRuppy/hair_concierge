@@ -19,7 +19,7 @@ import { profileEditRequestSchema } from "../../src/lib/mobile/profile-edit-cont
 import { computeNeedPlan } from "../../src/lib/personal-plan/compute-stage1"
 import { hashPersonalPlanNeedVersionInput } from "../../src/lib/personal-plan/persistence"
 import { adaptPersonalPlanAnswersForOffer } from "../../src/lib/personal-plan-quiz/offer-adapter"
-import { buildProfileDataFromQuizAnswers } from "../../src/lib/quiz/link-to-profile"
+import { buildProfileDataFromQuizAnswers } from "../../src/lib/quiz/legacy-profile-projection"
 import {
   planUserFactsBackfill,
   type LegacyProfileColumns,

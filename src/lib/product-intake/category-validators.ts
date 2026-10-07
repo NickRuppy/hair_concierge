@@ -1184,7 +1184,7 @@ function validateExactProtocol(
   }
 }
 
-function requiredProtocolRoles(
+export function requiredProtocolRoles(
   categoryKey: ProductIntakeReviewCategoryKey,
   categorySpecs: unknown,
 ): readonly string[] {

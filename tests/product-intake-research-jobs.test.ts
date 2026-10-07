@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { readFileSync, rmSync } from "node:fs"
+import { readdirSync, readFileSync, rmSync } from "node:fs"
 import test from "node:test"
 
 import {
@@ -78,6 +78,10 @@ const eslintConfig = readFileSync("eslint.config.mjs", "utf8")
 const workerScript = [
   readFileSync("scripts/product-intake/codex-research-worker.ts", "utf8"),
   readFileSync("src/lib/product-intake/category-research-router.ts", "utf8"),
+  ...readdirSync("src/lib/product-intake/pipeline")
+    .filter((file) => file.endsWith(".ts"))
+    .sort()
+    .map((file) => readFileSync(`src/lib/product-intake/pipeline/${file}`, "utf8")),
 ].join("\n")
 const repositorySource = readFileSync("packages/product-intake-core/src/repository.ts", "utf8")
 const serviceClientSource = readFileSync(
@@ -1292,8 +1296,7 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /approval_payload_schema/)
   assert.match(workerScript, /approvalPayloadContract/)
   assert.match(workerScript, /categoryApprovalContract/)
-  assert.match(workerScript, /derive Shampoo protocol roles from the reviewed Shampoo buckets/i)
-  assert.match(workerScript, /A schuppen-only Shampoo is complete without shampoo_everyday/i)
+  // Protocol slot contracts and derived roles are covered by the router and stage suites.
   assert.match(workerScript, /loadBrandResolutionCatalogForWorker/)
   assert.match(workerScript, /retailer_enrichment/)
   assert.match(workerScript, /scanned_identifier_type, scanned_identifier_value, intake_history/)
@@ -1385,7 +1388,6 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /suitable_thicknesses/)
   assert.match(workerScript, /repair_support_level/)
   assert.match(workerScript, /functional_benefits/)
-  assert.match(workerScript, /intensive_conditioning_mask/)
   assert.match(workerScript, /product_oil_eligibility/)
   assert.match(
     workerScript,

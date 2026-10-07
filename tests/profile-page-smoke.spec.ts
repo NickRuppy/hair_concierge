@@ -133,7 +133,7 @@ test.describe.serial("@ci Profile page smoke", () => {
     await admin.auth.admin.deleteUser(userId)
   })
 
-  test("journey sections mirror the live flow and edit routes land on the right step", async ({
+  test("no-plan journey keeps care values static while Haar-Check and goals remain editable", async ({
     page,
   }) => {
     await page.addInitScript((storageKey) => {
@@ -279,69 +279,54 @@ test.describe.serial("@ci Profile page smoke", () => {
     )
 
     const shampooDetailRow = page
-      .getByRole("button")
-      .filter({ hasText: "Shampoo" })
+      .locator("#profile-section-products")
+      .locator("div")
+      .filter({ hasText: /^Shampoo/ })
       .filter({ hasText: "Daily Shampoo" })
-    await shampooDetailRow.first().click()
-    await page.waitForURL(
-      /\/onboarding\?step=product_drilldown&returnTo=%2Fprofile&category=shampoo&editMode=single-step$/,
-      { timeout: 15000 },
-    )
-    await expect(page.getByText("Dein Shampoo", { exact: false })).toBeVisible()
-    await page.locator('input[placeholder="z.B. Produktname oder Marke"]').fill("Edited Shampoo")
-    await page.getByRole("button", { name: "5–6×/Woche" }).click()
-    await page.getByRole("button", { name: "Speichern und zurück zum Profil" }).click()
-    await page.waitForURL(/\/profile$/, { timeout: 30000 })
-    await expect(page.getByText("Edited Shampoo").first()).toBeVisible()
-    await expect(page.getByText("5-6x/Woche").first()).toBeVisible()
-
-    const { data: shampooUsageRow, error: shampooUsageError } = await admin
-      .from("user_product_usage")
-      .select("frequency_range")
-      .eq("user_id", userId!)
-      .eq("category", "shampoo")
-      .single()
-
-    if (shampooUsageError) throw shampooUsageError
-    expect(shampooUsageRow?.frequency_range).toBe("weekly_5_6x")
+    await expect(shampooDetailRow.first()).toBeVisible()
+    await expect(page.getByRole("button").filter({ hasText: "Daily Shampoo" })).toHaveCount(0)
 
     const towelMaterialCard = page
-      .getByRole("button")
-      .filter({ hasText: "Handtuch-Material" })
+      .locator("#profile-section-routine")
+      .locator("div")
+      .filter({ hasText: /^Handtuch-Material/ })
       .filter({ hasText: "Frottee-Handtuch" })
-    await towelMaterialCard.first().click()
-    await page.waitForURL(
-      /\/onboarding\?step=towel_material&returnTo=%2Fprofile&editMode=single-step$/,
-      { timeout: 15000 },
-    )
-    await page.getByRole("button", { name: "Mikrofaser-Handtuch" }).click()
-    await page.waitForURL(/\/profile$/, { timeout: 30000 })
-    await expect(page.getByText("Mikrofaser-Handtuch")).toBeVisible()
+    await expect(towelMaterialCard.last()).toBeVisible()
+    await expect(
+      page
+        .getByRole("button")
+        .filter({ hasText: "Handtuch-Material" })
+        .filter({ hasText: "Frottee-Handtuch" }),
+    ).toHaveCount(0)
 
     const heatFrequencyCard = page
-      .getByRole("button")
-      .filter({ hasText: "Styling-Frequenz" })
+      .locator("#profile-section-styling")
+      .locator("div")
+      .filter({ hasText: /^Styling-Frequenz/ })
       .filter({ hasText: "1x pro Woche" })
-    await heatFrequencyCard.first().click()
-    await page.waitForURL(
-      /\/onboarding\?step=heat_frequency&returnTo=%2Fprofile&editMode=single-step$/,
-      { timeout: 15000 },
-    )
-    await page.getByRole("button", { name: "Mehrmals pro Woche" }).click()
-    await page.waitForURL(/\/profile$/, { timeout: 30000 })
+    await expect(heatFrequencyCard.last()).toBeVisible()
     await expect(
       page
         .getByRole("button")
         .filter({ hasText: "Styling-Frequenz" })
-        .filter({ hasText: "Mehrmals pro Woche" })
-        .first(),
-    ).toBeVisible()
+        .filter({ hasText: "1x pro Woche" }),
+    ).toHaveCount(0)
+
+    for (const name of ["Produkte bearbeiten", "Styling bearbeiten", "Alltag bearbeiten"]) {
+      await expect(page.getByRole("button", { name, exact: true })).toHaveCount(0)
+    }
+    await expect(page.getByRole("button", { name: "Ziele bearbeiten", exact: true })).toBeVisible()
+    await expect(page).toHaveURL(`${baseUrl}/profile`)
 
     await page.goto(`${baseUrl}/profile`, { waitUntil: "domcontentloaded" })
     await page.setViewportSize({ width: 390, height: 844 })
     await page.reload({ waitUntil: "domcontentloaded" })
     await expect(page.getByRole("heading", { name: "Mein Profil" })).toBeVisible()
-    await expect(page.getByRole("button", { name: "Produkte bearbeiten" })).toBeVisible()
+    await expect(
+      page
+        .locator("#profile-section-products")
+        .getByRole("heading", { name: "Produkte", exact: true }),
+    ).toBeVisible()
 
     const hasHorizontalOverflow = await page.evaluate(
       () => document.documentElement.scrollWidth > window.innerWidth + 1,

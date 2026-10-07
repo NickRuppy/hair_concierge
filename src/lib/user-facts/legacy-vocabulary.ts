@@ -20,7 +20,7 @@ import type {
 
 // ---------------------------------------------------------------------------
 // Drying method <-> drying route
-// (inverse of `src/lib/personal-plan/legacy-prefill.ts:100-104`)
+// Shared by the care-habit backfill and the central profile projection.
 // ---------------------------------------------------------------------------
 
 export const DRYING_ROUTE_TO_DRYING_METHOD: Record<DryingRoute, DryingMethod> = {
@@ -38,7 +38,7 @@ export const DRYING_METHOD_TO_DRYING_ROUTE: Record<DryingMethod, DryingRoute> = 
 // ---------------------------------------------------------------------------
 // Heat source (Stage-2 heat event source, plus the `diffuser_or_airflow_shaping`
 // drying-route id) <-> `hair_profiles.styling_tools` vocabulary
-// (extends `src/lib/personal-plan/legacy-prefill.ts:105-111`)
+// Shared by the care-habit backfill and the central profile projection.
 // ---------------------------------------------------------------------------
 
 export type HeatSourceInput = Stage2HeatEventSource | "diffuser_or_airflow_shaping"

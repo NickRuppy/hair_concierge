@@ -1,6 +1,6 @@
 import { deriveDesiredVolumeFromGoals } from "../src/lib/hair-profile/derived"
 import { mergeMissingProfileAnswers } from "../src/lib/mobile/profile-completion-contract"
-import { buildProfileDataFromQuizAnswers } from "../src/lib/quiz/link-to-profile"
+import { buildProfileDataFromQuizAnswers } from "../src/lib/quiz/legacy-profile-projection"
 import { projectQuizAnswersToLegacyVocabulary } from "../src/lib/quiz/normalization"
 import type { QuizAnswers } from "../src/lib/quiz/types"
 

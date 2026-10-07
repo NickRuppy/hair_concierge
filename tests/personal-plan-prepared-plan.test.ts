@@ -3,7 +3,7 @@ import test from "node:test"
 
 import { adaptPersonalPlanAnswersForOffer } from "../src/lib/personal-plan-quiz/offer-adapter"
 import { buildPersonalPlanPreparedArtifact } from "../src/lib/personal-plan-quiz/prepared-plan"
-import { buildProfileDataFromPersonalPlanCanonicalProfile } from "../src/lib/quiz/link-to-profile"
+import { buildProfileDataFromPersonalPlanCanonicalProfile } from "../src/lib/quiz/legacy-profile-projection"
 import {
   canonicalizePersonalPlanAnswers,
   hashPersonalPlanAnswers,
