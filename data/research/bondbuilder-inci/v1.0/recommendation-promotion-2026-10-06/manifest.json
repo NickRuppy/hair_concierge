@@ -1,0 +1,28 @@
+{
+  "version": "bondbuilder-reviewed-promotion-v1",
+  "reviewed_date": "2026-10-06",
+  "baseline_preimage_sha256": "126b008dafe6a3254553a38df9b1aaca8068120427a8fca411deacde2732b120",
+  "items": [
+    {
+      "research_key": "P04",
+      "product_id": "e5fd7ff9-f7d7-44d5-a600-f44bdec939a8",
+      "profile_sha256": "7caa77e38bfbdd26dcce4592a1c2df35aaf331a438d72a0b81374b501979a87e",
+      "artifact": "P04.json",
+      "artifact_sha256": "74ba022a98e3298f420f5ee4b2e94055976e503bc9309718782dad7e2c1c0fb3"
+    },
+    {
+      "research_key": "P05",
+      "product_id": "9e5da870-1ab8-40f3-a74c-7088cbb31b2f",
+      "profile_sha256": "665fcceafeaa8c6719c90e88fce38511ef8fffff5dc040f044d8e26bc3291ee5",
+      "artifact": "P05.json",
+      "artifact_sha256": "4ff3fae17f7f1b0136813933e9e38bfa7303fca4941ea0782a421dd5de4c68d5"
+    },
+    {
+      "research_key": "P07",
+      "product_id": "04a83f16-e610-4883-b44d-038d3a343787",
+      "profile_sha256": "293275baa809e81344ba17652202aec67585f850561a7726b6c9bb0ceabc6ca0",
+      "artifact": "P07.json",
+      "artifact_sha256": "f44a1830ff1192bf63733d398ec5e401dfc8da523c7147525aa136c8492e78bb"
+    }
+  ]
+}

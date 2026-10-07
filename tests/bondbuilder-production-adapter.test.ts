@@ -137,6 +137,36 @@ test("conditional cadence, physical format unknowns, source scope and unsupporte
   )
 })
 
+test("explicit bedtime overnight leave-in directions map to the dedicated runtime mode only", () => {
+  const input = makeBondbuilderEnvelope()
+  input.profile.application.state_modifiers = fact(["at_bedtime"])
+  input.profile.application.timing = fact({ kind: "overnight", purpose: "contact" })
+  input.profile.application.rinse = fact({
+    treatment_mode: "leave_in",
+    standalone_treatment_rinse: false,
+  })
+  sealProfile(input.profile)
+
+  const result = projectBondbuilderForProduction(input)
+  assert.equal(result.status, "projected")
+  assert.equal(
+    result.productionProjection?.category_specs.product_bondbuilder_specs.application_mode,
+    "bedtime_leave_in",
+  )
+
+  input.profile.application.timing = fact({
+    kind: "exact_seconds",
+    seconds: 600,
+    purpose: "contact",
+  })
+  sealProfile(input.profile)
+  assert.notEqual(
+    projectBondbuilderForProduction(input).productionProjection?.category_specs
+      .product_bondbuilder_specs.application_mode,
+    "bedtime_leave_in",
+  )
+})
+
 test("ordered INCI normalization preserves digit commas and parentheses; tampered complete lists refuse", () => {
   assert.deepEqual(
     normalizeBondbuilderInci(
@@ -388,6 +418,17 @@ test("all eight frozen exact owner decisions preserve their independently approv
     assert.equal(
       projected.productionProjection?.category_specs.product_bondbuilder_specs.claim_trust_level,
       expected[row.research_key],
+    )
+    // Synthetic complete application isolates owner approval from efficacy trust.
+    // Actual pilot profiles keep their unresolved application/fit holds.
+    assert.equal(projected.readiness.curated_research_candidate, true, row.research_key)
+    assert.equal(projected.readiness.global_recommendation_ready, false, row.research_key)
+    p.assessment.classification_confidence = "low"
+    sealProfile(p)
+    assert.equal(
+      projectBondbuilderForProduction(input).readiness.curated_research_candidate,
+      false,
+      `${row.research_key}: uncertain classification is not the same as low efficacy trust`,
     )
   }
 })

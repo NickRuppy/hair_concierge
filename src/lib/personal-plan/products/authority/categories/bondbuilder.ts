@@ -95,37 +95,15 @@ function evaluateProduct(
         "Eine bekannte Reaktion verhindert die Empfehlung.",
       ),
     )
-  if (
-    product.suitableThicknesses === null ||
-    product.suitableThicknesses.length === 0 ||
-    !input.hairThickness
+  // Nick's category rule (2026-10-06), not inferred producer fit evidence.
+  criteria.push(
+    criterion(
+      "bondbuilder.thickness",
+      "Haarstärke",
+      "pass",
+      "Bondbuilder sind für feines, normales und dickes Haar geeignet.",
+    ),
   )
-    criteria.push(
-      criterion(
-        "bondbuilder.thickness",
-        "Haarstärke",
-        "unknown",
-        "Die Eignung für die Haarstärke ist nicht verifiziert.",
-      ),
-    )
-  else if (!product.suitableThicknesses.includes(input.hairThickness))
-    criteria.push(
-      criterion(
-        "bondbuilder.thickness",
-        "Haarstärke",
-        "fail",
-        "Das Produkt ist für die bestätigte Haarstärke nicht geeignet.",
-      ),
-    )
-  else
-    criteria.push(
-      criterion(
-        "bondbuilder.thickness",
-        "Haarstärke",
-        "pass",
-        "Die Eignung für die Haarstärke ist verifiziert.",
-      ),
-    )
   if (!product.isActive || product.lifecycleStatus !== "active")
     criteria.push(
       criterion("bondbuilder.lifecycle", "Produktstatus", "fail", "Das Produkt ist nicht aktiv."),
@@ -225,7 +203,7 @@ export function evaluateBondbuilderAuthority(
       recommendationFactFingerprint: selected?.factFingerprint ?? null,
     })
   }
-  const missing = commonUnknownFacts(sharedInput)
+  const missing = commonUnknownFacts(sharedInput, { requiresSuitableThickness: false })
   if (missing.length > 0) return unknownEvaluation(sharedInput, missing)
   const assessment = evaluateProduct(input, input.productFacts)
   if (assessment.verdict === "unknown") {

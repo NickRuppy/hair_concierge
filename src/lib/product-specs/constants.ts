@@ -36,13 +36,18 @@ export const PRODUCT_BOND_REPAIR_AXIS_LABELS = {
   peptide_chain: "Peptid-/Längsstruktur-Lane",
 } as const satisfies Record<ProductBondRepairAxis, string>
 
-export const PRODUCT_BOND_APPLICATION_MODES = ["pre_shampoo", "post_wash_leave_in"] as const
+export const PRODUCT_BOND_APPLICATION_MODES = [
+  "pre_shampoo",
+  "post_wash_leave_in",
+  "bedtime_leave_in",
+] as const
 
 export type ProductBondApplicationMode = (typeof PRODUCT_BOND_APPLICATION_MODES)[number]
 
 export const PRODUCT_BOND_APPLICATION_MODE_LABELS = {
   pre_shampoo: "Vor dem Waschen",
   post_wash_leave_in: "Nach der Wäsche / Leave-in",
+  bedtime_leave_in: "Abends / über Nacht im Haar",
 } as const satisfies Record<ProductBondApplicationMode, string>
 
 export const PRODUCT_BOND_TREATMENT_MODES = ["rinse_out", "leave_in"] as const

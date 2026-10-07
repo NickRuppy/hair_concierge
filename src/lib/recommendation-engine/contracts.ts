@@ -53,7 +53,11 @@ export const CANONICAL_SCALP_ROUTES = [
 export const CANONICAL_CLEANSING_INTENSITIES = ["gentle", "regular", "clarifying"] as const
 export const SCALP_TYPE_FOCUSES = ["oily", "balanced", "dry"] as const
 export const BOND_REPAIR_INTENSITIES = ["maintenance", "intensive"] as const
-export const BOND_APPLICATION_MODES = ["pre_shampoo", "post_wash_leave_in"] as const
+export const BOND_APPLICATION_MODES = [
+  "pre_shampoo",
+  "post_wash_leave_in",
+  "bedtime_leave_in",
+] as const
 export const PEELING_TYPES = ["acid_serum", "physical_scrub"] as const
 export const LEAVE_IN_CARE_TARGETS = [
   "heat_protect",
