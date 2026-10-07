@@ -6,6 +6,7 @@ import * as Sentry from "@sentry/node"
 
 import {
   bindResearchJobEngine,
+  categoryApprovalContract,
   normalizeResearchOutputForCategory,
   researchFailureUpdate,
   type BrandResolutionPromptContext,
@@ -22,6 +23,7 @@ import {
   conditionerFormulaFingerprintSha256,
   type ConditionerResearchEnvelope,
 } from "../src/lib/conditioner-research/production-adapter"
+import { validateProductIntakeApprovalPayload } from "../src/lib/product-intake/category-validators"
 import { BOND_CURRENT_METHOD_PINS } from "../src/lib/bondbuilder-research/registry"
 import { makeBondbuilderEnvelope, sealProfile } from "./fixtures/bondbuilder-research/profile"
 
@@ -66,6 +68,8 @@ for (const [category, id, methodology, adapter] of [
       methodology,
       adapter,
       state: "active",
+      input_hash: null,
+      projection_hash: null,
     })
     assert.equal((result.researched_payload?.final as Record<string, unknown>).engine, undefined)
     assert.ok(result.blockers.some((reason) => reason.includes("research adapter:")))
@@ -85,6 +89,39 @@ test("shampoo keeps its current research path and records the pending v1.6 lock"
   assert.equal(
     (result.researched_payload?.draft as Record<string, unknown>).notes,
     "Keep the research scratchpad",
+  )
+})
+
+test("templated conditioner and leave-in prompts reserve protocol rows for Chaarlie", () => {
+  for (const category of ["conditioner", "leave_in"] as const) {
+    const contract = categoryApprovalContract(category)
+    assert.ok(
+      (contract.required_category_specs as string[]).includes("product_application_protocols"),
+    )
+    assert.equal(
+      (contract.protocol_slots as Record<string, unknown>).output_path,
+      "researched_payload.draft.protocol",
+    )
+    assert.match(
+      String(contract.required_category_specs_note),
+      /Chaarlie stamps.*product_application_protocols.*never emit model-written protocol rows/i,
+    )
+
+    const researchContract =
+      category === "conditioner" ? contract.conditioner_research : contract.leave_in_research
+    assert.match(
+      String((researchContract as { adapter: { protocol_rule: string } }).adapter.protocol_rule),
+      /draft\.protocol.*never write.*product_application_protocols.*Chaarlie stamps/i,
+    )
+  }
+})
+
+test("oil prompt treats heat protection as a leave-on capability", () => {
+  const contract = categoryApprovalContract("oil")
+  const oilSpecs = contract.product_oil_specs as Record<string, unknown>
+  assert.match(
+    String(oilSpecs.heat_protection_protocol),
+    /capability on the ordinary leave-on purpose.*leave_on_fibre_conditioning.*do not create an extra protocol role/i,
   )
 })
 
@@ -424,20 +461,25 @@ test("an active engine leaves a provenance artifact when model output omitted pr
     [],
     "submission-1",
   )
-  assert.deepEqual(result.artifacts, [
-    {
-      kind: "property_synthesis",
-      status: "needs_research",
-      payload: {
-        engine: {
-          id: "conditioner-standard",
-          methodology: "v1.6",
-          adapter: "conditioner-production-adapter-v1",
-          state: "active",
+  assert.deepEqual(
+    result.artifacts.filter((artifact) => artifact.kind === "property_synthesis"),
+    [
+      {
+        kind: "property_synthesis",
+        status: "needs_research",
+        payload: {
+          engine: {
+            id: "conditioner-standard",
+            methodology: "v1.6",
+            adapter: "conditioner-production-adapter-v1",
+            state: "active",
+            input_hash: null,
+            projection_hash: null,
+          },
         },
       },
-    },
-  ])
+    ],
+  )
   assert.ok(
     result.blockers.some(
       (reason) =>
@@ -543,7 +585,25 @@ for (const [category, envelopeKey, envelope, researchId, specsKey, expected] of 
       summary: "Research",
       blockers: [],
       artifacts: [
-        { kind: "property_synthesis", payload: { [envelopeKey]: structuredClone(envelope) } },
+        {
+          kind: "property_synthesis",
+          payload: {
+            [envelopeKey]: structuredClone(envelope),
+            [`${category}_production_projection`]: {
+              research_input_sha256: "invented",
+              projection_sha256: "invented",
+            },
+          },
+        },
+        {
+          kind: "property_synthesis",
+          payload: {
+            [`${category}_production_projection`]: {
+              research_input_sha256: "unowned",
+              projection_sha256: "unowned",
+            },
+          },
+        },
       ],
       researched_payload: {
         final: {
@@ -577,6 +637,25 @@ for (const [category, envelopeKey, envelope, researchId, specsKey, expected] of 
         key.endsWith("production_projection"),
       ),
     )
+    assert.deepEqual(
+      [
+        (result.artifacts[1]!.payload.engine as Record<string, unknown>).input_hash,
+        (result.artifacts[1]!.payload.engine as Record<string, unknown>).projection_hash,
+      ],
+      [null, null],
+    )
+    const payload = result.artifacts[0]!.payload
+    const projection = payload[`${category}_production_projection`] as Record<string, unknown>
+    const provenance = payload.engine as Record<string, unknown>
+    if (category === "bondbuilder") {
+      assert.equal(provenance.input_hash, bondEnvelope.profile.method.output_sha256)
+      assert.equal(provenance.projection_hash, bondEnvelope.profile.review.profile_sha256)
+    } else {
+      assert.match(String(provenance.input_hash), /^[a-f0-9]{64}$/)
+      assert.match(String(provenance.projection_hash), /^[a-f0-9]{64}$/)
+      assert.equal(provenance.input_hash, projection.research_input_sha256)
+      assert.equal(provenance.projection_hash, projection.projection_sha256)
+    }
     assert.ok(Array.isArray(result.artifacts[0]!.payload.adapter_warnings))
     const refused = normalizeResearchOutputForCategory(
       structuredClone(input),
@@ -584,6 +663,13 @@ for (const [category, envelopeKey, envelope, researchId, specsKey, expected] of 
       brandContext,
       [],
       "different-submission",
+    )
+    assert.deepEqual(
+      [
+        (refused.artifacts[0]!.payload.engine as Record<string, unknown>).input_hash,
+        (refused.artifacts[0]!.payload.engine as Record<string, unknown>).projection_hash,
+      ],
+      [null, null],
     )
     assert.ok(
       refused.blockers.some((reason) => /must match Product Intake submission/.test(reason)),
@@ -596,3 +682,152 @@ for (const [category, envelopeKey, envelope, researchId, specsKey, expected] of 
     )
   })
 }
+
+for (const category of Object.keys(CATEGORY_RESEARCH_REGISTRY)) {
+  test(`${category} requests exact German-market INCI outside strict final fields`, () => {
+    const contract = categoryApprovalContract(category)
+    const formula = contract.canonical_inci as Record<string, unknown>
+    assert.equal(formula.output_path, "researched_payload.draft.formula")
+    assert.deepEqual(formula.fields, { raw_inci: "string or null", source_url: "string or null" })
+    assert.match(String(formula.instruction), /never invent/i)
+  })
+}
+
+const protocolEvidence = [
+  {
+    sourceUrl: "https://example.test/conditioner",
+    sourceType: "manufacturer",
+    checkedAt: "2026-10-06",
+  },
+]
+
+function protocolInput(category: string): ResearchOutput {
+  return {
+    summary: "Research",
+    blockers: [],
+    artifacts: [
+      {
+        kind: "property_synthesis",
+        payload: {
+          ...(category === "conditioner"
+            ? { conditioner_research_envelope: conditionerEnvelope() }
+            : {}),
+        },
+      },
+    ],
+    researched_payload: {
+      draft: { protocol: { evidence: protocolEvidence } },
+      final: {
+        product: { category_key: category },
+        category_specs: { product_application_protocols: [{ copy: "Model instructions" }] },
+        sources: [
+          {
+            url: protocolEvidence[0]!.sourceUrl,
+            title: "Hersteller",
+            evidence: "Ansatz behandeln.",
+          },
+        ],
+      },
+    },
+  }
+}
+
+test("worker preserves unowned conditioner protocol artifacts and stamps TPL-CONDITIONER", () => {
+  const input = protocolInput("conditioner")
+  input.artifacts.push({ kind: "protocol_template", status: "stale", payload: {} })
+  const result = normalizeResearchOutputForCategory(
+    input,
+    "conditioner",
+    brandContext,
+    [],
+    "submission-1",
+  )
+  const final = result.researched_payload!.final as Record<string, unknown>
+  const specs = final.category_specs as Record<string, unknown>
+  const rows = specs.product_application_protocols as Array<Record<string, unknown>>
+  assert.equal(rows.length, 1)
+  assert.equal(rows[0]!.role, "conditioner_rinse_out")
+  const guidance = rows[0]!.guidance_payload as {
+    protocolFacts: Record<string, unknown>
+    steps: Array<{ copyTemplateDe: string }>
+  }
+  assert.equal(guidance.protocolFacts.applicationArea, "lengths_ends")
+  assert.ok(guidance.steps.some((step) => step.copyTemplateDe.includes("Ansatz aussparen")))
+  const validation = validateProductIntakeApprovalPayload(result.researched_payload)
+  assert.deepEqual(
+    validation.missingFields.filter((field) => field.includes("product_application_protocols")),
+    [],
+  )
+  assert.deepEqual(
+    result.artifacts.filter((artifact) => artifact.kind === "protocol_template"),
+    [
+      { kind: "protocol_template", status: "stale", payload: {} },
+      {
+        kind: "protocol_template",
+        status: "templated",
+        payload: {
+          stage: "protocol",
+          status: "templated",
+          template_ids: ["TPL-CONDITIONER"],
+          blockers: [],
+          notes: [],
+        },
+      },
+    ],
+  )
+})
+
+test("worker reads projected leave-in heat specs and clears model protocols when the dry-use slot is missing", () => {
+  const input = protocolInput("leave_in")
+  // The projected specs replace this non-heat object; protocol must read the replacement.
+  const envelope = structuredClone(leaveInEnvelope)
+  const profile = envelope.profile as Record<string, Record<string, unknown>>
+  const specialistFunctions = profile.specialistFunctions!.value as Record<string, unknown>
+  specialistFunctions.providesHeatProtection = true
+  input.artifacts[0]!.payload.leave_in_research_envelope = envelope
+  const finalInput = input.researched_payload!.final as Record<string, Record<string, unknown>>
+  finalInput.category_specs!.product_leave_in_specs = { provides_heat_protection: false }
+  const result = normalizeResearchOutputForCategory(
+    input,
+    "leave_in",
+    brandContext,
+    [],
+    "leave-in-gold-set-slot-01",
+  )
+  const final = result.researched_payload!.final as Record<string, Record<string, unknown>>
+  assert.equal(
+    (final.category_specs!.product_leave_in_specs as Record<string, unknown>)
+      .provides_heat_protection,
+    true,
+  )
+  assert.deepEqual(final.category_specs!.product_application_protocols, [])
+  assert.ok(result.blockers.includes("protocol_slot_missing: heat_usable_on_dry_hair"))
+  assert.equal(
+    result.artifacts.find((artifact) => artifact.kind === "protocol_template")!.status,
+    "blocked",
+  )
+})
+
+test("worker keeps bondbuilder model protocols untouched and records the untemplated stage", () => {
+  const input = protocolInput("bondbuilder")
+  const before = structuredClone(
+    (input.researched_payload!.final as Record<string, Record<string, unknown>>).category_specs!
+      .product_application_protocols,
+  )
+  const result = normalizeResearchOutputForCategory(
+    input,
+    "bondbuilder",
+    brandContext,
+    [],
+    "submission-1",
+  )
+  assert.deepEqual(
+    (result.researched_payload!.final as Record<string, Record<string, unknown>>).category_specs!
+      .product_application_protocols,
+    before,
+  )
+  assert.equal(
+    result.artifacts.find((artifact) => artifact.kind === "protocol_template")!.status,
+    "not_templated",
+  )
+})
