@@ -143,7 +143,7 @@ export function conditionerResearchPromptContract() {
         "texture_fit",
       ],
       protocol_rule:
-        "Research product_application_protocols separately from authoritative use directions. The INCI adapter never invents cadence, placement, contact time, rinse action, or source text.",
+        "Report sourced application facts only in researched_payload.draft.protocol. Never write final.category_specs.product_application_protocols: Chaarlie stamps the normative protocol rows deterministically. The INCI adapter never invents cadence, placement, contact time, rinse action, or source text.",
     },
   }
 }
