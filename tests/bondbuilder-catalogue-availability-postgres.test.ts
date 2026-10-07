@@ -65,6 +65,17 @@ async function database(t: Parameters<typeof migratedDatabase>[0]) {
     strictSources.rows,
     "existing anchor and strict recommendation predicates remain byte-identical",
   )
+  // The current projector emits OGX's explicit bedtime mode. Keep admission
+  // transport current without applying recommendation-policy or product promotion.
+  await pg.exec(
+    await readFile(
+      new URL(
+        "supabase/migrations/20261006143746_bondbuilder_bedtime_leave_in_application_mode.sql",
+        ROOT,
+      ),
+      "utf8",
+    ),
+  )
   return pg
 }
 
