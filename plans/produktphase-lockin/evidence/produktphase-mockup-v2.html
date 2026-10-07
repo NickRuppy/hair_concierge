@@ -1,0 +1,281 @@
+<title>Cockpit Produktphase V2</title>
+<style>
+/* Layout: one dark admin column like the live cockpit — steps above, the compiled
+   Einkaufsliste as the payoff below. Tables adopt the iOS-Scan-Sheet language:
+   tinted rows, status badges, ZIEL column in plum. Single-theme dark by choice. */
+:root{
+  --bg:#141119;
+  --card:#1d1923;
+  --card2:#242030;
+  --line:#332c40;
+  --fg:#ece8f2;
+  --muted:#9b93ab;
+  --plum:#b892e6;        /* selection + ZIEL column */
+  --plum-soft:#b892e622;
+  --coral:#ff6f61;       /* CTA only */
+  --good:#5ad48f;  --good-tint:#5ad48f14;
+  --warn:#e8b34c;  --warn-tint:#e8b34c16;
+  --bad:#f07878;   --bad-tint:#f0787816;
+  color-scheme:dark;
+}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 "Figtree",system-ui,-apple-system,sans-serif;padding:24px 16px 120px;margin:0}
+.wrap{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1{font-size:22px;margin:0;text-wrap:balance}
+h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0}
+.sub{color:var(--muted);margin:4px 0 0;font-size:14px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 16px;display:flex;flex-direction:column;gap:14px}
+.step-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cat{font-size:11px;letter-spacing:.07em;text-transform:uppercase;background:var(--plum-soft);color:var(--plum);border-radius:6px;padding:3px 8px;font-weight:700}
+.step-title{font-weight:700}
+.role{color:var(--muted);font-size:13px}
+.verdict{font-size:12px;border-radius:999px;padding:2px 10px;font-weight:700}
+.v-bad{background:var(--bad-tint);color:var(--bad)}
+.v-gap{background:var(--warn-tint);color:var(--warn)}
+/* iOS-style tables */
+.tblwrap{overflow-x:auto}
+.tbl{min-width:100%;display:flex;flex-direction:column;gap:3px}
+.trow{display:grid;gap:8px;align-items:center;padding:9px 10px;border-radius:9px;font-size:13px}
+.trow.head{padding:2px 10px;background:none;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.trow.head .ziel{color:var(--plum)}
+.cols2{grid-template-columns:minmax(88px,110px) 1fr 1fr}
+.cols3{grid-template-columns:minmax(88px,110px) 1fr 1fr 1fr}
+.t-good{background:var(--good-tint)} .t-warn{background:var(--warn-tint)} .t-bad{background:var(--bad-tint)}
+.axis{color:var(--muted);font-weight:600;font-size:12px}
+.val{display:flex;align-items:center;gap:6px;min-width:0}
+.val span{overflow-wrap:anywhere}
+.ziel-val{color:var(--plum);font-weight:600}
+.badge{flex:none;width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font:800 10px system-ui;color:#141119}
+.b-good{background:var(--good)} .b-warn{background:var(--warn)} .b-bad{background:var(--bad)}
+/* sort chips */
+.sortrow{display:flex;gap:8px;align-items:center}
+.sortrow span{font-size:12px;color:var(--muted)}
+.chip{border:1px solid var(--line);background:none;color:var(--muted);border-radius:999px;padding:4px 12px;font:600 12px "Figtree",system-ui,sans-serif;cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--plum);color:var(--plum);background:var(--plum-soft)}
+/* alternative cards */
+.alts{display:flex;flex-direction:column;gap:10px}
+.alt{border:1px solid var(--line);border-radius:12px;background:var(--card2);padding:12px;display:flex;flex-direction:column;gap:10px}
+.alt-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.alt-head .name{font-weight:700}
+.meta{color:var(--muted);font-size:12px}
+.price{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums}
+.only{font-size:12px;color:var(--muted);font-style:italic}
+/* decision buttons */
+.decide{display:flex;gap:8px;flex-wrap:wrap}
+.dbtn{border:1px solid var(--line);background:none;color:var(--fg);border-radius:10px;padding:8px 12px;font:600 13px "Figtree",system-ui,sans-serif;cursor:pointer;min-width:0}
+.dbtn:hover{border-color:var(--plum)}
+.dbtn.on{border-color:var(--plum);background:var(--plum-soft);color:var(--plum)}
+.dbtn:focus-visible{outline:2px solid var(--plum);outline-offset:2px}
+/* locked-in section */
+.locked{background:var(--card);border:1px solid var(--plum);border-radius:14px;padding:18px 16px;display:flex;flex-direction:column;gap:14px}
+.locked h2{color:var(--plum)}
+.lgroup{display:flex;flex-direction:column;gap:6px}
+.lgroup h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 2px}
+.lrow{display:flex;align-items:baseline;gap:8px;font-size:14px;flex-wrap:wrap}
+.lrow .nm{font-weight:600}
+.lrow .rt{color:var(--muted);font-size:12px}
+.lrow .pr{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:600}
+.total{display:flex;border-top:1px solid var(--line);padding-top:10px;font-weight:800}
+.total .pr{margin-left:auto;font-variant-numeric:tabular-nums}
+.open-note{font-size:13px;color:var(--warn)}
+.empty{color:var(--muted);font-size:13px;font-style:italic}
+.copybtn{align-self:flex-start;border:none;border-radius:10px;background:var(--coral);color:#1b0f0d;font:700 13px "Figtree",system-ui,sans-serif;padding:9px 14px;cursor:pointer}
+.copybtn:active{transform:translateY(1px)}
+.note{font-size:12px;color:var(--muted)}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700;800&display=swap">
+
+<div class="wrap">
+  <header>
+    <h1>Produkte — Auswahl &amp; Einkaufsliste</h1>
+    <p class="sub">Nomi · Hauptproblem strapaziert. Pro Schritt: ihr Produkt als Fit-Tabelle, Alternativen im direkten Spaltenvergleich, Entscheidung darunter — die fertige Liste sammelt sich unten. Shampoo und Maske sind als Beispiel schon entschieden.</p>
+  </header>
+  <div id="steps"></div>
+
+  <section class="locked" aria-live="polite">
+    <h2>Für ihren Plan festgehalten</h2>
+    <div class="lgroup"><h3>Kauft sie neu</h3><div id="buy"></div></div>
+    <div class="lgroup"><h3>Behält sie</h3><div id="keep"></div></div>
+    <div class="lgroup"><h3>Bewusst ohne Produkt</h3><div id="skip"></div></div>
+    <div class="total"><span>Summe neu</span><span class="pr" id="total">0,00 €</span></div>
+    <div class="open-note" id="open-note"></div>
+    <button class="copybtn" id="copy">Liste kopieren</button>
+    <div class="note">Die Liste geht so in Phase 4 (Routine) und ins PDF.</div>
+  </section>
+</div>
+
+<script>
+// Data mirrors the live cockpit: axes and values from the verdict dimensions, alternatives
+// from the swap ranking. Bondbuilder: K18 is the only catalog option in that category.
+const STEPS = [
+  { id:"shampoo", cat:"Shampoo", title:"Sebamed Anti Schuppen", verdict:["Passt nicht","v-bad"],
+    role:"Regelmäßige Reinigung — ihre Kopfhaut ist trocken, Anti-Schuppen reinigt zu stark.",
+    hersName:"Sebamed Anti Schuppen",
+    hers:{ Reinigung:["regulär","warn"], Kopfhaut:["Schuppen-Fokus","bad"], Haardicke:["fein","good"] },
+    target:{ Reinigung:"sanft", Kopfhaut:"trocken", Haardicke:"fein" },
+    canKeep:true,
+    alts:[
+      { name:"Sebamed Urea 5%", price:5.25, tier:"dm", fit:1,
+        axes:{ Reinigung:["sanft","good"], Kopfhaut:["trocken","good"], Haardicke:["fein","good"] } },
+      { name:"Neqi Moisture Mystery", price:11.5, tier:"online", fit:2,
+        axes:{ Reinigung:["sanft","good"], Kopfhaut:["trocken","good"], Haardicke:["fein","good"] } },
+      { name:"Balea 2 in 1 Urea 5%", price:2.95, tier:"dm", fit:3,
+        axes:{ Reinigung:["sanft","good"], Kopfhaut:["trocken","good"], Haardicke:["fein","good"] } },
+    ] },
+  { id:"mask", cat:"Haarmaske", title:"John Frieda Wunder-Reparatur Kur", verdict:["Passt nicht","v-bad"],
+    role:"Intensivpflege · 1× pro Woche — zu reichhaltig für feines Haar, ohne Repair-Fokus.",
+    hersName:"John Frieda Wunder-Reparatur Kur",
+    hers:{ "Pflegegewicht":["reichhaltig","warn"], "Pflegerichtung":["ausgeglichen","good"], "Repair-Pflege":["niedrig","bad"] },
+    target:{ "Pflegegewicht":"leicht", "Pflegerichtung":"Feuchtigkeit · Protein ok", "Repair-Pflege":"hoch" },
+    canKeep:true,
+    alts:[
+      { name:"Gliss Liquid Silk Bonding Maske", price:4.45, tier:"dm", fit:1,
+        axes:{ "Pflegegewicht":["leicht","good"], "Pflegerichtung":["Protein","good"], "Repair-Pflege":["hoch","good"] } },
+      { name:"Balea Professional Plex Care 2in1", price:3.95, tier:"dm", fit:2,
+        axes:{ "Pflegegewicht":["mittel","warn"], "Pflegerichtung":["Protein","good"], "Repair-Pflege":["hoch","good"] } },
+      { name:"Neqi Peptide Power", price:12.9, tier:"online", fit:3,
+        axes:{ "Pflegegewicht":["mittel","warn"], "Pflegerichtung":["Protein","good"], "Repair-Pflege":["hoch","good"] } },
+    ] },
+  { id:"bond", cat:"Bondbuilder", title:"Neu dazu", verdict:["Lücke in der Idealroutine","v-gap"],
+    role:"Strukturpflege — Unterstützung für chemisch geschädigtes Haar, keine Reparatur.",
+    hersName:null, hers:null,
+    target:{ Einsatz:"Strukturpflege bei Blondierung", "Pflegegewicht":"leicht" },
+    canKeep:false,
+    only:"Aktuell die einzige Bondbuilder-Option im Katalog.",
+    alts:[
+      { name:"K18 Molecular Repair Mask", price:75.0, tier:"online · über ihrem Rahmen", fit:1,
+        axes:{ Einsatz:["Bond-Pflege, konzentriert","good"], "Pflegegewicht":["leicht","good"] } },
+    ] },
+  { id:"heat", cat:"Hitzeschutz", title:"Neu dazu", verdict:["Lücke in der Idealroutine","v-gap"],
+    role:"Vor jeder passenden Hitze-Anwendung — reduziert den Schaden, weniger Hitze bleibt der größere Hebel.",
+    hersName:null, hers:null,
+    target:{ Einsatz:"vor Lockenstab & Föhn", "Pflegegewicht":"leicht" },
+    canKeep:false,
+    alts:[
+      { name:"L'Oréal Elvital Defeat the Heat Spray", price:6.95, tier:"dm", fit:1,
+        axes:{ Einsatz:["bis 230 °C","good"], "Pflegegewicht":["leicht","good"] } },
+    ] },
+];
+
+const BADGE = { good:"✓", warn:"!", bad:"✕" };
+const state = { shampoo:{type:"swap",alt:"Sebamed Urea 5%"}, mask:{type:"swap",alt:"Gliss Liquid Silk Bonding Maske"} };
+const sorts = {};
+const euro = (n) => n.toFixed(2).replace(".", ",") + " €";
+const byId = (step, name) => step.alts.find((a) => a.name === name);
+
+function badge(mark){ return `<span class="badge b-${mark}">${BADGE[mark]}</span>`; }
+
+// Her product: the iOS two-column table (PRODUKT | DEIN ZIEL), rows tinted by her status.
+function hersTable(step){
+  if (!step.hers) return "";
+  const rows = Object.entries(step.hers).map(([axis,[val,mark]]) => `
+    <div class="trow cols2 t-${mark}">
+      <span class="axis">${axis}</span>
+      <span class="val">${badge(mark)}<span>${val}</span></span>
+      <span class="val ziel-val"><span>${step.target[axis]}</span></span>
+    </div>`).join("");
+  return `<div class="tblwrap"><div class="tbl">
+    <div class="trow cols2 head"><span></span><span>Ihr Produkt</span><span class="ziel">Ziel</span></div>
+    ${rows}
+  </div></div>`;
+}
+
+// Alternative: three columns (IHR PRODUKT | ALTERNATIVE | ZIEL), rows tinted by the
+// alternative's status — fit and comparison in one glance.
+function altCard(step, alt){
+  const withHers = !!step.hers;
+  const rows = Object.entries(alt.axes).map(([axis,[val,mark]]) => {
+    const hers = withHers && step.hers[axis]
+      ? `<span class="val">${badge(step.hers[axis][1])}<span>${step.hers[axis][0]}</span></span>` : "";
+    return `<div class="trow ${withHers ? "cols3" : "cols2"} t-${mark}">
+      <span class="axis">${axis}</span>
+      ${hers}
+      <span class="val">${badge(mark)}<span>${val}</span></span>
+      <span class="val ziel-val"><span>${step.target[axis]}</span></span>
+    </div>`;
+  }).join("");
+  const head = withHers
+    ? `<div class="trow cols3 head"><span></span><span>Ihr Produkt</span><span>Alternative</span><span class="ziel">Ziel</span></div>`
+    : `<div class="trow cols2 head"><span></span><span>Alternative</span><span class="ziel">Ziel</span></div>`;
+  return `<div class="alt">
+    <div class="alt-head">
+      <span class="name">${alt.name}</span>
+      <span class="meta">${alt.tier}</span>
+      <span class="price">${euro(alt.price)}</span>
+    </div>
+    <div class="tblwrap"><div class="tbl">${head}${rows}</div></div>
+  </div>`;
+}
+
+function renderStep(step){
+  const sorted = [...step.alts].sort(
+    sorts[step.id] === "price" ? (a,b) => a.price - b.price : (a,b) => a.fit - b.fit);
+  const current = state[step.id];
+  const on = (t, name) => current && current.type === t && (t !== "swap" || current.alt === name);
+  const decide = [];
+  if (step.canKeep) decide.push(`<button class="dbtn ${on("keep")?"on":""}" data-d="keep">Behalten: ${step.hersName}</button>`);
+  for (const alt of step.alts)
+    decide.push(`<button class="dbtn ${on("swap",alt.name)?"on":""}" data-d="swap" data-alt="${alt.name}">${step.hersName?"Tauschen zu":"Neu:"} ${alt.name}</button>`);
+  decide.push(`<button class="dbtn ${on("skip")?"on":""}" data-d="skip">Ohne Produkt weiter</button>`);
+  const sortRow = step.alts.length > 1 ? `<div class="sortrow"><span>Alternativen sortieren:</span>
+      <button class="chip" data-sort="fit" aria-pressed="${sorts[step.id]!=="price"}">Nach Fit</button>
+      <button class="chip" data-sort="price" aria-pressed="${sorts[step.id]==="price"}">Nach Preis</button></div>` : "";
+  return `<section class="step" data-step="${step.id}">
+    <div class="step-head"><span class="cat">${step.cat}</span><span class="step-title">${step.title}</span><span class="verdict ${step.verdict[1]}">${step.verdict[0]}</span></div>
+    <div class="role">${step.role}</div>
+    ${hersTable(step)}
+    ${sortRow}
+    <div class="alts">${sorted.map((alt)=>altCard(step,alt)).join("")}</div>
+    ${step.only ? `<div class="only">${step.only}</div>` : ""}
+    <div class="decide">${decide.join("")}</div>
+  </section>`;
+}
+
+function renderSteps(){
+  document.getElementById("steps").innerHTML = STEPS.map(renderStep).join("");
+  document.getElementById("steps").parentElement.querySelectorAll(".step").forEach((section) => {
+    const stepId = section.dataset.step;
+    section.addEventListener("click", (event) => {
+      const sortBtn = event.target.closest("[data-sort]");
+      if (sortBtn){ sorts[stepId] = sortBtn.dataset.sort; renderSteps(); renderLocked(); return; }
+      const dbtn = event.target.closest("[data-d]");
+      if (!dbtn) return;
+      state[stepId] = dbtn.dataset.d === "swap" ? { type:"swap", alt:dbtn.dataset.alt } : { type:dbtn.dataset.d };
+      renderSteps(); renderLocked();
+    });
+  });
+}
+
+function renderLocked(){
+  const buy=[], keep=[], skip=[]; let total=0, open=0;
+  for (const step of STEPS){
+    const d = state[step.id];
+    if (!d){ open++; continue; }
+    if (d.type==="keep") keep.push(`<div class="lrow"><span class="nm">${step.hersName}</span><span class="rt">${step.cat}</span></div>`);
+    else if (d.type==="skip") skip.push(`<div class="lrow"><span class="nm">${step.cat}</span><span class="rt">Schritt bleibt offen</span></div>`);
+    else {
+      const alt = byId(step, d.alt);
+      buy.push(`<div class="lrow"><span class="nm">${alt.name}</span><span class="rt">${step.cat} · ${alt.tier}</span><span class="pr">${euro(alt.price)}</span></div>`);
+      total += alt.price;
+    }
+  }
+  const fill = (id, rows) => document.getElementById(id).innerHTML = rows.length ? rows.join("") : `<div class="empty">Noch nichts festgehalten.</div>`;
+  fill("buy",buy); fill("keep",keep); fill("skip",skip);
+  document.getElementById("total").textContent = euro(total);
+  document.getElementById("open-note").textContent = open ? `${open} Schritt${open>1?"e":""} noch nicht entschieden.` : "Alle Schritte entschieden — bereit für Phase 4.";
+}
+
+renderSteps(); renderLocked();
+
+document.getElementById("copy").addEventListener("click", async () => {
+  const lines = [];
+  for (const step of STEPS){
+    const d = state[step.id];
+    if (d && d.type === "swap"){ const alt = byId(step, d.alt); lines.push(`${step.cat}: ${alt.name} — ${euro(alt.price)}`); }
+  }
+  const text = lines.length ? "Einkaufsliste:\n" + lines.join("\n") : "Einkaufsliste: noch leer";
+  const button = document.getElementById("copy");
+  try { await navigator.clipboard.writeText(text); button.textContent = "Kopiert ✓"; }
+  catch { window.getSelection()?.selectAllChildren(document.getElementById("buy")); }
+  setTimeout(() => { button.textContent = "Liste kopieren"; }, 1500);
+});
+</script>

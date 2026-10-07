@@ -1,0 +1,13 @@
+[
+  {
+    "receipt": {
+      "mode": "rolled_back_dry_run",
+      "checked_at": "2026-10-03T13:24:19.544486+00:00",
+      "rows_verified": 21,
+      "aliases_exercised": 1,
+      "identifier_writes": 0,
+      "noncommercial_changes": 0,
+      "committed_product_writes": 0
+    }
+  }
+]

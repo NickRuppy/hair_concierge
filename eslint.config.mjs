@@ -16,6 +16,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "scripts/**",
+    // Retained source-render builders for approved planning evidence, not application modules.
+    "plans/scanner-funnel-consolidation/preview/build*.cjs",
     "tests/**",
     "test-results/**",
     "tests/results/**",

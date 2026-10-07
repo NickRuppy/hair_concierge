@@ -1,0 +1,30 @@
+{
+  "sha256": {
+    "README.md": "b252c86136d361157102fbe673123a3e00db13695e7be8029cce3b1a6274e62b",
+    "applied-offers.csv": "acecfa2fbfa7f60a70a031125015d1b7320872356d83c7980c901116e9fb75b7",
+    "apply-result.json": "a1ad560107ff6f684021aee9a7e5c1bfd98355a7bcf969b875d48db08d754d58",
+    "approved-apply-payload.json": "ac98bb1759b0b7d789ab278bac0e74026d23b16a555c4a2b5bc580b577ed94ab",
+    "approved-apply.sql": "9b8addbf48c401f17fd83c3a9b0de97de89dcf6545fddaf2f037a1ed2af277f2",
+    "approved-dry-run.sql": "c38a8cc15cc2c0f855fb39bb085850ffa34043854fa6a19d869c47023d97e352",
+    "approved-manifest.json": "5e2c6bd6ab97c5a83067e36dbbeb57bf5fb678d69c5eb2414aba4efc6642c8b1",
+    "availability-dm-options.json": "2ce35e0023a6543011b0ad69cb4adb7715d476e6988fcbc19c26f3ec813bdf19",
+    "availability-specialist-options.json": "534c8e34c23f6787fa370c48eb89d6f8788d441bf185740f9dca046aaecd24b3",
+    "catalog-fact-evidence.json": "ec52ba142547b32f8b7114cc3d668bfa53bb1f46c8b01e91cdd6887867ae15ec",
+    "current-dm-details.json": "4d4592037b9338ca5b0e6dc7491cc269bfc0022ae4947df2467282dec0823d30",
+    "decisions-to-review.md": "1cf269366e1e11248d9b9e66760c1f1356bc90cdc395b666f44fcb01c567eba2",
+    "dry-run-result.json": "d280f72576922a6fd96476d2bc7cf1fedb43cbc00350fe8dfe1f01a122a3675d",
+    "dry-run-verification.json": "fdaeb81f23a44626256985800010f6c51b6ccc1b7b83d5260cb218b771496654",
+    "identity-brands.json": "5cfed4a1e40971e185e452899cd2820b759bf95d285163edbe9d3a4521772d8c",
+    "identity-dm.json": "d4796e1ec2d7c2bf33c74a2761116388a74a816de124328c02db8535d91c7a70",
+    "identity-specialists.json": "07b60cc79ba95362a044d7125b8f86907ae3ddcf0524d1cbce0dc9cfaa50ea27",
+    "moriveda-direct-confirmation.json": "dd361d39e4031108d1e6f5224d6cfa6cb4b350cf543fca43aed1e3bd3e2ced40",
+    "parent-primary-comparisons.json": "7e2bf404bebac80f56ab67854102252b40d264979664a56cf47f6ce181a32a6f",
+    "parent-primary-evidence.json": "ccad590b6a8ef60c216adb5df91c6b65d7acd0485fe5cfc1a027adc861bd4554",
+    "post-apply-readback.json": "73841ce373a81302d351ea3eec4b8ce69153030adcfda8092eda2064b9663875",
+    "post-apply-verification.json": "5ae1593386c2c4918f43c25b3db6ba1ae8bac8cdbac594d2475d7bf56f18bf65",
+    "post-dry-run-readback.json": "f10ccdda917c6ddb2a27ed34a1b167a88f4adc7a9a4b4457345b5743b57c4490",
+    "pre-apply-readback.json": "e73183f4d4ea10019bc0f818398f7f999d045e0c083057d6881f6169a7c8299f",
+    "remaining-holds.json": "3994207e5772f89e32d11630b45ce95cd039e87e20326276919f05a9069e4d50",
+    "schaebens-package-comparison.json": "b2bab4be4c370894f35f8dcf301b05f16d473a22c50c31619e96ae5a8e11e217"
+  }
+}

@@ -3,6 +3,8 @@ import { readFile } from "node:fs/promises"
 import { PGlite } from "@electric-sql/pglite"
 import { uuid_ossp } from "@electric-sql/pglite/contrib/uuid_ossp"
 
+import { commercePrerequisitesSql } from "./personal-plan-migration-admission.fixtures"
+
 /**
  * Shared PGlite harness for the two Stage-2/Stage-3 activation RPCs added in
  * PR 1 (`personal_plan_complete_stage2_module`,
@@ -23,6 +25,12 @@ import { uuid_ossp } from "@electric-sql/pglite/contrib/uuid_ossp"
  *     EXISTS-checks, which every test here satisfies with EMPTY arrays (a
  *     vacuous EXISTS-over-empty-array is always satisfied), so no row content
  *     in these stub tables is ever asserted on.
+ *   - `public.hair_profiles`: the pre-existing production table the central
+ *     user profile migrations ALTER. Its real DDL is spread over ~15 migration
+ *     files that also build leads/products/conversations/RLS, so it is
+ *     transcribed here column-for-column (with the owning migration cited per
+ *     column) instead of replayed. The three user-facts migrations themselves
+ *     are applied for real on top of it.
  *   - `public.update_updated_at_column()`, `auth.uid()`: generic,
  *     project-wide utility functions defined far outside this feature's own
  *     migrations (00001_initial_schema.sql and Supabase's own `auth` schema
@@ -52,6 +60,11 @@ import { uuid_ossp } from "@electric-sql/pglite/contrib/uuid_ossp"
  *   - 20260825120000 (answer provenance): applied for real deploy-order
  *     fidelity even though neither RPC under test reads its column.
  *   - 20260825130000 / 20260825140000: the two migrations under test.
+ *   - 20260925100000 (main #611): `hair_profiles.primary_concern`, its CHECK and the
+ *     BEFORE trigger that drops a pick `concerns` no longer contains.
+ *   - 20260929231100 / 20260929231200 / 20260929231300 (central user profile
+ *     PR1): the hair_profiles fact domains, the personal_plans facts cursor +
+ *     refinement-draft `origin`, and `public.user_facts_save_v1`.
  */
 
 const ROOT = new URL("../", import.meta.url)
@@ -70,6 +83,14 @@ const MIGRATIONS = [
   "supabase/migrations/20260825120000_personal_plan_refinement_answer_provenance.sql",
   "supabase/migrations/20260825130000_personal_plan_complete_stage2_module.sql",
   "supabase/migrations/20260825140000_personal_plan_refinement_recompute_activation.sql",
+  // main #611: `hair_profiles.primary_concern` + its stale-pick trigger. Applied for real
+  // (it only ALTERs hair_profiles) because `user_facts_save_v1` derives that column.
+  "supabase/migrations/20260925100000_hair_profiles_primary_concern.sql",
+  // Central user profile PR1: the fact domains on hair_profiles, the plan-side
+  // facts cursor, and the single write function over both.
+  "supabase/migrations/20260929231100_user_facts_domains.sql",
+  "supabase/migrations/20260929231200_personal_plan_facts_cursor.sql",
+  "supabase/migrations/20260929231300_user_facts_save_v1.sql",
 ] as const
 
 const STUB_PREREQUISITES = `
@@ -117,21 +138,196 @@ CREATE TABLE public.product_submissions (
   category text,
   status text
 );
+
+-- public.hair_profiles as production has it TODAY (before
+-- 20260929231100_user_facts_domains.sql, which this harness then applies for
+-- real). Hand-written rather than replayed from the migration chain because
+-- that chain (00001_initial_schema.sql + ~14 later files) also creates leads,
+-- products, conversations, RLS policies and admin functions this harness has no
+-- use for. Every column, type and CHECK below is transcribed from the owning
+-- migration, cited inline, so a future schema change is easy to mirror:
+--   00001_initial_schema.sql:51-65          id, user_id, concerns, products_used,
+--                                           heat_styling, styling_tools, goals,
+--                                           additional_notes, created_at, updated_at
+--   20260307152000:7-11 / 20260417130000:30 routine_preference (the other two
+--                                           columns from that file were dropped again)
+--   20260307180000                          hair_texture/thickness CHECKs,
+--                                           cuticle_condition, protein_moisture_balance,
+--                                           scalp_type, scalp_condition, chemical_treatment
+--   20260314153000 / 20260314210546         desired_volume / density (+ CHECKs)
+--   20260408090000:29-36                    towel_material, towel_technique,
+--                                           drying_method, brush_type, night_protection,
+--                                           uses_heat_protection
+--   20260408130000:4-5                      conversation_memory
+--   20260417130000:9-28                     drying_method -> scalar text + CHECK,
+--                                           nullable drying_method/night_protection
+--   20260521194000:27-29 / 20260615120000:23-28  towel technique/material vocabulary
+--   20260618120000 / 20260626143000         hair_length / brush_type text[]
+-- wash_frequency is deliberately absent (dropped by 20260609121000:163-165).
+CREATE TABLE public.hair_profiles (
+  id uuid PRIMARY KEY DEFAULT extensions.uuid_generate_v4(),
+  user_id uuid UNIQUE NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  hair_texture text CHECK (hair_texture IS NULL OR hair_texture IN ('straight','wavy','curly','coily')),
+  thickness text CHECK (thickness IS NULL OR thickness IN ('fine','normal','coarse')),
+  density text CHECK (density IS NULL OR density IN ('low','medium','high')),
+  hair_length text CHECK (hair_length IS NULL OR hair_length IN ('very_short','short','medium','long','very_long')),
+  cuticle_condition text,
+  protein_moisture_balance text,
+  scalp_type text,
+  scalp_condition text,
+  chemical_treatment text[] DEFAULT '{}',
+  concerns text[] DEFAULT '{}',
+  goals text[] DEFAULT '{}',
+  desired_volume text CHECK (desired_volume IS NULL OR desired_volume IN ('less','balanced','more')),
+  products_used text,
+  styling_tools text[],
+  heat_styling text,
+  towel_material text CHECK (towel_material IS NULL OR towel_material IN ('frottee','mikrofaser','tshirt','turban_mikrofaser','no_towel')),
+  towel_technique text CHECK (towel_technique IN ('rough_rubbing','gentle_press')),
+  drying_method text CHECK (drying_method IS NULL OR drying_method IN ('air_dry','blow_dry','blow_dry_diffuser')),
+  brush_type text[] CHECK (brush_type IS NULL OR brush_type <@ ARRAY['wide_tooth_comb','detangling','paddle','round','boar_bristle','fingers']::text[]),
+  night_protection text[],
+  uses_heat_protection boolean NOT NULL DEFAULT false,
+  routine_preference text CHECK (routine_preference IS NULL OR routine_preference IN ('minimal','balanced','advanced')),
+  conversation_memory text,
+  additional_notes text,
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
+-- 00001_initial_schema.sql:425-427.
+CREATE TRIGGER set_updated_at_hair_profiles
+  BEFORE UPDATE ON public.hair_profiles
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 `
+
+/** The same chain for a real PostgreSQL (the Docker two-session proofs in `scripts/mobile/`). */
+export {
+  MIGRATIONS as PERSONAL_PLAN_MIGRATIONS,
+  STUB_PREREQUISITES as PERSONAL_PLAN_STUB_PREREQUISITES,
+}
 
 export type PersonalPlanTestDb = PGlite
 
-export async function migratedPersonalPlanDatabase(t: {
-  after: (fn: () => Promise<void>) => void
-}): Promise<PersonalPlanTestDb> {
+/**
+ * Clean-switch task 9: the lock on `hair_profiles` (guard trigger + revoked browser privileges).
+ * Applied LAST in production (after the code deploy and the backfill), so every harness applies
+ * it last too: this constant, not the `MIGRATIONS` list, is how every harness finds it. A test
+ * that needs a row a legacy direct writer left (the state production was in BEFORE the lock)
+ * opens the database with `{ lock: false }`, seeds it, and then calls `applyUserFactsLock` —
+ * exactly the rollout order; the guard itself is never relaxed for a seed.
+ */
+export const USER_FACTS_LOCK_MIGRATION = "supabase/migrations/20261003120000_user_facts_lock.sql"
+
+export async function applyUserFactsLock(pg: PersonalPlanTestDb): Promise<void> {
+  await pg.exec(await readFile(new URL(USER_FACTS_LOCK_MIGRATION, ROOT), "utf8"))
+}
+
+/**
+ * Opt-in chain extension (`{ stage1Sources: true }`, central user profile PR2 task 2): the
+ * Stage-1 source identity of an initial Need version and the migration-enrolment admission,
+ * from the REAL files, each spliced into the chain right after the entry it follows in deploy
+ * order, plus `personal_plan_rebase_on_facts_v1` at the end.
+ *
+ *   20260812143000  `personal_plan_need_versions.stage1_source_kind` / `stage1_source_lead_id`
+ *                   (+ the initial-source CHECK) and the 10-argument
+ *                   `personal_plan_create_or_reuse_initial_need`. Deploy position: after
+ *                   20260811154526, before 20260817085000.
+ *   20260828104243  `personal_plan_migration_enrollments`, the paid-migration admission RPCs
+ *                   and the LATEST `personal_plan_create_or_reuse_initial_need` (the migration
+ *                   short-circuit, F02). Deploy position: after 20260825140000, before
+ *                   20260925100000.
+ *   20261003150000  `personal_plan_rebase_on_facts_v1` (the migration under test). Nothing in
+ *                   it touches `hair_profiles` DDL, so its position relative to the lock is
+ *                   immaterial; it is applied last in the list, before the lock.
+ *
+ * Why opt-in and not the default chain: the new CHECK makes every initial version name a real
+ * source (a prepared artifact or a legacy lead), so `createInitialNeed` (NULL artifact) and every
+ * suite built on it would stop working; `personal-plan-unified-migrations.test.ts` applies these
+ * two files ITSELF on top of the default chain (with the same commerce stubs), and
+ * `mobile-profile-facts-pglite.fixtures.ts` creates its own `public.leads`. Changing the default
+ * would therefore rewrite ~20 unrelated suites and the Docker proofs (`scripts/mobile/
+ * proof-database.ts`); the opt-in leaves them byte-identical.
+ *
+ * Shape-only stubs it adds (FK targets / tables the two files' SQL-language functions are
+ * validated against at CREATE time — `check_function_bodies` is on): `public.gen_random_uuid()`
+ * (the commerce stub's column default), the `commercePrerequisitesSql` tables shared with the
+ * admission suites (`leads`, `funnel_sessions`, the one-time checkout / purchase tables,
+ * `billing_subscriptions`, `manual_access_grants`, the test enrolments,
+ * `personal_plan_prepared_artifacts`), `auth.users`, the `private` schema, and the
+ * `profiles` columns the paid-migration authority reads. Exactly the set
+ * `personal-plan-unified-migrations.test.ts` already composes over this chain.
+ */
+const STAGE1_SOURCE_MIGRATIONS: ReadonlyArray<{ after: string; file: string }> = [
+  {
+    after: "supabase/migrations/20260811154526_personal_plan_initial_routine_activation_v1.sql",
+    file: "supabase/migrations/20260812143000_personal_plan_legacy_quiz_source.sql",
+  },
+  {
+    after: "supabase/migrations/20260825140000_personal_plan_refinement_recompute_activation.sql",
+    file: "supabase/migrations/20260828104243_personal_plan_paid_migration_admission.sql",
+  },
+]
+
+export const PERSONAL_PLAN_REBASE_ON_FACTS_MIGRATION =
+  "supabase/migrations/20261003150000_personal_plan_rebase_on_facts.sql"
+
+/**
+ * W01: the 10-argument `personal_plan_create_or_reuse_initial_need` no longer re-points a plan the
+ * facts lane has rebased (`applied_facts_revision` set). Opt-in chain only — the default chain has
+ * no 10-argument creator. Applied right after the rebase migration, before the lock.
+ */
+export const PERSONAL_PLAN_CREATE_INITIAL_KEEPS_REBASED_HEAD_MIGRATION =
+  "supabase/migrations/20261003150100_personal_plan_create_initial_keeps_rebased_head.sql"
+
+const STAGE1_SOURCE_STUB_PREREQUISITES = `
+CREATE FUNCTION public.gen_random_uuid() RETURNS uuid LANGUAGE sql
+  AS $$ SELECT extensions.uuid_generate_v4() $$;
+CREATE SCHEMA IF NOT EXISTS private;
+CREATE TABLE auth.users (id uuid PRIMARY KEY, email text, email_confirmed_at timestamptz);
+ALTER TABLE public.profiles
+  ADD COLUMN email text,
+  ADD COLUMN subscription_status text,
+  ADD COLUMN current_period_end timestamptz,
+  ADD COLUMN created_at timestamptz DEFAULT now(),
+  ADD COLUMN updated_at timestamptz DEFAULT now();
+${commercePrerequisitesSql}
+`
+
+/** The migration files in the order a database is built, for the given options. */
+function migrationChain(options: { stage1Sources?: boolean }): string[] {
+  if (!options.stage1Sources) return [...MIGRATIONS]
+  const chain: string[] = []
+  for (const migration of MIGRATIONS) {
+    chain.push(migration)
+    for (const extra of STAGE1_SOURCE_MIGRATIONS) {
+      if (extra.after === migration) chain.push(extra.file)
+    }
+  }
+  for (const extra of STAGE1_SOURCE_MIGRATIONS) {
+    if (!chain.includes(extra.file)) throw new Error(`chain anchor missing for ${extra.file}`)
+  }
+  chain.push(PERSONAL_PLAN_REBASE_ON_FACTS_MIGRATION)
+  chain.push(PERSONAL_PLAN_CREATE_INITIAL_KEEPS_REBASED_HEAD_MIGRATION)
+  return chain
+}
+
+export async function migratedPersonalPlanDatabase(
+  t: {
+    after: (fn: () => Promise<void>) => void
+  },
+  options: { lock?: boolean; stage1Sources?: boolean } = {},
+): Promise<PersonalPlanTestDb> {
   const pg = new PGlite({ extensions: { uuid_ossp } })
   t.after(async () => {
     await pg.close()
   })
   await pg.exec(STUB_PREREQUISITES)
-  for (const migration of MIGRATIONS) {
+  if (options.stage1Sources) await pg.exec(STAGE1_SOURCE_STUB_PREREQUISITES)
+  for (const migration of migrationChain(options)) {
     await pg.exec(await readFile(new URL(migration, ROOT), "utf8"))
   }
+  if (options.lock !== false) await applyUserFactsLock(pg)
   return pg
 }
 
@@ -170,6 +366,161 @@ export async function createInitialNeed(
        $1::uuid, NULL, NULL, 1, 'v1', $2, '{"a":1}'::jsonb, '{"b":1}'::jsonb
      ) AS result`,
     [input.userId, input.inputHash],
+  )
+  return rows[0]!.result
+}
+
+/** `{ stage1Sources: true }` only: a legacy-quiz lead owned by the user (shape-only stub row). */
+export async function insertLegacyQuizLead(
+  pg: PersonalPlanTestDb,
+  input: { leadId: string; userId: string },
+): Promise<void> {
+  await pg.query(
+    `INSERT INTO public.leads (id, email, quiz_kind, status, user_id)
+     VALUES ($1, $2, 'legacy', 'linked', $3)`,
+    [input.leadId, `${input.userId}@example.test`, input.userId],
+  )
+}
+
+/**
+ * `{ stage1Sources: true }` only: the real 10-argument
+ * `personal_plan_create_or_reuse_initial_need` with a legacy-quiz source (the 8-argument
+ * wrapper used by `createInitialNeed` needs a prepared artifact once 20260812143000 applies).
+ */
+export async function createLegacyQuizInitialNeed(
+  pg: PersonalPlanTestDb,
+  input: {
+    userId: string
+    leadId: string
+    inputHash: string
+    enrollmentPurchaseSourceId?: string | null
+  },
+): Promise<InitialNeedResult> {
+  const { rows } = await pg.query<{ result: InitialNeedResult }>(
+    `SELECT public.personal_plan_create_or_reuse_initial_need(
+       $1::uuid, $2::uuid, NULL, 1, 'v1', $3, '{"a":1}'::jsonb, '{"b":1}'::jsonb,
+       'legacy_quiz_lead', $4::uuid
+     ) AS result`,
+    [input.userId, input.enrollmentPurchaseSourceId ?? null, input.inputHash, input.leadId],
+  )
+  return rows[0]!.result
+}
+
+// ---------------------------------------------------------------------------
+// Central user profile (PR2): `public.personal_plan_rebase_on_facts_v1`
+// (`{ stage1Sources: true }` only)
+// ---------------------------------------------------------------------------
+
+export type RebaseOnFactsResult =
+  | {
+      status: "rebased"
+      initialNeedVersionId: string
+      refinedNeedVersionId: string | null
+      cloneDraftId: string | null
+      revision: number
+      factsRevision: number
+    }
+  | { status: "unchanged"; initialNeedVersionId: string; revision: number }
+  | { status: "plan_revision_conflict"; currentRevision: number }
+  | { status: "facts_revision_conflict"; currentRevision: number }
+  | {
+      status: "draft_conflict"
+      currentDraftId: string | null
+      currentDraftRevision: number | null
+    }
+  | { status: "initial_conflict"; existingId: string }
+  | { status: "invalid_source"; reasonCode: string }
+
+export type RebaseOnFactsInput = {
+  userId: string
+  personalPlanId: string
+  expectedPlanRevision: number | null
+  expectedFactsRevision: number | null
+  initialId: string | null
+  schemaVersion?: number
+  computationVersion?: string
+  initialInputHash: string
+  initialInputSnapshot?: unknown
+  initialOutputSnapshot?: unknown
+  sourceDraftId?: string | null
+  expectedDraftRevision?: number | null
+  clone?: {
+    answers: unknown
+    completedQuestionIds: readonly string[]
+    answerProvenance: unknown
+  } | null
+  /** Rev. 4 step 4a: the care-habits facts written through the door inside the rebase. */
+  careHabits?: { patch: unknown; provenance: unknown } | null
+  refined?: {
+    schemaVersion?: number
+    computationVersion?: string
+    inputHash: string
+    inputSnapshot?: unknown
+    outputSnapshot?: unknown
+  } | null
+}
+
+function textArrayLiteral(values: readonly string[]): string {
+  return `{${values
+    .map((value) => `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"`)
+    .join(",")}}`
+}
+
+/** Calls the RPC by named notation, exactly the parameter names the TypeScript lane uses. */
+export async function rebaseOnFacts(
+  pg: PersonalPlanTestDb,
+  input: RebaseOnFactsInput,
+): Promise<RebaseOnFactsResult> {
+  const json = (value: unknown) => (value === undefined ? null : JSON.stringify(value))
+  const { rows } = await pg.query<{ result: RebaseOnFactsResult }>(
+    `SELECT public.personal_plan_rebase_on_facts_v1(
+       p_user_id => $1::uuid,
+       p_personal_plan_id => $2::uuid,
+       p_expected_plan_revision => $3::bigint,
+       p_expected_facts_revision => $4::integer,
+       p_initial_id => $5::uuid,
+       p_schema_version => $6::integer,
+       p_computation_version => $7::text,
+       p_initial_input_hash => $8::text,
+       p_initial_input_snapshot => $9::jsonb,
+       p_initial_output_snapshot => $10::jsonb,
+       p_source_draft_id => $11::uuid,
+       p_expected_draft_revision => $12::bigint,
+       p_clone_answers => $13::jsonb,
+       p_clone_completed_question_ids => $14::text[],
+       p_clone_answer_provenance => $15::jsonb,
+       p_care_habits_patch => $16::jsonb,
+       p_care_habits_provenance => $17::jsonb,
+       p_refined_schema_version => $18::integer,
+       p_refined_computation_version => $19::text,
+       p_refined_input_hash => $20::text,
+       p_refined_input_snapshot => $21::jsonb,
+       p_refined_output_snapshot => $22::jsonb
+     ) AS result`,
+    [
+      input.userId,
+      input.personalPlanId,
+      input.expectedPlanRevision,
+      input.expectedFactsRevision,
+      input.initialId,
+      input.schemaVersion ?? 1,
+      input.computationVersion ?? "v1",
+      input.initialInputHash,
+      json(input.initialInputSnapshot ?? { facts: "initial" }),
+      json(input.initialOutputSnapshot ?? { need: "initial" }),
+      input.sourceDraftId ?? null,
+      input.expectedDraftRevision ?? null,
+      input.clone ? json(input.clone.answers) : null,
+      input.clone ? textArrayLiteral(input.clone.completedQuestionIds) : null,
+      input.clone ? json(input.clone.answerProvenance) : null,
+      input.careHabits ? json(input.careHabits.patch) : null,
+      input.careHabits ? json(input.careHabits.provenance) : null,
+      input.refined ? (input.refined.schemaVersion ?? 1) : null,
+      input.refined ? (input.refined.computationVersion ?? "v1") : null,
+      input.refined ? input.refined.inputHash : null,
+      input.refined ? json(input.refined.inputSnapshot ?? { refined: "input" }) : null,
+      input.refined ? json(input.refined.outputSnapshot ?? { refined: "output" }) : null,
+    ],
   )
   return rows[0]!.result
 }
@@ -502,6 +853,194 @@ export function pgliteReactivationClient(pg: PersonalPlanTestDb) {
         [args.p_user_id, args.p_personal_plan_id, args.p_proposal_id, args.p_expected_revision],
       )
       return { data: rows[0]!.result, error: null }
+    },
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Central user profile (PR1): `public.user_facts_save_v1`
+// ---------------------------------------------------------------------------
+
+export type UserFactsSaveResult = {
+  status: "ok" | "preserved" | "revision_conflict" | "draft_conflict" | "invalid_input"
+  revision?: number
+  changed?: boolean
+  diagnosticsHash?: string | null
+  reason?: string
+  updatedAt?: string
+}
+
+export type UserFactsSaveInput = {
+  userId: string
+  domain: string
+  patch: unknown
+  provenance: unknown
+  expectedRevision?: number | null
+  mode?: string
+  sourceDraftId?: string | null
+  expectedDraftRevision?: number | null
+  expectedInitialVersionId?: string | null
+  /** Fix round 6 (I1): the row's `updated_at` as loaded (string, microseconds kept). */
+  expectedUpdatedAt?: string | null
+}
+
+/** Calls the RPC with the exact signature task 4's TypeScript client will use. */
+export async function saveUserFacts(
+  pg: PersonalPlanTestDb,
+  input: UserFactsSaveInput,
+): Promise<UserFactsSaveResult> {
+  const { rows } = await pg.query<{ result: UserFactsSaveResult }>(
+    `SELECT public.user_facts_save_v1(
+       p_user_id => $1::uuid,
+       p_domain => $2::text,
+       p_patch => $3::jsonb,
+       p_provenance => $4::jsonb,
+       p_expected_revision => $5::integer,
+       p_mode => $6::text,
+       p_source_draft_id => $7::uuid,
+       p_expected_draft_revision => $8::bigint,
+       p_expected_initial_version_id => $9::uuid,
+       p_expected_updated_at => $10::timestamptz
+     ) AS result`,
+    [
+      input.userId,
+      input.domain,
+      JSON.stringify(input.patch),
+      JSON.stringify(input.provenance),
+      input.expectedRevision ?? null,
+      input.mode ?? "upsert",
+      input.sourceDraftId ?? null,
+      input.expectedDraftRevision ?? null,
+      input.expectedInitialVersionId ?? null,
+      input.expectedUpdatedAt ?? null,
+    ],
+  )
+  return rows[0]!.result
+}
+
+/** Every column the fact domains own, plus the domains themselves. */
+export type HairProfileRow = {
+  diagnostics: Record<string, unknown> | null
+  care_habits: Record<string, unknown> | null
+  quiz_context: Record<string, unknown> | null
+  facts_provenance: Record<string, unknown>
+  facts_revision: number
+  hair_texture: string | null
+  thickness: string | null
+  density: string | null
+  hair_length: string | null
+  cuticle_condition: string | null
+  protein_moisture_balance: string | null
+  scalp_type: string | null
+  scalp_condition: string | null
+  chemical_treatment: string[] | null
+  concerns: string[] | null
+  goals: string[] | null
+  desired_volume: string | null
+  primary_concern: string | null
+  drying_method: string | null
+  heat_styling: string | null
+  styling_tools: string[] | null
+  uses_heat_protection: boolean
+  towel_material: string | null
+  towel_technique: string | null
+  night_protection: string[] | null
+  brush_type: string[] | null
+  updated_at: Date
+}
+
+export async function readHairProfile(
+  pg: PersonalPlanTestDb,
+  userId: string,
+): Promise<HairProfileRow | null> {
+  const { rows } = await pg.query<HairProfileRow>(
+    `SELECT diagnostics, care_habits, quiz_context, facts_provenance, facts_revision,
+            hair_texture, thickness, density, hair_length, cuticle_condition,
+            protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment,
+            concerns, goals, desired_volume, primary_concern, drying_method, heat_styling, styling_tools,
+            uses_heat_protection, towel_material, towel_technique, night_protection,
+            brush_type, updated_at
+       FROM public.hair_profiles WHERE user_id = $1`,
+    [userId],
+  )
+  return rows[0] ?? null
+}
+
+// ---------------------------------------------------------------------------
+// Central user profile (PR2 task 4): lineage / activation / concurrency proofs
+// ---------------------------------------------------------------------------
+
+/** The `{ stage1Sources: true }` chain and its stubs, for the real-Postgres two-session proof. */
+export const PERSONAL_PLAN_STAGE1_SOURCE_STUB_PREREQUISITES = STAGE1_SOURCE_STUB_PREREQUISITES
+export function personalPlanMigrationChain(options: { stage1Sources?: boolean }): string[] {
+  return migrationChain(options)
+}
+
+/**
+ * A PostgREST-shaped read client over PGlite for the services the facts-rebase proofs drive for
+ * real: `classifyModuleDrivenRefinedVersion` (a LIST read awaited as a thenable — unlike
+ * `pgliteReactivationClient`, whose thenable yields one row) and
+ * `createSupabaseRoutineSourceSyncRepository` (`loadPlan`, `claim`, `finish`). Only `select` +
+ * `eq` + `maybeSingle` / list, and the two outbox RPCs; anything else throws, so a service
+ * reaching an unexpected surface fails loudly instead of reading nothing.
+ */
+export function pgliteLineageClient(pg: PersonalPlanTestDb) {
+  return {
+    from(table: string) {
+      return {
+        select(columns: string) {
+          const filters: Array<[string, unknown]> = []
+          async function rows() {
+            const where = filters
+              .map(([column], index) => `${column} = $${index + 1}`)
+              .join(" AND ")
+            const { rows: found } = await pg.query<Record<string, unknown>>(
+              `SELECT ${columns} FROM public.${table}${where ? ` WHERE ${where}` : ""}`,
+              filters.map(([, value]) => value),
+            )
+            return found
+          }
+          const chain = {
+            eq(column: string, value: unknown) {
+              filters.push([column, value])
+              return chain
+            },
+            async maybeSingle() {
+              const found = await rows()
+              if (found.length > 1) return { data: null, error: new Error("multiple rows") }
+              return { data: found[0] ?? null, error: null }
+            },
+            then(
+              resolve: (value: { data: unknown; error: unknown }) => unknown,
+              reject?: (reason: unknown) => unknown,
+            ) {
+              return rows().then((found) => resolve({ data: found, error: null }), reject)
+            },
+          }
+          return chain
+        },
+      }
+    },
+    async rpc(functionName: string, args: Record<string, unknown>) {
+      if (functionName === "personal_plan_claim_owner_routine_source_changes") {
+        const { rows } = await pg.query<Record<string, unknown>>(
+          `SELECT * FROM public.personal_plan_claim_owner_routine_source_changes(
+             p_user_id => $1::uuid, p_personal_plan_id => $2::uuid,
+             p_limit => $3::integer, p_lease_seconds => $4::integer)`,
+          [args.p_user_id, args.p_personal_plan_id, args.p_limit, args.p_lease_seconds],
+        )
+        return { data: rows, error: null }
+      }
+      if (functionName === "personal_plan_finish_routine_source_change") {
+        const { rows } = await pg.query<{ result: boolean }>(
+          `SELECT public.personal_plan_finish_routine_source_change(
+             p_outbox_id => $1::uuid, p_lease_token => $2::uuid,
+             p_processed_revision => $3::bigint, p_error_code => $4::text) AS result`,
+          [args.p_outbox_id, args.p_lease_token, args.p_processed_revision, args.p_error_code],
+        )
+        return { data: rows[0]!.result, error: null }
+      }
+      throw new Error(`pgliteLineageClient: unsupported rpc ${functionName}`)
     },
   }
 }

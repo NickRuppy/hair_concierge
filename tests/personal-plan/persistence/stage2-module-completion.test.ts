@@ -3,10 +3,12 @@ import test from "node:test"
 
 import {
   createStage2RefinementService,
+  type SaveCareHabitsFacts,
   type Stage2PersistedDraft,
   type Stage2RefinementPersistence,
 } from "@/lib/personal-plan/persistence/stage2-refinement-service"
 import { createRefinedNeedSnapshot } from "@/lib/personal-plan/refinement/production-persistence-gateway"
+import { Stage2RefinementError } from "@/lib/personal-plan/refinement/gateway"
 import type {
   PersonalPlanRefinementAnswersV1,
   Stage2AnswerProvenance,
@@ -14,6 +16,8 @@ import type {
   Stage2QuestionId,
   Stage2TriggerContext,
 } from "@/lib/personal-plan/refinement/types"
+import { CARE_HABITS_SCHEMA_VERSION } from "@/lib/user-facts/schema"
+import type { SaveUserFactsInput, SaveUserFactsResult } from "@/lib/user-facts/save"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "../fixtures"
 
 /**
@@ -103,6 +107,8 @@ function createModuleRefinementDb(seed: {
   const moduleCalls: ModuleCompletionCall[] = []
   const moduleOutcomes: string[] = []
   const completeCalls: Array<{ expectedRevision: number; inputHash: string }> = []
+  /** Cross-cutting call order, shared with a fake `saveFacts` (see `createFakeSaveFacts`). */
+  const order: string[] = []
   let sequence = 0
 
   function toPersisted(): Stage2PersistedDraft {
@@ -163,6 +169,7 @@ function createModuleRefinementDb(seed: {
       return { outcome: "saved", revision: row.revision }
     },
     async complete(input) {
+      order.push("persistence.complete")
       completeCalls.push({ expectedRevision: input.expectedRevision, inputHash: input.inputHash })
       if (row.status === "complete") {
         return { outcome: "already_completed", refinedVersionId: row.resultRefinedNeedVersionId! }
@@ -178,6 +185,7 @@ function createModuleRefinementDb(seed: {
       return { outcome: "completed", refinedVersionId: needVersionId }
     },
     async completeModule(input) {
+      order.push("persistence.completeModule")
       moduleCalls.push({
         module: input.module,
         expectedRevision: input.expectedRevision,
@@ -237,15 +245,42 @@ function createModuleRefinementDb(seed: {
     moduleCalls,
     moduleOutcomes,
     completeCalls,
+    order,
   }
 }
 
-function createService(db: ReturnType<typeof createModuleRefinementDb>) {
+type SaveFactsInput = Extract<SaveUserFactsInput, { domain: "care_habits" }>
+
+/** A fake `saveFacts` that records every call (and its position in `order`, when given). */
+function createFakeSaveFacts(options: { order?: string[]; result?: SaveUserFactsResult } = {}) {
+  const calls: SaveFactsInput[] = []
+  const saveFacts: SaveCareHabitsFacts = async (input) => {
+    options.order?.push("saveFacts")
+    calls.push(structuredClone(input))
+    return options.result ?? { status: "ok", revision: 1, changed: true, diagnosticsHash: null }
+  }
+  return { saveFacts, calls }
+}
+
+/**
+ * `saveFacts` defaults to a fresh working fake (M5: every completion path now REQUIRES
+ * one, so every test that reaches `.completeModule()`/`.complete()` must have one — the
+ * default satisfies that for every test that does not care about the facts write itself).
+ * Pass `null` explicitly to omit it (for the dedicated fail-loud tests), or a specific fake
+ * to assert on it.
+ */
+function createService(
+  db: ReturnType<typeof createModuleRefinementDb>,
+  saveFacts: SaveCareHabitsFacts | null = createFakeSaveFacts().saveFacts,
+  now?: () => Date,
+) {
   return createStage2RefinementService({
     userId: "user-1",
     persistence: db.persistence,
     snapshotBuilder: (snapshotInput) =>
       createRefinedNeedSnapshot({ ...snapshotInput, createdAt: "2026-08-25T10:00:00.000Z" }),
+    saveFacts: saveFacts ?? undefined,
+    now,
   })
 }
 
@@ -498,7 +533,11 @@ test("a lost revision race maps to a typed revision conflict and writes nothing"
 
   await assert.rejects(
     () => service.completeModule({ module: "products", expectedRevision: 4 }),
-    (error: { code?: string }) => error.code === "revision_conflict",
+    // A `persistence.completeModule`-originated conflict (the facts write itself
+    // succeeded first) carries no `detail` — only a facts-originated conflict is tagged
+    // (fix round 2, ruling 1).
+    (error: { code?: string; detail?: unknown }) =>
+      error.code === "revision_conflict" && error.detail === undefined,
   )
   assert.equal(db.needVersions.length, 0)
   assert.deepEqual(db.row.moduleProjections, {})
@@ -610,4 +649,297 @@ test("a rejected module id fails before any persistence call", async () => {
   )
   assert.equal(db.moduleCalls.length, 0)
   assert.equal(db.needVersions.length, 0)
+})
+
+/**
+ * Task 5b: `care_habits` facts writing, bound to the draft that is being closed. `saveFacts`
+ * is optional on `createStage2RefinementService` (every test above omits it and is
+ * unaffected); these tests supply a fake to lock in ordering, exact args, and the
+ * conflict mapping.
+ */
+
+test("module completion writes care_habits facts before persistence.completeModule, bound to the draft", async () => {
+  const db = createModuleRefinementDb({
+    answers: PRODUCTS_ANSWERS,
+    completedQuestionIds: PRODUCTS_QUESTION_IDS,
+    answerProvenance: userProvenance(PRODUCTS_QUESTION_IDS),
+    revision: 2,
+  })
+  const { saveFacts, calls } = createFakeSaveFacts({ order: db.order })
+  const service = createService(db, saveFacts)
+
+  const result = await service.completeModule({ module: "products", expectedRevision: 2 })
+
+  assert.equal(result.status, "in_progress")
+  assert.deepEqual(db.order, ["saveFacts", "persistence.completeModule"])
+  assert.equal(calls.length, 1)
+  const call = calls[0]!
+  assert.equal(call.userId, "user-1")
+  assert.equal(call.domain, "care_habits")
+  assert.deepEqual(call.patch, PRODUCTS_ANSWERS)
+  assert.deepEqual(call.draftBinding, {
+    sourceDraftId: "draft-1",
+    expectedDraftRevision: 2,
+    expectedInitialVersionId: "initial-1",
+  })
+  assert.deepEqual(call.provenance.source, { kind: "feinschliff_draft", id: "draft-1" })
+  assert.equal(call.provenance.schemaVersion, CARE_HABITS_SCHEMA_VERSION)
+  assert.deepEqual(call.provenance.fields, {
+    currentProductCategories: "user",
+    wetWashFrequency: "user",
+  })
+})
+
+test("a draft_conflict from saveFacts maps to revision_conflict and persistence.completeModule is never called", async () => {
+  const db = createModuleRefinementDb({
+    answers: PRODUCTS_ANSWERS,
+    completedQuestionIds: PRODUCTS_QUESTION_IDS,
+    answerProvenance: userProvenance(PRODUCTS_QUESTION_IDS),
+    revision: 2,
+  })
+  const { saveFacts } = createFakeSaveFacts({
+    order: db.order,
+    result: { status: "draft_conflict", reason: "revision_mismatch" },
+  })
+  const service = createService(db, saveFacts)
+
+  await assert.rejects(
+    () => service.completeModule({ module: "products", expectedRevision: 2 }),
+    (error: { code?: string; detail?: { source?: string; status?: string } }) =>
+      error.code === "revision_conflict" &&
+      // Fix round 2, ruling 1: tagged so a caller (direct acceptance) can tell a
+      // facts-originated conflict apart from every other `revision_conflict`.
+      error.detail?.source === "facts" &&
+      error.detail?.status === "draft_conflict",
+  )
+  assert.deepEqual(db.order, ["saveFacts"])
+  assert.equal(db.moduleCalls.length, 0)
+  assert.equal(db.needVersions.length, 0)
+})
+
+test("a revision_conflict from saveFacts also maps to revision_conflict and writes nothing", async () => {
+  const db = createModuleRefinementDb({
+    answers: PRODUCTS_ANSWERS,
+    completedQuestionIds: PRODUCTS_QUESTION_IDS,
+    answerProvenance: userProvenance(PRODUCTS_QUESTION_IDS),
+    revision: 2,
+  })
+  const { saveFacts } = createFakeSaveFacts({
+    order: db.order,
+    result: { status: "revision_conflict", revision: 9 },
+  })
+  const service = createService(db, saveFacts)
+
+  await assert.rejects(
+    () => service.completeModule({ module: "products", expectedRevision: 2 }),
+    (error: { code?: string }) => error.code === "revision_conflict",
+  )
+  assert.deepEqual(db.order, ["saveFacts"])
+  assert.equal(db.moduleCalls.length, 0)
+  assert.equal(db.needVersions.length, 0)
+})
+
+test("habits module completion also writes care_habits facts (the domain is not products-only)", async () => {
+  const db = createModuleRefinementDb({
+    answers: HABITS_ANSWERS,
+    completedQuestionIds: HABITS_QUESTION_IDS,
+    answerProvenance: userProvenance(HABITS_QUESTION_IDS),
+    revision: 4,
+  })
+  const { saveFacts, calls } = createFakeSaveFacts({ order: db.order })
+  const service = createService(db, saveFacts)
+
+  await service.completeModule({ module: "habits", expectedRevision: 4 })
+
+  assert.deepEqual(db.order, ["saveFacts", "persistence.completeModule"])
+  assert.equal(calls.length, 1)
+  assert.deepEqual(calls[0]!.patch, HABITS_ANSWERS)
+  assert.deepEqual(calls[0]!.draftBinding, {
+    sourceDraftId: "draft-1",
+    expectedDraftRevision: 4,
+    expectedInitialVersionId: "initial-1",
+  })
+})
+
+test("the closing module completion also writes care_habits facts, before persistence.complete", async () => {
+  const seed = {
+    answers: { ...PRODUCTS_ANSWERS, ...HABITS_ANSWERS },
+    completedQuestionIds: [...PRODUCTS_QUESTION_IDS, ...HABITS_QUESTION_IDS],
+    answerProvenance: userProvenance([...PRODUCTS_QUESTION_IDS, ...HABITS_QUESTION_IDS]),
+    revision: 6,
+  }
+  const db = createModuleRefinementDb(seed)
+  const { saveFacts, calls } = createFakeSaveFacts({ order: db.order })
+  const service = createService(db, saveFacts)
+
+  const result = await service.completeModule({ module: "habits", expectedRevision: 6 })
+
+  assert.equal(result.status, "complete")
+  assert.equal(
+    db.moduleCalls.length,
+    0,
+    "the closing module still runs through the full completion RPC",
+  )
+  assert.deepEqual(db.order, ["saveFacts", "persistence.complete"])
+  assert.equal(calls.length, 1)
+  assert.deepEqual(calls[0]!.patch, seed.answers)
+  assert.deepEqual(calls[0]!.draftBinding, {
+    sourceDraftId: "draft-1",
+    expectedDraftRevision: 6,
+    expectedInitialVersionId: "initial-1",
+  })
+})
+
+/**
+ * Fix round 1, I1: the terminal `complete()` lane (not reached via `completeModule` at
+ * all) must ALSO write `care_habits` facts first, since it is another lane that publishes
+ * a refined version from draft answers.
+ */
+test("the terminal complete() lane writes care_habits facts before persistence.complete", async () => {
+  const seed = {
+    answers: { ...PRODUCTS_ANSWERS, ...HABITS_ANSWERS },
+    completedQuestionIds: [...PRODUCTS_QUESTION_IDS, ...HABITS_QUESTION_IDS],
+    answerProvenance: userProvenance([...PRODUCTS_QUESTION_IDS, ...HABITS_QUESTION_IDS]),
+    revision: 6,
+  }
+  const db = createModuleRefinementDb(seed)
+  const { saveFacts, calls } = createFakeSaveFacts({ order: db.order })
+  const service = createService(db, saveFacts)
+
+  const handoff = await service.complete({ expectedRevision: 6 })
+
+  assert.ok(handoff.refinedVersionId)
+  assert.deepEqual(db.order, ["saveFacts", "persistence.complete"])
+  assert.equal(calls.length, 1)
+  assert.deepEqual(calls[0]!.patch, seed.answers)
+  assert.deepEqual(calls[0]!.draftBinding, {
+    sourceDraftId: "draft-1",
+    expectedDraftRevision: 6,
+    expectedInitialVersionId: "initial-1",
+  })
+})
+
+/**
+ * Fix round 2, P2: a successful completion whose HTTP response was lost. The identical retry
+ * loads the now-`complete` draft; writing facts first would hit the draft binding's
+ * `not_in_progress` and turn the replay into a 409. The facts were already written by the
+ * original successful completion, so the retry skips the write and goes straight to the RPC's
+ * `already_completed` branch — exactly the handoff this program inherited.
+ */
+test("an identical complete() retry after a lost response replays without rewriting facts", async () => {
+  const seed = {
+    answers: { ...PRODUCTS_ANSWERS, ...HABITS_ANSWERS },
+    completedQuestionIds: [...PRODUCTS_QUESTION_IDS, ...HABITS_QUESTION_IDS],
+    answerProvenance: userProvenance([...PRODUCTS_QUESTION_IDS, ...HABITS_QUESTION_IDS]),
+    revision: 6,
+  }
+  const db = createModuleRefinementDb(seed)
+  const { saveFacts, calls } = createFakeSaveFacts({ order: db.order })
+  const service = createService(db, saveFacts)
+
+  // The original completion succeeded; only its response was lost.
+  const original = await service.complete({ expectedRevision: 6 })
+  assert.deepEqual(db.order, ["saveFacts", "persistence.complete"])
+  assert.equal(calls.length, 1)
+
+  // A fresh service, exactly as the retried request would build one.
+  const retried = await createService(db, saveFacts).complete({ expectedRevision: 6 })
+
+  assert.deepEqual(retried, original, "the replay returns the original handoff")
+  assert.equal(calls.length, 1, "the completed draft's facts are never rewritten")
+  assert.deepEqual(db.order, ["saveFacts", "persistence.complete", "persistence.complete"])
+  assert.equal(db.completeCalls.length, 2)
+  assert.equal(db.needVersions.length, 1)
+})
+
+test("a draft_conflict from saveFacts aborts the terminal complete() lane before its RPC runs", async () => {
+  const seed = {
+    answers: { ...PRODUCTS_ANSWERS, ...HABITS_ANSWERS },
+    completedQuestionIds: [...PRODUCTS_QUESTION_IDS, ...HABITS_QUESTION_IDS],
+    answerProvenance: userProvenance([...PRODUCTS_QUESTION_IDS, ...HABITS_QUESTION_IDS]),
+    revision: 6,
+  }
+  const db = createModuleRefinementDb(seed)
+  const { saveFacts } = createFakeSaveFacts({
+    order: db.order,
+    result: { status: "draft_conflict", reason: "revision_mismatch" },
+  })
+  const service = createService(db, saveFacts)
+
+  await assert.rejects(
+    () => service.complete({ expectedRevision: 6 }),
+    (error: { code?: string }) => error.code === "revision_conflict",
+  )
+  assert.deepEqual(db.order, ["saveFacts"])
+  assert.equal(db.completeCalls.length, 0)
+  assert.equal(db.needVersions.length, 0)
+})
+
+/**
+ * Fix round 1, M5: a missing `saveFacts` must fail loud (a plain `Error`, never a silent
+ * skip) at both completion write points.
+ */
+test("completeModule throws a plain Error when saveFacts is missing, before persistence.completeModule", async () => {
+  const db = createModuleRefinementDb({
+    answers: PRODUCTS_ANSWERS,
+    completedQuestionIds: PRODUCTS_QUESTION_IDS,
+    answerProvenance: userProvenance(PRODUCTS_QUESTION_IDS),
+    revision: 2,
+  })
+  const service = createService(db, null)
+
+  await assert.rejects(
+    () => service.completeModule({ module: "products", expectedRevision: 2 }),
+    (error: unknown) =>
+      error instanceof Error &&
+      !(error instanceof Stage2RefinementError) &&
+      /requires saveFacts/.test(error.message),
+  )
+  assert.equal(db.moduleCalls.length, 0)
+  assert.equal(db.needVersions.length, 0)
+})
+
+test("complete() throws a plain Error when saveFacts is missing, before persistence.complete", async () => {
+  const db = createModuleRefinementDb({
+    answers: { ...PRODUCTS_ANSWERS, ...HABITS_ANSWERS },
+    completedQuestionIds: [...PRODUCTS_QUESTION_IDS, ...HABITS_QUESTION_IDS],
+    answerProvenance: userProvenance([...PRODUCTS_QUESTION_IDS, ...HABITS_QUESTION_IDS]),
+    revision: 6,
+  })
+  const service = createService(db, null)
+
+  await assert.rejects(
+    () => service.complete({ expectedRevision: 6 }),
+    (error: unknown) =>
+      error instanceof Error &&
+      !(error instanceof Stage2RefinementError) &&
+      /requires saveFacts/.test(error.message),
+  )
+  assert.equal(db.completeCalls.length, 0)
+  assert.equal(db.needVersions.length, 0)
+})
+
+/** Fix round 1, M2: `provenance.at` uses the injected clock. */
+test("the facts write uses the injected now() for provenance.at", async () => {
+  const db = createModuleRefinementDb({
+    answers: PRODUCTS_ANSWERS,
+    completedQuestionIds: PRODUCTS_QUESTION_IDS,
+    answerProvenance: userProvenance(PRODUCTS_QUESTION_IDS),
+    revision: 2,
+  })
+  const { saveFacts, calls } = createFakeSaveFacts()
+  const fixedNow = () => new Date("2026-09-16T08:00:00.000Z")
+  const service = createStage2RefinementService({
+    userId: "user-1",
+    persistence: db.persistence,
+    snapshotBuilder: (snapshotInput) =>
+      createRefinedNeedSnapshot({ ...snapshotInput, createdAt: "2026-08-25T10:00:00.000Z" }),
+    saveFacts,
+    now: fixedNow,
+  })
+
+  await service.completeModule({ module: "products", expectedRevision: 2 })
+
+  assert.equal(calls.length, 1)
+  assert.equal(calls[0]!.provenance.at, "2026-09-16T08:00:00.000Z")
 })

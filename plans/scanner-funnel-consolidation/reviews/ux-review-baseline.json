@@ -1,0 +1,16 @@
+{
+  "review": "Independent adversarial mobile UX/design review",
+  "previewRevision": 12,
+  "date": "2026-09-14",
+  "scope": "Read-only critique; no design edits. Founder lock precedes the requested Claude review.",
+  "sha256": {
+    "result-scanner-draft.html": "be03b69c5762caea81e8033f1465daadaabd167eb481302174dd109d9ee1b786",
+    "result-scanner-sections.html": "62308f80b0cf879748ca3a93a082cbb7704249b49c0c50d8075cedf01c3f07bc",
+    "scanner-mobile-polish.css": "0ab6e342239043914260f021f542a78f7d3b85fd2bbcb200850a2de89773efb3",
+    "result-draft.css": "df73bbb57792e67a928e13986f5539b6ad1af978692aea17cb1d629ee5617de1",
+    "scan-result-options.css": "18cc1a51353921daffc6906cc3bdb8ac03b2d7507b9d10c2e337c19e6e71b120",
+    "result-scanner-interactions.js": "33909dafd0ee684ce0594383e20deb52236700256e02d230f135598c98adb84f",
+    "production-screen.js": "068ff2e07542f8e8e3902540f546a25820475172986b4d9b80466e62774dad75",
+    "images/production/ogx-production-scan-390x844.jpg": "aa7221d1c44e03fa0ddb4b70f3947fae66f907a47dffd97a921b48fa29724566"
+  }
+}

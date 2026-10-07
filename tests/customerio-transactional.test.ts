@@ -139,3 +139,58 @@ test("treats network failures and malformed success receipts as ambiguous", asyn
     CustomerIoAmbiguousDeliveryError,
   )
 })
+
+test("inline required receipts preserve safe flags and provide complete per-send content without altering old callers", () => {
+  const request = buildCustomerIoTransactionalEmailRequest({
+    to: "lea@example.com",
+    transactionalMessageId: "required_contract_notice_v1",
+    messageData: { subject: "Bestätigung", receipt_text: "Text" },
+    inlineContent: {
+      from: '"Chaarlie" <info@chaarlie.de>',
+      subject: "Bestätigung",
+      htmlBody: "<p>Text</p>",
+      textBody: "Text",
+      autoCreate: true,
+      tracked: false,
+    },
+  })
+  assert.equal(request.body.from, '"Chaarlie" <info@chaarlie.de>')
+  assert.equal(request.body.subject, "Bestätigung")
+  assert.equal(request.body.body, "<p>Text</p>")
+  assert.equal(request.body.body_plain, "Text")
+  assert.equal(request.body.auto_create, true)
+  assert.equal(request.body.tracked, false)
+  assert.equal(request.body.send_to_unsubscribed, true)
+  assert.equal(request.body.disable_message_retention, true)
+})
+
+test("sends the attachment dictionary alongside content and rejects oversized attachments before fetch", async () => {
+  const payload: CustomerIoTransactionalEmailPayload = {
+    to: "owner@example.test",
+    transactionalMessageId: "test",
+    messageData: {},
+    attachments: { "contract.pdf": Buffer.from("%PDF-test").toString("base64") },
+  }
+  let calls = 0
+  const fetchImpl = (async (_url: unknown, init?: RequestInit) => {
+    calls++
+    assert.deepEqual(JSON.parse(String(init?.body)).attachments, payload.attachments)
+    return new Response("{}", { status: 200 })
+  }) as typeof fetch
+  await sendCustomerIoTransactionalEmail(payload, { apiKey: "test", fetchImpl })
+  assert.equal(calls, 1)
+  await assert.rejects(
+    sendCustomerIoTransactionalEmail(
+      {
+        ...payload,
+        attachments: {
+          "one.pdf": "A".repeat(1_000_000),
+          "two.pdf": "A".repeat(1_000_000),
+        },
+      },
+      { apiKey: "test", fetchImpl },
+    ),
+    /less than 2 MB/,
+  )
+  assert.equal(calls, 1)
+})

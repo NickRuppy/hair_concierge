@@ -1,0 +1,34 @@
+{
+  "verified_at": "2026-10-02T10:04:16.743Z",
+  "product_id": "8f84eae5-222d-4bbf-9ab0-f30361882a95",
+  "price_eur": 62.95,
+  "package": {
+    "value": 150,
+    "unit": "ml"
+  },
+  "link": "https://www.look-beautiful.de/professional-molecular-repair-hair-mist-sw13531",
+  "category_key": "leave_in",
+  "requested_category_key": "bondbuilder",
+  "category_move_applied": false,
+  "is_chaarlie_recommended": false,
+  "barcodes": [
+    {
+      "value": "858511001142",
+      "canonical_gtin14": "00858511001142"
+    },
+    {
+      "value": "858511001463",
+      "canonical_gtin14": "00858511001463"
+    }
+  ],
+  "scanner_visibility_predicate": {
+    "active": true,
+    "lifecycle": "active",
+    "not_quarantined": true
+  },
+  "unrelated_product_fields_preserved": true,
+  "existing_identifier_preserved": true,
+  "all_category_and_protocol_rows_preserved": true,
+  "price_checked_at": "2026-10-02T10:02:21.039+00:00",
+  "purchase_link_checked_at": "2026-10-02T10:02:21.039+00:00"
+}

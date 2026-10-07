@@ -15,6 +15,7 @@ import {
 import {
   isFunnelAttributionEnabled,
   isPersonalPlanQuizV1Enabled,
+  isQuizEmailReturnEnabled,
   isScanFunnelEnabled,
 } from "@/lib/funnel/flags"
 import {
@@ -41,6 +42,11 @@ import {
 } from "@/lib/observability/app-performance"
 
 export async function proxy(request: NextRequest) {
+  // Native routes own bearer admission; browser cookies/attribution are irrelevant.
+  const pathname = request.nextUrl.pathname
+  if (pathname === "/api/mobile/v1" || pathname.startsWith("/api/mobile/v1/"))
+    return NextResponse.next({ request })
+
   if (request.nextUrl.hostname === "www.chaarlie.de") {
     const url = request.nextUrl.clone()
     url.hostname = "chaarlie.de"
@@ -99,6 +105,7 @@ export async function proxy(request: NextRequest) {
 
   const personalPlanEnabled = isPersonalPlanQuizV1Enabled()
   const scanFunnelEnabled = isScanFunnelEnabled()
+  const emailReturnEnabled = isQuizEmailReturnEnabled()
   const selectedPackage = resolveAttributablePackageForPath(
     request.nextUrl.pathname,
     personalPlanEnabled,
@@ -126,6 +133,7 @@ export async function proxy(request: NextRequest) {
     explicitlySelectsPackage,
     personalPlanEnabled,
     scanFunnelEnabled,
+    emailReturnEnabled,
     selectedPackage,
   })
   const context: FunnelCookieContext =
@@ -280,11 +288,18 @@ export function isAttributableFunnelPackage(
   funnelPackage: FunnelPackage,
   personalPlanEnabled: boolean,
   scanFunnelEnabled: boolean,
+  emailReturnEnabled = isQuizEmailReturnEnabled(),
 ) {
   if (funnelPackage.key === "default_organic") return funnelPackage.status === "active"
   if (funnelPackage.key === "meta_personal_plan_v1") {
     return funnelPackage.status === "placeholder" && personalPlanEnabled
   }
+  if (funnelPackage.key === "customerio_scan_return_v1") {
+    return funnelPackage.status === "placeholder" && emailReturnEnabled
+  }
+  // Discovery-call funnel: a manual program without its own env flag —
+  // package status alone decides whether /lp/call attributes sessions.
+  if (funnelPackage.key === "discovery_call_v1") return funnelPackage.status === "active"
   return (
     funnelPackage.key === "scan_v1" &&
     (funnelPackage.status === "active" ||
@@ -311,19 +326,26 @@ export function shouldStartNewFunnelSession({
   explicitlySelectsPackage,
   personalPlanEnabled,
   scanFunnelEnabled,
+  emailReturnEnabled = isQuizEmailReturnEnabled(),
   selectedPackage,
 }: {
   existingPackageKey: string | null
   explicitlySelectsPackage: boolean
   personalPlanEnabled: boolean
   scanFunnelEnabled: boolean
+  emailReturnEnabled?: boolean
   selectedPackage: FunnelPackage
 }) {
   if (!existingPackageKey) return true
   const existingPackage = getFunnelPackageByKey(existingPackageKey)
   if (
     !existingPackage ||
-    !isAttributableFunnelPackage(existingPackage, personalPlanEnabled, scanFunnelEnabled)
+    !isAttributableFunnelPackage(
+      existingPackage,
+      personalPlanEnabled,
+      scanFunnelEnabled,
+      emailReturnEnabled,
+    )
   ) {
     return true
   }

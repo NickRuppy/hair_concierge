@@ -1,0 +1,140 @@
+{
+  "payload": {
+    "category_specs": {
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "gentle",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "fine"
+        },
+        {
+          "cleansing_intensity": "gentle",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "normal"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_shampoo_specs": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+          "blind:F1-full-research.json"
+        ],
+        "rationale": "Ordinary balanced scalp route: current exact-product intent is curl/wave hair care without a distinct oily, dry-scalp, sensitive or dandruff target; complete formula supports mild ordinary cleansing."
+      },
+      "category_specs.product_shampoo_specs.cleansing_intensity": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "blind:frozen-F1.json",
+          "blind:F1-full-research.json"
+        ],
+        "rationale": "Low is favored by CAPB #3 plus mild anionic SCI #4 and late nonionic Coco-Glucoside #19, with Glyceryl Oleate #11 refatting. Moderate is the nearest alternative because surfactant actives are unknown; neither sulfate-free naming nor Aloe #2 alone determines mildness. Observed intensity: gentle."
+      },
+      "product.suitable_thicknesses": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "blind:F1-full-research.json",
+          "blind:F1-full-research.json",
+          "blind:F1-full-research.json"
+        ],
+        "rationale": "Ideal: fine — Low weight plus bounded conditioning supports a broad fine-hair prior; not a guarantee of root lift. normal — Low cleansing and moderate conditioning support ordinary normal-diameter use; scalp loading still governs suitability. Conditional (not emitted): coarse — Limited high-deposition care leaves coarse/high-care needs conditional; formula-only evidence does not establish ideal fit across those needs."
+      },
+      "required_protocol_roles": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls"
+        ],
+        "rationale": "Roles derived from reviewed buckets: shampoo_everyday."
+      },
+      "research.properties.cleansingStrength": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "blind:frozen-F1.json",
+          "blind:F1-full-research.json"
+        ],
+        "rationale": "Low is favored by CAPB #3 plus mild anionic SCI #4 and late nonionic Coco-Glucoside #19, with Glyceryl Oleate #11 refatting. Moderate is the nearest alternative because surfactant actives are unknown; neither sulfate-free naming nor Aloe #2 alone determines mildness."
+      },
+      "research.properties.conditioningLevel": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "blind:frozen-F1.json",
+          "blind:F1-full-research.json"
+        ],
+        "rationale": "Moderate rinse-off care from Glyceryl Oleate #11 with cationic guar #17 and supporting emollient esters #16/#21. Above low because refatting plus substantive polymer form a coherent system; below high without rich fatty-alcohol/quat/silicone or 2-in-1 architecture. Amino acids do not prove repair."
+      },
+      "research.properties.dandruffSupport": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "blind:frozen-F1.json",
+          "blind:F1-full-research.json"
+        ],
+        "rationale": "Neither Piroctone Olamine nor Climbazole occurs in the complete supplied 33-ingredient sequence. Aloe/amino acids/humectants do not establish cosmetic anti-dandruff support."
+      },
+      "research.properties.focusPrimary": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "blind:frozen-F1.json",
+          "blind:F1-full-research.json",
+          "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls"
+        ],
+        "rationale": "General is the closest supported v1.4 headline for a curl/wave-positioned shampoo: curl support has no v1.4 focus enum. Mild cleansing is compatible but is not substituted for the dominant curl intent; neither amino-acid claims nor curl naming establish repair."
+      },
+      "research.properties.focusSecondary": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "blind:frozen-F1.json",
+          "blind:F1-full-research.json",
+          "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls"
+        ],
+        "rationale": "One secondary shine focus is supported by explicit exact-product shine positioning plus the compatible light cationic-guar/refatting surface-film route (#17/#11). The empty default was considered; a second volume focus is rejected because low weight alone is not an independent volumizing mechanism."
+      },
+      "research.properties.scalpComfortTarget": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "blind:frozen-F1.json",
+          "blind:F1-full-research.json",
+          "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls"
+        ],
+        "rationale": "Not targeted: the current exact-product positioning addresses curls/waves, shine and bounce, not sensitive, dry or itchy scalp. Mild/refatting architecture is supportive context but does not create scalp intent; Parfum #9 remains an exposure counter-signal."
+      },
+      "research.properties.usageRole": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "blind:frozen-F1.json",
+          "blind:F1-full-research.json",
+          "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls"
+        ],
+        "rationale": "Regular remains the default: source directions provide no explicit daily/frequent schedule, reset role or recognized problem-led treatment. Gentle cleansing alone does not require a frequent-use role."
+      },
+      "research.properties.weightPotential": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "blind:frozen-F1.json",
+          "blind:F1-full-research.json"
+        ],
+        "rationale": "Low whole-formula weight potential: bounded refatting and one cationic guar route, without a rich nonvolatile oil/fatty-alcohol/silicone load. Moderate remains possible with unusually efficient guar deposition, but polymer presence and weak reset alone do not create a moderate floor."
+      }
+    },
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "suitable_thicknesses": [
+      "fine",
+      "normal"
+    ]
+  },
+  "status": "property_lane_ready",
+  "summary": {
+    "conditionalThicknesses": [
+      "coarse"
+    ],
+    "productId": "F1",
+    "productName": "LANGHAARMÄDCHEN Shampoo Beautiful Curls, 300 ml",
+    "rows": 2
+  },
+  "version": "shampoo-production-light-v1",
+  "warnings": []
+}

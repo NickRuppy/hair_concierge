@@ -27,7 +27,7 @@ export const PRODUCT_APPLICATION_FACTS_SELECT = [
   "is_chaarlie_recommended",
   embedProductSpec(
     "product_leave_in_specs",
-    "format,roles,provides_heat_protection,heat_protection_max_c,heat_activation_required,application_stage",
+    "format,roles,provides_heat_protection,heat_activation_required,application_stage",
   ),
   embedProductSpec(
     "product_bondbuilder_specs",

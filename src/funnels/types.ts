@@ -1,4 +1,5 @@
 import type { ComponentType, ReactNode } from "react"
+import type { TrialOfferPricing } from "@/lib/billing/trial-offer"
 
 import type { QuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
@@ -39,6 +40,8 @@ export type FunnelOfferVariantProps = {
   name: string
   narrative: QuizResultNarrative
   quizAnswers: QuizAnswers
+  scannerRefinementEnabled?: boolean
+  trialOfferPricing?: TrialOfferPricing | null
   pricingSlot: ReactNode
   entryContext: OfferEntryContext
   focusRoutine?: boolean

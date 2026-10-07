@@ -1,6 +1,8 @@
 import { test, expect } from "@playwright/test"
 import { createClient } from "@supabase/supabase-js"
 
+import { seedHairProfile } from "../src/lib/user-facts/seed-profile"
+
 const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000"
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -15,25 +17,6 @@ if (!supabaseUrl || !serviceRoleKey) {
 const admin = createClient(supabaseUrl, serviceRoleKey, {
   auth: { autoRefreshToken: false, persistSession: false },
 })
-
-async function upsertHairProfileWithDryingCompat(payload: Record<string, unknown>) {
-  const { error } = await admin.from("hair_profiles").upsert(payload, { onConflict: "user_id" })
-
-  if (error?.code === "22P02" && typeof payload.drying_method === "string") {
-    const { error: retryError } = await admin.from("hair_profiles").upsert(
-      {
-        ...payload,
-        drying_method: [payload.drying_method],
-      },
-      { onConflict: "user_id" },
-    )
-
-    if (!retryError) return
-    throw retryError
-  }
-
-  if (error) throw error
-}
 
 test.describe.serial("@ci Profile page smoke", () => {
   const email = `playwright-profile-${Date.now()}@hairconscierge.test`
@@ -90,8 +73,8 @@ test.describe.serial("@ci Profile page smoke", () => {
 
     if (billingError && billingError.code !== "PGRST205") throw billingError
 
-    await upsertHairProfileWithDryingCompat({
-      user_id: userId,
+    // Through the door (`user_facts_save_v1`) — the lock rejects direct fact-column writes.
+    await seedHairProfile(admin, userId, {
       hair_texture: "wavy",
       thickness: "fine",
       density: "medium",
@@ -150,7 +133,7 @@ test.describe.serial("@ci Profile page smoke", () => {
     await admin.auth.admin.deleteUser(userId)
   })
 
-  test("journey sections mirror the live flow and edit routes land on the right step", async ({
+  test("no-plan journey keeps care values static while Haar-Check and goals remain editable", async ({
     page,
   }) => {
     await page.addInitScript((storageKey) => {
@@ -211,7 +194,7 @@ test.describe.serial("@ci Profile page smoke", () => {
     await expect(page.getByText("Weitere Produkte")).toHaveCount(0)
     await expect(page.getByText("Aus Haar-Check")).toHaveCount(0)
     await expect(page.getByText("Aus Onboarding")).toHaveCount(0)
-    await expect(page.locator("#profile-section-quiz").getByText("10/10 vollständig")).toBeVisible()
+    await expect(page.locator("#profile-section-quiz").getByText("9/10 vollständig")).toBeVisible()
     await expect(
       page.getByRole("button").filter({ hasText: "Haarlänge" }).filter({ hasText: "Lang" }),
     ).toBeVisible()
@@ -234,17 +217,30 @@ test.describe.serial("@ci Profile page smoke", () => {
     await expect(page.getByText("Haar-Check direkt im Profil aktualisieren")).toBeVisible()
     await expect(page.getByRole("button", { name: "Haar-Check speichern" })).toBeVisible()
     await page.getByRole("radio", { name: "Viele Haare" }).click()
-    await page.getByRole("button", { name: "Keine Beschwerden" }).click()
+    await page
+      .locator("div")
+      .filter({ hasText: /^Kopfhaut-Beschwerden/ })
+      .getByRole("button", { name: "Nichts davon" })
+      .click()
+    await page.getByRole("button", { name: "Trockene oder strohige Längen" }).click()
     await page.getByRole("button", { name: "Naturhaar" }).click()
     await page.getByRole("button", { name: "Haar-Check speichern" }).click()
     await expect(page.getByText("Haar-Check gespeichert").first()).toBeVisible()
     await expect(
       page.getByRole("button").filter({ hasText: "Haardichte" }).getByText("Viele Haare"),
     ).toBeVisible()
-    await expect(page.getByText("Keine Beschwerden")).toBeVisible()
+    await expect(
+      page
+        .getByRole("button")
+        .filter({ hasText: "Kopfhaut-Beschwerden" })
+        .getByText("Nichts davon"),
+    ).toBeVisible()
     await expect(page.getByText("Naturhaar")).toBeVisible()
     await expect(
-      page.getByRole("button").filter({ hasText: "Haar-Bedenken" }).getByText("Nichts davon"),
+      page
+        .getByRole("button")
+        .filter({ hasText: "Was beschäftigt dich gerade?" })
+        .getByText("Trockene oder strohige Längen"),
     ).toBeVisible()
 
     const { data: densityRow, error: densityError } = await admin
@@ -283,69 +279,54 @@ test.describe.serial("@ci Profile page smoke", () => {
     )
 
     const shampooDetailRow = page
-      .getByRole("button")
-      .filter({ hasText: "Shampoo" })
+      .locator("#profile-section-products")
+      .locator("div")
+      .filter({ hasText: /^Shampoo/ })
       .filter({ hasText: "Daily Shampoo" })
-    await shampooDetailRow.first().click()
-    await page.waitForURL(
-      /\/onboarding\?step=product_drilldown&returnTo=%2Fprofile&category=shampoo&editMode=single-step$/,
-      { timeout: 15000 },
-    )
-    await expect(page.getByText("Dein Shampoo", { exact: false })).toBeVisible()
-    await page.locator('input[placeholder="z.B. Produktname oder Marke"]').fill("Edited Shampoo")
-    await page.getByRole("button", { name: "5–6×/Woche" }).click()
-    await page.getByRole("button", { name: "Speichern und zurück zum Profil" }).click()
-    await page.waitForURL(/\/profile$/, { timeout: 30000 })
-    await expect(page.getByText("Edited Shampoo").first()).toBeVisible()
-    await expect(page.getByText("5-6x/Woche").first()).toBeVisible()
-
-    const { data: shampooUsageRow, error: shampooUsageError } = await admin
-      .from("user_product_usage")
-      .select("frequency_range")
-      .eq("user_id", userId!)
-      .eq("category", "shampoo")
-      .single()
-
-    if (shampooUsageError) throw shampooUsageError
-    expect(shampooUsageRow?.frequency_range).toBe("weekly_5_6x")
+    await expect(shampooDetailRow.first()).toBeVisible()
+    await expect(page.getByRole("button").filter({ hasText: "Daily Shampoo" })).toHaveCount(0)
 
     const towelMaterialCard = page
-      .getByRole("button")
-      .filter({ hasText: "Handtuch-Material" })
+      .locator("#profile-section-routine")
+      .locator("div")
+      .filter({ hasText: /^Handtuch-Material/ })
       .filter({ hasText: "Frottee-Handtuch" })
-    await towelMaterialCard.first().click()
-    await page.waitForURL(
-      /\/onboarding\?step=towel_material&returnTo=%2Fprofile&editMode=single-step$/,
-      { timeout: 15000 },
-    )
-    await page.getByRole("button", { name: "Mikrofaser-Handtuch" }).click()
-    await page.waitForURL(/\/profile$/, { timeout: 30000 })
-    await expect(page.getByText("Mikrofaser-Handtuch")).toBeVisible()
+    await expect(towelMaterialCard.last()).toBeVisible()
+    await expect(
+      page
+        .getByRole("button")
+        .filter({ hasText: "Handtuch-Material" })
+        .filter({ hasText: "Frottee-Handtuch" }),
+    ).toHaveCount(0)
 
     const heatFrequencyCard = page
-      .getByRole("button")
-      .filter({ hasText: "Styling-Frequenz" })
+      .locator("#profile-section-styling")
+      .locator("div")
+      .filter({ hasText: /^Styling-Frequenz/ })
       .filter({ hasText: "1x pro Woche" })
-    await heatFrequencyCard.first().click()
-    await page.waitForURL(
-      /\/onboarding\?step=heat_frequency&returnTo=%2Fprofile&editMode=single-step$/,
-      { timeout: 15000 },
-    )
-    await page.getByRole("button", { name: "Mehrmals pro Woche" }).click()
-    await page.waitForURL(/\/profile$/, { timeout: 30000 })
+    await expect(heatFrequencyCard.last()).toBeVisible()
     await expect(
       page
         .getByRole("button")
         .filter({ hasText: "Styling-Frequenz" })
-        .filter({ hasText: "Mehrmals pro Woche" })
-        .first(),
-    ).toBeVisible()
+        .filter({ hasText: "1x pro Woche" }),
+    ).toHaveCount(0)
+
+    for (const name of ["Produkte bearbeiten", "Styling bearbeiten", "Alltag bearbeiten"]) {
+      await expect(page.getByRole("button", { name, exact: true })).toHaveCount(0)
+    }
+    await expect(page.getByRole("button", { name: "Ziele bearbeiten", exact: true })).toBeVisible()
+    await expect(page).toHaveURL(`${baseUrl}/profile`)
 
     await page.goto(`${baseUrl}/profile`, { waitUntil: "domcontentloaded" })
     await page.setViewportSize({ width: 390, height: 844 })
     await page.reload({ waitUntil: "domcontentloaded" })
     await expect(page.getByRole("heading", { name: "Mein Profil" })).toBeVisible()
-    await expect(page.getByRole("button", { name: "Produkte bearbeiten" })).toBeVisible()
+    await expect(
+      page
+        .locator("#profile-section-products")
+        .getByRole("heading", { name: "Produkte", exact: true }),
+    ).toBeVisible()
 
     const hasHorizontalOverflow = await page.evaluate(
       () => document.documentElement.scrollWidth > window.innerWidth + 1,

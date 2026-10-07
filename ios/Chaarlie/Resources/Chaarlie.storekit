@@ -1,0 +1,69 @@
+{
+  "identifier": "C7A11E01",
+  "nonRenewingSubscriptions": [],
+  "products": [],
+  "settings": {
+    "_failTransactionsEnabled": false,
+    "_locale": "de_DE",
+    "_storefront": "DEU",
+    "_storeKitErrors": []
+  },
+  "subscriptionGroups": [
+    {
+      "id": "21500001",
+      "localizations": [],
+      "name": "Chaarlie Scanner",
+      "subscriptions": [
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "39.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "6700000001",
+          "introductoryOffer": {
+            "internalID": "6700000011",
+            "paymentMode": "free",
+            "subscriptionPeriod": "P1W"
+          },
+          "localizations": [
+            {
+              "description": "Unbegrenzt scannen, ein Jahr lang",
+              "displayName": "J\u00e4hrlich",
+              "locale": "de_DE"
+            }
+          ],
+          "productID": "de.chaarlie.scanner.yearly",
+          "recurringSubscriptionPeriod": "P1Y",
+          "referenceName": "Yearly",
+          "subscriptionGroupID": "21500001",
+          "type": "RecurringSubscription"
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "4.99",
+          "familyShareable": false,
+          "groupNumber": 2,
+          "internalID": "6700000002",
+          "localizations": [
+            {
+              "description": "Unbegrenzt scannen, monatlich k\u00fcndbar",
+              "displayName": "Monatlich",
+              "locale": "de_DE"
+            }
+          ],
+          "productID": "de.chaarlie.scanner.monthly",
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Monthly",
+          "subscriptionGroupID": "21500001",
+          "type": "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version": {
+    "major": 3,
+    "minor": 0
+  }
+}

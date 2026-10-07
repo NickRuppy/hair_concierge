@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import { test } from "node:test"
 import type Stripe from "stripe"
+import type { TrialOfferSnapshot } from "../src/lib/billing/trial-offer"
 import {
   buildStripeCheckoutContext,
   canCreateStripeReactivationCheckout,
@@ -13,10 +14,23 @@ import {
   recoverMembershipReactivationStripeCheckout,
   markMembershipReactivationReconciliationRequired,
 } from "../src/lib/reactivation/checkout-reservations"
+import { buildTrialStripeCheckoutSessionParams } from "../src/lib/stripe/trial-checkout-session-params"
 
 const NOW = 1_800_000_000
 const RESERVATION = "00000000-0000-4000-8000-000000000003"
 const USER = "00000000-0000-4000-8000-000000000001"
+const ANNUAL_TRIAL_OFFER: TrialOfferSnapshot = {
+  cohort: "trial_v1",
+  offerVersion: "trial_launch_v1",
+  interval: "year",
+  currency: "EUR",
+  trialDays: 7,
+  firstAmountMinor: 6999,
+  renewalAmountMinor: 9999,
+  taxBehavior: "inclusive",
+  stripePriceId: "price_annual_full_9999",
+  stripeCouponId: "coupon_annual_once_3000",
+}
 function params(): Stripe.Checkout.SessionCreateParams {
   return {
     mode: "subscription",
@@ -90,6 +104,154 @@ test("persisted recovery always wins and only frozen email may replace the missi
       () => parseStripeCheckoutContext({ ...context, recovery_params: recovery }),
       /recovery request invalid/,
     )
+})
+
+test("freezes the complete server-built trial request and only recovers its missing customer", () => {
+  const initialParams = buildTrialStripeCheckoutSessionParams({
+    origin: "https://example.test",
+    customerId: "cus_stale",
+    offer: ANNUAL_TRIAL_OFFER,
+    checkoutContext: "membership_reactivation",
+    reactivationReservationId: RESERVATION,
+    metadata: { checkout_attempt_id: "attempt-first", trial_enrollment_id: "enrollment-accepted" },
+    allow_promotion_codes: true,
+  } as Parameters<typeof buildTrialStripeCheckoutSessionParams>[0])
+  const context = buildStripeCheckoutContext({ ...input(), initialParams })
+
+  assert.deepEqual(context.initial_params.payment_method_types, ["card"])
+  assert.equal(context.initial_params.payment_method_collection, "always")
+  assert.deepEqual(context.initial_params.discounts, [{ coupon: "coupon_annual_once_3000" }])
+  assert.deepEqual(context.initial_params.subscription_data, {
+    trial_period_days: 7,
+    billing_mode: { type: "flexible" },
+    metadata: {
+      checkout_attempt_id: "attempt-first",
+      trial_enrollment_id: "enrollment-accepted",
+      trial_cohort: "trial_v1",
+      trial_offer_version: "trial_launch_v1",
+      trial_offer_id: "trial_v1:trial_launch_v1:year",
+    },
+  })
+  assert.equal("allow_promotion_codes" in context.initial_params, false)
+
+  const { customer: _customer, ...recovery } = context.initial_params
+  const recoveredContext = {
+    ...context,
+    recovery_params: { ...recovery, customer_email: "owner@example.test" },
+  }
+  const request = getStripeReactivationCheckoutRequest(RESERVATION, recoveredContext)
+  assert.equal(request.params.customer, undefined)
+  assert.equal(request.params.customer_email, "owner@example.test")
+  assert.equal(request.params.expires_at, NOW + 86400)
+  assert.deepEqual(request.params.line_items, [{ price: "price_annual_full_9999", quantity: 1 }])
+  assert.deepEqual(request.params.discounts, [{ coupon: "coupon_annual_once_3000" }])
+  assert.deepEqual(request.params.subscription_data, context.initial_params.subscription_data)
+
+  for (const tamperedRecovery of [
+    { ...recovery, customer_email: "owner@example.test", discounts: [] },
+    {
+      ...recovery,
+      customer_email: "owner@example.test",
+      subscription_data: { ...recovery.subscription_data, trial_period_days: 14 },
+    },
+  ]) {
+    assert.throws(
+      () => parseStripeCheckoutContext({ ...context, recovery_params: tamperedRecovery }),
+      /recovery request invalid/,
+    )
+  }
+  assert.throws(
+    () =>
+      parseStripeCheckoutContext({
+        ...context,
+        initial_params: { ...context.initial_params, payment_method_types: ["card", "paypal"] },
+      }),
+    /initial request invalid/,
+  )
+  assert.throws(
+    () =>
+      parseStripeCheckoutContext({
+        ...context,
+        initial_params: {
+          ...context.initial_params,
+          excluded_payment_method_types: ["paypal"],
+        },
+      }),
+    /initial request invalid/,
+  )
+  assert.throws(
+    () =>
+      parseStripeCheckoutContext({
+        ...context,
+        initial_params: {
+          ...context.initial_params,
+          metadata: {
+            ...context.initial_params.metadata,
+            trial_enrollment_id: "enrollment-session",
+          },
+          subscription_data: {
+            ...context.initial_params.subscription_data,
+            metadata: {
+              ...context.initial_params.subscription_data?.metadata,
+              trial_enrollment_id: "enrollment-subscription",
+            },
+          },
+        },
+      }),
+    /initial request invalid/,
+  )
+  assert.throws(
+    () =>
+      parseStripeCheckoutContext({
+        ...context,
+        initial_params: {
+          ...context.initial_params,
+          metadata: {
+            ...context.initial_params.metadata,
+            trial_offer_id: "trial_v1:trial_launch_v1:month",
+          },
+        },
+      }),
+    /initial request invalid/,
+  )
+  assert.throws(
+    () =>
+      parseStripeCheckoutContext({
+        ...context,
+        initial_params: { ...context.initial_params, allow_promotion_codes: true },
+      }),
+    /initial request invalid/,
+  )
+})
+
+test("trial-shaped fields cannot hide in an otherwise legacy reactivation request", () => {
+  assert.doesNotThrow(() =>
+    buildStripeCheckoutContext({
+      ...input(),
+      initialParams: {
+        ...params(),
+        subscription_data: { metadata: { is_internal_test: "true" } },
+      },
+    }),
+  )
+  const malformedInitialParams: Stripe.Checkout.SessionCreateParams[] = [
+    { ...params(), metadata: { ...params().metadata, trial_enrollment_id: "enrollment" } },
+    { ...params(), subscription_data: { trial_period_days: 7 } },
+    { ...params(), subscription_data: { trial_end: NOW + 7 * 86400 } },
+    { ...params(), subscription_data: { billing_mode: { type: "flexible" } } },
+    {
+      ...params(),
+      subscription_data: {
+        metadata: { is_internal_test: "true", trial_enrollment_id: "enrollment" },
+      },
+    },
+  ]
+  for (const initialParams of malformedInitialParams) {
+    assert.throws(
+      () => buildStripeCheckoutContext({ ...input(), initialParams }),
+      /initial request invalid/,
+    )
+  }
 })
 
 test("creation boundary never rolls expiry or creates beyond idempotency retention; known-session retrieval stays caller-owned", () => {

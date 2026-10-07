@@ -219,6 +219,10 @@ test-screenshots*/
 /data/research/leave-in-inci/**/lab-review-state.json
 /data/research/leave-in-inci/**/rework-queue.json
 /data/research/mask-inci/**/lab-review-state.json
+!/data/research/bondbuilder-inci/
+!/data/research/bondbuilder-inci/**
+/data/research/bondbuilder-inci/**/lab-review-state.json
+/data/research/bondbuilder-inci/**/rework-queue.json
 !/docs/research/conditioner-inci/v1.0/conditioner-classification-standard.docx
 !/data/catalog-enrichment/
 /data/catalog-enrichment/*
@@ -252,6 +256,7 @@ test-screenshots*/
 !/data/catalog-enrichment/personal-plan-stage5-v1/S5R-02-k18-molecular-repair-hair-mist-readiness.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/S5R-03-e18-oil-reentry.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/S5R-04-ogx-identity-resolution.json
+!/data/catalog-enrichment/personal-plan-stage5-v1/S5R-05-leave-in-calibration-protocol-carry-forward.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research.schema.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/scalp-refresh.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/
@@ -268,6 +273,9 @@ test-screenshots*/
 !/data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments/
 /data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments/*
 !/data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments/S5-*.json
+!/data/catalog-enrichment/personal-plan-stage5-v2/pointer-deltas/
+/data/catalog-enrichment/personal-plan-stage5-v2/pointer-deltas/*
+!/data/catalog-enrichment/personal-plan-stage5-v2/pointer-deltas/S5V2D-*.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-02-mask-critical-protocols.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-03-targeted-dandruff-shampoo.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-04-bondbuilder-primary-protocols.json
@@ -349,3 +357,9 @@ test-screenshots*/
 !/data/scanner-catalog-coverage/2026-08-26/retailer-core-research.md
 !/data/scanner-catalog-coverage/2026-08-26/retailer-specialist-candidates.json
 !plans/scanner-funnel/evidence/**/*.png
+
+# Reviewed recurring price-audit probe evidence (run artifacts remain ignored).
+!/data/price-audit/
+/data/price-audit/*
+!/data/price-audit/probes/
+!/data/price-audit/probes/*.json

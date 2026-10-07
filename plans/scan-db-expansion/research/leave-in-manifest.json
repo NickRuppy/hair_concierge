@@ -38,7 +38,6 @@
               "oil_replacement"
             ],
             "provides_heat_protection": true,
-            "heat_protection_max_c": null,
             "heat_activation_required": false,
             "care_benefits": [
               "shine",
@@ -233,7 +232,6 @@
           "category_specs.product_leave_in_specs.weight": "light: 2-Tropfen-Dosierung, flüchtige Träger (Isododecane, Alcohol denat.), Herstellerclaim 'leicht und nicht fettend'.",
           "category_specs.product_leave_in_specs.roles": "oil_replacement: anhydroses Silikon-Glanzserum, das wie ein Finishing-Öl dosiert und verwendet wird; kein Conditioner-Ersatz-/Booster-Anspruch.",
           "category_specs.product_leave_in_specs.provides_heat_protection": "true (nur Herstellerclaim): 'zuverlässiger Hitzeschutz' auf loreal-paris.de; dm-Packungstext nennt KEINEN Hitzeschutz, keine Temperaturangabe. Grenzfall, siehe Notes - Nick entscheidet, ob der Claim-Standard reicht.",
-          "category_specs.product_leave_in_specs.heat_protection_max_c": "null: keine Temperatur für DIESE SKU belegt. Achtung: der 230-Grad-Claim in Suchtreffern gehört zum separaten 'Spiegelglanz'-Leave-In-Spray, nicht zu diesem Serum.",
           "category_specs.product_leave_in_specs.care_benefits": "shine: Kernclaims Glanz/Spiegelglanz (+82% Glanz). anti_frizz: -75% Frizz laut Hersteller.",
           "category_specs.product_leave_in_specs.ingredient_flags": "silicones: Dimethicone, Dimethiconol, PEG-14 Dimethicone. polymers: Polyacrylamide. humectants: Glycerin, Hydroxyethyl Urea, Propylene Glycol. Keine Öle, keine Proteine in der INCI.",
           "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: Packung erlaubt explizit 'im feuchten oder trockenen Haar'. pre_heat: wegen Hitzeschutz-Claim des Herstellers.",
@@ -288,7 +286,6 @@
               "extension_conditioner"
             ],
             "provides_heat_protection": false,
-            "heat_protection_max_c": null,
             "heat_activation_required": false,
             "care_benefits": [
               "moisture",
@@ -482,7 +479,6 @@
               "oil_replacement"
             ],
             "provides_heat_protection": false,
-            "heat_protection_max_c": null,
             "heat_activation_required": false,
             "care_benefits": [
               "repair",
@@ -688,7 +684,6 @@
               "styling_prep"
             ],
             "provides_heat_protection": false,
-            "heat_protection_max_c": null,
             "heat_activation_required": false,
             "care_benefits": [
               "moisture",
@@ -872,7 +867,6 @@
               "styling_prep"
             ],
             "provides_heat_protection": true,
-            "heat_protection_max_c": null,
             "heat_activation_required": false,
             "care_benefits": [
               "moisture",
@@ -1086,7 +1080,6 @@
               "extension_conditioner"
             ],
             "provides_heat_protection": false,
-            "heat_protection_max_c": null,
             "heat_activation_required": false,
             "care_benefits": [
               "repair",
@@ -1291,7 +1284,6 @@
               "oil_replacement"
             ],
             "provides_heat_protection": true,
-            "heat_protection_max_c": 230,
             "heat_activation_required": false,
             "care_benefits": [
               "repair",
@@ -1476,7 +1468,6 @@
           "category_specs.product_leave_in_specs.weight": "light: flüchtiges Isododecane, Pumpdosierung, Garnier-Claim 'ohne zu kleben oder zu fetten'; keine Butter/schweren Öle (aus dem Oil-Research übernommen).",
           "category_specs.product_leave_in_specs.roles": "oil_replacement: silikon-dominantes Finish-Serum für Längen und Spitzen, das wie ein Pflege-/Glanzöl dosiert und verwendet wird (gleiches Enum-Mapping wie das Elvital Glycolic-Gloss-Serum); kein Conditioner-Ersatz-/Booster-Anspruch.",
           "category_specs.product_leave_in_specs.provides_heat_protection": "true: expliziter Claim 'schützt das Haar bis 230°C vor Hitze' auf der dm-Seite, von Garnier bestätigt. Per Ruling R-E reicht ein Beschreibungs-Claim; hier ist er sogar Teil des Verwendungstexts.",
-          "category_specs.product_leave_in_specs.heat_protection_max_c": "230: bezifferter Claim auf dm- und Herstellerseite.",
           "category_specs.product_leave_in_specs.care_benefits": "repair: 'reparierend', 'Haarschäden werden bekämpft', 'sichtbar weniger Spliss'. shine: 'glänzender, geschmeidiger Look'.",
           "category_specs.product_leave_in_specs.ingredient_flags": "silicones: Dimethicone, Phenyl Trimethicone, Dimethiconol, Amodimethicone. humectants: Propylene Glycol, Glycerin. polymers: Polyacrylate Crosspolymer-6. Keine Öle (Honig ist kein Öl), keine Proteine (aus dem Oil-Research übernommen).",
           "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: Packung erlaubt explizit 'auf feuchtem oder trockenem Haar'. pre_heat: Hitzeschutz-Claim ('Ob föhnen oder glätten').",

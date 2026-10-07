@@ -1,0 +1,630 @@
+# Read-only preflight receipt — `npm run products:intake:leave-in-calibration:preflight`
+#
+# THIS RED IS EXPECTED, NOT A DEFECT.
+#
+# `"ok": false` with `productsOk: 8/9` and the two slot-09 `publication_blockers`
+# below is the designed fail-closed state: Redken Extreme Anti-Snap gains
+# `pre_heat_application` in this batch, and its `pre_heat_protection` protocol row
+# does not exist in production yet. The preflight refuses the batch here so the
+# deferred curated-publication trigger cannot reject it at COMMIT instead (§4).
+# It turns green only after runbook steps 4 and 4b have landed that row and its
+# V2 pointer. Both slot-09 lines are the same single blocked product, counted as
+# two messages (missing V1 payload, missing V2 pointer).
+#
+# Re-verified 2026-09-14 against production (SELECT only): byte-identical to the
+# previously recorded receipt — 9/9 target fingerprints current, 0 stale, 57
+# upsert rows, 27 delete rows. No production state has drifted.
+#
+# These `#` lines are a human note; regenerating the receipt with `| tee` drops them.
+{
+  "mode": "preflight",
+  "writes": false,
+  "batch_id": "leave-in-research-calibration-v1",
+  "project_id": "pqdkhefxsxkyeqelqegq",
+  "ok": false,
+  "products": [
+    {
+      "product_key": "leave-in-slot-01-alverde-express-7in1",
+      "slot": "slot-01",
+      "target_product_id": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
+      "ok": true,
+      "errors": [],
+      "publication_blockers": [],
+      "target_fingerprint_matches": true,
+      "live_fingerprint": "0f0746ece2729ad253130b8da07fa4869d92708f85f8723d7a74660fe67a774a",
+      "operation_counts": {
+        "update_product": 1,
+        "upsert": 3,
+        "delete": 1
+      },
+      "upsert_rows_by_table": {
+        "product_leave_in_specs": 1,
+        "product_leave_in_fit_specs": 1,
+        "product_leave_in_eligibility": 4
+      },
+      "delete_rows": [
+        {
+          "product_id": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
+          "thickness": "fine",
+          "need_bucket": "moisture_anti_frizz",
+          "styling_context": "air_dry"
+        },
+        {
+          "product_id": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
+          "thickness": "fine",
+          "need_bucket": "moisture_anti_frizz",
+          "styling_context": "non_heat_style"
+        },
+        {
+          "product_id": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
+          "thickness": "fine",
+          "need_bucket": "shine_protect",
+          "styling_context": "air_dry"
+        },
+        {
+          "product_id": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
+          "thickness": "fine",
+          "need_bucket": "shine_protect",
+          "styling_context": "non_heat_style"
+        }
+      ],
+      "execution_order": [
+        {
+          "type": "update_product",
+          "table": "products",
+          "rows": 0
+        },
+        {
+          "type": "delete",
+          "table": "product_leave_in_eligibility",
+          "rows": 4
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_fit_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_eligibility",
+          "rows": 4
+        }
+      ]
+    },
+    {
+      "product_key": "leave-in-slot-02-isana-hyaluron-panthenol",
+      "slot": "slot-02",
+      "target_product_id": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+      "ok": true,
+      "errors": [],
+      "publication_blockers": [],
+      "target_fingerprint_matches": true,
+      "live_fingerprint": "8871679d027a13f110188534c9cd79afbf01931c969074bdc57af51aa609b806",
+      "operation_counts": {
+        "update_product": 1,
+        "upsert": 3,
+        "delete": 1
+      },
+      "upsert_rows_by_table": {
+        "product_leave_in_specs": 1,
+        "product_leave_in_fit_specs": 1,
+        "product_leave_in_eligibility": 2
+      },
+      "delete_rows": [
+        {
+          "product_id": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+          "thickness": "fine",
+          "need_bucket": "moisture_anti_frizz",
+          "styling_context": "air_dry"
+        },
+        {
+          "product_id": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+          "thickness": "fine",
+          "need_bucket": "moisture_anti_frizz",
+          "styling_context": "non_heat_style"
+        }
+      ],
+      "execution_order": [
+        {
+          "type": "update_product",
+          "table": "products",
+          "rows": 0
+        },
+        {
+          "type": "delete",
+          "table": "product_leave_in_eligibility",
+          "rows": 2
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_fit_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_eligibility",
+          "rows": 2
+        }
+      ]
+    },
+    {
+      "product_key": "leave-in-slot-03-cantu-repair-cream",
+      "slot": "slot-03",
+      "target_product_id": "e3c4b607-8f81-462c-8a2b-e45c8b3a2976",
+      "ok": true,
+      "errors": [],
+      "publication_blockers": [],
+      "target_fingerprint_matches": true,
+      "live_fingerprint": "e038884916c2162536df852bd5bc04fdc946c6f7c45fafeaad76dd9261230068",
+      "operation_counts": {
+        "update_product": 0,
+        "upsert": 3,
+        "delete": 1
+      },
+      "upsert_rows_by_table": {
+        "product_leave_in_specs": 1,
+        "product_leave_in_fit_specs": 1,
+        "product_leave_in_eligibility": 2
+      },
+      "delete_rows": [
+        {
+          "product_id": "e3c4b607-8f81-462c-8a2b-e45c8b3a2976",
+          "thickness": "coarse",
+          "need_bucket": "repair",
+          "styling_context": "air_dry"
+        },
+        {
+          "product_id": "e3c4b607-8f81-462c-8a2b-e45c8b3a2976",
+          "thickness": "coarse",
+          "need_bucket": "repair",
+          "styling_context": "non_heat_style"
+        }
+      ],
+      "execution_order": [
+        {
+          "type": "delete",
+          "table": "product_leave_in_eligibility",
+          "rows": 2
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_fit_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_eligibility",
+          "rows": 2
+        }
+      ]
+    },
+    {
+      "product_key": "leave-in-slot-05-evo-head-mistress",
+      "slot": "slot-05",
+      "target_product_id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+      "ok": true,
+      "errors": [],
+      "publication_blockers": [],
+      "target_fingerprint_matches": true,
+      "live_fingerprint": "f318d2ae8b168dcc082f78163c4e3d3c0aee79105541373d8694da4db2924531",
+      "operation_counts": {
+        "update_product": 1,
+        "upsert": 3,
+        "delete": 1
+      },
+      "upsert_rows_by_table": {
+        "product_leave_in_specs": 1,
+        "product_leave_in_fit_specs": 1,
+        "product_leave_in_eligibility": 4
+      },
+      "delete_rows": [
+        {
+          "product_id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+          "thickness": "fine",
+          "need_bucket": "moisture_anti_frizz",
+          "styling_context": "air_dry"
+        },
+        {
+          "product_id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+          "thickness": "fine",
+          "need_bucket": "moisture_anti_frizz",
+          "styling_context": "non_heat_style"
+        },
+        {
+          "product_id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+          "thickness": "fine",
+          "need_bucket": "shine_protect",
+          "styling_context": "air_dry"
+        },
+        {
+          "product_id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+          "thickness": "fine",
+          "need_bucket": "shine_protect",
+          "styling_context": "non_heat_style"
+        }
+      ],
+      "execution_order": [
+        {
+          "type": "update_product",
+          "table": "products",
+          "rows": 0
+        },
+        {
+          "type": "delete",
+          "table": "product_leave_in_eligibility",
+          "rows": 4
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_fit_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_eligibility",
+          "rows": 4
+        }
+      ]
+    },
+    {
+      "product_key": "leave-in-slot-06-curlsmith-hydrate-plump",
+      "slot": "slot-06",
+      "target_product_id": "648ba537-5180-440e-81ad-2b310b447d87",
+      "ok": true,
+      "errors": [],
+      "publication_blockers": [],
+      "target_fingerprint_matches": true,
+      "live_fingerprint": "5b474230130a1171f062a5dfbf271bae08b79196e5535300d9bfeb193db003f2",
+      "operation_counts": {
+        "update_product": 1,
+        "upsert": 3,
+        "delete": 1
+      },
+      "upsert_rows_by_table": {
+        "product_leave_in_specs": 1,
+        "product_leave_in_fit_specs": 1,
+        "product_leave_in_eligibility": 2
+      },
+      "delete_rows": [
+        {
+          "product_id": "648ba537-5180-440e-81ad-2b310b447d87",
+          "thickness": "normal",
+          "need_bucket": "moisture_anti_frizz",
+          "styling_context": "air_dry"
+        },
+        {
+          "product_id": "648ba537-5180-440e-81ad-2b310b447d87",
+          "thickness": "normal",
+          "need_bucket": "moisture_anti_frizz",
+          "styling_context": "non_heat_style"
+        }
+      ],
+      "execution_order": [
+        {
+          "type": "update_product",
+          "table": "products",
+          "rows": 0
+        },
+        {
+          "type": "delete",
+          "table": "product_leave_in_eligibility",
+          "rows": 2
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_fit_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_eligibility",
+          "rows": 2
+        }
+      ]
+    },
+    {
+      "product_key": "leave-in-slot-08-gliss-ultimate-repair",
+      "slot": "slot-08",
+      "target_product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+      "ok": true,
+      "errors": [],
+      "publication_blockers": [],
+      "target_fingerprint_matches": true,
+      "live_fingerprint": "25e5da02f520b9160f742762a06250b628939b4d26e904caca8b90e568824e10",
+      "operation_counts": {
+        "update_product": 1,
+        "upsert": 3,
+        "delete": 1
+      },
+      "upsert_rows_by_table": {
+        "product_leave_in_specs": 1,
+        "product_leave_in_fit_specs": 1,
+        "product_leave_in_eligibility": 6
+      },
+      "delete_rows": [
+        {
+          "product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+          "thickness": "fine",
+          "need_bucket": "heat_protect",
+          "styling_context": "heat_style"
+        },
+        {
+          "product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+          "thickness": "fine",
+          "need_bucket": "moisture_anti_frizz",
+          "styling_context": "air_dry"
+        },
+        {
+          "product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+          "thickness": "fine",
+          "need_bucket": "moisture_anti_frizz",
+          "styling_context": "non_heat_style"
+        },
+        {
+          "product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+          "thickness": "fine",
+          "need_bucket": "repair",
+          "styling_context": "air_dry"
+        },
+        {
+          "product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+          "thickness": "fine",
+          "need_bucket": "repair",
+          "styling_context": "non_heat_style"
+        }
+      ],
+      "execution_order": [
+        {
+          "type": "update_product",
+          "table": "products",
+          "rows": 0
+        },
+        {
+          "type": "delete",
+          "table": "product_leave_in_eligibility",
+          "rows": 5
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_fit_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_eligibility",
+          "rows": 6
+        }
+      ]
+    },
+    {
+      "product_key": "leave-in-slot-09-redken-extreme-anti-snap",
+      "slot": "slot-09",
+      "target_product_id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+      "ok": false,
+      "errors": [],
+      "publication_blockers": [
+        "publication dependency: role \"pre_heat_protection\" has no protocol row with a complete V1 guidance_payload (product scope, source_url, non-blank source_text, matching evidence)",
+        "publication dependency: role \"pre_heat_protection\" has no protocol row with a valid guidance_payload_v2 pointer; the deferred curated-publication trigger will reject this apply"
+      ],
+      "target_fingerprint_matches": true,
+      "live_fingerprint": "1dbc7a54d8886636bcf038a0762b93fe45d4c8bd5e4cc4daeb6741b17795ee7e",
+      "operation_counts": {
+        "update_product": 1,
+        "upsert": 3,
+        "delete": 0
+      },
+      "upsert_rows_by_table": {
+        "product_leave_in_specs": 1,
+        "product_leave_in_fit_specs": 1,
+        "product_leave_in_eligibility": 10
+      },
+      "delete_rows": [],
+      "execution_order": [
+        {
+          "type": "update_product",
+          "table": "products",
+          "rows": 0
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_fit_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_eligibility",
+          "rows": 10
+        }
+      ]
+    },
+    {
+      "product_key": "leave-in-slot-10-olaplex-no6-bond-smoother",
+      "slot": "slot-10",
+      "target_product_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+      "ok": true,
+      "errors": [],
+      "publication_blockers": [],
+      "target_fingerprint_matches": true,
+      "live_fingerprint": "62d50ce759bdb6aaf7669278eb401bf102740d8acb8a69e8ba564eace4c3fb2a",
+      "operation_counts": {
+        "update_product": 1,
+        "upsert": 3,
+        "delete": 1
+      },
+      "upsert_rows_by_table": {
+        "product_leave_in_specs": 1,
+        "product_leave_in_fit_specs": 1,
+        "product_leave_in_eligibility": 3
+      },
+      "delete_rows": [
+        {
+          "product_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+          "thickness": "normal",
+          "need_bucket": "heat_protect",
+          "styling_context": "heat_style"
+        },
+        {
+          "product_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+          "thickness": "normal",
+          "need_bucket": "moisture_anti_frizz",
+          "styling_context": "air_dry"
+        },
+        {
+          "product_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+          "thickness": "normal",
+          "need_bucket": "moisture_anti_frizz",
+          "styling_context": "non_heat_style"
+        },
+        {
+          "product_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+          "thickness": "normal",
+          "need_bucket": "repair",
+          "styling_context": "air_dry"
+        },
+        {
+          "product_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+          "thickness": "normal",
+          "need_bucket": "repair",
+          "styling_context": "non_heat_style"
+        },
+        {
+          "product_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+          "thickness": "normal",
+          "need_bucket": "shine_protect",
+          "styling_context": "air_dry"
+        },
+        {
+          "product_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+          "thickness": "normal",
+          "need_bucket": "shine_protect",
+          "styling_context": "non_heat_style"
+        }
+      ],
+      "execution_order": [
+        {
+          "type": "update_product",
+          "table": "products",
+          "rows": 0
+        },
+        {
+          "type": "delete",
+          "table": "product_leave_in_eligibility",
+          "rows": 7
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_fit_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_eligibility",
+          "rows": 3
+        }
+      ]
+    },
+    {
+      "product_key": "leave-in-slot-13-neqi-diamond-glass",
+      "slot": "slot-13",
+      "target_product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "ok": true,
+      "errors": [],
+      "publication_blockers": [],
+      "target_fingerprint_matches": true,
+      "live_fingerprint": "980e9b24bd93352f99afe5a81a9eb8a362dd8e9402455a7a55fa0fb4c9542171",
+      "operation_counts": {
+        "update_product": 1,
+        "upsert": 3,
+        "delete": 1
+      },
+      "upsert_rows_by_table": {
+        "product_leave_in_specs": 1,
+        "product_leave_in_fit_specs": 1,
+        "product_leave_in_eligibility": 6
+      },
+      "delete_rows": [
+        {
+          "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+          "thickness": "fine",
+          "need_bucket": "heat_protect",
+          "styling_context": "heat_style"
+        }
+      ],
+      "execution_order": [
+        {
+          "type": "update_product",
+          "table": "products",
+          "rows": 0
+        },
+        {
+          "type": "delete",
+          "table": "product_leave_in_eligibility",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_fit_specs",
+          "rows": 1
+        },
+        {
+          "type": "upsert",
+          "table": "product_leave_in_eligibility",
+          "rows": 6
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "products": 9,
+    "productsOk": 8,
+    "staleFingerprints": 0,
+    "publicationBlockers": 2,
+    "totalUpsertRows": 57,
+    "totalDeleteRows": 27
+  }
+}

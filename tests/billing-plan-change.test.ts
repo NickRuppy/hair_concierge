@@ -85,6 +85,29 @@ function operation(patch: Partial<BillingPlanChangeRow> = {}): BillingPlanChange
   }
 }
 
+test("new trial contracts cannot enter legacy plan changes even after becoming paid", () => {
+  for (const patch of [
+    { trial_enrollment_id: "11111111-1111-4111-8111-111111111111" },
+    {
+      metadata: {
+        trial_cohort: "trial_v1",
+        stripe_price_id: "price_month",
+        pricing_catalog: "standard",
+      },
+    },
+    { trial_access_facts: { malformed: true } },
+  ]) {
+    const row = subscription(patch)
+    assert.throws(
+      () => assertPlanChangeEligible(row, "year"),
+      (error: unknown) =>
+        error instanceof PlanChangeError && error.code === "trial_management_required",
+    )
+    assert.deepEqual(buildMembershipManagementState({ subscription: row }), { kind: "uncertain" })
+  }
+  assert.doesNotThrow(() => assertPlanChangeEligible(subscription(), "year"))
+})
+
 test("membership management read model exposes switching only for manageable renewals", () => {
   assert.deepEqual(buildMembershipManagementState({ subscription: subscription() }), {
     kind: "manageable",

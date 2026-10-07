@@ -8,7 +8,12 @@ import {
   type ResultArtifactStore,
 } from "@/lib/customerio/result-artifact-service"
 import { PERSONAL_PLAN_RESULT_ARTIFACT_MESSAGE_ID_ENV } from "@/lib/customerio/personal-plan-result-artifact"
+import {
+  SCANNER_RESULT_ARTIFACT_MESSAGE_ID_ENV,
+  type ResultArtifactEmailKind,
+} from "@/lib/customerio/scanner-result-artifact"
 import { sendCustomerIoTransactionalEmail } from "@/lib/customerio/transactional"
+import { SCAN_FUNNEL_PACKAGE_KEY } from "@/lib/quiz/screen-order"
 import { checkRateLimit } from "@/lib/rate-limit"
 import { createAdminClient } from "@/lib/supabase/admin"
 
@@ -46,7 +51,8 @@ export interface ResultArtifactRouteDeps {
   store: ResultArtifactStore
   siteUrl: string
   checkRateLimit: (identifier: string, config: typeof RATE_LIMIT) => Promise<RateLimitResult>
-  isConfigured: () => boolean
+  resolveEmailKind: (leadId: string) => Promise<ResultArtifactEmailKind>
+  isConfigured: (emailKind: ResultArtifactEmailKind) => boolean
   send: Parameters<typeof handleResultArtifactEmail>[0]["send"]
 }
 
@@ -109,13 +115,22 @@ export async function handleQuizResultArtifactRequest(
   const leadRateLimitResponse = rateLimitResponse(leadRateCheck)
   if (leadRateLimitResponse) return leadRateLimitResponse
 
-  if (!deps.isConfigured()) {
+  let emailKind: ResultArtifactEmailKind
+  try {
+    emailKind = await deps.resolveEmailKind(parsed.data.leadId)
+  } catch (error) {
+    console.error("[quiz-result-artifact] attribution lookup failed:", error)
+    return { status: 502, body: { error: SEND_ERROR } }
+  }
+
+  if (!deps.isConfigured(emailKind)) {
     return { status: 503, body: { error: CONFIGURATION_ERROR } }
   }
 
   try {
     const result = await handleResultArtifactEmail({
       leadId: parsed.data.leadId,
+      emailKind,
       siteUrl: deps.siteUrl,
       store: deps.store,
       send: deps.send,
@@ -132,11 +147,31 @@ function siteUrlFromRequest(request: Request): string {
   return process.env.NEXT_PUBLIC_SITE_URL ?? new URL(request.url).origin
 }
 
-function hasCustomerIoTransactionalConfig(): boolean {
-  return Boolean(
-    process.env.CUSTOMERIO_APP_API_KEY &&
-    process.env[PERSONAL_PLAN_RESULT_ARTIFACT_MESSAGE_ID_ENV]?.trim(),
-  )
+function hasCustomerIoTransactionalConfig(emailKind: ResultArtifactEmailKind): boolean {
+  const messageIdEnv =
+    emailKind === "scanner"
+      ? SCANNER_RESULT_ARTIFACT_MESSAGE_ID_ENV
+      : PERSONAL_PLAN_RESULT_ARTIFACT_MESSAGE_ID_ENV
+  return Boolean(process.env.CUSTOMERIO_APP_API_KEY && process.env[messageIdEnv]?.trim())
+}
+
+export function createResultArtifactEmailKindResolver(
+  supabase: SupabaseClient,
+): (leadId: string) => Promise<ResultArtifactEmailKind> {
+  return async (leadId) => {
+    const { data, error } = await supabase
+      .from("funnel_sessions")
+      .select("package_key")
+      .eq("lead_id", leadId)
+      .order("first_seen_at", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    if (error) throw new Error(`result artifact funnel attribution lookup failed: ${error.message}`)
+
+    const packageKey = (data as { package_key: string | null } | null)?.package_key
+    return packageKey === SCAN_FUNNEL_PACKAGE_KEY ? "scanner" : "organic"
+  }
 }
 
 function createResultArtifactRouteDeps(
@@ -146,6 +181,7 @@ function createResultArtifactRouteDeps(
   return {
     store: createSupabaseResultArtifactStore(supabase),
     siteUrl: siteUrlFromRequest(request),
+    resolveEmailKind: createResultArtifactEmailKindResolver(supabase),
     isConfigured: hasCustomerIoTransactionalConfig,
     send: sendCustomerIoTransactionalEmail,
   }

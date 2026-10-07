@@ -1,0 +1,91 @@
+import { spawn, spawnSync } from "node:child_process"
+import { loadLocalEnvironment } from "./local-stack.mjs"
+
+const docker = "/opt/homebrew/bin/docker"
+const env = {
+  PATH: "/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin",
+  HOME: process.env.HOME,
+  DOCKER_HOST: "unix:///Users/nick/.colima/chaarlie/docker.sock",
+}
+const args = [
+  "exec",
+  "-i",
+  "supabase_db_chaarlie-hosted-proof",
+  "psql",
+  "-X",
+  "-U",
+  "postgres",
+  "-d",
+  "postgres",
+  "-At",
+  "-v",
+  "ON_ERROR_STOP=1",
+]
+
+export function executeLocalSQL(sql) {
+  loadLocalEnvironment()
+  const result = spawnSync(docker, args, { env, input: sql, encoding: "utf8" })
+  if (result.status !== 0)
+    throw new Error("Local PostgreSQL rejected fixture SQL: " + result.stderr.slice(0, 1400))
+  return result.stdout
+}
+
+/** Holds a source write open so the HTTP publisher must wait on the real clock lock. */
+export async function holdProfileWrite(userId, thickness) {
+  loadLocalEnvironment()
+  if (!/^[0-9a-f-]{36}$/.test(userId) || !["fine", "coarse"].includes(thickness))
+    throw new Error("Invalid local lock fixture")
+  const process = spawn(docker, args, { env, stdio: ["pipe", "pipe", "pipe"] })
+  let output = ""
+  let finished = false
+  const closed = new Promise((resolve, reject) => {
+    process.once("error", reject)
+    process.once("exit", (code) => {
+      finished = true
+      if (code === 0) resolve()
+      else reject(new Error("Local transaction failed"))
+    })
+  })
+  const ready = new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error("Local transaction lock timeout")), 10000)
+    process.stdout.on("data", (data) => {
+      output += data.toString()
+      if (output.includes("LOCK_HELD")) {
+        clearTimeout(timer)
+        resolve()
+      }
+    })
+    process.once("exit", () => {
+      clearTimeout(timer)
+      if (!output.includes("LOCK_HELD")) reject(new Error("Local transaction lock failed"))
+    })
+  })
+  process.stderr.resume()
+  // The write goes through the door (`user_facts_save_v1`) as a thickness hand edit — the lock
+  // rejects the direct column UPDATE this used to be. The door's own UPDATE holds the same row
+  // lock (and moves the same scanner clock) until COMMIT / ROLLBACK.
+  const at = new Date().toISOString()
+  const provenance = JSON.stringify({
+    source: { kind: "profile_editor" },
+    schemaVersion: 1,
+    at,
+    editedAt: at,
+    fields: { thickness: "user" },
+  })
+  process.stdin.write(
+    `BEGIN;\nSELECT public.user_facts_save_v1(p_user_id => '${userId}'::uuid, p_domain => 'diagnostics', p_patch => '{"thickness":"${thickness}"}'::jsonb, p_provenance => '${provenance}'::jsonb);\n\\echo LOCK_HELD\n`,
+  )
+  try {
+    await ready
+  } catch (error) {
+    process.stdin.end("ROLLBACK;\n")
+    await closed.catch(() => {})
+    throw error
+  }
+  return {
+    async finish(commit) {
+      if (!finished) process.stdin.end(commit ? "COMMIT;\n" : "ROLLBACK;\n")
+      await closed
+    },
+  }
+}

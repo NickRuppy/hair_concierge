@@ -1,0 +1,67 @@
+{
+  "created_at": "2026-10-02T09:08:40.165Z",
+  "hashes": {
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/anonymous.json": "825a31bedaf12df4006547074645e0ef770a977c57e2a8940ed0ddf8a0f28599",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/named-evidence.json": "e2feb6e930fb8a5231dab3c753dce9aea52b2252301e37cc006fde386c4e5cb5",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/preregistration.json": "0344128af2524b5122cc9b8a91ed1de49acf91acafaa3e8f05f65a7ae11253db",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/verify.mjs": "75ddd923eaeee00921c614c1797540cb9bf61a3edbb916b05391b53fb8d218bf",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/method/standard.md": "031d32585ff0e2d5d1cdf77985d85188097fbf69354a4977eb93944ec2c93e10",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/method/runbook.md": "fbd5c07af51861ae1904bc6f8acb6809878e95840e87180c52bb9f4b1c4fb6c5",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/method/researcher-prompt.md": "de657611b3d98b45cd2febc10850491bef2b77fa21009a03491baeeb1b8a0fa3",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/method/blind-instructions.md": "698ad9feec477547b82c5833ed8d3a17c4be57329ac05cdbbd4d07c02874d86e",
+    "docs/research/bondbuilder-inci/draft-v0.4/standard.md": "15539ed6d8f5142c15d644d3679c340cfe3fc5b9be4b9c2b3380412c84ecb951",
+    "docs/research/bondbuilder-inci/draft-v0.4/runbook.md": "e209aa3566f9df6404f09e4250487142945cb6a1562663a2ae3158fd15c7f716",
+    "docs/research/bondbuilder-inci/draft-v0.4/researcher-prompt.md": "1446cd975c36f04ac5f2858185ad649b30d7c68c61de5bfc3c43e2d760b242cf",
+    "docs/research/bondbuilder-inci/draft-v0.4/blind-instructions.md": "017abe330c19a8b5be6c4add49ea4e78631af416a70f105fdbde028c2666fd82"
+  },
+  "formulas": [
+    {
+      "slot_id": "V01",
+      "raw_sha256": "cc7e9adce639fb4f4738bf94a14e59d6c4bcc7164df6023462602c6406a266f8",
+      "normalized_sha256": "8cc4b38ee4fe0d69d480407f6112e81d71e94f4e5a5136763a63961d9a998ce4"
+    },
+    {
+      "slot_id": "V02",
+      "raw_sha256": "78a928362cf5d657ccad40b40430c04968cd6f19a391f7ad2eaf4d29ca63c988",
+      "normalized_sha256": "460b5b1eaa91102a8f1b9963ae3d48771d4c662c7061331e7ca09c2a886a800f"
+    },
+    {
+      "slot_id": "V03",
+      "raw_sha256": "9f86b7780b2bdf674b5039dd15b5d55609e013705acff7fb84302d243ee284f0",
+      "normalized_sha256": "e2295616c29f72836c33be2a5a35e88ddd7731aded84e53bc562565d127e8f55"
+    },
+    {
+      "slot_id": "V04",
+      "raw_sha256": "75f8092b5e97c9cce01b91a3c0bf06b2f49fdca817d764c05d3a30a00b36f462",
+      "normalized_sha256": "8bd9d7c683b10dd4bc3c690967e81a23f1b6dc36e7013d3892de637a9d9b5379"
+    }
+  ],
+  "run_id": "bondbuilder-validation-2026-10-02-v0.4",
+  "standard_version": "bondbuilder-inci-v0.4",
+  "lexicon_version": "bondbuilder-lexicon-v0.1",
+  "serialization_version": "bondbuilder-validation-wire-v0.4",
+  "status": "frozen_for_authorized_validation_only",
+  "semantic_rule_changes": false,
+  "previous_method": "v0.3 completed calibration; no artifact overwritten",
+  "products": 4,
+  "root_only_files": [
+    "preregistration.json",
+    "freeze-receipt.json",
+    "verify.mjs"
+  ],
+  "stage_a_allowed": [
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/anonymous.json",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/method/researcher-prompt.md",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/method/blind-instructions.md"
+  ],
+  "stage_b_allowed": [
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/method/standard.md",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/named-evidence.json",
+    "own sealed lane blind-records.json"
+  ],
+  "counterpart_review": "approve with revisions; verified findings reconciled before freeze; no blockers",
+  "method_locked": false,
+  "activation": false,
+  "database_apply": false
+}
+

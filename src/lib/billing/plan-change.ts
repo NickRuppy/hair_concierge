@@ -3,6 +3,7 @@ import { recordBillingAnalyticsEvent } from "./analytics-outbox"
 import { parseSubscriptionPricingCatalog, type SubscriptionPricingCatalog } from "./pricing-catalog"
 import { getStripePriceCatalogForId } from "@/lib/stripe/client"
 import { getPayPalPlanCatalogForId } from "@/lib/paypal/plans"
+import { hasTrialBillingContract } from "./trial-access-projection"
 import type {
   BillingInterval,
   BillingPlanChangeRow,
@@ -50,6 +51,9 @@ export function buildMembershipManagementState(input: {
     renewalAt: subscription.current_period_end,
     cancelAtPeriodEnd: subscription.cancel_at_period_end,
   }
+
+  // The new cohort has its own immutable terms/declaration path, including once paid.
+  if (hasTrialBillingContract(subscription)) return { kind: "uncertain" }
 
   const pricingCatalog = resolvedSubscriptionPricingCatalog(subscription)
 
@@ -128,6 +132,12 @@ export function assertPlanChangeEligible(
   interval: BillingInterval
   current_period_end: string
 } {
+  if (hasTrialBillingContract(subscription)) {
+    throw new PlanChangeError(
+      "trial_management_required",
+      "Bitte verwalte dieses Abo über deine Mitgliedschaft.",
+    )
+  }
   if (subscription.entitlement_status !== "active") {
     throw new PlanChangeError("payment_problem", "Die Zahlung muss zuerst geklärt werden.")
   }

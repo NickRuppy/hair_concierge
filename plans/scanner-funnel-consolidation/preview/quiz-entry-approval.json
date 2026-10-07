@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-14",
+  "status": "visual-approved",
+  "acknowledgement": "Yeah I think that's good. Let's lock this in and then actually continue with the other parts.",
+  "scope": "Ad traffic enters first quiz question with approved brief explainer; no standalone landing. Implementation and final journey sign-off not included.",
+  "sha256": {
+    "quiz-entry.html": "e68e61f9db89d39aa29fc3d6d252f31e7dc493df7773a4095f63b97a3dbfe16c",
+    "quiz-entry.css": "d95d105420d20eee1fef6d16ae8b2534cbd793590103cc6a309eb1cd8fd185aa",
+    "quiz-entry.js": "d68bcf41ce35e2db8305f0c39e1f37739fc6d3928930ab6993c5579238a4620b",
+    "quiz-entry-render.css": "6a2913b98c3f4e90faba245d8c3d89c39a32489c6449365f01362185614d4854",
+    "quiz-entry-source.json": "559d8b57ac47bc28833190513a7b1aa5ef540a2241370a7c48fc20c2c0b4899f"
+  }
+}

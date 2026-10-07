@@ -1,0 +1,29 @@
+{
+  "candidate": "F4",
+  "market": "DE",
+  "category": "conventional_rinse_out_conditioner",
+  "raw_inci": "Ingredients: Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Palmitate, Behentrimonium Chloride, Panthenol, Hydrolyzed Keratin, Helianthus Annuus Hybrid Oil, Ricinus Communis Seed Oil, Argania Spinosa Kernel Oil, Orbignya Oleifera Seed Oil, Sclerocarya Birrea Seed Oil, Parfum, Isopropyl Alcohol, Sodium Benzoate, Potassium Sorbate, Tetramethyl Acetyloctahydronaphthalenes, Citric Acid",
+  "normalized_ingredients": [
+    "AQUA",
+    "GLYCERIN",
+    "CETEARYL ALCOHOL",
+    "ISOPROPYL PALMITATE",
+    "BEHENTRIMONIUM CHLORIDE",
+    "PANTHENOL",
+    "HYDROLYZED KERATIN",
+    "HELIANTHUS ANNUUS HYBRID OIL",
+    "RICINUS COMMUNIS SEED OIL",
+    "ARGANIA SPINOSA KERNEL OIL",
+    "ORBIGNYA OLEIFERA SEED OIL",
+    "SCLEROCARYA BIRREA SEED OIL",
+    "PARFUM",
+    "ISOPROPYL ALCOHOL",
+    "SODIUM BENZOATE",
+    "POTASSIUM SORBATE",
+    "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+    "CITRIC ACID"
+  ],
+  "source_attestation": "Root resolved exact DE current formula from a first-party product source; source identity retained separately to preserve blinding.",
+  "source_checked_at": "2026-10-03T15:19:23.074Z",
+  "fingerprint": "50affa768a3a3bc754f9eb833a5029fb121f53e912c9bb5fecfc28b64c7c23ee"
+}

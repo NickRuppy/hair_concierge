@@ -17,11 +17,6 @@ export const HAIR_THICKNESS_LABELS = {
   coarse: "Dick",
 } as const satisfies Record<HairThickness, string>
 
-export const HAIR_TEXTURE_OPTIONS = HAIR_TEXTURES.map((value) => ({
-  value,
-  label: HAIR_TEXTURE_LABELS[value],
-}))
-
 export const HAIR_THICKNESS_OPTIONS = HAIR_THICKNESSES.map((value) => ({
   value,
   label: HAIR_THICKNESS_LABELS[value],

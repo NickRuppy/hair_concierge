@@ -1,5 +1,6 @@
 "use client"
 
+import { loadConsent } from "@/lib/cookie-consent"
 import { useEffect, useRef, useState } from "react"
 import {
   FUNDING,
@@ -20,6 +21,7 @@ import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observabil
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import type { PayPalCheckoutSource } from "@/lib/paypal/checkout-intents"
 import { createFunnelEventId } from "@/lib/funnel/client"
+import { syncOpenAIAdsBeforeCheckout } from "@/lib/openai-ads/browser"
 import { paymentFeedback } from "@/lib/checkout/payment-feedback"
 import { isPaymentFeedbackV2Enabled, isPaymentSupportUiEnabled } from "@/lib/funnel/flags"
 import {
@@ -172,6 +174,7 @@ function PayPalScriptFailureObserver({
 export function PayPalSubscriptionButton({
   checkoutAttemptId,
   checkoutContext,
+  funnelSessionId,
   interval,
   leadId,
   onApproved,
@@ -187,10 +190,12 @@ export function PayPalSubscriptionButton({
   onCheckoutLifecycle,
   returnDestination,
   source,
+  trial = false,
   visible = true,
 }: {
   checkoutAttemptId?: string
   checkoutContext?: CheckoutContext
+  funnelSessionId?: string
   interval: BillingInterval
   leadId?: string | null
   /**
@@ -228,6 +233,7 @@ export function PayPalSubscriptionButton({
   }) => void
   returnDestination?: string
   source: PayPalCheckoutSource
+  trial?: boolean
   visible?: boolean
 }) {
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim()
@@ -506,10 +512,12 @@ export function PayPalSubscriptionButton({
                 intent = await createSubscriptionIntent({
                   checkoutAttemptId,
                   checkoutContext,
+                  funnelSessionId,
                   interval,
                   leadId,
                   returnDestination,
                   source,
+                  trial,
                   funnelEventId,
                 })
               } finally {
@@ -610,6 +618,12 @@ export function PayPalSubscriptionButton({
                 }),
               )
               try {
+                // Trial schedules and retry identity are frozen by the server.
+                // Creating again through the SDK would create another agreement.
+                if (trial) {
+                  if (!intent.subscriptionId) throw new Error(paypalStartError)
+                  return intent.subscriptionId
+                }
                 return await actions.subscription.create({
                   plan_id: intent.planId,
                   custom_id: intent.token,
@@ -875,30 +889,37 @@ export function PayPalSubscriptionButton({
 async function createSubscriptionIntent({
   checkoutAttemptId,
   checkoutContext,
+  funnelSessionId,
   interval,
   leadId,
   returnDestination,
   source,
+  trial = false,
   funnelEventId,
 }: {
   checkoutAttemptId?: string
   checkoutContext?: CheckoutContext
+  funnelSessionId?: string
   interval: BillingInterval
   leadId?: string | null
   returnDestination?: string
   source: PayPalCheckoutSource
+  trial?: boolean
   funnelEventId: string
-}): Promise<{ token: string; planId: string }> {
+}): Promise<{ token: string; planId: string; subscriptionId?: string }> {
+  await syncOpenAIAdsBeforeCheckout()
   const response = await fetch("/api/paypal/create-subscription-intent", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       checkoutAttemptId,
       checkoutContext,
+      funnelSessionId,
       interval,
       leadId: leadId ?? null,
       returnDestination,
       source,
+      ...(trial ? { trial: true, trialMarketingConsent: loadConsent()?.marketing === true } : {}),
       funnelEventId,
     }),
   })
@@ -926,9 +947,12 @@ async function createSubscriptionIntent({
 
   const token = typeof body.token === "string" ? body.token : null
   const planId = typeof body.planId === "string" ? body.planId : null
+  const subscriptionId = typeof body.subscriptionId === "string" ? body.subscriptionId : null
+  if (trial && body.trial !== true) throw new Error(paypalStartError)
+  if (trial && !subscriptionId) throw new Error(paypalStartError)
   if (!token || !planId) throw new Error(paypalStartError)
 
-  return { token, planId }
+  return { token, planId, ...(trial && subscriptionId ? { subscriptionId } : {}) }
 }
 
 async function approveSubscriptionIntent(

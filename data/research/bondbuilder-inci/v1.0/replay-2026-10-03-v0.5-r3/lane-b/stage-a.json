@@ -1,0 +1,189 @@
+{
+  "stage": "A",
+  "lane_id": "lane-b",
+  "input_receipt": [
+    {
+      "path": "method/researcher-prompt.md",
+      "sha256": "3019d9d4aa97167af1821f21609beaa414ea58e5f653b1dc3cc4e666191b2ec7"
+    },
+    {
+      "path": "method/blind-instructions.md",
+      "sha256": "4840b6d60efb00db856aa0de4f16cdb140ebcace7da561b5b6d567d2b1acdd41"
+    },
+    {
+      "path": "anonymous-packet.json",
+      "sha256": "6812dc31a13bb944cbcdc45ac5bbe12f62c5c35deac940b99b00f036eccc19f2"
+    }
+  ],
+  "metadata": {
+    "preparation_incident": "The preceding r2 Stage A attempt read its three authorized inputs, found the required closed family IDs missing, and stopped without writing any r2 output or seal. All three authorized r3 inputs were subsequently reread completely and freshly hashed before this assessment was serialized.",
+    "assessment_scope": "Candidate clues in the supplied anonymous formulas only. Family IDs are the blind guide's serialization labels. Confidence concerns literal clue matching. Complete means the supplied selected list appears internally complete, not that an actual package was inspected.",
+    "access_limits": "No named inputs, other repository files, web, peer outputs or previous output files were inspected."
+  },
+  "records": [
+    {
+      "slot_id": "P01",
+      "observed_ingredients": ["Bis-Aminopropyl Diglycol Dimaleate", "Citric Acid"],
+      "candidate_families": ["sulfur_targeting_dimaleate", "acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "Only the canonical selected formula is supplied.",
+        "Citric Acid is a candidate clue only; its presence cannot settle the category boundary anonymously."
+      ],
+      "recognition_incidents": [
+        "The distinctive Bis-Aminopropyl Diglycol Dimaleate chemistry prompted identity familiarity; no identity was recorded or used beyond the literal clue."
+      ]
+    },
+    {
+      "slot_id": "P02",
+      "observed_ingredients": ["sh-Oligopeptide -78", "Citric Acid"],
+      "candidate_families": ["designed_peptide", "acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "The raw sh-Oligopeptide -78 spelling includes spacing; it matches the permitted clue after spacing normalization, consistent with the supplied normalized list.",
+        "Only the canonical selected formula is supplied.",
+        "Citric Acid is a candidate clue only; its presence cannot settle the category boundary anonymously."
+      ],
+      "recognition_incidents": [
+        "The distinctive numbered peptide prompted identity familiarity; no identity was recorded or used beyond the literal clue."
+      ]
+    },
+    {
+      "slot_id": "P03",
+      "observed_ingredients": ["Diethylhexyl Maleate"],
+      "candidate_families": ["maleate_ester"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "Only the canonical selected formula is supplied; the four-ingredient list is not marked as an excerpt or incomplete."
+      ],
+      "recognition_incidents": [
+        "The distinctive maleate ingredient and short formula prompted identity familiarity; no identity was recorded or used beyond the literal clue."
+      ]
+    },
+    {
+      "slot_id": "P04",
+      "observed_ingredients": ["CITRIC ACID", "ARGININE", "BETAINE"],
+      "candidate_families": ["acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "Only the canonical selected formula is supplied.",
+        "Citric Acid and its supporting Arginine/Betaine clues cannot settle the category boundary anonymously.",
+        "CHLORHEXIDINE DIGLUCONATE is not the required Hydroxypropylammonium Gluconate clue."
+      ],
+      "recognition_incidents": []
+    },
+    {
+      "slot_id": "P05",
+      "observed_ingredients": ["CITRIC ACID", "SODIUM CITRATE"],
+      "candidate_families": ["acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "Differing source captures are flagged but not supplied; only this internally consistent selected formula was assessed and no captures were merged.",
+        "Citric Acid and supporting Sodium Citrate remain candidate clues only; the category boundary cannot be settled anonymously."
+      ],
+      "recognition_incidents": []
+    },
+    {
+      "slot_id": "P06",
+      "observed_ingredients": ["Hydroxypropylgluconamide", "Hydroxypropylammonium Gluconate", "Arginine", "Citric Acid"],
+      "candidate_families": ["gluconamide_gluconate", "acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "Both required paired ingredients are separately explicit in raw and normalized inputs.",
+        "Differing source captures are flagged but not supplied; only this selected formula was assessed and no captures were merged.",
+        "Raw spelling and punctuation irregularities outside the candidate markers do not create a contradictory candidate observation.",
+        "Citric Acid and supporting Arginine remain candidate clues only; the category boundary cannot be settled anonymously."
+      ],
+      "recognition_incidents": [
+        "The paired gluconamide/gluconate chemistry was familiar as a distinctive ingredient combination; no identity was inferred."
+      ]
+    },
+    {
+      "slot_id": "P07",
+      "observed_ingredients": ["Hydroxypropylgluconamide", "Hydroxypropylammonium Gluconate", "Octyldodecyl Citrate Crosspolymer", "Lactic Acid", "Tartaric Acid"],
+      "candidate_families": ["gluconamide_gluconate"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "Both required paired ingredients are present despite being separated in the ingredient list.",
+        "Only the canonical selected formula is supplied.",
+        "Octyldodecyl Citrate Crosspolymer, Lactic Acid and Tartaric Acid are not the permitted Citric Acid clue."
+      ],
+      "recognition_incidents": [
+        "The paired gluconamide/gluconate chemistry was familiar as a distinctive ingredient combination; no identity was inferred."
+      ]
+    },
+    {
+      "slot_id": "P08",
+      "observed_ingredients": ["GLYCINE", "CITRIC ACID", "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL"],
+      "candidate_families": ["acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "Differing source captures are flagged but not supplied; only this internally consistent selected formula was assessed and no captures were merged.",
+        "Citric Acid and supporting Glycine remain candidate clues only; the category boundary cannot be settled anonymously.",
+        "The listed hydrolyzed vegetable protein is not the required numbered peptide clue."
+      ],
+      "recognition_incidents": []
+    },
+    {
+      "slot_id": "V01",
+      "observed_ingredients": ["Hydroxypropylgluconamide", "Hydroxypropylammonium Gluconate", "Citric Acid"],
+      "candidate_families": ["gluconamide_gluconate", "acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "source_version_not_actual_pack: completeness and clue matching refer only to this supplied source version; actual-package identity is unverified.",
+        "Citric Acid is a candidate clue only; its presence cannot settle the category boundary anonymously."
+      ],
+      "recognition_incidents": [
+        "The paired gluconamide/gluconate chemistry was familiar as a distinctive ingredient combination; no identity was inferred."
+      ]
+    },
+    {
+      "slot_id": "V02",
+      "observed_ingredients": ["LACTIC ACID", "GLYCINE SOJA OIL", "HYDROLYZED KERATIN", "HYDROLYZED WHEAT PROTEIN", "HYDROLYZED SOY PROTEIN", "HYDROLYZED CORN PROTEIN"],
+      "candidate_families": [],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "source_version_not_actual_pack: the absence of permitted clues concerns only the supplied complete source version, not an independently inspected actual package.",
+        "Lactic Acid is not Citric Acid; Glycine Soja Oil is not Glycine; hydrolyzed proteins do not supply the required numbered peptide or paired gluconamide/gluconate clues.",
+        "No permitted candidate clue was found in the supplied formula."
+      ],
+      "recognition_incidents": []
+    },
+    {
+      "slot_id": "V03",
+      "observed_ingredients": ["CITRIC ACID", "GLYCINE", "HYDROLYZED CORN PROTEIN", "HYDROLYZED SOY PROTEIN", "HYDROLYZED WHEAT PROTEIN"],
+      "candidate_families": ["acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "source_version_not_actual_pack: completeness and clue matching refer only to this supplied source version; actual-package identity is unverified.",
+        "Citric Acid and supporting Glycine remain candidate clues only; the category boundary cannot be settled anonymously.",
+        "The hydrolyzed proteins are not the required numbered peptide; CHLORHEXIDINE DIGLUCONATE is not the required Hydroxypropylammonium Gluconate clue."
+      ],
+      "recognition_incidents": []
+    },
+    {
+      "slot_id": "V04",
+      "observed_ingredients": ["Glycine", "Citric Acid", "Hydroxypropyltrimonium Hydrolyzed Wheat Protein", "Arginine"],
+      "candidate_families": ["acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "source_version_not_actual_pack: completeness and clue matching refer only to this supplied source version; actual-package identity is unverified.",
+        "Citric Acid with supporting Glycine and Arginine remains a candidate clue only; the category boundary cannot be settled anonymously.",
+        "Hydroxypropyltrimonium Hydrolyzed Wheat Protein is neither member of the required gluconamide/gluconate pair and is not the required numbered peptide."
+      ],
+      "recognition_incidents": []
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "checked_at": "2026-10-04T08:45:42Z",
+  "scope": "2 physical Rossmann legacy products; sourcing only",
+  "shop_order": [
+    "dm",
+    "Rossmann",
+    "Mueller",
+    "brand-direct",
+    "Amazon DE",
+    "reputable German/EU specialists"
+  ],
+  "production_writes": 0,
+  "records": [
+    {
+      "id": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+      "name": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+      "gtin": "4068134014122",
+      "exact_offer": null,
+      "checks": [
+        {
+          "shop": "dm",
+          "evidence": "dm-exact-gtin.json",
+          "outcome": "Official getProductDetails returns found=false for exact barcode"
+        },
+        {
+          "shop": "Rossmann / brand-direct",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-alterra-haarmaske/p/4068134014122",
+          "outcome": "Hydrated browser page identifies 20 ml Intensiv Repair mask, article154607, Nur in der Filiale verfuegbar; no online price or purchase control",
+          "observed_at": "2026-10-04T08:41Z"
+        },
+        {
+          "shop": "Mueller / Amazon DE",
+          "outcome": "Focused exact GTIN and product-name site searches found no indexed exact offer; unverified, not absence proof",
+          "observed_at": "2026-10-04T08:50Z"
+        }
+      ],
+      "replacement": {
+        "name": "Garnier Fructis Haarmaske Aloe Vera Hair Food 3in1",
+        "gtin": "3600542511049",
+        "shop": "dm",
+        "size_ml": 400,
+        "price_eur": 5.95,
+        "url": "https://www.dm.de/p/d/1676340/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar",
+        "evidence_ref": "../brands/garnier-aloe-tile.json",
+        "existing_mask_catalog_id": "52264c47-f339-49db-9fb2-207d1ad3b470",
+        "difference": "Different brand and formula; moisture-use alternative, not a barcode alias. Current front labels Neue Formel; no automatic formula/eligibility inheritance",
+        "decision": "Distinct replacement selection remains for Nick; do not overwrite legacy identity or flags"
+      }
+    },
+    {
+      "id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "name": "Isana 3in1 Milchprotein & Mandel",
+      "gtin": "4305615627441",
+      "exact_offer": null,
+      "checks": [
+        {
+          "shop": "dm",
+          "evidence": "dm-exact-gtin.json",
+          "outcome": "Official getProductDetails returns found=false for exact barcode"
+        },
+        {
+          "shop": "Rossmann / brand-direct",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-isana-haarmaske-3in1-mandelmilch-milchprotein-und-mandel/p/4305615627441",
+          "resolved_url": "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127?info=text.product.notAvailable.error",
+          "outcome": "Hydrated browser explicitly says article no longer in assortment; redirected to hair-mask category",
+          "observed_at": "2026-10-04T08:43Z"
+        },
+        {
+          "shop": "Mueller / Amazon DE",
+          "outcome": "Focused exact GTIN and product-name site searches found no indexed exact offer; unverified, not absence proof",
+          "observed_at": "2026-10-04T08:50Z"
+        }
+      ],
+      "replacement": {
+        "name": "Schwarzkopf GLISS Haarmaske 4in1 Total Repair",
+        "gtin": "4015100813517",
+        "shop": "dm",
+        "size_ml": 400,
+        "price_eur": 5.75,
+        "url": "https://www.dm.de/p/d/1431891/schwarzkopf-gliss-haarmaske-4in1-total-repair",
+        "evidence_ref": "../dm/final-offers.json#unique_candidate_evidence",
+        "difference": "Distinct multi-use repair mask with hydrolyzed keratin declaration, rather than ISANA milk-protein/almond formula; no equivalent concentration/fit asserted",
+        "decision": "Distinct replacement selection remains for Nick; do not overwrite legacy identity or flags"
+      }
+    }
+  ]
+}

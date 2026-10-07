@@ -6,9 +6,11 @@ import {
   catalogEnrichmentFingerprint,
   generateCatalogEnrichmentIndex,
   isCatalogEnrichmentManifestPath,
+  orderCatalogEnrichmentOperations,
   previewCatalogEnrichment,
   validateCatalogEnrichmentManifest,
   type CatalogEnrichmentManifest,
+  type CatalogEnrichmentOperation,
 } from "../src/lib/product-intake/catalog-enrichment"
 import { validateProductIntakeApprovalPayload } from "../src/lib/product-intake/category-validators"
 
@@ -440,6 +442,209 @@ test("existing enrichment validates every planned category upsert against the sh
         "existing_product_enrichment planned spec operations do not match shared category validation",
       ),
     )
+  }
+})
+
+const existingEnrichment = {
+  lifecycle_classification: "existing_product_enrichment",
+  target_product_id: "product-1",
+  target_fingerprint: "frozen",
+}
+
+function eligibilityRow(overrides: Record<string, unknown> = {}) {
+  return {
+    product_id: "product-1",
+    thickness: "fine",
+    need_bucket: "shine_protect",
+    styling_context: "air_dry",
+    ...overrides,
+  }
+}
+
+function deleteOperation(rows: unknown[]) {
+  return { type: "delete", table: "product_leave_in_eligibility", rows }
+}
+
+test("eligibility deletes are allowlisted and carry the complete natural key", () => {
+  const valid = validateCatalogEnrichmentManifest(
+    manifest({
+      ...existingEnrichment,
+      planned_operations: [deleteOperation([eligibilityRow()])],
+    }),
+  )
+  assert.equal(valid.ok, true)
+
+  for (const rows of [
+    [] as unknown[],
+    [{ product_id: "product-1", thickness: "fine" }],
+    [{ ...eligibilityRow(), extra: "widening" }],
+    [{ ...eligibilityRow(), styling_context: "" }],
+    ["not-an-object"],
+    [eligibilityRow(), eligibilityRow()],
+  ]) {
+    const result = validateCatalogEnrichmentManifest(
+      manifest({ ...existingEnrichment, planned_operations: [deleteOperation(rows)] }),
+    )
+    assert.equal(result.ok, false, JSON.stringify(rows))
+  }
+})
+
+test("deletes stay scoped to the eligibility table and to the manifest's own product", () => {
+  const unrelatedTable = validateCatalogEnrichmentManifest(
+    manifest({
+      ...existingEnrichment,
+      planned_operations: [
+        { type: "delete", table: "product_leave_in_specs", rows: [eligibilityRow()] },
+      ],
+    }),
+  )
+  assert.equal(unrelatedTable.ok, false)
+  if (!unrelatedTable.ok)
+    assert.ok(
+      unrelatedTable.errors.some((error) =>
+        error.includes("is not an allowlisted catalog delete target"),
+      ),
+    )
+
+  const foreignProduct = validateCatalogEnrichmentManifest(
+    manifest({
+      ...existingEnrichment,
+      planned_operations: [deleteOperation([eligibilityRow({ product_id: "product-2" })])],
+    }),
+  )
+  assert.equal(foreignProduct.ok, false)
+  if (!foreignProduct.ok)
+    assert.ok(foreignProduct.errors.includes("delete rows must target product-1"))
+})
+
+test("only existing enrichment may plan deletes, and never against its own upsert", () => {
+  const onNewProduct = validateCatalogEnrichmentManifest(
+    manifest({
+      planned_operations: [...manifest().planned_operations, deleteOperation([eligibilityRow()])],
+    }),
+  )
+  assert.equal(onNewProduct.ok, false)
+  if (!onNewProduct.ok)
+    assert.ok(
+      onNewProduct.errors.includes("only existing_product_enrichment may plan catalog deletes"),
+    )
+
+  const contradiction = validateCatalogEnrichmentManifest(
+    manifest({
+      ...existingEnrichment,
+      planned_operations: [
+        deleteOperation([eligibilityRow()]),
+        { type: "upsert", table: "product_leave_in_eligibility", rows: [eligibilityRow()] },
+      ],
+    }),
+  )
+  assert.equal(contradiction.ok, false)
+  if (!contradiction.ok)
+    assert.ok(
+      contradiction.errors.includes(
+        "product_leave_in_eligibility plans a delete and an upsert for the same row",
+      ),
+    )
+})
+
+test("the placeholder cannot be used to smuggle a contradicting delete past the check", () => {
+  // Reported bypass: the delete addresses the row by `__PRODUCT_ID__` while the
+  // upsert addresses the same row by its UUID (and the mirror case). Both name
+  // the same row, so both must be rejected as a contradiction.
+  for (const [deleteId, upsertId] of [
+    ["__PRODUCT_ID__", "product-1"],
+    ["product-1", "__PRODUCT_ID__"],
+    ["__PRODUCT_ID__", "__PRODUCT_ID__"],
+  ]) {
+    const result = validateCatalogEnrichmentManifest(
+      manifest({
+        ...existingEnrichment,
+        planned_operations: [
+          deleteOperation([eligibilityRow({ product_id: deleteId })]),
+          {
+            type: "upsert",
+            table: "product_leave_in_eligibility",
+            rows: [eligibilityRow({ product_id: upsertId })],
+          },
+        ],
+      }),
+    )
+    assert.equal(result.ok, false, `${deleteId} vs ${upsertId}`)
+    if (!result.ok)
+      assert.ok(
+        result.errors.includes(
+          "product_leave_in_eligibility plans a delete and an upsert for the same row",
+        ),
+        `${deleteId} vs ${upsertId}`,
+      )
+  }
+
+  // No false positive: a delete of a genuinely different row is not reported as a
+  // contradiction, however it is addressed. (This fixture's category is
+  // heat_protectant, so the eligibility upsert still fails the category check —
+  // what matters here is that the contradiction error is absent.)
+  const distinct = validateCatalogEnrichmentManifest(
+    manifest({
+      ...existingEnrichment,
+      planned_operations: [
+        deleteOperation([eligibilityRow({ product_id: "__PRODUCT_ID__" })]),
+        {
+          type: "upsert",
+          table: "product_leave_in_eligibility",
+          rows: [eligibilityRow({ product_id: "product-1", need_bucket: "repair" })],
+        },
+      ],
+    }),
+  )
+  assert.equal(distinct.ok, false)
+  if (!distinct.ok)
+    assert.equal(
+      distinct.errors.includes(
+        "product_leave_in_eligibility plans a delete and an upsert for the same row",
+      ),
+      false,
+    )
+})
+
+test("execution order runs the product row, then deletes, then upserts", () => {
+  const operations = [
+    { type: "upsert", table: "product_leave_in_eligibility", rows: [] },
+    deleteOperation([eligibilityRow()]),
+    { type: "upsert", table: "product_leave_in_specs", rows: [] },
+    { type: "update_product", table: "products" },
+  ] as unknown as CatalogEnrichmentOperation[]
+
+  assert.deepEqual(
+    orderCatalogEnrichmentOperations(operations).map((operation) => operation.type),
+    ["update_product", "delete", "upsert", "upsert"],
+  )
+  // Stable within a rank: the two upserts keep their authored order.
+  assert.deepEqual(
+    orderCatalogEnrichmentOperations(operations)
+      .filter((operation) => operation.type === "upsert")
+      .map((operation) => operation.table),
+    ["product_leave_in_eligibility", "product_leave_in_specs"],
+  )
+})
+
+test("preview reports planned deletes in execution order", () => {
+  const result = previewCatalogEnrichment(
+    manifest({
+      ...existingEnrichment,
+      planned_operations: [
+        { type: "upsert", table: "product_leave_in_specs", rows: [] },
+        deleteOperation([eligibilityRow()]),
+      ],
+    }),
+  )
+  assert.equal(result.writes, false)
+  if (!("errors" in result)) {
+    assert.deepEqual(
+      result.operations.map((operation) => operation.type),
+      ["delete", "upsert"],
+    )
+    assert.equal(result.deletes.length, 1)
+    assert.deepEqual(result.deletes[0]?.rows, [eligibilityRow()])
   }
 })
 

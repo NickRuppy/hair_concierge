@@ -13,6 +13,31 @@ Customer.io is the lifecycle and campaign destination. Browser tracking remains 
 - `lead_id` is never the Customer.io person ID.
 - Long-term app identity remains Supabase `user.id`, not email.
 
+## Returning quiz reminder links
+
+The scanner-trial reactivation reminder uses a recipient-specific URL, not the mutable
+`lead_id` Customer.io trait or a generic `/quiz` link. A guarded server-only issuer
+(`issueQuizEmailReturnCredential` and `formatQuizEmailReturnUrl`) selects the
+most recently submitted saved quiz for a normalized email across regular and
+Personal Plan kinds, and binds an opaque 30-day credential to that exact lead.
+The issuer is a capability only; code deployment does not generate links or
+authorize a campaign send. Customer.io still selects eligible recipients and
+must enforce marketing consent, suppressions, and unsubscribe state.
+
+The CTA URL is `https://chaarlie.de/quiz/return?token=…`. Treat it as a bearer
+secret: do not include it in analytics or logs, disable Customer.io click
+tracking and automatic URL parameters for that CTA, and send only over HTTPS.
+The app exchanges it for a scoped HttpOnly cookie and redirects to the ordinary
+quiz without the token in the URL. The recipient may continue with the exact
+saved lead or edit it; neither action authenticates them or starts a trial.
+Each deliberate choice begins a new `customerio_scan_return_v1` email funnel
+session. Keep old acquisition sessions as historical records; report confirmed
+trial/purchase from this reminder under the email session. Individual links can
+be revoked without changing other recipients' links. Disable
+`QUIZ_EMAIL_RETURN_ENABLED` to stop the return entry/package without deleting
+credential records; production issuance, trait export, template updates, and
+send require separate launch approval and inbox/provider verification.
+
 Customer.io workspace settings should keep both `email` and `id` identifiers enabled. Anonymous merge should remain enabled so browser activity can attach to the later identified person.
 
 ## API Choice

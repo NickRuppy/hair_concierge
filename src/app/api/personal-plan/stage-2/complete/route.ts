@@ -95,9 +95,12 @@ export const POST = createStage2CompleteRouteHandler({
   enabled: isPersonalPlanAppV1Enabled,
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   loadStage2Access: loadPersonalPlanStage2AccessForUser,
-  gatewayFor: (userId) =>
-    createPersistedStage2RefinementGateway({
+  gatewayFor: (userId) => {
+    const admin = createAdminClient()
+    return createPersistedStage2RefinementGateway({
       userId,
-      persistence: createSupabaseStage2RefinementPersistence(createAdminClient()),
-    }),
+      persistence: createSupabaseStage2RefinementPersistence(admin),
+      admin,
+    })
+  },
 })

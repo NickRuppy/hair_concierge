@@ -20,6 +20,7 @@ import {
 } from "./subscription-shapes"
 import { getPayPalIntervalForPlanId } from "./plans"
 import { resolveLegacyQuizFuturePurchaseEligibility } from "@/lib/personal-plan/legacy-cutover-eligibility"
+import type { CheckoutRecoveryCode } from "@/lib/auth/checkout-activation-outcome"
 
 export interface PayPalCheckoutActivationDeps {
   supabase: SupabaseClient
@@ -28,6 +29,8 @@ export interface PayPalCheckoutActivationDeps {
   activationKey?: string
   accountEmail?: string | null
   interval?: BillingInterval
+  expectedPlanId?: string | null
+  expectedPlanIdRequired?: boolean
   leadId?: string | null
   checkoutContext?: string | null
   linkQuizToProfile?: (userId: string, email: string | undefined, leadId?: string) => Promise<void>
@@ -42,6 +45,7 @@ export type PayPalCheckoutActivationErrorCode =
   | "paypal_subscription_inactive"
   | "paypal_subscription_period_missing"
   | "paypal_subscription_interval_unknown"
+  | "paypal_subscription_plan_mismatch"
   | "paypal_user_race_unresolved"
   | "paypal_existing_subscription_owner_missing"
   | "paypal_existing_subscription_owner_mismatch"
@@ -74,9 +78,12 @@ export type PayPalCheckoutAccountResult =
       leadId?: string | null
       checkoutContext?: string | null
       legacyQuizFuturePurchaseEligible?: boolean
+      trialEnrollmentId?: string
+      authorizationSucceededAt?: string
+      trialEndAt?: string
     }
   | { status: "pending" }
-  | { status: "duplicate" }
+  | { status: "duplicate"; recoveryCode?: CheckoutRecoveryCode }
 
 type ProfileRow = {
   id: string
@@ -144,6 +151,10 @@ export async function ensurePayPalCheckoutAccountForToken(
       "PayPal checkout intent is missing",
     )
   }
+  if (Object.keys(intent.metadata ?? {}).some((key) => key.startsWith("trial_"))) {
+    const { ensurePayPalTrialCheckoutAccount } = await import("./trial-account-admission")
+    return ensurePayPalTrialCheckoutAccount(intent, deps)
+  }
   if (isPayPalCheckoutIntentExpired(intent)) {
     throw new PayPalCheckoutActivationError(
       "paypal_checkout_intent_expired",
@@ -161,6 +172,9 @@ export async function ensurePayPalCheckoutAccountForToken(
     activationKey: token,
     accountEmail: intent.email ?? null,
     interval: intent.interval,
+    expectedPlanId:
+      typeof intent.metadata.paypal_plan_id === "string" ? intent.metadata.paypal_plan_id : null,
+    expectedPlanIdRequired: Object.hasOwn(intent.metadata, "paypal_plan_id"),
     leadId: intent.lead_id,
     checkoutContext:
       typeof intent.metadata.checkout_context === "string"
@@ -286,6 +300,11 @@ export async function ensurePayPalCheckoutAccount(
       )
     }
   } else {
+    assertNewLegacyPayPalCheckoutPlan(subscription, {
+      expectedInterval: deps.interval,
+      expectedPlanId: deps.expectedPlanId,
+      expectedPlanIdRequired: deps.expectedPlanIdRequired,
+    })
     if (!valid.email) {
       throw new PayPalCheckoutActivationError(
         "paypal_subscription_email_missing",
@@ -420,6 +439,38 @@ function intervalFromPlanId(planId: string): BillingInterval {
   )
 }
 
+export function assertNewLegacyPayPalCheckoutPlan(
+  subscription: PayPalSubscription,
+  expected: {
+    expectedInterval?: BillingInterval
+    expectedPlanId?: string | null
+    expectedPlanIdRequired?: boolean
+  },
+): BillingInterval {
+  const planId = subscription.plan_id?.trim() ?? ""
+  const interval = intervalFromPlanId(planId)
+  if (expected.expectedInterval && expected.expectedInterval !== interval) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_subscription_plan_mismatch",
+      "PayPal subscription plan interval does not match the checkout intent",
+    )
+  }
+  const expectedPlanId = expected.expectedPlanId?.trim()
+  if (expected.expectedPlanIdRequired && !expectedPlanId) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_subscription_plan_mismatch",
+      "PayPal checkout intent has an invalid stored plan id",
+    )
+  }
+  if (expectedPlanId && expectedPlanId !== planId) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_subscription_plan_mismatch",
+      "PayPal subscription plan id does not match the checkout intent",
+    )
+  }
+  return interval
+}
+
 async function findProfileByEmail(
   deps: PayPalCheckoutActivationDeps,
   email: string,
@@ -508,7 +559,7 @@ async function createPayPalCheckoutUser(
     )
   }
 
-  throw new Error(`createUser failed: ${error?.message ?? "unknown"}`)
+  throw new Error(`createUser failed: ${error?.message ?? "unknown"}`, { cause: error })
 }
 
 export async function canSetInitialPasswordForPayPalCheckout(
@@ -530,10 +581,10 @@ export async function canSetInitialPasswordForPayPalCheckout(
 async function getAuthUserById(
   supabase: SupabaseClient,
   userId: string,
-): Promise<{ email?: string | null; app_metadata?: unknown } | null> {
+): Promise<{ id?: string; email?: string | null; app_metadata?: unknown } | null> {
   const admin = supabase.auth.admin as unknown as {
     getUserById?: (userId: string) => Promise<{
-      data?: { user?: { email?: string | null; app_metadata?: unknown } | null }
+      data?: { user?: { id?: string; email?: string | null; app_metadata?: unknown } | null }
       error?: { message?: string } | null
     }>
   }
@@ -605,4 +656,95 @@ function isDuplicateUserError(error: unknown): boolean {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+async function recoverConcurrentPayPalTrialUser(
+  deps: PayPalCheckoutActivationDeps,
+  email: string,
+  activationKey: string,
+  failure: unknown,
+): Promise<{ userId: string; created: false }> {
+  const cause = failure instanceof Error ? failure.cause : null
+  if (!isRecord(cause) || cause.status !== 500 || cause.code !== "unexpected_failure") throw failure
+
+  // Auth can surface a unique-email race as a generic database error. Only adopt
+  // a winner that Auth itself binds to this exact checkout, never email alone.
+  for (const delay of [0, 100, 150]) {
+    if (delay) await new Promise((resolve) => setTimeout(resolve, delay))
+    const profile = await findProfileByEmail(deps, email)
+    if (!profile) continue
+    const user = await getAuthUserById(deps.supabase, profile.id)
+    if (
+      normalizeEmail(profile.email) !== email ||
+      user?.id !== profile.id ||
+      normalizeEmail(user.email) !== email ||
+      !isRecord(user.app_metadata) ||
+      user.app_metadata.checkout_activation_session_hash !==
+        paypalCheckoutActivationHash(activationKey)
+    )
+      throw failure
+    return { userId: profile.id, created: false }
+  }
+  throw failure
+}
+
+/** Reuse checkout identity and password capability without writing a paid entitlement. */
+export async function ensurePayPalTrialAccountIdentity(
+  intent: PayPalCheckoutIntentRow,
+  deps: PayPalCheckoutActivationDeps,
+  ownedUserId: string | null,
+): Promise<Extract<PayPalCheckoutAccountResult, { status: "active" }>> {
+  const email = normalizeEmail(intent.email)
+  if (!email)
+    throw new PayPalCheckoutActivationError(
+      "paypal_subscription_email_missing",
+      "PayPal trial account email missing",
+    )
+  const ownerId = ownedUserId ?? intent.user_id
+  if (ownedUserId && intent.user_id && ownedUserId !== intent.user_id)
+    throw new Error("PayPal trial account owner mismatch")
+  let userId: string
+  let canSetInitialPassword: boolean
+  if (ownerId) {
+    if ((await resolveExistingPayPalSubscriptionOwnerEmail(deps, ownerId)) !== email)
+      throw new Error("PayPal trial account email mismatch")
+    userId = ownerId
+    canSetInitialPassword = await canSetInitialPasswordForPayPalCheckout(
+      deps.supabase,
+      userId,
+      intent.token,
+    )
+  } else {
+    const existing = await findProfileByEmail(deps, email)
+    if (existing) {
+      userId = existing.id
+      canSetInitialPassword = await canSetInitialPasswordForPayPalCheckout(
+        deps.supabase,
+        userId,
+        intent.token,
+      )
+    } else {
+      const created = await createPayPalCheckoutUser(deps, email, intent.token).catch((failure) =>
+        recoverConcurrentPayPalTrialUser(deps, email, intent.token, failure),
+      )
+      userId = created.userId
+      canSetInitialPassword =
+        created.created ||
+        (await canSetInitialPasswordForPayPalCheckout(deps.supabase, userId, intent.token))
+    }
+  }
+  await upsertSubscriptionProfile(deps, userId, { email })
+  return {
+    status: "active",
+    userId,
+    email,
+    canSetInitialPassword,
+    providerSubscriberEmail: null,
+    leadId: intent.lead_id,
+    checkoutContext:
+      typeof intent.metadata.checkout_context === "string"
+        ? intent.metadata.checkout_context
+        : null,
+    legacyQuizFuturePurchaseEligible: false,
+  }
 }

@@ -17,6 +17,9 @@ import {
 } from "@/lib/personal-plan/products/contracts"
 import { normalizeIdentifierValue } from "@/lib/product-identity/normalize"
 import { checkRateLimit } from "@/lib/rate-limit"
+import { resolveRetailerEnrichment } from "@/lib/scan/enrichment/resolve-enrichment"
+import { retailerEnrichmentTimeoutMs } from "@/lib/scan/enrichment/flag"
+import type { RetailerEnrichment, RetailerLookupResult } from "@/lib/scan/enrichment/types"
 import {
   isProductSearchQuarantined,
   loadQuarantinedProductIdsAmong,
@@ -37,6 +40,11 @@ import {
   type ScanCatalogPresentationRow,
 } from "@/lib/scan/product-presentation"
 import { loadScanVerdictForProduct } from "@/lib/scan/load-scan-verdict"
+import {
+  createActiveProductByIdLoader,
+  createPresentationRowLoader,
+  type ScanActiveProductLookup,
+} from "@/lib/scan/presentation-rows"
 import { maskScanVerdictPayload, type ScanMaskedVerdictResult } from "@/lib/scan/masked-alternative"
 import { loadScanEvaluationContext } from "@/lib/scan/profile-context"
 import { buildScanVerdict } from "@/lib/scan/resolve-verdict"
@@ -48,7 +56,7 @@ import {
 } from "@/lib/scan/saved-state"
 import type { ScanResolveResult, ScanResolvedVerdictResult } from "@/lib/scan/types"
 import { SCAN_PENDING_SUBMISSION_HEADLINE } from "@/lib/scan/verdict-labels"
-import { captureScanException } from "@/lib/observability/scan"
+import { captureScanException, reportRetailerLookupWarning } from "@/lib/observability/scan"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { isPersonalPlanFieldTestGuest } from "@/lib/supabase/middleware"
@@ -78,7 +86,7 @@ const resolveBodySchema = z
 
 type ResolveInput = z.infer<typeof resolveBodySchema>
 
-type ActiveProductLookup = { id: string; category: PersonalPlanCategory } | null
+type ActiveProductLookup = ScanActiveProductLookup
 
 export type ScanResolveRouteDeps = {
   getUserId: () => Promise<string | null>
@@ -86,6 +94,7 @@ export type ScanResolveRouteDeps = {
   createAdminClient: typeof createAdminClient
   validateEanInput: typeof validateEanInput
   findOpenScanSubmission: typeof findOpenScanSubmission
+  resolveRetailerEnrichment: typeof resolveRetailerEnrichment
   createScanResolveAttemptId: typeof createScanResolveAttemptId
   recordScanResolveAttempt: typeof recordScanResolveAttempt
   completeScanResolveAttempt: typeof completeScanResolveAttempt
@@ -146,6 +155,7 @@ type ResolveAttemptTracker = {
   /** Request start, written as the attempt row's `created_at` — see `ScanResolveAttempt`. */
   startedAt: string
   lookupOutcome: ScanResolveLookupOutcome | null
+  dmLookup: Pick<RetailerLookupResult, "outcome" | "durationMs" | "deadlineMs"> | null
   matchedProductId: string | null
   failureStage: ScanResolveFailureStage
   /** Deferred telemetry writes, drained in FIFO order — see `scheduleAttemptWrite`. */
@@ -225,6 +235,7 @@ function completeResolveAttempt(
     terminalOutcome,
     matchedProductId: attempt.matchedProductId,
     failureStage: stage,
+    ...(attempt.dmLookup ? { dmLookup: attempt.dmLookup } : {}),
   }
   scheduleAttemptWrite(attempt, runAfter, () =>
     deps.completeScanResolveAttempt(
@@ -254,6 +265,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
             attemptId: null,
             startedAt: new Date().toISOString(),
             lookupOutcome: null,
+            dmLookup: null,
             matchedProductId: null,
             failureStage: "identifier_lookup",
             telemetryWrites: [],
@@ -278,13 +290,29 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       const { input, attempt, client } = ctx.body
       const userId = ctx.userId
 
-      const unknownProduct = (type: "ean", value: string): ScanResolveResult => ({
+      const unknownProduct = (
+        type: "ean",
+        value: string,
+        enrichment: RetailerEnrichment | null = null,
+      ): ScanResolveResult => ({
         kind: "unknown_product",
         identifier: { type, value },
         categories: PERSONAL_PLAN_PRODUCT_CATEGORIES.map((key) => ({
           key,
           label: CATEGORY_COPY[key].label,
         })),
+        ...(enrichment
+          ? {
+              identified: {
+                source: "dm" as const,
+                dan: enrichment.dan,
+                productName: enrichment.productName,
+                brand: enrichment.brand,
+                imageUrl: enrichment.imageUrl,
+                suggestedCategory: enrichment.suggestedCategory,
+              },
+            }
+          : {}),
       })
 
       const completeAttempt = (
@@ -356,6 +384,29 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
               headline: SCAN_PENDING_SUBMISSION_HEADLINE,
               status: pending.status,
             } satisfies ScanResolveResult)
+          }
+          if (!hit) {
+            const started = performance.now()
+            let lookup: RetailerLookupResult
+            try {
+              lookup = await deps.resolveRetailerEnrichment(validation.value, { route: "resolve" })
+            } catch {
+              // A broken injected/client dependency must not turn a catalog miss into a scan 5xx.
+              reportRetailerLookupWarning({ route: "resolve", reason: "unexpected" })
+              lookup = {
+                enrichment: null,
+                outcome: "unexpected",
+                durationMs: Math.max(0, Math.round(performance.now() - started)),
+                deadlineMs: retailerEnrichmentTimeoutMs(),
+              }
+            }
+            attempt.dmLookup = {
+              outcome: lookup.outcome,
+              durationMs: lookup.durationMs,
+              deadlineMs: lookup.deadlineMs,
+            }
+            completeAttempt("unknown_product", null)
+            return scanOk(unknownProduct(identifier.type, normalizedValue, lookup.enrichment))
           }
           completeAttempt("unknown_product", null)
           return scanOk(unknownProduct(identifier.type, normalizedValue))
@@ -531,63 +582,10 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
   })
 }
 
-async function loadActiveProductById(
-  client: SupabaseClient,
-  productId: string,
-): Promise<ActiveProductLookup> {
-  const { data, error } = await client
-    .from("products")
-    .select("id, category_key")
-    .eq("id", productId)
-    .eq("is_active", true)
-    .eq("lifecycle_status", "active")
-    .maybeSingle()
-  if (error) throw new Error("scan_resolve_product_lookup_failed")
-  const row = data as { id: string; category_key: string } | null
-  return row ? { id: row.id, category: row.category_key as PersonalPlanCategory } : null
-}
-
-async function loadPresentationRows(
-  client: SupabaseClient,
-  productIds: string[],
-): Promise<ScanCatalogPresentationRow[]> {
-  if (productIds.length === 0) return []
-  const { data, error } = await client
-    .from("products")
-    .select(
-      "id, name, brand, category_key, image_url, price_eur, currency, affiliate_link, purchase_link_status, price_checked_at",
-    )
-    .in("id", [...new Set(productIds)])
-  if (error) throw new Error("scan_resolve_presentation_lookup_failed")
-  return ((data ?? []) as PresentationRow[]).map((row) => ({
-    id: row.id,
-    name: row.name,
-    brand: row.brand,
-    category: row.category_key as PersonalPlanCategory,
-    imageUrl: row.image_url,
-    priceEur: row.price_eur,
-    currency: row.currency,
-    affiliateLink: row.affiliate_link,
-    purchaseLinkStatus:
-      row.purchase_link_status === "available" || row.purchase_link_status === "unavailable"
-        ? row.purchase_link_status
-        : null,
-    priceCheckedAt: row.price_checked_at,
-  }))
-}
-
-type PresentationRow = {
-  id: string
-  name: string
-  brand: string | null
-  category_key: string
-  image_url: string | null
-  price_eur: number | null
-  currency: string | null
-  affiliate_link: string | null
-  purchase_link_status: string | null
-  price_checked_at: string | null
-}
+// Both loaders now live in `@/lib/scan/presentation-rows` — shared verbatim with
+// `/api/scan/reveal` and the discovery cockpit. Each caller keeps its own error code.
+const loadActiveProductById = createActiveProductByIdLoader("scan_resolve_product_lookup_failed")
+const loadPresentationRows = createPresentationRowLoader("scan_resolve_presentation_lookup_failed")
 
 export const POST = createScanResolveRouteHandler({
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
@@ -595,6 +593,7 @@ export const POST = createScanResolveRouteHandler({
   createAdminClient,
   validateEanInput,
   findOpenScanSubmission,
+  resolveRetailerEnrichment,
   createScanResolveAttemptId,
   recordScanResolveAttempt,
   completeScanResolveAttempt,

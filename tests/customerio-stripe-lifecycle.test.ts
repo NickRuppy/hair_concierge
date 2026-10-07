@@ -45,6 +45,31 @@ test("builds purchase and subscription events from a completed checkout", () => 
   assert.equal(sync.events[1].timestamp, "2026-05-28T10:00:00.000Z")
 })
 
+test("does not build paid Customer.io lifecycle events for a verified trial", () => {
+  const sync = buildCustomerIoCheckoutCompletedSync({
+    email: "trial@example.com",
+    interval: "year",
+    planId: "premium_year",
+    session: { id: "cs_trial", currency: "eur", customer: "cus_trial", subscription: "sub_trial" },
+    stripeEventId: "evt_trial",
+    subscriptionStatus: "trialing",
+    timestamp: "2026-09-14T10:00:00.000Z",
+    trial: {
+      authorizationSucceededAt: "2026-09-14T10:00:00.000Z",
+      enrollmentId: "trial-enrollment-1",
+      trialEndAt: "2026-09-21T10:00:00.000Z",
+      value: 0,
+    },
+    userId: "user_trial",
+  })
+
+  assert.equal(sync.identifyTraits.is_customer, undefined)
+  assert.equal(sync.identifyTraits.last_purchase_at, undefined)
+  assert.equal(sync.identifyTraits.subscription_started_at, undefined)
+  assert.deepEqual(sync.events, [])
+  assert.doesNotMatch(JSON.stringify(sync), /card|payment_method|fingerprint/i)
+})
+
 test("builds payment_failed from an invoice", () => {
   const sync = buildCustomerIoInvoicePaymentFailedSync({
     email: "buyer@example.com",

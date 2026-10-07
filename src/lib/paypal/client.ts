@@ -4,9 +4,10 @@ type OAuthTokenResponse = {
   access_token?: string
   token_type?: string
   expires_in?: number
+  app_id?: string
 }
 
-let cachedToken: { token: string; expiresAt: number } | null = null
+let cachedToken: { token: string; expiresAt: number; appId: string | null } | null = null
 let pendingToken: Promise<string> | null = null
 
 const PAYPAL_OAUTH_TIMEOUT_MS = 10_000
@@ -72,6 +73,15 @@ export async function getPayPalAccessToken(signal?: AbortSignal | null): Promise
   return waitForSignal(pendingToken, signal)
 }
 
+/** OAuth-attested app identity for trial catalog and agreement operations. */
+export async function getPayPalAppId(): Promise<string> {
+  const token = await getPayPalAccessToken()
+  if (!cachedToken || cachedToken.token !== token || !cachedToken.appId) {
+    throw new Error("PayPal OAuth app identity unavailable")
+  }
+  return cachedToken.appId
+}
+
 async function requestPayPalAccessToken(): Promise<string> {
   const clientId = process.env.PAYPAL_CLIENT_ID
   const clientSecret = process.env.PAYPAL_CLIENT_SECRET
@@ -102,6 +112,7 @@ async function requestPayPalAccessToken(): Promise<string> {
   cachedToken = {
     token: token.access_token,
     expiresAt: Date.now() + Math.max(0, token.expires_in ?? 0) * 1000,
+    appId: typeof token.app_id === "string" && token.app_id.trim() ? token.app_id : null,
   }
   return cachedToken.token
 }

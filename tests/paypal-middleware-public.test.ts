@@ -35,6 +35,16 @@ test("allows acquisition landing pages and funnel tracking through without auth 
   }
 })
 
+test("allows OpenAI consent GET and POST without a session lookup", async () => {
+  for (const method of ["GET", "POST"]) {
+    const response = await updateSession(
+      new NextRequest("https://chaarlie.de/api/openai-ads/context", { method }),
+    )
+    assert.equal(response.status, 200)
+    assert.equal(response.headers.get("location"), null)
+  }
+})
+
 test("passes unknown pages and APIs to Next.js without auth lookup", async () => {
   for (const pathname of ["/does-not-exist-seo-check", "/api/does-not-exist-seo-check"]) {
     const response = await updateSession(new NextRequest(`https://chaarlie.de${pathname}`))
@@ -91,15 +101,16 @@ test("lets every configured cron reach route-level auth without a session lookup
   }
 })
 
-test("lets the bearer-authenticated payment monitor reach route-level auth without a session", async () => {
-  const response = await updateSession(
-    new NextRequest("https://chaarlie.de/api/billing/payment-monitor", {
-      method: "POST",
-    }),
-  )
-
-  assert.equal(response.status, 200)
-  assert.equal(response.headers.get("location"), null)
+test("lets bearer-authenticated billing workers reach route-level auth without a session", async () => {
+  for (const path of [
+    "/api/billing/payment-monitor",
+    "/api/billing/trial-cancellation/reconcile",
+    "/api/billing/public-contract-declaration-receipts/reconcile",
+  ]) {
+    const response = await updateSession(new NextRequest(`https://chaarlie.de${path}`))
+    assert.equal(response.status, 200, path)
+    assert.equal(response.headers.get("location"), null, path)
+  }
 })
 
 test("redirects legacy offer links to the combined result offer with the quiz lead id", async () => {

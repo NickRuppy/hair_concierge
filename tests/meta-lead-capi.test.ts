@@ -101,3 +101,30 @@ test("Lead CAPI failures log only a fixed label and provider status", async () =
   assert.equal(JSON.stringify(warnings).includes(input.email), false)
   assert.equal(JSON.stringify(warnings).includes(input.leadId), false)
 })
+
+test("Lead CAPI forwards the server-resolved funnel package only behind its existing flag", async () => {
+  const previous = process.env.FUNNEL_META_CUSTOM_DATA_ENABLED
+  try {
+    for (const enabled of [false, true]) {
+      process.env.FUNNEL_META_CUSTOM_DATA_ENABLED = String(enabled)
+      const callbacks: Array<() => Promise<void>> = []
+      let customData: unknown
+      enqueueMetaLead(
+        { ...input, funnelPackageKey: "scan_v1" },
+        {
+          enabled: true,
+          schedule: (callback) => callbacks.push(callback),
+          deliver: async (conversion) => {
+            customData = conversion.customData
+            return { ok: true, status: 200 }
+          },
+        },
+      )
+      await callbacks[0]()
+      assert.deepEqual(customData, enabled ? { funnel_package_key: "scan_v1" } : undefined)
+    }
+  } finally {
+    if (previous === undefined) delete process.env.FUNNEL_META_CUSTOM_DATA_ENABLED
+    else process.env.FUNNEL_META_CUSTOM_DATA_ENABLED = previous
+  }
+})

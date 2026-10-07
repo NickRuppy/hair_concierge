@@ -52,6 +52,7 @@ import {
   RESET_INTENSITIES,
 } from "@/lib/recommendation-engine/contracts"
 import { normalizeCategoryKey } from "@/lib/product-identity"
+import { bondbuilderResearchProfileSchema } from "@/lib/bondbuilder-research/contracts"
 
 const brushTypeSchema = z
   .union([
@@ -101,14 +102,93 @@ const conditionerSpecsSchema = z.object({
   balance_direction: z.enum(PRODUCT_BALANCE_TARGETS).nullable().default(null),
 })
 
-const bondbuilderSpecsSchema = z.object({
-  bond_repair_intensity: z.enum(PRODUCT_BOND_REPAIR_INTENSITIES),
-  application_mode: z.enum(PRODUCT_BOND_APPLICATION_MODES),
-  bond_repair_axis: z.enum(PRODUCT_BOND_REPAIR_AXES),
-  treatment_mode: z.enum(PRODUCT_BOND_TREATMENT_MODES),
-  product_format: z.enum(PRODUCT_BOND_PRODUCT_FORMATS),
-  usage_protocol: z.enum(PRODUCT_BOND_USAGE_PROTOCOLS),
-})
+const bondbuilderSpecsSchema = z
+  .object({
+    bond_repair_intensity: z.enum(PRODUCT_BOND_REPAIR_INTENSITIES).nullable().optional(),
+    application_mode: z.enum(PRODUCT_BOND_APPLICATION_MODES).nullable().optional(),
+    bond_repair_axis: z.enum(PRODUCT_BOND_REPAIR_AXES).nullable().optional(),
+    treatment_mode: z.enum(PRODUCT_BOND_TREATMENT_MODES).nullable().optional(),
+    product_format: z.enum(PRODUCT_BOND_PRODUCT_FORMATS).nullable().optional(),
+    usage_protocol: z.enum(PRODUCT_BOND_USAGE_PROTOCOLS).nullable().optional(),
+    technology_family: z
+      .enum([
+        "sulfur_targeting_dimaleate",
+        "designed_peptide",
+        "maleate_ester",
+        "acid_calcium_management",
+        "gluconamide_gluconate",
+      ])
+      .optional(),
+    claim_trust_level: z.enum(["high", "medium", "low"]).optional(),
+    trust_basis: z.enum(["owner_anchor", "owner_calibration", "owner_default"]).optional(),
+    research_profile: z.unknown().optional(),
+  })
+  .strict()
+  .superRefine((specs, ctx) => {
+    const newKeys = [
+      "technology_family",
+      "claim_trust_level",
+      "trust_basis",
+      "research_profile",
+    ] as const
+    const legacyKeys = [
+      "bond_repair_intensity",
+      "application_mode",
+      "bond_repair_axis",
+      "treatment_mode",
+      "product_format",
+      "usage_protocol",
+    ] as const
+    const hasNewContractField = newKeys.some((key) => specs[key] !== undefined)
+
+    if (!hasNewContractField) {
+      for (const key of legacyKeys) {
+        if (specs[key] === undefined || specs[key] === null) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: [key],
+            message: "Legacy Bondbuilder-Spezifikationen müssen vollständig sein.",
+          })
+        }
+      }
+      return
+    }
+
+    for (const key of newKeys) {
+      if (specs[key] === undefined || specs[key] === null) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [key],
+          message: "Neue Bondbuilder-Forschungsfelder müssen vollständig gemeinsam vorliegen.",
+        })
+      }
+    }
+
+    if (specs.research_profile === undefined || specs.research_profile === null) return
+    // This schema is also imported by client forms. Authority/digest validation
+    // belongs to the authenticated server writer, never a node:crypto client import.
+    const validation = bondbuilderResearchProfileSchema.safeParse(specs.research_profile)
+    if (!validation.success) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["research_profile"],
+        message: validation.error.issues.map((issue) => issue.message).join("; "),
+      })
+      return
+    }
+
+    if (
+      validation.data.assessment.technology_family !== specs.technology_family ||
+      validation.data.assessment.claim_trust_level !== specs.claim_trust_level ||
+      validation.data.assessment.trust_basis !== specs.trust_basis
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["research_profile"],
+        message: "Bondbuilder-Forschung und skalare Forschungsfelder müssen übereinstimmen.",
+      })
+    }
+  })
 
 const deepCleansingShampooSpecsSchema = z.object({
   scalp_type_focus: z.enum(PRODUCT_SCALP_TYPE_FOCUSES),

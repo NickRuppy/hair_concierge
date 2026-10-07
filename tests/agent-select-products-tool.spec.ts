@@ -32,6 +32,51 @@ import type {
   HairProfile,
 } from "../src/lib/types"
 import { LOW_DAMAGE_PROFILE } from "./recommendation-engine-foundation.fixtures"
+import { makeBondbuilderProfile, sealProfile } from "./fixtures/bondbuilder-research/profile"
+
+test("selected Bondbuilder facts retain bounded research context without changing selection order", () => {
+  const profile = makeBondbuilderProfile()
+  profile.sources.unshift({
+    ...profile.sources[0],
+    id: "uninspected-creator-lead",
+    url: "https://example.com/uninspected-creator",
+    access: "uninspected",
+  })
+  sealProfile(profile)
+  const product = createMatchedProduct("epres-source-bound", 81, {
+    category: "Bondbuilder",
+    bondbuilder_specs: {
+      product_id: "epres-source-bound",
+      bond_repair_intensity: "intensive",
+      bond_repair_axis: "disulfide_crosslink",
+      application_mode: "pre_shampoo",
+      treatment_mode: "rinse_out",
+      product_format: "spray_treatment",
+      usage_protocol: "epres_spray",
+      technology_family: "maleate_ester",
+      claim_trust_level: "high",
+      trust_basis: "owner_anchor",
+      research_profile: profile,
+    },
+  })
+  const result = projectSelectedProducts([product], LOW_DAMAGE_PROFILE, "bondbuilder")
+  const selected = result.products[0] as unknown as Record<string, unknown>
+  const context = selected.bondbuilder_research as Record<string, unknown>
+  assert.equal(selected.product_id, product.id)
+  assert.equal(selected.rank, 1)
+  assert.equal(context?.claim_trust_level, "high")
+  assert.equal(context?.technology_family, "maleate_ester")
+  assert.deepEqual(context?.timing, profile.application.timing.value)
+  assert.equal(context?.explanation_de, profile.explanations_de.concise)
+  assert.deepEqual(context?.source_urls, [profile.sources[1].url])
+  assert.equal("raw_inci" in context, false)
+  assert.equal("intensity" in context, false)
+
+  const tampered = structuredClone(product)
+  tampered.bondbuilder_specs!.claim_trust_level = "medium"
+  const refused = projectSelectedProducts([tampered], LOW_DAMAGE_PROFILE, "bondbuilder")
+  assert.equal("bondbuilder_research" in refused.products[0], false)
+})
 
 function createMatchedProduct(
   id: string,

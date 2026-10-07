@@ -202,6 +202,8 @@ export async function resolvePersonalPlanPricingExperiment(input: {
 
   const stored = session.offerVariant
   if (isPersonalPlanPricingExperimentVariant(stored)) {
+    // Preserve the stored arm for historic reporting while retiring its unpaid offer.
+    if (stored === "personal-plan-one-time-v1") return fallback
     if (session.offerViewedAt || session.checkoutStartedAt || session.isInternalTest) return stored
     if (input.enabled ?? isPersonalPlanPricingExperimentEnabled()) return stored
     return resetPersonalPlanArm(session, fallback, input)
@@ -223,7 +225,11 @@ export async function resolvePersonalPlanPricingExperiment(input: {
       .select("offer_variant")
       .maybeSingle()
     if (error) throw error
-    if (isPersonalPlanPricingExperimentVariant(data?.offer_variant)) return data.offer_variant
+    if (
+      isPersonalPlanPricingExperimentVariant(data?.offer_variant) &&
+      data.offer_variant !== "personal-plan-one-time-v1"
+    )
+      return data.offer_variant
 
     const readBack = await client
       .from("funnel_sessions")
@@ -231,7 +237,8 @@ export async function resolvePersonalPlanPricingExperiment(input: {
       .eq("id", session.sessionId)
       .maybeSingle()
     if (readBack.error) throw readBack.error
-    return isPersonalPlanPricingExperimentVariant(readBack.data?.offer_variant)
+    return isPersonalPlanPricingExperimentVariant(readBack.data?.offer_variant) &&
+      readBack.data.offer_variant !== "personal-plan-one-time-v1"
       ? readBack.data.offer_variant
       : fallback
   } catch (error) {

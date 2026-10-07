@@ -1,7 +1,11 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { buildScanSentryPayload, captureScanException } from "../src/lib/observability/scan"
+import {
+  buildScanSentryPayload,
+  captureScanException,
+  reportRetailerLookupWarning,
+} from "../src/lib/observability/scan"
 
 test("captureScanException tags and scopes the event under scan.*", () => {
   const thrown = new Error("scan_resolve_decision_missing")
@@ -98,4 +102,25 @@ test("buildScanSentryPayload carries a distinct tag per scan route, for filterin
     const payload = buildScanSentryPayload({ route, status: 503 })
     assert.equal(payload.tags["scan.route"], route)
   }
+})
+
+test("dm lookup warnings capture only a fixed message and low-cardinality reason, once per window", () => {
+  const captured: Array<{ error: unknown; details: unknown }> = []
+  const capture = ((error: unknown, details: unknown) => {
+    captured.push({ error, details })
+  }) as typeof captureScanException
+
+  reportRetailerLookupWarning({ route: "resolve", reason: "malformed" }, capture, () => 100_000)
+  reportRetailerLookupWarning({ route: "resolve", reason: "malformed" }, capture, () => 100_100)
+  assert.equal(captured.length, 1)
+  assert.equal((captured[0]?.error as Error).message, "scan_retailer_lookup_failed")
+  assert.deepEqual(captured[0]?.details, {
+    route: "resolve",
+    status: 200,
+    reason: "retailer_lookup_malformed",
+    level: "warning",
+  })
+
+  reportRetailerLookupWarning({ route: "resolve", reason: "malformed" }, capture, () => 160_001)
+  assert.equal(captured.length, 2)
 })

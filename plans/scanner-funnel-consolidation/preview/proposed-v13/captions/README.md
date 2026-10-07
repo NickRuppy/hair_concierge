@@ -1,0 +1,3 @@
+# German captions for the revised mockup
+
+Generated locally from the unchanged Steffi video using faster-whisper / multilingual small on 14 September 2026. No audio was uploaded. Word timings were split into readable cues; brand spelling normalized to Chaarlie and punctuation adjusted. A second decode of seconds8–17 agreed on the phrase “so einhalten”. The track is a reviewable ASR draft, not a claimed human-verified transcript. A final listening check remains required before publication. Original video bytes and the locked baseline are unchanged. Native selectable German captions are default-on in the proposed mockup.

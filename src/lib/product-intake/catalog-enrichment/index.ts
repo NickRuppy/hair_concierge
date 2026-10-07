@@ -37,15 +37,46 @@ const SPEC_TABLES = new Set<ProductIntakeTargetSpecTable>([
   "product_scalp_care_specs",
   "product_application_protocols",
 ])
+/**
+ * Tables a manifest may plan row deletions for. Deletion is deliberately not a
+ * general capability: it exists because a recommended-only research projection
+ * *replaces* a product's eligibility set, so live rows the projection no longer
+ * contains have to go. Every other table stays upsert-only.
+ */
+const DELETE_TABLES = new Set<ProductIntakeTargetSpecTable>(["product_leave_in_eligibility"])
+
+/** The full natural key a delete row must carry, per deletable table. */
+const DELETE_NATURAL_KEYS: Partial<Record<ProductIntakeTargetSpecTable, readonly string[]>> = {
+  product_leave_in_eligibility: ["product_id", "thickness", "need_bucket", "styling_context"],
+}
+
 const FORBIDDEN_KEYS =
   /(?:password|secret|token|authorization|cookie|user_id|email|phone|signed_url)/i
 const FORBIDDEN_VALUES =
   /(?:[?&](?:token|signature|sig|x-amz-(?:signature|security-token|credential))=|-----BEGIN (?:RSA |EC )?PRIVATE KEY-----)/i
 const SAFE_KEY = /^[a-z0-9][a-z0-9-]*$/
 
+/**
+ * Removal of exactly-keyed rows from a deletable spec table. Only ever planned by
+ * an `existing_product_enrichment` manifest, and only for a table in
+ * `DELETE_TABLES`; the natural key must be complete so a delete can never widen
+ * into a set operation.
+ */
+export type CatalogEnrichmentDeleteOperation = {
+  type: "delete"
+  table: "product_leave_in_eligibility"
+  rows: Array<{
+    product_id: string
+    thickness: string
+    need_bucket: string
+    styling_context: string
+  }>
+}
+
 export type CatalogEnrichmentOperation =
   | { type: "insert_product"; table: "products"; catalog_content: CatalogContentInput }
   | { type: "update_product"; table: "products" }
+  | CatalogEnrichmentDeleteOperation
   | ProductIntakeTargetSpecOperation
 
 export type CatalogEnrichmentManifest = Record<string, unknown> & {
@@ -245,6 +276,136 @@ function catalogContentErrors(
     : ["insert_product catalog_content must exactly match the approved catalog input"]
 }
 
+/**
+ * Shape guard for a single delete operation: an allowlisted table, a non-empty
+ * row list, and on every row exactly the table's natural key — no more keys (a
+ * partial key would delete more than the manifest names), no fewer.
+ */
+function deleteOperationErrors(row: Record<string, unknown>, index: number): string[] {
+  const path = `planned_operations.${index}`
+  if (
+    typeof row.table !== "string" ||
+    !DELETE_TABLES.has(row.table as ProductIntakeTargetSpecTable)
+  )
+    return [`${path} is not an allowlisted catalog delete target`]
+  const naturalKey = DELETE_NATURAL_KEYS[row.table as ProductIntakeTargetSpecTable]
+  if (!naturalKey) return [`${path} has no declared natural key`]
+  if (!Array.isArray(row.rows) || row.rows.length === 0)
+    return [`${path}.rows must be a non-empty list`]
+  const errors = row.rows.flatMap((candidate, rowIndex) => {
+    if (!candidate || typeof candidate !== "object" || Array.isArray(candidate))
+      return [`${path}.rows.${rowIndex} must be an object`]
+    const keys = Object.keys(candidate as Record<string, unknown>)
+    const values = candidate as Record<string, unknown>
+    return keys.length !== naturalKey.length ||
+      naturalKey.some((key) => typeof values[key] !== "string" || values[key] === "")
+      ? [`${path}.rows.${rowIndex} must carry exactly the ${row.table} natural key`]
+      : []
+  })
+  const fingerprints = row.rows.map((candidate) => stableCatalogEnrichmentJson(candidate))
+  return [
+    ...errors,
+    ...(new Set(fingerprints).size === fingerprints.length
+      ? []
+      : [`${path}.rows contains duplicate natural keys`]),
+  ]
+}
+
+/**
+ * Cross-operation guard: every delete row must name the manifest's own target
+ * product, and must not collide with a row the same manifest upserts into that
+ * table (a row that is both deleted and re-inserted is a contradiction, not a
+ * replacement).
+ */
+function deleteTargetErrors(manifest: Record<string, unknown>, lifecycle: unknown): string[] {
+  const operations = Array.isArray(manifest.planned_operations) ? manifest.planned_operations : []
+  const deletes = operations.filter(
+    (operation) => operation && typeof operation === "object" && operation.type === "delete",
+  ) as Array<Record<string, unknown>>
+  if (deletes.length === 0) return []
+  if (lifecycle !== "existing_product_enrichment")
+    return ["only existing_product_enrichment may plan catalog deletes"]
+
+  const targetProductId = manifest.target_product_id
+  const errors: string[] = []
+
+  /**
+   * Natural key with `product_id` resolved to the manifest's target. Both the
+   * placeholder and the literal UUID address the same row, so comparing them
+   * verbatim let a delete written with `__PRODUCT_ID__` slip past a contradicting
+   * upsert written with the UUID (and vice versa).
+   */
+  const identity = (row: Record<string, unknown>, table: unknown) => {
+    const naturalKey = DELETE_NATURAL_KEYS[table as ProductIntakeTargetSpecTable] ?? []
+    return stableCatalogEnrichmentJson(
+      Object.fromEntries(
+        naturalKey.map((key) => [
+          key,
+          key === "product_id" && row[key] === PRODUCT_INTAKE_PRODUCT_ID_PLACEHOLDER
+            ? targetProductId
+            : row[key],
+        ]),
+      ),
+    )
+  }
+
+  for (const operation of deletes) {
+    const rows = Array.isArray(operation.rows) ? operation.rows : []
+    const upsertedKeys = new Set(
+      operations
+        .filter(
+          (candidate) =>
+            candidate &&
+            typeof candidate === "object" &&
+            candidate.type === "upsert" &&
+            candidate.table === operation.table &&
+            Array.isArray(candidate.rows),
+        )
+        .flatMap((candidate) => (candidate as { rows: unknown[] }).rows)
+        .map((row) =>
+          row && typeof row === "object"
+            ? identity(row as Record<string, unknown>, operation.table)
+            : "",
+        ),
+    )
+    for (const row of rows) {
+      if (!row || typeof row !== "object") continue
+      const record = row as Record<string, unknown>
+      if (
+        record.product_id !== targetProductId &&
+        record.product_id !== PRODUCT_INTAKE_PRODUCT_ID_PLACEHOLDER
+      ) {
+        errors.push(`delete rows must target ${String(targetProductId)}`)
+        continue
+      }
+      if (upsertedKeys.has(identity(record, operation.table)))
+        errors.push(`${String(operation.table)} plans a delete and an upsert for the same row`)
+    }
+  }
+  return [...new Set(errors)]
+}
+
+/**
+ * Execution order for a validated manifest: the product row first, then every
+ * delete, then every upsert. Deletes run before upserts so a replaced row set is
+ * cleared before the projection's rows land, and a row that survives the
+ * projection is never briefly absent.
+ */
+export function orderCatalogEnrichmentOperations(
+  operations: readonly CatalogEnrichmentOperation[],
+): CatalogEnrichmentOperation[] {
+  const rank = (operation: CatalogEnrichmentOperation) =>
+    operation.type === "insert_product" || operation.type === "update_product"
+      ? 0
+      : operation.type === "delete"
+        ? 1
+        : 2
+  return [...operations]
+    .map((operation, index) => ({ operation, index }))
+    .sort((left, right) => rank(left.operation) - rank(right.operation) || left.index - right.index)
+    .map(({ operation }) => operation)
+}
+
 function operationErrors(operations: unknown, lifecycle: unknown): string[] {
   if (!Array.isArray(operations)) return ["planned_operations must be an allowlisted list"]
   if (operations.length === 0) {
@@ -292,6 +453,7 @@ function operationErrors(operations: unknown, lifecycle: unknown): string[] {
         Array.isArray(row.rows)
       )
         return []
+      if (row.type === "delete") return deleteOperationErrors(row, index)
       return [`planned_operations.${index} is not an allowlisted catalog operation`]
     }),
   ]
@@ -481,6 +643,7 @@ export function validateCatalogEnrichmentManifest(
       errors.push("target fingerprint is stale")
   }
   errors.push(...operationErrors(manifest.planned_operations, lifecycle))
+  errors.push(...deleteTargetErrors(manifest, lifecycle))
   errors.push(...categoryOperationErrors(manifest, lifecycle, validationProfile))
   if (
     lifecycle === "new_product" &&
@@ -553,7 +716,12 @@ export function previewCatalogEnrichment(manifest: unknown, currentTarget?: Curr
     review_state: reviewState,
     disposition_state: dispositionState,
     blockers,
-    operations: validation.planned_operations,
+    operations: orderCatalogEnrichmentOperations(validation.planned_operations),
+    deletes: validation.planned_operations
+      .filter(
+        (operation): operation is CatalogEnrichmentDeleteOperation => operation.type === "delete",
+      )
+      .map((operation) => ({ table: operation.table, rows: operation.rows })),
     catalog_content: (
       validation.planned_operations.find((operation) => operation.type === "insert_product") as
         | Extract<CatalogEnrichmentOperation, { type: "insert_product" }>

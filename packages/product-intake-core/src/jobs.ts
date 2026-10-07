@@ -63,6 +63,11 @@ export const PRODUCT_INTAKE_ARTIFACT_KINDS = [
   "processed_image",
   "publication_preview",
   "publish_result",
+  "model_run",
+  "model_judgment",
+  "formula",
+  "commerce_check",
+  "protocol_template",
 ] as const
 
 export type ProductIntakeArtifactKind = (typeof PRODUCT_INTAKE_ARTIFACT_KINDS)[number]

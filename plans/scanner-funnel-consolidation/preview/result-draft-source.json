@@ -1,0 +1,29 @@
+{
+  "source": "09799e227d36ce38103eaf04ebfe71248ab132fe",
+  "sourceComponent": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+  "answers": {
+    "structure": "wavy",
+    "thickness": "fine",
+    "density": "medium",
+    "hair_length": "long",
+    "fingertest": "leicht_uneben",
+    "pulltest": "stretches_stays",
+    "scalp_type": "trocken",
+    "has_scalp_issue": false,
+    "concerns": [
+      "dryness",
+      "frizz"
+    ],
+    "treatment": [
+      "gefaerbt"
+    ],
+    "goals": [
+      "moisture",
+      "less_frizz"
+    ]
+  },
+  "retained": "Source layout, profile line, DiagnosticRow markup and existing assessment-generated row copy and scores.",
+  "proposed": "Jonas order: profile, source diagnostic cards, dark bridge, scanner and result examples, original Steffi video directly above trial pricing, then four source app-benefit cards. Floating WhatsApp preview.",
+  "video": "Existing local Steffi scanner asset is provisional; final result-explainer content not approved. Reference retains organic Wistia video.",
+  "scope": "Mobile-first local draft. Trial amounts from separate plan revision 1.6; day-five reminder/timeline newly requested by Nick, delivery implementation still pending. Checkout and WhatsApp are local review dialogs. Genuine OGX result screenshot captured from production using the existing authorized scanner test account; separate example profile. No live actions or final journey sign-off."
+}

@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { EditGoalsFlow } from "@/components/profile/edit-goals-flow"
+import { initialGoalSelection } from "@/lib/profile/goals-draft"
+import { readProfileDiagnostics } from "@/lib/user-facts/profile-diagnostics"
 import type { HairTexture } from "@/lib/vocabulary"
 
 interface PageProps {
@@ -29,23 +31,23 @@ export default async function ProfileEditGoalsPage({ searchParams }: PageProps) 
     redirect(`/auth?next=${encodeURIComponent("/profile/edit/goals")}`)
   }
 
+  // The whole row: a row the backfill has not reached converts its legacy columns (table M).
   const { data: hairProfile } = await supabase
     .from("hair_profiles")
-    .select("goals, hair_texture")
+    .select("*")
     .eq("user_id", user.id)
-    .single()
+    .maybeSingle()
 
-  const initialGoals = Array.isArray(hairProfile?.goals) ? (hairProfile.goals as string[]) : []
-  const hairTexture = (hairProfile?.hair_texture as HairTexture | null) ?? null
+  const row = (hairProfile as Record<string, unknown> | null) ?? null
+  const initialGoals = initialGoalSelection(row)
+  const hairTexture =
+    readProfileDiagnostics(row)?.texture ??
+    (hairProfile?.hair_texture as HairTexture | null) ??
+    null
 
   return (
     <div className="mx-auto max-w-[540px] px-5 py-8 md:px-10 md:py-12">
-      <EditGoalsFlow
-        userId={user.id}
-        initialGoals={initialGoals}
-        hairTexture={hairTexture}
-        returnTo={returnTo}
-      />
+      <EditGoalsFlow initialGoals={initialGoals} hairTexture={hairTexture} returnTo={returnTo} />
     </div>
   )
 }

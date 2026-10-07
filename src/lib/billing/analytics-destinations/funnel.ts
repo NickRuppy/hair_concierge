@@ -1,3 +1,4 @@
+import { isBillingFunnelDeliveryEnabled, isFunnelAttributionEnabled } from "@/lib/funnel/flags"
 import { recordFunnelPurchaseFromSession } from "@/lib/funnel/server"
 import type { BillingAnalyticsDeliveryInput, BillingAnalyticsDeliveryResult } from "./types"
 
@@ -28,6 +29,12 @@ export async function deliverBillingAnalyticsToFunnel(
     return { ok: false, permanent: true, error: "Funnel delivery requires purchase_completed" }
   }
 
+  if (
+    input.event.payload.trial_analytics_version === 1 &&
+    (!isFunnelAttributionEnabled() || !isBillingFunnelDeliveryEnabled())
+  ) {
+    return { ok: true, skipped: true }
+  }
   const sessionId = payloadString(input.event.payload, "funnel_session_id")
   if (!sessionId) {
     return { ok: false, permanent: true, error: "Funnel delivery requires funnel_session_id" }

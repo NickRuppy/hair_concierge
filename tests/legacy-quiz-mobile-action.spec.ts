@@ -24,7 +24,7 @@ async function openFreshQuiz(page: Page, viewport: { width: number; height: numb
     )
     window.localStorage.removeItem("chaarlie:quiz-draft:v1")
   })
-  await page.goto(`${baseUrl}/quiz`, { waitUntil: "networkidle" })
+  await page.goto(`${baseUrl}/quiz`, { waitUntil: "domcontentloaded" })
 }
 
 async function openDraft(
@@ -52,7 +52,7 @@ async function openDraft(
     },
     { answers, draftStep: step },
   )
-  await page.goto(`${baseUrl}/quiz`, { waitUntil: "networkidle" })
+  await page.goto(`${baseUrl}/quiz`, { waitUntil: "domcontentloaded" })
 }
 
 async function visibleActionGeometry(page: Page) {
@@ -236,17 +236,17 @@ test.describe("@ci regular quiz mobile parity", () => {
     expect(geometry.buttonBottom).toBeLessThanOrEqual(geometry.visualBottom + 8)
     expect(geometry.visibleActions).toBe(1)
     await expect(
-      page.getByRole("heading", { name: "Was wünschst du dir für deine Wellen?" }),
+      page.getByRole("heading", { name: "Was wünschst du dir für deine Haare?" }),
     ).toBeVisible()
   })
 
-  test("uses plain German Locken wording for coily goals", async ({ page }) => {
+  test("uses the neutral goals heading for coily hair", async ({ page }) => {
     await openDraft(page, 8, { width: 390, height: 844 }, { structure: "coily" })
     await page.getByRole("button", { name: "Trockene oder strohige Längen", exact: true }).click()
     await page.locator('[data-quiz-bottom-action="viewport"]').locator("button").click()
 
     await expect(
-      page.getByRole("heading", { name: "Was wünschst du dir für deine Locken?" }),
+      page.getByRole("heading", { name: "Was wünschst du dir für deine Haare?" }),
     ).toBeVisible()
   })
 
@@ -420,6 +420,9 @@ test.describe("@ci regular quiz mobile parity", () => {
 
   test("keeps browser Forward from desynchronizing the rendered quiz screen", async ({ page }) => {
     await openDraft(page, 7, { width: 390, height: 844 })
+    await expect(
+      page.getByRole("heading", { name: "Sind deine Haare chemisch behandelt?" }),
+    ).toBeVisible()
     await page.goBack()
     await expect(page.getByRole("heading", { name: "Wie elastisch ist dein Haar?" })).toBeVisible()
 

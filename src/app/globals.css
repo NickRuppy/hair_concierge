@@ -89,6 +89,19 @@
   --brand-coral-deeper: #9f3d45;
   --brand-coral-light: #fdeef0;
   --brand-coral-rgb: 212, 97, 106;
+
+  /* Motion tokens (batch 8, plans/discovery-b8-motion-days/plan.md) — one spec for the
+     quiz and the discovery flow. TS twins live in src/lib/motion.ts. */
+  --motion-ease-enter: cubic-bezier(0.32, 0.72, 0, 1);
+  --motion-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --motion-press: 120ms;
+  --motion-settle: 200ms;
+  --motion-step-in: 240ms;
+  --motion-step-out: 160ms;
+  --motion-screen: 320ms;
+  --motion-sheet-in: 350ms;
+  --motion-sheet-out: 250ms;
+  --motion-list: 220ms;
   --status-ok-bg: #edf7ef;
   --status-ok-text: #356b45;
   --status-pending-bg: #fff5df;
@@ -303,7 +316,7 @@
   }
 
   /* Brand coral — meets WCAG 1.4.11 for non-text UI (buttons >= 3:1) */
-  /* DEPRECATED — legacy quiz only (src/components/quiz/*, goals-screen). Do not use in personal-plan surfaces. Funnel CTAs use <Button variant="funnelCta">. */
+  /* DEPRECATED — legacy quiz only (src/components/quiz/*). Do not use in personal-plan surfaces. Funnel CTAs use <Button variant="funnelCta">. */
   .quiz-btn-primary {
     height: 3.5rem;
     padding: 0 1.5rem;
@@ -969,7 +982,7 @@
 }
 
 .scan-insert-example-card {
-  animation: scanInsertCardUp 1s 0.8s cubic-bezier(0.22, 0.8, 0.36, 1) both;
+  animation: scanInsertCardUp 0.75s 0.6s cubic-bezier(0.22, 0.8, 0.36, 1) both;
 }
 
 /* The verdict carries the display serif of the quiz headlines, one notch bolder. */
@@ -1027,20 +1040,21 @@
   }
 }
 
+/* Quiz step transition (legacy /quiz + personal-plan quiz) on the batch 8 motion tokens. */
 .personal-plan-screen-enter[data-personal-plan-transition-direction="forward"] {
-  animation: personalPlanScreenEnterForward 200ms ease-out both;
+  animation: personalPlanScreenEnterForward var(--motion-step-in) var(--motion-ease-enter) both;
 }
 
 .personal-plan-screen-enter[data-personal-plan-transition-direction="back"] {
-  animation: personalPlanScreenEnterBack 200ms ease-out both;
+  animation: personalPlanScreenEnterBack var(--motion-step-in) var(--motion-ease-enter) both;
 }
 
 .personal-plan-screen-exit[data-personal-plan-transition-direction="forward"] {
-  animation: personalPlanScreenExitForward 160ms ease-out both;
+  animation: personalPlanScreenExitForward var(--motion-step-out) var(--motion-ease-exit) both;
 }
 
 .personal-plan-screen-exit[data-personal-plan-transition-direction="back"] {
-  animation: personalPlanScreenExitBack 160ms ease-out both;
+  animation: personalPlanScreenExitBack var(--motion-step-out) var(--motion-ease-exit) both;
 }
 
 .personal-plan-option-card {
@@ -1532,5 +1546,213 @@
   }
   100% {
     transform: translateX(100%);
+  }
+}
+
+/*
+ * Discovery participant flow (batch 7, prototype round 6; batch 8 motion spec
+ * plans/discovery-b8-motion-days/plan.md, tokens --motion-* on :root): the cross-slide between
+ * sheet steps and screens, the card landing in its slot and collapsing out of it, the
+ * drawn-in check. Off under `prefers-reduced-motion` — every element still renders in its
+ * final state.
+ */
+@keyframes discoverySlideInForward {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes discoverySlideOutForward {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-30%);
+  }
+}
+
+@keyframes discoverySlideInBack {
+  from {
+    opacity: 0.4;
+    transform: translateX(-30%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes discoverySlideOutBack {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes discoveryCollapse {
+  from {
+    opacity: 1;
+    max-height: 160px;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: -10px;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes discoveryLand {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes discoveryPop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes discoveryDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes discoveryCtaIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Steps (heat questions, add-sheet steps): 240 ms in / 160 ms out. */
+.discovery-step-in-forward {
+  animation: discoverySlideInForward var(--motion-step-in) var(--motion-ease-enter) both;
+}
+
+.discovery-step-out-forward {
+  animation: discoverySlideOutForward var(--motion-step-out) var(--motion-ease-exit) both;
+}
+
+.discovery-step-in-back {
+  animation: discoverySlideInBack var(--motion-step-in) var(--motion-ease-enter) both;
+}
+
+.discovery-step-out-back {
+  animation: discoverySlideOutBack var(--motion-step-out) var(--motion-ease-exit) both;
+}
+
+/* Screens (products ↔ routine ↔ heat ↔ done): 320 ms. */
+.discovery-screen-in-forward {
+  animation: discoverySlideInForward var(--motion-screen) var(--motion-ease-enter) both;
+}
+
+.discovery-screen-out-forward {
+  animation: discoverySlideOutForward var(--motion-screen) var(--motion-ease-exit) both;
+}
+
+.discovery-screen-in-back {
+  animation: discoverySlideInBack var(--motion-screen) var(--motion-ease-enter) both;
+}
+
+.discovery-screen-out-back {
+  animation: discoverySlideOutBack var(--motion-screen) var(--motion-ease-exit) both;
+}
+
+/* No double animation: inside a sliding stage the option cards do not fade in on their own. */
+.discovery-stage .animate-fade-in-up {
+  animation: none;
+}
+
+/* The add sheet's back overlay (the frozen step leaving over the search). */
+.discovery-sheet-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--background);
+}
+
+/* A card that is being removed: fade and collapse in the list duration. */
+.discovery-collapse {
+  overflow: hidden;
+  pointer-events: none;
+  animation: discoveryCollapse var(--motion-list) var(--motion-ease-exit) both;
+}
+
+/* A new card lands once the sheet has finished closing. */
+.discovery-land {
+  animation: discoveryLand var(--motion-list) var(--motion-ease-enter) var(--motion-sheet-out) both;
+}
+
+.discovery-pop {
+  animation: discoveryPop 420ms cubic-bezier(0.34, 1.5, 0.64, 1) both;
+}
+
+.discovery-fade-up,
+.discovery-ornament {
+  animation: fadeInUp 0.55s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.discovery-cta-in {
+  animation: discoveryCtaIn 500ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.discovery-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: discoveryDraw 550ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .discovery-step-in-forward,
+  .discovery-step-out-forward,
+  .discovery-step-in-back,
+  .discovery-step-out-back,
+  .discovery-screen-in-forward,
+  .discovery-screen-out-forward,
+  .discovery-screen-in-back,
+  .discovery-screen-out-back,
+  .discovery-collapse,
+  .discovery-land,
+  .discovery-pop,
+  .discovery-fade-up,
+  .discovery-ornament,
+  .discovery-cta-in {
+    animation: none;
+  }
+
+  .discovery-draw {
+    animation: none;
+    stroke-dashoffset: 0;
   }
 }

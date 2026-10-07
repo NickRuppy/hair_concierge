@@ -1,0 +1,976 @@
+{
+  "records": [
+    {
+      "id": "07895098-a301-4137-b5c6-9061589b1800",
+      "gtins": [
+        "4063528103192"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4063528103192",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:57.857Z"
+    },
+    {
+      "id": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18",
+      "gtins": [
+        "4068134135490"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4068134135490",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:57.857Z"
+    },
+    {
+      "id": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "gtins": [
+        "4067796075021"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4067796075021",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:57.857Z"
+    },
+    {
+      "id": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c",
+      "gtins": [],
+      "rows": [],
+      "checked_at": "2026-10-02T14:39:57.857Z"
+    },
+    {
+      "id": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+      "gtins": [
+        "4072600720219"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4072600720219",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:57.857Z"
+    },
+    {
+      "id": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "gtins": [
+        "8006540153963"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "8006540153963",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:57.858Z"
+    },
+    {
+      "id": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+      "gtins": [
+        "071164304112"
+      ],
+      "rows": [],
+      "checked_at": "2026-10-02T14:39:57.858Z"
+    },
+    {
+      "id": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+      "gtins": [
+        "071164343166"
+      ],
+      "rows": [],
+      "checked_at": "2026-10-02T14:39:57.858Z"
+    },
+    {
+      "id": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "gtins": [
+        "8700216496032"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "8700216496032",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.142Z"
+    },
+    {
+      "id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "gtins": [
+        "4067796002621"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4067796002621",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.142Z"
+    },
+    {
+      "id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "gtins": [
+        "4067796150735"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4067796150735",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.142Z"
+    },
+    {
+      "id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "gtins": [
+        "4897097266343"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4897097266343",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.142Z"
+    },
+    {
+      "id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "gtins": [
+        "4021457666768"
+      ],
+      "rows": [
+        {
+          "dan": "3133400",
+          "gtin": "4021457666768",
+          "productName": "Shampoo Basis Sensitive Hydrate & Care, 250 ml",
+          "brand": "lavera NATURKOSMETIK",
+          "found": "true",
+          "errorMessage": "",
+          "productUrl": "https://www.dm.de/applink/p/d/3133400/lavera-naturkosmetik-shampoo-basis-sensitive-hydrate-und-care?appPageType=productdetails&appProductId=3133400&wt_mc=dm-mcp",
+          "image": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1773227604/assets/pas/images/a008001f-65f9-4c5a-b9a5-c7b01738ac04/lavera-naturkosmetik-shampoo-basis-sensitive-hydrate-und-care",
+          "imageBackgroundColor": "#F1F7F9",
+          "productType": "NON_FOOD",
+          "weight": "287g",
+          "volume": "0.426l",
+          "description": "Das Shampoo Basis Sensitive Hydrate & Care von lavera NATURKOSMETIK schenkt dem Haar eine natürliche Feuchtigkeitspflege. Die milde, pH-hautneutrale Formel mit Bio-Aloe Vera und Hyaluron ist ideal für normales sowie trockenes Haar und pflegt es bis in die Spitzen. Es kann dabei helfen, Trockenheit spürbar zu mildern und ist sanft zur Kopfhaut*. Für ein angenehm erfrischtes Haargefühl wird die zertifizierte Naturkosmetik zur täglichen Anwendung empfohlen. \n\n*Anwenderstudie: 30 Teilnehmer, 28 Tage\n",
+          "keyBenefits": "[Feuchtigkeitsshampoo für die Haare;Mit Bio-Aloe Vera & Hyaluron;Zertifizierte Naturkosmetik;Für normales & trockenes Haar;Ohne Silikone]",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "Ingredients: Water (Aqua), Aloe Barbadensis Leaf Juice*, Sodium Coco-Sulfate, Glycerin, Cocamidopropyl Betaine, Lauryl Glucoside, Citric Acid, Cucumis Sativus (Cucumber) Fruit Extract*, Melissa Officinalis (Lemon Balm) Leaf Extract*, Sodium Hyaluronate, Helianthus Annuus (Sunflower) Seed Oil, Tocopherol, Sea Salt (Maris Sal), Levulinic Acid, Cetearyl Alcohol, PCA Glyceryl Oleate, Betaine, Sodium Levulinate, Sodium Cetearyl Sulfate, Sodium Anisate, Guar Hydroxypropyltrimonium Chloride, Arginine, Tridecane, Coco-Glucoside, Undecane, Sodium Sulfate, Sodium Chloride, Fragrance (Parfum)**, Limonene**, Citrus Aurantium Peel Oil**, Linalool**, Citrus Limon (Lemon) Peel Oil**, Linalyl Acetate**, Pinene**, Citronellol**, Citrus Aurantium Bergamia (Bergamot) Peel Oil**, Geraniol**, Citral**, Lavandula Oil/Extract** \n\n* aus kontrolliert biologischem Anbau\n** natürlichen Ursprungs",
+          "applicationInstructions": "Shampoo im nassen Haar aufschäumen und einmassieren. Danach gründlich mit Wasser ausspülen. Für ein noch besseres Ergebnis empfehlen wir den lavera Conditioner basis sensitive Hydrate  Care.",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": "true"
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.142Z"
+    },
+    {
+      "id": "64fb44d5-8701-46ab-bcba-f1747f071e48",
+      "gtins": [
+        "4063528078377"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4063528078377",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.142Z"
+    },
+    {
+      "id": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+      "gtins": [
+        "3574661800202"
+      ],
+      "rows": [
+        {
+          "dan": "1443641",
+          "gtin": "3574661800202",
+          "productName": "Shampoo thick & full, Biotin & Collagen, 385 ml",
+          "brand": "OGX",
+          "found": "true",
+          "errorMessage": "",
+          "productUrl": "https://www.dm.de/applink/p/d/1443641/ogx-shampoo-thick-und-full-biotin-und-collagen?appPageType=productdetails&appProductId=1443641&wt_mc=dm-mcp",
+          "image": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1756161321/assets/pas/images/10d6d061-cfe1-443d-bcdc-01a67fb64893/ogx-shampoo-thick-und-full-biotin-und-collagen",
+          "imageBackgroundColor": "#F9F6F1",
+          "productType": "NON_FOOD",
+          "weight": "408g",
+          "volume": "0.745l",
+          "description": "Das OGX Biotin & Collagen Shampoo versorgt feines & dünnes Haar. Die reichhaltige Pflegeformel schenkt dem Haar bis zu 72 Stunden lang mehr Volumen und intensive Fülle. Die verbesserte Formel mit LipiPro Shield Technologie verleiht dem Haar einen atemberaubenden Glanz. Zudem hinterlässt das Shampoo einen verführerischen Duft.",
+          "keyBenefits": "[Haarshampoo;Hinterlässt Volumen und ein seidiges Gefühl;\"Mit Vitamin B Biotin, Collagen und Weizenprotein\";Nährt das Haar vom Ansatz bis zur Spitze;Mit LipiPro Shield Technolgie]",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "Ingredients: Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Biotin, Hydrolyzed Collagen, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Starch Hydroxypropyltrimonium Chloride, Amodimethicone, Coco-Glucoside, Glyceryl Oleate, Sodium Lactate, Lactic acid, Urea, Hydrogenated Palm Glycerides Citrate, Coconut Acid, Disodium Tetrapropenyl Succinate, Lecithin, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Benzoic Acid, Tocopherol, Ascorbyl Palmitate, Parfum/Fragrance",
+          "applicationInstructions": "Shampoo großzügig im nassen Haar verteilen und bis in die Haarspitzen aufschäumen, danach gründlich ausspülen. Anschließend Conditioner verwenden.",
+          "warnings": "Bitte die Anwendungshinweise beachten. Darf nicht in die Augen gelangen. Bei Kontakt mit den Augen sofort ausspülen. Von Kindern fernhalten.",
+          "hazardWarnings": "",
+          "careLabel": "Von Kindern fernhalten.",
+          "productFeatures": "[Ohne Alkohol]",
+          "isSustainable": "false"
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.142Z"
+    },
+    {
+      "id": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "gtins": [
+        "3574661798448"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "3574661798448",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.142Z"
+    },
+    {
+      "id": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "gtins": [
+        "3574661805931"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "3574661805931",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.527Z"
+    },
+    {
+      "id": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+      "gtins": [
+        "8006530060042"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "8006530060042",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.527Z"
+    },
+    {
+      "id": "03b847e5-01b9-40e5-950a-98efc73abb3a",
+      "gtins": [
+        "4008890006467"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4008890006467",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.527Z"
+    },
+    {
+      "id": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+      "gtins": [
+        "4055297221467"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4055297221467",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.527Z"
+    },
+    {
+      "id": "51a0b647-2794-49a3-96e1-e7695432561e",
+      "gtins": [
+        "4103040048448"
+      ],
+      "rows": [
+        {
+          "dan": "1277186",
+          "gtin": "4103040048448",
+          "productName": "Shampoo Anti-Juckreiz, Akut, 200 ml",
+          "brand": "sebamed",
+          "found": "true",
+          "errorMessage": "",
+          "productUrl": "https://www.dm.de/applink/p/d/1277186/sebamed-shampoo-anti-juckreiz-akut?appPageType=productdetails&appProductId=1277186&wt_mc=dm-mcp",
+          "image": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1762382541/assets/pas/images/6693d0fd-fb39-4f45-b0d3-c12d15eb787d/sebamed-shampoo-anti-juckreiz-akut",
+          "imageBackgroundColor": "#F9F1F3",
+          "productType": "NON_FOOD",
+          "weight": "252g",
+          "volume": "0.562l",
+          "description": "Das Shampoo Urea von sebamed wurde speziell für die Bedürfnisse von sehr trockener und juckender Kopfhaut entwickelt. Der feuchtigkeitsspendende Harnstoff kann dazu beitragen, die Haut zu glätten und Trockenheit spürbar zu reduzieren. Die seifenfreie Formel mit Polidocanol kann zudem bei Juckreiz helfen und sorgt für ein angenehmes Hautgefühl. Ideal als Akutpflege für empfindliche Kopfhaut und trockenes Haar.",
+          "keyBenefits": "[Shampoo mit Urea für sehr trockene Kopfhaut;Hilft bei Juckreiz & spendet Feuchtigkeit;Seifenfreie Formel mit Polidocanol zur Beruhigung der Haut;Unterstützt die Glättung & Pflege von trockenem Haar]",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "Ingredients: Aqua, Urea, Disodium Laureth Sulfosuccinate, Sodium Lauryl Sulfoacetate, Laureth-9, Lauryl Glucoside, Sodium Laureth Sulfate, Parfum, PEG-120 Methyl Glucose Dioleate, Phenoxyethanol, Citric Acid, Laureth-2, PEG/PPG-120/10 Trimethylolpropane Trioleate, Sodium Benzoate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Sodium Citrate, Tetramethyl Acetyloctahydronaphthalenes, Lactic Acid, Sodium Lactate, Sodium Chloride, Tocopherol, Helianthus annuus seed oil.",
+          "applicationInstructions": "sebamed TROCKENE HAUT Shampoo Urea Akut 5% auf dem nassen Haar verteilen, sanft einmassieren und mit lauwarmem Wasser (32 bis 35 Grad) gründlich ausspülen.  Anschließend das Haar trocken tupfen und bei Verwendung von Föhn oder Trockenhaube möglichst niedrige Temperaturen einstellen.",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "Bei Zimmertemperatur aufbewahren",
+          "productFeatures": "",
+          "isSustainable": "false"
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.527Z"
+    },
+    {
+      "id": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+      "gtins": [
+        "4015100860504"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4015100860504",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.527Z"
+    },
+    {
+      "id": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "gtins": [
+        "3600542461658"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "3600542461658",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.527Z"
+    },
+    {
+      "id": "4a45948b-53a6-48ac-9c02-20718c1d19c4",
+      "gtins": [
+        "4895248005872"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4895248005872",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.527Z"
+    },
+    {
+      "id": "22f95dcb-12de-4d62-b206-f03dbd6e94a0",
+      "gtins": [
+        "4305615566115"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4305615566115",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.870Z"
+    },
+    {
+      "id": "86f44889-b2c9-40a1-9190-58d7f738b6ca",
+      "gtins": [
+        "4305615566184"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4305615566184",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.870Z"
+    },
+    {
+      "id": "e859d6e0-e991-4081-84b5-b81862c82475",
+      "gtins": [
+        "4015100895025"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4015100895025",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.870Z"
+    },
+    {
+      "id": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
+      "gtins": [
+        "4015100860429"
+      ],
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4015100860429",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ],
+      "checked_at": "2026-10-02T14:39:58.870Z"
+    }
+  ]
+}

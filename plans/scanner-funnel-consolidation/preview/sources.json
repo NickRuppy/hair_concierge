@@ -1,0 +1,26 @@
+{
+  "nick": "5a3e33f1f641a8693209017ad25c4c9c69870df2",
+  "jonas": "d7de91a02a5435a031b233b27a7444bcd0592f1d",
+  "answers": {
+    "structure": "wavy",
+    "thickness": "fine",
+    "density": "medium",
+    "hair_length": "long",
+    "fingertest": "leicht_uneben",
+    "pulltest": "stretches_stays",
+    "scalp_type": "trocken",
+    "has_scalp_issue": false,
+    "concerns": [
+      "dryness",
+      "frizz"
+    ],
+    "treatment": [
+      "gefaerbt"
+    ],
+    "goals": [
+      "moisture",
+      "less_frizz"
+    ]
+  },
+  "note": "Offer components rendered statically. Source hooks not hydrated; review-only navigation/plan changes supplied in frame.js. No tracking, payment, or network actions. Shared pricing catalog selectable, not verified production configuration."
+}

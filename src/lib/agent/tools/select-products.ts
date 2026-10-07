@@ -23,6 +23,10 @@ import {
 } from "@/lib/agent/tools/care-balance-context"
 import { applyProductMemoryConstraints } from "@/lib/chat-runtime/user-memory"
 import type { MatchedProduct } from "@/lib/product-matching/matcher"
+import {
+  projectBondbuilderResearchForChat,
+  type BondbuilderChatResearch,
+} from "@/lib/bondbuilder/research-facts"
 import { isMatchedRoutineUsage } from "@/lib/product-usage/routine-identity"
 import type { UserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import { attachProductLineNamesToProducts } from "@/lib/product-lines/display"
@@ -189,6 +193,7 @@ export interface SelectedProductResult {
   caveat: string | null
   supported_claims: SupportedProductClaim[]
   unsupported_requested_signals: UnsupportedRequestedSignal[]
+  bondbuilder_research?: BondbuilderChatResearch
 }
 
 export interface SelectedProductsMissingInfo {
@@ -302,6 +307,9 @@ function projectDisplayableProduct(
   const meta = product.recommendation_meta
   const caveat = mapDisplayableCaveat(meta?.tradeoffs?.[0] ?? null)
   const supportedClaims = buildSupportedProductClaims(product)
+  const bondbuilderResearch = projectBondbuilderResearchForChat(
+    product.bondbuilder_specs ? { ...product.bondbuilder_specs } : null,
+  )
   const unsupportedRequestedSignals = [
     ...buildUnsupportedRequestedSignals(routeContext?.activeProfileSignals ?? [], supportedClaims),
     ...(meta?.category === "shampoo" ||
@@ -328,6 +336,7 @@ function projectDisplayableProduct(
     caveat,
     supported_claims: supportedClaims,
     unsupported_requested_signals: unsupportedRequestedSignals,
+    ...(bondbuilderResearch ? { bondbuilder_research: bondbuilderResearch } : {}),
   }
 }
 

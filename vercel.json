@@ -3,12 +3,40 @@
   "regions": ["dub1"],
   "crons": [
     {
+      "path": "/api/mobile/v1/research-delivery/reconcile",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/billing/trial-reminders/reconcile",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/billing/stripe-trial-continuation/reconcile",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/billing/trial-required-notices/reconcile",
+      "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/billing/public-contract-declaration-receipts/reconcile",
+      "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/billing/trial-cancellation/reconcile",
+      "schedule": "*/5 * * * *"
+    },
+    {
       "path": "/api/billing/reconcile",
       "schedule": "15 2 * * *"
     },
     {
       "path": "/api/customerio/profile-sync/reconcile",
       "schedule": "30 3 * * *"
+    },
+    {
+      "path": "/api/account-deletion/reconcile",
+      "schedule": "20 * * * *"
     }
   ],
   "git": {

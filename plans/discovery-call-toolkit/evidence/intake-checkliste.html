@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Intake-Checkliste — Discovery-Call</title>
+<style>
+  :root {
+    --bg: #fbf9f7;
+    --card: #ffffff;
+    --border: #e6e2df;
+    --plum-darkest: #2a1845;
+    --plum-dark: #3d2a62;
+    --plum: #6b50a0;
+    --plum-light: #c8b8e0;
+    --plum-ice: #f2eefa;
+    --coral: #d4616a;
+    --coral-dark: #c0555d;
+    --coral-light: #fdeef0;
+    --ok-bg: #edf7ef;
+    --ok-text: #356b45;
+    --neutral-bg: #f3f0f6;
+    --neutral-text: #574b61;
+    --text-heading: #2a1845;
+    --text-body: #3a3835;
+    --text-sub: #6a6560;
+    --text-caption: #736f69;
+    --font-display: Georgia, "Times New Roman", serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 40px 24px 72px;
+    background: #efece9;
+    font-family: var(--font-body);
+    color: var(--text-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .sheet-head {
+    max-width: 1240px;
+    margin: 0 auto 32px;
+  }
+  .sheet-head h1 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 26px;
+    color: var(--text-heading);
+    margin: 0 0 4px;
+  }
+  .sheet-head p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-caption);
+  }
+
+  .frames {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px 32px;
+    align-items: flex-start;
+  }
+
+  .frame-col { width: 375px; }
+  .frame-caption {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9a938d;
+    margin: 0 0 10px 4px;
+  }
+
+  .frame {
+    width: 375px;
+    min-height: 700px;
+    background: var(--bg);
+    border: 1px solid #ddd8d4;
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow: 0 18px 40px -30px rgba(42, 24, 69, 0.45);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 28px 20px 24px;
+  }
+
+  /* --- header --- */
+  .wordmark {
+    font-family: var(--font-display);
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    color: var(--plum);
+    margin: 0 0 24px;
+  }
+  h2.title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.25;
+    color: var(--text-heading);
+    margin: 0 0 6px;
+  }
+  p.lede {
+    margin: 0 0 22px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-sub);
+  }
+
+  /* --- progress --- */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .progress-row span {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--plum);
+  }
+  .bar {
+    height: 4px;
+    border-radius: 999px;
+    background: var(--plum-ice);
+    overflow: hidden;
+    margin-bottom: 26px;
+  }
+  .bar > i { display: block; height: 100%; background: var(--plum); border-radius: 999px; }
+
+  /* --- category list --- */
+  .group-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-caption);
+    margin: 18px 0 8px 2px;
+  }
+  .group-label:first-of-type { margin-top: 0; }
+
+  ul.rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 13px 14px;
+    min-height: 52px;
+  }
+  .row .name { font-size: 15px; font-weight: 600; color: var(--plum-darkest); flex: 1; }
+  .row .state { font-size: 12px; color: var(--text-caption); }
+  .row .chev { color: var(--plum-light); font-size: 15px; line-height: 1; }
+
+  .row.done { border-color: var(--plum-light); background: #fdfcff; }
+  .row.done .name { color: var(--plum-darkest); }
+
+  .tick {
+    width: 20px; height: 20px; border-radius: 999px;
+    background: var(--plum); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .dot-open {
+    width: 20px; height: 20px; border-radius: 999px;
+    border: 1.5px solid var(--border); flex-shrink: 0;
+  }
+
+  /* --- category detail --- */
+  .backbar {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 26px;
+  }
+  .backbar .back { font-size: 18px; color: var(--plum); line-height: 1; }
+  .backbar .crumb { font-size: 13px; font-weight: 600; color: var(--text-caption); letter-spacing: 0.02em; }
+
+  .scan-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; min-height: 56px;
+    border: 1.5px solid var(--plum);
+    border-radius: 16px;
+    background: #fff;
+    color: var(--plum-dark);
+    font-size: 16px; font-weight: 600;
+    font-family: inherit;
+  }
+
+  .or {
+    display: flex; align-items: center; gap: 12px;
+    margin: 16px 0;
+    font-size: 12px; color: var(--text-caption);
+  }
+  .or::before, .or::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+  .search {
+    display: flex; align-items: center; gap: 10px;
+    border: 1px solid var(--plum-light);
+    border-radius: 14px;
+    background: #fff;
+    padding: 13px 14px;
+    box-shadow: 0 0 0 3px rgba(107, 80, 160, 0.1);
+  }
+  .search .typed { font-size: 15px; color: var(--text-body); flex: 1; }
+  .search .caret { width: 1.5px; height: 17px; background: var(--plum); display: inline-block; }
+
+  ul.results { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .result {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 10px 12px;
+  }
+  .thumb {
+    width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+    background: var(--plum-ice); color: var(--plum);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; letter-spacing: -0.02em;
+  }
+  .result .meta { min-width: 0; flex: 1; }
+  .result .pname { font-size: 14px; font-weight: 600; color: var(--plum-darkest); line-height: 1.3; }
+  .result .brand { font-size: 12px; color: var(--text-caption); margin-top: 2px; }
+
+  .result.miss { justify-content: space-between; }
+  .result.miss .pname { font-weight: 600; color: var(--text-sub); }
+
+  .quiet {
+    margin-top: auto;
+    padding-top: 24px;
+    text-align: center;
+  }
+  .quiet a {
+    font-size: 14px; font-weight: 600; color: var(--text-caption);
+    text-decoration: underline; text-underline-offset: 4px;
+  }
+
+  /* --- added products --- */
+  ul.added { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .added-item {
+    display: flex; align-items: center; gap: 12px;
+    background: #fdfcff; border: 1px solid var(--plum-light);
+    border-radius: 14px; padding: 10px 12px;
+  }
+  .added-item .x { font-size: 16px; color: var(--text-caption); line-height: 1; }
+
+  .ghost-btn {
+    width: 100%; min-height: 48px;
+    border: 1px dashed var(--plum-light); border-radius: 14px;
+    background: transparent; color: var(--plum);
+    font-size: 14px; font-weight: 600; font-family: inherit;
+  }
+
+  .none-option {
+    display: flex; align-items: center; gap: 12px;
+    border: 1px solid var(--border); border-radius: 14px;
+    background: var(--card); padding: 13px 14px; margin-top: 8px;
+  }
+  .none-option .radio { width: 20px; height: 20px; border-radius: 999px; border: 1.5px solid var(--border); flex-shrink: 0; }
+  .none-option .label { font-size: 15px; color: var(--text-sub); }
+
+  /* --- CTA --- */
+  .cta-dock {
+    padding: 14px 20px 22px;
+    background: linear-gradient(to top, var(--bg) 70%, rgba(251, 249, 247, 0));
+    position: sticky; bottom: 0;
+  }
+  .cta {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; min-height: 54px;
+    border: 0; border-radius: 999px;
+    background: var(--coral); color: #fff;
+    font-size: 16px; font-weight: 700; font-family: inherit;
+    box-shadow: 0 10px 26px -14px rgba(212, 97, 106, 0.9);
+  }
+  .cta.secondary {
+    background: #fff; color: var(--plum-dark);
+    border: 1.5px solid var(--plum-light); box-shadow: none;
+  }
+
+  /* --- confirmation --- */
+  .confirm {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 0 12px 60px;
+  }
+  .confirm .seal {
+    width: 64px; height: 64px; border-radius: 999px;
+    background: var(--plum-ice); color: var(--plum);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin-bottom: 22px;
+  }
+  .confirm h2 {
+    font-family: var(--font-display); font-weight: 500;
+    font-size: 26px; color: var(--text-heading); margin: 0 0 10px;
+  }
+  .confirm p { margin: 0; font-size: 15px; line-height: 1.6; color: var(--text-sub); max-width: 250px; }
+  .confirm .foot { margin-top: 28px; font-size: 13px; color: var(--text-caption); }
+</style>
+</head>
+<body>
+
+<div class="sheet-head">
+  <h1>Intake-Checkliste</h1>
+  <p>375 px · Teilnehmer-Ansicht</p>
+</div>
+
+<div class="frames">
+
+  <!-- (a) EMPTY STATE -->
+  <div class="frame-col">
+    <p class="frame-caption">A · Start</p>
+    <div class="frame">
+      <div class="screen">
+        <p class="wordmark">Chaarlie</p>
+        <h2 class="title">Was benutzt du gerade?</h2>
+        <p class="lede">Scannen oder Namen eintippen. Dauert 5 Minuten.</p>
+
+        <div class="progress-row"><span>0 von 10</span></div>
+        <div class="bar"><i style="width:0%"></i></div>
+
+        <p class="group-label">Waschen</p>
+        <ul class="rows">
+          <li class="row"><span class="dot-open"></span><span class="name">Shampoo</span><span class="chev">›</span></li>
+          <li class="row"><span class="dot-open"></span><span class="name">Conditioner</span><span class="chev">›</span></li>
+          <li class="row"><span class="dot-open"></span><span class="name">Tiefenreinigung</span><span class="chev">›</span></li>
+        </ul>
+
+        <p class="group-label">Pflege</p>
+        <ul class="rows">
+          <li class="row"><span class="dot-open"></span><span class="name">Maske</span><span class="chev">›</span></li>
+          <li class="row"><span class="dot-open"></span><span class="name">Leave-in</span><span class="chev">›</span></li>
+          <li class="row"><span class="dot-open"></span><span class="name">Öl</span><span class="chev">›</span></li>
+          <li class="row"><span class="dot-open"></span><span class="name">Bondbuilder</span><span class="chev">›</span></li>
+        </ul>
+
+        <p class="group-label">Kopfhaut</p>
+        <ul class="rows">
+          <li class="row"><span class="dot-open"></span><span class="name">Kopfhautprodukt</span><span class="chev">›</span></li>
+        </ul>
+
+        <p class="group-label">Styling</p>
+        <ul class="rows">
+          <li class="row"><span class="dot-open"></span><span class="name">Hitzeschutz</span><span class="chev">›</span></li>
+          <li class="row"><span class="dot-open"></span><span class="name">Trockenshampoo</span><span class="chev">›</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- (b) CATEGORY OPEN — TWO ENTRY MODES -->
+  <div class="frame-col">
+    <p class="frame-caption">B · Kategorie offen</p>
+    <div class="frame">
+      <div class="screen">
+        <div class="backbar">
+          <span class="back">‹</span>
+          <span class="crumb">Shampoo</span>
+        </div>
+
+        <h2 class="title">Welches Shampoo benutzt du?</h2>
+        <p class="lede">Barcode ist am schnellsten.</p>
+
+        <button class="scan-btn" type="button">
+          <svg width="20" height="18" viewBox="0 0 20 18" aria-hidden="true">
+            <g fill="#6b50a0">
+              <rect x="0" y="1" width="2" height="16" rx="0.6"/>
+              <rect x="3.5" y="1" width="1" height="16" rx="0.4"/>
+              <rect x="6" y="1" width="2.5" height="16" rx="0.6"/>
+              <rect x="10" y="1" width="1" height="16" rx="0.4"/>
+              <rect x="12.5" y="1" width="2" height="16" rx="0.6"/>
+              <rect x="16" y="1" width="1" height="16" rx="0.4"/>
+              <rect x="18.5" y="1" width="1.5" height="16" rx="0.5"/>
+            </g>
+          </svg>
+          Barcode scannen
+        </button>
+
+        <div class="or">oder</div>
+
+        <div class="search">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+            <circle cx="7" cy="7" r="5" fill="none" stroke="#6a6560" stroke-width="1.6"/>
+            <line x1="10.8" y1="10.8" x2="14.5" y2="14.5" stroke="#6a6560" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <span class="typed">elvital hyaluron</span>
+          <span class="caret"></span>
+        </div>
+
+        <ul class="results">
+          <li class="result">
+            <span class="thumb">EL</span>
+            <span class="meta">
+              <span class="pname">Elvital Hyaluron Pure Shampoo</span>
+              <span class="brand">L'Oréal Elvital</span>
+            </span>
+          </li>
+          <li class="result">
+            <span class="thumb">EL</span>
+            <span class="meta">
+              <span class="pname">Elvital Hyaluron Plump Shampoo</span>
+              <span class="brand">L'Oréal Elvital</span>
+            </span>
+          </li>
+          <li class="result">
+            <span class="thumb">EL</span>
+            <span class="meta">
+              <span class="pname">Elvital Hyaluron Pure Mizellen-Shampoo</span>
+              <span class="brand">L'Oréal Elvital</span>
+            </span>
+          </li>
+          <li class="result miss">
+            <span class="pname">Nicht dabei</span>
+            <span class="chev">›</span>
+          </li>
+        </ul>
+
+        <div class="quiet"><a href="#">Benutze ich nicht</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- (c) CATEGORY WITH TWO PRODUCTS -->
+  <div class="frame-col">
+    <p class="frame-caption">C · Zwei Produkte</p>
+    <div class="frame">
+      <div class="screen">
+        <div class="backbar">
+          <span class="back">‹</span>
+          <span class="crumb">Shampoo</span>
+        </div>
+
+        <h2 class="title">Dein Shampoo</h2>
+        <p class="lede">Mehrere sind okay.</p>
+
+        <ul class="added">
+          <li class="added-item">
+            <span class="thumb">EL</span>
+            <span class="meta" style="flex:1;min-width:0">
+              <span class="pname">Elvital Hyaluron Pure Shampoo</span>
+              <span class="brand">L'Oréal Elvital</span>
+            </span>
+            <span class="x">✕</span>
+          </li>
+          <li class="added-item">
+            <span class="thumb">GK</span>
+            <span class="meta" style="flex:1;min-width:0">
+              <span class="pname">Gliss Kur Aqua Revive Shampoo</span>
+              <span class="brand">Schwarzkopf</span>
+            </span>
+            <span class="x">✕</span>
+          </li>
+        </ul>
+
+        <button class="ghost-btn" type="button">+ Noch eins</button>
+
+        <div class="none-option">
+          <span class="radio"></span>
+          <span class="label">Benutze ich nicht</span>
+        </div>
+      </div>
+      <div class="cta-dock">
+        <button class="cta" type="button">Fertig</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- (d) ALL DONE -->
+  <div class="frame-col">
+    <p class="frame-caption">D · Vollständig</p>
+    <div class="frame">
+      <div class="screen">
+        <p class="wordmark">Chaarlie</p>
+        <h2 class="title">Was benutzt du gerade?</h2>
+        <p class="lede">Alles da. Schick es ab.</p>
+
+        <div class="progress-row"><span>10 von 10</span></div>
+        <div class="bar"><i style="width:100%"></i></div>
+
+        <p class="group-label">Waschen</p>
+        <ul class="rows">
+          <li class="row done"><span class="tick">✓</span><span class="name">Shampoo</span><span class="state">2 Produkte</span></li>
+          <li class="row done"><span class="tick">✓</span><span class="name">Conditioner</span><span class="state">Gliss Kur</span></li>
+          <li class="row done"><span class="tick">✓</span><span class="name">Tiefenreinigung</span><span class="state">benutze ich nicht</span></li>
+        </ul>
+
+        <p class="group-label">Pflege</p>
+        <ul class="rows">
+          <li class="row done"><span class="tick">✓</span><span class="name">Maske</span><span class="state">Balea</span></li>
+          <li class="row done"><span class="tick">✓</span><span class="name">Leave-in</span><span class="state">benutze ich nicht</span></li>
+          <li class="row done"><span class="tick">✓</span><span class="name">Öl</span><span class="state">Elvital</span></li>
+          <li class="row done"><span class="tick">✓</span><span class="name">Bondbuilder</span><span class="state">benutze ich nicht</span></li>
+        </ul>
+
+        <p class="group-label">Kopfhaut</p>
+        <ul class="rows">
+          <li class="row done"><span class="tick">✓</span><span class="name">Kopfhautprodukt</span><span class="state">benutze ich nicht</span></li>
+        </ul>
+
+        <p class="group-label">Styling</p>
+        <ul class="rows">
+          <li class="row done"><span class="tick">✓</span><span class="name">Hitzeschutz</span><span class="state">got2b</span></li>
+          <li class="row done"><span class="tick">✓</span><span class="name">Trockenshampoo</span><span class="state">Batiste</span></li>
+        </ul>
+      </div>
+      <div class="cta-dock">
+        <button class="cta" type="button">Absenden</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- (e) CONFIRMATION -->
+  <div class="frame-col">
+    <p class="frame-caption">E · Abgeschickt</p>
+    <div class="frame">
+      <div class="screen">
+        <p class="wordmark">Chaarlie</p>
+        <div class="confirm">
+          <div class="seal">✓</div>
+          <h2>Danke!</h2>
+          <p>Wir bereiten deinen Termin vor.</p>
+          <p class="foot">Mehr musst du vorher nicht machen.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

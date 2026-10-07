@@ -1,0 +1,190 @@
+{
+  "startedAt": "2026-09-30T19:45:30.900Z",
+  "finishedAt": "2026-09-30T20:10:22.994Z",
+  "apply": true,
+  "total": 347,
+  "byAction": {
+    "auto_write": 57,
+    "review_proposal": 289,
+    "recheck_failed": 1
+  },
+  "byHost": {
+    "dm.de": {
+      "auto_write": 37,
+      "review_proposal": 179,
+      "recheck_failed": 0
+    },
+    "douglas.de": {
+      "auto_write": 0,
+      "review_proposal": 14,
+      "recheck_failed": 0
+    },
+    "rossmann.de": {
+      "auto_write": 0,
+      "review_proposal": 63,
+      "recheck_failed": 0
+    },
+    "urban-alchemy.com": {
+      "auto_write": 2,
+      "review_proposal": 0,
+      "recheck_failed": 0
+    },
+    "flaconi.de": {
+      "auto_write": 1,
+      "review_proposal": 2,
+      "recheck_failed": 0
+    },
+    "de.nuxe.com": {
+      "auto_write": 1,
+      "review_proposal": 0,
+      "recheck_failed": 0
+    },
+    "eu.curlsmith.com": {
+      "auto_write": 2,
+      "review_proposal": 0,
+      "recheck_failed": 0
+    },
+    "amazon.de": {
+      "auto_write": 0,
+      "review_proposal": 3,
+      "recheck_failed": 0
+    },
+    "nutreeoil.com": {
+      "auto_write": 1,
+      "review_proposal": 0,
+      "recheck_failed": 0
+    },
+    "wella.com": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "neqi-hair.com": {
+      "auto_write": 1,
+      "review_proposal": 0,
+      "recheck_failed": 0
+    },
+    "hagel-shop.de": {
+      "auto_write": 0,
+      "review_proposal": 11,
+      "recheck_failed": 0
+    },
+    "epres-hair.de": {
+      "auto_write": 1,
+      "review_proposal": 0,
+      "recheck_failed": 0
+    },
+    "jeanlen.de": {
+      "auto_write": 0,
+      "review_proposal": 3,
+      "recheck_failed": 0
+    },
+    "theordinary.com": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "olaplex.de": {
+      "auto_write": 0,
+      "review_proposal": 4,
+      "recheck_failed": 0
+    },
+    "shop-apotheke.com": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "duitsevoordeeldrogist.nl": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "cosmeterie.at": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "bali-care.com": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "rossmann.dk": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "schwarzkopf.de": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "nivea.de": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "mueller.de": {
+      "auto_write": 11,
+      "review_proposal": 1,
+      "recheck_failed": 1
+    }
+  },
+  "reasons": {
+    "not_found: beobachtet NIVEA Conditioner Volumen & Kraft, 200 ml @ https://www.dm.de/nivea-conditioner-volumen-und-kraft-p4005900918031.html": 1,
+    "llm_reports_unavailable: 5.95 EUR @ https://www.dm.de/p/d/1455746/jean-und-len-haaroel-repair-keratin-und-mandel — verify link status manually": 1,
+    "llm_reports_unavailable: 5.95 EUR @ https://www.dm.de/p/d/2973205/neqi-haarkur-treatment-treasures-peptide-power — verify link status manually": 1,
+    "price delta 44% (12.49 -> 17.95 EUR) exceeds 30%": 1,
+    "llm_reports_unavailable: 1.45 EUR @ https://www.dm.de/p/d/1688048/schaebens-haarmaske-arganoel — verify link status manually": 1,
+    "llm_reports_unavailable: 1.95 EUR @ https://www.dm.de/p/d/1711758/balea-trockenshampoo-kopfhaut-sensitive — verify link status manually": 1,
+    "llm_reports_unavailable: 2.75 EUR @ https://www.dm.de/p/d/1417521/balea-professional-haarmaske-3in1-aqua-hyaluron — verify link status manually": 2,
+    "llm_reports_unavailable: 3.75 EUR @ https://www.dm.de/p/d/1551780/batiste-trockenshampoo-original — verify link status manually": 1,
+    "price delta 85% (3.75 -> 6.95 EUR) exceeds 30%": 1,
+    "price delta 62% (3.99 -> 6.45 EUR) exceeds 30%": 1,
+    "llm_reports_unavailable: 5.95 EUR @ https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske — verify link status manually": 2,
+    "no_price_found: beobachtet Ogx Argan Reviving Dry Oil 118 ml - Haaröl @ https://www.boozt.com/de/de/ogx/argan-reviving-dry-oil-118-ml_30595984/224722169": 1,
+    "llm_reports_unavailable: 9.95 EUR @ https://www.dm.de/p/d/2972777/neqi-haarkur-treatment-treasures-build-boost — verify link status manually": 1,
+    "llm_reports_unavailable: 2.95 EUR @ https://www.dm.de/p/d/3119223/syoss-haarkur-lamination-intense-glaze — verify link status manually": 1,
+    "llm_reports_unavailable: 6.95 EUR @ https://www.dm.de/p/d/3042328/wahre-schaetze-haaroel-curl-revival-elixir — verify link status manually": 1,
+    "llm_reports_unavailable: 2.45 EUR @ https://www.dm.de/p/d/1457506/balea-haarmaske-3in1-natural-beauty-locken — verify link status manually": 1,
+    "not_found: beobachtet Balea Conditioner Natural Beauty Bio-Hibiskus-Extrakt und Cocosmilch, 350 ml @ https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-bio-hibiskus-extrakt-und-cocosmilch": 1,
+    "llm_reports_unavailable: 4.95 EUR @ https://www.dm.de/p/d/1335946/sante-naturally-conditioner-deep-repair — verify link status manually": 1,
+    "llm_reports_unavailable: 2.75 EUR @ https://www.dm.de/p/d/1670195/wahre-schaetze-shampoo-sanfte-hafermilch — verify link status manually": 1,
+    "llm_reports_unavailable: 3.95 EUR @ https://www.dm.de/p/d/1688644/guhl-shampoo-hyaluron-pflege — verify link status manually": 1,
+    "llm_reports_unavailable: 6.95 EUR @ https://www.dm.de/p/d/1475016/hask-shampoo-argan-oil — verify link status manually": 1,
+    "llm_reports_unavailable: 9.95 EUR @ https://www.dm.de/p/d/3063729/dejan-garz-shampoo-the-foundation — verify link status manually": 1,
+    "llm_reports_unavailable: 6.95 EUR @ https://www.dm.de/p/d/1622385/hask-conditioner-curl-care — verify link status manually": 1,
+    "llm_reports_unavailable: 4.95 EUR @ https://www.dm.de/p/d/1585350/hair-biology-conditioner-full-und-shining — verify link status manually": 1,
+    "llm_reports_unavailable: 4.95 EUR @ https://www.dm.de/p/d/3047029/syoss-shampoo-intense-curls — verify link status manually": 1,
+    "not_found: beobachtet Herbal Essences Conditioner Feuchtigkeit Aloe Vera, 250 ml @ https://www.dm.de/p/d/1409620/herbal-essences-conditioner-feuchtigkeit-aloe-vera": 1,
+    "llm_reports_unavailable: 4.95 EUR @ https://www.dm.de/p/d/1335957/sante-naturally-shampoo-sensitive-care — verify link status manually": 1,
+    "llm_reports_unavailable: 2.75 EUR @ https://www.dm.de/p/d/3058599/pantene-pro-v-shampoo-volumen-pur — verify link status manually": 1,
+    "llm_reports_unavailable: 5.95 EUR @ https://www.dm.de/p/d/1336165/pantene-pro-v-conditioner-miracles-bond-repair — verify link status manually": 1,
+    "not_found: beobachtet alverde NATURKOSMETIK Conditioner Glanz, 200 ml @ https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz": 1,
+    "llm_reports_unavailable: 4.95 EUR @ https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe — verify link status manually": 1,
+    "price delta 39% (4.99 -> 6.95 EUR) exceeds 30%": 1,
+    "llm_reports_unavailable: 2.95 EUR @ https://www.dm.de/p/d/3047028/syoss-conditioner-intense-curls — verify link status manually": 1,
+    "llm_reports_unavailable: 6.95 EUR @ https://www.dm.de/p/d/1475001/hask-conditioner-repairing-argan-oil — verify link status manually": 1,
+    "llm_reports_unavailable: 6.95 EUR @ https://www.dm.de/p/d/1443762/ogx-shampoo-strenght-und-lenght-keratin-oil — verify link status manually": 1,
+    "llm_reports_unavailable: 6.95 EUR @ https://www.dm.de/p/d/1622384/hask-shampoo-curl-care — verify link status manually": 1,
+    "host_not_enabled": 208,
+    "no_price_found: beobachtet Redken All Soft Mega Curls Hydramelt, 150 ml @ https://www.hair24.de/Redken-All-Soft-Mega-Curls-Hydramelt-150-ml": 1,
+    "llm_reports_unavailable: 21 EUR @ https://www.douglas.de/de/p/5011693052 — verify link status manually": 1,
+    "price delta 33% (75 -> 49.99 EUR) exceeds 30%": 1,
+    "price delta 44% (28.8 -> 16 EUR) exceeds 30%": 1,
+    "no_price_found: beobachtet K18 Professional Molecular Repair Hair Mist, 150 ml @ https://www.look-beautiful.de/professional-molecular-repair-hair-mist-sw13531": 1,
+    "no_price_found: beobachtet OUAI Leave in Conditioner, 140 ml @ https://www.sephora.de/p/leave-in-conditioner-P3282012.html": 1,
+    "not_found: beobachtet Alterra Haarmaske @ https://www.rossmann.de/de/pflege-und-duft-alterra-haarmaske/p/4068134014122": 1,
+    "not_found: beobachtet unbekannt @ https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127?info=text.product.notAvailable.error": 1,
+    "llm_reports_unavailable: 13.89 EUR @ https://www.douglas.de/de/p/m003070896 — verify link status manually": 1,
+    "llm_reports_unavailable: 6.99 EUR @ https://www.sante.de/intense-hydration-maske-hyaluron-3-fach-protein-komplex/40628 — verify link status manually": 1,
+    "not_found: beobachtet Maria Nila Coils & Curls Oil In Cream, 100 ml @ https://www.flaconi.de/haare/maria-nila/coils-and-curls/maria-nila-coils-and-curls-oil-in-cream-leave-in-treatment.html": 1,
+    "no_adapter_for_host": 27,
+    "no_price_found: beobachtet Fino Premium Touch Penetration Essence Hair Oil 70ml @ https://nalda.de/products/4550516493590": 1,
+    "not_found: beobachtet OGX Bond Protein Repair 3-in-1 Oil Mist, 50 ml @ https://www.amazon.de/OGX-Spr%C3%BChnebel-besch%C3%A4digtes-Technology-Dual-Action-Reparaturtechnologie/dp/B0DQLHGGYJ": 1,
+    "llm_reports_unavailable: 21.72 EUR @ https://www.shop-apotheke.com/beauty/upmFKXM79/wella-ultimate-repair-protective-leave-in.htm — verify link status manually": 1,
+    "llm_reports_unavailable: 2.95 EUR @ https://www.hagel-shop.de/hask-argan-oil-repairing-shine-oil-18-ml-5815315.html — verify link status manually": 1,
+    "no_price_found: beobachtet Panthenol + Reparatur Spülung @ https://www.budni.de/sortiment/produkte/6435184007": 1,
+    "http_error": 1
+  }
+}

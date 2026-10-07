@@ -10,6 +10,7 @@ import {
 } from "@/lib/billing/subscriptions"
 import type { BillingSubscriptionRow } from "@/lib/billing/types"
 import { getBillingTierIds } from "@/lib/billing/tier-ids"
+import { hasTrialBillingContract } from "@/lib/billing/trial-access-projection"
 
 export const runtime = "nodejs"
 
@@ -62,6 +63,10 @@ export async function handleCancelPayPalSubscription(deps: PayPalCancelDeps): Pr
   if (!current) return { status: 404, body: { error: "no_subscription" } }
   if (current.provider !== "paypal") {
     return { status: 409, body: { error: "not_paypal_subscription" } }
+  }
+
+  if (hasTrialBillingContract(current)) {
+    return { status: 409, body: { error: "trial_management_required" } }
   }
 
   await deps.cancelPayPalSubscription(current.provider_subscription_id, CANCEL_REASON)

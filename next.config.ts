@@ -19,8 +19,13 @@ const permissionsPolicy = (camera: string) => `${camera}, microphone=(), geoloca
  * these entries must stay AFTER the site-wide `securityHeaders` entry in `headers()`.
  * `/scan` and `/scan/:path*` are both listed because `:path*` does not match the bare
  * segment on its own.
+ *
+ * `/beratung/produkte` is the discovery-call product checklist. It reuses the same
+ * `Scanner` component, so without its own override the viewfinder would fail in
+ * production exactly the way `/scan` would. It is a single leaf route, so no
+ * `:path*` twin is needed.
  */
-const cameraRoutes = ["/scan", "/scan/:path*"]
+const cameraRoutes = ["/scan", "/scan/:path*", "/beratung/produkte"]
 
 const securityHeaders = [
   {
@@ -33,7 +38,7 @@ const securityHeaders = [
       "font-src 'self' data: https://fast.wistia.net",
       "connect-src 'self' https://eu.i.posthog.com https://eu.posthog.com https://cdp-eu.customer.io https://*.supabase.co https://*.sentry.io https://api.stripe.com https://js.stripe.com https://checkout.stripe.com https://www.paypal.com https://www.sandbox.paypal.com https://api-m.paypal.com https://api-m.sandbox.paypal.com https://fast.wistia.com https://fast.wistia.net https://embed-cloudfront.wistia.com https://embed-ssl.wistia.com https://distillery.wistia.com https://pipedream.wistia.com",
       "media-src 'self' https://embed-cloudfront.wistia.com https://embed-ssl.wistia.com",
-      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://www.paypal.com https://www.sandbox.paypal.com https://form.typeform.com",
+      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://www.paypal.com https://www.sandbox.paypal.com https://form.typeform.com https://calendly.com",
       "frame-ancestors 'none'",
       "object-src 'none'",
       "base-uri 'self'",
@@ -49,6 +54,9 @@ const securityHeaders = [
 const noindexRoutes = [
   "/admin/:path*",
   "/auth/:path*",
+  // The whole discovery-call journey is personal and invite-only.
+  "/beratung",
+  "/beratung/:path*",
   "/chat/:path*",
   "/labs/:path*",
   "/onboarding/:path*",
@@ -73,7 +81,9 @@ export const nextConfig: NextConfig = {
     root: process.cwd(),
   },
   images: {
+    maximumRedirects: 0,
     remotePatterns: [
+      { protocol: "https", hostname: "products.dm-static.com", pathname: "/images/**" },
       {
         protocol: "https",
         hostname: "www.tophair.de",
@@ -88,6 +98,9 @@ export const nextConfig: NextConfig = {
   },
   outputFileTracingIncludes: {
     "/api/chat": ["./data/agent-guidance/**/*", "./data/agent-v2/guidance/**/*"],
+    // Apple root certificates read at runtime by src/lib/app-store/verify.ts.
+    "/api/mobile/v1/app-store/transactions": ["./src/lib/app-store/certs/**/*"],
+    "/api/app-store/notifications": ["./src/lib/app-store/certs/**/*"],
   },
   async headers() {
     return [

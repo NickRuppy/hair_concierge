@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto"
+import { readBondbuilderResearchProfile } from "@/lib/bondbuilder/research-facts"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
 
@@ -716,12 +717,21 @@ function categorySpecFromSnapshot(
     case "bondbuilder": {
       const row = singleton("product_bondbuilder_specs")
       const relationships = rows("product_relationships")
+      const profile = readBondbuilderResearchProfile(row)
       return {
         applicationMode: text(row?.application_mode),
         treatmentMode: text(row?.treatment_mode),
         productFormat: text(row?.product_format),
         usageProtocol: text(row?.usage_protocol),
         relationship: classifyBondbuilderRelationship(relationships),
+        ...(row?.research_profile != null
+          ? {
+              technologyFamily: profile?.assessment.technology_family ?? null,
+              claimTrustLevel: profile?.assessment.claim_trust_level ?? null,
+              trustBasis: profile?.assessment.trust_basis ?? null,
+              researchProfile: profile,
+            }
+          : {}),
       }
     }
     case "deep_cleansing_shampoo": {

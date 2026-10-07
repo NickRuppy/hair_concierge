@@ -5,14 +5,12 @@ import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 import { heatEventsFromNeedSnapshot } from "@/lib/personal-plan/oil-heat-context"
 import { cleanProductDisplayName } from "@/lib/product-identity"
 import {
-  mapLegacyRefinementPrefill,
-  type LegacyCatalogMatch,
-  type LegacyProductUsageRow,
-  type LegacyRefinementPrefillInput,
-} from "@/lib/personal-plan/legacy-prefill"
-import {
   createStage3OptionalInventorySeedDraft,
   filterStage3ExactInventory,
+  mapLegacyInventoryPrefill,
+  type LegacyCatalogMatch,
+  type LegacyProductUsageRow,
+  type LegacyInventoryPrefillInput,
 } from "./legacy-inventory-entry"
 import type { Stage3DraftResponse } from "./gateway"
 import {
@@ -81,7 +79,7 @@ export async function openSupabaseStage3OptionalInventory(
     })
   }
 
-  const prefill = mapLegacyRefinementPrefill(
+  const prefill = mapLegacyInventoryPrefill(
     await loadLegacyInventoryPrefillInput(client, input.userId),
   )
   const seed = createStage3OptionalInventorySeedDraft({
@@ -783,7 +781,7 @@ async function hasCurrentStage3Draft(
 async function loadLegacyInventoryPrefillInput(
   client: AdminClient,
   userId: string,
-): Promise<LegacyRefinementPrefillInput> {
+): Promise<LegacyInventoryPrefillInput> {
   const { data: usage, error: usageError } = await client
     .from("user_product_usage")
     .select("id,category,product_name,frequency_range,product_id")
@@ -793,7 +791,6 @@ async function loadLegacyInventoryPrefillInput(
   const usageRows = coerceLegacyUsageRows(usage)
   const catalogMatches = await loadLegacyCatalogMatches(client, userId, usageRows)
   return {
-    profile: {},
     usageRows: usageRows.map((row) => ({
       id: row.id,
       category: row.category,

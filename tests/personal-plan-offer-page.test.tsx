@@ -158,26 +158,26 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.match(html, /73%/i)
   assert.match(html, /63%/i)
   assert.match(html, /4\.024 Antworten/i)
-  assert.match(html, /Kim · Endlich verstehe ich meine Haare/i)
-  assert.match(html, />Erfahrungen</)
-  assert.doesNotMatch(html, /Stimmen aus der Beta/i)
-  assert.match(html, /34 · feines, welliges, blondiertes Haar/i)
+  assert.match(html, /Chiara/)
+  assert.match(html, /Lucia/)
+  assert.match(html, /Marion/)
   assert.match(
     html,
-    /Der Fragebogen ist echt gut und leicht verständlich\. Im Chat hat das Antworten super geklappt\. Auch die Produktempfehlung fand ich gut\./i,
+    /Denn so hat man eine Haar Analyse die man eher selten, wenn nur auf Nachfrage bei einem Frisör bekommt./,
   )
-  assert.match(html, /Kerstin · Echte Antworten bekommen/i)
-  assert.match(
-    html,
-    /Ich finde die Interaktion sehr gut: meine Fragen stellen zu können und dann die benötigten Antworten zu bekommen\./i,
-  )
-  assert.match(html, /Sarah · Nie wieder googeln vorm Regal/i)
-  assert.match(
-    html,
-    /Bei den Produkten stehen Preis und Anwendung dabei – und warum sie empfohlen werden\. So muss ich nicht erst googeln\./i,
-  )
+  assert.match(html, /Durch die App habe ich endlich eine Routine gefunden/)
+  assert.match(html, /Großartig, endlich weiß ich, wie und was ich benutzen muss!/)
+  assert.equal((html.match(/Auszug · Bewertung auf Trustpilot/g) ?? []).length, 3)
+  for (const reviewId of [
+    "6a8850744333b27160272f20",
+    "6aa6b4108fc8b3854149df82",
+    "6a884be4a8140e3831760b17",
+  ]) {
+    assert.ok(html.includes(`href="https://www.trustpilot.com/reviews/${reviewId}"`))
+  }
+  assert.doesNotMatch(html, /34 · feines, welliges, blondiertes Haar|Kim ·|Kerstin ·|Sarah ·/)
   assert.equal((html.match(/aria-label="5 von 5 Sternen"/g) ?? []).length, 3)
-  assert.match(html, /Das sagen Kundinnen über Chaarlie/i)
+  assert.match(html, /Das sagen unsere Nutzer über Chaarlie/i)
   assert.match(html, /14 Tage Geld-zurück-Garantie/i)
   assert.doesNotMatch(html, /Ohne Risiko/i)
   assert.match(html, /Dein Plan zu schöneren Haaren in 30 Tagen/i)

@@ -46,6 +46,12 @@ export type AppendResearchArtifactParams = {
   promptVersion?: string | null
 }
 
+export type CountResearchArtifactsParams = {
+  kind: ProductIntakeResearchArtifact["kind"]
+  status?: string
+  payloadContains?: JsonRecord
+}
+
 export type SaveReviewDecisionParams = {
   submissionId: string
   jobId?: string | null
@@ -172,6 +178,23 @@ export async function appendResearchArtifact(
 
   if (error) throw error
   return data as ProductIntakeResearchArtifact
+}
+
+export async function countResearchArtifacts(
+  client: RpcClient,
+  params: CountResearchArtifactsParams,
+): Promise<number> {
+  let query = client
+    .from("product_intake_research_artifacts")
+    .select("id", { count: "exact", head: true })
+    .eq("kind", params.kind)
+
+  if (params.status) query = query.eq("status", params.status)
+  if (params.payloadContains) query = query.contains("payload", params.payloadContains)
+
+  const { count, error } = await query
+  if (error) throw error
+  return count ?? 0
 }
 
 export async function saveReviewDecision(

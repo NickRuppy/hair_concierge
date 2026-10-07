@@ -35,6 +35,7 @@ export type PersonalPlanEnrollmentSourceKind =
   | "partner"
   | "migration"
   | "freemium"
+  | "trial"
 
 export type PersonalPlanEnrollment = {
   accessState: OneTimeAccessState
@@ -184,7 +185,7 @@ function resolveActiveFieldTestEnrollment(
 }
 
 /**
- * Resolves the single paid source that owns a Personal Plan. Memberships are
+ * Resolves the qualified checkout source that owns a Personal Plan. Paid memberships are
  * accepted only when their provider purchase is correlated to one exact
  * Personal Plan quiz lead; user or email proximity is never sufficient.
  */
@@ -235,6 +236,53 @@ export async function findPersonalPlanEnrollmentForUser(
   }
 
   const subscriptions = await findCurrentBillingSubscriptionsForUser(supabase, userId, now)
+  const trialFallback = async (): Promise<PersonalPlanEnrollment> => {
+    const trialIds = new Set(subscriptions.map((row) => row.trial_enrollment_id).filter(Boolean))
+    if (trialIds.size === 0) return emptyEnrollment(oneTimeState)
+    const client = supabase as unknown as {
+      rpc: (
+        name: string,
+        args: Record<string, unknown>,
+      ) => PromiseLike<{ data: unknown; error: unknown }>
+    }
+    const { data, error } = await client.rpc("personal_plan_resolve_trial_source", {
+      p_user_id: userId,
+    })
+    if (error) throw error
+    if (!data || typeof data !== "object" || Array.isArray(data))
+      return emptyEnrollment(oneTimeState)
+    const row = data as Record<string, unknown>
+    if (
+      typeof row.enrollment_id !== "string" ||
+      !trialIds.has(row.enrollment_id) ||
+      typeof row.lead_id !== "string" ||
+      !row.lead_id.trim() ||
+      typeof row.qualified_at !== "string" ||
+      !Number.isFinite(Date.parse(row.qualified_at)) ||
+      Date.parse(row.qualified_at) > now.getTime() ||
+      (row.quiz_source_kind !== "legacy" && row.quiz_source_kind !== "personal_plan")
+    )
+      return emptyEnrollment(oneTimeState)
+    const quizSourceKind = await resolveEligibleQuizSourceKind({
+      supabase,
+      userId,
+      leadId: row.lead_id,
+      qualifiedAt: row.qualified_at,
+      // Trial provenance is not historical paid authority, even after conversion.
+      release: { ...release, migrationEnabled: () => false },
+    })
+    if (!quizSourceKind || quizSourceKind !== row.quiz_source_kind)
+      return emptyEnrollment(oneTimeState)
+    return {
+      accessState: "active",
+      sourceId: row.enrollment_id,
+      paidAt: null,
+      qualifiedAt: row.qualified_at,
+      artifactLeadId: row.lead_id,
+      quizSourceKind,
+      sourceKind: "trial",
+    }
+  }
   const subscription = subscriptions.find(
     (candidate) =>
       metadataString(candidate.metadata, "pricing_catalog") ===
@@ -362,7 +410,7 @@ export async function findPersonalPlanEnrollmentForUser(
     .eq("status", "active")
     .maybeSingle()
   if (fieldTestError) {
-    if (isMissingPersonalPlanFieldTestRelation(fieldTestError)) return emptyEnrollment(oneTimeState)
+    if (isMissingPersonalPlanFieldTestRelation(fieldTestError)) return trialFallback()
     throw fieldTestError
   }
   const personalPlanFieldTestRow = (fieldTestData as FieldTestEnrollmentRow | null) ?? null
@@ -388,7 +436,7 @@ export async function findPersonalPlanEnrollmentForUser(
     .maybeSingle()
   if (regularFieldTestError) {
     if (isMissingRegularQuizFieldTestRelation(regularFieldTestError)) {
-      return emptyEnrollment(oneTimeState)
+      return trialFallback()
     }
     throw regularFieldTestError
   }
@@ -398,7 +446,7 @@ export async function findPersonalPlanEnrollmentForUser(
       userId,
       now,
       "legacy",
-    ) ?? emptyEnrollment(oneTimeState)
+    ) ?? (await trialFallback())
   )
 }
 

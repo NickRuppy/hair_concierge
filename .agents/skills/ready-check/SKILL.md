@@ -9,7 +9,7 @@ Verify the promised end-state on the exact tree that will be reviewed. This skil
 
 ## 1. Define the proof
 
-Read the approved plan/spec or inline implementation contract and the final diff. Map each promised outcome and risk to observable evidence. For every change entering through `implementation-loop`, revalidate that decision coverage is current and `confirmed`, preserve its original user **Coverage acknowledgement** and approved scope, and record the current internal revalidation separately. Return through `plan-hardening-loop` only if implementation surfaced a new consequential choice. A quick-work check that never triggered `implementation-loop` has no decision-coverage record to revalidate. If the intended end-state or required decision coverage is unclear, stale, or unobservable, stop and name the missing contract.
+Read the requested outcome, approved plan or inline contract, and final diff. Map promised outcomes and material risks to observable evidence. Revalidate decision coverage for work entering through `implementation-loop`, preserving original authorization and recording the current internal check separately. Restore missing or stale records from existing evidence without a new approval interview. Return only unresolved consequential choices to `plan-hardening-loop`; if required evidence or access is unavailable, report that specific blocker and continue independent checks.
 
 ## 2. Run fresh checks
 

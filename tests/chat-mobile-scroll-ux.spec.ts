@@ -1,6 +1,8 @@
 import { expect, test, type Page } from "@playwright/test"
 import { createClient } from "@supabase/supabase-js"
 
+import { seedHairProfile } from "../src/lib/user-facts/seed-profile"
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
@@ -87,21 +89,17 @@ test("mobile chat anchors a new long assistant answer and can jump to latest", a
     )
     if (profileError) throw profileError
 
-    const { error: hairProfileError } = await admin.from("hair_profiles").upsert(
-      {
-        user_id: userId,
-        hair_texture: "wavy",
-        thickness: "fine",
-        density: "medium",
-        cuticle_condition: "medium_porosity",
-        scalp_type: "balanced",
-        scalp_condition: [],
-        chemical_treatment: [],
-        concerns: ["dryness"],
-      },
-      { onConflict: "user_id" },
-    )
-    if (hairProfileError) throw hairProfileError
+    // Through the door (`user_facts_save_v1`) — the lock rejects direct fact-column writes.
+    await seedHairProfile(admin, userId, {
+      hair_texture: "wavy",
+      thickness: "fine",
+      density: "medium",
+      cuticle_condition: "medium_porosity",
+      scalp_type: "balanced",
+      scalp_condition: [],
+      chemical_treatment: [],
+      concerns: ["dryness"],
+    })
 
     await page.setViewportSize({ width: 393, height: 852 })
     await page.addInitScript(

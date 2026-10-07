@@ -5,6 +5,8 @@ import {
   resolveVisibleDiagnosticConcerns,
   resolveVisibleDiagnosticGoals,
 } from "../src/lib/quiz/diagnostic-input"
+import { adaptLegacyQuizAnswersForAssessment } from "../src/lib/personal-plan-quiz/offer-adapter"
+import type { QuizAnswers } from "../src/lib/quiz/types"
 
 test("resumable legacy concerns map onto the current visible cards", () => {
   assert.deepEqual(resolveVisibleDiagnosticConcerns(["frizz", "dryness", "breakage"]), [
@@ -33,4 +35,18 @@ test("resumable legacy goals map deterministically onto the eight current famili
       "scalp_balance",
     ],
   )
+})
+
+test("historical goal aliases reach the same assessment families as the visible quiz", () => {
+  const historicalGoals = ["healthier_hair", "color_protection", "strengthen"]
+  const visibleGoals = resolveVisibleDiagnosticGoals(historicalGoals)
+  const assessment = adaptLegacyQuizAnswersForAssessment({ goals: historicalGoals } as QuizAnswers)
+
+  assert.deepEqual(visibleGoals, ["shine", "strength_ends"])
+  assert.deepEqual(assessment.goals, visibleGoals)
+})
+
+test("historical legacy-column goal spellings map onto their families too (migration table M)", () => {
+  assert.deepEqual(resolveVisibleDiagnosticGoals(["defined_curls"]), ["shape_definition"])
+  assert.deepEqual(resolveVisibleDiagnosticGoals(["less_breakage"]), ["strength_ends"])
 })

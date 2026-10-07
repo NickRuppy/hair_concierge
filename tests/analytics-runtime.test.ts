@@ -94,7 +94,7 @@ test("PostHog registers settled funnel context before one FIFO flush", async () 
   assert.equal(runtime.posthog.get_session_id(), "session-123")
 })
 
-test("PostHog bootstrap failure releases queued calls without registration", async () => {
+test("PostHog registers a later successful context after an initial bootstrap failure", async () => {
   const calls: unknown[][] = []
   const runtime = createPostHogRuntime({
     loadClient: async () => createPostHogClient(calls),
@@ -105,6 +105,84 @@ test("PostHog bootstrap failure releases queued calls without registration", asy
   await runtime.release()
 
   assert.deepEqual(calls, [["capture", "quiz_started", { step: 2 }]])
+
+  await runtime.configureContext(
+    Promise.resolve({ funnelPackageKey: "scan_v1", funnelSessionId: "session-2" }),
+  )
+  await Promise.resolve()
+  assert.deepEqual(calls, [
+    ["capture", "quiz_started", { step: 2 }],
+    ["register", { funnel_package_key: "scan_v1", funnel_session_id: "session-2" }],
+  ])
+})
+
+test("PostHog ignores a stale context that settles after a newer navigation", async () => {
+  const calls: unknown[][] = []
+  let resolveOld:
+    | ((context: { funnelPackageKey: string; funnelSessionId: string }) => void)
+    | undefined
+  let resolveNew:
+    | ((context: { funnelPackageKey: string; funnelSessionId: string }) => void)
+    | undefined
+  const oldContext = new Promise<{ funnelPackageKey: string; funnelSessionId: string }>(
+    (resolve) => {
+      resolveOld = resolve
+    },
+  )
+  const newContext = new Promise<{ funnelPackageKey: string; funnelSessionId: string }>(
+    (resolve) => {
+      resolveNew = resolve
+    },
+  )
+  const runtime = createPostHogRuntime({ loadClient: async () => createPostHogClient(calls) })
+
+  runtime.configureContext(oldContext)
+  runtime.configureContext(newContext)
+  resolveOld?.({ funnelPackageKey: "old", funnelSessionId: "old-session" })
+  await runtime.release()
+  resolveNew?.({ funnelPackageKey: "scan_v1", funnelSessionId: "new-session" })
+  await new Promise<void>((resolve) => setImmediate(resolve))
+
+  assert.deepEqual(calls, [
+    ["register", { funnel_package_key: "scan_v1", funnel_session_id: "new-session" }],
+  ])
+})
+
+test("PostHog registers the newest context that settles before its client and preserves explicit events", async () => {
+  const calls: unknown[][] = []
+  let resolveClient: ((client: PostHogRuntimeClient) => void) | undefined
+  let resolveFirst:
+    | ((context: { funnelPackageKey: string; funnelSessionId: string }) => void)
+    | undefined
+  let resolveLatest:
+    | ((context: { funnelPackageKey: string; funnelSessionId: string }) => void)
+    | undefined
+  const first = new Promise<{ funnelPackageKey: string; funnelSessionId: string }>((resolve) => {
+    resolveFirst = resolve
+  })
+  const latest = new Promise<{ funnelPackageKey: string; funnelSessionId: string }>((resolve) => {
+    resolveLatest = resolve
+  })
+  const runtime = createPostHogRuntime({
+    loadClient: () =>
+      new Promise<PostHogRuntimeClient>((resolve) => {
+        resolveClient = resolve
+      }),
+  })
+
+  runtime.posthog.capture("scanner_quiz_viewed", { funnel_session_id: "explicit-session" })
+  runtime.configureContext(first)
+  runtime.configureContext(latest)
+  const released = runtime.release()
+  resolveLatest?.({ funnelPackageKey: "scan_v1", funnelSessionId: "latest-session" })
+  resolveFirst?.({ funnelPackageKey: "old", funnelSessionId: "old-session" })
+  resolveClient?.(createPostHogClient(calls))
+  await released
+
+  assert.deepEqual(calls, [
+    ["register", { funnel_package_key: "scan_v1", funnel_session_id: "latest-session" }],
+    ["capture", "scanner_quiz_viewed", { funnel_session_id: "explicit-session" }],
+  ])
 })
 
 test("PostHog preserves identify and reset ordering before readiness", async () => {

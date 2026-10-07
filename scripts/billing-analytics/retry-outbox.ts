@@ -15,7 +15,8 @@ function destinationArg(): BillingAnalyticsDestination | undefined {
     destination === "customerio" ||
     destination === "meta" ||
     destination === "posthog" ||
-    destination === "funnel"
+    destination === "funnel" ||
+    destination === "openai"
   ) {
     return destination
   }

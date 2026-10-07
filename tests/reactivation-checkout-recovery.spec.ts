@@ -16,7 +16,7 @@ test.beforeAll(async () => {
     "next/dynamic": `import React,{lazy,Suspense} from 'react';export default function dynamic(loader){const C=lazy(()=>loader().then(defaultExport=>({default:defaultExport})));return props=><Suspense><C {...props}/></Suspense>}`,
     "@/lib/analytics/track-app-event": "export const trackAppEvent=()=>{}",
     "@/lib/funnel/client":
-      "let n=0;export const createFunnelEventId=()=>`00000000-0000-4000-8000-${String(++n).padStart(12,'0')}`;export const getCurrentFunnelContext=()=>null",
+      "let n=0;export const createFunnelEventId=()=>`00000000-0000-4000-8000-${String(++n).padStart(12,'0')}`;export const getCurrentFunnelContext=()=>null;export const bootstrapFunnelContext=async()=>null",
     "@/lib/observability/checkout": "export const addCheckoutBreadcrumb=()=>{}",
     "@/lib/observability/payment-client": "export const capturePaymentFailure=()=>{}",
     "@/components/providers/payment-runtime-provider":

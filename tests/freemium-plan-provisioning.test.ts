@@ -305,3 +305,27 @@ test("Y2: an in-flight Routine provisions the plan but never reports it ready", 
   if (result.outcome !== "provisioned") throw new Error("unreachable")
   assert.equal(result.routineAccepted, false)
 })
+
+/**
+ * Fix round 2, ruling 2: `acceptInitialRoutineForUser`'s `acceptIdealPlan` call is a
+ * second, previously-unwired production caller found during the task 5b I1 audit (the
+ * first being `/api/personal-plan/accept-ideal-plan`). Unit-testing the real wiring
+ * end-to-end would need a live Supabase client (this module's own tests fake
+ * `acceptInitialRoutine` entirely — see the header comment), so this asserts the source
+ * directly, mirroring the stage-2 routes' wiring guard in
+ * `tests/personal-plan-api-stage2.test.ts`: `acceptIdealPlan` receives a `saveFacts`
+ * built from the SAME service-role `admin` client already passed to
+ * `refinementPersistence`.
+ */
+test("acceptInitialRoutineForUser wires acceptIdealPlan's saveFacts from the service-role admin client", async () => {
+  const { readFile } = await import("node:fs/promises")
+  const source = await readFile(
+    new URL("../src/lib/freemium/plan-provisioning-supabase.ts", import.meta.url),
+    "utf8",
+  )
+  assert.match(
+    source,
+    /refinementPersistence: createSupabaseStage2RefinementPersistence\(admin[\s\S]{0,40}\),\s*\n\s*saveFacts: \([^)]*\) => saveUserFacts\(admin[\s\S]{0,40}\)/,
+    "acceptInitialRoutineForUser must pass saveFacts (built from the same admin client) to acceptIdealPlan",
+  )
+})

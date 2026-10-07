@@ -90,7 +90,13 @@ export function CookieConsent() {
   if (!mounted) return null
 
   return (
-    <>
+    // `contents` generates no box, so the fixed banner below keeps its exact positioning;
+    // `print:hidden` sits on a wrapper with no responsive display utility, because on the
+    // banner itself it would share an element with `sm:flex` and only Tailwind's emission
+    // order would decide which display wins at print width. Printed pages —
+    // the discovery routine document at `/admin/beratung/<id>/pdf` is an A4 sheet a
+    // participant receives — must not carry a consent banner.
+    <div className="contents print:hidden">
       {bannerVisible && !settingsOpen && (
         <div
           ref={bannerRef}
@@ -188,7 +194,7 @@ export function CookieConsent() {
           </div>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   )
 }
 

@@ -1,0 +1,22 @@
+Dein kostenloser Test endet bald.
+
+Wie versprochen, erinnern wir dich vor deiner ersten Zahlung.
+
+Testende: {{ trigger.trial_end_date }}
+Erste Zahlung: {{ trigger.first_charge_amount }} am {{ trigger.first_charge_date }}
+{{ trigger.plan_label }}: danach {{ trigger.renewal_amount }} {{ trigger.billing_interval_label }}.
+
+Nach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.
+
+Mein Abo ansehen: {{ trigger.management_url }}
+
+Du möchtest nicht weitermachen? Vor Testende kündigen: {{ trigger.cancellation_url }}
+Dann beginnt kein bezahlter Zeitraum.
+
+Falls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.
+
+Fragen? Antworte einfach auf diese E-Mail.
+
+Chaarlie · Haarmony LLC
+1111B S Governors Ave # 84075, Dover, DE 19904, USA
+https://chaarlie.de/impressum · https://chaarlie.de/datenschutz

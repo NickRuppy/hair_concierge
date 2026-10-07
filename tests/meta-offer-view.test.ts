@@ -252,3 +252,27 @@ test("Meta offer lookup preserves legacy quiz evidence and requires an attached 
     /data\.quiz_kind === "personal_plan"[\s\S]*\.from\("personal_plan_prepared_artifacts"\)[\s\S]*\.eq\("lead_id", leadId\)[\s\S]*\.eq\("status", "attached"\)/,
   )
 })
+
+test("offer CAPI uses the eligible lead's server-resolved package behind its existing flag", async () => {
+  const previous = process.env.FUNNEL_META_CUSTOM_DATA_ENABLED
+  try {
+    for (const enabled of [false, true]) {
+      process.env.FUNNEL_META_CUSTOM_DATA_ENABLED = String(enabled)
+      let customData: unknown
+      await deliverMetaOfferView(payload, {
+        findEligibleLead: async () => ({ email: null, name: null, funnelPackageKey: "scan_v1" }),
+        deliver: async (conversion) => {
+          customData = conversion.customData
+          return { ok: true, status: 200 }
+        },
+      })
+      assert.deepEqual(customData, {
+        content_name: "quiz_result_offer_view",
+        ...(enabled ? { funnel_package_key: "scan_v1" } : {}),
+      })
+    }
+  } finally {
+    if (previous === undefined) delete process.env.FUNNEL_META_CUSTOM_DATA_ENABLED
+    else process.env.FUNNEL_META_CUSTOM_DATA_ENABLED = previous
+  }
+})

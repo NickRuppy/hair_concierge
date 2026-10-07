@@ -32,7 +32,7 @@ The immediate fixes should be id-based updates for the known product rows. The r
 - Treat missing `image_url` as product-metadata health, but leave image backfill/UI handling to HAI-125.
 - Move the Gliss Ultimate Repair spray conditioner case into `Leave-in` instead of keeping it as a rinse-out `Conditioner (Drogerie)` row.
 
-Shop policy:
+Shop policy (**superseded 2026-10-05** — current rule: one order for every category, dm > Rossmann > Müller > brand-direct > Amazon DE > reputable German/EU specialists; shop and purchasability outrank package size and price. See [Source And Purchase URL Priority](product-intake-research-ops.md#source-and-purchase-url-priority). Kept below as the original HAI-124 text):
 
 - Product identity wins first: exact SKU, correct category/use type, correct default size, and current canonical product page.
 - Use allowed retailers only; deny aggregators, marketplace search pages, and generic price-comparison pages.
@@ -288,6 +288,17 @@ Safety:
 - Audit is read-only by default.
 - Updates happen through a reviewed CSV or id-based migration.
 - Never auto-update when product type or category changes.
+
+> **Amendment 2026-09-30 (recurring price-audit lane, Nick-approved):** the
+> recurring audit (`docs/price-audit.md`, `plans/price-audit-lane.md`) may
+> auto-write `price_eur`, `price_checked_at`, `purchase_link_status` and
+> `purchase_link_checked_at` — and only those — when identity is confirmed
+> (GTIN/stored-link tie) on a probe-gated host and the observation is
+> anomaly-free. The GPT research fallback (same date) may auto-write
+> `price_eur` + `price_checked_at` only, from a gate-passing evidence URL —
+> never `purchase_link_status` or links. Everything else here stands: link
+> *replacements*, category or product-type changes, and all anomalies remain
+> review-only.
 
 Suggested cadence:
 

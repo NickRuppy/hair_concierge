@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 import { getStripe } from "@/lib/stripe/client"
+import { createAdminClient } from "@/lib/supabase/admin"
+import { createLegacyPortalSession } from "@/lib/stripe/legacy-portal"
 
 export const runtime = "nodejs"
 
@@ -35,10 +37,32 @@ export async function POST() {
   }
 
   const origin = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
-  const stripe = getStripe()
-  const session = await stripe.billingPortal.sessions.create({
-    customer: profile.stripe_customer_id,
-    return_url: `${origin}/profile`,
-  })
-  return NextResponse.json({ url: session.url })
+  try {
+    const session = await createLegacyPortalSession(
+      {
+        userId: user.id,
+        customerId: profile.stripe_customer_id,
+        returnUrl: `${origin}/profile`,
+      },
+      {
+        readSubscriptions: async (userId) => {
+          const { data, error } = await createAdminClient()
+            .from("billing_subscriptions")
+            .select("*")
+            .eq("user_id", userId)
+            .eq("provider", "stripe")
+          if (error || !Array.isArray(data)) throw new Error("billing_lookup_failed")
+          return data
+        },
+        createSession: (params) => getStripe().billingPortal.sessions.create(params),
+      },
+    )
+    return NextResponse.json({ url: session.url })
+  } catch (error) {
+    const trial = error instanceof Error && error.message === "trial_management_required"
+    return NextResponse.json(
+      { error: trial ? "trial_management_required" : "portal_unavailable" },
+      { status: trial ? 409 : 503 },
+    )
+  }
 }

@@ -1,0 +1,20 @@
+[
+  {
+    "product": "Sant\u00e9 naturally. Shampoo Glossy Shine 250 ml",
+    "price_eur": 3.95,
+    "url": "https://www.dm.de/p/d/1334046/sante-naturally-shampoo-glossy-shine",
+    "result": "Direct PDP confirms price, GTIN 4055297220262 and buyability."
+  },
+  {
+    "product": "Sebamed Anti-Juckreiz Akut Shampoo Urea 5% 200 ml",
+    "price_eur": 5.95,
+    "url": "https://sebamed.de/de/p/anti-juckreiz-akut-shampoo-urea-5/",
+    "result": "Brand PDP confirms price, size and EAN 4103040048448; stored dm link remains unchanged."
+  },
+  {
+    "product": "Curlsmith Hydrate & Plump Leave-In",
+    "price_eur": 21,
+    "url": "https://eu.curlsmith.com/products/hydrate-plump-leave-in",
+    "result": "Brand PDP confirms EUR 21 product price; textual page lacks bottle volume, so this check does not independently confirm the size."
+  }
+]

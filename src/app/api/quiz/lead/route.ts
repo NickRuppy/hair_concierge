@@ -1,3 +1,4 @@
+import { isFunnelMetaCustomDataEnabled } from "@/lib/funnel/flags"
 import { after, NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient as createSessionClient } from "@/lib/supabase/server"
@@ -6,6 +7,12 @@ import { leadSchema } from "@/lib/quiz/validators"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import { findReusableLead } from "@/lib/quiz/lead-lifecycle"
+import {
+  QUIZ_EMAIL_RETURN_COOKIE,
+  QUIZ_EMAIL_RETURN_EDIT_COOKIE,
+  QUIZ_EMAIL_RETURN_PACKAGE_KEY,
+} from "@/lib/quiz/email-return-context"
+import { resolveQuizEmailReturnSourceIdentity } from "@/lib/quiz/email-return-server"
 import { syncQuizLeadToCustomerIo } from "@/lib/customerio/quiz-sync"
 import {
   bindRegularQuizFieldTestLead,
@@ -48,6 +55,8 @@ import {
 } from "@/lib/personal-plan/migration-quiz"
 import { isPersonalPlanLegacyMigrationEnabled } from "@/lib/personal-plan/migration-admission"
 import { resolvePartnerJourney, savePartnerAccessLead } from "@/lib/partner-access/journey"
+import { isDiscoveryCallToolkitEnabled } from "@/lib/discovery/flag"
+import { resolveDiscoveryJourney } from "@/lib/discovery/journey"
 
 const DEDUPE_WINDOW_MS = 15 * 60 * 1000
 const MAX_RECENT_DUPLICATE_CANDIDATES = 10
@@ -61,6 +70,8 @@ interface QuizLeadPostDependencies {
   saveModeratorOrganicLead: typeof saveModeratorOrganicLead
   resolvePartnerJourney: typeof resolvePartnerJourney
   savePartnerAccessLead: typeof savePartnerAccessLead
+  resolveDiscoveryJourney: typeof resolveDiscoveryJourney
+  discoveryEnabled: () => boolean
   checkRateLimit: typeof checkRateLimit
   checkEmailDeliverability: typeof checkEmailDeliverability
   recordEmailDeliverabilityOutcome: typeof recordEmailDeliverabilityOutcome
@@ -74,6 +85,7 @@ interface QuizLeadPostDependencies {
   now: () => number
   saveMigrationQuizLead: typeof saveMigrationQuizLead
   resolveFunnelCookieContext: typeof resolveFunnelCookieContext
+  resolveQuizEmailReturnSourceIdentity: typeof resolveQuizEmailReturnSourceIdentity
   resolvePendingFunnelTouchValue: typeof resolvePendingFunnelTouchValue
   recordFunnelEvent: typeof recordFunnelEvent
   syncQuizLeadToCustomerIo: typeof syncQuizLeadToCustomerIo
@@ -87,6 +99,8 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
     saveModeratorOrganicLead,
     resolvePartnerJourney,
     savePartnerAccessLead,
+    resolveDiscoveryJourney,
+    discoveryEnabled: isDiscoveryCallToolkitEnabled,
     checkRateLimit,
     checkEmailDeliverability,
     recordEmailDeliverabilityOutcome,
@@ -100,6 +114,7 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
     now: () => Date.now(),
     saveMigrationQuizLead,
     resolveFunnelCookieContext,
+    resolveQuizEmailReturnSourceIdentity,
     resolvePendingFunnelTouchValue,
     recordFunnelEvent,
     syncQuizLeadToCustomerIo,
@@ -119,6 +134,10 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
     try {
       const body = await request.json()
       const { browserEventId, funnelEventId } = resolveBrowserFunnelEventId(body)
+      const marketingConsentSource =
+        body && typeof body === "object" && body.marketingConsentSource === "inherited"
+          ? "inherited"
+          : "prompt"
       const parsed = leadSchema.parse(body)
       const email = normalizeEmail(parsed.email)
       const migrationRecovery = isMigrationRecoverySubmission(body)
@@ -142,6 +161,56 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
       const funnelContext = await dependencies.resolveFunnelCookieContext(
         cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
       )
+      // A discovery-call participant's quiz is call preparation, not a funnel
+      // lead: it never enters the dedupe pool, never reaches Customer.io or
+      // Meta, and it is identified afterwards through the enrollment's intake,
+      // not through a column on `leads`. The resolver reads the signed-in
+      // account's stamp first and only then the table, so it costs an unstamped
+      // visitor nothing.
+      //
+      // Both outcomes are decided here instead of being deferred like the
+      // partner `unavailable` below, because a discovery account can never also
+      // be a partner or a moderator: `stampDiscoveryAccess` REFUSES an account
+      // that already carries another `access_kind` rather than overwriting it,
+      // so the claim never mints an account belonging to two journeys at once.
+      //
+      // The kill switch guards the whole branch, not just its outcome: with the
+      // flag off the resolver is never called, so an ordinary lead cannot be
+      // turned into a 503 by anything discovery does or fails to do.
+      const discovery = dependencies.discoveryEnabled()
+        ? await dependencies.resolveDiscoveryJourney()
+        : ({ kind: "none" } as const)
+      if (discovery.kind === "unavailable") return discoveryUnavailableResponse()
+      if (discovery.kind === "authorized") {
+        const origin = request.headers.get("origin")
+        if (origin && origin !== new URL(request.url).origin) {
+          return NextResponse.json({ error: "Ungültige Anfrage" }, { status: 403 })
+        }
+        // Fail closed on a mismatch, exactly like the partner branch: the
+        // enrollment's address is the identity the call was booked under.
+        if (email !== discovery.enrollment.email) {
+          return NextResponse.json(
+            {
+              code: "invited_email_mismatch",
+              error: "Bitte verwende die E-Mail-Adresse deiner Einladung.",
+            },
+            { status: 422 },
+          )
+        }
+        const saved = await saveDiscoveryQuizLead({
+          client: dependencies.createAdminClient(),
+          email: discovery.enrollment.email,
+          name: discovery.enrollment.name,
+          marketingConsent: parsed.marketingConsent,
+          quizAnswers: canonicalizeQuizAnswers(parsed.quizAnswers),
+        }).catch(() => null)
+        // `journey` tells the client which journey actually saved her lead, so a stale
+        // client-side enrollment answer can never send a regular lead to the checklist.
+        return saved
+          ? NextResponse.json({ leadId: saved.leadId, journey: "discovery" })
+          : discoveryUnavailableResponse()
+      }
+
       // The partner journey resolves from the signed-in account, the moderator
       // journey from an intent cookie. A former moderator who later becomes a
       // partner still carries that cookie, and its resolver fails closed with
@@ -214,6 +283,34 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
       // branch did not claim — an entitled partner must never silently fall through
       // into the paid funnel.
       if (partner.kind === "unavailable") return partnerUnavailableResponse()
+
+      let inheritedConsentTimestamp: string | undefined
+      if (marketingConsentSource === "inherited") {
+        const returnCookieValue = cookieStore.get(QUIZ_EMAIL_RETURN_COOKIE)?.value
+        const editCookieValue = cookieStore.get(QUIZ_EMAIL_RETURN_EDIT_COOKIE)?.value
+        const source =
+          funnelContext?.packageKey === QUIZ_EMAIL_RETURN_PACKAGE_KEY &&
+          parsed.marketingConsent &&
+          returnCookieValue &&
+          editCookieValue === returnCookieValue
+            ? await dependencies.resolveQuizEmailReturnSourceIdentity(returnCookieValue)
+            : { status: "invalid" as const }
+        if (
+          source.status !== "resolved" ||
+          !source.identity.marketingConsent ||
+          normalizeEmail(source.identity.email) !== email
+        ) {
+          return NextResponse.json(
+            {
+              code: "return_consent_unavailable",
+              error: "Bitte bestätige deine Einwilligung erneut.",
+            },
+            { status: 422 },
+          )
+        }
+        inheritedConsentTimestamp = source.identity.consentTimestamp
+      }
+
       const deliverability = await dependencies.checkEmailDeliverability(email)
       dependencies.recordEmailDeliverabilityOutcome("legacy", deliverability)
       if (!deliverability.ok) {
@@ -267,17 +364,20 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
         return NextResponse.json({ error: "Speichern fehlgeschlagen" }, { status: 500 })
       }
 
-      const existingLead = findReusableLead(
-        (
-          (recentLeads as Array<{
-            id: string
-            quiz_answers: Record<string, unknown> | null
-            moderator_campaign_id?: string | null
-            partner_access_invitation_id?: string | null
-          }> | null) ?? []
-        ).filter((lead) => !lead.moderator_campaign_id && !lead.partner_access_invitation_id),
-        quizAnswers,
-      )
+      const existingLead =
+        funnelContext?.packageKey === QUIZ_EMAIL_RETURN_PACKAGE_KEY
+          ? null
+          : findReusableLead(
+              (
+                (recentLeads as Array<{
+                  id: string
+                  quiz_answers: Record<string, unknown> | null
+                  moderator_campaign_id?: string | null
+                  partner_access_invitation_id?: string | null
+                }> | null) ?? []
+              ).filter((lead) => !lead.moderator_campaign_id && !lead.partner_access_invitation_id),
+              quizAnswers,
+            )
 
       if (existingLead) {
         const createdAt = new Date().toISOString()
@@ -337,6 +437,7 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
             leadId: existingLead.id,
             name: parsed.name,
             requestData: metaUserRequestData,
+            funnelPackageKey: funnelContext?.packageKey,
           })
         }
 
@@ -393,6 +494,7 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
         dependencies.scheduleAfter(() =>
           dependencies.syncQuizLeadToCustomerIo({
             createdAt,
+            consentTimestamp: inheritedConsentTimestamp,
             email: deliverableEmail,
             leadId: data.id,
             marketingConsent: parsed.marketingConsent,
@@ -409,6 +511,7 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
           leadId: data.id,
           name: parsed.name,
           requestData: metaUserRequestData,
+          funnelPackageKey: funnelContext?.packageKey,
         })
       }
 
@@ -431,6 +534,7 @@ export type MetaLeadEnqueueInput = {
   eventTime: string
   email: string
   eventSourceUrl?: string
+  funnelPackageKey?: string
   leadId: string
   name: string
   requestData: MetaRequestData
@@ -449,6 +553,7 @@ export function enqueueMetaLead(
     eventTime,
     email,
     eventSourceUrl,
+    funnelPackageKey,
     leadId,
     name,
     requestData,
@@ -465,6 +570,9 @@ export function enqueueMetaLead(
       eventId: browserEventId,
       eventSourceUrl: eventSourceUrl ?? META_QUIZ_EVENT_SOURCE_URL,
       eventTime: new Date(eventTime),
+      ...(isFunnelMetaCustomDataEnabled() && funnelPackageKey
+        ? { customData: { funnel_package_key: funnelPackageKey } }
+        : {}),
       user: {
         email,
         name,
@@ -603,6 +711,38 @@ function fieldTestUnavailableResponse() {
 
 function partnerUnavailableResponse() {
   return NextResponse.json({ error: "Dein Zugang ist nicht verfügbar" }, { status: 503 })
+}
+
+function discoveryUnavailableResponse() {
+  return NextResponse.json({ error: "Deine Einladung ist nicht verfügbar" }, { status: 503 })
+}
+
+/**
+ * A fresh legacy lead for the participant, always inserted, never deduped: the
+ * checklist binds exactly this lead to the enrollment's intake, so handing back
+ * a stranger's recent row would bind the wrong answers. Name and e-mail come
+ * from the enrollment, not from the submitted body.
+ */
+export async function saveDiscoveryQuizLead(input: {
+  client: ReturnType<typeof createAdminClient>
+  email: string
+  name: string
+  marketingConsent: boolean
+  quizAnswers: QuizAnswers
+}) {
+  const { data, error } = await input.client
+    .from("leads")
+    .insert({
+      name: input.name,
+      email: input.email,
+      marketing_consent: input.marketingConsent,
+      quiz_answers: input.quizAnswers,
+      status: "captured",
+    })
+    .select("id")
+    .single()
+  if (error || !data?.id) throw error ?? new Error("Discovery lead save failed")
+  return { leadId: data.id as string }
 }
 
 function leadResponse(leadId: string, clearTouch: boolean, fieldTestAttached?: boolean) {

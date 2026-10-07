@@ -26,14 +26,19 @@ import {
 } from "@/lib/billing/purchases"
 import type { BillingOneTimePurchaseRow } from "@/lib/billing/types"
 import { applyPlanChangeAtRenewal } from "@/lib/billing/plan-change"
+import { resolveTrialAccess } from "@/lib/billing/trial-policy"
+import { readTrialEffectiveContract } from "@/lib/billing/trial-effective-contract"
 
 export type HandlerDeps = CheckoutActivationDeps
 type SubscriptionUpdateDeps = Pick<HandlerDeps, "supabase"> & {
+  stripe?: Pick<Stripe, "subscriptions">
   defer?: (work: () => void | Promise<void>) => void
 }
 type SubscriptionLifecycleResult = {
   matchedCurrentSubscription: boolean
   profileId?: string
+  /** Present when a trial-cohort event was consumed outside legacy lifecycle analytics. */
+  trialEnrollmentId?: string
 }
 
 function stripeObjectId(value: string | { id?: string } | null | undefined): string | null {
@@ -549,6 +554,8 @@ interface UpdatedSub {
   current_period_end?: number
   cancel_at_period_end?: boolean
   cancel_at?: number | null
+  cancellation_details?: { comment?: string | null } | null
+  metadata?: Record<string, string> | null
   items: {
     data: Array<{
       current_period_end?: number
@@ -562,12 +569,378 @@ interface UpdatedSub {
   }
 }
 
+type TrialEnrollmentLifecycleRow = {
+  id: string
+  user_id: string | null
+  provider: string
+  provider_agreement_id: string | null
+  accepted_offer: unknown
+  admission_status: "reserved" | "active" | "blocked" | "released"
+  authorization_succeeded_at: string | null
+  original_trial_end_at: string | null
+  first_payment_succeeded_at: string | null
+  paid_through_at: string | null
+  renewal_grace_ends_at: string | null
+  renewal_payment_failed: boolean
+  cancel_at_period_end: boolean
+  access_revoked: boolean
+}
+
+function trialMarkerEnrollmentId(
+  metadata: Record<string, string> | null | undefined,
+): string | null {
+  if (!metadata) return null
+  if (!Object.keys(metadata).some((key) => key.startsWith("trial_"))) return null
+  const cohort = metadata.trial_cohort
+  const enrollmentId = metadata.trial_enrollment_id
+  return cohort === "trial_v1" && typeof enrollmentId === "string" && enrollmentId.trim()
+    ? enrollmentId
+    : ""
+}
+
+function cancellationSchedule(
+  s: UpdatedSub,
+  periodEnd: string,
+): {
+  cancelAtPeriodEnd: boolean
+  cancelScheduledAt: string | null
+} {
+  return {
+    cancelAtPeriodEnd: Boolean(s.cancel_at_period_end || s.cancel_at != null),
+    cancelScheduledAt:
+      typeof s.cancel_at === "number"
+        ? new Date(s.cancel_at * 1000).toISOString()
+        : s.cancel_at_period_end
+          ? periodEnd
+          : null,
+  }
+}
+
+/**
+ * Trial subscriptions have their own authoritative enrollment projection. A provider
+ * `active` status only says Stripe has an agreement; it never establishes the first
+ * paid period. This adapter deliberately handles malformed or mismatched markers as
+ * trial events too, so they cannot fall through into legacy profile writes.
+ */
+async function handleTrialSubscriptionLifecycle(
+  s: UpdatedSub,
+  deps: SubscriptionUpdateDeps,
+  input: { deleted: boolean },
+): Promise<SubscriptionLifecycleResult | null> {
+  let existingBilling = await findBillingSubscriptionByProviderId(deps.supabase, "stripe", s.id)
+  const markerEnrollmentId = trialMarkerEnrollmentId(s.metadata)
+  let continuation: {
+    enrollment_id: string
+    original_agreement_id: string
+    customer_id: string
+  } | null = null
+  if (
+    !existingBilling &&
+    markerEnrollmentId &&
+    (s.metadata?.trial_continuation_operation_id || s.metadata?.trial_paid_recovery_operation_id)
+  ) {
+    const linked = await deps.supabase.rpc("lookup_trial_paid_continuation", {
+      p_provider: "stripe",
+      p_agreement_id: s.id,
+    })
+    if (linked.error) throw linked.error
+    const value = linked.data
+    if (
+      value &&
+      value.enrollment_id === markerEnrollmentId &&
+      value.continuation_agreement_id === s.id &&
+      value.customer_id === s.customer &&
+      typeof value.original_agreement_id === "string"
+    ) {
+      continuation = value
+      existingBilling = await findBillingSubscriptionByProviderId(
+        deps.supabase,
+        "stripe",
+        value.original_agreement_id,
+      )
+    }
+  }
+  // A restored agreement keeps the original billing row and immutable enrollment root.
+  if (!existingBilling && markerEnrollmentId) {
+    const root = await deps.supabase
+      .from("trial_enrollments")
+      .select("provider,provider_agreement_id")
+      .eq("id", markerEnrollmentId)
+      .maybeSingle()
+    if (root.error) throw root.error
+    if (root.data?.provider === "stripe" && root.data.provider_agreement_id) {
+      const current = await readTrialEffectiveContract(deps.supabase, markerEnrollmentId)
+      if (current.provider === "stripe" && current.agreementId === s.id) {
+        existingBilling = await findBillingSubscriptionByProviderId(
+          deps.supabase,
+          "stripe",
+          root.data.provider_agreement_id,
+        )
+      }
+    }
+  }
+  const linkedEnrollmentId = existingBilling?.trial_enrollment_id
+  if (markerEnrollmentId === null && !linkedEnrollmentId) return null
+
+  // Empty string is the explicit invalid-marker sentinel. Do not permit a partial
+  // marker to become a legacy subscription, and do not create a row before activation.
+  if (
+    !existingBilling ||
+    !linkedEnrollmentId ||
+    markerEnrollmentId === "" ||
+    (markerEnrollmentId && linkedEnrollmentId && markerEnrollmentId !== linkedEnrollmentId)
+  ) {
+    console.error("[stripe] trial subscription lifecycle marker is incomplete or unlinked", {
+      subscriptionId: s.id,
+    })
+    return {
+      matchedCurrentSubscription: false,
+      ...(linkedEnrollmentId ? { trialEnrollmentId: linkedEnrollmentId } : {}),
+    }
+  }
+
+  const enrollmentId = linkedEnrollmentId
+  const { data: enrollment, error } = await deps.supabase
+    .from("trial_enrollments")
+    .select(
+      "id,user_id,provider,provider_agreement_id,accepted_offer,admission_status,authorization_succeeded_at,original_trial_end_at,first_payment_succeeded_at,paid_through_at,renewal_grace_ends_at,renewal_payment_failed,cancel_at_period_end,access_revoked",
+    )
+    .eq("id", enrollmentId)
+    .maybeSingle()
+  if (error) throw error
+
+  const price = s.items.data[0]?.price
+  const interval = price
+    ? intervalFromPrice({
+        interval: price.recurring?.interval ?? price.interval ?? "",
+        interval_count: price.recurring?.interval_count ?? price.interval_count ?? 1,
+      })
+    : existingBilling.interval
+  const trialEnrollment = enrollment as TrialEnrollmentLifecycleRow | null
+  const ownerMatches = trialEnrollment?.user_id === existingBilling.user_id
+  const contract =
+    trialEnrollment && ownerMatches && trialEnrollment.admission_status === "active"
+      ? await readTrialEffectiveContract(deps.supabase, enrollmentId)
+      : null
+  const offer = contract?.offer ?? null
+  const agreementMatches = continuation
+    ? enrollment?.provider_agreement_id === continuation.original_agreement_id
+    : contract?.agreementId === s.id
+  const providerMatches = enrollment?.provider === "stripe"
+  const priceMatches =
+    !price || (offer !== null && offer.stripePriceId === price.id && offer.interval === interval)
+  if (
+    !trialEnrollment ||
+    !ownerMatches ||
+    !agreementMatches ||
+    !providerMatches ||
+    !offer ||
+    !priceMatches ||
+    trialEnrollment.admission_status !== "active" ||
+    trialEnrollment.access_revoked ||
+    trialEnrollment.user_id === null ||
+    existingBilling.provider_customer_id !== s.customer
+  ) {
+    console.error("[stripe] trial subscription lifecycle enrollment mismatch", {
+      subscriptionId: s.id,
+      enrollmentId,
+    })
+    return { matchedCurrentSubscription: false, trialEnrollmentId: enrollmentId }
+  }
+
+  const providerCancellation =
+    input.deleted || Boolean(s.cancel_at_period_end || s.cancel_at != null)
+  const recoveryOperationId = s.metadata?.trial_paid_recovery_operation_id
+  if (
+    providerCancellation &&
+    recoveryOperationId &&
+    s.cancellation_details?.comment === `trial-paid-recovery:${recoveryOperationId}` &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(recoveryOperationId)
+  ) {
+    const technical = await deps.supabase.rpc("is_trial_paid_recovery_source_cancellation", {
+      p_enrollment_id: enrollmentId,
+      p_source_agreement_id: s.id,
+      p_customer_id: existingBilling.provider_customer_id,
+      p_operation_id: recoveryOperationId,
+    })
+    if (technical.error) throw technical.error
+    if (technical.data === true)
+      return { matchedCurrentSubscription: false, trialEnrollmentId: enrollmentId }
+  }
+  const operationId = s.metadata?.trial_continuation_operation_id
+  if (
+    providerCancellation &&
+    !continuation &&
+    operationId &&
+    s.cancellation_details?.comment === `trial-paid-continuation:${operationId}` &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(operationId)
+  ) {
+    const repair = await deps.supabase.rpc("is_trial_continuation_source_cancellation", {
+      p_enrollment_id: enrollmentId,
+      p_original_agreement_id: s.id,
+      p_customer_id: existingBilling.provider_customer_id,
+      p_operation_id: operationId,
+    })
+    if (repair.error) throw repair.error
+    if (repair.data === true) {
+      // This source agreement was replaced to honor the already paid period.
+      // Its cancellation is not the customer's cancellation of membership.
+      return { matchedCurrentSubscription: false, trialEnrollmentId: enrollmentId }
+    }
+  }
+  // Read local generations BEFORE refreshing Stripe. Reading a generation only
+  // after the route's provider fetch still permits a restore to race that fetch.
+  if (providerCancellation) {
+    const identity = {
+      p_enrollment_id: enrollmentId,
+      p_agreement_id: s.id,
+      p_customer_id: existingBilling.provider_customer_id,
+      p_user_id: existingBilling.user_id,
+    }
+    const captured = await deps.supabase.rpc("read_stripe_trial_cancellation_fence", identity)
+    if (captured.error) throw captured.error
+    const fence = captured.data
+    if (
+      !fence ||
+      !Number.isSafeInteger(fence.revision) ||
+      !Number.isSafeInteger(fence.cancellationVersion)
+    )
+      return { matchedCurrentSubscription: false, trialEnrollmentId: enrollmentId }
+    const stripe = deps.stripe ?? (await import("./client")).getStripe()
+    const current = await stripe.subscriptions.retrieve(s.id, { expand: ["items.data.price"] })
+    const currentPrice = current.items.data[0]?.price
+    if (
+      current.id !== s.id ||
+      stripeObjectId(current.customer) !== existingBilling.provider_customer_id ||
+      trialMarkerEnrollmentId(current.metadata) !== enrollmentId ||
+      currentPrice?.id !== offer.stripePriceId ||
+      !(current.status === "canceled" || current.cancel_at_period_end || current.cancel_at != null)
+    ) {
+      // The provider read itself observed the restore; do not mirror the old event.
+      return { matchedCurrentSubscription: false, trialEnrollmentId: enrollmentId }
+    }
+    // A technical neutralization may have happened during the fresh provider
+    // read as well. Its exact marker still must never become customer cancellation.
+    const currentRecovery = current.metadata.trial_paid_recovery_operation_id
+    const currentRepair = current.metadata.trial_continuation_operation_id
+    for (const [operation, comment, rpc, agreementKey] of [
+      [
+        currentRecovery,
+        "trial-paid-recovery",
+        "is_trial_paid_recovery_source_cancellation",
+        "p_source_agreement_id",
+      ],
+      [
+        currentRepair,
+        "trial-paid-continuation",
+        "is_trial_continuation_source_cancellation",
+        "p_original_agreement_id",
+      ],
+    ]) {
+      if (
+        !operation ||
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(operation) ||
+        current.cancellation_details?.comment !== `${comment}:${operation}`
+      )
+        continue
+      const technical = await deps.supabase.rpc(rpc, {
+        p_enrollment_id: enrollmentId,
+        [agreementKey]: current.id,
+        p_customer_id: existingBilling.provider_customer_id,
+        p_operation_id: operation,
+      })
+      if (technical.error) throw technical.error
+      if (technical.data === true)
+        return { matchedCurrentSubscription: false, trialEnrollmentId: enrollmentId }
+    }
+    const confirmed = await deps.supabase.rpc("confirm_stripe_trial_cancellation", {
+      ...identity,
+      p_expected_revision: fence.revision,
+      p_expected_cancellation_version: fence.cancellationVersion,
+    })
+    if (confirmed.error) throw confirmed.error
+    if (!confirmed.data) {
+      // A restore or a newer declaration won after our read. It owns the state,
+      // including billing/profile mirrors; this stale snapshot performs no writes.
+      return { matchedCurrentSubscription: false, trialEnrollmentId: enrollmentId }
+    }
+    Object.assign(trialEnrollment, confirmed.data)
+    s = current as unknown as UpdatedSub
+  }
+
+  // Provider periods can be schedule/transition artifacts. The enrollment owns the
+  // only customer-facing trial or paid boundary and must be present before any mirror.
+  const periodEnd = trialEnrollment.paid_through_at ?? trialEnrollment.original_trial_end_at
+  if (!periodEnd) {
+    console.error("[stripe] trial subscription lifecycle has no canonical access boundary", {
+      subscriptionId: s.id,
+      enrollmentId,
+    })
+    return { matchedCurrentSubscription: false, trialEnrollmentId: enrollmentId }
+  }
+  const cancellation = cancellationSchedule(s, periodEnd)
+  const cancelAtPeriodEnd =
+    trialEnrollment.cancel_at_period_end ||
+    cancellation.cancelAtPeriodEnd ||
+    existingBilling.cancel_at_period_end
+  await upsertBillingSubscription(deps.supabase, {
+    user_id: existingBilling.user_id,
+    provider: "stripe",
+    provider_customer_id:
+      typeof s.customer === "string" ? s.customer : existingBilling.provider_customer_id,
+    provider_subscription_id: existingBilling.provider_subscription_id,
+    provider_status: input.deleted ? (s.status ?? "canceled") : s.status,
+    // The enrollment projection, not the provider's ACTIVE status, controls access.
+    entitlement_status: existingBilling.entitlement_status,
+    interval: interval ?? null,
+    current_period_end: periodEnd,
+    cancel_at_period_end: cancelAtPeriodEnd,
+    cancel_scheduled_at: cancelAtPeriodEnd ? periodEnd : null,
+    ...(input.deleted ? { cancelled_at: new Date().toISOString() } : {}),
+    metadata: { ...existingBilling.metadata },
+  })
+
+  const access = resolveTrialAccess(
+    {
+      authorizationSucceededAt: trialEnrollment.authorization_succeeded_at,
+      originalTrialEndAt: trialEnrollment.original_trial_end_at,
+      firstPaymentSucceededAt: trialEnrollment.first_payment_succeeded_at,
+      paidThroughAt: trialEnrollment.paid_through_at,
+      renewalGraceEndsAt: trialEnrollment.renewal_grace_ends_at,
+      renewalPaymentFailed: trialEnrollment.renewal_payment_failed,
+      cancelAtPeriodEnd: trialEnrollment.cancel_at_period_end,
+      accessRevoked: trialEnrollment.access_revoked,
+    },
+    new Date(),
+  )
+  const profile = await findProfileByStripeCustomerId(
+    deps.supabase,
+    typeof s.customer === "string" ? s.customer : "",
+  )
+  if (profile?.id === existingBilling.user_id && profile.stripe_subscription_id === s.id) {
+    await updateProfileForCurrentSubscription(deps, {
+      profileId: profile.id,
+      subscriptionId: s.id,
+      // Preserve the activation's premium tier and original deadline. The billing
+      // projection blocks legacy fallback; this mirror only keeps existing surfaces
+      // coherent through a cancelled-but-still-valid trial or paid period.
+      patch: {
+        subscription_status: access?.hasAccess ? "active" : "canceled",
+        subscription_interval: interval ?? null,
+      },
+    })
+  }
+  return { matchedCurrentSubscription: false, trialEnrollmentId: enrollmentId }
+}
+
 export async function handleSubscriptionUpdated(
   sub: Stripe.Subscription,
   deps: SubscriptionUpdateDeps,
 ): Promise<SubscriptionLifecycleResult> {
   const s = sub as unknown as UpdatedSub
   if (typeof s.customer !== "string") throw new Error("sub.customer not a string")
+  const trialResult = await handleTrialSubscriptionLifecycle(s, deps, { deleted: false })
+  if (trialResult) return trialResult
   const profile = await findProfileByStripeCustomerId(deps.supabase, s.customer)
   if (!profile) return handleSubscriptionUpdatedWithoutMatchedProfile(s, s.customer, deps)
   const price = s.items.data[0].price
@@ -677,6 +1050,7 @@ async function handleSubscriptionUpdatedWithoutMatchedProfile(
 }
 
 export interface DeleteDeps {
+  stripe?: Pick<Stripe, "subscriptions">
   supabase: HandlerDeps["supabase"]
   freeTierId: string
 }
@@ -687,6 +1061,10 @@ export async function handleSubscriptionDeleted(
 ): Promise<SubscriptionLifecycleResult> {
   const customer = typeof sub.customer === "string" ? sub.customer : null
   if (!customer) throw new Error("sub.customer not a string")
+  const trialResult = await handleTrialSubscriptionLifecycle(sub as unknown as UpdatedSub, deps, {
+    deleted: true,
+  })
+  if (trialResult) return trialResult
   const profile = await findProfileByStripeCustomerId(deps.supabase, customer)
   if (!profile) return { matchedCurrentSubscription: false }
   const matchedCurrentSubscription =

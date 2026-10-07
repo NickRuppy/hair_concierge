@@ -1,0 +1,144 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chaarlie · Jonas Landing, mobil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#FDFBF9;--card:#FFFFFF;--ink:#2A1845;--ink-2:#5B4A78;--muted:#8A7BA3;--rule:#E7E1D8;
+  --lilac:#6B50A0;--lilac-soft:#C8B8E0;--lilac-wash:#EEE9F6;--coral:#D4616A;--coral-wash:#FBE9EA;
+  --green:#3C7D5A;--green-wash:#E6F2EA;--red:#9B2C3B;
+  --f-display:"Fraunces",Georgia,serif;--f-body:"Plus Jakarta Sans",-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html{color-scheme:light}
+body{margin:0;background:#EFEAF4;color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.stage{max-width:1100px;margin:0 auto;padding:24px 20px 60px;display:grid;grid-template-columns:420px 1fr;gap:32px;align-items:start}
+@media (max-width:860px){.stage{grid-template-columns:1fr}}
+.phone{background:var(--paper);border:10px solid #1B1426;border-radius:44px;overflow:hidden;min-height:760px;position:relative;box-shadow:0 30px 60px rgba(42,24,69,.2);display:flex;flex-direction:column}
+.bar{display:flex;justify-content:space-between;font-size:12px;font-weight:600;padding:12px 24px 0}
+.screen{display:none;flex:1;flex-direction:column;padding:16px 20px 22px;animation:in .35s ease}
+.screen.on{display:flex}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.progress{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.progress .track{flex:1;height:4px;background:var(--lilac-wash);border-radius:99px;overflow:hidden}
+.progress .track i{display:block;height:100%;background:var(--lilac);width:var(--p)}
+.progress small{font-size:12px;color:var(--muted)}
+.hint{background:var(--lilac-wash);border-radius:12px;padding:10px 12px;font-size:13px;color:var(--ink);margin-bottom:14px;display:flex;gap:8px}
+.hint b{font-weight:700}
+h1,h2{font-family:var(--f-display);font-weight:500;line-height:1.1;text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:30px}h2{font-size:24px}
+p{margin:8px 0 0;color:var(--ink-2);font-size:14.5px}
+.opts{display:grid;gap:8px;margin-top:16px}
+.opt{border:1.5px solid var(--rule);background:var(--card);border-radius:14px;padding:12px 14px;text-align:left;font:inherit;cursor:pointer;color:var(--ink)}
+.opt b{display:block;font-size:15px}.opt span{font-size:12.5px;color:var(--muted)}
+.opt.sel{border-color:var(--lilac);background:#F6F3FB}
+.opt:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
+.cta{display:block;width:100%;background:var(--coral);color:#fff;text-align:center;font:inherit;font-weight:700;font-size:15px;padding:14px;border-radius:14px;margin-top:auto;border:0;cursor:pointer}
+.cta.ghost{background:transparent;color:var(--lilac);border:1.5px solid var(--lilac-soft);margin-top:8px}
+.cta.lilac{background:var(--lilac)}
+.axes{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
+.axes div{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:6px 6px;font-size:10px;color:var(--muted);text-align:center;line-height:1.2}
+.axes div b{display:block;font-size:11px;color:var(--ink);margin-bottom:2px}
+.axes div.done{border-color:var(--green);background:var(--green-wash);color:var(--green)}
+.axes div.done b{color:var(--green)}
+.toast{position:absolute;left:20px;right:20px;bottom:90px;background:var(--ink);color:#fff;border-radius:14px;padding:12px 14px;font-size:13.5px;opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s;pointer-events:none;z-index:4}
+.toast.show{opacity:1;transform:none}
+.toast b{color:#C8B8E0}
+.ey{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--lilac);font-weight:700;margin-bottom:8px}
+.hero-scan{margin:18px 0 6px;border-radius:18px;overflow:hidden;position:relative;background:#000;aspect-ratio:1254/790}
+.hero-scan img{width:100%;height:100%;object-fit:cover;display:block}
+.scanline{position:absolute;left:41%;right:37%;height:2px;background:#fff;box-shadow:0 0 12px #fff;top:22%;animation:scan 2.4s ease-in-out infinite}
+@keyframes scan{0%{top:22%}50%{top:62%}100%{top:22%}}
+.brk{display:none}
+.pop{position:absolute;left:12px;right:12px;bottom:12px;background:#fff;border-radius:14px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;animation:pop 4.8s ease-in-out infinite}
+@keyframes pop{0%,45%{opacity:0;transform:translateY(10px)}55%,95%{opacity:1;transform:none}100%{opacity:0}}
+.pop b{font-size:13px;color:var(--red)}.pop span{font-size:11px;color:var(--muted);display:block}
+.pop i{font-style:normal;font-size:11px;font-weight:700;background:var(--coral-wash);color:var(--red);padding:3px 8px;border-radius:999px}
+.meta{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:10px}
+.meta span::before{content:"✓ ";color:var(--green)}
+.demo{border-radius:18px;overflow:hidden;position:relative;background:#000;aspect-ratio:1254/790;margin-top:14px}
+.demo img{width:100%;height:100%;object-fit:cover;display:block;transition:filter .4s}
+.demo .scanline{display:none}
+.demo.scanning .scanline{display:block;animation:scan 1s ease-in-out 2}
+.demo.done img{filter:brightness(.45)}
+.demo .result{position:absolute;left:10px;right:10px;bottom:10px;background:#fff;border-radius:16px;padding:12px;transform:translateY(120%);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.demo.done .result{transform:none}
+.result .badge{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--lilac-wash);color:var(--lilac);padding:3px 8px;border-radius:999px;float:right}
+.result b{display:block;font-size:14px;line-height:1.2}
+.result small{color:var(--muted);font-size:11.5px}
+.result .v{margin-top:8px;background:var(--coral-wash);color:var(--red);border-radius:10px;padding:8px 10px;font-size:13px;font-weight:700}
+.result .v span{display:block;font-weight:400;font-size:11.5px}
+.result .ax{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px;font-size:11px}
+.result .ax div{background:var(--paper);border-radius:8px;padding:5px 8px;display:flex;justify-content:space-between}
+.ok{color:var(--green);font-weight:700}.no{color:var(--red);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}
+.chip{background:var(--card);border:1px solid var(--rule);border-radius:999px;padding:5px 10px;font-size:12px;font-weight:600}
+.chip small{font-weight:400;color:var(--muted);margin-right:3px}
+.field{border:1.5px solid var(--rule);background:var(--card);border-radius:14px;padding:13px 14px;font:inherit;font-size:15px;width:100%;margin-top:14px;color:var(--ink)}
+.field::placeholder{color:var(--muted)}
+.fine{font-size:11.5px;color:var(--muted);margin-top:8px}
+.reveal{display:grid;gap:10px;margin-top:20px}
+.reveal div{display:flex;gap:10px;align-items:center;font-size:14px;color:var(--muted)}
+.reveal div i{width:18px;height:18px;border-radius:50%;border:2px solid var(--lilac-soft);flex:none;display:grid;place-items:center;font-size:10px;font-style:normal}
+.reveal div.done{color:var(--ink)}
+.reveal div.done i{background:var(--green);border-color:var(--green);color:#fff}
+.guess{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:16px}
+.guess .opt{text-align:center}
+.answer{background:var(--card);border:1px solid var(--rule);border-radius:16px;padding:14px;margin-top:14px;display:none}
+.answer.show{display:block;animation:in .35s ease}
+.answer b{font-family:var(--f-display);font-weight:500;font-size:22px;display:block;line-height:1.15}
+.answer p{font-size:13.5px}
+
+/* Notizen rechts */
+.notes{font-size:15px}
+.notes h1{font-size:30px;margin-bottom:6px}
+.notes .lede{color:var(--ink-2);max-width:60ch}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0 14px}
+.tabs button{font:inherit;font-size:12.5px;font-weight:600;border:1.5px solid var(--rule);background:#fff;border-radius:999px;padding:6px 11px;cursor:pointer;color:var(--ink-2)}
+.tabs button.on{border-color:var(--lilac);background:var(--lilac);color:#fff}
+.note{display:none;background:#fff;border:1px solid var(--rule);border-radius:18px;padding:18px 20px}
+.note.on{display:block}
+.note h2{font-size:22px;margin-bottom:6px}
+.note .src{font-size:12px;color:var(--lilac);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.note p{font-size:14.5px;max-width:62ch}
+.note ul{margin:8px 0 0;padding-left:18px;font-size:14px;color:var(--ink-2)}
+.note li{margin:4px 0}
+.note .why{margin-top:10px;background:var(--lilac-wash);border-radius:12px;padding:10px 12px;font-size:13.5px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+
+<style>
+body{background:var(--paper)}
+.landing{max-width:560px;margin:0 auto}
+.landing-hero{height:100vh;height:100svh;min-height:630px;padding:24px 22px max(20px,env(safe-area-inset-bottom));animation:none}
+.landing-hero>*{flex-shrink:0}
+.landing-hero .hero-scan{flex:1;min-height:200px;aspect-ratio:auto;margin:18px 0 6px;container-type:size}
+.scan-visual{position:absolute;width:max(100cqw,158.735cqh);height:max(100cqh,63cqw);left:50%;top:50%;transform:translate(-50%,-50%)}
+.landing-hero .meta{justify-content:center;gap:14px;margin-top:12px}
+.landing-hero .cta{margin-top:16px;min-height:54px}
+button:focus-visible{outline:2px solid var(--lilac);outline-offset:4px}
+.notice{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:calc(100% - 32px);width:360px;border-radius:12px;background:var(--ink);color:#fff;padding:14px 16px;font-size:13px;box-shadow:0 8px 30px #2a18452a;z-index:20}.notice[hidden]{display:none}
+@media(max-height:700px){.landing-hero{padding-top:18px;padding-bottom:16px;min-height:580px}.landing-hero h1{font-size:27px}.landing-hero p{font-size:13px}.landing-hero .hero-scan{margin-top:14px;min-height:170px}.landing-hero .cta{margin-top:12px;min-height:50px}}
+@media(min-width:700px){.landing-hero{padding-top:30px}h1{font-size:36px}}
+</style>
+</head><body><main class="landing">  <div class="screen on landing-hero">
+    <div class="ey">Haartest + Produkt-Scanner</div>
+    <h1>Finde raus, welche Produkte zu deinem Haar passen.</h1>
+    <p>10 Fragen zu deinem Haar. Danach zeigt dir der Scanner, ob die Produkte in deinem Bad und im Regal zu dir passen.</p>
+    <div class="hero-scan">
+      <div class="scan-visual"><img src="photo-scanner-shelf.webp" width="1254" height="790" alt="Hand hält das Handy im Drogerie-Regal, der Scanner erkennt ein Balea-Shampoo">
+      <div class="brk tl"></div><div class="brk tr"></div><div class="brk bl"></div><div class="brk br"></div>
+      <div class="scanline"></div></div>
+      <div class="pop"><div><b>Passt nicht zu trockener Kopfhaut</b><span>1 von 2 Kriterien</span></div><i>Beispiel</i></div>
+    </div>
+    <div class="meta"><span>10 Fragen</span><span>2 Minuten</span><span>Kostenlos</span></div>
+    <button class="cta" data-start>Haartest starten</button>
+  </div>
+
+</main><aside class="notice" role="status" hidden></aside><script>
+const notice=document.querySelector('.notice');let timer;
+document.addEventListener('click',event=>{const target=event.target.closest('button,a');if(!target)return;event.preventDefault();notice.textContent=target.hasAttribute('data-start')?'Hier startet das bestehende Quiz. Diese Ansicht ist nur eine Designvorschau.':'Dieser Link bleibt in der Designvorschau inaktiv.';notice.hidden=false;clearTimeout(timer);timer=setTimeout(()=>notice.hidden=true,3500)});
+</script></body></html>

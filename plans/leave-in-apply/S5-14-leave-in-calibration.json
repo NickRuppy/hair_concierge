@@ -1,0 +1,125 @@
+{
+  "schema_version": "personal-plan-stage5-protocol-research-v1",
+  "batch_id": "S5-14-leave-in-calibration",
+  "category_key": "leave_in",
+  "products": [
+    {
+      "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "product_name": "Neqi Diamond Glass Ultimate Styling Spray",
+      "role": "post_wash_leave_in",
+      "research_status": "blocked_identity_or_commercial",
+      "sources": [
+        {
+          "label": "Neqi Produktseite",
+          "url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+          "text": "Das Haar in Abschnitte unterteilen. Das Spray großzügig und gleichmäßig auf das handtuchtrockene (nicht nasse) Haar sprühen. Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-09-03"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Katalog-origin ist user_submitted; die Stage-5-Protokoll-Lane akzeptiert nur curated Produkte (product_origin_mismatch). Die ausformulierten Protokollzeilen liegen in plans/leave-in-apply/leave-in-research-enrichment-manifest.json unter authored_protocols."
+      ]
+    },
+    {
+      "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "product_name": "Neqi Diamond Glass Ultimate Styling Spray",
+      "role": "pre_heat_protection",
+      "research_status": "blocked_identity_or_commercial",
+      "sources": [
+        {
+          "label": "Neqi Produktseite",
+          "url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+          "text": "Das Haar in Abschnitte unterteilen. Das Spray großzügig und gleichmäßig auf das handtuchtrockene (nicht nasse) Haar sprühen. Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-09-03"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": null,
+      "blockers": [
+        "Katalog-origin ist user_submitted; die Stage-5-Protokoll-Lane akzeptiert nur curated Produkte (product_origin_mismatch). Die ausformulierten Protokollzeilen liegen in plans/leave-in-apply/leave-in-research-enrichment-manifest.json unter authored_protocols."
+      ]
+    },
+    {
+      "product_id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+      "product_name": "Redken Extreme Anti-Snap",
+      "role": "pre_heat_protection",
+      "research_status": "verified",
+      "sources": [
+        {
+          "label": "Redken Produktseite (DE)",
+          "url": "https://www.redken.eu/de-de/produkte/haarpflege/extreme/extreme-anti-snap",
+          "text": "Nach dem Extreme Shampoo und Conditioner anwenden. Ins handtuchtrockenen Haar geben. Nicht ausspuelen. Wie gewohnt stylen.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-09-13"
+        }
+      ],
+      "cadence": null,
+      "guidance_payload": {
+        "schemaVersion": 1,
+        "guidanceKey": "product-leave-in-2b7db7e3-2058-4178-8a03-7d05f4a1d447-pre-heat",
+        "protocolVersion": 1,
+        "locale": "de",
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "2b7db7e3-2058-4178-8a03-7d05f4a1d447"
+        },
+        "role": "heat_protection",
+        "applicationFamily": "pre_heat_damp",
+        "compatibleDayTypes": [
+          "styling_day"
+        ],
+        "exactGuidanceRequired": true,
+        "sequence": {
+          "anchor": "damp_leave_on",
+          "before": [
+            "heat_tool"
+          ],
+          "after": [],
+          "conflictsWith": []
+        },
+        "requirements": {
+          "requiredCatalogFacts": [],
+          "requiredProtocolFacts": [],
+          "requiredProfileFacts": []
+        },
+        "protocolFacts": {
+          "applicationArea": "lengths_ends",
+          "rinse": "leave_in",
+          "contactTimeSeconds": null,
+          "conditionerRelationship": "not_applicable",
+          "reapplication": "each_separate_heat_event",
+          "amount": {
+            "kind": "qualitative",
+            "copyDe": "Gleichmäßig sprühen."
+          },
+          "cautions": []
+        },
+        "steps": [
+          {
+            "stepKey": "apply-pre-heat",
+            "action": "apply_product",
+            "copyTemplateDe": "Vor dem Hitzestyling gleichmäßig ins handtuchtrockene Haar sprühen, in Längen und Spitzen verteilen und durchkämmen – nur Strähnen mit Produkt sind geschützt."
+          },
+          {
+            "stepKey": "tool-pre-heat",
+            "action": "tool",
+            "copyTemplateDe": "Danach wie gewohnt mit Wärme stylen. Glätteisen oder Lockenstab nur auf komplett trockenem Haar verwenden. Vor jedem weiteren Hitzestyling erneut auftragen."
+          }
+        ],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.redken.eu/de-de/produkte/haarpflege/extreme/extreme-anti-snap",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-09-13"
+          }
+        ]
+      },
+      "blockers": []
+    }
+  ]
+}

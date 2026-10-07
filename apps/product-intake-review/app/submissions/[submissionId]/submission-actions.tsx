@@ -526,7 +526,7 @@ export function SubmissionActions({
             <div className="cardActions">
               {imageSelected ? (
                 <button className="completedButton" type="button" disabled>
-                  Rohbild freigegeben
+                  Bildquelle vorbereitet
                 </button>
               ) : (
                 <button
@@ -551,10 +551,10 @@ export function SubmissionActions({
             </div>
           }
           status={imageSelected ? "done" : imageResearched ? "active" : "pending"}
-          title="1. Bild auswaehlen"
+          title="1. Bildquelle"
         >
           {imageSelected
-            ? "Rohbild ist ausgewaehlt."
+            ? "Rohbild ist vorbereitet und bleibt bis zu deiner Finalbild-Freigabe ungeprueft."
             : imageResearched
               ? "Pruefe den Bildvorschlag und starte danach die Verarbeitung."
               : "Wartet auf Bild-Research."}
@@ -844,12 +844,12 @@ function ImageProcessingProgress({
         : isError
           ? "Die Verarbeitung konnte nicht sauber abgeschlossen werden. Details stehen im aktiven Research-Status."
           : isQueued
-            ? "Das Rohbild ist freigegeben und wartet auf den Worker. Diese Seite aktualisiert sich automatisch."
-            : "Das Rohbild ist freigegeben. Sobald der Worker startet, siehst du hier den laufenden Verarbeitungsschritt."
+            ? "Die Bildquelle ist vorbereitet und wartet auf den Worker. Diese Seite aktualisiert sich automatisch."
+            : "Die Bildquelle ist vorbereitet. Sobald der Worker startet, siehst du hier den laufenden Verarbeitungsschritt."
 
   const steps = [
     {
-      label: "Rohbild freigegeben",
+      label: "Bildquelle vorbereitet",
       status: "done",
     },
     {

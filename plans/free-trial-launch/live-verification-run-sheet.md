@@ -1,0 +1,26 @@
+# Deferred live verification proposal — not approved
+
+Prepared 12 September 2026. On 13 September the assistant withdrew this proposal as a prerequisite for finalizing the plan after Nick challenged it. Revisit only at implementation verification; do not request approval again during this planning interview. This is a proposed bounded test scope, not an executed test or authorization. No sandbox resources. Execution follows implementation of the isolated adapters, local checks and required journey review; this run sheet resolves how provider proof can be obtained before public activation.
+
+## Scope to approve
+
+- Merchants: existing Chaarlie live Stripe and PayPal merchant accounts. Stripe account `acct_1TH0lOGiGHTGZcKB`; verify the PayPal merchant identity before any action.
+- Participants: only owner-controlled QA customer identities and an owner-operated card/PayPal payer account. Nick completes any payment authorization in the provider UI; no payment credentials in chat. Existing customers are excluded. The PayPal payer must be separate from the receiving merchant as required by PayPal.
+- Maximum successful customer charges across the entire run: **EUR 159.96**, consisting of one EUR 9.99 monthly and one EUR 69.99 introductory annual charge per provider. No EUR 99.99 renewal charge, no duplicate recovery charge, no added charge after refunds without new approval. Stop before exceeding the cap.
+- Resource scope: new QA customer/enrollment records, isolated live checkout attempts/subscriptions for authorization/cancel/restore/switch cases, and the four authorized paid cases. Keep every provider ID in the run receipt. Reuse approved final catalog resources only where safe; do not alter their terms or existing subscriptions. QA trial attempts must be canceled well before any unapproved first charge.
+- Communication scope: do not send optional product/marketing emails. Payment-provider-required confirmations/receipts can go only to the owner-controlled QA addresses. The production customer journey stays disabled.
+- Cleanup: cancel all QA agreements and scheduled renewals; request full refunds of the four successful test charges after evidence capture. Refund success and completion must be verified. Processing fees may be retained; verify and show the current fee treatment before executing. The gross cap is not a promise of zero net test cost.
+
+## Sequence and evidence
+
+1. Local state-machine/request fixtures pass. Verify live merchant IDs, exact catalog terms, tax configuration, callback isolation, QA identity ownership and cancellation/refund capabilities. Fail preflight rather than running on uncertain tax or webhook routing.
+2. Use supported invoice previews to establish zero due at trial start, EUR 69.99 for the first annual paid term and EUR 99.99 thereafter. Save sanitized preview/schedule receipts. Previews do not prove payment execution or coupon consumption across a real trial.
+3. On isolated seven-day trial agreements, verify authorization, canonical provider timestamps, cancellation and restoration/plan switching. Save before/after provider schedule, approval result and app entitlement evidence. Prove abandoned restoration leaves cancellation effective. Cancel each unused agreement and verify terminal state. No shortened trial is silently substituted for the approved checkout behavior.
+4. For each provider, execute the approved monthly and annual first paid cases within the total charge cap. Save successful payment occurrence time, charged amount, first paid-period start/end and next renewal date. Confirm the exact agreed terms. Do not wait a year or claim a real second annual payment was observed; use the provider's recorded schedule and available renewal previews for that narrower assertion.
+5. First-failure/recovery case needs a legitimate owner-controlled failure or provider-supported live mechanism. Never use sandbox card numbers in live mode, manufacture disputes, or deliberately abuse bank declines. If failure cannot be safely produced, stop that case and document it as unverified; permission to spend the cap does not authorize arbitrary failure simulation. Local replay tests still cover late/duplicate events but cannot replace provider proof.
+6. Reconcile every original and replacement agreement before each further approval. Any unresolved payment, duplicate amount, unexpected date or incomplete cancellation stops the run. Do not “fix” a failed run by charging again outside the four-case budget.
+7. Cancel/refund as approved, verify no future scheduled QA collection, record retained provider IDs and any nonrefundable fees, remove QA product analytics effects without modifying actual customer records, and deliver a final evidence receipt distinguishing passed, failed and unobserved assertions.
+
+## Limits
+
+Some assertions require real elapsed trial time, renewed owner approval or a safely available payment-failure case. This proposal establishes a permission envelope, not a claim that all proof is immediately obtainable. Public launch remains blocked by unresolved schedule/recovery, required-notice or tax behavior. A different test mechanism, additional amount or production-customer scope requires a new concrete proposal.

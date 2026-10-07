@@ -238,12 +238,16 @@ export function mapModuleProjections(value: unknown): Stage2ModuleProjections {
   for (const stage2Module of STAGE2_MODULES) {
     const entry = (value as Record<string, unknown>)[stage2Module]
     if (!entry || typeof entry !== "object") continue
-    const { needVersionId, projectedAtRevision, stage3Handoff } = entry as Record<string, unknown>
+    const { needVersionId, projectedAtRevision, stage3Handoff, origin } = entry as Record<
+      string,
+      unknown
+    >
     if (typeof needVersionId !== "string" || !Number.isFinite(Number(projectedAtRevision))) continue
     projections[stage2Module] = {
       needVersionId,
       projectedAtRevision: Number(projectedAtRevision),
       stage3Handoff: stage3Handoff === true,
+      ...(origin === "facts_rebase" ? { origin } : {}),
     }
   }
   return projections

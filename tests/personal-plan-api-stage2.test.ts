@@ -16,6 +16,7 @@ import {
 import { createStage2RefinementSession } from "../src/lib/personal-plan/refinement/session"
 import type { PersonalPlanStage2Access } from "../src/lib/personal-plan/journey-access-loader"
 import type { Stage3RecomputeResult } from "../src/lib/personal-plan/refinement-recompute/types"
+import type { SyncPlanWithFactsResult } from "../src/lib/personal-plan/facts-recompute/types"
 
 const stage2Access: PersonalPlanStage2Access = { allowed: true }
 
@@ -798,4 +799,234 @@ test("Stage 2 completion is a separate strict POST with owner-derived success, c
     )
     assert.deepEqual([response.status, await response.json()], [status, { error: code }])
   }
+})
+
+/**
+ * Fix round 1, I1: every production `gatewayFor` that can reach `complete()` or
+ * `completeModule()` must wire the facts writer — otherwise the shared service throws
+ * (M5). Unit-testing the real wiring end-to-end would need a live Supabase client, so
+ * this asserts the source directly: both routes build ONE `admin` client and pass it to
+ * BOTH `createSupabaseStage2RefinementPersistence` and `createPersistedStage2RefinementGateway`
+ * (which derives `saveFacts` from it — see `production-persistence-gateway.ts`).
+ */
+test("both stage-2 routes construct their gateway with the facts writer (admin wired through)", async () => {
+  const { readFile } = await import("node:fs/promises")
+  const gatewayWiredWithAdmin =
+    /const admin = createAdminClient\(\)[\s\S]{0,200}createPersistedStage2RefinementGateway\(\{[\s\S]{0,200}admin,?\s*\}\)/
+
+  const routeSource = await readFile(
+    new URL("../src/app/api/personal-plan/stage-2/route.ts", import.meta.url),
+    "utf8",
+  )
+  assert.match(
+    routeSource,
+    gatewayWiredWithAdmin,
+    "stage-2/route.ts must wire admin into createPersistedStage2RefinementGateway (serves both completeAfterSave and completeModuleAfterSave)",
+  )
+
+  const completeRouteSource = await readFile(
+    new URL("../src/app/api/personal-plan/stage-2/complete/route.ts", import.meta.url),
+    "utf8",
+  )
+  assert.match(
+    completeRouteSource,
+    gatewayWiredWithAdmin,
+    "stage-2/complete/route.ts must wire admin into createPersistedStage2RefinementGateway",
+  )
+})
+
+// ---------------------------------------------------------------------------
+// Central profile PR2 task 5(d): the facts lane runs between the habits module completion and
+// the routine recompute; a rebase's refined version is the one the recompute receives.
+// ---------------------------------------------------------------------------
+
+function habitsPatch(expectedRevision: number) {
+  return new Request("http://test/api/personal-plan/stage-2", {
+    method: "PATCH",
+    body: JSON.stringify({
+      questionId: "wet_wash_frequency",
+      answer: "weekly_2x",
+      expectedRevision,
+      completeModuleAfterSave: "habits",
+    }),
+  })
+}
+
+test("Stage 2 habits completion: a rebased plan hands ITS refined version to the routine recompute", async () => {
+  const savedSession = { ...session, revision: 4 }
+  const moduleCompletion = moduleCompletionResult({ status: "in_progress" })
+  const events: string[] = []
+  const recomputeCalls: Array<{ userId: string; refinedVersionId: string }> = []
+  const response = await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          saveAnswer: async () => savedSession,
+          completeModule: async () => {
+            events.push("completion")
+            return moduleCompletion
+          },
+        }),
+      syncPlanWithFacts: async (input) => {
+        events.push(`lane:${input.userId}`)
+        return {
+          status: "rebased",
+          personalPlanId: "plan-1",
+          initialNeedVersionId: "initial-2",
+          refinedVersionId: "refined-rebased-2",
+          activeRoutineVersionId: "routine-1",
+        }
+      },
+      runHabitsRecompute: async (input) => {
+        events.push("recompute")
+        recomputeCalls.push(input)
+        return { status: "applied", routineVersionId: "routine-2" } satisfies Stage3RecomputeResult
+      },
+    }),
+  ).PATCH(habitsPatch(3))
+
+  assert.deepEqual(events, ["completion", "lane:owner-1", "recompute"])
+  assert.deepEqual(recomputeCalls, [{ userId: "owner-1", refinedVersionId: "refined-rebased-2" }])
+  // The response shape does not change.
+  assert.deepEqual(await response.json(), {
+    session: JSON.parse(JSON.stringify(savedSession)),
+    moduleCompletion: { ...moduleCompletion, recompute: { outcome: "applied" } },
+  })
+})
+
+test("Stage 2 habits completion: any other lane result keeps the module completion's refined version", async () => {
+  const lanes: Array<[string, () => Promise<SyncPlanWithFactsResult>]> = [
+    ["unchanged", async () => ({ status: "unchanged", personalPlanId: "plan-1" })],
+    ["no_plan", async () => ({ status: "no_plan" })],
+    ["unavailable", async () => ({ status: "unavailable", reason: "conflict", retryable: true })],
+    [
+      "rebased without a refined version",
+      async () => ({
+        status: "rebased",
+        personalPlanId: "plan-1",
+        initialNeedVersionId: "initial-2",
+        refinedVersionId: null,
+        activeRoutineVersionId: null,
+      }),
+    ],
+    [
+      "throws",
+      async () => {
+        throw new Error("lane boom")
+      },
+    ],
+  ]
+  for (const [name, lane] of lanes) {
+    const savedSession = { ...session, revision: 5 }
+    const moduleCompletion = moduleCompletionResult({ status: "complete" })
+    const recomputeCalls: Array<{ userId: string; refinedVersionId: string }> = []
+    const response = await createStage2RouteHandlers(
+      deps({
+        gatewayFor: () =>
+          gateway({
+            saveAnswer: async () => savedSession,
+            completeModule: async () => moduleCompletion,
+          }),
+        syncPlanWithFacts: lane,
+        runHabitsRecompute: async (input) => {
+          recomputeCalls.push(input)
+          return { status: "unchanged" } satisfies Stage3RecomputeResult
+        },
+      }),
+    ).PATCH(habitsPatch(4))
+
+    assert.equal(response.status, 200, name)
+    assert.deepEqual(
+      recomputeCalls,
+      [{ userId: "owner-1", refinedVersionId: "refined-habits-1" }],
+      name,
+    )
+    assert.deepEqual(
+      await response.json(),
+      {
+        session: JSON.parse(JSON.stringify(savedSession)),
+        moduleCompletion: { ...moduleCompletion, recompute: { outcome: "unchanged" } },
+      },
+      name,
+    )
+  }
+})
+
+test("Stage 2: only a successful habits module completion runs the facts lane", async () => {
+  let laneCalls = 0
+  const syncPlanWithFacts = async (): Promise<SyncPlanWithFactsResult> => {
+    laneCalls += 1
+    return { status: "no_plan" }
+  }
+
+  // products module
+  await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          completeModule: async () =>
+            moduleCompletionResult({ module: "products", stage3Handoff: true }),
+        }),
+      syncPlanWithFacts,
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "wet_wash_frequency",
+        answer: "weekly_2x",
+        expectedRevision: 1,
+        completeModuleAfterSave: "products",
+      }),
+    }),
+  )
+
+  // legacy single-lane completion
+  await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          complete: async () => ({ refinedVersionId: "refined-legacy", nextHref: "/plan-start" }),
+        }),
+      syncPlanWithFacts,
+    }),
+  ).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "night_protection",
+        answer: [],
+        expectedRevision: 0,
+        completeAfterSave: true,
+      }),
+    }),
+  )
+
+  // a habits completion that fails
+  const failed = await createStage2RouteHandlers(
+    deps({
+      gatewayFor: () =>
+        gateway({
+          completeModule: async () => {
+            throw new Stage2RefinementError("incomplete_refinement")
+          },
+        }),
+      syncPlanWithFacts,
+    }),
+  ).PATCH(habitsPatch(2))
+  assert.equal(failed.status, 422)
+
+  // a plain answer save
+  await createStage2RouteHandlers(deps({ syncPlanWithFacts })).PATCH(
+    new Request("http://test/api/personal-plan/stage-2", {
+      method: "PATCH",
+      body: JSON.stringify({
+        questionId: "wet_wash_frequency",
+        answer: "weekly_2x",
+        expectedRevision: 0,
+      }),
+    }),
+  )
+
+  assert.equal(laneCalls, 0)
 })

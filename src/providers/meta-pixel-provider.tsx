@@ -14,6 +14,9 @@ function MetaPixelPageView() {
     const pageViewKey = `${pathname}?${searchParams?.toString() ?? ""}`
     if (lastPageViewRef.current === pageViewKey) return
     lastPageViewRef.current = pageViewKey
+    // The welcome page emits its own PageView after sanitizing the return URL.
+    // A bare welcome document may only be restoring that URL after a reload.
+    if (pathname === "/welcome") return
     if (hasSensitiveBrowserAnalyticsLocation(searchParams, window.location.hash)) return
 
     trackMetaPageView()

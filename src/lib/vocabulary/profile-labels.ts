@@ -31,11 +31,6 @@ export const HAIR_DENSITY_LABELS: Record<string, string> = {
   high: "Viele Haare",
 } satisfies Record<HairDensity, string>
 
-export const HAIR_DENSITY_OPTIONS = HAIR_DENSITIES.map((value) => ({
-  value,
-  label: HAIR_DENSITY_LABELS[value],
-}))
-
 /* ── Scalp type ── */
 
 export const SCALP_TYPES = ["oily", "balanced", "dry"] as const

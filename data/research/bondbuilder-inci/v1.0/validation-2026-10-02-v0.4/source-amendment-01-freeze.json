@@ -1,0 +1,14 @@
+{
+  "amendment_id": "source-amendment-01",
+  "status": "frozen_before_supplemental_labels",
+  "hashes": {
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/source-amendment-01.json": "fa9232355a32c00e37b80a99f4fdf18a0a65b0d9551cc89b1477a9c33bae9fa9",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-a/records.json": "77b69830cd4385b468f9557ae0045321a80ec19430558608efe32de4c6495253",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-b/records.json": "1270f34e813c3c60cf3bfe0a0c6ab42a074d1c9d8e33451dd37e221e743ce6da"
+  },
+  "method_changed": false,
+  "source_changed": "same inspected producer page; lost aftercare order restored to packet",
+  "initial_classifications_preserved": true,
+  "independent_checks": "two small supplemental extractions, one affected product; not a new unused holdout"
+}
+

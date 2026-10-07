@@ -3,6 +3,7 @@ import type { BillingAnalyticsOutboxRow, SupabaseBillingAnalyticsClient } from "
 export type BillingAnalyticsProfile = {
   id: string
   email: string | null
+  full_name?: string | null
   stripe_customer_id?: string | null
   stripe_subscription_id?: string | null
   subscription_interval?: string | null
@@ -19,8 +20,10 @@ export type BillingAnalyticsDeliveryInput = {
 export type BillingAnalyticsDeliveryResult = {
   ok: boolean
   skipped?: boolean
+  paused?: boolean
   status?: number
   error?: string
   providerRequestId?: string
   permanent?: boolean
+  retryAfterSeconds?: number
 }

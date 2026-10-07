@@ -28,7 +28,7 @@ import {
   payPalDisputeCaptureIdsForWebhook,
   validatePayPalCaptureCompletedWebhook,
 } from "../src/lib/paypal/webhook-handlers"
-import { personalPlanOneTimeConsentBlocksPayPalOrder } from "../src/app/api/paypal/create-order-intent/route"
+import { POST as createPayPalOneTimeOrder } from "../src/app/api/paypal/create-order-intent/route"
 import { readFile } from "node:fs/promises"
 
 const intent: PayPalOrderIntentRow = {
@@ -47,6 +47,20 @@ const intent: PayPalOrderIntentRow = {
   expires_at: "2030-01-01T00:00:00.000Z",
   metadata: {},
 }
+
+test("retired one-time PayPal order creation fails before it can reach provider or persistence work", async () => {
+  const response = await createPayPalOneTimeOrder(
+    new Request("https://chaarlie.de/api/paypal/create-order-intent", {
+      method: "POST",
+      body: "not parsed after retirement",
+    }),
+  )
+
+  assert.equal(response.status, 410)
+  assert.deepEqual(await response.json(), {
+    error: "Der einmalige Haarplan ist nicht mehr verfügbar.",
+  })
+})
 
 test("builds one fixed PayPal digital-goods order without a Billing Plan", () => {
   const payload = buildPayPalPersonalPlanOrder(intent.token, "MERCHANT-1")
@@ -159,17 +173,6 @@ test("reuses the consent-linked PayPal intent when a later checkout attempt hits
 
   assert.equal(recovered.id, existing.id)
   assert.equal(recovered.checkout_attempt_id, existing.checkout_attempt_id)
-})
-
-test("PayPal order creation stops before the provider call when Stripe already owns the consent", () => {
-  assert.equal(
-    personalPlanOneTimeConsentBlocksPayPalOrder({ stripe_checkout_session_id: "cs_once" }),
-    true,
-  )
-  assert.equal(
-    personalPlanOneTimeConsentBlocksPayPalOrder({ stripe_checkout_session_id: null }),
-    false,
-  )
 })
 
 test("validates PayPal capture status, identity, amount, and currency", () => {

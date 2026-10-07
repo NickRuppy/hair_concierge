@@ -16,6 +16,25 @@ const supabase = {
   rpc: async () => ({ data: null, error: null }),
 } as unknown as SupabaseBillingAnalyticsClient
 
+test("trial_started cannot reach paid lifecycle destinations even if a delivery is misrouted", async () => {
+  const input = {
+    event: event({ event_name: "trial_started", payload: { value: 0 } }),
+    profile: null,
+    supabase,
+  }
+  for (const deliver of [deliverBillingAnalyticsToMeta, deliverBillingAnalyticsToCustomerIo]) {
+    const result = await deliver(input)
+    assert.equal(result.ok, false)
+    assert.equal(result.permanent, true)
+    assert.equal(
+      result.error,
+      deliver === deliverBillingAnalyticsToMeta
+        ? "Verified trial analytics context is required"
+        : "Trial lifecycle events are not sent to Customer.io",
+    )
+  }
+})
+
 function sha256(value: string) {
   return createHash("sha256").update(value).digest("hex")
 }

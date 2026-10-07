@@ -62,6 +62,19 @@ test("waitlist pages use the agreed final-step framing and preserve recovery", (
   assert.doesNotMatch(shell, /SiteFooter/)
 })
 
+test("waitlist entry retires new registration without changing historic survey recovery routes", () => {
+  const entry = read("src/app/warteliste/page.tsx")
+  const legacyEntry = read("src/app/warteliste/b/page.tsx")
+  const surveyPage = read("src/app/warteliste/umfrage/page.tsx")
+  const thanks = read("src/app/warteliste/danke/page.tsx")
+
+  assert.match(entry, /Die Anmeldung zur Warteliste ist geschlossen\./)
+  assert.doesNotMatch(entry, /<WaitlistForm/)
+  assert.match(legacyEntry, /WaitlistPage/)
+  assert.match(surveyPage, /WaitlistSurvey/)
+  assert.match(thanks, /WaitlistProgress/)
+})
+
 test("quiz-gate signup tracks exactly one Lead only for a new token-bearing waitlist signup", () => {
   const modal = read("src/components/waitlist/quiz-gate-modal.tsx")
 

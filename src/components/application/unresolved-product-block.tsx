@@ -2,13 +2,10 @@ import { CircleHelp } from "lucide-react"
 
 import type { ApplicationUnresolvedProductStepView } from "./application-types"
 
-export function UnresolvedProductBlock({
-  step,
-  position,
-}: {
-  step: ApplicationUnresolvedProductStepView
-  position: number
-}) {
+/** The unresolved slot's title and body — shared with the discovery call sheet's print. */
+export function unresolvedProductCopyDe(
+  step: Pick<ApplicationUnresolvedProductStepView, "productName" | "reason">,
+): { titleDe: string; bodyDe: string } {
   // A demoted confirmed product is not an open product decision, so it must not
   // read as "noch offen".
   const catalogUnavailable = step.reason === "catalog_unavailable"
@@ -20,6 +17,17 @@ export function UnresolvedProductBlock({
     : step.productName
       ? "Die Anwendung für dieses Produkt wird noch geprüft. Sobald die fehlenden Details bestätigt sind, ergänzen wir sie an dieser Stelle."
       : "Für diese Kategorie fehlen noch ein bestätigtes Produkt und geprüfte Anwendungsdetails."
+  return { titleDe, bodyDe }
+}
+
+export function UnresolvedProductBlock({
+  step,
+  position,
+}: {
+  step: ApplicationUnresolvedProductStepView
+  position: number
+}) {
+  const { titleDe, bodyDe } = unresolvedProductCopyDe(step)
   return (
     <li className="grid grid-cols-[34px_minmax(0,1fr)] gap-3">
       <span className="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-sm font-semibold text-[var(--text-sub)]">

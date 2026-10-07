@@ -11,6 +11,7 @@ import {
   type PersistedMessageContextColumns,
 } from "@/lib/chat-runtime/message-context"
 import type { MessageContext } from "@/lib/types"
+import { seedHairProfile } from "@/lib/user-facts/seed-profile"
 import type { EvalConversationTurnTraceRow } from "./debug-artifacts"
 import type { SSEResult, HairProfileOverrides, RoutineInventorySeed } from "./types"
 
@@ -275,9 +276,16 @@ export async function upsertHairProfile(
     throw new Error(formatWriteError("Failed to clear eval routine inventory", deleteUsageError))
   }
 
-  const { error: insertProfileError } = await admin.from("hair_profiles").insert(hairProfileRow)
-  if (insertProfileError) {
-    throw new Error(formatWriteError("Failed to seed eval hair profile", insertProfileError))
+  // Through the door (`user_facts_save_v1`): the eval user carries real fact documents, and the
+  // seed keeps working under the lock that rejects direct fact-column writes.
+  try {
+    await seedHairProfile(admin, userId, hairProfileRow)
+  } catch (error) {
+    throw new Error(
+      formatWriteError("Failed to seed eval hair profile", {
+        message: error instanceof Error ? error.message : String(error),
+      }),
+    )
   }
 
   if (routineUsageRows.length === 0) return

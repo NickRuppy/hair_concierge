@@ -12,6 +12,7 @@ import {
 } from "../src/lib/customerio/personal-plan-result-artifact-service"
 import {
   buildPersonalPlanPreparedArtifact,
+  derivePersonalPlanPrimaryMessage,
   type PersonalPlanPreparedArtifact,
 } from "../src/lib/personal-plan-quiz/prepared-plan"
 import {
@@ -107,9 +108,11 @@ test("derives a controlled primary message for compatible stored artifacts", () 
     siteUrl: "https://chaarlie.de",
   })
 
-  assert.equal(
-    (payload.messageData.primary_message as { label: string }).label,
-    artifact.publicOfferModel.primaryMessage.label,
+  // Stored artifacts from before F1 carry no stated pick: they keep the central
+  // priority's message they were always sent with.
+  assert.deepEqual(
+    payload.messageData.primary_message,
+    derivePersonalPlanPrimaryMessage({ ...artifact.priorities[0], isFallback: false }),
   )
 })
 

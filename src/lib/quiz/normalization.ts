@@ -82,6 +82,16 @@ function sortConcerns(concerns: unknown): QuizAnswers["concerns"] | undefined {
   return unique
 }
 
+/** A stated main problem survives only while it is one of her concerns (F1). */
+function normalizePrimaryConcern(
+  value: unknown,
+  concerns: QuizAnswers["concerns"],
+): QuizAnswers["primary_concern"] {
+  return isAllowedValue(value, QUIZ_ANSWER_CONCERN_VALUES) && (concerns ?? []).includes(value)
+    ? value
+    : undefined
+}
+
 function normalizeConcernOtherText(value: unknown): string | undefined {
   if (typeof value !== "string") return undefined
 
@@ -213,6 +223,9 @@ export function normalizeStoredQuizAnswers(
     scalpCondition = undefined
   }
 
+  const concerns = sortConcerns(source.concerns) ?? []
+  const primaryConcern = normalizePrimaryConcern(source.primary_concern, concerns)
+
   return {
     structure: isAllowedValue(source.structure, QUIZ_STRUCTURE_VALUES)
       ? source.structure
@@ -231,7 +244,9 @@ export function normalizeStoredQuizAnswers(
     scalp_type: scalpType,
     has_scalp_issue: hasScalpIssue,
     scalp_condition: scalpCondition,
-    concerns: sortConcerns(source.concerns) ?? [],
+    concerns,
+    // Present only when stated: answers without a pick keep their historical shape.
+    ...(primaryConcern ? { primary_concern: primaryConcern } : {}),
     concerns_other_text: normalizeConcernOtherText(source.concerns_other_text),
     treatment: sortTreatments(source.treatment),
     goals: normalizeGoals(source.goals),
@@ -239,6 +254,8 @@ export function normalizeStoredQuizAnswers(
 }
 
 export function canonicalizeQuizAnswers(answers: QuizAnswers): QuizAnswers {
+  // `primary_concern` comes from the stored normalization: same concern set, dropped
+  // when stale, absent when not stated.
   const normalized = {
     ...normalizeStoredQuizAnswers(answers),
     concerns: sortConcerns(answers.concerns),
@@ -255,6 +272,67 @@ export function canonicalizeQuizAnswers(answers: QuizAnswers): QuizAnswers {
 }
 
 /**
+ * Concern/goal legacy-vocabulary maps behind `projectQuizAnswersToLegacyVocabulary`.
+ * Exported so `src/lib/user-facts/derive-legacy-columns.ts` (task 2 of the central
+ * user profile program) can reuse the exact same tables instead of retyping them;
+ * do not duplicate these into another module.
+ */
+export const CONCERN_TO_PROFILE_CONCERN_MAP: Partial<Record<string, ProfileConcern>> = {
+  hair_damage: "hair_damage",
+  breakage: "breakage",
+  split_ends: "split_ends",
+  dryness: "dryness",
+  dry_lengths: "dryness",
+  frizz: "frizz",
+  frizz_flyaways: "frizz",
+  tangling: "tangling",
+  hair_loss_or_thinning: "hair_loss",
+}
+
+export const GOAL_TO_PROFILE_GOAL_MAP: Partial<Record<string, Goal>> = {
+  moisture: "moisture",
+  frizz_surface: "less_frizz",
+  less_frizz: "less_frizz",
+  shine: "shine",
+  shape_definition: "curl_definition",
+  curl_definition: "curl_definition",
+  strength_ends: "anti_breakage",
+  anti_breakage: "anti_breakage",
+  less_split_ends: "less_split_ends",
+  scalp_balance: "healthy_scalp",
+  healthy_scalp: "healthy_scalp",
+  manageability_styling: "less_frizz",
+  volume: "volume",
+  less_volume: "less_volume",
+  healthier_hair: "healthier_hair",
+  color_protection: "color_protection",
+  strengthen: "strengthen",
+}
+
+/**
+ * Resolves the neutral `volume_balance` family to a directional legacy goal only when
+ * factual signals support one; it never claims the opposite result. Exported so
+ * `deriveLegacyColumns` (task 2) applies exactly this rule instead of reimplementing it.
+ */
+export function resolveVolumeBalanceGoal(input: {
+  thickness?: string
+  density?: string
+  structure?: string
+}): Goal | null {
+  const hasFineOrLowDensity = input.thickness === "fine" || input.density === "low"
+  const hasControlSignal =
+    input.thickness === "coarse" ||
+    input.density === "high" ||
+    input.structure === "wavy" ||
+    input.structure === "curly" ||
+    input.structure === "coily"
+
+  if (hasFineOrLowDensity) return "volume"
+  if (hasControlSignal) return "less_volume"
+  return null
+}
+
+/**
  * Compatibility boundary for established profile, routine and Customer.io
  * consumers. New quiz-only families deliberately do not become onboarding
  * options; unavailable historical equivalents are omitted rather than guessed.
@@ -263,62 +341,29 @@ export function projectQuizAnswersToLegacyVocabulary(answers: QuizAnswers): {
   concerns: ProfileConcern[]
   goals: Goal[]
 } {
-  const concernMap: Partial<Record<string, ProfileConcern>> = {
-    hair_damage: "hair_damage",
-    breakage: "breakage",
-    split_ends: "split_ends",
-    dryness: "dryness",
-    dry_lengths: "dryness",
-    frizz: "frizz",
-    frizz_flyaways: "frizz",
-    tangling: "tangling",
-    hair_loss_or_thinning: "hair_loss",
-  }
-  const hasFineOrLowDensity = answers.thickness === "fine" || answers.density === "low"
-  const hasControlSignal =
-    answers.thickness === "coarse" ||
-    answers.density === "high" ||
-    answers.structure === "wavy" ||
-    answers.structure === "curly" ||
-    answers.structure === "coily"
-  const goalMap: Partial<Record<string, Goal>> = {
-    moisture: "moisture",
-    frizz_surface: "less_frizz",
-    less_frizz: "less_frizz",
-    shine: "shine",
-    shape_definition: "curl_definition",
-    curl_definition: "curl_definition",
-    strength_ends: "anti_breakage",
-    anti_breakage: "anti_breakage",
-    less_split_ends: "less_split_ends",
-    scalp_balance: "healthy_scalp",
-    healthy_scalp: "healthy_scalp",
-    manageability_styling: "less_frizz",
-    volume: "volume",
-    less_volume: "less_volume",
-    healthier_hair: "healthier_hair",
-    color_protection: "color_protection",
-    strengthen: "strengthen",
-  }
   const projectedGoals = new Set<Goal>()
   for (const value of answers.goals ?? []) {
     if (value === "volume_balance") {
-      // The neutral user-facing family only receives a directional legacy goal
-      // when factual signals support one; it never claims the opposite result.
-      if (hasFineOrLowDensity) projectedGoals.add("volume")
-      else if (hasControlSignal) projectedGoals.add("less_volume")
+      const resolved = resolveVolumeBalanceGoal({
+        thickness: answers.thickness,
+        density: answers.density,
+        structure: answers.structure,
+      })
+      if (resolved) projectedGoals.add(resolved)
       continue
     }
-    const mapped = goalMap[value]
+    const mapped = GOAL_TO_PROFILE_GOAL_MAP[value]
     if (mapped) projectedGoals.add(mapped)
   }
   if (projectedGoals.has("volume") && projectedGoals.has("less_volume")) {
-    projectedGoals.delete(hasFineOrLowDensity ? "less_volume" : "volume")
+    projectedGoals.delete(
+      answers.thickness === "fine" || answers.density === "low" ? "less_volume" : "volume",
+    )
   }
 
   const projectedConcerns = new Set<ProfileConcern>()
   for (const value of answers.concerns ?? []) {
-    const mapped = concernMap[value]
+    const mapped = CONCERN_TO_PROFILE_CONCERN_MAP[value]
     if (mapped) projectedConcerns.add(mapped)
   }
   return {

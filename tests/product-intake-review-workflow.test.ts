@@ -1,5 +1,9 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises"
+import { join } from "node:path"
+import { tmpdir } from "node:os"
+import { readReviewPackage } from "../scripts/product-intake/review-app"
 
 import {
   parseProductIntakeResearchedPayload,
@@ -7,8 +11,326 @@ import {
   type ProductIntakeReviewCategoryKey,
 } from "../src/lib/product-intake/category-validators"
 import { dryRunProductIntakeReadyForReview } from "../src/lib/product-intake/review-workflow"
+import { validateBondbuilderOwnerSubmissionApproval } from "../src/lib/product-intake/review-workflow"
+import {
+  approveReviewedSubmission,
+  dryRunResearchedPayload,
+  saveResearchedPayload,
+  validateSubmissionReady,
+} from "../scripts/product-intake/review-actions"
+import {
+  makeBondbuilderProfile,
+  sealProfile,
+  unknownFact,
+} from "./fixtures/bondbuilder-research/profile"
+import { BOND_DEFAULT_POLICY } from "../src/lib/bondbuilder-research/registry"
+import type { ProductSubmission } from "../src/lib/types"
+import type { SupabaseClient } from "@supabase/supabase-js"
 
 const PRODUCT_ID_PLACEHOLDER = "__PRODUCT_ID__"
+
+test("review preview derives held owner readiness from stored submission context", async () => {
+  const rootDir = await mkdtemp(join(tmpdir(), "owner-bondbuilder-preview-"))
+  try {
+    const submission = ownerBondbuilderSubmission()
+    const packagePath = join(rootDir, "ops", "product-intake-research", "2026-10-02", submission.id)
+    await mkdir(packagePath, { recursive: true })
+    await writeFile(
+      join(packagePath, "payload.json"),
+      JSON.stringify(submission.researched_payload),
+    )
+    await writeFile(join(packagePath, "submission.json"), JSON.stringify(submission))
+    const ready = await readReviewPackage({ rootDir, packagePath })
+    assert.equal((ready.validation as { ok: boolean }).ok, true)
+    await writeFile(
+      join(packagePath, "submission.json"),
+      JSON.stringify({ ...submission, source: "admin" }),
+    )
+    const denied = await readReviewPackage({ rootDir, packagePath })
+    assert.equal((denied.validation as { ok: boolean }).ok, false)
+  } finally {
+    await rm(rootDir, { recursive: true, force: true })
+  }
+})
+
+function ownerBondbuilderSubmission() {
+  const profile = makeBondbuilderProfile()
+  profile.identity.product_name = "Fixture Brand Source-bound Treatment"
+  profile.identity.brand = "Fixture Brand"
+  profile.assessment.claim_trust_level = "low"
+  profile.assessment.trust_basis = "owner_default"
+  profile.assessment.policy_reference = BOND_DEFAULT_POLICY
+  profile.application.application_area = unknownFact()
+  profile.holds.protocol = [
+    {
+      code: "missing_application_area",
+      reason: "Selected producer source does not specify application area.",
+      field: "application.application_area",
+      source_ids: [],
+    },
+  ]
+  sealProfile(profile)
+  const payload = reviewedPayload("bondbuilder", {
+    product_bondbuilder_specs: {
+      technology_family: profile.assessment.technology_family,
+      claim_trust_level: "low",
+      trust_basis: "owner_default",
+      research_profile: profile,
+      usage_protocol: null,
+    },
+  })
+  payload.final.product.canonical_brand = profile.identity.brand
+  payload.final.product.clean_name = "Source-bound Treatment"
+  payload.final.product.image_url = null as never
+  payload.final.sources = profile.sources.map((source) => ({
+    url: source.url,
+    title: "Selected inspected producer source",
+    evidence: source.observation,
+  }))
+  return {
+    id: "50000000-0000-4000-8000-000000000001",
+    user_id: "50000000-0000-4000-8000-000000000002",
+    source: "chat",
+    category: "bondbuilder",
+    status: "researching",
+    researched_payload: payload,
+    updated_at: "2026-10-02T12:00:00Z",
+  } as unknown as ProductSubmission
+}
+
+test("held low Bondbuilder research becomes owner-ready and routes only its validated payload to the owner RPC", async () => {
+  const submission = ownerBondbuilderSubmission()
+  const normal = dryRunProductIntakeReadyForReview({
+    id: submission.id,
+    category: "bondbuilder",
+    researched_payload: submission.researched_payload,
+  })
+  const research = dryRunResearchedPayload({
+    submission,
+    researchedPayload: submission.researched_payload as never,
+    markReady: true,
+  })
+  assert.equal(research.next_status, "ready_for_review")
+  const updates: unknown[] = []
+  const filters: unknown[] = []
+  const query = {
+    update: (value: unknown) => {
+      updates.push(value)
+      return query
+    },
+    eq: (key: string, value: unknown) => {
+      filters.push([key, value])
+      return query
+    },
+    in: (key: string, value: unknown) => {
+      filters.push([key, value])
+      return query
+    },
+    select: () => query,
+    single: async () => ({ data: { id: submission.id }, error: null }),
+  }
+  await saveResearchedPayload({
+    supabase: {
+      from: (table: string) => {
+        assert.equal(table, "product_submissions")
+        return query
+      },
+    } as unknown as SupabaseClient,
+    submission,
+    researchedPayload: submission.researched_payload as never,
+    markReady: true,
+    now: () => new Date("2026-10-02T12:01:00Z"),
+  })
+  assert.deepEqual(updates, [
+    {
+      researched_payload: submission.researched_payload,
+      status: "ready_for_review",
+      updated_at: "2026-10-02T12:01:00.000Z",
+    },
+  ])
+  assert.ok(
+    filters.some(
+      (value) => JSON.stringify(value) === JSON.stringify(["updated_at", submission.updated_at]),
+    ),
+  )
+  const ready = { ...submission, status: "ready_for_review" as const }
+  const selected = validateSubmissionReady(ready)
+  assert.equal(selected.ok, true)
+  if (!selected.ok) return
+  const admission = validateBondbuilderOwnerSubmissionApproval(ready)
+  if (admission.ok) assert.equal(admission.global_recommendation_ready, false)
+  assert.deepEqual(
+    selected.targetSpecOperations.map((op) => op.table),
+    ["product_bondbuilder_specs"],
+  )
+  const calls: Array<{ name: string; args: unknown }> = []
+  const supabase = {
+    rpc: async (name: string, args: unknown) => {
+      calls.push({ name, args })
+      return { data: { product_id: "created-product" }, error: null }
+    },
+  } as unknown as SupabaseClient
+  const params = {
+    supabase,
+    submission: ready,
+    finalPayload: selected.normalizedPayload.final,
+    specOperations: selected.targetSpecOperations,
+    reviewedBy: "reviewer",
+    reviewedAt: "2026-10-02T12:30:00Z",
+    reviewNotes: null,
+  }
+  await approveReviewedSubmission(params)
+  assert.equal(calls[0]?.name, "product_intake_approve_bondbuilder_owner_v1")
+  assert.equal(admission.ok, true)
+  assert.equal(
+    normal.ok,
+    false,
+    "No stored owner context must retain ordinary protocol requirements",
+  )
+  assert.deepEqual(calls[0]?.args, {
+    p_submission_id: ready.id,
+    p_owner_user_id: ready.user_id,
+    p_final_payload: selected.normalizedPayload.final,
+    p_spec_operations: selected.targetSpecOperations,
+    p_reviewed_by: params.reviewedBy,
+    p_reviewed_at: params.reviewedAt,
+    p_review_notes: null,
+  })
+  await assert.rejects(
+    approveReviewedSubmission({
+      ...params,
+      finalPayload: {
+        ...params.finalPayload,
+        product: { ...params.finalPayload.product, clean_name: "Caller replacement" },
+      },
+    }),
+    /mismatch|does not match/i,
+  )
+  await assert.rejects(
+    approveReviewedSubmission({ ...params, specOperations: [] }),
+    /mismatch|does not match/i,
+  )
+  assert.equal(calls.length, 1)
+})
+
+test("owner readiness rejects missing owners, unrelated sources, high grades, forged profiles and executable selectors", () => {
+  for (const mutate of [
+    (s: ProductSubmission) => {
+      Object.assign(s, { user_id: null })
+    },
+    (s: ProductSubmission) => {
+      s.source = "admin" as never
+    },
+    (s: ProductSubmission) => {
+      s.status = "approved"
+    },
+    (s: ProductSubmission) => {
+      const specs = (s.researched_payload as ReturnType<typeof reviewedPayload>).final
+        .category_specs.product_bondbuilder_specs as Record<string, unknown>
+      specs.claim_trust_level = "high"
+    },
+    (s: ProductSubmission) => {
+      const p = (
+        (s.researched_payload as ReturnType<typeof reviewedPayload>).final.category_specs
+          .product_bondbuilder_specs as {
+          research_profile: ReturnType<typeof makeBondbuilderProfile>
+        }
+      ).research_profile
+      p.explanations_de.concise = "Unsealed replacement"
+    },
+    (s: ProductSubmission) => {
+      ;(
+        (s.researched_payload as ReturnType<typeof reviewedPayload>).final.category_specs
+          .product_bondbuilder_specs as Record<string, unknown>
+      ).usage_protocol = "verified_product_protocol"
+    },
+    (s: ProductSubmission) => {
+      ;(s.researched_payload as ReturnType<typeof reviewedPayload>).final.sources = []
+    },
+  ]) {
+    const submission = ownerBondbuilderSubmission()
+    submission.status = "ready_for_review"
+    mutate(submission)
+    assert.equal(
+      dryRunResearchedPayload({
+        submission,
+        researchedPayload: submission.researched_payload as never,
+        markReady: true,
+      }).next_status,
+      "researching",
+    )
+    assert.equal(validateBondbuilderOwnerSubmissionApproval(submission).ok, false)
+  }
+})
+
+test("missing exact protocol remains explicit even when researcher omitted a redundant holds entry", () => {
+  const submission = ownerBondbuilderSubmission()
+  const profile = (
+    (submission.researched_payload as ReturnType<typeof reviewedPayload>).final.category_specs
+      .product_bondbuilder_specs as { research_profile: ReturnType<typeof makeBondbuilderProfile> }
+  ).research_profile
+  profile.holds.protocol = []
+  sealProfile(profile)
+  assert.equal(
+    dryRunResearchedPayload({
+      submission,
+      researchedPayload: submission.researched_payload as never,
+      markReady: true,
+    }).next_status,
+    "ready_for_review",
+  )
+  const admission = validateBondbuilderOwnerSubmissionApproval({
+    ...submission,
+    status: "ready_for_review",
+  })
+  assert.equal(admission.ok, true)
+  if (admission.ok) assert.equal(admission.protocolHold, "exact_product_protocol_unavailable")
+})
+
+test("all trusted owner sources support open research while a valid high owner profile cannot use the exception", () => {
+  for (const source of ["chat", "onboarding", "personal_plan"] as const) {
+    for (const status of [
+      "pending_review",
+      "researching",
+      "needs_more_info",
+      "ready_for_review",
+    ] as const) {
+      const submission = { ...ownerBondbuilderSubmission(), source, status }
+      assert.equal(
+        dryRunResearchedPayload({
+          submission,
+          researchedPayload: submission.researched_payload as never,
+          markReady: true,
+        }).next_status,
+        "ready_for_review",
+        source + ":" + status,
+      )
+    }
+  }
+  const submission = ownerBondbuilderSubmission()
+  const payload = submission.researched_payload as ReturnType<typeof reviewedPayload>
+  const high = makeBondbuilderProfile()
+  payload.final.category_specs.product_bondbuilder_specs = {
+    technology_family: high.assessment.technology_family,
+    claim_trust_level: high.assessment.claim_trust_level,
+    trust_basis: high.assessment.trust_basis,
+    research_profile: high,
+    usage_protocol: null,
+  }
+  payload.final.product.canonical_brand = high.identity.brand
+  payload.final.product.clean_name = high.identity.product_name
+    .slice(high.identity.brand.length)
+    .trim()
+  assert.equal(
+    dryRunResearchedPayload({ submission, researchedPayload: payload, markReady: true })
+      .next_status,
+    "researching",
+  )
+  assert.equal(
+    validateBondbuilderOwnerSubmissionApproval({ ...submission, status: "ready_for_review" }).ok,
+    false,
+  )
+})
 
 function exactProtocol(category: ProductIntakeReviewCategoryKey, role: string) {
   const semanticRoleBySourceRole: Record<string, string> = {
@@ -207,7 +529,6 @@ function validCategorySpecs(categoryKey: ProductIntakeReviewCategoryKey): Record
           weight: "light",
           roles: ["styling_prep"],
           provides_heat_protection: true,
-          heat_protection_max_c: 220,
           heat_activation_required: false,
           care_benefits: ["moisture", "anti_frizz"],
           ingredient_flags: ["polymers"],

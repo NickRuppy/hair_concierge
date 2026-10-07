@@ -1,11 +1,12 @@
 "use client"
 
-import { useReducer, useRef, useState } from "react"
+import { useCallback, useReducer, useRef, useState } from "react"
 import dynamic from "next/dynamic"
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe-js"
 import type { Stripe } from "@stripe/stripe-js"
 import { LockKeyhole } from "lucide-react"
 
+import { isCheckoutAccessRecoveryError } from "@/lib/checkout/access-recovery"
 import { Button } from "@/components/ui/button"
 import { PaymentFeedbackCard } from "@/components/checkout/payment-feedback-card"
 import { usePaymentSupportReport } from "@/components/checkout/use-payment-support-report"
@@ -109,8 +110,10 @@ export function PaymentMethodCheckout({
   checkoutKey,
   clientSecret,
   fetchClientSecret,
+  isAccessRecoveryActive,
   interval,
   leadId,
+  funnelSessionId,
   lockedProvider = null,
   onBeforeStripeConfirm,
   onClientMounted,
@@ -134,6 +137,8 @@ export function PaymentMethodCheckout({
   returnDestination,
   source,
   stripe,
+  trial = false,
+  trialTerms,
   visible = true,
   expressElementsEnabled = false,
 }: {
@@ -144,8 +149,10 @@ export function PaymentMethodCheckout({
   checkoutKey: string
   clientSecret?: string | null
   fetchClientSecret: () => Promise<string>
+  isAccessRecoveryActive?: () => boolean
   interval: BillingInterval
   leadId?: string | null
+  funnelSessionId?: string | null
   lockedProvider?: "stripe" | "paypal" | null
   onBeforeStripeConfirm?: () => Promise<boolean>
   onClientMounted?: OfferCheckoutProviderLifecycleCallback
@@ -174,9 +181,23 @@ export function PaymentMethodCheckout({
   returnDestination?: string
   source: "pricing_page" | "quiz_result_offer"
   stripe: Promise<Stripe | null>
+  trial?: boolean
+  trialTerms?: string
   visible?: boolean
   expressElementsEnabled?: boolean
 }) {
+  const guardedFetchClientSecret = useCallback(async () => {
+    try {
+      return await fetchClientSecret()
+    } catch (error) {
+      if (isCheckoutAccessRecoveryError(error) || isAccessRecoveryActive?.()) {
+        // The owner has switched to recovery or discarded this attempt. Never
+        // hand an expected control outcome to Stripe as a failed payment load.
+        return new Promise<string>(() => {})
+      }
+      throw error
+    }
+  }, [fetchClientSecret, isAccessRecoveryActive])
   const paypalEnabled = isPayPalCheckoutEnabled()
   const isOfferOverlay = presentation === "offer-overlay"
   const useOfferElementsCheckout = isOfferOverlay && expressElementsEnabled
@@ -233,6 +254,8 @@ export function PaymentMethodCheckout({
           checkoutContext={checkoutContext}
           interval={interval}
           leadId={leadId}
+          funnelSessionId={funnelSessionId ?? undefined}
+          trial={trial}
           onCheckoutFailed={(failure) => {
             setPayPalReadyForCheckoutKey((readyCheckoutKey) =>
               readyCheckoutKey === checkoutKey ? null : readyCheckoutKey,
@@ -302,6 +325,10 @@ export function PaymentMethodCheckout({
         </p>
       ) : null}
 
+      {trialTerms ? (
+        <p className="mb-3 text-[12px] leading-relaxed text-[var(--text-caption)]">{trialTerms}</p>
+      ) : null}
+
       {useOfferElementsCheckout ? (
         <>
           <p className="text-[12px] leading-relaxed text-[var(--text-caption)]">
@@ -348,7 +375,8 @@ export function PaymentMethodCheckout({
               checkoutKey={checkoutKey}
               clientSecret={clientSecret}
               commerceKind="subscription"
-              fetchClientSecret={fetchClientSecret}
+              fetchClientSecret={guardedFetchClientSecret}
+              isAccessRecoveryActive={isAccessRecoveryActive}
               lockedProvider={lockedProvider}
               onBeforeConfirm={onBeforeStripeConfirm}
               onClientMounted={onClientMounted}
@@ -481,7 +509,7 @@ export function PaymentMethodCheckout({
                   <EmbeddedCheckoutProvider
                     key={checkoutKey}
                     stripe={stripe}
-                    options={{ fetchClientSecret }}
+                    options={{ fetchClientSecret: guardedFetchClientSecret }}
                   >
                     <EmbeddedCheckout />
                   </EmbeddedCheckoutProvider>

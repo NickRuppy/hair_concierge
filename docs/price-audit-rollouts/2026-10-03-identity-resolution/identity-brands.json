@@ -1,0 +1,91 @@
+{
+  "collector_started_at": "2026-10-03T13:48:09Z",
+  "collector_finished_at": "2026-10-03T13:51:49Z",
+  "scope": "read-only deep identity resolution; no catalog writes",
+  "cases": [
+    {
+      "id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "name": "Langhaarmädchen Lovely Long Shampoo",
+      "old_gtin": "4067796002621",
+      "current_gtin": "4066447864694",
+      "current_offer": {
+        "url": "https://www.dm.de/p/d/1559584/langhaarmaedchen-shampoo-lovely-long",
+        "price_eur": 4.95,
+        "size": "300 ml",
+        "stock": "InStock; In den Warenkorb; Lieferbar; 2–3 business days"
+      },
+      "formula_delta": "Old Deste record matches dm AT/DE list, but current exact GTIN4066447864694 dm IT additionally declares Tetramethyl Acetyloctahydronaphthalenes and Amyl Salicylate, and moves Parfum to fourth. Current primary storefronts disagree; continuity unproven.",
+      "historical_source": {
+        "url": "https://deste.uz/product/shampoo-lovely-long-300-ml-a81508504",
+        "source_date": "search index crawled 2026-09-12",
+        "exact_gtin_quote": "EAN 4067796002621; Maqola 1559584; [full listed INCI follows]"
+      },
+      "recommendation": "hold_current_primary_declaration_conflict",
+      "confidence": "medium",
+      "blocker": "no manufacturer transition statement",
+      "parent_conflict_source": "https://www.dm-drogeriemarkt.it/p/d/1559584/langhaarmadchen-shampoo-lovely-long"
+    },
+    {
+      "id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "name": "Langhaarmädchen Beautiful Curls Shampoo",
+      "old_gtin": "4067796150735",
+      "current_gtin": "4070765004649",
+      "current_offer": {
+        "url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+        "price_eur": 4.95,
+        "size": "300 ml",
+        "stock": "InStock; In den Warenkorb; Lieferbar; 2–3 business days"
+      },
+      "formula_delta": "confirmed declared formulation change: old dm.at exact GTIN list begins Aqua, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Aloe Barbadensis Leaf Juice Powder; current dm.de exact GTIN list begins Aqua, Aloe Barbadensis Leaf Juice, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride",
+      "historical_source": {
+        "url": "https://www.dm.at/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+        "source_date": "search index crawled 2026-09-12"
+      },
+      "recommendation": "hold alias/formula decision; same dm article is not sufficient under the current guard",
+      "confidence": "high",
+      "blocker": "no official reformulation/continuity statement"
+    },
+    {
+      "id": "efaff579-e411-41eb-972a-2734a8517356",
+      "name": "got2b Schutzengel Hitzeschutzspray",
+      "old_gtin": "4015100800128",
+      "current_gtin": "4015100894141",
+      "current_offer": {
+        "url": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+        "price_eur": 4.95,
+        "size": "200 ml",
+        "stock": "InStock; In den Warenkorb; Lieferbar; 2–3 business days"
+      },
+      "formula_delta": "changed disclosed INCI lists; this is not evidence by itself of a chemical reformulation because fragrance-allergen/disclosure conventions can explain part of the difference",
+      "historical_source": {
+        "url": "https://www.dm.de/hitzeschutzspray-schutzengel-p4015100800128.html",
+        "source_date": "search index crawled 2026-02-03"
+      },
+      "recommendation": "hold alias/formula decision",
+      "confidence": "high for disclosed-list change; unresolved for chemical/reformulation interpretation",
+      "blocker": "no manufacturer statement"
+    },
+    {
+      "id": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+      "name": "Herbal Essences Aloe Vera Conditioner",
+      "old_gtin": "8700216211598",
+      "current_gtin": "8700216210546",
+      "current_offer": {
+        "url": "https://www.dm.de/p/d/1409620/herbal-essences-conditioner-feuchtigkeit-aloe-vera",
+        "price_eur": 3.95,
+        "size": "250 ml",
+        "stock": "InStock; In den Warenkorb; Lieferbar; 2–3 business days"
+      },
+      "formula_delta": "not determinable: exact old INCI not recovered from the primary dm network",
+      "historical_source": {
+        "url": "https://shop.super-pharm.co.il/care/hair-care/conditioner/%D7%9E%D7%A8%D7%9B-%D7%90%D7%9C%D7%95%D7%95%D7%A8%D7%94-%D7%9C%D7%9C%D7%90-%D7%A1%D7%95%D7%9C%D7%A4%D7%98%D7%99%D7%9D/p/681048",
+        "source_date": "search index crawled 2026-09-12",
+        "exact_gtin_quote": "Product barcode 8700216211598; 250 ml"
+      },
+      "recommendation": "hold alias",
+      "confidence": "low",
+      "blocker": "no exact old INCI or official transition statement"
+    }
+  ],
+  "evidence": "/tmp/chaarlie-identity-deep-brand-evidence/evidence.md"
+}

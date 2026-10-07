@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { z } from "zod"
 
 import { createAdminClient } from "@/lib/supabase/admin"
+import { createProductionSyncPlanWithFacts } from "@/lib/personal-plan/facts-recompute"
+import type { SyncPlanWithFacts } from "@/lib/personal-plan/facts-recompute/types"
 import { createClient } from "@/lib/supabase/server"
 import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
 import { createSupabaseStage2RefinementPersistence } from "@/lib/personal-plan/persistence/stage2-refinement-supabase"
@@ -27,6 +29,13 @@ export type Stage2RouteDeps = {
   enabled: () => boolean
   loadStage2Access: (userId: string) => Promise<PersonalPlanStage2Access>
   /**
+   * Facts recompute lane (central profile PR2): after a habits module completion and before the
+   * routine recompute, moves the plan to the current profile facts. A `rebased` result with a
+   * refined version replaces the completion's refined version as the recompute's target; every
+   * other result (or a throw) leaves today's behaviour. Absent = no lane.
+   */
+  syncPlanWithFacts?: SyncPlanWithFacts
+  /**
    * Runs the headless habits-recompute lane after a Verhalten (habits) module
    * completion. Returns `null` when the plan has no active routine yet — the
    * cheap gate this dep applies BEFORE doing any Stage-3 work, so the caller
@@ -44,6 +53,38 @@ export type Stage2RouteDeps = {
 
 /** The client-visible shape added to `moduleCompletion.recompute` — no reasons or retryability. */
 type HabitsRecomputeClientOutcome = { outcome: "applied" | "unchanged" | "unavailable" }
+
+/**
+ * The refined version the routine recompute must target: the one a facts rebase just produced,
+ * else the completion's own. Completing the habits module on a plan whose profile changed since
+ * the last rebase would otherwise recompute the routine on a refined version that the rebase is
+ * about to supersede. Never throws: a plan problem must not fail the module completion.
+ */
+async function resolveRecomputeTarget(
+  deps: Stage2RouteDeps,
+  userId: string,
+  completedRefinedVersionId: string,
+): Promise<string> {
+  if (!deps.syncPlanWithFacts) return completedRefinedVersionId
+  const phaseStarted = performance.now()
+  let status = "unexpected_error"
+  let target = completedRefinedVersionId
+  try {
+    const result = await deps.syncPlanWithFacts({ userId })
+    status = result.status
+    if (result.status === "rebased" && result.refinedVersionId) target = result.refinedVersionId
+  } catch {
+    // Keep the completion's refined version; the outbox self-heal covers a missed rebase.
+  }
+  reportPersonalPlanTransitionTiming({
+    layer: "server",
+    operation: "stage2_habits_facts_sync",
+    outcome: status,
+    durationMs: performance.now() - phaseStarted,
+  })
+  console.info("personal_plan_stage2_api", { event: "habits_facts_sync", status })
+  return target
+}
 
 /**
  * Runs the habits-recompute lane and reports it via the same telemetry idiom
@@ -233,7 +274,7 @@ export function createStage2RouteHandlers(deps: Stage2RouteDeps) {
             const recompute = await runHabitsRecomputeLane(
               deps,
               userId,
-              moduleCompletion.refinedVersionId,
+              await resolveRecomputeTarget(deps, userId, moduleCompletion.refinedVersionId),
             )
             return {
               session: savedSession,
@@ -282,11 +323,15 @@ const handlers = createStage2RouteHandlers({
   enabled: () => isPersonalPlanAppV1Enabled(),
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   loadStage2Access: loadPersonalPlanStage2AccessForUser,
-  gatewayFor: (userId) =>
-    createPersistedStage2RefinementGateway({
+  syncPlanWithFacts: (input) => createProductionSyncPlanWithFacts(createAdminClient())(input),
+  gatewayFor: (userId) => {
+    const admin = createAdminClient()
+    return createPersistedStage2RefinementGateway({
       userId,
-      persistence: createSupabaseStage2RefinementPersistence(createAdminClient()),
-    }),
+      persistence: createSupabaseStage2RefinementPersistence(admin),
+      admin,
+    })
+  },
   runHabitsRecompute: async ({ userId, refinedVersionId }) => {
     const admin = createAdminClient()
     // Cheapest existing read that exposes `active_routine_version_id` (see
@@ -311,7 +356,7 @@ const handlers = createStage2RouteHandlers({
     )
   },
 })
-// A habits-module completion runs the headless Stage-3 recompute inline, the
+// A habits-module completion runs the facts rebase and the headless Stage-3 recompute inline, the
 // same shape `accept-ideal-plan/route.ts` needs the raised ceiling for.
 export const maxDuration = 60
 export const GET = handlers.GET

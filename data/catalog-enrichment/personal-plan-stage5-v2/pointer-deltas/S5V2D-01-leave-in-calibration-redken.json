@@ -1,0 +1,59 @@
+{
+  "schema_version": "personal-plan-stage5-v2-pointer-delta-v1",
+  "batch_id": "S5V2D-01-leave-in-calibration-redken",
+  "source_artifact": {
+    "path": "data/catalog-enrichment/personal-plan-stage5-v2/application-pointer-backfill.json",
+    "sha256": "7afa162b8575e07afc3f1c5b801ac66ffdcbebbecba1fa505ffb13bf3aad03a8"
+  },
+  "observed_counts": {
+    "items": 1
+  },
+  "items": [
+    {
+      "key": "2b7db7e3-2058-4178-8a03-7d05f4a1d447:pre_heat_protection:pre_heat_damp",
+      "product_id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+      "source_role": "pre_heat_protection",
+      "source_fingerprint": "8e1b1bbc51ce497047f75891d18bc5b87125dbe6a0b20b01a95f7b5f8fa7b8cb",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "2b7db7e3-2058-4178-8a03-7d05f4a1d447"
+        },
+        "sourceRole": "pre_heat_protection",
+        "role": "heat_protection",
+        "applicationFamily": "pre_heat_damp",
+        "facts": {
+          "applicationState": "damp_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "leave_in",
+          "contactTime": null,
+          "amount": null,
+          "heat": {
+            "supportedStates": [
+              "damp_hair"
+            ],
+            "activationRequired": false,
+            "maximumClaimedTemperatureC": null,
+            "reapplication": "each_separate_heat_event"
+          },
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.redken.eu/de-de/produkte/haarpflege/extreme/extreme-anti-snap",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-09-13"
+          }
+        ]
+      }
+    }
+  ]
+}

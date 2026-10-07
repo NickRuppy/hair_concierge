@@ -37,7 +37,6 @@ const SPEC_TABLE_COLUMNS: Record<(typeof SPEC_TABLE_ORDER)[number], string[]> = 
     "weight",
     "roles",
     "provides_heat_protection",
-    "heat_protection_max_c",
     "heat_activation_required",
     "care_benefits",
     "ingredient_flags",

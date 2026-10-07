@@ -375,7 +375,7 @@ test("the generated V2 artifact includes Balea without changing the frozen V1 re
   const niveaItems = artifact.items.filter(
     (candidate: { product_id: string }) => candidate.product_id === NIVEA_PRODUCT_ID,
   )
-  assert.equal(artifact.observed_counts.rows, 309)
+  assert.equal(artifact.observed_counts.rows, 310)
   assert.equal(baleaItems.length, 1)
   assert.equal(baleaItems[0].source_role, "shampoo_everyday")
   assert.deepEqual(baleaItems[0].guidance_payload_v2, pointer)

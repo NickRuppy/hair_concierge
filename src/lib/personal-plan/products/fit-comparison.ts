@@ -28,6 +28,7 @@ import {
   positionLabel,
   positionsOverlap,
   renderedDimensions,
+  targetPositionLabel,
   type ComparisonProductEntry,
   type Stage3FitComparisonDimension,
   type Stage3FitComparisonPosition,
@@ -45,6 +46,9 @@ export type {
 } from "./comparison-dimensions"
 
 export const STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT = 3
+export const STAGE3_NATIVE_FIT_COMPARISON_ALTERNATIVE_LIMIT = 5
+
+export type Stage3FitComparisonAlternativeSelection = "web" | "native"
 
 export type Stage3FitEvidenceRelation =
   | "in_target"
@@ -127,12 +131,14 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
   input: Stage3AuthorityInput<C>,
   subjectEvaluation?: Stage3AuthorityEvaluation,
   context?: Stage3EvaluationContext,
+  options?: { alternativeSelection?: Stage3FitComparisonAlternativeSelection },
 ): Stage3FitComparison {
   const authorityInput = input as unknown as Stage3AuthorityInput
   const authorityEvaluation = subjectEvaluation ?? evaluateStage3Authority(authorityInput)
   const selectedCandidates = boundedSelectedComparisonCandidateAssessments(
     authorityInput,
     authorityEvaluation,
+    options?.alternativeSelection ?? "web",
   )
   const entries = [
     ...currentComparisonProductEntries(authorityInput, authorityEvaluation),
@@ -245,13 +251,11 @@ function alternativeProductEntries(
   }))
 }
 
-const STAGE3_COMMERCE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000
-
 function presentationFor(
   facts: Stage3CategoryProductFacts,
 ): Stage3FitComparisonProduct["presentation"] {
   return {
-    priceLabel: freshPriceLabel(facts),
+    priceLabel: priceLabel(facts),
     netContentLabel:
       facts.netContentValue !== null &&
       facts.netContentValue !== undefined &&
@@ -261,18 +265,19 @@ function presentationFor(
   }
 }
 
-function freshPriceLabel(facts: Stage3CategoryProductFacts): string | null {
+/**
+ * The stored price always shows while the link is buyable — a stale check date
+ * never blanks it (Nick, 2026-09-30: an outdated price beats a price-less
+ * card; the recurring price audit keeps the stored value honest).
+ */
+function priceLabel(facts: Stage3CategoryProductFacts): string | null {
   if (
     facts.priceEur === null ||
     facts.priceEur === undefined ||
-    facts.purchaseLinkStatus !== "available" ||
-    !facts.priceCheckedAt
+    facts.purchaseLinkStatus !== "available"
   ) {
     return null
   }
-  const checkedAt = Date.parse(facts.priceCheckedAt)
-  if (!Number.isFinite(checkedAt) || Date.now() - checkedAt > STAGE3_COMMERCE_MAX_AGE_MS)
-    return null
   return new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(
     facts.priceEur,
   )
@@ -285,6 +290,7 @@ function formatNumber(value: number): string {
 function selectedComparisonCandidateAssessments(
   input: Stage3AuthorityInput,
   subjectEvaluation?: Stage3AuthorityEvaluation,
+  selection: Stage3FitComparisonAlternativeSelection = "web",
 ): CandidateAssessment[] {
   const currentProductId = input.productFacts?.productId ?? null
   const pinnedRecommendationProductId = authorityRecommendationProductId(input, subjectEvaluation)
@@ -298,7 +304,10 @@ function selectedComparisonCandidateAssessments(
     )
     .map((candidate) => assessCandidate(input, candidate))
     .filter((candidate): candidate is CandidateAssessment => candidate !== null)
-    .filter((candidate) => candidate.targetCount > 0 && candidate.targetMatchCount > 0)
+    .filter(
+      (candidate) =>
+        selection === "native" || (candidate.targetCount > 0 && candidate.targetMatchCount > 0),
+    )
     .sort((left, right) =>
       compareWithAuthorityPin(
         toRankableCandidate(left),
@@ -360,11 +369,35 @@ function compareWithAuthorityPin(
 function boundedSelectedComparisonCandidateAssessments(
   input: Stage3AuthorityInput,
   subjectEvaluation?: Stage3AuthorityEvaluation,
+  selection: Stage3FitComparisonAlternativeSelection = "web",
 ): CandidateAssessment[] {
-  return selectedComparisonCandidateAssessments(input, subjectEvaluation).slice(
-    0,
-    STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
-  )
+  const candidates = selectedComparisonCandidateAssessments(input, subjectEvaluation, selection)
+  if (selection === "native") {
+    return candidates
+      .sort(compareNativePresentationCandidates)
+      .slice(0, STAGE3_NATIVE_FIT_COMPARISON_ALTERNATIVE_LIMIT)
+  }
+  return candidates.slice(0, STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT)
+}
+
+/** Native carousel policy is presentation-only: verdict, then comparable EUR price, then ID. */
+function compareNativePresentationCandidates(
+  left: CandidateAssessment,
+  right: CandidateAssessment,
+): number {
+  const verdict = left.verdict === right.verdict ? 0 : left.verdict === "ideal" ? -1 : 1
+  if (verdict !== 0) return verdict
+  const price = (candidate: CandidateAssessment) =>
+    candidate.facts.currency === "EUR" &&
+    Number.isFinite(candidate.priceEur) &&
+    candidate.priceEur !== null &&
+    candidate.priceEur >= 0
+      ? candidate.priceEur
+      : Number.POSITIVE_INFINITY
+  const leftPrice = price(left)
+  const rightPrice = price(right)
+  if (leftPrice !== rightPrice) return leftPrice - rightPrice
+  return left.productId.localeCompare(right.productId)
 }
 
 function assessCandidate(
@@ -463,7 +496,11 @@ function evidenceRowsFromDimensions(
     target:
       dimension.targetPosition && dimension.targetPosition.kind !== "unknown"
         ? {
-            valueLabel: positionLabel(dimension.targetPosition, dimension.stops),
+            valueLabel: targetPositionLabel(
+              dimension.targetPosition,
+              dimension.stops,
+              dimension.presentationKind,
+            ),
             rationale: targetRationale(dimension.dimensionId),
             profileEvidenceLabels: profileEvidenceLabels(dimension.dimensionId, context).slice(
               0,

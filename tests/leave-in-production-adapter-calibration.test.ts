@@ -11,9 +11,19 @@ import {
   type LeaveInProductionAdapterOutcome,
 } from "../src/lib/leave-in-research/production-adapter"
 
-const ENVELOPE_DIR = path.resolve("data/research/leave-in-inci/v1.0/calibration-envelopes")
+// Standard v1.1 (v1.0 + the T20 overlay) is the live calibration set. The v1.0
+// envelopes and golden projections stay byte-frozen as the historical record of
+// calibration batch v1; they are compared below, never regenerated.
+const ENVELOPE_DIR = path.resolve("data/research/leave-in-inci/v1.1/calibration-envelopes")
 const EXPECTED_PATH = path.resolve(
+  "data/research/leave-in-inci/v1.1/calibration-expected-projections.json",
+)
+const V10_ENVELOPE_DIR = path.resolve("data/research/leave-in-inci/v1.0/calibration-envelopes")
+const V10_EXPECTED_PATH = path.resolve(
   "data/research/leave-in-inci/v1.0/calibration-expected-projections.json",
+)
+const T20_RECORDS_PATH = path.resolve(
+  "data/research/leave-in-inci/v1.1/corpus/t20-rederived/t20-care-direction-records.json",
 )
 const PACKET_PATH = path.resolve(
   "data/research/leave-in-inci/v1.0/corpus/gold-set/calibration-packet.json",
@@ -35,7 +45,7 @@ const envelopeFiles = readdirSync(ENVELOPE_DIR)
   .filter((file) => file.endsWith(".json"))
   .sort()
 
-test("the calibration corpus holds all 11 in-category gold-set envelopes", () => {
+test("the v1.1 calibration corpus holds all 11 in-category gold-set envelopes", () => {
   assert.equal(envelopeFiles.length, 11)
   const expected = readJson<ExpectedFile>(EXPECTED_PATH)
   assert.equal(expected.adapter_version, "leave-in-production-adapter-v1")
@@ -78,7 +88,7 @@ test("the golden projections stay inside the intake vocabularies", () => {
     assert.ok(fit.care_benefits.length > 0, `${file}: fit care_benefits`)
     assert.ok(eligibility.length > 0, `${file}: eligibility`)
 
-    assert.equal(specs.heat_protection_max_c, null, `${file}: AD-6`)
+    assert.ok(!("heat_protection_max_c" in specs), `${file}: AD-6`)
     assert.equal(specs.heat_activation_required, false, `${file}: AD-3`)
     assert.equal(fit.weight, specs.weight, `${file}: fit_specs.weight === specs.weight`)
     assert.ok(!specs.roles.includes("oil_replacement"), `${file}: oil_replacement is never emitted`)
@@ -209,4 +219,153 @@ test("P2 INCI comma guard: protects digit-comma-digit only, not a digit on one s
     "1,2-HEXANEDIOL",
     "a comma with a digit on both sides stays inside the ingredient name",
   )
+})
+
+// ---------------------------------------------------------------------------
+// Standard v1.1 (T20) against the frozen v1.0 calibration set
+// ---------------------------------------------------------------------------
+
+type EnvelopeShape = {
+  researchMethod: Record<string, string>
+  profile: Record<string, unknown> & {
+    careDirection: { value: string; confidence: string }
+    uncertainFields: string[]
+    assumptionNotes: string[]
+  }
+} & Record<string, unknown>
+
+test("v1.1 envelopes carry every v1.0 field unchanged except the T20 care_direction reopen", () => {
+  const v10Files = readdirSync(V10_ENVELOPE_DIR)
+    .filter((file) => file.endsWith(".json"))
+    .sort()
+  assert.deepEqual(envelopeFiles, v10Files)
+  for (const file of envelopeFiles) {
+    const v11 = readJson<EnvelopeShape>(path.join(ENVELOPE_DIR, file))
+    const v10 = readJson<EnvelopeShape>(path.join(V10_ENVELOPE_DIR, file))
+    const { researchMethod: m11, profile: p11, ...rest11 } = v11
+    const { researchMethod: m10, profile: p10, ...rest10 } = v10
+    assert.deepEqual(rest11, rest10, `${file}: identity/formula/version unchanged`)
+    assert.equal(m10.policyId, "leave-in-classification-v1.0", file)
+    assert.equal(m11.policyId, "leave-in-classification-v1.1", file)
+    const { careDirection: c11, uncertainFields: u11, assumptionNotes: a11, ...other11 } = p11
+    const { careDirection: c10, uncertainFields: u10, assumptionNotes: a10, ...other10 } = p10
+    assert.deepEqual(
+      other11,
+      other10,
+      `${file}: every other profile field is carried byte-for-byte`,
+    )
+    assert.deepEqual(a11.slice(0, a10.length), a10, `${file}: v1.0 notes kept`)
+    assert.equal(a11.length, a10.length + 1, `${file}: exactly one T20 note added`)
+    assert.deepEqual(
+      u11.filter((field) => field !== "care_direction"),
+      u10.filter((field) => field !== "care_direction"),
+      `${file}: only care_direction may join uncertainFields`,
+    )
+    assert.ok(c11 && c10, `${file}: both carry a care direction`)
+  }
+})
+
+test("every v1.1 envelope's care direction is its T20 record, low reads flagged uncertain", () => {
+  const records = readJson<{
+    records: Array<{
+      slot: number | string
+      care_direction: { value: string; confidence: string; routes_to_review: boolean }
+    }>
+  }>(T20_RECORDS_PATH).records
+  for (const file of envelopeFiles) {
+    const slot = Number(file.replace(/^slot-|\.json$/g, ""))
+    const record = records.find((candidate) => candidate.slot === slot)
+    assert.ok(record, `${file}: T20 record`)
+    const envelope = readJson<EnvelopeShape>(path.join(ENVELOPE_DIR, file))
+    assert.equal(envelope.profile.careDirection.value, record.care_direction.value, file)
+    assert.equal(envelope.profile.careDirection.confidence, record.care_direction.confidence, file)
+    if (record.care_direction.confidence === "low" && record.care_direction.routes_to_review) {
+      assert.ok(envelope.profile.uncertainFields.includes("care_direction"), `${file}: uncertain`)
+    }
+  }
+})
+
+test("the v1.1 adapter refuses every frozen v1.0 envelope (T20 reopened care_direction)", () => {
+  for (const file of envelopeFiles) {
+    const outcome = projectLeaveInForProduction(
+      readJson<unknown>(path.join(V10_ENVELOPE_DIR, file)),
+    )
+    assert.equal(outcome.status, "needs_research", file)
+    if (outcome.status === "needs_research") {
+      assert.match(outcome.reasons.join(" "), /researchMethod\.policyId/, file)
+    }
+  }
+})
+
+test("the v1.0 -> v1.1 production delta is exactly the ruled one", () => {
+  type Projection = Extract<LeaveInProductionAdapterOutcome, { status: "projection_ready" }>
+  const v10 = readJson<{ projections: Record<string, Projection> }>(V10_EXPECTED_PATH).projections
+  const v11 = readJson<ExpectedFile>(EXPECTED_PATH).projections as Record<string, Projection>
+  const changedFields = (file: string) => {
+    const before = v10[file].productionProjection
+    const after = v11[file].productionProjection
+    const changes: Record<string, [unknown, unknown]> = {}
+    if (
+      JSON.stringify(before.suitable_thicknesses) !== JSON.stringify(after.suitable_thicknesses)
+    ) {
+      changes.suitable_thicknesses = [before.suitable_thicknesses, after.suitable_thicknesses]
+    }
+    for (const table of ["product_leave_in_specs", "product_leave_in_fit_specs"] as const) {
+      const b = before.category_specs[table] as Record<string, unknown>
+      const a = after.category_specs[table] as Record<string, unknown>
+      for (const key of new Set([...Object.keys(b), ...Object.keys(a)])) {
+        if (JSON.stringify(b[key]) !== JSON.stringify(a[key]))
+          changes[`${table}.${key}`] = [b[key], a[key]]
+      }
+    }
+    if (
+      JSON.stringify(before.category_specs.product_leave_in_eligibility) !==
+      JSON.stringify(after.category_specs.product_leave_in_eligibility)
+    ) {
+      changes.product_leave_in_eligibility = [
+        before.category_specs.product_leave_in_eligibility,
+        after.category_specs.product_leave_in_eligibility,
+      ]
+    }
+    return changes
+  }
+
+  const moistureToBalanced = (functionalAfter: string[]) => ({
+    "product_leave_in_specs.care_direction": ["moisture", "balanced"],
+    "product_leave_in_specs.care_benefits": [["moisture", "anti_frizz"], ["anti_frizz"]],
+    "product_leave_in_specs.functional_benefits": [
+      ["moisture_softness", ...functionalAfter],
+      functionalAfter,
+    ],
+  })
+  const expected: Record<string, Record<string, [unknown, unknown]>> = {
+    "slot-01.json": {},
+    "slot-02.json": {},
+    "slot-03.json": {},
+    "slot-04.json": {},
+    // AD-3a revision only: already balanced, loses moisture_softness.
+    "slot-05.json": {
+      "product_leave_in_specs.functional_benefits": [
+        ["moisture_softness", "smooth_anti_frizz"],
+        ["smooth_anti_frizz"],
+      ],
+    },
+    "slot-06.json": {},
+    // T20 flip + AD-3a revision.
+    "slot-08.json": moistureToBalanced(["smooth_anti_frizz", "heat_protect"]) as never,
+    // AD-3a revision only: protein, loses moisture_softness.
+    "slot-09.json": {
+      "product_leave_in_specs.functional_benefits": [
+        ["moisture_softness", "smooth_anti_frizz", "heat_protect", "repair_support"],
+        ["smooth_anti_frizz", "heat_protect", "repair_support"],
+      ],
+    },
+    "slot-10.json": moistureToBalanced(["smooth_anti_frizz", "heat_protect"]) as never,
+    "slot-11.json": {},
+    "slot-13.json": moistureToBalanced(["smooth_anti_frizz", "heat_protect"]) as never,
+  }
+  for (const file of envelopeFiles) {
+    assert.deepEqual(changedFields(file), expected[file], `${file}: production delta`)
+    assert.equal(v11[file].productionProjection.research_model_version, "leave-in-inci-v1.1", file)
+  }
 })

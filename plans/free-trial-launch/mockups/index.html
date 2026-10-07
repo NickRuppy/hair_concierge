@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chaarlie · Probeabo im Vergleich</title>
+<style>
+:root{--ink:#2a1845;--plum:#6b50a0;--coral:#c86974;--cream:#fbfaf7;--line:#e3dde8;--muted:#716879}*{box-sizing:border-box}body{margin:0;background:#eeecf0;color:var(--ink);font:14px/1.5 Arial,Helvetica,sans-serif}button,a{font:inherit}button{cursor:pointer}button:focus-visible{outline:3px solid var(--coral);outline-offset:3px}.review{padding:18px 28px;background:#29213a;color:white}.review-top{display:flex;align-items:center;justify-content:space-between;gap:20px;max-width:1120px;margin:auto}.review h1{font-size:16px;font-weight:500;margin:0 0 10px}.controls{display:flex;gap:6px;flex-wrap:wrap}.controls button{border:1px solid #635673;border-radius:7px;padding:8px 12px;background:transparent;color:white;font-size:12px}.controls button[aria-pressed=true]{background:#fff;color:var(--ink);border-color:#fff}.context{max-width:1120px;margin:12px auto 0;color:#d4cadf;font-size:12px}.context summary{cursor:pointer}.context p{margin:7px 0 0;max-width:850px}.canvas{max-width:1020px;margin:24px auto;background:var(--cream);border:1px solid #e1dce4;box-shadow:0 8px 35px #3022390d}.canvas.mobile{max-width:390px}.brandbar{border-bottom:1px solid #ede9ef;padding:18px 32px}.brand{font:700 28px Georgia,serif;letter-spacing:-1.5px}.surface{padding:40px 32px 32px;max-width:630px;margin:auto}.intro{text-align:center;margin-bottom:34px}.intro h2{font:normal 36px/1.12 Georgia,serif;letter-spacing:-1px;margin:0 0 12px}.intro p{margin:0;color:var(--muted);font-size:14px}.choices{display:grid;gap:14px}.plan{position:relative;display:flex;align-items:center;gap:12px;padding:21px 18px;border:1px solid var(--line);border-radius:14px;background:#fff}.radio{height:19px;width:19px;flex:none;border:1.5px solid #d2cbd9;border-radius:50%}.plan-copy{flex:1}.plan-title{font-size:14px;font-weight:700}.detail{margin-top:5px;font-size:12px;color:var(--muted)}.amount{text-align:right;white-space:nowrap}.amount strong{font-size:24px;line-height:1.2;font-weight:700}.amount span{font-size:12px;color:var(--muted);display:block;margin-top:3px}.selected{border:1.5px solid var(--plum);background:#f5f1fa}.selected .radio{border:6px solid var(--plum);background:#fff}.badge{position:absolute;top:-12px;right:14px;border-radius:20px;padding:3px 10px;background:var(--plum);color:white;font-size:12px;font-weight:600}.aggressive .selected{background:var(--ink);color:#fff;border-color:var(--ink)}.aggressive .selected .detail,.aggressive .selected .amount span{color:#e2daec}.aggressive .selected .radio{border-color:#cfb7ef}.aggressive .badge{background:#ead3a0;color:#44361c}.cta{display:block;width:100%;border:0;background:var(--coral);color:#fff;padding:17px 10px;border-radius:12px;font-size:14px;font-weight:700;margin-top:23px;cursor:default}.disclosure{font-size:12px;line-height:1.55;color:var(--muted);text-align:center;margin:13px auto 0;max-width:530px}.providers{font-size:12px;color:var(--muted);text-align:center;margin:20px 0 0}.foot{border-top:1px solid #ede9ef;text-align:center;color:var(--muted);font-size:12px;padding:16px}.reviewnote{max-width:1020px;margin:0 auto 24px;padding:0 20px;font-size:12px;color:#686173}.mobile .brandbar{padding:17px 22px}.mobile .surface{padding:30px 20px 25px}.mobile .intro{margin-bottom:30px}.mobile .intro h2{font-size:32px}.mobile .plan{padding:21px 13px;gap:10px}.mobile .amount strong{font-size:24px}.mobile .detail{max-width:170px}@media(max-width:700px){.review{padding:15px}.review-top{display:block}.viewcontrols{display:none}.canvas{max-width:390px;margin:16px auto}.brandbar{padding:17px 22px}.surface{padding:30px 20px 25px}.intro{margin-bottom:30px}.intro h2{font-size:32px}.plan{padding:21px 13px;gap:10px}.detail{max-width:170px}}@media print{.review,.reviewnote{display:none}.canvas{border:0;box-shadow:none;margin:0}}
+</style>
+</head>
+<body>
+<header class="review">
+ <div class="review-top"><div><h1>Probeabo · Entwürfe, überarbeitet</h1><div class="controls" aria-label="Variante"><button data-variant="a">A · Zwei Laufzeiten</button><button data-variant="b">B · Drei Laufzeiten</button><button data-variant="c">C · Cal AI inspiriert</button></div></div><div class="controls viewcontrols"><button data-view="desktop">Desktop</button><button data-view="mobile">Mobil · 390 px</button></div></div>
+ <details class="context"><summary>Designentwurf · Preise kürzerer Laufzeiten noch offen</summary><p>Statische Ansichten, keine Buchung. Monatlich 9,99 € und vierteljährlich 19,99 € stammen aus dem aktuellen Launch-Katalog. Diese Preise und sieben Testtage auf kürzeren Laufzeiten sind Vergleichsannahmen. Die Jahresersparnis von gerundet 42 % bezieht sich nur auf das erste bezahlte Jahr gegenüber zwölf Monatszahlungen von je 9,99 €.</p></details>
+</header>
+<div class="canvas" id="canvas"><div id="offer">
+ <header class="brandbar"><span class="brand">chaarlie</span></header>
+ <main class="surface">
+  <div class="intro"><h2 id="headline"></h2><p>Dein persönlicher Haarplan. Voller Zugang.</p></div>
+  <div class="choices" id="choices" aria-label="Laufzeiten, Jahresabo als Entwurf ausgewählt"></div>
+  <button class="cta" id="cta" aria-disabled="true" tabindex="-1">7 Tage kostenlos testen →</button>
+  <p class="disclosure">Nach 7 Tagen 69,99 € fürs erste Jahr, danach 99,99 €/Jahr.<br>Automatische Verlängerung. Vor Testende kündigen, dann zahlst du nichts.</p>
+  <p class="providers">Karte oder PayPal · Alle Preise sind Endpreise.</p>
+ </main><footer class="foot">AGB &nbsp; · &nbsp; Datenschutz &nbsp; · &nbsp; Widerruf</footer>
+</div></div>
+<p class="reviewnote" id="note"></p>
+<script>
+const annual = (bold) => `<div class="plan selected"><span class="badge">${bold?'42 % im 1. Jahr sparen':'Empfohlen'}</span><span class="radio" aria-hidden="true"></span><div class="plan-copy"><div class="plan-title">Jährlich</div><div class="detail">69,99 € im ersten Jahr</div></div><div class="amount"><strong>≈ 5,83 €</strong><span>/ Monat im 1. Jahr</span></div></div>`;
+const monthly = `<div class="plan"><span class="radio" aria-hidden="true"></span><div class="plan-copy"><div class="plan-title">Monatlich</div><div class="detail">Monatliche Abrechnung</div></div><div class="amount"><strong>9,99 €</strong><span>/ Monat</span></div></div>`;
+const quarterly = `<div class="plan"><span class="radio" aria-hidden="true"></span><div class="plan-copy"><div class="plan-title">Vierteljährlich</div><div class="detail">19,99 € alle 3 Monate</div></div><div class="amount"><strong>≈ 6,66 €</strong><span>/ Monat</span></div></div>`;
+function render(variant,view){
+const aggressive=variant==='c'; document.querySelector('#offer').className=aggressive?'aggressive':'';document.querySelector('#canvas').className='canvas '+(view==='mobile'?'mobile':'');
+document.querySelector('#headline').innerHTML=aggressive?'7 Tage kostenlos.<br>Dein Haarplan wartet.':'Dein Haarplan.<br>7 Tage kostenlos.';
+document.querySelector('#choices').innerHTML=aggressive?annual(true)+monthly:monthly+(variant==='b'?quarterly:'')+annual(false);
+document.querySelector('#note').innerHTML=variant==='c'?'<b>C · Jahresabo im Fokus.</b> Direkter Monatsvergleich, Ersparnis im ersten Jahr, kompakte Verlängerungsinformation.':variant==='b'?'<b>B · Drei Laufzeiten.</b> Gleiche reduzierte Gestaltung wie A, ergänzt um die vierteljährliche Option.':'<b>A · Zwei Laufzeiten.</b> Direkter Monatsvergleich, Jahresabo empfohlen.';
+document.querySelectorAll('[data-variant]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.variant===variant));document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.view===view));
+history.replaceState(null,'',`?variant=${variant}&view=${view}`);
+}
+let params=new URLSearchParams(location.search);let variant=['a','b','c'].includes(params.get('variant'))?params.get('variant'):'c';let view=params.get('view')==='mobile'?'mobile':'desktop';
+document.querySelectorAll('[data-variant]').forEach(b=>b.onclick=()=>{variant=b.dataset.variant;render(variant,view)});document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;render(variant,view)});render(variant,view);
+</script>
+</body></html>

@@ -44,10 +44,11 @@ const v3EnvelopeSchema = z
   .strict()
 
 const v2AnswersSchema = personalPlanDurableAnswersBaseSchema
-  .omit({ currentConcerns: true, concernRecurrence: true })
+  .omit({ currentConcerns: true, concernRecurrence: true, primaryConcern: true })
   .extend({
     currentConcerns: z.array(z.enum(legacyConcernValues)).optional(),
     concernRecurrence: z.undefined().optional(),
+    primaryConcern: z.undefined().optional(),
   })
   .strict()
 
@@ -162,7 +163,10 @@ export function parseSupportedPersonalPlanQuizEnvelope(
   }
 }
 
-const V2_CONCERN_MAP: Record<PersonalPlanLegacyConcern, PlanCurrentConcern | null> = {
+// Exported so `src/lib/user-facts/project-artifact.ts` decodes v2 `currentConcerns` through
+// the exact same table Stage-1 uses (F10: unchanged users must hash identically) instead of
+// retyping this vocabulary.
+export const V2_CONCERN_MAP: Record<PersonalPlanLegacyConcern, PlanCurrentConcern | null> = {
   dry_dull_lengths: "dry_lengths",
   frizz_flyaways: "frizz_flyaways",
   low_shine: "low_shine",
@@ -173,7 +177,7 @@ const V2_CONCERN_MAP: Record<PersonalPlanLegacyConcern, PlanCurrentConcern | nul
   scalp_imbalance: null,
 }
 
-function normalizeV2Concerns(values: readonly PersonalPlanLegacyConcern[] | undefined) {
+export function normalizeV2Concerns(values: readonly PersonalPlanLegacyConcern[] | undefined) {
   const normalized = new Set<PlanCurrentConcern>()
   for (const value of values ?? []) {
     const mapped = V2_CONCERN_MAP[value]

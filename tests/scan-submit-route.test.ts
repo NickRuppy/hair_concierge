@@ -26,6 +26,15 @@ function baseDeps(overrides: Partial<ScanSubmitRouteDeps> = {}): ScanSubmitRoute
     // only calls isMatchScanEligible for a "matched" result), so an empty set is a safe,
     // inert default here -- tests that care about eligibility override this.
     filterScanEligibleProductIds: async () => new Set(),
+    resolveRetailerEnrichment: async () => ({
+      enrichment: null,
+      outcome: "disabled",
+      durationMs: null,
+      deadlineMs: null,
+    }),
+    recordScanSubmitDmLookupEvent: async () => {},
+    after: () => {},
+    findOpenScanSubmissionByName: async () => null,
     submit: async () => ({
       kind: "pending_review",
       category: "shampoo",
@@ -155,6 +164,94 @@ test("scan submit: pending_review maps to 202 pending_submission with headline",
     submissionId,
     headline: "Eingereicht!",
   })
+})
+
+test("scan submit: server-fetched dm draft reaches the confirmed submission and logs lookup", async () => {
+  const logged: unknown[] = []
+  let submittedEnrichment: unknown = undefined
+  const enrichment = {
+    source: "dm" as const,
+    fetchedAt: "2026-09-17T10:00:00.000Z",
+    gtin: "04006381333931",
+    dan: "1234567",
+    productName: "Repair Shampoo",
+    brand: "WELEDA",
+    imageUrl: null,
+    productUrl: "https://dm.de/repair",
+    ingredientsText: "Water",
+    description: null,
+    keyBenefits: null,
+    suggestedCategory: "shampoo" as const,
+  }
+  const handler = createScanSubmitRouteHandler(
+    baseDeps({
+      resolveRetailerEnrichment: (async () => ({
+        enrichment,
+        outcome: "hit",
+        durationMs: 210,
+        deadlineMs: 1500,
+      })) as never,
+      recordScanSubmitDmLookupEvent: (async (_client: unknown, event: unknown) => {
+        logged.push(event)
+      }) as never,
+      after: (task: () => Promise<void> | void) => {
+        void task()
+      },
+      submit: (async ({ enrichment: draft }: { enrichment?: unknown }) => {
+        submittedEnrichment = draft
+        return {
+          kind: "pending_review",
+          category: "shampoo",
+          submission: { id: submissionId, status: "pending_review", category: "shampoo" },
+          match: { status: "insufficient_identity" } as never,
+        }
+      }) as never,
+    } as Partial<ScanSubmitRouteDeps>),
+  )
+  const response = await handler(request(validBody))
+  assert.equal(response.status, 202)
+  assert.deepEqual(submittedEnrichment, enrichment)
+  assert.equal(logged.length, 1)
+  assert.deepEqual(
+    (({ outcome, durationMs, deadlineMs }) => ({ outcome, durationMs, deadlineMs }))(
+      logged[0] as { outcome: string; durationMs: number; deadlineMs: number },
+    ),
+    { outcome: "hit", durationMs: 210, deadlineMs: 1500 },
+  )
+})
+
+test("scan submit: dm timeout still creates the plain submission and records timeout", async () => {
+  const logged: unknown[] = []
+  let submittedEnrichment: unknown = "not-called"
+  const handler = createScanSubmitRouteHandler(
+    baseDeps({
+      resolveRetailerEnrichment: (async () => ({
+        enrichment: null,
+        outcome: "timeout",
+        durationMs: 1500,
+        deadlineMs: 1500,
+      })) as never,
+      recordScanSubmitDmLookupEvent: (async (_client: unknown, event: unknown) => {
+        logged.push(event)
+      }) as never,
+      after: (task: () => Promise<void> | void) => {
+        void task()
+      },
+      submit: (async ({ enrichment }: { enrichment?: unknown }) => {
+        submittedEnrichment = enrichment
+        return {
+          kind: "pending_review",
+          category: "shampoo",
+          submission: { id: submissionId, status: "pending_review", category: "shampoo" },
+          match: { status: "insufficient_identity" } as never,
+        }
+      }) as never,
+    } as Partial<ScanSubmitRouteDeps>),
+  )
+  const response = await handler(request(validBody))
+  assert.equal(response.status, 202)
+  assert.equal(submittedEnrichment, null)
+  assert.equal((logged[0] as { outcome?: string })?.outcome, "timeout")
 })
 
 test("scan submit: a scan-eligible catalog match is wired into submit's isMatchScanEligible, honoured as 200 already_in_catalog", async () => {
@@ -313,4 +410,200 @@ test("scan submit: a lost race on the one-open-submission index answers 202 with
     headline: "Eingereicht!",
   })
   assert.deepEqual(reloads, [{ userId, identifierValue: "4006381333931" }])
+})
+
+// --- Task 5: name-based research intake (no scanned identifier) ------------------------
+
+const nameOnlyBody = {
+  category: "shampoo",
+  brandText: "Kérastase",
+  productNameText: "Ciment Thermique",
+}
+
+test("scan submit: an identifier-less body is accepted and maps to 202 pending_submission", async () => {
+  const handler = createScanSubmitRouteHandler(baseDeps())
+  const response = await handler(request(nameOnlyBody))
+  assert.equal(response.status, 202)
+  assert.deepEqual(await response.json(), {
+    kind: "pending_submission",
+    submissionId,
+    headline: "Eingereicht!",
+  })
+})
+
+test("scan submit: an identifier-less body missing brandText is a 400 zod rejection", async () => {
+  const handler = createScanSubmitRouteHandler(baseDeps())
+  const { brandText: _brandText, ...withoutBrand } = nameOnlyBody
+  const response = await handler(request(withoutBrand))
+  assert.equal(response.status, 400)
+})
+
+test("scan submit: an identifier-less body missing productNameText is a 400 zod rejection", async () => {
+  const handler = createScanSubmitRouteHandler(baseDeps())
+  const { productNameText: _productNameText, ...withoutName } = nameOnlyBody
+  const response = await handler(request(withoutName))
+  assert.equal(response.status, 400)
+})
+
+test("scan submit: an identifier-less body missing both brandText and productNameText is a 400 zod rejection", async () => {
+  const handler = createScanSubmitRouteHandler(baseDeps())
+  const response = await handler(request({ category: "shampoo" }))
+  assert.equal(response.status, 400)
+})
+
+test("scan submit: an identifier-less body skips EAN validation, the dm lookup, and its event log entirely", async () => {
+  let resolveRetailerEnrichmentCalled = false
+  let recordScanSubmitDmLookupEventCalled = false
+  let capturedEnrichment: unknown = "not-called"
+  const handler = createScanSubmitRouteHandler(
+    baseDeps({
+      validateEanInput: () => {
+        throw new Error("validateEanInput must not be called for an identifier-less body")
+      },
+      resolveRetailerEnrichment: (async () => {
+        resolveRetailerEnrichmentCalled = true
+        return { enrichment: null, outcome: "disabled", durationMs: null, deadlineMs: null }
+      }) as never,
+      recordScanSubmitDmLookupEvent: (async () => {
+        recordScanSubmitDmLookupEventCalled = true
+      }) as never,
+      submit: async ({ enrichment }) => {
+        capturedEnrichment = enrichment
+        return {
+          kind: "pending_review",
+          category: "shampoo",
+          submission: { id: submissionId, status: "pending_review", category: "shampoo" },
+          match: { status: "insufficient_identity" } as never,
+        }
+      },
+    }),
+  )
+  const response = await handler(request(nameOnlyBody))
+  assert.equal(response.status, 202)
+  assert.equal(resolveRetailerEnrichmentCalled, false)
+  assert.equal(recordScanSubmitDmLookupEventCalled, false)
+  assert.equal(capturedEnrichment, null)
+})
+
+test("scan submit: an identifier-less body's insert input carries both texts and OMITS scannedIdentifier (never an explicit null)", async () => {
+  let capturedInput:
+    | { scannedIdentifier?: unknown; brand_text?: unknown; product_name_text?: unknown }
+    | undefined
+  const handler = createScanSubmitRouteHandler(
+    baseDeps({
+      submit: async ({ input }) => {
+        capturedInput = input
+        return {
+          kind: "pending_review",
+          category: "shampoo",
+          submission: { id: submissionId, status: "pending_review", category: "shampoo" },
+          match: { status: "insufficient_identity" } as never,
+        }
+      },
+    }),
+  )
+  await handler(request(nameOnlyBody))
+  assert.equal("scannedIdentifier" in (capturedInput ?? {}), false)
+  assert.equal(capturedInput?.brand_text, "Kérastase")
+  assert.equal(capturedInput?.product_name_text, "Ciment Thermique")
+})
+
+test("scan submit: an identifier-less body matching an eligible catalog product answers 200 already_in_catalog", async () => {
+  const handler = createScanSubmitRouteHandler(
+    baseDeps({
+      submit: async ({ input }) => {
+        assert.equal("scannedIdentifier" in input, false)
+        return {
+          kind: "already_in_catalog",
+          productId,
+          category: "shampoo",
+          match: { status: "matched" } as never,
+        }
+      },
+    }),
+  )
+  const response = await handler(request(nameOnlyBody))
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { kind: "already_in_catalog", productId })
+})
+
+test("scan submit: a lost race on the name-only one-open-submission index answers 202 with the existing submission (coalesce)", async () => {
+  // End-to-end over the real submitScanProductIntake, mirroring the EAN-lane coalesce test
+  // above: the second concurrent identifier-less submit for the same
+  // user+category+brand+name is rejected by idx_product_submissions_one_open_scan_name.
+  // submitScanProductIntake itself only reloads the EAN lane's own conflict (its
+  // `scannedIdentifier &&` guard is false here), so the route must reload and answer with
+  // the existing submission instead of propagating the error as a 503.
+  const existingSubmissionId = "55555555-5555-4555-8555-555555555555"
+  const reloads: Array<{
+    userId: string
+    category: string
+    brandText: string
+    productNameText: string
+  }> = []
+  const repository = {
+    loadCatalog: async () => ({ products: [], identifiers: [] }),
+    loadBrandResolutionCatalog: async () => ({ brands: [] }),
+    insertProductSubmission: async () => {
+      throw Object.assign(
+        new Error(
+          'duplicate key value violates unique constraint "idx_product_submissions_one_open_scan_name"',
+        ),
+        { code: "23505" },
+      )
+    },
+  } as unknown as ProductIntakeRepository
+
+  const handler = createScanSubmitRouteHandler(
+    baseDeps({
+      createRepository: () => repository,
+      submit: submitScanProductIntake,
+      findOpenScanSubmissionByName: (async (
+        _client: unknown,
+        reloadUserId: string,
+        category: string,
+        brandText: string,
+        productNameText: string,
+      ) => {
+        reloads.push({ userId: reloadUserId, category, brandText, productNameText })
+        return { submissionId: existingSubmissionId, status: "pending_review" as const }
+      }) as never,
+    }),
+  )
+  const response = await handler(request(nameOnlyBody))
+
+  assert.equal(response.status, 202)
+  assert.deepEqual(await response.json(), {
+    kind: "pending_submission",
+    submissionId: existingSubmissionId,
+    headline: "Eingereicht!",
+  })
+  assert.deepEqual(reloads, [
+    { userId, category: "shampoo", brandText: "Kérastase", productNameText: "Ciment Thermique" },
+  ])
+})
+
+test("scan submit: a name-only conflict with no reloadable row still throws (not silently swallowed)", async () => {
+  const repository = {
+    loadCatalog: async () => ({ products: [], identifiers: [] }),
+    loadBrandResolutionCatalog: async () => ({ brands: [] }),
+    insertProductSubmission: async () => {
+      throw Object.assign(
+        new Error(
+          'duplicate key value violates unique constraint "idx_product_submissions_one_open_scan_name"',
+        ),
+        { code: "23505" },
+      )
+    },
+  } as unknown as ProductIntakeRepository
+
+  const handler = createScanSubmitRouteHandler(
+    baseDeps({
+      createRepository: () => repository,
+      submit: submitScanProductIntake,
+      findOpenScanSubmissionByName: async () => null,
+    }),
+  )
+  const response = await handler(request(nameOnlyBody))
+  assert.equal(response.status, 503)
 })

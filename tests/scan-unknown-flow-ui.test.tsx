@@ -5,6 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server"
 
 import { CATEGORY_COPY } from "../src/components/personal-plan-products/stage3-product-copy"
 import { ScanUnknownFlow, type ScanSubmissionInput } from "../src/components/scan/scan-unknown-flow"
+import { ScanProductThumb } from "../src/components/scan/scan-product-thumb"
 import { PERSONAL_PLAN_PRODUCT_CATEGORIES } from "../src/lib/personal-plan/products/contracts"
 import type { ScanUnknownProductResult } from "../src/lib/scan/types"
 
@@ -121,6 +122,145 @@ function categoryButton(tree: ReactNode, label: string): AnyElement {
   assert.ok(match, `Expected a category button labeled "${label}"`)
   return match
 }
+
+function identifiedResult(suggestion: "shampoo" | null = "shampoo"): ScanUnknownProductResult {
+  return {
+    ...unknownResult(),
+    identified: {
+      source: "dm",
+      dan: "1234567",
+      productName: "Shampoo Rosmarin Revitalising, 250 ml",
+      brand: "WELEDA",
+      imageUrl: null,
+      suggestedCategory: suggestion,
+    },
+  }
+}
+
+test("dm thumbnail: a failed optimizer image becomes the accessible placeholder", () => {
+  const tree = withClientHooks(() =>
+    ScanProductThumb({
+      imageUrl: "https://products.dm-static.com/images/a",
+      label: "Shampoo",
+      size: 48,
+      proxied: true,
+    }),
+  )
+  ;(tree.value.props as { onError: () => void }).onError()
+  tree.value = tree.rerender()
+  assert.equal(tree.value.props.role, "img")
+  assert.equal(tree.value.props["aria-label"], "Shampoo: Bild nicht verfügbar")
+})
+
+test("identified unknown: renders identity and one-tap confirmation without creating a submission on view", () => {
+  const calls: unknown[] = []
+  const tree = withClientHooks(() =>
+    ScanUnknownFlow({
+      unknown: identifiedResult(),
+      submitting: false,
+      error: null,
+      onSubmit: (...args) => calls.push(args),
+    }),
+  )
+  const markup = renderToStaticMarkup(tree.value)
+  assert.match(markup, /Gefunden – jetzt prüfen wir es\./)
+  assert.match(markup, /Weleda/)
+  assert.match(markup, /Benutzt du es als Shampoo\?/)
+  assert.doesNotMatch(markup, /Barcode gelesen|Wobei benutzt|Weitere Produktarten/)
+  assert.deepEqual(calls, [])
+  categoryButton(tree.value, "Ja, als Shampoo").props.onClick()
+  assert.deepEqual(calls, [[{ category: "shampoo" }, "one_tap"]])
+})
+
+test("identified unknown: other reveals grid without submitting, then allows a category override", () => {
+  const calls: unknown[] = []
+  const tree = withClientHooks(() =>
+    ScanUnknownFlow({
+      unknown: identifiedResult(),
+      submitting: false,
+      error: null,
+      onSubmit: (...args) => calls.push(args),
+    }),
+  )
+  categoryButton(tree.value, "Wofür anderes").props.onClick()
+  tree.value = tree.rerender()
+  assert.deepEqual(calls, [])
+  assert.match(renderToStaticMarkup(tree.value), /Wobei benutzt du es\?/)
+  assert.equal(
+    findAll(
+      tree.value,
+      (element) => element.type === "button" && textContent(element) === "Shampoo",
+    ).length,
+    0,
+  )
+  categoryButton(tree.value, "Conditioner").props.onClick()
+  assert.deepEqual(calls, [[{ category: "conditioner" }, "grid"]])
+})
+
+test("identified unknown: expanding alternative categories also excludes a secondary suggestion", () => {
+  const unknown = identifiedResult()
+  unknown.identified!.suggestedCategory = "heat_protectant"
+  const calls: unknown[] = []
+  const tree = withClientHooks(() =>
+    ScanUnknownFlow({
+      unknown,
+      submitting: false,
+      error: null,
+      onSubmit: (...args) => calls.push(args),
+    }),
+  )
+  categoryButton(tree.value, "Wofür anderes").props.onClick()
+  tree.value = tree.rerender()
+  categoryButton(tree.value, "Weitere Produktarten").props.onClick()
+  tree.value = tree.rerender()
+  assert.deepEqual(calls, [])
+  assert.equal(
+    findAll(
+      tree.value,
+      (element) =>
+        element.type === "button" && textContent(element) === CATEGORY_COPY.heat_protectant.label,
+    ).length,
+    0,
+  )
+  categoryButton(tree.value, CATEGORY_COPY.scalp_care.label).props.onClick()
+  assert.deepEqual(calls, [[{ category: "scalp_care" }, "grid"]])
+})
+
+test("identified unknown: ambiguous category uses the normal grid and mixed-case brand stays unchanged", () => {
+  const unknown = identifiedResult(null)
+  unknown.identified!.brand = "alverde Naturkosmetik"
+  const tree = withClientHooks(() =>
+    ScanUnknownFlow({ unknown, submitting: false, error: null, onSubmit: () => undefined }),
+  )
+  const markup = renderToStaticMarkup(tree.value)
+  assert.match(markup, /alverde Naturkosmetik/)
+  assert.match(markup, /Wobei benutzt du es\?/)
+  assert.doesNotMatch(markup, /Ja, als|Wofür anderes/)
+  categoryButton(tree.value, "Shampoo")
+})
+
+test("identified unknown: failed confirmation restores its label and keeps recovery available", () => {
+  const state = { submitting: false, error: null as string | null }
+  const calls: unknown[] = []
+  const tree = withClientHooks(() =>
+    ScanUnknownFlow({
+      unknown: identifiedResult(),
+      ...state,
+      onSubmit: (...args) => calls.push(args),
+    }),
+  )
+  categoryButton(tree.value, "Ja, als Shampoo").props.onClick()
+  state.submitting = true
+  tree.value = tree.rerender()
+  categoryButton(tree.value, "Wird eingereicht").props.onClick()
+  assert.equal(calls.length, 1)
+  assert.equal(categoryButton(tree.value, "Wofür anderes").props.disabled, true)
+  state.submitting = false
+  state.error = "Hat nicht geklappt – versuch's nochmal."
+  tree.value = tree.rerender()
+  assert.equal(categoryButton(tree.value, "Ja, als Shampoo").props.disabled, false)
+  assert.match(renderToStaticMarkup(tree.value), /role="alert"/)
+})
 
 test("ScanUnknownFlow: renders the signed-off headline and question verbatim", () => {
   const tree = renderFlow({ submitting: false, onSubmit: () => undefined })

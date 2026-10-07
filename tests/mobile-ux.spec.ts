@@ -1,6 +1,8 @@
 import { expect, test, type Page } from "@playwright/test"
 import { createClient } from "@supabase/supabase-js"
 
+import { seedHairProfile } from "../src/lib/user-facts/seed-profile"
+
 const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000"
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -367,28 +369,24 @@ for (const mobileViewport of mobileViewports) {
       )
       if (billingError && billingError.code !== "PGRST205") throw billingError
 
-      const { error: hairProfileError } = await admin.from("hair_profiles").upsert(
-        {
-          user_id: userId,
-          hair_texture: "wavy",
-          thickness: "fine",
-          density: "medium",
-          concerns: ["frizz"],
-          cuticle_condition: "rough",
-          protein_moisture_balance: "stretches_bounces",
-          scalp_type: "balanced",
-          scalp_condition: null,
-          chemical_treatment: ["colored"],
-          goals: ["less_frizz"],
-          desired_volume: "balanced",
-          heat_styling: "never",
-          styling_tools: [],
-          night_protection: [],
-          uses_heat_protection: false,
-        },
-        { onConflict: "user_id" },
-      )
-      if (hairProfileError) throw hairProfileError
+      // Through the door (`user_facts_save_v1`) — the lock rejects direct fact-column writes.
+      await seedHairProfile(admin, userId, {
+        hair_texture: "wavy",
+        thickness: "fine",
+        density: "medium",
+        concerns: ["frizz"],
+        cuticle_condition: "rough",
+        protein_moisture_balance: "stretches_bounces",
+        scalp_type: "balanced",
+        scalp_condition: null,
+        chemical_treatment: ["colored"],
+        goals: ["less_frizz"],
+        desired_volume: "balanced",
+        heat_styling: "never",
+        styling_tools: [],
+        night_protection: [],
+        uses_heat_protection: false,
+      })
 
       const { error: productUsageError } = await admin.from("user_product_usage").insert({
         user_id: userId,

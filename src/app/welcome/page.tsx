@@ -1,4 +1,9 @@
-import { redirect } from "next/navigation"
+import { redirect, unstable_rethrow } from "next/navigation"
+import { CheckoutRecoveryError } from "@/lib/auth/checkout-activation-outcome"
+import { classifyCheckoutRecoveryError } from "@/lib/auth/checkout-recovery-classification"
+import { CheckoutRecoveryPanel } from "./checkout-recovery-panel"
+import { WelcomeReturnRecovery } from "./return-recovery-client"
+import { paypalWelcomeReturnExpiresAt } from "./return-recovery"
 import { after } from "next/server"
 import { createHash } from "node:crypto"
 import { createClient } from "@/lib/supabase/server"
@@ -32,6 +37,7 @@ import {
   ensureCheckoutAccount,
   ensureOneTimeCheckoutAccount,
   verifyCheckoutSessionForActivation,
+  getStripeTrialReturnRecoveryCode,
 } from "@/lib/stripe/checkout-activation"
 import { buildCheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
 import { recoverPayPalOrderActivation } from "@/lib/paypal/order-activation"
@@ -57,11 +63,24 @@ export default async function WelcomePage({
         return_state === "failed_permanent" || return_state === "revoked" ? return_state : undefined
       return renderPayPalOneTimeWelcome(token, returnState)
     }
-    return renderPayPalWelcome(token)
+    return renderPayPalWelcome(token).catch((error) => renderReturnError(error, "paypal"))
   }
 
-  if (!session_id) redirect("/")
-  return renderStripeWelcome(session_id)
+  if (!session_id) return <WelcomeReturnRecovery />
+  return renderStripeWelcome(session_id).catch((error) => renderReturnError(error, "stripe"))
+}
+
+function renderReturnError(error: unknown, provider: "stripe" | "paypal") {
+  unstable_rethrow(error)
+  captureCheckoutException(error, {
+    provider,
+    stage: "checkout_return",
+    source: "welcome",
+    reason: error instanceof CheckoutRecoveryError ? error.code : "activation_return_failed",
+  })
+  return (
+    <CheckoutRecoveryPanel code={classifyCheckoutRecoveryError(error) ?? "activation_temporary"} />
+  )
 }
 
 async function renderStripeWelcome(session_id: string) {
@@ -103,33 +122,50 @@ async function renderStripeWelcome(session_id: string) {
           />
         )
       }
-      redirect("/pricing")
+      return (
+        <CheckoutRecoveryPanel
+          code={classifyCheckoutRecoveryError(err) ?? "trial_reconciliation_required"}
+        />
+      )
     }
     throw err
   }
 
   const email = session.customer_details?.email
-  if (!email) redirect("/")
+  if (!email) return <CheckoutRecoveryPanel code="trial_reconciliation_required" />
   const isOneTimePurchase = session.metadata?.product_kind === "personal_plan_once"
+  // Suppression only: a provider marker never grants trial access. Admission is
+  // independently verified by ensureCheckoutAccount during account completion.
+  const isTrialCheckout = Object.keys(session.metadata ?? {}).some((key) =>
+    key.startsWith("trial_"),
+  )
   const admin = createAdminClient()
+  if (isTrialCheckout) {
+    const recoveryCode = await getStripeTrialReturnRecoveryCode(session, {
+      supabase: admin,
+      stripe,
+    })
+    if (recoveryCode) return <CheckoutRecoveryPanel code={recoveryCode} />
+  }
   const firstTimeDestination = await resolveCheckoutFirstTimeDestination(
     admin,
     session.metadata?.lead_id,
     session.metadata?.checkout_context,
   )
-  const purchaseAnalytics = isOneTimePurchase
-    ? null
-    : await buildCheckoutPurchaseAnalytics(session, stripe).catch((err) => {
-        console.error("[welcome] purchase analytics unavailable:", err)
-        captureCheckoutException(err, {
-          provider: "stripe",
-          stage: "checkout_return",
-          source: "welcome",
-          stripeSessionId: session_id,
-          reason: "purchase_analytics_unavailable",
+  const purchaseAnalytics =
+    isOneTimePurchase || isTrialCheckout
+      ? null
+      : await buildCheckoutPurchaseAnalytics(session, stripe).catch((err) => {
+          console.error("[welcome] purchase analytics unavailable:", err)
+          captureCheckoutException(err, {
+            provider: "stripe",
+            stage: "checkout_return",
+            source: "welcome",
+            stripeSessionId: session_id,
+            reason: "purchase_analytics_unavailable",
+          })
+          return null
         })
-        return null
-      })
 
   const supabase = await createClient()
   const {
@@ -255,6 +291,7 @@ async function renderStripeWelcome(session_id: string) {
         }}
         email={email}
         purchase={purchaseAnalytics}
+        isTrialCheckout={isTrialCheckout}
         redirectTo={redirectTo}
         activationRedirectTo={firstTimeDestination}
         sessionId={session_id}
@@ -271,6 +308,7 @@ async function renderStripeWelcome(session_id: string) {
       }}
       email={email}
       purchase={purchaseAnalytics}
+      isTrialCheckout={isTrialCheckout}
       activationRedirectTo={firstTimeDestination}
       sessionId={session_id}
     />
@@ -394,28 +432,29 @@ function oneTimeReturnStateFromError(error: unknown): "revoked" | "support_neede
 }
 
 async function renderPayPalWelcome(token: string | undefined) {
-  if (!token) redirect("/")
+  if (!token) return <CheckoutRecoveryPanel code="activation_link_invalid" />
 
   const admin = createAdminClient()
-  const activation = await ensurePayPalCheckoutAccountForToken(token, {
-    supabase: admin,
-    premiumTierId: await getPremiumTierId(admin),
-    linkQuizToProfile,
-  }).catch((err) => {
-    if (err instanceof PayPalCheckoutActivationError) {
-      captureCheckoutException(err, {
-        provider: "paypal",
-        stage: "checkout_return",
-        source: "welcome",
-        paypalTokenPresent: true,
-        reason: err.code,
-      })
-      redirect("/pricing")
+  let activation
+  try {
+    activation = await ensurePayPalCheckoutAccountForToken(token, {
+      supabase: admin,
+      premiumTierId: await getPremiumTierId(admin),
+      linkQuizToProfile,
+    })
+  } catch (error) {
+    if (
+      error instanceof PayPalCheckoutActivationError &&
+      (error.code === "paypal_checkout_intent_missing" ||
+        error.code === "paypal_checkout_intent_expired")
+    ) {
+      return <CheckoutRecoveryPanel code="activation_link_invalid" />
     }
-    throw err
-  })
+    return renderReturnError(error, "paypal")
+  }
 
   if (activation.status === "duplicate") {
+    if (activation.recoveryCode) return <CheckoutRecoveryPanel code={activation.recoveryCode} />
     return (
       <WelcomeClient
         activationSource={{ provider: "paypal", token }}
@@ -438,6 +477,7 @@ async function renderPayPalWelcome(token: string | undefined) {
   }
 
   const intent = await findPayPalCheckoutIntentByToken(admin, token)
+  const returnRecoveryExpiresAt = paypalWelcomeReturnExpiresAt(intent)
   const checkoutContext =
     typeof intent?.metadata?.checkout_context === "string" ? intent.metadata.checkout_context : null
   const firstTimeDestination = await resolveCheckoutFirstTimeDestination(
@@ -488,6 +528,7 @@ async function renderPayPalWelcome(token: string | undefined) {
       providerSubscriberEmail={activation.providerSubscriberEmail}
       purchase={null}
       activationRedirectTo={firstTimeDestination}
+      returnRecoveryExpiresAt={returnRecoveryExpiresAt}
     />
   )
 }

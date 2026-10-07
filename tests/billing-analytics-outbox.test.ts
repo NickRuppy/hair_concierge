@@ -13,6 +13,59 @@ import type {
   SupabaseBillingAnalyticsClient,
 } from "../src/lib/billing/types"
 
+test("Slack rows cannot consume the Node batch limit or interrupt other deliveries", async () => {
+  const { supabase, deliveries } = createSupabaseStub()
+  await createBillingAnalyticsEvent(
+    supabase,
+    {
+      eventKey: "stripe:purchase_completed:slack-state-outage",
+      eventName: "purchase_completed",
+      userId: "user-123",
+      provider: "stripe",
+      occurredAt: new Date().toISOString(),
+      payload: { value: 9.99, currency: "EUR" },
+    },
+    { dispatch: false, destinations: ["meta", "posthog"] },
+  )
+  deliveries[0].destination = "slack"
+  const sent: string[] = []
+  await dispatchBillingAnalyticsDueWithStats(supabase, {
+    limit: 1,
+    dependencies: {
+      deliver: async (destination) => {
+        sent.push(destination)
+        return { ok: true }
+      },
+    },
+  })
+  assert.deepEqual(sent, ["posthog"])
+  assert.equal(deliveries[0].status, "pending")
+  assert.equal(deliveries[0].attempts, 0)
+  assert.equal(deliveries[1].status, "delivered")
+})
+
+test("trial authorization can only queue the internal PostHog event, even with paid destinations requested", async () => {
+  for (const destinations of [undefined, ["customerio", "meta", "posthog", "funnel"] as const]) {
+    const { supabase, deliveries } = createSupabaseStub()
+    await createBillingAnalyticsEvent(
+      supabase,
+      {
+        eventKey: "stripe:trial_started:enrollment",
+        eventName: "trial_started",
+        userId: "user-123",
+        provider: "stripe",
+        occurredAt: "2026-09-14T12:00:00.000Z",
+        payload: { value: 0 },
+      },
+      { dispatch: false, ...(destinations ? { destinations: [...destinations] } : {}) },
+    )
+    assert.deepEqual(
+      deliveries.map((row) => row.destination),
+      ["posthog"],
+    )
+  }
+})
+
 function createSupabaseStub(options: { profileLookupErrors?: number } = {}) {
   const outbox: BillingAnalyticsOutboxRow[] = []
   const deliveries: BillingAnalyticsDeliveryRow[] = []
@@ -629,4 +682,136 @@ test("permanent delivery results stop after the first attempt", async () => {
   assert.equal(deliveries[0].attempts, 1)
   assert.equal(deliveries[0].next_attempt_at, null)
   assert.equal(deliveries[0].last_error, "invalid funnel data")
+})
+
+test("OpenAI queues only new trial/first purchase events and never backfills a duplicate", async () => {
+  const previous = process.env.OPENAI_ADS_ENABLED
+  process.env.OPENAI_ADS_ENABLED = "true"
+  try {
+    for (const eventName of [
+      "trial_started",
+      "purchase_completed",
+      "payment_completed",
+      "subscription_updated",
+    ] as const) {
+      const { supabase, deliveries } = createSupabaseStub()
+      const input = {
+        eventKey: `stripe:${eventName}:openai-fixture`,
+        eventName,
+        userId: "user-123",
+        provider: "stripe" as const,
+        occurredAt: new Date().toISOString(),
+        payload: {
+          trial_analytics_version: 1,
+          trial_authorized_at: new Date().toISOString(),
+          value: eventName === "trial_started" ? 0 : 9.99,
+          currency: "EUR",
+          attempt_phase: "first_paid",
+          funnel_session_id: "11111111-1111-4111-8111-111111111111",
+        },
+      }
+      await createBillingAnalyticsEvent(supabase, input, { dispatch: false })
+      assert.equal(
+        deliveries.some((row) => row.destination === "openai"),
+        eventName === "trial_started" || eventName === "purchase_completed",
+      )
+      const openaiIndex = deliveries.findIndex((row) => row.destination === "openai")
+      if (openaiIndex >= 0) deliveries.splice(openaiIndex, 1)
+      await createBillingAnalyticsEvent(supabase, input, { dispatch: false })
+      assert.equal(
+        deliveries.some((row) => row.destination === "openai"),
+        false,
+      )
+    }
+  } finally {
+    if (previous === undefined) delete process.env.OPENAI_ADS_ENABLED
+    else process.env.OPENAI_ADS_ENABLED = previous
+  }
+})
+
+test("OpenAI skips are terminal and counted without reading a customer profile", async () => {
+  const { supabase, deliveries } = createSupabaseStub()
+  const event = await createBillingAnalyticsEvent(
+    supabase,
+    {
+      eventKey: "stripe:purchase_completed:openai-skip",
+      eventName: "purchase_completed",
+      userId: "user-123",
+      provider: "stripe",
+      occurredAt: new Date().toISOString(),
+      payload: {
+        value: 9.99,
+        currency: "EUR",
+        funnel_session_id: "11111111-1111-4111-8111-111111111111",
+      },
+    },
+    { dispatch: false, destinations: ["openai"] },
+  )
+  let calls = 0
+  const stats = await dispatchBillingAnalyticsDueWithStats(supabase, {
+    destination: "openai",
+    eventKey: event.event_key,
+    dependencies: {
+      findProfile: async () => {
+        assert.fail("OpenAI must not read contact profiles")
+      },
+      deliver: async () => {
+        calls++
+        return { ok: false, skipped: true, error: "consent_denied" }
+      },
+    },
+  })
+  assert.deepEqual(stats, { processed: 1, delivered: 0, failed: 0, skipped: 1 })
+  assert.equal(deliveries[0].status, "skipped")
+  assert.equal(deliveries[0].next_attempt_at, null)
+  assert.equal(deliveries[0].delivered_at, null)
+  await dispatchBillingAnalyticsEvent(supabase, event, ["openai"], {
+    deliver: async () => {
+      calls++
+      return { ok: true }
+    },
+  })
+  assert.equal(calls, 1)
+})
+
+test("Node dispatch leaves all Supabase-owned Slack states untouched", async () => {
+  for (const status of [
+    "pending",
+    "failed",
+    "processing",
+    "delivered",
+    "failed_permanent",
+    "skipped",
+  ] as const) {
+    const { supabase, deliveries } = createSupabaseStub()
+    const event = await createBillingAnalyticsEvent(
+      supabase,
+      {
+        eventKey: `stripe:purchase_completed:slack-${status}`,
+        eventName: "purchase_completed",
+        userId: "user-123",
+        provider: "stripe",
+        occurredAt: new Date().toISOString(),
+        payload: { value: 9.99, currency: "EUR" },
+      },
+      { dispatch: false, destinations: ["posthog"] },
+    )
+    const row = deliveries[0]
+    row.destination = "slack"
+    row.status = status
+    row.attempts = 2
+    row.processing_started_at = "2020-01-01T00:00:00Z"
+    const before = structuredClone(row)
+    let calls = 0
+    const dependencies = {
+      deliver: async () => {
+        calls++
+        return { ok: true }
+      },
+    }
+    await dispatchBillingAnalyticsDueWithStats(supabase, { destination: "slack", dependencies })
+    await dispatchBillingAnalyticsEvent(supabase, event, ["slack"], dependencies)
+    assert.equal(calls, 0)
+    assert.deepEqual(row, before)
+  }
 })

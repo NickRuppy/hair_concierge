@@ -63,7 +63,10 @@ export async function deliverBillingAnalyticsToPostHog(
   const host =
     process.env.POSTHOG_HOST ?? process.env.NEXT_PUBLIC_POSTHOG_HOST ?? DEFAULT_POSTHOG_HOST
   let eventPayload = input.event.payload
-  if (input.event.event_name === "purchase_completed") {
+  if (
+    input.event.event_name === "purchase_completed" &&
+    input.event.payload.trial_analytics_version !== 1
+  ) {
     const attribution = await resolvePurchaseFunnelAttribution(input.supabase, input.event.payload)
     if (attribution.kind === "transient") {
       return { ok: false, error: attribution.error }
@@ -71,7 +74,20 @@ export async function deliverBillingAnalyticsToPostHog(
     eventPayload = purchaseFunnelProperties(input.event.payload, attribution)
   }
   const properties = {
-    ...eventPayload,
+    ...Object.fromEntries(
+      Object.entries(eventPayload).filter(
+        ([key]) =>
+          ![
+            "fbp",
+            "fbc",
+            "client_user_agent",
+            "client_ip_address",
+            "meta_context",
+            "marketing_consent",
+          ].includes(key),
+      ),
+    ),
+    $insert_id: input.event.event_key,
     billing_provider: input.event.provider,
     provider_customer_id: input.event.provider_customer_id,
     provider_subscription_id: input.event.provider_subscription_id,

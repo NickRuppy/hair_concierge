@@ -43,6 +43,12 @@ test("personal-plan pricing allocation is deterministic and has exclusive pricin
   assert.equal(resolvePersonalPlanPricingMode("personal-plan-membership-v1"), "membership")
 })
 
+test("retired one-time arm is never assigned to a new Personal Plan session", () => {
+  for (const id of ["new-session-a", "new-session-b", "new-session-c"]) {
+    assert.equal(assignPersonalPlanPricingExperimentVariant(id), "personal-plan-membership-v1")
+  }
+})
+
 test("personal-plan pricing experiment flag is enabled only by exact true", () => {
   const previous = process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED
   try {
@@ -209,7 +215,7 @@ test("personal-plan resolver persists an enabled unviewed assignment against the
   assert.equal(storedVariantGuard, PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant)
 })
 
-test("viewed, checkout-started, internal, and enabled treatment assignments remain sticky", async () => {
+test("persisted retired one-time arms resolve to the subscription presentation", async () => {
   for (const session of [
     {
       sessionId,
@@ -234,7 +240,7 @@ test("viewed, checkout-started, internal, and enabled treatment assignments rema
   ]) {
     assert.equal(
       await resolvePersonalPlanPricingExperiment({ enabled: false, session }),
-      "personal-plan-one-time-v1",
+      PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant,
     )
   }
   assert.equal(
@@ -251,7 +257,7 @@ test("viewed, checkout-started, internal, and enabled treatment assignments rema
   )
 })
 
-test("disabling the experiment rolls an unviewed treatment back to personal-plan-v1", async () => {
+test("a persisted retired arm is left intact for historic reporting", async () => {
   let updateValue: string | null = null
   let storedVariantGuard: string | null = null
   const client = {
@@ -289,11 +295,11 @@ test("disabling the experiment rolls an unviewed treatment back to personal-plan
   })
 
   assert.equal(resolved, PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant)
-  assert.equal(updateValue, PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant)
-  assert.equal(storedVariantGuard, "personal-plan-one-time-v1")
+  assert.equal(updateValue, null)
+  assert.equal(storedVariantGuard, null)
 })
 
-test("personal-plan rollback reads a concurrent winner and falls back to base on persistence failure", async () => {
+test("a persisted retired arm does not attempt a reset or database read", async () => {
   const raceClient = {
     from: () => ({
       update: () => ({
@@ -327,38 +333,8 @@ test("personal-plan rollback reads a concurrent winner and falls back to base on
       client: raceClient as never,
       session,
     }),
-    "personal-plan-membership-v1",
-  )
-
-  let capturedFallback: string | null = null
-  const errorClient = {
-    from: () => ({
-      update: () => ({
-        eq: () => ({
-          is: () => ({
-            eq: () => ({
-              select: () => ({
-                maybeSingle: async () => ({ data: null, error: new Error("unavailable") }),
-              }),
-            }),
-          }),
-        }),
-      }),
-      select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: null, error: null }) }) }),
-    }),
-  }
-  assert.equal(
-    await resolvePersonalPlanPricingExperiment({
-      enabled: false,
-      client: errorClient as never,
-      captureFailure: (_error, details) => {
-        capturedFallback = details.fallbackVariant
-      },
-      session,
-    }),
     PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant,
   )
-  assert.equal(capturedFallback, PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant)
 })
 
 test("assignment races use the persisted winner while assignment failures stay on the base", async () => {
@@ -395,7 +371,7 @@ test("assignment races use the persisted winner while assignment failures stay o
       client: raceClient as never,
       session,
     }),
-    "personal-plan-one-time-v1",
+    PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant,
   )
 
   let capturedFallback: string | null = null

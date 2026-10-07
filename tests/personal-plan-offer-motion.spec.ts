@@ -100,6 +100,24 @@ async function blockStripeSdk(page: Page) {
   )
 }
 
+async function stubCheckoutEligibility(
+  page: Page,
+  response:
+    | { status: "eligible" }
+    | { status: "existing_access"; activationPending: boolean; recovery: "account" | "login" } = {
+    status: "eligible",
+  },
+) {
+  await page.route("**/api/checkout/eligibility", async (route) => {
+    expect(route.request().method()).toBe("POST")
+    await route.fulfill({
+      body: JSON.stringify(response),
+      contentType: "application/json",
+      status: 200,
+    })
+  })
+}
+
 test.describe("@ci personal plan offer motion hooks", () => {
   test("sticky header keeps its footprint and page containment across the viewport matrix", async ({
     page,
@@ -154,6 +172,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
     page,
   }) => {
     await page.setViewportSize({ width: 320, height: 740 })
+    await stubCheckoutEligibility(page)
     await openPersonalPlanLab(page, "membership")
 
     const stickyCta = page.locator("[data-offer-sticky-cta]")
@@ -191,6 +210,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 })
+    await stubCheckoutEligibility(page)
     await page.route("**/api/stripe/create-checkout-session", async (route) => {
       await route.fulfill({
         body: JSON.stringify({ error: "synthetic lab response" }),
@@ -588,6 +608,117 @@ test.describe("@ci personal plan offer motion hooks", () => {
     }
   })
 
+  test("membership existing access recovers before any provider or session work", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    let stripeSdkRequests = 0
+    let payPalSdkRequests = 0
+    let providerRequests = 0
+    page.on("request", (request) => {
+      if (request.resourceType() === "script" && isStripeSdkScriptUrl(request.url())) {
+        stripeSdkRequests += 1
+      }
+      if (request.resourceType() === "script" && request.url().includes("paypal.com/sdk/js")) {
+        payPalSdkRequests += 1
+      }
+    })
+    await page.route("**/api/checkout/eligibility", async (route) => {
+      await route.fulfill({
+        body: JSON.stringify({
+          status: "existing_access",
+          activationPending: false,
+          recovery: "login",
+        }),
+        contentType: "application/json",
+        status: 200,
+      })
+    })
+    await page.route("**/api/stripe/create-checkout-session", async (route) => {
+      providerRequests += 1
+      await route.abort()
+    })
+    await page.route("**/api/paypal/create-subscription-intent", async (route) => {
+      providerRequests += 1
+      await route.abort()
+    })
+    await page.route("**/sdk/js?**", async (route) => {
+      providerRequests += 1
+      await route.abort()
+    })
+
+    await openPersonalPlanLab(page, "membership")
+    await revealPricing(page)
+    await page.locator("[data-offer-sticky-cta]").click()
+
+    const checkout = page.getByRole("dialog", { name: "Dein Zugang" })
+    const existingAccess = checkout.getByRole("status")
+    await expect(existingAccess).toContainText("Du hast bereits Zugang")
+    await expect(checkout).toContainText("Keine neue Zahlung gestartet")
+    await expect(checkout.getByRole("button", { name: "PayPal", exact: true })).toHaveCount(0)
+    await expect(checkout.getByRole("button", { name: "Mit Karte bezahlen" })).toHaveCount(0)
+    expect(providerRequests).toBe(0)
+    expect(stripeSdkRequests).toBe(0)
+    expect(payPalSdkRequests).toBe(0)
+
+    await checkout.getByRole("button", { name: "Einloggen und weiter" }).click()
+    await expect(page).toHaveURL(/\/auth\?force=login&next=%2Fchat%3Fcheckout_recovery%3D1$/)
+    expect(providerRequests).toBe(0)
+    expect(stripeSdkRequests).toBe(0)
+    expect(payPalSdkRequests).toBe(0)
+  })
+
+  test("membership eligibility failure retries before provider initialization", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await blockStripeSdk(page)
+    await stubPayPalSdk(page)
+    let eligibilityCalls = 0
+    let sessionCalls = 0
+    let stripeSdkRequests = 0
+    page.on("request", (request) => {
+      if (request.resourceType() === "script" && isStripeSdkScriptUrl(request.url())) {
+        stripeSdkRequests += 1
+      }
+    })
+    await page.route("**/api/checkout/eligibility", async (route) => {
+      eligibilityCalls += 1
+      await route.fulfill({
+        body: JSON.stringify(
+          eligibilityCalls === 1
+            ? { error: "synthetic preflight failure" }
+            : { status: "eligible" },
+        ),
+        contentType: "application/json",
+        status: eligibilityCalls === 1 ? 503 : 200,
+      })
+    })
+    await page.route("**/api/stripe/create-checkout-session", async (route) => {
+      sessionCalls += 1
+      await route.fulfill({
+        body: JSON.stringify({ error: "synthetic checkout session response" }),
+        contentType: "application/json",
+        status: 503,
+      })
+    })
+
+    await openPersonalPlanLab(page, "membership")
+    await revealPricing(page)
+    await page.locator("[data-offer-sticky-cta]").click()
+
+    const checkout = page.getByRole("dialog", { name: "Dein Zugang" })
+    await expect(checkout.getByRole("status")).toContainText("Zugang konnte nicht geprüft werden")
+    await expect(checkout.getByRole("button", { name: "PayPal", exact: true })).toHaveCount(0)
+    expect(sessionCalls).toBe(0)
+    expect(stripeSdkRequests).toBe(0)
+    await checkout.getByRole("button", { name: "Erneut prüfen" }).click()
+    await expect.poll(() => eligibilityCalls).toBe(2)
+    await expect(page.getByRole("dialog", { name: "Sicher bezahlen" })).toBeVisible()
+    await expect.poll(() => stripeSdkRequests).toBeGreaterThan(0)
+    await expect(checkout.getByRole("button", { name: "Zurück zum Ergebnis" })).toHaveCount(0)
+  })
+
   test("a terminal PayPal recovery state hands the customer to support without another payment", async ({
     page,
   }) => {
@@ -649,9 +780,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await page.screenshot({ path: "/tmp/chaarlie-payment-support-handoff.png" })
   })
 
-  test("a newly activated customer sees confirmed payment and can choose a login link", async ({
-    page,
-  }) => {
+  test("a newly activated customer can choose a login link", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
     let magicLinkRequests = 0
     await page.route("**/api/auth/send-magic-link", async (route) => {
@@ -666,11 +795,11 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await page.goto("/labs/offer-page?variant=payment-welcome", {
       waitUntil: "domcontentloaded",
     })
-    await expect(page.getByText("Zahlung erfolgreich", { exact: true })).toBeVisible()
+    await expect(page.getByText("Zahlung erfolgreich", { exact: true })).toHaveCount(0)
     await expect(page.getByRole("heading", { name: "Zugang einrichten" })).toBeVisible()
     await expect(page.getByLabel("Chaarlie-E-Mail")).toHaveValue("lea@example.com")
-    await expect(page.getByRole("heading", { name: "Mit Passwort fortfahren" })).toBeVisible()
-    await expect(page.getByRole("heading", { name: "Ohne Passwort fortfahren" })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Mit Passwort", exact: true })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Mit Login-Link", exact: true })).toBeVisible()
     await page.screenshot({ path: "/tmp/chaarlie-payment-activation-choice.png" })
 
     await page.getByRole("button", { name: "Login-Link senden" }).click()

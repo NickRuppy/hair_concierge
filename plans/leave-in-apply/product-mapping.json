@@ -1,0 +1,1288 @@
+{
+  "products": [
+    {
+      "id": "gold-slot-01",
+      "de_name": "alverde Leave-In Sprühkur Express 7in1",
+      "brand": "alverde NATURKOSMETIK",
+      "pack_size": "75 ml",
+      "research_gtin": "4066447919387",
+      "research_lane": "gold_calibration",
+      "envelope_status": "exists",
+      "catalog_match": {
+        "status": "exists",
+        "product_id": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
+        "catalog_name": "alverde Leave-In Sprühkur Express 7in1",
+        "match_method": "gtin",
+        "catalog_gtin": "4066447919387",
+        "is_active": true,
+        "is_chaarlie_recommended": true,
+        "has_image": true,
+        "category_key": "leave_in"
+      },
+      "current_specs": {
+        "suitable_thicknesses": [
+          "fine"
+        ],
+        "format": "spray",
+        "weight": "light",
+        "roles": [
+          "extension_conditioner"
+        ],
+        "provides_heat_protection": false,
+        "care_benefits": [
+          "detangling",
+          "anti_frizz",
+          "shine"
+        ],
+        "ingredient_flags": [],
+        "application_stage": [
+          "towel_dry"
+        ],
+        "care_direction": "balanced",
+        "repair_support_level": "medium",
+        "plan_roles": [
+          "post_wash_leave_in"
+        ],
+        "functional_benefits": [
+          "detangle",
+          "moisture_softness",
+          "repair_support",
+          "shine_support"
+        ],
+        "fit_weight": "light",
+        "fit_conditioner_relationship": "booster_only",
+        "fit_care_benefits": [
+          "detangle_smooth"
+        ],
+        "eligibility_count": 4,
+        "protocol_count": 2
+      },
+      "projected_specs": {
+        "suitable_thicknesses": [
+          "normal",
+          "coarse"
+        ],
+        "format": "spray",
+        "weight": "medium",
+        "roles": [
+          "replacement_conditioner"
+        ],
+        "provides_heat_protection": false,
+        "care_benefits": [
+          "moisture"
+        ],
+        "ingredient_flags": [
+          "oils",
+          "proteins",
+          "humectants"
+        ],
+        "application_stage": [
+          "towel_dry",
+          "dry_hair"
+        ],
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "plan_roles": [
+          "post_wash_leave_in"
+        ],
+        "functional_benefits": [
+          "moisture_softness"
+        ],
+        "fit_weight": "medium",
+        "fit_conditioner_relationship": "replacement_capable",
+        "fit_care_benefits": [
+          "detangle_smooth"
+        ],
+        "eligibility_count": 4
+      },
+      "delta_summary": [
+        "suitable_thicknesses flips fine -> normal,coarse (audience change)",
+        "roles extension_conditioner -> replacement_conditioner (major: no longer just a booster)",
+        "care_benefits narrows to moisture-only, drops detangling/anti_frizz/shine",
+        "weight light -> medium; repair_support_level medium -> low",
+        "fit_conditioner_relationship booster_only -> replacement_capable"
+      ],
+      "risk_flags": [
+        "live_recommended",
+        "major_role_and_audience_change"
+      ]
+    },
+    {
+      "id": "gold-slot-02",
+      "de_name": "ISANA Leave-In Hyaluron & Panthenol",
+      "brand": "ISANA PROFESSIONAL",
+      "pack_size": "100 ml",
+      "research_gtin": "4305615946733",
+      "research_lane": "gold_calibration",
+      "envelope_status": "exists",
+      "catalog_match": {
+        "status": "exists",
+        "product_id": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+        "catalog_name": "ISANA PROFESSIONAL Leave-In Conditioner Hyaluron & Panthenol",
+        "match_method": "gtin",
+        "catalog_gtin": "4305615946733",
+        "is_active": true,
+        "is_chaarlie_recommended": true,
+        "has_image": true,
+        "category_key": "leave_in"
+      },
+      "current_specs": {
+        "suitable_thicknesses": [
+          "fine"
+        ],
+        "format": "lotion",
+        "weight": "light",
+        "roles": [
+          "extension_conditioner"
+        ],
+        "provides_heat_protection": false,
+        "care_benefits": [
+          "moisture",
+          "detangling"
+        ],
+        "ingredient_flags": [
+          "humectants"
+        ],
+        "application_stage": [
+          "towel_dry"
+        ],
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "plan_roles": [
+          "post_wash_leave_in"
+        ],
+        "functional_benefits": [
+          "detangle",
+          "moisture_softness"
+        ],
+        "fit_weight": "light",
+        "fit_conditioner_relationship": "booster_only",
+        "fit_care_benefits": [
+          "detangle_smooth"
+        ],
+        "eligibility_count": 2,
+        "protocol_count": 1
+      },
+      "projected_specs": {
+        "suitable_thicknesses": [
+          "coarse"
+        ],
+        "format": "spray",
+        "weight": "rich",
+        "roles": [
+          "replacement_conditioner"
+        ],
+        "provides_heat_protection": false,
+        "care_benefits": [
+          "moisture",
+          "anti_frizz"
+        ],
+        "ingredient_flags": [
+          "polymers",
+          "humectants"
+        ],
+        "application_stage": [
+          "towel_dry"
+        ],
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "plan_roles": [
+          "post_wash_leave_in"
+        ],
+        "functional_benefits": [
+          "moisture_softness",
+          "smooth_anti_frizz"
+        ],
+        "fit_weight": "rich",
+        "fit_conditioner_relationship": "replacement_capable",
+        "fit_care_benefits": [
+          "detangle_smooth"
+        ],
+        "eligibility_count": 2
+      },
+      "delta_summary": [
+        "FORMAT CORRECTION: lotion -> spray (user-visible: dispenser/instructions change)",
+        "suitable_thicknesses flips fine -> coarse (opposite audience)",
+        "weight light -> rich; roles extension_conditioner -> replacement_conditioner",
+        "fit_conditioner_relationship booster_only -> replacement_capable"
+      ],
+      "risk_flags": [
+        "live_recommended",
+        "format_correction",
+        "major_role_and_audience_change"
+      ]
+    },
+    {
+      "id": "gold-slot-03",
+      "de_name": "Cantu Leave-In Haarkur Repair Creme",
+      "brand": "Cantu",
+      "pack_size": "453 g",
+      "research_gtin": "810006945430",
+      "research_lane": "gold_calibration",
+      "envelope_status": "exists",
+      "catalog_match": {
+        "status": "exists",
+        "product_id": "e3c4b607-8f81-462c-8a2b-e45c8b3a2976",
+        "catalog_name": "Cantu Leave-In Repair Cream",
+        "match_method": "gtin",
+        "catalog_gtin": "810006945430",
+        "is_active": true,
+        "is_chaarlie_recommended": true,
+        "has_image": true,
+        "category_key": "leave_in"
+      },
+      "current_specs": {
+        "suitable_thicknesses": [
+          "coarse"
+        ],
+        "format": "cream",
+        "weight": "rich",
+        "roles": [
+          "extension_conditioner"
+        ],
+        "provides_heat_protection": false,
+        "care_benefits": [
+          "moisture",
+          "repair",
+          "anti_frizz"
+        ],
+        "ingredient_flags": [
+          "oils"
+        ],
+        "application_stage": [
+          "towel_dry"
+        ],
+        "care_direction": "moisture",
+        "repair_support_level": "medium",
+        "plan_roles": [
+          "post_wash_leave_in"
+        ],
+        "functional_benefits": [
+          "curl_shape_support",
+          "moisture_softness",
+          "repair_support",
+          "smooth_anti_frizz"
+        ],
+        "fit_weight": "rich",
+        "fit_conditioner_relationship": "booster_only",
+        "fit_care_benefits": [
+          "repair",
+          "detangle_smooth"
+        ],
+        "eligibility_count": 4,
+        "protocol_count": 1
+      },
+      "projected_specs": {
+        "suitable_thicknesses": [
+          "coarse"
+        ],
+        "format": "cream",
+        "weight": "rich",
+        "roles": [
+          "replacement_conditioner"
+        ],
+        "provides_heat_protection": false,
+        "care_benefits": [
+          "moisture"
+        ],
+        "ingredient_flags": [
+          "polymers",
+          "oils",
+          "humectants"
+        ],
+        "application_stage": [
+          "towel_dry"
+        ],
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "plan_roles": [
+          "post_wash_leave_in"
+        ],
+        "functional_benefits": [
+          "moisture_softness"
+        ],
+        "fit_weight": "rich",
+        "fit_conditioner_relationship": "replacement_capable",
+        "fit_care_benefits": [
+          "detangle_smooth"
+        ],
+        "eligibility_count": 2
+      },
+      "delta_summary": [
+        "care_benefits loses repair + anti_frizz, becomes moisture-only",
+        "repair_support_level medium -> low; fit_care_benefits drops 'repair'",
+        "roles extension_conditioner -> replacement_conditioner",
+        "eligibility rows 4 -> 2 (fewer recommended contexts)",
+        "format/weight/thickness unchanged"
+      ],
+      "risk_flags": [
+        "live_recommended",
+        "repair_claim_removed_despite_product_name",
+        "duplicate_active_catalog_row_wrong_category (product_id 7539ab79-f4f6-49d7-9269-08034ef4de96, same name, category_key=conditioner, no identifiers -- NOT part of this apply, flag separately)",
+        "inactive_legacy_duplicate_exists (product_id 7db2bb60-0af6-4198-adec-28fad13251a6, is_active=false -- leave untouched)",
+        "research identity_status=provisional_formula_conflict: cantubeauty.de repair claims may reflect the US-variant INCI (GTIN 810006943405), not the frozen DE-pack formula (810006945430) this projection is built from"
+      ]
+    },
+    {
+      "id": "gold-slot-04",
+      "de_name": "alverde Nutri-Care 2-Phasen-Sprühkur Bio-Mandel, Bio-Argan",
+      "brand": "alverde NATURKOSMETIK",
+      "pack_size": "75 ml",
+      "research_gtin": "4066447105032",
+      "research_lane": "gold_calibration",
+      "envelope_status": "exists",
+      "catalog_match": {
+        "status": "missing",
+        "product_id": null,
+        "catalog_name": null,
+        "match_method": "none_found",
+        "notes": "No product_identifiers row for GTIN 4066447105032; no products row matching brand alverde + name containing 'Nutri-Care'/'2-Phasen'. The only 'Nutri-Care' catalog products are a distinct Haarserum (d70fdc25-2cdc-4b8a-b005-c4c719d88c33) and a Conditioner Nutri Care -- neither is this 2-Phasen-Sprühkur SKU. Research itself flags this GTIN as possibly delisted at dm.de (identity_status=provisional_identity_conflict)."
+      },
+      "current_specs": null,
+      "projected_specs": {
+        "suitable_thicknesses": [
+          "normal",
+          "coarse"
+        ],
+        "format": "spray",
+        "weight": "medium",
+        "roles": [
+          "replacement_conditioner"
+        ],
+        "provides_heat_protection": false,
+        "care_benefits": [
+          "moisture"
+        ],
+        "ingredient_flags": [
+          "oils",
+          "humectants"
+        ],
+        "application_stage": [
+          "towel_dry",
+          "dry_hair"
+        ],
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "plan_roles": [
+          "post_wash_leave_in"
+        ],
+        "functional_benefits": [
+          "moisture_softness"
+        ],
+        "fit_weight": "medium",
+        "fit_conditioner_relationship": "replacement_capable",
+        "fit_care_benefits": [
+          "detangle_smooth"
+        ],
+        "eligibility_count": 4
+      },
+      "delta_summary": [
+        "N/A -- product does not exist in catalog, nothing to diff"
+      ],
+      "risk_flags": [
+        "missing_product",
+        "needs_full_intake",
+        "research_flags_possible_delisting_at_dm.de"
+      ]
+    },
+    {
+      "id": "gold-slot-05",
+      "de_name": "EVO Head Mistress Cuticle Sealer",
+      "brand": "EVO",
+      "pack_size": "150 ml",
+      "research_gtin": "9349769013144",
+      "research_lane": "gold_calibration",
+      "envelope_status": "exists",
+      "catalog_match": {
+        "status": "exists_identity_unconfirmed",
+        "product_id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+        "catalog_name": "EVO Head Mistress",
+        "match_method": "name (brand+shortened name); GTIN MISMATCH",
+        "catalog_gtin": "9349769020791",
+        "is_active": true,
+        "is_chaarlie_recommended": true,
+        "has_image": true,
+        "category_key": "leave_in",
+        "notes": "Catalog EAN 9349769020791 does NOT equal research GTIN 9349769013144 (150ml pack). Could be a different pack size/variant of the same product line, or a genuinely different SKU. Task brief explicitly warned EVO 'Day of Grace' (b139d4e8-6f26-4096-a1b9-d9efcb02d2ec, a separate catalog product) is NOT this product -- that mix-up is avoided, but the GTIN mismatch on the correct name-matched row is a new, unresolved finding."
+      },
+      "current_specs": {
+        "suitable_thicknesses": [
+          "fine"
+        ],
+        "format": "cream",
+        "weight": "light",
+        "roles": [
+          "extension_conditioner",
+          "styling_prep"
+        ],
+        "provides_heat_protection": false,
+        "care_benefits": [
+          "anti_frizz",
+          "shine"
+        ],
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "application_stage": [
+          "towel_dry"
+        ],
+        "care_direction": "balanced",
+        "repair_support_level": "low",
+        "plan_roles": [
+          "post_wash_leave_in"
+        ],
+        "functional_benefits": [
+          "moisture_softness",
+          "smooth_anti_frizz"
+        ],
+        "fit_weight": "light",
+        "fit_conditioner_relationship": "booster_only",
+        "fit_care_benefits": [
+          "detangle_smooth"
+        ],
+        "eligibility_count": 4,
+        "protocol_count": 2
+      },
+      "projected_specs": {
+        "suitable_thicknesses": [
+          "normal",
+          "coarse"
+        ],
+        "format": "cream",
+        "weight": "medium",
+        "roles": [
+          "replacement_conditioner",
+          "styling_prep"
+        ],
+        "provides_heat_protection": false,
+        "care_benefits": [
+          "anti_frizz"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "oils",
+          "humectants"
+        ],
+        "application_stage": [
+          "towel_dry",
+          "pre_heat",
+          "post_style"
+        ],
+        "care_direction": "balanced",
+        "repair_support_level": "low",
+        "plan_roles": [
+          "post_wash_leave_in"
+        ],
+        "functional_benefits": [
+          "moisture_softness",
+          "smooth_anti_frizz"
+        ],
+        "fit_weight": "medium",
+        "fit_conditioner_relationship": "replacement_capable",
+        "fit_care_benefits": [
+          "detangle_smooth"
+        ],
+        "eligibility_count": 4
+      },
+      "delta_summary": [
+        "suitable_thicknesses flips fine -> normal,coarse",
+        "weight light -> medium; roles extension_conditioner -> replacement_conditioner (styling_prep kept)",
+        "care_benefits loses 'shine'; application_stage gains pre_heat + post_style",
+        "fit_conditioner_relationship booster_only -> replacement_capable"
+      ],
+      "risk_flags": [
+        "live_recommended",
+        "GTIN_MISMATCH_BLOCKS_APPLY",
+        "identity_must_be_confirmed_before_apply"
+      ]
+    },
+    {
+      "id": "gold-slot-06",
+      "de_name": "Curlsmith Hydrate & Plump Leave-In",
+      "brand": "Curlsmith",
+      "pack_size": "237 ml",
+      "research_gtin": null,
+      "research_lane": "gold_calibration",
+      "envelope_status": "exists",
+      "catalog_match": {
+        "status": "exists",
+        "product_id": "648ba537-5180-440e-81ad-2b310b447d87",
+        "catalog_name": "Curlsmith Hydrate & Plump Leave-In",
+        "match_method": "exact name (no GTIN in research packet; catalog EAN 0850035298718)",
+        "catalog_gtin": "0850035298718",
+        "is_active": true,
+        "is_chaarlie_recommended": true,
+        "has_image": true,
+        "category_key": "leave_in"
+      },
+      "current_specs": {
+        "suitable_thicknesses": [
+          "normal"
+        ],
+        "format": "lotion",
+        "weight": "medium",
+        "roles": [
+          "extension_conditioner"
+        ],
+        "provides_heat_protection": false,
+        "care_benefits": [
+          "moisture",
+          "detangling"
+        ],
+        "ingredient_flags": [
+          "humectants"
+        ],
+        "application_stage": [
+          "towel_dry"
+        ],
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "plan_roles": [
+          "post_wash_leave_in"
+        ],
+        "functional_benefits": [
+          "curl_shape_support",
+          "moisture_softness",
+          "smooth_anti_frizz"
+        ],
+        "fit_weight": "medium",
+        "fit_conditioner_relationship": "booster_only",
+        "fit_care_benefits": [
+          "detangle_smooth"
+        ],
+        "eligibility_count": 2,
+        "protocol_count": 1
+      },
+      "projected_specs": {
+        "suitable_thicknesses": [
+          "coarse"
+        ],
+        "format": "cream",
+        "weight": "rich",
+        "roles": [
+          "replacement_conditioner",
+          "styling_prep"
+        ],
+        "provides_heat_protection": false,
+        "care_benefits": [
+          "moisture",
+          "anti_frizz"
+        ],
+        "ingredient_flags": [
+          "polymers",
+          "oils",
+          "humectants"
+        ],
+        "application_stage": [
+          "towel_dry"
+        ],
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "plan_roles": [
+          "post_wash_leave_in"
+        ],
+        "functional_benefits": [
+          "moisture_softness",
+          "smooth_anti_frizz"
+        ],
+        "fit_weight": "rich",
+        "fit_conditioner_relationship": "replacement_capable",
+        "fit_care_benefits": [
+          "detangle_smooth"
+        ],
+        "eligibility_count": 2
+      },
+      "delta_summary": [
+        "FORMAT CORRECTION: lotion -> cream (research round-4 pack-shot evidence: pump dispenser, thick white cream, label says 'Conditioning Cream')",
+        "suitable_thicknesses normal -> coarse; weight medium -> rich",
+        "roles extension_conditioner -> replacement_conditioner + styling_prep (gains styling_prep)",
+        "care_benefits swaps detangling for anti_frizz; loses curl_shape_support in functional_benefits",
+        "fit_conditioner_relationship booster_only -> replacement_capable"
+      ],
+      "risk_flags": [
+        "live_recommended",
+        "format_correction",
+        "major_role_and_audience_change"
+      ]
+    },
+    {
+      "id": "gold-slot-08",
+      "de_name": "GLISS Sprüh-Conditioner Express-Repair",
+      "brand": "Schwarzkopf GLISS",
+      "pack_size": "200 ml",
+      "research_gtin": "4015100813494",
+      "research_lane": "gold_calibration",
+      "envelope_status": "exists",
+      "catalog_match": {
+        "status": "exists",
+        "product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+        "catalog_name": "Gliss Ultimate Repair Sprüh-Conditioner",
+        "match_method": "gtin",
+        "catalog_gtin": "4015100813494",
+        "is_active": true,
+        "is_chaarlie_recommended": true,
+        "has_image": true,
+        "category_key": "leave_in",
+        "notes": "Distinct from 'Schwarzkopf Gliss Sprüh-Conditioner Express-Repair Total Repair' (a67c4125-2195-4cb6-a6d0-8bcd495a74d4), a different active catalog product -- GTIN match confirms the correct 'Ultimate Repair' row was hit."
+      },
+      "current_specs": {
+        "suitable_thicknesses": [
+          "fine"
+        ],
+        "format": "spray",
+        "weight": "light",
+        "roles": [
+          "styling_prep"
+        ],
+        "provides_heat_protection": true,
+        "care_benefits": [
+          "repair",
+          "detangling",
+          "anti_frizz"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "polymers"
+        ],
+        "application_stage": [
+          "towel_dry",
+          "pre_heat"
+        ],
+        "care_direction": "protein",
+        "repair_support_level": "high",
+        "plan_roles": [
+          "post_wash_leave_in",
+          "pre_heat_application"
+        ],
+        "functional_benefits": [
+          "detangle",
+          "heat_protect",
+          "repair_support",
+          "shine_support",
+          "smooth_anti_frizz"
+        ],
+        "fit_weight": "light",
+        "fit_conditioner_relationship": "booster_only",
+        "fit_care_benefits": [
+          "heat_protect",
+          "repair",
+          "detangle_smooth"
+        ],
+        "eligibility_count": 5,
+        "protocol_count": 3
+      },
+      "projected_specs": {
+        "suitable_thicknesses": [
+          "normal",
+          "coarse"
+        ],
+        "format": "spray",
+        "weight": "medium",
+        "roles": [
+          "replacement_conditioner"
+        ],
+        "provides_heat_protection": true,
+        "care_benefits": [
+          "moisture",
+          "anti_frizz"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "polymers",
+          "oils",
+          "proteins",
+          "humectants"
+        ],
+        "application_stage": [
+          "towel_dry",
+          "dry_hair"
+        ],
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "plan_roles": [
+          "post_wash_leave_in",
+          "pre_heat_application"
+        ],
+        "functional_benefits": [
+          "moisture_softness",
+          "smooth_anti_frizz",
+          "heat_protect"
+        ],
+        "fit_weight": "medium",
+        "fit_conditioner_relationship": "replacement_capable",
+        "fit_care_benefits": [
+          "heat_protect",
+          "detangle_smooth"
+        ],
+        "eligibility_count": 6
+      },
+      "delta_summary": [
+        "MAJOR: care_direction protein -> moisture (fundamental reclassification)",
+        "MAJOR: repair_support_level high -> low; care_benefits and fit_care_benefits drop 'repair' entirely",
+        "roles flips: current is styling_prep-ONLY, projection is replacement_conditioner-ONLY",
+        "suitable_thicknesses fine -> normal,coarse; weight light -> medium",
+        "functional_benefits loses detangle, repair_support, shine_support"
+      ],
+      "risk_flags": [
+        "live_recommended",
+        "product_name_says_Express-Repair_but_projection_drops_repair_entirely -- flag for Nick before applying",
+        "role_flip_styling_prep_to_replacement_conditioner"
+      ]
+    },
+    {
+      "id": "gold-slot-09",
+      "de_name": "Redken Extreme Anti-Snap Leave-In Treatment",
+      "brand": "Redken",
+      "pack_size": "250 ml",
+      "research_gtin": null,
+      "research_gtin_candidates": [
+        "884486453402",
+        "884486210777"
+      ],
+      "research_lane": "gold_calibration",
+      "envelope_status": "exists",
+      "catalog_match": {
+        "status": "exists",
+        "product_id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+        "catalog_name": "Redken Extreme Anti-Snap",
+        "match_method": "gtin (884486453402)",
+        "catalog_gtin": "884486453402",
+        "is_active": true,
+        "is_chaarlie_recommended": true,
+        "has_image": true,
+        "category_key": "leave_in"
+      },
+      "current_specs": {
+        "suitable_thicknesses": [
+          "coarse"
+        ],
+        "format": "lotion",
+        "weight": "medium",
+        "roles": [
+          "extension_conditioner"
+        ],
+        "provides_heat_protection": false,
+        "care_benefits": [
+          "repair",
+          "anti_frizz"
+        ],
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "application_stage": [
+          "towel_dry"
+        ],
+        "care_direction": "protein",
+        "repair_support_level": "medium",
+        "plan_roles": [
+          "post_wash_leave_in"
+        ],
+        "functional_benefits": [
+          "repair_support",
+          "smooth_anti_frizz"
+        ],
+        "fit_weight": "medium",
+        "fit_conditioner_relationship": "booster_only",
+        "fit_care_benefits": [
+          "repair",
+          "detangle_smooth"
+        ],
+        "eligibility_count": 4,
+        "protocol_count": 1
+      },
+      "projected_specs": {
+        "suitable_thicknesses": [
+          "normal",
+          "coarse"
+        ],
+        "format": "spray",
+        "weight": "medium",
+        "roles": [
+          "replacement_conditioner"
+        ],
+        "provides_heat_protection": true,
+        "care_benefits": [
+          "protein",
+          "repair",
+          "anti_frizz"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "proteins"
+        ],
+        "application_stage": [
+          "towel_dry"
+        ],
+        "care_direction": "protein",
+        "repair_support_level": "medium",
+        "plan_roles": [
+          "post_wash_leave_in",
+          "pre_heat_application"
+        ],
+        "functional_benefits": [
+          "moisture_softness",
+          "smooth_anti_frizz",
+          "heat_protect",
+          "repair_support"
+        ],
+        "fit_weight": "medium",
+        "fit_conditioner_relationship": "replacement_capable",
+        "fit_care_benefits": [
+          "heat_protect",
+          "repair",
+          "detangle_smooth"
+        ],
+        "eligibility_count": 10
+      },
+      "delta_summary": [
+        "FORMAT CORRECTION: lotion -> spray (not previously flagged by task brief)",
+        "NEW CLAIM: provides_heat_protection false -> true; gains pre_heat_application plan_role",
+        "suitable_thicknesses expands coarse -> normal,coarse",
+        "roles extension_conditioner -> replacement_conditioner",
+        "eligibility rows 4 -> 10 (large expansion of recommended contexts)"
+      ],
+      "risk_flags": [
+        "live_recommended",
+        "format_correction",
+        "new_heat_protection_claim_verify_evidence",
+        "large_eligibility_expansion"
+      ]
+    },
+    {
+      "id": "gold-slot-10",
+      "de_name": "Olaplex N°.6 Bond Smoother",
+      "brand": "Olaplex",
+      "pack_size": "100 ml",
+      "research_gtin": null,
+      "research_gtin_candidates": [
+        "896364002602",
+        "896364002619"
+      ],
+      "research_lane": "gold_calibration",
+      "envelope_status": "exists",
+      "catalog_match": {
+        "status": "exists",
+        "product_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+        "catalog_name": "Olaplex No.6 Bond Smoother",
+        "match_method": "name (catalog EAN 850018802796, referenced in research's T14 amendment note but not the frozen gtin/gtin_candidates fields)",
+        "catalog_gtin": "850018802796",
+        "is_active": true,
+        "is_chaarlie_recommended": true,
+        "has_image": true,
+        "category_key": "leave_in"
+      },
+      "current_specs": {
+        "suitable_thicknesses": [
+          "normal"
+        ],
+        "format": "cream",
+        "weight": "medium",
+        "roles": [
+          "extension_conditioner",
+          "styling_prep"
+        ],
+        "provides_heat_protection": true,
+        "care_benefits": [
+          "repair",
+          "anti_frizz",
+          "shine"
+        ],
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "application_stage": [
+          "towel_dry",
+          "pre_heat"
+        ],
+        "care_direction": "balanced",
+        "repair_support_level": "high",
+        "plan_roles": [
+          "post_wash_leave_in",
+          "pre_heat_application"
+        ],
+        "functional_benefits": [
+          "curl_shape_support",
+          "heat_protect",
+          "moisture_softness",
+          "repair_support",
+          "smooth_anti_frizz"
+        ],
+        "fit_weight": "medium",
+        "fit_conditioner_relationship": "booster_only",
+        "fit_care_benefits": [
+          "heat_protect",
+          "repair",
+          "detangle_smooth"
+        ],
+        "eligibility_count": 7,
+        "protocol_count": 2
+      },
+      "projected_specs": {
+        "suitable_thicknesses": [
+          "coarse"
+        ],
+        "format": "cream",
+        "weight": "rich",
+        "roles": [
+          "replacement_conditioner"
+        ],
+        "provides_heat_protection": true,
+        "care_benefits": [
+          "moisture",
+          "anti_frizz"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "oils",
+          "proteins",
+          "humectants"
+        ],
+        "application_stage": [
+          "towel_dry"
+        ],
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "plan_roles": [
+          "post_wash_leave_in",
+          "pre_heat_application"
+        ],
+        "functional_benefits": [
+          "moisture_softness",
+          "smooth_anti_frizz",
+          "heat_protect"
+        ],
+        "fit_weight": "rich",
+        "fit_conditioner_relationship": "replacement_capable",
+        "fit_care_benefits": [
+          "heat_protect",
+          "detangle_smooth"
+        ],
+        "eligibility_count": 3
+      },
+      "delta_summary": [
+        "MAJOR: repair_support_level high -> low; 'repair' dropped from care_benefits and fit_care_benefits ('Bond Smoother' branding implies repair)",
+        "care_direction balanced -> moisture; roles loses styling_prep",
+        "suitable_thicknesses normal -> coarse; weight medium -> rich",
+        "eligibility rows 7 -> 3 (large reduction)"
+      ],
+      "risk_flags": [
+        "live_recommended",
+        "high_visibility_brand",
+        "product_name_says_Bond_Smoother_but_repair_support_drops_to_low -- flag for Nick before applying",
+        "large_eligibility_reduction"
+      ]
+    },
+    {
+      "id": "gold-slot-11",
+      "de_name": "Balea Leichtkämmspray Pure Styling",
+      "brand": "Balea",
+      "pack_size": "200 ml",
+      "research_gtin": "4067796148855",
+      "research_lane": "gold_calibration",
+      "envelope_status": "exists",
+      "catalog_match": {
+        "status": "missing",
+        "product_id": null,
+        "catalog_name": null,
+        "match_method": "none_found",
+        "notes": "No product_identifiers row for GTIN 4067796148855. Full Balea brand product list checked (30 rows) -- no 'Leichtkämm'/'Leichtkamm'/'Pure Styling' product exists. Existing Balea leave-in rows are all different products (Balea Professional Brilliant Blond Hair Sealer, Balea Professional Leave-In Haarmaske Molecular Care, Balea Professional Leave-In Serum Plex Care, Balea Aqua 3in1)."
+      },
+      "current_specs": null,
+      "projected_specs": {
+        "suitable_thicknesses": [
+          "fine",
+          "normal"
+        ],
+        "format": "spray",
+        "weight": "light",
+        "roles": [
+          "extension_conditioner"
+        ],
+        "provides_heat_protection": false,
+        "care_benefits": [
+          "moisture",
+          "detangling",
+          "volume"
+        ],
+        "ingredient_flags": [
+          "humectants"
+        ],
+        "application_stage": [
+          "towel_dry"
+        ],
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "plan_roles": [
+          "post_wash_leave_in"
+        ],
+        "functional_benefits": [
+          "detangle",
+          "moisture_softness"
+        ],
+        "fit_weight": "light",
+        "fit_conditioner_relationship": "booster_only",
+        "fit_care_benefits": [
+          "detangle_smooth"
+        ],
+        "eligibility_count": 4
+      },
+      "delta_summary": [
+        "N/A -- product does not exist in catalog, nothing to diff"
+      ],
+      "risk_flags": [
+        "missing_product",
+        "needs_full_intake"
+      ]
+    },
+    {
+      "id": "gold-slot-13",
+      "de_name": "Neqi Diamond Glass Ultimate Styling Spray",
+      "brand": "Neqi",
+      "pack_size": "180 ml",
+      "research_gtin": "4063528094575",
+      "research_lane": "gold_calibration",
+      "envelope_status": "exists",
+      "catalog_match": {
+        "status": "exists",
+        "product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+        "catalog_name": "Neqi Diamond Glass Ultimate Styling Spray",
+        "match_method": "gtin",
+        "catalog_gtin": "4063528094575",
+        "is_active": true,
+        "is_chaarlie_recommended": false,
+        "has_image": true,
+        "category_key": "leave_in",
+        "notes": "NOT currently recommended -- lower risk to apply than the live-recommended items. Zero product_application_protocols rows exist today (protocol_count=0)."
+      },
+      "current_specs": {
+        "suitable_thicknesses": [
+          "coarse",
+          "fine",
+          "normal"
+        ],
+        "format": "spray",
+        "weight": "light",
+        "roles": [
+          "styling_prep"
+        ],
+        "provides_heat_protection": true,
+        "heat_activation_required": true,
+        "care_benefits": [
+          "moisture",
+          "anti_frizz",
+          "shine"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "polymers",
+          "humectants"
+        ],
+        "application_stage": [
+          "towel_dry",
+          "pre_heat",
+          "post_style"
+        ],
+        "care_direction": null,
+        "repair_support_level": null,
+        "plan_roles": null,
+        "functional_benefits": null,
+        "fit_weight": "light",
+        "fit_conditioner_relationship": "booster_only",
+        "fit_care_benefits": [
+          "heat_protect",
+          "detangle_smooth"
+        ],
+        "eligibility_count": 3,
+        "protocol_count": 0
+      },
+      "projected_specs": {
+        "suitable_thicknesses": [
+          "normal",
+          "coarse"
+        ],
+        "format": "spray",
+        "weight": "medium",
+        "roles": [
+          "replacement_conditioner",
+          "styling_prep"
+        ],
+        "provides_heat_protection": true,
+        "heat_activation_required": false,
+        "care_benefits": [
+          "moisture",
+          "anti_frizz"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "humectants"
+        ],
+        "application_stage": [
+          "towel_dry",
+          "pre_heat"
+        ],
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "plan_roles": [
+          "post_wash_leave_in",
+          "pre_heat_application"
+        ],
+        "functional_benefits": [
+          "moisture_softness",
+          "smooth_anti_frizz",
+          "heat_protect"
+        ],
+        "fit_weight": "medium",
+        "fit_conditioner_relationship": "replacement_capable",
+        "fit_care_benefits": [
+          "heat_protect",
+          "detangle_smooth"
+        ],
+        "eligibility_count": 6
+      },
+      "delta_summary": [
+        "care_direction / repair_support_level / plan_roles / functional_benefits are currently NULL (incomplete row) -> all get populated",
+        "heat_activation_required true -> false",
+        "roles gains replacement_conditioner (keeps styling_prep)",
+        "suitable_thicknesses loses 'fine'; weight light -> medium; eligibility 3 -> 6",
+        "ingredient_flags drops 'polymers'"
+      ],
+      "risk_flags": [
+        "not_currently_recommended_lower_risk",
+        "currently_has_zero_application_protocols -- cannot be recommendation-ready even after spec update without protocol authoring"
+      ]
+    },
+    {
+      "id": "unseen-u1",
+      "de_name": "L'Oréal Elvital Dream Length Milk",
+      "brand": "L'Oréal Paris Elvital",
+      "pack_size": "200 ml",
+      "research_gtin": "3600523587841",
+      "research_lane": "unseen_test",
+      "envelope_status": "missing_but_dimension_values_fully_resolved",
+      "envelope_status_notes": "Formula-source conflict (3 divergent INCI captures) resolved via a 2026-09-13 rederivation pass (corpus/unseen-test/rederived/u1-record.json + u1-notes.md): identity_status now verified_with_minor_source_difference, uncertain_fields=[]. All profile dimensions have final values. Only the formal leave-in-research-envelope-v1.0 JSON + production-adapter projection still need to be produced -- this is a mechanical step, not new research.",
+      "catalog_match": {
+        "status": "missing",
+        "product_id": null,
+        "catalog_name": null,
+        "match_method": "none_found",
+        "notes": "No product_identifiers row for GTIN 3600523587841; no products row matching 'Dream Length'. No product_submissions row either -- this is a wholly new product to the catalog."
+      },
+      "current_specs": null,
+      "projected_specs": null,
+      "delta_summary": [
+        "N/A -- product does not exist in catalog, no envelope yet either"
+      ],
+      "risk_flags": [
+        "missing_product",
+        "needs_envelope_generation_then_full_intake"
+      ]
+    },
+    {
+      "id": "unseen-u4",
+      "de_name": "Briogeo Superfoods Avocado + Kiwi Mega Moisture 3-in-1 Leave-In Spray",
+      "brand": "Briogeo",
+      "pack_size": "170 ml",
+      "research_gtin": null,
+      "research_lane": "unseen_test",
+      "envelope_status": "missing_but_dimension_values_fully_resolved",
+      "envelope_status_notes": "Both independent research lanes agreed on every value field for this product (lane-a/records.json, lane-b/records.json); unseen-test-report.md calls it a clean negative-claim-control pass. Only the formal envelope + projection remain to be produced.",
+      "catalog_match": {
+        "status": "missing",
+        "product_id": null,
+        "catalog_name": null,
+        "match_method": "none_found",
+        "notes": "No Briogeo brand exists anywhere in the products table. No product_submissions row either. GTIN/EAN was never found in research (remaining_gap) -- will need a purchase-link/price source that can stand in for identity confirmation during intake."
+      },
+      "current_specs": null,
+      "projected_specs": null,
+      "delta_summary": [
+        "N/A -- product does not exist in catalog, no envelope yet either"
+      ],
+      "risk_flags": [
+        "missing_product",
+        "no_gtin_found",
+        "needs_envelope_generation_then_full_intake"
+      ]
+    },
+    {
+      "id": "unseen-u5",
+      "de_name": "ISANA PROFESSIONAL Argan Leave-in Conditioner",
+      "brand": "ISANA PROFESSIONAL (Rossmann house brand)",
+      "pack_size": "100 ml",
+      "research_gtin": null,
+      "research_gtin_candidates": [
+        "4068134081742 (inferred from rossmann.de URL path, unconfirmed)"
+      ],
+      "research_lane": "unseen_test",
+      "envelope_status": "missing_but_dimension_values_fully_resolved",
+      "envelope_status_notes": "Clean pass in both lanes (unseen-test-report.md: 'boring control ... zero repair credit from the pack copy'), plus a dedicated rederived/u5-record.json. Only the formal envelope + projection remain to be produced.",
+      "catalog_match": {
+        "status": "missing",
+        "product_id": null,
+        "catalog_name": null,
+        "match_method": "none_found",
+        "notes": "Catalog only has 'Isana Professional Arganöl & Pflege Spülung' (7964b930-7e88-4f93-89d3-fa437f8e753c, category_key=conditioner, a rinse-out) and 'Isana Professional Haaröl Arganöl & Pflege' (c9ded02d, category_key=oil) -- both different products from this Argan LEAVE-IN spray. No matching leave_in row exists. GTIN is only an unconfirmed candidate."
+      },
+      "current_specs": null,
+      "projected_specs": null,
+      "delta_summary": [
+        "N/A -- product does not exist in catalog, no envelope yet either"
+      ],
+      "risk_flags": [
+        "missing_product",
+        "gtin_unconfirmed",
+        "needs_envelope_generation_then_full_intake"
+      ]
+    },
+    {
+      "id": "unseen-u6",
+      "de_name": "amika The Shield Anti-Humidity Spray",
+      "brand": "amika",
+      "pack_size": "221 ml (also 103 ml)",
+      "research_gtin": null,
+      "research_gtin_candidates": [
+        "840117813281 (US UPC from a third-party retailer URL slug, unconfirmed)"
+      ],
+      "research_lane": "unseen_test",
+      "envelope_status": "missing_but_dimension_values_fully_resolved",
+      "envelope_status_notes": "Both lanes independently and identically declined the cross-market heat-protection claim (identity prong fails: Sephora.de INCI has 3 extra ingredients vs manufacturer list, no GTIN) -- unseen-test-report.md calls this 'the Cantu-shaped failure caught on a fresh product, and the gate held'. provides_heat_protection stays false; all other values resolved. Only the formal envelope + projection remain to be produced.",
+      "catalog_match": {
+        "status": "missing",
+        "product_id": null,
+        "catalog_name": null,
+        "match_method": "none_found",
+        "notes": "No amika brand exists anywhere in the products table. No product_submissions row either. GTIN unconfirmed."
+      },
+      "current_specs": null,
+      "projected_specs": null,
+      "delta_summary": [
+        "N/A -- product does not exist in catalog, no envelope yet either"
+      ],
+      "risk_flags": [
+        "missing_product",
+        "gtin_unconfirmed",
+        "needs_envelope_generation_then_full_intake"
+      ]
+    }
+  ],
+  "generated_at": "2026-09-14",
+  "source": "Leave-In calibration-apply package (plans/leave-in-apply/apply-package.md)",
+  "totals": {
+    "total_products": 15,
+    "catalog_status_exists_clean": 8,
+    "catalog_status_exists_identity_unconfirmed": 1,
+    "catalog_status_missing": 6
+  },
+  "boundary_followups_not_in_apply": [
+    {
+      "product": "Kevin Murphy Young.Again Oil",
+      "catalog_product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+      "issue": "Currently live in catalog as category_key=leave_in, is_chaarlie_recommended=true, with roles=['oil_replacement'] (the spec's own role vocabulary already hints it behaves like an oil). Leave-In research program EXCLUDES this product as an oil, out of scope. Recommend a separate follow-up to re-evaluate its category, NOT touched by this apply."
+    },
+    {
+      "product": "Cantu Leave-In Repair Cream (duplicate, wrong category)",
+      "catalog_product_id": "7539ab79-f4f6-49d7-9269-08034ef4de96",
+      "issue": "Second ACTIVE catalog row with the identical name 'Cantu Leave-In Repair Cream', but category_key=conditioner and no product_identifiers rows at all. A separate data-quality issue from the intended target (e3c4b607-...), not part of this apply. Recommend a separate follow-up to de-duplicate/re-categorize or deactivate."
+    }
+  ]
+}

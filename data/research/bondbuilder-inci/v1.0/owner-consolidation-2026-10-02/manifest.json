@@ -1,0 +1,221 @@
+{
+  "version": "bondbuilder-owner-envelope-index-v1",
+  "derived_from": "owner-reviewed-consolidation-2026-10-02",
+  "new_classification_run": false,
+  "method_locked": false,
+  "apply_authorized": false,
+  "production_writes": 0,
+  "provenance": "Envelopes extracted without changing their objects, facts, pins or digests; original staged items and raw source files are retained at their original paths.",
+  "items": [
+    {
+      "research_key": "P01",
+      "file": "P01.json",
+      "sha256": "00b3b5bfc9dd444ec6ba6112c3e0932b122842c5aac5e46032f80fbbfc5e32ae",
+      "profile_sha256": "def32d3c7ff79da83e2f326c1a54a66578136057e16fe69240af64fe73b43e3b",
+      "source_artifact": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/P01.json",
+      "source_artifact_sha256": "aff0ad5506da5b92953c728a5295e59f2315c92ff9518b19cb3d91af6f7a9564",
+      "claim_trust_level": "high",
+      "readiness": {
+        "property_projection_ready": true,
+        "candidate_protocol_projected": true,
+        "catalog_intake_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false
+      },
+      "blockers": [
+        "provisional_method_not_locked",
+        "physical_pack_formula_binding_unverified",
+        "reviewed_preimage_and_guarded_apply_not_approved",
+        "german_lab_explanations_require_customer_copy_review",
+        "candidate_existing_row_not_authorized_for_update",
+        "new_research_fit_not_established"
+      ]
+    },
+    {
+      "research_key": "P02",
+      "file": "P02.json",
+      "sha256": "9a2b523764ea1318804e3edf9fd4eff32e82a671fa0a741db7693daec8638016",
+      "profile_sha256": "3ecdf8aeab05a827720359c56d67039a9a9393b40745d3dee808e7d1f407bc35",
+      "source_artifact": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/P02.json",
+      "source_artifact_sha256": "94c2aa4b35e959277311287170c9b0d538b18a235d7109fd6f5a1c1d2773154b",
+      "claim_trust_level": "high",
+      "readiness": {
+        "property_projection_ready": true,
+        "candidate_protocol_projected": false,
+        "catalog_intake_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false
+      },
+      "blockers": [
+        "provisional_method_not_locked",
+        "physical_pack_formula_binding_unverified",
+        "reviewed_preimage_and_guarded_apply_not_approved",
+        "german_lab_explanations_require_customer_copy_review",
+        "candidate_existing_row_not_authorized_for_update",
+        "missing_exact_application_facts",
+        "new_research_fit_not_established"
+      ]
+    },
+    {
+      "research_key": "P03",
+      "file": "P03.json",
+      "sha256": "f9351947ba0fa3ee62cb88a703d1e810a7049681429df331c06c9707e8af22e4",
+      "profile_sha256": "166bca37c521536bb8367e17deacfd27ee2a2b883a4f50690c42158d5d8cd395",
+      "source_artifact": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/P03.json",
+      "source_artifact_sha256": "12191d0b5d01e515360b2409b3d5253079761efefaaf3ff451c6719fd9382634",
+      "claim_trust_level": "high",
+      "readiness": {
+        "property_projection_ready": true,
+        "candidate_protocol_projected": true,
+        "catalog_intake_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false
+      },
+      "blockers": [
+        "provisional_method_not_locked",
+        "physical_pack_formula_binding_unverified",
+        "reviewed_preimage_and_guarded_apply_not_approved",
+        "german_lab_explanations_require_customer_copy_review",
+        "candidate_existing_row_not_authorized_for_update",
+        "new_research_fit_not_established"
+      ]
+    },
+    {
+      "research_key": "P04",
+      "file": "P04.json",
+      "sha256": "133ab3dad75a1cba290b3a169390630bba5a763c1b7c51ed2700263dbd5de32a",
+      "profile_sha256": "276532b73bbeaf94f8892ac9980e35ddedd75f36c73c2fdcc364185abd634750",
+      "source_artifact": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/P04.json",
+      "source_artifact_sha256": "9cecc4d15126eaf4e717266511739d631a9c3c2453b590805904859a9011edb3",
+      "claim_trust_level": "medium",
+      "readiness": {
+        "property_projection_ready": true,
+        "candidate_protocol_projected": false,
+        "catalog_intake_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false
+      },
+      "blockers": [
+        "provisional_method_not_locked",
+        "physical_pack_formula_binding_unverified",
+        "reviewed_preimage_and_guarded_apply_not_approved",
+        "german_lab_explanations_require_customer_copy_review",
+        "selected_local_cadence_unestablished",
+        "no_existing_row_found_in_bounded_snapshot",
+        "new_row_origin_and_publication_mode_require_review",
+        "no_reconciled_catalogue_product_id",
+        "new_research_fit_not_established"
+      ]
+    },
+    {
+      "research_key": "P05",
+      "file": "P05.json",
+      "sha256": "33cd1b45c6f88a246ed5da3226523119ee00a1d47deb341e3b06bc481d9a785c",
+      "profile_sha256": "d0429a587e3f1fd7e4663ea706e356ae19560ec26cdb8cc2def3ecdecf56ad73",
+      "source_artifact": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/P05.json",
+      "source_artifact_sha256": "769c3aec6f529a8058cbfd68c89e387a31875223dc7f7f01c0f879842f941f68",
+      "claim_trust_level": "medium",
+      "readiness": {
+        "property_projection_ready": true,
+        "candidate_protocol_projected": false,
+        "catalog_intake_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false
+      },
+      "blockers": [
+        "provisional_method_not_locked",
+        "physical_pack_formula_binding_unverified",
+        "reviewed_preimage_and_guarded_apply_not_approved",
+        "german_lab_explanations_require_customer_copy_review",
+        "selected_local_cadence_unestablished",
+        "no_existing_row_found_in_bounded_snapshot",
+        "new_row_origin_and_publication_mode_require_review",
+        "no_reconciled_catalogue_product_id",
+        "new_research_fit_not_established"
+      ]
+    },
+    {
+      "research_key": "P06",
+      "file": "P06.json",
+      "sha256": "b7d3ff92b5c136a22801029493e0000a7cd35a610338840ab0d9f7d629acc7cd",
+      "profile_sha256": "2d9df8555b6089deccdbc148fc060e70213af6b6596e9662782e1a0d506f6150",
+      "source_artifact": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/P06.json",
+      "source_artifact_sha256": "a76cf911d009ab020f94de430f841807d3281ab495554911c01d2ce5c50f0115",
+      "claim_trust_level": "low",
+      "readiness": {
+        "property_projection_ready": true,
+        "candidate_protocol_projected": false,
+        "catalog_intake_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false
+      },
+      "blockers": [
+        "provisional_method_not_locked",
+        "physical_pack_formula_binding_unverified",
+        "reviewed_preimage_and_guarded_apply_not_approved",
+        "german_lab_explanations_require_customer_copy_review",
+        "uk_directions_de_pack_unverified",
+        "no_existing_row_found_in_bounded_snapshot",
+        "new_row_origin_and_publication_mode_require_review",
+        "no_reconciled_catalogue_product_id",
+        "owner_low_not_curated_promotion_candidate",
+        "new_research_fit_not_established"
+      ]
+    },
+    {
+      "research_key": "P07",
+      "file": "P07.json",
+      "sha256": "3aae82028365e7964feea42cd5bb7b85f69ec746e9e4323316411e74183032b8",
+      "profile_sha256": "ba507f23774282416788a97ae7c6ed0be58a219919314cde98250f5fad26f2fc",
+      "source_artifact": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/P07.json",
+      "source_artifact_sha256": "6715760a607e2a0a4e460481ff605816a6b7a0d23a8ced2554a88de1f4ead732",
+      "claim_trust_level": "low",
+      "readiness": {
+        "property_projection_ready": true,
+        "candidate_protocol_projected": false,
+        "catalog_intake_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false
+      },
+      "blockers": [
+        "provisional_method_not_locked",
+        "physical_pack_formula_binding_unverified",
+        "reviewed_preimage_and_guarded_apply_not_approved",
+        "german_lab_explanations_require_customer_copy_review",
+        "conditional_cadence_has_no_universal_default",
+        "no_existing_row_found_in_bounded_snapshot",
+        "new_row_origin_and_publication_mode_require_review",
+        "no_reconciled_catalogue_product_id",
+        "owner_low_not_curated_promotion_candidate",
+        "new_research_fit_not_established"
+      ]
+    },
+    {
+      "research_key": "P08",
+      "file": "P08.json",
+      "sha256": "0b887a31980771042ce2a56ea19ac0bd51b71bd20fe041e1fcf43bffa191f401",
+      "profile_sha256": "3a7eada4cbd03a0b1cdd49415ed328dd9f56c2c271ccbf1726cd97962917cb98",
+      "source_artifact": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/P08.json",
+      "source_artifact_sha256": "1f93456408239b5a78d0af379989e92dfc9cdc716d555886852b37cc2ba66578",
+      "claim_trust_level": "medium",
+      "readiness": {
+        "property_projection_ready": true,
+        "candidate_protocol_projected": false,
+        "catalog_intake_ready": false,
+        "global_recommendation_ready": false,
+        "publish_ready": false
+      },
+      "blockers": [
+        "provisional_method_not_locked",
+        "physical_pack_formula_binding_unverified",
+        "reviewed_preimage_and_guarded_apply_not_approved",
+        "german_lab_explanations_require_customer_copy_review",
+        "selected_local_cadence_unestablished",
+        "no_existing_row_found_in_bounded_snapshot",
+        "new_row_origin_and_publication_mode_require_review",
+        "no_reconciled_catalogue_product_id",
+        "new_research_fit_not_established"
+      ]
+    }
+  ]
+}

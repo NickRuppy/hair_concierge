@@ -1,0 +1,66 @@
+[
+  {
+    "key": "lovely-primary-history.pdf",
+    "url": "https://content.services.dmtech.com/rootpage-dm-shop-it-it/resource/blob/2689784/7ee8942e0821a3eb299912f74c60fa0a/lista-smaltimento-imballo-data.pdf",
+    "checked_at": "2026-10-04T08:03:54.511741+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "key": "lovely-archive.json",
+    "url": "https://web.archive.org/cdx/search/cdx?url=www.dm.de/langhaarmaedchen-shampoo-lovely-long-p4067796002621.html&output=json&filter=statuscode:200&filter=mimetype:text/html&collapse=timestamp:4",
+    "checked_at": "2026-10-04T08:03:54.512348+00:00",
+    "error": "The read operation timed out"
+  },
+  {
+    "key": "herbal-archive.json",
+    "url": "https://web.archive.org/cdx/search/cdx?url=www.dm.de/*8700216211598*&output=json&filter=statuscode:200&collapse=urlkey",
+    "checked_at": "2026-10-04T08:03:54.512567+00:00",
+    "error": "The read operation timed out"
+  },
+  {
+    "key": "innersense-de.html",
+    "url": "https://innersensebeauty.com/en-de/products/harmonic-treatment-oil",
+    "checked_at": "2026-10-04T08:03:54.512742+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "key": "innersense-shipping.html",
+    "url": "https://innersensebeauty.com/policies/shipping-policy",
+    "checked_at": "2026-10-04T08:03:54.512933+00:00",
+    "status": 200,
+    "final_url": "https://innersensebeauty.com/policies/shipping-policy",
+    "bytes": 563872
+  },
+  {
+    "key": "innersense-pack.webp",
+    "url": "https://www.belladonna-naturkosmetik.de/media/23/21/a8/1739534758/ean-850006575039-harmonic-treatment-oil-4oz-innersense-organic-beauty.webp",
+    "checked_at": "2026-10-04T08:03:54.513128+00:00",
+    "status": 200,
+    "final_url": "https://www.belladonna-naturkosmetik.de/media/23/21/a8/1739534758/ean-850006575039-harmonic-treatment-oil-4oz-innersense-organic-beauty.webp",
+    "bytes": 54142
+  },
+  {
+    "key": "innersense-second.webp",
+    "url": "https://www.belladonna-naturkosmetik.de/media/92/44/3a/1756828983/Harmonic-Treatment-Oil.webp",
+    "checked_at": "2026-10-04T08:03:54.513305+00:00",
+    "status": 200,
+    "final_url": "https://www.belladonna-naturkosmetik.de/media/92/44/3a/1756828983/Harmonic-Treatment-Oil.webp",
+    "bytes": 52954
+  },
+  {
+    "key": "herbal-israel.html",
+    "url": "https://shop.super-pharm.co.il/care/hair-care/conditioner/%D7%9E%D7%A8%D7%9B%D7%9A-%D7%90%D7%9C%D7%95%D7%95%D7%A8%D7%94-%D7%9C%D7%9C%D7%90-%D7%A1%D7%95%D7%9C%D7%A4%D7%98%D7%99%D7%9D/p/681048",
+    "checked_at": "2026-10-04T08:03:54.513559+00:00",
+    "status": 247,
+    "final_url": "https://shop.super-pharm.co.il/care/hair-care/conditioner/%D7%9E%D7%A8%D7%9B%D7%9A-%D7%90%D7%9C%D7%95%D7%95%D7%A8%D7%94-%D7%9C%D7%9C%D7%90-%D7%A1%D7%95%D7%9C%D7%A4%D7%98%D7%99%D7%9D/p/681048",
+    "bytes": 448
+  },
+  {
+    "key": "lovely-brand-history.html",
+    "url": "https://www.langhaarmaedchen.de/blogs/news/haarwachstum-anregen-und-verbessern",
+    "checked_at": "2026-10-04T08:03:54.702674+00:00",
+    "status": 200,
+    "final_url": "https://www.langhaarmaedchen.de/blogs/news/haarwachstum-anregen-und-verbessern",
+    "bytes": 149935
+  }
+]

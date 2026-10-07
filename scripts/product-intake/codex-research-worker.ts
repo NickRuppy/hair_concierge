@@ -1,56 +1,62 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
-import { basename, join } from "node:path"
+import { join, resolve } from "node:path"
 import { hostname } from "node:os"
-import { spawnSync } from "node:child_process"
 import { createHash } from "node:crypto"
-import sharp from "sharp"
+import { pathToFileURL } from "node:url"
+import * as Sentry from "@sentry/node"
 
 import {
-  buildBrandResolutionCatalog,
-  resolveBrandFromText,
-  type BrandResolutionCatalogInput,
-  type ProductIdentityBrandAlias,
-  type ProductIdentityBrand,
-  type ProductIdentityProductLine,
-} from "@/lib/product-identity/brand-resolution"
-import { normalizeIdentityText } from "@/lib/product-identity/normalize"
+  loadBrandResolutionContext,
+  applyIdentityStage,
+  type BrandResolutionPromptContext,
+} from "@/lib/product-intake/pipeline/identity"
 import {
-  CONDITIONER_INGREDIENT_FLAGS,
-  CONDITIONER_REPAIR_LEVELS,
-  CONDITIONER_WEIGHTS,
-} from "@/lib/conditioner/constants"
+  runProtocolStage,
+  type ProtocolResearchDraft,
+} from "@/lib/product-intake/pipeline/protocol"
 import {
-  DEEP_CLEANSING_COLOR_TREATED_SUITABILITIES,
-  DEEP_CLEANSING_RESET_FOCUSES,
-  DEEP_CLEANSING_RESET_INTENSITIES,
-} from "@/lib/deep-cleansing-shampoo/constants"
+  runCommerceStage,
+  applyCommerceWrites,
+  type CommerceStageDeps,
+} from "@/lib/product-intake/pipeline/commerce"
+import { createDmMcpClient } from "@/lib/scan/enrichment/dm-mcp-client"
+import { applyInciStage, type InciStageOptions } from "@/lib/product-intake/pipeline/inci"
+import type { BrandResolutionCatalogInput } from "@/lib/product-identity/brand-resolution"
+export type { BrandResolutionPromptContext } from "@/lib/product-intake/pipeline/identity"
+import {
+  cleanupStaleRembgContainers,
+  processApprovedImageForReview,
+  shouldAutoPrepareImage,
+} from "@/lib/product-intake/pipeline/image"
+import { runWorkerProcess, type WorkerSpawn } from "@/lib/product-intake/pipeline/process"
+import {
+  assertAllowedProductIntakeModel,
+  boundedNumber,
+  errorMessage,
+  hasFinalResearchPayload,
+  nonBlankEnv,
+  normalizeRecord,
+  optionalServiceTier,
+  parseJsonObject,
+  stringValue,
+  truncateDiagnostic,
+  type CodexResearchRuntimeConfig,
+} from "@/lib/product-intake/pipeline/shared"
+
+import {
+  checkResearchReadiness,
+  type ResearchReadinessSelfCheck,
+} from "@/lib/product-intake/research-readiness-self-check"
 import { LEAVE_IN_APPLICATION_STAGES } from "@/lib/leave-in/constants"
-import { MASK_CONCENTRATIONS, MASK_INGREDIENT_FLAGS, MASK_WEIGHTS } from "@/lib/mask/constants"
-import { OIL_INGREDIENT_FLAGS, OIL_PURPOSES, OIL_SUBTYPES } from "@/lib/oil/constants"
 import {
-  DRY_SHAMPOO_FORMATS,
-  DRY_SHAMPOO_HAIR_COLOR_FITS,
-  DRY_SHAMPOO_PRIMARY_EFFECTS,
-  DRY_SHAMPOO_SCALP_SENSITIVITY_FITS,
-  PRODUCT_BALANCE_TARGETS,
-  PRODUCT_BOND_APPLICATION_MODES,
-  PRODUCT_BOND_PRODUCT_FORMATS,
-  PRODUCT_BOND_REPAIR_AXES,
-  PRODUCT_BOND_REPAIR_INTENSITIES,
-  PRODUCT_BOND_TREATMENT_MODES,
-  PRODUCT_BOND_USAGE_PROTOCOLS,
-  PRODUCT_SCALP_TYPE_FOCUSES,
-} from "@/lib/product-specs/constants"
-import { SHAMPOO_BUCKETS } from "@/lib/shampoo/constants"
-import { HAIR_THICKNESSES, PROTEIN_MOISTURE_LEVELS } from "@/lib/vocabulary"
-import {
-  appendResearchArtifact,
+  appendResearchArtifact as coreAppendResearchArtifact,
   claimResearchJobs,
+  countResearchArtifacts,
   loadProductIntakeSubmissionDetail,
   normalizeCodexConcurrency,
   resolveReviewDecisionsForSubmission,
   saveSubmissionResearchPreview,
-  updateResearchJob,
+  updateResearchJob as coreUpdateResearchJob,
   PRODUCT_INTAKE_ARTIFACT_KINDS,
   PRODUCT_INTAKE_JOB_STAGES,
   type JsonRecord,
@@ -62,11 +68,284 @@ import {
 } from "@chaarlie/product-intake-core"
 
 import { createSupabaseClientFromEnv, flagBool, flagInt, parseArgs, printJson } from "./cli"
-import { finalizeProductImageAsset } from "./finalize-package-image"
-import { applyConditionerResearchAdapter } from "@/lib/product-intake/conditioner-research-adapter"
-import { conditionerResearchPromptContract } from "@/lib/product-intake/conditioner-research-prompt-contract"
-import { applyLeaveInResearchAdapter } from "@/lib/product-intake/leave-in-research-adapter"
-import { leaveInResearchPromptContract } from "@/lib/product-intake/leave-in-research-prompt-contract"
+import {
+  CATEGORY_RESEARCH_REGISTRY,
+  CATEGORY_SPEC_KEYS,
+  REQUIRED_CATEGORY_SPEC_KEYS,
+  normalizeCategoryKey,
+  researchEngineBindingMismatch,
+  researchEngineBindingVersion,
+  type ResearchJobEngineBinding,
+  type CategoryContractKey,
+} from "@/lib/product-intake/category-research-router"
+import {
+  createRetailerEnrichmentWarningReporter,
+  parseRetailerEnrichmentPacket,
+  type RetailerEnrichmentPacket,
+  type ScannedIdentifierPacketValue,
+} from "./retailer-enrichment-packet"
+
+export {
+  buildImageQualityJudgePrompt,
+  cleanupStaleRembgContainers,
+  finalizedImageOutputRoot,
+  imageQualityJudgeRuntimeConfig,
+  imageQualityPreparationDecision,
+  loadImageQualityReferenceSet,
+  normalizeImageQualityVerdict,
+  rembgContainerArgs,
+  rembgRuntimeConfig,
+  runRembgContainer,
+  shouldAutoPrepareImage,
+  type ImageQualityDefect,
+  type ImageQualityJudgeRuntimeConfig,
+  type ImageQualityReference,
+  type ImageQualityReferenceSet,
+  type ImageQualityVerdict,
+  type RembgRuntimeConfig,
+} from "@/lib/product-intake/pipeline/image"
+export { runWorkerProcess, type WorkerSpawn } from "@/lib/product-intake/pipeline/process"
+export {
+  assertAllowedProductIntakeModel,
+  type CodexResearchRuntimeConfig,
+} from "@/lib/product-intake/pipeline/shared"
+
+type HeartbeatClient = {
+  rpc: (
+    name: string,
+    args: Record<string, unknown>,
+  ) => PromiseLike<{ data: unknown; error: unknown }>
+}
+
+class WorkerLeaseLostError extends Error {
+  constructor(jobId: string) {
+    super(`Worker lease lost for ${jobId}`)
+  }
+}
+
+export class WorkerJobLease {
+  aborted = false
+  private pending: Promise<unknown> = Promise.resolve()
+  private readonly startedAt = Date.now()
+  private readonly maxRuntimeMs = positiveDurationMs(
+    process.env.PRODUCT_INTAKE_JOB_MAX_RUNTIME_MS,
+    45 * 60_000,
+  )
+
+  private checkRuntime(): void {
+    if (Date.now() - this.startedAt > this.maxRuntimeMs) this.aborted = true
+  }
+
+  constructor(
+    readonly job: Pick<ProductIntakeResearchJob, "id" | "locked_by" | "locked_at">,
+    private readonly client: HeartbeatClient,
+  ) {}
+
+  private serialize<T>(operation: () => Promise<T>): Promise<T> {
+    const result = this.pending.then(operation)
+    this.pending = result.catch(() => undefined)
+    return result
+  }
+
+  renew(): Promise<void> {
+    return this.serialize(async () => {
+      this.checkRuntime()
+      if (this.aborted) return
+      const { data, error } = await this.client.rpc("product_intake_renew_research_job_lease", {
+        target_job_id: this.job.id,
+        expected_locked_by: this.job.locked_by,
+      })
+      if (error) throw error
+      if (data === null) this.aborted = true
+      else if (typeof data === "string") this.job.locked_at = data
+      else throw new Error("Lease renewal returned an invalid timestamp")
+    })
+  }
+
+  write<T>(operation: () => Promise<T>): Promise<T> {
+    return this.serialize(async () => {
+      this.checkRuntime()
+      if (this.aborted) throw new WorkerLeaseLostError(this.job.id)
+      return operation()
+    })
+  }
+}
+
+const workerLeases = new Map<string, WorkerJobLease>()
+
+function withJobLease<T>(jobId: string | null | undefined, write: () => Promise<T>): Promise<T> {
+  const lease = jobId ? workerLeases.get(jobId) : undefined
+  return lease ? lease.write(write) : write()
+}
+
+function appendResearchArtifact(
+  ...[client, params]: Parameters<typeof coreAppendResearchArtifact>
+) {
+  return withJobLease(params.jobId, () => coreAppendResearchArtifact(client, params))
+}
+
+function updateResearchJob(...[client, params]: Parameters<typeof coreUpdateResearchJob>) {
+  return withJobLease(params.jobId, async () => {
+    const lease = workerLeases.get(params.jobId)
+    const updated = await coreUpdateResearchJob(client, {
+      ...params,
+      expectedLockedAt: lease?.job.locked_at ?? params.expectedLockedAt,
+    })
+    // All call-chain aliases share this object, including optional model lanes.
+    if (lease) Object.assign(lease.job, updated)
+    if (updated.status !== "running") workerLeases.delete(params.jobId)
+    return lease ? (lease.job as ProductIntakeResearchJob) : updated
+  })
+}
+
+/** Called before the production research run; the RPC fences concurrent/stale owners. */
+export async function bindResearchJobEngine(
+  client: HeartbeatClient,
+  job: ProductIntakeResearchJob & ResearchJobEngineBinding,
+  category: string | null | undefined,
+): Promise<ProductIntakeResearchJob & ResearchJobEngineBinding> {
+  const key = normalizeCategoryKey(category)
+  if (!key) return job
+  const engine = CATEGORY_RESEARCH_REGISTRY[key]
+  if (engine.state !== "active") return job
+  return withJobLease(job.id, async () => {
+    const mismatch = researchEngineBindingMismatch(job, engine)
+    if (mismatch) throw new Error(mismatch)
+    const lease = workerLeases.get(job.id)
+    const { data, error } = await client.rpc("product_intake_bind_research_job_engine", {
+      target_job_id: job.id,
+      next_engine_key: engine.engineId,
+      next_engine_version: researchEngineBindingVersion(engine),
+      expected_locked_by: job.locked_by,
+      expected_locked_at: lease?.job.locked_at ?? job.locked_at,
+    })
+    if (error) {
+      const rpcError = normalizeRecord(error)
+      const message = stringValue(rpcError?.message) ?? "Engine binding RPC failed"
+      if (rpcError?.code === "PGRST202" || /Could not find the function/i.test(message)) {
+        const infrastructureError = new Error(
+          `INFRA_ENGINE_BINDING: product_intake_bind_research_job_engine unavailable; continuing without binding for job ${job.id}: ${message}`,
+        )
+        try {
+          console.error(infrastructureError.message)
+        } catch {
+          /* Observability must not gate research. */
+        }
+        try {
+          if (Sentry.isInitialized()) Sentry.captureException(infrastructureError)
+        } catch {
+          /* Sentry is best effort. */
+        }
+        return job
+      }
+      throw new Error(message)
+    }
+    const bound = normalizeRecord(data)
+    if (!bound) throw new Error("Engine binding RPC returned no job")
+    Object.assign(job, bound)
+    return job
+  })
+}
+
+export function startWorkerHeartbeat(params: {
+  client: HeartbeatClient
+  workerId: string
+  host: string
+  pid: number
+  releaseSha?: string
+  intervalMs?: number
+  leases: Map<string, WorkerJobLease>
+  currentJobId: () => string | null
+  authPaused?: () => boolean
+  onError?: (error: unknown) => void
+  checkIn?: (status: "ok" | "error") => void
+}) {
+  let stopped = false
+  let inFlight: Promise<void> | undefined
+  let heartbeatFailures = 0
+  const report = (error: unknown) => {
+    try {
+      ;(params.onError ?? console.error)(error)
+    } catch {
+      /* Observability cannot crash work. */
+    }
+  }
+  const tick = (): Promise<void> => {
+    if (stopped) return Promise.resolve()
+    if (inFlight) return inFlight
+    inFlight = (async () => {
+      // Renew even when the separate liveness RPC fails.
+      await Promise.all([...params.leases.values()].map((lease) => lease.renew().catch(report)))
+      try {
+        const { error } = await params.client.rpc("product_intake_record_worker_heartbeat", {
+          worker_id: params.workerId,
+          host: params.host,
+          pid: params.pid,
+          release_sha: params.releaseSha ?? null,
+          current_job_id: params.currentJobId(),
+        })
+        if (error) throw error
+        heartbeatFailures = 0
+      } catch (error) {
+        heartbeatFailures++
+        report(error)
+      }
+      try {
+        params.checkIn?.(
+          heartbeatFailures >= 2 ||
+            params.authPaused?.() ||
+            [...params.leases.values()].some((lease) => lease.aborted)
+            ? "error"
+            : "ok",
+        )
+      } catch (error) {
+        report(error)
+      }
+    })().finally(() => {
+      inFlight = undefined
+    })
+    return inFlight
+  }
+  const timer = setInterval(() => {
+    void tick()
+  }, params.intervalMs ?? 60_000)
+  void tick()
+  return {
+    tick,
+    stop: () => {
+      stopped = true
+      clearInterval(timer)
+    },
+  }
+}
+
+function initWorkerSentry(): boolean {
+  const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN?.trim()
+  if (!dsn) return false
+  try {
+    Sentry.init({ dsn, environment: process.env.NODE_ENV ?? "production", sendDefaultPii: false })
+    return true
+  } catch {
+    return false
+  }
+}
+
+function workerSentryCheckIn(enabled: boolean, intervalMs: number, status: "ok" | "error"): void {
+  if (!enabled) return
+  try {
+    const checkInId = Sentry.captureCheckIn(
+      { monitorSlug: "product-intake-worker", status: "in_progress" },
+      {
+        schedule: { type: "interval", value: Math.ceil(intervalMs / 60_000), unit: "minute" },
+        checkinMargin: 10,
+        maxRuntime: 1,
+      },
+    )
+    Sentry.captureCheckIn({ monitorSlug: "product-intake-worker", status, checkInId })
+  } catch {
+    /* Match price-audit: Sentry is best effort. */
+  }
+}
 
 type WorkerResult = {
   worker_id: string
@@ -99,6 +378,75 @@ type CodexResearchOutput = {
   next_stage?: ProductIntakeJobStage
 }
 
+export type ProductIntakeModelLane =
+  | "production_low"
+  | "challenger_medium"
+  | "judge"
+  | "image_judge"
+
+export type ModelEvaluationRuntimeConfig = {
+  enabled: boolean
+  targetSuccessfulJudgments: number
+  challenger: CodexResearchRuntimeConfig
+  judge: CodexResearchRuntimeConfig
+}
+
+type BlindCandidateLabel = "A" | "B"
+type ResearchLane = "production_low" | "challenger_medium"
+
+export type BlindJudgePacket = {
+  candidates: Record<BlindCandidateLabel, JsonRecord>
+  laneByCandidate: Record<BlindCandidateLabel, ResearchLane>
+}
+
+type ModelJudgeDimensionScores = {
+  identity: number
+  evidence: number
+  completeness: number
+  uncertainty: number
+}
+
+export type ModelJudgeVerdict = {
+  preferredCandidate: BlindCandidateLabel | "tie"
+  preferredLane: ResearchLane | "tie"
+  confidence: number
+  scores: Record<BlindCandidateLabel, ModelJudgeDimensionScores>
+  materialIssues: string[]
+  rationale: string
+}
+
+type SuccessfulModelRun<T> = {
+  success: true
+  lane: ProductIntakeModelLane
+  runtimeConfig: CodexResearchRuntimeConfig
+  durationMs: number
+  outputHash: string
+  output: T
+}
+
+type FailedModelRun = {
+  success: false
+  lane: ProductIntakeModelLane
+  runtimeConfig: CodexResearchRuntimeConfig
+  durationMs: number
+  error: string
+}
+
+type MeasuredModelRun<T> = SuccessfulModelRun<T> | FailedModelRun
+
+type ModelEvaluationResult = {
+  status:
+    | "disabled"
+    | "target_reached"
+    | "completed"
+    | "challenger_failed"
+    | "judge_failed"
+    | "telemetry_failed"
+  successfulJudgments: number
+  targetSuccessfulJudgments: number
+  preferredLane?: ResearchLane | "tie"
+}
+
 type WorkerOptions = {
   executeCodex: boolean
   noComplete: boolean
@@ -109,75 +457,55 @@ type WorkerOptions = {
   concurrency: number
   workerId: string
   supabase: ReturnType<typeof createSupabaseClientFromEnv>
+  currentJobId?: string | null
+  claimGate: WorkerClaimGate
 }
 
-type BrandResolutionPromptContext = {
-  submitted_brand_text: string | null
-  submitted_product_name_text: string | null
-  scanned_identifier: ScannedIdentifierPacketValue
-  lookup_text: string
-  resolved_brand: JsonRecord | null
-  nearby_brand_options: JsonRecord[]
-  catalog_summary: JsonRecord
-  rules: string[]
+// Shared by the watch loop and its heartbeat, so infrastructure outages stop claims.
+export class WorkerClaimGate {
+  private pauseUntil = 0
+
+  get paused(): boolean {
+    return Date.now() < this.pauseUntil
+  }
+
+  handleFailure(error: unknown): void {
+    if (codexInfrastructureCode(error) !== "infra_auth") return
+    const pauseMs = positiveDurationMs(process.env.PRODUCT_INTAKE_AUTH_PAUSE_MS, 15 * 60_000)
+    this.pauseUntil = Date.now() + pauseMs
+    try {
+      console.error(
+        `INFRA_AUTH: worker claims PAUSED for ${pauseMs}ms until ${new Date(this.pauseUntil).toISOString()}: ${errorMessage(error)}`,
+      )
+    } catch {
+      /* Observability cannot prevent the pause. */
+    }
+    try {
+      if (Sentry.isInitialized()) Sentry.captureException(error)
+    } catch {
+      /* Sentry is best effort. */
+    }
+  }
+
+  claim(...args: Parameters<typeof claimResearchJobs>): ReturnType<typeof claimResearchJobs> {
+    return this.paused ? Promise.resolve([]) : claimResearchJobs(...args)
+  }
 }
 
-type ScannedIdentifierPacketValue = { type: string; value: string } | null
-
-type SupabaseQueryResult<T> = {
-  data: T | null
-  error: { message?: string } | null
+export type ScanIntakeSeed = {
+  scannedIdentifier: ScannedIdentifierPacketValue
+  retailerEnrichment: RetailerEnrichmentPacket | null
+  retailerEnrichmentWarning: "gtin_mismatch" | null
 }
 
-const CATEGORY_SPEC_KEYS = {
-  shampoo: ["product_shampoo_specs", "product_application_protocols"],
-  conditioner: [
-    "product_conditioner_specs",
-    "product_conditioner_rerank_specs",
-    "product_application_protocols",
-  ],
-  mask: ["product_mask_specs", "product_application_protocols"],
-  leave_in: [
-    "product_leave_in_specs",
-    "product_leave_in_fit_specs",
-    "product_leave_in_eligibility",
-    "product_application_protocols",
-  ],
-  oil: ["product_oil_specs", "product_oil_eligibility", "product_application_protocols"],
-  dry_shampoo: ["product_dry_shampoo_specs", "product_application_protocols"],
-  deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs", "product_application_protocols"],
-  bondbuilder: [
-    "product_bondbuilder_specs",
-    "product_relationships",
-    "product_application_protocols",
-  ],
-  heat_protectant: ["product_heat_protectant_specs", "product_application_protocols"],
-  scalp_care: ["product_scalp_care_specs", "product_application_protocols"],
-} as const
+const reportRetailerEnrichmentWarning = createRetailerEnrichmentWarningReporter({
+  emit: (message, fields) => console.warn("[product-intake]", message, fields),
+})
+
 const CODEX_RESEARCH_TIMEOUT_MS = 5 * 60_000
 const CODEX_APP_BINARY = "/Applications/Codex.app/Contents/Resources/codex"
+const MODEL_EVALUATION_EXPERIMENT_ID = "product_intake_research_effort_v1"
 
-const REQUIRED_CATEGORY_SPEC_KEYS = {
-  shampoo: ["product_shampoo_specs", "product_application_protocols"],
-  conditioner: [
-    "product_conditioner_specs",
-    "product_conditioner_rerank_specs",
-    "product_application_protocols",
-  ],
-  mask: ["product_mask_specs", "product_application_protocols"],
-  leave_in: [
-    "product_leave_in_specs",
-    "product_leave_in_fit_specs",
-    "product_leave_in_eligibility",
-    "product_application_protocols",
-  ],
-  oil: ["product_oil_specs", "product_oil_eligibility", "product_application_protocols"],
-  dry_shampoo: ["product_dry_shampoo_specs", "product_application_protocols"],
-  deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs", "product_application_protocols"],
-  bondbuilder: ["product_bondbuilder_specs", "product_application_protocols"],
-  heat_protectant: ["product_heat_protectant_specs", "product_application_protocols"],
-  scalp_care: ["product_scalp_care_specs", "product_application_protocols"],
-} as const
 const ARRAY_CATEGORY_SPEC_TABLES = new Set<string>([
   "product_shampoo_specs",
   "product_conditioner_specs",
@@ -185,8 +513,6 @@ const ARRAY_CATEGORY_SPEC_TABLES = new Set<string>([
   "product_oil_eligibility",
   "product_application_protocols",
 ])
-
-type CategoryContractKey = keyof typeof CATEGORY_SPEC_KEYS
 
 async function main() {
   const args = parseArgs()
@@ -217,6 +543,7 @@ async function main() {
     concurrency,
     workerId,
     supabase,
+    claimGate: new WorkerClaimGate(),
   }
 
   if (watch && !json) {
@@ -226,18 +553,146 @@ async function main() {
     console.log("Press Ctrl-C to stop.")
   }
 
-  while (watch) {
-    printWorkerResult(await runWorkerBatch(options), options)
-    await sleep(pollMs)
-  }
-
-  if (!watch) {
-    printWorkerResult(await runWorkerBatch(options), options)
+  const heartbeatMs = normalizeWorkerPollMs(process.env.PRODUCT_INTAKE_WORKER_HEARTBEAT_MS, 60_000)
+  const sentryEnabled = initWorkerSentry()
+  const heartbeat = watch
+    ? startWorkerHeartbeat({
+        client: supabase,
+        workerId,
+        host: hostname(),
+        pid: process.pid,
+        releaseSha: process.env.PRODUCT_INTAKE_RELEASE_SHA?.trim() || undefined,
+        intervalMs: heartbeatMs,
+        leases: workerLeases,
+        currentJobId: () => options.currentJobId ?? null,
+        authPaused: () => options.claimGate.paused,
+        checkIn: (status) => workerSentryCheckIn(sentryEnabled, heartbeatMs, status),
+      })
+    : undefined
+  try {
+    if (watch) await cleanupStaleRembgContainers()
+    do {
+      printWorkerResult(await runWorkerBatch(options), options)
+      if (watch) await sleep(pollMs)
+    } while (watch)
+  } finally {
+    heartbeat?.stop()
   }
 }
 
+/** Persist the production result before optional evaluation, then release it for review. */
+export async function completeResearchPass(params: {
+  supabase: ReturnType<typeof createSupabaseClientFromEnv>
+  job: ProductIntakeResearchJob
+  category: string | null | undefined
+  submission: Pick<ProductIntakeSubmissionDetail, "id" | "source" | "status"> | null
+  reworkRequest?: JsonRecord | null
+  workerId: string
+  promptPacketPath: string
+  researchOutput: CodexResearchOutput
+  researchModel: string
+  executeCodex: boolean
+  autoPrepareImages: boolean
+  beforeCompletion?: () => Promise<{
+    job: ProductIntakeResearchJob
+    modelEvaluation: ModelEvaluationResult
+  }>
+}) {
+  const { researchOutput, promptPacketPath } = params
+  const reworkRequest =
+    params.job.stage === "rework"
+      ? (params.reworkRequest ?? activeReworkRequestFromProgress(params.job.progress))
+      : null
+  const hasFinalPayload = hasFinalResearchPayload(researchOutput.researched_payload)
+  const blockers = researchOutput.blockers.filter(Boolean)
+  let submissionContext = params.submission
+    ? { ...params.submission, user_id: null as string | null }
+    : undefined
+  if (blockers.length === 0 && hasFinalPayload && submissionContext) {
+    // The shared detail loader omits ownership. Supplement it from the stored
+    // submission, never from model output or job progress.
+    const { data, error } = await params.supabase
+      .from("product_submissions")
+      .select("user_id")
+      .eq("id", submissionContext.id)
+      .maybeSingle()
+    if (error) throw new Error(`load product-intake readiness owner: ${error.message}`)
+    submissionContext = { ...submissionContext, user_id: stringValue(data?.user_id) }
+  }
+  const readiness =
+    blockers.length === 0 && hasFinalPayload
+      ? checkResearchReadiness(
+          researchOutput.researched_payload,
+          params.category,
+          submissionContext,
+        )
+      : null
+  const progress = await persistResearchOutput({ ...params, readiness })
+  const evaluated = await params.beforeCompletion?.()
+  const leasedJob = evaluated?.job ?? params.job
+  const evaluation = evaluated?.modelEvaluation ?? {
+    status: "disabled",
+    successfulJudgments: 0,
+    targetSuccessfulJudgments: 0,
+  }
+  const autoPrepareImage = shouldAutoPrepareImage({
+    enabled: params.autoPrepareImages && readiness?.ok === true,
+    researchOutput,
+  })
+  const nextStatus = autoPrepareImage
+    ? "queued"
+    : readiness?.ok === true
+      ? "waiting_for_review"
+      : "blocked"
+  const nextStage = autoPrepareImage
+    ? "image_judging"
+    : (researchOutput.next_stage ?? (hasFinalPayload ? "preview_build" : "source_research"))
+
+  const readinessError =
+    readiness && !readiness.ok
+      ? `Katalog-Prüfung: ${readiness.researchGaps.length} Pflichtfelder fehlen: ${readiness.researchGaps.slice(0, 5).join(", ")}${readiness.researchGaps.length > 5 ? "…" : ""}`
+      : null
+  // A new pass replaces the prior readiness verdict, including on model blockers.
+  const previousProgress = progressWithoutReadiness(leasedJob.progress)
+  if (reworkRequest) {
+    previousProgress.last_rework_request = reworkRequest
+    for (const key of ["requested_by", "requested_at", "rework_type", "message"])
+      delete previousProgress[key]
+  }
+  const updated = await updateResearchJob(params.supabase, {
+    jobId: leasedJob.id,
+    status: nextStatus,
+    stage: nextStage,
+    progress: {
+      ...previousProgress,
+      message: autoPrepareImage
+        ? "Research ist bereit. Bildverarbeitung und visueller Bildcheck sind eingereiht."
+        : nextStatus === "waiting_for_review"
+          ? "Research preview ist bereit fuer Nick."
+          : "Research braucht Aufmerksamkeit, bevor Nick final freigeben kann.",
+      prompt_packet_path: promptPacketPath,
+      worker_id: params.workerId,
+      mode: params.executeCodex ? "codex_cli" : "preview_only",
+      image_selection_mode: autoPrepareImage ? "agent_prepared" : null,
+      next_step: autoPrepareImage ? "process_image_for_combined_review" : null,
+      model_evaluation: evaluation,
+      ...progress,
+      ...(readiness
+        ? {
+            readiness_check: readiness.ok ? "passed" : "failed",
+            readiness_missing_fields: readiness.researchGaps,
+          }
+        : {}),
+    },
+    lastError: blockers.length > 0 ? blockers.join("; ") : readinessError,
+    expectedLockedBy: leasedJob.locked_by,
+    expectedLockedAt: leasedJob.locked_at,
+  })
+  return updated
+}
+
 async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
-  const jobs = await claimResearchJobs(options.supabase, {
+  const jobs = await options.claimGate.claim(options.supabase, {
     workerId: options.workerId,
     limit: options.concurrency,
   })
@@ -250,169 +705,295 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
     jobs: [],
   }
 
-  for (const job of jobs) {
-    const detail = await loadProductIntakeSubmissionDetail(options.supabase, job.submission_id)
-    const scannedIdentifier = await loadScannedIdentifierForSubmission(
-      options.supabase,
-      job.submission_id,
-    )
-    const brandResolutionContext = await loadBrandResolutionContext(
-      options.supabase,
-      detail,
-      scannedIdentifier,
-    )
-    const promptPacketPath = writePromptPacket(
-      job,
-      options.workerId,
-      detail,
-      brandResolutionContext,
-    )
-
-    if (options.failTest) {
-      const updated = await updateResearchJob(options.supabase, {
-        jobId: job.id,
-        status: "failed",
-        stage: job.stage,
-        progress: {
-          message: "Codex worker skeleton marked this job failed for UI testing.",
-          prompt_packet_path: promptPacketPath,
-          worker_id: options.workerId,
-          mode: options.executeCodex ? "codex_cli" : "preview_only",
-        },
-        lastError: "Phase 1 --fail-test requested",
-        expectedLockedBy: job.locked_by,
-        expectedLockedAt: job.locked_at,
-      })
-      result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
-      continue
-    }
-
-    if (options.noComplete) {
-      const updated = await updateResearchJob(options.supabase, {
-        jobId: job.id,
-        status: "running",
-        stage: job.stage,
-        progress: {
-          message: "Codex worker skeleton claimed this job and left it running for lock testing.",
-          prompt_packet_path: promptPacketPath,
-          worker_id: options.workerId,
-          mode: options.executeCodex ? "codex_cli" : "preview_only",
-        },
-        expectedLockedBy: job.locked_by,
-        expectedLockedAt: job.locked_at,
-      })
-      result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
-      continue
-    }
-
-    if (job.stage === "image_judging") {
+  for (const job of jobs) workerLeases.set(job.id, new WorkerJobLease(job, options.supabase))
+  try {
+    for (const job of jobs) {
+      options.currentJobId = job.id
+      const lease = workerLeases.get(job.id)!
+      // Lease refreshes replace progress.message before completion; retain the
+      // reviewer instruction as it was when this rework pass was claimed.
+      const reworkRequest =
+        job.stage === "rework" ? activeReworkRequestFromProgress(job.progress) : null
       try {
-        const updated = await processApprovedImageForReview({
-          supabase: options.supabase,
+        if (lease.aborted) continue
+        const detail = await loadProductIntakeSubmissionDetail(options.supabase, job.submission_id)
+        const scanIntakeSeed = await loadScanIntakeSeedForSubmission(
+          options.supabase,
+          job.submission_id,
+        )
+        reportRetailerEnrichmentWarning(scanIntakeSeed.retailerEnrichmentWarning)
+        const { catalog: brandCatalog, ...brandResolutionContext } =
+          await loadBrandResolutionContext(
+            options.supabase,
+            detail,
+            scanIntakeSeed.scannedIdentifier,
+          )
+        const promptPacketPath = writePromptPacket(
           job,
+          options.workerId,
           detail,
-          workerId: options.workerId,
-          promptPacketPath,
-        })
-        result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+          brandResolutionContext,
+          scanIntakeSeed.retailerEnrichment,
+        )
+
+        if (options.failTest) {
+          const updated = await updateResearchJob(options.supabase, {
+            jobId: job.id,
+            status: "failed",
+            stage: job.stage,
+            progress: {
+              message: "Codex worker skeleton marked this job failed for UI testing.",
+              prompt_packet_path: promptPacketPath,
+              worker_id: options.workerId,
+              mode: options.executeCodex ? "codex_cli" : "preview_only",
+            },
+            lastError: "Phase 1 --fail-test requested",
+            expectedLockedBy: job.locked_by,
+            expectedLockedAt: job.locked_at,
+          })
+          result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+          continue
+        }
+
+        if (options.noComplete) {
+          const updated = await updateResearchJob(options.supabase, {
+            jobId: job.id,
+            status: "running",
+            stage: job.stage,
+            progress: {
+              message:
+                "Codex worker skeleton claimed this job and left it running for lock testing.",
+              prompt_packet_path: promptPacketPath,
+              worker_id: options.workerId,
+              mode: options.executeCodex ? "codex_cli" : "preview_only",
+            },
+            expectedLockedBy: job.locked_by,
+            expectedLockedAt: job.locked_at,
+          })
+          result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+          continue
+        }
+
+        if (job.stage === "image_judging") {
+          let imageLeasedJob = job
+          try {
+            const updated = await processApprovedImageForReview(
+              {
+                supabase: options.supabase,
+                job,
+                detail,
+                workerId: options.workerId,
+                promptPacketPath,
+                executeCodex: options.executeCodex,
+                onLeaseRefresh: (refreshedJob) => {
+                  imageLeasedJob = refreshedJob
+                },
+              },
+              {
+                appendResearchArtifact,
+                updateResearchJob,
+                measureModelRun,
+                refreshModelRunLease,
+                captureOptionalTelemetryFailure,
+                runCodexJson,
+                outputPathForModelLane,
+              },
+            )
+            result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+          } catch (error) {
+            options.claimGate.handleFailure(error)
+            if (lease.aborted || error instanceof WorkerLeaseLostError) continue
+            const updated = await updateResearchJob(
+              options.supabase,
+              imageProcessingFailureUpdate({
+                job: imageLeasedJob,
+                error,
+                promptPacketPath,
+                workerId: options.workerId,
+              }),
+            )
+            result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+          }
+          continue
+        }
+
+        let leasedJob = job
+        try {
+          const researchRuntimeConfig = codexResearchRuntimeConfig(process.env)
+          const evaluationRuntimeConfig = modelEvaluationRuntimeConfig(process.env)
+          let evaluation: ModelEvaluationResult = {
+            status: "disabled",
+            successfulJudgments: 0,
+            targetSuccessfulJudgments: 0,
+          }
+          let rawResearchOutput: CodexResearchOutput
+
+          if (options.executeCodex) {
+            leasedJob = await bindResearchJobEngine(options.supabase, leasedJob, detail?.category)
+            const productionRun = await measureModelRun(
+              "production_low",
+              researchRuntimeConfig,
+              () => runCodexResearch(promptPacketPath, researchRuntimeConfig, "production_low"),
+            )
+            leasedJob = await refreshModelRunLease({
+              supabase: options.supabase,
+              job: leasedJob,
+              workerId: options.workerId,
+              promptPacketPath,
+              message: "Luna/low research returned; worker lease refreshed.",
+            })
+            await persistModelRunArtifact(options.supabase, leasedJob, productionRun)
+            if (!productionRun.success) throw new Error(productionRun.error)
+
+            rawResearchOutput = productionRun.output
+          } else {
+            rawResearchOutput = buildPreviewOnlyOutput(job, detail, promptPacketPath)
+            leasedJob = await refreshModelRunLease({
+              supabase: options.supabase,
+              job: leasedJob,
+              workerId: options.workerId,
+              promptPacketPath,
+              message: "Preview result returned; worker lease refreshed.",
+            })
+          }
+
+          let researchOutput = normalizeResearchOutputForCategory(
+            rawResearchOutput,
+            detail?.category,
+            brandResolutionContext,
+            detail?.decisions ?? [],
+            job.submission_id,
+            {
+              retailerPacket: scanIntakeSeed.retailerEnrichment,
+              inciRetryAttempted: leasedJob.progress.inci_retry_attempted === true,
+              brandCatalog,
+            },
+          )
+          // Enabled by default; only the exact env value "false" disables commerce confirmation.
+          if (process.env.PRODUCT_INTAKE_COMMERCE_CHECK_ENABLED !== "false") {
+            researchOutput = await applyCommerceStage(researchOutput, job.submission_id, {
+              dmSearch: (query) => workerDmClient().searchProducts(query),
+              now: () => new Date(),
+            })
+          }
+          const updated = await completeResearchPass({
+            supabase: options.supabase,
+            job: leasedJob,
+            category: detail?.category,
+            submission: detail,
+            reworkRequest,
+            workerId: options.workerId,
+            promptPacketPath,
+            researchOutput,
+            researchModel: options.executeCodex
+              ? researchRuntimeConfig.model
+              : "codex-worker-preview",
+            executeCodex: options.executeCodex,
+            autoPrepareImages:
+              options.executeCodex &&
+              process.env.PRODUCT_INTAKE_AUTO_PREPARE_IMAGES?.trim().toLowerCase() === "true",
+            beforeCompletion: async () => {
+              if (options.executeCodex) {
+                const evaluationRun = await runNonFatalModelEvaluation({
+                  job: leasedJob,
+                  currentJob: () => leasedJob,
+                  targetSuccessfulJudgments: evaluationRuntimeConfig.targetSuccessfulJudgments,
+                  run: () =>
+                    runOptionalModelEvaluation({
+                      supabase: options.supabase,
+                      job: leasedJob,
+                      workerId: options.workerId,
+                      promptPacketPath,
+                      productionOutput: rawResearchOutput,
+                      config: evaluationRuntimeConfig,
+                      onLeaseRefresh: (refreshedJob) => {
+                        leasedJob = refreshedJob
+                      },
+                    }),
+                  persistFailure: (message) =>
+                    persistModelJudgmentFailure(options.supabase, leasedJob, message),
+                })
+                leasedJob = evaluationRun.job
+                evaluation = evaluationRun.result
+              }
+              return { job: leasedJob, modelEvaluation: evaluation }
+            },
+          })
+          result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+        } catch (error) {
+          options.claimGate.handleFailure(error)
+          if (lease.aborted || error instanceof WorkerLeaseLostError) continue
+          const updated = await updateResearchJob(
+            options.supabase,
+            researchFailureUpdate({
+              job: leasedJob,
+              error,
+              promptPacketPath,
+              workerId: options.workerId,
+              executeCodex: options.executeCodex,
+            }),
+          )
+          result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+        }
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Image processing worker failed."
-        const updated = await updateResearchJob(options.supabase, {
-          jobId: job.id,
-          status: "failed",
-          stage: job.stage,
-          progress: {
-            message,
-            prompt_packet_path: promptPacketPath,
-            worker_id: options.workerId,
-            mode: "local_image_processing",
-          },
-          lastError: message,
-          expectedLockedBy: job.locked_by,
-          expectedLockedAt: job.locked_at,
-        })
-        result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+        options.claimGate.handleFailure(error)
+        if (!(error instanceof WorkerLeaseLostError) && !lease.aborted) throw error
+        console.error(`Worker stopped writes after lease loss: ${job.id}`)
+      } finally {
+        workerLeases.delete(job.id)
+        options.currentJobId = null
       }
-      continue
     }
-
-    try {
-      const researchOutput = normalizeResearchOutputForCategory(
-        options.executeCodex
-          ? runCodexResearch(promptPacketPath)
-          : buildPreviewOnlyOutput(job, detail, promptPacketPath),
-        detail?.category,
-        brandResolutionContext,
-        detail?.decisions ?? [],
-        job.submission_id,
-      )
-      const leasedJob = await updateResearchJob(options.supabase, {
-        jobId: job.id,
-        status: "running",
-        stage: job.stage,
-        progress: {
-          message: "Codex research result returned; refreshing worker lease before writes.",
-          prompt_packet_path: promptPacketPath,
-          worker_id: options.workerId,
-          mode: options.executeCodex ? "codex_cli" : "preview_only",
-        },
-        expectedLockedBy: job.locked_by,
-        expectedLockedAt: job.locked_at,
-      })
-      const progress = await persistResearchOutput({
-        supabase: options.supabase,
-        job: leasedJob,
-        workerId: options.workerId,
-        promptPacketPath,
-        researchOutput,
-        executeCodex: options.executeCodex,
-      })
-      const hasFinalPayload = hasFinalResearchPayload(researchOutput.researched_payload)
-      const blockers = researchOutput.blockers.filter(Boolean)
-      const nextStatus = blockers.length === 0 && hasFinalPayload ? "waiting_for_review" : "blocked"
-      const nextStage =
-        researchOutput.next_stage ?? (hasFinalPayload ? "preview_build" : "source_research")
-
-      const updated = await updateResearchJob(options.supabase, {
-        jobId: job.id,
-        status: nextStatus,
-        stage: nextStage,
-        progress: {
-          message:
-            nextStatus === "waiting_for_review"
-              ? "Research preview ist bereit fuer Nick."
-              : "Research braucht Aufmerksamkeit, bevor Nick final freigeben kann.",
-          prompt_packet_path: promptPacketPath,
-          worker_id: options.workerId,
-          mode: options.executeCodex ? "codex_cli" : "preview_only",
-          ...progress,
-        },
-        lastError: blockers.length > 0 ? blockers.join("; ") : null,
-        expectedLockedBy: leasedJob.locked_by,
-        expectedLockedAt: leasedJob.locked_at,
-      })
-      result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Codex research worker failed."
-      const updated = await updateResearchJob(options.supabase, {
-        jobId: job.id,
-        status: "failed",
-        stage: job.stage,
-        progress: {
-          message,
-          prompt_packet_path: promptPacketPath,
-          worker_id: options.workerId,
-          mode: options.executeCodex ? "codex_cli" : "preview_only",
-        },
-        lastError: message,
-        expectedLockedBy: job.locked_by,
-        expectedLockedAt: job.locked_at,
-      })
-      result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
-    }
+  } finally {
+    for (const job of jobs) workerLeases.delete(job.id)
+    options.currentJobId = null
   }
 
   return result
+}
+
+function progressWithoutReadiness(progress: JsonRecord | null | undefined): JsonRecord {
+  const next = { ...progress }
+  delete next.readiness_check
+  delete next.readiness_missing_fields
+  return next
+}
+
+export function researchFailureUpdate(params: {
+  job: Pick<
+    ProductIntakeResearchJob,
+    "id" | "stage" | "locked_by" | "locked_at" | "attempt_count" | "max_attempts"
+  > & { progress?: JsonRecord }
+  error: unknown
+  promptPacketPath: string
+  workerId: string
+  executeCodex: boolean
+}) {
+  const message = truncateDiagnostic(
+    params.error instanceof Error ? params.error.message : "Codex research worker failed.",
+  )
+  const code = codexInfrastructureCode(params.error)
+  const retryable = code === "codex_timeout"
+  const retryExhausted = retryable && params.job.attempt_count >= params.job.max_attempts
+  const engineMismatch = /^engine_(version|key)_mismatch:/.test(message)
+  const status =
+    retryable && !retryExhausted ? "queued" : code || engineMismatch ? "blocked" : "failed"
+  return {
+    jobId: params.job.id,
+    status: status as "queued" | "blocked" | "failed",
+    stage: params.job.stage,
+    progress: {
+      ...progressWithoutReadiness(params.job.progress),
+      message,
+      prompt_packet_path: params.promptPacketPath,
+      worker_id: params.workerId,
+      mode: params.executeCodex ? "codex_cli" : "preview_only",
+      ...(code ? { error_code: code, retryable, retry_exhausted: retryExhausted } : {}),
+    },
+    lastError: message,
+    expectedLockedBy: params.job.locked_by,
+    expectedLockedAt: params.job.locked_at,
+  }
 }
 
 function printWorkerResult(result: WorkerResult, options: WorkerOptions) {
@@ -439,184 +1020,56 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-async function processApprovedImageForReview(params: {
+export async function measureModelRun<T>(
+  lane: ProductIntakeModelLane,
+  runtimeConfig: CodexResearchRuntimeConfig,
+  execute: () => T | Promise<T>,
+): Promise<MeasuredModelRun<T>> {
+  const startedAt = Date.now()
+  try {
+    const output = await execute()
+    return {
+      success: true,
+      lane,
+      runtimeConfig,
+      durationMs: Date.now() - startedAt,
+      outputHash: createHash("sha256").update(JSON.stringify(output)).digest("hex"),
+      output,
+    }
+  } catch (error) {
+    const code = codexInfrastructureCode(error)
+    if (code === "infra_auth" || (code === "codex_timeout" && lane === "production_low")) {
+      throw error
+    }
+    return {
+      success: false,
+      lane,
+      runtimeConfig,
+      durationMs: Date.now() - startedAt,
+      error: truncateDiagnostic(
+        error instanceof Error ? error.message : "Unknown Codex model-run failure.",
+      ),
+    }
+  }
+}
+
+async function refreshModelRunLease(params: {
   supabase: ReturnType<typeof createSupabaseClientFromEnv>
   job: ProductIntakeResearchJob
-  detail: ProductIntakeSubmissionDetail | null
   workerId: string
   promptPacketPath: string
-}) {
-  const sourceImageUrl = findApprovedSourceImageUrl(params.detail)
-  if (!sourceImageUrl) {
-    throw new Error("No approved source image URL found for image processing.")
-  }
-
-  const response = await fetch(sourceImageUrl, {
-    headers: {
-      // Some CDNs serve AVIF/HEIF variants for .jpg URLs when asked, and the
-      // local Sharp/libvips build can read metadata but fail during pixel decode.
-      accept: "image/jpeg,image/png,image/webp,*/*;q=0.8",
-      "user-agent": "ChaarlieProductIntakeReview/1.0",
-    },
-  })
-  if (!response.ok) {
-    throw new Error(`Download approved image failed: HTTP ${response.status}`)
-  }
-
-  const sourceBytes = Buffer.from(await response.arrayBuffer())
-  const sourceSha256 = createHash("sha256").update(sourceBytes).digest("hex")
-  const sourceAlphaStats = await processedImageAlphaStats(sourceBytes)
-  const sourceAlreadyTransparent = sourceAlphaStats.transparentRatio > 0.05
-  const workDir = join(
-    process.cwd(),
-    "tmp",
-    "product-intake-image-processing",
-    params.job.submission_id,
-  )
-  const sourceDir = join(workDir, "source")
-  const cutoutDir = join(workDir, "selected-nobg")
-  mkdirSync(sourceDir, { recursive: true })
-  mkdirSync(cutoutDir, { recursive: true })
-  const sourceExt = imageExtension(response.headers.get("content-type"), sourceImageUrl)
-  const sourceSlug = slugForProcessedImage(params.detail)
-  const sourceFile = join(sourceDir, `${sourceSlug}-${sourceSha256.slice(0, 12)}.${sourceExt}`)
-  writeFileSync(sourceFile, sourceBytes)
-
-  const preparedCutoutFile = sourceAlreadyTransparent
-    ? null
-    : runVisionBackgroundRemoval({
-        sourceFile,
-        outputDir: cutoutDir,
-        outputSlug: sourceSlug,
-      })
-  const transparentBackgroundDetected = sourceAlreadyTransparent || Boolean(preparedCutoutFile)
-  const backgroundRemovalRequired = !sourceAlreadyTransparent && !preparedCutoutFile
-  if (backgroundRemovalRequired) {
-    const artifact = await appendResearchArtifact(params.supabase, {
-      jobId: params.job.id,
-      submissionId: params.job.submission_id,
-      kind: "processed_image",
-      status: "needs_image_work",
-      confidence: 0.2,
-      payload: {
-        source_image_url: sourceImageUrl,
-        source_sha256: sourceSha256,
-        final_image_ready: false,
-        background_action: "background_removal_required",
-        source_transparent_background_detected: false,
-        transparent_background_detected: false,
-        source_transparent_pixel_ratio: sourceAlphaStats.transparentRatio,
-        source_opaque_pixel_ratio: sourceAlphaStats.opaqueRatio,
-        notes:
-          "Source image has no usable alpha and automatic Vision background removal did not produce a cutout. Use Vision/rembg manually or select a cleaner image before final image review.",
-      },
-      sourceUrls: [sourceImageUrl],
-      model: "local-image-finalizer",
-      promptVersion: "product_intake_image_finalization_v1",
-    })
-
-    return updateResearchJob(params.supabase, {
-      jobId: params.job.id,
-      status: "waiting_for_review",
-      stage: "preview_build",
-      progress: {
-        ...params.job.progress,
-        message: "Bildverarbeitung braucht manuelle Hintergrundentfernung.",
-        prompt_packet_path: params.promptPacketPath,
-        worker_id: params.workerId,
-        mode: "local_image_processing",
-        processed_image_artifact_id: artifact.id,
-        processed_image_ready: false,
-        background_action: "background_removal_required",
-        processed_at: new Date().toISOString(),
-      },
-      lastError: null,
-      expectedLockedBy: params.job.locked_by,
-      expectedLockedAt: params.job.locked_at,
-    })
-  }
-
-  const backgroundAction = sourceAlreadyTransparent
-    ? "source_already_transparent"
-    : "vision_background_removed"
-  const finalized = await finalizeProductImageAsset({
-    sourceFile,
-    preparedCutoutFile,
-    label: productLabelForImage(params.detail),
-    outputDir: join(
-      process.cwd(),
-      "apps/product-intake-review/public/product-intake-finalized",
-      params.job.submission_id,
-    ),
-    publicPathPrefix: `/product-intake-finalized/${params.job.submission_id}`,
-    dateFolder: dateFolderForJob(params.job),
-    submissionId: params.job.submission_id,
-    sourceImageUrl,
-    sourcePageUrl: findApprovedSourcePageUrl(params.detail),
-    sourceType: "retailer",
-    reviewedBy: "codex",
-  })
-  const finalImageReady = finalized.qualityGate.status === "pass"
-
-  const artifact = await appendResearchArtifact(params.supabase, {
-    jobId: params.job.id,
-    submissionId: params.job.submission_id,
-    kind: "processed_image",
-    status: finalImageReady ? "pending_review" : "needs_image_work",
-    confidence: finalImageReady ? 0.9 : 0.4,
-    payload: {
-      public_review_url: finalized.finalReviewUrl,
-      final_review_url: finalized.finalReviewUrl,
-      qa_review_url: finalized.qaReviewUrl,
-      source_image_url: sourceImageUrl,
-      source_page_url: findApprovedSourcePageUrl(params.detail),
-      source_sha256: sourceSha256,
-      asset_sha256: finalized.sha256,
-      thumbnail_file: finalized.thumbnailFile,
-      thumbnail_storage_path: finalized.thumbnailStoragePath,
-      thumbnail_public_url: finalized.thumbnailPublicUrl,
-      thumbnail_asset_sha256: finalized.thumbnailSha256,
-      processing_method: "local_chaarlie_neutral_background_v1",
-      final_image_ready: finalImageReady,
-      background_action: backgroundAction,
-      background_removed: backgroundAction === "vision_background_removed",
-      source_transparent_background_detected: sourceAlreadyTransparent,
-      transparent_background_detected: transparentBackgroundDetected,
-      source_transparent_pixel_ratio: sourceAlphaStats.transparentRatio,
-      source_opaque_pixel_ratio: sourceAlphaStats.opaqueRatio,
-      final_file: finalized.finalFile,
-      qa_file: finalized.qaFile,
-      selected_nobg_file: finalized.selectedNoBgFile,
-      storage_bucket: "product-images",
-      storage_path: finalized.storagePath,
-      planned_public_url: finalized.publicUrl,
-      quality_gate: finalized.qualityGate,
-      chaarlie_neutral_background: true,
-      notes: sourceAlreadyTransparent
-        ? "Source image already had a transparent cutout. Final Chaarlie review asset was cropped, size-normalized, QA-rendered on magenta, and composited onto the neutral product background."
-        : "Vision produced a transparent cutout. Final Chaarlie review asset was cropped, size-normalized, QA-rendered on magenta, and composited onto the neutral product background.",
-    },
-    sourceUrls: [sourceImageUrl],
-    model: "local-image-finalizer",
-    promptVersion: "product_intake_image_finalization_v1",
-  })
-
+  message: string
+}): Promise<ProductIntakeResearchJob> {
   return updateResearchJob(params.supabase, {
     jobId: params.job.id,
-    status: "waiting_for_review",
-    stage: "preview_build",
+    status: "running",
+    stage: params.job.stage,
     progress: {
-      ...params.job.progress,
-      message: "Bildverarbeitung ist bereit fuer den finalen Bildcheck.",
+      ...(params.job.progress ?? {}),
+      message: params.message,
       prompt_packet_path: params.promptPacketPath,
       worker_id: params.workerId,
-      mode: "local_image_processing",
-      processed_image_artifact_id: artifact.id,
-      processed_image_url: finalized.finalReviewUrl,
-      qa_image_url: finalized.qaReviewUrl,
-      processed_image_ready: finalImageReady,
-      background_action: backgroundAction,
-      processed_at: new Date().toISOString(),
+      mode: "codex_cli",
     },
     lastError: null,
     expectedLockedBy: params.job.locked_by,
@@ -624,24 +1077,316 @@ async function processApprovedImageForReview(params: {
   })
 }
 
-async function processedImageAlphaStats(bytes: Buffer) {
-  const { data, info } = await sharp(bytes, { failOn: "none" })
-    .ensureAlpha()
-    .raw()
-    .toBuffer({ resolveWithObject: true })
-  let transparent = 0
-  let opaque = 0
+async function persistModelRunArtifact<T>(
+  supabase: ReturnType<typeof createSupabaseClientFromEnv>,
+  job: ProductIntakeResearchJob,
+  run: MeasuredModelRun<T>,
+) {
+  return appendResearchArtifact(supabase, {
+    jobId: job.id,
+    submissionId: job.submission_id,
+    kind: "model_run",
+    status: run.success ? "completed" : "failed",
+    payload: {
+      lane: run.lane,
+      experiment_id: MODEL_EVALUATION_EXPERIMENT_ID,
+      role: run.lane === "judge" ? "judge" : "researcher",
+      model: run.runtimeConfig.model,
+      reasoning_effort: run.runtimeConfig.reasoningEffort,
+      service_tier: run.runtimeConfig.serviceTier ?? "standard",
+      duration_ms: run.durationMs,
+      output_hash: run.success ? run.outputHash : null,
+      output: run.success ? toJsonRecord(run.output) : null,
+      error: run.success ? null : run.error,
+      token_usage: null,
+    },
+    model: run.runtimeConfig.model,
+    promptVersion:
+      run.lane === "judge" ? "product_intake_model_judge_v1" : "product_intake_codex_research_v1",
+  })
+}
 
-  for (let index = 3; index < data.length; index += info.channels) {
-    const alpha = data[index]
-    if (alpha < 8) transparent += 1
-    if (alpha > 247) opaque += 1
+export async function captureOptionalTelemetryFailure(
+  write: () => Promise<unknown>,
+): Promise<string | null> {
+  try {
+    await write()
+    return null
+  } catch (error) {
+    return errorMessage(error)
+  }
+}
+
+export async function runNonFatalModelEvaluation<TJob>(params: {
+  job: TJob
+  currentJob?: () => TJob
+  targetSuccessfulJudgments: number
+  run: () => Promise<{ job: TJob; result: ModelEvaluationResult }>
+  persistFailure: (message: string) => Promise<unknown>
+}): Promise<{ job: TJob; result: ModelEvaluationResult }> {
+  try {
+    return await params.run()
+  } catch (error) {
+    if (codexInfrastructureCode(error) === "infra_auth") throw error
+    await captureOptionalTelemetryFailure(() => params.persistFailure(errorMessage(error)))
+    return {
+      job: params.currentJob?.() ?? params.job,
+      result: {
+        status: "telemetry_failed",
+        successfulJudgments: 0,
+        targetSuccessfulJudgments: params.targetSuccessfulJudgments,
+      },
+    }
+  }
+}
+
+async function runOptionalModelEvaluation(params: {
+  supabase: ReturnType<typeof createSupabaseClientFromEnv>
+  job: ProductIntakeResearchJob
+  workerId: string
+  promptPacketPath: string
+  productionOutput: CodexResearchOutput
+  config: ModelEvaluationRuntimeConfig
+  onLeaseRefresh?: (job: ProductIntakeResearchJob) => void
+}): Promise<{ job: ProductIntakeResearchJob; result: ModelEvaluationResult }> {
+  let leasedJob = params.job
+  let successfulJudgments = 0
+
+  try {
+    successfulJudgments = await countResearchArtifacts(params.supabase, {
+      kind: "model_judgment",
+      status: "completed",
+      payloadContains: { experiment_id: MODEL_EVALUATION_EXPERIMENT_ID },
+    })
+  } catch (error) {
+    await captureOptionalTelemetryFailure(() =>
+      persistModelJudgmentFailure(
+        params.supabase,
+        leasedJob,
+        `Could not count completed model judgments: ${errorMessage(error)}`,
+      ),
+    )
+    return {
+      job: leasedJob,
+      result: {
+        status: "judge_failed",
+        successfulJudgments,
+        targetSuccessfulJudgments: params.config.targetSuccessfulJudgments,
+      },
+    }
   }
 
-  const total = info.width * info.height
+  if (
+    !shouldRunShadowExperiment({
+      enabled: params.config.enabled,
+      successfulJudgments,
+      target: params.config.targetSuccessfulJudgments,
+    })
+  ) {
+    return {
+      job: leasedJob,
+      result: {
+        status: params.config.enabled ? "target_reached" : "disabled",
+        successfulJudgments,
+        targetSuccessfulJudgments: params.config.targetSuccessfulJudgments,
+      },
+    }
+  }
+
+  const challengerRun = await measureModelRun("challenger_medium", params.config.challenger, () =>
+    runCodexResearch(params.promptPacketPath, params.config.challenger, "challenger_medium"),
+  )
+  leasedJob = await refreshModelRunLease({
+    supabase: params.supabase,
+    job: leasedJob,
+    workerId: params.workerId,
+    promptPacketPath: params.promptPacketPath,
+    message: "Luna/medium shadow research returned; worker lease refreshed.",
+  })
+  params.onLeaseRefresh?.(leasedJob)
+  const challengerArtifactError = await captureOptionalTelemetryFailure(() =>
+    persistModelRunArtifact(params.supabase, leasedJob, challengerRun),
+  )
+  if (challengerArtifactError) {
+    await captureOptionalTelemetryFailure(() =>
+      persistModelJudgmentFailure(params.supabase, leasedJob, challengerArtifactError),
+    )
+    return {
+      job: leasedJob,
+      result: {
+        status: "telemetry_failed",
+        successfulJudgments,
+        targetSuccessfulJudgments: params.config.targetSuccessfulJudgments,
+      },
+    }
+  }
+
+  if (!challengerRun.success) {
+    await captureOptionalTelemetryFailure(() =>
+      persistModelJudgmentFailure(params.supabase, leasedJob, challengerRun.error),
+    )
+    return {
+      job: leasedJob,
+      result: {
+        status: "challenger_failed",
+        successfulJudgments,
+        targetSuccessfulJudgments: params.config.targetSuccessfulJudgments,
+      },
+    }
+  }
+
+  const blindPacket = buildBlindJudgePacket(
+    toJsonRecord(params.productionOutput),
+    toJsonRecord(challengerRun.output),
+  )
+  const judgeRun = await measureModelRun("judge", params.config.judge, () =>
+    runCodexJudge(params.promptPacketPath, blindPacket, params.config.judge),
+  )
+  leasedJob = await refreshModelRunLease({
+    supabase: params.supabase,
+    job: leasedJob,
+    workerId: params.workerId,
+    promptPacketPath: params.promptPacketPath,
+    message: "Sol/medium judgment returned; worker lease refreshed.",
+  })
+  params.onLeaseRefresh?.(leasedJob)
+  const judgeArtifactError = await captureOptionalTelemetryFailure(() =>
+    persistModelRunArtifact(params.supabase, leasedJob, judgeRun),
+  )
+  if (judgeArtifactError) {
+    await captureOptionalTelemetryFailure(() =>
+      persistModelJudgmentFailure(params.supabase, leasedJob, judgeArtifactError, blindPacket),
+    )
+    return {
+      job: leasedJob,
+      result: {
+        status: "telemetry_failed",
+        successfulJudgments,
+        targetSuccessfulJudgments: params.config.targetSuccessfulJudgments,
+      },
+    }
+  }
+
+  if (!judgeRun.success) {
+    await captureOptionalTelemetryFailure(() =>
+      persistModelJudgmentFailure(params.supabase, leasedJob, judgeRun.error, blindPacket),
+    )
+    return {
+      job: leasedJob,
+      result: {
+        status: "judge_failed",
+        successfulJudgments,
+        targetSuccessfulJudgments: params.config.targetSuccessfulJudgments,
+      },
+    }
+  }
+
+  const completedJudgmentError = await captureOptionalTelemetryFailure(() =>
+    appendResearchArtifact(params.supabase, {
+      jobId: leasedJob.id,
+      submissionId: leasedJob.submission_id,
+      kind: "model_judgment",
+      status: "completed",
+      payload: {
+        anonymous_order: blindPacket.laneByCandidate,
+        experiment_id: MODEL_EVALUATION_EXPERIMENT_ID,
+        preferred_candidate: judgeRun.output.preferredCandidate,
+        preferred_lane: judgeRun.output.preferredLane,
+        confidence: judgeRun.output.confidence,
+        scores: judgeRun.output.scores,
+        material_issues: judgeRun.output.materialIssues,
+        rationale: judgeRun.output.rationale,
+        judge_output_hash: judgeRun.outputHash,
+      },
+      confidence: judgeRun.output.confidence,
+      model: params.config.judge.model,
+      promptVersion: "product_intake_model_judge_v1",
+    }),
+  )
+  if (completedJudgmentError) {
+    return {
+      job: leasedJob,
+      result: {
+        status: "telemetry_failed",
+        successfulJudgments,
+        targetSuccessfulJudgments: params.config.targetSuccessfulJudgments,
+      },
+    }
+  }
+
   return {
-    transparentRatio: total > 0 ? transparent / total : 0,
-    opaqueRatio: total > 0 ? opaque / total : 0,
+    job: leasedJob,
+    result: {
+      status: "completed",
+      successfulJudgments: successfulJudgments + 1,
+      targetSuccessfulJudgments: params.config.targetSuccessfulJudgments,
+      preferredLane: judgeRun.output.preferredLane,
+    },
+  }
+}
+
+async function persistModelJudgmentFailure(
+  supabase: ReturnType<typeof createSupabaseClientFromEnv>,
+  job: ProductIntakeResearchJob,
+  error: string,
+  blindPacket?: BlindJudgePacket,
+) {
+  return appendResearchArtifact(supabase, {
+    jobId: job.id,
+    submissionId: job.submission_id,
+    kind: "model_judgment",
+    status: "failed",
+    payload: {
+      anonymous_order: blindPacket?.laneByCandidate ?? null,
+      experiment_id: MODEL_EVALUATION_EXPERIMENT_ID,
+      error,
+    },
+    model: null,
+    promptVersion: "product_intake_model_judge_v1",
+  })
+}
+
+function toJsonRecord(value: unknown): JsonRecord {
+  const normalized = normalizeRecord(JSON.parse(JSON.stringify(value)) as unknown)
+  if (!normalized) throw new Error("Expected a JSON object for model-run persistence.")
+  return normalized
+}
+
+export function imageProcessingFailureUpdate(params: {
+  job: Pick<ProductIntakeResearchJob, "id" | "stage" | "locked_by" | "locked_at"> &
+    Partial<Pick<ProductIntakeResearchJob, "attempt_count" | "max_attempts">>
+  error: unknown
+  promptPacketPath: string
+  workerId: string
+}) {
+  if (codexInfrastructureCode(params.error)) {
+    const update = researchFailureUpdate({
+      ...params,
+      job: {
+        ...params.job,
+        attempt_count: params.job.attempt_count ?? 1,
+        max_attempts: params.job.max_attempts ?? 1,
+      },
+      executeCodex: true,
+    })
+    return { ...update, progress: { ...update.progress, mode: "local_image_processing" } }
+  }
+  const message = truncateDiagnostic(
+    params.error instanceof Error ? params.error.message : "Image processing worker failed.",
+  )
+  return {
+    jobId: params.job.id,
+    status: "failed" as const,
+    stage: params.job.stage,
+    progress: {
+      message,
+      prompt_packet_path: params.promptPacketPath,
+      worker_id: params.workerId,
+      mode: "local_image_processing",
+    },
+    lastError: message,
+    expectedLockedBy: params.job.locked_by,
+    expectedLockedAt: params.job.locked_at,
   }
 }
 
@@ -651,7 +1396,8 @@ async function persistResearchOutput(params: {
   workerId: string
   promptPacketPath: string
   researchOutput: CodexResearchOutput
-  executeCodex: boolean
+  researchModel: string
+  readiness: ResearchReadinessSelfCheck | null
 }) {
   const created = []
   for (const artifact of params.researchOutput.artifacts) {
@@ -663,7 +1409,7 @@ async function persistResearchOutput(params: {
       confidence: artifact.confidence ?? null,
       payload: artifact.payload,
       sourceUrls: artifact.source_urls ?? null,
-      model: params.executeCodex ? "codex-cli" : "codex-worker-preview",
+      model: params.researchModel,
       promptVersion: "product_intake_codex_research_v1",
     })
     created.push(row.id)
@@ -671,17 +1417,19 @@ async function persistResearchOutput(params: {
 
   let savedSubmissionStatus: string | null = null
   let resolvedDecisionCount = 0
-  if (hasFinalResearchPayload(params.researchOutput.researched_payload)) {
-    const updated = await saveSubmissionResearchPreview(params.supabase, {
-      submissionId: params.job.submission_id,
-      researchedPayload: params.researchOutput.researched_payload,
-      status: params.researchOutput.blockers.length === 0 ? "ready_for_review" : "researching",
-    })
+  const researchedPayload = params.researchOutput.researched_payload
+  if (hasFinalResearchPayload(researchedPayload)) {
+    const updated = await withJobLease(params.job.id, () =>
+      saveSubmissionResearchPreview(params.supabase, {
+        submissionId: params.job.submission_id,
+        researchedPayload,
+        status: params.readiness?.ok === true ? "ready_for_review" : "researching",
+      }),
+    )
     savedSubmissionStatus = updated.status
     if (params.job.stage === "rework") {
-      resolvedDecisionCount = await resolveReviewDecisionsForSubmission(
-        params.supabase,
-        params.job.submission_id,
+      resolvedDecisionCount = await withJobLease(params.job.id, () =>
+        resolveReviewDecisionsForSubmission(params.supabase, params.job.submission_id),
       )
     }
   }
@@ -696,11 +1444,12 @@ async function persistResearchOutput(params: {
   }
 }
 
-function writePromptPacket(
+export function writePromptPacket(
   job: ProductIntakeResearchJob,
   workerId: string,
   detail: ProductIntakeSubmissionDetail | null,
   brandResolutionContext: BrandResolutionPromptContext,
+  retailerEnrichment: RetailerEnrichmentPacket | null,
 ): string {
   const dir = join(process.cwd(), "tmp", "product-intake-codex-worker")
   mkdirSync(dir, { recursive: true })
@@ -733,23 +1482,32 @@ function writePromptPacket(
           source: detail?.source ?? null,
         },
         brand_resolution_context: brandResolutionContext,
+        retailer_enrichment: retailerEnrichment,
+        retailer_enrichment_contract: retailerEnrichment
+          ? [
+              "This is a dm-provided research lead, not an approved catalog fact.",
+              "The returned GTIN must equal scanned_identifier after canonical GTIN normalization; this packet omits mismatches.",
+              "Use the verbatim ingredient text and product URL as a source lead, then independently verify identity, category, and properties.",
+              "The raw retailer image is a candidate only: inspect it under image_source_contract and never use it as final.product.image_url.",
+            ]
+          : [],
         current_payload: detail?.payload ?? {},
         review_decisions: detail?.decisions ?? [],
         recent_artifacts: detail?.artifacts.slice(0, 20) ?? [],
         category_contract: categoryApprovalContract(detail?.category),
         image_source_contract: imageSourceContract(),
-        commercial_source_contract: commercialSourceContract(detail?.category),
+        commercial_source_contract: commercialSourceContract(),
         output_contract: {
           summary: "short human-readable summary",
           researched_payload:
             "complete product_submissions.researched_payload object with final.product and final.category_specs when enough evidence exists",
           approval_payload_schema: approvalPayloadContract(detail?.category),
-          artifacts: `array using kind values: ${PRODUCT_INTAKE_ARTIFACT_KINDS.join(", ")}`,
+          artifacts: `array using kind values: ${PRODUCT_INTAKE_ARTIFACT_KINDS.filter(isModelGeneratedArtifactKind).join(", ")}`,
           blockers:
             "array of strings; empty array only when ready for Nick review. Put review caveats in artifact payloads unless they block approval.",
           category_contract: categoryApprovalContract(detail?.category),
           image_source_contract: imageSourceContract(),
-          commercial_source_contract: commercialSourceContract(detail?.category),
+          commercial_source_contract: commercialSourceContract(),
         },
       },
       null,
@@ -814,7 +1572,7 @@ function approvalPayloadContract(category: string | null | undefined): JsonRecor
       "Use only approval-safe identifier types: ean, gtin, barcode, retailer_sku, retailer_url.",
       "Do not put source URLs as final.product.sources; use final.sources.",
       "Do not use search, category, brand listing, or price-comparison pages as affiliate_link.",
-      "Choose affiliate_link and price_eur using commercial_source_contract, including category-specific purchase URL preference and denylisted hosts.",
+      "Choose affiliate_link and price_eur using commercial_source_contract, including the shared purchase URL preference for every category and denylisted hosts.",
       "Before blocking affiliate_link or price_eur, prove targeted_preferred_retailer_searches were attempted for the top preferred hosts.",
       "If any required final.product field cannot be researched, leave blockers non-empty and explain the missing field.",
       "The review cockpit shows final.product and final.category_specs exactly as they will be written to the database.",
@@ -822,8 +1580,7 @@ function approvalPayloadContract(category: string | null | undefined): JsonRecor
   }
 }
 
-function commercialSourceContract(category: string | null | undefined): JsonRecord {
-  const categoryKey = normalizeCategoryKey(category)
+function commercialSourceContract(): JsonRecord {
   return {
     goal: "Choose the product URL and price source that should be reviewed and stored for this new product.",
     source_priority: [
@@ -833,7 +1590,7 @@ function commercialSourceContract(category: string | null | undefined): JsonReco
       "Secondary listings only when primary sources are missing",
       "User photo/OCR only as identity evidence",
     ],
-    purchase_url_preference: purchaseUrlPreferenceForCategory(categoryKey),
+    purchase_url_preference: "dm > Rossmann > Müller > brand-direct > Amazon DE",
     host_allowlist: [
       "dm.de",
       "rossmann.de",
@@ -848,9 +1605,10 @@ function commercialSourceContract(category: string | null | undefined): JsonReco
     targeted_preferred_retailer_searches: [
       "Before declaring no acceptable affiliate_link, run a mandatory search audit across the purchase_url_preference order and every host in host_allowlist using the submitted brand and submitted product name, then the researched canonical identity.",
       "Use explicit preferred-host queries including: site:dm.de <brand> <submitted product name>, site:rossmann.de <brand> <submitted product name>, site:mueller.de <brand> <submitted product name>, site:douglas.de <brand> <submitted product name>, site:hagel-shop.de <brand> <submitted product name>, site:flaconi.de <brand> <submitted product name>, site:notino.de <brand> <submitted product name>, site:otto.de <brand> <submitted product name>, site:amazon.de <brand> <submitted product name>.",
-      "Also search brand-direct/official manufacturer sources using the brand name plus product name; use official pages for identity/source evidence and a purchasable preferred retailer PDP for affiliate_link when the official page is not buyable.",
+      "Also search brand-direct/official manufacturer sources using the brand name plus product name. Use official pages for identity/source evidence; choose affiliate_link using purchase_url_preference even when the official page is buyable.",
       "Repeat the mandatory search audit with stable researched identity terms if the submitted wording differs from the researched canonical identity.",
-      "For leave_in and drogerie categories, a matching dm.de PDP with EUR price and purchasable availability beats international exact-identity sources for affiliate_link and price_eur.",
+      "For every category, choose a matching purchasable PDP in this order: dm, Rossmann, Müller, brand-direct, Amazon DE. Manufacturer-first identity evidence does not change this purchase URL order. Other reputable retailers are fallbacks after the preferred sources have been checked.",
+      "Record an inaccessible shop as unverified; do not treat a blocked page or search as evidence that the product is absent.",
       "If a preferred retailer has a matching PDP but the page is JavaScript-backed, use search-result snippets or page structured data as supporting evidence and include the PDP URL in final.sources.",
     ],
     host_denylist: [
@@ -873,12 +1631,13 @@ function commercialSourceContract(category: string | null | undefined): JsonReco
     ],
     price_rules: [
       "Prefer price_eur from the same accepted purchasable PDP used as affiliate_link.",
+      "Package size and price do not outrank the purchase URL preference. Keep the chosen URL, package size, and price aligned to one verified purchasable variant of the same product.",
       "If the best identity source is official brand but not purchasable, use it in final.sources and choose the best purchasable retailer PDP for affiliate_link.",
       "Set purchase_link_status to available only when the chosen PDP is purchase-capable/in stock; otherwise unavailable.",
       "If only identity evidence exists and no acceptable purchasable PDP with price exists, add a blocker instead of inventing price_eur.",
     ],
     rationale_rules: [
-      "field_rationales.product.affiliate_link must name why this PDP beat lower-priority sources.",
+      "field_rationales.product.affiliate_link must explain the chosen shop's priority and the checks of any higher-priority shops, distinguishing unavailable offers from unverified shops.",
       "field_rationales.product.price_eur must name the exact source and availability state.",
       "final.sources should include the official/identity source and the chosen purchase/price source when they differ.",
     ],
@@ -890,25 +1649,6 @@ function codexBinaryForWorker(): string {
   if (configured) return configured
   if (process.platform === "darwin" && existsSync(CODEX_APP_BINARY)) return CODEX_APP_BINARY
   return "codex"
-}
-
-function purchaseUrlPreferenceForCategory(categoryKey: CategoryContractKey | null): string {
-  switch (categoryKey) {
-    case "leave_in":
-      return "dm > brand-direct > Rossmann > Amazon DE"
-    case "oil":
-      return "brand-direct > Amazon DE > dm > Rossmann"
-    case "shampoo":
-    case "conditioner":
-    case "mask":
-    case "dry_shampoo":
-    case "deep_cleansing_shampoo":
-      return "dm > Rossmann > Müller > brand-direct > Amazon DE"
-    case "bondbuilder":
-      return "brand-direct or reputable specialist retailer can beat dm/Rossmann when that is the stable canonical PDP"
-    default:
-      return "Use source_priority first, then choose the most stable reputable German/EU product-detail page with price and availability."
-  }
 }
 
 function imageSourceContract(): JsonRecord {
@@ -960,343 +1700,160 @@ function imageSourceContract(): JsonRecord {
   }
 }
 
-function categoryApprovalContract(category: string | null | undefined): JsonRecord {
+export function categoryApprovalContract(category: string | null | undefined): JsonRecord {
   const categoryKey = normalizeCategoryKey(category)
-  if (!categoryKey) {
-    return {
-      category_key: category ?? null,
-      instruction:
-        "Research only the category_specs required by this product category's approval validator. Put them under researched_payload.final.category_specs, never inside researched_payload.final.product. Do not emit category_specs for other product categories.",
-    }
+  if (categoryKey) return CATEGORY_RESEARCH_REGISTRY[categoryKey].promptContract()
+  return {
+    category_key: category ?? null,
+    instruction:
+      "Research only the category_specs required by this product category's approval validator. Put them under researched_payload.final.category_specs, never inside researched_payload.final.product. Do not emit category_specs for other product categories.",
   }
+}
 
-  if (categoryKey === "shampoo") {
-    return {
-      category_key: "shampoo",
-      instruction:
-        "Research and emit only shampoo approval specs under researched_payload.final.category_specs.",
-      required_category_specs: [...CATEGORY_SPEC_KEYS.shampoo],
-      product_shampoo_specs:
-        "array with one row per relevant hair thickness; each row has thickness, shampoo_bucket, scalp_route, optional cleansing_intensity. shampoo_bucket is a scalp/route bucket, not a dry-hair or damaged-lengths claim. Use trocken only when sources support dry scalp; dry/damaged hair alone should usually stay normal + balanced unless another scalp claim is proven.",
-      allowed_product_shampoo_specs_values: {
-        thickness: [...HAIR_THICKNESSES],
-        shampoo_bucket: [...SHAMPOO_BUCKETS],
-        scalp_route: ["oily", "balanced", "dry", "dandruff", "dry_flakes", "irritated"],
-        cleansing_intensity: ["gentle", "regular", "clarifying", null],
-      },
-      shampoo_bucket_to_scalp_route_contract: {
-        normal: "balanced",
-        trocken: "dry",
-        "dehydriert-fettig": "oily",
-        schuppen: "dandruff or dry_flakes",
-        irritationen: "irritated",
-      },
-      product_application_protocols: applicationProtocolResearchContract(
-        "shampoo",
-        ["shampoo_everyday", "shampoo_dandruff"],
-        "Derive Shampoo protocol roles from the reviewed Shampoo buckets: include shampoo_dandruff when any row uses schuppen, and include shampoo_everyday only when at least one source-supported row uses a non-schuppen bucket. A schuppen-only Shampoo is complete without shampoo_everyday. When an exact source supports ordinary or daily use, research the matching non-schuppen scalp-route facts before adding shampoo_everyday; daily-use wording alone must not invent a bucket or cadence.",
+let dmCommerceClient: ReturnType<typeof createDmMcpClient> | undefined
+
+function workerDmClient(): ReturnType<typeof createDmMcpClient> {
+  dmCommerceClient ??= createDmMcpClient({ deadlineMs: 20_000 })
+  return dmCommerceClient
+}
+
+export async function applyCommerceStage(
+  output: CodexResearchOutput,
+  submissionId: string,
+  deps: CommerceStageDeps,
+): Promise<CodexResearchOutput> {
+  if (!hasFinalResearchPayload(output.researched_payload)) return output
+  const final = normalizeRecord(output.researched_payload.final)!
+  let artifact: CodexResearchArtifactOutput
+  let blockers: string[] = []
+  try {
+    const result = await runCommerceStage({ submissionId, final, deps })
+    applyCommerceWrites(final, result.writes)
+    artifact = result.artifact
+    blockers = result.blockers
+  } catch (error) {
+    artifact = {
+      kind: "commerce_check",
+      status: "unconfirmed",
+      payload: { stage: "commerce", error: errorMessage(error) },
+    }
+    await captureOptionalTelemetryFailure(async () => {
+      if (Sentry.isInitialized()) Sentry.captureException(error)
+    })
+  }
+  return {
+    ...output,
+    artifacts: [
+      ...output.artifacts.filter(
+        (entry) => entry.kind !== "commerce_check" || entry.payload.stage !== "commerce",
       ),
-    }
-  }
-
-  if (categoryKey === "conditioner") {
-    return {
-      category_key: "conditioner",
-      instruction:
-        "Complete the full Conditioner Standard v1.6 research envelope first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research only the exact rinse-out protocol separately.",
-      conditioner_research: conditionerResearchPromptContract(),
-      required_category_specs: [...CATEGORY_SPEC_KEYS.conditioner],
-      product_conditioner_specs:
-        "array with one row per relevant hair thickness; each row has thickness and protein_moisture_balance",
-      allowed_product_conditioner_specs_values: {
-        thickness: [...HAIR_THICKNESSES],
-        protein_moisture_balance: [...PROTEIN_MOISTURE_LEVELS],
-      },
-      product_conditioner_rerank_specs: {
-        weight: [...CONDITIONER_WEIGHTS],
-        repair_level: [...CONDITIONER_REPAIR_LEVELS],
-        balance_direction: [...PRODUCT_BALANCE_TARGETS, null],
-        ingredient_flags: [...CONDITIONER_INGREDIENT_FLAGS],
-      },
-      product_application_protocols: applicationProtocolResearchContract("conditioner", [
-        "conditioner_rinse_out",
-      ]),
-    }
-  }
-
-  if (categoryKey === "mask") {
-    return {
-      category_key: "mask",
-      instruction:
-        "Research and emit only mask approval specs under researched_payload.final.category_specs.",
-      required_category_specs: [...CATEGORY_SPEC_KEYS.mask],
-      product_mask_specs: {
-        weight: [...MASK_WEIGHTS],
-        concentration: [...MASK_CONCENTRATIONS],
-        balance_direction: [...PRODUCT_BALANCE_TARGETS, null],
-        ingredient_flags: [...MASK_INGREDIENT_FLAGS],
-        repair_support_level: ["low", "medium", "high"],
-        functional_benefits: [
-          "smoothing_frizz_control",
-          "detangling_slip",
-          "shine",
-          "moisture_softness",
-        ],
-      },
-      product_application_protocols: {
-        category: ["mask"],
-        role: ["intensive_conditioning_mask"],
-        required_fields: [
-          "cadence",
-          "application_stage",
-          "placement",
-          "contact_time_seconds",
-          "rinse_action",
-          "source_label",
-          "source_url",
-          "source_text",
-          "guidance_payload",
-        ],
-        note: "The exact manufacturer protocol must be complete enough to derive the Stage 5 product pointer.",
-      },
-    }
-  }
-
-  if (categoryKey === "oil") return oilApprovalContract()
-  if (categoryKey === "dry_shampoo") return dryShampooApprovalContract()
-  if (categoryKey === "deep_cleansing_shampoo") return deepCleansingShampooApprovalContract()
-  if (categoryKey === "bondbuilder") return bondbuilderApprovalContract()
-  if (categoryKey === "heat_protectant") return heatProtectantApprovalContract()
-  if (categoryKey === "scalp_care") return scalpCareApprovalContract()
-
-  return {
-    category_key: "leave_in",
-    instruction:
-      "Complete the full Leave-In Standard v1.0 research envelope first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research only the exact leave-in application protocol separately.",
-    leave_in_research: leaveInResearchPromptContract(),
-    required_category_specs: [...CATEGORY_SPEC_KEYS.leave_in],
-    aliases: {
-      post_wash:
-        "Do not use post_wash for leave-ins. If evidence says after washing, damp hair, no-rinse, or towel-dried hair, use towel_dry in identity.applicationStage.",
-    },
-    product_application_protocols: applicationProtocolResearchContract(
-      "leave_in",
-      ["post_wash_leave_in", "pre_heat_protection"],
-      "Always include post_wash_leave_in; include pre_heat_protection only when the product claims heat protection.",
-    ),
-  }
-}
-
-function oilApprovalContract(): JsonRecord {
-  return {
-    category_key: "oil",
-    instruction:
-      "Research and emit only oil approval specs under researched_payload.final.category_specs.",
-    required_category_specs: [...CATEGORY_SPEC_KEYS.oil],
-    product_oil_specs: {
-      weight: ["light", "medium", "rich"],
-      role_support: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
-      provides_heat_protection:
-        "boolean; true only when a product source explicitly claims heat protection; false only after the reviewed producer/shop sources have been checked and make no heat-protection claim",
-    },
-    product_oil_eligibility:
-      "array with one or more user-fit rows; each row has thickness, oil_subtype, oil_purpose, and ingredient_flags",
-    allowed_product_oil_eligibility_values: {
-      thickness: [...HAIR_THICKNESSES],
-      oil_subtype: [...OIL_SUBTYPES],
-      oil_purpose: [...OIL_PURPOSES, null],
-      ingredient_flags: [...OIL_INGREDIENT_FLAGS],
-    },
-    product_application_protocols: applicationProtocolResearchContract(
-      "oil",
-      ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
-      "Include one exact protocol for every role declared in product_oil_specs.role_support. Heat protection is not a role: set provides_heat_protection=true and include a sourced leave_on_fibre_conditioning protocol when the oil protects from heat.",
-    ),
-  }
-}
-
-function dryShampooApprovalContract(): JsonRecord {
-  return {
-    category_key: "dry_shampoo",
-    instruction:
-      "Research and emit only dry-shampoo approval specs under researched_payload.final.category_specs.",
-    required_category_specs: [...CATEGORY_SPEC_KEYS.dry_shampoo],
-    product_dry_shampoo_specs: {
-      primary_effect: [...DRY_SHAMPOO_PRIMARY_EFFECTS],
-      hair_color_fit: [...DRY_SHAMPOO_HAIR_COLOR_FITS],
-      scalp_sensitivity_fit: [...DRY_SHAMPOO_SCALP_SENSITIVITY_FITS],
-      format: [...DRY_SHAMPOO_FORMATS],
-    },
-    product_application_protocols: applicationProtocolResearchContract("dry_shampoo", [
-      "root_refresh_bridge",
-    ]),
-  }
-}
-
-function deepCleansingShampooApprovalContract(): JsonRecord {
-  return {
-    category_key: "deep_cleansing_shampoo",
-    instruction:
-      "Research and emit only deep-cleansing-shampoo approval specs under researched_payload.final.category_specs.",
-    required_category_specs: [...CATEGORY_SPEC_KEYS.deep_cleansing_shampoo],
-    product_deep_cleansing_shampoo_specs: {
-      scalp_type_focus: [...PRODUCT_SCALP_TYPE_FOCUSES],
-      reset_intensity: [...DEEP_CLEANSING_RESET_INTENSITIES],
-      reset_focus: [...DEEP_CLEANSING_RESET_FOCUSES],
-      color_treated_suitability: [...DEEP_CLEANSING_COLOR_TREATED_SUITABILITIES],
-    },
-    product_application_protocols: applicationProtocolResearchContract(
-      "deep_cleansing_shampoo",
-      ["residue_reset", "mineral_reset"],
-      "Use mineral_reset for metal_mineral_hard_water, residue_reset for product_sebum_buildup, and both for broad_spectrum_detox.",
-    ),
-  }
-}
-
-function bondbuilderApprovalContract(): JsonRecord {
-  return {
-    category_key: "bondbuilder",
-    instruction:
-      "Research and emit only bondbuilder approval specs under researched_payload.final.category_specs.",
-    required_category_specs: [...REQUIRED_CATEGORY_SPEC_KEYS.bondbuilder],
-    product_bondbuilder_specs: {
-      bond_repair_intensity: [...PRODUCT_BOND_REPAIR_INTENSITIES],
-      application_mode: [...PRODUCT_BOND_APPLICATION_MODES],
-      bond_repair_axis: [...PRODUCT_BOND_REPAIR_AXES],
-      treatment_mode: [...PRODUCT_BOND_TREATMENT_MODES],
-      product_format: [...PRODUCT_BOND_PRODUCT_FORMATS],
-      usage_protocol: [...PRODUCT_BOND_USAGE_PROTOCOLS],
-    },
-    product_relationships: "optional; emit only when needed by the approval payload",
-    product_application_protocols: applicationProtocolResearchContract("bondbuilder", [
-      "specialized_bond_treatment",
-    ]),
-  }
-}
-
-function applicationProtocolResearchContract(
-  category: CategoryContractKey,
-  roles: readonly string[],
-  requiredRoleRule = "Include every listed role.",
-): JsonRecord {
-  return {
-    category: [category],
-    roles: [...roles],
-    required_role_rule: requiredRoleRule,
-    required_fields: [
-      "cadence",
-      "application_stage",
-      "application_state",
-      "placement",
-      "contact_time_seconds",
-      "rinse_action",
-      "reapplication",
-      "instruction_modifiers",
-      "source_label",
-      "source_url",
-      "source_text",
-      "guidance_payload",
+      artifact,
     ],
-    guidance_payload:
-      "Canonical schemaVersion 1 product-scoped guidance payload using productId __PRODUCT_ID__; it must be complete enough to derive the Stage 5 V2 product pointer.",
+    blockers: dedupeStrings([...output.blockers, ...blockers]),
   }
 }
 
-function heatProtectantApprovalContract(): JsonRecord {
-  return {
-    category_key: "heat_protectant",
-    instruction:
-      "Research only explicit finished-product heat-protection evidence and exact manufacturer application instructions. Do not infer heat protection from a name, format, ingredient, or adjacent care claim.",
-    required_category_specs: [...REQUIRED_CATEGORY_SPEC_KEYS.heat_protectant],
-    product_heat_protectant_specs: {
-      format: ["spray"],
-      provides_heat_protection:
-        "true, false, or null when the finished-product evidence is unresolved",
-    },
-    product_application_protocols: {
-      category: ["heat_protectant"],
-      role: ["pre_heat_protection"],
-      required_fields: ["application_state", "reapplication"],
-      application_state: ["damp", "dry", "either"],
-      reapplication: ["required", "optional", "not_stated"],
-    },
-  }
-}
-
-function scalpCareApprovalContract(): JsonRecord {
-  return {
-    category_key: "scalp_care",
-    instruction:
-      "Research only cosmetic scalp-care product facts and exact manufacturer instructions. Preserve medical boundaries: do not turn flake, oil, density, shedding, or comfort claims into diagnosis or treatment claims.",
-    required_category_specs: [...REQUIRED_CATEGORY_SPEC_KEYS.scalp_care],
-    product_scalp_care_specs: {
-      primary_role: [
-        "scalp_comfort",
-        "scalp_flake_oil_adjunct",
-        "density_claim_tonic",
-        "scalp_exfoliant",
-      ],
-      presentation_format: [
-        "serum",
-        "tonic",
-        "lotion_or_fluid",
-        "oil",
-        "scrub",
-        "other",
-        "unknown",
-      ],
-      rinse_mode: ["leave_on", "rinse_off"],
-      application_instructions: "exact reviewed manufacturer instruction text",
-    },
-    product_application_protocols: {
-      category: ["scalp_care"],
-      role: ["scalp_comfort", "scalp_flake_oil_adjunct", "density_claim_tonic", "scalp_exfoliant"],
-      note: "The protocol role must equal product_scalp_care_specs.primary_role.",
-    },
-  }
-}
-
-function normalizeResearchOutputForCategory(
+export function normalizeResearchOutputForCategory(
   output: CodexResearchOutput,
   category: string | null | undefined,
   brandResolutionContext: BrandResolutionPromptContext,
   reviewDecisions: ProductIntakeReviewDecisionRow[],
   expectedResearchId: string,
+  options: InciStageOptions & { brandCatalog?: BrandResolutionCatalogInput } = {},
 ): CodexResearchOutput {
   const categoryKey = normalizeCategoryKey(category)
   if (!categoryKey) return output
 
-  const researchedPayload = normalizeCategoryResearchedPayload(
-    output.researched_payload,
-    categoryKey,
-    output.artifacts,
+  const researchedPayload =
+    normalizeCategoryResearchedPayload(output.researched_payload, categoryKey, output.artifacts) ??
+    {}
+  const artifacts = [...output.artifacts]
+  let blockers = output.blockers.filter(
+    (blocker) => !/^inci_(missing_first_pass|unavailable):/.test(blocker),
   )
-  const blockers = [...output.blockers]
   const final = normalizeRecord(researchedPayload?.final)
-  applyApprovedCanonicalBrand(final, brandResolutionContext, reviewDecisions)
-  enforceCanonicalBrandResolution(final, brandResolutionContext)
-  applyApprovedProductIdentity(final, brandResolutionContext, reviewDecisions)
-  const categorySpecs = normalizeRecord(final?.category_specs)
-
-  if (categoryKey === "conditioner" && final) {
-    const adapterResult = applyConditionerResearchAdapter({
-      final,
-      artifacts: output.artifacts,
-      expectedResearchId,
-    })
+  const identityBlocker = applyIdentityStage({
+    final,
+    context: brandResolutionContext,
+    reviewDecisions,
+    artifacts,
+    brandCatalog: options.brandCatalog,
+  })
+  if (identityBlocker) blockers.push(identityBlocker)
+  else if (
+    artifacts.some(
+      (artifact) =>
+        artifact.kind === "identity_candidate" &&
+        artifact.payload.stage === "identity" &&
+        artifact.status === "resolved",
+    )
+  ) {
+    blockers = blockers.filter(
+      (blocker) => !blocker.startsWith("canonical brand table resolution missing for:"),
+    )
+  }
+  const engine = CATEGORY_RESEARCH_REGISTRY[categoryKey]
+  let projected = false
+  const projectionArtifact = artifacts.find(
+    (artifact) =>
+      artifact.kind === "property_synthesis" &&
+      artifact.payload[`${categoryKey}_research_envelope`] != null,
+  )
+  if (final) {
+    const adapterResult = engine.apply({ final, artifacts, expectedResearchId })
     blockers.push(...adapterResult.blockers)
+    projected = adapterResult.blockers.length === 0
+    // Model-authored provenance cannot override the running server registry.
+    delete final.engine
+    const draft = normalizeRecord(researchedPayload?.draft)
+    if (engine.state === "active") {
+      if (draft) delete draft.engine
+    } else if (researchedPayload) {
+      researchedPayload.draft = {
+        ...draft,
+        engine:
+          engine.state === "pending_lock"
+            ? { state: engine.state, id: engine.engineId, target: engine.methodology }
+            : { state: engine.state },
+      }
+    }
+  }
+  if (
+    engine.state === "active" &&
+    final &&
+    !artifacts.some((artifact) => artifact.kind === "property_synthesis")
+  ) {
+    artifacts.push({ kind: "property_synthesis", status: "needs_research", payload: {} })
+  }
+  for (const artifact of artifacts) {
+    if (artifact.kind !== "property_synthesis") continue
+    if (engine.state === "active" && final) {
+      const projection =
+        projected && artifact === projectionArtifact
+          ? normalizeRecord(artifact.payload[`${categoryKey}_production_projection`])
+          : null
+      const profile = normalizeRecord(
+        normalizeRecord(projection?.category_specs)?.product_bondbuilder_specs,
+      )
+      const researchProfile = normalizeRecord(profile?.research_profile)
+      artifact.payload.engine = {
+        id: engine.engineId,
+        methodology: engine.methodology,
+        adapter: engine.adapter,
+        state: engine.state,
+        input_hash:
+          categoryKey === "bondbuilder"
+            ? stringValue(normalizeRecord(researchProfile?.method)?.output_sha256)
+            : stringValue(projection?.research_input_sha256),
+        projection_hash:
+          categoryKey === "bondbuilder"
+            ? stringValue(normalizeRecord(researchProfile?.review)?.profile_sha256)
+            : stringValue(projection?.projection_sha256),
+      }
+    } else delete artifact.payload.engine
   }
 
-  if (categoryKey === "leave_in" && final) {
-    const adapterResult = applyLeaveInResearchAdapter({
-      final,
-      artifacts: output.artifacts,
-      expectedResearchId,
-    })
-    blockers.push(...adapterResult.blockers)
-  }
-
-  // Read AFTER the adapter branches: applyLeaveInResearchAdapter reassigns
+  // Read AFTER the category adapter: applyLeaveInResearchAdapter reassigns
   // `categorySpecs.product_leave_in_specs` to a brand-new projected object
   // (structuredClone) rather than mutating the original in place, so a
   // reference captured before it runs is stale — it still points at
@@ -1305,6 +1862,7 @@ function normalizeResearchOutputForCategory(
   // fully valid table. Re-reading here validates the object the adapter
   // actually produced, for both the envelope path and the legacy/non-envelope
   // path (where the adapter never ran and this is unchanged from before).
+  const categorySpecs = normalizeRecord(final?.category_specs)
   const leaveInSpecs = normalizeRecord(categorySpecs?.product_leave_in_specs)
 
   if (leaveInSpecs) {
@@ -1314,6 +1872,39 @@ function normalizeResearchOutputForCategory(
       blockers.push("leave_in application_stage has no valid value")
     }
   }
+  const protocol = final
+    ? runProtocolStage({
+        categoryKey,
+        categorySpecs: categorySpecs ?? {},
+        draft:
+          (normalizeRecord(researchedPayload.draft)?.protocol as
+            | ProtocolResearchDraft
+            | undefined) ?? null,
+        sources: final.sources,
+      })
+    : { status: "not_templated" as const, templateIds: [], rows: [], blockers: [], notes: [] }
+  if (categorySpecs && protocol.status !== "not_templated") {
+    categorySpecs.product_application_protocols = protocol.rows
+  }
+  blockers.push(...protocol.blockers)
+  for (let index = artifacts.length - 1; index >= 0; index--) {
+    if (
+      artifacts[index]!.kind === "protocol_template" &&
+      artifacts[index]!.payload.stage === "protocol"
+    )
+      artifacts.splice(index, 1)
+  }
+  artifacts.push({
+    kind: "protocol_template",
+    status: protocol.status,
+    payload: {
+      stage: "protocol",
+      status: protocol.status,
+      template_ids: protocol.templateIds,
+      blockers: protocol.blockers,
+      notes: protocol.notes,
+    },
+  })
   const missingSpecTables = missingCategorySpecTables(categorySpecs, categoryKey)
   if (missingSpecTables.length > 0) {
     blockers.push(`missing category_specs for ${categoryKey}: ${missingSpecTables.join(", ")}`)
@@ -1326,17 +1917,13 @@ function normalizeResearchOutputForCategory(
   if (missingFinalSections.length > 0) {
     blockers.push(`missing final payload sections: ${missingFinalSections.join(", ")}`)
   }
-  const missingBrandResolution = canonicalBrandResolutionBlocker(
-    final,
-    brandResolutionContext,
-    reviewDecisions,
-  )
-  if (missingBrandResolution) blockers.push(missingBrandResolution)
+  const inciBlocker = applyInciStage(researchedPayload, artifacts, engine, options)
+  if (inciBlocker) blockers.push(inciBlocker)
 
   return {
     ...output,
     researched_payload: researchedPayload,
-    artifacts: output.artifacts.map((artifact) => ({
+    artifacts: artifacts.map((artifact) => ({
       ...artifact,
       payload: normalizeCategoryArtifactPayload(artifact.payload, categoryKey),
     })),
@@ -1344,29 +1931,18 @@ function normalizeResearchOutputForCategory(
   }
 }
 
-async function loadBrandResolutionContext(
-  supabase: ReturnType<typeof createSupabaseClientFromEnv>,
-  detail: ProductIntakeSubmissionDetail | null,
-  scannedIdentifier: ScannedIdentifierPacketValue,
-): Promise<BrandResolutionPromptContext> {
-  const catalogInput = await loadBrandResolutionCatalogForWorker(supabase)
-  return buildBrandResolutionPromptContext(detail, catalogInput, scannedIdentifier)
-}
-
 /**
- * Scan intake's strongest research seed (WP4): product_submissions.scanned_identifier_type/
- * value (migration 20260820100100), fetched directly here rather than through
- * ProductIntakeSubmissionDetail/loadProductIntakeSubmissionDetail (packages/product-intake-core),
- * which is out of this task's file scope and doesn't select these columns. Null for every
- * non-scan submission (both columns are null there by the DB CHECK).
+ * Scan-specific fields are fetched directly because ProductIntakeSubmissionDetail
+ * deliberately does not select them. This keeps the shared core repository
+ * contract unchanged while giving the worker an exact-GTIN-checked dm lead.
  */
-async function loadScannedIdentifierForSubmission(
+export async function loadScanIntakeSeedForSubmission(
   supabase: ReturnType<typeof createSupabaseClientFromEnv>,
   submissionId: string,
-): Promise<ScannedIdentifierPacketValue> {
+): Promise<ScanIntakeSeed> {
   const { data, error } = await supabase
     .from("product_submissions")
-    .select("scanned_identifier_type, scanned_identifier_value")
+    .select("scanned_identifier_type, scanned_identifier_value, intake_history")
     .eq("id", submissionId)
     .maybeSingle()
   if (error) {
@@ -1376,266 +1952,19 @@ async function loadScannedIdentifierForSubmission(
   const row = data as {
     scanned_identifier_type: string | null
     scanned_identifier_value: string | null
+    intake_history: unknown
   } | null
-  if (!row?.scanned_identifier_type || !row.scanned_identifier_value) return null
-
-  return { type: row.scanned_identifier_type, value: row.scanned_identifier_value }
-}
-
-async function loadBrandResolutionCatalogForWorker(
-  supabase: ReturnType<typeof createSupabaseClientFromEnv>,
-): Promise<BrandResolutionCatalogInput> {
-  const [brandsResult, productLinesResult, brandAliasesResult] = await Promise.all([
-    supabase.from("brands").select("id, canonical_name, normalized_name"),
-    supabase.from("product_lines").select("id, brand_id, canonical_name, normalized_name"),
-    supabase.from("brand_aliases").select("brand_id, product_line_id, alias, normalized_alias"),
-  ])
-
-  return {
-    brands: requireSupabaseData<ProductIdentityBrand[]>(
-      brandsResult as unknown as SupabaseQueryResult<ProductIdentityBrand[]>,
-      "load brands for product-intake Codex worker",
-    ),
-    productLines: requireSupabaseData<ProductIdentityProductLine[]>(
-      productLinesResult as unknown as SupabaseQueryResult<ProductIdentityProductLine[]>,
-      "load product lines for product-intake Codex worker",
-    ),
-    brandAliases: requireSupabaseData<ProductIdentityBrandAlias[]>(
-      brandAliasesResult as unknown as SupabaseQueryResult<ProductIdentityBrandAlias[]>,
-      "load brand aliases for product-intake Codex worker",
-    ),
-  }
-}
-
-function requireSupabaseData<T>(result: SupabaseQueryResult<T>, label: string): T {
-  if (result.error) {
-    throw new Error(`${label}: ${result.error.message ?? "unknown Supabase error"}`)
-  }
-  if (result.data === null) {
-    throw new Error(`${label}: no data returned`)
-  }
-  return result.data
-}
-
-function buildBrandResolutionPromptContext(
-  detail: ProductIntakeSubmissionDetail | null,
-  catalogInput: BrandResolutionCatalogInput,
-  scannedIdentifier: ScannedIdentifierPacketValue,
-): BrandResolutionPromptContext {
-  const catalog = buildBrandResolutionCatalog(catalogInput)
-  const submittedBrand = detail?.brand ?? null
-  const submittedProductName = detail?.product_name ?? null
-  const lookupText = [submittedBrand, submittedProductName].filter(Boolean).join(" ").trim()
-  const resolution = lookupText ? resolveBrandFromText(lookupText, catalog) : null
-  const resolvedBrand =
-    resolution && resolution.match !== "none" && resolution.brand
-      ? {
-          match: resolution.match,
-          confidence: resolution.confidence,
-          reason: resolution.reason,
-          matched_text: resolution.matchedText,
-          canonical_brand_id: brandIdValue(resolution.brand),
-          canonical_brand: brandLabel(resolution.brand),
-          product_line_id: resolution.productLine
-            ? productLineIdValue(resolution.productLine)
-            : null,
-          product_line: resolution.productLine ? productLineLabel(resolution.productLine) : null,
-        }
+  const scannedIdentifier =
+    row?.scanned_identifier_type && row.scanned_identifier_value
+      ? { type: row.scanned_identifier_type, value: row.scanned_identifier_value }
       : null
 
+  const retailerEnrichment = parseRetailerEnrichmentPacket(row?.intake_history, scannedIdentifier)
   return {
-    submitted_brand_text: submittedBrand,
-    submitted_product_name_text: submittedProductName,
-    scanned_identifier: scannedIdentifier,
-    lookup_text: lookupText,
-    resolved_brand: resolvedBrand,
-    nearby_brand_options: resolvedBrand ? [] : nearbyBrandOptions(lookupText, catalogInput.brands),
-    catalog_summary: {
-      brand_count: catalogInput.brands.length,
-      product_line_count: catalogInput.productLines?.length ?? 0,
-      brand_alias_count: catalogInput.brandAliases?.length ?? 0,
-      alias_conflict_count: catalog.conflicts.length,
-    },
-    rules: [
-      "Use resolved_brand.canonical_brand exactly for final.product.canonical_brand when resolved_brand is present.",
-      "Use resolved_brand.product_line exactly for final.product.product_line when resolved_brand.product_line is present.",
-      "If resolved_brand is null and review_decisions includes an approved product.canonical_brand, use that reviewed DB-ready brand spelling exactly.",
-      "If review_decisions includes approved product.product_line or product.clean_name, use those reviewed DB-ready product identity fields exactly.",
-      "If resolved_brand is null, do not invent a canonical brand spelling. Add a blocker requesting canonical brand resolution or new-brand approval.",
-      "The review cockpit must show DB-ready brand values, not prose explanations.",
-    ],
+    scannedIdentifier,
+    retailerEnrichment: retailerEnrichment.packet,
+    retailerEnrichmentWarning: retailerEnrichment.warning,
   }
-}
-
-function enforceCanonicalBrandResolution(
-  final: JsonRecord | null | undefined,
-  brandResolutionContext: BrandResolutionPromptContext,
-): void {
-  const product = normalizeRecord(final?.product)
-  const resolved = normalizeRecord(brandResolutionContext.resolved_brand)
-  const canonicalBrand = stringValue(resolved?.canonical_brand)
-  if (!product || !canonicalBrand) return
-
-  product.canonical_brand = canonicalBrand
-  const productLine = stringValue(resolved?.product_line)
-  if (productLine) product.product_line = productLine
-}
-
-function applyApprovedCanonicalBrand(
-  final: JsonRecord | null | undefined,
-  brandResolutionContext: BrandResolutionPromptContext,
-  reviewDecisions: ProductIntakeReviewDecisionRow[],
-): void {
-  if (normalizeRecord(brandResolutionContext.resolved_brand)) return
-  const product = normalizeRecord(final?.product)
-  if (!product) return
-
-  const approvedBrand = approvedCanonicalBrandFromReview(reviewDecisions)
-  if (!approvedBrand) return
-
-  product.canonical_brand = approvedBrand
-}
-
-function applyApprovedProductIdentity(
-  final: JsonRecord | null | undefined,
-  brandResolutionContext: BrandResolutionPromptContext,
-  reviewDecisions: ProductIntakeReviewDecisionRow[],
-): void {
-  const product = normalizeRecord(final?.product)
-  if (!product) return
-
-  const identity = approvedProductIdentityFromReview(reviewDecisions)
-  if (!normalizeRecord(brandResolutionContext.resolved_brand) && identity.canonicalBrand) {
-    product.canonical_brand = identity.canonicalBrand
-  }
-  if (identity.hasProductLine) {
-    product.product_line = identity.productLine
-  }
-  if (identity.cleanName) {
-    product.clean_name = identity.cleanName
-  }
-}
-
-function approvedCanonicalBrandFromReview(
-  reviewDecisions: ProductIntakeReviewDecisionRow[],
-): string | null {
-  for (const decision of reviewDecisions) {
-    if (decision.field_path !== "product.canonical_brand") continue
-    if (decision.decision !== "approved") continue
-
-    const reviewerValue = normalizeRecord(decision.reviewer_value)
-    const proposedValue = normalizeRecord(decision.proposed_value)
-    const approvedBrand =
-      stringValue(reviewerValue?.canonical_brand) ??
-      stringValue(reviewerValue?.canonicalName) ??
-      stringValue(proposedValue?.canonical_brand) ??
-      stringValue(proposedValue?.canonicalName)
-    if (approvedBrand) return approvedBrand
-  }
-
-  return null
-}
-
-function approvedProductIdentityFromReview(reviewDecisions: ProductIntakeReviewDecisionRow[]): {
-  canonicalBrand: string | null
-  hasProductLine: boolean
-  productLine: string | null
-  cleanName: string | null
-} {
-  const identity = {
-    canonicalBrand: null as string | null,
-    hasProductLine: false,
-    productLine: null as string | null,
-    cleanName: null as string | null,
-  }
-
-  for (const decision of reviewDecisions) {
-    if (decision.decision !== "approved") continue
-    const reviewerValue = normalizeRecord(decision.reviewer_value)
-    const proposedValue = normalizeRecord(decision.proposed_value)
-
-    if (decision.field_path === "product.canonical_brand") {
-      identity.canonicalBrand =
-        stringValue(reviewerValue?.canonical_brand) ??
-        stringValue(reviewerValue?.canonicalName) ??
-        stringValue(proposedValue?.canonical_brand) ??
-        stringValue(proposedValue?.canonicalName) ??
-        identity.canonicalBrand
-    }
-
-    if (decision.field_path === "product.product_line") {
-      identity.hasProductLine = true
-      identity.productLine =
-        stringValue(reviewerValue?.product_line) ?? stringValue(proposedValue?.product_line)
-    }
-
-    if (decision.field_path === "product.clean_name") {
-      identity.cleanName =
-        stringValue(reviewerValue?.clean_name) ??
-        stringValue(reviewerValue?.cleanName) ??
-        stringValue(proposedValue?.clean_name) ??
-        stringValue(proposedValue?.cleanName) ??
-        identity.cleanName
-    }
-  }
-
-  return identity
-}
-
-function canonicalBrandResolutionBlocker(
-  final: JsonRecord | null | undefined,
-  brandResolutionContext: BrandResolutionPromptContext,
-  reviewDecisions: ProductIntakeReviewDecisionRow[],
-): string | null {
-  const product = normalizeRecord(final?.product)
-  if (!product) return null
-  if (normalizeRecord(brandResolutionContext.resolved_brand)) return null
-  if (approvedCanonicalBrandFromReview(reviewDecisions)) return null
-  if (!brandResolutionContext.lookup_text) return null
-  return `canonical brand table resolution missing for: ${brandResolutionContext.lookup_text}`
-}
-
-function nearbyBrandOptions(
-  lookupText: string,
-  brands: readonly ProductIdentityBrand[],
-): JsonRecord[] {
-  const lookupTokens = new Set(
-    normalizeIdentityText(lookupText)
-      .split(" ")
-      .filter((token) => token.length >= 3),
-  )
-  if (lookupTokens.size === 0) return []
-
-  return brands
-    .map((brand) => {
-      const label = brandLabel(brand)
-      const normalized = normalizeIdentityText(label)
-      const score = normalized.split(" ").filter((token) => lookupTokens.has(token)).length
-      return { brand, label, score }
-    })
-    .filter((candidate) => candidate.score > 0)
-    .sort((left, right) => right.score - left.score || left.label.localeCompare(right.label))
-    .slice(0, 20)
-    .map((candidate) => ({
-      canonical_brand_id: brandIdValue(candidate.brand),
-      canonical_brand: candidate.label,
-    }))
-}
-
-function brandIdValue(brand: ProductIdentityBrand): string | null {
-  return brand.id ?? brand.key ?? brand.canonical_name ?? brand.canonicalName ?? brand.name ?? null
-}
-
-function productLineIdValue(line: ProductIdentityProductLine): string | null {
-  return line.id ?? line.key ?? line.canonical_name ?? line.canonicalName ?? line.name ?? null
-}
-
-function brandLabel(brand: ProductIdentityBrand): string {
-  return brand.canonical_name ?? brand.canonicalName ?? brand.name ?? brand.key ?? brand.id ?? ""
-}
-
-function productLineLabel(line: ProductIdentityProductLine): string {
-  return line.canonical_name ?? line.canonicalName ?? line.name ?? line.key ?? line.id ?? ""
 }
 
 function normalizeCategoryResearchedPayload(
@@ -1789,52 +2118,6 @@ function normalizeLeaveInApplicationStages(value: unknown): string[] {
   )
 }
 
-function normalizeCategoryKey(category: string | null | undefined): CategoryContractKey | null {
-  if (typeof category !== "string") return null
-  const normalized = category
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .replace(/[-\s]+/g, "_")
-
-  switch (normalized) {
-    case "shampoo":
-    case "shampoo_profi":
-      return "shampoo"
-    case "conditioner":
-    case "conditioner_profi":
-    case "conditioner_(drogerie)":
-      return "conditioner"
-    case "mask":
-    case "maske":
-      return "mask"
-    case "leave_in":
-      return "leave_in"
-    case "oil":
-    case "ole":
-    case "oele":
-      return "oil"
-    case "dry_shampoo":
-    case "trockenshampoo":
-      return "dry_shampoo"
-    case "deep_cleansing_shampoo":
-    case "tiefenreinigungsshampoo":
-      return "deep_cleansing_shampoo"
-    case "bondbuilder":
-    case "bond_builder":
-      return "bondbuilder"
-    case "heat_protectant":
-    case "hitzeschutz":
-      return "heat_protectant"
-    case "scalp_care":
-    case "kopfhautpflege":
-      return "scalp_care"
-    default:
-      return null
-  }
-}
-
 function cloneJsonRecord(value: JsonRecord): JsonRecord {
   return JSON.parse(JSON.stringify(value)) as JsonRecord
 }
@@ -1903,11 +2186,11 @@ function buildPreviewOnlyOutput(
   }
 }
 
-function runCodexResearch(promptPacketPath: string): CodexResearchOutput {
-  const dir = join(process.cwd(), "tmp", "product-intake-codex-worker")
-  const outputPath = promptPacketPath.replace(/\.json$/, ".codex-output.json")
-  const codexBinary = codexBinaryForWorker()
-
+async function runCodexResearch(
+  promptPacketPath: string,
+  runtimeConfig: CodexResearchRuntimeConfig,
+  lane: Extract<ProductIntakeModelLane, "production_low" | "challenger_medium">,
+): Promise<CodexResearchOutput> {
   const prompt = [
     "You are researching one user-submitted hair product for Chaarlie's internal Product Intake Review Cockpit.",
     "Read the JSON prompt packet below. Do not edit repository files, do not write to databases, and do not approve or publish anything.",
@@ -1919,49 +2202,289 @@ function runCodexResearch(promptPacketPath: string): CodexResearchOutput {
     readFileSync(promptPacketPath, "utf8"),
   ].join("\n")
 
-  const run = spawnSync(
-    codexBinary,
-    [
-      "exec",
-      "-c",
-      `service_tier="${process.env.PRODUCT_INTAKE_CODEX_SERVICE_TIER ?? "fast"}"`,
-      "--cd",
-      process.cwd(),
-      "--sandbox",
-      "read-only",
-      "--output-last-message",
-      outputPath,
+  return normalizeCodexOutput(
+    await runCodexJson({
+      outputPath: outputPathForModelLane(promptPacketPath, lane),
       prompt,
-    ],
+      runtimeConfig,
+    }),
+  )
+}
+
+async function runCodexJudge(
+  promptPacketPath: string,
+  blindPacket: BlindJudgePacket,
+  runtimeConfig: CodexResearchRuntimeConfig,
+): Promise<ModelJudgeVerdict> {
+  const prompt = [
+    "You are the read-only quality judge for two anonymized Product Intake research drafts.",
+    "Do not research the product again, edit files, write databases, or approve publication.",
+    "Compare only the supplied candidates against this rubric:",
+    "- identity: exact product/package identity and identifier consistency",
+    "- evidence: source authority, traceability, and claim support",
+    "- completeness: required identity, commercial, property, category, and image evidence",
+    "- uncertainty: honest blockers and no false-ready claims",
+    "Return one JSON object with preferred_candidate (A, B, or tie), confidence (0..1), scores for A and B with identity/evidence/completeness/uncertainty each 0..5, material_issues as strings, and a non-empty rationale.",
+    "Candidates are intentionally anonymous; never infer which model produced either candidate.",
+    "",
+    JSON.stringify({ candidates: blindPacket.candidates }),
+  ].join("\n")
+
+  const value = await runCodexJson({
+    outputPath: outputPathForModelLane(promptPacketPath, "judge"),
+    prompt,
+    runtimeConfig,
+    webSearch: "disabled",
+  })
+  return normalizeModelJudgeVerdict(value, blindPacket.laneByCandidate)
+}
+
+type CodexInfrastructureCode = "codex_timeout" | "infra_auth"
+
+class CodexInfrastructureError extends Error {
+  constructor(
+    readonly code: CodexInfrastructureCode,
+    detail: string,
+  ) {
+    super(truncateDiagnostic(`${code}: ${detail}`))
+    this.name = "CodexInfrastructureError"
+  }
+}
+
+function codexInfrastructureCode(error: unknown): CodexInfrastructureCode | null {
+  if (!(error instanceof Error)) return null
+  if (error.message.startsWith("codex_timeout:")) return "codex_timeout"
+  if (error.message.startsWith("infra_auth:")) return "infra_auth"
+  return null
+}
+
+function positiveDurationMs(raw: string | undefined, fallback: number): number {
+  const parsed = Number(raw)
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : fallback
+}
+
+export async function runCodexJson(
+  params: {
+    outputPath: string
+    prompt: string
+    runtimeConfig: CodexResearchRuntimeConfig
+    webSearch?: "disabled" | "live"
+    imagePaths?: string[]
+  },
+  spawn: WorkerSpawn = runWorkerProcess,
+): Promise<JsonRecord> {
+  const codexBinary = codexBinaryForWorker()
+
+  const run = await spawn(
+    codexBinary,
+    codexResearchExecArgs({
+      cwd: process.cwd(),
+      outputPath: params.outputPath,
+      prompt: params.prompt,
+      runtimeConfig: params.runtimeConfig,
+      webSearch: params.webSearch,
+      imagePaths: params.imagePaths,
+    }),
     {
       encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
       maxBuffer: 1024 * 1024 * 20,
       timeout: CODEX_RESEARCH_TIMEOUT_MS,
     },
   )
 
+  if (run.error && "code" in run.error && run.error.code === "ETIMEDOUT") {
+    throw new CodexInfrastructureError(
+      "codex_timeout",
+      `Codex CLI timed out after ${CODEX_RESEARCH_TIMEOUT_MS / 1000}s (${codexBinary}): ${run.error.message}`,
+    )
+  }
+  if (
+    (run.error || run.signal || run.status !== 0) &&
+    /\bnot logged in\b|\blog[ -]?in required\b|\b401\b|\bunauthori[sz]ed\b|\btoken (?:has )?expired\b(?! or nearly expired)/i.test(
+      run.stderr,
+    )
+  ) {
+    throw new CodexInfrastructureError(
+      "infra_auth",
+      `Codex CLI authentication failed (${codexBinary}): ${run.stderr || "no output"}`,
+    )
+  }
   if (run.error) {
-    throw new Error(`Codex CLI failed to start (${codexBinary}): ${run.error.message}`)
+    throw new Error(
+      truncateDiagnostic(`Codex CLI failed to start (${codexBinary}): ${run.error.message}`),
+    )
   }
   if (run.signal) {
     throw new Error(
-      `Codex CLI terminated by ${run.signal} after up to ${CODEX_RESEARCH_TIMEOUT_MS / 1000}s: ${
-        run.stderr || run.stdout || "no output"
-      }`,
+      truncateDiagnostic(
+        `Codex CLI terminated by ${run.signal} after up to ${CODEX_RESEARCH_TIMEOUT_MS / 1000}s: ${
+          run.stderr || run.stdout || "no output"
+        }`,
+      ),
     )
   }
   if (run.status !== 0) {
     throw new Error(
-      `Codex CLI failed (${codexBinary}, exit ${run.status}): ${
-        run.stderr || run.stdout || "no output"
-      }`,
+      truncateDiagnostic(
+        `Codex CLI failed (${codexBinary}, exit ${run.status}): ${
+          run.stderr || run.stdout || "no output"
+        }`,
+      ),
     )
   }
-  if (!existsSync(outputPath)) {
-    throw new Error(`Codex CLI did not write ${outputPath}`)
+  if (!existsSync(params.outputPath)) {
+    throw new Error(`Codex CLI did not write ${params.outputPath}`)
   }
 
-  return normalizeCodexOutput(parseJsonObject(readFileSync(outputPath, "utf8")))
+  return parseJsonObject(readFileSync(params.outputPath, "utf8"))
+}
+
+export function codexResearchRuntimeConfig(
+  env: Readonly<Record<string, string | undefined>>,
+): CodexResearchRuntimeConfig {
+  const config = {
+    model: nonBlankEnv(env.PRODUCT_INTAKE_CODEX_RESEARCH_MODEL, "gpt-6-luna"),
+    reasoningEffort: nonBlankEnv(env.PRODUCT_INTAKE_CODEX_RESEARCH_REASONING_EFFORT, "low"),
+    serviceTier: optionalServiceTier(env.PRODUCT_INTAKE_CODEX_SERVICE_TIER),
+  }
+  assertAllowedProductIntakeModel(config.model, "production research")
+  return config
+}
+
+export function modelEvaluationRuntimeConfig(
+  env: Readonly<Record<string, string | undefined>>,
+): ModelEvaluationRuntimeConfig {
+  const challenger = {
+    model: nonBlankEnv(env.PRODUCT_INTAKE_CODEX_CHALLENGER_MODEL, "gpt-6-luna"),
+    reasoningEffort: nonBlankEnv(env.PRODUCT_INTAKE_CODEX_CHALLENGER_REASONING_EFFORT, "medium"),
+    serviceTier: optionalServiceTier(env.PRODUCT_INTAKE_CODEX_CHALLENGER_SERVICE_TIER),
+  }
+  const judge = {
+    model: nonBlankEnv(env.PRODUCT_INTAKE_CODEX_JUDGE_MODEL, "gpt-6-sol"),
+    reasoningEffort: nonBlankEnv(env.PRODUCT_INTAKE_CODEX_JUDGE_REASONING_EFFORT, "medium"),
+    serviceTier: optionalServiceTier(env.PRODUCT_INTAKE_CODEX_JUDGE_SERVICE_TIER),
+  }
+  assertAllowedProductIntakeModel(challenger.model, "shadow challenger")
+  assertAllowedProductIntakeModel(judge.model, "judge")
+
+  return {
+    enabled: env.PRODUCT_INTAKE_CODEX_SHADOW_ENABLED?.trim().toLowerCase() !== "false",
+    targetSuccessfulJudgments: positiveIntegerEnv(env.PRODUCT_INTAKE_CODEX_SHADOW_TARGET, 10),
+    challenger,
+    judge,
+  }
+}
+
+function positiveIntegerEnv(value: string | undefined, fallback: number): number {
+  const parsed = Number.parseInt(value?.trim() ?? "", 10)
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback
+}
+
+export function shouldRunShadowExperiment(params: {
+  enabled: boolean
+  successfulJudgments: number
+  target: number
+}): boolean {
+  return params.enabled && params.successfulJudgments < params.target
+}
+
+export function outputPathForModelLane(
+  promptPacketPath: string,
+  lane: ProductIntakeModelLane,
+): string {
+  return promptPacketPath.replace(/\.json$/, `.${lane}.codex-output.json`)
+}
+
+export function buildBlindJudgePacket(
+  production: JsonRecord,
+  challenger: JsonRecord,
+  swap = Math.random() >= 0.5,
+): BlindJudgePacket {
+  if (swap) {
+    return {
+      candidates: { A: challenger, B: production },
+      laneByCandidate: { A: "challenger_medium", B: "production_low" },
+    }
+  }
+  return {
+    candidates: { A: production, B: challenger },
+    laneByCandidate: { A: "production_low", B: "challenger_medium" },
+  }
+}
+
+export function normalizeModelJudgeVerdict(
+  value: JsonRecord,
+  laneByCandidate: BlindJudgePacket["laneByCandidate"],
+): ModelJudgeVerdict {
+  const preferred = value.preferred_candidate
+  if (preferred !== "A" && preferred !== "B" && preferred !== "tie") {
+    throw new Error("Model judge verdict requires preferred_candidate A, B, or tie.")
+  }
+  const confidence = boundedNumber(value.confidence, 0, 1, "confidence")
+  const rawScores = normalizeRecord(value.scores)
+  if (!rawScores) throw new Error("Model judge verdict requires scores.")
+  const scores = {
+    A: normalizeJudgeDimensionScores(rawScores.A, "A"),
+    B: normalizeJudgeDimensionScores(rawScores.B, "B"),
+  }
+  const materialIssues = normalizeStringArray(value.material_issues) ?? []
+  if (typeof value.rationale !== "string" || value.rationale.trim().length === 0) {
+    throw new Error("Model judge verdict requires rationale.")
+  }
+
+  return {
+    preferredCandidate: preferred,
+    preferredLane: preferred === "tie" ? "tie" : laneByCandidate[preferred],
+    confidence,
+    scores,
+    materialIssues,
+    rationale: value.rationale.trim(),
+  }
+}
+
+function normalizeJudgeDimensionScores(
+  value: unknown,
+  candidate: BlindCandidateLabel,
+): ModelJudgeDimensionScores {
+  const scores = normalizeRecord(value)
+  if (!scores) throw new Error(`Model judge verdict requires scores for candidate ${candidate}.`)
+  return {
+    identity: boundedNumber(scores.identity, 0, 5, `${candidate}.identity`),
+    evidence: boundedNumber(scores.evidence, 0, 5, `${candidate}.evidence`),
+    completeness: boundedNumber(scores.completeness, 0, 5, `${candidate}.completeness`),
+    uncertainty: boundedNumber(scores.uncertainty, 0, 5, `${candidate}.uncertainty`),
+  }
+}
+
+export function codexResearchExecArgs(params: {
+  cwd: string
+  outputPath: string
+  prompt: string
+  runtimeConfig: CodexResearchRuntimeConfig
+  webSearch?: "disabled" | "live"
+  imagePaths?: string[]
+}): string[] {
+  return [
+    "exec",
+    "--skip-git-repo-check",
+    "-m",
+    params.runtimeConfig.model,
+    "-c",
+    `model_reasoning_effort="${params.runtimeConfig.reasoningEffort}"`,
+    ...(params.runtimeConfig.serviceTier
+      ? ["-c", `service_tier="${params.runtimeConfig.serviceTier}"`]
+      : []),
+    ...(params.webSearch ? ["-c", `web_search="${params.webSearch}"`] : []),
+    ...(params.imagePaths && params.imagePaths.length > 0 ? ["-i", ...params.imagePaths] : []),
+    "--cd",
+    params.cwd,
+    "--sandbox",
+    "read-only",
+    "--output-last-message",
+    params.outputPath,
+    params.prompt,
+  ]
 }
 
 function normalizeCodexOutput(value: JsonRecord): CodexResearchOutput {
@@ -1970,7 +2493,7 @@ function normalizeCodexOutput(value: JsonRecord): CodexResearchOutput {
         if (!item || typeof item !== "object" || Array.isArray(item)) return []
         const record = item as JsonRecord
         const kind = normalizeArtifactKind(record.kind ?? record.type)
-        if (!isArtifactKind(kind)) return []
+        if (!isModelGeneratedArtifactKind(kind)) return []
         const payload = normalizeRecord(record.payload) ?? artifactPayloadFromRecord(record)
         return [
           {
@@ -1998,38 +2521,11 @@ function normalizeCodexOutput(value: JsonRecord): CodexResearchOutput {
   }
 }
 
-function parseJsonObject(raw: string): JsonRecord {
-  try {
-    const parsed = JSON.parse(raw) as unknown
-    const record = normalizeRecord(parsed)
-    if (record) return record
-  } catch {
-    // Fall through to fenced/object extraction.
-  }
-
-  const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)```/)
-  if (fenced) {
-    const parsed = JSON.parse(fenced[1]) as unknown
-    const record = normalizeRecord(parsed)
-    if (record) return record
-  }
-
-  const firstBrace = raw.indexOf("{")
-  const lastBrace = raw.lastIndexOf("}")
-  if (firstBrace >= 0 && lastBrace > firstBrace) {
-    const parsed = JSON.parse(raw.slice(firstBrace, lastBrace + 1)) as unknown
-    const record = normalizeRecord(parsed)
-    if (record) return record
-  }
-
-  throw new Error("Codex output was not a JSON object.")
-}
-
 function projectJob(
   job: ProductIntakeResearchJob,
   promptPacketPath: string,
   executeCodex: boolean,
-) {
+): WorkerResult["jobs"][number] {
   return {
     id: job.id,
     submission_id: job.submission_id,
@@ -2038,120 +2534,6 @@ function projectJob(
     prompt_packet_path: promptPacketPath,
     mode: executeCodex ? "codex_cli" : "preview_only",
   }
-}
-
-function hasFinalResearchPayload(value: JsonRecord | null | undefined): value is JsonRecord {
-  return Boolean(normalizeRecord(value)?.final && normalizeRecord(normalizeRecord(value)?.final))
-}
-
-function findApprovedSourceImageUrl(detail: ProductIntakeSubmissionDetail | null): string | null {
-  const final = normalizeRecord(detail?.payload?.final)
-  const product = normalizeRecord(final?.product)
-  const productImageUrl = stringValue(product?.image_url)
-  if (productImageUrl) return productImageUrl
-
-  for (const artifact of detail?.artifacts ?? []) {
-    if (artifact.kind !== "image_candidate") continue
-    const imageUrl = stringValue(artifact.payload.image_url)
-    if (imageUrl) return imageUrl
-  }
-
-  return null
-}
-
-function findApprovedSourcePageUrl(detail: ProductIntakeSubmissionDetail | null): string | null {
-  const final = normalizeRecord(detail?.payload?.final)
-  const sources = Array.isArray(final?.sources) ? final.sources : []
-  for (const source of sources) {
-    const record = normalizeRecord(source)
-    const url = stringValue(record?.url)
-    if (url) return url
-  }
-
-  for (const artifact of detail?.artifacts ?? []) {
-    if (artifact.kind !== "image_candidate") continue
-    const url = stringValue(artifact.payload.source_page_url)
-    if (url) return url
-  }
-
-  return null
-}
-
-function productLabelForImage(detail: ProductIntakeSubmissionDetail | null): string {
-  return (
-    [detail?.brand, detail?.product_name]
-      .filter((part): part is string => typeof part === "string" && part.trim().length > 0)
-      .join(" ")
-      .trim() || "product-image"
-  )
-}
-
-function slugForProcessedImage(detail: ProductIntakeSubmissionDetail | null): string {
-  const raw = productLabelForImage(detail)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-  return raw || "product-image"
-}
-
-function dateFolderForJob(job: ProductIntakeResearchJob): string {
-  const iso = job.created_at || new Date().toISOString()
-  return iso.slice(0, 10)
-}
-
-function imageExtension(
-  contentType: string | null,
-  imageUrl: string,
-): "avif" | "webp" | "png" | "jpg" {
-  const normalized = contentType?.toLowerCase() ?? ""
-  if (normalized.includes("avif")) return "avif"
-  if (normalized.includes("webp")) return "webp"
-  if (normalized.includes("png")) return "png"
-  if (normalized.includes("jpeg") || normalized.includes("jpg")) return "jpg"
-
-  try {
-    const path = new URL(imageUrl).pathname.toLowerCase()
-    const name = basename(path)
-    if (name.endsWith(".avif")) return "avif"
-    if (name.endsWith(".webp")) return "webp"
-    if (name.endsWith(".png")) return "png"
-  } catch {
-    // Fall through to the broadly supported default.
-  }
-  return "jpg"
-}
-
-function runVisionBackgroundRemoval(params: {
-  sourceFile: string
-  outputDir: string
-  outputSlug: string
-}): string | null {
-  const direct = spawnSync(
-    "swift",
-    ["scripts/product-images/removebg.swift", params.outputDir, params.sourceFile],
-    {
-      cwd: process.cwd(),
-      encoding: "utf8",
-      maxBuffer: 1024 * 1024 * 10,
-    },
-  )
-  const sourceBase = basename(params.sourceFile).replace(/\.[^.]+$/, "")
-  const directOutput = join(params.outputDir, `${sourceBase}.png`)
-  if (!direct.error && direct.status === 0 && existsSync(directOutput)) return directOutput
-
-  const paddedOutput = join(params.outputDir, `${params.outputSlug}-vision-padded.png`)
-  const padded = spawnSync(
-    "swift",
-    ["scripts/product-images/removebg-padded.swift", params.sourceFile, paddedOutput],
-    {
-      cwd: process.cwd(),
-      encoding: "utf8",
-      maxBuffer: 1024 * 1024 * 10,
-    },
-  )
-
-  if (!padded.error && padded.status === 0 && existsSync(paddedOutput)) return paddedOutput
-  return null
 }
 
 function normalizeResearchPayload(value: unknown): JsonRecord | null {
@@ -2168,14 +2550,6 @@ function sanitizedResearchPayload(record: JsonRecord): JsonRecord {
   if (record.draft !== undefined) payload.draft = record.draft
   if (record.final !== undefined) payload.final = record.final
   return payload
-}
-
-function normalizeRecord(value: unknown): JsonRecord | null {
-  return value && typeof value === "object" && !Array.isArray(value) ? (value as JsonRecord) : null
-}
-
-function stringValue(value: unknown): string | null {
-  return typeof value === "string" && value.trim().length > 0 ? value : null
 }
 
 function normalizeConfidence(value: unknown): number | null {
@@ -2254,15 +2628,35 @@ function artifactPayloadFromRecord(record: JsonRecord): JsonRecord {
   return payload
 }
 
-function isArtifactKind(value: string): value is ProductIntakeArtifactKind {
-  return PRODUCT_INTAKE_ARTIFACT_KINDS.includes(value as ProductIntakeArtifactKind)
+export function isModelGeneratedArtifactKind(value: string): value is ProductIntakeArtifactKind {
+  return (
+    PRODUCT_INTAKE_ARTIFACT_KINDS.includes(value as ProductIntakeArtifactKind) &&
+    value !== "model_run" &&
+    value !== "model_judgment" &&
+    value !== "formula" &&
+    value !== "commerce_check" &&
+    value !== "protocol_template"
+  )
 }
 
 function isJobStage(value: string): value is ProductIntakeJobStage {
   return PRODUCT_INTAKE_JOB_STAGES.includes(value as ProductIntakeJobStage)
 }
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : error)
-  process.exitCode = 1
-})
+/**
+ * Task 5 (null-identifier worker proof): guards the CLI entry point so this module can be
+ * `import`-ed by a test (to reach the exported `loadScanIntakeSeedForSubmission` /
+ * `writePromptPacket` seam below) without executing `main()` — which claims real jobs and
+ * needs `createSupabaseClientFromEnv()`'s env vars. Strictly behavior-preserving: run
+ * directly (`tsx scripts/product-intake/codex-research-worker.ts`, the
+ * `products:intake:codex-worker` npm script), `process.argv[1]` is this file and the guard
+ * is true, so `main()` still fires exactly as before. Same pattern already used by every
+ * other CLI script in `scripts/` that also needs to be import-safe (e.g.
+ * `scripts/catalog-authority/audit.ts`).
+ */
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : error)
+    process.exitCode = 1
+  })
+}

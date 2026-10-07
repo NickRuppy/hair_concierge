@@ -3,6 +3,11 @@ import { getChemicalTreatmentDamageWeight } from "@/lib/profile/chemical-treatme
 
 import { projectQuizAnswersForLegacyConsumers } from "./normalization"
 import { resolveQuizNeed, type QuizConcern, type QuizNeedLane } from "./need-lane"
+import {
+  resolveStatedPrimaryConcern,
+  toLegacyQuizConcern,
+  type QuizAnswerConcern,
+} from "./primary-concern"
 import type { QuizAnswers } from "./types"
 
 export type QuizResultIconKey =
@@ -83,11 +88,37 @@ export interface QuizResultNarrative {
     label: string
     subline: string
   }
-  primaryConcern: QuizConcern | null
+  /** Her STATED main problem (F1), in copy vocabulary; `null` when she stated none. */
+  primaryConcern: NarrativeConcern | null
   primaryGoal: Goal | null
 }
 
-const CONCERN_COPY: Record<QuizConcern, QuizResultRowCopy> = {
+/**
+ * Copy vocabulary for a stated main problem: the six legacy codes (the aliases
+ * `dry_lengths`/`frizz_flyaways` read as dryness/frizz) plus the four quiz concerns the
+ * legacy projection cannot carry.
+ */
+export type NarrativeConcern =
+  | QuizConcern
+  | "low_shine"
+  | "lost_shape"
+  | "low_volume_or_weighed_down"
+  | "hair_loss_or_thinning"
+
+function toNarrativeConcern(concern: QuizAnswerConcern | null): NarrativeConcern | null {
+  if (!concern) return null
+  return (
+    toLegacyQuizConcern(concern) ??
+    (concern === "low_shine" ||
+    concern === "lost_shape" ||
+    concern === "low_volume_or_weighed_down" ||
+    concern === "hair_loss_or_thinning"
+      ? concern
+      : null)
+  )
+}
+
+const CONCERN_COPY: Record<NarrativeConcern, QuizResultRowCopy> = {
   frizz: {
     before: "Frizz",
     after: "ruhigere, glattere Längen",
@@ -129,6 +160,36 @@ const CONCERN_COPY: Record<QuizConcern, QuizResultRowCopy> = {
     iconKey: "shield",
     tickBefore: "angegriffen",
     tickAfter: "geschützt",
+  },
+  low_shine: {
+    before: "wenig Glanz",
+    after: "mehr Glanz in den Längen",
+    iconKey: "sparkles",
+    tickBefore: "stumpf",
+    tickAfter: "glänzend",
+  },
+  lost_shape: {
+    before: "Formverlust",
+    after: "mehr Form und Halt",
+    iconKey: "waves",
+    tickBefore: "formlos",
+    tickAfter: "definiert",
+  },
+  low_volume_or_weighed_down: {
+    before: "plattes, beschwertes Haar",
+    after: "leichtere Längen mit mehr Fülle",
+    iconKey: "arrow-up",
+    tickBefore: "platt",
+    tickAfter: "luftig",
+  },
+  // Medically adjacent: Pflege kann schonen, aber keinen Haarausfall behandeln. The row
+  // names the boundary instead of promising a product result.
+  hair_loss_or_thinning: {
+    before: "Haarausfall oder dünner werdendes Haar",
+    after: "schonende Pflege – die Ursache ärztlich abklären",
+    iconKey: "heart",
+    tickBefore: "belastet",
+    tickAfter: "geschont",
   },
 }
 
@@ -424,7 +485,7 @@ function buildHairFeelRow(
 
 function buildIntro(
   answers: QuizAnswers,
-  primaryConcern: QuizConcern | null,
+  primaryConcern: NarrativeConcern | null,
   primaryGoal: Goal | null,
 ): string {
   const goalOutcome = primaryGoal ? GOAL_COPY[primaryGoal].intro : null
@@ -456,8 +517,10 @@ function buildFrictionScore(
   answers: QuizAnswers,
   primaryConcern: QuizConcern | null,
   primaryGoal: Goal | null,
+  statedConcern: NarrativeConcern | null,
 ): number {
-  const canUseScalpFallback = !primaryConcern
+  // A stated main problem outranks the scalp fallback, legacy-mappable or not.
+  const canUseScalpFallback = !primaryConcern && !statedConcern
 
   if (canUseScalpFallback && answers.scalp_condition) {
     let score = 4
@@ -518,8 +581,10 @@ function resolveFrictionScope(
   answers: QuizAnswers,
   primaryConcern: QuizConcern | null,
   primaryGoal: Goal | null,
+  statedConcern: NarrativeConcern | null,
 ): QuizResultScope {
-  const canUseScalpFallback = !primaryConcern
+  // A stated main problem outranks the scalp fallback, legacy-mappable or not.
+  const canUseScalpFallback = !primaryConcern && !statedConcern
 
   if (canUseScalpFallback && answers.scalp_condition) {
     return "KOPFHAUT"
@@ -536,7 +601,11 @@ function resolveFrictionScope(
     return "SPITZEN"
   }
 
-  if (primaryConcern === "hair_damage" || primaryConcern === "breakage") {
+  if (
+    primaryConcern === "hair_damage" ||
+    primaryConcern === "breakage" ||
+    statedConcern === "hair_loss_or_thinning"
+  ) {
     return "HAAR"
   }
 
@@ -551,9 +620,11 @@ function buildFrictionRow(
   answers: QuizAnswers,
   primaryConcern: QuizConcern | null,
   primaryGoal: Goal | null,
+  statedConcern: NarrativeConcern | null,
 ): QuizResultNarrativeRow {
-  const canUseScalpFallback = !primaryConcern
-  const scope = resolveFrictionScope(answers, primaryConcern, primaryGoal)
+  // A stated main problem outranks the scalp fallback, legacy-mappable or not.
+  const canUseScalpFallback = !primaryConcern && !statedConcern
+  const scope = resolveFrictionScope(answers, primaryConcern, primaryGoal, statedConcern)
 
   if (canUseScalpFallback && answers.scalp_condition === "gereizt") {
     return {
@@ -565,7 +636,9 @@ function buildFrictionRow(
       tickBefore: "gereizt",
       tickAfter: "beruhigt",
       currentPosition:
-        BUCKET_TO_POSITION[scoreToBucket(buildFrictionScore(answers, primaryConcern, primaryGoal))],
+        BUCKET_TO_POSITION[
+          scoreToBucket(buildFrictionScore(answers, primaryConcern, primaryGoal, statedConcern))
+        ],
       targetPosition: ROW_TARGET_POSITIONS.friction,
     }
   }
@@ -580,7 +653,9 @@ function buildFrictionRow(
       tickBefore: "unruhig",
       tickAfter: "ausgeglichen",
       currentPosition:
-        BUCKET_TO_POSITION[scoreToBucket(buildFrictionScore(answers, primaryConcern, primaryGoal))],
+        BUCKET_TO_POSITION[
+          scoreToBucket(buildFrictionScore(answers, primaryConcern, primaryGoal, statedConcern))
+        ],
       targetPosition: ROW_TARGET_POSITIONS.friction,
     }
   }
@@ -595,7 +670,9 @@ function buildFrictionRow(
       tickBefore: "trocken",
       tickAfter: "ausgeglichen",
       currentPosition:
-        BUCKET_TO_POSITION[scoreToBucket(buildFrictionScore(answers, primaryConcern, primaryGoal))],
+        BUCKET_TO_POSITION[
+          scoreToBucket(buildFrictionScore(answers, primaryConcern, primaryGoal, statedConcern))
+        ],
       targetPosition: ROW_TARGET_POSITIONS.friction,
     }
   }
@@ -610,7 +687,9 @@ function buildFrictionRow(
       tickBefore: "unausgeglichen",
       tickAfter: "ausgeglichen",
       currentPosition:
-        BUCKET_TO_POSITION[scoreToBucket(buildFrictionScore(answers, primaryConcern, primaryGoal))],
+        BUCKET_TO_POSITION[
+          scoreToBucket(buildFrictionScore(answers, primaryConcern, primaryGoal, statedConcern))
+        ],
       targetPosition: ROW_TARGET_POSITIONS.friction,
     }
   }
@@ -625,13 +704,15 @@ function buildFrictionRow(
       tickBefore: "trocken",
       tickAfter: "ausgeglichen",
       currentPosition:
-        BUCKET_TO_POSITION[scoreToBucket(buildFrictionScore(answers, primaryConcern, primaryGoal))],
+        BUCKET_TO_POSITION[
+          scoreToBucket(buildFrictionScore(answers, primaryConcern, primaryGoal, statedConcern))
+        ],
       targetPosition: ROW_TARGET_POSITIONS.friction,
     }
   }
 
-  const copy = primaryConcern
-    ? CONCERN_COPY[primaryConcern]
+  const copy = statedConcern
+    ? CONCERN_COPY[statedConcern]
     : {
         before: "unpassende Pflege",
         after: "mehr Ruhe, Glanz & Ausgewogenheit",
@@ -649,7 +730,9 @@ function buildFrictionRow(
     tickBefore: copy.tickBefore,
     tickAfter: copy.tickAfter,
     currentPosition:
-      BUCKET_TO_POSITION[scoreToBucket(buildFrictionScore(answers, primaryConcern, primaryGoal))],
+      BUCKET_TO_POSITION[
+        scoreToBucket(buildFrictionScore(answers, primaryConcern, primaryGoal, statedConcern))
+      ],
     targetPosition: ROW_TARGET_POSITIONS.friction,
   }
 }
@@ -933,16 +1016,20 @@ function buildNeedsSection(
 }
 
 export function buildQuizResultNarrative(rawAnswers: QuizAnswers): QuizResultNarrative {
+  // Resolved from the RAW answers: the legacy projection below drops the four newer
+  // concern codes and can collapse two raw concerns into one.
+  const statedConcern = resolveStatedPrimaryConcern(rawAnswers)
+  const narrativeConcern = toNarrativeConcern(statedConcern)
   const answers = projectQuizAnswersForLegacyConsumers(rawAnswers)
-  const { lane, primaryConcern, primaryGoal } = resolveQuizNeed(answers)
+  const { lane, primaryConcern, primaryGoal } = resolveQuizNeed(answers, statedConcern)
 
   const hairFeelRow = buildHairFeelRow(answers, primaryConcern, primaryGoal)
-  const frictionRow = buildFrictionRow(answers, primaryConcern, primaryGoal)
+  const frictionRow = buildFrictionRow(answers, primaryConcern, primaryGoal, narrativeConcern)
   const outcomeRow = buildOutcomeRow(primaryGoal)
 
   return {
     heroHeadline: buildHeroHeadline(lane),
-    intro: buildIntro(answers, primaryConcern, primaryGoal),
+    intro: buildIntro(answers, narrativeConcern, primaryGoal),
     rows: [hairFeelRow, frictionRow, outcomeRow],
     needs: buildNeedsSection(answers, primaryConcern, primaryGoal, lane),
     cta: {
@@ -950,7 +1037,7 @@ export function buildQuizResultNarrative(rawAnswers: QuizAnswers): QuizResultNar
       label: "MEINE ROUTINE STARTEN",
       subline: "Mit passenden Produkten, Reihenfolge und Anwendung.",
     },
-    primaryConcern,
+    primaryConcern: narrativeConcern,
     primaryGoal,
   }
 }

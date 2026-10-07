@@ -8,6 +8,10 @@ import type {
 } from "@/lib/billing/types"
 import { deliverBillingAnalyticsToCustomerIo } from "./analytics-destinations/customerio"
 import { deliverBillingAnalyticsToFunnel } from "./analytics-destinations/funnel"
+import {
+  deliverBillingAnalyticsToOpenAI,
+  isOpenAIBillingEvent,
+} from "./analytics-destinations/openai-capi"
 import { deliverBillingAnalyticsToMeta } from "./analytics-destinations/meta-capi"
 import { deliverBillingAnalyticsToPostHog } from "./analytics-destinations/posthog-server"
 import type {
@@ -66,28 +70,47 @@ export type BillingAnalyticsDueStats = {
   processed: number
   delivered: number
   failed: number
+  skipped?: number
 }
 
-type DispatchDeliveryOutcome = "skipped" | "delivered" | "failed"
+type DispatchDeliveryOutcome = "not_claimed" | "skipped" | "delivered" | "failed"
 
 export async function createBillingAnalyticsEvent(
   supabase: SupabaseBillingAnalyticsClient,
   input: BillingAnalyticsEventInput,
   options: CreateBillingAnalyticsEventOptions = {},
 ): Promise<BillingAnalyticsOutboxRow> {
-  const event = await insertOrFindOutboxEvent(supabase, input)
+  const { event, created } = await insertOrFindOutboxEvent(supabase, input)
+  const legacyDestinations = event.event_name.startsWith("trial_")
+    ? event.event_name === "trial_started" && event.payload.trial_analytics_version === 1
+      ? ["posthog" as const, "meta" as const]
+      : ["posthog" as const]
+    : (options.destinations ?? BILLING_ANALYTICS_EXTERNAL_DESTINATIONS)
+  const destinations: BillingAnalyticsDestination[] = [...legacyDestinations].filter(
+    (d) => d !== "openai",
+  )
+  if (
+    created &&
+    isOpenAIBillingEvent(event) &&
+    (process.env.OPENAI_ADS_ENABLED === "true" || options.destinations?.includes("openai"))
+  ) {
+    destinations.push("openai")
+  }
   await ensureDeliveryRows(
     supabase,
     event.id,
-    options.destinations ?? BILLING_ANALYTICS_EXTERNAL_DESTINATIONS,
+    destinations.filter((destination) => destination !== "openai"),
   )
+  if (destinations.includes("openai")) {
+    // The database trigger normally creates this row. A fallback failure must not
+    // interfere with the established billing destinations.
+    try {
+      await ensureDeliveryRows(supabase, event.id, ["openai"])
+    } catch {}
+  }
 
   if (options.dispatch !== false) {
-    await dispatchBillingAnalyticsEvent(
-      supabase,
-      event,
-      options.destinations ?? BILLING_ANALYTICS_EXTERNAL_DESTINATIONS,
-    )
+    await dispatchBillingAnalyticsEvent(supabase, event, destinations)
   }
 
   return event
@@ -133,6 +156,8 @@ export async function dispatchBillingAnalyticsDueWithStats(
   supabase: SupabaseBillingAnalyticsClient,
   options: DispatchBillingAnalyticsOptions = {},
 ): Promise<BillingAnalyticsDueStats> {
+  // Supabase owns Slack delivery; even explicit legacy calls must not query or claim it.
+  if (options.destination === "slack") return { processed: 0, delivered: 0, failed: 0 }
   const event = options.eventKey
     ? await findBillingAnalyticsEventByKey(supabase, options.eventKey)
     : null
@@ -145,6 +170,7 @@ export async function dispatchBillingAnalyticsDueWithStats(
   let query = supabase
     .from("billing_analytics_deliveries")
     .select("*")
+    .in("destination", ["customerio", "meta", "posthog", "funnel", "openai"])
     .in("status", ["pending", "failed", "processing"])
     .or(
       `next_attempt_at.is.null,next_attempt_at.lte.${now},processing_started_at.lte.${staleProcessingCutoff}`,
@@ -165,9 +191,10 @@ export async function dispatchBillingAnalyticsDueWithStats(
     const event = await findOutboxEventById(supabase, delivery.outbox_id)
     if (!event) continue
     const outcome = await dispatchDelivery(supabase, event, delivery, options.dependencies)
-    if (outcome === "skipped") continue
+    if (outcome === "not_claimed") continue
     stats.processed += 1
-    stats[outcome] += 1
+    if (outcome === "skipped") stats.skipped = (stats.skipped ?? 0) + 1
+    else stats[outcome] += 1
   }
 
   return stats
@@ -179,15 +206,24 @@ export async function dispatchBillingAnalyticsEvent(
   destinations: BillingAnalyticsDestination[] = BILLING_ANALYTICS_EXTERNAL_DESTINATIONS,
   dependencies: Partial<DispatchBillingAnalyticsDependencies> = {},
 ) {
+  const dispatchDestinations = isOpenAIBillingEvent(event)
+    ? [...new Set([...destinations, "openai"])]
+    : destinations.filter((d) => d !== "openai")
   const { data, error } = await supabase
     .from("billing_analytics_deliveries")
     .select("*")
     .eq("outbox_id", event.id)
-    .in("destination", destinations)
+    .in(
+      "destination",
+      dispatchDestinations.filter((destination) => destination !== "slack"),
+    )
 
   if (error) throw error
   const deliveries = ((data as BillingAnalyticsDeliveryRow[] | null) ?? []).filter(
-    (delivery) => delivery.status !== "delivered" && delivery.status !== "failed_permanent",
+    (delivery) =>
+      delivery.status !== "delivered" &&
+      delivery.status !== "failed_permanent" &&
+      delivery.status !== "skipped",
   )
 
   for (const delivery of deliveries) {
@@ -198,7 +234,7 @@ export async function dispatchBillingAnalyticsEvent(
 async function insertOrFindOutboxEvent(
   supabase: SupabaseBillingAnalyticsClient,
   input: BillingAnalyticsEventInput,
-): Promise<BillingAnalyticsOutboxRow> {
+): Promise<{ event: BillingAnalyticsOutboxRow; created: boolean }> {
   const now = new Date().toISOString()
   const row = {
     event_key: input.eventKey,
@@ -216,12 +252,12 @@ async function insertOrFindOutboxEvent(
 
   const insert = await supabase.from("billing_analytics_outbox").insert(row).select("*").single()
 
-  if (!insert.error) return insert.data as BillingAnalyticsOutboxRow
+  if (!insert.error) return { event: insert.data as BillingAnalyticsOutboxRow, created: true }
   if (!isDuplicateKeyError(insert.error)) throw insert.error
 
   const existing = await findBillingAnalyticsEventByKey(supabase, input.eventKey)
   if (!existing) throw insert.error
-  return existing
+  return { event: existing, created: false }
 }
 
 async function ensureDeliveryRows(
@@ -246,15 +282,18 @@ async function dispatchDelivery(
   delivery: BillingAnalyticsDeliveryRow,
   dependencies: Partial<DispatchBillingAnalyticsDependencies> = {},
 ): Promise<DispatchDeliveryOutcome> {
+  if (delivery.destination === "slack") return "not_claimed"
   const claimed = await claimDeliveryForDispatch(supabase, delivery)
-  if (!claimed) return "skipped"
+  if (!claimed) return "not_claimed"
 
   let result: BillingAnalyticsDeliveryResult
   try {
     const findProfile = dependencies.findProfile ?? findBillingAnalyticsProfile
     const deliver = dependencies.deliver ?? deliverToDestination
     const profile =
-      claimed.destination === "funnel" ? null : await findProfile(supabase, event.user_id)
+      claimed.destination === "funnel" || claimed.destination === "openai"
+        ? null
+        : await findProfile(supabase, event.user_id)
     const input: BillingAnalyticsDeliveryInput = { event, profile, supabase }
     result = await deliver(claimed.destination, input)
   } catch (error) {
@@ -262,6 +301,23 @@ async function dispatchDelivery(
       ok: false,
       error: error instanceof Error ? error.message : String(error),
     }
+  }
+
+  if (claimed.destination === "openai" && result.skipped) {
+    const { error } = await supabase
+      .from("billing_analytics_deliveries")
+      .update({
+        status: "skipped",
+        attempts: claimed.attempts + 1,
+        processing_started_at: null,
+        next_attempt_at: null,
+        delivered_at: null,
+        last_error: result.error ?? "skipped",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", claimed.id)
+    if (error) throw error
+    return "skipped"
   }
 
   if (result.ok) {
@@ -278,8 +334,12 @@ function deliverToDestination(
   input: BillingAnalyticsDeliveryInput,
 ) {
   switch (destination) {
+    case "slack":
+      throw new Error("Slack delivery is owned by Supabase")
     case "customerio":
       return deliverBillingAnalyticsToCustomerIo(input)
+    case "openai":
+      return deliverBillingAnalyticsToOpenAI(input)
     case "meta":
       return deliverBillingAnalyticsToMeta(input)
     case "posthog":
@@ -354,7 +414,7 @@ async function markDeliveryFailed(
       processing_started_at: null,
       delivered_at: null,
       last_error: result.error ?? "Unknown billing analytics delivery error",
-      next_attempt_at: permanent ? null : nextAttemptAt(attempts),
+      next_attempt_at: permanent ? null : nextAttemptAt(attempts, result.retryAfterSeconds),
       provider_request_id: result.providerRequestId ?? null,
       updated_at: new Date().toISOString(),
     })
@@ -398,7 +458,7 @@ async function findBillingAnalyticsProfile(
   const { data, error } = await supabase
     .from("profiles")
     .select(
-      "id,email,stripe_customer_id,stripe_subscription_id,subscription_interval,subscription_status,current_period_end",
+      "id,email,full_name,stripe_customer_id,stripe_subscription_id,subscription_interval,subscription_status,current_period_end",
     )
     .eq("id", userId)
     .maybeSingle()
@@ -407,9 +467,13 @@ async function findBillingAnalyticsProfile(
   return (data as BillingAnalyticsProfile | null) ?? null
 }
 
-function nextAttemptAt(attempts: number) {
-  const delayMinutes = Math.min(60, attempts * attempts)
-  return new Date(Date.now() + delayMinutes * 60_000).toISOString()
+function nextAttemptAt(attempts: number, retryAfterSeconds?: number) {
+  const delayMs = Math.min(60, attempts * attempts) * 60_000
+  const retryMs =
+    typeof retryAfterSeconds === "number" && Number.isFinite(retryAfterSeconds)
+      ? Math.max(0, Math.min(86_400, retryAfterSeconds)) * 1000
+      : 0
+  return new Date(Date.now() + Math.max(delayMs, retryMs)).toISOString()
 }
 
 function sanitizePayload(payload: Record<string, unknown>) {
@@ -421,6 +485,16 @@ function sanitizePayload(payload: Record<string, unknown>) {
     "access_token",
     "payment_method_details",
     "raw_event",
+    "fbp",
+    "fbc",
+    "client_user_agent",
+    "client_ip_address",
+    "meta_context",
+    "marketing_consent",
+    "oppref",
+    "obref",
+    "__oppref",
+    "__obref",
   ])
   return Object.fromEntries(Object.entries(payload).filter(([key]) => !blockedKeys.has(key)))
 }

@@ -1,6 +1,11 @@
+import { dispatchBillingAnalyticsDue } from "@/lib/billing/analytics-outbox"
 import { after, NextResponse, type NextRequest } from "next/server"
+import { deferRequiredTrialNotices } from "@/lib/billing/trial-notice-dispatch"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 import { getStripe } from "@/lib/stripe/client"
+import { cancelDeletedAccountStripeSubscription } from "@/lib/stripe/deleted-account"
+import { reportAccountDeletionStripeRefundFailed } from "@/lib/observability/account-deletion"
+import { reconcileStripePriorPaidMembership } from "@/lib/stripe/trial-prior-paid-history"
 import {
   CheckoutActivationError,
   type CheckoutAccountResult,
@@ -43,6 +48,10 @@ import {
 } from "@/lib/billing/analytics-outbox"
 import type { BillingAnalyticsDestination, BillingInterval } from "@/lib/billing/types"
 import {
+  isTrialAnalyticsCandidate,
+  resolveTrialStartedAnalytics,
+} from "@/lib/billing/trial-analytics"
+import {
   identifyCustomerIoServerPerson,
   logCustomerIoServerResult,
   trackCustomerIoServerEvent,
@@ -60,6 +69,15 @@ import { captureCheckoutException } from "@/lib/observability/checkout"
 import type { PaymentFailureReporter } from "@/lib/observability/payment"
 import { captureServerPaymentFailure } from "@/lib/observability/payment-server"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
+import { readTrialRuntime } from "@/lib/billing/trial-runtime"
+import {
+  handleStripeTrialPaidRecoveryCompleted,
+  handleStripeTrialPaidRecoveryInvoice,
+} from "@/lib/stripe/trial-paid-recovery"
+import { handleStripeTrialManagementApprovalCompleted } from "@/lib/stripe/trial-management-approval"
+import { handleStripeTrialInvoice, type TrialInvoiceResult } from "@/lib/stripe/trial-invoice"
+
+import { respondToStripeWebhookFailure } from "@/lib/stripe/webhook-failure"
 
 export const runtime = "nodejs" // raw body required; edge runtime buffers differently
 /**
@@ -117,6 +135,10 @@ function stripeObjectIsInternalTest(object: unknown): boolean {
   )
 }
 
+function stripeObjectId(value: string | { id: string } | null | undefined): string | null {
+  return typeof value === "string" ? value : (value?.id ?? null)
+}
+
 export function shouldRecordStripePaymentCompleted(invoice: Stripe.Invoice) {
   const candidate = invoice as Stripe.Invoice & { billing_reason?: string | null }
   return candidate.billing_reason !== "subscription_create"
@@ -139,6 +161,30 @@ async function recordStripeBillingAnalytics(
   )
 }
 
+async function recordTrialInvoiceAnalytics(
+  trial: TrialInvoiceResult,
+  webhookOutcome: "succeeded" | "failed",
+  supabase: SupabaseClient,
+  defer: (work: () => void | Promise<void>) => void,
+) {
+  // The ledger owns facts and destinations. Failed invoices intentionally return
+  // payment:null; look up their canonical key without creating a new event.
+  // Retrieved paid truth takes precedence over a late failure webhook.
+  const phase = trial.payment?.result.phase
+  const name =
+    phase === "first_paid"
+      ? "purchase_completed"
+      : phase === "renewal"
+        ? "payment_completed"
+        : webhookOutcome === "failed"
+          ? "trial_first_payment_failed"
+          : null
+  if (!name) return
+  defer(async () => {
+    await dispatchBillingAnalyticsDue(supabase, { eventKey: `stripe:${name}:${trial.invoiceId}` })
+  })
+}
+
 async function recordStripeCheckoutAnalytics(input: {
   activation: CheckoutAccountResult
   defer: (work: () => void | Promise<void>) => void
@@ -152,6 +198,18 @@ async function recordStripeCheckoutAnalytics(input: {
 
   const interval = activation.subscriptionInterval
   if (interval !== "month" && interval !== "quarter" && interval !== "year") return
+  const trialCandidate = isTrialAnalyticsCandidate({ activation, session })
+  if (trialCandidate) {
+    // Canonical admission captures trial_started atomically; never fall through to Purchase.
+    const trial = resolveTrialStartedAnalytics({ activation, interval, session })
+    if (trial)
+      defer(async () => {
+        await dispatchBillingAnalyticsDue(supabase, {
+          eventKey: `stripe:trial_started:${trial.enrollmentId}`,
+        })
+      })
+    return
+  }
   const value = amountFromMinorUnits(session.amount_total)
   const currency = normalizedCurrency(session.currency)
   const purchasePricing = resolveStripeCheckoutPurchasePricing(session, interval)
@@ -302,6 +360,7 @@ function scheduleCheckoutCompletedSync(input: {
     ) {
       return
     }
+    if (isTrialAnalyticsCandidate({ activation, session })) return
     const sync = buildCustomerIoCheckoutCompletedSync({
       email: activation.email,
       interval: activation.subscriptionInterval,
@@ -326,6 +385,7 @@ type StripeWebhookEventDeps = StripeWebhookProvisioningDeps & {
   recordBillingAnalytics?: boolean
   captureCheckoutException?: typeof captureCheckoutException
   capturePaymentFailure?: PaymentFailureReporter
+  reportAccountDeletionRefundFailed?: typeof reportAccountDeletionStripeRefundFailed
 }
 
 export async function handleStripeWebhookEvent(event: Stripe.Event, deps: StripeWebhookEventDeps) {
@@ -339,12 +399,39 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     recordBillingAnalytics = false,
     captureCheckoutException: captureCheckout = captureCheckoutException,
     capturePaymentFailure: capturePayment = captureServerPaymentFailure,
+    reportAccountDeletionRefundFailed = reportAccountDeletionStripeRefundFailed,
   } = deps
   const timestamp = stripeEventTimestamp(event)
 
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as unknown as Stripe.Checkout.Session
+      if (session.metadata?.trial_paid_recovery_operation_id) {
+        const recovery = await handleStripeTrialPaidRecoveryCompleted({
+          sessionId: session.id,
+          client: supabase,
+          stripe,
+        })
+        if (!recovery || recovery.status === "pending" || recovery.status === "approval_required") {
+          throw new Error("Stripe paid recovery requires reconciliation")
+        }
+        break
+      }
+      if (session.metadata?.trial_management_purpose === "restore_authorization") {
+        const management = await handleStripeTrialManagementApprovalCompleted({
+          sessionId: session.id,
+          client: supabase,
+          stripe,
+        })
+        if (
+          !management ||
+          management.status === "pending" ||
+          management.status === "approval_required"
+        ) {
+          throw new Error("Stripe trial restoration requires reconciliation")
+        }
+        break
+      }
       if (
         session.metadata?.product_kind === PERSONAL_PLAN_ONCE_KIND &&
         session.mode === "payment"
@@ -359,6 +446,17 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
         })
         break
       }
+      if (
+        await cancelDeletedAccountStripeSubscription(
+          {
+            eventType: event.type,
+            subscriptionId: stripeObjectId(session.subscription),
+            metadata: session.metadata,
+          },
+          { supabase, stripe },
+        )
+      )
+        break
       let activation
       try {
         activation = await handleCheckoutSessionCompleted(session, {
@@ -432,6 +530,17 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     }
     case "checkout.session.async_payment_succeeded": {
       const session = event.data.object as unknown as Stripe.Checkout.Session
+      if (
+        await cancelDeletedAccountStripeSubscription(
+          {
+            eventType: event.type,
+            subscriptionId: stripeObjectId(session.subscription),
+            metadata: session.metadata,
+          },
+          { supabase, stripe },
+        )
+      )
+        break
       const activation = await handleCheckoutSessionAsyncPaymentSucceeded(session, {
         supabase,
         stripe,
@@ -555,7 +664,19 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
       const subscription = await stripe.subscriptions.retrieve(eventSubscription.id, {
         expand: ["items.data.price"],
       })
+      if (
+        await cancelDeletedAccountStripeSubscription(
+          {
+            eventType: event.type,
+            subscriptionId: subscription.id,
+            metadata: subscription.metadata,
+          },
+          { supabase, stripe },
+        )
+      )
+        break
       const result = await handleSubscriptionUpdated(subscription, {
+        stripe,
         supabase,
         defer,
       })
@@ -626,6 +747,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     case "customer.subscription.deleted": {
       const subscription = event.data.object as unknown as Stripe.Subscription
       const result = await handleSubscriptionDeleted(subscription, {
+        stripe,
         supabase,
         freeTierId: await resolveFreeTierId(supabase),
       })
@@ -679,6 +801,43 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     }
     case "invoice.payment_succeeded": {
       const invoice = event.data.object as unknown as Stripe.Invoice
+      const recoverySubscriptionId = invoiceSubscriptionId(invoice)
+      if (recoverySubscriptionId && readTrialRuntime()) {
+        const recovery = await handleStripeTrialPaidRecoveryInvoice({
+          subscriptionId: recoverySubscriptionId,
+          invoiceId: invoice.id,
+          client: supabase,
+          stripe,
+        })
+        if (recovery?.status === "pending" || recovery?.status === "approval_required") {
+          throw new Error("Stripe paid recovery requires reconciliation")
+        }
+        if (recovery?.invoice && recordBillingAnalytics) {
+          await recordTrialInvoiceAnalytics(recovery.invoice, "succeeded", supabase, defer)
+        }
+        // Its exact initial invoice was already fulfilled by the atomic recovery commit.
+        if (recovery?.status === "committed" || recovery?.status === "abandoned") break
+      }
+      const trial = await handleStripeTrialInvoice(
+        {
+          invoice,
+          eventId: event.id,
+          eventCreated: event.created,
+          outcome: "succeeded",
+        },
+        { supabase, stripe },
+      )
+      if (trial) {
+        if (recordBillingAnalytics)
+          await recordTrialInvoiceAnalytics(trial, "succeeded", supabase, defer)
+        break
+      }
+      // Approved identity processing reconciles legacy paid use independently of analytics.
+      // No configured runtime means no provider reads or new claim writes.
+      await reconcileStripePriorPaidMembership(
+        { invoiceId: invoice.id, apply: true },
+        { supabase, stripe },
+      )
       if (!shouldRecordStripePaymentCompleted(invoice)) break
       const customerId = stripeId(invoice.customer)
       if (!customerId) break
@@ -711,6 +870,22 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     }
     case "invoice.payment_failed": {
       const invoice = event.data.object as unknown as Stripe.Invoice
+      const trial = await handleStripeTrialInvoice(
+        {
+          invoice,
+          eventId: event.id,
+          eventCreated: event.created,
+          outcome: "failed",
+        },
+        { supabase, stripe },
+      )
+      if (trial) {
+        // A late failure delivery may retrieve an already paid invoice. Reconcile
+        // that success instead of downgrading access or sending a failure email.
+        if (recordBillingAnalytics)
+          await recordTrialInvoiceAnalytics(trial, "failed", supabase, defer)
+        break
+      }
       capturePayment({
         signal: "provider_payment_failed",
         provider: "stripe",
@@ -833,6 +1008,20 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
         })
       break
     }
+    case "refund.failed": {
+      const refund = event.data.object as unknown as Stripe.Refund
+      // A deletion refund (D14/R-a) that failed after it was sent, possibly after its row was
+      // settled: an operator follows up by hand; the event is acknowledged, nothing changes.
+      if (refund.metadata?.source === "account_deletion") {
+        reportAccountDeletionRefundFailed({
+          kind: refund.metadata.kind,
+          failureReason: refund.failure_reason,
+        })
+        break
+      }
+      console.warn("[stripe] unhandled event type:", event.type)
+      break
+    }
     default:
       console.warn("[stripe] unhandled event type:", event.type)
   }
@@ -875,23 +1064,23 @@ export async function POST(req: NextRequest) {
   try {
     await handleStripeWebhookEvent(event, { supabase, stripe, recordBillingAnalytics: true })
   } catch (err) {
-    const message = err instanceof Error ? err.message : "unknown"
-    await releaseWebhookEventClaim(supabase, "stripe", event.id)
-    captureServerPaymentFailure({
-      signal: "payment_webhook_processing_failed",
-      provider: "stripe",
-      boundary: "webhook",
-      errorFamily: "webhook_processing",
-      commerceKind: stripeWebhookCommerceKind(event),
-      origin: "webhook",
-      method: "unknown",
-      truth: "unknown",
-      live: paymentRuntime().stripeLive,
-      isInternalTest: false,
-      providerReferencePresent: Boolean(event.id),
+    return respondToStripeWebhookFailure(event, err, {
+      releaseClaim: () => releaseWebhookEventClaim(supabase, "stripe", event.id),
+      captureFailure: () =>
+        captureServerPaymentFailure({
+          signal: "payment_webhook_processing_failed",
+          provider: "stripe",
+          boundary: "webhook",
+          errorFamily: "webhook_processing",
+          commerceKind: stripeWebhookCommerceKind(event),
+          origin: "webhook",
+          method: "unknown",
+          truth: "unknown",
+          live: paymentRuntime().stripeLive,
+          isInternalTest: false,
+          providerReferencePresent: Boolean(event.id),
+        }),
     })
-    console.error("[stripe] handler error:", err)
-    return new NextResponse(`handler error: ${message}`, { status: 500 })
   }
 
   console.info("[stripe:webhook] handled", {
@@ -900,6 +1089,7 @@ export async function POST(req: NextRequest) {
     durationMs: Date.now() - startedAt,
   })
 
+  deferRequiredTrialNotices(after)
   return NextResponse.json({ received: true })
 }
 

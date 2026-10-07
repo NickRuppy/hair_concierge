@@ -1,0 +1,27 @@
+[
+  {
+    "id": "50951ef2-e16a-4a51-85c5-a709aa64c03a",
+    "name": "Maria Nila Coils & Curls Oil in Cream",
+    "oldPrice": 31,
+    "observedPrice": 22.5,
+    "volumeMl": 100,
+    "gtin": "07391681403741",
+    "evidenceUrl": "https://www.flaconi.de/haare/maria-nila/coils-and-curls/maria-nila-coils-and-curls-oil-in-cream-leave-in-treatment.html?variant=90001423-0002071",
+    "source": "live browser selected 100 ml and expanded manufacturer EAN",
+    "available": true,
+    "decision": "Use actual unconditional bottle price, consistent with approved discount-price policy; reject research answer 31 which substituted manufacturer regular price despite linked retailer discount."
+  },
+  {
+    "id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+    "name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+    "oldPrice": 8.95,
+    "observedPrice": 5.4,
+    "volumeMl": 350,
+    "gtin": "04897097266343",
+    "evidenceUrl": "https://www.flaconi.de/haare/monday-haircare/volume/monday-haircare-volume-kraft-and-fuelle-haarshampoo.html?variant=90008661-0013372",
+    "source": "Live browser selected sole 350ml variant, stock Auf Lager, expanded manufacturer EAN4897097266343; no coupon required",
+    "available": true,
+    "decision": "Nick explicitly approved EUR5.40/350ml; price+stamp applied and independently verified at2026-10-01T09:36:33.748Z; barcode,link,package fields unchanged",
+    "checkedAt": "2026-10-01T09:19:50.590474+00:00"
+  }
+]

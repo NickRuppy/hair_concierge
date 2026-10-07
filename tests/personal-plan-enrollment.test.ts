@@ -6,6 +6,246 @@ import { loadPersonalPlanRoutingFrontierForUser } from "../src/lib/personal-plan
 
 type Row = Record<string, unknown>
 
+test("partner access retains its routing exemption when the account also has a trial", async () => {
+  const calls: string[] = []
+  const result = await loadPersonalPlanRoutingFrontierForUser(
+    {
+      rpc: async (name: string) => {
+        calls.push(name)
+        return {
+          data: {
+            source_kind:
+              name === "personal_plan_get_own_partner_routing_source" ? "partner" : "trial",
+            qualified_at: "2026-09-15T19:48:05Z",
+            quiz_source_kind: "legacy",
+            plan: { current_initial_need_version_id: "need-1" },
+          },
+          error: null,
+        }
+      },
+    } as never,
+    "user-1",
+    {
+      cohortCutoff: () => new Date("2026-10-01"),
+      legacyQuizCutoverEnabled: () => false,
+      migrationEnabled: () => false,
+      appAllowedForUser: async () => true,
+    },
+  )
+  assert.deepEqual(result, { kind: "personal_plan", frontier: "stage2", nextHref: "/plan-start" })
+  assert.deepEqual(calls, [
+    "personal_plan_get_own_routing_source",
+    "personal_plan_get_own_partner_routing_source",
+  ])
+})
+
+const trialEnrollmentId = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"
+const trialLeadId = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb"
+const trialSource = {
+  enrollment_id: trialEnrollmentId,
+  lead_id: trialLeadId,
+  quiz_source_kind: "legacy",
+  qualified_at: "2026-09-15T19:48:05Z",
+}
+const trialRelease = {
+  legacyQuizCutoverEnabled: () => true,
+  migrationEnabled: () => false,
+  cohortCutoff: () => new Date("2026-08-08T00:00:00Z"),
+  appAllowedForUser: async () => true,
+}
+
+function trialClient(
+  input: {
+    provider?: "paypal" | "stripe"
+    source?: unknown
+    accessRevoked?: boolean
+    leadOwner?: string
+    rpcError?: unknown
+  } = {},
+) {
+  const calls: string[] = []
+  const admin = client({
+    billing_subscriptions: [
+      {
+        ...subscription,
+        provider: input.provider ?? "paypal",
+        metadata: { trial_cohort: "trial_v1" },
+        trial_enrollment_id: trialEnrollmentId,
+        trial_access_facts: {
+          version: 1,
+          enrollmentId: trialEnrollmentId,
+          admissionStatus: "active",
+          authorizationSucceededAt: "2026-09-15T19:48:05Z",
+          originalTrialEndAt: "2026-09-24T00:00:00Z",
+          firstPaymentSucceededAt: null,
+          paidThroughAt: null,
+          renewalGraceEndsAt: null,
+          renewalPaymentFailed: false,
+          cancelAtPeriodEnd: false,
+          accessRevoked: input.accessRevoked ?? false,
+        },
+      },
+    ],
+    leads: [{ id: trialLeadId, user_id: input.leadOwner ?? "user-1", quiz_kind: "legacy" }],
+  })
+  return {
+    ...admin,
+    calls,
+    rpc: async (name: string, args: unknown) => {
+      calls.push(name)
+      if (name === "personal_plan_resolve_trial_source") {
+        assert.deepEqual(args, { p_user_id: "user-1" })
+        return {
+          data: input.source === undefined ? trialSource : input.source,
+          error: input.rpcError ?? null,
+        }
+      }
+      return { data: { status: "ineligible" }, error: null }
+    },
+  }
+}
+
+for (const provider of ["paypal", "stripe"] as const) {
+  test(`unpaid ${provider} trial resolves its exact quiz without paid attribution`, async () => {
+    const admin = trialClient({ provider })
+    assert.deepEqual(
+      await findPersonalPlanEnrollmentForUser(
+        admin as never,
+        "user-1",
+        new Date("2026-09-15T20:00:00Z"),
+        trialRelease,
+      ),
+      {
+        accessState: "active",
+        sourceId: trialEnrollmentId,
+        paidAt: null,
+        qualifiedAt: trialSource.qualified_at,
+        artifactLeadId: trialLeadId,
+        quizSourceKind: "legacy",
+        sourceKind: "trial",
+      },
+    )
+    assert.equal(
+      admin.queries.some((q) => q.table === "funnel_sessions"),
+      false,
+    )
+  })
+}
+
+test("trial source rejects mismatched enrollment, malformed payload and changed lead ownership", async () => {
+  for (const input of [
+    { source: null },
+    { source: [] },
+    { source: { ...trialSource, enrollment_id: "another" } },
+    { source: { ...trialSource, qualified_at: "invalid" } },
+    { source: { ...trialSource, qualified_at: "2027-01-01T00:00:00Z" } },
+    { source: { ...trialSource, quiz_source_kind: "personal_plan" } },
+    { leadOwner: "someone-else" },
+  ]) {
+    assert.equal(
+      (
+        await findPersonalPlanEnrollmentForUser(
+          trialClient(input) as never,
+          "user-1",
+          new Date("2026-09-15T20:00:00Z"),
+          trialRelease,
+        )
+      ).sourceId,
+      null,
+    )
+  }
+})
+
+test("revoked and expired trial projections never resolve a plan source", async () => {
+  for (const [admin, now] of [
+    [trialClient({ accessRevoked: true }), new Date("2026-09-15T20:00:00Z")],
+    [trialClient(), new Date("2026-09-26T00:00:00Z")],
+  ] as const) {
+    assert.equal(
+      (await findPersonalPlanEnrollmentForUser(admin as never, "user-1", now, trialRelease))
+        .sourceId,
+      null,
+    )
+    assert.equal(admin.calls.includes("personal_plan_resolve_trial_source"), false)
+  }
+})
+
+test("trial read failures remain errors rather than an absent source", async () => {
+  const error = new Error("trial source unavailable")
+  await assert.rejects(
+    findPersonalPlanEnrollmentForUser(
+      trialClient({ rpcError: error }) as never,
+      "user-1",
+      new Date("2026-09-15T20:00:00Z"),
+      trialRelease,
+    ),
+    error,
+  )
+})
+
+test("trial legacy eligibility cannot inherit the historical-paid migration bypass", async () => {
+  for (const release of [
+    { ...trialRelease, legacyQuizCutoverEnabled: () => false },
+    { ...trialRelease, cohortCutoff: () => new Date("2026-10-01") },
+    { ...trialRelease, appAllowedForUser: async () => false },
+  ]) {
+    assert.equal(
+      (
+        await findPersonalPlanEnrollmentForUser(
+          trialClient() as never,
+          "user-1",
+          new Date("2026-09-15T20:00:00Z"),
+          { ...release, migrationEnabled: () => true },
+        )
+      ).sourceId,
+      null,
+    )
+  }
+})
+
+test("trial routing recognizes ready and pending plans while retaining ordinary cohort gates", async () => {
+  const source = {
+    source_kind: "trial",
+    qualified_at: trialSource.qualified_at,
+    quiz_source_kind: "legacy",
+    plan: null as unknown,
+  }
+  const load = (release = trialRelease) =>
+    loadPersonalPlanRoutingFrontierForUser(
+      {
+        rpc: async (name: string) => ({
+          data: name === "personal_plan_get_own_routing_source" ? source : null,
+          error: null,
+        }),
+      } as never,
+      "user-1",
+      release,
+    )
+  assert.deepEqual(await load(), { kind: "recovery", nextHref: "/plan-bereit" })
+  source.plan = { current_initial_need_version_id: "need-1" }
+  assert.deepEqual(await load(), {
+    kind: "personal_plan",
+    frontier: "stage2",
+    nextHref: "/plan-start",
+  })
+  assert.deepEqual(
+    await load({
+      ...trialRelease,
+      migrationEnabled: () => true,
+      legacyQuizCutoverEnabled: () => false,
+    }),
+    { kind: "legacy" },
+  )
+  assert.deepEqual(
+    await load({
+      ...trialRelease,
+      migrationEnabled: () => true,
+      cohortCutoff: () => new Date("2026-10-01"),
+    }),
+    { kind: "legacy" },
+  )
+})
+
 function client(responses: Record<string, Row[]>, errors: Record<string, unknown> = {}) {
   const queries: Array<{
     table: string

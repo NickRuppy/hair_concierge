@@ -289,7 +289,7 @@ test("the Stage 3 CI browser suite isolates the production lab from development 
 
   assert.equal(
     aggregateCommand,
-    "CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true PERSONAL_PLAN_APP_V1_ENABLED=true PERSONAL_PLAN_STAGE2_ENABLED=true PERSONAL_PLAN_STAGE3_ENABLED=true npm run build && npm run test:playwright:personal-plan-stage3:lab && npm run test:playwright:personal-plan-stage3:journey",
+    "CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true PERSONAL_PLAN_APP_V1_ENABLED=true PERSONAL_PLAN_STAGE2_ENABLED=true PERSONAL_PLAN_STAGE3_ENABLED=true npm run build && npm run test:playwright:personal-plan-stage3:lab && npm run test:playwright:personal-plan-stage3:journey && npm run test:playwright:scanner-refinement",
   )
 
   assert.match(labCommand, /^WAIT_ON_TIMEOUT=60000 /)
@@ -316,11 +316,11 @@ test("the Stage 3 CI browser suite isolates the production lab from development 
   assert.match(journeyCommand, /PLAYWRIGHT_BASE_URL=http:\/\/127\.0\.0\.1:3217/)
   assert.match(
     journeyCommand,
-    /playwright test tests\/personal-plan-start\.spec\.ts tests\/personal-plan-feinschliff-journey\.spec\.ts tests\/personal-plan-stage2-refinement\.spec\.ts tests\/personal-plan-stage1-2-3\.spec\.ts tests\/personal-plan-application-transition\.spec\.ts tests\/personal-plan-routine-editor\.spec\.ts tests\/personal-plan-stage3-focus\.spec\.ts tests\/personal-plan-preparation-browser\.spec\.ts tests\/scan-flow\.spec\.ts tests\/scan-funnel-journey\.spec\.ts --project=chromium/,
+    /playwright test tests\/personal-plan-start\.spec\.ts tests\/personal-plan-feinschliff-journey\.spec\.ts tests\/personal-plan-stage2-refinement\.spec\.ts tests\/personal-plan-stage1-2-3\.spec\.ts tests\/personal-plan-application-transition\.spec\.ts tests\/personal-plan-routine-editor\.spec\.ts tests\/personal-plan-stage3-focus\.spec\.ts tests\/personal-plan-preparation-browser\.spec\.ts tests\/scan-flow\.spec\.ts tests\/scan-funnel-journey\.spec\.ts tests\/public-contract-declarations\.spec\.ts tests\/profile-trial-membership\.spec\.ts tests\/waitlist-b-quiz-gate\.spec\.ts --project=chromium/,
   )
   assert.match(
     journeyCommand,
-    /playwright test tests\/personal-plan-stage3-focus\.spec\.ts tests\/personal-plan-preparation-browser\.spec\.ts tests\/scan-funnel-journey\.spec\.ts --project=webkit-mobile-action/,
+    /playwright test tests\/personal-plan-stage3-focus\.spec\.ts tests\/personal-plan-preparation-browser\.spec\.ts tests\/scan-funnel-journey\.spec\.ts tests\/public-contract-declarations\.spec\.ts tests\/profile-trial-membership\.spec\.ts --project=webkit-mobile-action/,
   )
   assert.doesNotMatch(journeyCommand, /tests\/personal-plan-stage3\.spec\.ts/)
 
@@ -350,6 +350,10 @@ test("the Stage 3 CI browser suite isolates the production lab from development 
   assert.match(
     qualityPersonalPlanJourney,
     /- name: Install Playwright browsers\n        run: npx playwright install --with-deps chromium webkit/,
+  )
+  assert.match(
+    qualityPersonalPlanJourney,
+    /- name: Run scanner refinement journeys\n        run: npm run test:playwright:scanner-refinement/,
   )
   assert.match(qualityPersonalPlan, /^    timeout-minutes: 10$/m)
   // M1: raised from 10 so a run cannot be SIGKILLed mid-afterAll while the live

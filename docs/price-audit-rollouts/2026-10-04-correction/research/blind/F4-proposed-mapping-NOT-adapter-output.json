@@ -1,0 +1,35 @@
+{
+  "status": "conditional_proposal_identity_unbound",
+  "suitable_thicknesses": [
+    "normal",
+    "coarse"
+  ],
+  "category_specs": {
+    "product_conditioner_specs": [
+      {
+        "thickness": "normal",
+        "protein_moisture_balance": "stretches_bounces"
+      },
+      {
+        "thickness": "coarse",
+        "protein_moisture_balance": "stretches_bounces"
+      }
+    ],
+    "product_conditioner_rerank_specs": {
+      "weight": "rich",
+      "repair_level": "medium",
+      "balance_direction": "balanced",
+      "ingredient_flags": [
+        "oils",
+        "proteins",
+        "humectants"
+      ]
+    }
+  },
+  "required_protocol_role": "conditioner_rinse_out",
+  "blockers": [
+    "Post-blind exact identity/source binding",
+    "Reconcile uncertain fields without catalog-label tie breaking"
+  ],
+  "source_envelope": "F4-conditioner-envelope.json"
+}

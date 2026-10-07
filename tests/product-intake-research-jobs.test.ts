@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { readFileSync } from "node:fs"
+import { readdirSync, readFileSync, rmSync } from "node:fs"
 import test from "node:test"
 
 import {
@@ -7,6 +7,7 @@ import {
   type ProductIntakeReviewCategoryKey,
 } from "../src/lib/product-intake/category-validators"
 import {
+  PRODUCT_INTAKE_ARTIFACT_KINDS,
   PRODUCT_INTAKE_NON_TERMINAL_JOB_STATUSES,
   PRODUCT_INTAKE_OPEN_SUBMISSION_STATUSES,
   PRODUCT_INTAKE_RETRYABLE_JOB_STATUSES,
@@ -18,6 +19,12 @@ import {
   finalImageUploadDecisionFromArtifacts,
 } from "../apps/product-intake-review/app/api/submissions/[submissionId]/publish/final-image-handoff"
 import { buildReviewPropertyRows } from "../apps/product-intake-review/app/submissions/[submissionId]/review-property-rows"
+import {
+  createRetailerEnrichmentWarningReporter,
+  parseRetailerEnrichmentPacket,
+  retailerEnrichmentPacketFromIntakeHistory,
+} from "../scripts/product-intake/retailer-enrichment-packet"
+import { writePromptPacket } from "../scripts/product-intake/codex-research-worker"
 
 const migration = readFileSync(
   "supabase/migrations/20260630120000_product_intake_research_jobs.sql",
@@ -25,6 +32,10 @@ const migration = readFileSync(
 )
 const artifactMigration = readFileSync(
   "supabase/migrations/20260630130000_product_intake_research_artifacts_decisions.sql",
+  "utf8",
+)
+const modelEvaluationArtifactMigration = readFileSync(
+  "supabase/migrations/20260925061101_product_intake_model_evaluation_artifacts.sql",
   "utf8",
 )
 const reworkAttemptsMigration = readFileSync(
@@ -37,6 +48,9 @@ const autoEnqueueMigration = readFileSync(
 )
 const normalizedMigration = migration.toLowerCase().replace(/\s+/g, " ")
 const normalizedArtifactMigration = artifactMigration.toLowerCase().replace(/\s+/g, " ")
+const normalizedModelEvaluationArtifactMigration = modelEvaluationArtifactMigration
+  .toLowerCase()
+  .replace(/\s+/g, " ")
 const normalizedReworkAttemptsMigration = reworkAttemptsMigration.toLowerCase().replace(/\s+/g, " ")
 const normalizedAutoEnqueueMigration = autoEnqueueMigration.toLowerCase().replace(/\s+/g, " ")
 const packageJson = JSON.parse(readFileSync("package.json", "utf8")) as {
@@ -60,7 +74,15 @@ const appPackageJson = JSON.parse(
   scripts: Record<string, string>
 }
 const eslintConfig = readFileSync("eslint.config.mjs", "utf8")
-const workerScript = readFileSync("scripts/product-intake/codex-research-worker.ts", "utf8")
+// Category contracts moved into the research router (Slice 1); text assertions cover both files.
+const workerScript = [
+  readFileSync("scripts/product-intake/codex-research-worker.ts", "utf8"),
+  readFileSync("src/lib/product-intake/category-research-router.ts", "utf8"),
+  ...readdirSync("src/lib/product-intake/pipeline")
+    .filter((file) => file.endsWith(".ts"))
+    .sort()
+    .map((file) => readFileSync(`src/lib/product-intake/pipeline/${file}`, "utf8")),
+].join("\n")
 const repositorySource = readFileSync("packages/product-intake-core/src/repository.ts", "utf8")
 const serviceClientSource = readFileSync(
   "apps/product-intake-review/app/api/_lib/service-client.ts",
@@ -114,6 +136,182 @@ const REVIEW_CATEGORY_KEYS: ProductIntakeReviewCategoryKey[] = [
   "heat_protectant",
   "scalp_care",
 ]
+
+test("Bondbuilder worker prompt requires current full research instead of legacy intensity specs", (t) => {
+  const path = writePromptPacket(
+    {
+      id: "bondbuilder-prompt-contract-job",
+      submission_id: "00000000-0000-4000-8000-000000000777",
+      status: "running",
+      stage: "source_research",
+      priority: 0,
+      attempt_count: 1,
+      max_attempts: 3,
+      locked_by: "worker-test",
+      locked_at: "2026-10-02T10:00:00.000Z",
+      started_at: "2026-10-02T10:00:00.000Z",
+      completed_at: null,
+      next_run_at: "2026-10-02T10:05:00.000Z",
+      last_error: null,
+      progress: {},
+      created_at: "2026-10-02T09:59:00.000Z",
+      updated_at: "2026-10-02T10:00:00.000Z",
+    },
+    "worker-test",
+    {
+      id: "00000000-0000-4000-8000-000000000777",
+      status: "researching",
+      category: "bondbuilder",
+      brand: "Example",
+      product_name: "Bond Treatment",
+      source: "manual",
+      payload: {},
+      created_at: "2026-10-02T09:59:00.000Z",
+      updated_at: "2026-10-02T10:00:00.000Z",
+      job: null,
+      artifacts: [],
+      decisions: [],
+    },
+    {
+      submitted_brand_text: "Example",
+      submitted_product_name_text: "Bond Treatment",
+      scanned_identifier: null,
+      lookup_text: "Example Bond Treatment",
+      resolved_brand: null,
+      nearby_brand_options: [],
+      catalog_summary: {},
+      rules: [],
+    },
+    null,
+  )
+  t.after(() => rmSync(path, { force: true }))
+
+  const packet = JSON.parse(readFileSync(path, "utf8")) as {
+    category_contract: {
+      bondbuilder_research: Record<string, unknown>
+    }
+  }
+  const prepared = packet.category_contract.bondbuilder_research
+
+  assert.ok(prepared, "real worker packet must use the active research contract")
+  assert.equal(prepared.enabled, true)
+  assert.equal(
+    (prepared.required_artifact as { payload_key: string }).payload_key,
+    "bondbuilder_research_envelope",
+  )
+  assert.deepEqual((prepared.profile as { required_roots: string[] }).required_roots, [
+    "method",
+    "identity",
+    "formula",
+    "assessment",
+    "technology_reference",
+    "application",
+    "evidence",
+    "explanations_de",
+    "sources",
+    "fit",
+    "holds",
+    "review",
+  ])
+  assert.doesNotMatch(JSON.stringify(packet.category_contract), /bond_repair_intensity/)
+  assert.match(JSON.stringify(prepared), /owner_default/)
+  assert.doesNotMatch(JSON.stringify(prepared), /bond_repair_intensity/)
+  const reference = (prepared.profile as { technology_reference: Record<string, unknown> })
+    .technology_reference
+  assert.equal(reference.formula_digest, "normalized_sha256")
+  assert.equal(reference.marker_encoding, "exact_normalized_literal")
+})
+
+test("worker packet keeps only exact-GTIN dm provenance and makes retailer images candidates", () => {
+  const history = [
+    {
+      at: "2026-09-17T10:00:01.000Z",
+      source: "retailer_enrichment",
+      retailer: "dm",
+      enrichment: {
+        source: "dm",
+        fetchedAt: "2026-09-17T10:00:00.000Z",
+        gtin: "4001638530378",
+        dan: "1234567",
+        productName: "Exact product",
+        brand: "DM",
+        imageUrl: "https://products.dm-static.com/images/example.png",
+        productUrl: "https://www.dm.de/example",
+        ingredientsText: "Aqua",
+        suggestedCategory: "mask",
+      },
+    },
+  ]
+
+  const packet = retailerEnrichmentPacketFromIntakeHistory(history, {
+    type: "ean",
+    value: "4001638530378",
+  })
+
+  assert.deepEqual(packet, {
+    source: "dm",
+    fetched_at: "2026-09-17T10:00:00.000Z",
+    gtin: "4001638530378",
+    dan: "1234567",
+    product_name: "Exact product",
+    brand: "DM",
+    ingredients_text: "Aqua",
+    product_url: "https://www.dm.de/example",
+    image_url_candidate: "https://products.dm-static.com/images/example.png",
+    suggested_category: "mask",
+  })
+  assert.equal("image_url" in (packet ?? {}), false)
+
+  const mismatch = retailerEnrichmentPacketFromIntakeHistory(history, {
+    type: "ean",
+    value: "4006381333931",
+  })
+  assert.equal(mismatch, null)
+})
+
+test("worker packet reports an exact-GTIN mismatch without preserving a packet or leaking payload", () => {
+  const parsed = parseRetailerEnrichmentPacket(
+    [
+      {
+        source: "retailer_enrichment",
+        retailer: "dm",
+        enrichment: {
+          source: "dm",
+          fetchedAt: "2026-09-17T10:00:00.000Z",
+          gtin: "4001638530378",
+          dan: "1234567",
+          productName: "Secret product name",
+        },
+      },
+    ],
+    { type: "ean", value: "4006381333931" },
+  )
+
+  assert.deepEqual(parsed, { packet: null, warning: "gtin_mismatch" })
+
+  const emitted: Array<{ message: string; fields: Record<string, string> }> = []
+  let now = 1_000
+  const report = createRetailerEnrichmentWarningReporter({
+    now: () => now,
+    emit: (message, fields) => emitted.push({ message, fields }),
+  })
+
+  report(parsed.warning)
+  report(parsed.warning)
+  now += 60_000
+  report(parsed.warning)
+
+  assert.deepEqual(emitted, [
+    {
+      message: "product_intake_retailer_enrichment_warning",
+      fields: { reason: "gtin_mismatch", source: "dm" },
+    },
+    {
+      message: "product_intake_retailer_enrichment_warning",
+      fields: { reason: "gtin_mismatch", source: "dm" },
+    },
+  ])
+})
 
 const ARRAY_SPEC_TABLES = new Set([
   "product_shampoo_specs",
@@ -307,7 +505,6 @@ function validCategorySpecsForAudit(
           weight: "light",
           roles: ["styling_prep"],
           provides_heat_protection: true,
-          heat_protection_max_c: 220,
           heat_activation_required: false,
           care_benefits: ["moisture", "anti_frizz"],
           ingredient_flags: ["polymers"],
@@ -599,6 +796,7 @@ test("review cockpit kicks the local Codex worker after enqueueing work", () => 
   assert.match(workerKickSource, /findRepoRoot/)
   assert.match(workerKickSource, /PRODUCT_INTAKE_CODEX_CONCURRENCY/)
   assert.match(workerKickSource, /PRODUCT_INTAKE_CODEX_WORKER_POLL_MS/)
+  assert.match(workerKickSource, /PRODUCT_INTAKE_CODEX_WORKER_EXTERNAL/)
 
   for (const source of [
     researchRouteSource,
@@ -658,6 +856,19 @@ test("artifact and review decision migration is service-role protected", () => {
     /grant execute on function public\.product_intake_request_rework_job/,
   )
   assert.match(normalizedArtifactMigration, /decision in \( 'approved', 'change_requested'/)
+})
+
+test("model evaluation artifacts are part of the shared Product Intake contract", () => {
+  assert.equal(PRODUCT_INTAKE_ARTIFACT_KINDS.includes("model_run" as never), true)
+  assert.equal(PRODUCT_INTAKE_ARTIFACT_KINDS.includes("model_judgment" as never), true)
+  assert.match(
+    normalizedModelEvaluationArtifactMigration,
+    /drop constraint if exists product_intake_research_artifacts_kind_check/,
+  )
+  assert.match(normalizedModelEvaluationArtifactMigration, /'model_run'/)
+  assert.match(normalizedModelEvaluationArtifactMigration, /'model_judgment'/)
+  assert.doesNotMatch(normalizedModelEvaluationArtifactMigration, /grant .* anon/)
+  assert.doesNotMatch(normalizedModelEvaluationArtifactMigration, /grant .* authenticated/)
 })
 
 test("detail page exposes research artifacts, comments, rework, and preflight controls", () => {
@@ -731,7 +942,7 @@ test("detail page exposes research artifacts, comments, rework, and preflight co
   assert.match(submissionActionsSource, /publishCompleted\s*\?\s*"completedButton"/)
   assert.match(submissionActionsSource, /Entscheidung speichern/)
   assert.match(submissionActionsSource, /Bild passt/)
-  assert.match(submissionActionsSource, /Rohbild freigegeben/)
+  assert.match(submissionActionsSource, /Bildquelle vorbereitet/)
   assert.match(submissionActionsSource, /Bild passt nicht/)
   assert.match(submissionActionsSource, /neues Bild suchen/)
   assert.match(submissionActionsSource, /requestImageSearchRework/)
@@ -853,7 +1064,6 @@ test("review property rows show exact database field paths and raw approval valu
         weight: "medium",
         roles: ["styling_prep", "extension_conditioner"],
         provides_heat_protection: true,
-        heat_protection_max_c: 230,
         heat_activation_required: false,
         care_benefits: ["repair", "protein", "shine", "anti_frizz"],
         ingredient_flags: ["silicones", "oils", "proteins", "humectants"],
@@ -917,7 +1127,6 @@ test("review property rows show exact database field paths and raw approval valu
   assert.equal(valuesByPath.get("product_conditioner_rerank_specs[0].balance_direction"), "null")
   assert.equal(valuesByPath.get("product_mask_specs[0].ingredient_flags"), '["humectants","oils"]')
   assert.equal(valuesByPath.get("product_leave_in_specs[0].provides_heat_protection"), "true")
-  assert.equal(valuesByPath.get("product_leave_in_specs[0].heat_protection_max_c"), "230")
   assert.equal(valuesByPath.get("product_leave_in_specs[0].heat_activation_required"), "false")
   assert.equal(
     valuesByPath.get("product_leave_in_specs[0].roles"),
@@ -967,7 +1176,9 @@ test("shampoo approval specs require explicit scalp routes", () => {
   const validation = validateProductIntakeApprovalPayload(payload)
 
   assert.equal(validation.ok, false)
+  // Diagnostics are exhaustive since Slice 1 (1.4): the missing protocol rows are reported too.
   assert.deepEqual(validation.missingFields, [
+    "final.category_specs.product_application_protocols",
     "final.category_specs.product_shampoo_specs.0.scalp_route",
   ])
 })
@@ -1048,10 +1259,23 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /PRODUCT_INTAKE_CODEX_BIN/)
   assert.match(workerScript, /Codex\.app\/Contents\/Resources\/codex/)
   assert.match(workerScript, /codexBinaryForWorker/)
-  assert.match(workerScript, /spawnSync\(\s*codexBinary/)
+  assert.match(workerScript, /spawn\(\s*codexBinary/)
+  assert.match(workerScript, /spawn: WorkerSpawn = runWorkerProcess/)
+  assert.match(workerScript, /stdio: \["ignore", "pipe", "pipe"\]/)
   assert.match(workerScript, /Codex CLI terminated by/)
   assert.match(workerScript, /Codex CLI failed to start/)
-  assert.match(workerScript, /refreshing worker lease before writes/)
+  assert.match(workerScript, /worker lease refreshed/)
+  assert.match(workerScript, /model_run/)
+  assert.match(workerScript, /model_judgment/)
+  assert.match(workerScript, /challenger_medium/)
+  assert.match(workerScript, /preferred_lane/)
+  assert.ok(
+    workerScript.indexOf("const progress = await persistResearchOutput") <
+      workerScript.indexOf("const evaluationRun = await runNonFatalModelEvaluation"),
+    "production research must persist before optional shadow evaluation",
+  )
+  assert.match(workerScript, /currentJob: \(\) => leasedJob/)
+  assert.match(workerScript, /onLeaseRefresh: \(refreshedJob\) => \{\s*leasedJob = refreshedJob/)
   assert.match(workerScript, /--execute-codex/)
   assert.match(workerScript, /service_tier/)
   assert.match(workerScript, /PRODUCT_INTAKE_CODEX_SERVICE_TIER/)
@@ -1072,9 +1296,10 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /approval_payload_schema/)
   assert.match(workerScript, /approvalPayloadContract/)
   assert.match(workerScript, /categoryApprovalContract/)
-  assert.match(workerScript, /derive Shampoo protocol roles from the reviewed Shampoo buckets/i)
-  assert.match(workerScript, /A schuppen-only Shampoo is complete without shampoo_everyday/i)
+  // Protocol slot contracts and derived roles are covered by the router and stage suites.
   assert.match(workerScript, /loadBrandResolutionCatalogForWorker/)
+  assert.match(workerScript, /retailer_enrichment/)
+  assert.match(workerScript, /scanned_identifier_type, scanned_identifier_value, intake_history/)
   assert.match(workerScript, /brand_resolution_context/)
   assert.match(workerScript, /resolveBrandFromText/)
   assert.match(workerScript, /brands"\)\.select\("id, canonical_name, normalized_name"\)/)
@@ -1113,7 +1338,6 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /commercial_source_contract/)
   assert.match(workerScript, /Official brand\/manufacturer product page/)
   assert.match(workerScript, /dm > Rossmann > Müller > brand-direct > Amazon DE/)
-  assert.match(workerScript, /brand-direct > Amazon DE > dm > Rossmann/)
   assert.match(workerScript, /targeted_preferred_retailer_searches/)
   assert.match(workerScript, /site:dm\.de/)
   assert.match(workerScript, /site:rossmann\.de/)
@@ -1164,7 +1388,6 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /suitable_thicknesses/)
   assert.match(workerScript, /repair_support_level/)
   assert.match(workerScript, /functional_benefits/)
-  assert.match(workerScript, /intensive_conditioning_mask/)
   assert.match(workerScript, /product_oil_eligibility/)
   assert.match(
     workerScript,

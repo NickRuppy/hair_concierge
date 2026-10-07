@@ -1,6 +1,9 @@
 import { computeNeedPlan } from "../compute-stage1"
+import type { SyncPlanWithFacts } from "../facts-recompute/types"
 import { buildLegacyQuizStage1Source } from "../input"
 import type { QuizAnswers } from "@/lib/quiz/types"
+import { toStage1SourceFromFacts, type UserFacts } from "@/lib/user-facts/read"
+import { UnsupportedUserFactsSourceError, UserFactsIncompleteError } from "@/lib/user-facts/schema"
 import { hashPersonalPlanNeedVersionInput, type JsonValue } from "./index"
 
 export const PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION = "stage1-v1"
@@ -24,6 +27,7 @@ export type Stage1Entitlement = {
     | "partner"
     | "migration"
     | "freemium"
+    | "trial"
     | null
 }
 
@@ -71,6 +75,19 @@ export type Stage1PersistenceDependencies = {
   ) => Promise<Extract<Stage1LoadOrCreateResult, { status: "completed" }> | null>
   loadArtifact: (userId: string, artifactLeadId: string) => Promise<Stage1PreparedArtifact | null>
   loadLegacyLead?: (userId: string, leadId: string) => Promise<Stage1LegacyLead | null>
+  /** The profile facts the Stage-1 source is built from. Absent = the artifact / lead envelope. */
+  loadFacts?: (userId: string) => Promise<UserFacts | null>
+  /**
+   * The user's existing plan and its current initial version (owner-scoped), or `null` without a
+   * plan. With it, a plan whose initial `inputHash` differs from the facts hash is moved by
+   * `syncPlanWithFacts` instead of `createOrReuseInitialNeed`. Absent = today's path.
+   */
+  loadExistingPlan?: (userId: string) => Promise<{
+    personalPlanId: string
+    currentInitial: { needVersionId: string; inputHash: string; outputSnapshot: JsonValue }
+  } | null>
+  /** The facts recompute lane (`facts-recompute/`); never throws, callers branch on nothing. */
+  syncPlanWithFacts?: SyncPlanWithFacts
   createOrReuseInitialNeed: (request: CreateInitialNeedRequest) => Promise<CreateInitialNeedResult>
   now?: () => Date
 }
@@ -116,10 +133,19 @@ export function createStage1PersistenceService(deps: Stage1PersistenceDependenci
 
       if (entitlement.sourceKind === "migration" && deps.loadExistingMigrationPlan) {
         try {
-          const existing = await deps.loadExistingMigrationPlan(
+          let existing = await deps.loadExistingMigrationPlan(
             userId,
             entitlement.enrollmentSourceId!,
           )
+          // This branch returns before any source read, so it must run the lane itself (R07):
+          // a migrated plan whose profile changed is rebased here, then re-read. The lane is a
+          // cheap no-op when nothing differs.
+          if (existing && deps.syncPlanWithFacts) {
+            await runPlanSync(deps.syncPlanWithFacts, userId)
+            existing =
+              (await deps.loadExistingMigrationPlan(userId, entitlement.enrollmentSourceId!)) ??
+              existing
+          }
           if (existing) return existing
         } catch {
           return { status: "temporarily_unavailable" }
@@ -139,9 +165,27 @@ export function createStage1PersistenceService(deps: Stage1PersistenceDependenci
       }
       if (!artifact && !legacyLead) return { status: "activation_pending" }
 
-      const stage1Source = legacyLead
-        ? buildLegacyQuizStage1Source({ leadId: legacyLead.id, answers: legacyLead.quizAnswers })
-        : artifact!.quizAnswers
+      // The artifact / lead above proves ownership and supplies the source ids; the Stage-1
+      // source itself comes from the profile facts when they can produce one.
+      let factsSource: unknown = null
+      if (deps.loadFacts) {
+        try {
+          const facts = await deps.loadFacts(userId)
+          factsSource = facts ? toStage1SourceFromFacts(facts) : null
+        } catch (error) {
+          if (
+            !(error instanceof UnsupportedUserFactsSourceError) &&
+            !(error instanceof UserFactsIncompleteError)
+          ) {
+            return { status: "temporarily_unavailable" }
+          }
+        }
+      }
+      const stage1Source =
+        factsSource ??
+        (legacyLead
+          ? buildLegacyQuizStage1Source({ leadId: legacyLead.id, answers: legacyLead.quizAnswers })
+          : artifact!.quizAnswers)
       const sourceId = legacyLead?.id ?? artifact!.id
 
       const computed = computeNeedPlan({
@@ -172,6 +216,29 @@ export function createStage1PersistenceService(deps: Stage1PersistenceDependenci
         outputSnapshot,
       }
 
+      // A plan that already exists and differs from the facts is the lane's to move, never
+      // `createOrReuseInitialNeed`'s: its "initial changed" branch stales the open refinement
+      // draft and nulls the refined head without a clone or a routine recompute. Whatever the
+      // lane returns (a failed lane leaves the old initial, which is still the plan's truth),
+      // the caller gets the plan's current initial version.
+      if (deps.loadExistingPlan) {
+        try {
+          const existing = await deps.loadExistingPlan(userId)
+          if (existing && existing.currentInitial.inputHash !== request.inputHash) {
+            if (deps.syncPlanWithFacts) await runPlanSync(deps.syncPlanWithFacts, userId)
+            const current = (await deps.loadExistingPlan(userId)) ?? existing
+            return {
+              status: "completed",
+              personalPlanId: current.personalPlanId,
+              needVersionId: current.currentInitial.needVersionId,
+              outputSnapshot: current.currentInitial.outputSnapshot,
+            }
+          }
+        } catch {
+          return { status: "temporarily_unavailable" }
+        }
+      }
+
       let result: CreateInitialNeedResult
       try {
         result = await deps.createOrReuseInitialNeed(request)
@@ -188,6 +255,15 @@ export function createStage1PersistenceService(deps: Stage1PersistenceDependenci
       }
       return { status: result.outcome }
     },
+  }
+}
+
+/** The lane never throws; a plan problem must not turn into a Stage-1 failure if it ever did. */
+async function runPlanSync(syncPlanWithFacts: SyncPlanWithFacts, userId: string): Promise<void> {
+  try {
+    await syncPlanWithFacts({ userId })
+  } catch {
+    // The caller re-reads the plan and serves what is persisted.
   }
 }
 

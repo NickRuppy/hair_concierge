@@ -1,0 +1,15 @@
+{
+  "monitorId": "629c0113-7402-45ba-87b4-4300fc5a620b",
+  "monitorStatus": "disabled",
+  "slug": "price-audit-weekly",
+  "config": {
+    "schedule": "30 4 * * 1",
+    "timezone": "Europe/Berlin",
+    "max_runtime": 180,
+    "schedule_type": "crontab",
+    "checkin_margin": 120,
+    "recovery_threshold": 1,
+    "failure_issue_threshold": 1
+  },
+  "checkins": []
+}

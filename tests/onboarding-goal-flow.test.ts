@@ -1,13 +1,9 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import {
-  deriveVolumeFromGoals,
-  getAvailableGoalLabel,
-  getAvailableGoals,
-} from "../src/lib/onboarding/goal-flow"
-import { getOrderedGoals, getGoalLabel } from "../src/lib/vocabulary/onboarding-goals"
-import { GOALS, GOAL_LABELS } from "../src/lib/vocabulary/concerns-goals"
+import { deriveVolumeFromGoals } from "../src/lib/onboarding/goal-flow"
+import { getOrderedGoals } from "../src/lib/vocabulary/onboarding-goals"
+import { GOALS } from "../src/lib/vocabulary/concerns-goals"
 
 // --- deriveVolumeFromGoals ---
 
@@ -25,14 +21,6 @@ test("no volume goal derives desired_volume 'balanced'", () => {
 
 test("empty goals derives desired_volume 'balanced'", () => {
   assert.equal(deriveVolumeFromGoals([]), "balanced")
-})
-
-test("getAvailableGoals falls back to the full goal list when texture is unknown", () => {
-  assert.deepEqual(getAvailableGoals(null), GOALS)
-})
-
-test("getAvailableGoalLabel falls back to the default goal label when texture is unknown", () => {
-  assert.equal(getAvailableGoalLabel("curl_definition", null), GOAL_LABELS.curl_definition)
 })
 
 // --- getOrderedGoals ---
@@ -76,19 +64,4 @@ test("getOrderedGoals puts priority goals first for coily", () => {
     "healthy_scalp",
     "healthier_hair",
   ])
-})
-
-// --- getGoalLabel ---
-
-test("getGoalLabel returns override when it exists", () => {
-  assert.equal(getGoalLabel("curl_definition", "curly"), "Locken-Clumping")
-  assert.equal(getGoalLabel("curl_definition", "wavy"), "Wellen-Definition")
-  assert.equal(getGoalLabel("moisture", "coily"), "Feuchtigkeit versiegeln")
-  assert.equal(getGoalLabel("healthy_scalp", "straight"), "Weniger schnell nachfetten")
-})
-
-test("getGoalLabel returns default label when no override", () => {
-  assert.equal(getGoalLabel("volume", "curly"), "Mehr Volumen")
-  assert.equal(getGoalLabel("shine", "coily"), "Mehr Glanz")
-  assert.equal(getGoalLabel("anti_breakage", "straight"), "Anti-Haarbruch")
 })

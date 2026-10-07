@@ -2,6 +2,10 @@ import { normalizeStoredQuizAnswers } from "@/lib/quiz/normalization"
 import { storedQuizAnswersSchema } from "@/lib/quiz/validators"
 
 import { buildQuizResultArtifactEmailPayload } from "./quiz-result-artifact"
+import {
+  buildScannerResultArtifactEmailPayload,
+  type ResultArtifactEmailKind,
+} from "./scanner-result-artifact"
 import type { CustomerIoTransactionalEmailPayload } from "./transactional"
 
 export interface ResultArtifactLead {
@@ -21,6 +25,7 @@ export interface ResultArtifactStore {
 
 export interface HandleResultArtifactEmailInput {
   leadId: string
+  emailKind: ResultArtifactEmailKind
   siteUrl: string
   store: ResultArtifactStore
   send: (payload: CustomerIoTransactionalEmailPayload) => Promise<void>
@@ -60,6 +65,7 @@ function missingLeadDataError(missing: string[]): string {
 
 export async function handleResultArtifactEmail({
   leadId,
+  emailKind,
   siteUrl,
   store,
   send,
@@ -93,13 +99,16 @@ export async function handleResultArtifactEmail({
     return { sent: false, skipped: false }
   }
 
-  const payload = buildQuizResultArtifactEmailPayload({
-    leadId,
-    name,
-    email,
-    quizAnswers: parsedAnswers.data,
-    siteUrl,
-  })
+  const payload =
+    emailKind === "scanner"
+      ? buildScannerResultArtifactEmailPayload({ leadId, email, siteUrl })
+      : buildQuizResultArtifactEmailPayload({
+          leadId,
+          name,
+          email,
+          quizAnswers: parsedAnswers.data,
+          siteUrl,
+        })
 
   try {
     await send(payload)

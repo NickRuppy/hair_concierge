@@ -6,15 +6,25 @@ import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { trackMetaPageView } from "@/lib/meta-pixel"
 import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
 import type { CheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
+import { clearWelcomeReturn, rememberWelcomeReturn } from "./return-recovery"
 
 export function shouldTrackCheckoutReturnSubscriptionStarted({
   purchaseKind,
   sessionId,
+  isTrialCheckout,
+  trialEnrollmentId,
 }: {
   purchaseKind?: "one_time"
   sessionId: string
+  isTrialCheckout?: boolean
+  trialEnrollmentId?: string
 }) {
-  return purchaseKind !== "one_time" && !sessionId.startsWith("paypal:")
+  return (
+    purchaseKind !== "one_time" &&
+    !isTrialCheckout &&
+    !trialEnrollmentId &&
+    !sessionId.startsWith("paypal:")
+  )
 }
 
 export function CheckoutReturnAnalytics({
@@ -22,11 +32,19 @@ export function CheckoutReturnAnalytics({
   purchaseKind,
   redirectTo,
   sessionId,
+  isTrialCheckout,
+  trialEnrollmentId,
+  returnRecoveryExpiresAt,
 }: {
   purchase: CheckoutPurchaseAnalytics | null
   purchaseKind?: "one_time"
   redirectTo?: string
   sessionId: string
+  /** Metadata-derived browser suppression only; it never establishes trial success. */
+  isTrialCheckout?: boolean
+  /** Passed only from the server's canonical verified trial activation result. */
+  trialEnrollmentId?: string
+  returnRecoveryExpiresAt?: number
 }) {
   const router = useRouter()
   const trackedRef = useRef(false)
@@ -36,6 +54,10 @@ export function CheckoutReturnAnalytics({
     trackedRef.current = true
 
     try {
+      // Persist the return proof before removing it from the address bar. Otherwise
+      // a document reload loses the unfinished activation and sends the buyer away.
+      if (redirectTo) clearWelcomeReturn(window)
+      else if (!rememberWelcomeReturn(window, Date.now(), returnRecoveryExpiresAt)) return
       window.history.replaceState(window.history.state, "", "/welcome")
       trackMetaPageView()
       addCheckoutBreadcrumb({
@@ -45,12 +67,19 @@ export function CheckoutReturnAnalytics({
         stripeSessionId: sessionId.startsWith("paypal:") ? undefined : sessionId,
         paypalTokenPresent: sessionId.startsWith("paypal:"),
       })
-      if (shouldTrackCheckoutReturnSubscriptionStarted({ purchaseKind, sessionId })) {
+      if (
+        shouldTrackCheckoutReturnSubscriptionStarted({
+          purchaseKind,
+          sessionId,
+          isTrialCheckout,
+          trialEnrollmentId,
+        })
+      ) {
         trackAppEvent("subscription_started", {
           checkoutSessionId: sessionId,
         })
       }
-      if (purchase) {
+      if (purchase && !isTrialCheckout && !trialEnrollmentId) {
         trackAppEvent("purchase_completed", {
           checkoutSessionId: sessionId,
           currency: purchase.currency.toUpperCase(),
@@ -85,7 +114,16 @@ export function CheckoutReturnAnalytics({
         router.replace(redirectTo)
       }
     }
-  }, [purchase, purchaseKind, redirectTo, router, sessionId])
+  }, [
+    purchase,
+    purchaseKind,
+    redirectTo,
+    router,
+    sessionId,
+    isTrialCheckout,
+    trialEnrollmentId,
+    returnRecoveryExpiresAt,
+  ])
 
   return null
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 import * as Sentry from "@sentry/nextjs"
+import { cleanupOpenAIAdsContext } from "@/lib/openai-ads/server/context"
 import { dispatchBillingAnalyticsDueWithStats } from "@/lib/billing/analytics-outbox"
 import {
   reconcileExpiredBillingEntitlements,
@@ -48,6 +49,7 @@ const ANALYTICS_DESTINATIONS: BillingAnalyticsDestination[] = [
   "posthog",
   "meta",
   "funnel",
+  "openai",
 ]
 const PAYMENT_INTEGRITY_DAILY_DEADLINE_MS = 20_000
 const PAYMENT_INTEGRITY_RUNTIME_MODULE = "@/lib/billing/payment-integrity-runtime"
@@ -67,6 +69,7 @@ type ReconcileDeps = {
   reconcileEntitlements?: typeof reconcileExpiredBillingEntitlements
   analyticsRetryEnabled?: boolean
   dispatchAnalyticsDue?: typeof dispatchBillingAnalyticsDueWithStats
+  cleanupOpenAIAdsContext?: () => Promise<number>
   oneTimeFulfillmentRetryEnabled?: boolean
   reconcileOneTimeFulfillmentRetries?: typeof reconcilePersonalPlanOneTimeFulfillmentRetries
   oneTimeFulfillmentDispatchers?: PersonalPlanOneTimeFulfillmentDispatchers
@@ -122,6 +125,7 @@ export async function GET(request: Request) {
       cronSecret: process.env.CRON_SECRET,
       analyticsRetryEnabled: process.env.BILLING_ANALYTICS_RETRY_ENABLED === "true",
       dispatchAnalyticsDue: dispatchBillingAnalyticsDueWithStats,
+      cleanupOpenAIAdsContext: () => cleanupOpenAIAdsContext(supabase),
       oneTimeFulfillmentRetryEnabled:
         process.env.PERSONAL_PLAN_ONE_TIME_FULFILLMENT_RETRY_ENABLED === "true",
       runPaymentIntegrity: async (input) => {
@@ -388,7 +392,7 @@ async function runAnalyticsBranch(deps: ReconcileDeps) {
       dispatchAnalyticsDue(deps.supabase, { destination, limit: 10 }),
     ),
   )
-  const analyticsRetry = Object.fromEntries(
+  const analyticsRetry: Record<string, unknown> = Object.fromEntries(
     ANALYTICS_DESTINATIONS.map((destination, index) => {
       const destinationResult = settled[index]
       return [
@@ -405,8 +409,17 @@ async function runAnalyticsBranch(deps: ReconcileDeps) {
     }),
   )
 
+  let cleanupOk = true
+  if (deps.cleanupOpenAIAdsContext) {
+    try {
+      analyticsRetry.openaiCleanup = { deleted: await deps.cleanupOpenAIAdsContext() }
+    } catch {
+      cleanupOk = false
+      analyticsRetry.openaiCleanup = { status: "error" }
+    }
+  }
   return {
-    ok: settled.every((destinationResult) => destinationResult.status === "fulfilled"),
+    ok: cleanupOk && settled.every((destinationResult) => destinationResult.status === "fulfilled"),
     result: analyticsRetry,
   }
 }

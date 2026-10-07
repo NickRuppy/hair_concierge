@@ -475,7 +475,7 @@ test("PayPal approval validates the provider custom id before accepting a bound 
 
   const tokenMismatchIndex = routeSource.indexOf("subscription.custom_id?.trim() !== token")
   const alreadyBoundIndex = routeSource.indexOf(
-    "intent.provider_subscription_id === subscription.id",
+    "binding = await bindNewPayPalAgreementForApproval({",
   )
 
   assert.ok(tokenMismatchIndex > -1)
@@ -490,7 +490,7 @@ test("PayPal approval retries run duplicate checks even for an already-bound int
   )
 
   const alreadyBoundIndex = routeSource.indexOf(
-    "intent.provider_subscription_id === subscription.id",
+    "binding = await bindNewPayPalAgreementForApproval({",
   )
   const duplicateGuardIndex = routeSource.indexOf(
     "findPayPalCheckoutDuplicateReason",

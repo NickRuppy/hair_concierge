@@ -36,6 +36,8 @@ function createSupabaseStub(options: {
     cancel_at_period_end: row.cancel_at_period_end ?? false,
     cancel_scheduled_at: row.cancel_scheduled_at ?? null,
     cancelled_at: row.cancelled_at ?? null,
+    trial_enrollment_id: row.trial_enrollment_id,
+    trial_access_facts: row.trial_access_facts,
     metadata: row.metadata ?? {},
     created_at: row.created_at ?? new Date().toISOString(),
     updated_at: row.updated_at ?? new Date().toISOString(),
@@ -167,6 +169,49 @@ test("PayPal cancellation returns 401 for unauthenticated users", async () => {
   })
 
   assert.equal(response.status, 401)
+})
+
+test("legacy PayPal cancellation cannot bypass a trial declaration", async () => {
+  const end = futureIso()
+  const { supabase, calls } = createSupabaseStub({
+    user: { id: "user-1" },
+    billing: [
+      {
+        trial_enrollment_id: "trial-1",
+        current_period_end: end,
+        metadata: { trial_cohort: "trial_v1" },
+        trial_access_facts: {
+          version: 1,
+          enrollmentId: "trial-1",
+          admissionStatus: "active",
+          authorizationSucceededAt: new Date(Date.parse(end) - 604800000).toISOString(),
+          originalTrialEndAt: end,
+          firstPaymentSucceededAt: null,
+          paidThroughAt: null,
+          renewalGraceEndsAt: null,
+          renewalPaymentFailed: false,
+          cancelAtPeriodEnd: false,
+          accessRevoked: false,
+        },
+      },
+    ],
+  })
+  let providerCalls = 0
+  const result = await handleCancelPayPalSubscription({
+    authSupabase: supabase,
+    billingSupabase: supabase,
+    cancelPayPalSubscription: async () => {
+      providerCalls++
+    },
+    getTierIds: async () => ({ premiumTierId: "tier-premium", freeTierId: "tier-free" }),
+  })
+  assert.equal(result.status, 409)
+  assert.deepEqual(result.body, { error: "trial_management_required" })
+  assert.equal(providerCalls, 0)
+  assert.equal(
+    calls.some((call) => call.op === "update"),
+    false,
+  )
 })
 
 test("PayPal cancellation rejects Stripe subscriptions", async () => {

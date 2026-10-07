@@ -1,3 +1,7 @@
+import { cookies } from "next/headers"
+import { FUNNEL_SESSION_COOKIE } from "@/lib/funnel/cookie"
+import { isFunnelMetaCustomDataEnabled } from "@/lib/funnel/flags"
+import { lookupFunnelContextForLead, resolveFunnelCookieContext } from "@/lib/funnel/server"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 
@@ -41,6 +45,7 @@ type RateLimitResult = { allowed: boolean; error?: string }
 type MetaOfferViewInput = z.infer<typeof metaOfferViewSchema> & MetaRequestData
 
 type EligibleLead = {
+  funnelPackageKey?: string
   email: string | null
   name: string | null
 }
@@ -127,7 +132,12 @@ export async function deliverMetaOfferView(
       fbp: input.fbp,
       fbc: input.fbc,
     },
-    customData: { content_name: "quiz_result_offer_view" },
+    customData: {
+      content_name: "quiz_result_offer_view",
+      ...(isFunnelMetaCustomDataEnabled() && lead.funnelPackageKey
+        ? { funnel_package_key: lead.funnelPackageKey }
+        : {}),
+    },
   })
 
   return result.ok ? { ok: true } : { ok: false, reason: "delivery_failed" }
@@ -244,7 +254,23 @@ export async function POST(request: Request) {
             if (!artifact) return null
           }
 
+          // Use the signed current session plus lead binding, never the latest
+          // session for that lead or a browser-provided package name.
+          let funnelPackageKey: string | undefined
+          if (isFunnelMetaCustomDataEnabled()) {
+            const context = await resolveFunnelCookieContext(
+              (await cookies()).get(FUNNEL_SESSION_COOKIE)?.value,
+            )
+            if (context) {
+              const lookup = await lookupFunnelContextForLead(leadId, context.sessionId)
+              if (lookup.kind === "unavailable")
+                throw new Error("Meta offer attribution unavailable")
+              if (lookup.context?.packageKey === context.packageKey)
+                funnelPackageKey = lookup.context.packageKey
+            }
+          }
           return {
+            funnelPackageKey,
             email: typeof data.email === "string" ? data.email : null,
             name: typeof data.name === "string" ? data.name : null,
           }

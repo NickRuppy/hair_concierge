@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
 import test from "node:test"
+import { classifyCheckoutRecoveryError } from "../src/lib/auth/checkout-recovery-classification"
 import {
   assertCanStartCheckout,
   assertCanStartCheckoutForEmail,
@@ -28,6 +29,9 @@ import {
   paypalCheckoutActivationId,
   paypalCheckoutActivationHash,
 } from "../src/lib/paypal/checkout-activation"
+
+process.env.PAYPAL_PLAN_ID_MONTHLY ??= "P-month"
+process.env.PAYPAL_PLAN_ID_QUARTERLY ??= "P-quarter"
 import {
   bindPayPalCheckoutIntentToSubscription,
   createPayPalCheckoutIntent,
@@ -2522,6 +2526,24 @@ test("PayPal activation hash is provider-aware and Stripe checkout hash remains 
     paypalCheckoutActivationHash("I-123"),
     createHash("sha256").update("I-123").digest("hex"),
   )
+})
+
+test("PayPal terminal subscription statuses cannot suggest finishing an open checkout", async () => {
+  for (const status of ["CANCELLED", "SUSPENDED", "EXPIRED"]) {
+    const { supabase, profiles, billing } = createSupabaseStub()
+    await assert.rejects(
+      ensurePayPalCheckoutAccount(
+        { id: "I-terminal", status },
+        { supabase, premiumTierId: "tier-premium", interval: "month" },
+      ),
+      (error: unknown) => {
+        assert.equal(classifyCheckoutRecoveryError(error), "trial_reconciliation_required")
+        return true
+      },
+    )
+    assert.deepEqual(profiles, {})
+    assert.equal(billing.length, 0)
+  }
 })
 
 test("Stripe subscription.updated upserts the billing row when profile resolves by customer id", async () => {

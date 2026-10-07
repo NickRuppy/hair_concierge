@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie Pflichtmitteilungen – Entwurf</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #2d1b46;
+        --muted: #655471;
+        --line: #e8e1f0;
+        --wash: #f4f0f9;
+        --canvas: #ebe7ef;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--canvas);
+        color: var(--ink);
+      }
+      button {
+        font: inherit;
+      }
+      .review {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 40px 24px 64px;
+      }
+      .review-header {
+        max-width: 850px;
+        margin-bottom: 24px;
+      }
+      .kicker,
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(30px, 5vw, 48px);
+        line-height: 1.05;
+        letter-spacing: -0.04em;
+      }
+      .review-header > p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.55;
+      }
+      .picker {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 4px 2px 16px;
+        margin: 0 0 12px;
+        scrollbar-width: thin;
+      }
+      .picker button {
+        flex: 0 0 auto;
+        border: 1px solid rgba(45, 27, 70, 0.14);
+        border-radius: 999px;
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.62);
+        color: var(--ink);
+        cursor: pointer;
+      }
+      .picker button[aria-selected="true"] {
+        border-color: var(--ink);
+        background: var(--ink);
+        color: #fff;
+      }
+      .variant-note {
+        margin: 0 0 18px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      .frames {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 390px;
+        gap: 28px;
+        align-items: start;
+      }
+      .frame-label {
+        display: flex;
+        justify-content: space-between;
+        margin: 0 0 10px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .client {
+        background: #fff;
+        border: 1px solid rgba(45, 27, 70, 0.12);
+        border-radius: 18px;
+        box-shadow: 0 18px 55px rgba(45, 27, 70, 0.12);
+        overflow: hidden;
+      }
+      .client-bar {
+        padding: 18px 22px;
+        border-bottom: 1px solid #ece8ef;
+      }
+      .mobile .client-bar {
+        padding: 16px;
+      }
+      .subject {
+        margin: 0 0 9px;
+        color: #202124;
+        font-size: 18px;
+        line-height: 1.35;
+      }
+      .mobile .subject {
+        font-size: 16px;
+      }
+      .sender {
+        margin: 0;
+        color: #5f6368;
+        font-size: 13px;
+      }
+      .sender strong {
+        color: #202124;
+      }
+      .email-canvas {
+        padding: 28px 16px;
+        background: var(--wash);
+      }
+      .mobile .email-canvas {
+        padding: 0;
+      }
+      .email-card {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .mobile .email-card {
+        border-radius: 0;
+      }
+      .email-main {
+        padding: 38px 42px 32px;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.55;
+      }
+      .mobile .email-main {
+        padding: 30px 22px 26px;
+      }
+      .wordmark {
+        margin: 0 0 28px;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -1px;
+      }
+      .email-main h2 {
+        margin: 0 0 12px;
+        font-size: 30px;
+        line-height: 1.18;
+        letter-spacing: -0.7px;
+      }
+      .mobile .email-main h2 {
+        font-size: 27px;
+      }
+      .intro {
+        margin: 0 0 24px;
+        color: var(--muted);
+      }
+      .facts {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        overflow: hidden;
+        background: var(--wash);
+        border-radius: 10px;
+      }
+      .facts td {
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--line);
+      }
+      .facts tr:last-child td {
+        border-bottom: 0;
+      }
+      .facts small {
+        display: block;
+        margin-bottom: 3px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .facts strong {
+        display: block;
+        font-size: 17px;
+        line-height: 1.4;
+      }
+      .status {
+        margin: 14px 0 24px;
+        padding-left: 14px;
+        border-left: 3px solid var(--ink);
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .button {
+        display: inline-block;
+        padding: 13px 22px;
+        border-radius: 8px;
+        background: var(--ink);
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .secondary {
+        margin: 16px 0 0;
+        font-size: 14px;
+      }
+      .secondary a {
+        color: var(--ink);
+      }
+      .support {
+        margin: 20px 0 30px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .details {
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .details h3 {
+        margin: 0 0 10px;
+        color: var(--ink);
+        font-size: 14px;
+      }
+      .details p {
+        margin: 5px 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .email-footer {
+        padding: 20px 22px 26px;
+        text-align: center;
+        color: var(--muted);
+        font:
+          12px/1.8 Arial,
+          sans-serif;
+      }
+      .email-footer a {
+        color: var(--muted);
+      }
+      .legend {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-top: 28px;
+      }
+      .legend article {
+        padding: 16px;
+        border: 1px solid rgba(45, 27, 70, 0.12);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.62);
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      .legend strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--ink);
+      }
+      @media (max-width: 900px) {
+        .frames {
+          grid-template-columns: 1fr;
+        }
+        .mobile {
+          max-width: 390px;
+        }
+        .legend {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 520px) {
+        .review {
+          padding: 24px 0 48px;
+        }
+        .review-header,
+        .picker,
+        .variant-note,
+        .frame-label,
+        .legend {
+          margin-left: 16px;
+          margin-right: 16px;
+        }
+        .client {
+          border-left: 0;
+          border-right: 0;
+          border-radius: 0;
+        }
+        .desktop {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="review">
+      <header class="review-header">
+        <p class="kicker">Designvorschlag · acht wahrheitsgetreue Varianten</p>
+        <h1>Die fünf weiteren Pflichtmitteilungen</h1>
+        <p>
+          Ein gemeinsames Chaarlie-System, aber je Ereignis eine eigene Aussage. Die Auswahl zeigt
+          Desktop und Mobil mit realistischen Vertragsdaten.
+        </p>
+      </header>
+      <nav class="picker" aria-label="E-Mail-Variante">
+        <button type="button" data-key="switch" aria-selected="true">Tarifwechsel</button>
+        <button type="button" data-key="restore" aria-selected="false">Kündigung aufgehoben</button>
+        <button type="button" data-key="trialCancel" aria-selected="false">Test gekündigt</button>
+        <button type="button" data-key="paidCancel" aria-selected="false">Bezahlt gekündigt</button>
+        <button type="button" data-key="renewal" aria-selected="false">Jahreshinweis</button>
+        <button type="button" data-key="ordinary" aria-selected="false">
+          Öffentliche Kündigung
+        </button>
+        <button type="button" data-key="extraordinary" aria-selected="false">
+          Außerordentlich
+        </button>
+        <button type="button" data-key="withdrawal" aria-selected="false">Widerruf</button>
+      </nav>
+      <p class="variant-note" id="variant-note"></p>
+      <div class="frames">
+        <section class="desktop">
+          <p class="frame-label"><span>Desktop</span><span>600 px E-Mail</span></p>
+          <div class="client">
+            <div class="client-bar">
+              <p class="subject"></p>
+              <p class="sender"><strong>Chaarlie</strong> &lt;info@chaarlie.de&gt;</p>
+            </div>
+            <div class="email-canvas"><div class="email-card"></div></div>
+          </div>
+        </section>
+        <section class="mobile">
+          <p class="frame-label"><span>Mobil</span><span>390 px</span></p>
+          <div class="client">
+            <div class="client-bar">
+              <p class="subject"></p>
+              <p class="sender"><strong>Chaarlie</strong> &lt;info@chaarlie.de&gt;</p>
+            </div>
+            <div class="email-canvas"><div class="email-card"></div></div>
+          </div>
+        </section>
+      </div>
+      <section class="legend" aria-label="Gestaltungsentscheidungen">
+        <article>
+          <strong>Wahrheitsgetreuer Status</strong>„Eingegangen“ bleibt sichtbar, solange die
+          technische Verarbeitung noch läuft. Keine E-Mail behauptet mehr als ihr Snapshot belegt.
+        </article>
+        <article>
+          <strong>Eine nächste Handlung</strong>Mitgliedschafts-Mails führen zur Verwaltung.
+          Öffentliche Erklärungen bieten nur Kontakt, weil sie noch keinem Konto sicher zugeordnet
+          sind.
+        </article>
+        <article>
+          <strong>Belegdaten bleiben erhalten</strong>Vertrags-, Änderungs- und Erklärungsnummern
+          stehen weiterhin im Belegbereich und umbrechen auf kleinen Bildschirmen.
+        </article>
+      </section>
+    </main>
+    <script>
+      const common = {
+        contract: "8a2368ec-2cbe-4234-b711-174594112c46",
+        declaration: "3949a816-4cca-4177-93ad-0e6cb5bad1bd",
+        operation: "cc114622-c507-49fa-bb38-50729df9da86",
+      }
+      const variants = {
+        switch: {
+          subject: "Deine geänderte Chaarlie-Mitgliedschaft",
+          eyebrow: "Änderung bestätigt",
+          title: "Deine Laufzeit wurde geändert.",
+          intro:
+            "Dein kostenloser Test läuft unverändert weiter. Für diese Änderung wurde keine Zahlung ausgelöst.",
+          facts: [
+            ["Neue Laufzeit", "Jahresmitgliedschaft"],
+            ["Test endet", "29. September 2026"],
+            ["Erste Zahlung", "69,99 € am 29. September 2026"],
+          ],
+          status: "Jetzt berechnet: 0,00 €. Es beginnt kein neuer Test.",
+          action: "Mitgliedschaft verwalten",
+          secondary: "Online kündigen",
+          detailTitle: "Änderungsdetails",
+          details: [
+            ["Änderungskennung", common.operation],
+            ["Vertragskennung", common.contract],
+            ["Bestätigt", "22. September 2026 um 10:42:16 MESZ"],
+          ],
+          note: "Familie 1 · Contract change, Unterfall Tarifwechsel. Das ursprüngliche Testende bleibt unverändert.",
+        },
+        restore: {
+          subject: "Deine Chaarlie-Mitgliedschaft wird fortgesetzt",
+          eyebrow: "Änderung bestätigt",
+          title: "Deine Kündigung wurde aufgehoben.",
+          intro:
+            "Wie von dir gewünscht wird deine Mitgliedschaft fortgesetzt. Dein ursprünglicher Test läuft unverändert weiter.",
+          facts: [
+            ["Mitgliedschaft", "Jahresmitgliedschaft"],
+            ["Test endet", "29. September 2026"],
+            ["Erste Zahlung", "69,99 € am 29. September 2026"],
+          ],
+          status: "Für diese Änderung wurden 0,00 € berechnet. Es beginnt kein neuer Test.",
+          action: "Mitgliedschaft verwalten",
+          secondary: "Online kündigen",
+          detailTitle: "Änderungsdetails",
+          details: [
+            ["Änderungskennung", common.operation],
+            ["Vertragskennung", common.contract],
+            ["Bestätigt", "22. September 2026 um 10:45:08 MESZ"],
+          ],
+          note: "Familie 1 · Contract change, Unterfall Wiederaufnahme. Die E-Mail bestätigt ausdrücklich die vom Kunden angeforderte Aufhebung.",
+        },
+        trialCancel: {
+          subject: "Deine Kündigung bei Chaarlie ist eingegangen",
+          eyebrow: "Kündigung eingegangen",
+          title: "Nach dem Test entstehen keine Kosten.",
+          intro: "Wir haben deine Kündigung erhalten. Du musst nicht erneut kündigen.",
+          facts: [
+            ["Zugang bis", "29. September 2026"],
+            ["Danach berechnet", "0,00 €"],
+            ["Mitgliedschaft", "Jahresmitgliedschaft"],
+          ],
+          status:
+            "Dein Testzugang bleibt bis zum Ende bestehen. Die technische Bearbeitung beim Zahlungsanbieter kann noch laufen.",
+          action: "Mitgliedschaft ansehen",
+          secondary: null,
+          detailTitle: "Kündigungsbeleg",
+          details: [
+            ["Kündigungskennung", common.declaration],
+            ["Vertragskennung", common.contract],
+            ["Eingegangen", "22. September 2026 um 10:48:31 MESZ"],
+          ],
+          note: "Familie 2 · Kündigung im kostenlosen Test. Kernversprechen: kein kostenpflichtiger Zeitraum nach dem Test.",
+        },
+        paidCancel: {
+          subject: "Deine Kündigung bei Chaarlie ist eingegangen",
+          eyebrow: "Kündigung eingegangen",
+          title: "Dein Zugang bleibt bis zum 22. September 2027 bestehen.",
+          intro: "Wir haben deine Kündigung erhalten. Du musst nicht erneut kündigen.",
+          facts: [
+            ["Bezahlter Zugang bis", "22. September 2027"],
+            ["Wirksames Vertragsende", "22. September 2027"],
+            ["Mitgliedschaft", "Jahresmitgliedschaft"],
+          ],
+          status:
+            "Die technische Bearbeitung beim Zahlungsanbieter läuft noch. Diese Eingangsbestätigung bleibt gültig.",
+          action: "Mitgliedschaft ansehen",
+          secondary: null,
+          detailTitle: "Kündigungsbeleg",
+          details: [
+            ["Kündigungskennung", common.declaration],
+            ["Vertragskennung", common.contract],
+            ["Eingegangen", "22. September 2026 um 10:51:04 MESZ"],
+          ],
+          note: "Familie 3 · Kündigung nach Zahlung. Bezahlter Zugang und wirksames Vertragsende werden getrennt, aber identisch belegt.",
+        },
+        renewal: {
+          subject: "Deine nächste jährliche Chaarlie-Zahlung",
+          eyebrow: "Jährliche Zahlung",
+          title: "Deine nächste Zahlung ist für den 22. September 2027 vorgesehen.",
+          intro:
+            "Eine kurze Erinnerung vor der nächsten jährlichen Zahlung deiner Chaarlie-Mitgliedschaft.",
+          facts: [
+            ["Betrag", "99,99 € inkl. Steuern"],
+            ["Vorgesehen am", "22. September 2027"],
+            ["Mitgliedschaft", "Jahresmitgliedschaft"],
+          ],
+          status:
+            "Es beginnt keine neue feste Jahresbindung. Nach dem ersten bezahlten Jahr kannst du mit höchstens einem Monat Frist kündigen.",
+          action: "Mitgliedschaft verwalten",
+          secondary: "Online kündigen",
+          detailTitle: "Vertragsdetails",
+          details: [
+            ["Vertragskennung", common.contract],
+            ["Zahlungsanbieter", "Stripe"],
+          ],
+          note: "Familie 4 · Hinweis vor der jährlichen Fortsetzung. Betrag, Termin und Kündigungsrecht stehen vor technischen Details.",
+        },
+        ordinary: publicVariant(
+          "Kündigung eingegangen",
+          "Wir haben deine Kündigung erhalten.",
+          "Ordentliche Kündigung",
+          "Gewünschtes Vertragsende: zum nächstmöglichen Zeitpunkt",
+          "Familie 5 · Öffentliche Vertragserklärung, Unterfall ordentliche Kündigung.",
+        ),
+        extraordinary: publicVariant(
+          "Außerordentliche Kündigung eingegangen",
+          "Wir haben deine außerordentliche Kündigung erhalten.",
+          "Außerordentliche Kündigung",
+          "Gewünschtes Vertragsende: sofort",
+          "Familie 5 · Öffentliche Vertragserklärung, Unterfall außerordentliche Kündigung. Der angegebene Grund bleibt im Beleg erhalten.",
+        ),
+        withdrawal: publicVariant(
+          "Widerruf eingegangen",
+          "Wir haben deinen Widerruf erhalten.",
+          "Widerruf",
+          "Die Zuordnung und Abwicklung werden geprüft",
+          "Familie 5 · Öffentliche Vertragserklärung, Unterfall Widerruf. Sie nennt bewusst noch kein Vertragsende.",
+        ),
+      }
+      function publicVariant(eyebrow, title, kind, outcome, note) {
+        return {
+          subject: "Deine Erklärung zu deinem Chaarlie Vertrag",
+          eyebrow,
+          title,
+          intro:
+            "Diese Bestätigung dokumentiert den Eingang deiner Erklärung. Sie ist noch keine Bestätigung eines Vertragsendes.",
+          facts: [
+            ["Erklärung", kind],
+            ["Vertrag (deine Angabe)", "Chaarlie Jahresmitgliedschaft"],
+            ["Status", outcome],
+          ],
+          status:
+            "Wir prüfen die sichere Zuordnung. Bei Rückfragen antworte bitte auf diese E-Mail.",
+          action: "Kontakt aufnehmen",
+          secondary: null,
+          detailTitle: "Eingangsbeleg",
+          details: [
+            ["Erklärungsnummer", common.declaration],
+            ["Eingang", "22. September 2026 um 10:56:19 MESZ"],
+            ["E-Mail", "nick@example.com"],
+          ],
+          note,
+          public: true,
+        }
+      }
+      function emailMarkup(v) {
+        const rows = v.facts
+          .map(
+            ([label, value]) =>
+              `<tr><td><small>${label}</small><strong>${value}</strong></td></tr>`,
+          )
+          .join("")
+        const details = v.details
+          .map(([label, value]) => `<p><strong>${label}:</strong> ${value}</p>`)
+          .join("")
+        const href = v.public ? "mailto:info@chaarlie.de" : "https://chaarlie.de/profile"
+        return `<div class="email-main"><p class="wordmark">chaarlie</p><p class="eyebrow">${v.eyebrow}</p><h2>${v.title}</h2><p class="intro">${v.intro}</p><table class="facts" role="presentation">${rows}</table><p class="status">${v.status}</p><a class="button" href="${href}">${v.action}</a>${v.secondary ? `<p class="secondary"><a href="https://chaarlie.de/kuendigen">${v.secondary}</a></p>` : ""}<p class="support">Fragen? Antworte auf diese E-Mail oder schreibe an info@chaarlie.de.</p><div class="details"><h3>${v.detailTitle}</h3>${details}</div></div><div class="email-footer">Haarmony LLC · <a href="https://chaarlie.de/impressum">Impressum</a> · <a href="https://chaarlie.de/datenschutz">Datenschutz</a> · <a href="#">Abmelden</a></div>`
+      }
+      function render(key) {
+        const v = variants[key]
+        document.querySelectorAll(".subject").forEach((node) => (node.textContent = v.subject))
+        document
+          .querySelectorAll(".email-card")
+          .forEach((node) => (node.innerHTML = emailMarkup(v)))
+        document.querySelector("#variant-note").textContent = v.note
+        document
+          .querySelectorAll(".picker button")
+          .forEach((button) =>
+            button.setAttribute("aria-selected", String(button.dataset.key === key)),
+          )
+      }
+      document.querySelector(".picker").addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-key]")
+        if (button) render(button.dataset.key)
+      })
+      render("switch")
+    </script>
+  </body>
+</html>

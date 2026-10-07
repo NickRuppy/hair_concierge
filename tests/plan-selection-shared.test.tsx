@@ -128,7 +128,9 @@ test("the offer page drives offer_plan_selected from the shared hook", () => {
     /import \{ usePlanSelection \} from "@\/components\/checkout\/use-plan-selection"/,
   )
   assert.match(source, /const \{ selectedInterval, selectPlan \} = usePlanSelection\(\{/)
-  assert.match(source, /defaultInterval: DEFAULT_PRICING_INTERVAL/)
+  // Trial offers use the approved annual preselection; legacy offers retain
+  // the catalog default, through the same selection/analytics model.
+  assert.match(source, /defaultInterval: trialOfferPricing \? "year" : DEFAULT_PRICING_INTERVAL/)
   assert.match(source, /const change = selectPlan\(interval\)/)
   assert.match(source, /isDefault: change\.isDefault/)
   assert.match(source, /previousInterval: change\.previousInterval/)

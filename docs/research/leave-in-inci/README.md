@@ -1,6 +1,6 @@
 # Leave-In ingredient research
 
-Status: **logic locked (Standard v1.0) — research engine active for Product Intake preparation, not live matching logic**
+Status: **logic locked (Standard v1.1 = Standard v1.0 + the T20 `care_direction` overlay, 2026-09-29) — research engine active for Product Intake preparation, not live matching logic**
 
 This directory is the durable entry point for the Leave-In ingredient-classification work. It separates formula-derived product research from user fit, and both of those from catalog or production activation.
 
@@ -8,10 +8,12 @@ This directory is the durable entry point for the Leave-In ingredient-classifica
 
 The folder `v1.0/` is the **artifact root version** (the frozen research package). The classification standard inside it carries its own **semantic version**, currently **v1.0** (`leave-in-inci-v1.0`), promoted unchanged from the `v0.4` draft at the 2026-09-13 freeze. A semantic bump (classification meaning, thresholds, routes, derivation, eligibility) does not create a new artifact root; a genuinely new research run does.
 
+**Standard v1.1 (2026-09-29).** v1.1 is the byte-frozen v1.0 standard plus one normative overlay, [`v1.1/leave-in-classification-overlay.v1.1.md`](./v1.1/leave-in-classification-overlay.v1.1.md) (ruling T20: which species may set `care_direction`). Its artifacts live in sibling `v1.1/` roots (`docs/research/leave-in-inci/v1.1/`, `data/research/leave-in-inci/v1.1/`). That is not a new research package. It keeps every v1.0 path byte-identical: the v1.0 manifest and CI pin those files, and T20 added a re-derivation run (the `care_direction` records) and a new calibration envelope set that could not be written into the frozen root without changing it. Nothing under `v1.0/` was edited.
+
 ## Start here
 
 1. Read the [runbook](./v1.0/runbook.md) — frozen-packet capture, the sealed-lane protocol, the agreement diff, the Lab review flow, and the rule-change discipline.
-2. Use the [classification standard](./v1.0/leave-in-classification-standard.md) for the seven-dimension research record and the lean matching profile.
+2. Use the [classification standard](./v1.0/leave-in-classification-standard.md) for the seven-dimension research record and the lean matching profile, **with the [v1.1 overlay](./v1.1/leave-in-classification-overlay.v1.1.md) replacing §9's moisture-leg rule** (T20).
 3. The [reviewed source snapshot](./v1.0/leave-in-classification-standard.v1.0-rc1.md) is the exact text calibration round 4 was run against — byte-identical to the normative file minus its Version preamble and version stamps.
 4. The [rule-change ledger](./v1.0/rule-changes.md) is the entry-by-entry history; the table below is its index.
 
@@ -25,14 +27,18 @@ The folder `v1.0/` is the **artifact root version** (the frozen research package
 | Category boundary + market | `v1.0/00_category_charter.md` | G0 eligibility, Germany/EU market, medical boundary, parked assumptions. |
 | Researcher prompt (operative) | `src/lib/product-intake/leave-in-research-prompt-contract.ts` (`leaveInResearchPromptContract`, consumed by `scripts/product-intake/codex-research-worker.ts`) | The current consuming guide under the frozen `leave-in-research-envelope-v1.0` standard; must stay synchronized with the standard. |
 | Researcher prompt (archived) | `v1.0/product-research-prompt.v0.1.md` | **Superseded, history only.** Predates the trim/freeze to the 13-dimension v1.0 envelope; do not follow. |
-| Rule-change ledger | `v1.0/rule-changes.md` | T1–T19, housekeeping rows 20/20a, and the v0.1→v0.4 defect passes. |
+| Current Leave-In method, v1.1 overlay | `docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md` | T20: only settled humectants and medium/rich lipids above the tail set `moisture`; a leading persistent film makes the leg subordinate. Supersedes T19's Neqi call; documents the conditioner-`balanced` alignment. Carries the v1.1 ledger block (row 21). |
+| Rule-change ledger | `v1.0/rule-changes.md` (T1–T19, rows 20/20a, v0.1→v0.4) and the v1.1 overlay §8 (T20, row 21) | Entry-by-entry history. |
+| v1.1 lock receipt + manifest | `data/research/leave-in-inci/v1.1/v1.1-logic-lock-receipt.json`, `…/v1.1/artifact-manifest.json` | Lock of the T20 scope and hash-pinned inventory of the overlay, the frozen base and the v1.1 corpus artifacts. |
+| T20 re-derivation records | `data/research/leave-in-inci/v1.1/corpus/t20-rederived/t20-care-direction-records.json` | `care_direction` re-derived on all 15 in-category records; 4 flips (Gliss, Olaplex, Neqi, u1). |
+| v1.1 calibration set | `data/research/leave-in-inci/v1.1/calibration-envelopes/`, `…/v1.1/calibration-expected-projections.json` | The 11 gold-set envelopes under v1.1 and their golden production projections (built by `scripts/leave-in-research/build-v1.1-calibration.ts`). |
 | Logic-lock receipt | `data/research/leave-in-inci/v1.0/v1.0-logic-lock-receipt.json` | Machine-readable lock of the v1.0 scope, dimensions, profile fields and separate gates. |
 | Artifact manifest | `data/research/leave-in-inci/v1.0/artifact-manifest.json` | Hash-pinned inventory of the normative source, snapshot, runbook and corpus. |
 | Calibration corpus | `data/research/leave-in-inci/v1.0/corpus/gold-set/`, `…/corpus/unseen-test/` | Frozen packets, reference keys v1–v4, blind lanes, round reports, unseen-product test. |
-| Lab fixture + review state | `data/research/leave-in-inci/v1.0/lab-fixture.json`, `…/lab-review-state.json` | 19 products / 397 reviewable properties; 15 approved + 4 G0-confirmed exclusions. |
+| Lab fixture + review state | `data/research/leave-in-inci/v1.1/lab-fixture.json` (what the Lab reads since v1.1; overlay of the frozen `v1.0/lab-fixture.json`), review state `data/research/leave-in-inci/v1.0/lab-review-state.json` | 19 products / 397 reviewable properties. v1.0: 15 approved + 4 G0-confirmed exclusions; v1.1 reopens the 15 in-category `care_direction` rows (T20), every other approval still matches. |
 | Science authority (**SR §x**) | `plans/leave-in-inci/research/leave-on-science-review.md` | The evidence base every scientific claim traces to. |
 | Handover (**HO §x**) | `plans/leave-in-inci/handover/` | Category development handover v1.0 and its candidate profile. |
-| Adapter decisions | `plans/leave-in-inci/adapter-decisions.md` | AD-1 (shared `format` enum), AD-2 (no `unknown` commits) and context rulings. |
+| Adapter decisions | `plans/leave-in-inci/adapter-decisions.md` | AD-1 (shared `format` enum), AD-2 (no `unknown` commits), AD-3–AD-6, AD-3a (revised 2026-09-29: `moisture_softness` requires `care_direction = moisture`) and context rulings. |
 | Historical drafts | `v1.0/leave-in-classification-standard.v0.1.md` … `v0.4.md` | The frozen round-1/2/3 rule sets and the promoted draft. Provenance only. |
 
 ## The rulings the standard rests on
@@ -61,6 +67,7 @@ Nick's binding rulings, one line each. Full text and per-record consequences: `v
 | T18 | Formula-set conflict precedence | Tier 1: three-source convergence (one GTIN-anchored German retailer) becomes the formula of record, with confidence stepped down and review routed. Tier 2: `unknown` + `formula_source_conflict`. Same-market only. |
 | T19 | `balanced` gains a film-led reading | Directional neutrality is a co-equal reading of `balanced`; `unknown` is reserved for genuine evidence failure. Closes open gap §17.22. |
 | 20 / 20a | Freeze-prep housekeeping (**not a ruling**) | Six convention fixes from the unseen test (vacuity test, E-level ladder, trigger vocabulary, three §18 strings, LAYER/SHN anchors, confidence bands) plus four round-4 residue fixes. No value moves; nothing here may be cited as a ruling. |
+| T20 | `care_direction` counts directional species only (v1.1 overlay, 2026-09-29) | Only settled humectants and medium/rich lipids above the tail set `moisture`; a leading persistent film makes the leg subordinate (`balanced`); glycols, dry-feel esters, volatiles and cationics never set a direction. Supersedes T19's Neqi call. Flips Gliss, Olaplex No.6, Neqi (and unseen u1) to `balanced`. |
 
 ## Calibration status
 
@@ -92,7 +99,7 @@ This package does **not**:
 1. **`roles[]` derivation** — `product_leave_in_specs.roles` has no research-side counterpart since T12 removed `usage_role[]`. What, if anything, derives it is undecided.
 2. **`conditioner_relationship`** — `product_leave_in_fit_specs.conditioner_relationship` (`replacement_capable` / `booster_only`) has no dimension behind it in this standard.
 3. **Eligibility emission** — how, and whether, a research record emits leave-in eligibility, given that an excluded product emits no lean profile at all (§2.3.1).
-4. **`heat_protection_max_c` cutover** — the field is removed from the research model (charter ruling 6, OA-2), but is live in `src/lib/recommendation-engine/selection.ts` and in personal-plan catalog facts. Its removal is a scoped migration plus code-path change, surfaced to Nick before execution.
+4. **`heat_protection_max_c` cutover** — the field is removed from the research model (charter ruling 6, OA-2). Heat protection is binary only; degrees cut over 2026-09-14 (AD-6) via a scoped migration plus code-path change across `src/lib/recommendation-engine/selection.ts` and personal-plan catalog facts.
 
 The §17 open evidence gaps stay open under v1.0 and are inherited by every record that touches them.
 

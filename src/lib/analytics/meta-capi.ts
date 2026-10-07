@@ -7,7 +7,7 @@ const FBP_PATTERN = /^fb\.1\.\d{10,16}\.\d+$/
 const FBC_PATTERN = /^fb\.1\.\d{10,16}\.[A-Za-z0-9._~-]+$/
 const MAX_BROWSER_ID_LENGTH = 512
 
-export type MetaConversionEventName = "Lead" | "ViewContent"
+export type MetaConversionEventName = "Lead" | "Schedule" | "ViewContent"
 
 export type MetaRequestData = {
   clientIpAddress?: string
@@ -16,18 +16,34 @@ export type MetaRequestData = {
   fbc?: string
 }
 
-export type MetaConversionInput = {
-  eventName: MetaConversionEventName
+type MetaConversionUser = MetaRequestData & {
+  email?: string | null
+  name?: string | null
+}
+
+type MetaConversionBase = {
   eventId: string
   eventSourceUrl: string
   eventTime?: Date
-  user: MetaRequestData & {
-    email?: string | null
-    name?: string | null
-    externalId: string
-  }
   customData?: Record<string, string | number | boolean>
 }
+
+/**
+ * Lead/ViewContent keep their compile-time `externalId` requirement (both
+ * fire with a lead id); only the webhook-sourced Schedule, which has no lead
+ * identity, may omit it.
+ */
+export type MetaConversionInput = MetaConversionBase &
+  (
+    | {
+        eventName: "Lead" | "ViewContent"
+        user: MetaConversionUser & { externalId: string }
+      }
+    | {
+        eventName: "Schedule"
+        user: MetaConversionUser & { externalId?: undefined }
+      }
+  )
 
 export type MetaConversionDeliveryResult =
   | { ok: true; status: number; providerRequestId?: string }
@@ -137,6 +153,10 @@ export function isMetaLeadCapiEnabled(env: MetaCapiEnvironment = process.env) {
 
 export function isMetaOfferViewCapiEnabled(env: MetaCapiEnvironment = process.env) {
   return env.META_CAPI_OFFER_VIEW_ENABLED === "true"
+}
+
+export function isMetaScheduleCapiEnabled(env: MetaCapiEnvironment = process.env) {
+  return env.META_CAPI_SCHEDULE_ENABLED === "true"
 }
 
 export function buildMetaConversionPayload(input: MetaConversionInput) {

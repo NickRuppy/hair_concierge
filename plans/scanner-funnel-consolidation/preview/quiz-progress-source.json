@@ -1,0 +1,17 @@
+{
+  "source": "09799e227d36ce38103eaf04ebfe71248ab132fe",
+  "questionStep": 3,
+  "questionNumber": 2,
+  "assets": [
+    "images/funnels/personal-plan-quiz/thickness-fine.webp",
+    "images/funnels/personal-plan-quiz/thickness-normal.webp",
+    "images/funnels/personal-plan-quiz/thickness-coarse.webp"
+  ],
+  "adapters": [
+    "prior structure answer: wavy",
+    "inactive navigation",
+    "native image tags",
+    "local info-tip button"
+  ],
+  "note": "Current second QuizQuestion component, without any new progress indicators. Static preview only."
+}

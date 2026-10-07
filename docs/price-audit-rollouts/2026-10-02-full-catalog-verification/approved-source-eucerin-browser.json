@@ -1,0 +1,10 @@
+{
+  "kind": "read-only dm-med pre-apply refresh",
+  "id": "cd76afea-d332-4b1d-b44b-7de5bef9034f",
+  "url": "https://www.dm.de/p/d/3086968/eucerin-eucerin-dermo-capillaire-5-prozent-urea-kopfhautberuhigendes-intensiv-tonikum",
+  "checked_at": "2026-10-03T11:39:43.738Z",
+  "expected": {"price_eur": 16.95, "package": "100 ml", "gtin": "4005800036620"},
+  "observed": {"price_eur": 16.95, "package": "100 ml", "gtin": "4005800036620", "availability": "Lieferbar", "purchase_control": "In den Warenkorb", "delivery": "Standardversand 2-3 Werktage", "seller": "dm-med"},
+  "result": "EXACT_MATCH",
+  "method": "hydrated dm-med PDP, visible product block; no cart interaction"
+}

@@ -256,7 +256,6 @@ test("buildProductMatchSummary falls back to Leave-in for leave-in specs without
     conditioner_relationship: "booster_only",
     roles: ["extension_conditioner"],
     provides_heat_protection: true,
-    heat_protection_max_c: null,
     heat_activation_required: false,
     care_benefits: ["shine"],
     ingredient_flags: [],

@@ -34,11 +34,11 @@ const artifact = JSON.parse(
 
 test("Stage 5 V2 backfill exhaustively covers the reviewed production-shaped snapshot", () => {
   assert.deepEqual(artifact.observed_counts, {
-    rows: 309,
+    rows: 310,
     products: 240,
     exact_workflows: 4,
     family_templates: 28,
-    composable_rows: 309,
+    composable_rows: 310,
     blocked_rows: 0,
     by_category: {
       bondbuilder: 3,
@@ -46,7 +46,7 @@ test("Stage 5 V2 backfill exhaustively covers the reviewed production-shaped sna
       deep_cleansing_shampoo: 6,
       dry_shampoo: 10,
       heat_protectant: 7,
-      leave_in: 79,
+      leave_in: 80,
       mask: 34,
       oil: 71,
       scalp_care: 8,

@@ -1,0 +1,22 @@
+{
+  "standard_version": "bondbuilder-inci-v0.3",
+  "stage": "C",
+  "sealed_before": "cross-lane comparison / root adjudication",
+  "rows_per_lane": 8,
+  "no_web": true,
+  "root_checks": [
+    "all input receipts and prior seals verified",
+    "all amended source IDs valid",
+    "8/8 protocols exact in both lanes",
+    "seven source-version category findings; Redken conflict held",
+    "one prescribed owner high and two research medium separated",
+    "all five unresolved trust rows retain concrete benefit gaps, not optional-source requirements",
+    "commercial scope and same-study duplicate captures inspected"
+  ],
+  "sha256": {
+    "lane-a/records.json": "5b6d9221a7a76ac5daafe82db20809e2a6bb7f6667cf5e1068530b93e22f0149",
+    "lane-a/notes.md": "a6edae4d52c6bc8ecad7d07504d8d1977cd770ba23296bcd8769928f1edd1515",
+    "lane-b/records.json": "7a77dee3258805698d0b66e1bda2149b49b433e3695a2918a450ad102e4a7a7d",
+    "lane-b/notes.md": "ef2117f271b7d6753aba45a54467ecdcbf4569e15041709779553e57363725c7"
+  }
+}

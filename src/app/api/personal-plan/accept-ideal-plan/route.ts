@@ -37,6 +37,7 @@ import {
 } from "@/lib/rate-limit"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
+import { saveUserFacts } from "@/lib/user-facts/save"
 
 const rate: RateLimitConfig = {
   prefix: "personal-plan-accept-ideal-plan",
@@ -149,6 +150,7 @@ export const POST = createAcceptIdealPlanRouteHandler({
           stage4Enabled: isPersonalPlanStage4Enabled(),
         },
         refinementPersistence: createSupabaseStage2RefinementPersistence(admin),
+        saveFacts: (factsInput) => saveUserFacts(admin, factsInput),
         planState: {
           async loadActiveRoutineVersionId({ personalPlanId }) {
             const { data, error } = await admin

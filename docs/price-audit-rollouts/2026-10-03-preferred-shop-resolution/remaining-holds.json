@@ -1,0 +1,484 @@
+{
+  "checked_at": "2026-10-03T14:32:27.282722+00:00",
+  "counts": {
+    "marketplace": 1,
+    "stock_or_missing_exact_offer": 17,
+    "identity_or_formula": 9
+  },
+  "recommended_rows": 24,
+  "records": [
+    {
+      "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "name": "Gliss Aqua Revive",
+      "category_key": "mask",
+      "is_chaarlie_recommended": true,
+      "hold_group": "marketplace",
+      "production_changes": 0,
+      "reason": "same hydration-mask category; not equivalent to Gliss Aqua Revive bonding/hyaluron formula",
+      "proposed_alternative": {
+        "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+        "proposal_type": "alternative_pending_recommendation_review",
+        "name": "GARNIER FRUCTIS Haarmaske Aloe Vera Hair Food 3in1",
+        "category": "mask",
+        "url": "https://www.dm.de/p/d/1676340/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar",
+        "gtin": "3600542511049",
+        "size": "400 ml",
+        "price_eur": 5.95,
+        "seller": "dm",
+        "stock": "Lieferbar; standard shipping 2-3 working days",
+        "why": "same hydration-mask category; not equivalent to Gliss Aqua Revive bonding/hyaluron formula",
+        "evidence": "dm public PDP, crawled 2-3 weeks ago"
+      },
+      "recommended_next_action": "Consider a distinct already-cataloged alternative after recommendation-profile review."
+    },
+    {
+      "id": "41e09958-5a1f-4997-b99b-f8384b7a8c0c",
+      "name": "Trockenshampoo Kopfhaut Sensitive",
+      "category_key": "dry_shampoo",
+      "is_chaarlie_recommended": true,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "The only current sensitive-scalp result is a different foam format/150 ml; do not inherit the old spray price or GTIN.",
+      "proposed_alternative": {
+        "gtin": "4066447989540",
+        "dan": "2974661",
+        "title": "Trockenshampoo Schaum Kopfhaut Sensitive, 150 ml",
+        "whole_package_price_eur": 1.45,
+        "url": "https://www.dm.de/p/d/2974661/balea-trockenshampoo-schaum-kopfhaut-sensitive",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommended_next_action": "Propose Balea Trockenshampoo Schaum Kopfhaut Sensitive as a distinct replacement."
+    },
+    {
+      "id": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "name": "Balea Professional Ultimate Volume",
+      "category_key": "shampoo",
+      "is_chaarlie_recommended": true,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "No exact Ultimate Volume article was returned; product may be absent or not indexed.",
+      "proposed_alternative": {
+        "gtin": "4066447990126",
+        "dan": "3126236",
+        "title": "Shampoo Hydra Volume, 250 ml",
+        "whole_package_price_eur": 1.35,
+        "url": "https://www.dm.de/p/d/3126236/balea-professional-shampoo-hydra-volume",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommended_next_action": "Propose Balea Professional Shampoo Hydra Volume as a distinct replacement."
+    },
+    {
+      "id": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "name": "Hair Biology Revitalize & Soothe",
+      "category_key": "shampoo",
+      "is_chaarlie_recommended": true,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "same shampoo category and scalp-sensitive positioning; not equivalent to Hair Biology’s menopause/thinning-hair positioning",
+      "proposed_alternative": {
+        "id": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+        "proposal_type": "alternative_pending_recommendation_review",
+        "name": "Guhl Shampoo Kopfhaut Sensitiv",
+        "category": "shampoo",
+        "url": "https://www.dm.de/p/d/1446989/guhl-shampoo-kopfhaut-sensitiv",
+        "gtin": "4072600283172",
+        "size": "250 ml",
+        "price_eur": 3.95,
+        "seller": "dm",
+        "stock": "Lieferbar; standard shipping 2-3 working days",
+        "why": "same shampoo category and scalp-sensitive positioning; not equivalent to Hair Biology’s menopause/thinning-hair positioning",
+        "evidence": "dm public PDP, crawled 2-3 weeks ago"
+      },
+      "recommended_next_action": "Consider a distinct already-cataloged alternative after recommendation-profile review."
+    },
+    {
+      "id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "name": "Langhaarmädchen Lovely Long",
+      "category_key": "shampoo",
+      "is_chaarlie_recommended": true,
+      "hold_group": "identity_or_formula",
+      "production_changes": 0,
+      "reason": "Current exact-GTIN dm IT list differs from dm AT/DE and historical retailer record. No unchanged-formula claim is justified.",
+      "recommended_next_action": "Reassess current declared formula under the category contract; no silent identity merge."
+    },
+    {
+      "id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "name": "Langhaarmädchen Beautiful Curls Shampoo",
+      "category_key": "shampoo",
+      "is_chaarlie_recommended": true,
+      "hold_group": "identity_or_formula",
+      "production_changes": 0,
+      "reason": "confirmed declared formulation change: old dm.at exact GTIN list begins Aqua, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Aloe Barbadensis Leaf Juice Powder; current dm.de exact GTIN list begins Aqua, Aloe Barbadensis Leaf Juice, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride",
+      "recommended_next_action": "Reassess current declared formula under the category contract; no silent identity merge."
+    },
+    {
+      "id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+      "name": "Alverde Conditioner Glanz",
+      "category_key": "conditioner",
+      "is_chaarlie_recommended": true,
+      "hold_group": "identity_or_formula",
+      "production_changes": 0,
+      "reason": "Old list: Aqua, Cetearyl Alcohol, Helianthus Annuus Hybrid Oil, Glycerin, Betaine, Arginine, Rosa Damascena Flower Water, Levulinic Acid, Parfum, Brassica Alcohol, Sodium Levulinate, Cetearyl Glucoside, Hydrolyzed Wheat Protein, Alcohol, Glyceryl Caprylate, p-Anisic Acid, Brassicyl Isoleucinate Esylate, Citric Acid, Sodium Hydroxide. Current list additionally declares Pelargonium Graveolens Flower Oil and changes ingredient order. This is not a same-list result.",
+      "recommended_next_action": "Reassess current declared formula under the category contract before attaching a new barcode or changing the base offer."
+    },
+    {
+      "id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "name": "Balea Natural Beauty Hibiskus",
+      "category_key": "conditioner",
+      "is_chaarlie_recommended": true,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "No exact Hibiskus candidate was returned; old/candidate barcode hold remains separate.",
+      "proposed_alternative": {
+        "gtin": "4066447238938",
+        "dan": "1625965",
+        "title": "Conditioner Avocadoöl & Mangobutter natural beauty, 350 ml",
+        "whole_package_price_eur": 1.45,
+        "url": "https://www.dm.de/p/d/1625965/balea-conditioner-avocadooel-und-mangobutter-natural-beauty",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommended_next_action": "Propose Balea Natural Beauty Conditioner Avocadoöl & Mangobutter as a distinct replacement."
+    },
+    {
+      "id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+      "name": "Balea Professional Oil Repair Intensiv Spülung",
+      "category_key": "conditioner",
+      "is_chaarlie_recommended": true,
+      "hold_group": "identity_or_formula",
+      "production_changes": 0,
+      "reason": "Old and current disclose the same ingredient set, but Hydrolyzed Keratin moves from after Isopropyl Alcohol to before the oil complex. INCI order can reflect concentration ordering; this is continuity evidence, not proof of an unchanged formula.",
+      "recommended_next_action": "Reassess current declared formula under the category contract before attaching a new barcode or changing the base offer."
+    },
+    {
+      "id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "name": "Garnier Hair Food Macadamia",
+      "category_key": "conditioner",
+      "is_chaarlie_recommended": true,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "The registered dm identity has no buyable current offer. A rejected Douglas candidate had conflicting INCI; that does not invalidate the existing canonical product. Retain both legacy category records and current identifier ownership.",
+      "proposed_alternative": {
+        "gtin": "3600542511148",
+        "dan": "1676321",
+        "title": "Haarkur Kakao Butter Hair Food 3in1 Maske, 400 ml",
+        "whole_package_price_eur": 5.95,
+        "url": "https://www.dm.de/p/d/1676321/garnier-fructis-haarkur-kakao-butter-hair-food-3in1-maske",
+        "purchasable": true,
+        "sellout": false,
+        "warning": "Distinct Kakao Butter formula; not a successor or automatic reclassification."
+      },
+      "recommended_next_action": "Propose Garnier Kakao Butter Hair Food 3in1 Maske as a distinct 400 ml conditioner-use replacement."
+    },
+    {
+      "id": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+      "name": "Herbal Essences Aloe Vera Conditioner",
+      "category_key": "conditioner",
+      "is_chaarlie_recommended": true,
+      "hold_group": "identity_or_formula",
+      "production_changes": 0,
+      "reason": "not determinable: exact old INCI not recovered from the primary dm network",
+      "recommended_next_action": "Reassess current declared formula under the category contract; no silent identity merge."
+    },
+    {
+      "id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "name": "Nivea Volumen & Kraft",
+      "category_key": "conditioner",
+      "is_chaarlie_recommended": true,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "same brand/category and 200ml pack; repair rather than volume positioning",
+      "proposed_alternative": {
+        "id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+        "proposal_type": "alternative_pending_recommendation_review",
+        "name": "NIVEA Conditioner Power Repair",
+        "category": "conditioner",
+        "url": "https://www.dm.de/p/d/1620990/nivea-conditioner-power-repair",
+        "gtin": "4006000192598",
+        "size": "200 ml",
+        "price_eur": 2.95,
+        "seller": "dm",
+        "stock": "Lieferbar; standard shipping 2-3 working days",
+        "why": "same brand/category and 200ml pack; repair rather than volume positioning",
+        "evidence": "dm public PDP, crawled 2-3 weeks ago"
+      },
+      "recommended_next_action": "Consider a distinct already-cataloged alternative after recommendation-profile review."
+    },
+    {
+      "id": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+      "name": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+      "category_key": "mask",
+      "is_chaarlie_recommended": true,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "same mask category with hydration positioning; different formula and 400ml rather than Alterra 20ml",
+      "proposed_alternative": {
+        "id": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+        "proposal_type": "alternative_pending_recommendation_review",
+        "name": "GARNIER FRUCTIS Haarmaske Aloe Vera Hair Food 3in1",
+        "category": "mask",
+        "url": "https://www.dm.de/p/d/1676340/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar",
+        "gtin": "3600542511049",
+        "size": "400 ml",
+        "price_eur": 5.95,
+        "seller": "dm",
+        "stock": "Lieferbar; standard shipping 2-3 working days",
+        "why": "same mask category with hydration positioning; different formula and 400ml rather than Alterra 20ml",
+        "evidence": "dm public PDP, crawled 2-3 weeks ago"
+      },
+      "recommended_next_action": "Consider a distinct already-cataloged alternative after recommendation-profile review."
+    },
+    {
+      "id": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+      "name": "Balea Natural Beauty 3in1 Locken",
+      "category_key": "mask",
+      "is_chaarlie_recommended": true,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "No exact curl 3in1 mask was returned.",
+      "proposed_alternative": {
+        "gtin": "4066447982817",
+        "dan": "1671219",
+        "title": "Haarmaske Intensivpflege 3in1, 300 ml",
+        "whole_package_price_eur": 1.95,
+        "url": "https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommended_next_action": "Propose already-cataloged Balea 3 in 1 Intensivmaske as a distinct mask replacement."
+    },
+    {
+      "id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+      "name": "Balea Professional Glow & Shine",
+      "category_key": "mask",
+      "is_chaarlie_recommended": true,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "No exact 200 ml Glow & Shine treatment was returned.",
+      "proposed_alternative": {
+        "gtin": "4066447982817",
+        "dan": "1671219",
+        "title": "Haarmaske Intensivpflege 3in1, 300 ml",
+        "whole_package_price_eur": 1.95,
+        "url": "https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommended_next_action": "Propose already-cataloged Balea 3 in 1 Intensivmaske as a distinct mask replacement."
+    },
+    {
+      "id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+      "name": "Balea Aqua Hyaluron 3 in 1",
+      "category_key": "mask",
+      "is_chaarlie_recommended": true,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "Exact Aqua Hyaluron 3in1 mask was not returned.",
+      "proposed_alternative": {
+        "gtin": "4066447982817",
+        "dan": "1671219",
+        "title": "Haarmaske Intensivpflege 3in1, 300 ml",
+        "whole_package_price_eur": 1.95,
+        "url": "https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommended_next_action": "Propose already-cataloged Balea 3 in 1 Intensivmaske as a distinct mask replacement."
+    },
+    {
+      "id": "17c50884-3c17-479a-848a-10447464e086",
+      "name": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+      "category_key": "mask",
+      "is_chaarlie_recommended": true,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "No exact Aktivkohle treatment was returned.",
+      "proposed_alternative": {
+        "gtin": "3600542656191",
+        "dan": "3115711",
+        "title": "Haarkur 1-Minute Traube, 340 ml",
+        "whole_package_price_eur": 4.95,
+        "url": "https://www.dm.de/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommended_next_action": "Propose already-cataloged Wahre Schätze 1-Minute Traube as a distinct mask replacement."
+    },
+    {
+      "id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "name": "Isana 3in1 Milchprotein & Mandel",
+      "category_key": "mask",
+      "is_chaarlie_recommended": true,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "same 3-in-1 mask use class; different formula and 400ml rather than Isana 250ml",
+      "proposed_alternative": {
+        "id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+        "proposal_type": "alternative_pending_recommendation_review",
+        "name": "GARNIER FRUCTIS Haarmaske Aloe Vera Hair Food 3in1",
+        "category": "mask",
+        "url": "https://www.dm.de/p/d/1676340/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar",
+        "gtin": "3600542511049",
+        "size": "400 ml",
+        "price_eur": 5.95,
+        "seller": "dm",
+        "stock": "Lieferbar; standard shipping 2-3 working days",
+        "why": "same 3-in-1 mask use class; different formula and 400ml rather than Isana 250ml",
+        "evidence": "dm public PDP, crawled 2-3 weeks ago"
+      },
+      "recommended_next_action": "Consider a distinct already-cataloged alternative after recommendation-profile review."
+    },
+    {
+      "id": "869abd97-a499-4f39-97e5-2722773e46ae",
+      "name": "Sante Intense Hydration",
+      "category_key": "mask",
+      "is_chaarlie_recommended": true,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "same hydrating-mask job; not equivalent to Sante certified-natural protein-hyaluron formula",
+      "proposed_alternative": {
+        "id": "869abd97-a499-4f39-97e5-2722773e46ae",
+        "proposal_type": "alternative_pending_recommendation_review",
+        "name": "GARNIER FRUCTIS Haarmaske Aloe Vera Hair Food 3in1",
+        "category": "mask",
+        "url": "https://www.dm.de/p/d/1676340/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar",
+        "gtin": "3600542511049",
+        "size": "400 ml",
+        "price_eur": 5.95,
+        "seller": "dm",
+        "stock": "Lieferbar; standard shipping 2-3 working days",
+        "why": "same hydrating-mask job; not equivalent to Sante certified-natural protein-hyaluron formula",
+        "evidence": "dm public PDP, crawled 2-3 weeks ago"
+      },
+      "recommended_next_action": "Consider a distinct already-cataloged alternative after recommendation-profile review."
+    },
+    {
+      "id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+      "name": "Schaebens Argan-Öl Haarmaske",
+      "category_key": "mask",
+      "is_chaarlie_recommended": true,
+      "hold_group": "identity_or_formula",
+      "production_changes": 0,
+      "reason": "The current14ml2x7 package/newGTIN has materially different declared INCI from registered20ml, including different conditioning agents and emollients. No manufacturer unchanged-formula bridge was found.",
+      "proposed_alternative": {
+        "gtin": "4003573125015",
+        "dan": "3132757",
+        "title": "Haarmaske Arganöl (2x7 ml), 14 ml",
+        "whole_package_price_eur": 0.95,
+        "url": "https://www.dm.de/p/d/3132757/schaebens-haarmaske-arganoel-2x7-ml",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommended_next_action": "Review the14ml product as a separate formula/package; do not attach its barcode to the old20ml identity."
+    },
+    {
+      "id": "e3571e45-1126-4431-bef8-43153ef64c20",
+      "name": "alverde NATURKOSMETIK Haarkur 4in1 Repair & Care Wunderkur",
+      "category_key": "mask",
+      "is_chaarlie_recommended": false,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "No exact alverde 4in1 repair treatment was returned.",
+      "proposed_alternative": {
+        "gtin": "4015100814095",
+        "dan": "1534911",
+        "title": "Haarkur Total Repair 1 Min Express-Kur, 200 ml",
+        "whole_package_price_eur": 3.45,
+        "url": "https://www.dm.de/p/d/1534911/schwarzkopf-gliss-haarkur-total-repair-1-min-express-kur",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommended_next_action": "Propose GLISS Total Repair 1-Minute Express-Kur as a distinct repair-mask replacement."
+    },
+    {
+      "id": "96f4cf13-7a71-4924-b44e-9d5612d55d32",
+      "name": "alverde NATURKOSMETIK Haarmaske Hydro Feuchtigkeit",
+      "category_key": "mask",
+      "is_chaarlie_recommended": false,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "No exact alverde hydro mask was returned.",
+      "proposed_alternative": {
+        "gtin": "3600524245849",
+        "dan": "3122676",
+        "title": "Haarmaske Hydra Hyaluronic, 300 ml",
+        "whole_package_price_eur": 4.95,
+        "url": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommended_next_action": "Propose L’Oréal Elvital Hydra Hyaluronic Haarmaske as a distinct hydration-mask replacement."
+    },
+    {
+      "id": "efaff579-e411-41eb-972a-2734a8517356",
+      "name": "Hitzeschutzspray Schutzengel",
+      "category_key": "heat_protectant",
+      "is_chaarlie_recommended": true,
+      "hold_group": "identity_or_formula",
+      "production_changes": 0,
+      "reason": "changed disclosed INCI lists; this is not evidence by itself of a chemical reformulation because fragrance-allergen/disclosure conventions can explain part of the difference",
+      "recommended_next_action": "Reassess current declared formula under the category contract; no silent identity merge."
+    },
+    {
+      "id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+      "name": "Balea Aqua Hyaluron 3in1",
+      "category_key": "leave_in",
+      "is_chaarlie_recommended": true,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "Exact Aqua Hyaluron 3in1 leave-in was not returned.",
+      "proposed_alternative": {
+        "gtin": "4070765026894",
+        "dan": "3151631",
+        "title": "Feuchtigkeitsfiller Aqua Hyaluron, 50 ml",
+        "whole_package_price_eur": 2.95,
+        "url": "https://www.dm.de/p/d/3151631/balea-professional-feuchtigkeitsfiller-aqua-hyaluron",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommended_next_action": "Propose Balea Feuchtigkeitsfiller Aqua Hyaluron as a distinct leave-in/moisture replacement."
+    },
+    {
+      "id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "name": "Garnier Hair Food Macadamia",
+      "category_key": "leave_in",
+      "is_chaarlie_recommended": true,
+      "hold_group": "stock_or_missing_exact_offer",
+      "production_changes": 0,
+      "reason": "The registered dm identity has no buyable current offer. A rejected Douglas candidate had conflicting INCI; that does not invalidate the existing canonical product. Retain both legacy category records and current identifier ownership.",
+      "proposed_alternative": {
+        "gtin": "3600542511148",
+        "dan": "1676321",
+        "title": "Haarkur Kakao Butter Hair Food 3in1 Maske, 400 ml",
+        "whole_package_price_eur": 5.95,
+        "url": "https://www.dm.de/p/d/1676321/garnier-fructis-haarkur-kakao-butter-hair-food-3in1-maske",
+        "purchasable": true,
+        "sellout": false,
+        "warning": "Distinct Kakao Butter formula; not a successor or automatic reclassification."
+      },
+      "recommended_next_action": "Same distinct Kakao Butter Hair Food 3in1 proposal can be evaluated for leave-in use; it is not a formula/identity replacement."
+    },
+    {
+      "id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+      "name": "Hitzeschutzspray 2-Phasen",
+      "category_key": "heat_protectant",
+      "is_chaarlie_recommended": false,
+      "hold_group": "identity_or_formula",
+      "production_changes": 0,
+      "reason": "Old declared INCI: AQUA, ISODODECANE, ALCOHOL DENAT., POLYQUATERNIUM-68, PANTHENOL, UNDECANE, CITRIC ACID, GLYCERYL CAPRATE, TRIDECANE, ETHYLHEXYLGLYCERIN, CETRIMONIUM CHLORIDE, PARFUM, HYDROLYZED RICE PROTEIN, AMMONIA, PHENOXYETHANOL, LINALYL ACETATE, LIMONENE, LINALOOL, SODIUM BENZOATE, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, CITRUS AURANTIUM PEEL OIL, GERANIOL, PINENE, TOCOPHEROL, HELIANTHUS ANNUUS SEED OIL. Current declared INCI: AQUA, ISODODECANE, ALCOHOL DENAT., POLYQUATERNIUM-68, PANTHENOL, UNDECANE, CITRIC ACID, GLYCERYL CAPRATE, TRIDECANE, ETHYLHEXYLGLYCERIN, CETRIMONIUM CHLORIDE, PARFUM, HYDROLYZED RICE PROTEIN, AMMONIA, PHENOXYETHANOL, LIMONENE, LINALOOL, SODIUM BENZOATE, GERANIOL, CITRAL, TOCOPHEROL, HELIANTHUS ANNUUS SEED OIL. Difference: old declares Linalyl Acetate, Tetramethyl Acetyloctahydronaphthalenes, Citrus Aurantium Peel Oil and Pinene; current declares Citral. This may be a fragrance-allergen/declaration change or a reformulation; it does not prove either.",
+      "recommended_next_action": "Reassess current declared formula under the category contract before attaching a new barcode or changing the base offer."
+    },
+    {
+      "id": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+      "name": "Innersense Harmonic Treatment Oil",
+      "category_key": "oil",
+      "is_chaarlie_recommended": true,
+      "hold_group": "identity_or_formula",
+      "production_changes": 0,
+      "reason": "Current manufacturer INCI conflicts materially with Hagel legacy INCI; older exact-catalog formula not recovered.",
+      "recommended_next_action": "Resolve which exact formulation the catalog properties describe before choosing the29ml or118ml base offer."
+    }
+  ]
+}

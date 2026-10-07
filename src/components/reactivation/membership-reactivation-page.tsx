@@ -12,6 +12,10 @@ import {
   Sparkles,
 } from "lucide-react"
 
+import {
+  TrialMembershipRecovery,
+  type TrialMembershipRecoveryState,
+} from "@/components/reactivation/trial-membership-recovery"
 import { OfferPreviewRoutine } from "@/components/quiz/offer-preview-routine"
 import { MembershipReactivationCheckout } from "@/components/reactivation/membership-reactivation-checkout"
 import type { SubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
@@ -270,6 +274,41 @@ export function MembershipReactivationPage({
           </div>
         </div>
       </footer>
+    </main>
+  )
+}
+
+/** Management remains reachable here after the product/profile subscription gate locks. */
+export function TrialMembershipReactivationPage({
+  initialState,
+}: {
+  initialState: TrialMembershipRecoveryState
+}) {
+  return (
+    <main className="min-h-screen bg-[#fbfaf8] text-[var(--brand-plum-darkest)]">
+      <header className="border-b border-border/60 bg-white/90">
+        <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-4 sm:px-6">
+          <span className="font-[family-name:var(--font-display)] text-2xl font-semibold tracking-[-0.03em]">
+            Chaarlie
+          </span>
+          <div className="flex items-center gap-4 text-sm">
+            <Link href="/kontakt" className="inline-flex min-h-11 items-center text-primary">
+              Hilfe
+            </Link>
+            <form action={signOutAction}>
+              <button type="submit" className="min-h-11 text-muted-foreground">
+                Abmelden
+              </button>
+            </form>
+          </div>
+        </div>
+      </header>
+      <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
+        <h1 className="font-[family-name:var(--font-display)] text-3xl font-medium leading-tight tracking-[-0.035em] text-[var(--text-heading)] sm:text-4xl">
+          Deine Mitgliedschaft
+        </h1>
+        <TrialMembershipRecovery initialState={initialState} />
+      </div>
     </main>
   )
 }

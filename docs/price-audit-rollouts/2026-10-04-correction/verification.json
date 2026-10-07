@@ -1,0 +1,20 @@
+{
+  "checked_at": "2026-10-04T08:15:13.993044+00:00",
+  "products": 371,
+  "active": 347,
+  "recommended": 238,
+  "restored_recommendation_flags": 16,
+  "commerce_records_refreshed": 2,
+  "prices_changed": 0,
+  "identifiers_changed": 0,
+  "formula_category_protocol_changes": 0,
+  "restoration_verification": true,
+  "commerce_verification": true,
+  "root_adapter_replays_equal": [
+    "F1",
+    "F2",
+    "F4"
+  ],
+  "no_new_purchase_pauses": true
+}
+

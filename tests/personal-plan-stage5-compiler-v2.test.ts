@@ -1,15 +1,84 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { compileApplicationViewV2 as compileApplicationViewV2Impl } from "../src/lib/routines/personal-plan/application/compiler-v2"
+import {
+  compileApplicationViewV2 as compileApplicationViewV2Impl,
+  composeProductApplicationProtocolsV2,
+} from "../src/lib/routines/personal-plan/application/compiler-v2"
 import { APPLICATION_DAY_TYPE_KEYS } from "../src/lib/routines/personal-plan/application/contracts"
-import type { ProductApplicationPointerV2 } from "../src/lib/routines/personal-plan/application/contracts-v2"
+import {
+  productApplicationPointerV2Schema,
+  type ProductApplicationPointerV2,
+} from "../src/lib/routines/personal-plan/application/contracts-v2"
 import { SHARED_APPLICATION_TEMPLATES_V2 } from "../src/lib/routines/personal-plan/application/shared-templates-v2"
 
 const compileApplicationViewV2 = compileApplicationViewV2Impl
 
 const productId = "30000000-0000-4000-8000-000000000001"
 const shampooProductId = "30000000-0000-4000-8000-000000000002"
+
+test("verified Bondbuilder workflows preserve minimum contact and finished dilution at the compiler boundary", () => {
+  const parsed = productApplicationPointerV2Schema.safeParse({
+    ...pointer(),
+    scope: { kind: "product", category: "bondbuilder", productId },
+    sourceRole: "specialized_bond_treatment",
+    role: "bond_repair",
+    workflowId: "bondbuilder_verified_product",
+    applicationFamily: "pre_shampoo_single_treatment",
+    facts: {
+      ...pointer().facts,
+      applicationState: "pre_wash_dry_hair",
+      applicationArea: "root_to_tip_hair",
+      rinse: "follow_with_shampoo",
+      contactTime: { kind: "minimum_seconds", minimumSeconds: 600 },
+      dilution: {
+        concentrateAmount: 1,
+        concentrateUnit: "vial",
+        finishedVolumeMl: 150,
+        containerDe: "Sprühflasche",
+        methodDe: "Mit Wasser auffüllen und schütteln.",
+      },
+      overnightAllowed: true,
+    },
+    exactSteps: [
+      {
+        stepKey: "apply",
+        action: "apply_product",
+        copyDe: "Auf trockenes, ungewaschenes Haar sprühen.",
+      },
+      {
+        stepKey: "wait",
+        action: "wait",
+        copyDe: "Mindestens 10 Minuten einwirken lassen, auch über Nacht möglich.",
+      },
+    ],
+  })
+  assert.equal(parsed.success, true)
+  if (!parsed.success) return
+  const result = composeProductApplicationProtocolsV2(parsed.data, [])
+  assert.equal(result.status, "resolved")
+  if (result.status !== "resolved") return
+  assert.equal(result.protocols[0].sequence.anchor, "pre_wash")
+  assert.deepEqual(result.protocols[0].compatibleDayTypes, ["bond_repair_day"])
+  assert.equal(result.protocols[0].protocolFacts.contactTimeSeconds, null)
+  assert.deepEqual(result.protocols[0].protocolFacts.contactTime, {
+    kind: "minimum_seconds",
+    minimumSeconds: 600,
+  })
+  assert.equal(result.protocols[0].protocolFacts.dilution?.finishedVolumeMl, 150)
+  assert.equal(result.protocols[0].protocolFacts.overnightAllowed, true)
+  assert.equal(
+    productApplicationPointerV2Schema.safeParse({ ...parsed.data, role: "condition" }).success,
+    false,
+  )
+  assert.equal(
+    productApplicationPointerV2Schema.safeParse({
+      ...parsed.data,
+      workflowId: "k18_leave_in_molecular_repair",
+    }).success,
+    false,
+  )
+})
 
 function pointer(
   overrides: Partial<ProductApplicationPointerV2> = {},
@@ -91,6 +160,150 @@ function supportingShampooPointer() {
     scope: { kind: "product", category: "shampoo", productId: shampooProductId },
   })
 }
+
+test("optional Conditioner follows the complete treatment wait and its absence never suppresses K18", () => {
+  const treatment = pointer({
+    scope: { kind: "product", category: "bondbuilder", productId },
+    sourceRole: "specialized_bond_treatment",
+    role: "bond_repair",
+    workflowId: "bondbuilder_verified_product",
+    applicationFamily: "post_shampoo_timed_leave_in",
+    facts: {
+      ...pointer().facts,
+      applicationState: "damp_hair",
+      applicationArea: "hair_lengths_ends",
+      rinse: "leave_in",
+      contactTime: { kind: "seconds", seconds: 240 },
+      conditionerPolicy: "conditioner_optional",
+      conditionerSequence: { before: "forbidden", after: "optional", minimumWaitSeconds: 240 },
+    },
+    exactSteps: [
+      {
+        stepKey: "dry",
+        action: "dry",
+        copyDe: "Nach dem Shampoo ohne Conditioner gründlich handtuchtrocknen.",
+      },
+      {
+        stepKey: "apply",
+        action: "apply_product",
+        copyDe: "Mit einer Pumpe beginnen, bei Bedarf mehr verwenden.",
+      },
+      { stepKey: "wait", action: "wait", copyDe: "Volle 4 Minuten warten." },
+      {
+        stepKey: "after",
+        action: "section",
+        copyDe:
+          "Danach kannst du deinen üblichen Conditioner verwenden oder diesen Schritt weglassen.",
+      },
+    ],
+  })
+  const conditionerId = "30000000-0000-4000-8000-000000000003"
+  for (const includeConditioner of [true, false]) {
+    const applicationInput = input("bondbuilder", "bond_repair") as unknown as {
+      routineItems: Array<Record<string, unknown>>
+    }
+    if (includeConditioner)
+      applicationInput.routineItems.push({
+        itemId: "conditioner",
+        productId: conditionerId,
+        productName: "Usual conditioner",
+        category: "conditioner",
+        role: "condition",
+        inclusion: "included",
+        availability: "owned",
+        executable: true,
+        catalogFacts: {},
+      })
+    const result = compileApplicationViewV2({
+      input: applicationInput as never,
+      familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+      productPointers: [
+        supportingShampooPointer(),
+        treatment,
+        ...(includeConditioner
+          ? [
+              pointer({
+                scope: { kind: "product", category: "conditioner", productId: conditionerId },
+                sourceRole: "conditioner_rinse_out",
+                role: "condition",
+                applicationFamily: "standard_rinse_out_conditioning",
+              }),
+            ]
+          : []),
+      ],
+    })
+    assert.deepEqual(result.pointerIssues, [])
+    const day = result.days.find((d) => d.key === "bond_repair_day")!
+    assert.ok(day)
+    assert.deepEqual(
+      day.productBlocks.map((b) => b.productId),
+      includeConditioner
+        ? [shampooProductId, productId, conditionerId]
+        : [shampooProductId, productId],
+    )
+    const block = day.productBlocks.find((b) => b.productId === productId)!
+    assert.equal(block.steps.filter((s) => s.action === "apply_product").length, 1)
+    assert.equal(
+      block.steps.some((s) => s.action === "rinse"),
+      false,
+    )
+    assert.equal(day.isPartial, false)
+  }
+})
+
+test("Première layers the normal Shampoo after five minutes without an intervening rinse or wetting", () => {
+  const result = compileApplicationViewV2({
+    input: input("bondbuilder", "bond_repair"),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [
+      supportingShampooPointer(),
+      pointer({
+        scope: { kind: "product", category: "bondbuilder", productId },
+        sourceRole: "specialized_bond_treatment",
+        role: "bond_repair",
+        workflowId: "bondbuilder_verified_product",
+        applicationFamily: "pre_shampoo_single_treatment",
+        facts: {
+          ...pointer().facts,
+          applicationState: "damp_hair",
+          applicationArea: "hair_lengths_ends",
+          rinse: "follow_with_shampoo",
+          contactTime: { kind: "seconds", seconds: 300 },
+          shampooAfterTreatment: "layer_without_rinsing",
+        },
+        exactSteps: [
+          { stepKey: "apply", action: "apply_product", copyDe: "In feuchte Längen einarbeiten." },
+          {
+            stepKey: "wait",
+            action: "wait",
+            copyDe: "5 Minuten einwirken lassen. Nicht ausspülen.",
+          },
+        ],
+      }),
+    ],
+  })
+  const day = result.days.find((d) => d.key === "bond_repair_day")!
+  assert.deepEqual(
+    day.productBlocks.map((b) => b.productId),
+    [productId, shampooProductId],
+  )
+  const steps = day.outerSequence.flatMap((e) =>
+    e.kind === "product"
+      ? e.block.steps
+      : e.kind === "state_transition"
+        ? [{ action: "section", copyDe: e.copyDe }]
+        : [],
+  )
+  assert.doesNotMatch(steps.map((s) => s.copyDe).join(" "), /anfeuchten/)
+  const applyIndices = steps.flatMap((s, i) => (s.action === "apply_product" ? [i] : []))
+  assert.equal(applyIndices.length, 2)
+  assert.ok(steps.findIndex((s) => s.action === "wait") < applyIndices[1])
+  assert.ok(steps.findIndex((s) => s.action === "rinse") > applyIndices[1])
+  assert.match(
+    steps.map((s) => s.copyDe).join(" "),
+    /direkt auf die noch nicht ausgespülte Behandlung/,
+  )
+})
 
 test("V2 compiler renders OGX through canonical shampoo copy only", () => {
   const result = compileApplicationViewV2({
@@ -512,17 +725,75 @@ test("V2 compiler generalizes a conventional damp Oil role and adapts rich Oil d
           rinse: "leave_in",
         },
       }),
+      pointer({
+        scope: { kind: "product", category: "oil", productId },
+        sourceRole: "dry_finish",
+        role: "finish",
+        applicationFamily: "dry_finish",
+        facts: {
+          ...pointer().facts,
+          applicationState: "dry_hair",
+          applicationArea: "hair_lengths_ends",
+          rinse: "leave_in",
+        },
+      }),
     ],
   })
 
   assert.deepEqual(result.pointerIssues, [])
+  assert.equal(
+    result.days
+      .find(({ key }) => key === "refresh_day")
+      ?.productBlocks.some((block) => block.productId === productId) ?? false,
+    false,
+    "no Oil on the Refresh-Tag",
+  )
   const steps = result.days
-    .find(({ key }) => key === "refresh_day")
+    .find(({ key }) => key === "between_wash_care_day")
     ?.productBlocks.find((block) => block.productId === productId)?.steps
   assert.ok(steps)
   assert.ok(steps.some(({ copyDe }) => copyDe.includes("Mit 1 Tropfen")))
   assert.ok(steps.some(({ copyDe }) => copyDe.includes("reichhaltigen Öl")))
   assert.ok(steps.some(({ copyDe }) => copyDe.includes("besonders sparsam")))
+})
+
+test("V2 compiler gives a damp-only Oil no between-wash card (O3)", () => {
+  const result = compileApplicationViewV2({
+    input: input("oil", "leave_in") as never,
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [
+      supportingShampooPointer(),
+      pointer({
+        scope: { kind: "product", category: "oil", productId },
+        sourceRole: "leave_on_fibre_conditioning",
+        role: "leave_in",
+        applicationFamily: "post_wash_damp_conditioning",
+        facts: {
+          ...pointer().facts,
+          applicationState: "damp_hair",
+          applicationArea: "hair_lengths_ends",
+          rinse: "leave_in",
+        },
+      }),
+    ],
+  })
+
+  assert.deepEqual(result.pointerIssues, [])
+  for (const key of ["refresh_day", "between_wash_care_day"] as const) {
+    assert.equal(
+      result.days
+        .find((day) => day.key === key)
+        ?.productBlocks.some((block) => block.productId === productId) ?? false,
+      false,
+      key,
+    )
+  }
+  assert.ok(
+    result.days
+      .find((day) => day.key === "wash_day")
+      ?.productBlocks.some((block) => block.productId === productId),
+    "the damp Oil keeps its wash-day step",
+  )
 })
 
 test("V2 compiler groups one Oil selected for finish and leave-in roles only once", () => {

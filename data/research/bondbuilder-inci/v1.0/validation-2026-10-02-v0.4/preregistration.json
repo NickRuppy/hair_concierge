@@ -1,0 +1,118 @@
+{
+  "run_id": "bondbuilder-validation-2026-10-02-v0.4",
+  "run_type": "four new source-version identities; targeted applicability validation, not full unused-family lock gate",
+  "authorization": {
+    "user_date": "2026-10-02",
+    "request": "All original products in enrichment scope; find additional products outside the pilot and run through the engine to simulate new user submission",
+    "database_apply": false,
+    "method_lock": false,
+    "recommendation_promotion": false
+  },
+  "cohort_slots": [
+    "V01",
+    "V02",
+    "V03",
+    "V04"
+  ],
+  "denominators": {
+    "unique_products": 4,
+    "positive_family_coverage": 1,
+    "total_lexicon_families": 5,
+    "positive_examples": 1,
+    "ordinary_repair_controls": 2,
+    "unrecognized_technology_boundary": 1
+  },
+  "ordered_reserves": [],
+  "substitution_policy": "No substitution permitted after freeze. If a target becomes unusable, retain hold in denominator and create a new amended run before replacement labels.",
+  "overlap_check": {
+    "command": "rg -n -i 'curlsmith|keratin repair|absolut repair molecular|pro-keratin filler' data/research/bondbuilder-inci plans/bondbuilder-research-engine docs/research/bondbuilder-inci",
+    "result": "No prior task corpus matches before this packet was created. Different pilot formulas checked before freeze; no sizes/predecessor duplicates selected.",
+    "limits": "No claim that these products have never been researched elsewhere in the repository/world. Novel to this engine pilot."
+  },
+  "expected": [
+    {
+      "slot_id": "V01",
+      "markers": [
+        "Citric Acid",
+        "Hydroxypropylammonium Gluconate",
+        "Hydroxypropylgluconamide"
+      ],
+      "boundary": "in_scope",
+      "family": "gluconamide_gluconate",
+      "trust": "low",
+      "basis": "owner_default",
+      "protocol_checks": [
+        "three porosity branches, current middle 20 minutes not editorial 30",
+        "pre-shampoo wet unwashed root-tip generous",
+        "rinse before shampoo and conditioner",
+        "no numeric dose or inferred cream texture"
+      ]
+    },
+    {
+      "slot_id": "V02",
+      "markers": [],
+      "boundary": "out_of_scope",
+      "family": null,
+      "trust": null,
+      "basis": null,
+      "protocol_checks": [
+        "damp lengths/ends",
+        "2-3 minute dwell",
+        "1-2 times weekly",
+        "no invented wash placement"
+      ]
+    },
+    {
+      "slot_id": "V03",
+      "markers": [
+        "Citric Acid",
+        "Glycine"
+      ],
+      "boundary": "out_of_scope",
+      "family": null,
+      "trust": null,
+      "basis": null,
+      "protocol_checks": [
+        "before OR after shampoo",
+        "damp lengths/ends",
+        "5 minute dwell then rinse",
+        "cadence unknown"
+      ]
+    },
+    {
+      "slot_id": "V04",
+      "markers": [
+        "Arginine",
+        "Citric Acid",
+        "Glycine"
+      ],
+      "boundary": "category_review",
+      "family": null,
+      "trust": null,
+      "basis": null,
+      "protocol_checks": [
+        "serum physical texture",
+        "post-shampoo wet 2-3 pumps per section",
+        "1-2 minute working time is not extra dwell; no separate wait",
+        "rinse and optional subsequent mask",
+        "cadence unknown",
+        "system/15-application evidence not generic one-use proof"
+      ]
+    }
+  ],
+  "targets": {
+    "marker_agreement": "100% on complete lists",
+    "boundary_policy_agreement": "4/4 without counting null trust as efficacy agreement",
+    "protocol": "all applicable checklist conditions; no fabricated source facts; no unresolved critical protocol dispute",
+    "source_closure": "all factual nodes cite packet sources; unknowns explicit",
+    "recommended": false,
+    "curated_candidates": 0
+  },
+  "coverage_limitations": [
+    "Only gluconamide/gluconate has a new positive example; other four families not validated outside calibration.",
+    "No overnight, layering, incomplete/conflicting INCI or legacy-transfer fixture in this four-product slice.",
+    "Preregistered root expected outcomes are source-preparer oracles, hidden from independent lanes, not independent scientific labels.",
+    "No model claims empirical tier discovery, runtime scheduling, storage, exact catalog identity, intake readiness or activation."
+  ]
+}
+

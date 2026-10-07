@@ -167,7 +167,11 @@ test("both quiz layouts initialize the store from the signed cookie", () => {
     const source = readFileSync(new URL(`../${path}`, import.meta.url), "utf8")
     assert.match(source, /resolveQuizFunnelPackageKey\(/, path)
     assert.match(source, /FUNNEL_SESSION_COOKIE/, path)
-    assert.match(source, /<QuizFunnelPackageProvider funnelPackageKey=\{funnelPackageKey\}>/, path)
+    assert.match(
+      source,
+      /<QuizFunnelPackageProvider[\s\S]*funnelPackageKey=\{funnelPackageKey\}/,
+      path,
+    )
   }
 })
 

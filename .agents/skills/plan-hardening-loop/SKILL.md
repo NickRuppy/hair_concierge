@@ -11,10 +11,10 @@ Turn fuzzy intent or an existing plan into one chosen, evidence-grounded impleme
 
 - For plan creation or hardening, this skill owns discovery, options, decisions, user-facing evidence, plan writing, counterpart review, user-journey sign-off, and revision.
 - For review-only requests, inspect the requested plan and relevant evidence, then return findings, unresolved choices, and missing implementation gates. Completing the assessment does not require revising the plan, obtaining sign-off, or implementing it. Use counterpart review only when required by `AGENTS.md` or explicitly requested.
-- It does not implement the plan. Handoff execution to `implementation-loop`.
+- When planning is complete and execution is already authorized, continue directly with `implementation-loop`. A planning-only request ends with the plan and a concrete recommended next action.
 - It accepts a Wayfinder handoff once the planning contract can be stated. If dependent decisions still prevent that, explain the boundary and offer explicit `$wayfinder` invocation instead of silently switching workflows.
 - Keep external evidence, internal product logic, and reconciliation separate as defined in `AGENTS.md`.
-- Do not use it for a tiny non-user-facing change that does not need a durable plan unless evidence exposes a consequential choice; this loop then owns that decision before work continues. Any user-facing change still uses the mockup and journey gates even when the eventual code diff is small.
+- Use the proportional planning and evidence rules in `AGENTS.md`. Routine bounded work needs no planning ceremony; unresolved consequential choices return here.
 
 ## 1. Establish the planning contract
 
@@ -27,7 +27,7 @@ Non-goals: what is excluded
 Done when: evidence required for an implementation-ready plan
 ```
 
-If the outcome spans independently shippable subsystems, split it before detailed grilling. Plan the first outcome and leave the others as explicit follow-ups.
+If the outcome spans independently shippable subsystems, plan coherent slices while preserving the whole requested outcome. Splitting work does not authorize dropping or deferring a requested slice.
 
 Ask only for missing information that local context cannot answer. Acknowledge the contract and continue without seeking ceremonial confirmation unless an assumption changes scope.
 
@@ -35,14 +35,9 @@ Before writing a persistent plan or mockup, use `branch-gate` and create or reus
 
 Completion criterion: outcome, constraints, non-goals, and done-when evidence are concrete enough to reject an unsuitable approach.
 
-## 2. Grill the consequential decisions
+## 2. Resolve consequential decisions
 
-Use one high-leverage question at a time. For architecture, UX, data ownership, rollout, verification, risk, or scope forks, present 2-3 similarly scoped options:
-
-| Option | Plain meaning | What gets easier | What gets harder | Best when |
-| ------ | ------------- | ---------------- | ---------------- | --------- |
-
-Recommend one option when the evidence supports it. After every 2-4 substantive decisions, checkpoint what is settled, what remains open, and the likely direction.
+Ask only about unresolved consequential choices under `AGENTS.md`. Group related questions when it helps, explain meaningful alternatives, and recommend a direction. Choose routine details yourself.
 
 Maintain a compact decision-coverage record with four buckets:
 
@@ -51,11 +46,9 @@ Maintain a compact decision-coverage record with four buckets:
 - **Implementation defaults:** routine technical choices with no meaningful product consequence.
 - **Open consequential assumptions:** anything not yet confirmed where another choice could change user-visible behavior, product semantics, scope, data ownership, access or payment, rollout, recoverability, or material risk. Mark each item `resolve before handoff` or `parked out of scope` and name the affected work.
 
-Track the record status as `pending` or `confirmed`. For plan-backed and user-facing work, confirmation requires Nick to have seen the record, settled every consequential choice affecting the handoff, and explicitly acknowledged any parked choice with its affected work out of scope. For clearly bounded non-user-facing work without a durable plan, an explicit request that uniquely determines the scope and leaves no consequential choice open can supply authorization: present the compact record and cite that request without asking again. In both cases state `Undiscussed consequential assumptions affecting this handoff: none`. Record the original user acknowledgement/request and its approved scope; do not rewrite its date or imply Nick saw later revisions. Separately record internal revalidation against the current plan, evidence, and findings. A new consequential choice returns dependent work to `pending`; unchanged approved choices retain their original acknowledgement.
+Track the record as `pending` only while a consequential choice affecting the work is unresolved; otherwise mark it `confirmed` using the original request, approved proposal, or determining contract. Nick approves choices, not the formatting of this record. Record the original authorization and scope, and separately note internal revalidation against the current plan and evidence. A new consequential choice blocks only dependent work. Park requested work only with Nick's agreement.
 
-Do not treat evidence that merely supports one viable direction, a reviewer preference, or the orchestrator's recommendation as user approval of a consequential choice. Move that choice into the open bucket and ask for the decision. Do not fill the record with naming, test mechanics, or other internals that cannot change the product outcome.
-
-Before final handoff, explicitly state `Undiscussed consequential assumptions affecting this handoff: none`. If that is not true, list the assumptions and keep the affected work open.
+Do not treat a reviewer preference or evidence favoring one viable option as approval of an unresolved consequential choice. A confirmed handoff states `Undiscussed consequential assumptions affecting this handoff: none`; otherwise list the actual open decisions.
 
 Compact example:
 
@@ -74,7 +67,7 @@ Completion criterion: every known consequential fork has a chosen direction or i
 
 ## 3. Make consequential behavior concrete
 
-For any user-facing work, create at least one reviewable mockup during planning and show it to the user before finalizing the plan. Do this even for apparently small copy, hierarchy, spacing, state, or interaction changes; put the proposal in context instead of asking the user to imagine it from prose.
+For new flows or material changes to the user experience, prepare concrete evidence under `AGENTS.md`. Present the proposal and journey together for approval. Reuse reviewed evidence for an unchanged design; exact routine edits need contextual verification rather than a new mockup ceremony.
 
 State the decision the artifact must resolve, then choose the lightest evidence that makes it real:
 
@@ -88,13 +81,13 @@ Do enough grilling to name the prototype question and its decision criterion bef
 
 For non-user-facing planning, skip the user-facing mockup ladder. Invoke `prototype` only when operating a logic model will settle a consequential implementation decision more reliably than discussion or a static diagram.
 
-Ground mockups in the actual product surface when one exists. Inspect and capture the current surface first, then annotate that screenshot or recreate the proposed state as rendered lightweight HTML. For copy-only changes, show the before/after wording inside the real component layout at a representative viewport. A Markdown quote, ASCII sketch, detached copy sample, or prose description does not count as a mockup for an existing surface.
+Ground required mockups in the actual product surface when one exists: use an annotated screenshot or rendered proposal, with copy inside the real layout. Detached prose does not demonstrate the visual result.
 
 Use realistic content and German UI copy. Show mobile and desktop when the experience materially differs, and include loading, empty, error, confirmation, or recovery states when they affect comprehension or trust.
 
 Mockups and prototypes are planning artifacts, not production implementation. Keep durable decision evidence in the task worktree and transient previews outside the repository. Present the relevant evidence to the user, incorporate feedback, record what it proved, and record the selected direction in the plan. Purely non-user-facing work may skip user-facing evidence only when the plan explicitly states that no surface, copy, timing, or user-visible feedback changes.
 
-Completion criterion: the user has seen or operated the relevant experience, feedback and prototype findings are reflected in the chosen direction, and evidence review is recorded as confirmed for user-facing work. Any logic prototype also has its finding and disposition recorded.
+Completion criterion: the relevant evidence is ready for the combined design/journey decision, or existing approval is linked. Record prototype findings and disposition. Pending approval blocks dependent implementation, not preparation or review of the proposal.
 
 ## 4. Write or update the plan
 
@@ -121,31 +114,15 @@ Revalidate decision coverage after the review. A material finding that changes a
 
 Completion criterion: every material finding is classified, supported or rejected by evidence, reflected in the plan or an explicit open decision, and reconciled with current decision coverage.
 
-## 6. Confirm the designed user journey
+## 6. Align on the concrete proposal
 
-For user-facing plans, after the plan and counterpart findings are reconciled, translate the chosen design back into the experience the user will actually have. Add or update the plan's **Designed user journey** section, then present the same journey to the user for explicit confirmation.
+For new flows or material UX changes, describe the actor and entry state, ordered actions and system responses, meaningful variants, error/recovery states, and completion. Link the concrete mockup or prototype. Keep the presentation proportional to the decision.
 
-Describe the journey from the user's perspective, not as an implementation checklist:
+Present the evidence, journey, and unresolved consequential choices together. One explicit approval of that concrete proposal supplies evidence review, journey sign-off, and decision coverage. It may happen before or after counterpart review: retain it if review changes only implementation details. Ask about material changes to the proposal, not an unchanged journey or reformatted plan. An approval given before seeing the relevant proposal does not settle unseen behavior.
 
-1. actor and entry condition
-2. ordered user-visible steps, decisions, and system responses
-3. important loading, empty, error, fallback, and recovery states
-4. meaningful variants such as entitlement, device, prior state, or user choice
-5. completion state and what the user sees or can do next
+For an already approved design, link the original evidence and approval. For exact routine changes or internal work, record separate journey sign-off as not applicable under `AGENTS.md` and verify the requested result. If the user gives a precise correction that leaves no consequential choice open, incorporate it without another confirmation; if it opens a new choice, ask about that choice and continue independent work.
 
-Link the reviewed mockups or screenshots for every user-facing change and ensure the narrated journey matches them. Keep invisible backend work outside the journey unless it changes timing, feedback, trust, or available actions. For work with no end-user surface, describe the operator/integration outcome in the implementation contract and state that no surface, copy, timing, or user-visible feedback changes. Request a separate walkthrough only when needed to resolve a consequential choice missing from that contract; otherwise record journey sign-off as not applicable.
-
-Present the final decision-coverage record with the journey: what Nick decided, what was inherited, which non-consequential implementation defaults remain, and which decisions are explicitly parked out of scope. Journey sign-off is invalid while an open or undiscussed consequential assumption affects the handed-off scope.
-
-For user-facing work, ask whether this journey exactly matches the user's intent. A general approval before this walkthrough does not count as journey sign-off. Do not implement dependent work while a required sign-off is pending; continue independent authorized preparation.
-
-If the user corrects the journey:
-
-- update the journey, plan tasks, acceptance criteria, and verification together
-- return to counterpart review only when the correction materially changes architecture, data flow, scope, risk, or earlier review assumptions
-- present the revised journey again and obtain explicit confirmation
-
-Completion criterion: the plan records the confirmed user-facing journey, or an internal outcome whose consequential choices are settled and separate sign-off is not applicable. No implementation-relevant journey assumption remains implicit.
+Completion criterion: required design/journey decisions are settled, their evidence and authorization are recorded, and no consequential assumption is hidden.
 
 ## 7. Hand off cleanly
 
@@ -161,6 +138,6 @@ Report:
 - user-journey sign-off status and any corrections incorporated
 - residual risks
 - artifact disposition: commit, archive, or discard
-- recommended `implementation-loop` kickoff
+- next action: enter `implementation-loop` when execution is authorized; otherwise recommend the concrete kickoff
 
 Do not create a formal Goal merely because the plan is ready. Goal selection belongs to `implementation-loop` and remains opt-in.

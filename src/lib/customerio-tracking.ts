@@ -12,6 +12,7 @@ export type CustomerIoProperties = Record<string, CustomerIoValue | undefined>
 export type CustomerIoEventName =
   | "checkout_started"
   | "chat_product_recommendation_shown"
+  | "discovery_call_booking_scheduled"
   | "first_chat_message"
   | "onboarding_completed"
   | "pricing_viewed"

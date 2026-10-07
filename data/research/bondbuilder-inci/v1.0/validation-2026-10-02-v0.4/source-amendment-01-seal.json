@@ -1,0 +1,13 @@
+{
+  "created_at": "2026-10-02T09:25:43.700Z",
+  "hashes": {
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/source-amendment-01.json": "fa9232355a32c00e37b80a99f4fdf18a0a65b0d9551cc89b1477a9c33bae9fa9",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/source-amendment-01-freeze.json": "94d496d7ad756aecd2b84aa91c338a4e6e08992a9d782f19cd93a0f3643895ca",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-a/source-amendment-01.json": "a61dc8ff14260203b7e016e1be6790004e7d56b0c8958e42345ccbb937fd4890",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-b/source-amendment-01.json": "4847b006b9a230b985ba09b590c6dca6c7e497ace2dc13f83afac81198c7f3ab"
+  },
+  "amendment_id": "source-amendment-01",
+  "source_facts_agree": true,
+  "original_classification_unchanged": true
+}
+

@@ -1,5 +1,6 @@
 "use client"
 
+import { MOTION_MS } from "@/lib/motion"
 import { useModeratorQuiz } from "./moderator-quiz-context"
 import { scopeQuizDraftStorage, type QuizDraftStorage } from "@/lib/personal-plan-quiz/draft-scope"
 
@@ -67,6 +68,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { HairLengthOptionCard } from "@/components/quiz/hair-length-option-card"
 import { HairPortraitFigure } from "@/components/quiz/hair-portrait-figure"
+import { getLegacyQuizConcernIcon } from "@/components/quiz/legacy-quiz-visuals"
+import { QuizMainProblemSheet } from "@/components/quiz/quiz-main-problem-sheet"
 import { TreatmentPermedIcon, TreatmentStraightenedIcon } from "@/components/ui/icon"
 import { Input } from "@/components/ui/input"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
@@ -112,7 +115,8 @@ import {
 } from "@/lib/personal-plan-quiz"
 import type { PortraitConfig } from "@/lib/quiz/portrait-config"
 import { cn } from "@/lib/utils"
-import { resolvePrimaryPersonalPlanConcern } from "@/lib/personal-plan-quiz/hair-assessment"
+import { resolveStatedPersonalPlanConcern } from "@/lib/personal-plan-quiz/primary-concern"
+import { reconcilePrimaryConcern, requiresPrimaryConcernPick } from "@/lib/quiz/primary-concern"
 import {
   clearPendingPersonalPlanPreparationCredential,
   createPendingPersonalPlanPreparationCredential,
@@ -124,6 +128,7 @@ import {
 } from "@/lib/personal-plan-quiz/preparation-client"
 
 import {
+  CURRENT_PROBLEMS_TITLE,
   DAILY_TIME_OPTIONS,
   EARLY_PROOF_TESTIMONIAL,
   PREPARATION_TESTIMONIALS,
@@ -191,8 +196,10 @@ function resolveQuizCompletionNavigation(
  * damit der Funnel nie an einem Spinner stehen bleibt.
  */
 const EMAIL_PRECHECK_TIMEOUT_MS = 6000
-const AUTO_ADVANCE_MS = 400
-const SCREEN_EXIT_MS = 200
+// Batch 8 motion spec: one settle delay after a single-tap answer; the outgoing snapshot
+// stays until the incoming step has finished entering.
+const AUTO_ADVANCE_MS = MOTION_MS.settle
+const SCREEN_EXIT_MS = MOTION_MS.stepIn
 const subscribeToClientReady = () => () => {}
 const getClientReadySnapshot = () => true
 const getServerReadySnapshot = () => false
@@ -1049,7 +1056,15 @@ function ProofScreen({ onContinue }: { onContinue: () => void }) {
           {`„${EARLY_PROOF_TESTIMONIAL.quote}“`}
         </p>
         <footer className="mt-4 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--brand-plum)]">
-          {EARLY_PROOF_TESTIMONIAL.source}
+          {EARLY_PROOF_TESTIMONIAL.name}
+          <a
+            className="mt-2 block underline underline-offset-4"
+            href={EARLY_PROOF_TESTIMONIAL.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Auszug · Bewertung auf Trustpilot
+          </a>
         </footer>
       </blockquote>
 
@@ -1230,7 +1245,7 @@ function AdmissionScreen({
   onSelect: (value: string) => void
 }) {
   const conflictPrompt = derivePersonalPlanConflictPrompt(answers)
-  const primaryConcern = resolvePrimaryPersonalPlanConcern(answers)
+  const primaryConcern = resolveStatedPersonalPlanConcern(answers)
   const primaryConcernOption = getConcernOptions(answers.texture).find(
     (option) => option.value === primaryConcern,
   )
@@ -1712,7 +1727,15 @@ function LoadingScreen({
             „{PREPARATION_TESTIMONIALS[Math.min(stageIndex, 2)].quote}“
           </p>
           <footer className="mt-2 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--brand-plum)]">
-            {PREPARATION_TESTIMONIALS[Math.min(stageIndex, 2)].source}
+            {PREPARATION_TESTIMONIALS[Math.min(stageIndex, 2)].name}
+            <a
+              className="mt-2 block underline underline-offset-4"
+              href={PREPARATION_TESTIMONIALS[Math.min(stageIndex, 2)].url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Auszug · Bewertung auf Trustpilot
+            </a>
           </footer>
         </blockquote>
       </section>
@@ -2181,6 +2204,7 @@ export function PersonalPlanQuiz({
   const [currentConcernNoteOpen, setCurrentConcernNoteOpen] = useState(
     Boolean(initialCurrentConcernNote.trim()),
   )
+  const [mainProblemSheetOpen, setMainProblemSheetOpen] = useState(false)
   const [currentConcernNoteDraft, setCurrentConcernNoteDraft] = useState(initialCurrentConcernNote)
   const [draftReady, setDraftReady] = useState(false)
   const [preparedPlan, setPreparedPlan] = useState<PreparedPlanState>({
@@ -2652,7 +2676,11 @@ export function PersonalPlanQuiz({
       if (clearWhenEmpty && next.length === 0) {
         delete (updated as Record<string, unknown>)[config.field]
       }
-      if (config.field === "currentConcerns") delete updated.concernRecurrence
+      if (config.field === "currentConcerns") {
+        delete updated.concernRecurrence
+        // …and a main-problem pick she just deselected (F1); the sheet asks again.
+        if (!reconcilePrimaryConcern(next, updated.primaryConcern)) delete updated.primaryConcern
+      }
       // Drop the free-text detail when "Etwas anderes" is no longer selected.
       if (config.field === "blockers" && !next.includes("other")) {
         delete updated.blockersOtherText
@@ -2732,7 +2760,7 @@ export function PersonalPlanQuiz({
   }
 
   function selectConcernRecurrence(value: string) {
-    const concernId = resolvePrimaryPersonalPlanConcern(answers)
+    const concernId = resolveStatedPersonalPlanConcern(answers)
     if (!concernId) {
       scheduleNext(answers)
       return
@@ -2748,6 +2776,19 @@ export function PersonalPlanQuiz({
     }
     setAnswers(next)
     scheduleNext(next)
+  }
+
+  // F1: one tap on the main-problem sheet is the answer — store it and advance. A
+  // recurrence answered for a different concern no longer belongs to her main problem.
+  function pickMainProblem(value: string) {
+    const primaryConcern = value as NonNullable<PersonalPlanQuizAnswers["primaryConcern"]>
+    const next: PersonalPlanQuizAnswers = { ...answers, primaryConcern }
+    if (next.concernRecurrence && next.concernRecurrence.concernId !== primaryConcern) {
+      delete next.concernRecurrence
+    }
+    setAnswers(next)
+    setMainProblemSheetOpen(false)
+    goNext(next)
   }
 
   // Field-test and moderator completions keep the paid result reveal even with
@@ -2770,7 +2811,7 @@ export function PersonalPlanQuiz({
       return renderQuestion(
         {
           field: "goals",
-          title: `Was wünschst du dir für ${TEXTURE_COPY[answers.texture ?? "wavy"].possessive}?`,
+          title: "Was wünschst du dir für deine Haare?",
           helper: "Wähl ruhig mehrere Ziele aus – alles, was dir wichtig ist.",
           options: getGoalOptions(answers.texture),
           multi: true,
@@ -2781,12 +2822,14 @@ export function PersonalPlanQuiz({
     }
     if (screen === "current_problems") {
       const hasCurrentConcernNote = Boolean(answers.currentConcernsOtherText?.trim())
-      return renderQuestion(
+      const concernOptions = getConcernOptions(answers.texture)
+      const selectedConcerns: readonly string[] = answers.currentConcerns ?? []
+      const question = renderQuestion(
         {
           field: "currentConcerns",
-          title: "Was beschäftigt dich gerade?",
+          title: CURRENT_PROBLEMS_TITLE,
           helper: "Wähle alles aus, was du aktuell bemerkst.",
-          options: getConcernOptions(answers.texture),
+          options: concernOptions,
           multi: true,
           visual: true,
         },
@@ -2795,6 +2838,11 @@ export function PersonalPlanQuiz({
           continueValidity: Boolean(answers.currentConcerns?.length) || hasCurrentConcernNote,
           onContinue: () => {
             if (!currentConcernNoteOpen) setCurrentConcernNoteDraft("")
+            // Two or more concerns: ask for her main problem first (F1).
+            if (requiresPrimaryConcernPick(answers.currentConcerns ?? [])) {
+              setMainProblemSheetOpen(true)
+              return
+            }
             goNext()
           },
           standaloneOtherText: {
@@ -2836,6 +2884,24 @@ export function PersonalPlanQuiz({
             },
           },
         },
+      )
+      return (
+        <>
+          {question}
+          <QuizMainProblemSheet
+            open={mainProblemSheetOpen}
+            options={concernOptions
+              .filter((option) => selectedConcerns.includes(option.value))
+              .map((option) => ({
+                value: option.value,
+                label: option.label,
+                icon: getLegacyQuizConcernIcon(option.value),
+              }))}
+            selected={reconcilePrimaryConcern(selectedConcerns, answers.primaryConcern)}
+            onPick={pickMainProblem}
+            onClose={() => setMainProblemSheetOpen(false)}
+          />
+        </>
       )
     }
     if (screen === "analysis_bridge") {

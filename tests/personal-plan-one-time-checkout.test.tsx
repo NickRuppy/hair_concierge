@@ -215,7 +215,7 @@ test("one-time preparation resolves provider ownership before mounting Stripe El
   assert.match(checkoutSource, /preparedStripeCheckoutState\.checkout\.owner === "stripe"/)
 })
 
-test("PayPal pending capture continues to welcome while an expired intent stops blind retries", () => {
+test("PayPal capture recovery remains available while new order creation is retired", () => {
   assert.match(
     paypalCaptureRouteSource,
     /error\.code === "paypal_order_capture_pending"[\s\S]*status: "pending"[\s\S]*status: 202/,
@@ -225,10 +225,8 @@ test("PayPal pending capture continues to welcome while an expired intent stops 
   assert.match(paypalSource, /body\.error === "paypal_order_intent_expired"/)
   assert.match(paypalSource, /Die PayPal-Zahlung ist abgelaufen/)
   assert.match(paypalSource, /mailto:/)
-  assert.match(
-    paypalOrderRouteSource,
-    /createPayPalOrderIntent[\s\S]*isUniqueViolation[\s\S]*consent_id[\s\S]*paypal_order_intent_expired/,
-  )
+  assert.match(paypalOrderRouteSource, /status: 410/)
+  assert.doesNotMatch(paypalOrderRouteSource, /createPayPalOrderIntent/)
 })
 
 test("one-time Apple Pay does no provider work before the drawer opens", () => {
@@ -650,13 +648,13 @@ test("one-time PayPal reports visible payment failures once and excludes control
   assert.doesNotMatch(sdkErrorSource, /status: "paypal_button_error"/)
 })
 
-test("one-time PayPal attribution uses the authorized result session, not browser cookies", () => {
-  assert.match(
+test("retired PayPal order endpoint has no acquisition attribution or provider dependencies", () => {
+  assert.match(paypalOrderRouteSource, /Der einmalige Haarplan ist nicht mehr verfügbar/)
+  assert.doesNotMatch(
     paypalOrderRouteSource,
-    /const funnelContext = \{[\s\S]*visitorId: authorization\.visitorId,[\s\S]*sessionId: authorization\.sessionId,[\s\S]*packageKey: authorization\.packageKey,[\s\S]*issuedAt: authorization\.issuedAt/,
+    /resolveFunnelCookieContext|resolveFunnelContextForLead/,
   )
-  assert.doesNotMatch(paypalOrderRouteSource, /resolveFunnelCookieContext/)
-  assert.doesNotMatch(paypalOrderRouteSource, /resolveFunnelContextForLead/)
+  assert.doesNotMatch(paypalOrderRouteSource, /createPayPalOrderIntent|createProviderPayPalOrder/)
 })
 
 test("one-time checkout marks a real first interaction and routes its nested close through policy", () => {

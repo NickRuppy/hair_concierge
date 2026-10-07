@@ -1,4 +1,5 @@
 import {
+  trackMetaBookingScheduled,
   trackMetaCheckoutStarted,
   trackMetaLeadCaptured,
   trackMetaPricingViewed,
@@ -81,6 +82,12 @@ export const metaDestination = {
             data.funnelEventId,
             packageKey,
           ),
+        )
+      }
+      case "discovery_call_booking_scheduled": {
+        const data = payload as AppEventMap["discovery_call_booking_scheduled"]
+        return trackWithFunnelPackage(data.funnelPackageKey, (packageKey) =>
+          trackMetaBookingScheduled(data.funnelEventId, packageKey),
         )
       }
       case "offer_checkout_opened": {

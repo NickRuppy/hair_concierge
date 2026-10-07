@@ -337,26 +337,20 @@ export function OnboardingFlow({
     [productIntake, userId],
   )
 
+  // The care steps save on the server (`POST /api/profile/care-habits`): the legacy column
+  // values go in, the server turns them into a care_habits edit through the facts door.
   const saveHairProfile = useCallback(
     async (fields: Record<string, unknown>, signal?: AbortSignal) => {
-      const supabase = createClient()
-      const payload = { user_id: userId, ...fields }
-      const upsertQuery = supabase.from("hair_profiles").upsert(payload, { onConflict: "user_id" })
-      const { error } = await withAbortSignal(upsertQuery, signal)
-
-      if (error && error.code === "22P02" && typeof fields.drying_method === "string") {
-        const retryQuery = supabase
-          .from("hair_profiles")
-          .upsert({ ...payload, drying_method: [fields.drying_method] }, { onConflict: "user_id" })
-        const { error: retryError } = await withAbortSignal(retryQuery, signal)
-
-        if (!retryError) return
-        throw retryError
-      }
-
-      if (error) throw error
+      const response = await fetch("/api/profile/care-habits", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(fields),
+        cache: "no-store",
+        signal,
+      })
+      if (!response.ok) throw new Error(`care habits save failed (${response.status})`)
     },
-    [userId],
+    [],
   )
 
   // ── Step completion handler ──
@@ -430,16 +424,13 @@ export function OnboardingFlow({
           }
 
           case "heat_tools": {
+            // If no heat tools, clear heat-related fields in the same save
             await saveHairProfile({
               styling_tools: state.selectedHeatTools,
+              ...(state.selectedHeatTools.length === 0
+                ? { heat_styling: "never", uses_heat_protection: false }
+                : {}),
             })
-            // If no heat tools, clear heat-related fields
-            if (state.selectedHeatTools.length === 0) {
-              await saveHairProfile({
-                heat_styling: "never",
-                uses_heat_protection: false,
-              })
-            }
             break
           }
 

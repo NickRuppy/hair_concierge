@@ -8,6 +8,7 @@ import {
 } from "@/components/checkout/plan-reference-prices"
 import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
 import { QuizResultsView } from "@/components/quiz/quiz-results-view"
+import { ScannerRefinedOffer } from "@/components/scan-regal-offer/scanner-refined-offer"
 import {
   PersonalPlanOffer,
   PersonalPlanPaidContinuation,
@@ -25,6 +26,7 @@ import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import type { PersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
 import type { SubscriptionPricingCatalog } from "@/lib/stripe/pricing-plans"
+import type { TrialOfferPricing } from "@/components/billing/trial-offer"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
 import type { FunnelOfferFieldTest, FunnelOfferPartnerAccess } from "@/funnels/types"
 
@@ -52,6 +54,10 @@ export function ResultPageClient({
   offerTracking = null,
   offerVariant = "default",
   pricingCatalog,
+  trialOfferPricing = null,
+  scannerRefinementEnabled = false,
+  returningScannerOffer = false,
+  returningProfileIncomplete = true,
 }: {
   showQuizRestart?: boolean
   leadId: string
@@ -76,10 +82,51 @@ export function ResultPageClient({
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
   pricingCatalog?: SubscriptionPricingCatalog
+  scannerRefinementEnabled?: boolean
+  trialOfferPricing?: TrialOfferPricing | null
+  /** Server proves the exact email-return session belongs to this lead. */
+  returningScannerOffer?: boolean
+  returningProfileIncomplete?: boolean
 }) {
   const resolvedEntryContext = entryContext ?? (focusRoutine ? "routine_return" : "saved_result")
   const resolvedPricingCatalog = pricingCatalog ?? "standard"
   const pricingCatalogWasProvided = pricingCatalog !== undefined
+
+  if (
+    returningScannerOffer &&
+    offerVariant === "scan-regal-v1" &&
+    trialOfferPricing &&
+    !hasAccess &&
+    !fieldTest &&
+    !moderatorTest &&
+    !fieldTestUnavailable &&
+    !regularFieldTest &&
+    !regularFieldTestUnavailable &&
+    !partnerAccess &&
+    !partnerAccessUnavailable
+  ) {
+    return (
+      <ScannerRefinedOffer
+        leadId={leadId}
+        quizAnswers={quizAnswers}
+        savedProfileIncomplete={returningProfileIncomplete}
+        entryContext={resolvedEntryContext}
+        offerTracking={offerTracking}
+        offerVariant={offerVariant}
+        isInternalTest={isInternalTest}
+        trialOfferPricing={trialOfferPricing}
+        pricingSlot={
+          <ResultOfferPricing
+            presentation="scanner"
+            leadId={leadId}
+            offerTracking={offerTracking}
+            pricingCatalog={resolvedPricingCatalog}
+            trialOfferPricing={trialOfferPricing}
+          />
+        }
+      />
+    )
+  }
 
   if (quizKind === "personal_plan") {
     if (hasAccess) {
@@ -113,6 +160,7 @@ export function ResultPageClient({
         offerTracking={offerTracking}
         offerVariant={offerVariant}
         pricingCatalog={pricingCatalog}
+        trialOfferPricing={trialOfferPricing}
       />
     )
   }
@@ -142,6 +190,8 @@ export function ResultPageClient({
       offerVariant={offerVariant}
       pricingCatalog={resolvedPricingCatalog}
       pricingCatalogWasProvided={pricingCatalogWasProvided}
+      scannerRefinementEnabled={scannerRefinementEnabled}
+      trialOfferPricing={trialOfferPricing}
       quizAnswers={quizAnswers}
       regularFieldTest={regularFieldTest}
       partnerAccess={partnerAccess}
@@ -162,6 +212,8 @@ function LegacyResultPageClient({
   offerVariant,
   pricingCatalog,
   pricingCatalogWasProvided,
+  scannerRefinementEnabled,
+  trialOfferPricing,
   quizAnswers,
   regularFieldTest,
   partnerAccess,
@@ -178,6 +230,8 @@ function LegacyResultPageClient({
   offerVariant: string
   pricingCatalog: SubscriptionPricingCatalog
   pricingCatalogWasProvided: boolean
+  scannerRefinementEnabled: boolean
+  trialOfferPricing: TrialOfferPricing | null
   quizAnswers: QuizAnswers
   regularFieldTest?: FunnelOfferFieldTest | null
   partnerAccess?: FunnelOfferPartnerAccess | null
@@ -219,6 +273,13 @@ function LegacyResultPageClient({
     )
   }
 
+  const showScannerRefinement =
+    scannerRefinementEnabled &&
+    offerVariant === "scan-regal-v1" &&
+    trialOfferPricing !== null &&
+    !regularFieldTest &&
+    !partnerAccess
+
   const offer = renderOfferVariant(offerVariant, {
     entryContext,
     leadId,
@@ -230,8 +291,11 @@ function LegacyResultPageClient({
     quizAnswers,
     focusRoutine,
     focusTarget,
+    scannerRefinementEnabled: showScannerRefinement,
+    trialOfferPricing,
     pricingSlot: (
       <ResultOfferPricing
+        presentation={showScannerRefinement ? "scanner" : "default"}
         leadId={leadId}
         offerTracking={offerTracking}
         pricingCatalog={pricingCatalog}
@@ -240,6 +304,7 @@ function LegacyResultPageClient({
             ? (getSubscriptionPlanReferencePrices(pricingCatalog) ?? QUIZ_RESULT_REFERENCE_PRICES)
             : QUIZ_RESULT_REFERENCE_PRICES
         }
+        trialOfferPricing={trialOfferPricing}
       />
     ),
     regularFieldTest,

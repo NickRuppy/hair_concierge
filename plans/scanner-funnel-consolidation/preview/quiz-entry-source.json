@@ -1,0 +1,19 @@
+{
+  "source": "09799e227d36ce38103eaf04ebfe71248ab132fe",
+  "questionStep": 2,
+  "questionNumber": 1,
+  "assets": [
+    "images/funnels/personal-plan-quiz/texture-straight.webp",
+    "images/funnels/personal-plan-quiz/texture-wavy.webp",
+    "images/funnels/personal-plan-quiz/texture-curly.webp",
+    "images/funnels/personal-plan-quiz/texture-coily.webp"
+  ],
+  "adapters": [
+    "empty quiz state",
+    "inactive navigation",
+    "native image tags",
+    "local info-tip button",
+    "first-question back button hidden"
+  ],
+  "note": "Current first QuizQuestion component plus proposed short ad-entry explanation. Static preview only."
+}

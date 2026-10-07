@@ -8,7 +8,78 @@ import {
   resolvePlanBereitFunnelPackage,
   updateMissingPlanBereitSourceFact,
   needsFreshMigrationQuiz,
+  classifyPlanBereitSourceFacts,
+  isValidPlanBereitFactPatch,
 } from "../src/app/plan-bereit/readiness"
+import { projectLegacyLeadToFacts } from "../src/lib/user-facts/project-legacy-lead"
+import { diagnosticsV1Schema } from "../src/lib/user-facts/schema"
+import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
+import { projectArtifactToFacts } from "../src/lib/user-facts/project-artifact"
+import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
+import { simulateUserFactsSave } from "./user-facts-save-rpc.fixtures"
+
+test("email return recovery asks only absent or invalid Stage-1 facts", () => {
+  const source = classifyPlanBereitSourceFacts({
+    id: "old",
+    quiz_kind: "legacy",
+    quiz_answers: {
+      ...COMPLETE_LEGACY_ANSWERS,
+      density: "unknown",
+      hair_length: undefined,
+      concerns: ["retired"],
+    },
+  })
+  assert.equal(source.status, "missing_source_facts")
+  if (source.status === "missing_source_facts")
+    assert.deepEqual(
+      source.missingFacts.map((f) => f.field),
+      ["density", "hair_length"],
+    )
+  assert.equal(
+    needsFreshMigrationQuiz({
+      status: "missing_source_facts",
+      missingFacts: [{ field: "density" }, { field: "hair_length" }],
+      funnelPackageKey: "customerio_scan_return_v1",
+    }),
+    false,
+  )
+})
+
+test("Personal Plan missing facts remain distinct from missing artifacts and context answers", () => {
+  const source = classifyPlanBereitSourceFacts({
+    id: "pp",
+    quiz_kind: "personal_plan",
+    quiz_answers: {
+      kind: "personal_plan",
+      version: 3,
+      answers: {
+        texture: "wavy",
+        thickness: "fine",
+        density: "low",
+        hairLength: "medium",
+        hairSurface: "rough",
+        elasticResponse: "snaps",
+        scalpOiliness: "dry",
+        goals: ["moisture"],
+        chemicalTreatments: ["colored"],
+      },
+    },
+  })
+  assert.equal(
+    source.status,
+    "ready",
+    "missing unrelated Personal Plan context is not a missing hair fact",
+  )
+})
+
+test("missing-fact patch rejects wrong enums, duplicates and contradictory treatments", () => {
+  assert.equal(isValidPlanBereitFactPatch("density", "high"), true)
+  assert.equal(isValidPlanBereitFactPatch("density", "unknown"), false)
+  assert.equal(isValidPlanBereitFactPatch("treatment", ["natur", "gefaerbt"]), false)
+  assert.equal(isValidPlanBereitFactPatch("treatment", ["gefaerbt", "gefaerbt"]), false)
+  assert.equal(isValidPlanBereitFactPatch("goals", []), false)
+  assert.equal(isValidPlanBereitFactPatch("goals", ["shine", "moisture"]), true)
+})
 
 test("migration quiz recovery retains the existing hair-length repair and rejects authorization failures", () => {
   assert.equal(needsFreshMigrationQuiz({ status: "invalid_source" }), true)
@@ -45,18 +116,24 @@ const COMPLETE_LEGACY_ANSWERS = {
   goals: ["moisture"],
 }
 
+/**
+ * F28 (task 5a): readiness only needs to know a diagnostics domain EXISTS
+ * (non-null, at least one write) — the field-by-field legacy-column comparison
+ * this fixture used to stand in for (`profileMatchesProjected`) is gone along
+ * with the direct `hair_profiles` writes it existed to validate. Its exact
+ * content is irrelevant to every "ready" fixture below.
+ */
 const COMPLETE_PROFILE = {
   user_id: "user-1",
-  hair_texture: "wavy",
-  thickness: "fine",
-  hair_length: "medium",
-  density: "low",
-  cuticle_condition: "rough",
-  protein_moisture_balance: "snaps",
-  scalp_type: "dry",
-  scalp_condition: null,
-  concerns: ["frizz"],
-  chemical_treatment: ["colored"],
+  diagnostics: { texture: "wavy", thickness: "fine" },
+  facts_revision: 1,
+}
+
+/** A `hair_profiles` row that exists but has never had diagnostics facts written. */
+const UNPROJECTED_PROFILE = {
+  user_id: "user-1",
+  diagnostics: null,
+  facts_revision: 0,
 }
 
 type Row = Record<string, unknown>
@@ -130,7 +207,14 @@ class FakeQuery {
       | null,
     onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null,
   ) {
-    return Promise.resolve({ data: this.matchingRows(), error: null }).then(onfulfilled, onrejected)
+    const matching = this.matchingRows()
+    // A plain `.update(...).eq(...)` awaited directly (no `.select().maybeSingle()`
+    // chained) must still apply — real Supabase never requires a re-select to
+    // persist an update.
+    if (this.updateValues) {
+      for (const row of matching) Object.assign(row, this.updateValues)
+    }
+    return Promise.resolve({ data: matching, error: null }).then(onfulfilled, onrejected)
   }
 
   private matchingRows() {
@@ -177,7 +261,21 @@ class FakeSupabase {
 
   rpc(fn: string, args: Row) {
     this.rpcs.push({ fn, args })
+    if (fn === "user_facts_save_v1") {
+      return Promise.resolve({ data: this.simulateUserFactsSave(args), error: null })
+    }
     return Promise.resolve(this.rpcResults[fn] ?? { data: null, error: null })
+  }
+
+  /**
+   * `user_facts_save_v1` stand-in (`simulateUserFactsSave`): CAS, create_only
+   * preserve, field-level merge with null-clears and the provenance merge, so
+   * the "latest own quiz wins" writes can be asserted on the stored document.
+   * It never derives the legacy columns — that derivation has its own parity
+   * test (`tests/user-facts-derive-parity.test.ts`) against the real RPC.
+   */
+  private simulateUserFactsSave(args: Row) {
+    return simulateUserFactsSave((this.tables.hair_profiles ??= []), args)
   }
 }
 
@@ -212,7 +310,7 @@ test("legacy readiness is ready only when the exact lead is already projected in
   )
 })
 
-test("legacy readiness is not a no-op when the persisted profile misses a projected fact", async () => {
+test("legacy readiness stays checking when the persisted profile has no diagnostics facts yet", async () => {
   const db = new FakeSupabase({
     leads: [
       {
@@ -225,7 +323,7 @@ test("legacy readiness is not a no-op when the persisted profile misses a projec
         updated_at: "2026-08-12T08:00:00.000Z",
       },
     ],
-    hair_profiles: [{ ...COMPLETE_PROFILE, hair_length: null }],
+    hair_profiles: [UNPROJECTED_PROFILE],
   })
 
   const readiness = await loadPlanBereitReadiness(db as never, {
@@ -239,123 +337,294 @@ test("legacy readiness is not a no-op when the persisted profile misses a projec
   assert.equal(db.updates.length, 0)
   assert.equal(db.upserts.length, 0)
   assert.equal(
+    db.rpcs.some((call) => call.fn === "user_facts_save_v1"),
+    false,
+    "a read must never write",
+  )
+  assert.equal(
     db.queries.some((query) => query.table === "hair_profiles" && query.column === "user_id"),
     true,
   )
 })
 
-test("legacy readiness compares every projected profile field and ignores goals plus unrelated fields", async () => {
-  const fieldMutations: Array<[keyof typeof COMPLETE_PROFILE, unknown]> = [
-    ["hair_texture", "curly"],
-    ["thickness", "coarse"],
-    ["hair_length", "long"],
-    ["density", "medium"],
-    ["cuticle_condition", "smooth"],
-    ["protein_moisture_balance", "stretches"],
-    ["scalp_type", "balanced"],
-    ["scalp_condition", "dandruff"],
-    ["concerns", []],
-    ["chemical_treatment", []],
-  ]
+// --- F28 + decision wave 1 ("latest own quiz wins") ----------------------------
+//
+// F28 only checks that `hair_profiles.diagnostics` is non-null and
+// `facts_revision > 0` for the owning candidate — not that its content matches
+// what THIS candidate would have projected. What a link WRITES follows Nick's
+// 2026-09-30 rule: an own quiz newer than the profile's last facts change
+// replaces the diagnostics (upsert); an older one is preserved (create_only).
 
-  for (const [field, value] of fieldMutations) {
-    const db = new FakeSupabase({
-      leads: [
-        {
-          id: `lead-${field}`,
-          email: "lea@example.test",
-          quiz_kind: "legacy",
-          quiz_answers: COMPLETE_LEGACY_ANSWERS,
-          user_id: "user-1",
-          updated_at: "2026-08-12T08:00:00.000Z",
-        },
-      ],
-      hair_profiles: [
-        { ...COMPLETE_PROFILE, goals: ["ignored"], unrelated_note: "ignored", [field]: value },
-      ],
-    })
-
-    const readiness = await loadPlanBereitInitialReadiness(db as never, {
-      userId: "user-1",
-      email: "lea@example.test",
-      leadId: `lead-${field}`,
-      expectedQuizSourceKind: "legacy",
-    })
-
-    assert.equal(readiness.status, "checking", `${String(field)} mismatch should require link`)
-    assert.equal(readiness.initialAction, "link", `${String(field)} mismatch should post once`)
-    assert.equal(db.updates.length, 0)
-    assert.equal(db.upserts.length, 0)
-    assert.equal(db.rpcs.length, 0)
-  }
-
-  const matching = new FakeSupabase({
-    leads: [
-      {
-        id: "lead-extra-fields",
-        email: "lea@example.test",
-        quiz_kind: "legacy",
-        quiz_answers: COMPLETE_LEGACY_ANSWERS,
-        user_id: "user-1",
-        updated_at: "2026-08-12T08:00:00.000Z",
-      },
-    ],
-    hair_profiles: [{ ...COMPLETE_PROFILE, goals: ["ignored"], unrelated_note: "ignored" }],
+/** A stored diagnostics document an earlier, different source wrote at `at`. */
+function earlierArtifactProfile(at: string, revision = 3): Row {
+  const { diagnostics, quizContext } = projectArtifactToFacts({
+    envelope: COMPLETE_V3_PLAN_ENVELOPE,
+    artifactId: "artifact-earlier",
+    leadId: "lead-earlier",
   })
+  return {
+    user_id: "user-1",
+    diagnostics: { ...diagnostics, texture: "straight", goals: ["shine"] },
+    quiz_context: quizContext,
+    facts_revision: revision,
+    facts_provenance: {
+      diagnostics: {
+        source: { kind: "personal_plan_artifact", id: "artifact-earlier" },
+        schemaVersion: 1,
+        at,
+      },
+    },
+  }
+}
 
-  const readiness = await loadPlanBereitInitialReadiness(matching as never, {
+function legacyLead(createdAt: string): Row {
+  return {
+    id: "lead-legacy",
+    email: "lea@example.test",
+    quiz_kind: "legacy",
+    quiz_answers: COMPLETE_LEGACY_ANSWERS,
+    user_id: null,
+    created_at: createdAt,
+    updated_at: "2026-09-14T08:00:00.000Z",
+  }
+}
+
+test("F28: linking an OLDER legacy lead preserves the existing profile and reports ready, never sticking on checking", async () => {
+  const db = new FakeSupabase({
+    leads: [legacyLead("2026-09-01T08:00:00.000Z")],
+    hair_profiles: [earlierArtifactProfile("2026-09-10T08:00:00.000Z")],
+  })
+  const before = structuredClone(db.tables.hair_profiles[0].diagnostics)
+
+  const pending = await loadPlanBereitReadiness(db as never, {
     userId: "user-1",
     email: "lea@example.test",
-    leadId: "lead-extra-fields",
+    leadId: "lead-legacy",
+    expectedQuizSourceKind: "legacy",
+  })
+  assert.equal(pending.status, "source_pending", "not yet linked to this lead/user pair")
+
+  const linked = await linkExactPlanBereitSourceToProfile(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
     expectedQuizSourceKind: "legacy",
   })
 
-  assert.equal(readiness.status, "ready")
-  assert.equal(readiness.initialAction, "none")
+  assert.equal(linked.status, "ready", "checking must not stick once diagnostics facts exist")
+  const factsCall = db.rpcs.find((call) => call.fn === "user_facts_save_v1")
+  assert.ok(factsCall, "expected a user_facts_save_v1 call")
+  assert.equal(factsCall!.args.p_mode, "create_only")
+  assert.equal(factsCall!.args.p_domain, "diagnostics")
+  assert.deepEqual(
+    db.tables.hair_profiles[0].diagnostics,
+    before,
+    "an older quiz must never overwrite the existing domain",
+  )
+  const provenance = (db.tables.hair_profiles[0].facts_provenance as Row).diagnostics as Row
+  assert.deepEqual(
+    (provenance.preservedCandidates as Row[]).map((entry) => [entry.kind, entry.id]),
+    [["lead", "lead-legacy"]],
+  )
 })
 
-test("legacy readiness treats missing projected fields and array order drift as unequal", async () => {
-  const missingThicknessProfile = { ...COMPLETE_PROFILE }
-  delete (missingThicknessProfile as Partial<typeof COMPLETE_PROFILE>).thickness
+test("latest quiz wins: linking a NEWER own legacy lead replaces the existing profile, goals included", async () => {
+  const db = new FakeSupabase({
+    leads: [legacyLead("2026-09-12T08:00:00.000Z")],
+    hair_profiles: [earlierArtifactProfile("2026-09-10T08:00:00.000Z")],
+  })
 
-  const cases: Array<{ name: string; answers: Row; profile: Row }> = [
-    {
-      name: "missing scalar",
-      answers: COMPLETE_LEGACY_ANSWERS,
-      profile: missingThicknessProfile,
-    },
-    {
-      name: "array order",
-      answers: { ...COMPLETE_LEGACY_ANSWERS, treatment: ["gefaerbt", "blondiert"] },
-      profile: { ...COMPLETE_PROFILE, chemical_treatment: ["bleached", "colored"] },
-    },
-  ]
+  const linked = await linkExactPlanBereitSourceToProfile(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    expectedQuizSourceKind: "legacy",
+  })
 
-  for (const fixture of cases) {
-    const db = new FakeSupabase({
+  assert.equal(linked.status, "ready")
+  const factsCalls = db.rpcs.filter((call) => call.fn === "user_facts_save_v1")
+  // F4: the winning lead replaces BOTH domains — the earlier artifact's quiz_context is cleared.
+  assert.deepEqual(
+    factsCalls.map((call) => [call.args.p_domain, call.args.p_mode, call.args.p_expected_revision]),
+    [
+      ["diagnostics", "upsert", 3],
+      ["quiz_context", "upsert", 4],
+    ],
+  )
+  assert.deepEqual(db.tables.hair_profiles[0].quiz_context, {})
+  const patch = factsCalls[0].args.p_patch as Row
+  // Fields the legacy quiz does not carry are cleared, never carried over.
+  assert.equal(patch.concernRecurrence, null)
+  assert.deepEqual(
+    db.tables.hair_profiles[0].diagnostics,
+    projectLegacyLeadToFacts({
+      leadId: "lead-legacy",
+      quizAnswers: COMPLETE_LEGACY_ANSWERS as never,
+      takenAt: "2026-09-12T08:00:00.000Z",
+    }).diagnostics,
+  )
+  assert.deepEqual((db.tables.hair_profiles[0].diagnostics as Row).goals, ["moisture"])
+})
+
+test("latest quiz wins: a hand-edited profile loses to a quiz retaken after the edit", async () => {
+  const profile = earlierArtifactProfile("2026-09-01T08:00:00.000Z")
+  ;((profile.facts_provenance as Row).diagnostics as Row).editedAt = "2026-09-10T08:00:00.000Z"
+  const db = new FakeSupabase({
+    leads: [legacyLead("2026-09-11T08:00:00.000Z")],
+    hair_profiles: [profile],
+  })
+
+  await linkExactPlanBereitSourceToProfile(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    expectedQuizSourceKind: "legacy",
+  })
+
+  const factsCall = db.rpcs.find((call) => call.fn === "user_facts_save_v1")
+  assert.equal(factsCall!.args.p_mode, "upsert")
+  assert.equal((db.tables.hair_profiles[0].diagnostics as Row).texture, "wavy")
+})
+
+test("F28: linking an OLDER artifact preserves the existing artifact-sourced profile and reports ready", async () => {
+  const db = new FakeSupabase(
+    {
       leads: [
         {
-          id: `lead-${fixture.name}`,
+          id: "lead-pp",
           email: "lea@example.test",
-          quiz_kind: "legacy",
-          quiz_answers: fixture.answers,
-          user_id: "user-1",
-          updated_at: "2026-08-12T08:00:00.000Z",
+          quiz_kind: "personal_plan",
+          user_id: null,
+          updated_at: "2026-09-14T08:00:00.000Z",
         },
       ],
-      hair_profiles: [fixture.profile],
-    })
+      personal_plan_prepared_artifacts: [
+        {
+          id: "artifact-1",
+          lead_id: "lead-pp",
+          // Already linked: the fake's canned `link_personal_plan_artifact_to_user`
+          // result (below) doesn't mutate the table the way the real RPC does, so
+          // ownership is set up-front rather than simulating that side effect.
+          user_id: "user-1",
+          status: "attached",
+          canonical_profile: COMPLETE_LEGACY_ANSWERS,
+          quiz_answers: COMPLETE_V3_PLAN_ENVELOPE,
+          created_at: "2026-09-01T08:00:00.000Z",
+        },
+      ],
+      hair_profiles: [earlierArtifactProfile("2026-09-10T08:00:00.000Z", 2)],
+    },
+    {
+      link_personal_plan_artifact_to_user: {
+        data: [{ artifact_id: "artifact-1", canonical_profile: COMPLETE_LEGACY_ANSWERS }],
+        error: null,
+      },
+    },
+  )
+  const before = structuredClone(db.tables.hair_profiles[0].diagnostics)
 
-    const readiness = await loadPlanBereitInitialReadiness(db as never, {
-      userId: "user-1",
-      email: "lea@example.test",
-      leadId: `lead-${fixture.name}`,
-      expectedQuizSourceKind: "legacy",
-    })
+  const linked = await linkExactPlanBereitSourceToProfile(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-pp",
+    expectedQuizSourceKind: "personal_plan",
+  })
 
-    assert.equal(readiness.status, "checking", fixture.name)
-    assert.equal(readiness.initialAction, "link", fixture.name)
-  }
+  assert.equal(linked.status, "ready")
+  const factsCalls = db.rpcs.filter((call) => call.fn === "user_facts_save_v1")
+  // Round 2 ruling: a losing quiz writes nothing to quiz_context, only its candidate record.
+  assert.equal(factsCalls.length, 1, "diagnostics only")
+  assert.equal(factsCalls[0].args.p_domain, "diagnostics")
+  assert.equal(factsCalls[0].args.p_mode, "create_only")
+  assert.deepEqual(
+    db.tables.hair_profiles[0].diagnostics,
+    before,
+    "the existing domain must be preserved, not overwritten",
+  )
+})
+
+test("latest quiz wins: linking a NEWER artifact replaces diagnostics and quiz_context", async () => {
+  const db = new FakeSupabase(
+    {
+      leads: [
+        {
+          id: "lead-pp",
+          email: "lea@example.test",
+          quiz_kind: "personal_plan",
+          user_id: null,
+          updated_at: "2026-09-14T08:00:00.000Z",
+        },
+      ],
+      personal_plan_prepared_artifacts: [
+        {
+          id: "artifact-1",
+          lead_id: "lead-pp",
+          user_id: "user-1",
+          status: "attached",
+          canonical_profile: COMPLETE_LEGACY_ANSWERS,
+          quiz_answers: COMPLETE_V3_PLAN_ENVELOPE,
+          created_at: "2026-09-12T08:00:00.000Z",
+        },
+      ],
+      hair_profiles: [earlierArtifactProfile("2026-09-10T08:00:00.000Z", 2)],
+    },
+    {
+      link_personal_plan_artifact_to_user: {
+        data: [{ artifact_id: "artifact-1", canonical_profile: COMPLETE_LEGACY_ANSWERS }],
+        error: null,
+      },
+    },
+  )
+
+  const linked = await linkExactPlanBereitSourceToProfile(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-pp",
+    expectedQuizSourceKind: "personal_plan",
+  })
+
+  assert.equal(linked.status, "ready")
+  assert.deepEqual(
+    db.rpcs
+      .filter((call) => call.fn === "user_facts_save_v1")
+      .map((call) => [call.args.p_domain, call.args.p_mode, call.args.p_expected_revision]),
+    [
+      ["diagnostics", "upsert", 2],
+      ["quiz_context", "upsert", 3],
+    ],
+  )
+  assert.deepEqual(
+    db.tables.hair_profiles[0].diagnostics,
+    projectArtifactToFacts({
+      envelope: COMPLETE_V3_PLAN_ENVELOPE,
+      artifactId: "artifact-1",
+      leadId: "lead-pp",
+      takenAt: "2026-09-12T08:00:00.000Z",
+    }).diagnostics,
+  )
+})
+
+test("F28: linking a user with no existing profile at all creates diagnostics facts and reports ready", async () => {
+  const db = new FakeSupabase({
+    leads: [legacyLead("2026-09-12T08:00:00.000Z")],
+    hair_profiles: [],
+  })
+
+  const linked = await linkExactPlanBereitSourceToProfile(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    expectedQuizSourceKind: "legacy",
+  })
+
+  assert.equal(linked.status, "ready")
+  const factsCall = db.rpcs.find((call) => call.fn === "user_facts_save_v1")
+  assert.ok(factsCall)
+  // No real quiz on file yet: this quiz writes, CAS-pinned to the missing row's revision 0.
+  assert.equal(factsCall!.args.p_mode, "upsert")
+  assert.equal(factsCall!.args.p_expected_revision, 0)
+  assert.ok(db.tables.hair_profiles[0].diagnostics)
+  assert.equal(db.tables.hair_profiles[0].facts_revision, 1)
 })
 
 test("legacy initial readiness skips posting when already semantically projected", async () => {
@@ -387,7 +656,7 @@ test("legacy initial readiness skips posting when already semantically projected
   assert.equal(db.upserts.length, 0)
 })
 
-test("legacy initial readiness keeps the authoritative POST for an unprojected owner lead", async () => {
+test("legacy initial readiness keeps the authoritative POST when diagnostics facts don't exist yet", async () => {
   const db = new FakeSupabase({
     leads: [
       {
@@ -399,7 +668,7 @@ test("legacy initial readiness keeps the authoritative POST for an unprojected o
         updated_at: "2026-08-12T08:00:00.000Z",
       },
     ],
-    hair_profiles: [{ ...COMPLETE_PROFILE, density: "medium" }],
+    hair_profiles: [UNPROJECTED_PROFILE],
   })
 
   const readiness = await loadPlanBereitInitialReadiness(db as never, {
@@ -509,7 +778,22 @@ test("legacy readiness asks only the canonical hair-length question when that ex
   assert.equal(readiness.sourceVersion, "2026-08-12T08:00:00.000Z")
 })
 
+/** The stored source minus its `takenAt` — the correction time is "now", not a fixture. */
+function withoutTakenAt(diagnostics: Row): Row {
+  const { takenAt: _takenAt, ...source } = diagnostics.source as Row
+  void _takenAt
+  return { ...diagnostics, source }
+}
+
+/** Round 2: the recovery stamps the CORRECTION time as the quiz time. */
+function assertCorrectionTakenAt(diagnostics: Row, notBefore: number) {
+  const takenAt = (diagnostics.source as Row).takenAt
+  assert.equal(typeof takenAt, "string", "the correction time is stored as source.takenAt")
+  assert.ok(Date.parse(takenAt as string) >= notBefore, "takenAt is the correction time")
+}
+
 test("missing hair length persists against the exact owner-scoped lead with source-version protection", async () => {
+  const testStartedAt = Date.now() - 1
   const db = new FakeSupabase({
     leads: [
       {
@@ -543,17 +827,324 @@ test("missing hair length persists against the exact owner-scoped lead with sour
     db.updates[0].filters.map((filter) => [filter.column, filter.value]),
     [
       ["id", "lead-legacy"],
-      ["user_id", "user-1"],
       ["quiz_kind", "legacy"],
       ["updated_at", "2026-08-12T08:00:00.000Z"],
+      ["user_id", "user-1"],
     ],
   )
-  assert.equal(db.upserts.length, 1)
-  assert.equal(db.upserts[0].table, "hair_profiles")
-  assert.equal(db.upserts[0].onConflict, "user_id")
-  assert.equal(db.upserts[0].values.user_id, "user-1")
-  assert.equal(db.upserts[0].values.hair_length, "long")
-  assert.equal("goals" in db.upserts[0].values, false)
+
+  // F28/task 5a: the direct `hair_profiles` upsert is gone.
+  assert.equal(db.upserts.length, 0)
+  // Fix round 2, I(P1): the recovery re-projects the WHOLE corrected legacy lead. A bare
+  // `{ hairLength }` upsert would create a diagnostics document with no `source` when the
+  // profile has none yet (the normal case here — readiness was `missing_source_facts`
+  // BEFORE any link), which F28 would then report `ready` and `loadUserFacts` would throw
+  // on. `raw` therefore equals the corrected built legacy source (F26).
+  const factsCall = db.rpcs.find((call) => call.fn === "user_facts_save_v1")
+  assert.ok(factsCall, "expected a user_facts_save_v1 call")
+  assert.equal(factsCall!.args.p_user_id, "user-1")
+  assert.equal(factsCall!.args.p_domain, "diagnostics")
+  assert.equal(factsCall!.args.p_mode, "upsert")
+  const patch = factsCall!.args.p_patch as Row
+  assert.equal((patch.source as Row | undefined)?.kind, "legacy_quiz")
+  assert.equal((patch.source as Row | undefined)?.leadId, "lead-legacy")
+  assert.equal(patch.hairLength, "long")
+  const provenance = factsCall!.args.p_provenance as Row
+  assert.deepEqual(provenance.source, { kind: "legacy_lead", id: "lead-legacy" })
+  assert.equal(provenance.editedAt, undefined)
+  assert.equal(provenance.preservedCandidates, undefined)
+
+  // Round 2 ruling: answering the missing question makes that quiz the LATEST one. The
+  // recovery is an ordinary account-link write — full replacement, CAS — with the correction
+  // time as the quiz time.
+  assert.equal(factsCall!.args.p_expected_revision, 0)
+  const stored = diagnosticsV1Schema.parse(db.tables.hair_profiles[0].diagnostics)
+  const reprojected = projectLegacyLeadToFacts({
+    leadId: "lead-legacy",
+    quizAnswers: { ...COMPLETE_LEGACY_ANSWERS, hair_length: "long" } as never,
+  }).diagnostics
+  for (const field of [
+    "texture",
+    "thickness",
+    "density",
+    "hairLength",
+    "hairSurface",
+    "elasticResponse",
+    "scalpOiliness",
+  ] as const) {
+    assert.notEqual(stored[field], undefined, `${field} must be projected, not missing`)
+  }
+  assertCorrectionTakenAt(stored, testStartedAt)
+  assert.deepEqual(withoutTakenAt(stored), reprojected)
+})
+
+test("round 2: a recovery over OLDER artifact facts wins with full replacement and clears quiz_context", async () => {
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-legacy",
+        email: "lea@example.test",
+        quiz_kind: "legacy",
+        quiz_answers: { ...COMPLETE_LEGACY_ANSWERS, hair_length: undefined },
+        user_id: "user-1",
+        created_at: "2026-08-01T08:00:00.000Z",
+        updated_at: "2026-08-12T08:00:00.000Z",
+      },
+    ],
+    // An artifact quiz taken AFTER the lead's own created_at — but before the correction.
+    hair_profiles: [earlierArtifactProfile("2026-09-10T08:00:00.000Z", 2)],
+  })
+
+  const readiness = await updateMissingPlanBereitSourceFact(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    sourceVersion: "2026-08-12T08:00:00.000Z",
+    field: "hair_length",
+    value: "long",
+  })
+
+  assert.equal(readiness.status, "ready")
+  const factsCalls = db.rpcs.filter((call) => call.fn === "user_facts_save_v1")
+  assert.deepEqual(
+    factsCalls.map((call) => [call.args.p_domain, call.args.p_mode, call.args.p_expected_revision]),
+    [
+      ["diagnostics", "upsert", 2],
+      ["quiz_context", "upsert", 3],
+    ],
+  )
+  const patch = factsCalls[0].args.p_patch as Row
+  assert.equal(patch.concernRecurrence, null, "a field the corrected lead lacks is cleared")
+  const stored = db.tables.hair_profiles[0].diagnostics as Row
+  assert.equal(stored.hairLength, "long")
+  assert.equal(stored.texture, "wavy", "the artifact's answers are replaced")
+  assert.equal((stored.source as Row).leadId, "lead-legacy")
+  assert.deepEqual(db.tables.hair_profiles[0].quiz_context, {}, "F4: quiz_context cleared")
+})
+
+test("round 2: a recovery never beats a quiz taken AFTER the correction — preserved", async () => {
+  const profile = earlierArtifactProfile("2026-09-10T08:00:00.000Z", 2)
+  ;(profile.diagnostics as Row).source = {
+    ...((profile.diagnostics as Row).source as Row),
+    takenAt: "2099-01-01T00:00:00.000Z",
+  }
+  const before = structuredClone(profile.diagnostics)
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-legacy",
+        email: "lea@example.test",
+        quiz_kind: "legacy",
+        quiz_answers: { ...COMPLETE_LEGACY_ANSWERS, hair_length: undefined },
+        user_id: "user-1",
+        updated_at: "2026-08-12T08:00:00.000Z",
+      },
+    ],
+    hair_profiles: [profile],
+  })
+
+  const readiness = await updateMissingPlanBereitSourceFact(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    sourceVersion: "2026-08-12T08:00:00.000Z",
+    field: "hair_length",
+    value: "long",
+  })
+
+  assert.equal(readiness.status, "ready", "a preserve still settles — no stuck checking")
+  const factsCalls = db.rpcs.filter((call) => call.fn === "user_facts_save_v1")
+  assert.deepEqual(
+    factsCalls.map((call) => [call.args.p_domain, call.args.p_mode]),
+    [["diagnostics", "create_only"]],
+  )
+  assert.deepEqual(db.tables.hair_profiles[0].diagnostics, before)
+})
+
+test("round 2: a hand-edited profile newer than the correction is preserved", async () => {
+  const profile = earlierArtifactProfile("2026-09-10T08:00:00.000Z", 2)
+  ;((profile.facts_provenance as Row).diagnostics as Row).editedAt = "2099-01-01T00:00:00.000Z"
+  const before = structuredClone(profile.diagnostics)
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-legacy",
+        email: "lea@example.test",
+        quiz_kind: "legacy",
+        quiz_answers: { ...COMPLETE_LEGACY_ANSWERS, hair_length: undefined },
+        user_id: "user-1",
+        updated_at: "2026-08-12T08:00:00.000Z",
+      },
+    ],
+    hair_profiles: [profile],
+  })
+
+  const readiness = await updateMissingPlanBereitSourceFact(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    sourceVersion: "2026-08-12T08:00:00.000Z",
+    field: "hair_length",
+    value: "long",
+  })
+
+  assert.equal(readiness.status, "ready")
+  assert.deepEqual(db.tables.hair_profiles[0].diagnostics, before)
+  assert.equal(
+    db.rpcs.filter((call) => call.fn === "user_facts_save_v1")[0]?.args.p_mode,
+    "create_only",
+  )
+})
+
+test("the recovery form's real hair length replaces an assumed default and clears the assumed marker", async () => {
+  const oldAnswers = { ...COMPLETE_LEGACY_ANSWERS, hair_length: undefined }
+  const linkedWithDefault = {
+    ...projectLegacyLeadToFacts({ leadId: "lead-legacy", quizAnswers: oldAnswers as never })
+      .diagnostics,
+    hairLength: "long",
+  }
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-legacy",
+        email: "lea@example.test",
+        quiz_kind: "legacy",
+        quiz_answers: oldAnswers,
+        user_id: "user-1",
+        updated_at: "2026-08-12T08:00:00.000Z",
+      },
+    ],
+    // What an account link of this old lead wrote (decision wave 1, item B).
+    hair_profiles: [
+      {
+        user_id: "user-1",
+        diagnostics: linkedWithDefault,
+        facts_revision: 1,
+        facts_provenance: {
+          diagnostics: {
+            source: { kind: "legacy_lead", id: "lead-legacy" },
+            schemaVersion: 1,
+            at: "2026-08-12T09:00:00.000Z",
+            fields: { texture: "user", hairLength: "assumed" },
+          },
+        },
+      },
+    ],
+  })
+
+  const readiness = await updateMissingPlanBereitSourceFact(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    sourceVersion: "2026-08-12T08:00:00.000Z",
+    field: "hair_length",
+    value: "short",
+  })
+
+  assert.equal(readiness.status, "ready")
+  assert.equal((db.tables.hair_profiles[0].diagnostics as Row).hairLength, "short")
+  const fields = ((db.tables.hair_profiles[0].facts_provenance as Row).diagnostics as Row)
+    .fields as Row
+  assert.equal(fields.hairLength, "user", "no stale assumed marker survives the real answer")
+  assert.equal(
+    Object.values(fields).includes("assumed"),
+    false,
+    "the corrected lead is complete, so nothing is assumed any more",
+  )
+})
+
+test("F5 / round 2: a recovery write that fails AFTER the lead was corrected still lands on the retry", async () => {
+  const testStartedAt = Date.now() - 1
+  const oldAnswers = { ...COMPLETE_LEGACY_ANSWERS, hair_length: undefined }
+  // What an earlier account link of this lead wrote: its facts, with an assumed length.
+  const linkedWithDefault = {
+    ...projectLegacyLeadToFacts({ leadId: "lead-legacy", quizAnswers: oldAnswers as never })
+      .diagnostics,
+    hairLength: "long",
+  }
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-legacy",
+        email: "lea@example.test",
+        quiz_kind: "legacy",
+        quiz_answers: oldAnswers,
+        user_id: "user-1",
+        created_at: "2026-08-12T07:00:00.000Z",
+        updated_at: "2026-08-12T08:00:00.000Z",
+      },
+    ],
+    hair_profiles: [
+      {
+        user_id: "user-1",
+        diagnostics: linkedWithDefault,
+        facts_revision: 1,
+        facts_provenance: {
+          diagnostics: {
+            source: { kind: "legacy_lead", id: "lead-legacy" },
+            schemaVersion: 1,
+            at: "2026-08-12T09:00:00.000Z",
+            fields: { texture: "user", hairLength: "assumed" },
+          },
+        },
+      },
+    ],
+  })
+  // The facts write fails once — after the lead row was already corrected.
+  const realRpc = db.rpc.bind(db)
+  let failNextFactsWrite = true
+  db.rpc = (fn: string, args: Row) => {
+    if (fn === "user_facts_save_v1" && failNextFactsWrite) {
+      failNextFactsWrite = false
+      db.rpcs.push({ fn, args })
+      return Promise.resolve({ data: null, error: { message: "connection reset" } }) as never
+    }
+    return realRpc(fn, args)
+  }
+  const input = {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    expectedQuizSourceKind: "legacy" as const,
+  }
+
+  await assert.rejects(() =>
+    updateMissingPlanBereitSourceFact(db as never, {
+      ...input,
+      sourceVersion: "2026-08-12T08:00:00.000Z",
+      field: "hair_length",
+      value: "short",
+    }),
+  )
+  assert.equal((db.tables.leads[0].quiz_answers as Row).hair_length, "short", "lead corrected")
+  assert.equal((db.tables.hair_profiles[0].diagnostics as Row).hairLength, "long", "facts not")
+
+  // The retry: the page's readiness read must not call this "ready" on the stale facts…
+  const initial = await loadPlanBereitInitialReadiness(db as never, input)
+  assert.equal(initial.status, "checking")
+  assert.equal(initial.initialAction, "link")
+
+  // …and the link POST it triggers lands the corrected lead's facts.
+  const linked = await linkExactPlanBereitSourceToProfile(db as never, input)
+  assert.equal(linked.status, "ready")
+  const stored = db.tables.hair_profiles[0].diagnostics as Row
+  assert.equal(stored.hairLength, "short")
+  // The retry is an ordinary account-link write whose quiz time is the correction time.
+  assertCorrectionTakenAt(stored, testStartedAt)
+  assert.deepEqual(
+    withoutTakenAt(stored),
+    projectLegacyLeadToFacts({
+      leadId: "lead-legacy",
+      quizAnswers: { ...COMPLETE_LEGACY_ANSWERS, hair_length: "short" } as never,
+    }).diagnostics,
+  )
+  const fields = ((db.tables.hair_profiles[0].facts_provenance as Row).diagnostics as Row)
+    .fields as Row
+  assert.equal(fields.hairLength, "user")
+
+  // Settled: the next read is plain ready, and a further link is a no-op preserve.
+  const again = await loadPlanBereitInitialReadiness(db as never, input)
+  assert.equal(again.status, "ready")
 })
 
 test("foreign exact leads are forbidden and never patched from the recovery form", async () => {
@@ -581,6 +1172,10 @@ test("foreign exact leads are forbidden and never patched from the recovery form
 
   assert.equal(readiness.status, "forbidden")
   assert.equal(db.updates.length, 0)
+  assert.equal(
+    db.rpcs.some((call) => call.fn === "user_facts_save_v1"),
+    false,
+  )
 })
 
 test("Personal Plan readiness keeps the attached artifact and projected profile requirement", async () => {
@@ -779,6 +1374,369 @@ function scanLinkInput() {
   }
 }
 
+test("email return saves only a currently missing fact, retaining other answers and version CAS", async () => {
+  const db = scanFunnelDb()
+  db.tables.leads[0].user_id = "user-1"
+  db.tables.leads[0].quiz_answers = {
+    ...COMPLETE_LEGACY_ANSWERS,
+    density: undefined,
+    hair_length: undefined,
+  }
+  const deps = {
+    resolveFunnelPackage: async () => resolvedPackage("customerio_scan_return_v1"),
+    provisionStage1Plan: async () => ({ status: "completed" }),
+  }
+  const input = {
+    ...scanLinkInput(),
+    funnelSessionId: "return-session",
+    sourceVersion: "2026-09-12T08:00:00.000Z",
+  }
+  const result = await updateMissingPlanBereitSourceFact(
+    db as never,
+    { ...input, field: "density", value: "high" },
+    deps,
+  )
+  assert.equal(result.status, "missing_source_facts")
+  if (result.status === "missing_source_facts")
+    assert.deepEqual(
+      result.missingFacts.map((f) => f.field),
+      ["hair_length"],
+    )
+  assert.equal((db.tables.leads[0].quiz_answers as Row).density, "high")
+  assert.equal((db.tables.leads[0].quiz_answers as Row).structure, "wavy")
+  assert.equal(db.upserts.length, 0, "a partial recovery must not project incomplete profile")
+  assert.equal(
+    db.updates[0].filters.some((f) => f.column === "updated_at" && f.value === input.sourceVersion),
+    true,
+  )
+  await updateMissingPlanBereitSourceFact(
+    db as never,
+    { ...input, field: "structure", value: "curly" },
+    deps,
+  )
+  assert.equal(
+    (db.tables.leads[0].quiz_answers as Row).structure,
+    "wavy",
+    "existing fact cannot be overwritten through recovery",
+  )
+})
+
+test("legacy German-valued recovery preserves source answers and projects canonical profile values", async () => {
+  const cases = [
+    { field: "fingertest", value: "rau", profileField: "cuticle_condition", profileValue: "rough" },
+    { field: "scalp_type", value: "trocken", profileField: "scalp_type", profileValue: "dry" },
+    {
+      field: "treatment",
+      value: ["gefaerbt"],
+      profileField: "chemical_treatment",
+      profileValue: ["colored"],
+    },
+  ] as const
+  for (const { field, value, profileField, profileValue } of cases) {
+    const db = scanFunnelDb()
+    db.tables.leads[0].user_id = "user-1"
+    db.tables.leads[0].quiz_answers = { ...COMPLETE_LEGACY_ANSWERS, [field]: undefined }
+    const result = await updateMissingPlanBereitSourceFact(
+      db as never,
+      {
+        ...scanLinkInput(),
+        funnelSessionId: "return-session",
+        sourceVersion: "2026-09-12T08:00:00.000Z",
+        field,
+        value: typeof value === "string" ? value : [...value],
+      },
+      {
+        resolveFunnelPackage: async () => resolvedPackage("customerio_scan_return_v1"),
+        provisionStage1Plan: async () => ({ status: "completed" }),
+      },
+    )
+    assert.equal(result.status, "ready", field)
+    assert.deepEqual((db.tables.leads[0].quiz_answers as Row)[field], value, field)
+    // Merge adaptation (single write path): the corrected lead is re-projected through
+    // `user_facts_save_v1` as an unconditional upsert, and the legacy column is what the
+    // RPC derives from the stored diagnostics (the fake RPC stores, it does not derive —
+    // derivation parity is `user-facts-derive-parity.test.ts`).
+    const factsCalls = db.rpcs.filter((call) => call.fn === "user_facts_save_v1")
+    assert.equal(factsCalls.length, 1, field)
+    assert.equal(factsCalls[0].args.p_mode, "upsert", field)
+    const stored = diagnosticsV1Schema.parse(db.tables.hair_profiles[0].diagnostics)
+    assert.deepEqual(
+      deriveDiagnosticsColumns(stored)[
+        profileField as keyof ReturnType<typeof deriveDiagnosticsColumns>
+      ],
+      profileValue,
+      field,
+    )
+  }
+})
+
+test("stale missing-fact writes do not replace a newer quiz", async () => {
+  const db = scanFunnelDb()
+  db.tables.leads[0].user_id = "user-1"
+  db.tables.leads[0].quiz_answers = { ...COMPLETE_LEGACY_ANSWERS, density: undefined }
+  const result = await updateMissingPlanBereitSourceFact(
+    db as never,
+    {
+      ...scanLinkInput(),
+      funnelSessionId: "return-session",
+      field: "density",
+      value: "high",
+      sourceVersion: "stale",
+    },
+    {
+      resolveFunnelPackage: async () => resolvedPackage("customerio_scan_return_v1"),
+      provisionStage1Plan: async () => ({ status: "completed" }),
+    },
+  )
+  assert.equal(result.status, "source_pending")
+  assert.equal((db.tables.leads[0].quiz_answers as Row).density, undefined)
+  assert.equal(db.upserts.length, 0)
+})
+
+test("email package recovery needs the exact supplied lead session", async () => {
+  const db = scanFunnelDb()
+  db.tables.leads[0].user_id = "user-1"
+  db.tables.leads[0].quiz_answers = { ...COMPLETE_LEGACY_ANSWERS, density: undefined }
+  const calls: Array<string | null | undefined> = []
+  const deps = {
+    resolveFunnelPackage: async (_lead: string, session?: string | null) => {
+      calls.push(session)
+      return resolvedPackage("customerio_scan_return_v1")
+    },
+    provisionStage1Plan: async () => ({ status: "completed" }),
+  }
+  assert.equal(
+    (await loadPlanBereitReadiness(db as never, scanLinkInput(), deps)).status,
+    "invalid_source",
+  )
+  const recovery = await loadPlanBereitReadiness(
+    db as never,
+    { ...scanLinkInput(), funnelSessionId: "exact-return" },
+    deps,
+  )
+  assert.equal(recovery.status, "missing_source_facts")
+  assert.deepEqual(calls, [undefined, "exact-return"])
+})
+
+test("Personal Plan email returns provision only with facts, attached artifact and exact session", async () => {
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-pp",
+        email: "lea@example.test",
+        user_id: "user-1",
+        quiz_kind: "personal_plan",
+        quiz_answers: {
+          kind: "personal_plan",
+          version: 3,
+          answers: {
+            texture: "wavy",
+            thickness: "fine",
+            density: "low",
+            hairLength: "medium",
+            hairSurface: "rough",
+            elasticResponse: "snaps",
+            scalpOiliness: "dry",
+            goals: ["moisture"],
+            chemicalTreatments: ["colored"],
+          },
+        },
+      },
+    ],
+    personal_plan_prepared_artifacts: [],
+    hair_profiles: [COMPLETE_PROFILE],
+  })
+  let provisioned = 0
+  const deps = {
+    resolveFunnelPackage: async () => resolvedPackage("customerio_scan_return_v1"),
+    provisionStage1Plan: async () => {
+      provisioned++
+      return { status: "completed" }
+    },
+  }
+  const input = {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-pp",
+    expectedQuizSourceKind: "personal_plan" as const,
+    funnelSessionId: "return-session",
+  }
+  assert.equal((await loadPlanBereitReadiness(db as never, input, deps)).status, "source_pending")
+  assert.equal(provisioned, 0)
+  db.tables.personal_plan_prepared_artifacts.push({
+    id: "artifact",
+    lead_id: "lead-pp",
+    user_id: "user-1",
+    status: "attached",
+    quiz_answers: db.tables.leads[0].quiz_answers,
+    canonical_profile: COMPLETE_LEGACY_ANSWERS,
+  })
+  assert.equal((await loadPlanBereitReadiness(db as never, input, deps)).status, "ready")
+  assert.equal(provisioned, 1)
+})
+
+test("exact email return repairs a missing Personal Plan artifact only after the post-access POST", async () => {
+  // Merge adaptation: a complete v3 envelope — the real repair RPC only ever attaches one
+  // that passes `personalPlanDurableAnswersSchema`, and the account-link facts writer
+  // projects the attached artifact's envelope (it no longer stores `canonical_profile`).
+  const answers = {
+    kind: "personal_plan",
+    version: 3,
+    answers: {
+      texture: "wavy",
+      thickness: "fine",
+      density: "low",
+      hairLength: "medium",
+      hairSurface: "rough",
+      elasticResponse: "snaps",
+      scalpOiliness: "dry",
+      scalpConcerns: [],
+      goals: ["moisture"],
+      chemicalTreatments: ["colored"],
+      currentConcerns: ["dry_lengths"],
+      routineClarity: "partial",
+      resultReliability: "sometimes",
+      adaptationConfidence: "partly",
+      previousAttempts: "some_steps_helped",
+      blockers: ["consistency"],
+      routineStyle: "simple_reliable",
+      meaningfulMoment: "everyday",
+    },
+  }
+  const db = new FakeSupabase(
+    {
+      leads: [
+        {
+          id: "lead-pp-return",
+          email: "lea@example.test",
+          quiz_kind: "personal_plan",
+          quiz_answers: answers,
+          user_id: null,
+          updated_at: "2026-09-12T08:00:00.000Z",
+        },
+      ],
+      personal_plan_prepared_artifacts: [],
+      hair_profiles: [],
+    },
+    {
+      link_personal_plan_artifact_to_user: {
+        data: [{ canonical_profile: COMPLETE_LEGACY_ANSWERS }],
+        error: null,
+      },
+    },
+  )
+  const repairCalls: Array<{ leadId: string; userId: string; quizAnswers: unknown }> = []
+  const deps = {
+    resolveFunnelPackage: async () => resolvedPackage("customerio_scan_return_v1"),
+    provisionStage1Plan: async () => ({ status: "completed" }),
+    repairPersonalPlanArtifact: async (input: {
+      leadId: string
+      userId: string
+      quizAnswers: unknown
+    }) => {
+      repairCalls.push(input)
+      db.tables.personal_plan_prepared_artifacts.push({
+        id: "repaired-artifact",
+        lead_id: input.leadId,
+        user_id: input.userId,
+        status: "attached",
+        quiz_answers: input.quizAnswers,
+        canonical_profile: COMPLETE_LEGACY_ANSWERS,
+      })
+      return { status: "repaired" as const, artifactId: "repaired-artifact" }
+    },
+  }
+  const input = {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-pp-return",
+    expectedQuizSourceKind: "personal_plan" as const,
+    funnelSessionId: "exact-return",
+  }
+
+  const initial = await loadPlanBereitInitialReadiness(db as never, input, deps)
+  assert.equal(initial.status, "source_pending")
+  assert.equal(initial.initialAction, "link")
+  assert.equal(repairCalls.length, 0)
+  assert.equal(db.updates.length, 0)
+
+  const linked = await linkExactPlanBereitSourceToProfile(db as never, input, deps)
+  assert.equal(linked.status, "ready")
+  assert.deepEqual(repairCalls, [
+    { leadId: input.leadId, userId: input.userId, quizAnswers: answers },
+  ])
+  assert.equal(db.tables.leads[0].user_id, input.userId)
+  assert.equal(db.tables.personal_plan_prepared_artifacts.length, 1)
+  // The facts come from the REPAIRED artifact's own envelope.
+  const stored = diagnosticsV1Schema.parse(db.tables.hair_profiles[0].diagnostics)
+  assert.equal(stored.source.kind, "personal_plan_v3")
+  assert.equal("artifactId" in stored.source ? stored.source.artifactId : null, "repaired-artifact")
+  assert.equal(stored.hairLength, "medium")
+})
+
+test("email return will not use a stale Personal Plan artifact as scanner-ready source", async () => {
+  const oldAnswers = {
+    kind: "personal_plan",
+    version: 3,
+    answers: {
+      texture: "wavy",
+      thickness: "fine",
+      density: "low",
+      hairLength: null,
+      hairSurface: "rough",
+      elasticResponse: "snaps",
+      scalpOiliness: "dry",
+      goals: ["moisture"],
+      chemicalTreatments: ["colored"],
+    },
+  }
+  const newAnswers = {
+    ...oldAnswers,
+    answers: { ...oldAnswers.answers, hairLength: "medium" },
+  }
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-pp-stale",
+        email: "lea@example.test",
+        quiz_kind: "personal_plan",
+        quiz_answers: newAnswers,
+        user_id: "user-1",
+        updated_at: "2026-09-12T08:00:00.000Z",
+      },
+    ],
+    personal_plan_prepared_artifacts: [
+      {
+        id: "artifact-old",
+        lead_id: "lead-pp-stale",
+        user_id: "user-1",
+        status: "attached",
+        quiz_answers: oldAnswers,
+        canonical_profile: COMPLETE_LEGACY_ANSWERS,
+      },
+    ],
+    hair_profiles: [COMPLETE_PROFILE],
+  })
+  const input = {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-pp-stale",
+    expectedQuizSourceKind: "personal_plan" as const,
+    funnelSessionId: "exact-return",
+  }
+  const deps = {
+    resolveFunnelPackage: async () => resolvedPackage("customerio_scan_return_v1"),
+    provisionStage1Plan: async () => ({ status: "completed" }),
+    repairPersonalPlanArtifact: async () => ({ status: "conflict" as const }),
+  }
+  const initial = await loadPlanBereitInitialReadiness(db as never, input, deps)
+  assert.equal(initial.status, "source_pending")
+  assert.equal(initial.initialAction, "link")
+  const blocked = await linkExactPlanBereitSourceToProfile(db as never, input, deps)
+  assert.equal(blocked.status, "invalid_source")
+  assert.equal(db.rpcs.length, 0, "stale artifact must not enter the ordinary linker")
+})
+
 test("a scan_v1 buyer gets the initial need snapshot provisioned inside the link poll", async () => {
   const db = scanFunnelDb()
   const packageLookups: string[] = []
@@ -805,6 +1763,11 @@ test("a scan_v1 buyer gets the initial need snapshot provisioned inside the link
     db.updates.map((update) => [update.table, update.values]),
     [["leads", { user_id: "user-1", status: "linked" }]],
   )
+  assert.equal(
+    db.updates[0].filters.some((filter) => filter.column === "user_id" && filter.value === null),
+    true,
+    "the link cannot steal a lead claimed after the readiness read",
+  )
 })
 
 test("scanner provisioning repeats safely once the lead is already linked", async () => {
@@ -820,10 +1783,9 @@ test("scanner provisioning repeats safely once the lead is already linked", asyn
     },
   })
 
-  // Every pass re-runs the idempotent loadOrCreate (it reuses an existing plan): once
-  // right after the link, once more in the readiness read that reports `ready`.
+  // The read-back performs the idempotent loadOrCreate once for this request.
   // The lead link itself is only written while it is still missing.
-  assert.deepEqual(provisioned, ["user-1", "user-1"])
+  assert.deepEqual(provisioned, ["user-1"])
   assert.equal(db.updates.length, 0)
 })
 
@@ -841,7 +1803,11 @@ test("organic legacy buyers keep the pre-scanner link behaviour", async () => {
     })
 
     assert.equal(provisionCalls, 0, `package ${packageKey}`)
-    assert.equal(db.upserts.length, 1, `package ${packageKey} still projects the profile`)
+    assert.equal(
+      db.rpcs.filter((call) => call.fn === "user_facts_save_v1").length,
+      1,
+      `package ${packageKey} still writes diagnostics facts`,
+    )
     assert.equal(db.updates.length, 1, `package ${packageKey} still links the lead`)
   }
 })
@@ -924,8 +1890,10 @@ test("a lead with no funnel session at all is an organic buyer, not a blocked on
   })
 
   assert.equal(provisionCalls, 0)
-  assert.equal(db.upserts.length, 1)
-  assert.equal(readiness.status, "source_pending", "unchanged pre-scanner link outcome")
+  assert.equal(db.rpcs.filter((call) => call.fn === "user_facts_save_v1").length, 1)
+  // Organic and non-scan_v1, so no provisioning — but the link itself still writes
+  // diagnostics facts and links the lead, so the tail readiness read reaches `ready`.
+  assert.equal(readiness.status, "ready", "the linked profile is visible on the read-back")
   assert.equal(readiness.funnelPackageKey, null, "organic, and said so explicitly")
 })
 

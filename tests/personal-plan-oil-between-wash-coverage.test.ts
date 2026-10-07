@@ -63,7 +63,26 @@ test("the reviewed Oil cohort has 27 conventional leave-on products and 13 exact
   ])
 })
 
-test("every current conventional Oil compiles to one dry-first damp-alternative between-wash card", () => {
+const dryUseProductIds = new Set(
+  oilItems
+    .filter(
+      (item) =>
+        item.guidance_payload_v2.applicationFamily === "dry_finish" &&
+        item.guidance_payload_v2.runtimeBlockerCode === null,
+    )
+    .map((item) => item.product_id),
+)
+
+test("conventional Oils without a sourced dry use are named, not silently dropped (O3)", () => {
+  const dampOnly = conventionalProductIds
+    .filter((productId) => !dryUseProductIds.has(productId))
+    .map((productId) => oilItems.find((item) => item.product_id === productId)!.product_name)
+    .sort()
+  assert.ok(dampOnly.length > 0)
+  assert.ok(dampOnly.length < conventionalProductIds.length)
+})
+
+test("every conventional Oil with a sourced dry use compiles to one dry-first damp-alternative between-wash card; the others get none", () => {
   for (const currentProductId of conventionalProductIds) {
     const candidate = oilItems.find(
       (item) =>
@@ -72,7 +91,7 @@ test("every current conventional Oil compiles to one dry-first damp-alternative 
           item.guidance_payload_v2.role === "leave_in"),
     )!
     const pointer = candidate.guidance_payload_v2
-    const dayKey = pointer.role === "finish" ? "between_wash_care_day" : "refresh_day"
+    const dayKey = "between_wash_care_day"
     const result = compileApplicationViewV2({
       input: {
         routineItems: [
@@ -99,18 +118,26 @@ test("every current conventional Oil compiles to one dry-first damp-alternative 
       } as never,
       familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
       productPointers: oilItems
-        .filter(
-          (item) =>
-            item.product_id === currentProductId && item.source_role === candidate.source_role,
-        )
+        .filter((item) => item.product_id === currentProductId)
         .map((item) => item.guidance_payload_v2),
     })
 
     assert.deepEqual(result.pointerIssues, [], candidate.product_name)
+    assert.deepEqual(
+      result.days
+        .find(({ key }) => key === "refresh_day")
+        ?.productBlocks.filter((block) => block.productId === currentProductId) ?? [],
+      [],
+      `${candidate.product_name}: no Oil on the Refresh-Tag (O4)`,
+    )
     const blocks =
       result.days
         .find(({ key }) => key === dayKey)
         ?.productBlocks.filter((block) => block.productId === currentProductId) ?? []
+    if (!dryUseProductIds.has(currentProductId)) {
+      assert.equal(blocks.length, 0, candidate.product_name)
+      continue
+    }
     assert.equal(blocks.length, 1, candidate.product_name)
     assert.deepEqual(
       blocks[0]?.steps.filter(({ action }) => action === "section").map(({ copyDe }) => copyDe),

@@ -24,6 +24,8 @@ export interface SavedHairProfileQuizSource {
   scalp_condition?: unknown
   chemical_treatment?: unknown
   concerns?: unknown
+  /** Her stated main problem (F1), legacy vocabulary like `concerns`; absent on older rows. */
+  primary_concern?: unknown
   goals?: unknown
 }
 
@@ -138,6 +140,12 @@ export function buildQuizAnswersFromHairProfile(
     has_scalp_issue: scalpCondition !== undefined,
     scalp_condition: scalpCondition,
     concerns: filterConcerns(source.concerns),
+    // Legacy profile codes that are quiz codes restore as-is; anything else (hair_loss, a
+    // stale pick outside `concerns`) is dropped by the normalization — no main problem.
+    primary_concern:
+      typeof source.primary_concern === "string" && QUIZ_CONCERNS.has(source.primary_concern)
+        ? source.primary_concern
+        : undefined,
     treatment: mappedValues(source.chemical_treatment, TREATMENT_BY_PROFILE_VALUE),
     goals: filterGoals(source.goals),
   })

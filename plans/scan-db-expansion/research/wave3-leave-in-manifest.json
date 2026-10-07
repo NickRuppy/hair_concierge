@@ -40,7 +40,6 @@
               "styling_prep"
             ],
             "provides_heat_protection": false,
-            "heat_protection_max_c": null,
             "heat_activation_required": false,
             "care_benefits": [
               "moisture",
@@ -237,7 +236,6 @@
               "extension_conditioner"
             ],
             "provides_heat_protection": false,
-            "heat_protection_max_c": null,
             "heat_activation_required": false,
             "care_benefits": [
               "moisture",
@@ -452,7 +450,6 @@
               "extension_conditioner"
             ],
             "provides_heat_protection": false,
-            "heat_protection_max_c": null,
             "heat_activation_required": false,
             "care_benefits": [
               "moisture",
@@ -665,7 +662,6 @@
               "extension_conditioner"
             ],
             "provides_heat_protection": false,
-            "heat_protection_max_c": null,
             "heat_activation_required": false,
             "care_benefits": [
               "moisture",
@@ -860,7 +856,6 @@
               "extension_conditioner"
             ],
             "provides_heat_protection": true,
-            "heat_protection_max_c": 230,
             "heat_activation_required": false,
             "care_benefits": [
               "repair",
@@ -1086,7 +1081,6 @@
               "extension_conditioner"
             ],
             "provides_heat_protection": false,
-            "heat_protection_max_c": null,
             "heat_activation_required": false,
             "care_benefits": [
               "moisture",

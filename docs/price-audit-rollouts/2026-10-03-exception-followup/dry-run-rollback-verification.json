@@ -1,0 +1,8 @@
+{
+  "scope": "All371catalog rows and complete recognition identifiers",
+  "product_rows": 371,
+  "product_fingerprint_drift": 0,
+  "identifier_fingerprint_drift": 0,
+  "new_aliases_persisted": 0,
+  "result": "PASS: actual21updates+1identifierinsert fully rolled back; independent readback unchanged"
+}

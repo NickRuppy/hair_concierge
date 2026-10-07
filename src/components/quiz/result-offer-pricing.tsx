@@ -1,5 +1,6 @@
 "use client"
 
+import { loadConsent } from "@/lib/cookie-consent"
 import { useCallback, useEffect, useRef, useState } from "react"
 import type { Stripe } from "@stripe/stripe-js"
 
@@ -8,19 +9,27 @@ import {
   PaymentMethodCheckout,
   type CheckoutFailure,
 } from "@/components/checkout/payment-method-checkout"
+import {
+  CheckoutAccessRecoveryPanel,
+  type CheckoutAccessCheckState,
+} from "@/components/checkout/checkout-access-recovery-panel"
+import {
+  buildCheckoutRecoveryHref,
+  CheckoutAccessRecoveryError,
+  type CheckoutEligibilityResponse,
+} from "@/lib/checkout/access-recovery"
 import { OfferPaymentOverlay } from "@/components/checkout/offer-payment-overlay"
 import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
 import { PersonalPlanOneTimeCheckout } from "@/components/checkout/personal-plan-one-time-checkout"
-import {
-  ActiveSubscriptionDialog,
-  isCheckoutAccessAlreadyExistsResponse,
-  readCheckoutAccessAlreadyExistsEmail,
-} from "@/components/checkout/active-subscription-dialog"
-import { PaymentFeedbackCard } from "@/components/checkout/payment-feedback-card"
-import { usePaymentSupportReport } from "@/components/checkout/use-payment-support-report"
+import { isCheckoutAccessAlreadyExistsResponse } from "@/components/checkout/active-subscription-dialog"
 import { usePlanSelection } from "@/components/checkout/use-plan-selection"
 import type { QuizResultReferencePrices } from "@/components/checkout/plan-reference-prices"
 import { SubscriptionPlanSelector } from "@/components/checkout/subscription-plan-selector"
+import {
+  getTrialOfferPresentation,
+  TrialOffer,
+  type TrialOfferPricing,
+} from "@/components/billing/trial-offer"
 import {
   OFFER_PRICING_REVISION,
   useOfferTrackingContext,
@@ -35,13 +44,8 @@ import {
   type CheckoutLifecycleClaim,
 } from "@/lib/analytics/checkout-attempt"
 import { createFunnelEventId, getCurrentFunnelContext } from "@/lib/funnel/client"
-import {
-  isOfferPaymentOverlayEnabled,
-  isPaymentFeedbackV2Enabled,
-  isPaymentSupportUiEnabled,
-  isStripeExpressCheckoutEnabled,
-} from "@/lib/funnel/flags"
-import { paymentFeedback } from "@/lib/checkout/payment-feedback"
+import { syncOpenAIAdsBeforeCheckout } from "@/lib/openai-ads/browser"
+import { isOfferPaymentOverlayEnabled, isStripeExpressCheckoutEnabled } from "@/lib/funnel/flags"
 import type {
   CheckoutLifecycleDismissalReason,
   CheckoutLifecycleTransition,
@@ -53,10 +57,6 @@ import { getOfferStripePromise } from "@/lib/stripe/offer-client-loader"
 import { resolvePersonalPlanPricingMode } from "@/lib/funnel/personal-plan-pricing-experiment"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 
-export function isUnexpectedCheckoutNavigationPath(expectedPathname: string, nextPathname: string) {
-  if (nextPathname === expectedPathname) return false
-  return !/^\/(?:welcome|datenschutz|impressum|agb|widerruf|kontakt)(?:\/|$)/.test(nextPathname)
-}
 import {
   DEFAULT_PRICING_INTERVAL,
   getStripePricingPlan,
@@ -65,6 +65,36 @@ import {
 } from "@/lib/stripe/pricing-plans"
 import { PERSONAL_PLAN_ONCE_PRODUCT } from "@/lib/billing/offer-products"
 import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment-client"
+
+export function isUnexpectedCheckoutNavigationPath(expectedPathname: string, nextPathname: string) {
+  if (nextPathname === expectedPathname) return false
+  return !/^\/(?:welcome|datenschutz|impressum|agb|widerruf|kontakt)(?:\/|$)/.test(nextPathname)
+}
+
+export function buildResultCheckoutSessionRequest(input: {
+  checkoutAttemptId: string
+  checkoutSessionAttemptId: string
+  funnelEventId: string
+  funnelSessionId?: string
+  interval: BillingInterval
+  leadId: string | null
+  presentation?: "offer_overlay_elements"
+  trial: boolean
+}) {
+  return {
+    checkoutAttemptId: input.checkoutAttemptId,
+    checkoutSessionAttemptId: input.checkoutSessionAttemptId,
+    funnelEventId: input.funnelEventId,
+    funnelSessionId: input.funnelSessionId,
+    interval: input.interval,
+    leadId: input.leadId,
+    source: "quiz_result_offer" as const,
+    ...(input.presentation ? { presentation: input.presentation } : {}),
+    ...(input.trial
+      ? { trial: true as const, trialMarketingConsent: loadConsent()?.marketing === true }
+      : {}),
+  }
+}
 
 const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?.trim()
 const unloadedStripePromise = Promise.resolve(null)
@@ -143,7 +173,9 @@ function useCheckoutOverlayPresentationIntegrity({
   open,
   plan,
   trackLifecycle,
+  intentionalNavigationRef,
 }: {
+  intentionalNavigationRef?: { current: boolean }
   attemptId: string | null
   attempts: CheckoutAttemptController
   commerceKind: "one_time" | "subscription"
@@ -224,6 +256,7 @@ function useCheckoutOverlayPresentationIntegrity({
     const expectedPathname = window.location.pathname
     const openIndex = attempts.openIndex() ?? 1
     const reportUnexpectedRoute = () => {
+      if (intentionalNavigationRef?.current) return
       if (!isUnexpectedCheckoutNavigationPath(expectedPathname, window.location.pathname)) return
       reportPresentationFailure(attemptId, openIndex, "unexpected_route")
     }
@@ -251,7 +284,7 @@ function useCheckoutOverlayPresentationIntegrity({
         window.history.replaceState = originalReplaceState
       }
     }
-  }, [attemptId, attempts, open, reportPresentationFailure])
+  }, [attemptId, attempts, intentionalNavigationRef, open, reportPresentationFailure])
 
   return useCallback(
     (state: "mounted" | "visible") => {
@@ -341,7 +374,18 @@ export type ResultOfferPricingCheckoutSummary =
 export function getMembershipCheckoutSummary(
   interval: BillingInterval,
   pricingCatalog: SubscriptionPricingCatalog = "standard",
+  trialPricing?: TrialOfferPricing | null,
 ): ResultOfferPricingCheckoutSummary {
+  if (trialPricing) {
+    if (interval !== "month" && interval !== "year") throw new Error("Unsupported trial interval")
+    return {
+      commerceKind: "membership",
+      interval,
+      planName: "7 Tage kostenlos testen",
+      priceLabel: "Heute 0,00 €",
+      stickyLine: "7 Tage kostenlos · heute 0,00 €",
+    }
+  }
   const plan = getStripePricingPlan(interval, pricingCatalog)
   return {
     commerceKind: "membership",
@@ -390,11 +434,13 @@ export function ResultOfferPricing(props: {
   offerVariant?: string
   openCheckoutRequestId?: number
   pricingCatalog?: SubscriptionPricingCatalog
+  presentation?: "default" | "scanner"
   referencePrices?: QuizResultReferencePrices
+  trialOfferPricing?: TrialOfferPricing | null
 }) {
   const offerContext = useOfferTrackingContext()
   const offerVariant = props.offerVariant ?? offerContext?.offerVariant ?? "personal-plan-v1"
-  if (resolvePersonalPlanPricingMode(offerVariant) === "one_time") {
+  if (!props.trialOfferPricing && resolvePersonalPlanPricingMode(offerVariant) === "one_time") {
     const expressElementsEnabled = props.checkoutPresentationFixture
       ? props.checkoutPresentationFixture.overlay &&
         props.checkoutPresentationFixture.expressElements
@@ -411,7 +457,12 @@ export function ResultOfferPricing(props: {
       />
     )
   }
-  return <MembershipResultOfferPricing {...props} />
+  return (
+    <MembershipResultOfferPricing
+      key={props.trialOfferPricing ? `trial-${props.presentation ?? "default"}` : "paid"}
+      {...props}
+    />
+  )
 }
 
 function PersonalPlanOneTimePricing({
@@ -732,7 +783,9 @@ function MembershipResultOfferPricing({
   offerTracking,
   openCheckoutRequestId,
   pricingCatalog = "standard",
+  presentation = "default",
   referencePrices,
+  trialOfferPricing = null,
 }: {
   checkoutPresentationFixture?: { expressElements: boolean; overlay: boolean }
   leadId: string | null
@@ -743,7 +796,9 @@ function MembershipResultOfferPricing({
   offerVariant?: string
   openCheckoutRequestId?: number
   pricingCatalog?: SubscriptionPricingCatalog
+  presentation?: "default" | "scanner"
   referencePrices?: QuizResultReferencePrices
+  trialOfferPricing?: TrialOfferPricing | null
 }) {
   const { stripeLive } = usePaymentRuntime()
   const pricingRef = useRef<HTMLDivElement | null>(null)
@@ -765,7 +820,7 @@ function MembershipResultOfferPricing({
   const attempts = attemptsRef.current
   const offerContext = useOfferTrackingContext()
   const { selectedInterval, selectPlan } = usePlanSelection({
-    defaultInterval: DEFAULT_PRICING_INTERVAL,
+    defaultInterval: trialOfferPricing ? "year" : DEFAULT_PRICING_INTERVAL,
   })
   const [checkoutInterval, setCheckoutInterval] = useState<BillingInterval | null>(null)
   const [checkoutVisible, setCheckoutVisible] = useState(false)
@@ -774,28 +829,24 @@ function MembershipResultOfferPricing({
   const [lockedProvider, setLockedProvider] = useState<LockedCheckoutProvider | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [stripe, setStripe] = useState<Promise<Stripe | null>>(unloadedStripePromise)
-  const [duplicateEmail, setDuplicateEmail] = useState<string | null>(null)
-  const [duplicateOpen, setDuplicateOpen] = useState(false)
+  const [accessCheck, setAccessCheck] = useState<CheckoutAccessCheckState>({ status: "idle" })
+  const [recoveryAfterPayPal, setRecoveryAfterPayPal] = useState(false)
+  const [accessGeneration, setAccessGeneration] = useState(0)
+  const accessGenerationRef = useRef(0)
+  const accessAbortRef = useRef<AbortController | null>(null)
+  const accessRecoveryRef = useRef(false)
+  const intentionalNavigationRef = useRef(false)
   const [engaged, setEngaged] = useState(false)
   const overlay = checkoutPresentationFixture?.overlay ?? isOfferPaymentOverlayEnabled()
   const express =
     overlay && (checkoutPresentationFixture?.expressElements ?? isStripeExpressCheckoutEnabled())
-  const duplicateFeedback = duplicateOpen
-    ? paymentFeedback("access_already_active", {
-        provider: "checkout",
-        method: "unknown",
-        accessAction: "login",
-      })
-    : null
-  const duplicateReport = usePaymentSupportReport({
-    checkoutAttemptId: attemptId,
-    checkoutContext: "result_membership",
-    feedback: duplicateFeedback,
-  })
 
   useEffect(
-    () => onCheckoutSummaryChange?.(getMembershipCheckoutSummary(selectedInterval, pricingCatalog)),
-    [onCheckoutSummaryChange, pricingCatalog, selectedInterval],
+    () =>
+      onCheckoutSummaryChange?.(
+        getMembershipCheckoutSummary(selectedInterval, pricingCatalog, trialOfferPricing),
+      ),
+    [onCheckoutSummaryChange, pricingCatalog, selectedInterval, trialOfferPricing],
   )
   useEffect(() => {
     if (!pricingRef.current || trackedRef.current) return
@@ -805,7 +856,9 @@ function MembershipResultOfferPricing({
       const fallback = offerTracking ?? getCurrentFunnelContext()
       trackAppEvent("pricing_viewed", {
         ...(offerContext ?? {}),
-        availableIntervals: getStripePricingPlans(pricingCatalog).map((plan) => plan.interval),
+        availableIntervals: trialOfferPricing
+          ? ["month", "year"]
+          : getStripePricingPlans(pricingCatalog).map((plan) => plan.interval),
         leadId: leadId ?? undefined,
         pricingCatalog,
         pricingRevision: OFFER_PRICING_REVISION,
@@ -817,7 +870,15 @@ function MembershipResultOfferPricing({
       })
       onPricingReached?.()
     })
-  }, [leadId, offerContext, offerTracking, onPricingReached, pricingCatalog, selectedInterval])
+  }, [
+    leadId,
+    offerContext,
+    offerTracking,
+    onPricingReached,
+    pricingCatalog,
+    selectedInterval,
+    trialOfferPricing,
+  ])
 
   const resetLock = useCallback(() => {
     lockRef.current = null
@@ -878,6 +939,7 @@ function MembershipResultOfferPricing({
     attemptId,
     attempts,
     commerceKind: "subscription",
+    intentionalNavigationRef,
     interval: checkoutInterval ?? selectedInterval,
     isInternalTest: Boolean(offerContext?.isInternalTest),
     leadId,
@@ -940,6 +1002,119 @@ function MembershipResultOfferPricing({
     [attemptId, attempts, checkoutInterval, leadId, offerContext, pricingCatalog, stripeLive],
   )
 
+  const invalidateAccessCheck = useCallback(() => {
+    accessGenerationRef.current += 1
+    accessAbortRef.current?.abort()
+    accessAbortRef.current = null
+    accessRecoveryRef.current = true
+  }, [])
+  useEffect(() => invalidateAccessCheck, [invalidateAccessCheck])
+
+  const checkAccess = useCallback(
+    async (id: string, interval: BillingInterval, recoveryOnly = false, afterPayPal = false) => {
+      invalidateAccessCheck()
+      const generation = accessGenerationRef.current
+      const controller = new AbortController()
+      accessAbortRef.current = controller
+      accessRecoveryRef.current = recoveryOnly
+      setAccessGeneration(generation)
+      setRecoveryAfterPayPal(afterPayPal)
+      setAccessCheck({ status: "checking" })
+      setError(null)
+      const timeout = window.setTimeout(() => controller.abort(), 12_000)
+      let failureFamily: PaymentErrorFamily = "network"
+      try {
+        const response = await fetch("/api/checkout/eligibility", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          cache: "no-store",
+          signal: controller.signal,
+          body: JSON.stringify({
+            source: "quiz_result_offer",
+            leadId,
+            funnelSessionId: leadId ? (offerContext?.funnelSessionId ?? undefined) : undefined,
+          }),
+        })
+        failureFamily = "entitlement_state"
+        const body = (await response.json()) as CheckoutEligibilityResponse
+        if (generation !== accessGenerationRef.current) return
+        if (!response.ok || controller.signal.aborted)
+          throw new Error("checkout eligibility unavailable")
+        if (
+          body.status === "existing_access" &&
+          typeof body.activationPending === "boolean" &&
+          (body.recovery === "account" || body.recovery === "login")
+        ) {
+          accessRecoveryRef.current = true
+          resetLock()
+          setEngaged(false)
+          setAccessCheck(body)
+          return
+        }
+        if (body.status !== "eligible" || recoveryOnly)
+          throw new Error("checkout eligibility unavailable")
+        const stripePromise = getOfferStripePromise()
+        const stripeRequired = overlay || !isPayPalCheckoutEnabled()
+        if (stripePublishableKey && stripeRequired) {
+          trackStripeJsAvailability(stripePromise, (failure) => {
+            if (generation === accessGenerationRef.current && !accessRecoveryRef.current) {
+              reportFailure(failure, "stripe", interval, id)
+            }
+          })
+        } else if (!stripePublishableKey && stripeRequired) {
+          reportFailure(
+            {
+              errorCode: "stripe_publishable_key_missing",
+              failureStage: "configuration",
+              retryable: false,
+            },
+            "stripe",
+            interval,
+            id,
+          )
+        }
+        setError(!stripePublishableKey && stripeRequired ? checkoutStartError : null)
+        setStripe(stripePromise)
+        setAccessCheck({ status: "eligible" })
+      } catch {
+        if (generation !== accessGenerationRef.current) return
+        accessRecoveryRef.current = true
+        setAccessCheck({ status: "unavailable" })
+        capturePaymentFailure({
+          signal: "checkout_experience_degraded",
+          provider: "unknown",
+          boundary: "entitlement",
+          errorFamily: controller.signal.aborted ? "timeout" : failureFamily,
+          commerceKind: "subscription",
+          origin: "browser",
+          method: "unknown",
+          truth: "unknown",
+          live: stripeLive,
+          isInternalTest: Boolean(offerContext?.isInternalTest),
+          retryable: "true",
+          checkoutAttemptId: id,
+          source: "quiz_result_offer",
+          interval,
+          status: "checkout_eligibility_unavailable",
+          providerReferencePresent: false,
+        })
+      } finally {
+        window.clearTimeout(timeout)
+        if (accessAbortRef.current === controller) accessAbortRef.current = null
+      }
+    },
+    [
+      invalidateAccessCheck,
+      leadId,
+      offerContext?.funnelSessionId,
+      offerContext?.isInternalTest,
+      overlay,
+      reportFailure,
+      resetLock,
+      stripeLive,
+    ],
+  )
+
   const endCheckout = useCallback(
     ({
       dismissalReason,
@@ -968,6 +1143,8 @@ function MembershipResultOfferPricing({
           transition: "attempt_ended",
         })
       }
+      invalidateAccessCheck()
+      setAccessCheck({ status: "idle" })
       attempts.end()
       resetLock()
       setAttemptId(null)
@@ -979,7 +1156,7 @@ function MembershipResultOfferPricing({
       membershipLastLifecycleTransitionRef.current = "none"
       membershipAttemptStartedAtRef.current = 0
     },
-    [attemptId, attempts, resetLock, trackCheckoutLifecycle],
+    [attemptId, attempts, invalidateAccessCheck, resetLock, trackCheckoutLifecycle],
   )
   const close = useCallback(
     ({ focusPlan = false }: { focusPlan?: boolean } = {}) => {
@@ -998,15 +1175,19 @@ function MembershipResultOfferPricing({
           transition: "dismissed",
         })
       }
+      invalidateAccessCheck()
+      setAccessCheck({ status: "idle" })
       setCheckoutVisible(false)
       setEngaged(false)
       setError(null)
     },
-    [attemptId, attempts, endCheckout, overlay, trackCheckoutLifecycle],
+    [attemptId, attempts, endCheckout, invalidateAccessCheck, overlay, trackCheckoutLifecycle],
   )
   const openCheckout = useCallback(() => {
+    intentionalNavigationRef.current = false
     if (overlay && attemptId && checkoutInterval && !checkoutVisible) {
       const resumed = attempts.resume()
+      void checkAccess(attemptId, checkoutInterval)
       setCheckoutVisible(true)
       setEngaged(false)
       if (resumed) {
@@ -1042,39 +1223,21 @@ function MembershipResultOfferPricing({
         openIndex,
         planId: plan.analyticsId,
         pricingCatalog,
-        value: plan.amount,
+        value: trialOfferPricing ? 0 : plan.amount,
       })
     trackCheckoutLifecycle(id, {
       lastState: "none",
       openIndex,
       transition: "opened",
     })
-    const stripePromise = getOfferStripePromise()
-    const stripeRequired = overlay || !isPayPalCheckoutEnabled()
-    if (stripePublishableKey && stripeRequired) {
-      trackStripeJsAvailability(stripePromise, (failure) =>
-        reportFailure(failure, "stripe", selectedInterval, id),
-      )
-    } else if (!stripePublishableKey && stripeRequired) {
-      reportFailure(
-        {
-          errorCode: "stripe_publishable_key_missing",
-          failureStage: "configuration",
-          retryable: false,
-        },
-        "stripe",
-        selectedInterval,
-        id,
-      )
-    }
     setEngaged(false)
-    setError(!stripePublishableKey && stripeRequired ? checkoutStartError : null)
+    setError(null)
+    void checkAccess(id, selectedInterval)
     rotateStripeSessionAttemptOnRetryRef.current = true
     setAttemptId(id)
     setCheckoutSessionAttemptId(createFunnelEventId())
     setCheckoutInterval(selectedInterval)
     setCheckoutVisible(true)
-    setStripe(stripePromise)
     onCheckoutOpen?.()
     if (!overlay)
       window.requestAnimationFrame(() =>
@@ -1089,9 +1252,10 @@ function MembershipResultOfferPricing({
     onCheckoutOpen,
     overlay,
     pricingCatalog,
-    reportFailure,
+    checkAccess,
     selectedInterval,
     trackCheckoutLifecycle,
+    trialOfferPricing,
   ])
   useEffect(() => {
     if (!claimCheckoutOpenRequest(handledRequestsRef.current, openCheckoutRequestId)) return
@@ -1110,6 +1274,12 @@ function MembershipResultOfferPricing({
   }, [attemptId, attempts, trackCheckoutLifecycle])
 
   const fetchClientSecret = useCallback(async () => {
+    const assertCurrentAttempt = () => {
+      if (accessGeneration !== accessGenerationRef.current || accessRecoveryRef.current) {
+        throw new CheckoutAccessRecoveryError()
+      }
+    }
+    assertCurrentAttempt()
     if (!checkoutInterval || !attemptId || !checkoutSessionAttemptId) {
       throw new Error("checkout attempt missing")
     }
@@ -1137,21 +1307,26 @@ function MembershipResultOfferPricing({
         provider: "stripe",
         transition: "preparation_started",
       })
+      await syncOpenAIAdsBeforeCheckout()
+      assertCurrentAttempt()
       response = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          interval: checkoutInterval,
-          leadId,
-          source: "quiz_result_offer",
-          funnelEventId,
-          checkoutAttemptId: attemptId,
-          checkoutSessionAttemptId,
-          funnelSessionId: offerContext?.funnelSessionId,
-          ...(express ? { presentation: "offer_overlay_elements" } : {}),
-        }),
+        body: JSON.stringify(
+          buildResultCheckoutSessionRequest({
+            checkoutAttemptId: attemptId,
+            checkoutSessionAttemptId,
+            funnelEventId,
+            funnelSessionId: offerContext?.funnelSessionId ?? undefined,
+            interval: checkoutInterval,
+            leadId,
+            presentation: express ? "offer_overlay_elements" : undefined,
+            trial: Boolean(trialOfferPricing),
+          }),
+        ),
       })
     } catch (cause) {
+      assertCurrentAttempt()
       // The server may have received a request whose response was lost. Reuse the
       // same idempotency scope for that transport retry to recover its Session.
       rotateStripeSessionAttemptOnRetryRef.current =
@@ -1167,22 +1342,18 @@ function MembershipResultOfferPricing({
       )
       throw cause
     }
+    assertCurrentAttempt()
     if (!response.ok) {
       rotateStripeSessionAttemptOnRetryRef.current =
         shouldRotateStripeSessionAttemptOnRetry("provider_response")
       const body = await response.json().catch(() => ({}))
+      assertCurrentAttempt()
       if (isCheckoutAccessAlreadyExistsResponse(response, body)) {
-        setDuplicateEmail(readCheckoutAccessAlreadyExistsEmail(body))
-        setDuplicateOpen(true)
-        reportFailure(
-          {
-            errorCode: "access_already_exists",
-            failureStage: "duplicate_access",
-            retryable: false,
-          },
-          "stripe",
-        )
-        throw new Error("checkout access already exists")
+        accessRecoveryRef.current = true
+        resetLock()
+        setEngaged(false)
+        void checkAccess(attemptId, checkoutInterval, true)
+        throw new CheckoutAccessRecoveryError()
       }
       setError(checkoutStartError)
       reportFailure(
@@ -1196,6 +1367,7 @@ function MembershipResultOfferPricing({
       throw new Error("failed to create checkout session")
     }
     const data = (await response.json().catch(() => ({}))) as { client_secret?: string }
+    assertCurrentAttempt()
     if (!data.client_secret) {
       rotateStripeSessionAttemptOnRetryRef.current =
         shouldRotateStripeSessionAttemptOnRetry("invalid_payload")
@@ -1223,7 +1395,7 @@ function MembershipResultOfferPricing({
       currency: plan.currency,
       planId: plan.analyticsId,
       pricingCatalog,
-      value: plan.amount,
+      value: trialOfferPricing ? 0 : plan.amount,
     })
     trackCheckoutLifecycle(attemptId, {
       provider: "stripe",
@@ -1231,6 +1403,9 @@ function MembershipResultOfferPricing({
     })
     return data.client_secret
   }, [
+    accessGeneration,
+    checkAccess,
+    resetLock,
     attemptId,
     checkoutSessionAttemptId,
     checkoutInterval,
@@ -1241,33 +1416,55 @@ function MembershipResultOfferPricing({
     pricingCatalog,
     reportFailure,
     trackCheckoutLifecycle,
+    trialOfferPricing,
   ])
 
   const activePlan = getStripePricingPlan(checkoutInterval ?? selectedInterval, pricingCatalog)
+  const trialPresentation = trialOfferPricing ? getTrialOfferPresentation(trialOfferPricing) : null
+  const trialCheckoutTerms =
+    trialPresentation && checkoutInterval
+      ? checkoutInterval === "year"
+        ? `Heute 0,00 €. Nach 7 Tagen ${trialPresentation.annualFirst} fürs erste Jahr, danach ${trialPresentation.annualRenewal} jährlich.`
+        : `Heute 0,00 €. Nach 7 Tagen ${trialPresentation.monthly} pro Monat.`
+      : undefined
+  const isAccessRecoveryActive = useCallback(
+    () => accessGeneration !== accessGenerationRef.current || accessRecoveryRef.current,
+    [accessGeneration],
+  )
+  const recoverAccess = () => {
+    if (accessCheck.status !== "existing_access") return
+    intentionalNavigationRef.current = true
+    const href = buildCheckoutRecoveryHref(accessCheck)
+    endCheckout({ endReason: "page_teardown" })
+    // Replace the overlay's same-URL history sentinel with the recovery destination.
+    if (overlay) window.location.replace(href)
+    else window.location.assign(href)
+  }
   const checkout = checkoutInterval ? (
-    duplicateOpen && isPaymentFeedbackV2Enabled() && duplicateFeedback ? (
-      <PaymentFeedbackCard
-        feedback={duplicateFeedback}
-        onAction={() => {
-          const href = duplicateEmail
-            ? `/auth?email=${encodeURIComponent(duplicateEmail)}`
-            : "/auth"
-          window.location.assign(href)
+    accessCheck.status !== "eligible" ? (
+      <CheckoutAccessRecoveryPanel
+        state={accessCheck}
+        paymentMayHaveStarted={recoveryAfterPayPal}
+        onClose={() => close()}
+        onRecover={recoverAccess}
+        onRetry={() => {
+          if (attemptId)
+            void checkAccess(attemptId, checkoutInterval, recoveryAfterPayPal, recoveryAfterPayPal)
         }}
-        onReportProblem={
-          attemptId && isPaymentSupportUiEnabled() ? duplicateReport.report : undefined
-        }
-        reportState={duplicateReport.state}
       />
     ) : (
       <PaymentMethodCheckout
         checkoutAttemptId={attemptId ?? undefined}
         checkoutError={error}
-        checkoutKey={`${checkoutInterval}:${checkoutSessionAttemptId ?? "pending"}`}
+        checkoutKey={`${trialOfferPricing ? "trial" : "paid"}:${checkoutInterval}:${checkoutSessionAttemptId ?? "pending"}`}
         expressElementsEnabled={express}
         fetchClientSecret={fetchClientSecret}
+        isAccessRecoveryActive={isAccessRecoveryActive}
         interval={checkoutInterval}
         leadId={leadId}
+        funnelSessionId={offerContext?.funnelSessionId ?? undefined}
+        trial={Boolean(trialOfferPricing)}
+        trialTerms={trialCheckoutTerms}
         lockedProvider={express ? lockedProvider : null}
         onClientMounted={(provider, option) => {
           if (!attemptId) return
@@ -1305,7 +1502,19 @@ function MembershipResultOfferPricing({
           }
           setEngaged(true)
         }}
-        onPayPalCheckoutFailed={(failure) => reportFailure(failure, "paypal")}
+        onPayPalCheckoutFailed={(failure) => {
+          if (isAccessRecoveryActive()) return
+          if (failure.failureStage === "duplicate_access" && attemptId) {
+            accessRecoveryRef.current = true
+            resetLock()
+            setEngaged(false)
+            // PayPal may already have approved an agreement before its server guard.
+            // Recover neutrally; cancellation does not prove that no charge occurred.
+            void checkAccess(attemptId, checkoutInterval, true, true)
+            return
+          }
+          reportFailure(failure, "paypal")
+        }}
         onPayPalCheckoutStarted={(funnelEventId) => {
           if (!attemptId) return
           const plan = getStripePricingPlan(checkoutInterval, pricingCatalog)
@@ -1327,7 +1536,7 @@ function MembershipResultOfferPricing({
             funnelEventId,
             planId: plan.analyticsId,
             pricingCatalog,
-            value: plan.amount,
+            value: trialOfferPricing ? 0 : plan.amount,
           })
         }}
         onProviderReady={(provider, option) => {
@@ -1359,7 +1568,12 @@ function MembershipResultOfferPricing({
             planId: plan.analyticsId,
             pricingCatalog,
             provider,
-            value: plan.amount,
+            value:
+              trialOfferPricing && checkoutInterval === "year"
+                ? trialOfferPricing.annualFirstAmountMinor / 100
+                : trialOfferPricing
+                  ? trialOfferPricing.monthlyAmountMinor / 100
+                  : plan.amount,
           })
         }}
         onPaymentMethodSelected={(provider, paymentMethodType) => {
@@ -1378,7 +1592,12 @@ function MembershipResultOfferPricing({
             pricingCatalog,
             provider,
             selectionIndex: selectionIndexRef.current,
-            value: plan.amount,
+            value:
+              trialOfferPricing && checkoutInterval === "year"
+                ? trialOfferPricing.annualFirstAmountMinor / 100
+                : trialOfferPricing
+                  ? trialOfferPricing.monthlyAmountMinor / 100
+                  : plan.amount,
           })
         }}
         onProviderLockClaim={express ? claimLock : undefined}
@@ -1392,8 +1611,7 @@ function MembershipResultOfferPricing({
           if (rotateStripeSessionAttemptOnRetryRef.current) {
             setCheckoutSessionAttemptId(createFunnelEventId())
           }
-          setCheckoutInterval(null)
-          window.setTimeout(() => setCheckoutInterval(selectedInterval), 0)
+          void checkAccess(retryId, checkoutInterval)
         }}
         planLabel={activePlan.ctaLabel}
         presentation={overlay ? "offer-overlay" : "default"}
@@ -1406,46 +1624,73 @@ function MembershipResultOfferPricing({
 
   return (
     <div ref={pricingRef} className="space-y-4">
-      {!isPaymentFeedbackV2Enabled() ? (
-        <ActiveSubscriptionDialog
-          email={duplicateEmail}
-          onOpenChange={setDuplicateOpen}
-          open={duplicateOpen}
+      {trialOfferPricing ? (
+        <TrialOffer
+          onContinue={openCheckout}
+          onSelect={(interval) => {
+            if (lockRef.current) return
+            const change = selectPlan(interval)
+            if (offerContext) {
+              const plan = getStripePricingPlan(interval, pricingCatalog)
+              trackAppEvent("offer_plan_selected", {
+                ...offerContext,
+                currency: plan.currency,
+                funnelEventId: createFunnelEventId(),
+                interval,
+                isDefault: change.isDefault,
+                planId: plan.analyticsId,
+                pricingCatalog,
+                previousInterval: change.previousInterval,
+                selectionIndex: change.selectionIndex,
+                value:
+                  interval === "year"
+                    ? trialOfferPricing.annualFirstAmountMinor / 100
+                    : trialOfferPricing.monthlyAmountMinor / 100,
+              })
+            }
+            endCheckout({ endReason: "plan_changed" })
+          }}
+          pricing={trialOfferPricing}
+          presentation={presentation}
+          selectedInterval={selectedInterval as "month" | "year"}
         />
-      ) : null}
-      <SubscriptionPlanSelector
-        busy={false}
-        offerTracking
-        onContinue={openCheckout}
-        onSelect={(interval) => {
-          if (lockRef.current) return
-          const change = selectPlan(interval)
-          if (offerContext) {
-            const plan = getStripePricingPlan(interval, pricingCatalog)
-            trackAppEvent("offer_plan_selected", {
-              ...offerContext,
-              currency: plan.currency,
-              funnelEventId: createFunnelEventId(),
-              interval,
-              isDefault: change.isDefault,
-              planId: plan.analyticsId,
-              pricingCatalog,
-              previousInterval: change.previousInterval,
-              selectionIndex: change.selectionIndex,
-              value: plan.amount,
-            })
-          }
-          endCheckout({ endReason: "plan_changed" })
-        }}
-        pricingCatalog={pricingCatalog}
-        referencePrices={referencePrices}
-        selectedInterval={selectedInterval}
-      />
+      ) : (
+        <SubscriptionPlanSelector
+          busy={false}
+          offerTracking
+          onContinue={openCheckout}
+          onSelect={(interval) => {
+            if (lockRef.current) return
+            const change = selectPlan(interval)
+            if (offerContext) {
+              const plan = getStripePricingPlan(interval, pricingCatalog)
+              trackAppEvent("offer_plan_selected", {
+                ...offerContext,
+                currency: plan.currency,
+                funnelEventId: createFunnelEventId(),
+                interval,
+                isDefault: change.isDefault,
+                planId: plan.analyticsId,
+                pricingCatalog,
+                previousInterval: change.previousInterval,
+                selectionIndex: change.selectionIndex,
+                value: plan.amount,
+              })
+            }
+            endCheckout({ endReason: "plan_changed" })
+          }}
+          pricingCatalog={pricingCatalog}
+          referencePrices={referencePrices}
+          selectedInterval={selectedInterval}
+        />
+      )}
       {overlay ? (
         <OfferPaymentOverlay
-          checkoutEngaged={engaged || !express}
+          headerMode={accessCheck.status === "eligible" ? "payment" : "access"}
+          intentionalNavigationRef={intentionalNavigationRef}
+          checkoutEngaged={accessCheck.status === "eligible" && (engaged || !express)}
           onConfirmedAbort={() =>
-            engaged || !express
+            accessCheck.status === "eligible" && (engaged || !express)
               ? endCheckout({
                   dismissalReason: membershipLastDismissalReasonRef.current,
                   endReason: "customer_aborted",
@@ -1459,8 +1704,10 @@ function MembershipResultOfferPricing({
           onPresentationStateChange={onOverlayPresentationStateChange}
           keepMounted={Boolean(checkoutInterval)}
           open={checkoutVisible}
-          planName={activePlan.name}
-          priceLabel={`${activePlan.price.replace(/^€/, "")} €`}
+          planName={trialOfferPricing ? "7 Tage kostenlos testen" : activePlan.name}
+          priceLabel={
+            trialOfferPricing ? "Heute 0,00 €" : `${activePlan.price.replace(/^€/, "")} €`
+          }
           restoreFocusRef={returnFocusRef}
         >
           {checkout}

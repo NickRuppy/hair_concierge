@@ -5,6 +5,7 @@ import type { HairDensity, HairThickness, ScalpCondition, ScalpType } from "@/li
 
 import { resolveQuizNeed, type QuizNeedLane } from "./need-lane"
 import { projectQuizAnswersForLegacyConsumers } from "./normalization"
+import { resolveStatedPrimaryConcern, type QuizAnswerConcern } from "./primary-concern"
 import { selectOfferPreviewProduct } from "./offer-preview-products"
 import type {
   OfferPreviewCadence,
@@ -109,8 +110,11 @@ function deriveExtraCadence(
   return { label: "Nach Produktprotokoll", qualifier: "wird im finalen Plan festgelegt" }
 }
 
-export function deriveOfferPreviewNeedProfile(answers: QuizAnswers): OfferPreviewNeedProfile {
-  const resolution = resolveQuizNeed(answers)
+export function deriveOfferPreviewNeedProfile(
+  answers: QuizAnswers,
+  statedConcern: QuizAnswerConcern | null = resolveStatedPrimaryConcern(answers),
+): OfferPreviewNeedProfile {
+  const resolution = resolveQuizNeed(answers, statedConcern)
   const thickness = (answers.thickness as HairThickness | undefined) ?? "normal"
   const density = (answers.density as HairDensity | undefined) ?? "medium"
   const scalpRoute = deriveScalpRoute(answers)
@@ -239,9 +243,11 @@ function toCard(
 }
 
 export function buildQuizOfferPreview(rawAnswers: QuizAnswers): QuizOfferPreview {
+  // Her stated main problem comes from the RAW answers (see `resolveQuizNeed`).
+  const statedConcern = resolveStatedPrimaryConcern(rawAnswers)
   const answers = projectQuizAnswersForLegacyConsumers(rawAnswers)
-  const resolution = resolveQuizNeed(answers)
-  const needs = deriveOfferPreviewNeedProfile(answers)
+  const resolution = resolveQuizNeed(answers, statedConcern)
+  const needs = deriveOfferPreviewNeedProfile(answers, statedConcern)
   const products = [
     toCard(selectOfferPreviewProduct("shampoo", needs), needs.shampoo.cadence, false),
     toCard(selectOfferPreviewProduct("conditioner", needs), needs.conditioner.cadence, false),

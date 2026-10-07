@@ -1,0 +1,31 @@
+{
+  "method": "Parent read primary page text through web open/find; ordinary direct dm HTTP response supplied only shell HTML. These excerpts are from indexed primary PDP text, not a fresh physical-package inspection. Current German prices and buyability are separately evidenced by dated official dm MCP details/search.",
+  "collection_window_start": "2026-10-03T13:56:25Z",
+  "recorded_at": "2026-10-03T14:10:16.656212+00:00",
+  "records": [
+    {
+      "id": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+      "source_url": "https://www.dm-drogeriemarkt.it/p/d/2974661/balea-shampoo-secco-in-schiuma-sensitive",
+      "exact_gtin": "4067796069556",
+      "article": "2974661",
+      "package": "150 ml",
+      "declared_inci": "AQUA, ALCOHOL DENAT., BUTANE, ORYZA SATIVA STARCH, PROPANE, COCO-GLUCOSIDE, COCAMIDOPROPYL BETAINE, PHENOXYETHANOL, XANTHAN GUM, PANTHENOL, CETRIMONIUM CHLORIDE",
+      "comparison": "Same complete declared ingredient sequence as current dm DE exactGTIN4066447989540; same named product/article/package. Supports recognition continuity; not chemical batch proof."
+    },
+    {
+      "id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "source_url": "https://www.dm-drogeriemarkt.it/p/d/1675522/balea-professional-balsamo-per-capelli-secchi-aqua-hyaluron",
+      "exact_gtin": "4066447342055",
+      "article": "1675522",
+      "package": "200 ml",
+      "declared_inci": "AQUA, CETEARYL ALCOHOL, STEARAMIDOPROPYL DIMETHYLAMINE, GLYCERIN, LACTIC ACID, SODIUM CETEARYL SULFATE, PARFUM, SODIUM BENZOATE, ALOE BARBADENSIS LEAF JUICE POWDER, POTASSIUM SORBATE, SODIUM HYALURONATE, DISODIUM PHOSPHATE, POTASSIUM PHOSPHATE",
+      "comparison": "Same complete declared ingredient sequence as current dm DE exactGTIN4070765001662; same named product/article/package. Supports recognition continuity."
+    },
+    {
+      "id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "source_url": "https://www.dm-drogeriemarkt.it/p/d/1559584/langhaarmadchen-shampoo-lovely-long",
+      "exact_gtin": "4066447864694",
+      "comparison": "Current dm IT declares Parfum fourth, Tetramethyl Acetyloctahydronaphthalenes and Amyl Salicylate. Other current primary lists differ; hold, no alias."
+    }
+  ]
+}

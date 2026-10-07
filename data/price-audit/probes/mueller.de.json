@@ -1,0 +1,74 @@
+{
+  "host": "mueller.de",
+  "probedAt": "2026-09-30T16:01:27.943Z",
+  "enabledForAutoWrite": true,
+  "reviewedBy": "nick",
+  "reviewedAt": "2026-09-30T16:32:47.574195+00:00",
+  "samples": [
+    {
+      "productId": "07120c73-0171-4a2a-9d07-facd9ce90d8c",
+      "storedPriceEur": 9.59,
+      "observation": {
+        "kind": "confirmed",
+        "identity": "gtin_match",
+        "priceEur": 9.95,
+        "buyable": true,
+        "buyableSource": "structured",
+        "evidenceUrl": "https://www.mueller.de/p/weleda-hydrashine-gloss-drops-haaroel-alpen-lein-PPN3138905/",
+        "observedName": "WELEDA HydraShine Gloss Drops Haar\u00f6l Alpen-Lein"
+      }
+    },
+    {
+      "productId": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+      "storedPriceEur": 8.99,
+      "observation": {
+        "kind": "confirmed",
+        "identity": "gtin_match",
+        "priceEur": 8.99,
+        "buyable": true,
+        "buyableSource": "structured",
+        "evidenceUrl": "https://www.mueller.de/p/benecos-bio-koerperoel-macadamianussoel-IPN2878442/",
+        "observedName": "benecos BIO K\u00f6rper\u00f6l Macadamianuss\u00f6l"
+      }
+    },
+    {
+      "productId": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+      "storedPriceEur": 15.9,
+      "observation": {
+        "kind": "confirmed",
+        "identity": "gtin_match",
+        "priceEur": 15.9,
+        "buyable": true,
+        "buyableSource": "structured",
+        "evidenceUrl": "https://www.mueller.de/p/primavera-calendulaoel-bio-IPN2893577/",
+        "observedName": "Primavera Calendula\u00f6l bio"
+      }
+    },
+    {
+      "productId": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "storedPriceEur": 5.99,
+      "observation": {
+        "kind": "confirmed",
+        "identity": "gtin_match",
+        "priceEur": 5.99,
+        "buyable": false,
+        "buyableSource": "structured",
+        "evidenceUrl": "https://www.mueller.de/p/biogourmet-disteloel-2529149/",
+        "observedName": "BioGourmet Distel\u00f6l"
+      }
+    },
+    {
+      "productId": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+      "storedPriceEur": 4.99,
+      "observation": {
+        "kind": "confirmed",
+        "identity": "gtin_match",
+        "priceEur": 4.99,
+        "buyable": true,
+        "buyableSource": "structured",
+        "evidenceUrl": "https://www.mueller.de/p/benecos-bio-koerperoel-wunderbaumsamenoel-IPN2878448/",
+        "observedName": "benecos BIO K\u00f6rper\u00f6l Wunderbaumsamen\u00f6l"
+      }
+    }
+  ]
+}

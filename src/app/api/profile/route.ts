@@ -1,8 +1,12 @@
 import { createClient } from "@/lib/supabase/server"
-import { hairProfileFullSchema } from "@/lib/validators"
-import { ERR_UNAUTHORIZED, ERR_INVALID_DATA, fehler } from "@/lib/vocabulary"
+import { ERR_UNAUTHORIZED } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 
+const NO_STORE = { "Cache-Control": "no-store" }
+
+// Read-only. Profile facts are saved through `user_facts_save_v1` only — the web editors via
+// `POST /api/profile/answers`; the former `PUT` (a direct column write with no caller) is gone
+// (clean-switch fix round 1).
 export async function GET() {
   const supabase = await createClient()
   const {
@@ -13,11 +17,7 @@ export async function GET() {
     return NextResponse.json({ error: ERR_UNAUTHORIZED }, { status: 401 })
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single()
+  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single()
 
   const { data: hairProfile } = await supabase
     .from("hair_profiles")
@@ -25,48 +25,5 @@ export async function GET() {
     .eq("user_id", user.id)
     .single()
 
-  return NextResponse.json({ profile, hairProfile })
-}
-
-export async function PUT(request: Request) {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    return NextResponse.json({ error: ERR_UNAUTHORIZED }, { status: 401 })
-  }
-
-  const body = await request.json()
-  const parsed = hairProfileFullSchema.safeParse(body)
-
-  if (!parsed.success) {
-    return NextResponse.json(
-      { error: ERR_INVALID_DATA, details: parsed.error.flatten() },
-      { status: 400 }
-    )
-  }
-
-  const { data, error } = await supabase
-    .from("hair_profiles")
-    .upsert(
-      {
-        user_id: user.id,
-        ...parsed.data,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "user_id" }
-    )
-    .select()
-    .single()
-
-  if (error) {
-    return NextResponse.json(
-      { error: fehler("Speichern") },
-      { status: 500 }
-    )
-  }
-
-  return NextResponse.json({ hairProfile: data })
+  return NextResponse.json({ profile, hairProfile }, { status: 200, headers: NO_STORE })
 }

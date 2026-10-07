@@ -1,0 +1,10 @@
+# Post-freeze source follow-up — 2026-09-30
+
+These observations were made by the source-preparation/orchestrator lane after packet freeze. They were **not** supplied to either classification lane and do not change v0.1 inputs or grades. Add verified new evidence to a new packet/re-run if it becomes grade-bearing.
+
+- [Published 2026 lysate study](https://www.mdpi.com/2079-9284/13/3/121): publisher/index metadata confirms publication on 2026-05-14 and [version notes](https://www.mdpi.com/2079-9284/13/3/121/notes) link the version-of-record PDF/XML. Direct HTML/XML returned 429; PDF was inaccessible through the research tool. Full current methods/results remain unaudited; the preprint is not a substitute for verifying changes in the published version. Retain the packet's open-lead status, not a grade-bearing contradiction.
+- [Ashland FiberHance poster](https://www.ashland.com/file_source/Ashland/Documents/Poster%20FiberHance%20bm%2001312020.pdf): direct PDF retrieval again timed out. The packet's partial indexed-text/graph-access limit remains; no graph result was inferred.
+- [K18 manufacturer disclaimers](https://www.k18hair.com/en-ca/pages/disclaimers): indexed manufacturer text attributes mask strength/elasticity and breakage claims to technical testing on damaged fibres/tresses, including four-minute applications. Methods, comparators, sample counts, statistics and local formula binding are not sufficiently exposed there to resolve the packet's applicability/support questions. Different salon mist-plus-mask claims must remain separate from the at-home mask.
+- Targeted manufacturer searches for current No.3PLUS/K18/epres testing produced additional product/system claim pages, but no newly audited test report that clears a frozen packet gap. This bounded search is not evidence that such reports do not exist.
+
+No source was requested from a brand, no external message was sent and no production state changed. Follow-up priority is inspectable original reports plus exact local formula reconciliation, not collecting more marketing percentages.

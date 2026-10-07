@@ -434,7 +434,7 @@ test("comparison projects fresh price and structured size without changing autho
   )
 })
 
-test("comparison omits stale or incomplete commerce presentation metadata", () => {
+test("a stale or missing check date never blanks the stored price; a missing price stays null", () => {
   const input = authorityInput("conditioner", "conditioner_rinse_out", {
     productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned", {
       recommendable: false,
@@ -444,6 +444,7 @@ test("comparison omits stale or incomplete commerce presentation metadata", () =
     }),
     candidates: [
       factsFor("conditioner", "conditioner_rinse_out", "candidate", {
+        priceEur: null,
         priceCheckedAt: null,
         netContentValue: null,
         netContentUnit: null,
@@ -454,7 +455,7 @@ test("comparison omits stale or incomplete commerce presentation metadata", () =
   assert.deepEqual(
     comparison.products.map((product) => product.presentation),
     [
-      { priceLabel: null, netContentLabel: null },
+      { priceLabel: "9,00 €", netContentLabel: null },
       { priceLabel: null, netContentLabel: null },
     ],
   )
@@ -1762,8 +1763,8 @@ test("an ideal verdict outranks a higher-coverage supportive candidate", () => {
       factsFor("mask", "intensive_conditioning_mask", "fewer-matches-ideal", {
         sortOrder: 5,
         weight: "medium", // one step from target "light" -> mask treats this as "pass"
-        careDirection: "protein", // mask always treats care direction as "pass"
-        repairSupportLevel: "medium", // exact match -> the only displayed-dimension match
+        careDirection: "moisture", // exact match -> the only displayed-dimension match
+        repairSupportLevel: "high", // stronger than target "medium" -> "pass", but no match
       }),
       factsFor("mask", "intensive_conditioning_mask", "more-matches-supportive", {
         sortOrder: 1,
@@ -2205,7 +2206,7 @@ function commonFacts(
     ],
     factFingerprint: overrides.fingerprint ?? `facts-${productId}`,
     catalogSortOrder: overrides.sortOrder ?? null,
-    priceEur: overrides.priceEur ?? 9,
+    priceEur: overrides.priceEur !== undefined ? overrides.priceEur : 9,
     priceCheckedAt: overrides.priceCheckedAt ?? null,
     purchaseLinkStatus: "available" as const,
     netContentValue: overrides.netContentValue ?? null,
@@ -2237,3 +2238,23 @@ function assertNoRawFactsOrPresentationFields(value: unknown): void {
 function assertPayloadFits(value: unknown): void {
   assert.ok(Buffer.byteLength(JSON.stringify(value), "utf8") <= 64 * 1024)
 }
+
+test("mask evidence row names the full accepted care-direction set as the target", () => {
+  const input = authorityInput("mask", "intensive_conditioning_mask", {
+    productFacts: factsFor("mask", "intensive_conditioning_mask", "owned", {
+      careDirection: "balanced",
+      repairSupportLevel: "high",
+    }),
+    candidates: [],
+  })
+  const target = input.categoryDecision.target
+  if (target?.category !== "mask") throw new Error("expected Mask target")
+  target.careDirection = "moisture"
+  target.repairSupportLevel = "high"
+
+  const comparison = buildStage3FitComparison(input)
+  const row = comparison.evidenceRows?.find((entry) => entry.rowId === "mask.care_direction")
+  assert.equal(row?.target?.valueLabel, "Feuchtigkeit · ausgeglichen ok")
+  assert.equal(row?.productValues[0]?.valueLabel, "ausgeglichen")
+  assert.equal(row?.productValues[0]?.relation, "in_target")
+})

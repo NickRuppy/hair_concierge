@@ -2,9 +2,10 @@ import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
 import test from "node:test"
 
-import * as linkToProfile from "../src/lib/quiz/link-to-profile"
+import * as legacyProfileProjection from "../src/lib/quiz/legacy-profile-projection"
+import { canLinkDirectQuizLead } from "../src/lib/quiz/link-to-profile"
 
-const { canLinkDirectQuizLead, resolveProfileDensityFromQuizAnswers } = linkToProfile
+const { resolveProfileDensityFromQuizAnswers } = legacyProfileProjection
 
 test("linking uses the explicit quiz density when present", () => {
   assert.equal(resolveProfileDensityFromQuizAnswers({ density: "high" }), "high")
@@ -38,7 +39,7 @@ test("linking does not invent density for sparse or partial answers", () => {
 
 test("profile update data includes quiz hair length when present", () => {
   assert.equal(
-    linkToProfile.buildProfileDataFromQuizAnswers({
+    legacyProfileProjection.buildProfileDataFromQuizAnswers({
       structure: "wavy",
       thickness: "normal",
       density: "medium",
@@ -50,7 +51,7 @@ test("profile update data includes quiz hair length when present", () => {
 
 test("profile update data maps expanded quiz treatment values to canonical profile values", () => {
   assert.deepEqual(
-    linkToProfile.buildProfileDataFromQuizAnswers({
+    legacyProfileProjection.buildProfileDataFromQuizAnswers({
       treatment: ["dauerwelle", "chemisch_geglaettet"],
     }).chemical_treatment,
     ["permed", "chemically_straightened"],
@@ -59,7 +60,7 @@ test("profile update data maps expanded quiz treatment values to canonical profi
 
 test("profile update data projects combined hair-loss quiz concern to exactly hair_loss", () => {
   assert.deepEqual(
-    linkToProfile.buildProfileDataFromQuizAnswers({
+    legacyProfileProjection.buildProfileDataFromQuizAnswers({
       concerns: ["hair_loss_or_thinning"],
     }).concerns,
     ["hair_loss"],
@@ -68,7 +69,7 @@ test("profile update data projects combined hair-loss quiz concern to exactly ha
 
 test("personal-plan canonical diagnostics project every required onboarding field", () => {
   assert.deepEqual(
-    linkToProfile.buildProfileDataFromPersonalPlanCanonicalProfile({
+    legacyProfileProjection.buildProfileDataFromPersonalPlanCanonicalProfile({
       structure: "curly",
       thickness: "fine",
       density: "high",
@@ -101,7 +102,7 @@ test("personal-plan canonical diagnostics project every required onboarding fiel
 test("personal-plan projection rejects incomplete canonical diagnostics", () => {
   assert.throws(
     () =>
-      linkToProfile.buildProfileDataFromPersonalPlanCanonicalProfile({
+      legacyProfileProjection.buildProfileDataFromPersonalPlanCanonicalProfile({
         structure: "straight",
         thickness: "normal",
       }),

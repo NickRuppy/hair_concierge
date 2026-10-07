@@ -1,0 +1,316 @@
+{
+  "prepared_at": "2026-10-03T14:04:36.007098+00:00",
+  "authorization": "Nick: do it. Continue the approved current-price/exact-link/selected-package pass and add verified recognition barcodes. No formula/category/recommendation changes or different-product replacement publication.",
+  "records": [
+    {
+      "id": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+      "name": "Trockenshampoo Schaum Kopfhaut Sensitive",
+      "before": {
+        "readback_at": "2026-10-03 13:48:57.254076+00",
+        "id": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+        "name": "Trockenshampoo Schaum Kopfhaut Sensitive",
+        "brand": "Balea",
+        "category_key": "dry_shampoo",
+        "currency": "EUR",
+        "price_eur": "1.45",
+        "price_checked_at": "2026-09-30 19:47:17.299+00",
+        "affiliate_link": "https://www.dm.de/balea-trockenshampoo-schaum-kopfhaut-sensitive-p4067796069556.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-10 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "cc5d7a6280aaee692cfc070e6f574bcb",
+        "noncommercial_fingerprint": "19fb57c310d20204cdbc1d9a0ff2d684",
+        "gtins": [
+          {
+            "value": "4067796069556",
+            "canonical_gtin14": "04067796069556"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "9f56dd3d-00f8-4add-a551-9a0b0d72dcbd",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:03:21.858164+00:00",
+            "product_id": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+            "updated_at": "2026-08-28T08:03:21.858164+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04067796069556",
+            "identifier_value": "4067796069556",
+            "normalized_identifier_value": "4067796069556"
+          }
+        ],
+        "identifier_fingerprint": "eeb4c651b2ca968f2619f94e5a644c43"
+      },
+      "verified_offer": {
+        "url": "https://www.dm.de/p/d/2974661/balea-trockenshampoo-schaum-kopfhaut-sensitive",
+        "price_eur": 1.45,
+        "package_value": 150,
+        "package_unit": "ml"
+      },
+      "source_checked_at": "2026-10-03T13:47:19.545Z",
+      "note": "Old and current exact-GTIN primary dm lists have identical declared INCI and same article/package; retain old barcode, add current recognition alias.",
+      "proposed": {
+        "price_eur": 1.45,
+        "price_checked_at": "2026-10-03T13:47:19.545Z",
+        "affiliate_link": "https://www.dm.de/p/d/2974661/balea-trockenshampoo-schaum-kopfhaut-sensitive",
+        "net_content_value": 150,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": {
+        "type": "ean",
+        "value": "4066447989540",
+        "canonical_gtin14": "04066447989540",
+        "source": "price-audit-approved-2026-10-03-identity"
+      }
+    },
+    {
+      "id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "name": "Balea Professional Aqua Hyaluron Conditioner",
+      "before": {
+        "readback_at": "2026-10-03 13:48:57.254076+00",
+        "id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+        "name": "Balea Professional Aqua Hyaluron Conditioner",
+        "brand": "Balea",
+        "category_key": "conditioner",
+        "currency": "EUR",
+        "price_eur": "1.25",
+        "price_checked_at": "2026-09-30 20:08:55.697+00",
+        "affiliate_link": "https://www.dm.de/balea-professional-conditioner-aqua-hyaluron-p4066447342055.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-11 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "6c163aef0cae1c20db6c33d8532b4e33",
+        "noncommercial_fingerprint": "e8f0068e3da0cbbafd3b95353493a447",
+        "gtins": [
+          {
+            "value": "4066447342055",
+            "canonical_gtin14": "04066447342055"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "d998483d-b3a4-41b2-b2ad-0a774771b077",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:03:37.28665+00:00",
+            "product_id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+            "updated_at": "2026-08-28T08:03:37.28665+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04066447342055",
+            "identifier_value": "4066447342055",
+            "normalized_identifier_value": "4066447342055"
+          }
+        ],
+        "identifier_fingerprint": "8314a38a3fc7964fd56df1e7f277980f"
+      },
+      "verified_offer": {
+        "url": "https://www.dm.de/p/d/1675522/balea-professional-conditioner-aqua-hyaluron",
+        "price_eur": 1.25,
+        "package_value": 200,
+        "package_unit": "ml"
+      },
+      "source_checked_at": "2026-10-03T13:47:21.503Z",
+      "note": "Old and current exact-GTIN primary dm lists have identical declared INCI and same article/package; retain old barcode, add current recognition alias.",
+      "proposed": {
+        "price_eur": 1.25,
+        "price_checked_at": "2026-10-03T13:47:21.503Z",
+        "affiliate_link": "https://www.dm.de/p/d/1675522/balea-professional-conditioner-aqua-hyaluron",
+        "net_content_value": 200,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": {
+        "type": "ean",
+        "value": "4070765001662",
+        "canonical_gtin14": "04070765001662",
+        "source": "price-audit-approved-2026-10-03-identity"
+      }
+    },
+    {
+      "id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "name": "Lavera Basis Sensitiv",
+      "before": {
+        "readback_at": "2026-10-03 13:48:57.254076+00",
+        "id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+        "name": "Lavera Basis Sensitiv",
+        "brand": "Lavera",
+        "category_key": "shampoo",
+        "currency": "EUR",
+        "price_eur": "4.95",
+        "price_checked_at": "2026-09-30 20:02:10.389+00",
+        "affiliate_link": "https://www.dm.de/lavera-shampoo-basis-sensitiv-feuchtigkeit-und-pflege-p4021457655120.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-11 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "cc81194fb70deea86b901e001e1ecaeb",
+        "noncommercial_fingerprint": "79bf2cc39c02d469b852723bc2fc09c7",
+        "gtins": [
+          {
+            "value": "4021457666768",
+            "canonical_gtin14": "04021457666768"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "79c2c0ce-9840-4f28-b337-653e31cf9ef7",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:43:05.287777+00:00",
+            "product_id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+            "updated_at": "2026-08-28T08:43:05.287777+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04021457666768",
+            "identifier_value": "4021457666768",
+            "normalized_identifier_value": "4021457666768"
+          }
+        ],
+        "identifier_fingerprint": "ae549fdf0bf6c0e68cbdbeff54a3b86f"
+      },
+      "verified_offer": {
+        "url": "https://www.dm.de/p/d/3133400/lavera-naturkosmetik-shampoo-basis-sensitive-hydrate-und-care",
+        "price_eur": 5.45,
+        "package_value": 250,
+        "package_unit": "ml"
+      },
+      "source_checked_at": "2026-10-03T13:47:23.673Z",
+      "note": "Current preferred-shop offer matches the registered exact barcode. No identity transition.",
+      "proposed": {
+        "price_eur": 5.45,
+        "price_checked_at": "2026-10-03T13:47:23.673Z",
+        "affiliate_link": "https://www.dm.de/p/d/3133400/lavera-naturkosmetik-shampoo-basis-sensitive-hydrate-und-care",
+        "net_content_value": 250,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
+      "name": "Jean&Len Rosemary/Ginger Hair Mask Hydration Rosemary/Ginger",
+      "before": {
+        "readback_at": "2026-10-03 13:48:57.254076+00",
+        "id": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
+        "name": "Jean&Len Rosemary/Ginger Hair Mask Hydration Rosemary/Ginger",
+        "brand": "Jean&Len",
+        "category_key": "mask",
+        "currency": "EUR",
+        "price_eur": "7.99",
+        "price_checked_at": "2026-07-02 09:26:04+00",
+        "affiliate_link": "https://www.jeanlen.de/en/haarmaske-feuchtigkeit-rosemary-ginger",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-07-02 09:26:04+00",
+        "is_chaarlie_recommended": false,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "be22d6709e5ed50009013207d48252bb",
+        "noncommercial_fingerprint": "9196ddc547a6004c5e1c703094054c02",
+        "gtins": [],
+        "identifiers": [
+          {
+            "id": "b96249c4-a17a-41a8-87b1-740d606b8a65",
+            "source": "https://www.jeanlen.de/en/haarmaske-feuchtigkeit-rosemary-ginger",
+            "created_at": "2026-07-02T10:10:55.352702+00:00",
+            "product_id": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
+            "updated_at": "2026-07-02T10:10:55.352702+00:00",
+            "identifier_type": "retailer_sku",
+            "canonical_gtin14": null,
+            "identifier_value": "2900101127",
+            "normalized_identifier_value": "2900101127"
+          }
+        ],
+        "identifier_fingerprint": "921ed1e758f33c0e6810d4418e1e5d22"
+      },
+      "verified_offer": {
+        "url": "https://www.jeanlen.de/haarmaske-feuchtigkeit-rosemary-ginger",
+        "price_eur": 7.99,
+        "package_value": 200,
+        "package_unit": "ml"
+      },
+      "source_checked_at": "2026-10-03T13:48:16.042418+00:00",
+      "note": "Same retained manufacturer SKU2900101127 and exact existing URL; current primary JSON-LD publishes GTIN4262401735639. No historic formula equivalence claimed.",
+      "proposed": {
+        "price_eur": 7.99,
+        "price_checked_at": "2026-10-03T13:48:16.042418+00:00",
+        "affiliate_link": "https://www.jeanlen.de/haarmaske-feuchtigkeit-rosemary-ginger",
+        "net_content_value": 200,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": {
+        "type": "ean",
+        "value": "4262401735639",
+        "canonical_gtin14": "04262401735639",
+        "source": "price-audit-approved-2026-10-03-identity"
+      }
+    },
+    {
+      "id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "name": "MoriVeda Premium Moringaöl",
+      "before": {
+        "readback_at": "2026-10-03 13:48:57.254076+00",
+        "id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+        "name": "MoriVeda Premium Moringaöl",
+        "brand": "MoriVeda",
+        "category_key": "oil",
+        "currency": "EUR",
+        "price_eur": "16.99",
+        "price_checked_at": "2026-09-30 17:44:07.609+00",
+        "affiliate_link": "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-10 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "cf323a52e5f366ab0316c5f2b2c7f772",
+        "noncommercial_fingerprint": "90c7f3af219379dc4acfd7dce333ebd2",
+        "gtins": [
+          {
+            "value": "4251762160037",
+            "canonical_gtin14": "04251762160037"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "26f2c7e1-42e0-4c73-bf13-24283e8e4afe",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-09-01T21:34:09.226794+00:00",
+            "product_id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+            "updated_at": "2026-09-01T21:34:09.226794+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04251762160037",
+            "identifier_value": "4251762160037",
+            "normalized_identifier_value": "4251762160037"
+          }
+        ],
+        "identifier_fingerprint": "11b6b9bc93a7472c50df819b5363092e"
+      },
+      "verified_offer": {
+        "url": "https://www.moriveda.com/product-page/moringa-oel-premium-schonendgepresst-100ml",
+        "price_eur": 12.37,
+        "package_value": 100,
+        "package_unit": "ml"
+      },
+      "source_checked_at": "2026-10-03T14:03:38Z",
+      "note": "Existing Sep 30 receipt docs/price-audit-rollouts/2026-09-30-first-apply/apply-research-evidence.json records the exact Shop Apotheke 100 ml page with EAN 4251762160037 and seller/shipping by AMTEC Trading. The current direct page identifies the same brand, product name, package, and AMTEC seller, but does not publish that GTIN. Public unconditional sale12.37EUR; regular16.49EUR; direct page publishes SKU but not GTIN; retain existing barcode.",
+      "proposed": {
+        "price_eur": 12.37,
+        "price_checked_at": "2026-10-03T14:03:38Z",
+        "affiliate_link": "https://www.moriveda.com/product-page/moringa-oel-premium-schonendgepresst-100ml",
+        "net_content_value": 100,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    }
+  ]
+}

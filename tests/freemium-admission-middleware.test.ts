@@ -70,6 +70,27 @@ test("every admitted page prefix is itself still SUB_REQUIRED (admission is a ca
 
 // --- shouldRedirectToReactivation -------------------------------------------
 
+test("expired trial history cannot enter free previews or keepsake APIs", () => {
+  for (const pathname of [
+    "/scan",
+    "/profile",
+    "/routine",
+    "/api/scan",
+    "/api/personal-plan/state",
+  ]) {
+    assert.equal(
+      shouldRedirectToReactivation({
+        pathname,
+        method: "GET",
+        freemiumScannerFirstEnabled: true,
+        hasTrialBillingHistory: true,
+      }),
+      true,
+      pathname,
+    )
+  }
+})
+
 test("flag off: always redirects to reactivation, admitted or not", () => {
   assert.equal(
     shouldRedirectToReactivation({ pathname: "/scan", freemiumScannerFirstEnabled: false }),

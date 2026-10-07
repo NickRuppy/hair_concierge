@@ -1,0 +1,53 @@
+{
+  "collector": "read-only public HTTP fetch",
+  "checked_at": "2026-10-03T14:03:38Z",
+  "catalog": {
+    "id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+    "name": "MoriVeda Premium Moringaöl",
+    "registered_gtin": "4251762160037",
+    "expected_package": "100 ml"
+  },
+  "direct_brand_offer": {
+    "url": "https://www.moriveda.com/product-page/moringa-oel-premium-schonendgepresst-100ml",
+    "http_status": 200,
+    "seller": "Amtec Trading GmbH",
+    "structured_product": {
+      "name": "Moringa Öl Premium schonend gepresst 100 ml",
+      "sku": "moil-pre-100",
+      "package": "100 ml",
+      "jsonld_offer_price": "16.49",
+      "jsonld_availability": "InStock"
+    },
+    "rendered_selection": {
+      "regular_price_eur": "16.49",
+      "sale_price_eur": "12.37",
+      "sale_label": "Sale-Preis",
+      "discount_label": "25% · MFP - Premium Öl",
+      "buyability": "Rendered product control says In den Warenkorb and has aria-disabled=false. No rendered Nicht verfügbar or Ausverkauft signal was found."
+    },
+    "unconditional_price_assessment": "The public, unauthenticated PDP renders €12.37 as the selected Sale-Preis next to €16.49 Standardpreis. The fetched PDP contains no Rabattcode, Gutscheincode, or Aktionscode text. This supports an unconditional product sale at the time checked; no cart or checkout was used.",
+    "raw_html": "/tmp/chaarlie-moriveda-direct.html",
+    "raw_sha256": "86fa7e424b240d1eaafb94f93ea6d386c67dd04f7e0fa0f99f32590a6d6b2ae3"
+  },
+  "german_shipping": {
+    "url": "https://www.moriveda.com/versandrichtlinien",
+    "http_status": 200,
+    "observed_context": "Kostenloser Versand für Deutschland und Österreich ab 49,99€ Einkaufswert.",
+    "interpretation": "The seller publicly lists Germany as a shipping destination; delivery cost may apply below the free-shipping threshold.",
+    "raw_html": "/tmp/chaarlie-moriveda-shipping.html",
+    "raw_sha256": "158daf94e765834a25bb5e8dd3f402095e0a488783371dee35beb700f4c0ea97"
+  },
+  "identity": {
+    "direct_page_published_gtin": null,
+    "direct_page_published_sku": "moil-pre-100",
+    "direct_page_package_identity": "MoriVeda Moringa Öl Premium, 100 ml",
+    "registered_gtin_evidence": "Existing Sep 30 receipt docs/price-audit-rollouts/2026-09-30-first-apply/apply-research-evidence.json records the exact Shop Apotheke 100 ml page with EAN 4251762160037 and seller/shipping by AMTEC Trading. The current direct page identifies the same brand, product name, package, and AMTEC seller, but does not publish that GTIN.",
+    "limitation": "The current direct brand page itself does not expose GTIN 4251762160037. It must not be treated as newly published direct GTIN proof; continuity rests on exact name/package/seller plus the retained exact marketplace receipt. A fresh Shop Apotheke GET timed out after 30 seconds, so it supplies no current corroboration."
+  },
+  "decision": {
+    "safe_current_direct_same_product_commerce": true,
+    "price_to_use_eur": "12.37",
+    "reason": "Direct manufacturer/seller public PDP presents the exact 100 ml product as in stock with a non-code sale price and German shipping coverage. Identity confidence is sufficient for commerce continuity but direct GTIN publication remains absent.",
+    "guardrail": "Record the direct URL and €12.37 whole-package price; retain the catalog GTIN unchanged and do not claim the manufacturer page independently published it."
+  }
+}

@@ -131,7 +131,7 @@ Expected: root `main` may be dirty with unrelated local docs/temp files. Do not 
 
 - [ ] **Step 2: Create a fresh task worktree**
 
-Run from `/Users/nick/AI_work/hair_concierge`:
+Run from `/Users/nick/AI_work/hair_conscierge`:
 
 ```bash
 npm run worktree:new -- rag-memory-cleanup

@@ -104,6 +104,13 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         source: data.source,
       }
     }
+    case "discovery_call_booking_scheduled": {
+      const data = payload as AppEventMap["discovery_call_booking_scheduled"]
+      return {
+        leadId: data.leadId,
+        offer_variant: data.offerVariant,
+      }
+    }
     case "first_chat_message":
       return payload
     case "purchase_completed": {
@@ -161,6 +168,12 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
     }
     case "quiz_goals_selected":
       return payload
+    case "quiz_email_return_prompt_viewed":
+      return { funnel_package_key: "customerio_scan_return_v1" }
+    case "quiz_email_return_choice": {
+      const data = payload as AppEventMap["quiz_email_return_choice"]
+      return { choice: data.choice, funnel_package_key: data.funnelPackageKey }
+    }
     case "quiz_insert_viewed": {
       const data = payload as AppEventMap["quiz_insert_viewed"]
       return {
@@ -174,6 +187,28 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
       return {
         step_name: data.stepName,
         step_number: data.stepNumber,
+      }
+    }
+    case "discovery_call_quiz_viewed":
+    case "scanner_quiz_viewed": {
+      const data = payload as AppEventMap["scanner_quiz_viewed"]
+      return {
+        entry_at: data.entryAt,
+        entry_path: data.entryPath,
+        funnel_package_key: data.funnelPackageKey,
+        funnel_session_id: data.funnelSessionId,
+        is_resumed: data.isResumed,
+        is_internal_test: data.isInternalTest,
+        quiz_step: data.quizStep,
+        quiz_view_id: data.quizViewId,
+        scanner_tracking_version: data.scannerTrackingVersion,
+        test_kind: data.testKind,
+        utm_campaign: data.utmCampaign,
+        utm_content: data.utmContent,
+        utm_medium: data.utmMedium,
+        utm_source: data.utmSource,
+        utm_term: data.utmTerm,
+        viewed_at: data.viewedAt,
       }
     }
     case "chat_product_recommendation_shown": {
@@ -230,6 +265,26 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         destination: data.destination,
         interaction_index: data.interactionIndex,
         selected_interval: data.selectedInterval,
+        source_section: data.sourceSection,
+      }
+    }
+    case "offer_content_interacted": {
+      const data = payload as AppEventMap["offer_content_interacted"]
+      return {
+        ...offerContextProperties(data),
+        action: data.action,
+        action_index: data.actionIndex,
+        content_type: data.contentType,
+        placement: data.placement,
+        source_section: data.sourceSection,
+      }
+    }
+    case "offer_content_viewed": {
+      const data = payload as AppEventMap["offer_content_viewed"]
+      return {
+        ...offerContextProperties(data),
+        content_id: data.contentId,
+        content_type: data.contentType,
         source_section: data.sourceSection,
       }
     }
@@ -451,11 +506,33 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
       }
     }
     case "scan_started":
-    case "scan_not_found":
       return {}
+    case "scan_not_found": {
+      const data = payload as AppEventMap["scan_not_found"]
+      return {
+        identified: data.identified,
+        suggested_category: data.suggestedCategory,
+        scan_interaction_id: data.scanInteractionId,
+        ms_to_unknown_sheet_ready: data.msToUnknownSheetReady,
+      }
+    }
     case "scan_decoded": {
       const data = payload as AppEventMap["scan_decoded"]
       return { ms_to_decode: data.msToDecode, format: data.format }
+    }
+    case "scan_retailer_search": {
+      const data = payload as AppEventMap["scan_retailer_search"]
+      return {
+        catalog_count: data.catalogCount,
+        retailer_count: data.retailerCount,
+        outcome: data.outcome,
+        duration_ms: data.durationMs,
+        trigger: data.trigger,
+      }
+    }
+    case "scan_retailer_result_opened": {
+      const data = payload as AppEventMap["scan_retailer_result_opened"]
+      return { category_label: data.categoryLabel }
     }
     case "scan_result_shown": {
       const data = payload as AppEventMap["scan_result_shown"]
@@ -468,7 +545,14 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
     }
     case "scan_submission_created": {
       const data = payload as AppEventMap["scan_submission_created"]
-      return { category: data.category }
+      return {
+        category: data.category,
+        suggested_category: data.suggestedCategory,
+        selection_path: data.selectionPath,
+        scan_interaction_id: data.scanInteractionId,
+        ms_confirmation_to_pending: data.msConfirmationToPending,
+        intake_path: data.intakePath,
+      }
     }
     case "scan_fallback_search_used": {
       const data = payload as AppEventMap["scan_fallback_search_used"]
