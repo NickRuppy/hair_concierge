@@ -160,7 +160,8 @@ test("every category retains its pre-router prompt contract byte for byte", () =
     leave_in: "39f26cb7201439140c9273e2e16411f3cb5957729e3caf9b31250e16b462cda6",
     bondbuilder: "f5e94f8ee0ea1e7b6010c43e912f5c29566537b46b3872b11e52d93acb7022f5",
     shampoo: "dc511c24cb88c76fe66fbb60dadda2bbe52f246314bc582c7278af1ad97c99a7",
-    mask: "68c7c7ad750e70add3d28bf7333fcddaa1154234d8a2fe1b2351450e0c79fe0d",
+    // moisture_softness added to mask functional_benefits (ruled 2026-10-07)
+    mask: "6e09f814859bfe0339c39e808515b979090bbfe4a5387077633de610f23a41a8",
     oil: "b07faaf152f390227c6980959c89075f60f75e28403cd2546a050edba142be15",
     dry_shampoo: "b83adcdac65c1b5b90acf859b53cc3e592f8fb0364094cee9f53db816bdc583b",
     deep_cleansing_shampoo: "6f0b700d503ce13691120d1f15cd87a0c54fedf1221034d2978dc6742c047dcc",
