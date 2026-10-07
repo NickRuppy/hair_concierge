@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { spawnSync } from "node:child_process"
 import { readdirSync, readFileSync, rmSync } from "node:fs"
 import test from "node:test"
 
@@ -650,7 +651,7 @@ test("workspace wiring keeps review cockpit separate from root app checks", () =
   )
   assert.equal(
     packageJson.scripts["products:intake:codex-worker"],
-    "tsx scripts/product-intake/codex-research-worker.ts",
+    "node --import ./tests/server-only-register.cjs --import tsx scripts/product-intake/codex-research-worker.ts",
   )
   assert.ok(rootTsconfig.exclude?.includes("apps"))
   assert.ok(rootTsconfig.exclude?.includes("packages"))
@@ -1657,4 +1658,20 @@ test("queue overview keeps active and completed submissions filterable", () => {
   assert.doesNotMatch(queuePageSource, /queue\.rows\.map/)
   assert.match(reviewCockpitCss, /queueFilters/)
   assert.match(reviewCockpitCss, /filterButton-active/)
+})
+
+test("codex worker npm script loads the worker graph outside Next (server-only modules)", () => {
+  // The worker transitively imports `server-only` modules (dm MCP client); the plain
+  // `tsx` entry crashed the Hetzner worker on start. Load the module with the exact
+  // node flags of the npm script, without running its main loop.
+  const script = packageJson.scripts["products:intake:codex-worker"]!
+  const [runner, ...rest] = script.split(" ")
+  assert.equal(runner, "node")
+  const entry = rest.pop()!
+  const result = spawnSync(
+    process.execPath,
+    [...rest, "--input-type=module", "-e", `await import(${JSON.stringify(`./${entry}`)})`],
+    { encoding: "utf8", timeout: 120_000 },
+  )
+  assert.equal(result.status, 0, result.stderr)
 })
