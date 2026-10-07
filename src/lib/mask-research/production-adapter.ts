@@ -35,7 +35,12 @@ export const MASK_PRODUCTION_ADAPTER_RESEARCH_METHOD = {
  * `src/lib/product-intake/category-validators.ts` (min 1) and in the
  * `product_mask_specs_functional_benefits_check` constraint; keep in sync.
  */
-const MASK_FUNCTIONAL_BENEFITS = ["smoothing_frizz_control", "detangling_slip", "shine"] as const
+const MASK_FUNCTIONAL_BENEFITS = [
+  "smoothing_frizz_control",
+  "detangling_slip",
+  "shine",
+  "moisture_softness",
+] as const
 type MaskFunctionalBenefit = (typeof MASK_FUNCTIONAL_BENEFITS)[number]
 
 /** `product_mask_specs.repair_support_level`, aligned with the conditioner/leave-in engines. */
@@ -441,6 +446,8 @@ const ingredientRules: Record<MaskIngredientFlag, Array<string | RegExp>> = {
   proteins: [
     /\bhydrolyzed (?:keratin|collagen|wheat protein|rice protein|soy protein|oat protein)\b/i,
     /\b(?:keratin|collagen|peptide|protein)\b/i,
+    /^hydrolyzed silk$/i,
+    /^sericin$/i,
   ],
   humectants: [
     "glycerin",
@@ -453,7 +460,6 @@ const ingredientRules: Record<MaskIngredientFlag, Array<string | RegExp>> = {
     "propylene glycol",
     "butylene glycol",
     "pentylene glycol",
-    "dipropylene glycol",
     "aloe barbadensis leaf juice",
     "sorbitol",
   ],
@@ -704,28 +710,27 @@ export function projectMaskForProduction(input: unknown): MaskProductionAdapterO
     const mapped = focusToFunctionalBenefit[value]
     if (mapped) functionalBenefitSet.add(mapped)
   }
-  // MAD-1 baseline (implementation default, mirroring the leave-in AD-3a
-  // baseline clause): `functional_benefits` is NOT NULL with min 1, and D2's
-  // three focus routes leave a plain conditioning mask (focus general /
-  // moisture / repair) with an empty set. A mask whose conditioning level is
-  // moderate or high carries the cationic/fatty-alcohol slip architecture by
-  // definition (§9.1), so it carries `detangling_slip`. The other two members
-  // stay strictly focus-ruled — this clause never adds smoothing or shine.
+  // Ruled 2026-10-07 (MAD-1 resolved: care chip instead of detangling filler).
+  // `functional_benefits` is NOT NULL with min 1. The non-specialized care chip
+  // `moisture_softness` is added for a moisture care direction, a general or
+  // moisture focus, and as the honest fallback when nothing else applies (a
+  // rinse-out mask always nourishes). A moderate/high conditioning level still
+  // adds `detangling_slip` (real cationic/fatty-alcohol slip, §9.1) but is no
+  // longer the min-1 guarantor. Never adds smoothing or shine.
   if (conditioningLevel === "moderate" || conditioningLevel === "high") {
     functionalBenefitSet.add("detangling_slip")
   }
+  if (
+    careDirection === "moisture" ||
+    focus.primary === "general" ||
+    focusValuesUsed.includes("moisture")
+  ) {
+    functionalBenefitSet.add("moisture_softness")
+  }
+  if (functionalBenefitSet.size === 0) functionalBenefitSet.add("moisture_softness")
   const functionalBenefits = MASK_FUNCTIONAL_BENEFITS.filter((benefit) =>
     functionalBenefitSet.has(benefit),
   )
-  if (functionalBenefits.length === 0) {
-    return needsResearch(
-      [
-        "category_specs.product_mask_specs.functional_benefits: no functional benefit is supported by the reviewed profile",
-      ],
-      envelope,
-    )
-  }
-
   const ingredientFlags = deriveMaskIngredientFlags(envelope.formula.normalizedIngredients)
 
   // Property set field 7: the derived thickness subset projects to suitable_thicknesses.
@@ -783,8 +788,11 @@ export function projectMaskForProduction(input: unknown): MaskProductionAdapterO
         .join(", ") || "none"
     }.`,
     conditioningLevel === "moderate" || conditioningLevel === "high"
-      ? `MAD-1 baseline: conditioning_level ${conditioningLevel} adds detangling_slip.`
-      : "MAD-1 baseline not applied: conditioning_level is low.",
+      ? `Ruled 2026-10-07: conditioning_level ${conditioningLevel} adds detangling_slip.`
+      : "Ruled 2026-10-07: conditioning_level is low, so no detangling_slip is added.",
+    functionalBenefits.includes("moisture_softness")
+      ? "Ruled 2026-10-07: moisture_softness from moisture care direction, general/moisture focus, or the rinse-out nourishment fallback."
+      : "Ruled 2026-10-07: moisture_softness not applied.",
     `Emitted: ${functionalBenefits.join(", ")}.`,
   ].join(" ")
 

@@ -33,7 +33,7 @@ const envelopeFiles = readdirSync(ENVELOPE_DIR)
  * Expected app-side values for the twelve approved reference-key-v1 records,
  * derived by hand from each record's approved profile with the adapter rules
  * (weight map, D1 concentration twin, D6 balance direction, D2 focus benefits +
- * the MAD-1 baseline, the thickness echo), independently of the adapter code.
+ * the 2026-10-07 moisture_softness care chip, the thickness echo), independently of the adapter code.
  */
 const READY = {
   "02-gliss-7sekunden-express-repair": {
@@ -41,7 +41,7 @@ const READY = {
     concentration: "medium",
     balance_direction: "moisture",
     repair_support_level: "high",
-    functional_benefits: ["detangling_slip"],
+    functional_benefits: ["detangling_slip", "moisture_softness"],
     suitable_thicknesses: ["fine", "normal", "coarse"],
   },
   "03-bali-curls-sos-protein-treatment": {
@@ -49,13 +49,14 @@ const READY = {
     concentration: "high",
     balance_direction: "moisture",
     repair_support_level: "low",
-    functional_benefits: ["detangling_slip"],
+    functional_benefits: ["detangling_slip", "moisture_softness"],
     suitable_thicknesses: ["normal", "coarse"],
   },
   "04-gliss-liquid-silk-4in1": {
     weight: "medium",
     concentration: "high",
     balance_direction: "protein",
+    ingredient_flags: ["silicones", "oils", "proteins", "humectants"],
     repair_support_level: "high",
     functional_benefits: ["detangling_slip"],
     suitable_thicknesses: ["fine", "normal", "coarse"],
@@ -65,7 +66,7 @@ const READY = {
     concentration: "medium",
     balance_direction: "moisture",
     repair_support_level: "low",
-    functional_benefits: ["smoothing_frizz_control", "detangling_slip"],
+    functional_benefits: ["smoothing_frizz_control", "detangling_slip", "moisture_softness"],
     suitable_thicknesses: ["normal", "coarse"],
   },
   "07-pantene-molecular-bond-repair": {
@@ -73,7 +74,7 @@ const READY = {
     concentration: "medium",
     balance_direction: "moisture",
     repair_support_level: "low",
-    functional_benefits: ["smoothing_frizz_control", "detangling_slip"],
+    functional_benefits: ["smoothing_frizz_control", "detangling_slip", "moisture_softness"],
     suitable_thicknesses: ["fine", "normal", "coarse"],
   },
   "08-sante-intense-hydration": {
@@ -81,7 +82,7 @@ const READY = {
     concentration: "medium",
     balance_direction: "balanced",
     repair_support_level: "medium",
-    functional_benefits: ["detangling_slip"],
+    functional_benefits: ["detangling_slip", "moisture_softness"],
     suitable_thicknesses: ["fine", "normal"],
   },
   "09-balea-professional-aqua-hyaluron": {
@@ -89,7 +90,7 @@ const READY = {
     concentration: "medium",
     balance_direction: "moisture",
     repair_support_level: "low",
-    functional_benefits: ["detangling_slip"],
+    functional_benefits: ["detangling_slip", "moisture_softness"],
     suitable_thicknesses: ["fine", "normal", "coarse"],
   },
   "10-bali-curls-deep-repair-mask": {
@@ -97,7 +98,7 @@ const READY = {
     concentration: "high",
     balance_direction: "moisture",
     repair_support_level: "low",
-    functional_benefits: ["detangling_slip"],
+    functional_benefits: ["detangling_slip", "moisture_softness"],
     suitable_thicknesses: ["normal", "coarse"],
   },
   "12-guhl-panthenol-reparatur-2in1": {
@@ -105,7 +106,7 @@ const READY = {
     concentration: "medium",
     balance_direction: "moisture",
     repair_support_level: "low",
-    functional_benefits: ["detangling_slip"],
+    functional_benefits: ["detangling_slip", "moisture_softness"],
     suitable_thicknesses: ["fine", "normal"],
   },
 } as const

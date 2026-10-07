@@ -549,7 +549,9 @@ const maskSpecsSchema = z
         ingredient_flags: z.array(z.enum(MASK_INGREDIENT_FLAGS)),
         repair_support_level: z.enum(["low", "medium", "high"]),
         functional_benefits: z
-          .array(z.enum(["smoothing_frizz_control", "detangling_slip", "shine"]))
+          .array(
+            z.enum(["smoothing_frizz_control", "detangling_slip", "shine", "moisture_softness"]),
+          )
           .min(1),
       })
       .strict(),

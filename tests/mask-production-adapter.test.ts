@@ -6,6 +6,7 @@ import test from "node:test"
 
 import {
   MASK_PRODUCTION_ADAPTER_RESEARCH_METHOD,
+  deriveMaskIngredientFlags,
   maskFormulaFingerprintSha256,
   normalizeMaskInciForFingerprint,
   projectMaskForProduction,
@@ -194,8 +195,8 @@ test("D2: smoothing, detangling and shine focus project into functional_benefits
   const cases = [
     [{ primary: "smoothing", secondary: [] }, ["smoothing_frizz_control", "detangling_slip"]],
     [{ primary: "shine", secondary: ["detangling"] }, ["detangling_slip", "shine"]],
-    [{ primary: "general", secondary: [] }, ["detangling_slip"]],
-    [{ primary: "moisture", secondary: ["repair"] }, ["detangling_slip"]],
+    [{ primary: "general", secondary: [] }, ["detangling_slip", "moisture_softness"]],
+    [{ primary: "moisture", secondary: ["repair"] }, ["detangling_slip", "moisture_softness"]],
   ] as const
   for (const [focus, expected] of cases) {
     const input = completeInput()
@@ -211,18 +212,23 @@ test("D2: smoothing, detangling and shine focus project into functional_benefits
   }
 })
 
-test("MAD-1 baseline: only a moderate/high conditioning level adds detangling_slip", () => {
+test("ruled 2026-10-07: a moderate/high conditioning level adds detangling_slip but is not the min-1 guarantor", () => {
   const plainLow = completeInput()
   plainLow.profile.conditioningLevel = evidence("low")
-  plainLow.profile.focus = evidence({ primary: "general", secondary: [] })
-  const refused = projectMaskForProduction(plainLow)
-  assert.equal(refused.status, "needs_research")
-  if (refused.status === "needs_research") {
-    assert.match(refused.reasons.join(" "), /functional_benefits/)
+  plainLow.profile.careDirection = evidence("balanced" as const)
+  plainLow.profile.focus = evidence({ primary: "repair", secondary: [] })
+  const fallback = projectMaskForProduction(plainLow)
+  assert.equal(fallback.status, "projection_ready")
+  if (fallback.status === "projection_ready") {
+    assert.deepEqual(
+      fallback.productionProjection.category_specs.product_mask_specs.functional_benefits,
+      ["moisture_softness"],
+    )
   }
 
   const lowShine = completeInput()
   lowShine.profile.conditioningLevel = evidence("low")
+  lowShine.profile.careDirection = evidence("balanced" as const)
   lowShine.profile.focus = evidence({ primary: "shine", secondary: [] })
   const outcome = projectMaskForProduction(lowShine)
   assert.equal(outcome.status, "projection_ready")
@@ -234,14 +240,38 @@ test("MAD-1 baseline: only a moderate/high conditioning level adds detangling_sl
   }
 })
 
-test("moisture, repair, curl_support and color_care focus add no functional benefit of their own", () => {
-  for (const primary of ["moisture", "repair", "curl_support", "color_care"] as const) {
+test("moisture_softness: moisture care direction or general/moisture focus; repair, curl_support and color_care alone do not add it", () => {
+  const cases = [
+    ["moisture", "protein", true],
+    ["general", "protein", true],
+    ["repair", "moisture", true],
+    ["repair", "protein", false],
+    ["curl_support", "balanced", false],
+    ["color_care", "balanced", false],
+  ] as const
+  for (const [primary, direction, expectChip] of cases) {
     const input = completeInput()
-    input.profile.conditioningLevel = evidence("low")
+    input.profile.conditioningLevel = evidence("moderate")
+    input.profile.careDirection = evidence(direction)
     input.profile.focus = evidence({ primary, secondary: [] })
     const outcome = projectMaskForProduction(input)
-    assert.equal(outcome.status, "needs_research", primary)
+    assert.equal(outcome.status, "projection_ready", `${primary}/${direction}`)
+    if (outcome.status !== "projection_ready") continue
+    assert.equal(
+      outcome.productionProjection.category_specs.product_mask_specs.functional_benefits.includes(
+        "moisture_softness",
+      ),
+      expectChip,
+      `${primary}/${direction}`,
+    )
   }
+})
+
+test("ingredient flags: dipropylene glycol is a solvent, not a humectant; hydrolyzed silk and sericin are proteins", () => {
+  assert.deepEqual(deriveMaskIngredientFlags(["dipropylene glycol"]), [])
+  assert.deepEqual(deriveMaskIngredientFlags(["hydrolyzed silk"]), ["proteins"])
+  assert.deepEqual(deriveMaskIngredientFlags(["sericin"]), ["proteins"])
+  assert.deepEqual(deriveMaskIngredientFlags(["glycerin"]), ["humectants"])
 })
 
 test("AD-2: refuses to commit any unknown value and names the exact field", () => {
