@@ -23,6 +23,7 @@ import {
   createSupabaseRoutineCadenceAuthorityReader,
   type RoutineCadenceAuthorityReadClient,
 } from "@/lib/personal-plan/routine/cadence-authority"
+import { loadKnownCareAnswers } from "@/lib/user-facts/read"
 import { saveUserFacts } from "@/lib/user-facts/save"
 
 import type {
@@ -220,6 +221,7 @@ async function acceptInitialRoutineForUser(
         },
         refinementPersistence: createSupabaseStage2RefinementPersistence(admin as never),
         saveFacts: (factsInput) => saveUserFacts(admin as never, factsInput),
+        loadKnownCareAnswers: (id) => loadKnownCareAnswers(admin as never, id),
         planState: {
           async loadActiveRoutineVersionId({ personalPlanId }) {
             const { data, error } = await admin
@@ -232,6 +234,16 @@ async function acceptInitialRoutineForUser(
             const activeRoutineVersionId = (data as { active_routine_version_id?: unknown })
               .active_routine_version_id
             return activeRoutineVersionId ? String(activeRoutineVersionId) : null
+          },
+          async isUnrefinedDirectAccept({ personalPlanId }) {
+            const { data, error } = await admin
+              .from("personal_plans")
+              .select("unrefined_direct_accept")
+              .eq("id", personalPlanId)
+              .eq("user_id", userId)
+              .maybeSingle()
+            if (error || !data) throw new Error("freemium_accept_plan_state_unavailable")
+            return (data as { unrefined_direct_accept?: unknown }).unrefined_direct_accept === true
           },
         },
         stage3Gateway: createProductionStage3ProductsGateway({

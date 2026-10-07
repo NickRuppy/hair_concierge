@@ -13,6 +13,10 @@ import {
 import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
 import { Stage2RefinementError } from "@/lib/personal-plan/refinement/gateway"
 import { STAGE2_MODULES, type Stage2Module } from "@/lib/personal-plan/refinement/types"
+import {
+  reportUnexpectedStage2Error,
+  type Stage2UnexpectedErrorRoute,
+} from "@/lib/observability/personal-plan-stage2"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -24,6 +28,8 @@ export type Stage2OptionalEntryRouteDeps = {
     userId: string
     module: Stage2Module
   }) => Promise<Stage2PersistedDraft>
+  /** Logs + reports a failure the route answers with a generic 503. Defaults to Sentry. */
+  reportUnexpectedError?: (route: Stage2UnexpectedErrorRoute, error: unknown) => void
 }
 
 const requestSchema = z.object({ module: z.enum(STAGE2_MODULES) }).strict()
@@ -43,7 +49,11 @@ function serverTiming(phases: Record<string, number>) {
     .join(", ")
 }
 
-function errorResponse(error: unknown, started: number) {
+function errorResponse(
+  error: unknown,
+  started: number,
+  report: NonNullable<Stage2OptionalEntryRouteDeps["reportUnexpectedError"]>,
+) {
   if (error instanceof Stage2OptionalEntryInvalidRequestError) {
     return response({ error: "invalid_request" }, 400)
   }
@@ -54,6 +64,9 @@ function errorResponse(error: unknown, started: number) {
       : message === "revision_conflict"
         ? "revision_conflict"
         : "temporarily_unavailable"
+  if (!(error instanceof Stage2RefinementError) && code === "temporarily_unavailable") {
+    report("stage2_optional_entry", error)
+  }
   const status =
     code === "revision_conflict"
       ? 409
@@ -69,6 +82,7 @@ function errorResponse(error: unknown, started: number) {
 }
 
 export function createStage2OptionalEntryRouteHandler(deps: Stage2OptionalEntryRouteDeps) {
+  const report = deps.reportUnexpectedError ?? reportUnexpectedStage2Error
   return async function POST(request: Request) {
     const started = Date.now()
     const phases: Record<string, number> = {}
@@ -83,7 +97,8 @@ export function createStage2OptionalEntryRouteHandler(deps: Stage2OptionalEntryR
         return response({ error: "stage_not_ready" }, 409)
       }
       phases.journey = Date.now() - phaseStarted
-    } catch {
+    } catch (error) {
+      report("stage2_optional_entry_access", error)
       return response({ error: "temporarily_unavailable" }, 503)
     }
 
@@ -108,7 +123,7 @@ export function createStage2OptionalEntryRouteHandler(deps: Stage2OptionalEntryR
         "Server-Timing": serverTiming(phases),
       })
     } catch (error) {
-      return errorResponse(error, started)
+      return errorResponse(error, started, report)
     }
   }
 }

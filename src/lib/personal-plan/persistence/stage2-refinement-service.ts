@@ -75,6 +75,12 @@ export type Stage2PersistedDraft = {
   revision: number
   status: "in_progress" | "complete" | "stale"
   refinedVersionId: string | null
+  /**
+   * `direct_acceptance_owned` (20261006180100): `true` = holds exactly what direct acceptance
+   * („Plan übernehmen") last saved; `false` = new row or interactively saved since; `null` /
+   * absent = the row predates the column.
+   */
+  directAcceptanceOwned?: boolean | null
 }
 
 export type Stage2RefinementPersistence = {
@@ -87,6 +93,8 @@ export type Stage2RefinementPersistence = {
     answers: PersonalPlanRefinementAnswersV1
     completedQuestionIds: Stage2QuestionId[]
     answerProvenance: Stage2AnswerProvenance
+    /** Only direct acceptance passes `true`: the save marks the draft as its own. */
+    directAcceptance?: boolean
   }): Promise<
     { outcome: "saved"; revision: number } | { outcome: "revision_conflict"; revision: number }
   >
@@ -235,6 +243,7 @@ export function createStage2RefinementService(input: {
         fields: toFieldProvenance({
           completedQuestionIds: draft.completedQuestionIds,
           answerProvenance: draft.answerProvenance,
+          answers: draft.answers,
         }),
       },
       draftBinding: {

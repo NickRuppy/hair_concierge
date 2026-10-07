@@ -32,7 +32,7 @@ export function toCareHabitsPatch(answers: PersonalPlanRefinementAnswersV1): Car
  * `heat:<source>` id folds into the single `heatEvents` aggregate key instead — see
  * `toFieldProvenance`.
  */
-const CARE_HABITS_FIELD_BY_STATIC_QUESTION_ID: Record<Stage2StaticQuestionId, string> = {
+export const CARE_HABITS_FIELD_BY_STATIC_QUESTION_ID: Record<Stage2StaticQuestionId, string> = {
   current_product_categories: "currentProductCategories",
   wet_wash_frequency: "wetWashFrequency",
   scalp_irritation_detail: "scalpIrritationDetail",
@@ -57,10 +57,17 @@ const CARE_HABITS_FIELD_BY_STATIC_QUESTION_ID: Record<Stage2StaticQuestionId, st
  * Every `heat:<source>` id folds into ONE `heatEvents` key — `"assumed"` if ANY completed
  * heat event is assumed, else `"user"` (controller ruling: a conservative aggregate, since
  * the `care_habits` domain has no per-event provenance slot).
+ *
+ * When `answers` carries a `heatEvents` map but no heat question completed (the resolver
+ * returns `{}` whenever no heat source is selected), that map is the consequence of the drying
+ * and heat-tool answers, so it takes their provenance: `"user"` only when both are user
+ * answers. Without an entry the empty map would count as real and replace a member's stored
+ * heat events (2026-10-06, `user_facts_save_v1` step 4b).
  */
 export function toFieldProvenance(input: {
   completedQuestionIds: readonly Stage2QuestionId[]
   answerProvenance: Stage2AnswerProvenance
+  answers?: PersonalPlanRefinementAnswersV1
 }): Record<string, FieldProvenanceValue> {
   const fields: Record<string, FieldProvenanceValue> = {}
   let heatEventSeen = false
@@ -81,6 +88,9 @@ export function toFieldProvenance(input: {
 
   if (heatEventSeen) {
     fields.heatEvents = heatEventAssumed ? "assumed" : "user"
+  } else if (input.answers?.heatEvents !== undefined) {
+    fields.heatEvents =
+      fields.dryingRoutes === "user" && fields.additionalHeatTools === "user" ? "user" : "assumed"
   }
 
   return fields

@@ -36,8 +36,8 @@ export function simulateUserFactsSave(rows: Row[], args: Row): Row {
   const oldDomain = isRecord(profile[domain]) ? (profile[domain] as Row) : null
   const allProvenance = isRecord(profile.facts_provenance) ? (profile.facts_provenance as Row) : {}
   const oldProvenance = isRecord(allProvenance[domain]) ? (allProvenance[domain] as Row) : {}
-  const provenance = args.p_provenance as Row
-  const patch = args.p_patch as Row
+  let provenance = args.p_provenance as Row
+  let patch = args.p_patch as Row
 
   if (args.p_mode === "create_only" && oldDomain !== null) {
     const incoming = Array.isArray(provenance.preservedCandidates)
@@ -59,6 +59,26 @@ export function simulateUserFactsSave(rows: Row[], args: Row): Row {
       }
     }
     return { status: "preserved", revision, changed: false, diagnosticsHash: null }
+  }
+
+  // Step (4b), migration 20261006180000: in care_habits an `assumed` key (value or clear) never
+  // replaces a stored key whose provenance is anything but `assumed` (a missing entry is real).
+  if (domain === "care_habits" && oldDomain !== null) {
+    const incomingFields = isRecord(provenance.fields) ? provenance.fields : {}
+    const storedFields = isRecord(oldProvenance.fields) ? oldProvenance.fields : {}
+    const keptReal = Object.keys(patch).filter(
+      (key) =>
+        incomingFields[key] === "assumed" && key in oldDomain && storedFields[key] !== "assumed",
+    )
+    if (keptReal.length > 0) {
+      patch = Object.fromEntries(Object.entries(patch).filter(([key]) => !keptReal.includes(key)))
+      provenance = {
+        ...provenance,
+        fields: Object.fromEntries(
+          Object.entries(incomingFields).filter(([key]) => !keptReal.includes(key)),
+        ),
+      }
+    }
   }
 
   const cleared = Object.entries(patch)

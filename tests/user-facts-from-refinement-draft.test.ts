@@ -152,3 +152,42 @@ test("toFieldProvenance combines static fields and the heatEvents aggregate toge
     heatEvents: "user",
   })
 })
+
+test("an empty heat map carries the provenance of the answers that emptied it", () => {
+  // The resolver always returns `heatEvents: {}` when no heat source is selected; without a
+  // provenance entry that map replaced a member's real heat events (2026-10-06 review F1).
+  assert.deepEqual(
+    toFieldProvenance({
+      completedQuestionIds: ["drying_routes", "additional_heat_tools"],
+      answerProvenance: { drying_routes: "assumed", additional_heat_tools: "assumed" },
+      answers: { dryingRoutes: ["air_dry"], additionalHeatTools: [], heatEvents: {} },
+    }).heatEvents,
+    "assumed",
+  )
+  assert.deepEqual(
+    toFieldProvenance({
+      completedQuestionIds: ["drying_routes", "additional_heat_tools"],
+      answerProvenance: { drying_routes: "user", additional_heat_tools: "assumed" },
+      answers: { dryingRoutes: ["air_dry"], additionalHeatTools: [], heatEvents: {} },
+    }).heatEvents,
+    "assumed",
+  )
+  assert.deepEqual(
+    toFieldProvenance({
+      completedQuestionIds: ["drying_routes", "additional_heat_tools"],
+      answerProvenance: { drying_routes: "user", additional_heat_tools: "user" },
+      answers: { dryingRoutes: ["air_dry"], additionalHeatTools: [], heatEvents: {} },
+    }).heatEvents,
+    "user",
+  )
+  // No heatEvents key in the answers → no provenance entry (unchanged).
+  assert.equal(
+    "heatEvents" in
+      toFieldProvenance({
+        completedQuestionIds: ["drying_routes"],
+        answerProvenance: { drying_routes: "user" },
+        answers: { dryingRoutes: ["air_dry"] },
+      }),
+    false,
+  )
+})
