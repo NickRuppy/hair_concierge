@@ -1,0 +1,313 @@
+{
+  "schema": "shampoo-v1.6-candidate-single-product-research",
+  "policy": "shampoo-classification-v1.6-candidate (NOT locked, NOT production-active; artifact must not feed Product Intake, adapter, catalog or recommendations)",
+  "slug": "isana-med-ph55",
+  "researchedAt": "2026-10-06",
+  "identity": {
+    "brand": "ISANA MED",
+    "productName": "Shampoo pH 5,5 hautneutral",
+    "manufacturer": "Dirk Rossmann GmbH (private label; rossmann.de is the brand owner's own page)",
+    "market": "DE",
+    "packSize": "400 ml",
+    "gtin": ["4068134039743"],
+    "rossmannArticleNumber": "164591",
+    "priceObserved": "1,79 EUR (rossmann.de, 2026-10-06; was 1,69 EUR at 2026-09-02 capture)",
+    "packFrontText": "ISANA MED · pH 5,5 HAUTNEUTRAL · SHAMPOO · 3% Urea · ohne Silikone · normales Haar · Klinisch getestet · dermatologisch bestätigt · ROSSMANN",
+    "identityConfidence": "high",
+    "notToConfuseWith": "ISANA MED Shampoo Jeden Tag (Ultra Sensitiv), EAN 4305615629223 — different formula (SLES/Glycerin/Hydroxysultaine/Guar), different product. Never merge INCI across the two.",
+    "conflicts": [
+      "Rossmann Türkei exact-EAN page (captured 2026-09-02, not re-verified today) names this EAN 'Isana Med Şampuan Ultra Hassas 400 ml' (= 'ultra sensitive'). Non-DE naming only; DE name and DE pack are unambiguous. Not material to classification."
+    ]
+  },
+  "formulaSource": {
+    "rawInci": "Aqua, Sodium Laureth Sulfate, Urea, Sodium Chloride, Cocamidopropyl Betaine, Sodium Cocoyl Glutamate, Disodium Cocoamphodiacetate, Panthenol, Sodium Laureth-8 Sulfate, Glycol Distearate, Magnesium Laureth Sulfate, Magnesium Laureth-8-Sulfate, Laureth-4, Sodium Oleth Sulfate, Magnesium Oleth Sulfate, Parfum, Citric Acid, Sodium Benzoate, Potassium Sorbate, Glycerin, Formic Acid, Propylene Glycol",
+    "ingredientCount": 22,
+    "fingerprint": {
+      "method": "SHA-256 of the 22 trimmed INCI names joined with ', ' (case preserved, as printed on rossmann.de)",
+      "sha256": "6cc9991c01ffceb8956288e32ac7b6f1327a99c132f93121c25950fa92668e6d"
+    },
+    "sourceTier": "3 (exact German retailer page for the exact GTIN; retailer is also the brand owner) + tier 1 pack-front image from the same page",
+    "completeness": "complete (water to last preservative/solvent; Parfum declared)",
+    "sources": [
+      {
+        "id": "S1-rossmann-de-pdp",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-ph-55-hautneutral/p/4068134039743",
+        "accessed": "2026-10-06",
+        "method": "built-in browser, embedded product JSON (GRP_INHALTSSTOFFE, GRP_PRODUKTDETAILS, GRP_GEBRAUCHAUFBEWAHRUNG); plain curl/WebFetch hit the bot wall",
+        "provides": "INCI (identical to 2026-09-02 capture), claims, price, article number. No usage directions on the page (only 'unter 25 Grad Celsius lagern')."
+      },
+      {
+        "id": "S2-rossmann-pack-front",
+        "url": "https://www.rossmann.de/media-neu/145/MAM_14522428/MAM_14522428_SHOP_IMAGE_2.0.png",
+        "accessed": "2026-10-06",
+        "provides": "Pack front claims. Pack back not available online."
+      },
+      {
+        "id": "S3-codecheck",
+        "url": "https://www.codecheck.info/p/kosmetik/haarpflege/shampoo/2842467575.html",
+        "accessed": "2026-10-06",
+        "provides": "Corroborating INCI (page says last updated 12.02.2026) and identical claim list; EAN 4068134039743 resolves to this page via codecheck search. Only difference: last two items listed as 'Propylene Glycol, Formic Acid' (reverse of Rossmann). Trace tail, non-material."
+      },
+      {
+        "id": "S4-rossmann-tr",
+        "url": "https://www.rossmann.com.tr/isana-med-sampuan-ultra-hassas-400-ml-p-sr24090131",
+        "accessed": "2026-09-02 (from repo capture; not re-verified)",
+        "provides": "EAN corroboration only (non-DE)."
+      },
+      {
+        "id": "S5-hmarka-ua",
+        "url": "https://hmarka.ua/uk/product/15694-shampun-isana-med-z-nejtralnym-ph-dlya-shkiry-golovy-z-3-sechovynoyu-400-ml/",
+        "accessed": "2026-09-02 (from repo capture; not re-verified)",
+        "provides": "Usage directions only (non-DE): massage into wet hair, leave briefly, rinse thoroughly. Not used for any property."
+      },
+      {
+        "id": "S0-repo-capture",
+        "url": "file:plans/scan-db-expansion/research/shampoo-manifest-02.json (product 'Shampoo pH 5,5 hautneutral'); shampoo-v14/admin/batch-02.json products[12]; shampoo-research-notes-02.md rank 51",
+        "accessed": "2026-10-06",
+        "provides": "Prior capture of 2026-09-02, used as starting point."
+      }
+    ],
+    "changedSinceCapture": {
+      "inci": false,
+      "claims": false,
+      "price": "1,69 -> 1,79 EUR",
+      "note": "INCI re-read live on rossmann.de 2026-10-06 is character-identical to the 2026-09-02 capture."
+    }
+  },
+  "blindFormulaPacket": {
+    "surfactantArchitecture": "Primary anionic: Sodium Laureth Sulfate (2). Buffers: Cocamidopropyl Betaine (5, amphoteric), Sodium Cocoyl Glutamate (6, mild amino-acid anionic), Disodium Cocoamphodiacetate (7, amphoteric). Minor mild ether-sulfate blend after Panthenol: Sodium Laureth-8 Sulfate (9), Magnesium Laureth Sulfate (11), Magnesium Laureth-8-Sulfate (12), Sodium Oleth Sulfate (14), Magnesium Oleth Sulfate (15), plus nonionic Laureth-4 (13). No chelator, no clarifying route.",
+    "conditioningRoutes": "No cationic polymer, no silicone, no oil/lipid payload. Light routes only: Glycol Distearate (10, pearlizer), Panthenol (8).",
+    "humectantRefatting": "Urea (3; 3% per pack), Panthenol (8), Glycerin (20, trace position).",
+    "scalpActives": "No Piroctone Olamine, no Climbazole. Comfort: Urea (3), Panthenol (8). Acidic pH system: Citric Acid (17), Formic Acid (21).",
+    "exposureFlags": "Parfum (16) present.",
+    "unresolved": "Proportion of the ether-sulfate blend at 9-15 is unknown (INCI order only)."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: an early SLES base buffered by two amphoterics and a mild amino-acid surfactant, with no reset/clarifying route or intent — the C1 pattern.",
+      "formulaFacts": [
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2},
+        {"ingredient": "Cocamidopropyl Betaine", "position": 5},
+        {"ingredient": "Sodium Cocoyl Glutamate", "position": 6},
+        {"ingredient": "Disodium Cocoamphodiacetate", "position": 7},
+        {"ingredient": "Sodium Laureth-8 Sulfate / Magnesium Laureth Sulfate / Magnesium Laureth-8-Sulfate / Sodium Oleth Sulfate / Magnesium Oleth Sulfate", "position": "9, 11, 12, 14, 15"},
+        {"ingredient": "Laureth-4", "position": 13}
+      ],
+      "counterSignals": "Five further ether-sulfate tokens (9-15) could be read as a second anionic route; SLES clearly leads the formula, so 'low' is not supported.",
+      "neighboringAlternative": "strong",
+      "ruleIds": ["C1", "Section 4 anchors"],
+      "sources": ["S1-rossmann-de-pdp", "S3-codecheck"],
+      "notes": "The 9-15 cluster is the classic mild Mg/laureth-8/oleth ether-sulfate blend used in mild shampoos. It sits after Panthenol and is read as part of the same buffered ether-sulfate route, not as a reinforcing reset route. Precedent: Eucerin DermoCapillaire pH5 (SLES/SMES + amphoacetate, pH/sensitive positioning) adjudicated moderate in holdout-v3."
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: no cationic polymer, silicone or lipid. Only a pearlizer and humectants, which give little rinse-off slip.",
+      "formulaFacts": [
+        {"ingredient": "Glycol Distearate", "position": 10},
+        {"ingredient": "Panthenol", "position": 8},
+        {"ingredient": "Urea", "position": 3},
+        {"ingredient": "Glycerin", "position": 20}
+      ],
+      "counterSignals": "The 'several light routes' wording in the moderate anchor (pearlizer + panthenol + urea) is the only path upward. Pack says 'ohne Silikone'.",
+      "neighboringAlternative": "moderate",
+      "ruleIds": ["Section 5 anchors", "C2 (not met: no silicone, no cationic)"],
+      "sources": ["S1-rossmann-de-pdp", "S2-rossmann-pack-front"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: no hair-substantive deposition system at all, and an effective cleansing base.",
+      "subjudgments": {"depositionLoad": "light", "persistence": "low", "resetCapacity": "moderate"},
+      "formulaFacts": [
+        {"ingredient": "Glycol Distearate", "position": 10, "role": "only film/fatty clue; pearlizer, low persistence"},
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2, "role": "reset capacity"}
+      ],
+      "counterSignals": "Glycol Distearate can leave a slight film. It is one weak, low-persistence route.",
+      "whyThisBand": "Deposition is light and low-persistence; nothing makes loss of movement/root lift likely.",
+      "whyNotNeighborBand": "Moderate needs one meaningfully persistent system (cationic, silicone, rich lipid). None is present.",
+      "neighboringAlternative": "none",
+      "ruleIds": ["Section 6 anchors"],
+      "sources": ["S1-rossmann-de-pdp"]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "moderate",
+      "rationale": "scalp_active: the brand owner positions it explicitly for sensitive scalp ('Spezialentwicklung für sensible Kopfhaut', pH 5,5 hautneutral, 3% Urea), and the formula is compatible (buffered cleansing, urea + panthenol, acidic pH).",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureCandidateVerdict": "nonspecific",
+        "moistureRoutes": ["Urea (3)", "Panthenol (8)", "Glycerin (20)"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Glycol Distearate (10)"],
+        "limitation": "The 'Feuchtigkeits-Komplex / schützt Kopfhaut & Haar vor Austrocknung' claim has humectants but no conditioning/emollient/deposition support, so it does not reach moisture_supported for the lengths."
+      },
+      "claimRole": "candidate",
+      "formulaFacts": [
+        {"ingredient": "Urea", "position": 3},
+        {"ingredient": "Panthenol", "position": 8},
+        {"ingredient": "Cocamidopropyl Betaine", "position": 5},
+        {"ingredient": "Disodium Cocoamphodiacetate", "position": 7},
+        {"ingredient": "Citric Acid", "position": 17},
+        {"ingredient": "Formic Acid", "position": 21}
+      ],
+      "counterSignal": "SLES is the lead surfactant and Parfum (16) is present. The sensitive-scalp claim is on rossmann.de, not on the pack front (front says only pH 5,5 hautneutral / 3% Urea / normales Haar).",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Formula: mild-buffered ether-sulfate wash with scalp humectants; no length-care system. Claims: sensitive scalp + pH-neutral (dominant), moisture (secondary). The moisture verdict is nonspecific, so it stays out. Sensitive-scalp positioning plus scalpComfortTarget targeted -> scalp_active (Section 7.2 row 'Explicit sensitive ... scalp positioning with targeted'). If the sensitive claim were discounted, the product would fall to general (mildness alone is not a focus).",
+      "ruleIds": ["7.2", "7.3", "F1"],
+      "sources": ["S1-rossmann-de-pdp", "S2-rossmann-pack-front", "S3-codecheck"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: the only other claim, moisture, has a nonspecific formula verdict (humectants without conditioning/deposition), so it fails Section 8 condition 2.",
+      "counterSignals": "'Feuchtigkeits-Komplex' and 'schützt ... Haar vor Austrocknung' are distinct claims.",
+      "neighboringAlternative": "moisture",
+      "ruleIds": ["8", "F1", "F2"],
+      "sources": ["S1-rossmann-de-pdp"]
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "moderate",
+      "rationale": "frequent: explicit 'für jeden Tag' positioning and cleansing is not strong (mechanical trigger).",
+      "formulaFacts": [],
+      "counterSignals": "Depends on cleansingStrength staying moderate. If it were strong, the result would mechanically be regular.",
+      "neighboringAlternative": "regular",
+      "ruleIds": ["9"],
+      "sources": ["S1-rossmann-de-pdp", "S3-codecheck"]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "rationale": "targeted: explicit sensitive-scalp positioning plus a credible supportive architecture (buffered cleansing, 3% urea, panthenol, pH 5.5 system).",
+      "formulaFacts": [
+        {"ingredient": "Urea", "position": 3},
+        {"ingredient": "Panthenol", "position": 8},
+        {"ingredient": "Cocamidopropyl Betaine", "position": 5},
+        {"ingredient": "Sodium Cocoyl Glutamate", "position": 6},
+        {"ingredient": "Disodium Cocoamphodiacetate", "position": 7}
+      ],
+      "counterSignals": "Parfum (16) is declared (not fragrance-free). The SLES lead is milder than a reset chassis but not a gentle amino-acid/amphoteric base. No allantoin/bisabolol.",
+      "neighboringAlternative": "not_targeted",
+      "ruleIds": ["10"],
+      "sources": ["S1-rossmann-de-pdp", "S3-codecheck"],
+      "notes": "Fragrance is a counter-signal, not a veto (Section 10). Precedent: Eucerin DermoCapillaire pH5 (with fragrance) = targeted, moderate."
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "not_supported: the complete INCI contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [],
+      "counterSignals": "none",
+      "neighboringAlternative": "none",
+      "ruleIds": ["11"],
+      "sources": ["S1-rossmann-de-pdp"]
+    }
+  },
+  "projection": {
+    "status": "proposal (all eight properties moderate-or-high, identity canonical)",
+    "thicknesses": [
+      {"thickness": "fine", "fit": "ideal", "confidence": "high", "rationale": "T1: W low -> fine ideal. T4: W neighbor 'none', so no boundary flag. T2: pack 'normales Haar' does not change fit."},
+      {"thickness": "normal", "fit": "ideal", "confidence": "high", "rationale": "T1: W low -> normal ideal. No T4 flag."},
+      {"thickness": "coarse", "fit": "conditional", "confidence": "moderate", "rationale": "T1: W low and C not high -> coarse conditional (usable with a separate conditioner). Not emitted (T5). Min(W high, C moderate) = moderate."}
+    ],
+    "scalpTargets": {
+      "primary": {
+        "target": "sensitive",
+        "bucket": "irritationen",
+        "route": "irritated",
+        "confidence": "moderate",
+        "rationale": "S-SENSITIVE. Positioning gate (E1/E2): 'Spezialentwicklung für sensible Kopfhaut' names a sensitive scalp. It appears on rossmann.de (the brand owner's exact product page), not the pack front -> positioning confidence moderate. Formula gate: scalpComfortTarget targeted AND prominent comfort routes (E3: before Parfum at 16): Panthenol (8), Urea (3). cleansingStrength moderate -> no review_strong_cleansing_comfort_route. S-FOCUS: focusPrimary scalp_active -> no mismatch."
+      },
+      "secondary": null,
+      "secondaryRationale": "S-DRY not emitted. 'schützt Kopfhaut & Haar vor Austrocknung' names the scalp but is a preventive claim, not a dry-scalp condition claim like the E2 examples ('trockene Kopfhaut', 'Spannungsgefühl'). Under P0 the uncertain lexicon match fails conservative (no secondary). The formula gate would pass (targeted + Urea 3/Panthenol 8 prominent), so this lexicon reading alone decides it. See openIssues."
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "moderate",
+      "rationale": "I1: cleansingStrength moderate -> regular. I2: written unchanged even though the irritationen bucket expects gentle, so the live matcher would rank these rows 'supportive', not 'ideal'. I3: the cleansing neighbor 'strong' would also yield regular -> no review_intensity_boundary."
+    },
+    "positioning": {"explicitResetPositioning": false, "rationale": "D1: no Tiefenreinigung/Clarifying/Detox wording and no occasional-use limit. Directions say 'für jeden Tag'."},
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular"},
+      {"thickness": "normal", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [
+      {
+        "code": "review_live_value_differs",
+        "status": "provisional",
+        "rationale": "The live DB was not read (no Supabase access in this run). The 2026-09-02 batch-02 manifest proposed only normal x irritationen x regular. This projection adds fine x irritationen. If the live rows match the manifest, the flag stands and the projection stays blocked until Nick rules."
+      }
+    ],
+    "informationalWarnings": []
+  },
+  "customerFit": {
+    "customer": "Viola (wavy, FINE strands, HIGH density, medium length, colored + bleached, elastic test snaps, dry scalp without current flakes/itch, main problem dry lengths; also frizz, tangling, low shine, lost wave shape; washes ~2x/week, this shampoo ~1x/week; then Syoss Intense Glaze lamination mask as conditioner, Neqi leave-in mist, Neqi Opulent Oil)",
+    "verdict": "keep (with conditions)",
+    "summary": "Fine to keep as her weekly wash. It is weightless (good for fine wavy strands), silicone-free, pH 5.5 with urea + panthenol (friendly to a dry-feeling scalp), and its moderate cleansing removes residue from the glaze mask and oil. It does nothing for her main problems (dry, tangly, snapping lengths). Those belong to the mask/leave-in and to wash technique. No reason to swap unless the lengths feel squeaky/rough right after washing or breakage during washing goes up.",
+    "whyItSuits": [
+      "Weight low: no cationic, silicone or oil. It will not flatten fine strands or pull out the wave.",
+      "Moderate, buffered cleansing: enough to clear film from a lamination mask + oil on a weekly basis without being a clarifying shampoo.",
+      "Scalp-friendly: pH 5.5, 3% urea, panthenol, daily-use positioning. Suits a dry-feeling scalp with no current complaints."
+    ],
+    "limits": [
+      "Conditioning low: zero slip in the wash. For bleached hair that snaps and tangles, the wash step itself gives no detangling help, so knots and breakage during washing are the risk.",
+      "SLES-led: on very porous bleached lengths it can feel drying if worked through the lengths. Use it on the scalp and let the lather run through.",
+      "Contains perfume. Irrelevant for her today (no scalp complaints), but worth knowing if itching appears.",
+      "The 'Feuchtigkeit' claim mainly concerns the scalp; it is not a moisture or repair shampoo for the lengths."
+    ],
+    "whatToWatch": [
+      "Lengths feel squeaky, straw-like or rough right after rinsing -> too much cleansing for her lengths; consider a gentler / more conditioning fine-hair shampoo for this slot.",
+      "More broken hairs or knots during or right after washing -> wash technique / pre-wash conditioning, not necessarily the shampoo.",
+      "Wave drops or hair feels coated by day 2-3 -> more likely the mask + oil amount than this shampoo; this shampoo actually helps here."
+    ],
+    "engineNote": "Product truth vs user fit (Section 15): the v1.6 projection is fine-ideal but projects only the sensitive-scalp bucket (irritationen). If Viola's scalp bucket is 'trocken', the engine would not show this product in her cell (unless Nick rules the dry-scalp claim in). That is not a reason to tell her to stop using it.",
+    "callQuestions": [
+      "Which shampoo do you use for the second wash each week, and how do your lengths feel right after rinsing this one compared to that one (soft vs squeaky/rough)?",
+      "Do you put the shampoo only on the scalp or work it through the lengths, and do you notice many knots or broken hairs during or right after washing?",
+      "How much Syoss glaze mask and Neqi oil do you use, and does your hair feel flat or coated by day 2-3, with the waves dropping?"
+    ],
+    "boundaries": "Cosmetic guidance only. No claims about scalp disease, tolerability guarantees or hair-loss effects."
+  },
+  "openIssues": [
+    {
+      "id": "OI-1-positioning-tier",
+      "issue": "The sensitive-scalp claim appears only on rossmann.de (no 'Kopfhaut' wording on the pack front; pack back not seen). It was treated as the exact manufacturer DE page (Rossmann is the brand owner) -> E1 moderate. If a reviewer instead treats rossmann.de as retailer copy -> E1 low -> no sensitive target -> needs_research. Resolving needs a photo of the pack back.",
+      "affects": ["focusPrimary", "projection.scalpTargets.primary"],
+      "cautiousDefaultApplied": "Moderate (manufacturer-page tier); this directly decides whether a target is emitted, so pack-back verification is recommended before apply."
+    },
+    {
+      "id": "OI-2-dry-scalp-lexicon",
+      "issue": "Does 'schützt Kopfhaut & Haar vor Austrocknung' count as an E2 dry-scalp claim? Not emitted under P0. If Nick rules yes, S-DRY passes the formula gate and a secondary 'dry' (trocken) target would be added, giving fine/normal x trocken rows.",
+      "affects": ["projection.scalpTargets.secondary"],
+      "cautiousDefaultApplied": "No secondary target."
+    },
+    {
+      "id": "OI-3-open-question-1-fine-hair",
+      "issue": "open-questions.md Q1 (moderate weight on fine hair) does not apply: W is low, so fine is ideal under both the cautious and the wider option. Q2-Q5 do not apply (W not high, C not used for an ideal, no oily claim, no reset positioning).",
+      "affects": [],
+      "cautiousDefaultApplied": "n/a"
+    },
+    {
+      "id": "OI-4-live-rows",
+      "issue": "Live product_shampoo_specs rows were not read. Compare before any apply (review_live_value_differs).",
+      "affects": ["projection.reviewFlags"],
+      "cautiousDefaultApplied": "Flag recorded as provisional/blocking."
+    },
+    {
+      "id": "OI-5-inci-tail-order",
+      "issue": "codecheck lists 'Propylene Glycol, Formic Acid' while Rossmann lists 'Formic Acid, Propylene Glycol' (positions 21/22). Rossmann (exact GTIN, live) is canonical. Trace-level, non-material.",
+      "affects": [],
+      "cautiousDefaultApplied": "Rossmann order used."
+    },
+    {
+      "id": "OI-6-usage-directions",
+      "issue": "No German usage directions online. The only exact-product directions are Ukrainian retailer text (short leave-on). Not used for any property.",
+      "affects": [],
+      "cautiousDefaultApplied": "n/a"
+    }
+  ]
+}

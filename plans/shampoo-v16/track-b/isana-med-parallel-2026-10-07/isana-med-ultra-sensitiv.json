@@ -1,0 +1,644 @@
+{
+  "schema": "shampoo-classification-v1.6-candidate / single-product consult research",
+  "policy": {
+    "candidatePolicyId": "shampoo-classification-v1.6-candidate",
+    "analysisModelVersion": "shampoo-inci-v1.6-candidate",
+    "status": "candidate, not locked, not production-active; this artifact may not feed Product Intake, Production Light, catalog or recommendations (Section 1/16)"
+  },
+  "researchDate": "2026-10-06",
+  "identity": {
+    "slug": "isana-med-ultra-sensitiv",
+    "brand": "ISANA MED",
+    "brandOwner": "Dirk Rossmann GmbH (private label; rossmann.de is both brand-owner and retailer page)",
+    "productName": "Shampoo Jeden Tag (Ultra Sensitiv)",
+    "packFrontText": "ISANA MED · ULTRA SENSITIV · SHAMPOO · Allantoin · Allergie getestet** · Mikrobiom Balance* · 0% Parfüm, Farbstoffe, Silikon · KLINISCH GETESTET, dermatologisch bestätigt · ROSSMANN",
+    "market": "DE",
+    "packSize": "200 ml",
+    "priceEur": 1.79,
+    "rossmannArtikelnummer": "042817",
+    "gtins": [
+      "4305615629223"
+    ],
+    "notSameProduct": [
+      {
+        "name": "ISANA MED Shampoo Jeden Tag",
+        "ean": "4305615629216",
+        "reason": "different SKU with urea formula (v1.4 holdout-v1); not merged"
+      }
+    ],
+    "identityConfidence": "high",
+    "identityNotes": "Rossmann DE live PDP (2026-10-06) shows exact name, 200 ml, 1,79 EUR, Art.-Nr. 042817 under EAN 4305615629223 in URL; codecheck lists barcode 4305615629223 with same name and INCI (last edit by Dirk-Rossmann-GmbH 12 Feb 2026). Pack-front image from the exact PDP reviewed."
+  },
+  "formulaSource": {
+    "rawInci": "Aqua, Sodium Laureth Sulfate, Glycerin, Cocamidopropyl Hydroxysultaine, Sodium Chloride, Coco-Glucoside, Glyceryl Oleate, Panthenol, Allantoin, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrogenated Vegetable Glycerides Citrate, Tocopherol, Sodium Citrate, Sodium Sulfate, Citric Acid, Sodium Benzoate",
+    "inciList": [
+      {
+        "position": 1,
+        "ingredient": "Aqua"
+      },
+      {
+        "position": 2,
+        "ingredient": "Sodium Laureth Sulfate"
+      },
+      {
+        "position": 3,
+        "ingredient": "Glycerin"
+      },
+      {
+        "position": 4,
+        "ingredient": "Cocamidopropyl Hydroxysultaine"
+      },
+      {
+        "position": 5,
+        "ingredient": "Sodium Chloride"
+      },
+      {
+        "position": 6,
+        "ingredient": "Coco-Glucoside"
+      },
+      {
+        "position": 7,
+        "ingredient": "Glyceryl Oleate"
+      },
+      {
+        "position": 8,
+        "ingredient": "Panthenol"
+      },
+      {
+        "position": 9,
+        "ingredient": "Allantoin"
+      },
+      {
+        "position": 10,
+        "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride"
+      },
+      {
+        "position": 11,
+        "ingredient": "Hydrogenated Vegetable Glycerides Citrate"
+      },
+      {
+        "position": 12,
+        "ingredient": "Tocopherol"
+      },
+      {
+        "position": 13,
+        "ingredient": "Sodium Citrate"
+      },
+      {
+        "position": 14,
+        "ingredient": "Sodium Sulfate"
+      },
+      {
+        "position": 15,
+        "ingredient": "Citric Acid"
+      },
+      {
+        "position": 16,
+        "ingredient": "Sodium Benzoate"
+      }
+    ],
+    "ingredientCount": 16,
+    "normalizedFingerprintSha256": "42d23057f1c7cc44bcd54e6daf5cf4f74665b06b45b7a455daba19641aa8188d",
+    "fingerprintMethod": "sha256 of lowercase INCI names joined with '|' in declared order",
+    "sourceTier": "2/3 (exact brand-owner DE page = exact preferred DE retailer page for this GTIN)",
+    "completeness": "complete (16 items, ends with preservative; no Parfum declared, consistent with 0% Parfüm claim)",
+    "sources": [
+      {
+        "id": "SRC-ROSSMANN-DE-PDP-2026-10-06",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-jeden-tag-ultra-sensitiv/p/4305615629223",
+        "accessed": "2026-10-06",
+        "tier": "2/3",
+        "use": "identity, INCI (Inhaltsstoffe accordion), claims; read via rendered browser (plain fetch is bot-blocked)"
+      },
+      {
+        "id": "SRC-ROSSMANN-DE-PACKFRONT-IMAGE-2026-10-06",
+        "url": "https://www.rossmann.de/media-neu/567/MAM_56764056/MAM_56764056_SHOP_IMAGE_1.4.png",
+        "accessed": "2026-10-06",
+        "tier": "1 (pack front image for exact GTIN)",
+        "use": "front-of-pack claims; confirms 'Kopfhaut' is NOT on pack front and 'Jeden Tag' is NOT visible on pack front"
+      },
+      {
+        "id": "SRC-CODECHECK-2026-10-06",
+        "url": "https://www.codecheck.info/p/kosmetik/haarpflege/shampoo/isana-med-shampoo-jeden-tag-ultra-sensitiv.html",
+        "accessed": "2026-10-06",
+        "tier": "4 (corroboration)",
+        "use": "identical 16-item INCI, barcode 4305615629223, last edited by Dirk-Rossmann-GmbH 12 Feb 2026"
+      },
+      {
+        "id": "SRC-CAPTURE-2026-09-02",
+        "url": "plans/scan-db-expansion/research/shampoo-manifest-02.json (+ shampoo-v14/admin/batch-02.json products[11])",
+        "accessed": "2026-10-06",
+        "tier": "prior capture",
+        "use": "baseline INCI captured 2026-09-02 from Rossmann DE; identical"
+      },
+      {
+        "id": "SRC-ROSSMANN-TR",
+        "url": "https://www.rossmann.com.tr/isana-med-sampuan-ultra-hassas-200-ml-p-sr20080398",
+        "accessed": "2026-09-02 (via capture, not re-fetched)",
+        "tier": "non-DE fallback",
+        "use": "EAN corroboration and rinse/repeat directions only; not a formula source"
+      }
+    ],
+    "conflicts": [
+      {
+        "source": "https://skinsignal.com/products/isana-med-shampoo-jeden-tag-ultra-sensitiv",
+        "accessed": "2026-10-06",
+        "observation": "Lists a 17-item variant: Water, SLES, Glycerin, Cocamidopropyl Hydroxysultaine, Sodium Chloride, Panthenol, Coco-Glucoside, Glyceryl Oleate, Hydroxypropyl Guar HPTC, Allantoin, Citric Acid, Levulinic Acid, Sodium Levulinate, p-Anisic Acid, Hydrogenated Vegetable Glycerides Citrate, Tocopherol, Sodium Hydroxide. No EAN, no date.",
+        "resolution": "Not used and not merged (Section 2). Likely an older/other batch preservative system. Current exact German sources (Rossmann DE live + codecheck edited by Rossmann Feb 2026) agree on the 16-item Sodium-Benzoate formula. Surfactant/conditioning architecture is the same in both, so no property would change."
+      }
+    ],
+    "changedSinceCapture": false,
+    "changedSinceCaptureNote": "Rossmann DE INCI on 2026-10-06 is character-identical to the 2026-09-02 capture."
+  },
+  "blindFormulaPass": {
+    "note": "Performed by the same researcher who had already seen the captured identity/claims; not a sealed blind lane. Blind-to-final changes recorded per property.",
+    "provisional": {
+      "cleansingStrength": "moderate",
+      "conditioningLevel": "moderate",
+      "weightPotential": "low",
+      "focusPrimary": "general",
+      "focusSecondary": [],
+      "usageRole": "regular",
+      "scalpComfortTarget": "unknown (intent not decidable blind)",
+      "dandruffSupport": "not_supported"
+    },
+    "blindToFinalChanges": [
+      {
+        "property": "focusPrimary",
+        "from": "general",
+        "to": "scalp_active",
+        "reason": "Revealed explicit sensitive-scalp positioning on brand-owner page + 'Ultra Sensitiv' pack front; scalpComfortTarget targeted (7.2 row)."
+      },
+      {
+        "property": "usageRole",
+        "from": "regular",
+        "to": "frequent",
+        "reason": "Revealed 'Jeden Tag' in the brand-owner product name; cleansingStrength moderate (not strong) -> Section 9 frequent trigger met."
+      },
+      {
+        "property": "scalpComfortTarget",
+        "from": "unknown",
+        "to": "targeted",
+        "reason": "Explicit sensitive-scalp intent revealed; formula supportive."
+      }
+    ]
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one ether-sulfate primary (SLES #2) buffered by an amphoteric sultaine (#4) and a nonionic glucoside (#6) plus a refatter (#7); no second anionic or reset route. This is exactly the C1 pattern.",
+      "rules": [
+        "C1",
+        "Section 4 anchors"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "primary anionic"
+        },
+        {
+          "ingredient": "Cocamidopropyl Hydroxysultaine",
+          "position": 4,
+          "role": "amphoteric buffer"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 6,
+          "role": "nonionic buffer"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "role": "refatting"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 3,
+          "role": "humectant counter-signal"
+        }
+      ],
+      "counterSignals": [
+        "SLES is directly after water, so the anionic route is prominent (argues against low).",
+        "Three buffering/refatting routes before Panthenol and fragrance-free mild positioning argue toward low."
+      ],
+      "neighboringAlternative": "low",
+      "whyNotNeighbor": "Low requires an architecture dominated by mild amphoteric/nonionic/amino-acid routes; here SLES is the primary surfactant.",
+      "sources": [
+        "SRC-ROSSMANN-DE-PDP-2026-10-06",
+        "SRC-CODECHECK-2026-10-06"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one meaningful cationic system (guar HPTC #10) plus light refatting/humectant routes gives noticeable but bounded slip; no silicone, fatty alcohol or pearlizer.",
+      "rules": [
+        "Section 5 anchors",
+        "C2 (not triggered: no silicone/pearlizer)"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 10,
+          "role": "cationic conditioning polymer"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "role": "refatter"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 3,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 8,
+          "role": "humectant/comfort"
+        },
+        {
+          "ingredient": "Hydrogenated Vegetable Glycerides Citrate",
+          "position": 11,
+          "role": "emulsifier/light lipid"
+        }
+      ],
+      "counterSignals": [
+        "Guar sits after Allantoin at #10, so its level is probably modest.",
+        "0% silicone; no second substantive system."
+      ],
+      "neighboringAlternative": "low",
+      "whyNotNeighbor": "Low means cleansing-led with little substantive slip; a cationic guar plus a refatter is a real conditioning system.",
+      "sources": [
+        "SRC-ROSSMANN-DE-PDP-2026-10-06",
+        "SRC-CODECHECK-2026-10-06",
+        "SRC-ROSSMANN-DE-PACKFRONT-IMAGE-2026-10-06"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "subjudgments": {
+        "depositionLoad": "light",
+        "persistence": "low",
+        "resetCapacity": "moderate"
+      },
+      "rationale": "Low: the only hair-substantive deposit is one mid-list guar polymer plus a light refatter, delivered in an effective SLES base; noticeable loss of movement or root lift is unlikely.",
+      "rules": [
+        "Section 6 anchors (one light polymer / weak refatter can remain low)"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 10,
+          "role": "only persistent deposit route"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "role": "light refatter, low persistence"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "reset capacity"
+        }
+      ],
+      "counterSignals": [
+        "Cationic guar can build up with repeated use on porous (bleached) hair."
+      ],
+      "whyThisBand": "Single light deposition route, no silicone/oil payload, ordinary reset.",
+      "whyNotNeighborBand": "Moderate needs one meaningfully persistent system or interacting routes; guar at #10 with no silicone does not reach that.",
+      "neighboringAlternative": "moderate",
+      "sources": [
+        "SRC-ROSSMANN-DE-PDP-2026-10-06",
+        "SRC-CODECHECK-2026-10-06"
+      ]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "moderate",
+      "rationale": "scalp_active: the product is explicitly positioned for very sensitive scalp and its formula supports that role (fragrance-free, Allantoin/Panthenol, buffered cleansing).",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Hydroxypropyl Guar HPTC #10",
+          "Glyceryl Oleate #7"
+        ],
+        "limitation": "Focus is not a repair/moisture decision."
+      },
+      "claimRole": "candidate",
+      "formulaFacts": [
+        {
+          "ingredient": "Allantoin",
+          "position": 9,
+          "role": "comfort route"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 8,
+          "role": "comfort/humectant route"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 3,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "role": "refatting"
+        }
+      ],
+      "counterSignal": "SLES (#2) is the primary surfactant, so the cleansing is ordinary, not ultra-mild; the sensitive claim ('Kopfhaut') is on the brand-owner page, not the pack front.",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Formula alone was nonspecific (blind: general). Claims revealed explicit sensitive-scalp positioning ('besondere Bedürfnisse sehr sensibler und empfindlicher Kopfhaut', 'hautberuhigende Formel', 'Ultra Sensitiv'). scalpComfortTarget is targeted, so Section 7.2 row 'explicit sensitive scalp positioning with targeted' applies -> scalp_active. Counter-signal (SLES primary) does not make the formula incompatible.",
+      "rules": [
+        "7.1",
+        "7.2",
+        "Appendix A (gentle not a focus)"
+      ],
+      "sources": [
+        "SRC-ROSSMANN-DE-PDP-2026-10-06",
+        "SRC-ROSSMANN-DE-PACKFRONT-IMAGE-2026-10-06"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: 'schützt Kopfhaut und Haar vor Austrocknung' is delivered by the same glycerin/refatting/panthenol routes as the scalp-comfort role, so it is not an independent moisture route (F2).",
+      "rules": [
+        "Section 8",
+        "F2"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Glycerin",
+          "position": 3,
+          "role": "shared route"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "role": "shared route"
+        }
+      ],
+      "counterSignals": [
+        "A reviewer could read the anti-drying claim as moisture positioning."
+      ],
+      "neighboringAlternative": "moisture",
+      "sources": [
+        "SRC-ROSSMANN-DE-PDP-2026-10-06"
+      ]
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "moderate",
+      "rationale": "Frequent: 'Jeden Tag' is in the brand-owner product name and cleansingStrength is moderate (not strong), so the conjunctive Section 9 trigger is met.",
+      "rules": [
+        "Section 9 frequent trigger"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "moderate, buffered (not strong)"
+        }
+      ],
+      "counterSignals": [
+        "'Jeden Tag' is in the Rossmann listing name but not visible on the pack front image."
+      ],
+      "neighboringAlternative": "regular",
+      "sources": [
+        "SRC-ROSSMANN-DE-PDP-2026-10-06",
+        "SRC-ROSSMANN-DE-PACKFRONT-IMAGE-2026-10-06",
+        "SRC-CODECHECK-2026-10-06"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "high",
+      "rationale": "Targeted: explicit sensitive-scalp intent plus a credibly supportive formula (no fragrance, Allantoin #9, Panthenol #8, Glycerin #3, refatter #7, sulfate buffered).",
+      "rules": [
+        "Section 10"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Allantoin",
+          "position": 9,
+          "role": "comfort"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 8,
+          "role": "comfort"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 3,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "role": "refatting"
+        },
+        {
+          "ingredient": "Cocamidopropyl Hydroxysultaine",
+          "position": 4,
+          "role": "buffer"
+        }
+      ],
+      "counterSignals": [
+        "SLES primary surfactant (moderate, not strong)."
+      ],
+      "supportingClaims": [
+        "Das ISANA Med Shampoo berücksichtigt die besonderen Bedürfnisse sehr sensibler und empfindlicher Kopfhaut.",
+        "hautberuhigende Formel",
+        "0% Parfüm, 0% Farbstoffe, 0% Silikon",
+        "Allergie getestet; DAAB-Empfehlung 10/2023"
+      ],
+      "neighboringAlternative": "not_targeted",
+      "sources": [
+        "SRC-ROSSMANN-DE-PDP-2026-10-06",
+        "SRC-ROSSMANN-DE-PACKFRONT-IMAGE-2026-10-06"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete INCI contains neither Piroctone Olamine nor Climbazole.",
+      "rules": [
+        "Section 11"
+      ],
+      "formulaFacts": [],
+      "counterSignals": [],
+      "neighboringAlternative": "none",
+      "sources": [
+        "SRC-ROSSMANN-DE-PDP-2026-10-06",
+        "SRC-CODECHECK-2026-10-06"
+      ]
+    }
+  },
+  "projection": {
+    "status": "proposal_blocked_for_review",
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "Ideal by T1 (W low). T4: the W neighbour 'moderate' would make fine conditional -> review_thickness_boundary.",
+        "rules": [
+          "T1",
+          "T4"
+        ]
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "Ideal by T1 (W low); the W neighbour (moderate) keeps normal ideal, so no flag.",
+        "rules": [
+          "T1",
+          "T4"
+        ]
+      },
+      {
+        "thickness": "coarse",
+        "fit": "conditional",
+        "confidence": "moderate",
+        "rationale": "Conditional by T1 (W low, C moderate, not high). Open question 3's wider 'scalp products only' option would make this ideal; it is not adopted (cautious default, P0).",
+        "rules": [
+          "T1",
+          "T5",
+          "P0"
+        ]
+      }
+    ],
+    "scalpTargets": {
+      "primary": {
+        "target": "sensitive",
+        "bucket": "irritationen",
+        "route": "irritated",
+        "confidence": "moderate",
+        "rationale": "S-SENSITIVE passes. Positioning: E2 sensitive claim 'sehr sensibler und empfindlicher Kopfhaut' on the brand-owner's exact DE page (E1 moderate; not on pack front). Formula: scalpComfortTarget targeted + prominent comfort routes Panthenol #8 and Allantoin #9 (E3: no Parfum, so prominent = before Sodium Benzoate #16). Cleansing is not strong, so no comfort-route review flag.",
+        "rules": [
+          "S-SENSITIVE",
+          "E1",
+          "E2",
+          "E3",
+          "E4",
+          "13.8"
+        ]
+      },
+      "secondary": null,
+      "secondaryConsidered": {
+        "target": "dry",
+        "decision": "not emitted",
+        "rationale": "'schützt Kopfhaut ... vor Austrocknung' is a preventive claim, not one of the E2 dry-scalp phrases ('trockene Kopfhaut', 'Spannungsgefühl'). The formula gate would pass (Glycerin #3), but an uncertain positioning gate fails conservative (P0).",
+        "rules": [
+          "S-DRY",
+          "S-SECONDARY",
+          "E2",
+          "P0"
+        ]
+      },
+      "focusConsistency": "focusPrimary scalp_active -> no review_focus_target_mismatch (S-FOCUS)"
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "moderate",
+      "rationale": "I1: cleansingStrength moderate -> regular. I2: written unchanged even though the irritationen bucket expects gentle (resulting match is 'supportive', a truthful trade-off). I3: the cleansing neighbour 'low' would give gentle = the bucket's expected intensity -> review_intensity_boundary.",
+      "rules": [
+        "I1",
+        "I2",
+        "I3"
+      ]
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "rationale": "D1: no Tiefenreinigung/Clarifying/occasional-use wording; the name says 'Jeden Tag'. D2/D3 not applicable.",
+      "rules": [
+        "D1",
+        "D2",
+        "D3"
+      ]
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine (weightPotential low, neighbour moderate)",
+        "rule": "T4"
+      },
+      {
+        "code": "review_intensity_boundary",
+        "detail": "cleansing moderate->regular; neighbour low->gentle would match irritationen expected gentle",
+        "rule": "I3"
+      }
+    ],
+    "informational": [
+      "No live rows exist (track-b inventory: no live catalog overlap in prod snapshot 2026-10-05), so review_live_value_differs is not raised. Rows equal the 2026-09-02 manifest proposal (fine+normal x irritationen/irritated/regular)."
+    ],
+    "openQuestionDefaultsApplied": [
+      "OQ1 not triggered (W is low), but the fine fit sits on the boundary and is flagged.",
+      "OQ3: cautious default kept -> coarse conditional; the proposed 'scalp products only' widening would add a coarse row (toward recommending) and needs Nick's yes.",
+      "OQ2, OQ4, OQ5 not applicable."
+    ]
+  },
+  "customerFit": {
+    "separationNote": "User fit (Section 15). Does not change any property above. Cosmetic guidance only.",
+    "customer": "Viola: wavy, fine strands, high density, medium length, coloured + bleached, elastic test snaps, dry scalp without flakes/itch, dry lengths, frizz, tangling, low shine, lost wave shape. Washes ~2x/week, this shampoo ~1x/week; then Syoss Intense Glaze (lamination mask) as conditioner, Neqi leave-in mist, Neqi Opulent Oil.",
+    "verdict": "keep (with conditions)",
+    "summary": "Fine to keep as one of her wash shampoos. It is light (won't flatten fine waves), fragrance-free and comfortable for a dry-feeling scalp. It is not the lever for her dry, frizzy, snapping lengths; those depend on the after-wash care and on how much the bleached lengths get washed.",
+    "whyItFits": [
+      "Low weight: suits fine strands and does not add buildup that would pull waves flat.",
+      "Fragrance-free with glycerin, panthenol, allantoin and a refatter: comfortable for a dry-feeling scalp.",
+      "Moderate (buffered) cleansing: cleans off the film from the glaze mask, leave-in and oil; that may help her wave shape come back."
+    ],
+    "watchOuts": [
+      "Cleansing strength on bleached hair: it is an ordinary sulfate shampoo, not an ultra-mild one. On bleached hair that snaps, wash the scalp and let the foam run through the lengths. Don't scrub the lengths or lather twice.",
+      "Its care for the lengths is moderate (one guar conditioner, no silicone), so it doesn't fix dryness, frizz or tangles. The conditioner step has to do that work.",
+      "The 'sensitive scalp' label is more than she needs right now; it does no harm. In our candidate projection it would only be matched to the sensitive-scalp group, not to a dry-scalp group, so the app may not suggest it to her.",
+      "Possible weight from the rest of her routine (glaze mask + leave-in + oil on fine, dense hair) is a more likely cause of lost wave shape than this shampoo."
+    ],
+    "swapIf": [
+      "Her scalp feels tight or itchy after washing, or the lengths feel squeaky or straw-like even after the mask -> try a lower-cleansing (amphoteric/glucoside-based) shampoo for the lengths.",
+      "Her colour fades noticeably fast."
+    ],
+    "callQuestions": [
+      "Which shampoo do you use for the other wash each week, and why do you switch between the two?",
+      "How do you wash: only the scalp or the lengths too, once or twice, and how does your scalp feel afterwards (tight, comfortable)?",
+      "Do you use the Syoss glaze mask every wash instead of a conditioner, and how much oil do you use? Are the waves flatter on the day after the mask?"
+    ],
+    "confidence": "moderate (no direct observation of her hair; depends on the unknown second shampoo and her technique)"
+  },
+  "openIssues": [
+    "E1 interpretation: the sensitive-scalp sentence appears only on rossmann.de, not on the pack front. Rossmann is the brand owner, so it was treated as the exact manufacturer page (moderate). If a reviewer classes it as retailer-only copy (low), S-SENSITIVE confidence falls to low -> needs_research. Pack back not seen.",
+    "'Jeden Tag' (usageRole frequent) comes from the Rossmann product name; not visible on pack front. Pack back unverified.",
+    "Preserved conflict: skinsignal.com lists an undated 17-item levulinic/anisic-acid variant. Not merged; architecture identical so no property would move.",
+    "Two blocking review flags (review_thickness_boundary fine; review_intensity_boundary). Projection is a proposal until Nick rules.",
+    "Not a sealed blind lane: same researcher saw the captured claims before the formula pass. Needs lane B before any use under the lock gate.",
+    "Directions: no German directions on rossmann.de; only the exact-EAN Rossmann Turkey text (lather, rinse, repeat if needed)."
+  ]
+}

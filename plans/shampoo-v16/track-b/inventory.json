@@ -1,26 +1,76 @@
 {
- "schema": "shampoo-v16-track-b-inventory-v1",
- "generated": "2026-10-05",
- "scope": "Paused remainder of the 52-product scan-expansion shampoo wave (admin batches 01-04) not among the 14 live products",
+ "schema": "shampoo-v16-track-b-inventory-v2",
+ "generated": "2026-10-07",
+ "scope": "Paused remainder of the 52-product scan-expansion shampoo wave (admin batches 01-04) not among the 14 live products, reconciled with catalog changes through 2026-10-07 and rulings R5-R10",
  "summary": {
-  "total_paused": 38,
-  "ready": 18,
-  "partial": 18,
+  "total_paused_2026_10_05": 38,
+  "already_live": 3,
+  "dropped_duplicate": 1,
   "blocked": 1,
-  "duplicate": 1,
-  "duplicates_vs_live": 1,
+  "still_paused": 34,
+  "researchable_products_in_cells": 33,
+  "ready": 15,
+  "partial": 18,
   "cells": 8,
-  "researchable_products_in_cells": 36,
-  "deviations_total": 8,
-  "deviations_numeric": 4,
-  "deviations_non_numeric": 4,
-  "inci_on_file": 18,
+  "inci_on_file": 15,
   "price_missing": 1,
-  "medical_language_flagged": 10,
-  "ean_verified_all": 38,
-  "images_present": 38
+  "images_present": 33,
+  "ean_verified_all": 33,
+  "deviations_pending_nick_approval_numeric": 4,
+  "deviations_non_numeric_remaining": 0,
+  "non_numeric_cleared_by_R8": 4,
+  "medical_language_flagged": 7,
+  "r10_fresh_research_products": 3,
+  "thick_oily_scalp_candidates": {
+   "strong": 1,
+   "plausible": 3,
+   "weak": 3
+  },
+  "new_live_not_in_track_b": 3
  },
  "cells": [
+  {
+   "cell": "C1",
+   "archetype": "Scalp-condition: anti-dandruff (D5: list first for Nick)",
+   "size": 2,
+   "avg_readiness_score": 85.0,
+   "ready": 1,
+   "partial": 1,
+   "members": [
+    "b02-i09",
+    "b03-i01"
+   ],
+   "review_order": 1,
+   "research_start_order": 2,
+   "note": "Rebuilt: the three ISANA MED rows (Jeden Tag, Totes Meer, pH 5,5) are live and left the cell. Only dandruff rows remain; Fructis Coco Water (oily roots) would join this cell if R7 unblocks it.",
+   "thick_oily_scalp_candidates": [
+    "b03-i01"
+   ]
+  },
+  {
+   "cell": "C2",
+   "archetype": "Koffein / Wurzel / Men; R5 priority cell (light oily-scalp shampoo for thick hair); hair-loss-adjacent language, keep cosmetic",
+   "size": 5,
+   "avg_readiness_score": 81.4,
+   "ready": 2,
+   "partial": 3,
+   "members": [
+    "b02-i01",
+    "b03-i00",
+    "b03-i07",
+    "b03-i12",
+    "b04-i04"
+   ],
+   "review_order": 2,
+   "research_start_order": 1,
+   "note": "Unchanged membership. R5 names this cell as the place to start looking for a light oily-scalp shampoo that suits thick hair.",
+   "thick_oily_scalp_candidates": [
+    "b02-i01",
+    "b03-i00",
+    "b03-i07",
+    "b03-i12"
+   ]
+  },
   {
    "cell": "C3",
    "archetype": "Repair / protein / Plex-bond / keratin",
@@ -35,23 +85,10 @@
     "b04-i02",
     "b04-i03"
    ],
-   "order": 1
-  },
-  {
-   "cell": "C1",
-   "archetype": "Scalp-condition (dandruff + sensitive-scalp targeted); D5 says list first for Nick",
-   "size": 5,
-   "avg_readiness_score": 91.8,
-   "ready": 4,
-   "partial": 1,
-   "members": [
-    "b02-i09",
-    "b02-i11",
-    "b02-i12",
-    "b03-i01",
-    "b04-i00"
-   ],
-   "order": 2
+   "review_order": 3,
+   "research_start_order": 3,
+   "note": "Unchanged membership. R10: three members are researched fresh; their v1.4 holdout results are not carried forward.",
+   "thick_oily_scalp_candidates": []
   },
   {
    "cell": "C5",
@@ -66,7 +103,10 @@
     "b02-i14",
     "b04-i06"
    ],
-   "order": 3
+   "review_order": 4,
+   "research_start_order": 4,
+   "note": "Unchanged.",
+   "thick_oily_scalp_candidates": []
   },
   {
    "cell": "C6",
@@ -82,23 +122,10 @@
     "b03-i02",
     "b03-i06"
    ],
-   "order": 4
-  },
-  {
-   "cell": "C2",
-   "archetype": "Koffein / Wurzel / Men (hair-loss-adjacent language, keep cosmetic)",
-   "size": 5,
-   "avg_readiness_score": 81.4,
-   "ready": 2,
-   "partial": 3,
-   "members": [
-    "b02-i01",
-    "b03-i00",
-    "b03-i07",
-    "b03-i12",
-    "b04-i04"
-   ],
-   "order": 5
+   "review_order": 5,
+   "research_start_order": 5,
+   "note": "Unchanged.",
+   "thick_oily_scalp_candidates": []
   },
   {
    "cell": "C4",
@@ -113,7 +140,10 @@
     "b02-i04",
     "b03-i08"
    ],
-   "order": 6
+   "review_order": 6,
+   "research_start_order": 6,
+   "note": "Unchanged.",
+   "thick_oily_scalp_candidates": []
   },
   {
    "cell": "C7",
@@ -128,7 +158,10 @@
     "b03-i05",
     "b04-i07"
    ],
-   "order": 7
+   "review_order": 7,
+   "research_start_order": 7,
+   "note": "Unchanged.",
+   "thick_oily_scalp_candidates": []
   },
   {
    "cell": "C8",
@@ -143,7 +176,12 @@
     "b03-i13",
     "b04-i05"
    ],
-   "order": 8
+   "review_order": 8,
+   "research_start_order": 8,
+   "note": "Unchanged.",
+   "thick_oily_scalp_candidates": [
+    "b03-i10"
+   ]
   }
  ],
  "products": [
@@ -193,6 +231,10 @@
     {
      "kind": "info",
      "text": "Same EAN 4015100860382 is already a v1.4 calibration holdout (data/research/shampoo-inci/holdout-v3/products/syoss-intense-repair, captured 2026-09-01). Seen product for calibration/unseen-set purposes; formula-source file exists."
+    },
+    {
+     "kind": "ruling",
+     "text": "R10: full fresh v1.6 research; v1.4 holdout result not carried forward (Nick: there was a reason it was put on hold). The old formula-source/result is only a comparison point."
     }
    ],
    "missing_for_research_start": [],
@@ -201,7 +243,13 @@
    "calibration_holdout_overlap": true,
    "readiness_bucket": "ready",
    "readiness_score": 99,
-   "cell": "C3"
+   "cell": "C3",
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "researchable",
+   "rulings_applied": [
+    "R10: researched fresh with full v1.6 research; the v1.4 holdout result is NOT carried forward (comparison point only); decide after the fresh research"
+   ],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b04-i01",
@@ -255,7 +303,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "ready",
    "readiness_score": 97,
-   "cell": "C3"
+   "cell": "C3",
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b04-i03",
@@ -305,6 +357,10 @@
     {
      "kind": "info",
      "text": "DE shop showed price but product was online-unavailable (notes-04)."
+    },
+    {
+     "kind": "ruling",
+     "text": "R10: full fresh v1.6 research; v1.4 holdout result not carried forward (Nick: there was a reason it was put on hold). The old formula-source/result is only a comparison point."
     }
    ],
    "missing_for_research_start": [],
@@ -313,7 +369,13 @@
    "calibration_holdout_overlap": true,
    "readiness_bucket": "ready",
    "readiness_score": 97,
-   "cell": "C3"
+   "cell": "C3",
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "researchable",
+   "rulings_applied": [
+    "R10: researched fresh with full v1.6 research; the v1.4 holdout result is NOT carried forward (comparison point only); decide after the fresh research"
+   ],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b04-i02",
@@ -343,11 +405,8 @@
    "protocol_template": "TPL-SHAMPOO-STD",
    "protocol_usage_text": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Für die tägliche Haarwäsche geeignet.",
    "protocol_source_url": "https://www.rossmann.de/de/de/pflege-und-duft-isana-professional-shampoo-keratin-und-repair/p/4305615830940",
-   "protocol_deviation": {
-    "reason": "Die exakte Produktanweisung verlangt eine nicht numerisch bestimmte Einwirkzeit; die Standardvorlage bleibt sonst unverändert.",
-    "packaging_text": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Für die tägliche Haarwäsche geeignet."
-   },
-   "protocol_deviation_kind": "non_numeric_wait",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": "cleared_R8",
    "source_urls": [
     "https://www.rossmann.de/de/de/pflege-und-duft-isana-professional-shampoo-keratin-und-repair/p/4305615830940",
     "https://shop.rossmann.hu/termek/isana-hair-professional-anti-haarbruch-sampon-250-ml"
@@ -360,8 +419,8 @@
    ],
    "flags": [
     {
-     "kind": "decision",
-     "text": "Recorded deviation is NON-numeric 'kurz einwirken lassen' (notes-04 called it 'genuine' pre-ruling); Nick's 2026-09-04 ruling makes it ordinary STD - needs confirmation."
+     "kind": "resolved",
+     "text": "Non-numeric wait (\"kurz einwirken lassen\") cleared by R8 (2026-10-07): ordinary STD use, no deviation."
     }
    ],
    "missing_for_research_start": [],
@@ -370,7 +429,17 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "ready",
    "readiness_score": 94,
-   "cell": "C3"
+   "cell": "C3",
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "researchable",
+   "rulings_applied": [
+    "R8: \"kurz einwirken lassen\" is ordinary TPL-SHAMPOO-STD use, no deviation, nothing special shown"
+   ],
+   "thick_oily_scalp_candidate": null,
+   "protocol_deviation_original": {
+    "reason": "Die exakte Produktanweisung verlangt eine nicht numerisch bestimmte Einwirkzeit; die Standardvorlage bleibt sonst unverändert.",
+    "packaging_text": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Für die tägliche Haarwäsche geeignet."
+   }
   },
   {
    "id": "b03-i09",
@@ -415,6 +484,14 @@
     {
      "kind": "info",
      "text": "Same EAN 3600524074654 is a v1.4 calibration holdout (holdout-v1/loreal-elvital-bond-repair-plus, captured 2026-08-26, official source, INCI on file there). Rossmann shows a shorter formula (non-blocking)."
+    },
+    {
+     "kind": "ruling",
+     "text": "R10: full fresh v1.6 research; v1.4 holdout result not carried forward (Nick: there was a reason it was put on hold). The old formula-source/result is only a comparison point."
+    },
+    {
+     "kind": "info",
+     "text": "The only INCI on file is the v1.4 holdout formula-source file. Under R10 treat it as a comparison point only; the fresh formula capture is mandatory (as for every Track B product)."
     }
    ],
    "missing_for_research_start": [],
@@ -423,7 +500,13 @@
    "calibration_holdout_overlap": true,
    "readiness_bucket": "ready",
    "readiness_score": 93,
-   "cell": "C3"
+   "cell": "C3",
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "researchable",
+   "rulings_applied": [
+    "R10: researched fresh with full v1.6 research; the v1.4 holdout result is NOT carried forward (comparison point only); decide after the fresh research"
+   ],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b02-i09",
@@ -473,6 +556,14 @@
     {
      "kind": "info",
      "text": "Candidate image and INCI come from Rossmann.dk exact-EAN page; German PDP has less INCI visibility (notes-02)."
+    },
+    {
+     "kind": "info",
+     "text": "R5 counter-signal (inferred): Claims \"dry hair and flaky scalp\" (dry-scalp positioning), so not an oily-scalp candidate on its own claim."
+    },
+    {
+     "kind": "info",
+     "text": "Availability (parallel-session notes, 2026-10-06, scratchpad only): Rossmann lists this product as \"online nicht verfügbar\". Re-check availability and the image/INCI source (Rossmann.dk) before research."
     }
    ],
    "missing_for_research_start": [],
@@ -481,7 +572,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "ready",
    "readiness_score": 97,
-   "cell": "C1"
+   "cell": "C1",
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b02-i11",
@@ -535,15 +630,35 @@
     {
      "kind": "info",
      "text": "Near-name sibling in v1.4 holdout-v1: 'ISANA MED Shampoo Jeden Tag' EAN 4305615629216 (urea formula). Different EAN and slug; do NOT merge (inferred: separate SKU)."
+    },
+    {
+     "kind": "resolved",
+     "text": "Created in prod 2026-10-07 by a parallel session (a1451c9b-fb55-406d-a81f-c513cc4ddcdf). Moved out of new creation; Track B does not research it again."
     }
    ],
    "missing_for_research_start": [],
-   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "live_catalog_overlap": "LIVE: a1451c9b-fb55-406d-a81f-c513cc4ddcdf",
    "medical_language_flag": true,
    "calibration_holdout_overlap": false,
-   "readiness_bucket": "ready",
+   "readiness_bucket": "already_live",
    "readiness_score": 97,
-   "cell": "C1"
+   "cell": null,
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "already_live",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null,
+   "cell_2026_10_05": "C1",
+   "already_live": {
+    "product_id": "a1451c9b-fb55-406d-a81f-c513cc4ddcdf",
+    "live_name": "ISANA MED Shampoo Jeden Tag (Ultra Sensitiv), 200 ml",
+    "ean": "4305615629223",
+    "submission_id": "b0462a7d-938b-4d59-83c4-a8af7ce26d68",
+    "specs": "fine+normal; scalp_route irritated; bucket irritationen; cleansing regular; template TARGETED (shampoo_everyday)",
+    "matched_by": "brand+name+size+EAN (EAN identical to the Track B row; size and name identical)",
+    "research_package": "/Users/nick/AI_work/hair_conscierge/ops/product-intake-research/2026-10-06/b0462a7d-938b-4d59-83c4-a8af7ce26d68/",
+    "prod_status": "live 2026-10-07, user_submitted, not recommended",
+    "research_standard": "Shampoo-Standard v1.6 CANDIDATE (engine state pending_lock), single researcher, not calibrated; Nick signed off 2026-10-07"
+   }
   },
   {
    "id": "b04-i00",
@@ -593,15 +708,35 @@
     {
      "kind": "info",
      "text": "German PDP exposes no directions; protocol cites Rossmann Hungary wet-hair/rinse fallback (non-DE)."
+    },
+    {
+     "kind": "resolved",
+     "text": "Created in prod 2026-10-07 by a parallel session (8a90f0fa-9cb1-458a-93f3-c2374e6d8f16). Moved out of new creation; Track B does not research it again."
     }
    ],
    "missing_for_research_start": [],
-   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "live_catalog_overlap": "LIVE: 8a90f0fa-9cb1-458a-93f3-c2374e6d8f16",
    "medical_language_flag": true,
    "calibration_holdout_overlap": false,
-   "readiness_bucket": "ready",
+   "readiness_bucket": "already_live",
    "readiness_score": 97,
-   "cell": "C1"
+   "cell": null,
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "already_live",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null,
+   "cell_2026_10_05": "C1",
+   "already_live": {
+    "product_id": "8a90f0fa-9cb1-458a-93f3-c2374e6d8f16",
+    "live_name": "ISANA MED Shampoo Totes Meer, 200 ml",
+    "ean": "4305615629230",
+    "submission_id": "d2f27a6f-6f1f-4c70-bfd9-83eaffd1bcca",
+    "specs": "fine+normal; scalp_route irritated (Nick ruling 2026-10-07, deviating from the candidate default \"normal\"); bucket irritationen; cleansing regular; template TARGETED",
+    "matched_by": "brand+name+size+EAN (EAN identical to the Track B row; size and name identical)",
+    "research_package": "/Users/nick/AI_work/hair_conscierge/ops/product-intake-research/2026-10-06/d2f27a6f-6f1f-4c70-bfd9-83eaffd1bcca/",
+    "prod_status": "live 2026-10-07, user_submitted, not recommended",
+    "research_standard": "Shampoo-Standard v1.6 CANDIDATE (engine state pending_lock), single researcher, not calibrated; Nick signed off 2026-10-07"
+   }
   },
   {
    "id": "b02-i12",
@@ -631,11 +766,8 @@
    "protocol_template": "TPL-SHAMPOO-TARGETED",
    "protocol_usage_text": "Легкими масажними рухами нанесіть на вологе волосся, залиште на короткий час і ретельно змийте.",
    "protocol_source_url": "https://hmarka.ua/uk/product/15694-shampun-isana-med-z-nejtralnym-ph-dlya-shkiry-golovy-z-3-sechovynoyu-400-ml/",
-   "protocol_deviation": {
-    "reason": "Die exakte Produktanweisung verlangt eine kurze, nicht numerisch spezifizierte Einwirkzeit; dies weicht von der Standardvorlage ohne Wartezeit ab.",
-    "packaging_text": "Легкими масажними рухами нанесіть на вологе волосся, залиште на короткий час і ретельно змийте."
-   },
-   "protocol_deviation_kind": "non_numeric_wait",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": "cleared_R8",
    "source_urls": [
     "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-ph-55-hautneutral/p/4068134039743",
     "https://www.rossmann.com.tr/isana-med-sampuan-ultra-hassas-400-ml-p-sr24090131",
@@ -653,21 +785,43 @@
      "text": "Sensitive-scalp / pH-skin-neutral, TPL-SHAMPOO-TARGETED (D5 scalp-condition)."
     },
     {
-     "kind": "decision",
-     "text": "Recorded protocol deviation is a NON-numeric wait ('kurz einwirken lassen'); Nick's 2026-09-04 ruling treats that as ordinary STD use (plan says remainder not reopened) - needs confirmation."
-    },
-    {
      "kind": "info",
      "text": "Directions come from a Ukrainian retailer (Hmarka); DE + first-party TR Rossmann corroborate EAN. No German directions on file."
+    },
+    {
+     "kind": "resolved",
+     "text": "Created in prod 2026-10-07 by a parallel session (94829f16-b21d-4061-9dcc-cbd43dcb4274). Moved out of new creation; Track B does not research it again."
     }
    ],
    "missing_for_research_start": [],
-   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "live_catalog_overlap": "LIVE: 94829f16-b21d-4061-9dcc-cbd43dcb4274",
    "medical_language_flag": true,
    "calibration_holdout_overlap": false,
-   "readiness_bucket": "ready",
+   "readiness_bucket": "already_live",
    "readiness_score": 95,
-   "cell": "C1"
+   "cell": null,
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "already_live",
+   "rulings_applied": [
+    "R8 (moot: product is live; live protocol is the TARGETED template without a deviation)"
+   ],
+   "thick_oily_scalp_candidate": null,
+   "cell_2026_10_05": "C1",
+   "already_live": {
+    "product_id": "94829f16-b21d-4061-9dcc-cbd43dcb4274",
+    "live_name": "ISANA MED Shampoo pH 5,5 hautneutral, 400 ml",
+    "ean": "4068134039743",
+    "submission_id": "8f87957a-f3dd-4ef1-84fd-29efed572049",
+    "specs": "fine+normal; scalp_route irritated; bucket irritationen; cleansing regular; template TARGETED",
+    "matched_by": "brand+name+size+EAN (EAN identical to the Track B row; size and name identical)",
+    "research_package": "/Users/nick/AI_work/hair_conscierge/ops/product-intake-research/2026-10-06/8f87957a-f3dd-4ef1-84fd-29efed572049/",
+    "prod_status": "live 2026-10-07, user_submitted, not recommended",
+    "research_standard": "Shampoo-Standard v1.6 CANDIDATE (engine state pending_lock), single researcher, not calibrated; Nick signed off 2026-10-07"
+   },
+   "protocol_deviation_original": {
+    "reason": "Die exakte Produktanweisung verlangt eine kurze, nicht numerisch spezifizierte Einwirkzeit; dies weicht von der Standardvorlage ohne Wartezeit ab.",
+    "packaging_text": "Легкими масажними рухами нанесіть на вологе волосся, залиште на короткий час і ретельно змийте."
+   }
   },
   {
    "id": "b03-i01",
@@ -716,6 +870,10 @@
     {
      "kind": "info",
      "text": "Current GTIN 8001090896049 (500 ml); historical 8700216219907 deliberately not attached (notes-03)."
+    },
+    {
+     "kind": "r5_candidate",
+     "text": "Thick hair + oily scalp candidate (plausible, inferred): Anti-dandruff, daily-use \"Apple Fresh\" variant. No claims text on file; oily-scalp/light-weight fit depends on the formula (not yet read)."
     }
    ],
    "missing_for_research_start": [
@@ -726,7 +884,16 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 73,
-   "cell": "C1"
+   "cell": "C1",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": {
+    "strength": "plausible",
+    "basis": "Anti-dandruff, daily-use \"Apple Fresh\" variant. No claims text on file; oily-scalp/light-weight fit depends on the formula (not yet read).",
+    "evidence": "inferred from name/claims only; no formula read, no weight or thickness data",
+    "rule": "R5"
+   }
   },
   {
    "id": "b02-i02",
@@ -776,7 +943,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "ready",
    "readiness_score": 98,
-   "cell": "C5"
+   "cell": "C5",
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b02-i08",
@@ -831,7 +1002,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "ready",
    "readiness_score": 98,
-   "cell": "C5"
+   "cell": "C5",
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b02-i14",
@@ -893,7 +1068,14 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "ready",
    "readiness_score": 98,
-   "cell": "C5"
+   "cell": "C5",
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "researchable",
+   "rulings_applied": [
+    "R9: standard shampoo template plus one documented extra step stating the manufacturer contact time, recorded as a documented deviation in the manifest; Nick approves each of the four in review"
+   ],
+   "thick_oily_scalp_candidate": null,
+   "protocol_deviation_status": "documented_extra_step_pending_nick_approval"
   },
   {
    "id": "b04-i06",
@@ -956,7 +1138,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 55,
-   "cell": "C5"
+   "cell": "C5",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b02-i05",
@@ -1010,7 +1196,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "ready",
    "readiness_score": 97,
-   "cell": "C6"
+   "cell": "C6",
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b02-i10",
@@ -1064,7 +1254,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "ready",
    "readiness_score": 97,
-   "cell": "C6"
+   "cell": "C6",
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b02-i13",
@@ -1118,7 +1312,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "ready",
    "readiness_score": 97,
-   "cell": "C6"
+   "cell": "C6",
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b03-i06",
@@ -1173,7 +1371,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 73,
-   "cell": "C6"
+   "cell": "C6",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b03-i02",
@@ -1229,7 +1431,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 65,
-   "cell": "C6"
+   "cell": "C6",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b02-i01",
@@ -1276,6 +1482,10 @@
     {
      "kind": "medical",
      "text": "Growth-factor/caffeine 'energy' marketing: keep cosmetic, never hair-loss efficacy (notes-02)."
+    },
+    {
+     "kind": "r5_candidate",
+     "text": "Thick hair + oily scalp candidate (plausible, inferred): Men line \"for normal hair\"; on-file claim: cleansing/refreshing with caffeine-energy complex. Product name says \"Deep Caring\", so weight is unclear."
     }
    ],
    "missing_for_research_start": [],
@@ -1284,7 +1494,16 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "ready",
    "readiness_score": 98,
-   "cell": "C2"
+   "cell": "C2",
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": {
+    "strength": "plausible",
+    "basis": "Men line \"for normal hair\"; on-file claim: cleansing/refreshing with caffeine-energy complex. Product name says \"Deep Caring\", so weight is unclear.",
+    "evidence": "inferred from name/claims only; no formula read, no weight or thickness data",
+    "rule": "R5"
+   }
   },
   {
    "id": "b04-i04",
@@ -1314,11 +1533,8 @@
    "protocol_template": "TPL-SHAMPOO-STD",
    "protocol_usage_text": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Bei Bedarf die Anwendung wiederholen. Für die tägliche Anwendung geeignet.",
    "protocol_source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-men-shampoo-energy-effect/p/4305615633428",
-   "protocol_deviation": {
-    "reason": "Die exakte Produktanweisung verlangt eine nicht numerisch bestimmte Einwirkzeit; die Standardvorlage bleibt sonst unverändert.",
-    "packaging_text": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Bei Bedarf die Anwendung wiederholen. Für die tägliche Anwendung geeignet."
-   },
-   "protocol_deviation_kind": "non_numeric_wait",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": "cleared_R8",
    "source_urls": [
     "https://www.rossmann.de/de/pflege-und-duft-isana-men-shampoo-energy-effect/p/4305615633428",
     "https://allegro.pl/produkt/isana-men-energy-power-szampon-kofeina-keratyna-7bb9abb8-31ff-4fbe-9ceb-700e88588c73?fromInactiveOffer=archived"
@@ -1331,16 +1547,20 @@
    ],
    "flags": [
     {
-     "kind": "decision",
+     "kind": "info",
      "text": "Name correction: frozen selection said 'Energy Effect', current exact-EAN pack/PDP says 'Energy Power' (admin snapshot already uses Energy Power)."
     },
     {
-     "kind": "decision",
-     "text": "Recorded deviation is NON-numeric 'kurz einwirken lassen' - same ruling confirmation as above."
+     "kind": "resolved",
+     "text": "Non-numeric wait (\"kurz einwirken lassen\") cleared by R8 (2026-10-07): ordinary STD use, no deviation."
     },
     {
      "kind": "medical",
      "text": "Caffeine/keratin 'energy' language: cosmetic only (low)."
+    },
+    {
+     "kind": "info",
+     "text": "R5 counter-signal (inferred): Claims \"feines & energieloses Haar\" (targets fine hair), so not a thick-hair candidate on its own claim."
     }
    ],
    "missing_for_research_start": [],
@@ -1349,7 +1569,17 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "ready",
    "readiness_score": 91,
-   "cell": "C2"
+   "cell": "C2",
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "researchable",
+   "rulings_applied": [
+    "R8: \"kurz einwirken lassen\" is ordinary TPL-SHAMPOO-STD use, no deviation, nothing special shown"
+   ],
+   "thick_oily_scalp_candidate": null,
+   "protocol_deviation_original": {
+    "reason": "Die exakte Produktanweisung verlangt eine nicht numerisch bestimmte Einwirkzeit; die Standardvorlage bleibt sonst unverändert.",
+    "packaging_text": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Bei Bedarf die Anwendung wiederholen. Für die tägliche Anwendung geeignet."
+   }
   },
   {
    "id": "b03-i00",
@@ -1401,6 +1631,10 @@
     {
      "kind": "info",
      "text": "Genuine numeric deviation: '2 Minuten einwirken lassen'. Highest price in set (19.95 EUR). Image was 'recovered' product-only dm asset (notes-03)."
+    },
+    {
+     "kind": "r5_candidate",
+     "text": "Thick hair + oily scalp candidate (weak, inferred): Clinical root/caffeine positioning; 19.95 EUR; no claims text on file."
     }
    ],
    "missing_for_research_start": [
@@ -1411,7 +1645,19 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 73,
-   "cell": "C2"
+   "cell": "C2",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [
+    "R9: standard shampoo template plus one documented extra step stating the manufacturer contact time, recorded as a documented deviation in the manifest; Nick approves each of the four in review"
+   ],
+   "thick_oily_scalp_candidate": {
+    "strength": "weak",
+    "basis": "Clinical root/caffeine positioning; 19.95 EUR; no claims text on file.",
+    "evidence": "inferred from name/claims only; no formula read, no weight or thickness data",
+    "rule": "R5"
+   },
+   "protocol_deviation_status": "documented_extra_step_pending_nick_approval"
   },
   {
    "id": "b03-i07",
@@ -1463,6 +1709,10 @@
     {
      "kind": "info",
      "text": "Genuine numeric deviation: '2 Minuten einwirken lassen'."
+    },
+    {
+     "kind": "r5_candidate",
+     "text": "Thick hair + oily scalp candidate (plausible, inferred): Men/caffeine \"Activator\" shampoo applied on the scalp; no claims text on file."
     }
    ],
    "missing_for_research_start": [
@@ -1473,7 +1723,19 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 73,
-   "cell": "C2"
+   "cell": "C2",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [
+    "R9: standard shampoo template plus one documented extra step stating the manufacturer contact time, recorded as a documented deviation in the manifest; Nick approves each of the four in review"
+   ],
+   "thick_oily_scalp_candidate": {
+    "strength": "plausible",
+    "basis": "Men/caffeine \"Activator\" shampoo applied on the scalp; no claims text on file.",
+    "evidence": "inferred from name/claims only; no formula read, no weight or thickness data",
+    "rule": "R5"
+   },
+   "protocol_deviation_status": "documented_extra_step_pending_nick_approval"
   },
   {
    "id": "b03-i12",
@@ -1524,6 +1786,10 @@
     {
      "kind": "info",
      "text": "Genuine numeric deviation: 'mindestens 2 Minuten einwirken lassen'."
+    },
+    {
+     "kind": "r5_candidate",
+     "text": "Thick hair + oily scalp candidate (weak, inferred): Caffeine shampoo for long hair (#langehaare); length-care positioning makes a light weight less likely."
     }
    ],
    "missing_for_research_start": [
@@ -1534,7 +1800,19 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 72,
-   "cell": "C2"
+   "cell": "C2",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [
+    "R9: standard shampoo template plus one documented extra step stating the manufacturer contact time, recorded as a documented deviation in the manifest; Nick approves each of the four in review"
+   ],
+   "thick_oily_scalp_candidate": {
+    "strength": "weak",
+    "basis": "Caffeine shampoo for long hair (#langehaare); length-care positioning makes a light weight less likely.",
+    "evidence": "inferred from name/claims only; no formula read, no weight or thickness data",
+    "rule": "R5"
+   },
+   "protocol_deviation_status": "documented_extra_step_pending_nick_approval"
   },
   {
    "id": "b02-i04",
@@ -1589,7 +1867,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "ready",
    "readiness_score": 98,
-   "cell": "C4"
+   "cell": "C4",
+   "readiness_bucket_2026_10_05": "ready",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b01-i12",
@@ -1644,7 +1926,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 73,
-   "cell": "C4"
+   "cell": "C4",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b03-i08",
@@ -1699,7 +1985,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 73,
-   "cell": "C4"
+   "cell": "C4",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b01-i14",
@@ -1753,7 +2043,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 72,
-   "cell": "C4"
+   "cell": "C4",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b03-i03",
@@ -1809,7 +2103,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 74,
-   "cell": "C7"
+   "cell": "C7",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b03-i04",
@@ -1865,7 +2163,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 74,
-   "cell": "C7"
+   "cell": "C7",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b04-i07",
@@ -1921,7 +2223,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 72,
-   "cell": "C7"
+   "cell": "C7",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b03-i05",
@@ -1981,7 +2287,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 65,
-   "cell": "C7"
+   "cell": "C7",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b03-i13",
@@ -2031,7 +2341,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 73,
-   "cell": "C8"
+   "cell": "C8",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b04-i05",
@@ -2082,7 +2396,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 72,
-   "cell": "C8"
+   "cell": "C8",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b03-i10",
@@ -2112,11 +2430,8 @@
    "protocol_template": "TPL-SHAMPOO-STD",
    "protocol_usage_text": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen.",
    "protocol_source_url": "https://www.dm.de/p/d/1588723/schauma-shampoo-for-men",
-   "protocol_deviation": {
-    "reason": "Die Quelle enthält eine Warteanweisung ohne Dauer; das STD-Template enthält keinen Wait-Schritt.",
-    "packaging_text": "kurz einwirken lassen"
-   },
-   "protocol_deviation_kind": "non_numeric_wait",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": "cleared_R8",
    "source_urls": [
     "https://www.dm.de/p/d/1588723/schauma-shampoo-for-men",
     "https://www.rossmann.de/de/pflege-und-duft-schauma-shampoo-for-men/p/4015100890792"
@@ -2127,8 +2442,12 @@
    "claims": [],
    "flags": [
     {
-     "kind": "decision",
-     "text": "Draft recorded a deviation for NON-numeric 'kurz einwirken lassen'; Nick's 2026-09-04 ruling treats that as ordinary STD (plan: remainder not reopened) - needs confirmation."
+     "kind": "resolved",
+     "text": "Non-numeric wait (\"kurz einwirken lassen\") cleared by R8 (2026-10-07): ordinary STD use, no deviation."
+    },
+    {
+     "kind": "r5_candidate",
+     "text": "Thick hair + oily scalp candidate (weak, inferred): Mild everyday men shampoo, 400 ml; no oily-scalp claim on file."
     }
    ],
    "missing_for_research_start": [
@@ -2139,7 +2458,22 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 69,
-   "cell": "C8"
+   "cell": "C8",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [
+    "R8: \"kurz einwirken lassen\" is ordinary TPL-SHAMPOO-STD use, no deviation, nothing special shown"
+   ],
+   "thick_oily_scalp_candidate": {
+    "strength": "weak",
+    "basis": "Mild everyday men shampoo, 400 ml; no oily-scalp claim on file.",
+    "evidence": "inferred from name/claims only; no formula read, no weight or thickness data",
+    "rule": "R5"
+   },
+   "protocol_deviation_original": {
+    "reason": "Die Quelle enthält eine Warteanweisung ohne Dauer; das STD-Template enthält keinen Wait-Schritt.",
+    "packaging_text": "kurz einwirken lassen"
+   }
   },
   {
    "id": "b01-i13",
@@ -2195,7 +2529,11 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "partial",
    "readiness_score": 65,
-   "cell": "C8"
+   "cell": "C8",
+   "readiness_bucket_2026_10_05": "partial",
+   "disposition": "researchable",
+   "rulings_applied": [],
+   "thick_oily_scalp_candidate": null
   },
   {
    "id": "b01-i04",
@@ -2239,7 +2577,11 @@
    "flags": [
     {
      "kind": "blocker",
-     "text": "Material formula conflict: dm exact-GTIN formula vs Garnier manufacturer formula disagree; wave-02/blocked-products.json status material_formula_conflict. Needs exact-pack manufacturer asset or independent exact-GTIN corroboration (or a physical pack read)."
+     "text": "Material formula conflict for GTIN 3600541970533: dm exact-GTIN formula vs Garnier manufacturer formula disagree (wave-02/blocked-products.json: material_formula_conflict). R7: hunt for a deciding source (exact-pack manufacturer source, independent exact-GTIN retailer source, or a physical pack photo). Stays blocked; do not classify from either list."
+    },
+    {
+     "kind": "r5_candidate",
+     "text": "Thick hair + oily scalp candidate (strong, inferred): Product name states \"fettiger Ansatz & trockene Spitzen\" (oily roots). Blocked by R7 until the formula conflict is resolved; no thickness or weight claim on file."
     }
    ],
    "missing_for_research_start": [
@@ -2250,7 +2592,23 @@
    "calibration_holdout_overlap": false,
    "readiness_bucket": "blocked",
    "readiness_score": null,
-   "cell": "held"
+   "cell": null,
+   "readiness_bucket_2026_10_05": "blocked",
+   "disposition": "blocked",
+   "rulings_applied": [
+    "R7: stays in Track B, blocked, never classified from either conflicting list until a deciding source exists"
+   ],
+   "thick_oily_scalp_candidate": {
+    "strength": "strong",
+    "basis": "Product name states \"fettiger Ansatz & trockene Spitzen\" (oily roots). Blocked by R7 until the formula conflict is resolved; no thickness or weight claim on file.",
+    "evidence": "inferred from name/claims only; no formula read, no weight or thickness data",
+    "rule": "R5"
+   },
+   "blocker_resolution_routes": [
+    "exact-pack manufacturer source",
+    "independent exact-GTIN retailer source",
+    "physical pack photo"
+   ]
   },
   {
    "id": "b03-i11",
@@ -2292,19 +2650,26 @@
    "claims": [],
    "flags": [
     {
-     "kind": "duplicate",
-     "text": "ALREADY IN CATALOG as 'Pantene Grow Abundance' (prod id 7373656d-5fd7-46e8-81a3-2ef29e3c4c18, cohort C50, rec=true). Identical EAN 8006530060042 / 290 ml sits in data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-e5-v1.json for that exact product id. Must NOT be created as new; at most an existing_product_updates no-op."
+     "kind": "resolved",
+     "text": "Confirmed duplicate of live \"Pantene Grow Abundance\" (7373656d-5fd7-46e8-81a3-2ef29e3c4c18); EAN 8006530060042 is already attached in prod. Dropped from new creation. No existing_product_updates no-op needed."
     }
    ],
    "missing_for_research_start": [
     "INCI text not stored in repo (re-freeze from live source required)"
    ],
-   "live_catalog_overlap": "DUPLICATE: prod 7373656d-5fd7-46e8-81a3-2ef29e3c4c18 Pantene Grow Abundance",
+   "live_catalog_overlap": "LIVE DUPLICATE: 7373656d-5fd7-46e8-81a3-2ef29e3c4c18 (EAN 8006530060042 already attached in prod, Nick-confirmed 2026-10-07)",
    "medical_language_flag": false,
    "calibration_holdout_overlap": false,
-   "readiness_bucket": "duplicate",
+   "readiness_bucket": "dropped_duplicate",
    "readiness_score": null,
-   "cell": "none (duplicate)"
+   "cell": null,
+   "readiness_bucket_2026_10_05": "duplicate",
+   "disposition": "dropped_duplicate",
+   "rulings_applied": [
+    "Nick 2026-10-07: duplicate, drop; no update needed"
+   ],
+   "thick_oily_scalp_candidate": null,
+   "cell_2026_10_05": "none (duplicate)"
   }
  ],
  "ancillary_existing_product_updates": [
@@ -2320,5 +2685,52 @@
    "source": "admin/batch-03.json existing_product_updates",
    "status_in_prod_snapshot_2026_10_05": "Unknown: product not in the shampoo-specs snapshot (no product_shampoo_specs rows); verify in prod before including."
   }
- ]
+ ],
+ "held_outside_cells": [
+  {
+   "id": "b01-i04",
+   "reason": "R7 blocked; would join C1 once resolved",
+   "thick_oily_scalp_candidate": "strong (inferred)"
+  }
+ ],
+ "dropped": [
+  {
+   "id": "b03-i11",
+   "reason": "duplicate of live 7373656d-5fd7-46e8-81a3-2ef29e3c4c18"
+  }
+ ],
+ "new_live_not_in_track_b": [
+  {
+   "product_id": "1311e51c-7941-4d2c-b9b4-7a450ee37f15",
+   "name": "Balea Professional Shampoo Hydra Volume, 250 ml",
+   "ean": "4066447990126",
+   "note": "recommended; price-audit replacement swap for Balea Ultimate Volume (2026-10-05); not one of the 38. Spec (local package 2026-10-05): fine, balanced, normal, gentle. Research package: /Users/nick/AI_work/hair_conscierge/ops/product-intake-research/2026-10-05/41e9950e-0da7-459d-b190-e56918242d20/"
+  },
+  {
+   "product_id": "a836ef4f-f406-4557-b908-0155919e2c4f",
+   "name": "ISANA MED Shampoo Anti Schuppen, 200 ml",
+   "ean": "4305615629209",
+   "note": "not one of the 38 (differs from Track B \"ISANA Shampoo Anti-Schuppen Wasserminze & Grüner Tee\", 4305615566146). Specs: fine+normal, dandruff and oily rows, regular. Package: /Users/nick/AI_work/hair_conscierge/ops/product-intake-research/2026-10-06/337d26bc-0cf8-4471-a536-434f75bdae7f/"
+  },
+  {
+   "product_id": "34697aec-761c-45e7-9a92-986f786dd022",
+   "name": "ISANA MED Ultra Sensitiv+ Anti-Schuppen Shampoo, 200 ml",
+   "ean": "4068134169129",
+   "note": "not one of the 38. Specs: fine+normal, dandruff, regular. Package: /Users/nick/AI_work/hair_conscierge/ops/product-intake-research/2026-10-06/c76157b5-2df1-4dbd-9a09-e16d39a644c3/"
+  }
+ ],
+ "parallel_isana_med_research": {
+  "standard": "Shampoo-Standard v1.6 CANDIDATE (payload draft engine: shampoo-standard, state pending_lock, target v1.6). Not locked, not calibrated, one researcher per product; Nick signed off the values 2026-10-07 (review.manual_reviewed, reviewed_by nick).",
+  "durable_packages": "/Users/nick/AI_work/hair_conscierge/ops/product-intake-research/2026-10-06/<submission-id>/ (gitignored: /ops/* in .gitignore; payload.json holds final.product, sources, identifiers, category_specs, field_rationales, review; research.md is an empty template)",
+  "submission_ids": {
+   "Jeden Tag (Ultra Sensitiv)": "b0462a7d-938b-4d59-83c4-a8af7ce26d68",
+   "Totes Meer": "d2f27a6f-6f1f-4c70-bfd9-83eaffd1bcca",
+   "Anti Schuppen": "337d26bc-0cf8-4471-a536-434f75bdae7f",
+   "pH 5,5 hautneutral": "8f87957a-f3dd-4ef1-84fd-29efed572049",
+   "Ultra Sensitiv+ Anti-Schuppen": "c76157b5-2df1-4dbd-9a09-e16d39a644c3"
+  },
+  "scratchpad_not_durable": "/private/tmp/claude-501/-Users-nick-AI-work-hair-conscierge/400d6eb2-12b2-48ab-8924-d69f4d5e664d/scratchpad/isana-med/ (per-product INCI + all-property reports isana-med-*.md/json, range.md, uebersicht.md, rework.sql); session scratchpad only, may disappear",
+  "protocol_note": "Live protocols use the normative TARGETED/DANDRUFF templates (docs/product-application-protocol-templates.md P3) because the packs carry no directions; those templates contain a \"2-3 Minuten einwirken lassen\" step. No R8/R9 deviation is recorded for them."
+ },
+ "supersedes": "shampoo-v16-track-b-inventory-v1 (2026-10-05); see reconciliation-2026-10-07.md"
 }

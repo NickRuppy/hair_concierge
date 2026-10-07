@@ -1,59 +1,37 @@
-# v1.6 candidate: decisions for Nick
+# v1.6 candidate: what is still open
 
-Five choices change which shampoos people see. The candidate standard picks the cautious option for each one, because a rule we're unsure about must never recommend more products. Each answer below is either "keep the cautious option" or "you accept a wider rule".
+The five earlier questions are all decided (rulings R2–R6, 2026-10-07, in `../rulings.md`) and are written into the standard:
 
-**How the counts were made:** the new hair-thickness rule applied to the 46 recommended products that already have v1.4 research, using the live snapshot from 2026-10-05. Each product keeps its current scalp group. "7 → 1" means 7 recommended products serve that hair-thickness × scalp combination today, and 1 would under the candidate. These are estimates only: v1.6 research may change individual product values.
+| Earlier question | Ruling | Where in the standard |
+| --- | --- | --- |
+| Moderate-weight shampoo for fine hair | R2: amber (shown, ranked lower) | T1, T5, W-LIVE |
+| Heavy shampoo for normal hair | R3: amber | T1 |
+| Moderate-conditioning shampoo for thick hair, scalp products | R4: thickness never hides a scalp-concern product | T6 |
+| Heavy volume shampoo as the oily-scalp pick (Monday) | R5: temporary named exception + no-gap rule | S-OILY, 13.11 N1, 13.12 X1 |
+| "Tiefenreinigung" products | R6: stay regular shampoos (`clarifying`) and also get a deep-cleanser entry | I1, D2, D3 |
 
-What the candidate does overall: fewer fine-hair matches, many more normal-hair matches (normal + balanced scalp goes 4 → 11), and fewer thick-hair matches.
+Two smaller questions remain. Neither blocks the calibration lanes, because both concern how the live app shows a result, not how a product is classified. Both must be settled before the R2 PR (new `weight` column + shampoo rule) ships.
 
-## 1. Should a "moderately heavy" shampoo count as right for fine hair?
+## 1. How does the app turn "weight" into green or amber?
 
-**Example:** Neqi Volume Victory is a volume shampoo. Today it's recommended for fine hair. Its formula is rated "moderate" weight, meaning some residue is likely but limited.
+R2 says to judge shampoo weight "like the conditioner". Copied exactly, the conditioner rule would disagree with the thickness table you approved in two places:
 
-- **Cautious (in the candidate):** moderate weight is not a default fine-hair match. Fine + balanced scalp goes 7 → 1, and fine + dandruff goes 4 → 2. No combination is left empty.
-- **Wider:** moderate weight still counts for fine hair unless the formula is also highly conditioning. Fine + balanced scalp goes 7 → 11.
-- **Earlier judgments split 3 to 2:** the 10-product calibration said "not ideal" three times, while the 5-product pilot said "ideal" twice for formulas rated the same way.
+- **Normal hair + light shampoo.** Example: Salthouse Anti Schuppen (light, per its v1.4 research) for a normal-hair user. The table says green. A conditioner copy says amber, because the conditioner's target for normal hair is "medium".
+- **Thick hair + light shampoo.** Example: a light curl shampoo, or Salthouse Anti Schuppen, for a thick-hair user. The table says amber (or green if it is very caring). A conditioner copy says it's two steps off, so it's hidden. For a dandruff or sensitive-scalp product that would break R4.
 
-**Recommendation:** keep the cautious rule for now. Put at least three fine-hair, moderate-weight products in the gold set, and decide at lock time based on what that calibration shows.
+The conditioner also moves its target when someone says their hair goes flat. If the shampoo did the same, the app would show different colors than the research decided.
 
-## 2. Should a "heavy" shampoo count as right for normal hair?
+**Recommendation:** the app uses the thickness table, not a conditioner copy. If a product has a row for your thickness, it's shown; it's green when its weight is right for that thickness (fine: light; normal: light or moderate; thick: heavy), otherwise amber. No adjustment for "goes flat". One small known gap: a light but very caring shampoo is green for thick hair in the research but would show amber in the app, because the app has no conditioning field. That errs on the careful side, so I'd accept it rather than add a second column. (Standard T7.)
 
-**Example:** OGX Renewing + Argan Oil is recommended for normal hair today. Its formula is rated "high" weight, meaning hair is likely to lose movement.
+## 2. Should Monday Volume show green or amber for thick hair + oily scalp?
 
-- **Cautious (in the candidate):** heavy formulas only fit thick hair. Normal + balanced scalp loses OGX Renewing, and normal + oily scalp loses Monday Volume. Both combinations still grow overall because of the moderate-weight products.
-- **Wider:** heavy formulas still count for normal hair unless they're also highly conditioning.
-- **Earlier judgments split 2 to 2.**
+Monday is the only thick-hair + oily-scalp pick and is kept only through the temporary exception X1. By the weight rule it's a perfect thick-hair match (heavy), so the app would show it **green**. You said the exception "doesn't sound good".
 
-**Recommendation:** keep the cautious rule. Few products are affected, and normal hair has plenty of other options.
+- **Green (in the candidate):** no special case in the app. It's temporary anyway and goes as soon as a lighter replacement passes review. Any replacement will show amber, because an oily-scalp shampoo can't be heavy or very caring.
+- **Amber:** more honest about the compromise, but needs a one-product rule in the app's code.
 
-## 3. Should a moderately conditioning shampoo count as right for thick hair?
-
-**Example:** Head & Shoulders Anti Schuppen Sensitive is today's thick-hair anti-dandruff pick, and its conditioning is "moderate".
-
-- **Cautious (in the candidate):** only highly conditioning or heavy formulas are a default thick-hair match. Thick + dandruff goes 2 → **0**, which triggers your D9 rule (no combination may lose its last product). Thick + sensitive scalp goes 2 → 1, and curl shampoos like Cantu lose thick-hair eligibility.
-- **Wider, only for scalp products:** for anti-dandruff and sensitive-scalp shampoos, moderate conditioning counts for thick hair. Thick + dandruff becomes about 5.
-- **Wider, for everything:** thick + balanced scalp goes 4 → 10.
-
-**Recommendation:** use the scalp-products-only version. Dandruff and sensitive-scalp care don't depend on how thick the hair is, and the conditioner step covers the lengths. The pilot already reasoned this way for Head & Shoulders Classic Clean. This widens the rule, so it needs your explicit yes.
-
-## 4. Can a heavy volume shampoo be the oily-scalp pick?
-
-**Example:** Monday Volume Kraft & Fülle is the **only** recommended thick-hair + oily-scalp shampoo (added in PR #449 to fill that gap). Its formula is rated "high" weight.
-
-- **Cautious (in the candidate):** an oily-scalp pick must not be heavy, because residue at the roots works against the claim. Monday is held for your review and proposed as thick hair + balanced scalp only. That leaves thick + oily **empty** (D9).
-- **Wider:** the oily-scalp claim wins even when the formula is heavy.
-
-**Recommendation:** keep the cautious rule. Rule on Monday individually under D9: either keep its oily row as a documented one-off exception until a replacement exists, or accept the gap. Then look for a lighter thick-hair oily-scalp shampoo among the paused new products (Track B).
-
-## 5. Do "Tiefenreinigung" (deep-cleansing) products stay regular shampoos?
-
-**Example:** Balea Tiefenreinigung is a recommended fine-hair + oily-scalp shampoo today.
-
-- **Candidate:** a product sold as deep cleansing ("Tiefenreinigung", "Clarifying", or "1× pro Woche" on the pack) with a strong reset formula moves to the deep-cleansing category, out of regular shampoo. Fine + oily goes 5 → 4. Herbal Essences Tiefenreinigung (not recommended) moves too. Wahre Schätze Aktivkohle depends on its exact pack wording.
-- **Alternative:** keep them as regular shampoos with "clarifying" cleansing.
-
-**Recommendation:** move them out, since their own name says reset product. But only apply this once the deep-cleansing category can actually show them to users. Until then, leave their live rows unchanged.
+**Recommendation:** keep green and focus on finding the replacement (Track B, cell C2).
 
 ## Earlier rules proposed for re-testing
 
-None. The two rules v1.4 rejected (counting ingredient routes to set weight, and "a polymer means moderate weight") are not needed to answer any question above.
+None. The two rules v1.4 rejected (counting ingredient routes to set weight, and "a polymer means moderate weight") are not needed for anything above.

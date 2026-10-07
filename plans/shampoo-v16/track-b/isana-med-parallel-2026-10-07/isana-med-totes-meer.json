@@ -1,0 +1,545 @@
+{
+  "identity": {
+    "slug": "isana-med-totes-meer",
+    "brand": "ISANA MED",
+    "productName": "Shampoo Totes Meer",
+    "packFrontName": "ISANA MED Totes Meer Salz Anti Juckreiz Shampoo",
+    "market": "DE",
+    "packSize": "200 ml",
+    "gtins": [
+      "4305615629230"
+    ],
+    "rossmannArticleNumber": "042820",
+    "brandOwner": "Dirk Rossmann GmbH (private label; 'Hergestellt für Dirk Rossmann GmbH', 'Hergestellt in Deutschland')",
+    "priceEur": 0.99,
+    "availability": "Listed and orderable on rossmann.de on 2026-10-06 (delivery date shown). codecheck.info says 'Nicht mehr erhältlich' - stale, overridden by the live Rossmann listing.",
+    "captureDate": "2026-10-06",
+    "identityConfidence": "high",
+    "identityEvidence": "EAN 4305615629230 printed under the barcode on the current Rossmann pack-back image; Rossmann PDP URL id = EAN; Rossmann HU page shows the same EAN and formula.",
+    "nearbySkusNotMerged": [
+      "ISANA MED Shampoo Jeden Tag (Ultra Sensitiv) 4305615629223",
+      "ISANA MED Shampoo Jeden Tag 4305615629216 (urea formula)",
+      "ISANA MED Waschlotion/Dusche Totes Meer (body care, not shampoo)"
+    ]
+  },
+  "formulaSource": {
+    "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Lauryl Lactate, Guar Hydroxypropyltrimonium Chloride, Glycol Distearate, Parfum, Menthol, Laureth-4, Maris Sal, Allantoin, Bisabolol, Sodium Benzoate, Potassium Sorbate, Sodium Chloride, Citric Acid, Glycerin, Formic Acid, Terpineol",
+    "inciCount": 19,
+    "inciSha256": "0a9ce49c3c9a71eeb4cd8e8ebc4dc4b2431235b5e08cbd0e096985e48ddbbda3",
+    "fingerprintNormalization": "lowercase, trim, split on comma, joined with '|'",
+    "canonicalSource": "S1 (tier 1: exact German pack evidence for this GTIN; barcode visible on the same image)",
+    "sources": [
+      {
+        "id": "S1-pack-back",
+        "tier": 1,
+        "what": "Pack back image on rossmann.de: full INCI (19 items, ends with Terpineol), WIRKUNG claims, EAN barcode, 200 ml, vegan, Hergestellt fuer Dirk Rossmann GmbH",
+        "url": "https://www.rossmann.de/media-neu/567/MAM_56763627/MAM_56763627_SHOP_IMAGE_1.4.png",
+        "accessed": "2026-10-06",
+        "method": "Downloaded the image and read it visually (zoomed crop of the INCI block)"
+      },
+      {
+        "id": "S1b-pack-front",
+        "tier": 1,
+        "what": "Pack front: 'TOTES MEER SALZ', 'ANTI JUCKREIZ SHAMPOO', naturreine Mineralien, Bisabolol & Allantoin, ohne Silikone, pH hautneutral, 'empfindliche Kopfhaut', klinisch getestet, dermatologisch bestaetigt",
+        "url": "https://www.rossmann.de/media-neu/567/MAM_56763628/MAM_56763628_SHOP_IMAGE_1.4.png",
+        "accessed": "2026-10-06",
+        "method": "Downloaded image, visual read"
+      },
+      {
+        "id": "S2-rossmann-pdp",
+        "tier": "2/3 (brand owner = retailer)",
+        "what": "PDP text: name, 200 ml, 0,99 EUR, Art.-Nr. 042820, claims; Inhaltsstoffe tab lists 18 items (same order, no Terpineol)",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-totes-meer/p/4305615629230",
+        "accessed": "2026-10-06",
+        "method": "Read in the user's Chrome via the Claude-in-Chrome extension (WebFetch and curl both get a bot-challenge page); INCI read from the page's embedded GRP_INHALTSSTOFFE data"
+      },
+      {
+        "id": "S3-rossmann-hu",
+        "tier": 4,
+        "what": "Same EAN, same 18-item INCI as the DE PDP; corroboration only",
+        "url": "https://shop.rossmann.hu/termek/isana-med-holt-tengeri-sampon-200-ml",
+        "accessed": "2026-10-06"
+      },
+      {
+        "id": "S4-incidecoder",
+        "tier": 4,
+        "what": "Same 18-item INCI, page dated 10/10/2021; old corroboration only (the URL now redirects to inkeedecoder.com)",
+        "url": "https://incidecoder.com/products/isana-med-shampoo-totes-meer",
+        "accessed": "2026-10-06"
+      },
+      {
+        "id": "S5-codecheck",
+        "tier": 4,
+        "what": "Product found, marked 'Nicht mehr erhältlich', no INCI shown; stale",
+        "url": "https://www.codecheck.info/product.search?q=4305615629230",
+        "accessed": "2026-10-06"
+      }
+    ],
+    "conflicts": [
+      "The pack image lists 19 items ending in Terpineol. The PDP text, the Rossmann HU page and incidecoder (2021) list 18 items without Terpineol; positions 1-18 are identical. Most likely a label update that declares an extra fragrance component (Terpineol) and has not reached the PDP text list. Following the source hierarchy, the pack wins. This has no effect on any property: it is a trace fragrance component at the last position and only adds a little to the fragrance counter-signal."
+    ],
+    "changedSinceCapture": {
+      "changed": "minor",
+      "detail": "The 2026-09-02 capture (shampoo-manifest-04.json / batch-04) used the 18-item PDP list. The current pack adds Terpineol at position 19. Positions 1-18 are unchanged. No property changes.",
+      "capturedInciSha256_18item": "87470b013ec64e722747910a4a0e21077b2c21cd2670767d76e0b39c21631d0e"
+    },
+    "usageDirections": "None on the pack images or the DE PDP. Only the HU retailer says to apply to wet hair and rinse (non-DE fallback). No frequency limit, no 'every day' claim.",
+    "exactProductClaims": {
+      "packFront": [
+        "ANTI JUCKREIZ SHAMPOO",
+        "empfindliche Kopfhaut",
+        "naturreine Mineralien",
+        "Bisabolol & Allantoin",
+        "ohne Silikone",
+        "pH hautneutral",
+        "klinisch getestet",
+        "dermatologisch bestätigt"
+      ],
+      "packBack": [
+        "WIRKUNG: ... Spezialentwicklung, die empfindliche und juckende Kopfhaut beruhigt",
+        "Original Totes Meer Salz Mineralien",
+        "juckreizlindernder Wirkstoff-Komplex",
+        "Schutz vor Austrocknung für Kopfhaut & Haar",
+        "HAUTVERTRÄGLICHKEIT: dermatologisch bestätigt",
+        "vegan"
+      ]
+    }
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: a standard SLES chassis buffered by a betaine. There is no second anionic surfactant, no reset route and no deep-cleansing claim, so rule C1 applies directly.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3
+        },
+        {
+          "ingredient": "Laureth-4",
+          "position": 9
+        },
+        {
+          "ingredient": "Lauryl Lactate",
+          "position": 4
+        }
+      ],
+      "notes": "Laureth-4 (#9) is a nonionic solubilizer, not an extra cleansing route. Lauryl Lactate (#4) is an emollient/refatting ester that slightly softens the cleanse.",
+      "counterSignals": [
+        "SLES is the primary surfactant (#2) and buffering is limited to one amphoteric. This is not a mild amino-acid or nonionic chassis, so 'low' is ruled out."
+      ],
+      "neighboringAlternative": "strong",
+      "ruleIds": [
+        "C1"
+      ],
+      "sources": [
+        "S1-pack-back",
+        "S2-rossmann-pdp"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one meaningful conditioning system (cationic guar #5) plus light supporting routes (emollient ester #4, pearlizer #6, late glycerin #17). There is no silicone, so slip stays limited.",
+      "formulaFacts": [
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 5
+        },
+        {
+          "ingredient": "Lauryl Lactate",
+          "position": 4
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 6
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 17
+        }
+      ],
+      "counterSignals": [
+        "Silicone-free ('ohne Silikone'). Glycol Distearate is mainly an opacifier. Glycerin is late (#17). Guar is the only substantive deposition route, which pulls toward 'low'."
+      ],
+      "neighboringAlternative": "low",
+      "ruleIds": [
+        "Section 5 anchors"
+      ],
+      "sources": [
+        "S1-pack-back",
+        "S2-rossmann-pdp"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: the only deposition route is one cationic guar without a silicone or oil payload for it to carry, plus a light rinse-off ester and a pearlizer, all in an effective SLES/betaine base. The 'one light polymer, weak refatter' low anchor fits.",
+      "subjudgments": {
+        "depositionLoad": "light",
+        "persistence": "low",
+        "resetCapacity": "moderate"
+      },
+      "formulaFacts": [
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 5
+        },
+        {
+          "ingredient": "Lauryl Lactate",
+          "position": 4
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 6
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3
+        }
+      ],
+      "whyThisBand": "W1 sets silicone + cationic guar + late amodimethicone in a sulfate/betaine base at 'moderate'. This formula has neither silicone, only the guar, so it sits one step lower.",
+      "whyNotNeighborBand": "For 'moderate', guar at #5 together with Lauryl Lactate #4 and Glycol Distearate #6 would have to count as 'interacting lighter routes', and guar can build up with repeated use. Not chosen because none of these is a persistent payload and the SLES base gives moderate reset.",
+      "counterSignals": [
+        "Guar is fairly early (#5, before Parfum). Cationic guar can build up on porous or bleached hair with repeated use."
+      ],
+      "neighboringAlternative": "moderate",
+      "disagreementWithPriorLabel": "The batch-04 v1.4 adjudication (2026-09-02) recorded weight 'moderate'. This v1.6 pass says 'low'. Flagged for adjudication. The value decides the fine-hair fit (T1/T4).",
+      "ruleIds": [
+        "Section 6 anchors",
+        "W1"
+      ],
+      "sources": [
+        "S1-pack-back",
+        "S2-rossmann-pdp"
+      ]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "moderate",
+      "rationale": "scalp_active: the pack front names the product 'ANTI JUCKREIZ SHAMPOO' for 'empfindliche Kopfhaut', and scalpComfortTarget is targeted (7.2 row: explicit sensitive/itchy scalp positioning + targeted).",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          {
+            "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+            "position": 5
+          }
+        ],
+        "limitation": "Not a repair/moisture decision. The 'Schutz vor Austrocknung' claim is secondary and has no coherent humectant cluster behind it."
+      },
+      "claimRole": "candidate",
+      "formulaFacts": [
+        {
+          "ingredient": "Menthol",
+          "position": 8
+        },
+        {
+          "ingredient": "Allantoin",
+          "position": 11
+        },
+        {
+          "ingredient": "Bisabolol",
+          "position": 12
+        },
+        {
+          "ingredient": "Lauryl Lactate",
+          "position": 4
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 17
+        }
+      ],
+      "counterSignal": "The comfort routes Allantoin (#11) and Bisabolol (#12) come after Parfum (#7) and Menthol (#8); the chassis is SLES-led and the formula is fragranced (Parfum #7, Terpineol #19).",
+      "neighboringAlternative": "general",
+      "decisionTrace": "The blind formula alone reads as a fragranced SLES/betaine shampoo with a guar, a cooling agent and late comfort actives: compatible with a scalp-comfort role but not proving one. After unblinding, the front-pack anti-itch/sensitive-scalp positioning is dominant and Section 10 gives 'targeted', so the focus resolves to scalp_active. The counter-signal is recorded. Without 'targeted' it would fall to 'general'.",
+      "ruleIds": [
+        "7.2",
+        "10"
+      ],
+      "sources": [
+        "S1b-pack-front",
+        "S1-pack-back",
+        "S2-rossmann-pdp"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty. The v1.4 secondary 'gentle' is retired and dropped under Appendix A, because the primary scalp_active already covers the sensitive-scalp role. 'Schutz vor Austrocknung für Kopfhaut & Haar' does not qualify as a moisture secondary: the formula has no coherent humectant cluster (only Glycerin #17), so the care direction would be nonspecific (F1).",
+      "formulaFacts": [
+        {
+          "ingredient": "Glycerin",
+          "position": 17
+        },
+        {
+          "ingredient": "Lauryl Lactate",
+          "position": 4
+        }
+      ],
+      "counterSignals": [
+        "There is an explicit anti-drying claim for scalp and hair on the pack back."
+      ],
+      "neighboringAlternative": "moisture",
+      "ruleIds": [
+        "Appendix A",
+        "8",
+        "F1",
+        "F2"
+      ],
+      "sources": [
+        "S1-pack-back"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular, the default: no daily/frequent-use claim, cleansing is moderate (so 'alternating' is impossible), no recognized active (so not 'treatment'), no reset wording.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3
+        }
+      ],
+      "counterSignals": [
+        "The mild-sounding claims 'pH hautneutral' and 'dermatologisch bestätigt' are not frequent-use positioning."
+      ],
+      "neighboringAlternative": "frequent",
+      "ruleIds": [
+        "9"
+      ],
+      "sources": [
+        "S1-pack-back",
+        "S1b-pack-front",
+        "S2-rossmann-pdp"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "rationale": "Targeted: explicit sensitive/itchy-scalp positioning on the pack front and back, backed by a supportive architecture: buffered (moderate) cleansing, Allantoin #11, Bisabolol #12, an emollient ester #4 and pH-neutral positioning. Menthol (#8) is the cooling anti-itch component the claim relies on.",
+      "formulaFacts": [
+        {
+          "ingredient": "Allantoin",
+          "position": 11
+        },
+        {
+          "ingredient": "Bisabolol",
+          "position": 12
+        },
+        {
+          "ingredient": "Menthol",
+          "position": 8
+        },
+        {
+          "ingredient": "Lauryl Lactate",
+          "position": 4
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 17
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3
+        }
+      ],
+      "counterSignals": [
+        "Parfum #7, Menthol #8 and Terpineol #19 add fragrance/cooling exposure. SLES-led chassis. Comfort actives are late. Section 10 treats these as counter-signals, not a veto, in an explicit anti-itch product."
+      ],
+      "neighboringAlternative": "not_targeted",
+      "ruleIds": [
+        "10"
+      ],
+      "sources": [
+        "S1b-pack-front",
+        "S1-pack-back"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete INCI contains neither Piroctone Olamine nor Climbazole. Dead Sea salt, menthol and bisabolol do not count.",
+      "formulaFacts": [],
+      "counterSignals": [],
+      "neighboringAlternative": "none",
+      "ruleIds": [
+        "11"
+      ],
+      "sources": [
+        "S1-pack-back",
+        "S2-rossmann-pdp"
+      ]
+    }
+  },
+  "projection": {
+    "status": "proposal_blocked_for_review",
+    "preconditions": "All eight properties are final at moderate or high confidence. scalpComfortTarget and dandruffSupport are not unknown. Identity is canonical (pack tier 1).",
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low gives fine ideal. T4: W's neighbor 'moderate' would make fine conditional, so review_thickness_boundary is raised. Open question 1 (should moderate weight count for fine hair) only matters if adjudication moves W to moderate; then the cautious default makes fine conditional.",
+        "ruleIds": [
+          "T1",
+          "T4"
+        ]
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low gives normal ideal. W's neighbor 'moderate' keeps it ideal, so no flag.",
+        "ruleIds": [
+          "T1",
+          "T4"
+        ]
+      },
+      {
+        "thickness": "coarse",
+        "fit": "conditional",
+        "confidence": "moderate",
+        "rationale": "T1: W low and C moderate (not high) give conditional. C's neighbor 'low' leaves it conditional. Not emitted (T5). Open question 3 (moderate conditioning for coarse hair on scalp products) would not apply after S-FAIL, because the target is no longer a scalp target.",
+        "ruleIds": [
+          "T1",
+          "T5"
+        ]
+      }
+    ],
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "proposedVia": "S-FAIL",
+        "confidence": "moderate",
+        "rationale": "The E2 sensitive claim passes with high positioning confidence ('ANTI JUCKREIZ', 'empfindliche Kopfhaut' on the pack front), and scalpComfortTarget is targeted. But the S-SENSITIVE formula gate also needs a prominent comfort route (E3/E4): every E4 comfort route here comes after Parfum (#7): Allantoin #11, Bisabolol #12. Positions 1-6 contain no listed comfort route. The gate fails, so S-FAIL proposes 'ordinary' plus review_specialist_gate_failed. Menthol is not on the closed E4 list, and treating it as an unlisted comfort route would be a recommending move under P0, so it is not used.",
+        "ruleIds": [
+          "E1",
+          "E2",
+          "E3",
+          "E4",
+          "S-SENSITIVE",
+          "S-FAIL",
+          "P0"
+        ]
+      },
+      "secondary": null,
+      "notConsidered": [
+        {
+          "target": "dry",
+          "reason": "'Schutz vor Austrocknung für Kopfhaut & Haar' (pack back, E1 moderate) protects against drying; it does not say the product is for dry scalp ('trockene Kopfhaut'). Under P0 it does not count as an E2 dry claim. Even if it did, no E4 humectant route is prominent (Glycerin #17). Lauryl Lactate #4 would only count as an unlisted route, which is a recommending move. The conservative result is the same: no dry target. Covered by the same review flag."
+        },
+        {
+          "target": "dandruff",
+          "reason": "No dandruff claim and dandruffSupport is not_supported."
+        },
+        {
+          "target": "oily",
+          "reason": "No oily-scalp claim."
+        }
+      ],
+      "sFocusCheck": "No specialist target is projected, so there is no review_focus_target_mismatch. Note: focusPrimary scalp_active together with an 'ordinary' target is the converse mismatch, which the reviewer will see under the S-FAIL flag."
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate gives regular. I3: the neighbor 'strong' would also give regular, so no flag. (If the sensitive target were restored, the bucket 'irritationen' expects gentle. The row would then rank as supportive, which is a truthful trade-off under I2.)",
+      "ruleIds": [
+        "I1",
+        "I2",
+        "I3"
+      ]
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "rationale": "D1: no Tiefenreinigung/clarifying wording, no occasional-use direction.",
+      "ruleIds": [
+        "D1"
+      ]
+    },
+    "reviewFlags": [
+      {
+        "code": "review_specialist_gate_failed",
+        "detail": "S-SENSITIVE formula gate failed: no E4 comfort route before Parfum (#7). Allantoin #11 and Bisabolol #12 are late. Proposed 'ordinary'. Nick rules whether this anti-itch product keeps an 'irritationen' row.",
+        "ruleIds": [
+          "S-FAIL"
+        ]
+      },
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine: ideal rests on W low. W's neighbor 'moderate' (also the batch-04 v1.4 label) would make fine conditional.",
+        "ruleIds": [
+          "T4"
+        ]
+      }
+    ],
+    "reviewLiveValueDiffers": "Not raised: no live rows were checked (no DB access in this run, and the product is not in data/product-catalog-snapshot.json). The proposal differs from the draft manifest-04 rows (irritationen/irritated/regular x fine, normal, coarse). It drops the irritationen bucket and coarse, and adds normal/balanced for fine and normal. Raise this flag if the product turns out to be live.",
+    "proposedRows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular"
+      }
+    ],
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "informationalWarnings": []
+  },
+  "customerFit": {
+    "separation": "Section 15: this is user fit, derived from the product truth above. It changes no classification.",
+    "customer": "Viola: wavy, fine strands, high density, medium length, colored and bleached, elastic test 'snaps', dry scalp with no current flakes or itch, main problem dry lengths; also frizz, tangling, low shine, lost wave shape. Uses this shampoo about 1x/week of ~2 washes/week, then Syoss Intense Glaze lamination mask, Neqi leave-in mist, Neqi Opulent Oil.",
+    "verdict": "depends",
+    "verdictShort": "OK to keep as her once-a-week wash if her scalp feels comfortable with it, but it does nothing for her main problem (dry, very fragile lengths). Swap it if her lengths feel rough or tangled after it, or her scalp feels tight.",
+    "why": [
+      "What it is built for: soothing an itchy, sensitive scalp. Viola currently has no itch and no flakes, so she isn't using its main job.",
+      "Cleansing: a normal SLES-based cleanse, buffered, not harsh but not especially gentle either. Her bleached hair snaps when stretched, so it is very fragile and porous; a milder cleanse would be kinder to her lengths. At only 1x/week, followed by a rich mask, the extra stress is limited.",
+      "Weight: light, no silicones, no oils. That suits fine strands and helps waves keep their shape. Once a week it can also clear residue from the lamination mask and the oil, which may help her waves.",
+      "Care: only moderate softness (one conditioning polymer, no silicone). It won't detangle or smooth much on its own, so tangling and frizz right after washing depend on the mask.",
+      "Scalp comfort: it contains fragrance and menthol (the cooling feel). Most people are fine with this, but on a dry scalp the cooling can feel tight or tingly. If so, that's a reason to swap.",
+      "Engine view: under the v1.6 proposal it would be a normal-scalp shampoo that fits fine and normal strands. Viola's scalp is dry, and this is not a dry-scalp product. The proposal is still blocked for review."
+    ],
+    "watch": [
+      "How her lengths feel straight after washing with it compared with her other shampoo: rougher, more tangles, more frizz?",
+      "Scalp after washing: tight, tingly, itchy or flaky? (cosmetic comfort only)",
+      "Technique: shampoo on the scalp only, let the lather run through the lengths, no scrubbing of the lengths, always follow with the mask.",
+      "Lost wave shape is more likely from damage and heavy layering (lamination mask + oil on fine hair) than from this light shampoo."
+    ],
+    "callQuestions": [
+      "Which shampoo do you use for your other wash each week, and why did you pick the Totes Meer one - did you have an itchy scalp at some point?",
+      "How do your scalp and lengths feel right after this shampoo compared with the other one? Tight or tingly scalp? Rougher or more tangled lengths?",
+      "Do you put it only on your scalp or through your lengths too, and how much of the mask and oil do you use? Do your waves look flatter on the days after the oil?"
+    ],
+    "boundaries": "Cosmetic guidance only. No medical claims. If an itchy or flaky scalp comes back or persists, suggest seeing a doctor or dermatologist rather than treating it with shampoo choice."
+  },
+  "openIssues": [
+    "weightPotential low (this pass) vs moderate (batch-04 v1.4 adjudication): decides the fine-hair fit. Blocking flag review_thickness_boundary.",
+    "S-SENSITIVE gate failure: an explicit front-pack anti-itch product loses its sensitive target only because its comfort actives sit after Parfum under the E3 proxy. Nick should rule; this is a likely calibration case for E3/E4 (Menthol is not on the closed comfort list).",
+    "Pack INCI (19 items, + Terpineol) vs PDP text (18 items): label likely updated; property-neutral. The PDP text is stale.",
+    "No German usage directions found (pack images and DE PDP show none); only the HU fallback.",
+    "Live catalog status not verified (no DB read in this run).",
+    "All results are v1.6 candidate output: not locked, not production-active, not usable for intake or recommendations until lock and adapter re-pin."
+  ]
+}
