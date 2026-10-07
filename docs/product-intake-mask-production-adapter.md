@@ -104,13 +104,15 @@ Formula integrity is checked exactly as in the leave-in adapter: `rawInciSha256`
 | `careDirection` protein/moisture/balanced | `balance_direction` (same value; never `null` from this adapter) | D6 |
 | `repairSupportLevel` low/medium/high | `repair_support_level` (same value) | property set field 4 |
 | `focus` primary + secondary | `functional_benefits`: smoothing → `smoothing_frizz_control`, detangling → `detangling_slip`, shine → `shine` | D2 |
-| `conditioningLevel` moderate/high | adds `detangling_slip` | **MAD-1 baseline — implementation default mirroring the leave-in AD-3a baseline clause; pending Nick's ruling** |
+| `careDirection` moisture, or `moisture` focus, or general primary focus | adds `moisture_softness` (exists since migration `20261007120000`) | MAD-1, ruled 2026-10-07 |
+| `conditioningLevel` moderate/high | additionally adds `detangling_slip` | MAD-1 baseline, ruled 2026-10-07 |
+| no member from the rows above | falls back to `moisture_softness` | MAD-1, ruled 2026-10-07 |
 | normalized complete INCI | presence-only `ingredient_flags` (rules shared with the leave-in adapter) | property set |
 | `hairThicknessFit` (echo of `weight_potential`) | `suitable_thicknesses` | property set field 7 |
 
-`moisture`, `repair`, `curl_support` and `color_care` focus values have no `functional_benefits` counterpart (fixed vocabulary); the moisture identity reaches production through `balance_direction` (D5 adapter note). `functional_benefits` is required non-empty by the intake validator; a record whose focus and baseline produce no member is refused (`needs_research`), never padded.
+`repair`, `curl_support` and `color_care` focus values have no `functional_benefits` counterpart (fixed vocabulary); the moisture identity reaches production through `balance_direction` and, since the 2026-10-07 MAD-1 ruling, also through `moisture_softness`. `functional_benefits` is required non-empty by the intake validator; when focus, care direction and baseline produce no member, the adapter falls back to `moisture_softness`. Emptiness never causes a refusal.
 
-Retained research-only (reported in `omittedResearchProperties`): `bond_route`, `damage_fit`, `texture_fit`, the four focus values without a production column, `balanced_reading`, `hinweise`, the overload counter-signal, multi-use scope, the tail-marker trace, the direct properties and the assumption notes. No semantically unrelated current column is used to store them.
+Retained research-only (reported in `omittedResearchProperties`): `bond_route`, `damage_fit`, `texture_fit`, the focus values without a dedicated production column (`repair`, `curl_support`, `color_care`; `moisture` is reported here too although it now also drives the `moisture_softness` care chip), `balanced_reading`, `hinweise`, the overload counter-signal, multi-use scope, the tail-marker trace, the direct properties and the assumption notes. No semantically unrelated current column is used to store them.
 
 Note (production, not research): the current mask matcher consumes `concentration` as a temporary repair-need proxy (`mask_concentration_is_temporary_repair_level_proxy`). Under D1 the adapter writes the conditioning-intensity twin into that column; whether matching later reads `repair_support_level` instead is a separate production-policy decision.
 

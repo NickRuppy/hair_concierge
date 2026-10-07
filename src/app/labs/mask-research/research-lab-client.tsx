@@ -924,10 +924,11 @@ function DetailPanel({
           className="mt-5 rounded-md border border-stone-200 bg-white p-4"
           data-mask-projected-outputs="true"
         >
-          <h3 className="font-semibold">Projizierte Ausgaben</h3>
+          <h3 className="font-semibold">Historische Projektion (Stand des Forschungslaufs)</h3>
           <p className="mt-1 text-xs leading-5 text-stone-600">
-            Deterministische Folge der oben geprüften Feldwerte. Wird angezeigt, nicht separat
-            freigegeben — wer einer Ausgabe widerspricht, widerspricht dem Feld, das sie treibt.
+            Aus dem gespeicherten Forschungsdatensatz übernommen, nicht live berechnet — sie kann
+            vom heutigen Adapter abweichen. Die aktuelle Projektion liefert{" "}
+            <code>npm run research:mask:production-adapter</code>. Wird nicht separat freigegeben.
           </p>
           <dl className="mt-3 grid gap-2 text-sm text-stone-800 sm:grid-cols-2">
             <div>
@@ -1139,6 +1140,7 @@ export function MaskResearchLabClient({ data }: { data: MaskLabData }) {
     const sequence = ++requestSequence.current
     const reviewedProductId = selectedDetail.productId
     const reviewedProductName = selectedDetail.productName
+    const reviewedRecordFingerprint = selectedDetail.recordFingerprint
     setPending(true)
     setFeedback("Entscheidung wird gespeichert …")
     try {
@@ -1148,6 +1150,7 @@ export function MaskResearchLabClient({ data }: { data: MaskLabData }) {
         body: JSON.stringify({
           action,
           itemId: reviewedProductId,
+          recordFingerprint: reviewedRecordFingerprint,
           ...(propertyPath ? { propertyPath } : {}),
           ...(comment.trim() ? { comment: comment.trim() } : {}),
         }),

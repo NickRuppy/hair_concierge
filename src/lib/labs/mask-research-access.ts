@@ -308,6 +308,7 @@ const blindToFinalChangeSchema = z
 const referenceRecordSchema = z
   .object({
     schemaVersion: z.string(),
+    standardVersion: z.string().trim().min(1).optional(),
     g0: g0Schema,
     tailMarker: tailMarkerSchema.optional(),
     profile: profileSchema.optional(),
@@ -590,15 +591,28 @@ export type MaskResearchLabData = {
 }
 
 export type MaskReviewInput =
-  | { action: "approve_property"; itemId: string; propertyPath: string; comment?: string }
-  | { action: "request_rework"; itemId: string; propertyPath: string; comment: string }
-  | { action: "approve_product"; itemId: string; comment?: string }
-  | { action: "approve_boundary"; itemId: string; comment?: string }
+  | {
+      action: "approve_property"
+      itemId: string
+      recordFingerprint: string
+      propertyPath: string
+      comment?: string
+    }
+  | {
+      action: "request_rework"
+      itemId: string
+      recordFingerprint: string
+      propertyPath: string
+      comment: string
+    }
+  | { action: "approve_product"; itemId: string; recordFingerprint: string; comment?: string }
+  | { action: "approve_boundary"; itemId: string; recordFingerprint: string; comment?: string }
 
 export type MaskReviewResult =
   | { status: "accepted"; item: MaskProductDetail; reviewDecision: MaskLabReviewDecision }
   | { status: "blocked"; item: MaskProductDetail; blockers: string[] }
   | { status: "not_found"; error: string }
+  | { status: "stale_record"; error: string }
   | { status: "persistence_failed"; error: string }
 
 /* -------------------------------------------------------------------------
@@ -724,9 +738,12 @@ function buildDetail(
     runStatus === "pending" ? "pending" : excluded ? "excluded_product_form" : "eligible"
 
   const recordFingerprint = maskReviewFingerprint({ product, record })
+  // Reviews bind to the standard the record itself was produced under, not a
+  // hardcoded draft id; the cohort's standard is only the fallback.
+  const standardVersion = record?.standardVersion ?? cohort.standard
   const staleReview = stored
     ? !(
-        stored.recordFingerprint === recordFingerprint && stored.standardVersion === cohort.standard
+        stored.recordFingerprint === recordFingerprint && stored.standardVersion === standardVersion
       )
     : false
 
@@ -867,7 +884,7 @@ function buildDetail(
     properties,
     propertyStatuses,
     recordFingerprint,
-    standardVersion: cohort.standard,
+    standardVersion,
     projectedOutputs,
     canApproveProduct:
       runStatus === "completed" && !excluded && reviewStatus !== "approved" && !hasOpenRework,
@@ -974,6 +991,7 @@ export const maskResearchReviewRequestSchema = z.discriminatedUnion("action", [
     .object({
       action: z.literal("approve_property"),
       itemId: z.string().trim().min(1),
+      recordFingerprint: z.string().trim().min(1),
       propertyPath: z.string().trim().min(1),
       comment: z.string().trim().min(1).optional(),
     })
@@ -982,6 +1000,7 @@ export const maskResearchReviewRequestSchema = z.discriminatedUnion("action", [
     .object({
       action: z.literal("request_rework"),
       itemId: z.string().trim().min(1),
+      recordFingerprint: z.string().trim().min(1),
       propertyPath: z.string().trim().min(1),
       comment: z.string().trim().min(1),
     })
@@ -990,6 +1009,7 @@ export const maskResearchReviewRequestSchema = z.discriminatedUnion("action", [
     .object({
       action: z.literal("approve_product"),
       itemId: z.string().trim().min(1),
+      recordFingerprint: z.string().trim().min(1),
       comment: z.string().trim().min(1).optional(),
     })
     .strict(),
@@ -997,6 +1017,7 @@ export const maskResearchReviewRequestSchema = z.discriminatedUnion("action", [
     .object({
       action: z.literal("approve_boundary"),
       itemId: z.string().trim().min(1),
+      recordFingerprint: z.string().trim().min(1),
       comment: z.string().trim().min(1).optional(),
     })
     .strict(),
@@ -1020,6 +1041,11 @@ function reviewSnapshot(
 export function reviewMaskResearchItem(input: MaskReviewInput): MaskReviewResult {
   const item = getMaskResearchProductDetail(input.itemId)
   if (!item) return { status: "not_found", error: "Mask-Research-Eintrag nicht gefunden." }
+  if (input.recordFingerprint !== item.recordFingerprint)
+    return {
+      status: "stale_record",
+      error: "Der Datensatz hat sich seit dem Laden geändert — bitte neu laden.",
+    }
 
   if (item.runStatus === "pending") {
     return {
