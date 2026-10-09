@@ -5,13 +5,15 @@ import type {
   PlanCategoryDecision,
   PlanProductRole,
 } from "@/lib/personal-plan/types"
-import type {
-  Stage1DirectAcceptanceAvailability,
-  Stage1ProductExampleCommerce,
-  Stage1ProductExamplePreviewResponse,
-  Stage1ProductExampleReasoning,
-  Stage1ProductExampleRolePreview,
+import {
+  STAGE1_MARKET_SEGMENT_BADGE_CATEGORIES,
+  type Stage1DirectAcceptanceAvailability,
+  type Stage1ProductExampleCommerce,
+  type Stage1ProductExamplePreviewResponse,
+  type Stage1ProductExampleReasoning,
+  type Stage1ProductExampleRolePreview,
 } from "@/lib/personal-plan/product-preview-contract"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 
 import { frequencyLabel, presentationFor } from "./decision-presentation"
 import { CATEGORY_ROLE_POLICIES, stage1ExampleVerdictAllowed } from "./products/authorities"
@@ -19,9 +21,25 @@ import {
   loadStage3RecommendationCandidates,
   type Stage3RecommendationCandidateSelection,
 } from "./products/authority/catalog-facts"
-import type { Stage3CategoryProductFacts } from "./products/authority/contracts"
+import type {
+  Stage3AuthorityEvaluation,
+  Stage3AuthorityInput,
+  Stage3CategoryProductFacts,
+} from "./products/authority/contracts"
 import { evaluateStage3Authority } from "./products/authority/evaluate"
+import {
+  allocateBudgetPortfolio,
+  type BudgetRoleAllocation,
+  type BudgetRoleInput,
+} from "./products/budget-policy"
+import { budgetNeedDistances } from "./products/comparison-dimensions"
 import { stage3DecisionKey, type PersonalPlanCategory } from "./products/contracts"
+import {
+  rankStage3ComparisonCandidates,
+  STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
+  usablePackagePriceEur,
+} from "./products/fit-comparison"
+import { statedMainConcernDimensions } from "./products/production-persistence-gateway"
 import { presentCatalogCommerce } from "./routine/commerce"
 
 export type Stage1ProductExamplePreviewCandidateLoader = (
@@ -96,11 +114,25 @@ export function stage1PreviewedRoleDecisionKeys(
   )
 }
 
+/**
+ * The saved budget a proposal is previewed under. Callers pass it only while the shopping-budget
+ * gate is on and a budget was actually saved; absent means "no budget", never "uncapped".
+ */
+export type Stage1ProductExamplePreviewBudget = {
+  budget: ShoppingBudget
+  /** Stated concerns from the saved diagnostics — exception priority only, as in Stage 3. */
+  statedConcerns?: { currentConcerns: readonly string[]; primaryConcern: string | null }
+}
+
 export async function computeStage1ProductExamplePreviews(input: {
   personalPlanId: string
   sourceNeedVersionId: string
   snapshot: InitialNeedPlanSnapshot
   loadCandidates: Stage1ProductExamplePreviewCandidateLoader
+  /** Omitted (consultation today) or null: previews stay exactly the price-neutral ones. */
+  budget?: Stage1ProductExamplePreviewBudget | null
+  /** Drogerie/Profi badge gate; off unless the caller turns it on. */
+  marketSegmentDisplayEnabled?: boolean
 }): Promise<Stage1ProductExamplePreviewResponse> {
   const roleTasks = stage1PreviewRoleTasks(input.snapshot)
 
@@ -125,8 +157,21 @@ export async function computeStage1ProductExamplePreviews(input: {
     return promise
   }
 
-  const previews = await Promise.all(
-    roleTasks.map((task) => computeRolePreview(task, input, loadCandidatesForTask(task))),
+  // Every role is evaluated first; the budget (when one is saved) is then allocated ONCE over the
+  // whole proposal, so one flexible allowance and one no-ceiling mix cover all roles together —
+  // exactly as Stage 3 and direct acceptance allocate them.
+  const assessments = await Promise.all(
+    roleTasks.map((task) => assessRole(task, input, loadCandidatesForTask(task))),
+  )
+  const allocations = input.budget
+    ? allocateProposal(assessments, input.budget, input.snapshot)
+    : null
+  const previews = assessments.map((assessment) =>
+    previewForAssessment(assessment, input, {
+      allocation: allocations?.get(assessment.decisionKey) ?? null,
+      budgeted: allocations !== null,
+      marketSegmentDisplayEnabled: input.marketSegmentDisplayEnabled === true,
+    }),
   )
   return {
     schemaVersion: 2,
@@ -219,26 +264,29 @@ function defaultsWouldAddScalpCareRoles(snapshot: InitialNeedPlanSnapshot): bool
   )
 }
 
-async function computeRolePreview(
+type RoleAssessment = {
+  task: RoleTask
+  decisionKey: string
+  authorityVersion: string
+  /** Null when the candidate load or the evaluation failed: the role falls back. */
+  evaluated: {
+    candidates: Stage3CategoryProductFacts[]
+    authorityInput: Stage3AuthorityInput
+    evaluation: Stage3AuthorityEvaluation
+  } | null
+}
+
+async function assessRole(
   task: RoleTask,
   input: {
     sourceNeedVersionId: string
     snapshot: InitialNeedPlanSnapshot
   },
   loadCandidates: Promise<Stage3CategoryProductFacts[]>,
-): Promise<Stage1ProductExampleRolePreview> {
+): Promise<RoleAssessment> {
   const { category, decision, role } = task
   const authorityVersion = CATEGORY_ROLE_POLICIES[category].authorityVersion
   const decisionKey = stage3DecisionKey(category, role, null)
-  const fallback = (): Stage1ProductExampleRolePreview => ({
-    kind: "fallback",
-    category,
-    role,
-    decisionKey,
-    authorityVersion,
-    fallback: "post_refinement",
-  })
-
   try {
     const candidates = await loadCandidates
     const authorityInput = {
@@ -256,14 +304,127 @@ async function computeRolePreview(
       productFacts: null,
       recommendationCandidates: candidates as never,
       heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
-    }
+    } as unknown as Stage3AuthorityInput
     const evaluation = evaluateStage3Authority(authorityInput)
-    if (evaluation.status !== "known" || !evaluation.recommendation) return fallback()
-    const selectedProductId = evaluation.recommendation.productId
-    const selected = candidates.find((candidate) => candidate.productId === selectedProductId)
-    const imageUrl = selected?.presentationImageUrl?.trim()
-    if (!selected || !imageUrl) return fallback()
-    if (evaluation.recommendationFactFingerprint !== selected.factFingerprint) return fallback()
+    return {
+      task,
+      decisionKey,
+      authorityVersion,
+      evaluated: { candidates, authorityInput, evaluation },
+    }
+  } catch {
+    return { task, decisionKey, authorityVersion, evaluated: null }
+  }
+}
+
+/**
+ * One budget allocation for the whole previewed proposal, built the way the Stage-3 gateway's
+ * `computeProposalAllocation` builds it for a fresh draft: the authority's full fit ranking per
+ * role, usable package prices, need distances, required = a role of a non-optional need, and no
+ * owned or preserved products (nothing is captured yet). A role whose evaluation failed takes no
+ * part — it shows a fallback either way.
+ */
+function allocateProposal(
+  assessments: readonly RoleAssessment[],
+  budget: Stage1ProductExamplePreviewBudget,
+  snapshot: InitialNeedPlanSnapshot,
+): Map<string, BudgetRoleAllocation> {
+  const roles = assessments.flatMap((assessment): BudgetRoleInput[] => {
+    if (!assessment.evaluated) return []
+    const { authorityInput, evaluation } = assessment.evaluated
+    return [
+      {
+        roleKey: assessment.decisionKey,
+        ranked: rankStage3ComparisonCandidates(authorityInput, evaluation, "web").map(
+          (candidate) => ({
+            productId: candidate.productId,
+            priceEur: usablePackagePriceEur(candidate.facts),
+            verdict: candidate.verdict,
+            cautionCount: candidate.cautionCount,
+            needDistances: budgetNeedDistances(authorityInput, candidate.facts),
+          }),
+        ),
+        required: assessment.task.decision.needTier !== "optional",
+        ownedKept: false,
+        preserved: null,
+      },
+    ]
+  })
+  const result = allocateBudgetPortfolio({
+    budget: budget.budget,
+    roles,
+    mainConcernDimensions: statedMainConcernDimensions({
+      statedConcerns: budget.statedConcerns,
+      refinedNeedSnapshot: snapshot,
+    }),
+    displayLimit: STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
+  })
+  return new Map(result.roles.map((role) => [role.roleKey, role]))
+}
+
+/**
+ * The product a role previews: the authority's own recommendation without a budget; with one,
+ * the allocated default — mirroring the gateway's `budgetedEvaluation`, which swaps the
+ * recommendation only for a known evaluation that offers `plan_recommendation`. A strict budget
+ * without an affordable product allocates no default, and the role shows no product example.
+ */
+function previewedProduct(
+  evaluation: Stage3AuthorityEvaluation,
+  candidates: readonly Stage3CategoryProductFacts[],
+  allocation: BudgetRoleAllocation | null,
+  budgeted: boolean,
+): { selected: Stage3CategoryProductFacts; factFingerprint: string } | null {
+  if (evaluation.status !== "known") return null
+  const raw = evaluation.recommendation
+  const swaps =
+    budgeted && allocation !== null && evaluation.allowedActions.includes("plan_recommendation")
+  const productId = swaps ? allocation.defaultProductId : (raw?.productId ?? null)
+  if (!productId) return null
+  const selected = candidates.find((candidate) => candidate.productId === productId)
+  if (!selected) return null
+  if (raw && productId === raw.productId) {
+    if (evaluation.recommendationFactFingerprint !== selected.factFingerprint) return null
+    return {
+      selected,
+      factFingerprint: evaluation.recommendationFactFingerprint ?? selected.factFingerprint,
+    }
+  }
+  // A budget-allocated product other than the authority's own pick: the gateway pins it by the
+  // ranked candidate's fingerprint, which is the catalog facts' fingerprint.
+  return { selected, factFingerprint: selected.factFingerprint }
+}
+
+function previewForAssessment(
+  assessment: RoleAssessment,
+  input: {
+    sourceNeedVersionId: string
+    snapshot: InitialNeedPlanSnapshot
+  },
+  options: {
+    allocation: BudgetRoleAllocation | null
+    budgeted: boolean
+    marketSegmentDisplayEnabled: boolean
+  },
+): Stage1ProductExampleRolePreview {
+  const { task, decisionKey, authorityVersion } = assessment
+  const { category, decision, role } = task
+  const fallback = (): Stage1ProductExampleRolePreview => ({
+    kind: "fallback",
+    category,
+    role,
+    decisionKey,
+    authorityVersion,
+    fallback: "post_refinement",
+  })
+
+  try {
+    if (!assessment.evaluated) return fallback()
+    const { candidates, authorityInput, evaluation } = assessment.evaluated
+    const picked = previewedProduct(evaluation, candidates, options.allocation, options.budgeted)
+    if (!picked) return fallback()
+    const { selected } = picked
+    const imageUrl = selected.presentationImageUrl?.trim()
+    if (!imageUrl) return fallback()
 
     // Some authorities use the first verdict to describe an uncovered portfolio slot.
     // Evaluate the recommendation itself before exposing its presentation data.
@@ -296,6 +457,15 @@ async function computeRolePreview(
         purchaseLinkStatus: selected.purchaseLinkStatus ?? null,
         updatedAt: selected.priceCheckedAt ?? null,
       })
+    const overBudget = options.allocation?.candidates.find(
+      (view) => view.productId === selected.productId,
+    )?.overBudget
+    const marketSegment =
+      options.marketSegmentDisplayEnabled &&
+      STAGE1_MARKET_SEGMENT_BADGE_CATEGORIES.has(category) &&
+      (selected.marketSegment === "drugstore" || selected.marketSegment === "professional")
+        ? selected.marketSegment
+        : null
     const commerce: Stage1ProductExampleCommerce = {
       priceEur: selected.priceEur ?? null,
       purchaseLinkStatus: selected.purchaseLinkStatus ?? null,
@@ -309,6 +479,9 @@ async function computeRolePreview(
       availabilityLabel,
       productUrl,
       affiliateDisclosure,
+      // Optional transport: emitted only under a budget / the badge gate, never as `null`.
+      ...(options.budgeted ? { overBudget: overBudget === true } : {}),
+      ...(marketSegment ? { marketSegment } : {}),
     }
 
     return {
@@ -321,7 +494,7 @@ async function computeRolePreview(
       imageUrl,
       verdict: selectedEvaluation.verdict,
       authorityVersion,
-      factFingerprint: evaluation.recommendationFactFingerprint ?? selected.factFingerprint,
+      factFingerprint: picked.factFingerprint,
       commerce,
       reasoning,
     }

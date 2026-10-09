@@ -4743,3 +4743,110 @@ test("Oil combines every eligibility row while its product spec stays singular",
   assert.equal(oilEligibilityMaybeSingleCalls, 0)
   assert.ok(oilSpecMaybeSingleCalls >= 1)
 })
+
+test("shopping context reads the owner's budget and stated concerns in one narrow query", async () => {
+  const reads: Array<{ table: string; columns: string; filters: Array<[string, unknown]> }> = []
+  const clientFor = (row: unknown, error: unknown = null) => ({
+    from(table: string) {
+      const read = { table, columns: "", filters: [] as Array<[string, unknown]> }
+      reads.push(read)
+      const chain = {
+        select: (columns: string) => {
+          read.columns = columns
+          return chain
+        },
+        eq: (column: string, value: unknown) => {
+          read.filters.push([column, value])
+          return chain
+        },
+        maybeSingle: async () => ({ data: row, error }),
+      }
+      return chain
+    },
+  })
+  const load = (row: unknown, error?: unknown) =>
+    createSupabaseStage3ProductionPersistence(clientFor(row, error) as never).loadShoppingContext(
+      "owner-1",
+    )
+  const none = { budget: null, currentConcerns: [], primaryConcern: null }
+
+  assert.deepEqual(
+    await load({
+      shopping_preferences: { budget: { kind: "capped", limitEur: 5, allowExceptions: true } },
+      diagnostics: {
+        currentConcerns: ["breakage", "low_volume_or_weighed_down", 7],
+        primaryConcern: "breakage",
+      },
+    }),
+    {
+      budget: { kind: "capped", limitEur: 5, allowExceptions: true },
+      currentConcerns: ["breakage", "low_volume_or_weighed_down"],
+      primaryConcern: "breakage",
+    },
+  )
+  assert.equal(reads.length, 1)
+  assert.deepEqual(reads[0], {
+    table: "hair_profiles",
+    columns: "shopping_preferences, diagnostics",
+    filters: [["user_id", "owner-1"]],
+  })
+  assert.deepEqual(await load({ shopping_preferences: { budget: { kind: "uncapped" } } }), {
+    ...none,
+    budget: { kind: "uncapped" },
+  })
+  // Absent, empty, or invalid documents are "not collected", never "uncapped".
+  assert.deepEqual(await load(null), none)
+  assert.deepEqual(await load({ shopping_preferences: null, diagnostics: null }), none)
+  assert.deepEqual(await load({ shopping_preferences: {}, diagnostics: [] }), none)
+  assert.deepEqual(
+    await load({
+      shopping_preferences: { budget: { kind: "capped", limitEur: 10 } },
+      diagnostics: { currentConcerns: "breakage", primaryConcern: 3 },
+    }),
+    none,
+  )
+  await assert.rejects(
+    () => load(null, { message: "boom" }),
+    /stage3_shopping_preferences_unavailable/,
+  )
+})
+
+test("catalog package prices are one batched commerce-only products read", async () => {
+  const reads: Array<{ table: string; columns: string; ids: unknown }> = []
+  const client = {
+    from(table: string) {
+      const read = { table, columns: "", ids: null as unknown }
+      reads.push(read)
+      const chain = {
+        select: (columns: string) => {
+          read.columns = columns
+          return chain
+        },
+        in: async (_column: string, ids: unknown) => {
+          read.ids = ids
+          return {
+            data: [
+              { id: "a", price_eur: 8, purchase_link_status: "available" },
+              { id: "b", price_eur: "9.5", purchase_link_status: "unavailable" },
+              { id: "c", price_eur: null, purchase_link_status: "weird" },
+            ],
+            error: null,
+          }
+        },
+      }
+      return chain
+    },
+  }
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
+
+  assert.deepEqual(await persistence.loadCatalogPackagePrices([]), [])
+  assert.equal(reads.length, 0)
+  assert.deepEqual(await persistence.loadCatalogPackagePrices(["a", "b", "c"]), [
+    { productId: "a", priceEur: 8, purchaseLinkStatus: "available" },
+    { productId: "b", priceEur: 9.5, purchaseLinkStatus: "unavailable" },
+    { productId: "c", priceEur: null, purchaseLinkStatus: null },
+  ])
+  assert.deepEqual(reads, [
+    { table: "products", columns: "id,price_eur,purchase_link_status", ids: ["a", "b", "c"] },
+  ])
+})

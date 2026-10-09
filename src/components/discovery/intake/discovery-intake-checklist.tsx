@@ -7,6 +7,7 @@ import type { ScanSearchResult } from "@/app/api/scan/search/route"
 import type { ScanDecodedIdentifier, ScannerRuntime } from "@/components/scan/scanner"
 import type { DiscoveryHeatStylingV1 } from "@/lib/discovery/heat-styling"
 import { MOTION_MS } from "@/lib/motion"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 
 import {
   answerFrequency,
@@ -30,6 +31,7 @@ import {
   type DiscoveryProductSlot,
 } from "./add-flow"
 import { DiscoveryAddSheet, type DiscoveryAddSheetHandlers } from "./discovery-add-sheet"
+import { DiscoveryBudgetScreen } from "./discovery-budget-screen"
 import { DiscoveryHeatScreen, DiscoveryIntakeThanks } from "./discovery-heat-flow"
 import { motionMs, SlideStage } from "./discovery-motion"
 import { DiscoveryProductsScreen } from "./discovery-products-screen"
@@ -59,6 +61,9 @@ import type { DiscoveryIntakeItemView, DiscoveryIntakeProductBody } from "./type
  *
  *   products „Deine Produkte" — ghost slots that fill with product cards; one persistent add
  *            sheet (search → usage → frequency, typed path, scanner). Sticky „Weiter".
+ *   budget   „Was darf ein Pflegeprodukt ungefähr kosten?" — only with the shopping-budget flag
+ *            on, and skipped when a budget is already saved. Saved through the member route
+ *            (`/api/profile/shopping-preferences`), never into the intake.
  *   routine  „Deine Routine" — her products as day cards; „Stimmt so" / „Noch was ergänzen".
  *   heat     „Hitze & Styling" — one question per screen, saved whole on the way to the final
  *            page „Alles bereit für unser Gespräch", whose „Abschicken" submits.
@@ -79,7 +84,7 @@ import type { DiscoveryIntakeItemView, DiscoveryIntakeProductBody } from "./type
 const GENERIC_ERROR = "Das hat gerade nicht geklappt. Versuch es nochmal."
 const SUBMIT_ERROR = "Das Absenden hat nicht geklappt. Versuch es nochmal."
 
-type Screen = "products" | "routine" | "heat" | "done"
+type Screen = "products" | "budget" | "routine" | "heat" | "done"
 
 function isAlreadySubmitted(error: unknown): boolean {
   return error instanceof DiscoveryIntakeRequestError && error.code === "already_submitted"
@@ -128,6 +133,8 @@ export function DiscoveryIntakeChecklist({
   initialHeatStyling = null,
   retailerSearchEnabled,
   scannerRuntime,
+  budgetEnabled = false,
+  initialBudget = null,
 }: {
   initialItems: DiscoveryIntakeItemView[]
   initialSubmitted: boolean
@@ -136,8 +143,15 @@ export function DiscoveryIntakeChecklist({
   retailerSearchEnabled: boolean
   /** Camera/detector seam handed to `<Scanner>`; production leaves it undefined. */
   scannerRuntime?: ScannerRuntime
+  /** `SHOPPING_BUDGET_ENABLED`: adds the budget screen after her products. Off = today's flow. */
+  budgetEnabled?: boolean
+  /** Her saved budget (narrow, flag-on read): with one, the budget screen is skipped. */
+  initialBudget?: ShoppingBudget | null
 }) {
   const [items, setItems] = useState(initialItems)
+  const [budgetSaved, setBudgetSaved] = useState(initialBudget !== null)
+  /** Where „Deine Routine" steps back to: the budget screen only when she just came from it. */
+  const [routineBack, setRoutineBack] = useState<"products" | "budget">("products")
   const [screen, setScreen] = useState<Screen>(initialSubmitted ? "done" : "products")
   const [screenDirection, setScreenDirection] = useState<1 | -1>(1)
   const [flow, setFlow] = useState<AddFlow | null>(null)
@@ -481,6 +495,11 @@ export function DiscoveryIntakeChecklist({
       openSheet(openAddEdit(missing, current, { frequencyOnly: true }))
       return
     }
+    if (budgetEnabled && !budgetSaved) {
+      go("budget", 1)
+      return
+    }
+    setRoutineBack("products")
     go("routine", 1)
   }
 
@@ -545,12 +564,24 @@ export function DiscoveryIntakeChecklist({
   let body
   if (screen === "done") {
     body = <DiscoveryIntakeThanks />
+  } else if (screen === "budget") {
+    body = (
+      <DiscoveryBudgetScreen
+        onBack={() => go("products", -1)}
+        onSaved={() => {
+          setBudgetSaved(true)
+          setRoutineBack("budget")
+          go("routine", 1)
+        }}
+      />
+    )
   } else if (screen === "routine") {
     body = (
       <DiscoveryRoutineScreen
         items={items}
         onEdit={(item) => openSheet(openAddEdit(item, items))}
-        onBack={() => go("products", -1)}
+        onBack={() => go(budgetEnabled ? routineBack : "products", -1)}
+        onAddMore={() => go("products", -1)}
         onConfirm={() => {
           enterHeat(0, 1)
           go("heat", 1)

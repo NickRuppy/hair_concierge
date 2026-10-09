@@ -29,6 +29,7 @@ type DeepCleansingSeedProduct = {
   price_checked_at: string
   image_url: string
   sort_order: number
+  market_segment?: "drugstore" | "professional"
   specs: Omit<ProductDeepCleansingShampooSpecs, "product_id">
 }
 
@@ -593,6 +594,7 @@ export function buildDeepCleansingProductPayload(params: {
     product_line_id: params.productLineId,
     origin: "curated",
     is_chaarlie_recommended: true,
+    ...(params.product.market_segment ? { market_segment: params.product.market_segment } : {}),
   }
 }
 

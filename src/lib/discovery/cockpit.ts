@@ -2,11 +2,16 @@ import "server-only"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import { parseDiscoveryPriceLabel } from "@/components/discovery/cockpit/swap-sort"
+import { isShoppingBudgetEnabled } from "@/lib/personal-plan/release"
+import type { Stage1ProductExamplePreviewBudget } from "@/lib/personal-plan/product-previews"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
+import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/products/stage3-persistence-supabase"
 import { createPresentationRowLoader } from "@/lib/scan/presentation-rows"
 import type { ScanCatalogPresentationRow } from "@/lib/scan/product-presentation"
 import type { ScanPresentedVerdictPayload, ScanProductHeader } from "@/lib/scan/types"
 import { SCAN_VERDICT_COPY } from "@/lib/scan/verdict-labels"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 
 import {
   loadDiscoveryApplication,
@@ -441,6 +446,11 @@ export type DiscoveryCockpitModel = {
    * `loadDiscoveryRecommendationPropertyRows`). Display only, never hashed. Absent = no rows.
    */
   recommendationPropertyRows?: ReadonlyMap<string, DiscoveryPropertyRow[]>
+  /**
+   * The participant's saved shopping budget (flag on), for the „Kundenbudget" panel and the
+   * over-budget pills. Null/absent = none saved (or the flag is off). Display only, never hashed.
+   */
+  shoppingBudget?: ShoppingBudget | null
 }
 
 export type DiscoveryCockpitModelResult =
@@ -465,6 +475,43 @@ export type DiscoveryCockpitDependencies = {
   ) => Promise<DiscoveryResearchState>
   loadApplication: typeof loadDiscoveryApplication
   loadRecommendationRows: typeof loadDiscoveryRecommendationPropertyRows
+  /**
+   * The participant's saved budget (+ her stated concerns, for the exception priority), read
+   * once per composition. Flag-gated and fail-open: off, absent or unreadable = null = no
+   * budget, and every surface behaves exactly as before.
+   */
+  loadShoppingBudget: (
+    client: DiscoveryCockpitAdminClient,
+    userId: string,
+  ) => Promise<Stage1ProductExamplePreviewBudget | null>
+}
+
+/**
+ * The saved budget as the participant's own previews read it (`loadShoppingContext`, the same
+ * narrow `hair_profiles` read the Stage-1 previews route uses). Never throws.
+ */
+export async function loadDiscoveryShoppingBudget(
+  client: DiscoveryCockpitAdminClient,
+  userId: string,
+  enabled: () => boolean = isShoppingBudgetEnabled,
+): Promise<Stage1ProductExamplePreviewBudget | null> {
+  try {
+    if (!enabled()) return null
+    const shopping =
+      await createSupabaseStage3ProductionPersistence(client).loadShoppingContext(userId)
+    return shopping.budget
+      ? {
+          budget: shopping.budget,
+          statedConcerns: {
+            currentConcerns: shopping.currentConcerns,
+            primaryConcern: shopping.primaryConcern,
+          },
+        }
+      : null
+  } catch (error) {
+    console.error("[discovery] shopping budget lookup failed:", error)
+    return null
+  }
 }
 
 export const DISCOVERY_COCKPIT_DEPENDENCIES: DiscoveryCockpitDependencies = {
@@ -478,6 +525,7 @@ export const DISCOVERY_COCKPIT_DEPENDENCIES: DiscoveryCockpitDependencies = {
   loadResearchState: (client, items) => loadDiscoveryResearchState(client, items),
   loadApplication: loadDiscoveryApplication,
   loadRecommendationRows: loadDiscoveryRecommendationPropertyRows,
+  loadShoppingBudget: (client, userId) => loadDiscoveryShoppingBudget(client, userId),
 }
 
 /**
@@ -520,11 +568,22 @@ export async function loadDiscoveryCockpitModel(
     ? buildDiscoveryRoutineContext(capturedItems, heatStyling)
     : null
 
+  // Her saved budget, read once: the previews and the verdicts below follow it, the panel shows it.
+  let shopping: Stage1ProductExamplePreviewBudget | null = null
+  try {
+    shopping = await deps.loadShoppingBudget(admin, input.userId)
+  } catch (error) {
+    console.error("[discovery] shopping budget lookup failed:", error)
+  }
+  const idealOptions = {
+    ...(routineOverride ? { routineOverride } : {}),
+    ...(shopping ? { budget: shopping } : {}),
+  }
   const ideal = await deps.loadIdealRoutine(
     admin,
     input.userId,
     input.intakeId,
-    routineOverride ? { routineOverride } : undefined,
+    Object.keys(idealOptions).length > 0 ? idealOptions : undefined,
   )
   if (ideal.status !== "ready") return { status: ideal.status }
 
@@ -546,7 +605,14 @@ export async function loadDiscoveryCockpitModel(
   // Nothing linked: the very rows as loaded, untouched.
   const items = links.size > 0 ? withDiscoveryResearchLinks(capturedItems, links) : capturedItems
   // Exactly one verdict pass per render, on the context the Idealplan already prepared.
-  const verdicts = await deps.loadVerdicts(admin, input.userId, items, ideal.context)
+  const verdicts = await deps.loadVerdicts(
+    admin,
+    input.userId,
+    items,
+    ideal.context,
+    undefined,
+    shopping?.budget ?? null,
+  )
   const decisions = await deps.loadDecisions(input.intakeId, admin)
   const swapProductIds = new Set(discoverySwapProductIds(decisions))
   // Outcomes first (composition is pure): only an `ideal` step prints the Idealplan's
@@ -693,6 +759,7 @@ export async function loadDiscoveryCockpitModel(
     routineSource: ideal.routineSource ?? "quiz_only",
     heatProtectionDeferred: ideal.heatProtectionDeferred === true,
     recommendationPropertyRows,
+    shoppingBudget: shopping?.budget ?? null,
   }
 }
 
@@ -726,6 +793,11 @@ export type DiscoveryCockpitSwapOption = {
   /** The catalog packshot (`products.image_url`), for the option's thumbnail; null = none. */
   imageUrl: string | null
   origin: "alternative" | "ideal_recommendation"
+  /**
+   * With a capped budget saved: how many euros the package price lies above it (the pill
+   * „+19,90 € über Budget"). Present only when it is over; display only, never a verdict.
+   */
+  overBudgetEur?: number
   /**
    * Target-vs-product rows for a displayed alternative or (F1) the Idealplan's
    * recommendation; null when there are none.
@@ -898,6 +970,20 @@ function optionLabel(
   })
 }
 
+/**
+ * How far a package price lies above a CAPPED budget, in euros rounded to the cent; null when
+ * there is no capped budget, no readable price, or the price is within the limit. An uncapped
+ * budget (or none) never marks anything. Pure.
+ */
+export function discoveryOverBudgetEur(
+  budget: ShoppingBudget | null | undefined,
+  price: number | null,
+): number | null {
+  if (!budget || budget.kind !== "capped" || price === null || !Number.isFinite(price)) return null
+  const over = Math.round((price - budget.limitEur) * 100) / 100
+  return over > 0 ? over : null
+}
+
 function alternativeOption(
   alternative: {
     productId: string
@@ -909,7 +995,10 @@ function alternativeOption(
   },
   identities: ReadonlyMap<string, DiscoveryProductIdentity>,
   propertyRows: DiscoveryPropertyRow[] | null,
+  budget: ShoppingBudget | null = null,
 ): DiscoveryCockpitSwapOption {
+  // Alternatives carry only the catalog's price label; read it the way the price sort does.
+  const over = discoveryOverBudgetEur(budget, parseDiscoveryPriceLabel(alternative.priceLabel))
   return {
     productId: alternative.productId,
     name: alternative.displayName,
@@ -924,6 +1013,7 @@ function alternativeOption(
     // Already loaded: every alternative's id is in the identity batch (iteration 3).
     imageUrl: identities.get(alternative.productId)?.imageUrl ?? null,
     origin: "alternative",
+    ...(over !== null ? { overBudgetEur: over } : {}),
     propertyRows,
   }
 }
@@ -933,10 +1023,15 @@ function idealRecommendationOption(
   brandsByProductId: ReadonlyMap<string, string | null>,
   identities: ReadonlyMap<string, DiscoveryProductIdentity>,
   propertyRows: DiscoveryPropertyRow[] | null,
+  budget: ShoppingBudget | null = null,
 ): DiscoveryCockpitSwapOption | null {
   const preview = step.preview
   if (!preview || preview.kind !== "recommendation") return null
   const brand = brandsByProductId.get(preview.productId) ?? null
+  const over = discoveryOverBudgetEur(
+    budget,
+    preview.commerce?.priceEur ?? parseDiscoveryPriceLabel(preview.commerce?.priceLabel),
+  )
   return {
     productId: preview.productId,
     name: preview.productName,
@@ -949,6 +1044,7 @@ function idealRecommendationOption(
     priceLabel: preview.commerce?.priceLabel ?? null,
     imageUrl: identities.get(preview.productId)?.imageUrl ?? null,
     origin: "ideal_recommendation",
+    ...(over !== null ? { overBudgetEur: over } : {}),
     // F1: the recommendation against her target — null when it could not be evaluated.
     propertyRows,
   }
@@ -998,6 +1094,7 @@ function intakeProductViews(model: DiscoveryCockpitModel): DiscoveryCockpitIntak
 }
 
 export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): DiscoveryCockpitView {
+  const budget = model.shoppingBudget ?? null
   const verdictsByItemId = new Map(model.verdicts.map((entry) => [entry.itemId, entry]))
   const brandsByProductId = new Map(
     model.recommendationProducts.map((row) => [row.id, row.brand] as const),
@@ -1030,6 +1127,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       brandsByProductId,
       identities,
       model.recommendationPropertyRows?.get(step.decisionKey) ?? null,
+      budget,
     )
     // The ruled fallback: with no displayed alternatives the only swap target the cockpit
     // can honestly offer is the Idealplan's own pick — and never a product already in the
@@ -1044,6 +1142,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
               alternative,
               identities,
               alternativeRows.get(alternative.productId) ?? null,
+              budget,
             ),
           )
         : ideal && !ownedInStep.has(ideal.productId)

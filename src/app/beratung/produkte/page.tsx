@@ -9,12 +9,14 @@ import {
   toDiscoveryIntakeItemView,
 } from "@/lib/discovery/intake"
 import { DISCOVERY_QUIZ_ENTRY_HREF } from "@/lib/discovery/participant"
+import { isShoppingBudgetEnabled } from "@/lib/personal-plan/release"
 import { isRetailerSearchEnabled } from "@/lib/scan/enrichment/flag"
+import { loadScanShoppingBudget } from "@/lib/scan/shopping-budget"
 
 import { ensureDiscoveryQuizProjection } from "./quiz-projection"
 
 /**
- * The participant's flow (products → routine → Hitze & Styling → Abschicken) — the terminal destination of the
+ * The participant's flow (products → budget (flag) → routine → Hitze & Styling → Abschicken) — the terminal destination of the
  * discovery middleware gate, and the only page a participant is meant to spend
  * time on before the call.
  *
@@ -58,6 +60,9 @@ export default async function DiscoveryChecklistPage({
   if (!projection.hasDiagnostics || !projection.leadBound) redirect(DISCOVERY_QUIZ_ENTRY_HREF)
 
   const items = await loadDiscoveryIntakeItems(intake.id, admin)
+  // Flag on: her saved budget (narrow, fail-open read) decides whether the budget screen shows.
+  const budgetEnabled = isShoppingBudgetEnabled()
+  const initialBudget = budgetEnabled ? await loadScanShoppingBudget(admin, userId) : null
 
   return (
     <DiscoveryIntakeChecklist
@@ -70,6 +75,8 @@ export default async function DiscoveryChecklistPage({
       // Threaded from the server exactly like `/scan/page.tsx` does it: the dm
       // lane's flag is not Edge/browser-safe.
       retailerSearchEnabled={isRetailerSearchEnabled()}
+      budgetEnabled={budgetEnabled}
+      initialBudget={initialBudget}
     />
   )
 }

@@ -287,3 +287,22 @@ test("product schema allows dryness on shampoo", () => {
 
   assert.equal(parsed.success, true)
 })
+
+test("product schema accepts an optional market segment and rejects unknown buckets", () => {
+  const base = {
+    category: "Maske",
+    mask_specs: { weight: "medium", concentration: "high", balance_direction: "moisture" },
+  }
+  for (const market_segment of ["drugstore", "professional", null]) {
+    const parsed = productSchema.safeParse(buildBaseProduct({ ...base, market_segment }))
+    assert.equal(parsed.success, true)
+    assert.equal(parsed.success && parsed.data.market_segment, market_segment)
+  }
+  const omitted = productSchema.safeParse(buildBaseProduct({ ...base }))
+  assert.equal(omitted.success, true)
+  assert.equal(omitted.success && "market_segment" in omitted.data, false)
+
+  const invalid = productSchema.safeParse(buildBaseProduct({ ...base, market_segment: "luxury" }))
+  assert.equal(invalid.success, false)
+  assert.ok(!invalid.success && invalid.error.issues.some((i) => i.path[0] === "market_segment"))
+})

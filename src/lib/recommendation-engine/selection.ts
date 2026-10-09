@@ -20,6 +20,10 @@ import type {
   ShampooRecommendationMetadata,
 } from "@/lib/types"
 import { getBondbuilderUsageHint } from "@/lib/bondbuilder/usage-protocols"
+import {
+  BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+  bondbuilderTrustRank,
+} from "@/lib/personal-plan/products/authority/categories/bondbuilder"
 import type { ProductConditionerRerankSpecs } from "@/lib/conditioner/constants"
 import type {
   LeaveInFormat,
@@ -47,7 +51,6 @@ import {
   type MatchedProduct,
 } from "@/lib/product-matching/matcher"
 import {
-  evaluateBondbuilderFit,
   evaluateConditionerFit,
   evaluateDeepCleansingShampooFit,
   evaluateDryShampooFit,
@@ -55,7 +58,6 @@ import {
   evaluateMaskFit,
   evaluatePeelingFit,
   evaluateShampooFit,
-  type BondbuilderFitSpec,
   type ConditionerFitSpec,
   type DeepCleansingShampooFitSpec,
   type DryShampooFitSpec,
@@ -303,6 +305,26 @@ function sliceWithIncludedProductIds<T extends MatchedProduct>(
   }
 
   return selected
+}
+
+/**
+ * Optional ordering applied to a ranked pool right before the engine's final result cut. The
+ * chat passes the standalone budget policy here so an affordable product ranked below the cut
+ * still reaches it; without a hook the pool is untouched. `trust_pair` (Bondbuilder) keeps the
+ * ranked order and leads with the best affordable product next to the best product overall.
+ */
+export type EngineBudgetOrderMode = "default" | "trust_pair"
+export type EngineBudgetOrder = <T extends MatchedProduct>(
+  products: T[],
+  options?: { mode?: EngineBudgetOrderMode },
+) => T[]
+
+/** Orders each fit group on its own (suitable products stay ahead of fallbacks). */
+function orderedPool<T extends MatchedProduct>(
+  order: EngineBudgetOrder | undefined,
+  ...groups: T[][]
+): T[] {
+  return groups.flatMap((group) => (order ? order(group) : group))
 }
 
 function appendUnselectedProducts<T extends MatchedProduct>(selected: T[], pool: T[]): T[] {
@@ -631,6 +653,7 @@ export function rerankConditionerProductsWithEngine(params: {
   runtime?: RecommendationEngineRuntime
   includeProductIds?: readonly string[]
   preserveProductIds?: readonly string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): MatchedProduct[] {
   const {
     candidates,
@@ -640,6 +663,7 @@ export function rerankConditionerProductsWithEngine(params: {
     runtime,
     includeProductIds,
     preserveProductIds,
+    orderBeforeCut,
   } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
@@ -736,7 +760,7 @@ export function rerankConditionerProductsWithEngine(params: {
   if (acceptable.length >= SELECTION_LIMIT) {
     return stripScore(
       sliceWithIncludedProductIds(
-        withPreservedProducts(acceptable, scored, preserveProductIds),
+        withPreservedProducts(orderedPool(orderBeforeCut, acceptable), scored, preserveProductIds),
         preserveProductIds,
         SELECTION_LIMIT,
       ),
@@ -748,7 +772,11 @@ export function rerankConditionerProductsWithEngine(params: {
     .map(markConditionerFallback)
 
   return stripScore(
-    sliceWithIncludedProductIds([...acceptable, ...fallback], preserveProductIds, SELECTION_LIMIT),
+    sliceWithIncludedProductIds(
+      orderedPool(orderBeforeCut, acceptable, fallback),
+      preserveProductIds,
+      SELECTION_LIMIT,
+    ),
   )
 }
 
@@ -763,6 +791,7 @@ export function rerankShampooProductsWithEngine(params: {
   specs?: ProductShampooSpecRow[]
   includeProductIds?: readonly string[]
   preserveProductIds?: readonly string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): MatchedProduct[] {
   const {
     candidates,
@@ -772,6 +801,7 @@ export function rerankShampooProductsWithEngine(params: {
     specs = [],
     includeProductIds,
     preserveProductIds,
+    orderBeforeCut,
   } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const targetProfile = decision.targetProfile
@@ -841,7 +871,7 @@ export function rerankShampooProductsWithEngine(params: {
   if (acceptable.length >= SELECTION_LIMIT) {
     return stripScore(
       sliceWithIncludedProductIds(
-        withPreservedProducts(acceptable, scored, preserveProductIds),
+        withPreservedProducts(orderedPool(orderBeforeCut, acceptable), scored, preserveProductIds),
         preserveProductIds,
         SELECTION_LIMIT,
       ),
@@ -854,7 +884,7 @@ export function rerankShampooProductsWithEngine(params: {
 
   return stripScore(
     sliceWithIncludedProductIds(
-      [...acceptable, ...mismatches],
+      orderedPool(orderBeforeCut, acceptable, mismatches),
       preserveProductIds,
       SELECTION_LIMIT,
     ),
@@ -932,6 +962,7 @@ export function rerankOilProductsWithEngine(params: {
   runtime?: RecommendationEngineRuntime
   includeProductIds?: readonly string[]
   preserveProductIds?: readonly string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): MatchedProduct[] {
   const {
     candidates,
@@ -941,6 +972,7 @@ export function rerankOilProductsWithEngine(params: {
     runtime,
     includeProductIds,
     preserveProductIds,
+    orderBeforeCut,
   } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const targetProfile = decision.targetProfile
@@ -1063,7 +1095,13 @@ export function rerankOilProductsWithEngine(params: {
   })
 
   scored.sort(compareScoredProducts)
-  return stripScore(sliceWithIncludedProductIds(scored, preserveProductIds, SELECTION_LIMIT))
+  return stripScore(
+    sliceWithIncludedProductIds(
+      orderedPool(orderBeforeCut, scored),
+      preserveProductIds,
+      SELECTION_LIMIT,
+    ),
+  )
 }
 
 export function rerankBondbuilderProductsWithEngine(params: {
@@ -1073,6 +1111,7 @@ export function rerankBondbuilderProductsWithEngine(params: {
   message?: string
   includeProductIds?: readonly string[]
   preserveProductIds?: readonly string[]
+  orderBeforeCut?: EngineBudgetOrder
   outgoingRelationshipsByProductId?: Map<string, ProductRelationshipRow[]>
   incomingRelationshipsByProductId?: Map<string, ProductRelationshipRow[]>
   relatedProductsById?: Map<string, RelatedProduct>
@@ -1084,6 +1123,7 @@ export function rerankBondbuilderProductsWithEngine(params: {
     message = "",
     includeProductIds = [],
     preserveProductIds,
+    orderBeforeCut,
     outgoingRelationshipsByProductId = new Map<string, ProductRelationshipRow[]>(),
     incomingRelationshipsByProductId = new Map<string, ProductRelationshipRow[]>(),
     relatedProductsById = new Map<string, RelatedProduct>(),
@@ -1120,26 +1160,18 @@ export function rerankBondbuilderProductsWithEngine(params: {
   const primaryCandidates =
     requestedBrandCandidates.length > 0 ? requestedBrandCandidates : eligibleCandidates
 
-  const scored: Array<ScoredEngineProduct & { _bondRepairAxis: string | null }> =
-    primaryCandidates.map((product) => {
+  const scored: Array<ScoredEngineProduct & { _trustRank: number }> = primaryCandidates.map(
+    (product) => {
       const spec = specsByProductId.get(product.id) ?? null
-      const fit = evaluateBondbuilderFit(decision, spec as BondbuilderFitSpec | null)
+      const fit = evaluateBondbuilderRankingFit(spec)
       const { positives, tradeoffs } = buildFitSummary(
         fit,
-        "Passt sehr gut zur benötigten Bondbuilding-Intensität.",
+        "Passt zum aktuellen Bondbuilding-Bedarf.",
         "Passt weitgehend zum aktuellen Bondbuilding-Bedarf.",
         "Die Bondbuilder-Spezifikation ist noch nicht vollständig genug für eine sichere Idealeinstufung.",
-        "Weicht bei der Intensität zu deutlich vom aktuellen Bondbuilding-Bedarf ab.",
+        "Passt nicht sicher zum aktuellen Bondbuilding-Bedarf.",
       )
-      const score =
-        toBaseScore(product) + fitStatusAdjustment(fit.status) + fitReasonAdjustment(fit)
-      const laneScore =
-        spec?.bond_repair_axis === "disulfide_crosslink" && target.chemicalCrosslinkLane
-          ? 7
-          : spec?.bond_repair_axis === "peptide_chain" && target.peptideChainLane
-            ? 7
-            : 0
-      const adjustedScore = score + laneScore
+      const score = toBaseScore(product) + fitStatusAdjustment(fit.status)
       const attachedAddOns = (incomingRelationshipsByProductId.get(product.id) ?? [])
         .filter((relationship) => relationship.relationship_type === "add_on_for")
         .map((relationship) => {
@@ -1157,9 +1189,10 @@ export function rerankBondbuilderProductsWithEngine(params: {
         })
         .filter((item): item is NonNullable<typeof item> => Boolean(item))
 
+      // Axis and intensity stay display metadata only; they never rank (Nick, 2026-10-09).
       const recommendationMeta: BondbuilderRecommendationMetadata = {
         category: "bondbuilder",
-        score: Math.round(adjustedScore * 10) / 10,
+        score: Math.round(score * 10) / 10,
         top_reasons: [
           ...positives,
           target.bondRepairIntensity === "intensive"
@@ -1183,35 +1216,70 @@ export function rerankBondbuilderProductsWithEngine(params: {
         ...product,
         bondbuilder_specs: spec,
         recommendation_meta: recommendationMeta,
-        _engineScore: adjustedScore,
-        _bondRepairAxis: spec?.bond_repair_axis ?? null,
+        _engineScore: score,
+        _fitStatus: fit.status,
+        _trustRank: bondbuilderTrustRank(spec?.claim_trust_level),
       }
-    })
-
-  scored.sort(compareScoredProducts)
-  const limit = target.mixedOrSevereCombo ? SELECTION_LIMIT : 2
-  const selected: typeof scored = []
-
-  if (!target.mixedOrSevereCombo && target.chemicalCrosslinkLane && target.peptideChainLane) {
-    const crosslink = scored.find((product) => product._bondRepairAxis === "disulfide_crosslink")
-    const peptide = scored.find((product) => product._bondRepairAxis === "peptide_chain")
-    if (crosslink) selected.push(crosslink)
-    if (peptide && peptide.id !== crosslink?.id) selected.push(peptide)
-  }
-
-  for (const product of scored) {
-    if (selected.some((selectedProduct) => selectedProduct.id === product.id)) continue
-    selected.push(product)
-    if (selected.length >= limit) break
-  }
-
-  return stripScore(
-    sliceWithIncludedProductIds(
-      appendUnselectedProducts(selected, scored),
-      preserveProductIds,
-      limit,
-    ),
+    },
   )
+
+  scored.sort(compareBondbuilderProducts)
+  // A capped chat budget pairs the most trusted affordable product with the most trusted product
+  // overall (over budget), then keeps the trust order; the cut follows.
+  const ranked = orderBeforeCut ? orderBeforeCut(scored, { mode: "trust_pair" }) : scored
+  const limit = target.mixedOrSevereCombo ? SELECTION_LIMIT : 2
+
+  return stripScore(sliceWithIncludedProductIds(ranked, preserveProductIds, limit)).map(
+    (product) => {
+      Reflect.deleteProperty(product, "_trustRank")
+      return product
+    },
+  )
+}
+
+/**
+ * Bondbuilder fit for ranking without repair intensity or axis (Nick, 2026-10-09: both are
+ * worthless for ranking). Every candidate with a structured spec row shares one bucket; a missing
+ * row stays unknown. Eligibility problems never reach this point: retired, replaced and add-on
+ * products are filtered out before ranking.
+ */
+function evaluateBondbuilderRankingFit(
+  spec: ProductBondbuilderSpecs | null,
+): CategoryFitEvaluation {
+  return spec
+    ? { status: "ideal", reasonCodes: ["bondbuilder_specs_present"], missingFields: [] }
+    : { status: "unknown", reasonCodes: ["bondbuilder_specs_missing"], missingFields: ["spec"] }
+}
+
+const BONDBUILDER_FIT_ORDER: Record<CategoryFitStatus, number> = {
+  ideal: 0,
+  supportive: 1,
+  unknown: 2,
+  mismatch: 3,
+  not_applicable: 4,
+}
+
+/**
+ * Fit bucket first (trust never lifts a worse fit), then claim trust level, then the K18 house
+ * default among equally trusted products, then message relevance, catalog order and id.
+ */
+function compareBondbuilderProducts(
+  left: ScoredEngineProduct & { _trustRank: number },
+  right: ScoredEngineProduct & { _trustRank: number },
+): number {
+  const fitOrder =
+    BONDBUILDER_FIT_ORDER[left._fitStatus ?? "unknown"] -
+    BONDBUILDER_FIT_ORDER[right._fitStatus ?? "unknown"]
+  if (fitOrder !== 0) return fitOrder
+  if (left._trustRank !== right._trustRank) return left._trustRank - right._trustRank
+  const tieDefault =
+    Number(right.id === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID) -
+    Number(left.id === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
+  if (tieDefault !== 0) return tieDefault
+  const relevance = toBaseScore(right) - toBaseScore(left)
+  if (relevance !== 0) return relevance
+  if (left.sort_order !== right.sort_order) return left.sort_order - right.sort_order
+  return left.id.localeCompare(right.id)
 }
 
 type RequestedBondbuilderBrand = "k18" | "olaplex" | "epres"
@@ -1295,8 +1363,17 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
   runtime?: RecommendationEngineRuntime
   includeProductIds?: readonly string[]
   preserveProductIds?: readonly string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): MatchedProduct[] {
-  const { candidates, specs, decision, runtime, includeProductIds, preserveProductIds } = params
+  const {
+    candidates,
+    specs,
+    decision,
+    runtime,
+    includeProductIds,
+    preserveProductIds,
+    orderBeforeCut,
+  } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
   const careBalanceRow = getCareBalanceRow(runtime, "deep_cleansing_shampoo")
@@ -1367,7 +1444,7 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
   if (acceptable.length > 0) {
     return stripScore(
       sliceWithIncludedProductIds(
-        withPreservedProducts(acceptable, scored, preserveProductIds),
+        withPreservedProducts(orderedPool(orderBeforeCut, acceptable), scored, preserveProductIds),
         preserveProductIds,
         SELECTION_LIMIT,
       ),
@@ -1384,7 +1461,13 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
     )
   }
 
-  return stripScore(sliceWithIncludedProductIds(scored, preserveProductIds, SELECTION_LIMIT))
+  return stripScore(
+    sliceWithIncludedProductIds(
+      orderedPool(orderBeforeCut, scored),
+      preserveProductIds,
+      SELECTION_LIMIT,
+    ),
+  )
 }
 
 function buildDryShampooUsageHint(): string {
@@ -1397,8 +1480,10 @@ export function rerankDryShampooProductsWithEngine(params: {
   decision: DryShampooCategoryDecision
   includeProductIds?: readonly string[]
   preserveProductIds?: readonly string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): MatchedProduct[] {
-  const { candidates, specs, decision, includeProductIds, preserveProductIds } = params
+  const { candidates, specs, decision, includeProductIds, preserveProductIds, orderBeforeCut } =
+    params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
 
@@ -1454,7 +1539,7 @@ export function rerankDryShampooProductsWithEngine(params: {
   const acceptable = scored.filter((product) => product._fitStatus !== "mismatch")
   return stripScore(
     sliceWithIncludedProductIds(
-      withPreservedProducts(acceptable, scored, preserveProductIds),
+      withPreservedProducts(orderedPool(orderBeforeCut, acceptable), scored, preserveProductIds),
       preserveProductIds,
       SELECTION_LIMIT,
     ),
@@ -1475,8 +1560,10 @@ export function rerankPeelingProductsWithEngine(params: {
   decision: PeelingCategoryDecision
   includeProductIds?: readonly string[]
   preserveProductIds?: readonly string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): MatchedProduct[] {
-  const { candidates, specs, decision, includeProductIds, preserveProductIds } = params
+  const { candidates, specs, decision, includeProductIds, preserveProductIds, orderBeforeCut } =
+    params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
 
@@ -1517,7 +1604,13 @@ export function rerankPeelingProductsWithEngine(params: {
   })
 
   scored.sort(compareScoredProducts)
-  return stripScore(sliceWithIncludedProductIds(scored, preserveProductIds, SELECTION_LIMIT))
+  return stripScore(
+    sliceWithIncludedProductIds(
+      orderedPool(orderBeforeCut, scored),
+      preserveProductIds,
+      SELECTION_LIMIT,
+    ),
+  )
 }
 
 function mapEngineLeaveInNeedToLegacy(
@@ -1620,6 +1713,7 @@ export function rerankLeaveInProductsWithEngine(params: {
   runtime?: RecommendationEngineRuntime
   includeProductIds?: readonly string[]
   preserveProductIds?: readonly string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): MatchedProduct[] {
   const {
     candidates,
@@ -1629,6 +1723,7 @@ export function rerankLeaveInProductsWithEngine(params: {
     requestedFormats = [],
     includeProductIds,
     preserveProductIds,
+    orderBeforeCut,
   } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
@@ -1749,7 +1844,7 @@ export function rerankLeaveInProductsWithEngine(params: {
   if (acceptable.length >= SELECTION_LIMIT) {
     return stripScore(
       sliceWithIncludedProductIds(
-        withPreservedProducts(acceptable, scored, preserveProductIds),
+        withPreservedProducts(orderedPool(orderBeforeCut, acceptable), scored, preserveProductIds),
         preserveProductIds,
         SELECTION_LIMIT,
       ),
@@ -1765,7 +1860,11 @@ export function rerankLeaveInProductsWithEngine(params: {
 
   return stripScore(
     sliceWithIncludedProductIds(
-      withPreservedProducts([...acceptable, ...fallback], scored, preserveProductIds),
+      withPreservedProducts(
+        orderedPool(orderBeforeCut, acceptable, fallback),
+        scored,
+        preserveProductIds,
+      ),
       preserveProductIds,
       SELECTION_LIMIT,
     ),
@@ -1923,8 +2022,10 @@ export function rerankMaskProductsWithEngine(params: {
   decision: MaskCategoryDecision
   includeProductIds?: readonly string[]
   preserveProductIds?: readonly string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): MatchedProduct[] {
-  const { candidates, specs, decision, includeProductIds, preserveProductIds } = params
+  const { candidates, specs, decision, includeProductIds, preserveProductIds, orderBeforeCut } =
+    params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
 
@@ -1988,7 +2089,7 @@ export function rerankMaskProductsWithEngine(params: {
   if (acceptable.length >= SELECTION_LIMIT) {
     return stripScore(
       sliceWithIncludedProductIds(
-        withPreservedProducts(acceptable, scored, preserveProductIds),
+        withPreservedProducts(orderedPool(orderBeforeCut, acceptable), scored, preserveProductIds),
         preserveProductIds,
         SELECTION_LIMIT,
       ),
@@ -2004,7 +2105,11 @@ export function rerankMaskProductsWithEngine(params: {
 
   return stripScore(
     sliceWithIncludedProductIds(
-      withPreservedProducts([...acceptable, ...fallback], scored, preserveProductIds),
+      withPreservedProducts(
+        orderedPool(orderBeforeCut, acceptable, fallback),
+        scored,
+        preserveProductIds,
+      ),
       preserveProductIds,
       SELECTION_LIMIT,
     ),
@@ -2078,6 +2183,7 @@ export async function selectConditionerProductsWithEngine(params: {
   runtime?: RecommendationEngineRuntime
   includeProductIds?: string[]
   preserveProductIds?: string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const runtime =
@@ -2154,6 +2260,7 @@ export async function selectConditionerProductsWithEngine(params: {
     runtime,
     includeProductIds: params.includeProductIds,
     preserveProductIds: params.preserveProductIds,
+    orderBeforeCut: params.orderBeforeCut,
   })
 }
 
@@ -2163,6 +2270,7 @@ export async function selectShampooProductsWithEngine(params: {
   routineItems: PersistenceRoutineItemRow[]
   includeProductIds?: string[]
   preserveProductIds?: string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const runtime = buildRecommendationEngineRuntimeFromPersistence(
@@ -2250,6 +2358,7 @@ export async function selectShampooProductsWithEngine(params: {
     specs: (specs ?? []) as ProductShampooSpecRow[],
     includeProductIds: params.includeProductIds,
     preserveProductIds: params.preserveProductIds,
+    orderBeforeCut: params.orderBeforeCut,
   })
 }
 
@@ -2260,6 +2369,7 @@ export async function selectOilProductsWithEngine(params: {
   runtime?: RecommendationEngineRuntime
   includeProductIds?: string[]
   preserveProductIds?: string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const requestContext = buildRecommendationRequestContext({
@@ -2321,6 +2431,7 @@ export async function selectOilProductsWithEngine(params: {
       runtime,
       includeProductIds: params.includeProductIds,
       preserveProductIds: params.preserveProductIds,
+      orderBeforeCut: params.orderBeforeCut,
     })
   }
 
@@ -2348,6 +2459,7 @@ export async function selectOilProductsWithEngine(params: {
     runtime,
     includeProductIds: params.includeProductIds,
     preserveProductIds: params.preserveProductIds,
+    orderBeforeCut: params.orderBeforeCut,
   })
 }
 
@@ -2358,6 +2470,7 @@ export async function selectLeaveInProductsWithEngine(params: {
   runtime?: RecommendationEngineRuntime
   includeProductIds?: string[]
   preserveProductIds?: string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const runtime =
@@ -2440,6 +2553,7 @@ export async function selectLeaveInProductsWithEngine(params: {
     requestedFormats: runtime.requestContext.leaveInRequestedFormats,
     includeProductIds: params.includeProductIds,
     preserveProductIds: params.preserveProductIds,
+    orderBeforeCut: params.orderBeforeCut,
   })
 }
 
@@ -2450,6 +2564,7 @@ export async function selectMaskProductsWithEngine(params: {
   runtime?: RecommendationEngineRuntime
   includeProductIds?: string[]
   preserveProductIds?: string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const runtime =
@@ -2508,6 +2623,7 @@ export async function selectMaskProductsWithEngine(params: {
     decision,
     includeProductIds: params.includeProductIds,
     preserveProductIds: params.preserveProductIds,
+    orderBeforeCut: params.orderBeforeCut,
   })
 }
 
@@ -2518,6 +2634,7 @@ export async function selectBondbuilderProductsWithEngine(params: {
   runtime?: RecommendationEngineRuntime
   includeProductIds?: string[]
   preserveProductIds?: string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const runtime =
@@ -2658,6 +2775,7 @@ export async function selectBondbuilderProductsWithEngine(params: {
     message,
     includeProductIds: params.includeProductIds,
     preserveProductIds: params.preserveProductIds,
+    orderBeforeCut: params.orderBeforeCut,
     outgoingRelationshipsByProductId,
     incomingRelationshipsByProductId,
     relatedProductsById,
@@ -2671,6 +2789,7 @@ export async function selectDeepCleansingShampooProductsWithEngine(params: {
   runtime?: RecommendationEngineRuntime
   includeProductIds?: string[]
   preserveProductIds?: string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const runtime =
@@ -2725,6 +2844,7 @@ export async function selectDeepCleansingShampooProductsWithEngine(params: {
     decision,
     includeProductIds: params.includeProductIds,
     preserveProductIds: params.preserveProductIds,
+    orderBeforeCut: params.orderBeforeCut,
   })
 }
 
@@ -2735,6 +2855,7 @@ export async function selectDryShampooProductsWithEngine(params: {
   runtime?: RecommendationEngineRuntime
   includeProductIds?: string[]
   preserveProductIds?: string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems, runtime: providedRuntime } = params
   const runtime =
@@ -2789,6 +2910,7 @@ export async function selectDryShampooProductsWithEngine(params: {
     decision,
     includeProductIds: params.includeProductIds,
     preserveProductIds: params.preserveProductIds,
+    orderBeforeCut: params.orderBeforeCut,
   })
 }
 
@@ -2799,6 +2921,7 @@ export async function selectPeelingProductsWithEngine(params: {
   runtime?: RecommendationEngineRuntime
   includeProductIds?: string[]
   preserveProductIds?: string[]
+  orderBeforeCut?: EngineBudgetOrder
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const runtime =
@@ -2845,5 +2968,6 @@ export async function selectPeelingProductsWithEngine(params: {
     decision,
     includeProductIds: params.includeProductIds,
     preserveProductIds: params.preserveProductIds,
+    orderBeforeCut: params.orderBeforeCut,
   })
 }

@@ -224,8 +224,29 @@ export type PersonalPlanTestDb = PGlite
  */
 export const USER_FACTS_LOCK_MIGRATION = "supabase/migrations/20261003120000_user_facts_lock.sql"
 
+/**
+ * The fourth facts domain (`shopping_preferences`): adds the column, extends the lock's two
+ * fact-column lists to 27 keys and re-creates `user_facts_save_v1` with the new branch. It must
+ * run AFTER `USER_FACTS_LOCK_MIGRATION` (the lock's apply-time check refuses an unclassified
+ * column), so it is never part of the `MIGRATIONS` chain.
+ */
+export const USER_FACTS_SHOPPING_PREFERENCES_MIGRATION =
+  "supabase/migrations/20261009100000_user_facts_shopping_preferences.sql"
+
+/**
+ * HISTORICAL mode: the lock exactly as the first deploy shipped it (26 fact columns, a door
+ * without `shopping_preferences`). The suites that seed a legacy row and then lock call this;
+ * readers there select only columns that exist in this mode.
+ */
 export async function applyUserFactsLock(pg: PersonalPlanTestDb): Promise<void> {
   await pg.exec(await readFile(new URL(USER_FACTS_LOCK_MIGRATION, ROOT), "utf8"))
+}
+
+/** CURRENT mode: the historical lock, then the `shopping_preferences` migration — the order
+ * production applies them in. This is what `migratedPersonalPlanDatabase` applies by default. */
+export async function applyCurrentUserFacts(pg: PersonalPlanTestDb): Promise<void> {
+  await applyUserFactsLock(pg)
+  await pg.exec(await readFile(new URL(USER_FACTS_SHOPPING_PREFERENCES_MIGRATION, ROOT), "utf8"))
 }
 
 /**
@@ -332,7 +353,7 @@ export async function migratedPersonalPlanDatabase(
   for (const migration of migrationChain(options)) {
     await pg.exec(await readFile(new URL(migration, ROOT), "utf8"))
   }
-  if (options.lock !== false) await applyUserFactsLock(pg)
+  if (options.lock !== false) await applyCurrentUserFacts(pg)
   return pg
 }
 
@@ -873,6 +894,8 @@ export type UserFactsSaveResult = {
   diagnosticsHash?: string | null
   reason?: string
   updatedAt?: string
+  /** `true` when this call inserted the `hair_profiles` row. */
+  created?: boolean
 }
 
 export type UserFactsSaveInput = {
@@ -928,6 +951,9 @@ export type HairProfileRow = {
   diagnostics: Record<string, unknown> | null
   care_habits: Record<string, unknown> | null
   quiz_context: Record<string, unknown> | null
+  /** Only present in CURRENT mode (the column exists once the shopping_preferences migration
+   * ran); `readHairProfile` omits it on a historical database. */
+  shopping_preferences?: Record<string, unknown> | null
   facts_provenance: Record<string, unknown>
   facts_revision: number
   hair_texture: string | null
@@ -958,8 +984,15 @@ export async function readHairProfile(
   pg: PersonalPlanTestDb,
   userId: string,
 ): Promise<HairProfileRow | null> {
+  const { rows: columns } = await pg.query<{ present: boolean }>(
+    `SELECT EXISTS (
+       SELECT 1 FROM pg_catalog.pg_attribute
+        WHERE attrelid = 'public.hair_profiles'::pg_catalog.regclass
+          AND attname = 'shopping_preferences' AND NOT attisdropped) AS present`,
+  )
+  const shopping = columns[0]?.present ? "shopping_preferences, " : ""
   const { rows } = await pg.query<HairProfileRow>(
-    `SELECT diagnostics, care_habits, quiz_context, facts_provenance, facts_revision,
+    `SELECT diagnostics, care_habits, quiz_context, ${shopping}facts_provenance, facts_revision,
             hair_texture, thickness, density, hair_length, cuticle_condition,
             protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment,
             concerns, goals, desired_volume, primary_concern, drying_method, heat_styling, styling_tools,

@@ -1026,6 +1026,32 @@ test("field rationales must cover product and category spec conclusions", () => 
   )
 })
 
+test("market segment is optional in the reviewed package and needs a rationale only when present", () => {
+  const without = validateProductIntakeApprovalPayload(
+    reviewedPayload("mask", validCategorySpecs("mask")),
+  )
+  assert.equal(without.ok, true)
+
+  const withSegment = reviewedPayload("mask", validCategorySpecs("mask"))
+  ;(withSegment.final.product as Record<string, unknown>).market_segment = "professional"
+  const missingRationale = validateProductIntakeApprovalPayload(withSegment)
+  assert.equal(missingRationale.ok, false)
+  assert.deepEqual(missingRationale.missingFields, [
+    "final.field_rationales.product.market_segment",
+  ])
+
+  withSegment.final.field_rationales["product.market_segment"] =
+    "Sold through professional salon channels only."
+  const accepted = validateProductIntakeApprovalPayload(withSegment)
+  assert.equal(accepted.ok, true)
+  if (!accepted.ok) return
+  assert.equal(accepted.normalizedPayload.final.product.market_segment, "professional")
+
+  const invalid = reviewedPayload("mask", validCategorySpecs("mask"))
+  ;(invalid.final.product as Record<string, unknown>).market_segment = "luxury"
+  assert.equal(validateProductIntakeApprovalPayload(invalid).ok, false)
+})
+
 test("manual review flag is required before approval", () => {
   const payload = reviewedPayload("mask", validCategorySpecs("mask"))
   payload.final.review.manual_reviewed = false

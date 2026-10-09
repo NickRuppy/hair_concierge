@@ -241,7 +241,8 @@ export function parseStage3GatewayErrorCode(body: unknown) {
       body.error === "snapshot_too_large" ||
       body.error === "compensation_pending" ||
       body.error === "rolled_back" ||
-      body.error === "idempotency_key_reused")
+      body.error === "idempotency_key_reused" ||
+      body.error === "budget_required")
   )
     return body.error
   return "temporarily_unavailable" as const

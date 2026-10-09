@@ -95,6 +95,7 @@ const FULL_ROW = {
   diagnostics: FULL_DIAGNOSTICS,
   care_habits: FULL_CARE_HABITS,
   quiz_context: FULL_QUIZ_CONTEXT,
+  shopping_preferences: { budget: { kind: "capped", limitEur: 15, allowExceptions: true } },
   facts_provenance: { diagnostics: VALID_DIAGNOSTICS_PROVENANCE },
   facts_revision: 4,
   density: "low",
@@ -118,6 +119,7 @@ test("loadUserFacts parses a full row into typed facts with revision", async () 
     diagnostics: FULL_DIAGNOSTICS,
     careHabits: FULL_CARE_HABITS,
     quizContext: FULL_QUIZ_CONTEXT,
+    shoppingPreferences: { budget: { kind: "capped", limitEur: 15, allowExceptions: true } },
     provenance: { diagnostics: VALID_DIAGNOSTICS_PROVENANCE },
     revision: 4,
     // F2: the two legacy columns the completeness defaults fall back to.
@@ -139,6 +141,37 @@ test("loadUserFacts throws UserFactsReadError naming the domain and user for cor
     assert.match((error as Error).message, /diagnostics/)
     assert.match((error as Error).message, /user-1/)
   }
+})
+
+test("loadUserFacts: shopping_preferences is read; a null column is null (never uncapped); a corrupt one is loud", async () => {
+  const selected = new FakeSupabase({ data: FULL_ROW, error: null })
+  await loadUserFacts(selected as never, "user-1")
+  assert.match(String(selected.calls.select), /\bshopping_preferences\b/)
+
+  const absent = await loadUserFacts(
+    new FakeSupabase({ data: { ...FULL_ROW, shopping_preferences: null }, error: null }) as never,
+    "user-1",
+  )
+  assert.equal(absent?.shoppingPreferences, null)
+
+  const notCollected = await loadUserFacts(
+    new FakeSupabase({ data: { ...FULL_ROW, shopping_preferences: {} }, error: null }) as never,
+    "user-1",
+  )
+  assert.deepEqual(notCollected?.shoppingPreferences, {})
+  assert.equal(notCollected?.shoppingPreferences?.budget, undefined)
+
+  await assert.rejects(
+    loadUserFacts(
+      new FakeSupabase({
+        data: { ...FULL_ROW, shopping_preferences: { budget: { kind: "capped", limitEur: 7 } } },
+        error: null,
+      }) as never,
+      "user-1",
+    ),
+    (error: Error) =>
+      error instanceof UserFactsReadError && /shopping_preferences/.test(error.message),
+  )
 })
 
 test("toRefinementAnswers drops brushesCombs and omits absent keys", () => {
@@ -165,6 +198,7 @@ test("toStage1SourceFromFacts: unedited returns diagnostics.source.raw, edited d
     diagnostics: FULL_DIAGNOSTICS,
     careHabits: null,
     quizContext: FULL_QUIZ_CONTEXT,
+    shoppingPreferences: null,
     provenance: {},
     revision: 1,
   }
@@ -197,6 +231,7 @@ test("fix round 1 (F): an edited emission treats an assumed default as missing, 
     diagnostics: FULL_DIAGNOSTICS,
     careHabits: null,
     quizContext: FULL_QUIZ_CONTEXT,
+    shoppingPreferences: null,
     provenance: {
       diagnostics: {
         ...VALID_DIAGNOSTICS_PROVENANCE,

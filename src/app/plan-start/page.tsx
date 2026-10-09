@@ -31,7 +31,9 @@ import {
   isPersonalPlanStage2Enabled,
   isPersonalPlanStage3Enabled,
   isPersonalPlanStage4Enabled,
+  isShoppingBudgetEnabled,
 } from "@/lib/personal-plan/release"
+import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/products/stage3-persistence-supabase"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -72,6 +74,13 @@ export type PlanStartPageDeps = {
   loadRefinementProgress?: (
     userId: string,
   ) => Promise<{ completedSteps: number; totalSteps: number } | null>
+  /**
+   * Whether the Idealplan CTA must ask the budget question before accepting: the
+   * shopping-budget gate is on and no budget is saved. Read only when direct acceptance is
+   * offered. Failure-tolerant: an unreadable answer projects "not required", and the accept
+   * route's own `budget_required` still routes the user into the question.
+   */
+  loadShoppingBudgetRequired?: (userId: string) => Promise<boolean>
 }
 
 export type PlanStartSearchParams = {
@@ -181,10 +190,20 @@ export async function resolvePlanStartPageState(
     // path on their own Idealplan. This flag only gates the CTA's intent —
     // `POST /api/personal-plan/accept-ideal-plan` re-validates real access,
     // Stage 2 progress and seen state server-side before accepting anything.
-    const directAcceptance =
-      stage2Enabled && deps.stage3Enabled?.() && deps.stage4Enabled?.()
-        ? ({ directAcceptanceAvailable: true } as const)
-        : {}
+    const directAcceptanceOffered = Boolean(
+      stage2Enabled && deps.stage3Enabled?.() && deps.stage4Enabled?.(),
+    )
+    // An accepted plan is never asked for a budget here: `plan_already_accepted` wins.
+    const shoppingBudgetRequired =
+      directAcceptanceOffered &&
+      !planAccepted &&
+      (await deps.loadShoppingBudgetRequired?.(userId).catch(() => false)) === true
+    const directAcceptance = directAcceptanceOffered
+      ? ({
+          directAcceptanceAvailable: true,
+          ...(shoppingBudgetRequired ? { shoppingBudgetRequired: true } : {}),
+        } as const)
+      : {}
 
     if (!stage2Enabled || access.kind !== "personal_plan" || !access.allowed.stage2) {
       return production(
@@ -349,6 +368,13 @@ export default async function PlanStartPage({
         )
         return status.status === "ok" ? status.data.progress : null
       },
+      loadShoppingBudgetRequired: async (userId) =>
+        isShoppingBudgetEnabled() &&
+        (
+          await createSupabaseStage3ProductionPersistence(createAdminClient()).loadShoppingContext(
+            userId,
+          )
+        ).budget === null,
       loadStage1Plan: async (userId) => {
         const result = await createStage1PersistenceService(
           createStage1SupabaseDependencies(createAdminClient() as never),
