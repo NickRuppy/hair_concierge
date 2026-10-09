@@ -506,6 +506,20 @@ export function compileApplicationViewV2({
           item.role === "bond_repair",
       ),
   )
+  // A rinse-out mask needs its intensive care day (cleanse + intensive_care). The canonical V2
+  // cleanse template is wash-day only, so without this the day never formed and every mask
+  // lost its instructions (Nomi consult finish T5) — mirrors the bond-repair extension below.
+  const hasRinseOutMask = productPointers.some(
+    (pointer) =>
+      pointer.applicationFamily === "post_shampoo_rinse_out_mask" &&
+      pointer.role === "intensive_care" &&
+      input.routineItems.some(
+        (item) =>
+          item.productId === pointer.scope.productId &&
+          item.category === pointer.scope.category &&
+          item.role === "intensive_care",
+      ),
+  )
   const routineItems = input.routineItems.flatMap((item) => {
     let matches = productPointers
       .filter(
@@ -549,16 +563,19 @@ export function compileApplicationViewV2({
         return []
       }
       if (
-        hasVerifiedBondTreatment &&
         item.category === "shampoo" &&
         pointer.applicationFamily === "standard_rinse_out_cleanse"
       ) {
-        composition.protocols = composition.protocols.map((protocol) => ({
-          ...protocol,
-          compatibleDayTypes: [
-            ...new Set([...protocol.compatibleDayTypes, "bond_repair_day" as const]),
-          ],
-        }))
+        const extraDays = [
+          ...(hasVerifiedBondTreatment ? (["bond_repair_day"] as const) : []),
+          ...(hasRinseOutMask ? (["intensive_care_day"] as const) : []),
+        ]
+        if (extraDays.length > 0) {
+          composition.protocols = composition.protocols.map((protocol) => ({
+            ...protocol,
+            compatibleDayTypes: [...new Set([...protocol.compatibleDayTypes, ...extraDays])],
+          }))
+        }
       }
       protocols.push(...composition.protocols)
       const compatibleDayTypes = composition.protocols.flatMap(
