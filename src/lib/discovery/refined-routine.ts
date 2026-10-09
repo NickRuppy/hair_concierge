@@ -588,8 +588,8 @@ function hashedPreview(preview: DiscoveryIdealStep["preview"]): unknown {
  * hash already covers (bound, unassigned and declined), so it cannot change without them —
  * and adding a key would flag every finalized document as drifted. Every printed product
  * label is part of `steps` / `unassignedIntakeProducts`, so a label that changes (a catalog
- * rename, a new product line) moves the hash with it. The step's call-only `depth` is
- * stripped: the paper does not print it, so a copy change there must not flag every
+ * rename, a new product line) moves the hash with it. The step's call-only `depth` (and its
+ * `equalOptions`, swap choices that print nothing until chosen) is stripped: the paper does not print it, so a copy change there must not flag every
  * finalised document as drifted. The recommendation's `commerce` is stripped for the same
  * reason (`hashedPreview`).
  *
@@ -610,7 +610,12 @@ function discoveryRoutineSourceHash(
   return semanticHash({
     steps: routine.steps.map((entry) => ({
       ...entry,
-      step: { ...entry.step, depth: undefined, preview: hashedPreview(entry.step.preview) },
+      step: {
+        ...entry.step,
+        depth: undefined,
+        equalOptions: undefined,
+        preview: hashedPreview(entry.step.preview),
+      },
     })),
     unassignedIntakeProducts: routine.unassignedIntakeProducts,
     declinedCategories: routine.declinedCategories,
@@ -629,7 +634,35 @@ export function withDiscoveryApplicationHash(
   application: { days: readonly unknown[] } | null,
 ): DiscoveryRefinedRoutine {
   if (!application || application.days.length === 0) return routine
-  return { ...routine, sourceHash: discoveryRoutineSourceHash(routine, application) }
+  return {
+    ...routine,
+    sourceHash: discoveryRoutineSourceHash(routine, withoutVariantHeadings(application)),
+  }
+}
+
+/**
+ * A printed product's `headings` (which of its actions are variant headings) is layout only —
+ * the same words are hashed in `actions` — so it stays out of the fingerprint: a sheet
+ * finalised before headings were marked does not drift (Nomi consult finish T3).
+ */
+function withoutVariantHeadings(application: { days: readonly unknown[] }): unknown {
+  return {
+    ...application,
+    days: application.days.map((day) => {
+      if (!day || typeof day !== "object" || !Array.isArray((day as { steps?: unknown }).steps))
+        return day
+      const { steps } = day as { steps: unknown[] }
+      return {
+        ...day,
+        steps: steps.map((step) => {
+          if (!step || typeof step !== "object" || !("headings" in step)) return step
+          const { headings: _layout, ...hashed } = step as { headings?: unknown }
+          void _layout
+          return hashed
+        }),
+      }
+    }),
+  }
 }
 
 /** Every swap target the decisions reference, for one batched products-by-id select. */

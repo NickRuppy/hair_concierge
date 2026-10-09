@@ -294,7 +294,7 @@ test("brief save: an invalid score is refused in the island — nothing is sent"
     tree = render()
     assert.equal(fetchStub.calls.length, 0)
     assert.equal(saveBar(tree).props.status, "error")
-    assert.match(saveBar(tree).props.message, /ganze Zahl von 1 bis 10/)
+    assert.match(saveBar(tree).props.message, /von 1 bis 10 eintragen, halbe Punkte gehen/)
   } finally {
     fetchStub.restore()
   }

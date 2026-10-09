@@ -231,7 +231,7 @@ export const USER_FACTS_LOCK_MIGRATION = "supabase/migrations/20261003120000_use
  * column), so it is never part of the `MIGRATIONS` chain.
  */
 export const USER_FACTS_SHOPPING_PREFERENCES_MIGRATION =
-  "supabase/migrations/20261009100000_user_facts_shopping_preferences.sql"
+  "supabase/migrations/20261009130000_user_facts_shopping_preferences.sql"
 
 /**
  * HISTORICAL mode: the lock exactly as the first deploy shipped it (26 fact columns, a door

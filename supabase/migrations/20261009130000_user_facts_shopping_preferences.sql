@@ -437,7 +437,7 @@ BEGIN
            updated_at = pg_catalog.now()
      WHERE user_id = p_user_id;
   ELSIF p_domain = 'shopping_preferences' THEN
-    -- shopping_preferences owns no projection (20261009100000).
+    -- shopping_preferences owns no projection (20261009130000).
     UPDATE public.hair_profiles
        SET shopping_preferences = v_new_domain,
            facts_provenance =

@@ -422,7 +422,7 @@ test("historical Bondbuilder receipts keep replaying after products.market_segme
 
   await pg.exec(
     await readFile(
-      new URL("supabase/migrations/20261009110000_products_market_segment.sql", ROOT),
+      new URL("supabase/migrations/20261009140000_products_market_segment.sql", ROOT),
       "utf8",
     ),
   )

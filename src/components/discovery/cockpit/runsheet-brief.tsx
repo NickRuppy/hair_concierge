@@ -115,7 +115,8 @@ export const RUNSHEET_BRIEF_LISTS = [
 export type RunsheetBriefListKey = (typeof RUNSHEET_BRIEF_LISTS)[number]["key"]
 
 const SAVE_SCOPE = "Score, Brief und Gewohnheiten"
-const INVALID_BASELINE = "Nicht gespeichert — Score als ganze Zahl von 1 bis 10 eintragen."
+const INVALID_BASELINE =
+  "Nicht gespeichert — Score von 1 bis 10 eintragen, halbe Punkte gehen, z. B. 7,5."
 const INVALID_POINTS = "Nicht gespeichert — Hebel-Punkte als Zahl ab 0 eintragen, z. B. 1,5."
 
 export const RUNSHEET_GENERATE_COPY = {
@@ -241,7 +242,8 @@ function seedRunsheetBrief(props: BriefSeed, tag: string): RunsheetBriefState {
         (b.bucket === null ? 0 : bucketRank[b.bucket]),
     )
   return {
-    baselineText: props.initialBaseline === null ? "" : String(props.initialBaseline),
+    baselineText:
+      props.initialBaseline === null ? "" : String(props.initialBaseline).replace(".", ","),
     mechanik: props.initialSections.mechanik,
     diagnose: props.initialSections.diagnose,
     hebel,
@@ -377,10 +379,12 @@ export function parseRunsheetPoints(value: string): number | null {
   return Number.isFinite(parsed) && parsed >= 0 ? parsed : null
 }
 
-/** A whole score 1–10, else null. */
+/** A score 1–10 in half points — „7,5" or „7.5" → 7.5 — else null. */
 export function parseRunsheetBaseline(value: string): number | null {
-  const parsed = Number(value.trim())
-  return Number.isInteger(parsed) && parsed >= 1 && parsed <= 10 ? parsed : null
+  const normalized = value.trim().replace(",", ".")
+  if (normalized === "") return null
+  const parsed = Number(normalized)
+  return Number.isInteger(parsed * 2) && parsed >= 1 && parsed <= 10 ? parsed : null
 }
 
 /**
@@ -833,11 +837,8 @@ export function DiscoveryRunsheetBrief({
             <span className="flex items-baseline gap-1">
               <input
                 id="runsheet-baseline-score"
-                type="number"
-                inputMode="numeric"
-                min={1}
-                max={10}
-                step={1}
+                type="text"
+                inputMode="decimal"
                 placeholder="–"
                 value={baselineText}
                 onChange={(event) => setBaselineText(event.target.value)}

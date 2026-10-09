@@ -10,6 +10,15 @@ export const OIL_WASH_FAMILY_DAY_TYPES = [
 type OilHeatDayType = (typeof OIL_WASH_FAMILY_DAY_TYPES)[number] | "styling_day"
 type OilHeatEvent = Pick<PlanHeatToolUseEvent, "tool" | "route">
 
+/**
+ * Which days a heat event happens on: blow-drying with a hair dryer belongs to the wash family
+ * (it follows a wash), hot tools and airflow stylers to the Styling-Tag. `null`: unmapped tool.
+ * Shared by the Oil carrier and (Nomi consult finish T6) Heat protection placement.
+ */
+export function heatEventDayContext(event: OilHeatEvent): "wash_family" | "styling_day" | null {
+  return oilHeatEventContext(event)
+}
+
 function oilHeatEventContext(event: OilHeatEvent): "wash_family" | "styling_day" | null {
   if (event.tool === "hair_dryer" && event.route === "airflow_shaping") {
     return "wash_family"

@@ -159,9 +159,48 @@ test("shampoo-dry-flakes-only / shampoo.role.dry_flakes uses gentle dry-scalp ev
       : null,
     "gentle_dry_scalp",
   )
+  // The fixture's hair is wavy: dry-scalp straight/wavy band (Nomi consult finish T4).
   assert.equal(result.frequency?.kind, "wet_wash_total")
   if (result.frequency?.kind === "wet_wash_total") {
-    assert.equal(result.frequency.target, "weekly_1x")
+    assert.equal(result.frequency.target, "weekly_2x")
+  }
+})
+
+test("shampoo-dry-scalp-band / straight or wavy: 2×/week preferred, 1–3/4× tolerated", () => {
+  for (const texture of ["straight", "wavy"] as const) {
+    const result = decision({ scalpOiliness: "dry", scalpConcerns: [], texture })
+    assert.deepEqual(
+      result.frequency?.kind === "wet_wash_total"
+        ? [result.frequency.target, result.frequency.allowedRange]
+        : null,
+      ["weekly_2x", { min: "weekly_1x", max: "weekly_3_4x" }],
+      texture,
+    )
+  }
+})
+
+test("shampoo-dry-scalp-band / curly or coily keeps the stricter dry band", () => {
+  for (const texture of ["curly", "coily"] as const) {
+    const result = decision({ scalpOiliness: "dry", scalpConcerns: [], texture })
+    assert.deepEqual(
+      result.frequency?.kind === "wet_wash_total"
+        ? [result.frequency.target, result.frequency.allowedRange]
+        : null,
+      ["weekly_1x", { min: "biweekly_1x", max: "weekly_1x" }],
+      texture,
+    )
+  }
+})
+
+test("shampoo-dry-scalp-band / fine straight hair washing 2×/week keeps her rhythm (Nomi)", () => {
+  const result = decision(
+    { scalpOiliness: "dry", scalpConcerns: ["dry_dandruff"], texture: "straight" },
+    { shampooFrequency: { state: "known", value: "weekly_2x" } },
+  )
+  assert.equal(result.frequency?.kind, "wet_wash_total")
+  if (result.frequency?.kind === "wet_wash_total") {
+    assert.equal(result.frequency.target, "weekly_2x")
+    assert.equal(result.frequency.mode, "retained_current")
   }
 })
 

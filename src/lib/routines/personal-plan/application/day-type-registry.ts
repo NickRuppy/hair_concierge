@@ -4,7 +4,11 @@ import type {
   NormalizedRoutineItem,
   SemanticRole,
 } from "./contracts"
-import { oilHeatEventMatchesDay } from "@/lib/personal-plan/oil-heat-context"
+import {
+  heatEventDayContext,
+  OIL_WASH_FAMILY_DAY_TYPES,
+  oilHeatEventMatchesDay,
+} from "@/lib/personal-plan/oil-heat-context"
 
 export const CANONICAL_APPLICATION_DAY_RULES: Record<
   ApplicationDayTypeKey,
@@ -89,9 +93,67 @@ export function routineItemsForDay(
   key: ApplicationDayTypeKey,
   items: readonly NormalizedRoutineItem[],
 ) {
-  return items.filter((item) =>
-    CANONICAL_APPLICATION_DAY_RULES[key].acceptedRoles.includes(item.role),
+  return oneHeatApplicationPerDay(
+    items.filter(
+      (item) =>
+        CANONICAL_APPLICATION_DAY_RULES[key].acceptedRoles.includes(item.role) &&
+        heatOccurrenceBelongsToDay(key, item),
+    ),
   )
+}
+
+const HAIR_DRYER_DAY_TYPES: readonly ApplicationDayTypeKey[] = [
+  ...OIL_WASH_FAMILY_DAY_TYPES,
+  "refresh_day",
+]
+const HOT_TOOL_DAY_TYPES: readonly ApplicationDayTypeKey[] = [
+  ...OIL_WASH_FAMILY_DAY_TYPES,
+  "refresh_day",
+  "styling_day",
+]
+
+/**
+ * A heat-protection occurrence (one per heat-day context, `materializeHeatOccurrences`) sits
+ * only on days its heat event can happen on (Nomi consult finish T6): blow-drying follows a wash
+ * or a damp refresh; hot tools follow a wash, a refresh or are the Styling-Tag itself. The
+ * „Pflegetag ohne Wäsche" (care on dry lengths) never carries heat. Items without a mapped
+ * event keep their placement.
+ */
+function heatOccurrenceBelongsToDay(
+  key: ApplicationDayTypeKey,
+  item: NormalizedRoutineItem,
+): boolean {
+  if (item.role !== "heat_protection") return true
+  const tool = item.catalogFacts.heatEventTool
+  const route = item.catalogFacts.heatEventRoute
+  if (typeof tool !== "string" || typeof route !== "string") return true
+  const context = heatEventDayContext({ tool, route } as Parameters<typeof heatEventDayContext>[0])
+  if (context === null) return true
+  return (context === "wash_family" ? HAIR_DRYER_DAY_TYPES : HOT_TOOL_DAY_TYPES).includes(key)
+}
+
+/**
+ * Without required reapplication one application covers the day's heat sequence: of an item's
+ * occurrences on one day only one stays — the one before blow-drying, which comes first.
+ */
+function oneHeatApplicationPerDay(items: NormalizedRoutineItem[]): NormalizedRoutineItem[] {
+  const single = (item: NormalizedRoutineItem) =>
+    item.role === "heat_protection" &&
+    item.heatEventId !== undefined &&
+    item.catalogFacts.reapplication !== "required"
+  const chosen = new Map<string, NormalizedRoutineItem>()
+  for (const item of items) {
+    if (!single(item)) continue
+    const current = chosen.get(item.itemId)
+    if (
+      !current ||
+      (current.catalogFacts.heatEventRoute !== "airflow_shaping" &&
+        item.catalogFacts.heatEventRoute === "airflow_shaping")
+    ) {
+      chosen.set(item.itemId, item)
+    }
+  }
+  return items.filter((item) => !single(item) || chosen.get(item.itemId) === item)
 }
 
 export function isAlwaysRelevantRoleForDay(

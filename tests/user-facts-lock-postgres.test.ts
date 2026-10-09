@@ -599,7 +599,7 @@ test("the guard and the apply-time check hold the same fact columns and defaults
 test("the shopping_preferences migration's guard and apply-time check hold the same 27 fact columns and defaults", async () => {
   const sql = await readFile(
     new URL(
-      "../supabase/migrations/20261009100000_user_facts_shopping_preferences.sql",
+      "../supabase/migrations/20261009130000_user_facts_shopping_preferences.sql",
       import.meta.url,
     ),
     "utf8",
@@ -621,7 +621,7 @@ test("the shopping_preferences migration refuses to apply over a column it does 
     pg.exec(
       await readFile(
         new URL(
-          "../supabase/migrations/20261009100000_user_facts_shopping_preferences.sql",
+          "../supabase/migrations/20261009130000_user_facts_shopping_preferences.sql",
           import.meta.url,
         ),
         "utf8",
