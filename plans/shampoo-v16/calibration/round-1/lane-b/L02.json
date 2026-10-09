@@ -1,0 +1,109 @@
+{
+  "blindId": "L02",
+  "status": "projected_with_review",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "rationale": "Strong: primary anionic is the non-ethoxylated Ammonium Lauryl Sulfate #2 with Cocamidopropyl Betaine only at #4 (after Sodium Chloride #3); this is a strong primary anionic chassis. C1 does not apply (it covers ether sulfates without reset intent; this product carries explicit Tiefenreinigung intent). Nigella Sativa Seed Oil #5 and polyglyceryl esters #11-13 are counter-signals but do not offset the chassis.",
+      "ruleIds": ["§4", "C1"],
+      "formulaFacts": ["Ammonium Lauryl Sulfate #2", "Cocamidopropyl Betaine #4", "Nigella Sativa Seed Oil #5", "Charcoal Powder #9"],
+      "counterSignal": "single anionic route with betaine and refatting oil buffering",
+      "neighboringAlternative": "moderate"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: two light routes, Nigella Sativa Seed Oil #5 (nonvolatile payload lipid) and Guar Hydroxypropyltrimonium Chloride #8, plus polyglyceryl-10 esters #12-13; no silicone or fatty alcohol. Noticeable but bounded rinse-off care.",
+      "ruleIds": ["§5", "C2"],
+      "formulaFacts": ["Nigella Sativa Seed Oil #5", "Guar Hydroxypropyltrimonium Chloride #8", "Polyglycerin-10 #11", "Polyglyceryl-10 Myristate #12"],
+      "counterSignal": "strong cleansing chassis; routes are light and few",
+      "neighboringAlternative": "low"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: depositionLoad light (one oil and one guar), persistence low (no silicone/film), resetCapacity strong (ALS chassis). Oil at #5 is earlier than 'late', so moderate is the realistic neighbor.",
+      "ruleIds": ["§6"],
+      "subjudgments": { "depositionLoad": "light", "persistence": "low", "resetCapacity": "strong" },
+      "formulaFacts": ["Nigella Sativa Seed Oil #5", "Guar Hydroxypropyltrimonium Chloride #8"],
+      "counterSignal": "oil payload is fairly early (#5)",
+      "whyThisBand": "light, low-persistence deposition with strong reset",
+      "whyNotNeighborBand": "no meaningfully persistent system; reset strong",
+      "neighboringAlternative": "moderate"
+    },
+    "focusPrimary": {
+      "value": "clarifying",
+      "confidence": "moderate",
+      "rationale": "Clarifying: manufacturer positions it as 'Tiefenreinigungsshampoo gegen schnell fettende Kopfhaut' that removes residues; strong ALS chassis plus charcoal is compatible. Moisture-for-lengths is a second, weaker claim.",
+      "ruleIds": ["§7.1", "§7.2"],
+      "careDirection": { "verdict": "not_applicable", "limitation": "primary is not a repair/moisture decision; see secondary for the moisture check" },
+      "claimRole": "candidate",
+      "formulaFacts": ["Ammonium Lauryl Sulfate #2", "Charcoal Powder #9"],
+      "counterSignal": "'Spendet bis zu 72 h Feuchtigkeit' for dry lengths competes; Nigella oil #5 refatting",
+      "neighboringAlternative": "moisture",
+      "decisionTrace": "Formula strong-anionic, light deposition. Claims: deep cleansing/oily scalp dominates name 'Ausgleichendes' and the manufacturer summary. Resolved clarifying."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: moisture positioning for lengths is distinct, but the care-direction verdict is nonspecific: the only humectant is Polyglycerin-10 #11 alongside one oil and one guar, not a coherent humectant cluster (7.3). 72 h claim is an instrumental test with conditioner.",
+      "ruleIds": ["§8", "§7.3", "F1"],
+      "careDirection": { "verdict": "nonspecific", "limitation": "single humectant, light conditioning" },
+      "counterSignal": "explicit 'trockene Haarlängen' / 72 h Feuchtigkeit claim",
+      "neighboringAlternative": "moisture"
+    },
+    "usageRole": {
+      "value": "occasional_reset",
+      "confidence": "moderate",
+      "rationale": "Occasional_reset: exact-product manufacturer copy names it a 'Tiefenreinigungsshampoo' (D1 lexicon 'Tiefenreinigung') and cleansing is strong. Directions do not restrict frequency.",
+      "ruleIds": ["§9", "D1"],
+      "counterSignal": "'Ausgleichendes' everyday naming; directions do not limit to occasional use",
+      "neighboringAlternative": "alternating"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No sensitive/itchy/dry-feeling scalp positioning; strong ALS chassis.",
+      "ruleIds": ["§10"],
+      "neighboringAlternative": "none"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole in the complete INCI.",
+      "ruleIds": ["§11"],
+      "neighboringAlternative": "none"
+    }
+  },
+  "projection": {
+    "thicknessFit": { "fine": "ideal", "normal": "ideal", "coarse": "acceptable" },
+    "thicknessFitConfidence": { "fine": "moderate", "normal": "moderate", "coarse": "moderate" },
+    "thicknessRationale": "T1 W low: fine ideal, normal ideal, coarse acceptable (C moderate). T6 lifts nothing. T4: W neighbor moderate would make fine acceptable -> review_thickness_boundary (fine).",
+    "weight": "light",
+    "weightConfidence": "moderate",
+    "scalpTargets": { "primary": "oily", "secondary": null },
+    "scalpTargetRationale": "S-OILY: E2 'schnell fettende Kopfhaut' on manufacturer page (E1 moderate); formula: cleansing strong, W low, C moderate -> pass. 'trockene Haarlängen' is a hair-length claim, not dry scalp (E2).",
+    "scalpTargetConfidence": "moderate",
+    "cleansingIntensity": "clarifying",
+    "cleansingIntensityRationale": "I1: strong + occasional_reset + clarifying primary -> clarifying (differs from oily bucket's expected regular; I2 keeps it). I3: cleansing neighbor moderate -> regular would equal the expected intensity -> review_intensity_boundary.",
+    "explicitResetPositioning": true,
+    "deepCleanserListing": "flagged",
+    "deepCleanserRationale": "D1 true ('Tiefenreinigungsshampoo' on exact manufacturer page); D2: strong + clarifying + occasional_reset + D1 -> flagged; confidence moderate. Regular entry kept.",
+    "rows": [
+      { "thickness": "fine", "shampoo_bucket": "dehydriert-fettig", "scalp_route": "oily", "cleansing_intensity": "clarifying", "weight": "light", "tier": "ideal" },
+      { "thickness": "normal", "shampoo_bucket": "dehydriert-fettig", "scalp_route": "oily", "cleansing_intensity": "clarifying", "weight": "light", "tier": "ideal" },
+      { "thickness": "coarse", "shampoo_bucket": "dehydriert-fettig", "scalp_route": "oily", "cleansing_intensity": "clarifying", "weight": "light", "tier": "acceptable" }
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": ["review_thickness_boundary:fine", "review_intensity_boundary"],
+    "informationalNotes": ["deep_cleanser_listing:needs_record"]
+  },
+  "uncertainties": [
+    "D1: 'product name or a primary pack claim' - the D1 term appears only on the exact manufacturer page (no pack evidence). Treated manufacturer copy as a primary claim; if not, D1 false and usageRole would be alternating.",
+    "§9 occasional_reset vs alternating: D1 lexicon hit triggers occasional_reset although directions describe ordinary use and name says 'Ausgleichend'; standard gives no rule for a deep-cleansing name with unrestricted directions.",
+    "C1 is written for alkyl ether sulfates; an alkyl sulfate (ALS) primary with late betaine is not explicitly covered. Resolved strong via the §4 anchor.",
+    "D2 'deep_cleanser_listing' note requires an existing record ID or needs_record; the lane cannot see the catalog, recorded needs_record.",
+    "neighboringAlternative for W low is a judgment; a 'moderate' neighbor automatically raises a fine T4 flag."
+  ]
+}

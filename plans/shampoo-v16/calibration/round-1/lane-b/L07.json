@@ -1,0 +1,108 @@
+{
+  "blindId": "L07",
+  "status": "projected_with_review",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: Sodium Laureth Sulfate #2 buffered by Cocamidopropyl Betaine #3 and Coco-Glucoside #4, no second reinforcing anionic or reset route, no reset intent (C1). Refatting Glyceryl Oleate #7.",
+      "ruleIds": ["C1", "§4"],
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Cocamidopropyl Betaine #3", "Coco-Glucoside #4", "Glyceryl Oleate #7"],
+      "counterSignal": "SLES primary",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: several light routes - refatting Glyceryl Oleate #7, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #9 (before Sodium Chloride), Panthenol #12, Glycerin #14. No silicone or fatty alcohol.",
+      "ruleIds": ["§5"],
+      "formulaFacts": ["Glyceryl Oleate #7", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #9", "Panthenol #12", "Glycerin #14"],
+      "counterSignal": "single cationic, otherwise light humectants; could be read as cleansing-led (low)",
+      "neighboringAlternative": "low"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: depositionLoad light (one guar, weak refatter), persistence low, resetCapacity moderate. One light polymer and weak refatter remain low per the §6 anchor.",
+      "ruleIds": ["§6"],
+      "subjudgments": { "depositionLoad": "light", "persistence": "low", "resetCapacity": "moderate" },
+      "formulaFacts": ["Glyceryl Oleate #7", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #9"],
+      "counterSignal": "none material",
+      "whyThisBand": "light, non-persistent routes",
+      "whyNotNeighborBand": "no persistent system",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "rationale": "scalp_active: problem-led 'Anti Schuppen' product with recognized active Piroctone Olamine #6 (7.2 row).",
+      "ruleIds": ["§7.2", "§7.1"],
+      "careDirection": { "verdict": "not_applicable", "limitation": "scalp focus" },
+      "claimRole": "corroborating",
+      "formulaFacts": ["Piroctone Olamine #6", "Zinc PCA #11", "Panthenol #12"],
+      "counterSignal": "fragrance #19 and dyes in an itchy-scalp product",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Formula has a recognized anti-dandruff active; name and claims are anti-dandruff -> scalp_active."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: the itchy/tight-scalp role is part of scalp_active (Appendix A Vichy row); secondary cannot repeat the primary.",
+      "ruleIds": ["§8", "Appendix A"],
+      "neighboringAlternative": "none"
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "rationale": "Treatment: problem-led recognized active route (Piroctone Olamine #6) with anti-dandruff positioning and 'bei regelmäßiger Anwendung'.",
+      "ruleIds": ["§9"],
+      "neighboringAlternative": "none"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "rationale": "Targeted: explicit 'juckende, spannende Kopfhaut' positioning ('Deine juckende Kopfhaut wird beruhigt', 'sanft zur Kopfhaut') with supportive architecture - moderate buffered cleansing, Glyceryl Oleate #7, Panthenol #12, Glycerin #14, Malva extract. Counter-signal: Parfum #19 and colorants.",
+      "ruleIds": ["§10"],
+      "counterSignal": "fragrance and dyes",
+      "neighboringAlternative": "not_targeted"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains Piroctone Olamine #6.",
+      "ruleIds": ["§11"],
+      "neighboringAlternative": "none"
+    }
+  },
+  "projection": {
+    "thicknessFit": { "fine": "ideal", "normal": "ideal", "coarse": "acceptable" },
+    "thicknessFitConfidence": { "fine": "high", "normal": "high", "coarse": "moderate" },
+    "thicknessRationale": "T1 W low: fine ideal, normal ideal, coarse acceptable (C moderate). T6: nothing not_suited. T4: W neighbor none; C neighbor low keeps coarse acceptable -> no flag.",
+    "weight": "light",
+    "weightConfidence": "high",
+    "scalpTargets": { "primary": "dandruff", "secondary": "sensitive" },
+    "scalpTargetRationale": "S-DANDRUFF: 'Anti Schuppen' in name (E1 high) + dandruffSupport supported -> pass. S-SENSITIVE: 'juckende Kopfhaut'/'beruhigt' (E2, manufacturer, E1 moderate), targeted, prominent comfort route Panthenol #12 (before Parfum #19) -> pass. S-DRY: 'spannende Kopfhaut'/'Spannungsgefühl' (E2 dry), targeted, prominent Glycerin #14/Panthenol #12/Glyceryl Oleate #7 -> pass. Three targets: S-SECONDARY keeps primary dandruff + highest-precedence secondary sensitive, drops dry, adds review_extra_scalp_target. S-FOCUS satisfied (scalp_active primary).",
+    "scalpTargetConfidence": { "dandruff": "high", "sensitive": "moderate" },
+    "cleansingIntensity": "regular",
+    "cleansingIntensityRationale": "I1 moderate -> regular; equals schuppen expectation, differs from irritationen's gentle (I2: amber, kept). I3: cleansing neighbor none -> no flag.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "D1 false.",
+    "rows": [
+      { "thickness": "fine", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal" },
+      { "thickness": "normal", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal" },
+      { "thickness": "coarse", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable" },
+      { "thickness": "fine", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal" },
+      { "thickness": "normal", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal" },
+      { "thickness": "coarse", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable" }
+    ],
+    "requiredProtocolRoles": ["shampoo_dandruff", "shampoo_everyday"],
+    "reviewFlags": ["review_extra_scalp_target"],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "S-SECONDARY 'distinct E2 claim': itch and tightness are described as dandruff symptoms in the same sentence; standard does not say whether symptom claims attached to the dandruff problem count as separate sensitive/dry claims. Treated as distinct (lexicon match), producing a third target and review_extra_scalp_target.",
+    "E2 lexicon lists 'Juckreiz' and 'Spannungsgefühl der Kopfhaut'; inflected variants 'juckende Kopfhaut' / 'spannende Kopfhaut' treated as matches.",
+    "E1: claims are on the manufacturer page and look like pack-front text ('Bei Schuppen und juckender Kopfhaut') but no pack evidence is present; graded moderate except the product-name claim."
+  ]
+}
