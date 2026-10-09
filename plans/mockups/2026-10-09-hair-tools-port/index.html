@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deine Tools – Feinschliff</title>
+<style>
+@font-face{font-family:"Playfair Display";font-weight:500;font-style:normal;src:url("assets/fonts/playfair-500-latin.woff2") format("woff2")}
+@font-face{font-family:"Plus Jakarta Sans";font-weight:200 800;font-style:normal;src:url("assets/fonts/jakarta-latin.woff2") format("woff2")}
+:root{
+  --bg:#fcfaf8; --card:#fff; --border:#e6e2dd;
+  --plum-darkest:#2a1845; --plum-dark:#3d2a62; --plum:#6b50a0; --plum-light:#c8b8e0; --plum-ice:#f2eefa;
+  --coral:#d4616a; --coral-dark:#c0555d;
+  --text-body:#3a3835; --text-sub:#6a6560; --muted:#6a6560;
+  --ok-bg:#edf7ef; --ok-text:#356b45;
+  --display:"Playfair Display",Georgia,"Times New Roman",serif;
+  --serif:ui-serif,Georgia,Cambria,"Times New Roman",Times,serif;
+  --body:"Plus Jakarta Sans",Arial,Helvetica,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#ebe7e3;font-family:var(--body);color:var(--text-body);-webkit-font-smoothing:antialiased;padding:40px 32px 80px}
+.page-title{font-family:var(--display);font-weight:500;font-size:30px;color:var(--plum-darkest);margin:0 auto 6px;max-width:1720px}
+.page-sub{font-size:13px;color:#8a847e;margin:0 auto 34px;max-width:1720px}
+.row{display:flex;flex-wrap:wrap;gap:40px 36px;align-items:flex-start;max-width:1720px;margin:0 auto 56px}
+.shot{display:flex;flex-direction:column;gap:10px}
+.cap{font-size:12px;color:#8a847e;font-weight:600;letter-spacing:.01em}
+.cap b{color:#6f6963;font-weight:700}
+.shot .cap{max-width:390px}
+.shot:has(.desk) .cap{max-width:none}
+.namechip{font-size:11.5px;color:#8a847e;font-weight:500}
+.namechip q{quotes:"„" "“";color:#5f5a55;font-weight:700}
+
+/* phone frame */
+.phone{width:390px;min-height:844px;background:var(--bg);border-radius:30px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 30px 60px -36px rgba(42,24,69,.45),0 0 0 1px rgba(42,24,69,.06)}
+.phone.tall{min-height:844px}
+.hdr{background:var(--bg);border-bottom:1px solid #efeae5;padding:10px 16px 12px}
+.hdr-top{display:grid;grid-template-columns:48px 1fr 72px;align-items:center}
+.back{width:48px;height:48px;border-radius:14px;background:var(--plum-ice);border:1px solid #e3dbf1;display:flex;align-items:center;justify-content:center;color:var(--plum)}
+.word{font-family:var(--display);font-size:20px;color:var(--plum-darkest);text-align:center}
+.saved{font-size:11px;font-weight:700;color:#3f7a50;text-align:right}
+.meter{display:flex;align-items:center;gap:10px;margin-top:8px}
+.meter .bar{flex:1;height:4px;border-radius:99px;background:#e6dff2;overflow:hidden}
+.meter .bar i{display:block;height:100%;background:var(--plum);border-radius:99px}
+.meter span{font-size:10px;font-weight:700;color:var(--plum);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.q{padding:24px 20px 128px;flex:1}
+.pill{display:inline-flex;border-radius:99px;background:var(--plum-ice);padding:6px 12px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--plum);margin-bottom:12px}
+.kick{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--plum);margin-bottom:6px}
+.qt{font-family:var(--serif);font-weight:500;font-size:28px;line-height:1.2;color:var(--plum-darkest)}
+.lead{margin-top:8px;font-size:14px;line-height:24px;color:var(--text-sub)}
+.opts{margin-top:20px;display:grid;gap:10px}
+
+/* list option card (QuizOptionCard row) */
+.oc{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;background:#fff;border:1px solid var(--plum-light);border-radius:16px;padding:14px 16px;box-shadow:0 12px 34px -28px rgba(107,80,160,.6)}
+.oc.on{border-color:var(--plum);box-shadow:0 0 0 2px rgba(107,80,160,.2),0 16px 40px -30px rgba(107,80,160,.72)}
+.ico{width:40px;height:40px;border-radius:12px;background:var(--plum-ice);display:flex;align-items:center;justify-content:center;color:var(--plum)}
+.ol{font-size:15px;font-weight:600;line-height:1.35;color:var(--plum-darkest)}
+.od{margin-top:3px;font-size:14px;line-height:20px;color:var(--text-sub)}
+.box{width:20px;height:20px;border:1px solid var(--plum-light);background:#fff;border-radius:6px}
+.box.r{border-radius:99px}
+.chk{width:20px;height:20px;background:var(--plum);color:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.chk.r{border-radius:99px}
+
+/* photo cards (ToolVisualMultiSelect) */
+.grid2{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px;grid-auto-rows:1fr}
+.pc{display:flex;flex-direction:column;background:#fff;border:1px solid var(--plum-light);border-radius:16px;overflow:hidden}
+.pc.on{border-color:var(--plum);box-shadow:0 0 0 2px rgba(107,80,160,.2)}
+.well{height:128px;background:var(--plum-ice);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.well span{height:100%;aspect-ratio:1/1;overflow:hidden;-webkit-mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent)}
+.well img{width:100%;height:100%;object-fit:cover;object-position:center}
+.pb{display:flex;gap:8px;align-items:flex-start;padding:8px 12px 12px;flex:1}
+.pb .t{flex:1;min-width:0}
+.pl{font-size:15px;font-weight:600;line-height:1.35;color:var(--plum-darkest);hyphens:auto;overflow-wrap:break-word}
+.ph{margin-top:4px;font-size:14px;line-height:20px;color:var(--text-sub)}
+.rc{width:24px;height:24px;flex:none;margin-top:2px;border-radius:99px;border:1px solid var(--plum-light);background:#fff;display:flex;align-items:center;justify-content:center;color:transparent}
+.rc.on{background:var(--plum);border-color:var(--plum);color:#fff}
+.none{margin-top:12px;width:100%;background:#fff;border:1px solid var(--plum-light);border-radius:16px;padding:12px 16px;font-size:15px;font-weight:600;color:var(--plum-darkest)}
+
+/* dock */
+.dock{position:absolute;left:0;right:0;bottom:0;border-top:1px solid #ece6df;background:rgba(253,251,249,.95);padding:10px 16px 22px}
+.cta{display:flex;align-items:center;justify-content:center;min-height:56px;width:100%;border-radius:99px;background:var(--coral);color:#fff;font-weight:700;font-size:16px;text-align:center;padding:0 24px}
+
+/* routine page + banner */
+.apphdr{padding:16px 16px 8px;display:flex;justify-content:center}
+.rt{padding:12px 16px 40px;flex:1}
+.rt .k{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#6e6863}
+.rt h1{font-family:var(--display);font-weight:500;font-size:23px;line-height:1.14;color:#291a43}
+.edit{font-size:12px;font-weight:600;color:var(--plum);text-decoration:underline;text-underline-offset:2px}
+.banner{position:relative;margin-top:16px;border-radius:16px;border:1px solid #ddd2ef;background:var(--plum-ice);padding:14px 16px}
+.banner .x{position:absolute;right:12px;top:10px;font-size:15px;font-weight:700;color:#a394c2}
+.banner .top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding-right:20px}
+.banner .tt{font-size:15.5px;font-weight:800;color:var(--plum-darkest)}
+.banner .n{font-size:12px;font-weight:700;color:var(--plum);white-space:nowrap;font-variant-numeric:tabular-nums}
+.banner .bar{margin:10px 0;height:6px;border-radius:99px;background:#e6dff2;overflow:hidden}
+.banner .bar i{display:block;height:100%;background:var(--plum)}
+.pillcta{display:inline-block;border-radius:99px;background:var(--coral);color:#fff;font-size:13.5px;font-weight:800;padding:10px 18px}
+.blk{margin-top:22px}
+.blk .h{display:flex;justify-content:space-between;align-items:baseline;padding:0 2px 10px}
+.blk .h strong{font-size:14px;color:#291a43}
+.blk .h span{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--plum)}
+.rcard{background:#fff;border:1px solid var(--border);border-radius:18px;padding:14px;display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.rcard .sq{width:52px;height:52px;border-radius:14px;flex:none}
+.rcard .l1{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.1em}
+.rcard .l2{font-size:15px;font-weight:700;color:#291a43;margin-top:2px}
+.rcard .l3{font-size:12px;color:#706a65;margin-top:2px}
+
+/* haarprofil */
+.hp{padding:28px 16px 40px}
+.hp .hh{display:flex;justify-content:space-between;align-items:baseline}
+.hp h2{font-family:var(--display);font-weight:500;font-size:24px;color:var(--plum-darkest)}
+.hp .n{font-size:12.5px;font-weight:700;color:var(--plum);font-variant-numeric:tabular-nums}
+.hp .bar{margin:4px 0 18px;height:8px;border-radius:99px;background:#e6dff2;overflow:hidden}
+.hp .bar i{display:block;height:100%;background:var(--plum)}
+.prow{display:flex;align-items:center;gap:12px;border:1px solid var(--border);border-radius:16px;padding:14px 15px;background:#fff;margin-bottom:10px}
+.prow.done{background:#f6f3f0}
+.prow .c{width:30px;height:30px;flex:none;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;background:var(--plum-ice);color:var(--plum)}
+.prow.done .c{background:#e7efe3;color:#5d8a6c}
+.prow .lb{flex:1;font-size:15px;font-weight:700;color:var(--plum-darkest)}
+.prow.done .lb{font-weight:600;color:#6a6560}
+.prow .lb small{display:block;font-size:12px;font-weight:500;color:#6a6560;margin-top:2px}
+.prow .chev{font-weight:800;color:var(--plum-light)}
+.prow .ed{font-size:12px;font-weight:600;color:var(--plum);text-decoration:underline;text-underline-offset:2px}
+.prow.new{border-color:var(--plum-light);box-shadow:0 12px 34px -28px rgba(107,80,160,.6)}
+
+/* checkpoint */
+.cp{padding:24px 12px 120px;flex:1}
+.cp .k{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--plum)}
+.cp h1{font-family:var(--display);font-weight:500;font-size:23px;line-height:1.14;color:#291a43;margin-top:4px}
+.cp .ld{margin-top:8px;font-size:13px;line-height:1.6;color:#706a65}
+.fam{margin-top:12px;border:1px solid;border-radius:18px;padding:12px}
+.fam .fl{display:flex;align-items:center;gap:6px;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.1em}
+.fam .fl i{width:6px;height:6px;border-radius:99px;display:block}
+.tool{display:flex;align-items:center;gap:12px;margin-top:10px}
+.tool img{width:44px;height:44px;border-radius:12px;object-fit:cover;border:1px solid rgba(31,26,20,.05);background:var(--plum-ice)}
+.tool span{font-size:15px;font-weight:700;color:#291a43}
+.quiet{display:block;text-align:center;margin-top:22px;font-size:13px;font-weight:600;color:var(--plum)}
+.quiet u{text-underline-offset:2px}
+.f-air{background:#EEF3F8;border-color:#DFE9F2}.f-air .fl{color:#3D6A92}.f-air .fl i{background:#6D9CC4}
+.f-brush{background:#F7F3EA;border-color:#EEE7D8}.f-brush .fl{color:#8A6D2F}.f-brush .fl i{background:#C9A24A}
+.f-tex{background:#EEF5EF;border-color:#DCEBE0}.f-tex .fl{color:#3E7D5B}.f-tex .fl i{background:#6FAE8C}
+.f-night{background:#F3EEF8;border-color:#E6DCF2}.f-night .fl{color:#6A4FA3}.f-night .fl i{background:#9B7FD1}
+
+/* profil section */
+.pf{padding:20px 12px 40px;flex:1}
+.pcard{background:#fff;border:1px solid rgba(107,80,160,.2);border-radius:20px;overflow:hidden}
+.pcard .ch{padding:20px 20px 16px}
+.pcard .tw{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.pcard h2{font-family:var(--display);font-weight:500;font-size:24px;line-height:1.2;color:var(--plum-darkest)}
+.badge{border:1px solid rgba(107,80,160,.15);background:rgba(107,80,160,.05);color:var(--plum);border-radius:99px;font-size:12px;font-weight:500;padding:4px 12px}
+.pcard .ds{margin-top:8px;font-size:14px;line-height:1.5;color:#6a6560;max-width:42rem}
+.obtn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 22px;border:1.5px solid var(--plum);border-radius:12px;color:var(--plum);font-size:13px;font-weight:600;white-space:nowrap}
+.pcard .cc{padding:0 20px 20px;display:grid;gap:16px}
+.fc{border:1px solid rgba(107,80,160,.1);background:rgba(252,250,248,.7);border-radius:22px;padding:20px}
+.fc .fl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.14em;color:#6a6560;margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid rgba(107,80,160,.2);background:var(--bg);border-radius:99px;font-size:12px;font-weight:600;color:var(--plum-darkest);padding:4px 12px;display:inline-flex;align-items:center;gap:6px}
+.chip img{width:20px;height:20px;border-radius:99px;object-fit:cover;margin-left:-6px}
+.ptab{height:40px}
+
+/* desktop */
+.desk{width:1180px;background:var(--bg);border-radius:18px;overflow:hidden;box-shadow:0 30px 60px -36px rgba(42,24,69,.45),0 0 0 1px rgba(42,24,69,.06)}
+.desk .bar{height:34px;background:#f1ece8;border-bottom:1px solid #e6e0da;display:flex;align-items:center;gap:7px;padding:0 14px}
+.desk .bar i{width:11px;height:11px;border-radius:99px;background:#d9d2cb;display:block}
+.desk .in{padding:36px 48px 48px}
+.desk .pcard .ch{padding:28px 28px 20px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px}
+.desk .pcard .cc{padding:0 28px 28px;grid-template-columns:repeat(3,1fr)}
+.desk .span3{grid-column:1/-1}
+.pcard+.pcard{margin-top:16px}
+.compact .cc{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.compact .fc{min-width:0}
+.compact .fc .fl{letter-spacing:.06em}
+.compact .fc{padding:12px 14px;border-radius:16px}
+.compact .fc .fl{margin-bottom:8px;font-size:10px}
+.compact .chip{font-size:11.5px}
+.famlab{display:flex;align-items:center;gap:6px;font-weight:800!important;letter-spacing:.1em!important;font-size:9.5px!important}
+.famlab i{width:6px;height:6px;border-radius:99px;display:block}
+.t-air{color:#3D6A92!important}.t-air i{background:#6D9CC4}
+.t-brush{color:#8A6D2F!important}.t-brush i{background:#C9A24A}
+.t-tex{color:#3E7D5B!important}.t-tex i{background:#6FAE8C}
+.t-night{color:#6A4FA3!important}.t-night i{background:#9B7FD1}
+.toolsc .chip{font-size:13px;padding:5px 12px 5px 6px}
+.toolsc .chip img{width:28px;height:28px;margin-left:0}
+.desk .compact .cc{grid-template-columns:repeat(3,1fr);gap:16px}
+.desk .compact .fc{padding:16px 20px}
+.desk .toolsc .cc{grid-template-columns:repeat(4,1fr)}
+.f-heat{background:#F5F0EA;border-color:#E5D6C8}.f-heat .fl{color:#9A5330}.f-heat .fl i{background:#C8845A}
+.t-heat{color:#9A5330!important}.t-heat i{background:#C8845A}
+.desk .habitsc .cc{grid-template-columns:repeat(4,1fr)}
+.desk .toolsc .cc{grid-template-columns:repeat(5,minmax(0,1fr))}
+.prow.later .c{background:#f1ede8;color:#8a847e}
+.prow.later .lb{color:#8a847e;font-weight:600}
+.q2{font-family:var(--serif);font-weight:500;font-size:21px;line-height:1.25;color:var(--plum-darkest);margin-top:26px}
+.opts.tight{gap:8px;margin-top:14px}
+.opts.tight .oc{padding:12px 16px}
+.opts.two{grid-template-columns:1fr 1fr}
+.oc.nl{grid-template-columns:1fr auto}
+.compact .fc.wide{grid-column:1/-1}
+.goalhead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
+.goalhead .fl{margin-bottom:0!important}
+.mini-edit{font-size:12px;font-weight:600;color:var(--plum);text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.prodc .cc{grid-template-columns:1fr!important;gap:8px!important}
+.prod{border:1px solid rgba(107,80,160,.1);background:rgba(252,250,248,.7);border-radius:16px;padding:12px 14px}
+.prod p{font-size:13.5px;font-weight:600;color:#291a43}
+.prod small{display:block;margin-top:4px;font-size:12px;color:#706a65}
+.desk .hc .cc{grid-template-columns:repeat(4,minmax(0,1fr))}
+.desk .compact .fc.wide{grid-column:auto}
+.desk .prodc .cc{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important}
+.desk .prod{padding:16px 20px}
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Feinschliff · Deine Tools</h1>
+<p class="page-sub">Beispiel: Lena, wellige Haare, föhnt heiß mit Rundbürste.</p>
+
+<!-- ROW 1 -->
+<div class="row">
+
+  <!-- 1a Routine-Banner -->
+  <div class="shot">
+    <div class="cap"><b>1a</b> · Einstieg auf der Routine · 3 von 5</div>
+    <div class="phone">
+      <div class="apphdr"><span class="word">chaarlie</span></div>
+      <div class="rt">
+        <div class="k">Persönlicher Plan</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:4px">
+          <h1>Deine Routine</h1><span class="edit">Bearbeiten</span>
+        </div>
+        <div class="banner">
+          <span class="x">✕</span>
+          <div class="top"><span class="tt">Als Nächstes: Deine Tools.</span><span class="n">3 von 5</span></div>
+          <div class="bar"><i style="width:60%"></i></div>
+          <span class="pillcta">Weiter · 3 Min.</span>
+        </div>
+        <div class="blk" style="opacity:.55">
+          <div class="h"><strong>Deine Basis</strong><span>5 Kategorien</span></div>
+          <div class="rcard"><div class="sq" style="background:#EEF3F8"></div><div><div class="l1" style="color:#3D6A92">Shampoo</div><div class="l2">Sanft reinigend</div><div class="l3">3–4×/Woche</div></div></div>
+          <div class="rcard"><div class="sq" style="background:#F5EDEF"></div><div><div class="l1" style="color:#8C4A5C">Conditioner</div><div class="l2">Leicht pflegend</div><div class="l3">nach jeder Haarwäsche</div></div></div>
+          <div class="rcard"><div class="sq" style="background:#EEF5EF"></div><div><div class="l1" style="color:#3E7D5B">Leave-in</div><div class="l2">Leicht schützend</div><div class="l3">nach jeder Haarwäsche</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1b Haarprofil -->
+  <div class="shot">
+    <div class="cap"><b>1b</b> · Haarprofil · Reihenfolge der Module</div>
+    <div class="phone">
+      <div class="apphdr"><span class="word">chaarlie</span></div>
+      <div class="hp">
+        <div class="hh"><h2>Dein Haarprofil</h2><span class="n">3 von 5</span></div>
+        <div class="bar"><i style="width:60%"></i></div>
+        <div class="prow done"><span class="c">✓</span><span class="lb">Haar-Analyse</span></div>
+        <div class="prow done"><span class="c">✓</span><span class="lb">Dein Plan</span><span class="chev">›</span></div>
+        <div class="prow done"><span class="c">✓</span><span class="lb">Deine Produkte</span><span class="ed">Angaben ändern</span></div>
+        <div class="prow new"><span class="c">4</span><span class="lb">Deine Tools</span><span class="chev">›</span></div>
+        <div class="prow later"><span class="c">5</span><span class="lb">Deine Gewohnheiten</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 Überblick -->
+  <div class="shot">
+    <div class="cap"><b>2</b> · Überblick · Bereiche in Waschtag-Reihenfolge</div>
+    <div class="phone" style="min-height:900px">
+      <div class="hdr">
+        <div class="hdr-top">
+          <span class="back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></span>
+          <span class="word">chaarlie</span><span class="saved">Gespeichert</span>
+        </div>
+        <div class="meter"><div class="bar"><i style="width:60%"></i></div><span>3 von 5</span></div>
+      </div>
+      <div class="q">
+        <div class="kick">Deine Tools</div>
+        <h2 class="qt">Was hast du schon?</h2>
+        <p class="lead">Wähle die Bereiche, aus denen du schon Produkte hast. Nicht gewählt = hast du nicht.</p>
+        <div class="grid2">
+          <div class="pc"><div class="well"><span><img src="assets/scalp_brush.webp" alt="Kopfhautbürste"></span></div>
+            <div class="pb"><div class="t"><div class="pl">Waschen &amp; Auftragen</div><div class="ph">Applikator, Kopfhautbürste</div></div><span class="rc"></span></div></div>
+          <div class="pc on"><div class="well"><span><img src="assets/microfiber_towel.webp" alt="Mikrofaser-Handtuch"></span></div>
+            <div class="pb"><div class="t"><div class="pl">Abtrocknen &amp; Entwirren</div><div class="ph">Handtücher, Kämme, Bürsten</div></div><span class="rc on"><svg viewBox="0 0 20 20" width="14" height="14"><path d="M5 10.5l3.2 3.2L15 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div></div>
+          <div class="pc on"><div class="well"><span><img src="assets/blow_dryer.webp" alt="Föhn"></span></div>
+            <div class="pb"><div class="t"><div class="pl">Trocknen &amp; Stylen</div><div class="ph">Föhn, Glätteisen, Lockenwickler, Clips</div></div><span class="rc on"><svg viewBox="0 0 20 20" width="14" height="14"><path d="M5 10.5l3.2 3.2L15 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div></div>
+          <div class="pc on"><div class="well"><span><img src="assets/pillowcase.webp" alt="Glatter Kissenbezug"></span></div>
+            <div class="pb"><div class="t"><div class="pl">Nachtschutz</div><div class="ph">Kissenbezug, Bonnet</div></div><span class="rc on"><svg viewBox="0 0 20 20" width="14" height="14"><path d="M5 10.5l3.2 3.2L15 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div></div>
+        </div>
+        <div class="none">Nichts davon</div>
+      </div>
+      <div class="dock"><div class="cta">Weiter</div></div>
+    </div>
+  </div>
+
+  <!-- 3 Bildkarten-Seite -->
+  <div class="shot">
+    <div class="cap"><b>3</b> · Bildkarten-Seite pro Bereich (hier: Handtücher)</div>
+    <div class="phone" style="min-height:900px">
+      <div class="hdr">
+        <div class="hdr-top">
+          <span class="back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></span>
+          <span class="word">chaarlie</span><span class="saved">Gespeichert</span>
+        </div>
+        <div class="meter"><div class="bar"><i style="width:60%"></i></div><span>3 von 5</span></div>
+      </div>
+      <div class="q">
+        <span class="pill">Abtrocknen &amp; Entwirren</span>
+        <div class="kick">Deine Tools</div>
+        <h2 class="qt">Welche Handtücher &amp; Trocknungsmaterialien nutzt du?</h2>
+        <p class="lead">Mehrfachauswahl möglich.</p>
+        <div class="grid2">
+          <div class="pc on"><div class="well"><span><img src="assets/microfiber_towel.webp" alt="Mikrofaser-Handtuch"></span></div>
+            <div class="pb"><div class="t"><div class="pl">Mikrofaser-Handtuch</div></div><span class="rc on"><svg viewBox="0 0 20 20" width="14" height="14"><path d="M5 10.5l3.2 3.2L15 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div></div>
+          <div class="pc"><div class="well"><span><img src="assets/frottee.webp" alt="Frottee-Handtuch"></span></div>
+            <div class="pb"><div class="t"><div class="pl">Frottee-Handtuch</div></div><span class="rc"></span></div></div>
+          <div class="pc"><div class="well"><span><img src="assets/drying_wrap.webp" alt="Trockenturban"></span></div>
+            <div class="pb"><div class="t"><div class="pl">Trockenturban</div></div><span class="rc"></span></div></div>
+          <div class="pc"><div class="well"><span><img src="assets/smooth_cotton_cloth.webp" alt="Baumwolltuch"></span></div>
+            <div class="pb"><div class="t"><div class="pl">Baumwolltuch</div></div><span class="rc"></span></div></div>
+        </div>
+        <div class="none">Nichts davon</div>
+      </div>
+      <div class="dock"><div class="cta">Weiter</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ROW 2 -->
+<div class="row">
+
+  <!-- 4 Tool-Checkpoint -->
+  <div class="shot">
+    <div class="cap"><b>4</b> · Tool-Checkpoint, einmalig vor der Routine</div>
+    <div class="phone" style="min-height:900px">
+      <div class="cp">
+        <div class="k">Deine Tools</div>
+        <h1>Das hast du schon</h1>
+        <p class="ld">Damit planen wir ab jetzt deine Routine.</p>
+
+        <div class="fam f-tex"><div class="fl"><i></i>Handtücher</div>
+          <div class="tool"><img src="assets/microfiber_towel.webp" alt=""><span>Mikrofaser-Handtuch</span></div></div>
+        <div class="fam f-brush"><div class="fl"><i></i>Bürsten &amp; Kämme</div>
+          <div class="tool"><img src="assets/round.webp" alt=""><span>Rundbürste</span></div>
+          <div class="tool"><img src="assets/wide_tooth_comb.webp" alt=""><span>Grobzinkiger Kamm</span></div></div>
+        <div class="fam f-air"><div class="fl"><i></i>Haartrockner &amp; Luftstyler</div>
+          <div class="tool"><img src="assets/blow_dryer.webp" alt=""><span>Föhn</span></div>
+          <div class="tool"><img src="assets/dryer_brush.webp" alt=""><span>Warmluftbürste</span></div></div>
+        <div class="fam f-heat"><div class="fl"><i></i>Hitzestyling-Tools</div>
+          <div class="tool"><img src="assets/straightener.webp" alt=""><span>Glätteisen</span></div></div>
+        <div class="fam f-night"><div class="fl"><i></i>Nachtschutz</div>
+          <div class="tool"><img src="assets/pillowcase.webp" alt=""><span>Glatter Kissenbezug</span></div></div>
+
+        <span class="quiet">Etwas fehlt? <u>Tools ergänzen</u></span>
+      </div>
+      <div class="dock"><div class="cta">Weiter zu deiner Routine</div></div>
+    </div>
+  </div>
+
+  <!-- 5a Gewohnheiten · Trocknen -->
+  <div class="shot">
+    <div class="cap"><b>5a</b> · Gewohnheiten · Trocknen · „Mit Diffusor“ erscheint nur mit Diffusor-Aufsatz in den Tools</div>
+    <div class="phone" style="min-height:900px">
+      <div class="hdr">
+        <div class="hdr-top">
+          <span class="back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></span>
+          <span class="word">chaarlie</span><span class="saved">Gespeichert</span>
+        </div>
+        <div class="meter"><div class="bar"><i style="width:80%"></i></div><span>4 von 5</span></div>
+      </div>
+      <div class="q">
+        <div class="kick">Wie du dein Haar behandelst</div>
+        <h2 class="qt">Wie trocknet dein Haar meistens weiter?</h2>
+        <p class="lead">Mehrere Wege dürfen parallel vorkommen.</p>
+        <div class="opts">
+          <div class="oc">
+            <span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 8h11a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M3 16h7"/></svg></span>
+            <span><span class="ol">Lufttrocknen</span></span><span class="box"></span>
+          </div>
+          <div class="oc on">
+            <span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9a4 4 0 0 1 0 8H9l-1 5H6l1-5H4z"/><path d="M17 9h3M17 13h3"/></svg></span>
+            <span><span class="ol">Gewöhnlich föhnen</span><span class="od" style="display:block">auch mit Rundbürste</span></span>
+            <span class="chk"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6L5 8.5L9.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+      </div>
+      <div class="dock"><div class="cta">Weiter</div></div>
+    </div>
+  </div>
+
+  <!-- 5b Gewohnheiten · pro Hitze-Tool -->
+  <div class="shot">
+    <div class="cap"><b>5b</b> · Gewohnheiten · pro Hitze-Tool (hier: Glätteisen)</div>
+    <div class="phone" style="min-height:900px">
+      <div class="hdr">
+        <div class="hdr-top">
+          <span class="back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></span>
+          <span class="word">chaarlie</span><span class="saved">Gespeichert</span>
+        </div>
+        <div class="meter"><div class="bar"><i style="width:80%"></i></div><span>4 von 5</span></div>
+      </div>
+      <div class="q">
+        <div class="kick">Wie du dein Haar behandelst</div>
+        <h2 class="qt">Wie oft nutzt du dein Glätteisen?</h2>
+        <div class="opts tight">
+          <div class="oc nl"><span class="ol">Täglich</span><span class="box r"></span></div>
+          <div class="oc nl on"><span class="ol">Mehrmals pro Woche</span><span class="chk r"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6L5 8.5L9.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="oc nl"><span class="ol">Wöchentlich</span><span class="box r"></span></div>
+          <div class="oc nl"><span class="ol">Seltener</span><span class="box r"></span></div>
+        </div>
+        <h3 class="q2">Hitzeschutz dabei?</h3>
+        <div class="opts tight two">
+          <div class="oc nl"><span class="ol">Immer</span><span class="box r"></span></div>
+          <div class="oc nl on"><span class="ol">Manchmal</span><span class="chk r"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6L5 8.5L9.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="oc nl"><span class="ol">Nein</span><span class="box r"></span></div>
+          <div class="oc nl"><span class="ol">Unsicher</span><span class="box r"></span></div>
+        </div>
+      </div>
+      <div class="dock"><div class="cta">Weiter</div></div>
+    </div>
+  </div>
+
+  <!-- 6a Profil mobil -->
+  <div class="shot">
+    <div class="cap"><b>6a</b> · Profil · mobil</div>
+    <div class="phone">
+      <div class="apphdr"><span class="word">chaarlie</span></div>
+      <div class="pf">
+        <div class="pcard compact hc">
+          <div class="ch">
+            <div class="tw"><h2>Haar-Check</h2></div>
+            <div style="margin-top:14px"><span class="obtn">Haar-Check bearbeiten</span></div>
+          </div>
+          <div class="cc"><div class="fc"><div class="fl">Haarstruktur</div><div class="chips"><span class="chip">Wellig</span></div></div><div class="fc"><div class="fl">Haardicke</div><div class="chips"><span class="chip">Normal</span></div></div><div class="fc"><div class="fl">Haarlänge</div><div class="chips"><span class="chip">Schulterlang</span></div></div><div class="fc wide"><div class="goalhead"><div class="fl">Deine Haarziele</div><span class="mini-edit">Ziele bearbeiten</span></div><div class="chips"><span class="chip">Mehr Glanz</span><span class="chip">Weniger Frizz</span></div></div></div>
+        </div><div class="pcard compact prodc">
+          <div class="ch">
+            <div class="tw"><h2>Produkte</h2></div>
+            <div style="margin-top:14px"><span class="obtn">Produkte bearbeiten</span></div>
+          </div>
+          <div class="cc"><div class="prod"><p>Shampoo · Sanft reinigend</p><small>3–4×/Woche</small></div><div class="prod"><p>Conditioner · Leicht pflegend</p><small>nach jeder Haarwäsche</small></div><div class="prod"><p>Leave-in · Leicht schützend</p><small>nach jeder Haarwäsche</small></div></div>
+        </div><div class="pcard toolsc">
+          <div class="ch">
+            <div class="tw"><h2>Deine Tools</h2><span class="badge">7 Tools</span></div>
+            <p class="ds">Was du schon hast, aus deinem Feinschliff.</p>
+            <div style="margin-top:14px"><span class="obtn">Deine Tools bearbeiten</span></div>
+          </div>
+          <div class="cc"><div class="fc"><div class="fl famlab t-tex"><i></i>Handtücher</div><div class="chips"><span class="chip"><img src="assets/microfiber_towel.webp" alt="">Mikrofaser-Handtuch</span></div></div><div class="fc"><div class="fl famlab t-brush"><i></i>Bürsten &amp; Kämme</div><div class="chips"><span class="chip"><img src="assets/round.webp" alt="">Rundbürste</span><span class="chip"><img src="assets/wide_tooth_comb.webp" alt="">Grobzinkiger Kamm</span></div></div><div class="fc"><div class="fl famlab t-air"><i></i>Haartrockner &amp; Luftstyler</div><div class="chips"><span class="chip"><img src="assets/blow_dryer.webp" alt="">Föhn</span><span class="chip"><img src="assets/dryer_brush.webp" alt="">Warmluftbürste</span></div></div><div class="fc"><div class="fl famlab t-heat"><i></i>Hitzestyling-Tools</div><div class="chips"><span class="chip"><img src="assets/straightener.webp" alt="">Glätteisen</span></div></div><div class="fc"><div class="fl famlab t-night"><i></i>Nachtschutz</div><div class="chips"><span class="chip"><img src="assets/pillowcase.webp" alt="">Glatter Kissenbezug</span></div></div></div>
+        </div><div class="pcard compact habitsc">
+          <div class="ch">
+            <div class="tw"><h2>Gewohnheiten</h2></div>
+            <p class="ds">Wie du trocknest und stylst, aus deinem Feinschliff.</p>
+            <div style="margin-top:14px"><span class="obtn">Gewohnheiten bearbeiten</span></div>
+          </div>
+          <div class="cc"><div class="fc"><div class="fl">Abtrocknen</div><div class="chips"><span class="chip">Sanft ausdrücken</span></div></div><div class="fc"><div class="fl">Trocknen</div><div class="chips"><span class="chip">Gewöhnlich föhnen</span></div></div><div class="fc"><div class="fl">Hitze-Häufigkeit</div><div class="chips"><span class="chip">Mehrmals pro Woche</span></div></div><div class="fc"><div class="fl">Hitzeschutz</div><div class="chips"><span class="chip">Manchmal</span></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ROW 3 desktop -->
+<div class="row">
+  <div class="shot">
+    <div class="cap"><b>6b</b> · Profil · Desktop</div>
+    <div class="desk">
+      <div class="bar"><i></i><i></i><i></i></div>
+      <div class="in">
+        <div class="pcard compact hc">
+          <div class="ch">
+            <div><div class="tw"><h2>Haar-Check</h2></div></div>
+            <span class="obtn">Haar-Check bearbeiten</span>
+          </div>
+          <div class="cc"><div class="fc"><div class="fl">Haarstruktur</div><div class="chips"><span class="chip">Wellig</span></div></div><div class="fc"><div class="fl">Haardicke</div><div class="chips"><span class="chip">Normal</span></div></div><div class="fc"><div class="fl">Haarlänge</div><div class="chips"><span class="chip">Schulterlang</span></div></div><div class="fc wide"><div class="goalhead"><div class="fl">Deine Haarziele</div><span class="mini-edit">Ziele bearbeiten</span></div><div class="chips"><span class="chip">Mehr Glanz</span><span class="chip">Weniger Frizz</span></div></div></div>
+        </div><div class="pcard compact prodc">
+          <div class="ch">
+            <div><div class="tw"><h2>Produkte</h2></div></div>
+            <span class="obtn">Produkte bearbeiten</span>
+          </div>
+          <div class="cc"><div class="prod"><p>Shampoo · Sanft reinigend</p><small>3–4×/Woche</small></div><div class="prod"><p>Conditioner · Leicht pflegend</p><small>nach jeder Haarwäsche</small></div><div class="prod"><p>Leave-in · Leicht schützend</p><small>nach jeder Haarwäsche</small></div></div>
+        </div><div class="pcard toolsc">
+          <div class="ch">
+            <div><div class="tw"><h2>Deine Tools</h2><span class="badge">7 Tools</span></div><p class="ds">Was du schon hast, aus deinem Feinschliff.</p></div>
+            <span class="obtn">Deine Tools bearbeiten</span>
+          </div>
+          <div class="cc"><div class="fc"><div class="fl famlab t-tex"><i></i>Handtücher</div><div class="chips"><span class="chip"><img src="assets/microfiber_towel.webp" alt="">Mikrofaser-Handtuch</span></div></div><div class="fc"><div class="fl famlab t-brush"><i></i>Bürsten &amp; Kämme</div><div class="chips"><span class="chip"><img src="assets/round.webp" alt="">Rundbürste</span><span class="chip"><img src="assets/wide_tooth_comb.webp" alt="">Grobzinkiger Kamm</span></div></div><div class="fc"><div class="fl famlab t-air"><i></i>Haartrockner &amp; Luftstyler</div><div class="chips"><span class="chip"><img src="assets/blow_dryer.webp" alt="">Föhn</span><span class="chip"><img src="assets/dryer_brush.webp" alt="">Warmluftbürste</span></div></div><div class="fc"><div class="fl famlab t-heat"><i></i>Hitzestyling-Tools</div><div class="chips"><span class="chip"><img src="assets/straightener.webp" alt="">Glätteisen</span></div></div><div class="fc"><div class="fl famlab t-night"><i></i>Nachtschutz</div><div class="chips"><span class="chip"><img src="assets/pillowcase.webp" alt="">Glatter Kissenbezug</span></div></div></div>
+        </div><div class="pcard compact habitsc">
+          <div class="ch">
+            <div><div class="tw"><h2>Gewohnheiten</h2></div><p class="ds">Wie du trocknest und stylst, aus deinem Feinschliff.</p></div>
+            <span class="obtn">Gewohnheiten bearbeiten</span>
+          </div>
+          <div class="cc"><div class="fc"><div class="fl">Abtrocknen</div><div class="chips"><span class="chip">Sanft ausdrücken</span></div></div><div class="fc"><div class="fl">Trocknen</div><div class="chips"><span class="chip">Gewöhnlich föhnen</span></div></div><div class="fc"><div class="fl">Hitze-Häufigkeit</div><div class="chips"><span class="chip">Mehrmals pro Woche</span></div></div><div class="fc"><div class="fl">Hitzeschutz</div><div class="chips"><span class="chip">Manchmal</span></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -564,6 +564,13 @@ export type AppEventMap = {
   personal_plan_stage3_handoff: {
     outcome: PersonalPlanStage3HandoffOutcome
   }
+  personal_plan_tools_inventory_entered: {
+    sectionCount: number
+  }
+  personal_plan_tools_inventory_completed: {
+    reportedFamilyCount: number
+    explicitNoneFamilyCount: number
+  }
   personal_plan_stage3_review_viewed: {
     category: PersonalPlanCategory | null
     verdict: PersonalPlanStage3ReviewVerdict
