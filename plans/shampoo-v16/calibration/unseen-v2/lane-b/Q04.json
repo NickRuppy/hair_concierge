@@ -1,0 +1,298 @@
+{
+ "blindId": "Q04",
+ "policy": "shampoo-classification-v1.6-candidate",
+ "identity": {
+  "brand": "head&shoulders",
+  "productName": "Anti-Schuppen Shampoo Apple Fresh",
+  "packSize": "500 ml",
+  "market": "DE",
+  "formulaSource": "frozen packet canonicalInci (treated as approved canonical full-INCI capture, ID-1)",
+  "normalization": "ID-2: no synonym/split entries; normalized positions = packet positions (31 entries)",
+  "formulaFingerprint": "sha256(newline-joined normalized INCI) = cbcdbe2d5832e0628bcc7755dc1315a032944d2e9736fca513a3a1b6c300c4d5",
+  "prominenceCutoff": "E3: Parfum at #6 -> prominent = #1-#5",
+  "claimInciConflicts": "none: 'Pirocton-Olamin' -> Piroctone Olamine #10",
+  "sourceGrading": "CL-SRC/E1: product name 'Anti-Schuppen Shampoo Apple Fresh' = high; manufacturer source = moderate; retailer = low"
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "C1: defining anionic Sodium Laureth Sulfate #2 (ether type); prominent buffer Cocamidopropyl Betaine #4; no prominent reinforcing anionic -> moderate. Sodium Xylenesulfonate #3 is a hydrotrope and Cocamide MEA #8 a foam booster (C3, neither route nor buffer). TEA-Dodecylbenzenesulfonate #16 is a strong sulfonate but listed after Parfum, so C4 records it without counting it as a reinforcing route.",
+   "ruleIds": [
+    "C3",
+    "C4",
+    "C1",
+    "E3",
+    "N-ALT"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "high",
+   "rationale": "Section 5 anchors: one meaningful silicone/cationic-guar coacervate system - Dimethiconol #11, Guar Hydroxypropyltrimonium Chloride #13, Dimethicone #14 - plus pearlizing Glycol Distearate #9 and late humectants Glycerin #21 / Panthenol #24. C2 not met: both silicones are after Parfum #6 ('early' = prominent, E3), so they are supporting routes only, and no prominent payload_lipid replaces them. Counter-signal toward high: two silicones + guar + pearlizer + humectants are the full C2 element set, missing only prominence.",
+   "ruleIds": [
+    "C2",
+    "R11",
+    "E3",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "high",
+   "evidenceByFamily": {
+    "silicone": [
+     "Dimethiconol #11",
+     "Dimethicone #14"
+    ],
+    "cationic_polymer": [
+     "Guar Hydroxypropyltrimonium Chloride #13"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "protein_film": [],
+    "film_former": [],
+    "anionic_surfactant": [
+     "Sodium Laureth Sulfate #2",
+     "TEA-Dodecylbenzenesulfonate #16 (late)"
+    ],
+    "amphoteric_surfactant": [
+     "Cocamidopropyl Betaine #4"
+    ],
+    "nonionic_surfactant": [],
+    "humectant_context": [
+     "Glycerin #21",
+     "Panthenol #24",
+     "Niacinamide #23 (active)"
+    ]
+   },
+   "excluded": [
+    "Glycol Distearate #9 (pearlizing wax, 6.4)",
+    "Cocamide MEA #8 (foam booster)",
+    "Sodium Xylenesulfonate #3 (hydrotrope)",
+    "Trideceth-10 #20 (emulsifier)",
+    "Tocopheryl Acetate #25 (antioxidant)",
+    "Triethylene Glycol #29, Propylene Glycol #30 (solvents)",
+    "Piroctone Olamine #10 (active, not a conditioning route)"
+   ],
+   "unresolved": [],
+   "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Silicone + cationic guar is a coacervate deposition system designed to leave silicone on hair; two silicones reinforce it."
+   },
+   "persistence": {
+    "value": "moderate",
+    "rationale": "Dimethiconol/dimethicone are persistent and can accumulate with repeated use, but no lipid or film-former converges."
+   },
+   "resetCapacity": {
+    "value": "moderate",
+    "rationale": "C1 ether-sulfate chassis with betaine buffer; late TEA-DDBS adds little."
+   },
+   "whyThisBand": "One meaningfully persistent silicone/guar system gives noticeable but bounded residue.",
+   "whyNotNeighborBand": "Not high: no W-RICH (no prominent payload_lipid), no third converging family, effective C1 reset. W1 does not apply (no amodimethicone; post-round-2 'set without amodimethicone' - no presumption either way). Not low: a deliberate silicone+cationic deposition system makes a lightweight call an understatement (W2).",
+   "confidenceLimitingFactor": "Silicone level unknown; deposition-optimized coacervate systems can be heavier than INCI order suggests.",
+   "rationale": "6.6 subjudgments moderate/moderate/moderate -> moderate; neighbors equally realistic is not the case - high is the more realistic neighbor (persistent silicones).",
+   "ruleIds": [
+    "6.3",
+    "6.4",
+    "6.6",
+    "W1",
+    "W2",
+    "W3",
+    "6.8",
+    "N-ALT"
+   ]
+  },
+  "focusPrimary": {
+   "value": "scalp_active",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "n/a"
+   },
+   "claimRole": "candidate",
+   "counterSignal": "Manufacturer also names 'Öl'/'fettige Kopfhaut' and itch, but only inside dandruff claim units (absorbed, E2a); retailer 'Feuchtigkeit' is low-graded.",
+   "decisionTrace": {
+    "claimDirection": "anti-dandruff (name 'Anti-Schuppen', high; manufacturer, moderate)",
+    "formulaCompatible": true,
+    "compatibleRoute": "Piroctone Olamine #10 (recognized dandruff active)",
+    "decisionReason": "7.2: problem-led product with recognized dandruff active and anti-dandruff positioning -> scalp_active."
+   },
+   "rationale": "7.2 decision table row 'Problem-led product with recognized dandruff active' -> scalp_active.",
+   "ruleIds": [
+    "7.1",
+    "7.2",
+    "E1",
+    "CL-SRC",
+    "F-TRACE"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": "oily-scalp wording exists only inside dandruff units ('Schuppen, Öl und Juckreiz', 'Schuppen, Juckreiz ... und fettige Kopfhaut') -> no distinct positioning (E2a); 'Feuchtigkeit' retailer-only (low)",
+    "independentRoutes": "none",
+    "exceptionCode": null
+   },
+   "rationale": "Section 8: no distinct secondary positioning; clarifying cannot come from the oily wording absorbed by the dandruff unit, nor from cleansing strength (invalid pattern).",
+   "ruleIds": [
+    "8",
+    "E2a",
+    "F6",
+    "CL-SRC"
+   ]
+  },
+  "usageRole": {
+   "value": "treatment",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "recognized_active_problem_led",
+   "triggerEvidence": [
+    "Piroctone Olamine #10 (dandruffSupport supported)",
+    "product name 'Anti-Schuppen Shampoo' (high)",
+    "manufacturer 'Entfernt Schuppen ab der ersten Haarwäsche' (moderate)"
+   ],
+   "losingTriggers": [
+    "frequent (explicit_frequent_non_strong): manufacturer 'ideal für die tägliche Anwendung' with cleansingStrength moderate - loses to treatment under U1"
+   ],
+   "rationale": "U3 met; U1 precedence treatment > frequent.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "F-TRACE"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "SC1: itch wording occurs only inside dandruff claim units ('Juckreiz im Zusammenhang mit Schuppen', 'Juckreiz durch Schuppen') -> dandruff symptoms, not sensitive positioning (E2a/E2b); 'dermatologisch getestet' is protective; 'pflegt die Kopfhaut' and retailer 'Kopfhaut ... mit Feuchtigkeit versorgt' (low) are not E2 lexicon claims. No separate sensitive/dry unit.",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "E2a",
+    "E2b",
+    "CL-SRC"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Section 11: Piroctone Olamine #10 in the complete INCI.",
+   "ruleIds": [
+    "11"
+   ]
+  }
+ },
+ "projection": {
+  "status": "proposal (blocked by review flags)",
+  "thicknesses": [
+   {
+    "thickness": "fine",
+    "fit": "acceptable",
+    "confidence": "moderate"
+   },
+   {
+    "thickness": "normal",
+    "fit": "ideal",
+    "confidence": "moderate"
+   },
+   {
+    "thickness": "coarse",
+    "fit": "acceptable",
+    "confidence": "moderate"
+   }
+  ],
+  "thicknessFit": {
+   "fine": "acceptable",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessRationale": "T1: W moderate -> fine acceptable, normal ideal; coarse acceptable (C moderate). T6 (dandruff target) leaves all unchanged (no T1 not_suited). Confidence lowest T1 input (13.8).",
+  "weight": "moderate",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: moderate -> moderate.",
+  "scalpTargets": {
+   "primary": {
+    "target": "dandruff",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "confidence": "high",
+    "rationale": "S-DANDRUFF: E2 dandruff claim in product name (E1 high) + dandruffSupport supported (high). Oily/itch wording sits inside dandruff units and adds no target (E2a, E2b layer 1)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "researchCombinationRationale": "E2b layer 2: bundled comfort wording 'Juckreiz im Zusammenhang mit Schuppen' / 'Juckreiz durch Schuppen' (manufacturer, moderate) - but the S-SENSITIVE formula gate fails: CSA needs a prominent E4 comfort or humectant/refatting route and prominent #1-#5 contain none (Panthenol #24, Niacinamide #23, Glycerin #21 all after Parfum); no prominent comfort route either. -> [] with note.",
+  "observedCleansingIntensity": "regular",
+  "cleansingIntensity": "regular",
+  "observedCleansingIntensityConfidence": "high",
+  "intensityRationale": "I1 moderate -> regular; equals schuppen expectation (regular); I3 none (high confidence).",
+  "positioning": {
+   "explicitResetPositioning": false,
+   "rationale": "D1 not met."
+  },
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserRationale": "D2 not met.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_dandruff"
+  ],
+  "reviewFlags": [
+   {
+    "code": "review_thickness_boundary",
+    "detail": "normal: ideal -> acceptable if weightPotential were high (T4; fine not flagged because T6 would lift not_suited back to acceptable; coarse neighbors only raise)"
+   }
+  ],
+  "informationalNotes": [
+   {
+    "code": "dandruff_bundled_comfort_wording",
+    "detail": "quoted: 'Bekämpft gezielt drei Kopfhautprobleme – Schuppen, Öl und Juckreiz im Zusammenhang mit Schuppen' / 'Juckreiz durch Schuppen'; failed clause: CSA (no prominent E4 comfort or humectant/refatting route) and no prominent E4 comfort route; no unlisted_route_candidate"
+   }
+  ],
+  "catalogDependent": "review_live_value_differs resolved by orchestrator after freeze (13.9, 14)"
+ },
+ "uncertainties": [
+  "C2 (conditioningLevel): moderate only because both silicones fall after the early Parfum (#6) under E3; with a later fragrance marker this would be C2 high.",
+  "6.6 (weightPotential): moderate vs high for a silicone/guar coacervate without lipids; W1 unavailable (no amodimethicone)."
+ ]
+}
