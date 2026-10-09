@@ -3,23 +3,14 @@ import { createHash } from "node:crypto"
 import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import path from "node:path"
 import { normalizeBondbuilderInci } from "../../src/lib/bondbuilder-research/production-adapter"
-import {
-  BOND_DEFAULT_POLICY,
-  BOND_OWNER_REGISTRY,
-  BOND_REFERENCE_KEYS,
-} from "../../src/lib/bondbuilder-research/registry"
+import { BOND_DEFAULT_POLICY, BOND_OWNER_REGISTRY, BOND_REFERENCE_KEYS } from "../../src/lib/bondbuilder-research/registry"
 
 const ROOT = path.resolve(__dirname, "../..")
 const DEFAULT_RUN = "data/research/bondbuilder-inci/v1.0/replay-2026-10-03-v0.5-r3"
 const OWNER = "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02"
 const VALIDATION = "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4"
 const METHOD = "docs/research/bondbuilder-inci/v0.5"
-const METHOD_FILES = [
-  "standard.md",
-  "runbook.md",
-  "researcher-prompt.md",
-  "blind-instructions.md",
-] as const
+const METHOD_FILES = ["standard.md", "runbook.md", "researcher-prompt.md", "blind-instructions.md"] as const
 const sha256 = (bytes: string | Buffer) => createHash("sha256").update(bytes).digest("hex")
 const encode = (value: unknown) => `${JSON.stringify(value, null, 2)}\n`
 const readJson = <T>(file: string) => JSON.parse(readFileSync(path.join(ROOT, file), "utf8")) as T
@@ -33,10 +24,7 @@ type Owner = {
     sources: Array<Record<string, unknown>>
   }
 }
-type Validation = {
-  records: Array<Record<string, unknown>>
-  source_registry: Array<Record<string, unknown>>
-}
+type Validation = { records: Array<Record<string, unknown>>; source_registry: Array<Record<string, unknown>> }
 
 function sourceId(source: Record<string, unknown>) {
   const id = source.id ?? source.source_id
@@ -58,12 +46,7 @@ function mergeSources(groups: Array<Array<Record<string, unknown>>>) {
 
 function prepareOwnerSources(owners: ReadonlyArray<readonly [string, Owner]>) {
   const entries = owners.flatMap(([slot_id, owner]) =>
-    owner.profile.sources.map((source) => ({
-      slot_id,
-      source,
-      id: sourceId(source),
-      bytes: JSON.stringify(source),
-    })),
+    owner.profile.sources.map((source) => ({ slot_id, source, id: sourceId(source), bytes: JSON.stringify(source) })),
   )
   const byId = new Map<string, typeof entries>()
   for (const entry of entries) byId.set(entry.id, [...(byId.get(entry.id) ?? []), entry])
@@ -71,15 +54,13 @@ function prepareOwnerSources(owners: ReadonlyArray<readonly [string, Owner]>) {
   const captures: Array<Record<string, unknown>> = []
   for (const [id, matches] of byId) {
     const variants = new Map<string, typeof matches>()
-    for (const match of matches)
-      variants.set(match.bytes, [...(variants.get(match.bytes) ?? []), match])
+    for (const match of matches) variants.set(match.bytes, [...(variants.get(match.bytes) ?? []), match])
     for (const variant of variants.values()) {
       const namespaced = variants.size > 1
       const outputId = namespaced ? `${variant[0].slot_id}:${id}` : id
       const capture = structuredClone(variant[0].source)
       capture.id = outputId
-      if (namespaced)
-        Object.assign(capture, { original_source_id: id, source_namespace: variant[0].slot_id })
+      if (namespaced) Object.assign(capture, { original_source_id: id, source_namespace: variant[0].slot_id })
       captures.push(capture)
       for (const match of variant) {
         let map = references.get(match.slot_id)
@@ -116,15 +97,11 @@ function ownerNamedRecord(slot_id: string, owner: Owner, references: Map<string,
     formula_conflicts: Array.isArray(formula.conflicts)
       ? formula.conflicts.map((conflict) =>
           conflict && typeof conflict === "object"
-            ? {
-                ...conflict,
-                source_ids: remapIds((conflict as { source_ids?: unknown }).source_ids, references),
-              }
+            ? { ...conflict, source_ids: remapIds((conflict as { source_ids?: unknown }).source_ids, references) }
             : conflict,
         )
       : formula.conflicts,
-    source_preparation_note:
-      "Current canonical owner identity/formula capture; no prior assessment or expected outcome is supplied.",
+    source_preparation_note: "Current canonical owner identity/formula capture; no prior assessment or expected outcome is supplied.",
   }
 }
 
@@ -136,8 +113,7 @@ function validationNamedRecord(record: Record<string, unknown>) {
     selected_direction_source_id: record.selected_direction_source_id,
     supporting_source_ids: record.supporting_source_ids,
     conflicts: record.conflicts,
-    source_preparation_note:
-      "Frozen source capture only; no prior assessment or expected outcome is supplied.",
+    source_preparation_note: "Frozen source capture only; no prior assessment or expected outcome is supplied.",
   }
 }
 
@@ -148,40 +124,22 @@ export function buildMethodReplay(runArgument?: string) {
     const key = `P${String(index + 1).padStart(2, "0")}`
     return [key, readJson<Owner>(`${OWNER}/${key}.json`)] as const
   })
-  const anonymousValidation = readJson<{ records: Array<Record<string, unknown>> }>(
-    `${VALIDATION}/anonymous.json`,
-  )
+  const anonymousValidation = readJson<{ records: Array<Record<string, unknown>> }>(`${VALIDATION}/anonymous.json`)
   const namedValidation = readJson<Validation>(`${VALIDATION}/named-evidence.json`)
   const amendment = readJson<Record<string, unknown>>(`${VALIDATION}/source-amendment-01.json`)
   const amendmentSources = amendment.source_registry
   if (!Array.isArray(amendmentSources)) throw new Error("source-amendment-01 lacks source_registry")
   // Historical S13 includes a researcher verdict in its metadata, not producer
   // evidence. Preserve history but do not disclose that verdict in future packets.
-  const sourceMetadataExclusions: Array<{
-    source_id: string
-    field: string
-    value: string
-    reason: string
-  }> = []
-  const preparedAmendmentSources = (amendmentSources as Array<Record<string, unknown>>).map(
-    (source) => {
-      if (source.source_id !== "S13" || !Array.isArray(source.limits)) return source
-      return {
-        ...source,
-        limits: source.limits.filter((limit: unknown) => {
-          if (typeof limit !== "string" || !limit.includes("category_review and trust null"))
-            return true
-          sourceMetadataExclusions.push({
-            source_id: "S13",
-            field: "limits",
-            value: limit,
-            reason: "Prior research verdict, not a producer observation.",
-          })
-          return false
-        }),
-      }
-    },
-  )
+  const sourceMetadataExclusions: Array<{ source_id: string; field: string; value: string; reason: string }> = []
+  const preparedAmendmentSources = (amendmentSources as Array<Record<string, unknown>>).map((source) => {
+    if (source.source_id !== "S13" || !Array.isArray(source.limits)) return source
+    return { ...source, limits: source.limits.filter((limit: unknown) => {
+      if (typeof limit !== "string" || !limit.includes("category_review and trust null")) return true
+      sourceMetadataExclusions.push({ source_id: "S13", field: "limits", value: limit, reason: "Prior research verdict, not a producer observation." })
+      return false
+    }) }
+  })
   const ownerSources = prepareOwnerSources(owners)
 
   const anonymousRows = [
@@ -213,20 +171,17 @@ export function buildMethodReplay(runArgument?: string) {
   ])
   const anonymous = {
     packet_version: "bondbuilder-method-replay-anonymous-v0.5",
-    purpose:
-      "bounded regression replay; not an unseen holdout, method lock, efficacy claim, or activation",
+    purpose: "bounded regression replay; not an unseen holdout, method lock, efficacy claim, or activation",
     rows: anonymousRows,
   }
   const named = {
     packet_version: "bondbuilder-method-replay-named-v0.5",
-    purpose:
-      "source preparation for bounded regression replay; not prior assessment/property values or expected outcomes",
+    purpose: "source preparation for bounded regression replay; not prior assessment/property values or expected outcomes",
     source_preparation_provenance: {
       owner_envelopes: owners.map(([slot_id]) => `${OWNER}/${slot_id}.json`),
       validation_named_capture: `${VALIDATION}/named-evidence.json`,
       amendment: `${VALIDATION}/source-amendment-01.json`,
-      amendment_included:
-        "S13 correction is included as a separate source capture; original frozen validation files remain unchanged.",
+      amendment_included: "S13 correction is included as a separate source capture; original frozen validation files remain unchanged.",
       excluded_researcher_metadata: sourceMetadataExclusions,
     },
     records: [
@@ -260,8 +215,7 @@ export function buildMethodReplay(runArgument?: string) {
   mkdirSync(run, { recursive: false })
   mkdirSync(path.join(run, "method"))
   mkdirSync(path.join(run, "frozen-inputs"))
-  for (const file of METHOD_FILES)
-    cpSync(path.join(ROOT, METHOD, file), path.join(run, "method", file), { errorOnExist: true })
+  for (const file of METHOD_FILES) cpSync(path.join(ROOT, METHOD, file), path.join(run, "method", file), { errorOnExist: true })
   const frozen = [
     "src/lib/bondbuilder-research/contracts.ts",
     "src/lib/bondbuilder-research/registry.ts",
@@ -278,7 +232,10 @@ export function buildMethodReplay(runArgument?: string) {
   }
   writeFileSync(path.join(run, "anonymous-packet.json"), encode(anonymous), { flag: "wx" })
   writeFileSync(path.join(run, "named-packet.json"), encode(named), { flag: "wx" })
-  const lineage = [...METHOD_FILES.map((file) => `${METHOD}/${file}`), ...frozen]
+  const lineage = [
+    ...METHOD_FILES.map((file) => `${METHOD}/${file}`),
+    ...frozen,
+  ]
   const frozenCopies = [
     ...METHOD_FILES.map((file) => `method/${file}`),
     ...frozen.map((file) => `frozen-inputs/${file}`),
@@ -286,24 +243,15 @@ export function buildMethodReplay(runArgument?: string) {
   const manifest = {
     packet_version: "bondbuilder-method-replay-manifest-v0.5",
     prepared_date: "2026-10-03",
-    purpose:
-      "bounded regression replay only; not an unseen holdout, method lock, efficacy claim, catalog approval, or activation",
-    source_lineage: Object.fromEntries(
-      lineage.map((file) => [file, sha256(readFileSync(path.join(ROOT, file)))]),
-    ),
-    frozen_copies: Object.fromEntries(
-      frozenCopies.map((file) => [file, sha256(readFileSync(path.join(run, file)))]),
-    ),
+    purpose: "bounded regression replay only; not an unseen holdout, method lock, efficacy claim, catalog approval, or activation",
+    source_lineage: Object.fromEntries(lineage.map((file) => [file, sha256(readFileSync(path.join(ROOT, file)))])),
+    frozen_copies: Object.fromEntries(frozenCopies.map((file) => [file, sha256(readFileSync(path.join(run, file)))])),
     generated_files: Object.fromEntries(
-      ["anonymous-packet.json", "named-packet.json"].map((file) => [
-        file,
-        sha256(readFileSync(path.join(run, file))),
-      ]),
+      ["anonymous-packet.json", "named-packet.json"].map((file) => [file, sha256(readFileSync(path.join(run, file)))]),
     ),
     row_count: anonymousRows.length,
     source_count: sources.length,
-    lane_outputs:
-      "Not prepared. Stage A and Stage B outputs and seals must be supplied by the two independent lanes before --complete can pass.",
+    lane_outputs: "Not prepared. Stage A and Stage B outputs and seals must be supplied by the two independent lanes before --complete can pass.",
   }
   writeFileSync(path.join(run, "manifest.json"), encode(manifest), { flag: "wx" })
   return { run: relative(run), rows: anonymousRows.length, sources: sources.length }
