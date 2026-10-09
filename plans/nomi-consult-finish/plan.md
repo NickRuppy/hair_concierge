@@ -61,13 +61,17 @@ impact first (production audit), regression test with the shared templates.
 
 (a) A dry-only protectant must not appear on days without heat (`between_wash_care_day`, `refresh_day`): gate
 heat-protection items to the days a heat event applies to (existing `oilHeatEventMatchesDay`-style mapping).
-(b) Blow-drying (`airflow_shaping`) with only a dry-hair protectant: no silent omission — scope decided from
-the compiler's heat-occurrence model; member-facing, regression-tested.
+(b) Finding: ordinary blow-drying is modelled as `ordinaryAirflowExposure`, not as a heat event, so it never
+triggers a protectant step. Ruled 2026-10-09: **keep the model** (only hot tools / airflow stylers trigger heat
+protection). Nomi gets the blow-dry advice verbally. Implemented: one occurrence per heat-day context, each
+gated to its days (oil heat-day mapping) — no protectant on care/refresh days.
 
 ## T7 — Olaplex Nº.5 (parallel, catalog lane — not this PR)
 
 Both formulas researched as separate catalog products (exact-EAN legacy = Nomi's submission; current
 Strengthening formula = new candidate). Local packages only; Nick signs off before publish.
+Findings: no real formula conflict — olaplex.de sells the original Nº.5 under her EAN (€34). Ruled 2026-10-09:
+weight `rich` → `suitable_thicknesses` normal + coarse (not fine). Strengthening product held until sold in DE.
 
 ## Out of scope
 

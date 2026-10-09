@@ -1091,9 +1091,9 @@ test("Heat uses one direct event by default and repeats only when exact guidance
   assert.equal(repeatedDay.productBlocks.length, 2)
 })
 
-test("Heat protection follows its heat event's days: damp before blow-drying, dry before the iron, none on care days", () => {
-  // Nomi consult finish T6: one occurrence per heat context (blow-dryer → wash days, hot tools →
-  // Styling-Tag), each only on its own days — the reviewed oil heat-day mapping.
+test("Heat protection follows its heat event's days: once per day, before blow-drying first; never on the care day", () => {
+  // Nomi consult finish T6: one occurrence per heat context (blow-dryer, hot tools), each only on
+  // days its heat can happen on; one application per day unless reapplication is required.
   const heatItem = {
     ...leaveInAndHeat,
     itemId: "heat",
@@ -1167,7 +1167,11 @@ test("Heat protection follows its heat event's days: damp before blow-drying, dr
     [["heat:iron"]],
   )
   assert.deepEqual(heatBlocks("between_wash_care_day"), [])
-  assert.deepEqual(heatBlocks("refresh_day"), [])
+  // A refresh may re-dampen and blow-dry: one application, before the dryer.
+  assert.deepEqual(
+    heatBlocks("refresh_day").map((block) => block.heatEventIds),
+    [["heat:dryer"]],
+  )
 })
 
 test("no non-rest day ever compiles with an empty outer sequence", () => {
