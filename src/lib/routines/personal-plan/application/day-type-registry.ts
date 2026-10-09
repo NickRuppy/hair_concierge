@@ -4,7 +4,11 @@ import type {
   NormalizedRoutineItem,
   SemanticRole,
 } from "./contracts"
-import { oilHeatEventMatchesDay } from "@/lib/personal-plan/oil-heat-context"
+import {
+  heatEventDayContext,
+  OIL_WASH_FAMILY_DAY_TYPES,
+  oilHeatEventMatchesDay,
+} from "@/lib/personal-plan/oil-heat-context"
 
 export const CANONICAL_APPLICATION_DAY_RULES: Record<
   ApplicationDayTypeKey,
@@ -89,9 +93,32 @@ export function routineItemsForDay(
   key: ApplicationDayTypeKey,
   items: readonly NormalizedRoutineItem[],
 ) {
-  return items.filter((item) =>
-    CANONICAL_APPLICATION_DAY_RULES[key].acceptedRoles.includes(item.role),
+  return items.filter(
+    (item) =>
+      CANONICAL_APPLICATION_DAY_RULES[key].acceptedRoles.includes(item.role) &&
+      heatOccurrenceBelongsToDay(key, item),
   )
+}
+
+/**
+ * A heat-protection occurrence (one per heat event, `materializeHeatOccurrences`) belongs only
+ * to the days its event happens on — protection before blow-drying on wash days, before the
+ * iron on the Styling-Tag, none on a care or refresh day without heat (Nomi consult finish
+ * T6). Items without a mapped event keep today's placement.
+ */
+function heatOccurrenceBelongsToDay(
+  key: ApplicationDayTypeKey,
+  item: NormalizedRoutineItem,
+): boolean {
+  if (item.role !== "heat_protection") return true
+  const tool = item.catalogFacts.heatEventTool
+  const route = item.catalogFacts.heatEventRoute
+  if (typeof tool !== "string" || typeof route !== "string") return true
+  const context = heatEventDayContext({ tool, route } as Parameters<typeof heatEventDayContext>[0])
+  if (context === null) return true
+  return context === "wash_family"
+    ? (OIL_WASH_FAMILY_DAY_TYPES as readonly string[]).includes(key)
+    : key === "styling_day"
 }
 
 export function isAlwaysRelevantRoleForDay(

@@ -675,12 +675,17 @@ test("V2 compiler selects canonical damp or dry heat copy for each heat event", 
   })
 
   assert.deepEqual(result.pointerIssues, [])
-  const copies = result.days
-    .find(({ key }) => key === "styling_day")
-    ?.productBlocks.filter((block) => block.productId === productId)
-    .flatMap((block) => block.steps.map(({ copyDe }) => copyDe))
-  assert.deepEqual(copies, [
+  const copies = (key: string) =>
+    result.days
+      .find((day) => day.key === key)
+      ?.productBlocks.filter((block) => block.productId === productId)
+      .flatMap((block) => block.steps.map(({ copyDe }) => copyDe))
+  // Each heat event on its own days (Nomi consult finish T6): blow-drying follows the wash,
+  // the iron is the Styling-Tag's.
+  assert.deepEqual(copies("wash_day"), [
     "Gleichmäßig auf handtuchtrockenem Haar verteilen. Erst danach föhnen oder stylen.",
+  ])
+  assert.deepEqual(copies("styling_day"), [
     "Gleichmäßig auf vollständig trockenem Haar verteilen. Erst danach das heiße Tool verwenden.",
   ])
 })
