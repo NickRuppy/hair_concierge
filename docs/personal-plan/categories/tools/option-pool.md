@@ -215,6 +215,19 @@ Best mapped jobs:
 
 Technique remains more important than the material: gently press, blot, or scrunch instead of rubbing. A user who reports `no_towel` receives no towel product recommendation and no invented rubbing behavior.
 
+## Feinschliff capture order (2026-10-09)
+
+The eight categories above are listed in their canonical (persisted) order. The Feinschliff tool trip asks them in wash-day order instead — four overview sections, then one product-form page per page key, in this order (plan `plans/2026-10-09-hair-tools-port.md` Rev. 5 §4):
+
+| Section | Category pages, in order |
+| --- | --- |
+| Waschen & Auftragen | Wasch- & Auftragshilfen (`wash_application:1`) |
+| Abtrocknen & Entwirren | Handtücher & Trocknungsmaterialien (`drying_textiles:1`); Bürsten & Kämme (`brushes_combs:1`, `brushes_combs:2`) |
+| Trocknen & Stylen | Haartrockner & Luftstyler (`airflow:1`); Hitzestyling-Tools (`heated_styling:1`); Heatless Styling & Setzen (`heatless_styling:1`); Clips, Haargummis & Fixierhilfen (`securing_sectioning:1`, `securing_sectioning:2`) |
+| Nachtschutz | Nachtschutz (`night_protection:1`) |
+
+The capture order is presentation only: category labels, product-type values and the canonical order of a stored answer do not change.
+
 ## How purposes are used
 
 The purpose mapping answers only three questions behind the scenes:

@@ -71,14 +71,18 @@ Every user-facing product category may carry one broad primary purpose for orien
 
 ## Inputs and grouped onboarding
 
-The onboarding starts with one compact Tools overview built from **four section cards** — corrected on 2026-08-24 under `D3b`; the earlier "eight product-category names on the overview" description was wrong and is retired. The four cards are the reviewed and approved mockup. The persisted answer stays family-keyed over all eight families (`toolFamiliesWithSomething`); the four sections are presentation only. The overview then opens up to four related product-type drilldown pages only for categories selected on that overview:
+The onboarding starts with one compact Tools overview built from **four section cards** — corrected on 2026-08-24 under `D3b`; the earlier "eight product-category names on the overview" description was wrong and is retired. The persisted answer stays family-keyed over all eight families (`toolFamiliesWithSomething`); the four sections are presentation only.
 
-1. `Haartrockner & Luftstyler`;
-2. `Hitzestyling-Tools` plus `Heatless Styling & Setzen`;
-3. `Bürsten & Kämme`, `Clips, Haargummis & Fixierhilfen`, and `Wasch- & Auftragshilfen`;
-4. `Nachtschutz` plus `Handtücher & Trocknungsmaterialien`.
+**Regrouped 2026-10-09 (Hair Tools port, plan `plans/2026-10-09-hair-tools-port.md` Rev. 5 §4 — wash-day order).** The sections, and the product-form pages inside them, follow the order in which the things are used on a wash day: waschen → abtrocknen → entwirren → trocknen/stylen → fixieren → Nachtschutz. Overview copy is unchanged („Was hast du schon?", the ratified lead, „Nichts davon").
 
-These are the four conditional page groups: Airflow; Heated + Heatless Styling; Handling & Helpers; and Protection & Drying. A page appears only if at least one category in that group was selected, and only selected category sections render inside it. The section headings remain product-category labels, not purpose headings. Each category contains recognizable product types; purposes/jobs are retained as recommendation mappings and explanation facts below the type.
+| # | Section card | Families (in page order) | Pages |
+| --- | --- | --- | --- |
+| 1 | `Waschen & Auftragen` | `wash_application` | `wash_application:1` |
+| 2 | `Abtrocknen & Entwirren` | `drying_textiles`, `brushes_combs` | `drying_textiles:1`, `brushes_combs:1`, `brushes_combs:2` |
+| 3 | `Trocknen & Stylen` | `airflow`, `heated_styling`, `heatless_styling`, `securing_sectioning` | `airflow:1`, `heated_styling:1`, `heatless_styling:1`, `securing_sectioning:1`, `securing_sectioning:2` |
+| 4 | `Nachtschutz` | `night_protection` | `night_protection:1` |
+
+A product-form page appears only for a family whose section was ticked on the overview; pages are asked in the table order (two-page families keep `:1` before `:2`). Each page's answer is stored on its own (per page, never per family) and sorted into the family's canonical order. The August grouping (Trocknen & Stylen / Entwirren & Fixieren / Waschen & Auftragen / Tücher & Nachtschutz, and before that the four drilldown page groups Airflow; Heated + Heatless Styling; Handling & Helpers; Protection & Drying) is superseded. The section headings remain product-category labels, not purpose headings. Each category contains recognizable product types; purposes/jobs are retained as recommendation mappings and explanation facts below the type.
 
 The overview does not expose every product type at once. It captures selected families; each conditional drilldown then captures only broad, recognizable forms and permits multiple forms. It does not ask for brand, model, precise attachment inventory, wattage, temperature, weight, dimensions, or technique compliance. Existing behavior questions remain conditional and separate, including drying method, heat frequency, Heat-protection use, and towel technique.
 
