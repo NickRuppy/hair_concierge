@@ -729,6 +729,8 @@ export type DiscoveryCockpitSwapOption = {
   priceLabel: string | null
   /** The catalog packshot (`products.image_url`), for the option's thumbnail; null = none. */
   imageUrl: string | null
+  /** How it is applied, where equals need telling apart (E2); absent/null = not shown. */
+  applicationLabel?: string | null
   /**
    * `equal_alternative`: rated exactly as well as the Idealplan's pick, which a house
    * default chose among equals (Bondbuilder tie, see `equal-options.ts`).
@@ -976,6 +978,7 @@ function equalAlternativeOption(
     verdictLabel: SCAN_VERDICT_COPY.ideal.label,
     priceLabel: option.priceLabel,
     imageUrl: identities.get(option.productId)?.imageUrl ?? option.imageUrl,
+    applicationLabel: option.applicationLabel,
     origin: "equal_alternative",
     propertyRows: null,
   }
@@ -1064,6 +1067,11 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
     const ownedInStep = new Set(
       stepEntries.flatMap((entry) => (entry.item?.productId ? [entry.item.productId] : [])),
     )
+    // E2: with equals on offer, the pick names its application too — the comparison is the point.
+    const idealWithApplication =
+      ideal && step.equalOptions && step.equalOptions.length > 0
+        ? { ...ideal, applicationLabel: step.idealApplicationLabel ?? null }
+        : ideal
     const swapOptions =
       alternatives.length > 0
         ? alternatives.map((alternative) =>
@@ -1073,9 +1081,9 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
               alternativeRows.get(alternative.productId) ?? null,
             ),
           )
-        : ideal
+        : idealWithApplication
           ? [
-              ideal,
+              idealWithApplication,
               // T1: a tie-default pick brings its equals — the call may choose any of them.
               ...(step.equalOptions ?? []).map((option) =>
                 equalAlternativeOption(option, identities),

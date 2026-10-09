@@ -93,6 +93,7 @@ const RESEARCH_SLOT_TITLE = "Bisheriges Produkt — noch in Recherche"
 const RESEARCH_SLOT_BODY = "Das Urteil folgt, sobald die Recherche abgeschlossen ist."
 const NEW_ENTRY_TITLE = "Neu dazu"
 const OPEN_ENTRY_TITLE = "Offener Schritt"
+const SKIPPED_ENTRY_TITLE = "Ohne Produkt"
 const PROPOSAL = "Vorschlag"
 const SWAP_CHIP = "Tauschen"
 const NEW_CHIP = "Neu"
@@ -155,7 +156,8 @@ const WRITE_ERROR = "Nicht gespeichert. Bitte noch einmal."
 const NO_OPTIONS_HINT = "Keine Alternative im Katalog. Nur behalten oder offen lassen."
 const SORT_LABEL = "Sortieren:"
 const SORT_OPTIONS: ReadonlyArray<[DiscoverySwapSort, string]> = [
-  ["fit", "Fit"],
+  // „Fit" was the engine's delivered order — named for what it is (E2).
+  ["fit", "Empfehlung"],
   ["price", "Preis"],
 ]
 
@@ -506,7 +508,9 @@ export function DiscoveryCallCockpit({
       <div key={key} className="border-b last:border-0">
         <div className="flex flex-wrap items-center gap-2 bg-muted/40 px-4 py-2.5">
           <RunsheetCategoryChip category={step.category} label={step.categoryLabel} />
-          <span className="text-[15px] font-bold text-foreground">{entryTitle(entry)}</span>
+          <span className="text-[15px] font-bold text-foreground">
+            {entryTitle(entry, selection)}
+          </span>
           <span className="text-xs text-muted-foreground">{step.roleLabel}</span>
           {addStep ? (
             // R28: deterministic from the Idealplan's need tier — no engine call.
@@ -878,9 +882,11 @@ function swapCount(entries: readonly RunsheetStepEntry[]): string {
   return parts.length > 0 ? parts.join(" · ") : productCount(0)
 }
 
-function entryTitle(entry: RunsheetStepEntry): string {
+function entryTitle(entry: RunsheetStepEntry, selection: Selection): string {
   if (entry.research) return RESEARCH_SLOT_TITLE
   if (entry.kind === "owned") return entry.step.ownedLabel ?? NO_PRODUCT
+  // A1: an empty step decided without a product is no longer „offen".
+  if (selection && selection.decision !== "swap") return SKIPPED_ENTRY_TITLE
   return entry.kind === "neu" ? NEW_ENTRY_TITLE : OPEN_ENTRY_TITLE
 }
 
@@ -1233,8 +1239,11 @@ export function StepDecision({
           // The option as the PDF would print it once chosen — brand + line + name.
           title={`${empty ? NEW_PREFIX : SWAP_PREFIX}${option.label}`}
           pill={cockpitVoice(option.verdictLabel)}
-          // R19: the price where the catalog has one — no placeholder line otherwise.
-          subtitle={option.priceLabel}
+          // R19: the price where the catalog has one — no placeholder line otherwise. E2: how
+          // it is applied, where equally ideal options need telling apart.
+          subtitle={
+            [option.applicationLabel, option.priceLabel].filter(Boolean).join(" · ") || null
+          }
           imageUrl={option.imageUrl}
           rows={option.propertyRows}
           // Her product's rows beside the option — „Bisheriges Produkt | Alternative | Ziel",

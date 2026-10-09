@@ -363,6 +363,7 @@ test("an empty tie step accepts an equally ideal product and still refuses one n
         productName: "Elvital Pre-Shampoo",
         priceLabel: "8,95 €",
         imageUrl: null,
+        applicationLabel: "Vorwäsche, ausspülen",
       },
     ],
   }

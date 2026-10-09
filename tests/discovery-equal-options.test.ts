@@ -102,6 +102,8 @@ test("a tied shortlist lists every other equally ideal product, by name, never t
   assert.equal(options[0]!.productName, "Elvital Bond Repair Pre-Shampoo")
   assert.equal(options[0]!.imageUrl, "https://example.com/elvital.webp")
   assert.match(options[0]!.priceLabel ?? "", /8,95/)
+  // E2: the candidate's own application mode, in the catalog's German wording.
+  assert.equal(options[0]!.applicationLabel, "Vorwäsche, ausspülen")
 })
 
 test("no tie, no options: a single ideal candidate stands alone", () => {

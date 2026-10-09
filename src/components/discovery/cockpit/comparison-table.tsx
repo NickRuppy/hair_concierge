@@ -65,10 +65,10 @@ function breakableLabel(label: string): string {
     .replace("Pflegerichtung", "Pflege­richtung")
 }
 
-const GRID = "grid grid-cols-[96px_16px_minmax(0,1fr)_minmax(0,1fr)] items-center"
+const GRID = "grid grid-cols-[88px_16px_minmax(0,1fr)_minmax(0,1fr)] items-center"
 /** Alternative next to her product: name | her value | the alternative's value | target. */
 const GRID_WITH_OWNED =
-  "grid grid-cols-[96px_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] items-center"
+  "grid grid-cols-[88px_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] items-center"
 
 const OWNED_HEADER = "Bisheriges Produkt"
 const OWNED_ARIA = "bisheriges Produkt"
@@ -222,13 +222,13 @@ function ComparisonWithOwned({
       className="overflow-hidden rounded-[14px] border border-border bg-card"
     >
       <div className="overflow-x-auto">
-        <div className="min-w-[440px]">
+        <div className="min-w-[360px]">
           <div
             aria-hidden="true"
             className={cn(
               GRID_WITH_OWNED,
               gap,
-              "bg-[#f6f3f0] px-2.5 py-[9px] text-[11px] font-bold uppercase leading-tight tracking-[0.04em] text-foreground [&>span]:min-w-0",
+              "bg-[#f6f3f0] px-2.5 py-[9px] text-[10px] font-bold uppercase leading-tight tracking-[0.02em] text-foreground [&>span]:min-w-0",
             )}
           >
             <span />

@@ -768,7 +768,7 @@ function bondbuilderTreatmentModeBucket(mode: string | null): BondbuilderApplica
   return null
 }
 
-function bondbuilderApplication(spec: {
+export function bondbuilderApplication(spec: {
   applicationMode: string | null
   treatmentMode: string | null
 }): string | null {

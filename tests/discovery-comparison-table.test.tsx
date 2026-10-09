@@ -143,7 +143,7 @@ test("with her product: three columns BISHERIGES PRODUKT | ALTERNATIVE | ZIEL, Z
       header.indexOf(">Alternative<") < header.indexOf(">Ziel<"),
   )
   assert.match(header, /text-\[var\(--brand-plum\)\][^>]*>Ziel</)
-  assert.match(markup, /grid-cols-\[96px_minmax\(0,1fr\)_minmax\(0,1fr\)_minmax\(0,1fr\)\]/)
+  assert.match(markup, /grid-cols-\[88px_minmax\(0,1fr\)_minmax\(0,1fr\)_minmax\(0,1fr\)\]/)
   // Only the alternative's axes, in its order.
   assert.equal(liBodies(markup).length, 3)
   assert.doesNotMatch(markup, /Silikone/)

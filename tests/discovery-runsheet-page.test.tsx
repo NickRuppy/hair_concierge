@@ -330,8 +330,22 @@ function footerOf(markup: string): string {
 
 // --- the page ---------------------------------------------------------------------------
 
+test("E1: her profile sits first — hair, scalp, routine, problems with the main one marked", async () => {
+  const markup = await renderPage({ loadQuizLead: async () => dryLengthsLead })
+  const at = markup.indexOf('id="runsheet-profile"')
+  assert.ok(at > 0)
+  assert.ok(at < markup.indexOf("Vor dem Call"))
+  const strip = markup.slice(at, markup.indexOf("</section>", at))
+  assert.ok(strip.includes(">Profil<"))
+  for (const label of [">Haar<", ">Probleme<"]) assert.ok(strip.includes(label), label)
+  assert.ok(strip.includes("Hauptproblem: "))
+})
+
 test("the runsheet renders its six phases in order", async () => {
-  const markup = await renderPage()
+  const page = await renderPage()
+  // The profile strip (E1) sits above everything and shares words like „Routine": the phases
+  // are read after it.
+  const markup = page.slice(page.indexOf("</section>", page.indexOf('id="runsheet-profile"')))
   const positions = [
     "Vor dem Call",
     ">Eröffnen<",
@@ -957,7 +971,11 @@ test("recipe: her scanned conditioner still in research counts as „vorhanden�
 test("recipe as a slide: talking point, Zuerst and Nicht zuerst visible; the rest folded", async () => {
   const markup = await renderPage({ loadQuizLead: async () => dryLengthsLead })
   const recipe = concernRecipeFor("dry_lengths")!
-  const start = markup.indexOf("Hauptproblem: ")
+  // After the profile strip (E1), which marks the main problem the same way.
+  const start = markup.indexOf(
+    "Hauptproblem: ",
+    markup.indexOf("</section>", markup.indexOf('id="runsheet-profile"')),
+  )
   const card = markup.slice(start, markup.indexOf("</section>", start))
   const foldAt = card.indexOf("<details")
   assert.ok(foldAt > 0, "the recipe has fold-ups")
