@@ -14,6 +14,11 @@ const MIGRATION = new URL(
   import.meta.url,
 )
 
+const TOOLS_MODULE_MIGRATION = new URL(
+  "../supabase/migrations/20261009150000_personal_plan_stage2_tools_module.sql",
+  import.meta.url,
+)
+
 async function installAdmissionStub(pg: Awaited<ReturnType<typeof migratedPersonalPlanDatabase>>) {
   await pg.exec(`
     CREATE SCHEMA IF NOT EXISTS private;
@@ -136,6 +141,7 @@ async function callOpenOptional(
     seedOutcome?: string
     seedAnswers: string
     sourceFingerprint?: string
+    module?: string
   },
 ) {
   const { rows } = await pg.query<{
@@ -151,7 +157,7 @@ async function callOpenOptional(
     }
   }>(
     `SELECT public.personal_plan_open_optional_refinement_v1(
-       $1::uuid, 'products', $2::uuid, $3::uuid, $4::uuid, $5::bigint,
+       $1::uuid, $9, $2::uuid, $3::uuid, $4::uuid, $5::bigint,
        $6,
        $7::jsonb,
        ARRAY['current_product_categories','wet_wash_frequency','towel_handling','drying_routes','additional_heat_tools','night_protection'],
@@ -168,6 +174,7 @@ async function callOpenOptional(
       input.seedOutcome ?? "applied",
       input.seedAnswers,
       input.sourceFingerprint ?? "legacy-prefill-v1:sha256:" + "a".repeat(64),
+      input.module ?? "products",
     ],
   )
   return rows[0]!.result
@@ -315,4 +322,41 @@ test("optional Stage 2 RPC grants execute only to service_role", async (t) => {
     { role: "authenticated", can_execute: false },
     { role: "service_role", can_execute: true },
   ])
+})
+
+test("optional Stage 2 RPC accepts the tools module once the tools migration follows it in deploy order", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t)
+  await installAdmissionStub(pg)
+  const userId = id(9, 9)
+  const parentDraftId = id(2, 2)
+  const initial = await seedMigratedAcceptedPlan(pg, {
+    userId,
+    enrollmentId: id(4, 4),
+    parentDraftId,
+  })
+  const args = {
+    userId,
+    planId: initial.personalPlanId,
+    initialId: initial.needVersionId,
+    parentDraftId,
+    parentRevision: 0,
+    seedAnswers:
+      '{"currentProductCategories":["conditioner"],"wetWashFrequency":"weekly_3_4x","towel":{"material":"mikrofaser","technique":"gentle_press"},"dryingRoutes":["air_dry"],"additionalHeatTools":[],"nightProtection":[]}',
+  }
+
+  // Deploy order: 20260828104634 (installed above) first — it knows two modules only.
+  assert.equal((await callOpenOptional(pg, { ...args, module: "tools" })).outcome, "invalid_source")
+
+  await pg.exec(await readFile(TOOLS_MODULE_MIGRATION, "utf8"))
+
+  const opened = await callOpenOptional(pg, { ...args, module: "tools" })
+  assert.equal(opened.outcome, "applied")
+  assert.equal(opened.draft?.status, "in_progress")
+  assert.notEqual(opened.draft?.id, parentDraftId)
+
+  assert.equal(
+    (await callOpenOptional(pg, { ...args, module: "colour" })).outcome,
+    "invalid_source",
+    "an unknown module is still rejected",
+  )
 })
