@@ -33,6 +33,7 @@ import {
 import {
   DiscoveryRunsheetRoutine,
   runsheetWeek,
+  runsheetWeekPlacement,
 } from "../src/components/discovery/cockpit/runsheet-routine"
 import { ScanVerdictSections } from "../src/components/scan/scan-verdict-sections"
 import { parseDiscoveryCallSheet, type DiscoveryCallSheet } from "../src/lib/discovery/call-sheet"
@@ -646,6 +647,59 @@ test("routine: each day is a table — Schritt | Produkt | Wann | Zweck, one row
       assert.ok(row.includes(line.frequencyLabel), row)
     }
   }
+})
+
+test("week view: every product names its status — Entschieden, Vorschlag or Offen (A1)", () => {
+  const week = runsheetWeek(buildDiscoveryCockpitView(model()).steps)
+  const labels = [...week.washDay, ...week.offDays].flatMap((line) =>
+    line.products.map((product) => product.label),
+  )
+  assert.ok(labels.length > 0)
+  for (const label of labels) {
+    assert.match(label, /^(Entschieden|Vorschlag|Offen): /, label)
+  }
+})
+
+test("week placement: a step sits in every column it belongs to (A3)", () => {
+  const at = (key: string, hotTool: boolean | null = true, timing: string | null = null) =>
+    runsheetWeekPlacement(key, timing, hotTool)
+  // Wash-only: shampoo, conditioner, mask, pre-wash oil, bondbuilder, scalp serum (default).
+  for (const key of [
+    "decision:shampoo:shampoo_everyday:gap",
+    "decision:conditioner:conditioner_rinse_out:gap",
+    "decision:mask:intensive_conditioning_mask:gap",
+    "decision:oil:pre_wash_fibre_treatment:gap",
+    "decision:bondbuilder:specialized_bond_treatment:gap",
+    "decision:scalp_care:scalp_comfort:gap",
+    "decision:leave_in:post_wash_leave_in:gap",
+  ]) {
+    assert.deepEqual(at(key), { washDay: true, offDays: false }, key)
+  }
+  // Finishing / leave-on oil: last on a wash day AND on days without washing.
+  assert.deepEqual(at("decision:oil:dry_finish:gap"), { washDay: true, offDays: true })
+  assert.deepEqual(at("decision:oil:leave_on_fibre_conditioning:gap"), {
+    washDay: true,
+    offDays: true,
+  })
+  // Heat steps follow her hot tools; unknown keeps both.
+  for (const key of [
+    "decision:heat_protectant:pre_heat_protection:gap",
+    "decision:leave_in:pre_heat_application:gap",
+  ]) {
+    assert.deepEqual(at(key, true), { washDay: true, offDays: true }, key)
+    assert.deepEqual(at(key, false), { washDay: true, offDays: false }, key)
+    assert.deepEqual(at(key, null), { washDay: true, offDays: true }, key)
+  }
+  // Dry shampoo bridges the days between washes.
+  assert.deepEqual(at("decision:dry_shampoo:root_refresh_bridge:gap"), {
+    washDay: false,
+    offDays: true,
+  })
+  // Unknown role: the timing label decides, as before.
+  assert.deepEqual(at("decision:x:unknown:gap", true, "Nach Shampoo"), {
+    washDay: true,
+    offDays: false,
+  })
 })
 
 test("closing: the approved referral text, the copy button, and the unchanged finalize bar", async () => {
@@ -2032,7 +2086,9 @@ test("locked-in: stored decisions — the swap is bought with its price, the emp
     section.indexOf(">Summe neu<"),
   )
   assert.ok(skip.includes(">Conditioner</span>"), skip)
-  assert.ok(skip.includes("Schritt bleibt offen"))
+  // A1: a deliberately empty step is decided — never worded „offen".
+  assert.ok(skip.includes("kein Produkt nötig"))
+  assert.ok(!skip.includes("offen"))
   const keep = section.slice(section.indexOf(">Behalten<"), section.indexOf(">Weglassen<"))
   assert.ok(keep.includes("Noch nichts festgehalten."))
   assert.ok(section.includes('id="runsheet-locked-in-total" class="ml-auto tabular-nums">9,95 €<'))

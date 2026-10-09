@@ -1272,6 +1272,32 @@ export async function setDiscoveryCallDecision(
   }
 }
 
+export type DiscoveryCallDecisionsResetResult =
+  | { outcome: "reset"; deleted: number }
+  | { outcome: "not_found" | "finalized" }
+
+/**
+ * „Testlauf zurücksetzen" (cockpit call-ready A2): every decision of this intake deleted in
+ * ONE locked call to `discovery_admin_reset_call_decisions` (migration 20261009140000) — the
+ * same intake row lock as every decision write, so it serialises with them and with
+ * finalising; a finalised call is frozen. The call sheet is not touched.
+ */
+export async function resetDiscoveryCallDecisions(
+  intakeId: string,
+  client: DiscoveryCockpitAdminClient,
+): Promise<DiscoveryCallDecisionsResetResult> {
+  const { data, error } = await client.rpc("discovery_admin_reset_call_decisions", {
+    target_intake_id: intakeId,
+  })
+  if (error) throw error
+  const row = (data ?? {}) as { outcome?: string; deleted?: unknown }
+  if (row.outcome === "reset" && typeof row.deleted === "number") {
+    return { outcome: "reset", deleted: row.deleted }
+  }
+  if (row.outcome === "not_found" || row.outcome === "finalized") return { outcome: row.outcome }
+  throw new Error("discovery_call_decisions_reset_unexpected_outcome")
+}
+
 /**
  * „Finalisieren": the timestamp and the fingerprint of the routine as it stands, written
  * together (the table's CHECK insists on the pair). The `state = 'submitted'` predicate is

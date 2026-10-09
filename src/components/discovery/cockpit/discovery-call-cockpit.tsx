@@ -21,6 +21,10 @@ import {
   type WashAnchor,
 } from "@/lib/discovery/runsheet"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
+import {
+  RUNSHEET_DECISION_STATE_LABELS,
+  runsheetDecisionState,
+} from "@/lib/discovery/runsheet/decision-state"
 
 import { DiscoveryComparisonTable } from "./comparison-table"
 import { beginDiscoveryDecisionWrite } from "./decision-writes"
@@ -930,18 +934,27 @@ function DecisionChip({
   selection: Selection
 }) {
   const empty = entry.step.intakeItemId === null
+  // A1: one status per entry — the same derivation as „Festgehalten" and the week view.
+  const state = runsheetDecisionState({
+    intakeItemId: entry.step.intakeItemId,
+    decision: selection?.decision ?? null,
+    hasProposal: entry.step.idealRecommendation !== null,
+  })
   if (selection) {
+    if (state === "bewusst_ohne") {
+      return <RunsheetChip tone="plum">{RUNSHEET_DECISION_STATE_LABELS.bewusst_ohne}</RunsheetChip>
+    }
     const label =
       selection.decision === "keep"
-        ? empty
-          ? KEEP_EMPTY_LABEL
-          : KEEP_LABEL
+        ? KEEP_LABEL
         : selection.decision === "swap"
           ? empty
             ? NEW_CHIP
             : SWAP_CHIP
           : DROP_LABEL
-    return <RunsheetChip tone="plum">{label}</RunsheetChip>
+    return (
+      <RunsheetChip tone="plum">{`${RUNSHEET_DECISION_STATE_LABELS.entschieden} · ${label}`}</RunsheetChip>
+    )
   }
   // Her product for this step is still in research: nothing to propose yet.
   if (entry.research) return <RunsheetChip tone="pending">{KLAEREN_RESEARCH}</RunsheetChip>
@@ -955,7 +968,14 @@ function DecisionChip({
           : bucket === "weglassen"
             ? DROP_LABEL
             : SWAP_CHIP
-  return <RunsheetChip tone="neutral">{`${PROPOSAL}: ${proposal}`}</RunsheetChip>
+  // Her own undecided product reads „Offen" first; the engine's idea follows as a hint.
+  return (
+    <RunsheetChip tone={state === "offen" ? "pending" : "neutral"}>
+      {state === "offen" && !empty
+        ? `${RUNSHEET_DECISION_STATE_LABELS.offen} · ${PROPOSAL}: ${proposal}`
+        : `${PROPOSAL}: ${proposal}`}
+    </RunsheetChip>
+  )
 }
 
 /** Referral (R20, copy approved as-is): the message and a copy button with a fallback. */

@@ -345,6 +345,7 @@ export function createDiscoveryCockpitPage(
           routinePhase={
             <DiscoveryRunsheetRoutine
               view={view}
+              hotTool={model.heatStyling ? model.heatStyling.additionalHeatTools.length > 0 : null}
               washFrequencyLabel={washFrequencyLabel}
               washChangeNote={washChangeNote}
               washFrequency={washAnchor}
