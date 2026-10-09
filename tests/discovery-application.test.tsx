@@ -1573,6 +1573,48 @@ test("batch 9: a one-product-per-step routine keeps its application-section fing
   )
 })
 
+test("variant headings are layout only: they never move the fingerprint, changed words do", () => {
+  const print = compile().print
+  const withoutHeadings = {
+    days: print.days.map((day) => ({
+      ...day,
+      steps: day.steps.map((step) => {
+        if (step.kind !== "product") return step
+        const { headings: _layout, ...rest } = step
+        void _layout
+        return rest
+      }),
+    })),
+  }
+  assert.ok(
+    print.days.some((day) =>
+      day.steps.some((step) => step.kind === "product" && (step.headings?.length ?? 0) > 0),
+    ),
+    "the fixture prints variant headings",
+  )
+  const routine = composeRoutine()
+  assert.equal(
+    withDiscoveryApplicationHash(routine, print).sourceHash,
+    withDiscoveryApplicationHash(routine, withoutHeadings).sourceHash,
+  )
+  const reworded = {
+    days: print.days.map((day, index) =>
+      index === 0
+        ? {
+            ...day,
+            steps: day.steps.map((step) =>
+              step.kind === "product" ? { ...step, actions: [...step.actions, "Neu."] } : step,
+            ),
+          }
+        : day,
+    ),
+  }
+  assert.notEqual(
+    withDiscoveryApplicationHash(routine, reworded).sourceHash,
+    withDiscoveryApplicationHash(routine, print).sourceHash,
+  )
+})
+
 test("batch 9: two shampoos in one step — a conflict on one never takes its sibling with it", () => {
   const secondShampoo = "30000000-0000-4000-8000-0000000000b2"
   const routine = composeDiscoveryRefinedRoutine({

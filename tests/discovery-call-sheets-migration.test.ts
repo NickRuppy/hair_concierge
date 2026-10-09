@@ -3,6 +3,8 @@ import { readFile } from "node:fs/promises"
 import test from "node:test"
 import { PGlite } from "@electric-sql/pglite"
 
+import { parseDiscoveryCallSheet } from "../src/lib/discovery/call-sheet"
+
 /**
  * Consult runsheet (plan `plans/consult-runsheet/plan.md` §6): one call sheet per
  * discovery enrollment. Replayed on PGlite over the discovery migrations.
@@ -106,6 +108,34 @@ test("baseline_score is 1–10 in half points, or null", async (t) => {
   for (const bad of [0, 11, -1, 0.5, 10.5, 7.25, 7.3]) {
     await assert.rejects(set(bad), /discovery_call_sheets_baseline_score_check/)
   }
+})
+
+test("the half-point widening keeps stored whole scores; they read back as numbers", async (t) => {
+  const pg = new PGlite()
+  t.after(async () => pg.close())
+  await pg.exec(predecessorSchema)
+  const half = "20261009120000_discovery_call_sheet_half_point_score.sql"
+  for (const file of CHAIN.filter((entry) => entry !== half)) {
+    await pg.exec(await readFile(`${dir}/${file}`, "utf8"))
+  }
+  const id = await enrollment(pg)
+  await pg.query(
+    "INSERT INTO public.discovery_call_sheets (enrollment_id, baseline_score) VALUES ($1, 7)",
+    [id],
+  )
+  await pg.exec(await readFile(`${dir}/${half}`, "utf8"))
+  const row = await pg.query<{ baseline_score: unknown }>(
+    "SELECT baseline_score FROM public.discovery_call_sheets WHERE enrollment_id = $1",
+    [id],
+  )
+  // numeric comes back as text from Postgres; the parser takes both shapes.
+  assert.equal(Number(row.rows[0]!.baseline_score), 7)
+  assert.equal(parseDiscoveryCallSheet(row.rows[0]).baselineScore, 7)
+  assert.equal(parseDiscoveryCallSheet({ baseline_score: "7.5" }).baselineScore, 7.5)
+  await pg.query(
+    "UPDATE public.discovery_call_sheets SET baseline_score = 7.5 WHERE enrollment_id = $1",
+    [id],
+  )
 })
 
 test("the list columns must hold JSON arrays", async (t) => {
