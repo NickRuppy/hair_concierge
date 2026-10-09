@@ -1,0 +1,586 @@
+[
+  {
+    "sample_id": "balea-sea-salt-texture-spray",
+    "subtype_candidate": "salt_spray",
+    "boundary_probe": false,
+    "brand": "Balea",
+    "product_name": "Sea Salt Texture Spray",
+    "size": "200 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 1.45,
+    "price_source_url": "https://www.dm.de/p/d/3048815/balea-sea-salt-texture-spray",
+    "ean": "4067796173673",
+    "inci": "Aqua, Propanediol, Propylene Glycol, Maris Sal, Hydrolyzed Corn Starch, Panthenol, Parfum, Sodium Benzoate, Heptyl Glucoside, Potassium Sorbate, Citric Acid, Tetramethyl Acetyloctahydronaphthalenes, Heptanol, Alpha-Isomethyl Ionone.",
+    "inci_source_url": "https://www.dm.de/p/d/3048815/balea-sea-salt-texture-spray",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Zaubert Beach Waves",
+      "Sorgt für Textur & natürlichen Halt",
+      "Ideal für lässige, Strand-Looks",
+      "flexiblen Halt und ... griffige Struktur, die für ein natürliches Finish sorgt",
+      "Rezeptur ohne Mikroplastik und wasserlösliche rein synthetische Polymere"
+    ],
+    "hold_claim": {
+      "raw": "Sorgt für Textur & natürlichen Halt / flexiblen Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "natürlicher / flexibler Halt (no number)",
+      "none_stated": false
+    },
+    "finish_claim": "natürlich - raw: 'natürliches Finish'",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "alle Haartypen"
+    ],
+    "free_from_claims": [
+      "vegan",
+      "Ohne Silikone",
+      "Ohne Alkohol",
+      "Ohne Paraffine / Mineralöle",
+      "Ohne Ammoniak",
+      "Ölfrei / fettfrei",
+      "ohne Mikroplastik und wasserlösliche rein synthetische Polymere"
+    ],
+    "directions": "Auf handtuchtrockenes Haar sprühen, sanft einkneten, lufttrocknen (natürlicher Look) oder trocken föhnen (mehr Volumen). Kann auch auf trockenes Haar gesprüht werden, z.B. um Locken vom Lockenstab ein natürliches Finish zu geben. Whole hair, no roots-specific instruction.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Water-based, alcohol-free pump spray. Salt = Maris Sal at position 4, after Aqua + two glycols (Propanediol, Propylene Glycol); no sodium chloride by INCI name, no magnesium sulfate. Hydrolyzed Corn Starch (pos 5) is the only film-forming/tacky texture agent. No fixative polymer (claim states no water-soluble fully synthetic polymers), no silica, no clay, no oil, no propellant. Heptyl Glucoside = surfactant/solubilizer. Hold therefore comes from salt crystals + starch hydrolysate only.",
+    "notes": "dm review score 2.8/5 (134); reviewers repeatedly say hold is weak ('wenig Halt'), strong coconut-like scent after reformulation. Marketed hold ('flexibel') is soft-to-minimal on formula evidence. Dual positioning: styling on towel-dry AND dry-hair touch-up."
+  },
+  {
+    "sample_id": "balea-leave-in-spray-sea-salt-care-define",
+    "subtype_candidate": "salt_spray",
+    "boundary_probe": true,
+    "brand": "Balea",
+    "product_name": "Leave-In Spray Sea Salt Care & Define",
+    "size": "200 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 1.95,
+    "price_source_url": "https://www.dm.de/p/d/3134022/balea-leave-in-spray-sea-salt-care-und-define",
+    "ean": "4066447983777",
+    "inci": "AQUA, ISODODECANE, MAGNESIUM SULFATE, GLYCERIN, LACTITOL, XYLITOL, PHENOXYETHANOL, SODIUM BENZOATE, MARIS SAL, ISOPROPYL MYRISTATE, PANTHENOL, PARFUM, POTASSIUM SORBATE, DICAPRYLYL ETHER, LAURYL ALCOHOL, LACTIC ACID, C12-15 ALKYL BENZOATE, TETRAMETHYL, ACETYLOCTAHYDRONAPHTHALENES, ALPHA-ISOMETHYL IONONE, VANILLIN, TOCOPHEROL",
+    "inci_source_url": "https://www.dm.de/p/d/3134022/balea-leave-in-spray-sea-salt-care-und-define",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Texturgebendes Haarspray",
+      "Mit Meersalz und pflegender Ölphase",
+      "Verleiht dem Haar Griffigkeit und Definition",
+      "Für lässige Beach-Looks mit mattem Finish",
+      "pflegt die enthaltene Ölphase das Haar, ohne es zu beschweren"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": "none stated (Griffigkeit und Definition only)",
+      "none_stated": true
+    },
+    "finish_claim": "matt - raw: 'Beach-Looks mit mattem Finish'",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "alle Haartypen"
+    ],
+    "free_from_claims": [
+      "Auf Ölbasis (dm product property)"
+    ],
+    "directions": "Auf handtuchtrockenes Haar sprühen, sanft einkneten; lufttrocknen oder trocken föhnen für mehr Volumen. Whole hair, no dry-hair instruction.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Two-phase (shake) emulsion-like spray: Aqua then Isododecane (volatile hydrocarbon, pos 2) then Magnesium Sulfate (pos 3). Maris Sal only at pos 9, after phenoxyethanol and sodium benzoate (i.e. sub-1% territory). Humectants Glycerin/Lactitol/Xylitol. Emollient oil phase: isopropyl myristate, dicaprylyl ether, C12-15 alkyl benzoate. No fixative polymer, no starch, no silica, no alcohol, no propellant.",
+    "notes": "Sold as sea-salt texture spray but is effectively a light leave-in / oil-water styling mist with Epsom salt; boundary with Leave-in. Same brand, same name family as the Balea Sea Salt Texture Spray but a completely different formula (oil vs. starch). No hold claim on dm page."
+  },
+  {
+    "sample_id": "bumble-and-bumble-surf-spray",
+    "subtype_candidate": "salt_spray",
+    "boundary_probe": false,
+    "brand": "Bumble and bumble",
+    "product_name": "Surf Spray",
+    "size": "125 ml",
+    "format": "pump_spray",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [
+      "douglas",
+      "flaconi"
+    ],
+    "price_eur": 28.99,
+    "price_source_url": "https://www.douglas.de/de/p/3000067216",
+    "ean": null,
+    "inci": "Water\\Aqua\\Eau, Magnesium Sulfate, Macrocystis Pyrifera (Kelp) Extract, Ascophyllum Nodosum Extract, Glycerin, Isoceteth-20, Ppg-5-Ceteth-20, Citric Acid, Fragrance (Parfum), Citronellol, Alpha-Isomethyl Ionone, Limonene, Potassium Sorbate, Phenoxyethanol",
+    "inci_source_url": "https://www.douglas.de/de/p/3000067216",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Styling-Spray auf Salzwasserbasis für den perfekten Beach-Look",
+      "mehr Volumen und Struktur",
+      "Salzwasser sorgt für Halt und ein cooles, mattes Sommer-Finish",
+      "Haltgrad leicht"
+    ],
+    "hold_claim": {
+      "raw": "Haltgrad leicht",
+      "number": null,
+      "scale_max": null,
+      "words": "leicht; 'Salzwasser sorgt für Halt'",
+      "none_stated": false
+    },
+    "finish_claim": "matt - raw: 'mattes Sommer-Finish'",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "für alle Haarzustände",
+      "Alle Haarfarben"
+    ],
+    "free_from_claims": [
+      "vegan",
+      "silikonfrei",
+      "parabenfrei",
+      "paraffinfrei",
+      "ohne ölige Inhaltsstoffe",
+      "phthalatfrei",
+      "ammoniakfrei",
+      "pigment- und farbstoff-frei",
+      "palmöl-frei"
+    ],
+    "directions": "Gleichmäßig auf feuchtes oder trockenes Haar sprühen; stylen und lufttrocknen (in den Wind stellen) oder mit Diffusor föhnen.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Minimal salt-water formula: Aqua, Magnesium Sulfate (pos 2 - the only salt; NO sodium chloride/Maris Sal), kelp/algae extracts, glycerin, Isoceteth-20 + PPG-5-Ceteth-20 as solubilizers/surfactants. No fixative polymer, no starch, no silica, no alcohol, no oil, no propellant.",
+    "notes": "Claim 'Salzwasserbasis ... Salzwasser sorgt für Halt' is actually Epsom salt (magnesium sulfate), not sea salt by INCI name. Older/other-market list on inkeedecoder.com differs (Propylene Glycol, DMDM Hydantoin, no phenoxyethanol); Douglas DE list used as current EU. Price: 125 ml 28.99 (UVP 40.00); 50 ml mini 18.39. Flaconi also lists the product (URL seen, page not read)."
+  },
+  {
+    "sample_id": "wella-eimi-sugar-lift",
+    "subtype_candidate": "salt_spray",
+    "boundary_probe": true,
+    "brand": "Wella Professionals",
+    "product_name": "EIMI Volume Sugar Lift Volumenspray",
+    "size": "150 ml",
+    "format": "pump_spray",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [
+      "douglas"
+    ],
+    "price_eur": 15.29,
+    "price_source_url": "https://www.douglas.de/de/p/5003622106",
+    "ean": null,
+    "inci": "Aqua, Hydrolyzed Corn Starch,Propylene Glycol, VP/VA Copolymer, PVP, Sorbitol,Panthenol, Methylparaben, Ceteareth-20, PEG-40Hydrogenated Castor Oil, Carbomer, Benzyl Alcohol,Parfum, Aminomethyl Propanol, Disodium EDTA,Limonene, Linalool, Benzyl Salicylate, Citronellol,Laurtimonium Chloride, Hydroxycitronellal, CI15510, CI 17200",
+    "inci_source_url": "https://www.douglas.de/de/p/5003622106",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "verleiht dem Haar starken Halt und optimale Griffigkeit",
+      "natürlichen Zuckermolekülen und Styling-Polymeren",
+      "Fülle, Stand und griffige Textur im Haar",
+      "hinterlässt einen brillanten Glanz",
+      "Haltgrad stark"
+    ],
+    "hold_claim": {
+      "raw": "Haltgrad stark / verleiht dem Haar starken Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "stark",
+      "none_stated": false
+    },
+    "finish_claim": "glänzend - raw: 'hinterlässt einen brillanten Glanz'",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Eignet sich hervorragend zur Betonung von wunderschönen Locken"
+    ],
+    "free_from_claims": [],
+    "directions": "Für Volumen und Struktur in feuchtes Haar sprühen; für dezente Looks im trockenen Haar anwenden. (Roots vs lengths not specified.)",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Salt-free 'sugar' spray. No sucrose/sugar INCI name: the 'Zuckermoleküle' are Hydrolyzed Corn Starch (pos 2) + Sorbitol (pos 6). Fixatives: VP/VA Copolymer (pos 4) + PVP (pos 5) = classic styling-lotion polymers; Carbomer + Aminomethyl Propanol = thickener/neutraliser; PEG-40 Hydrogenated Castor Oil + Ceteareth-20 solubilizers. No salts, no alcohol, no silica/clay/starch powder, no propellant. Contains colorants CI 15510 and CI 17200 and Methylparaben.",
+    "notes": "Boundary probe: salt-free 'texture' spray whose formula is a polymer-led volumizing/setting spray (Föhnlotion/Sprühgel family: VP/VA+PVP, thickener, shine), not a salt-texture product; marketed hold is 'stark'. Douglas lists a second EIMI Sugar Lift listing (5010957755) 'Textur und starkes Halt' - not read. Douglas also calls it 'Haarspray'."
+  },
+  {
+    "sample_id": "balea-pure-styling-volumenpuder-spray",
+    "subtype_candidate": "texture_spray",
+    "boundary_probe": false,
+    "brand": "Balea",
+    "product_name": "Styling Spray Volumenpuder Pure Styling",
+    "size": "150 ml",
+    "format": "aerosol",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 1.95,
+    "price_source_url": "https://www.dm.de/p/d/3070168/balea-styling-spray-volumenpuder-pure-styling",
+    "ean": "4066447985733",
+    "inci": "Butane, Propane, Isobutane, Alcohol denat., Aluminum starch octenylsuccinate, Corn starch modified, Silica, Panthenol, Tocopheryl acetate.",
+    "inci_source_url": "https://www.dm.de/p/d/3070168/balea-styling-spray-volumenpuder-pure-styling",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Volumenpuder für mehr Fülle",
+      "Für ultimatives Volumen vom Ansatz an",
+      "Geeignet für empfindliche Kopfhaut",
+      "griffige Textur direkt am Ansatz",
+      "ganz ohne Silikone"
+    ],
+    "hold_claim": {
+      "raw": "Halt: leichter Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "leichter Halt",
+      "none_stated": false
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Geeignet für empfindliche Kopfhaut"
+    ],
+    "free_from_claims": [
+      "ohne Parfüm",
+      "ohne Silikone",
+      "Geeignet für empfindliche Kopfhaut"
+    ],
+    "directions": "Dose kräftig schütteln. Auf trockenen Haaransatz sprühen und wie gewohnt stylen. Für mehr Textur und Griffigkeit sparsam in die Haarlängen sprühen. (Dry hair only; roots primary, lengths secondary.)",
+    "application_moment": "dry_finish",
+    "formula_observations": "Aerosol powder spray: propellants (butane/propane/isobutane) lead, Alcohol denat. pos 4, then powders: Aluminum Starch Octenylsuccinate (pos 5), modified Corn Starch (pos 6), Silica (pos 7). NO fixative polymer (no VP/VA, acrylates), no oil, no salt, no clay. Fragrance-free.",
+    "notes": "Formula is essentially a dry-shampoo base (starch + silica + alcohol + propellant, like got2b/OSiS) sold as 'Volumenpuder' styling spray - no cleansing claim, no 'Trockenshampoo' wording. 'leichter Halt' is not backed by any film former. Category on dm: Haarpuder."
+  },
+  {
+    "sample_id": "schwarzkopf-taft-texturspray-aloe-boost",
+    "subtype_candidate": "texture_spray",
+    "boundary_probe": false,
+    "brand": "Schwarzkopf taft",
+    "product_name": "Texturspray Aloe Boost",
+    "size": "150 ml",
+    "format": "aerosol",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 3.95,
+    "price_source_url": "https://www.dm.de/p/d/3047463/",
+    "ean": "4015100860825",
+    "inci": "Dimethyl Ether, Alcohol denat., VP/VA Copolymer, Distarch Phosphate, Aqua (Water, Eau), Polyquaternium-11, Cellulose, Tapioca Starch, Glycerin, Aloe Barbadensis Leaf Juice, Panthenol, Niacinamide, Parfum (Fragrance), Linalool, Benzyl Alcohol, Geraniol, Tetramethyl Acetyloctahydronaphthalenes, Sodium Benzoate",
+    "inci_source_url": "https://www.dm.de/p/d/3047463/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Für alle Haartypen geeignet",
+      "Hilft Frisur vor Luftfeuchtigkeit zu schützen",
+      "Mit Aloe Vera-Komplex & Niacinamid",
+      "Verleiht Fülle und Volumen",
+      "feinem Haar mehr Fülle und Volumen verleihen"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": "none stated (no Halt number; 'Fülle und Volumen' only)",
+      "none_stated": true
+    },
+    "finish_claim": null,
+    "humidity_claim": "Hilft Frisur vor Luftfeuchtigkeit zu schützen",
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Für alle Haartypen geeignet",
+      "feinem Haar mehr Fülle und Volumen"
+    ],
+    "free_from_claims": [
+      "ohne Silikone",
+      "ohne Ammoniak",
+      "ohne Sulfat",
+      "Frei von tierischen Inhaltsstoffen"
+    ],
+    "directions": "Gut schütteln. Mit kurzen Sprühstößen aus 30 cm Abstand auf das trockene Haar sprühen. (Dry hair; no roots/lengths instruction.)",
+    "application_moment": "dry_finish",
+    "formula_observations": "Dimethyl ether propellant, Alcohol denat. pos 2, then fixative VP/VA Copolymer pos 3 and Polyquaternium-11 (pos 6); texture/bulk powders Distarch Phosphate (pos 4), Cellulose (pos 7), Tapioca Starch (pos 8). No silica, no clay, no salt. Aloe juice only at pos 11 (below glycerin) - 'Aloe Vera-Komplex' is a care claim, not a driver.",
+    "notes": "Polymer-fixed + starch-textured: i.e. a light hairspray plus powder. Contrast with Balea Volumenpuder spray and got2b dry shampoo, which have no fixative. Rossmann carries same EAN (4015100860825). Marketed 'Texturspray' while also 'Volumen Spray'."
+  },
+  {
+    "sample_id": "living-proof-full-dry-volume-texture-spray",
+    "subtype_candidate": "texture_spray",
+    "boundary_probe": false,
+    "brand": "Living Proof",
+    "product_name": "Full Dry Volume & Texture Spray",
+    "size": "238 ml",
+    "format": "aerosol",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [
+      "flaconi"
+    ],
+    "price_eur": 23.95,
+    "price_source_url": "https://www.flaconi.de/haare/living-proof/full/living-proof-full-dry-volume-and-texture-spray-texturizing-spray.html",
+    "ean": null,
+    "inci": "Dimethyl Ether, Alcohol Denat., VP/VA Copolymer, VA/Crotonates/Vinyl Neodecanoate Copolymer, Calcium Sodium Borosilicate, Water/Aqua/Eau, Cyclodextrin, Zeolite, Fragrance (Parfum), Ethylcellulose, Propylene Glycol Dibenzoate, Aminomethyl Propanol, Ammonium Glycyrrhizate, Linalool, Citronellol, Citral, Limonene.",
+    "inci_source_url": "https://www.flaconi.de/haare/living-proof/full/living-proof-full-dry-volume-and-texture-spray-texturizing-spray.html",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "sofortiges und lang anhaltendes Volumen, Textur und weichen Halt",
+      "aufbaubaren, grifffreien Halt für mehr Stylingvielfalt",
+      "Hitzeschutz bis zu 410° F/210° C",
+      "Absorbiert leicht Öl, um die Lebensdauer Ihres Looks zu verlängern",
+      "Funktioniert auch bei trockenem Haar"
+    ],
+    "hold_claim": {
+      "raw": "weichen Halt / aufbaubaren, grifffreien Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "weicher, aufbaubarer, grifffreier Halt",
+      "none_stated": false
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": "Hitzeschutz bis zu 410° F/210° C",
+    "hair_type_claims": [
+      "Feines Haar",
+      "Lockiges Haar",
+      "Glattes, gewelltes und gelocktes Haar",
+      "Feines, mittleres und dickes Haar"
+    ],
+    "free_from_claims": [
+      "Vegan"
+    ],
+    "directions": "Dose schütteln, 5-10 cm vom trockenen Haar, Haarpartie anheben, von Wurzel bis Spitzen aufsprühen, mit Fingern zerzausen; fertige Frisur für Textur und Halt einsprühen. Tipp: Kopf zur Seite/auf den Kopf drehen, kleine Stöße in die Längen für mehr Textur. (Dry hair; roots to ends; also refresh.)",
+    "application_moment": "dry_finish",
+    "formula_observations": "DME propellant + Alcohol Denat. lead; two fixative polymers (VP/VA Copolymer, VA/Crotonates/Vinyl Neodecanoate Copolymer); texture/bulk minerals: Calcium Sodium Borosilicate (glass particles), Zeolite, Cyclodextrin (oil absorbers); Ethylcellulose. Water only pos 6. No starch, no silica (INCI name), no salt, no oil. Plasticizer Propylene Glycol Dibenzoate.",
+    "notes": "Size 95 ml 13.90 EUR also listed (95/238 ml variants). Strongest polymer + mineral blend of the texture sprays sampled; claims heat protection (a heat-protectant overlap). Hold words 'weich/aufbaubar' fit the VP/VA + crotonates load. INCI source is retailer page, not verified against manufacturer."
+  },
+  {
+    "sample_id": "got2b-trockenshampoo-extra-volumen",
+    "subtype_candidate": "texture_spray",
+    "boundary_probe": true,
+    "brand": "got2b",
+    "product_name": "Trockenshampoo Extra Volumen",
+    "size": "200 ml",
+    "format": "aerosol",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 3.95,
+    "price_source_url": "https://www.dm.de/p/d/1685672/got2b-trockenshampoo-extra-volumen",
+    "ean": "4015100800227",
+    "inci": "Butane, Propane, Alcohol denat., Oryza Sativa (Rice) Starch, Isobutane, Cellulose, Parfum (Fragrance), Tetramethyl Acetyloctahydronaphthalenes, Limonene, Aqua (Water, Eau), Linalool, Cetrimonium Chloride, Pinene, Citrus Limon (Lemon) Peel Oil",
+    "inci_source_url": "https://www.dm.de/p/d/1685672/got2b-trockenshampoo-extra-volumen",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Für extra Volumen und eine schnelle Reinigung",
+      "Hinterlässt kein Rückstände",
+      "Bis zu 48 Stunden Frische",
+      "sofortigen Volumen Boost",
+      "Vegane Formel"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": "none stated",
+      "none_stated": true
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "ohne Silikone",
+      "ohne Ammoniak",
+      "ohne Sulfat",
+      "Vegane Formel"
+    ],
+    "directions": "Haar durchbürsten, Handtuch um Schultern, Dose schütteln, in Partien aus 20 cm auf trockenes Haar sprühen, kurz trocknen lassen, mit Fingern/Handtuch einarbeiten, Rückstände ausbürsten. (Whole scalp/hair; second-day refresh positioning.)",
+    "application_moment": "second_day",
+    "formula_observations": "Propellants lead (butane, propane, isobutane), Alcohol denat. pos 3, then Rice Starch (pos 4) and Cellulose (pos 6) as oil absorbers; Cetrimonium Chloride at end (conditioning). No fixative polymer, no silica, no salt, no clay.",
+    "notes": "Boundary probe. dm categorises under Trockenshampoo but gives 'Wirkung: Styling, Volumen'. Formula is near-identical in structure to Balea Volumenpuder Spray (starch + alcohol + propellants); differs only by starch type (rice vs ASOS/corn+silica) and no silica. Schwarzkopf Professional OSiS+ 2nd Day Refresh Dust (Douglas 5011168812, 23.99/300 ml, 'Haltgrad mittel', 'Trockenshampoo für voluminöse Stylings') has a near-identical INCI (Butane, Propane, Alcohol denat., Rice Starch, Isobutane, Parfum, Aqua, Cetrimonium Chloride, ...) - same formula sold at ~4x price/ml as a styling-texture prestige product."
+  },
+  {
+    "sample_id": "schwarzkopf-taft-haarpuder-volumen",
+    "subtype_candidate": "hair_powder",
+    "boundary_probe": false,
+    "brand": "Schwarzkopf taft",
+    "product_name": "Haarpuder VOLUMEN",
+    "size": "10 g",
+    "format": "powder",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 3.95,
+    "price_source_url": "https://www.dm.de/p/d/1320701/schwarzkopf-taft-haarpuder-volumen",
+    "ean": "4015100810684",
+    "inci": "Aqua (Water, Eau), Silica Silylate (nano), Sodium Benzoate, Parfum (Fragrance), Citric Acid, Linalool, Benzyl Alcohol, Geraniol, Tetramethyl Acetyloctahydronaphthalenes, Terpineol, Dimethyl Phenethyl Acetate, Limonene, Citronellol, Alpha-Isomethyl Ionone",
+    "inci_source_url": "https://www.dm.de/p/d/1320701/schwarzkopf-taft-haarpuder-volumen",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Volumen & Kontrolle für alle Haartypen",
+      "Bis zu 24 h Kontrolle, ohne zu verkleben",
+      "Natürlicher Haarschwung",
+      "Hilft, die Frisur vor Feuchtigkeit & Wind zu schützen",
+      "Hilft, das Haar vor dem Austrocknen zu schützen"
+    ],
+    "hold_claim": {
+      "raw": "Für bis zu 24 Stunden langanhaltenden Halt / Bis zu 24 h Kontrolle",
+      "number": 24,
+      "scale_max": null,
+      "words": "bis zu 24 h Halt/Kontrolle (hours, no 1-5 scale)",
+      "none_stated": false
+    },
+    "finish_claim": null,
+    "humidity_claim": "Hilft, die Frisur vor Feuchtigkeit & Wind zu schützen",
+    "heat_claim": "Das Haar wird sowohl vor Föhnschäden als auch vor Feuchtigkeit und Wind geschützt",
+    "hair_type_claims": [
+      "alle Haartypen"
+    ],
+    "free_from_claims": [
+      "Ohne Alkohol",
+      "Ohne Sulfat",
+      "Ohne Ammoniak",
+      "vegane Formeln"
+    ],
+    "directions": "Kleine Menge Puder in Handflächen verreiben, auf trockenes Haar auftragen, vom Ansatz bis in die Spitzen verteilen und stylen. Tipp: Für extra Boost direkt aufs trockene Haar streuen und mit Fingerspitzen einmassieren. (Dry hair; roots to ends.)",
+    "application_moment": "dry_finish",
+    "formula_observations": "Aqua + Silica Silylate (hydrophobic silica, 'dry water' powder: water encapsulated in silica) + preservative/acid + fragrance. No fixative polymer, no starch, no clay, no salt, no alcohol, no propellant. Silica silylate (nano) is the only structuring/texture agent.",
+    "notes": "Hold expressed in hours, not strength. 'Bis zu 24 h ... Halt' and humidity/wind protection are unsupported by any film former in the INCI - claims are generic Taft styling language. Dm review score 4.5 (773)."
+  },
+  {
+    "sample_id": "got2b-styling-puder-volumen-powderfull",
+    "subtype_candidate": "hair_powder",
+    "boundary_probe": false,
+    "brand": "got2b",
+    "product_name": "Styling Puder Volumen Powderfull",
+    "size": "10 g",
+    "format": "powder",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 4.95,
+    "price_source_url": "https://www.dm.de/p/d/1300882/got2b-styling-puder-volumen-powderfull",
+    "ean": "4015100800180",
+    "inci": "Aqua (Water, Eau), Silica Silylate, Sodium Benzoate, Citric Acid",
+    "inci_source_url": "https://www.dm.de/p/d/1300882/got2b-styling-puder-volumen-powderfull",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Sofortiges Volumen",
+      "Natürlicher Halt",
+      "verleiht Ihrem Haar sofortiges Volumen direkt am Ansatz",
+      "texturiert jede einzelne Haarsträhne",
+      "Vegane Formel"
+    ],
+    "hold_claim": {
+      "raw": "Halt: leichter Halt / Natürlicher Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "leichter / natürlicher Halt",
+      "none_stated": false
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "vegan",
+      "Ohne Silikone",
+      "Ohne Parfüm",
+      "Ohne Alkohol",
+      "Ohne Sulfat",
+      "Ohne Ammoniak"
+    ],
+    "directions": "Kleine Menge Puder in Handflächen streuen und verreiben, bis unsichtbar; im trockenen Haar vom Ansatz bis in die Spitzen verteilen. (Dry hair; roots to ends.)",
+    "application_moment": "dry_finish",
+    "formula_observations": "Four-ingredient formula: Aqua, Silica Silylate, Sodium Benzoate, Citric Acid. Hydrophobic-silica 'dry water' powder only. No fixative polymer, starch, clay, salt, alcohol, fragrance or propellant.",
+    "notes": "Simplest formula in the lane; identical base to Taft Haarpuder (Taft adds fragrance) and to Schwarzkopf Professional OSiS+ Dust It (same INCI Aqua, Silica Silylate, Sodium Benzoate, Citric Acid per one AU retailer; Flaconi DE page had no price/INCI shown). Hold 'leicht' is the honest read - no film former at all."
+  },
+  {
+    "sample_id": "balea-haarpuder-volumen-pomegranate",
+    "subtype_candidate": "hair_powder",
+    "boundary_probe": false,
+    "brand": "Balea",
+    "product_name": "Haarpuder Volumen (Pomegranate)",
+    "size": "10 g",
+    "format": "powder",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 1.25,
+    "price_source_url": "https://www.dm.de/p/d/1567808/balea-haarpuder-volumen",
+    "ean": "4070765078381",
+    "inci": "Aqua, Silica Silylate, PEG-8, Undecane, Potassium Sorbate, Parfum, Carrageenan, Citric Acid, Tridecane, Tocopherol, Hexyl Cinnamal, Limonene, Citrus Aurantium Peel Oil, Citral, Geraniol, Citronellol.",
+    "inci_source_url": "https://www.dm.de/p/d/1567808/balea-haarpuder-volumen",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Puder für mehr Volumen & Textur",
+      "Für Ansatzvolumen & ein mattes Finish",
+      "ohne sichtbare Rückstände zu hinterlassen",
+      "eignet sich zudem hervorragend, um Frisuren zu fixieren",
+      "langanhaltenden Halt zu geben"
+    ],
+    "hold_claim": {
+      "raw": "Halt: starker Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "starker Halt (dm product property); text: 'langanhaltenden Halt'",
+      "none_stated": false
+    },
+    "finish_claim": "matt - raw: 'ein mattes Finish'",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "alle Haartypen"
+    ],
+    "free_from_claims": [
+      "vegan",
+      "Ohne Alkohol",
+      "Hautverträglichkeit dermatologisch bestätigt"
+    ],
+    "directions": "Kleine Menge in Handflächen verteilen, ins trockene Haar einarbeiten. Für maximales Volumen direkt am Haaransatz einmassieren und nach Wunsch stylen. (Dry hair; roots.)",
+    "application_moment": "dry_finish",
+    "formula_observations": "Aqua + Silica Silylate base with PEG-8, Undecane + Tridecane (plant-derived alkane blend, dry feel), Carrageenan (thickener/slight tack). No fixative polymer, no starch, no clay, no salt, no alcohol, no propellant.",
+    "notes": "Claim-vs-formula mismatch: dm property chip says 'starker Halt' (and text says it fixes hairstyles) while the INCI has no film former, weaker than Kevin.Murphy's VP/VA powder and no stronger than got2b ('leichter Halt') whose base is the same silica-water. dm review 3.3 (191)."
+  },
+  {
+    "sample_id": "kevin-murphy-powder-puff-volume",
+    "subtype_candidate": "hair_powder",
+    "boundary_probe": false,
+    "brand": "Kevin.Murphy",
+    "product_name": "Powder.Puff Volume",
+    "size": "14 g",
+    "format": "powder",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [
+      "flaconi"
+    ],
+    "price_eur": 36.0,
+    "price_source_url": "https://www.flaconi.de/haare/kevin-murphy/powder-puff/kevin-murphy-powder-puff-volume-haarpuder.html",
+    "ean": null,
+    "inci": "Water (Aqua) (Eau), Silica Silylate, VP/VA Copolymer, Butylene Glycol, Nylon-12, Alaria Esculenta Extract, Phenoxyethanol, Sodium Benzoate, Citric Acid.",
+    "inci_source_url": "https://www.flaconi.de/haare/kevin-murphy/powder-puff/kevin-murphy-powder-puff-volume-haarpuder.html",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Für Volumen und Struktur einfach etwas POWDER.PUFF auf den Haaransatz geben",
+      "sofortiges Volumen und Struktur",
+      "Haartyp: Alle Haartypen",
+      "Tierversuchsfrei"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": "none stated on Flaconi page (a secondary search snippet cited 'medium hold' from Notino; not verified)",
+      "none_stated": true
+    },
+    "finish_claim": null,
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Alle Haartypen"
+    ],
+    "free_from_claims": [
+      "Tierversuchsfrei"
+    ],
+    "directions": "Schütteln, etwas Puder auf den Haaransatz ins feuchte oder trockene Haar geben; stylen. (Roots; damp OR dry hair.)",
+    "application_moment": "dry_finish",
+    "formula_observations": "Same Water/Silica Silylate 'dry water' base as the drugstore powders, plus VP/VA Copolymer (pos 3) as fixative and Nylon-12 (powder bulking/grip). No starch, clay, salt, alcohol, propellant, fragrance.",
+    "notes": "Only powder in the lane with a real fixative. Price 36.00 EUR for 14 g (about 2,571 EUR/kg vs 395 EUR/kg Taft). 'Feuchtes oder trockenes Haar' directions = the only powder explicitly allowing damp-hair application."
+  }
+]

@@ -221,6 +221,8 @@ test-screenshots*/
 /data/research/mask-inci/**/lab-review-state.json
 !/data/research/bondbuilder-inci/
 !/data/research/bondbuilder-inci/**
+!/data/research/styling-inci/
+!/data/research/styling-inci/**
 /data/research/bondbuilder-inci/**/lab-review-state.json
 /data/research/bondbuilder-inci/**/rework-queue.json
 !/docs/research/conditioner-inci/v1.0/conditioner-classification-standard.docx

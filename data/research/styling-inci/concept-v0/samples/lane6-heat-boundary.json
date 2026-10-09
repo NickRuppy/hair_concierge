@@ -1,0 +1,669 @@
+[
+  {
+    "sample_id": "schwarzkopf-taft-foehn-spray-volumen-halt-3",
+    "subtype_candidate": "heat_styling_spray",
+    "boundary_probe": false,
+    "brand": "Schwarzkopf taft",
+    "product_name": "Föhn-Spray VOLUMEN Halt 3",
+    "size": "150 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 3.95,
+    "price_source_url": "https://www.dm.de/p/d/1168693/",
+    "ean": "4015100810226",
+    "inci": "Aqua (Water, Eau), Alcohol denat., VP/VA Copolymer, Panthenol, Cetrimonium Chloride, Parfum (Fragrance), Linalool, Benzyl Alcohol, Geraniol, Tetramethyl Acetyloctahydronaphthalenes, Lactic Acid, Terpineol, Dimethyl Phenethyl Acetate",
+    "inci_source_url": "https://www.dm.de/p/d/1168693/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Volumen & Halt für alle Haartypen",
+      "Schützt vor Föhnschäden",
+      "Langanhaltender Halt, dank Haltegrad 3",
+      "Hilft, das Haar vor dem Austrocknen zu schützen",
+      "Hilft, die Frisur vor Feuchtigkeit & Wind zu schützen",
+      "verleiht dem Haar mittleren, langanhaltenden Halt, ohne zu verkleben"
+    ],
+    "hold_claim": {
+      "raw": "Haltegrad 3 / mittleren, langanhaltenden Halt",
+      "number": 3,
+      "scale_max": null,
+      "words": "mittlerer Halt",
+      "none_stated": false
+    },
+    "finish_claim": "natürlich (verbessert den natürlichen Haarschwung), ohne zu verkleben",
+    "humidity_claim": "Hilft, die Frisur vor Feuchtigkeit & Wind zu schützen",
+    "heat_claim": "Schützt vor Föhnschäden (dm feature tag: Hitzeschutz; no temperature stated)",
+    "hair_type_claims": [
+      "für alle Haartypen"
+    ],
+    "free_from_claims": [
+      "ohne Silikone",
+      "ohne Ammoniak",
+      "ohne Sulfat",
+      "vegan (taft-Sprays: vegane Formeln)"
+    ],
+    "directions": "Gleichmäßig in das handtuchtrockene Haar sprühen, Haare trocken föhnen und stylen.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Classic hydroalcoholic fixative spray: Aqua, Alcohol denat. (2nd), VP/VA Copolymer (3rd) = sole film-forming fixative, then panthenol + cetrimonium chloride as light conditioning. No silicones, oils or heat-specific actives; the 'Hitzeschutz' tag is not supported by any recognisable thermal-protectant ingredient. Scale max for Halt 3 not printed in the dm text (taft convention 1-5, unverified).",
+    "notes": "Textbook heat_styling_spray: the primary promise is volume + medium hold produced with the blow-dryer (damp application, set by heat). Heat claim is secondary and vague ('Schützt vor Föhnschäden') while the fixative sits at rank 3 - this is the clearest FIXATIVE-YES / heat-claim-soft pole of the subtype. Contrast with got2b Schutzengel (same VP/VA polymer, but sold as Heat Protectant)."
+  },
+  {
+    "sample_id": "guhl-foehn-spray-langzeit-volumen",
+    "subtype_candidate": "heat_styling_spray",
+    "boundary_probe": false,
+    "brand": "GUHL",
+    "product_name": "Föhn-Spray Langzeit Volumen",
+    "size": "150 ml",
+    "format": "pump_spray",
+    "market_tier": "premium_drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 4.95,
+    "price_source_url": "https://www.dm.de/p/d/1447160/",
+    "ean": "4072600282441",
+    "inci": "Aqua, Alcohol Denat., Hydrolyzed Corn Starch, Glycerin, Coco-Betaine, Sucrose, Panthenol, Citric Acid, Glycine, Piroctone Olamine, Cetrimonium Chloride, Acacia Senegal Gum Extract, Centaurea Cyanus Flower Extract, Sodium Benzoate, Potassium Sorbate, Parfum, Benzyl Alcohol, Geraniol, Geranyl Acetate, Linalyl Acetate, Tetramethyl Acetyloctahydronaphthalenes, CI 42090, CI 60730.",
+    "inci_source_url": "https://www.dm.de/p/d/1447160/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "wird aktiviert durch die Föhnhitze",
+      "verleiht bis zu 48 h Halt und lebendiges Volumen",
+      "Volumen-Booster",
+      "Für das tägliche Styling",
+      "Blaue Kornblume & pflanzliches Kollagen wirken kräftigend",
+      "Inhaltsstoffe zu 89 % natürlichen Ursprungs"
+    ],
+    "hold_claim": {
+      "raw": "bis zu 48 h Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "Halt bis 48 h (no grade stated)",
+      "none_stated": false
+    },
+    "finish_claim": "lebendiges Volumen (kein Glanz-/Finish-Claim)",
+    "humidity_claim": null,
+    "heat_claim": "Föhn-Aktiv Styling Spray: wird aktiviert durch die Föhnhitze (heat = activator, not protection claim)",
+    "hair_type_claims": [
+      "dünneres Haar (fülliger & gesünder aussehen lassen)"
+    ],
+    "free_from_claims": [
+      "ohne Silikone",
+      "ohne Ammoniak",
+      "ohne Sulfat",
+      "vegan",
+      "ohne Inhaltsstoffe tierischen Ursprungs"
+    ],
+    "directions": "Vor dem Föhnen aufsprühen. Nicht ausspülen.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Natural-leaning hold route without a synthetic fixative: Aqua, Alcohol denat. (2nd), Hydrolyzed Corn Starch (3rd) + sucrose + Acacia Senegal Gum Extract (12th) as the film/hold components; betaine/glycerin humectants; Piroctone Olamine (10th) is an unusual anti-dandruff-type active in a styling spray; cationic Cetrimonium Chloride for slip; blue colorants (CI 42090/60730). No silicones/oils.",
+    "notes": "Heat is framed as activator ('wird aktiviert durch die Föhnhitze'), not as protection - exactly the Styling-side mirror of Heat Protectant. Hold is a duration claim (48 h) with no grade; the 48 h hold rests on starch/gum, not PVP/VP-VA. Format (pump vs aerosol) not stated; pump inferred from no propellant in INCI. Piroctone Olamine presence is a scalp-adjacent ingredient in a cosmetic styling product - flag for the cosmetic/medical separation rule."
+  },
+  {
+    "sample_id": "garnier-fructis-leave-in-spray-diamond-sleek-glaettungsspray",
+    "subtype_candidate": "heat_styling_spray",
+    "boundary_probe": false,
+    "brand": "GARNIER FRUCTIS",
+    "product_name": "Leave-In Spray Diamond Sleek Glättungsspray",
+    "size": "150 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 7.95,
+    "price_source_url": "https://www.dm.de/p/d/3115734/",
+    "ean": "3600542656825",
+    "inci": "AQUA / WATER • GLYCERIN • DIPROPYLENE GLYCOL • PEG-60 HYDROGENATED CASTOR OIL • LAURETH-4 • ARGANIA SPINOSA KERNEL OIL • STEARAMIDOPROPYL DIMETHYLAMINE • SODIUM HYDROXIDE • ISONONYL ISONONANOATE • HYDROLYZED CORN PROTEIN • HYDROLYZED SOY PROTEIN • HYDROLYZED WHEAT PROTEIN • CAPRYLYL GLYCOL • LACTIC ACID • POLYSILICONE-29 • HEXYL LAURATE • PHENOXYETHANOL • PARFUM / FRAGRANCE",
+    "inci_source_url": "https://www.dm.de/p/d/3115734/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Glättendes Leave-In Spray",
+      "Mit Hitzeschutz bis zu 230 °C",
+      "Schützende Formel mit Arganöl",
+      "Für einen diamantartigen Glanz",
+      "wirkt bis zu 72 Stunden gegen Frizz, selbst bei hoher Luftfeuchtigkeit",
+      "Dank der leichten Formel wird das Haar nicht beschwert"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "glänzend (brillant glänzender Sleek-Look, diamantartiger Glanz)",
+    "humidity_claim": "wirkt bis zu 72 Stunden gegen Frizz, selbst bei hoher Luftfeuchtigkeit",
+    "heat_claim": "Hitzeschutz bis zu 230 °C; Formel wird durch Bürstenföhnen aktiviert, Look mit Glätteisen versiegeln",
+    "hair_type_claims": [
+      "frizzy und glanzloses Haar"
+    ],
+    "free_from_claims": [
+      "vegan"
+    ],
+    "directions": "Nach der Wäsche handtuchtrockenes Haar großzügig besprühen, strähnenweise mit Bürste föhnen (Spannung, aktiviert die Formel), optional mit Glätteisen versiegeln.",
+    "application_moment": "before_heat",
+    "formula_observations": "Water/glycerin/dipropylene-glycol base solubilised with PEG-60 hydrogenated castor oil + laureth-4. Argan oil only 6th, isononyl isononanoate 9th, hexyl laurate 16th = light emollient package, not oil-led. Three hydrolyzed proteins (10-12). POLYSILICONE-29 at 15th (heat-activated film former) sits below the tail marker (phenoxyethanol 17th is close) - the 'activates with heat' claim rests on a late, low-dose ingredient. No PVP/VP-VA/PQ-11 fixative.",
+    "notes": "Primary promise is a smoothing/sleek RESULT achieved through blow-dry tension + iron ('Glättungsspray', 'Shine-Coat'); heat protection is a bullet. dm files it under 'Hitzeschutzspray & Co.' AND 'Styling Spray' AND 'Haarkur'. Same Polysilicone-29 mechanism as Color Wow Dream Coat / NEQI Diamond Glass but at far lower rank. No fixative, no hold claim -> shows heat_styling_spray does not need a fixative; the discriminator is 'result via heat' not 'hold'."
+  },
+  {
+    "sample_id": "loreal-paris-elnett-stylingspray-hitzeschutz-3-tage-glatt",
+    "subtype_candidate": "heat_styling_spray",
+    "boundary_probe": false,
+    "brand": "L'ORÉAL PARiS Elnett",
+    "product_name": "Stylingspray Hitzeschutz 3 Tage Glatt",
+    "size": "170 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 4.95,
+    "price_source_url": "https://www.dm.de/p/d/1353305/",
+    "ean": "3600522280774",
+    "inci": "AQUA / WATER • DIMETHICONE • STEARYL ALCOHOL • HYDROLYZED CONCHIOLIN PROTEIN • PHENOXYETHANOL • PPG-5-CETETH-20 • BEHENTRIMONIUM CHLORIDE • TRIDECETH-6 • SALICYLIC ACID • XYLOSE • LIMONENE • LINALOOL • AMODIMETHICONE • ISOPROPYL ALCOHOL • ALPHA- ISOMETHYL IONONE • CETRIMONIUM CHLORIDE • CITRONELLOL • BUTYLENE GLYCOL • LAURETH-23 • LAURETH-4 • HEXYL CINNAMAL • PARFUM / FRAGRANCE",
+    "inci_source_url": "https://www.dm.de/p/d/1353305/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "bietet Styling und Schutz in eine[m]",
+      "schützt das Haar bis zu 230 Grad",
+      "sorgt für ein glattes und geschmeidiges Ergebnis",
+      "Perfekter Halt ohne zu verkleben",
+      "Spielend leichtes Ausbürsten",
+      "230°C Hitze-Schutz-Technologie schützt das Haar optimal"
+    ],
+    "hold_claim": {
+      "raw": "Perfekter Halt ohne zu verkleben",
+      "number": null,
+      "scale_max": null,
+      "words": "Halt (no grade)",
+      "none_stated": false
+    },
+    "finish_claim": "glatt und geschmeidig, seidig-geschmeidiges Haargefühl",
+    "humidity_claim": "Dank des optimalen Schutzes vor Feuchtigkeit schützt er auch für Frizz",
+    "heat_claim": "schützt das Haar bis zu 230 Grad (230°C Hitze-Schutz-Technologie)",
+    "hair_type_claims": [],
+    "free_from_claims": [],
+    "directions": "dm directions are generic hairspray text: mit 3 cm Abstand gleichmäßig aufs Haar sprühen; für Volumen Deckhaar anheben und von unten sprühen. No explicit pre-heat step stated.",
+    "application_moment": "before_heat",
+    "formula_observations": "Silicone-emulsion heat protectant, not a fixative spray: Aqua, Dimethicone (2nd), Stearyl Alcohol (3rd), Behentrimonium Chloride (7th) + Amodimethicone (13th) = cationic/silicone conditioning system; Xylose (10th) is the 'Hitzeschutz-Technologie' marker; hydrolyzed conchiolin protein. Isopropyl alcohol only 14th. NO film-forming fixative (no PVP/VP-VA/PQ-11/acrylates) despite 'Stylingspray' and 'Halt' wording.",
+    "notes": "Best boundary example: named 'Stylingspray', claims 'Halt' and 'glatt 3 Tage', filed by dm under Hitzeschutzspray & Co., but the formula is a silicone/xylose heat protectant with zero fixative. Claims-vs-formula mismatch on 'Perfekter Halt'. dm directions text appears copy-pasted from Elnett hairspray (no pre-heat instruction). Format inferred pump (no propellant in INCI). Under the existing Heat Protectant decision (styling-led smoothing/hold products excluded even if they claim heat protection) this would be Styling by promise but Heat Protectant by formula."
+  },
+  {
+    "sample_id": "color-wow-dream-coat-supernatural-spray",
+    "subtype_candidate": "heat_styling_spray",
+    "boundary_probe": false,
+    "brand": "Color Wow",
+    "product_name": "Dream Coat Supernatural Spray",
+    "size": "200 ml",
+    "format": "pump_spray",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [
+      "douglas"
+    ],
+    "price_eur": 26.99,
+    "price_source_url": "https://www.douglas.de/de/p/3001054710?variant=1267612",
+    "ean": "5060150185274",
+    "inci": "Aqua/Water/Eau, Dipropylene Glycol, Polysilicone-29, DMDM Hydantoin, Propylene Glycol, Glycerin, Silicone Quaternium-18, Butylene Glycol, Iodopropynyl butylcarbamate, Trideceth-7, Trideceth-12, Phenoxyethanol, Chamomilla Recutita (Matricaria) Flower Extract , Calendula Officinalis Flower Extract, Potassium Sorbate, Potassium Benzoate, Citric Acid",
+    "inci_source_url": "https://www.douglas.de/de/p/3001054710?variant=1267612",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Hitzeschutz für Stylinggeräte",
+      "Antistatische Wirkung und UV-Schutz, um den Glanz des Haares zu erhalten",
+      "Leichte Textur: Beschwert und fettet das Haar nicht",
+      "wärmeaktivierte Polymer komprimiert, strafft und versiegelt jeden Strang",
+      "Feuchtigkeitsschutz, der bis zu drei Haarwäschen anhält",
+      "beschleunigt die Föhnzeit"
+    ],
+    "hold_claim": {
+      "raw": "Haltgrad mittel (Douglas attribute field)",
+      "number": null,
+      "scale_max": null,
+      "words": "mittel (retailer attribute only; no pack claim)",
+      "none_stated": false
+    },
+    "finish_claim": "seidige, glatte Textur mit umwerfendem Glanz",
+    "humidity_claim": "wasserdichte Hülle / Feuchtigkeitsschutz bis zu drei Haarwäschen",
+    "heat_claim": "Hitzeschutz für Stylinggeräte (kein Temperaturwert); wärmeaktiviertes Polymer",
+    "hair_type_claims": [
+      "für alle Haartypen",
+      "Haarstruktur kraus (Douglas attribute)"
+    ],
+    "free_from_claims": [
+      "ohne Parabene",
+      "ohne Sulfate",
+      "ohne Gluten",
+      "cruelty-free",
+      "silikonfrei (Douglas tag - contradicts INCI)",
+      "ohne Alkohol"
+    ],
+    "directions": "Handtuchtrockenes Haar abteilen, großzügig aufs feuchte Haar sprühen, jede Partie unter Spannung föhnen; weitere Styling-Produkte erst auf trockenem Haar.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Silicone-polymer film system: Polysilicone-29 3rd (heat-activated silicone film former) + Silicone Quaternium-18 7th; DPG/PG/glycerin/butylene glycol humectants; Trideceth-7/-12 solubilisers; chamomile/calendula; preservatives incl. DMDM Hydantoin (formaldehyde releaser) + IPBC in the Douglas-listed older formula. No PVP/VP-VA/PQ-11/acrylates and no oil. Cosmeterie.com (CH) lists a newer formula #703-2 (Aqua, DPG, Polysilicone-29, Silicone Quaternium-18, Glycerin, Trideceth-6, ...) without DMDM Hydantoin - two live formulas.",
+    "notes": "Prestige thermal styling spray: promise = smooth, sealed, glossy result via heat-activated polymer, shorter dry time; heat protection is bullet #1 but the mechanism is coating, not protection chemistry. Douglas tags it 'silikonfrei' although Polysilicone-29 and Silicone Quaternium-18 are silicone-derived (claim vs formula mismatch). Rossmann.de listing (21,99 EUR per search index) returned 'not available' on live fetch 2026-10-09. Formula is virtually identical to NEQI Diamond Glass Ultimate (Polysilicone-29 + Silicone Quaternium-18 + Trideceth-6/-12) - prestige and drugstore share the same mechanism."
+  },
+  {
+    "sample_id": "maria-nila-curlicue-cream",
+    "subtype_candidate": "curl_cream",
+    "boundary_probe": true,
+    "brand": "Maria Nila",
+    "product_name": "Curlicue Cream (Stylingcreme)",
+    "size": "100 ml",
+    "format": "cream",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [
+      "flaconi"
+    ],
+    "price_eur": 22.5,
+    "price_source_url": "https://www.flaconi.de/haare/maria-nila/curlicue-cream/maria-nila-curlicue-cream-stylingcreme.html",
+    "ean": "7391681038653",
+    "inci": "Aqua/Water/Eau, Propylene Glycol, Glycerin, PVP, Cetyl Alcohol, Helianthus Annuus (Sunflower) Seed Extract, Chamomilla Recutita (Matricaria) Flower Extract, Polysorbate 20, Butylene Glycol, Carbomer, Quaternium-95, Propanediol, Ethylhexylglycerin, Triethanolamine, Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate, Phenoxyethanol, Parfum/Fragrance.",
+    "inci_source_url": "https://www.flaconi.de/haare/maria-nila/curlicue-cream/maria-nila-curlicue-cream-stylingcreme.html",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Haartyp: Lockiges Haar",
+      "Wirkung: Anti-Frizz",
+      "Besonderheiten: Tierversuchsfrei",
+      "Zertifikat: ECOCERT",
+      "arbeitet sowohl natürliche, als auch gestylte Locken heraus",
+      "schützen das Haar zusätzlich vor Frizz und Spliss",
+      "Colour Guard Complex schützt vor UV-Strahlen und freien Radikalen"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "Locken herausarbeiten, definiert (kein Glanz-Claim)",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Lockiges Haar"
+    ],
+    "free_from_claims": [
+      "Tierversuchsfrei",
+      "ECOCERT (Flaconi attribute)"
+    ],
+    "directions": "Im feuchten Haar anwenden; Haar in Partien abteilen und die Haarcreme einarbeiten. (Maria Nila EN page: ends for textured look or lengths for controlled look.)",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Water/propylene glycol/glycerin base; PVP at rank 4 of 17 = the sole film-forming fixative, well above the tail (ethylhexylglycerin 13th). Cetyl alcohol 5th with no cationic partner; Quaternium-95 11th; carbomer + triethanolamine = rheology. NO oil, NO silicone, no real conditioning architecture - effectively a PVP curl gel in cream form (hybrid: PVP gel-cream).",
+    "notes": "PRIMARY PROMISE: define/enhance curls with frizz control (curl styling cream). FIXATIVE: yes - PVP rank 4, only film former. OIL-LED: no (no oil at all; do not confuse with Maria Nila 'Coils & Curls Oil In Cream', a different, oil/shea emulsion with no PVP and 100 ml / 35 USD page). RECOMMENDATION: moves to Styling / curl_cream (fixative above tail + no conditioning/oil route; directions lead on look). Flaconi shows no hold claim; a US retailer search snippet mentioned 'touchable (3/5) hold' (not fetched, 403). Price: Flaconi schema.org priceSpecification 22.50 EUR for the 100 ml variant (assumed absolute price). Directions text on flaconi is German but minimal. This is the repo's existing leave-in 'provisional_boundary' stress case (calibration slot 7) - INCI identical to that capture."
+  },
+  {
+    "sample_id": "alcina-foehn-lotion",
+    "subtype_candidate": "setting_lotion",
+    "boundary_probe": true,
+    "brand": "Alcina (Professional)",
+    "product_name": "Föhn Lotion",
+    "size": "125 ml",
+    "format": "pump_spray",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [],
+    "price_eur": 10.9,
+    "price_source_url": "https://www.alcina.com/de-de/haar/haarstyling-finish/fohnprodukte/fohn-lotion-f10826/",
+    "ean": "4008666114396",
+    "inci": "AQUA, ALCOHOL DENAT., VP/VA COPOLYMER, POLYQUATERNIUM-11, PEG-40 HYDROGENATED CASTOR OIL, TRIDECETH-9, BENZOPHENONE-4, PROPYLENE GLYCOL, TETRAHYDROXYPROPYL ETHYLENEDIAMINE, PARFUM, LINALOOL, CITRAL, ANETHOLE, JUNIPERUS VIRGINIANA OIL, CI 42090",
+    "inci_source_url": "https://www.alcina.com/de-de/haar/haarstyling-finish/fohnprodukte/fohn-lotion-f10826/",
+    "inci_source_tier": "manufacturer",
+    "claims_verbatim": [
+      "Sorgt für mehr Schwung & Elastizität im Haar",
+      "Für alle Föhnfrisuren geeignet",
+      "Schützt wirksam vor Föhnhitze",
+      "verleiht Volumen und Elastizität",
+      "Hold Faktor 2 von 10 (Bild-Alt-Text)"
+    ],
+    "hold_claim": {
+      "raw": "Hold Faktor 2 von 10 (image alt text on alcina.com; codecheck: Flex 5/10, Hold 2/10)",
+      "number": 2,
+      "scale_max": 10,
+      "words": "leichter Halt",
+      "none_stated": false
+    },
+    "finish_claim": "Volumen, Schwung & Elastizität (kein Glanz-Claim)",
+    "humidity_claim": null,
+    "heat_claim": "Schützt wirksam vor Föhnhitze (kein Temperaturwert)",
+    "hair_type_claims": [
+      "für alle klassischen Föhnfrisuren"
+    ],
+    "free_from_claims": [],
+    "directions": "Ins feuchte Haar sprühen. Haare wie gewohnt föhnen.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Hydroalcoholic double-fixative lotion: Aqua, Alcohol denat. 2nd, VP/VA Copolymer 3rd + Polyquaternium-11 4th = two film-forming fixatives leading; PEG-40 hydrogenated castor oil/Trideceth-9 solubilisers; Benzophenone-4 (UV filter) 7th; blue colorant CI 42090. No oil, no silicone, no conditioning agent beyond PQ-11.",
+    "notes": "PRIMARY PROMISE: volume + elasticity for classic blow-dried styles, heat protection as second sentence. FIXATIVE: yes - VP/VA (3) + PQ-11 (4). OIL-LED: no. RECOMMENDATION: moves to Styling / setting_lotion (the taxonomy's 'Föhnlotion' example); overlaps heat_styling_spray only by format. Manufacturer page carries 'Nachfolge-Produkt' notice (repo packet). The 'Schützt wirksam vor Föhnhitze' claim has no temperature and no recognisable thermal active - promise is styling. alcina.com is the manufacturer's own shop (not in the dm/Rossmann/Müller/Douglas/Flaconi list) so retailers_seen is empty; codecheck.info shows the partial same start (Aqua, Alkohol Denat, VP/VA, Parfum, PQ-11, PEG-40...). INCI taken from repo calibration capture 2026-09-12 (live manufacturer fetch) and re-checked: page start/end match."
+  },
+  {
+    "sample_id": "bali-curls-leave-in-spray-curl-defining",
+    "subtype_candidate": "gel",
+    "boundary_probe": true,
+    "brand": "BALI CURLS",
+    "product_name": "Leave-In Spray Curl Defining (Curl Defining Spray)",
+    "size": "150 ml",
+    "format": "pump_spray",
+    "market_tier": "premium_drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 9.95,
+    "price_source_url": "https://www.dm.de/p/d/3122368/",
+    "ean": "4262391990490",
+    "inci": "Aqua, Propylene Glycol, Hydrolyzed Corn Starch, Polyglyceryl-6 Caprylate, Polyglyceryl-4 Caprate, Betaine, Glycerin, Parfum, Sodium Benzoate, Saccharomyces Cerevisiae Extract, Panthenol, Lactic Acid, Potassium Sorbate, Benzyl Alcohol, Linalool, Limonene, Leuconostoc/Radish Root Ferment Filtrate, Geraniol, Cananga Odorata Flower Extract.",
+    "inci_source_url": "https://www.dm.de/p/d/3122368/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Definierendes Lockenspray",
+      "Mit Hitzeschutz bis zu 230°C",
+      "Für definierte Locken und Wellen mit Halt",
+      "Für alle Haartypen geeignet",
+      "Die Formulierung kann dabei helfen, Locken neu zu definieren",
+      "pflanzliche Keratin-Alternative"
+    ],
+    "hold_claim": {
+      "raw": "ihnen langanhaltenden Halt zu geben / Für definierte Locken und Wellen mit Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "Halt (no grade)",
+      "none_stated": false
+    },
+    "finish_claim": "definiertes, gepflegtes Lockenbild; verbesserte Sprungkraft",
+    "humidity_claim": null,
+    "heat_claim": "Schutz vor Hitze bis zu 230° C",
+    "hair_type_claims": [
+      "lockiges oder welliges Haar",
+      "für alle Haartypen geeignet"
+    ],
+    "free_from_claims": [
+      "vegan"
+    ],
+    "directions": "Auf handtuchtrockenes oder trockenes Haar sprühen und wie gewohnt stylen.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Very light aqueous formula: Aqua, propylene glycol, Hydrolyzed Corn Starch 3rd (only hold/film-ish ingredient, mild), polyglyceryl caprylate/caprate (solubiliser/emollient), betaine, glycerin, panthenol, yeast + radish-root ferment ('vegan keratin alternative'). NO synthetic fixative, NO oil, NO silicone, no cationic conditioner, no recognisable thermal-protectant active.",
+    "notes": "PRIMARY PROMISE: define curls with hold + heat protection to 230 C in one 'Leave-In Spray'. FIXATIVE: no (corn starch rank 3 is the closest). OIL-LED: no. RECOMMENDATION: genuinely hybrid - claim language is styling (definition, 'Halt', 'ideale Vorbereitung für jedes Styling'), formula is a minimal humectant/starch leave-in that cannot carry a real hold; stays leave-in unless Styling hold is graded by INCI evidence, in which case it would be a very-low-hold curl_refresher/gel (spray). dm categorises under 'Styling Spray & Creme > Locken Produkte', not Leave-in. Both heat (230 C) and hold claims have no INCI support - good test case for evidence-weak claims. Rossmann listing seen via search index (page itself JS-only)."
+  },
+  {
+    "sample_id": "neqi-diamond-glass-ultimate-styling-spray",
+    "subtype_candidate": "heat_styling_spray",
+    "boundary_probe": true,
+    "brand": "NEQI",
+    "product_name": "Diamond Glass Ultimate Styling Spray (dm: Leave-In Spray Diamond Glass Ultimate)",
+    "size": "180 ml",
+    "format": "pump_spray",
+    "market_tier": "premium_drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 12.95,
+    "price_source_url": "https://www.dm.de/p/d/3080142/",
+    "ean": "4063528094575",
+    "inci": "Aqua [Water], Dipropylene glycol, Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Pentylene glycol, Polysilicone-29, VP/methacrylamide/vinyl imidazole copolymer, Ethylhexylglycerin, Hydroxyacetophenone, Silicone quaternium-18, Trideceth-6, Trideceth-12, Propylene glycol, Glycerin",
+    "inci_source_url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+    "inci_source_tier": "manufacturer",
+    "claims_verbatim": [
+      "Es kombiniert Styling mit intensivem Hitzeschutz bis 230°",
+      "Noch mehr hitzeaktivierte Polymere als im goldenen Diamond Glass",
+      "Starker Anti-Frizz-Effekt",
+      "Wasserabweisender Effekt",
+      "Verkürzte Föhnzeit",
+      "Ultra-leichte Textur ohne Beschweren"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "glänzend (Glass-Hair-Effekt, spiegelglatt, ultimativer Glanz)",
+    "humidity_claim": "schützt das Haar langanhaltend vor Feuchtigkeit; Wasser perlt ab",
+    "heat_claim": "intensiver Hitzeschutz bis 230°; hitzeaktivierte Polymere",
+    "hair_type_claims": [
+      "trockenes, krauses oder widerspenstiges Haar",
+      "frizz-anfälliges Haar",
+      "coloriertes oder chemisch behandeltes Haar"
+    ],
+    "free_from_claims": [
+      "ohne Sulfat (dm tag)",
+      "ohne Duftstoffe entwickelt",
+      "vegan, alkoholfrei (retailer-reported)"
+    ],
+    "directions": "Handtuchtrockenes (nicht nasses) Haar abteilen, großzügig besprühen, Partien mit Hitze und auf Spannung föhnen.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Water/glycol base; Polysilicone-29 7th (heat-activated silicone film former) + VP/Methacrylamide/Vinyl Imidazole Copolymer 8th (vinylpyrrolidone-type film-forming polymer, outside the user's named fixative list but same class) + Silicone Quaternium-18 11th; plant extracts 3rd-5th; Trideceth-6/-12 solubilisers. No oil, no alcohol, no fragrance. dm product page OMITS the VP/methacrylamide/vinyl imidazole copolymer; manufacturer page and the repo calibration packet include it.",
+    "notes": "PRIMARY PROMISE: 'Glass hair' sealing + frizz/humidity shield applied pre-blow-dry; heat protection is the lead bullet. FIXATIVE: borderline yes - VP/methacrylamide/vinyl imidazole copolymer (8) plus heat-activated Polysilicone-29 film; no classic PVP/VP-VA. OIL-LED: no (oil-free, so SD3 applies). RECOMMENDATION: moves to Styling / heat_styling_spray (finish_shine is the alternative if the heat-activation mechanism is ignored). Retailer-name trap: dm calls it 'Leave-In Spray', manufacturer 'Styling Spray'. Identical mechanism to Color Wow Dream Coat. INCI discrepancy dm vs manufacturer = formula-source risk for any INCI-driven rule. EAN confirmed by dm/repo; Rossmann URL slug from repo packet (page not fetchable)."
+  },
+  {
+    "sample_id": "evo-head-mistress-cuticle-sealer",
+    "subtype_candidate": "styling_cream",
+    "boundary_probe": true,
+    "brand": "EVO",
+    "product_name": "Head Mistress Cuticle Sealer",
+    "size": "150 ml",
+    "format": "cream",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [],
+    "price_eur": 27.95,
+    "price_source_url": "https://www.haarspullen.nl/en/products/evo-cuticle-sealer",
+    "ean": "9349769013144",
+    "inci": "Aqua, Dimethicone, Cyclopentasiloxane, Polyacrylamide, Dimethiconol, Phenoxyethanol, Parfum, Panthenol, C13-14 Isoparaffin, Laureth-7, Benzophenone-4, Hydrolyzed Quinoa, Macadamia Ternifolia Seed Oil, Quaternium-80, Benzoic Acid, Dehydroacetic Acid, Sodium Hydroxide, Butylene Glycol, Ethylhexylglycerin, Potassium Sorbate, Limonene, Hexyl Cinnamal, Linalool, Geraniol, Citral",
+    "inci_source_url": "https://www.evohair.com/us/hair-styling/styling-format/cream/evo-head-mistress-cuticle-sealer-150ml-39268/",
+    "inci_source_tier": "manufacturer",
+    "claims_verbatim": [
+      "Darüber hinaus wirkt die Multifunktionscreme auch als UV- und Hitzeschutz",
+      "Reduziert Frizz",
+      "heat protection, uv protection, reduces frizz, improves condition, improves styling (EN, evohair.com/us)"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "Glätte/Weichheit, Frizz- und Flyaway-Kontrolle (kein Glanz-Claim)",
+    "humidity_claim": null,
+    "heat_claim": "UV- und Hitzeschutz (nicebeauty.com DE, C4); heat protection (EN manufacturer)",
+    "hair_type_claims": [
+      "trockenes, coloriertes Haar (retailer)"
+    ],
+    "free_from_claims": [],
+    "directions": "EN manufacturer: on towel-dried hair and blow-dry for manageability and softness; apply after styling to control frizz and fly-aways.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Silicone-led cream-lotion: Aqua, Dimethicone 2nd, Cyclopentasiloxane 3rd, Polyacrylamide 4th (emulsifier/thickener), Dimethiconol 5th = persistent silicone film; Quaternium-80 (silicone quat) 14th; Benzophenone-4 UV filter; macadamia oil only 13th; Hydrolyzed Quinoa. NO PVP/VP-VA/PQ-11/acrylates fixative, no hold claim.",
+    "notes": "PRIMARY PROMISE: multi-use finishing/blow-dry cream that smooths, controls frizz and gives heat/UV protection (cutting lotion, blow-dry cream, finishing cream). FIXATIVE: no. OIL-LED: no (silicone-led). RECOMMENDATION: stays Leave-in as a silicone smoother (repo calibration archetype 'Silicone-rich smoother'); if Styling needs a soft-control/smoothing-cream slot it is the closest styling_cream candidate - genuinely hybrid at the leave-in/styling_cream edge. No German manufacturer page exists (no evohair /de region); price 27.95 EUR from NL retailer haarspullen.nl (also john beerens 27.95); catalog price 23.94 (douglas.de/de/p/5010334174) is now a DEAD LINK (404 on 2026-10-09) and Douglas EVO brand listing no longer shows it - availability in DE at risk. EAN from repo (haarspullen.nl + amazon.de)."
+  },
+  {
+    "sample_id": "redken-one-united-all-in-one-multi-benefit-treatment",
+    "subtype_candidate": "unclear",
+    "boundary_probe": true,
+    "brand": "Redken",
+    "product_name": "One United All-in-One Multi-Benefit Treatment",
+    "size": "150 ml",
+    "format": "pump_spray",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [
+      "douglas"
+    ],
+    "price_eur": 22.99,
+    "price_source_url": "https://www.douglas.de/de/p/5002537033",
+    "ean": null,
+    "inci": "AQUA / WATER • COCOS NUCIFERA OIL / COCONUT OIL • AMODIMETHICONE • POLYQUATERNIUM-37 • PHENOXYETHANOL • PROPYLENE GLYCOL DICAPRYLATE/DICAPRATE • PARFUM / FRAGRANCE • ACETAMIDE MEA • LACTAMIDE MEA • DIMETHICONE PEG-7 PHOSPHATE • PPG-1 TRIDECETH-6 • TRIDECETH-6 • BEHENTRIMONIUM CHLORIDE • XYLOSE • LACTIC ACID • ETHYLHEXYLGLYCERIN • CETRIMONIUM CHLORIDE • HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL • CITRONELLOL • GERANIOL • LINALOOL • ALPHA-ISOMETHYL IONONE • VIOLA ODORATA EXTRACT - VIOLA ODORATA FLOWER/LEAF EXTRACT • SODIUM HYDROXIDE",
+    "inci_source_url": "https://redken.co.uk/products/haircare/one-united/one-united-150ml",
+    "inci_source_tier": "manufacturer",
+    "claims_verbatim": [
+      "Leave-in-Pflege mit Mehrfachwirkung",
+      "verbessert die Kämmbarkeit",
+      "schützt vor Hitzeschäden & Umwelteinflüssen",
+      "bereitet optimal auf Styling & Haarschnitt vor",
+      "antistatisches Ergebnis ohne Frizz",
+      "25 benefits (EN manufacturer)"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "geschmeidig weich und seidig glänzend",
+    "humidity_claim": null,
+    "heat_claim": "schützt vor Hitzeschäden (kein Temperaturwert); EN: helping prevent heat damage and split ends",
+    "hair_type_claims": [
+      "für alle Haarzustände",
+      "auch farbbehandeltes und ombre-gefärbtes Haar"
+    ],
+    "free_from_claims": [],
+    "directions": "Nach der Wäsche ins handtuchtrockene Haar einarbeiten, nicht ausspülen, danach wie gewohnt stylen (4 Varianten: auch mit Conditioner mischen und ausspülen, mit Leave-in oder Stylingprodukt mischen).",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Conditioning emulsion in spray form: Aqua, Coconut Oil 2nd, Amodimethicone 3rd, Polyquaternium-37 4th (cationic thickener/conditioner, not a fixative), PG dicaprylate/dicaprate 6th; behentrimonium + cetrimonium chloride; Xylose = heat-protection marker; hydrolyzed silanetriol protein. No PVP/VP-VA/PQ-11/acrylates; no hold.",
+    "notes": "PRIMARY PROMISE: 25-benefit leave-in treatment (conditioning, detangle, light heat/UV protection, styling prep). FIXATIVE: no. OIL-LED: partial - coconut oil at rank 2 but emulsified in a water-based spray with amino-silicone; conditioning-led, not an oil product. RECOMMENDATION: stays Leave-in (clear; no styling result is promised). INCI from the UK manufacturer page; Douglas DE page shows identical list; an older retailer version lacks acetamide/lactamide MEA and dimethicone PEG-7 phosphate. GTIN not captured (redken.co.uk product code 884486219312 is a UPC-style code; Douglas Art-Nr 498772). Price Douglas 150 ml 22,99 EUR (UVP 29,90)."
+  },
+  {
+    "sample_id": "garnier-fructis-sleek-and-stay-heat-activated-serum",
+    "subtype_candidate": "finish_shine",
+    "boundary_probe": true,
+    "brand": "GARNIER FRUCTIS",
+    "product_name": "Haarserum Keratin Sleek & Stay (Heat-Activated Serum), Anti-Frizz",
+    "size": "50 ml",
+    "format": "serum",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 7.95,
+    "price_source_url": "https://www.dm.de/p/d/3042323/",
+    "ean": "3600542638852",
+    "inci": "ISODODECANE • BIS-(MORPHOLINOMETHYL C1-4 DIALKOXYSILOXY) DIMETHICONE • BIS-CETEARYL AMODIMETHICONE • DIMETHICONOL • PARFUM / FRAGRANCE",
+    "inci_source_url": "https://www.dm.de/p/d/3042323/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Wirkt Frizz entgegen und sorgt für Glättung",
+      "Wasserresistenten Hitzeschutz",
+      "Enthält Alpha-Silane für zusätzlichen Schutz",
+      "Hält bis zu fünf Haarwäschen lang",
+      "aktiviert sich durch Hitze",
+      "gesunden Glanz"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "Glättung und gesunder Glanz",
+    "humidity_claim": "wasserresistent; wirkt Frizz entgegen (no humidity wording)",
+    "heat_claim": "wasserresistenter Hitzeschutz beim Föhnen oder Glätten; aktiviert sich durch Hitze",
+    "hair_type_claims": [
+      "trockenes, frizz-neigendes Haar"
+    ],
+    "free_from_claims": [],
+    "directions": "Nach Shampoo/Maske/Conditioner im leicht angetrockneten, feuchten Haar einen Pumpstoß verteilen, nicht ausspülen, dann föhnen und bei Bedarf glätten.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Anhydrous 5-ingredient silicone serum: Isododecane 1st (volatile hydrocarbon carrier), bis-(morpholinomethyl C1-4 dialkoxysiloxy) dimethicone 2nd (the 'Alpha-Silane' heat-crosslinking silicone), Bis-Cetearyl Amodimethicone 3rd, Dimethiconol 4th, Parfum. No triglyceride/plant oil, no water, no fixative polymer of the PVP family.",
+    "notes": "PRIMARY PROMISE: heat-activated anti-frizz sleek that lasts up to 5 washes (durable smoothing coat with water-resistant heat protection). FIXATIVE: no classic fixative, but the heat-crosslinking alkoxysilane silicone is a durable film former. OIL-LED: no - NOT an oil by INCI (our catalog files it under Öle; dm files it under Leave-in > Haarpflege). RECOMMENDATION: moves out of Oil. Fits Styling / finish_shine per SD3 (oil-free silicone anti-frizz serum) with Heat Protectant as the alternative home - genuinely hybrid between finish_shine and heat protection. Product name on pack/directions: 'Fructis Sleek & Stay Heat-Activated Serum' (matches our catalog name; dm title is 'Haarserum Keratin Sleek & Stay'). Catalog price 7.99 at Rossmann; dm 7.95."
+  },
+  {
+    "sample_id": "got2b-hitzeschutzspray-schutzengel",
+    "subtype_candidate": "heat_styling_spray",
+    "boundary_probe": true,
+    "brand": "got2b",
+    "product_name": "Hitzeschutzspray Schutzengel",
+    "size": "200 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 4.95,
+    "price_source_url": "https://www.dm.de/p/d/1267310/",
+    "ean": "4015100894141",
+    "inci": "Aqua (Water, Eau), VP/VA Copolymer, Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein, Sodium Benzoate, PEG-40 Hydrogenated Castor Oil, Cetrimonium Chloride, Parfum (Fragrance), Lactic Acid, Hexyl Cinnamal, Soy Amino Acids, Wheat Amino Acids, Phenoxyethanol, Linalool, Potassium Sorbate, Serine, Threonine, Arginine HCl, Linalyl Acetate, Benzyl Salicylate, Benzyl Alcohol, Acetyl Cedrene, Limonene, Citrus Aurantium Peel Oil",
+    "inci_source_url": "https://www.dm.de/p/d/1267310/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Schützt das Haar vor Hitzeschäden bis zu 230 °C",
+      "Kontrolliert Frizz für bis zu 96 Stunden",
+      "Für ein gepflegtes Haargefühl",
+      "ideale Vorbereitung für Föhn, Glätteisen oder Lockenstab",
+      "Ohne Alkohol",
+      "Vegan"
+    ],
+    "hold_claim": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "words": null,
+      "none_stated": true
+    },
+    "finish_claim": "gepflegtes Gefühl, strahlender Glanz, ohne zu beschweren",
+    "humidity_claim": "Kontrolliert Frizz für bis zu 96 Stunden",
+    "heat_claim": "bewahrt das Haar vor Hitzeschäden bis zu 230°C (Föhn, Glätteisen, Lockenstab)",
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "Ohne Alkohol",
+      "ohne Silikone",
+      "ohne Ammoniak",
+      "vegan"
+    ],
+    "directions": "Großzügig ins handtuchtrockene Haar sprühen, wie gewohnt föhnen; für den ultimativen heißen Style Glätteisen oder Lockenstab benutzen.",
+    "application_moment": "before_heat",
+    "formula_observations": "Alcohol-free, silicone-free water-based spray with VP/VA Copolymer as the 2nd ingredient (leading film-forming fixative) + a cationic wheat-protein derivative (Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein, 3rd), PEG-40 HCO solubiliser, amino acids. No silicones, no oils, no xylose/thermal marker ingredient.",
+    "notes": "PRIMARY PROMISE: heat protection to 230 C + frizz control (sold and filed as Heat Protectant). FIXATIVE: YES - VP/VA Copolymer rank 2, i.e. the same polymer taft uses as the sole hold agent in its Föhn-Spray, here under a 'Hitzeschutzspray' label with no hold claim. OIL-LED: no. RECOMMENDATION: genuinely hybrid by formula, stays Heat Protectant by promise (the pack makes no hold/shape claim) - but the Heat Protectant category decision ('no hold/shape') cannot be verified from the label; INCI-based fixative detection would misroute it to Styling. Needs a 'contains fixative' property independent of the promise."
+  },
+  {
+    "sample_id": "taft-x-gliss-hitzeschutzspray-lovely-long",
+    "subtype_candidate": "heat_styling_spray",
+    "boundary_probe": true,
+    "brand": "Schwarzkopf taft",
+    "product_name": "Hitzeschutzspray taft x Gliss Lovely Long",
+    "size": "150 ml",
+    "format": "pump_spray",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 3.95,
+    "price_source_url": "https://www.dm.de/p/d/1681631/",
+    "ean": "4015100810400",
+    "inci": "Aqua (Water, Eau), Trisiloxane, Dimethicone, Prunus Armeniaca (Apricot) Kernel Oil, Phenyl Trimethicone, Hydrolyzed Soy Protein, Dimethiconol, Polyquaternium-16, Cetyl PEG/PPG-10/1 Dimethicone, Parfum (Fragrance), Cetrimonium Chloride, Lactic Acid,  Sodium Benzoate, Tetramethyl Acetyloctahydronaphthalenes, Linalool, Acetyl Cedrene, Citronellol, Linalyl Acetate, Alpha-Isomethyl Ionone, Juniperus Virginiana Oil, Geranyl Acetate",
+    "inci_source_url": "https://www.dm.de/p/d/1681631/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Hitzeschutz bis 230°",
+      "Perfekt für langes Haar",
+      "kombiniert Styling und Pflege in einer Anwendung",
+      "Schutz vor Spliss und lang anhaltende definierte Styles",
+      "bis zu 95 % weniger Haarbruch gegenüber unbehandeltem geschädigtem Haar",
+      "Multitasking Hitzeschutz-Spray"
+    ],
+    "hold_claim": {
+      "raw": "lang anhaltende definierte Styles",
+      "number": null,
+      "scale_max": null,
+      "words": "Style-Haltbarkeit (no grade)",
+      "none_stated": false
+    },
+    "finish_claim": "geschmeidiges und entwirrtes Haar",
+    "humidity_claim": null,
+    "heat_claim": "Hitzeschutz bis 230°",
+    "hair_type_claims": [
+      "langes Haar",
+      "geschädigtes Haar"
+    ],
+    "free_from_claims": [
+      "Ohne Alkohol",
+      "ohne Ammoniak",
+      "ohne Sulfat",
+      "vegan (frei von tierischen Inhaltsstoffen)"
+    ],
+    "directions": "Gut schütteln; aus 15-20 cm auf handtuchtrockenes Haar sprühen und föhnen; auch auf trockenem Haar möglich (vor heißen Geräten trocknen lassen).",
+    "application_moment": "before_heat",
+    "formula_observations": "Silicone-led (Trisiloxane 2nd, Dimethicone 3rd, Phenyl Trimethicone 5th, Dimethiconol 7th) with apricot kernel oil 4th and Cetyl PEG/PPG-10/1 Dimethicone emulsifier. Polyquaternium-16 (8th) is a cationic vinylpyrrolidone/vinylimidazolium styling-conditioning polymer - mild film former, not on the user's fixative list. No VP/VA, PVP, PQ-11, acrylates.",
+    "notes": "PRIMARY PROMISE: heat protection + care/repair for long hair ('Styling und Pflege'). FIXATIVE: no classic fixative; PQ-16 at 8th is a borderline styling-conditioning polymer. OIL-LED: partly - apricot kernel oil 4th within a silicone-dominant system, so silicone-led rather than oil-led. RECOMMENDATION: stays Heat Protectant. Note the taft brand cue: same range as the Föhn-Spray (VP/VA fixative) but this sibling has none - shelf placement under 'Hitzeschutzspray & Co.' matches the formula here. This is the current DE taft heat spray on dm (taft x Gliss line); no other taft Hitzeschutz found."
+  }
+]

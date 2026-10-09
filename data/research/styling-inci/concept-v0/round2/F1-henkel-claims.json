@@ -1,0 +1,712 @@
+[
+  {
+    "sample_id": "schwarzkopf-taft-power-haargel-halt-5",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.schwarzkopf.de/brands/hair-styling/taft/power/power-styling-gel.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "bietet den maximalen langanhaltenden Halt von Taft, ohne zu verkleben",
+    "hold": {
+      "raw": "Haltegrad 5",
+      "number": 5,
+      "scale_max": 5,
+      "scale_max_stated": true,
+      "words": "maximalen langanhaltenden Halt von Taft; 'Styling-Gel mit starkem Halt'",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Not published on schwarzkopf.de (Anwendung and Inhaltsstoffe sections empty). Round-1 dm text: work into dry or damp hair, style, fix with Taft hairspray.",
+    "directions_tier": "C3",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": "schützt die Frisur vor Feuchtigkeit",
+    "duration_claim_raw": "für bis zu 48 Stunden Halt",
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "notes": "Taft Haltegrad scale on schwarzkopf.de has no legend and is NOT a closed 1-5 scale: Power-line sprays/mousse/gels say 5 = 'Tafts höchste Stufe'/'maximalen ... Halt von Taft', but Ultimate Haarlack is 'Haltegrad 5+', Marathon Gel 'Haltegrad 6', Super Kleber Gel 'Haltegrad 14'; the gel category page says 'Härtegraden: von 4 für natürlichen Halt bis 14'. Page title 'Taft Power Styling Gel'; pack name 'Haargel POWER Halt 5'. No finish claim. No flexibility word. INCI not published on the page, so inci_changed cannot be checked (left false)."
+  },
+  {
+    "sample_id": "schwarzkopf-taft-styling-balm-locken-halt-3",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.schwarzkopf.de/marken/haarstyling/taft/locken/Locken-balm.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Dieser Haarstyling-Balsam definiert Locken voller Elastizität.",
+    "hold": {
+      "raw": "Starker, langanhaltender Halt: bis zu 24 Stunden, ohne zu verkleben",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "starker Halt (no Haltegrad number on schwarzkopf.de)",
+      "tier": "C2"
+    },
+    "flexibility_words": [
+      "Elastizität",
+      "Sprungkraft"
+    ],
+    "finish": {
+      "raw": "definierte Locken, Anti-Frizz-Effekt (no gloss/matt claim)",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Page has no step-by-step directions, only a description. Round-1 dm text: work into dry or towel-dried hair, shape curls, fix with Taft hairspray.",
+    "directions_tier": "C3",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": "Die Frisur bleibt vor Luftfeuchtigkeit geschützt, das Haar vor dem Austrocknen.",
+    "duration_claim_raw": "bis zu 24 Stunden Halt, ohne zu verkleben",
+    "conflicts_with_round1": "Round 1 (dm) captured 'Haltegrad 3' (mittel) and name 'Styling Balm LOCKEN Halt 3'. schwarzkopf.de (C2) names the product 'Locken Styling Balm', gives NO Haltegrad number and calls the hold 'stark' ('Starker, langanhaltender Halt', 'Styling-Balm mit starkem Halt'). The number 3 survives only in the dm title (C3); the sibling Taft Locken Schaumfestiger is Haltegrad 3 on schwarzkopf.de.",
+    "inci_changed": false,
+    "notes": "Hold number 3 cannot be confirmed from C2; needs pack photo (C1). Wording 'stark' conflicts with 3 = 'mittel' used elsewhere (Föhn-Spray Haltegrad 3 = 'mittleren Halt'). INCI identical to round 1."
+  },
+  {
+    "sample_id": "schwarzkopf-taft-schaumfestiger-volumen-halt-4-feines-haar",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.schwarzkopf.de/marken/haarstyling/taft/volumen/volumen-fein/volumen-fein-schaumfestiger.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "sorgt für mehr Volumen und natürliche Bewegung im Haar",
+    "hold": {
+      "raw": "Haltegrad 4",
+      "number": 4,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "langanhaltender Halt und Volumen, ohne zu verkleben",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "natürliche Bewegung (no gloss/matt claim)",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Shake well, valve down; take foam and distribute in damp hair; do not rinse out; blow-dry heat strengthens the volume effect.",
+    "directions_tier": "C2",
+    "heat_claim_raw": "Föhnhitze verstärkt den Volumen-Effekt.",
+    "humidity_claim_raw": "verhindert ein trockenes Haargefühl und schützt vor Feuchtigkeit und Wind",
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "Round 1 recorded 'Bis zu 24 h Halt' (dm). schwarzkopf.de states no hours for this product. Also adds 'Föhnschutz: schützt das Haar vor Föhnschäden wie Haarbruch und Sprödigkeit'.",
+    "inci_changed": false,
+    "notes": "Hold words on page: 'langanhaltenden Halt'; no strength adjective. Dm called Haltegrad 4 'starker Halt' (retailer filter, C3). INCI identical."
+  },
+  {
+    "sample_id": "schwarzkopf-taft-foehn-spray-volumen-halt-3",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.schwarzkopf.de/brands/haarstyling/taft/volumen/volumen-normal/volumen_normal_foehnspray.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "verleiht Volumen und einen natürlichen Haarschwung und eignet sich für alle Haartypen",
+    "hold": {
+      "raw": "Haltegrad 3",
+      "number": 3,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "mittleren, langanhaltenden Halt, ohne zu verkleben",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "natürlicher Haarschwung",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Not published on schwarzkopf.de (Anwendung empty). Round-1 dm text: spray evenly into towel-dried hair, blow-dry and style.",
+    "directions_tier": "C3",
+    "heat_claim_raw": "hilft dabei, das Haar vor Sprödigkeit und Haarbruch zu schützen, die durch das Föhnen entstehen",
+    "humidity_claim_raw": "verhindert ein trockenes Haargefühl und schützt vor Feuchtigkeit und Wind",
+    "duration_claim_raw": null,
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "notes": "Cleanest C2 wording for a 3: Haltegrad 3 = 'mittleren, langanhaltenden Halt'. No temperature in the heat claim (protection against blow-dry damage only). INCI not published on the page; round-1 dm INCI retained. Page says 'Volumen Föhn-Spray' 150 ml."
+  },
+  {
+    "sample_id": "schwarzkopf-taft-haarspray-classic-halt-3",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.schwarzkopf.de/marken/haarstyling/taft/classic/classic-normal-haarspray.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "verleiht dem Haar langanhaltenden Halt und Schutz ohne zu verkleben",
+    "hold": {
+      "raw": "Haltegrad 3",
+      "number": 3,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "langanhaltender Halt (no strength adjective on page); lässt sich leicht ausbürsten",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Spray from 30 cm distance (no dry/damp or timing instruction on page).",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": "verhindert ein trockenes Haargefühl und schützt vor Feuchtigkeit und Wind.",
+    "duration_claim_raw": "langanhaltenden Halt",
+    "conflicts_with_round1": "Round 1 captured 'Bis zu 24 h Halt' and a heat/blow-dry protection claim from dm; schwarzkopf.de has neither (no hours, no Föhnschutz). Page name is 'Classic Haarspray Halt & Schutz'. 'Jetzt mit HaptIQ System' (strengthens hair structure from inside) is a new claim.",
+    "inci_changed": false,
+    "notes": "Strength word 'mittel' for 3 is dm filter (C3) only. INCI identical. Vegan and silicone-free per page."
+  },
+  {
+    "sample_id": "schwarzkopf-taft-haarspray-glanz-halt-4",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.schwarzkopf.de/marken/haarstyling/taft/shine/glanz-haarspray.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "verleiht dem Haar einen glänzenden Finish und eignet sich für alle Haartypen",
+    "hold": {
+      "raw": "Haltegrad 4",
+      "number": 4,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "langanhaltenden Halt ohne zu verkleben, leicht ausbürsten",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "Glänzendes Finish. Lässt sich leicht ausbürsten.",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Spray from 30 cm distance.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": "verhindert ein trockenes Haargefühl und schützt vor Feuchtigkeit und Wind.",
+    "duration_claim_raw": "langanhaltenden Halt",
+    "conflicts_with_round1": "Round 1 had 'Ultra starker Halt', 'bis zu 24 h' and 'glänzendes Lack-Finish' from dm; none of these three phrases appear on schwarzkopf.de. No Glanzstufe number on this spray.",
+    "inci_changed": false,
+    "notes": "Only the Gel Wax carries 'Glanzstufe' (retailer trace). INCI identical."
+  },
+  {
+    "sample_id": "schwarzkopf-taft-haarspray-power-halt-5",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.schwarzkopf.de/marken/haarstyling/taft/power/power-cashmere-touch/power-cashmere-touch-haarspray.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "verleiht dem Haar eine kaschmirartige Geschmeidigkeit, besonders bei trockenem und strapaziertem Haar",
+    "hold": {
+      "raw": "Haltegrad 5",
+      "number": 5,
+      "scale_max": 5,
+      "scale_max_stated": true,
+      "words": "Tafts höchste Stufe an langanhaltendem Halt, ohne zu verkleben",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "Kaschmirartige Geschmeidigkeit. Lässt sich leicht ausbürsten.",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Spray from 30 cm distance.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": "verhindert ein trockenes Haargefühl und schützt vor Feuchtigkeit und Wind.",
+    "duration_claim_raw": "langanhaltendem Halt",
+    "conflicts_with_round1": "Pack name 'Haarspray POWER Halt 5' = schwarzkopf.de 'Power Cashmere Haarspray' (Cashmere Touch). dm's 'Bis zu 24 h' is not on schwarzkopf.de. Page says 'Tafts höchste Stufe', yet other Taft items go higher (see notes).",
+    "inci_changed": false,
+    "notes": "Taft Haltegrad scale on schwarzkopf.de has no legend and is NOT a closed 1-5 scale: Power-line sprays/mousse/gels say 5 = 'Tafts höchste Stufe'/'maximalen ... Halt von Taft', but Ultimate Haarlack is 'Haltegrad 5+', Marathon Gel 'Haltegrad 6', Super Kleber Gel 'Haltegrad 14'; the gel category page says 'Härtegraden: von 4 für natürlichen Halt bis 14'. The sibling 'Power Haarlack' (different product) is Haltegrad 5 with 'starken Halt für bis zu 72 h'. INCI identical to round 1 (matches Cashmere formula incl. Vinyl Caprolactam/VP/DMAEMA copolymer)."
+  },
+  {
+    "sample_id": "schwarzkopf-taft-texturspray-aloe-boost",
+    "best_tier": "C5",
+    "sources": [
+      {
+        "tier": "C5",
+        "url": "https://www.henkel.com/resource/blob/2023338/8c22c8e9b496174c4a57922187705f70/data/taft.docx",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.dm.de/p/d/3047463/",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Verleiht Textur, Volumen und Pflege für mühelose Undone-Looks und natürlich aussehende Wellen.",
+    "hold": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "keine Halt-Angabe; nur 'Leichte Formel'. Line siblings Aloe Boost Haarspray and Styling Creme are Haltegrad 4 on schwarzkopf.de (C2)",
+      "tier": "C5"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "Undone-Looks, natürlich aussehende Wellen",
+      "number": null,
+      "tier": "C5"
+    },
+    "directions_summary": "Shake well; short bursts from 30 cm onto dry hair; twist hair with fingers for the undone look.",
+    "directions_tier": "C5",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": "Hilft, die Frisur vor Luftfeuchtigkeit zu schützen.",
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "Round 1 captured 'feinem Haar mehr Fülle und Volumen' (dm). Henkel press text positions it 'für langes Haar', all hair types, Undone-Looks/Wellen, not fine-hair volume.",
+    "inci_changed": false,
+    "notes": "No schwarzkopf.de page: the product is absent from the Aloe Boost line page (only Haarspray, Styling Creme, Hitzeschutz Spray), from the Stylingspray category and from the schwarzkopf.de sitemap. The Henkel press release (docx, 'Februar 2025', Vienna press contacts) is the Austrian release, hence C5; GTIN 4015100860825 is also sold by Rossmann.de and dm.de (dm.de: temporarily out of stock) which corroborates the product in Germany. Possibly delisted or distribution-limited; flag for owner. Launch: 'ab Februar 2025'. INCI not re-verified from C2 (round-1 dm list matches codecheck)."
+  },
+  {
+    "sample_id": "schwarzkopf-taft-haarpuder-volumen",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.schwarzkopf.de/marken/haarstyling/taft/volumen/volumen-normal/volumen_powder.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "bietet einen Volumenschub für sofort voller aussehendes Haar und natürliche Haarbewegungen",
+    "hold": {
+      "raw": "Halt für bis zu 24 Stunden",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "langanhaltende Kontrolle, ohne zu verkleben und ohne Rückstände",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "natürliche Haarbewegungen (no gloss/matt claim)",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Rub a small amount of powder in the hand; distribute in dry hair, concentrate on the roots; then style. Up to 50 applications.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": "verhindert ein trockenes Haargefühl und schützt vor Feuchtigkeit.",
+    "duration_claim_raw": "Halt für bis zu 24 Stunden",
+    "conflicts_with_round1": "Round 1 stored hold.number=24 (hours), which is not a Haltegrad: the product has no Haltegrad. Round 1 also had a 'Föhnschäden' heat claim and 'Feuchtigkeit & Wind'; schwarzkopf.de states only 'schützt vor Feuchtigkeit' and no heat claim. Round-1 direction 'vom Ansatz bis in die Spitzen' differs: the page says concentrate on the roots ('auf den Haaransatz konzentrieren').",
+    "inci_changed": false,
+    "notes": "Treat hold as unrated (hours only). INCI identical."
+  },
+  {
+    "sample_id": "schwarzkopf-taft-gel-wax-glanz-halt-2",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.schwarzkopf.de/marken/haarstyling/taft/shine/glanz-gel-wax.html",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-taft-gel-wax-glanz/p/4015100810905",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "bietet ein glänzendes Finish mit langanhaltendem Halt",
+    "hold": {
+      "raw": "Haltegrad von 2",
+      "number": 2,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "langanhaltenden Halt (no strength adjective)",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "Glänzendes Finish mit maximalem Glanz",
+      "number": 5,
+      "tier": "C3"
+    },
+    "directions_summary": "Work into dry or damp hair, style as desired; for best results fix with Taft Glanz Haarspray. Spreads and washes out easily.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": "verhindert ein trockenes Haargefühl und schützt vor Feuchtigkeit.",
+    "duration_claim_raw": "langanhaltenden Halt",
+    "conflicts_with_round1": "'Glanzstufe 5' is a Rossmann (C3) trace only; schwarzkopf.de says 'maximalem Glanz' without the number (consistent with 5 = max shine). Round-1 Rossmann INCI was truncated; schwarzkopf.de list adds the trailing fragrance components (Tetramethyl Acetyloctahydronaphthalenes, Terpineol, Dimethyl Phenethyl Acetate, Citrus Aurantium Peel Oil, Rose Ketones). Functional ingredients identical.",
+    "inci_changed": false,
+    "notes": "Gel with Haltegrad 2 means the Taft number does not track gel strength on a common scale (Power Gel 5, Super Kleber 14). Includes Paraffinum Liquidum. Name on site: 'Glanz Gel Wax' 75 ml."
+  },
+  {
+    "sample_id": "schwarzkopf-taft-matt-wax-halt-5",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.schwarzkopf.de/marken/haarstyling/taft/matt/wax.html",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C2",
+        "url": "https://www.schwarzkopf.de/marken/haarstyling/taft/matt.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "bietet ein mattes, nicht glänzendes Finish und langanhaltenden Halt",
+    "hold": {
+      "raw": "den maximalen Halt von Taft",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "maximaler Halt von Taft, mit reduziertem Glanz; 'Styling-Wax mit starkem Halt'",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "mattes, nicht glänzendes Finish",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Work into dry or damp hair, style as desired, fix with Taft hairspray for best results; spreads and washes out easily.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": "verhindert ein trockenes Haargefühl und schützt vor Feuchtigkeit.",
+    "duration_claim_raw": "Taft Matt kontrolliert deinen Look bis zu 24 Stunden",
+    "conflicts_with_round1": "The number 5 ('Halt 5' in the dm title, 'Haltegrad 5' in a dm sentence) is not on schwarzkopf.de: the page words it as 'den maximalen Halt von Taft' (same phrase as Power Gel Haltegrad 5). Round-1 humidity null; page now has 'schützt vor Feuchtigkeit'. 24 h comes from the Matt line page (C2).",
+    "inci_changed": false,
+    "notes": "Taft Haltegrad scale on schwarzkopf.de has no legend and is NOT a closed 1-5 scale: Power-line sprays/mousse/gels say 5 = 'Tafts höchste Stufe'/'maximalen ... Halt von Taft', but Ultimate Haarlack is 'Haltegrad 5+', Marathon Gel 'Haltegrad 6', Super Kleber Gel 'Haltegrad 14'; the gel category page says 'Härtegraden: von 4 für natürlichen Halt bis 14'. Page title 'Matt Wax' / 'Mattes Styling Wax'; no strength adjective besides 'maximal'. INCI identical."
+  },
+  {
+    "sample_id": "syoss-curl-cream-gel-3in1",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.syoss.de/haarstyling/gel-wax/syoss-curl-cream-gel.html",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C5",
+        "url": "https://syoss.net/hair-style/product/all-gels-creams-waxes/syoss-curl-control-cream-gel.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Gel hilft dabei, Locken zu formen und zu definieren – ohne das Haar zu beschweren",
+    "hold": {
+      "raw": "Bis zu 48 h definierte Locken",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "no Haltegrad number and no strength word on syoss.de; 'ohne das Haar zu beschweren oder zu verkleben'",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "definierte Locken; nicht klebend & ohne Rückstände (no gloss/matt claim)",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Small amount in palms, knead evenly from bottom up into wet hair. After drying, wrap curls in a silk towel and knead gently to release the film. Optionally combine with Syoss Curl Schaumfestiger for more definition.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "Bis zu 48 h definierte Locken",
+    "conflicts_with_round1": "Name changed: syoss.de lists 'Syoss Curl Cream Gel' (not '3in1 Curl Creme-Gel' / 'Curl Control'). The syoss.de INCI is shorter than the dm.at (Austria) list used in round 1: adds 1,2-Hexanediol; no long fragrance-allergen tail, no Tocopherol, no BHT, no Pantolactone. 'Long-lasting hold 5' and 'Protects your hairstyle from humidity' exist only on syoss.net (EN, C5); syoss.de has neither the number nor a humidity claim. dm.at 'starken Halt' not on syoss.de.",
+    "inci_changed": true,
+    "notes": "Round-1 record came from dm.at (Austria); the German-market formula looks reformulated/simplified, same fixative core (PVP, Acrylates/Hydroxyesters Acrylates Copolymer, Acrylates/Steareth-20 Methacrylate Crosspolymer). Free from alcohol* and silicones (*Ethylalkohol footnote). 'Our cream gel is strong' appears only on syoss.net."
+  },
+  {
+    "sample_id": "syoss-curl-control-hydrating-spray",
+    "best_tier": "C3",
+    "sources": [
+      {
+        "tier": "C3",
+        "url": "https://www.dm.at/p/d/1920069/",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Spendet Feuchtigkeit",
+    "hold": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "kein eigener Halt; 'Für einen starken Halt, mit dem Curl Control Creme Gel kombinieren' (round 1, dm.at)",
+      "tier": "C3"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "C3"
+    },
+    "directions_summary": "Round-1 dm.at text: shake; spray on damp or dry hair and work in, air-dry or diffuse; refresh between washes on dry hair.",
+    "directions_tier": "C3",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "No C2 or DE source exists: the product is not on syoss.de (sitemap lists Curl Cream Gel and Curl Schaumfestiger only), and the syoss.net page now redirects to the hairspray category. Only retailer evidence is dm.at (Austria); no dm.de, Rossmann or Müller listing found.",
+    "inci_changed": false,
+    "notes": "Likely discontinued or not sold in Germany (Henkel press June 2024 launched it with Cream Gel and Schaumfestiger). Round-1 content reused, not re-verified against a manufacturer page. Do not use as a German-market calibration anchor without a pack photo."
+  },
+  {
+    "sample_id": "syoss-schaumfestiger-volume",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.syoss.de/haarstyling/schaumfestiger/syoss-volume-schaumfestiger.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Intensives Volumen und Anti-Platt Effekt für langanhaltenden Lifting-Effekt direkt vom Haaransatz an",
+    "hold": {
+      "raw": "Bis zu 48h extra starken Halt (Haltegrad 4)",
+      "number": 4,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "extra starker Halt",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Hold bottle upside down and shake well; take a handful of foam in the palm and distribute in damp hair; style as desired; do not rinse out; fix with Syoss hairspray.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": "Schützt die Frisur vor Luftfeuchtigkeit",
+    "duration_claim_raw": "Bis zu 48h extra starken Halt",
+    "conflicts_with_round1": "Round 1 (dm) had 'Bis zu 24 Stunden Styling' and no Haltegrad number; syoss.de gives 48 h and Haltegrad 4 (extra stark). Round 1 also had 'Natürlich aussehender Halt' and 'schützt vor Föhnschäden'; syoss.de has neither, and no heat claim. The sister product Fullness Schaumfestiger is 'bis zu 24h extra starken Halt (Haltegrad 4)'.",
+    "inci_changed": false,
+    "notes": "Syoss ladder on syoss.de: Haltegrad 3 = 'starker Halt' (Strong, Fullness sprays), 4 = 'extra starker Halt' (Volume spray, Volume Schaumfestiger; but Keratin spray calls 4 'Starker Halt'), 5 = 'mega starker Halt' (Max Hold, Ceramide). No scale max stated. INCI identical."
+  },
+  {
+    "sample_id": "syoss-haarspray-max-hold",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.syoss.de/haarstyling/haarspray/syoss-max-hold-haarspray.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Bis zu 48h intensiver, starker Halt und Kontrolle für langanhaltende Frisuren",
+    "hold": {
+      "raw": "Mega starker Halt (Haltegrad 5)",
+      "number": 5,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "mega starker Halt",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Apply on dry hair. Finish: spray from 30 cm. Single strands: spray from the root and shape. Warm water clears a blocked nozzle.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": "Schützt den Look vor Luftfeuchtigkeit",
+    "duration_claim_raw": "Bis zu 48h intensiver, starker Halt und Kontrolle",
+    "conflicts_with_round1": "syoss.de adds the number: 'Haltegrad 5' (round 1 had 'mega starker Halt' with number null). 'natürlich aussehenden Halt' (dm) is not on syoss.de.",
+    "inci_changed": false,
+    "notes": "No flexibility word. 3in1 Styling/Pflege/Halt with Vitamin-Komplex (Panthenol + Niacinamid). INCI identical."
+  },
+  {
+    "sample_id": "syoss-professional-performance-max-hold-power-wax",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.syoss.de/haarstyling/gel-wax/syoss-max-hold-wax.html",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-syoss-professional-performance-max-hold-power-wax/p/4015100190526",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Intensiver Halt für glatte und glänzende, langanhaltende Looks",
+    "hold": {
+      "raw": "Mega starker Halt (Haltegrad 5)",
+      "number": 5,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "mega starker Halt",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "glatte und glänzende, langanhaltende Looks",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Take a small amount and rub in palms; apply on dry hair for the desired look; add more wax if needed; easy to restyle.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "Renamed/reformulated: syoss.de lists 'Syoss Max Hold Wax' (not 'Professional Performance Max Hold Power Wax'). INCI differs from the Rossmann list in round 1: Methylparaben, Ethylparaben, Propylene Glycol, Hexyl Cinnamal, Limonene, Linalool, Citral are gone; Caprylyl Glycol, Benzyl Alcohol, Tropolone are added. Finish: round 1 'natürlich/neutral', syoss.de says 'glatte und glänzende ... Looks'. '48h megastarke Kontrolle' (Rossmann) is not on syoss.de, which has no duration claim.",
+    "inci_changed": true,
+    "notes": "Paraben-free current formula; Rossmann EAN 4015100190526 is probably older stock of the previous formula. 'Ohne Alkohol* und Silikone' (*Ethylalkohol). Syoss hold ladder: see syoss-schaumfestiger-volume notes."
+  },
+  {
+    "sample_id": "got2b-lockenspray-refresher-curlz",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.got2b.de/haarstyling/produkt/settings/curlz-locken-refresher-spray.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "sorgt für glänzende, geschmeidige und revitalisierte Locken",
+    "hold": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "kein Halt-Claim",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "glossy Finish",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Apply to dry hair; for an ultimate glossy look spray section by section from mid-lengths to ends. Finer hair: spray onto hands first and distribute from mid-lengths to ends.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "Name on got2b.de: 'Curlz Locken Refresher Spray' 200 ml (round 1 dm: 'Lockenspray Refresher Curlz'). Page does not use the word 'Leave-in'; it says 'bekämpft Frizz, bewahrt die Feuchtigkeit im Haar'.",
+    "inci_changed": false,
+    "notes": "Positioned as shine/frizz refresher for natural wavy, curly and coily hair; silicone-free, vegan, with triglycerides. INCI identical (Butane, Isododecane, Alcohol denat. lead)."
+  },
+  {
+    "sample_id": "got2b-styling-puder-volumen-powderfull",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.got2b.de/haarstyling/produkt/puder/styling-puder.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Für sichtbar volleres Haar mit natürlichem Halt.",
+    "hold": {
+      "raw": "natürlichem Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "natürlicher Halt (round-1 dm filter: leichter Halt)",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "sofortiger Volumen-Boost direkt am Ansatz (no gloss/matt claim)",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Sprinkle a small amount in the palms and rub until invisible; distribute from roots to ends in dry hair. Hack: sprinkle directly onto the hair for the ultimate volume boost.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "Name on got2b.de: 'Powderfull Volumen Styling Puder' 10 g. 'leichter Halt' is a dm filter (C3); C2 says 'natürlicher Halt'.",
+    "inci_changed": false,
+    "notes": "Vegan formula, '80 % Inhaltsstoffen natürlichen Ursprungs (including 80 % water)'. INCI identical."
+  },
+  {
+    "sample_id": "got2b-styling-mattpaste-strand-matte",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.got2b.de/haarstyling/produkt/gel-creme-wachs/strand-matte-paste.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "kreiert matte Surfer-Styles mit mittlerem Halt",
+    "hold": {
+      "raw": "mittlerem Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "mittlerer Halt",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "Hauptsache matt!",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Apply on damp or dry hair; rub in hands, then tousle, twist or tame individual strands as desired.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "CONFLICT on hold strength: got2b.de (C2) says 'mittlerem Halt' (twice); round 1 captured 'Für leichten Halt' (dm, apparently from the pack text). Name on got2b.de: 'Strand Matte Matt-Paste' 100 ml. 'Ohne Verkleben' not on got2b.de. Fragrance-only INCI difference: got2b.de lists Geraniol; round 1 lists Geranyl Acetate and Rose Ketones.",
+    "inci_changed": true,
+    "notes": "Resolve with pack photo (C1): leicht vs mittel. Functional ingredients identical (beeswax, carnauba, isopropyl myristate, petrolatum, mica, iron oxides)."
+  },
+  {
+    "sample_id": "got2b-styling-paste-istyler-texture-clay",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.got2b.de/haarstyling/produkt/gel-creme-wachs/istyler-texture-clay.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "kreiert individuelle, matte Looks mit ultra krassem Halt",
+    "hold": {
+      "raw": "ultra krassem Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "ultra krasser Halt (hero line); 'flexiblem, mattem Halt'; 'starkem Halt'",
+      "tier": "C2"
+    },
+    "flexibility_words": [
+      "flexibel"
+    ],
+    "finish": {
+      "raw": "matte Looks / mattem Halt",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Rub between the palms and work into dry hair. Hack: twist individual strands with the fingertips for more texture.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "Name on got2b.de: 'iStyler Texture Clay' 75 ml. The word 'intensiv mattierend' and 'ohne die Haare zu verkleben' (dm) are not on got2b.de; the hold wording there is 'ultra krass'/'stark', 'flexibel'.",
+    "inci_changed": false,
+    "notes": "No Halt number. Sibling got2b pages: Phenomenal Texture Clay 'starkem Halt', Phenomenal Forming Paste 'mittlerem Halt', Happy Hour spray 'Halt 5' / 'Extremer Halt bis zu 24 h'. INCI identical."
+  }
+]

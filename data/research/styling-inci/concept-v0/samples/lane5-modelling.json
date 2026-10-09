@@ -1,0 +1,713 @@
+[
+  {
+    "sample_id": "schwarzkopf-taft-gel-wax-glanz-halt-2",
+    "subtype_candidate": "wax",
+    "boundary_probe": true,
+    "brand": "Schwarzkopf Taft",
+    "product_name": "Gel Wax Glanz (Strahlender Glanz)",
+    "size": "75 ml",
+    "format": "wax",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "rossmann"
+    ],
+    "price_eur": 2.99,
+    "price_source_url": "https://www.rossmann.de/de/pflege-und-duft-taft-gel-wax-glanz/p/4015100810905",
+    "ean": "4015100810905",
+    "inci": "Aqua (Water, Eau), Glycerin, Ceteth-20, Oleth-5, Paraffinum Liquidum (Mineral Oil, Huile Minérale), Parfum (Fragrance), Butylene Glycol, Sorbitol, Sodium Benzoate, Benzyl Alcohol, Methylpropanediol, Citric Acid, Ethylhexylglycerin, Panthenol, Caprylhydroxamic Acid, Linalool, Geraniol, Limonene, Citronellol, Alpha-Isomethyl Ionone, Methyl Benzoate",
+    "inci_source_url": "https://www.rossmann.de/de/pflege-und-duft-taft-gel-wax-glanz/p/4015100810905",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Glänzendes Finish",
+      "Haltegrad 2",
+      "Glanzstufe 5",
+      "strukturiert wie ein Wax und bietet Halt wie ein Gel",
+      "hilft, die Frisur vor Feuchtigkeit zu schützen",
+      "schonend für Haar und Kopfhaut"
+    ],
+    "hold_claim": {
+      "raw": "Haltegrad 2 / Glanzstufe 5",
+      "number": 2,
+      "scale_max": 5,
+      "words": "langanhaltende Kontrolle (Fließtext); kein Stärkewort",
+      "none_stated": false
+    },
+    "finish_claim": "glänzend: 'Glänzendes Finish', 'Strahlender Glanz', 'Glanzstufe 5'",
+    "humidity_claim": "hilft, die Frisur vor Feuchtigkeit zu schützen",
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "vegane Formel",
+      "PETA zertifiziert",
+      "frei von tierischen Inhaltsstoffen"
+    ],
+    "directions": "In dry or damp hair; style as desired; for best results fix with Taft hairspray. Description: lets itself be spread and washed out easily.",
+    "application_moment": "dry_restyle",
+    "formula_observations": "No wax ingredient at all despite 'Wax' name: Aqua, Glycerin, Ceteth-20/Oleth-5 (nonionic emulsifiers), Paraffinum Liquidum (mineral oil, position 5), then fragrance and preservatives. No fixative polymer (no PVP, VP/VA, acrylates). Oil-in-water emulsion/gel where mineral oil gives gloss; hold 2 is therefore plausible as slip/film from emulsifiers + oil, not polymer. No silicone, no alcohol, no petrolatum.",
+    "notes": "Strong claim-vs-formula contrast: 'Gel Wax' contains neither a gel former nor a wax; it is an oily glycerin emulsion. Highest shine number (5) paired with the lowest hold number (2) among the Taft products seen in this lane. A 'Drei Wetter Taft Styling Haarwachs Glanz Halt 2' listing also exists on aggregator sites (no INCI recorded there); Rossmann page used. Taft hold/shine numbers are printed bare (scale max 5 assumed, in line with sibling lanes)."
+  },
+  {
+    "sample_id": "schwarzkopf-taft-matt-wax-halt-5",
+    "subtype_candidate": "wax",
+    "boundary_probe": false,
+    "brand": "Schwarzkopf Taft",
+    "product_name": "Haargel MATT WAX Halt 5 (Rossmann: Wax Matt)",
+    "size": "75 ml",
+    "format": "wax",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 2.95,
+    "price_source_url": "https://www.dm.de/p/d/1616410/",
+    "ean": "4015100810943",
+    "inci": "Aqua (Water, Eau), Glycerin, Oryza Sativa (Rice) Bran Wax, Stearic Acid, Palmitic Acid, Pentaerythrityl Tetraisostearate, C12-15 Alkyl Benzoate, Ricinus Communis (Castor) Seed Oil, Hydrogenated Coconut Oil, Sucrose Distearate, Sucrose Stearate, Hydroxystearic Acid, Parfum (Fragrance), Phenoxyethanol, Acrylates/C10-30 Alkyl Acrylate Crosspolymer, Aminomethyl Propanol, Hydrogenated Castor Oil, Cera Carnauba (Copernicia Cerifera (Carnauba) Wax, Cire de Carnauba), Panthenol, C12-15 Alcohols, Benzyl Alcohol, Sucrose, Geraniol, Tetramethyl Acetyloctahydronaphthalenes, Tropolone, Limonene, Rose Ketones",
+    "inci_source_url": "https://www.dm.de/p/d/1616410/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Für langanhaltende und strukturierte Trend-Looks mit mattem Finish",
+      "Dank mega starkem Taft Haltegrad 5 hält der Style bis zu 24h",
+      "Geeignet für alle Haartypen",
+      "leicht auszuwaschen",
+      "Bei Wunsch kann das Haar beliebig neu gestylt werden"
+    ],
+    "hold_claim": {
+      "raw": "Haltegrad 5 / Halt 5 (dm title); dm attribute: sehr starker Halt",
+      "number": 5,
+      "scale_max": 5,
+      "words": "mega starker Haltegrad 5; sehr starker Halt",
+      "none_stated": false
+    },
+    "finish_claim": "matt: 'mattem Finish'; no Glanz number printed",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Geeignet für alle Haartypen"
+    ],
+    "free_from_claims": [
+      "Ohne Alkohol",
+      "ohne Silikone",
+      "ohne Ammoniak",
+      "ohne Sulfat"
+    ],
+    "directions": "Rub a small amount in palms, work the warmed wax into dry or damp hair, define strands with fingertips; restylable; for best results fix with Taft hairspray.",
+    "application_moment": "dry_restyle",
+    "formula_observations": "Aqua, Glycerin, then rice bran wax (position 3), stearic + palmitic acid (soap-forming with aminomethyl propanol), pentaerythrityl tetraisostearate and C12-15 alkyl benzoate (esters), castor + coconut oils, sucrose esters (emulsifier), carnauba far down. Acrylates/C10-30 alkyl acrylate crosspolymer is a thickener, NOT a fixative: no PVP, VP/VA or other film-former listed. Water-based wax emulsion; no petrolatum/mineral oil, no silicone, no clay/powder (matt comes from wax + soap, not mineral). Contains fatty alcohols (C12-15 Alcohols) but 'ohne Alkohol' refers to ethanol.",
+    "notes": "Halt 5 (top of scale) delivered by a wax/ester/soap emulsion with no synthetic fixative polymer. Compare Syoss Max Hold (waxes + two polymers) and Taft Gel Wax Glanz (neither). Rossmann sells the same GTIN as 'Wax Matt', dm as 'Haargel MATT WAX Halt 5' (naming drift: product called gel and wax)."
+  },
+  {
+    "sample_id": "syoss-professional-performance-max-hold-power-wax",
+    "subtype_candidate": "wax",
+    "boundary_probe": false,
+    "brand": "Syoss",
+    "product_name": "Professional Performance Max Hold Power Wax",
+    "size": "150 ml",
+    "format": "wax",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "rossmann"
+    ],
+    "price_eur": 3.99,
+    "price_source_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-professional-performance-max-hold-power-wax/p/4015100190526",
+    "ean": "4015100190526",
+    "inci": "Aqua, Cera Alba, Petrolatum, PVP, C12-15 Alkyl Benzoate, Stearic Acid, Palmitic Acid, Cetyl Alcohol, Steareth-2, Steareth-21, Paraffinum Liquidum, Phenoxyethanol, Parfum, PPG-5-Ceteth-20, Oleth-20, VP/DMAPA Acrylates Copolymer, Cetearyl Alcohol, Acrylates/C10-30 Alkyl Acrylate Crosspolymer, Aminomethyl Propanol, Methylparaben, Dicetyl Phosphate, Ceteth-10 Phosphate, C12-15 Alcohols, Ethylparaben, Panthenol, Linalool, Propylene Glycol, Hexyl Cinnamal, Limonene, Niacinamide, Ethylhexylglycerin, Benzalkonium Chloride, Citral",
+    "inci_source_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-professional-performance-max-hold-power-wax/p/4015100190526",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "48h megastarke Kontrolle",
+      "ohne zu verkleben",
+      "ohne Rückstände",
+      "Long-lasting hold 5 (syoss.net)",
+      "Free from alcohol* and silicones (syoss.net; *Ethylalcohol)"
+    ],
+    "hold_claim": {
+      "raw": "Long-lasting hold 5 (syoss.net); Rossmann: 48h megastarke Kontrolle",
+      "number": 5,
+      "scale_max": 5,
+      "words": "megastarke Kontrolle; Max Hold",
+      "none_stated": false
+    },
+    "finish_claim": "natürlich/neutral: no shine or matt claim on pack text (REWE listing title adds 'Medium Shine', retailer wording only)",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "Free from alcohol* and silicones (*Ethylalcohol, syoss.net)"
+    ],
+    "directions": "Small amount rubbed in palms, apply on dry hair, add more if needed; easy to restyle (syoss.net).",
+    "application_moment": "dry_restyle",
+    "formula_observations": "O/W emulsion: Aqua, beeswax (position 2), Petrolatum (3), PVP (4, fixative), C12-15 alkyl benzoate, stearic/palmitic acid, mineral oil (Paraffinum Liquidum, ~10), later VP/DMAPA Acrylates Copolymer (second fixative) and acrylates crosspolymer thickener. So: waxes + petrolatum + mineral oil + two fixative polymers. No silicone, no ethanol, no clay. Parabens (methyl/ethyl) present in the DE retailer list.",
+    "notes": "DE retailer INCI differs from the manufacturer's international page (syoss.net), which lists Ethylalcohol and omits the parabens, Linalool and Citral; the Rossmann DE list is used because it reflects the DE-market pack. Closest drugstore example of a classic wax with BOTH an occlusive wax base and polymer fixatives. Shares the fixative pair (PVP + VP/DMAPA Acrylates) and ester/emulsifier set with Taft POWER Styling Wax (dm 1146102), which uses rice bran wax instead of beeswax/petrolatum."
+  },
+  {
+    "sample_id": "got2b-styling-mattpaste-strand-matte",
+    "subtype_candidate": "paste",
+    "boundary_probe": false,
+    "brand": "got2b (Schwarzkopf)",
+    "product_name": "Styling Mattpaste Strand Matte",
+    "size": "100 ml",
+    "format": "paste",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 4.95,
+    "price_source_url": "https://www.dm.de/p/d/1136459/",
+    "ean": "4015100800401",
+    "inci": "Aqua (Water, Eau), Cera Alba (Beeswax, Cire d'Abeille), Cera Carnauba (Copernicia Cerifera (Carnauba) Wax, Cire de Carnauba), Isopropyl Myristate, Glyceryl Stearate, Petrolatum, Parfum (Fragrance), Stearic Acid, Palmitic Acid, PEG-8 Beeswax, Phenoxyethanol, Aminomethyl Propanol, Ethylhexylglycerin, Hydroxyethylcellulose, Benzyl Alcohol, Mica, Geranyl Acetate, Rose Ketones, CI 77499 (Iron Oxides), CI 77891 (Titanium Dioxide), CI 15985 (Yellow 6)",
+    "inci_source_url": "https://www.dm.de/p/d/1136459/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Für einen lässigen Surfer Look",
+      "Für leichten Halt",
+      "Ohne Verkleben",
+      "Hauptsache matt!",
+      "zerrauft, zerstrubbelt oder gebändigt"
+    ],
+    "hold_claim": {
+      "raw": "Für leichten Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "leichter Halt",
+      "none_stated": false
+    },
+    "finish_claim": "matt: 'Hauptsache matt!', 'Strand Matte'",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [
+      "Ohne Alkohol",
+      "ohne Silikone",
+      "ohne Ammoniak",
+      "ohne Sulfat"
+    ],
+    "directions": "On dry or damp hair; spread in palms and tousle, twist or flatten individual sections.",
+    "application_moment": "dry_restyle",
+    "formula_observations": "Aqua first, then beeswax and carnauba (positions 2-3), isopropyl myristate (ester), glyceryl stearate, Petrolatum (position 6), stearic/palmitic acid + aminomethyl propanol (soap), PEG-8 beeswax emulsifier. Only thickener is hydroxyethylcellulose; NO film-forming fixative polymer (no PVP/VP-VA/acrylates). Mica and iron oxides/TiO2 are in the list (pigment/mattifying effect). No silicone, no mineral oil, no clay. Water + wax/petrolatum emulsion.",
+    "notes": "Matt feel comes from wax/petrolatum plus mica/TiO2 powders, not clay. Light hold is consistent with the absence of a fixative. Rossmann lists it as 'Matt-Paste Strand Matte' at 4.99 EUR."
+  },
+  {
+    "sample_id": "got2b-styling-paste-istyler-texture-clay",
+    "subtype_candidate": "paste",
+    "boundary_probe": true,
+    "brand": "got2b (Schwarzkopf)",
+    "product_name": "Styling Paste iStyler Texture Clay",
+    "size": "75 ml",
+    "format": "paste",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 4.95,
+    "price_source_url": "https://www.dm.de/p/d/1336597/",
+    "ean": "4015100893700",
+    "inci": "Aqua (Water, Eau), Rhus Verniciflua Peel Cera (Rhus Verniciflua Peel Wax), VP/VA Copolymer, Stearic Acid, Palmitic Acid, Cera Carnauba (Copernicia Cerifera (Carnauba) Wax, Cire de Carnauba), Cetyl Ethylhexanoate, Steareth-21, Steareth-2, Propylene Glycol, Parfum (Fragrance), Phenoxyethanol, Aminomethyl Propanol, Carbomer, Tropolone, CI 19140 (Yellow 5), CI 15985 (Yellow 6)",
+    "inci_source_url": "https://www.dm.de/p/d/1336597/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Styling-Paste für texturierte Looks",
+      "Intensiv mattierender Effekt",
+      "Bietet starken & flexiblen Halt",
+      "ohne die Haare zu verkleben",
+      "die vegane Formel bietet zuverlässigen und dennoch flexiblen Halt"
+    ],
+    "hold_claim": {
+      "raw": "Bietet starken & flexiblen Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "starker & flexibler Halt",
+      "none_stated": false
+    },
+    "finish_claim": "matt: 'Intensiv mattierender Effekt', 'sorgt für ein mattes Finish'",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "definierte Undercuts oder andere kreative Styles"
+    ],
+    "free_from_claims": [
+      "Ohne Alkohol",
+      "ohne Silikone",
+      "ohne Aluminiumsalze (ACH)",
+      "ohne Ammoniak",
+      "vegane Formel"
+    ],
+    "directions": "Rub the clay paste between palms and work into dry hair; single strands can be modelled with fingertips.",
+    "application_moment": "dry_restyle",
+    "formula_observations": "Aqua, Japan wax (Rhus Verniciflua Peel Cera, position 2), VP/VA Copolymer (position 3, fixative), stearic/palmitic acid soap with aminomethyl propanol, carnauba, cetyl ethylhexanoate (ester), steareth-2/-21 emulsifiers, carbomer thickener. NO clay or mineral powder of any kind (no kaolin, bentonite, silica, mica, starch). Vegan wax + polymer emulsion; no petrolatum, mineral oil or silicone.",
+    "notes": "KEY MISMATCH: product name and dm description say 'Clay', 'intensiv mattierend', but the formula has no clay/mineral at all; the mattness must come from the wax/soap system. Sibling Taft Forming Paste (Halt 5+, same chassis: Japan wax, VP/VA, steareth-2/21) shows 'Clay' vs 'Paste' differs in naming, not formula. Rossmann lists 'Texture Clay iStyler' 4.99 EUR."
+  },
+  {
+    "sample_id": "bali-gents-matt-paste",
+    "subtype_candidate": "paste",
+    "boundary_probe": false,
+    "brand": "BALI GENTS",
+    "product_name": "Matt Paste",
+    "size": "100 ml",
+    "format": "paste",
+    "market_tier": "premium_drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 4.95,
+    "price_source_url": "https://www.dm.de/p/d/3093667/",
+    "ean": "4262391991039",
+    "inci": "Aqua, Candelilla Cera, Cocos Nucifera Oil, Helianthus Annuus Seed Oil, Glyceryl Stearate, Zea Mays Starch, Stearic Acid, Cetearyl Alcohol, Palmitic Acid, Hydrogenated Starch Hydrolysate, Sucrose, Parfum, Kaolin, Sodium Cetearyl Sulfate, Sodium Benzoate, Lactic Acid, Potassium Sorbate, Tocopherol, Linalool, Limonene, Amyl Salicylate, Linalyl Acetate, Sodium Sulfate, Geraniol, Geranyl Acetate, Benzoic Acid, Vanillin, Disodium Phosphate, Sodium Chloride, Benzyl Alcohol, Benzaldehyde, Potassium Phosphate, Methyl Benzoate Free of Ethanol.",
+    "inci_source_url": "https://www.dm.de/p/d/3093667/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Geschmeidige, matte Textur",
+      "Starker Halt für moderne Looks",
+      "Für definierte & voluminöse Styles",
+      "Ohne Silikone & Mikroplastik",
+      "Natürliche Öle und Wachse unterstützen die Formbarkeit"
+    ],
+    "hold_claim": {
+      "raw": "Starker Halt für moderne Looks",
+      "number": null,
+      "scale_max": null,
+      "words": "starker Halt",
+      "none_stated": false
+    },
+    "finish_claim": "matt: 'Geschmeidige, matte Textur', 'natürliches Finish', 'mattierende Wirkung'",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "messy, sleek oder surfer Styles"
+    ],
+    "free_from_claims": [
+      "Ohne Silikone & Mirkoplastik (sic, dm)",
+      "Free of Ethanol (INCI footer)"
+    ],
+    "directions": "Rub a small amount between palms; apply to dry or slightly damp hair; shape with fingers or comb.",
+    "application_moment": "dry_restyle",
+    "formula_observations": "Aqua, candelilla wax (2), coconut and sunflower oil, glyceryl stearate, corn starch (position 6), stearic/palmitic acid, cetearyl alcohol, hydrogenated starch hydrolysate, sucrose. Kaolin present but AFTER Parfum (so below ~1%); no PVP/VP-VA/acrylates, no beeswax, no petrolatum, no mineral oil, no silicone. Fully 'natural' water-based wax/starch emulsion with a trace of clay.",
+    "notes": "The only paste in the lane with a real clay ingredient (kaolin), yet at a token level; 'Starker Halt' claim with no synthetic fixative (starch + candelilla only). INCI footer carries 'Free of Ethanol.' attached to the list (copied as printed). Rossmann lists the same GTIN as 'Matt Paste' 4.99 EUR."
+  },
+  {
+    "sample_id": "american-crew-fiber",
+    "subtype_candidate": "paste",
+    "boundary_probe": false,
+    "brand": "American Crew",
+    "product_name": "Styling Fiber",
+    "size": "50 g",
+    "format": "paste",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [
+      "flaconi"
+    ],
+    "price_eur": 7.04,
+    "price_source_url": "https://www.flaconi.de/haare/american-crew/styling/american-crew-styling-fiber-stylingcreme.html",
+    "ean": null,
+    "inci": "Aqua (Water (Eau)), Lanolin Cera (Lanolin Wax (Cire De Lanoline)), Cetearyl Alcohol, PVP, Tridecyl Stearate, Tribehenin, Propylene Glycol, Alcohol Denat., Tridecyl Trimellitate, PEG-8 Beeswax, Ceteareth-25, Phenoxyethanol, PEG-40 Castor Oil, Dipentaerythrityl Hexacaprylate/Hexacaprate, Benzyl Alcohol, Limonene, Acrylates/C10-30 Alkyl Acrylate Crosspolymer, Triethanolamine, Methylparaben, Ethylparaben, Parfum (Fragrance), Tetrasodium EDTA, Citronellol, Geraniol, Caramel, Linalool, Yellow 5 (CI 19140)/ Acid Yellow 23",
+    "inci_source_url": "https://www.flaconi.de/haare/american-crew/styling/american-crew-styling-fiber-stylingcreme.html",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "starken aber variablen Halt",
+      "natürliches, mattes Finish",
+      "Sehr starker Halt – kein Glanz.",
+      "Haltfaktor 9 – Glanzfaktor 1."
+    ],
+    "hold_claim": {
+      "raw": "Sehr starker Halt – kein Glanz. Haltfaktor 9 – Glanzfaktor 1.",
+      "number": 9,
+      "scale_max": null,
+      "words": "sehr starker Halt, starker aber variabler Halt",
+      "none_stated": false
+    },
+    "finish_claim": "matt: 'natürliches, mattes Finish', 'kein Glanz', Glanzfaktor 1 (scale max not printed; American Crew factors appear to run 1-10)",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [],
+    "free_from_claims": [],
+    "directions": "Work a small amount rubbed in the hands into towel-dried hair.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Aqua, lanolin wax (2), cetearyl alcohol, PVP (4, fixative), tridecyl stearate, tribehenin (hard wax-like ester), propylene glycol, Alcohol Denat. (8), PEG-8 beeswax, PEG-40 castor oil; acrylates crosspolymer thickener; parabens preserved. Emulsion cream with PVP + lanolin/tribehenin structure; no clay, no powder, no silicone, no petrolatum, no mineral oil. 'Fiber' = a texture/hold story, not an ingredient class.",
+    "notes": "Both numbers explicit (hold 9, shine 1): useful anchor for a brand scale with a different max than Taft's. Retailer sells it as 'Stylingcreme'/'Haarcreme' category on Flaconi although American Crew markets as fiber paste-gel. Applied to towel-dried hair, unlike dry-applied pastes. 85 g size 12.69 EUR. Alcohol denat. present (position 8) with no free-from claim."
+  },
+  {
+    "sample_id": "balea-men-pomade-haar-bart-2in1",
+    "subtype_candidate": "pomade",
+    "boundary_probe": false,
+    "brand": "Balea MEN",
+    "product_name": "Pomade Haar & Bart 2in1",
+    "size": "100 ml",
+    "format": "pomade",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 1.95,
+    "price_source_url": "https://www.dm.de/p/d/1491041/",
+    "ean": "4066447855333",
+    "inci": "ETHYLHEXYL STEARATE, PETROLATUM, CERA MICROCRISTALLINA, PARAFFIN, BUTYROSPERMUM PARKII BUTTER, MACADAMIA TERNIFOLIA SEED OIL, SILICA, PARFUM, TOCOPHEROL, LIMONENE, LINALOOL, ALPHA-ISOMETHYL IONONE, BHT.",
+    "inci_source_url": "https://www.dm.de/p/d/1491041/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "2in1 Pomade für Bart- & Haupthaar",
+      "Formt & festigt individuelle Styles",
+      "Mit pflegendem Macadamiaöl & Sheabutter",
+      "Für langanhaltenden Halt & Definition",
+      "Dermatologisch bestätigte Hautverträglichkeit"
+    ],
+    "hold_claim": {
+      "raw": "Halt: mittlerer Halt (dm attribute); Für langanhaltenden Halt & Definition",
+      "number": null,
+      "scale_max": null,
+      "words": "mittlerer Halt",
+      "none_stated": false
+    },
+    "finish_claim": "null: no finish claim stated; formula suggests soft sheen (no shine or matt wording)",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "normales Haar",
+      "Bart- & Haupthaar"
+    ],
+    "free_from_claims": [
+      "Ohne Alkohol",
+      "ohne Silikone",
+      "ohne Ammoniak",
+      "ohne Sulfat",
+      "vegane Rezeptur"
+    ],
+    "directions": "Rub a small amount between palms and work evenly into dry or damp hair, or model single strands.",
+    "application_moment": "dry_restyle",
+    "formula_observations": "Anhydrous: no Aqua, no emulsifier, no polymer. Ethylhexyl stearate (ester) first, Petrolatum, microcrystalline wax, Paraffin (all occlusive), then shea butter and macadamia oil; Silica (mattifying/absorbent) near the end. A true oil/wax-based pomade: structure and hold come entirely from petrolatum + microcrystalline wax + paraffin.",
+    "notes": "Contrast set: anhydrous oil/wax-based (this) vs water-based (American Crew Pomade) vs O/W emulsion sold as pomade (L'Oréal Barber Club). Cheapest record in the lane (1.95 EUR). Petrolatum + paraffin + microcrystalline wax formula class, no emulsifier, so no water-washout aid in the INCI. 2in1 for hair and beard."
+  },
+  {
+    "sample_id": "loreal-men-expert-barber-club-styling-pomade",
+    "subtype_candidate": "pomade",
+    "boundary_probe": true,
+    "brand": "L'Oréal Men Expert",
+    "product_name": "Barber Club Styling Pomade Bart & Haar mit ätherischem Zedernholzöl",
+    "size": "75 ml",
+    "format": "pomade",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "douglas"
+    ],
+    "price_eur": 8.39,
+    "price_source_url": "https://www.douglas.de/de/p/3001040640",
+    "ean": null,
+    "inci": "AQUA / WATER, PARAFFINUM LIQUIDUM / MINERAL OIL, PEG-100 STEARATE, GLYCERYL STEARATE, CETEARYL ALCOHOL, PHENYL TRIMETHICONE, CERA MICROCRISTALLINA / MICROCRYSTALLINE WAX, VP/DIMETHYLAMINOETHYLMETHACRYLATE COPOLYMER, LACTIC ACID, EUCALYPTUS GLOBULUS LEAF OIL, TOCOPHEROL, CEDRUS ATLANTICA BARK OIL, PHENOXYETHANOL, PEG-150/DECYL ALCOHOL/SMDI COPOLYMER, PPG-1 TRIDECETH-6, EUGENOL, POLYQUATERNIUM-37, LIMONENE, BENZYL SALICYLATE, BENZYL ALCOHOL, LINALOOL, PROPYLENE GLYCOL, PROPYLENE GLYCOL DICAPRYLATE/DICAPRATE, CAPRYLYL GLYCOL, ALPHA-ISOMETHYL IONONE, PARAFFIN, FUSANUS SPICATUS WOOD OIL, COUMARIN, PARFUM / FRAGRANCE",
+    "inci_source_url": "https://www.douglas.de/de/p/3001040640",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "starker Halt und natürlicher Glanz für deinen Bart",
+      "leichte Textur & bis zu 24 Stunden Halt",
+      "sanfte Formel mit Bio-Zedernholzöl",
+      "ohne zu beschweren",
+      "für definierte Looks bei Bart und Haar"
+    ],
+    "hold_claim": {
+      "raw": "starken Halt und natürlichen Glanz, bis zu 24 Stunden",
+      "number": null,
+      "scale_max": null,
+      "words": "starker Halt",
+      "none_stated": false
+    },
+    "finish_claim": "glänzend/natürlich: 'natürlichen Glanz'",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Bart & Haar"
+    ],
+    "free_from_claims": [
+      "phthalatfrei",
+      "acetonfrei",
+      "pigment- und farbstoff-frei",
+      "parabenfrei",
+      "ammoniakfrei",
+      "sulfatfrei"
+    ],
+    "directions": "Clean and rough-shape hair/beard first, take a small dose from the jar, warm between hands, distribute in hair and beard and style; daily use, re-applicable.",
+    "application_moment": "dry_restyle",
+    "formula_observations": "O/W emulsion (Aqua first) with mineral oil (position 2), PEG-100 stearate/glyceryl stearate emulsifiers, cetearyl alcohol, Phenyl Trimethicone (a silicone, position 6), microcrystalline wax (7) and a VP/DMAEMA copolymer fixative (8), polyquaternium-37. Contains paraffin late. So: hybrid cream-pomade with mineral oil + microcrystalline wax + silicone + a fixative polymer; nothing petrolatum-led, no PVP.",
+    "notes": "Sold as pomade but jar consistency is 'Butter' (Douglas attribute) and Douglas AI review summary describes it as cream with limited hold; positioned for beard first. Silicone present although the claim list stresses free-from items other than silicone. Marked boundary_probe because beard-and-hair use may belong to grooming rather than hair styling."
+  },
+  {
+    "sample_id": "american-crew-pomade",
+    "subtype_candidate": "pomade",
+    "boundary_probe": false,
+    "brand": "American Crew",
+    "product_name": "Styling Pomade",
+    "size": "85 g",
+    "format": "pomade",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [
+      "flaconi"
+    ],
+    "price_eur": 12.5,
+    "price_source_url": "https://www.flaconi.de/haare/american-crew/styling/american-crew-styling-pomade-stylingcreme.html",
+    "ean": null,
+    "inci": "Aqua (Water (Eau)), PEG-25 Hydrogenated Castor Oil, Oleth-10, Lanolin, Oleth-20, Diisopropyl Dimer Dilinoleate, Glycerin, Hydroxypropyl Bisstearyldimonium Chloride, Alcohol Denat., PVP, Propylene Glycol, Carthamus Tinctorius (Safflower) Seed Oil, Salvia Officinalis (Sage) Leaf Extract, Panax Ginseng Root Extract, Quillaja Saponaria Bark Extract, Parfum (Fragrance), Linalool, Limonene, Hexyl Cinnamal, Benzyl Salicylate, Alpha-Isomethyl Ionone, Citronellol, Hydroxycitronellal, Geraniol, Citral, Diazolidinyl Urea, Methylparaben, Benzoic Acid, Propylparaben.",
+    "inci_source_url": "https://www.flaconi.de/haare/american-crew/styling/american-crew-styling-pomade-stylingcreme.html",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Eine Pomade auf Wasserbasis.",
+      "gibt sie dem Haar Halt, Glanz und Geschmeidigkeit",
+      "Großartig bei glatten Frisuren oder rauer Haarstruktur.",
+      "Mittlerer Halt – viel Glanz.",
+      "Haltfaktor 7 – Glanzfaktor 9."
+    ],
+    "hold_claim": {
+      "raw": "Mittlerer Halt – viel Glanz. Haltfaktor 7 – Glanzfaktor 9.",
+      "number": 7,
+      "scale_max": null,
+      "words": "mittlerer Halt",
+      "none_stated": false
+    },
+    "finish_claim": "glänzend: 'viel Glanz', Glanzfaktor 9 (scale max not printed)",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "glatte Frisuren",
+      "raue Haarstruktur"
+    ],
+    "free_from_claims": [],
+    "directions": "Work a small amount into towel-dried hair.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Self-declared water-based: Aqua first, then PEG-25 hydrogenated castor oil and Oleth-10/-20 (nonionic solubilizers), Lanolin (4), diisopropyl dimer dilinoleate (viscous ester), glycerin, a quat (hydroxypropyl bisstearyldimonium chloride), Alcohol Denat. (9), PVP (10, fixative), safflower oil. No wax (no beeswax/candelilla/paraffin), no petrolatum, no mineral oil, no silicone. Parabens + diazolidinyl urea preserved.",
+    "notes": "Named 'mittlerer Halt' but factor 7; with Fiber at factor 9 this implies American Crew uses an unprinted 10-point scale in which 7 reads as 'medium'. Highest Glanz number (9) with PVP at only position 10, so shine comes from lanolin/ester and not from a heavy wax. Flaconi categorises it as 'Stylingcreme' although marketed as pomade. Compare drugstore anhydrous Balea pomade."
+  },
+  {
+    "sample_id": "nivea-men-styling-cream-active-craft-stylers",
+    "subtype_candidate": "styling_cream",
+    "boundary_probe": false,
+    "brand": "NIVEA MEN",
+    "product_name": "Styling Cream Active (Rossmann: Craft Stylers Styling Cream Natural Look)",
+    "size": "150 ml",
+    "format": "cream",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm",
+      "rossmann"
+    ],
+    "price_eur": 3.95,
+    "price_source_url": "https://www.dm.de/p/d/1434215/",
+    "ean": "4006000277189",
+    "inci": "Aqua, Sorbitol, Glycerin, Cetyl Alcohol, Myristyl Alcohol, Sorbitan Stearate, Dimethicone, PVP, Trilaureth-4 Phosphate, Isopropyl Palmitate, Panthenol, Niacinamide, Pantolactone, Silica, Cera Microcristallina, Paraffinum Liquidum, PEG-90 M, Citric Acid, Tocopheryl Acetate, Phenoxyethanol, Benzethonium Chloride, Tetramethyl Acetyloctahydronaphthalenes, Citrus Aurantium Peel Oil, Limonene, Lavandula Oil/Extract, Linalyl Acetate, Linalool, Geranyl Acetate, BHT, Rose Ketones, Parfum",
+    "inci_source_url": "https://www.dm.de/p/d/1434215/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Haarstyling-Creme für formbare Looks",
+      "Mit Polymeren & Vitaminen",
+      "Ermöglicht ein flexibles & wandelbares Styling",
+      "Starker Halt ohne zu verkleben oder zu verhärten",
+      "Lässt sich problemlos auswaschen"
+    ],
+    "hold_claim": {
+      "raw": "Starker Halt ohne zu verkleben oder zu verhärten",
+      "number": null,
+      "scale_max": null,
+      "words": "starker, aber formbarer Halt",
+      "none_stated": false
+    },
+    "finish_claim": "natürlich/neutral: Rossmann name says 'Natural Look'; dm text: 'definiert das Haar' with no shine or matt claim",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Haarstyling für Männer (brand line)"
+    ],
+    "free_from_claims": [],
+    "directions": "Not stated on the dm product page.",
+    "application_moment": "dry_restyle",
+    "formula_observations": "O/W cream with humectants and fatty alcohols (cetyl/myristyl), Dimethicone (silicone, position 7), PVP (8, fixative), isopropyl palmitate, Silica, then microcrystalline wax and mineral oil (positions ~14-15, minor), PEG-90M. Fixative PVP is mid-list; waxes minor. No ethanol; vitamin set (niacinamide, panthenol, tocopheryl acetate).",
+    "notes": "Naming drift: dm 'Styling Cream Active' vs Rossmann 'Craft Stylers Styling Cream Natural Look' and the same GTIN; a related 'Pflege & Halt Styling Creme Gel' exists. 'Starker Halt' claim vs mid-ranked PVP and minor wax; the hold is described only in words. dm 'Hauttyp: alle' attribute is a data glitch. Men-positioned, short-hair use implied but no hair-length claim printed."
+  },
+  {
+    "sample_id": "wella-professionals-eimi-flowing-form",
+    "subtype_candidate": "styling_cream",
+    "boundary_probe": true,
+    "brand": "Wella Professionals",
+    "product_name": "EIMI Flowing Form (Smooth Flowing Form) Glättungscreme / Anti-Frizz Smoothing Balm",
+    "size": "100 ml",
+    "format": "cream",
+    "market_tier": "salon_prestige",
+    "retailers_seen": [
+      "flaconi"
+    ],
+    "price_eur": 10.5,
+    "price_source_url": "https://www.flaconi.de/haare/wella-professionals/eimi/wella-professionals-eimi-flowing-form-glaettungscreme.html",
+    "ean": null,
+    "inci": "Water/Eau, Pvp, Polyquaternium-37, Propylene Glycol Dicaprylate/ Dicaprate, Behentrimonium Chloride, Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, Polyquaternium-4, Fragrance/Parfum, Phenoxyethanol, Cetearyl Alcohol, Panthenol, Ppg-1 Trideceth-6, Glyoxylic Acid, Disodium Edta, Simmondsia Chinensis (Jojoba) Seed Oil, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Peg-20 Stearate, Ethylhexyl Methoxycinnamate, Cetyl Alcohol, Sorbitan Oleate.",
+    "inci_source_url": "https://www.wella.com/professional/en-SE/products/hair-styling/eimi-smooth/eimi-smooth-flowing-form",
+    "inci_source_tier": "manufacturer",
+    "claims_verbatim": [
+      "Anti-Frizz Glättungsbalsam",
+      "elastischem Halt und natürlicher Sprungkraft",
+      "Reduziert Frizz",
+      "schützt das Haar vor dem Austrocknen bei Stylinggeräten",
+      "Hold level 2 (wella.com)"
+    ],
+    "hold_claim": {
+      "raw": "elastischem Halt (Flaconi); Hold level 2 (wella.com)",
+      "number": 2,
+      "scale_max": null,
+      "words": "elastischer Halt",
+      "none_stated": false
+    },
+    "finish_claim": "natürlich/glatt: 'luxuriöse Geschmeidigkeit', 'natürlicher Sprungkraft'; no shine or matt number",
+    "humidity_claim": null,
+    "heat_claim": "Reduziert Frizz und hilft, das Haar während der Nutzung von Stylinggeräten vor dem Austrocknen zu schützen",
+    "hair_type_claims": [
+      "long and shoulder-length hair (wella.com)"
+    ],
+    "free_from_claims": [],
+    "directions": "Apply 2-5 pumps and work through lengths and ends; blow-dry with brush; for extra smooth results finish with flat iron (Flaconi: massage into lengths and tips, dry with dryer).",
+    "application_moment": "before_heat",
+    "formula_observations": "Water-thin conditioning balm: Aqua, PVP (position 2, fixative), Polyquaternium-37 (cationic polymer), propylene glycol dicaprylate/dicaprate (light ester), behentrimonium chloride + guar hydroxypropyltrimonium chloride + polyquaternium-4 (conditioning cationics), jojoba and almond oil late. No wax, no silicone, no mineral oil, no alcohol. Ethylhexyl methoxycinnamate = UV filter for the product.",
+    "notes": "Flaconi lists INCI nowhere on this page; manufacturer INCI taken from the wella.com en-SE (Swedish) page, which may differ marginally from the DE pack. Closest to a leave-in/heat protectant with PVP and cationics: strong boundary with Leave-in/Heat Protectant. Flaconi classifies it as 'Glättungscreme' although the Wella page calls it a smoothing balm; hold 2 is the lowest in this lane."
+  },
+  {
+    "sample_id": "balea-styling-creme-power-flex",
+    "subtype_candidate": "styling_cream",
+    "boundary_probe": true,
+    "brand": "Balea",
+    "product_name": "Styling Creme Power Flex (Forming Cream Power Flex)",
+    "size": "150 ml",
+    "format": "cream",
+    "market_tier": "drugstore",
+    "retailers_seen": [
+      "dm"
+    ],
+    "price_eur": 1.75,
+    "price_source_url": "https://www.dm.de/p/d/1612047/",
+    "ean": "4066447991697",
+    "inci": "AQUA, ALCOHOL DENAT., PVP, CARBOMER, PARFUM, PANTHENOL, POLYQUATERNIUM-11, VP/DIMETHYLAMINOETHYLMETHACRYLATE COPOLYMER, SODIUM HYDROXIDE, CI 77891, LINALOOL, PHENOXYETHANOL, TERPINEOL, CITRUS AURANTIUM PEEL OIL, LIMONENE, CAPRYLYL GLYCOL, CITRONELLOL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, GERANIOL, CITRIC ACID, ALPHA-ISOMETHYL IONONE, CITRAL, POGOSTEMON CABLIN OIL, SODIUM BICARBONATE",
+    "inci_source_url": "https://www.dm.de/p/d/1612047/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Formgebende Haarcreme",
+      "Für flexiblen Halt",
+      "Zum Modellieren & Fixieren von Frisuren",
+      "Kein Verkleben oder Beschweren",
+      "leicht auswaschbar und hinterlässt keine Rückstände"
+    ],
+    "hold_claim": {
+      "raw": "Für flexiblen Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "flexibler Halt; langanhaltender, aber dennoch flexibler Halt",
+      "none_stated": false
+    },
+    "finish_claim": "natürlich: 'natürlich aussehendes Finish'",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "normales Haar (dm attribute)"
+    ],
+    "free_from_claims": [
+      "vegan",
+      "ohne Silikone"
+    ],
+    "directions": "Distribute on palms, work into damp or dry hair, style as usual.",
+    "application_moment": "damp_before_drying",
+    "formula_observations": "Hydroalcoholic carbomer gel: Aqua, Alcohol Denat. (2), PVP (3), Carbomer (4, gelling), later Polyquaternium-11 and VP/DMAEMA copolymer (additional fixatives) neutralised with sodium hydroxide; CI 77891 (TiO2) opacifier gives creamy white look. No oils, waxes, emollient esters, silicone or fatty alcohols. Three film-formers; ethanol second.",
+    "notes": "Sold as 'Haarcreme'/'Styling Creme' but chemistry is a gel (fixative polymers in a carbomer/ethanol base), coloured white with TiO2 to look creamy; no 'ohne Alkohol' claim (and none would be true). Best drugstore example for 'light control, longer hair' (flexible hold, normal hair) but with significant hold potential from three polymers. Boundary probe against Gel/Curl-Cream subtype. Cheapest cream in lane (1.75 EUR)."
+  },
+  {
+    "sample_id": "cantu-shea-butter-extra-hold-edge-stay-gel",
+    "subtype_candidate": "edge_control",
+    "boundary_probe": false,
+    "brand": "Cantu",
+    "product_name": "Shea Butter for Natural Hair Extra Hold Edge Stay Gel",
+    "size": "64 g",
+    "format": "gel",
+    "market_tier": "premium_drugstore",
+    "retailers_seen": [
+      "amazon_de"
+    ],
+    "price_eur": 9.87,
+    "price_source_url": "https://www.amazon.de/dp/B01LTIAUAQ",
+    "ean": null,
+    "inci": "Aqua (Water), Ceteareth-25, PEG-7 Glyceryl Cocoate, PEG-40 Hydrogenated Castor Oil, Glycerin, Caramel, Butyrospermum Parkii (Shea) Butter, Phenoxyethanol, Parfum (Fragrance), Benzoic Acid, Simmondsia Chinensis (Jojoba) Seed Oil, Panthenol, Glycereth-2 Cocoate, Ethylhexylglycerin, Silk Amino Acids, Theobroma Cacao (Cocoa) Seed Butter, Benzyl Alcohol, Sodium Benzoate, Potassium Sorbate, Benzyl Benzoate, Coumarin, Hexyl Cinnamal",
+    "inci_source_url": "https://eu.lookfantastic.com/p/cantu-shea-butter-for-natural-hair-extra-hold-edge-stay-gel/12042589/",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Gel für extra Halt",
+      "Dauerhafter, schuppenfreier Halt",
+      "Perfekt für elegante, glatte Frisuren und Pferdeschwanz",
+      "Pflegt und glättet krauses Haar",
+      "Ohne Sulfate, Silikone, Parabene und Mineralöl"
+    ],
+    "hold_claim": {
+      "raw": "Extra Hold (Produktname); Dauerhafter, schuppenfreier Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "extra Halt",
+      "none_stated": false
+    },
+    "finish_claim": "glänzend/glatt: 'Pflegt und glänzt' (garbled machine translation on Amazon.de), 'sleek styles'",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "natürliches Haar",
+      "krauses Haar",
+      "curly, coily, wavy (EU lookfantastic)"
+    ],
+    "free_from_claims": [
+      "Ohne Sulfate, Silikone, Parabene und Mineralöl",
+      "ohne Phthalate, Gluten, Propylen"
+    ],
+    "directions": "Apply to edges; smooth with fingertips or a tightly bristled brush.",
+    "application_moment": "dry_restyle",
+    "formula_observations": "Surfactant/emulsifier-structured water gel: Aqua, Ceteareth-25, PEG-7 glyceryl cocoate, PEG-40 hydrogenated castor oil (all solubilizers), glycerin, then caramel colour, shea butter (low), jojoba, cocoa butter. NO film-forming fixative polymer (no PVP, VP/VA, acrylates, carbomer) and no wax; no silicone, mineral oil or alcohol. Hold, if any, must come from the surfactant gel structure plus glycerin film.",
+    "notes": "Only edge-control with a real DE listing found: Amazon.de third-party seller (NOMMAD, ASIN B01LTIAUAQ, EU model 07569-12/4EU, 9.87 EUR). Amazon.de page has no INCI; list taken from the EU Lookfantastic page ('coming soon' page, 8.05 EUR). Listings of the same product differ by retailer (Stop and Shop, Walmart, Medino lists add or reorder items), so the INCI is not fully certain for the EU pack. Claim 'Extra Hold' is not backed by an ingredient with fixative function. dm/Rossmann/Müller/Flaconi searches returned no Cantu, ORS or Eco Style edge control."
+  },
+  {
+    "sample_id": "bali-curls-sleek-stick-brows-and-edges",
+    "subtype_candidate": "edge_control",
+    "boundary_probe": true,
+    "brand": "Bali Curls",
+    "product_name": "Sleek Stick Brows & Edges",
+    "size": "16 ml",
+    "format": "gel",
+    "market_tier": "premium_drugstore",
+    "retailers_seen": [
+      "flaconi"
+    ],
+    "price_eur": 4.99,
+    "price_source_url": "https://www.flaconi.de/haare/bali-curls/sleek/bali-curls-sleek-stick-brows-and-edges-haargel.html",
+    "ean": null,
+    "inci": "Aqua, Acrylates Crosspolymer-3, Pvp, Carbomer, Sodium Hydroxide, Panthenol, Hydroxyacetophenone, Glycerin, Sodium Lactate, 1,2-Hexanediol, Caprylyl Glycol, Parfum, Linalool, Cananga Odorata Flower Extract, Limonene, Amyl Salicylate, Linalyl Acetate, Benzoic Acid, Methyl Benzoate",
+    "inci_source_url": "https://www.flaconi.de/haare/bali-curls/sleek/bali-curls-sleek-stick-brows-and-edges-haargel.html",
+    "inci_source_tier": "retailer_product_page",
+    "claims_verbatim": [
+      "Stärke/Halt: Stark",
+      "transparente, schnell trocknende und nicht-klebrige Formel",
+      "starken, langanhaltenden Halt, ohne Rückstände zu hinterlassen",
+      "Ideal, um sanfte Kanten und makellose Styles zu kreieren",
+      "Curly Girl Method konform"
+    ],
+    "hold_claim": {
+      "raw": "Stärke/Halt: Stark; starken, langanhaltenden Halt",
+      "number": null,
+      "scale_max": null,
+      "words": "starker, langanhaltender Halt",
+      "none_stated": false
+    },
+    "finish_claim": "natürlich/transparent: 'transparente' formula, Wirkung: Anti-Frizz; no shine or matt number",
+    "humidity_claim": null,
+    "heat_claim": null,
+    "hair_type_claims": [
+      "Normales Haar",
+      "Lockiges Haar",
+      "Geschädigtes Haar",
+      "Für Locken und Wellen & alle Haartypen geeignet"
+    ],
+    "free_from_claims": [
+      "Curly Girl Method konform",
+      "Vegan"
+    ],
+    "directions": "Stylinggel: sweep over eyebrows or dry hair and style as desired (for baby hairs/edges).",
+    "application_moment": "dry_restyle",
+    "formula_observations": "Clear polymer gel: Aqua, Acrylates Crosspolymer-3 (position 2), PVP (3), Carbomer, neutralised with sodium hydroxide; panthenol and glycerin; no oils, waxes, fatty alcohols, silicone or alcohol. Fixatives (acrylates crosspolymer-3 + PVP) are dominant, giving a transparent non-greasy film.",
+    "notes": "Edge control by use case (edges/baby hairs, brows) but in formula a standard styling gel; completely different from Cantu (surfactant gel with shea) and from traditional edge pomades (none found at the DE retailers searched). Flaconi also sells a Bali Curls 'Sleek Wax Stick' (6.29 EUR). dm lists a similar-use 'Stylinggel Kleber 4 Brows & Edges 2in1' (16 ml; not captured)."
+  }
+]

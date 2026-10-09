@@ -1,0 +1,641 @@
+[
+  {
+    "sample_id": "bali-curls-strong-hold-flaxseed-gel",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.bali-care.com/de-de/products/strong-hold-flaxseed-gel",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.dm.de/p/d/3106307/",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Extra-starker Halt für definierte, langanhaltende Locken",
+    "hold": {
+      "raw": "Extra-starker Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "extra starker Halt",
+      "tier": "C2"
+    },
+    "flexibility_words": [
+      "Flexibler Halt ohne Verkleben oder Verhärten"
+    ],
+    "finish": {
+      "raw": "schenkt natürlichen Glanz",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "In nasse oder feuchte Locken einarbeiten, zum Definieren Scrunch-Technik von unten nach oben; an der Luft trocknen oder mit Diffusor stylen.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "langanhaltende Definition und natürlichen Glanz",
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "notes": "Brand shop (Bali Treatment GmbH, bali-care.com/de-de) GTIN 4262391991138 = dm GTIN. INCI identical to round 1 (brand page has a hyphenation typo HY-DROXYACETOPHENONE). Brand price 12.90 EUR vs dm 8.95 EUR (not a claim). No numeric hold grade or scale on brand or dm page; wording-only brand scale."
+  },
+  {
+    "sample_id": "bali-curls-leave-in-spray-curl-defining",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.bali-care.com/de-de/products/leave-in-diffusing-heat-protection-spray",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.dm.de/p/d/3122368/",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Definiert und formt deine Locken - mit natürlichem Stylingpolymer für langanhaltenden Halt",
+    "hold": {
+      "raw": "langanhaltenden Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Halt (ohne Stufe); Locken behalten ihre Form",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "Pflegt vor dem Styling - bewahrt ihre Geschmeidigkeit",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Auf handtuchtrockenes oder trockenes Haar sprühen und wie gewohnt stylen; FAQ: auch auf feuchtes Haar, sanft einkneten, täglich nutzbar.",
+    "directions_tier": "C2",
+    "heat_claim_raw": "Schützt bis zu 220°C - mit pflanzlicher Keratin-Alternative",
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "mit natürlichem Stylingpolymer für langanhaltenden Halt",
+    "conflicts_with_round1": "Heat claim: brand DE page says 220 C, dm page (round 1) says 230 C. INCI: brand DE page lists a different formula than the dm page (see notes).",
+    "inci_changed": true,
+    "notes": "Same GTIN 4262391990490 on brand shop and dm but different INCI. Brand: Aqua, Propylene Glycol, Glycerin, Saccharomyces Cerevisiae Extract, Hydrogenated Ethylhexyl Olivate, Cetyl Alcohol, Hydrolyzed Corn/Wheat/Soy Protein, Sodium Stearoyl Glutamate, ... Sclerotium Gum ... Leuconostoc/Radish Root Ferment Filtrate. dm (round 1): Aqua, Propylene Glycol, Hydrolyzed Corn Starch, Polyglyceryl-6 Caprylate, Polyglyceryl-4 Caprate, Betaine, Glycerin ... Two formula versions are in circulation; which one Chaarlie's unit carries is unresolved (pack photo needed). Claims text (no hold grade) is the same in both. Neither INCI shows a classic fixative polymer despite the 'Stylingpolymer' wording. Priority item: NO Haltgrad/hold number or scale on either page; only 'Halt' / 'langanhaltenden Halt'. Heat 220 C (brand) vs 230 C (dm) must not be quoted as a hard number without the pack."
+  },
+  {
+    "sample_id": "bali-gents-matt-paste",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.bali-care.com/de-de/products/matt-paste",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.dm.de/p/d/3093667/",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Für müheloses Styling mit starkem Halt und natürlichem Finish!",
+    "hold": {
+      "raw": "starkem Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "starker Halt",
+      "tier": "C2"
+    },
+    "flexibility_words": [
+      "starken, flexiblen Halt mit mattem Finish"
+    ],
+    "finish": {
+      "raw": "Die mattierende Wirkung verleiht deinem Look ein authentisches, unaufgeregtes Finish",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Kleine Menge zwischen den Handflächen verreiben, auf trockenes oder leicht feuchtes Haar auftragen, mit Fingern oder Kamm formen.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "notes": "Brand shop shows 'Ausverkauft' (sold out) for Matt Paste on 2026-10-09; dm still lists it (4.95 EUR in dm JSON). Brand-page header bullets ('Sofortige Fülle & maximales Volumen', 'Ultrafeine, schwerelose Formel') look copied from another product and contradict the description (matt, strong hold); treat header bullets as unreliable, use the Beschreibung text. 'starken, flexiblen Halt' comes from the candelilla ingredient blurb, not the headline. GTIN 4262391991039 = dm. INCI identical to round 1."
+  },
+  {
+    "sample_id": "bali-curls-sleek-stick-brows-and-edges",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.bali-care.com/de-de/products/sleek-stick",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.flaconi.de/haare/bali-curls/sleek/bali-curls-sleek-stick-brows-and-edges-haargel.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Präziser Halt für Brows & Babyhaare - bringt selbst feine Härchen zuverlässig in Form",
+    "hold": {
+      "raw": "starken, langanhaltenden Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "starker, langanhaltender Halt",
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "Transparente, nicht-klebrige Formel - trocknet schnell und hinterlässt keine Rückstände",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Sanft über Augenbrauen oder trockenes Haar streichen und nach Wunsch in Form bringen (Babyhaare/Kanten); nicht auf den Wimpern anwenden.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "Hält den ganzen Tag",
+    "conflicts_with_round1": "Round 1 had no GTIN; brand shop gives 4262391991299. Flaconi's 'Stärke/Halt: Stark' attribute is not on the brand page, which uses the words 'starken, langanhaltenden Halt'.",
+    "inci_changed": false,
+    "notes": "Brand page price 7.90 EUR. INCI identical to round 1 (Acrylates Crosspolymer-3, PVP, Carbomer). Brand claims 'Curly Girl Method konform', 'ohne Silikone, Sulfate (SLS & SLES), austrocknende Alkohole'."
+  },
+  {
+    "sample_id": "alcina-styling-mousse-aerosol",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.alcina.com/de-de/haar/styling/schaumfestiger/styling-mousse-aerosol-f11432/",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Starker, flexibler Halt, ohne zu verkleben",
+    "hold": {
+      "raw": "Hold-Faktor 5 (Skala 1-10; Bild-Alt-Text: Haltstärke 5 von 10)",
+      "number": 5,
+      "scale_max": 10,
+      "scale_max_stated": true,
+      "words": "starker, flexibler Halt",
+      "tier": "C2"
+    },
+    "flexibility_words": [
+      "flexibler Halt"
+    ],
+    "finish": {
+      "raw": "intensiven Glanz",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Vor Gebrauch schütteln, Schaumkopf nach unten; tennisballgroße Menge je nach Haarlänge im feuchten Haar verteilen; nicht ausspülen; für alle Föhntechniken.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "langanhaltendem Volumen (nur Bild-Alt-Text)",
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "notes": "Alcina DE page renders a 1-10 Hold-Faktor scale with the active step marked (5). Only Hold is shown for this product; the Flex-Faktor scale is explained in the accordion ('kleiner als 5 = hohe Festigung', 'größer als 5 = Styling bleibt veränderbar') but no Flex value is displayed. Page flags 'Dieser Artikel ist ein Nachfolge-Produkt' (successor product); INCI identical to round 1. Sizes 150 ml and 300 ml. 12.50 EUR (150 ml) in Alcina's own shop."
+  },
+  {
+    "sample_id": "alcina-foehn-lotion",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.alcina.com/de-de/haar/haarstyling-finish/fohnprodukte/fohn-lotion-f10826/",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Sorgt für mehr Schwung & Elastizität im Haar",
+    "hold": {
+      "raw": "Hold-Faktor 2 (Skala 1-10; Alt-Text: Hold Faktor 2 von 10 für natürlichen Halt)",
+      "number": 2,
+      "scale_max": 10,
+      "scale_max_stated": true,
+      "words": "natürlicher Halt (leicht)",
+      "tier": "C2"
+    },
+    "flexibility_words": [
+      "Elastizität",
+      "Sprungkraft"
+    ],
+    "finish": {
+      "raw": "verleiht Volumen und Elastizität (kein Glanz-Claim)",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Ins feuchte Haar sprühen, Haare wie gewohnt föhnen.",
+    "directions_tier": "C2",
+    "heat_claim_raw": "Schützt wirksam vor Föhnhitze",
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "Round 1 cited 'Flex 5/10' from codecheck; the Alcina DE page shows NO Flex-Faktor value for this product (Hold only), so the Flex 5 figure is not manufacturer-confirmed.",
+    "inci_changed": false,
+    "notes": "Hold 2/10 is the 1-10 scale marked on the page (active step 2) and repeated in the image alt text. No heat temperature given. 'Nachfolge-Produkt' flag on page. 10.90 EUR / 125 ml. INCI identical to round 1."
+  },
+  {
+    "sample_id": "alcina-ansatz-volumen-spray-aerosol",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.alcina.com/de-de/haar/styling/haarfestiger/ansatz-volumen-spray-aerosol-f11438/",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "verleiht vor allem feinem Haar sofortiges Volumen und Halt am Ansatz",
+    "hold": {
+      "raw": "Hold-Faktor 6 (Skala 1-10; Alt-Text: Hold Faktor 6 von 10)",
+      "number": 6,
+      "scale_max": 10,
+      "scale_max_stated": true,
+      "words": "mehr Halt am Haaransatz (kein Stärke-Wort)",
+      "tier": "C2"
+    },
+    "flexibility_words": [
+      "Flex-Faktor 6 von 10"
+    ],
+    "finish": {
+      "raw": "Spannkraft & Langzeit-Volumen (kein Glanz-Claim)",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Ansatznah auf handtuchtrockenes Haar sprühen, anschließend wie gewohnt trocken föhnen.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "Spannkraft & Langzeit-Volumen",
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "notes": "This is the only one of the three Alcina pages that shows both scales: Flex-Faktor active step 6 and Hold-Faktor active step 6, each on a 1-10 scale. Per Alcina's own explanation Hold >5 = stronger fixation / less flexibility, Flex >5 = styling can still be changed afterwards. 'Nachfolge-Produkt' flag on page. 15.50 EUR / 200 ml. INCI identical to round 1 (contains parabens)."
+  },
+  {
+    "sample_id": "bumble-and-bumble-brilliantine",
+    "best_tier": "C3",
+    "sources": [
+      {
+        "tier": "C3",
+        "url": "https://www.douglas.de/de/p/3000067264",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C5",
+        "url": "https://www.bumbleandbumble.com (US-only store; product page returned 403 to automated fetch, only Google snippet seen)",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Definition & Glanz für lebendige Styles",
+    "hold": {
+      "raw": "Haltgrad leicht",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "leicht",
+      "tier": "C3"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "fantastischen Glanz",
+      "number": null,
+      "tier": "C3"
+    },
+    "directions_summary": "Kleine Menge verwenden, bei Bedarf aufbauen; im feuchten oder trockenen Haar; Finger für verwuschelten Look, Kamm für glatte Looks.",
+    "directions_tier": "C3",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "Round 1 recorded no hold claim; the Douglas page now carries a structured field 'Haltgrad: leicht' (retailer attribute, C3 trace). The prose copy still has no hold wording.",
+    "inci_changed": false,
+    "notes": "No German manufacturer site exists for Bumble and bumble (bumbleandbumble.com is US-only, USD). C5 snippet (US): 'oil-based styling cream ... adds polish, separation, and sheen' - not used for claims. Product is current in US and CH retail (not discontinued). Douglas INCI identical to round 1. 'Haltgrad leicht' is a retailer filter attribute: use as a trace, not as a manufacturer hold claim."
+  },
+  {
+    "sample_id": "bumble-and-bumble-surf-spray",
+    "best_tier": "C3",
+    "sources": [
+      {
+        "tier": "C3",
+        "url": "https://www.douglas.de/de/p/3000067216",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.lookfantastic.de/p/10302655/",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Styling-Spray auf Salzwasserbasis für den perfekten Beach-Look",
+    "hold": {
+      "raw": "Haltgrad leicht",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "leicht; Salzwasser sorgt für Halt",
+      "tier": "C3"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "Salzwasser sorgt für Halt und ein cooles, mattes Sommer-Finish",
+      "number": null,
+      "tier": "C3"
+    },
+    "directions_summary": "Gleichmäßig auf feuchtes oder trockenes Haar sprühen; stylen und lufttrocknen (in den Wind stellen) oder mit Diffusor föhnen.",
+    "directions_tier": "C3",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "notes": "Re-verified in browser: Douglas attribute 'Haltgrad leicht' (C3 trace). lookfantastic.de has the same INCI and copy ('Volumen, Halt und ein cooles, mattes Finish') but no Haltgrad field. No German manufacturer page (bumbleandbumble.com is US-only). So hold stays a C3 retailer-attribute trace only; the wording 'Halt' without grade is the only prose hold claim."
+  },
+  {
+    "sample_id": "color-wow-dream-coat-supernatural-spray",
+    "best_tier": "C3",
+    "sources": [
+      {
+        "tier": "C3",
+        "url": "https://www.douglas.de/de/p/3001054710?variant=1267612",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-color-wow-dream-coat-supernatural-spray/p/5060150185274 (listing exists, EAN in URL = round-1 EAN; page not fetched, bot wall)",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C5",
+        "url": "https://colorwowhair.com/products/dream-coat-anti-frizz-treatment",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "ein innovatives, ultraleichtes Haarspray, das sich für alle Haartypen eignet",
+    "hold": {
+      "raw": "Haltgrad mittel (Douglas attribute field)",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "mittel (nur Händler-Attribut; kein Hold-Claim des Herstellers)",
+      "tier": "C3"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "seidige, glatte Textur mit umwerfendem Glanz",
+      "number": null,
+      "tier": "C3"
+    },
+    "directions_summary": "Handtuchtrockenes Haar abteilen, großzügig und gleichmäßig auf feuchtes Haar sprühen, jede Partie unter Spannung föhnen; weitere Styling-Produkte erst auf trockenem Haar.",
+    "directions_tier": "C3",
+    "heat_claim_raw": "wärmeaktivierte Polymer komprimiert, strafft und versiegelt jeden Strang",
+    "humidity_claim_raw": "leistungsstarken Feuchtigkeitsschutz, der bis zu drei Haarwäschen anhält",
+    "duration_claim_raw": "Feuchtigkeitsschutz, der bis zu drei Haarwäschen anhält",
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "notes": "Not a hold styler: it is an anti-frizz/humidity barrier; 'Haltgrad mittel' is only Douglas's structured attribute. DE copy says 'bis zu drei Haarwäschen'; the US brand page says 'Results last through 3-4 shampoos' (C5). US page is not identity-verified: colorwowhair.com INCI differs (Trideceth-6, Sodium Benzoate; no DMDM Hydantoin/Trideceth-7) from the DE Douglas INCI (DMDM Hydantoin, Iodopropynyl butylcarbamate, Trideceth-7/-12), and the US URL for 'supernatural-spray' redirects to 'dream-coat-anti-frizz-treatment' (renamed). There is no German Color Wow site (colorwowhair.com/de = 404). Round 1 also recorded 'Hitzeschutz für Stylinggeräte' and UV/antistatic claims from Douglas; not re-seen in the copy block read this pass. Douglas INCI identical to round 1."
+  },
+  {
+    "sample_id": "living-proof-full-dry-volume-texture-spray",
+    "best_tier": "C3",
+    "sources": [
+      {
+        "tier": "C3",
+        "url": "https://www.flaconi.de/haare/living-proof/full/living-proof-full-dry-volume-and-texture-spray-texturizing-spray.html",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.lookfantastic.de/p/13486909/",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C5",
+        "url": "https://www.livingproof.com/products/full-dry-volume-texture-spray",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "sofortiges und lang anhaltendes Volumen, Textur und weichen Halt",
+    "hold": {
+      "raw": "weichen Halt / aufbaubaren, grifffreien Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "weicher, aufbaubarer, grifffreier Halt",
+      "tier": "C3"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "Volumen, Textur und ein langanhaltendes Finish (lookfantastic.de)",
+      "number": null,
+      "tier": "C3"
+    },
+    "directions_summary": "Dose schütteln, 5-10 cm vom trockenen Haar; Haarpartie anheben, Wurzel bis Spitzen aufsprühen, mit Fingern zerzausen; fertigen Style für Textur und Halt einsprühen.",
+    "directions_tier": "C3",
+    "heat_claim_raw": "Hitzeschutz bis zu 410° F/210° C",
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "sofortiges und lang anhaltendes Volumen",
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "notes": "No German Living Proof page (livingproof.com/de redirects to the US store). US page (C5) says 'soft hold' and 'buildable, no-slip grip', heat protection 410 F/210 C, but its INCI starts with Hydrofluorocarbon 152a as propellant whereas the DE retailer INCI (lookfantastic.de, Flaconi) starts with Dimethyl Ether - different formulation, so the US page is NOT identity-verified and counts only as C5 trace. lookfantastic.de copy has no explicit Halt wording and gives the heat claim as 'bis zu 210 °C'. Directions distance: Flaconi 5-10 cm vs US 6-10 inches (~15-25 cm) vs lookfantastic alt text 15-30 cm; treat distance as unreliable."
+  },
+  {
+    "sample_id": "kevin-murphy-powder-puff-volume",
+    "best_tier": "C3",
+    "sources": [
+      {
+        "tier": "C3",
+        "url": "https://www.flaconi.de/haare/kevin-murphy/powder-puff/kevin-murphy-powder-puff-volume-haarpuder.html",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C5",
+        "url": "https://kevinmurphy.com.au/us/en/products/by-benefit/volume/POWDER-PUFF.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Für sofortiges Volumen und Struktur einfach etwas Puder auf den Haaransatz geben",
+    "hold": {
+      "raw": null,
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": null,
+      "tier": "none"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": null,
+      "number": null,
+      "tier": "none"
+    },
+    "directions_summary": "Schütteln, etwas Puder auf den Haaransatz ins feuchte oder trockene Haar geben; stylen.",
+    "directions_tier": "C3",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "notes": "Re-verified in browser: Flaconi (C3) has no hold claim ('Wirkung: Styling'). kevinmurphy.com.au (AU/US store, English) tags the product 'Soft Hold' ('Delivers gentle control with a barely-there feel') plus 'lasting hold' and 'flexible hold' wording and says 'matte finish' for the powder complex - C5 only: its INCI differs (Zinc Myristate, Undaria Pinnatifida Extract) from the DE Flaconi INCI (Nylon-12, Alaria Esculenta Extract), so identity is not verified and a DE retailer does not corroborate hold. Brand hold scale is a four-tag wording scale: Soft / Flexible / Strong / Maximum Hold. No German Kevin Murphy site found. Candidate hold input if allowed: soft (C5, unverified)."
+  },
+  {
+    "sample_id": "american-crew-fiber",
+    "best_tier": "C3",
+    "sources": [
+      {
+        "tier": "C3",
+        "url": "https://www.flaconi.de/haare/american-crew/styling/american-crew-styling-fiber-stylingcreme.html",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C5",
+        "url": "https://www.americancrew.com/de/products/fiber",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "starken aber variablen Halt und gibt dem Haar ein natürliches, mattes Finish",
+    "hold": {
+      "raw": "Sehr starker Halt – kein Glanz. Haltfaktor 9 – Glanzfaktor 1.",
+      "number": 9,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "sehr starker Halt",
+      "tier": "C3"
+    },
+    "flexibility_words": [
+      "variablen Halt"
+    ],
+    "finish": {
+      "raw": "natürliches, mattes Finish; Glanzfaktor 1",
+      "number": 1,
+      "tier": "C3"
+    },
+    "directions_summary": "Kleine Menge in den Händen gut verreiben und in handtuchtrockenes Haar einarbeiten.",
+    "directions_tier": "C3",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "notes": "Haltfaktor 9 / Glanzfaktor 1 re-verified on Flaconi (browser, Produktdetails accordion); the scale maximum is NOT printed anywhere found (not on Flaconi, not on americancrew.com/de). americancrew.com/de is a German-language locale of the US store (USD prices, hreflang x-default = US), so it is C5: 'Texture Fiber ist ein Stylingprodukt mit starkem Halt und wenig Glanz', 'kräftigen, zugleich flexiblen Halt mit mattem Finish', badges 'High hold / Low shine'. Brand uses words (Strong hold / Low shine), no numeric factors. It lists no INCI for Fiber, so identity with the DE-sold unit is unverified; wording does agree with Flaconi. Name is 'Texture Fiber' / 'Fiber' (not to be confused with Fiber Cream = medium hold, natural shine, or Fiber Gel). Retailer 'Haltefaktor 3/5, Glanzfaktor 1/3' seen for the Forming Cream suggests factors may run on different scales per product - do not assume 10 as the max."
+  },
+  {
+    "sample_id": "american-crew-pomade",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://www.americancrew.com/de/products/pomade (German-language locale of US store; counted under C5 exception: INCI identical to DE Flaconi unit and Flaconi corroborates)",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.flaconi.de/haare/american-crew/styling/american-crew-styling-pomade-stylingcreme.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Unsere Pomade bietet mittleren Halt und hohen Glanz.",
+    "hold": {
+      "raw": "Mittlerer Halt – viel Glanz. Haltfaktor 7 – Glanzfaktor 9.",
+      "number": 7,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "mittlerer Halt",
+      "tier": "C3"
+    },
+    "flexibility_words": [
+      "Ultimativer Halt in einem flexiblen Produkt"
+    ],
+    "finish": {
+      "raw": "hochglänzendes Finish; Glanzfaktor 9",
+      "number": 9,
+      "tier": "C3"
+    },
+    "directions_summary": "Kleine Menge gleichmäßig im feuchten oder trockenen Haar verteilen und stylen (Flaconi: handtuchtrockenes Haar).",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "notes": "americancrew.com/de pomade INCI is identical to the Flaconi/round-1 INCI (Aqua, PEG-25 Hydrogenated Castor Oil, Oleth-10, Lanolin ... Propylparaben) and the German words 'mittleren Halt und hohen Glanz' match Flaconi, so the exception for non-DE manufacturer pages is met; still, the page is the US store in German (USD, hreflang default US), so treat the tier as C2-via-exception. The numeric factors (7 and 9) exist only on Flaconi (C3) and the brand page has no Faktor numbers and no scale max. Manufacturer claims: 'Diese Pomade auf Wasserbasis', 'moderne, flexible Alternative zu Styling-Gels', 'eignet sich gut für lockiges Haar', 'lässt sich leicht auswaschen'. One DE retailer lists the Pomade as 'Heavy Hold', contradicting brand wording."
+  },
+  {
+    "sample_id": "cantu-shea-butter-extra-hold-edge-stay-gel",
+    "best_tier": "C3",
+    "sources": [
+      {
+        "tier": "C3",
+        "url": "https://www.amazon.de/dp/B01LTIAUAQ",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.beautybay.com/de/p/cantu/extra-hold-edge-stay-gel/ (listing exists, out of stock per search; page text not rendered)",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C5",
+        "url": "https://www.cantubeauty.com/products/protective-styles/extra-hold-edge-stay-gel/",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Perfekt für elegante, glatte Frisuren und Pferdeschwanz",
+    "hold": {
+      "raw": "Gel für extra Halt; Dauerhafter, schuppenfreier Halt",
+      "number": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "extra Halt",
+      "tier": "C3"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "Pflegt und glättet krauses Haar ... geschmeidig und glänzend (Beschreibung)",
+      "number": null,
+      "tier": "C3"
+    },
+    "directions_summary": "Auf die Kanten auftragen und mit Fingerspitzen oder straffem Pinsel glätten.",
+    "directions_tier": "C3",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": "Dauerhafter, schuppenfreier Halt",
+    "conflicts_with_round1": null,
+    "inci_changed": false,
+    "notes": "German availability: Amazon.de has a German-language listing ('CANTU Sheabutter für natürliches Haar, Gel für extra Halt', 'Nur noch 16 auf Lager', model no. 07569-12/4EU, 4.3 stars from 15,407 reviews, not marked Auslaufartikel). Its INCI (machine-translated 'Seide Aminosäuren') matches round 1 (lookfantastic EU). Beauty Bay DE also lists it (out of stock in search). I could not confirm dm, Rossmann or Müller (search found none; not checked directly on their sites). So 'Amazon-only plus specialty e-tailers' is the best current statement. Brand site cantubeauty.com (US, English, no INCI so identity unverified = C5): 'Long-lasting, flake-free hold', 'Conditions & shines', 'Apply to edges and smooth with fingertips or tightly bristled brush'. Some US/UK retailers list the same jar as 'Firm Hold' - possible rename in other markets; the DE listing and brand site still say 'Extra Hold'. No hold number or scale anywhere."
+  },
+  {
+    "sample_id": "maria-nila-curlicue-cream",
+    "best_tier": "C2",
+    "sources": [
+      {
+        "tier": "C2",
+        "url": "https://marianila.de/products/curlicue-cream-100-ml",
+        "retrieved": "2026-10-09"
+      },
+      {
+        "tier": "C3",
+        "url": "https://www.flaconi.de/haare/maria-nila/curlicue-cream/maria-nila-curlicue-cream-stylingcreme.html",
+        "retrieved": "2026-10-09"
+      }
+    ],
+    "primary_promise_raw": "Definierende Pflegecreme, die natürlich lockigem und welligem Haar lebendige Sprungkraft verleiht.",
+    "hold": {
+      "raw": "Halt 3/5",
+      "number": 3,
+      "scale_max": 5,
+      "scale_max_stated": true,
+      "words": null,
+      "tier": "C2"
+    },
+    "flexibility_words": [],
+    "finish": {
+      "raw": "Betont und definiert Locken",
+      "number": null,
+      "tier": "C2"
+    },
+    "directions_summary": "Im handtuchtrockenen/feuchten Haar anwenden, Haar in Partien abteilen und die Creme einarbeiten; für optimales Ergebnis föhnen.",
+    "directions_tier": "C2",
+    "heat_claim_raw": null,
+    "humidity_claim_raw": null,
+    "duration_claim_raw": null,
+    "conflicts_with_round1": "Round 1 recorded no hold claim (Flaconi page has none). The Maria Nila Germany shop states 'Halt 3/5' (hold 3 of 5). Directions add 'im handtuchtrockenen Haar verteilen und föhnen'.",
+    "inci_changed": false,
+    "notes": "PRIORITY item resolved: marianila.de (vendor 'Maria Nila Germany', EUR, German) lists 'Halt 3/5' as a product bullet; GTIN 7391681038653 = round-1 EAN; INCI identical to round 1. Scale max 5 is printed as the denominator; across the German shop other products read 'Halt 5/5' (Extreme Spray), 4/5 (Styling Mousse, Extreme Wax, Power Powder), 2/5 (Styling Paste, Texture Spray, Styling Spray), 1/5 (dry shampoos, heat sprays), so 5 is the real ceiling of a brand-wide 1-5 scale. Brand price 29.00 EUR vs Flaconi 22.50 EUR in round 1. 'Colour Guard Complex' UV claim is cosmetic, not styling. English marianila.com carries the same 'Hold 3/5'."
+  }
+]
