@@ -78,10 +78,10 @@ test("every product type belongs to exactly one family and the union is the flat
 
 test("purpose headers never become persisted product types or families", () => {
   const presentationHeaders = [
-    "trocknen_stylen",
-    "entwirren_fixieren",
     "waschen_auftragen",
-    "tuecher_nachtschutz",
+    "abtrocknen_entwirren",
+    "trocknen_stylen",
+    "nachtschutz",
   ]
   for (const header of presentationHeaders) {
     assert.equal((TOOL_FAMILIES as readonly string[]).includes(header), false)

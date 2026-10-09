@@ -35,18 +35,18 @@ export type ToolOverviewOption = {
 }
 
 const SECTION_HINTS: Record<ToolOverviewSectionKey, string> = {
-  trocknen_stylen: "Föhn, Glätteisen, Lockenwickler",
-  entwirren_fixieren: "Kämme, Bürsten, Clips",
-  waschen_auftragen: "Kopfhaut-Bürste, Applikator",
-  tuecher_nachtschutz: "Handtuch, Bonnet, Kissenbezug",
+  waschen_auftragen: "Applikator, Kopfhautbürste",
+  abtrocknen_entwirren: "Handtücher, Kämme, Bürsten",
+  trocknen_stylen: "Föhn, Glätteisen, Lockenwickler, Clips",
+  nachtschutz: "Kissenbezug, Bonnet",
 }
 
 /** One recognizable form per section stands in for its image. */
 const SECTION_IMAGE_FORM: Record<ToolOverviewSectionKey, ToolProductType> = {
-  trocknen_stylen: "hair_dryer",
-  entwirren_fixieren: "detangling_brush",
   waschen_auftragen: "scalp_brush",
-  tuecher_nachtschutz: "microfiber_towel",
+  abtrocknen_entwirren: "microfiber_towel",
+  trocknen_stylen: "hair_dryer",
+  nachtschutz: "pillowcase",
 }
 
 export const TOOL_OVERVIEW_OPTIONS: ToolOverviewOption[] = TOOL_OVERVIEW_SECTIONS.map(

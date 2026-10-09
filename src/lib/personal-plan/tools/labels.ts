@@ -115,24 +115,27 @@ export const TOOL_ROUTE_PURPOSE_COPY = {
   gentle_towel_handling: "Sanft ausdrücken statt rubbeln",
 } as const satisfies Record<ToolRouteTarget, string>
 
-/** Four presentation-only Stage-2 overview sections. Not a persisted taxonomy. */
+/**
+ * Four presentation-only Stage-2 overview sections. Not a persisted taxonomy.
+ *
+ * Wash-day order (plan `plans/2026-10-09-hair-tools-port.md` Rev. 5 §4, Nick
+ * 2026-10-09): waschen → abtrocknen → entwirren → trocknen/stylen → fixieren →
+ * Nachtschutz. The families inside a section are listed in page order, so
+ * `toolFamiliesForSections` and `TOOL_FORM_PAGES` follow the same sequence.
+ */
 export const TOOL_OVERVIEW_SECTIONS = [
+  { key: "waschen_auftragen", label: "Waschen & Auftragen", families: ["wash_application"] },
+  {
+    key: "abtrocknen_entwirren",
+    label: "Abtrocknen & Entwirren",
+    families: ["drying_textiles", "brushes_combs"],
+  },
   {
     key: "trocknen_stylen",
     label: "Trocknen & Stylen",
-    families: ["airflow", "heated_styling", "heatless_styling"],
+    families: ["airflow", "heated_styling", "heatless_styling", "securing_sectioning"],
   },
-  {
-    key: "entwirren_fixieren",
-    label: "Entwirren & Fixieren",
-    families: ["brushes_combs", "securing_sectioning"],
-  },
-  { key: "waschen_auftragen", label: "Waschen & Auftragen", families: ["wash_application"] },
-  {
-    key: "tuecher_nachtschutz",
-    label: "Tücher & Nachtschutz",
-    families: ["drying_textiles", "night_protection"],
-  },
+  { key: "nachtschutz", label: "Nachtschutz", families: ["night_protection"] },
 ] as const satisfies ReadonlyArray<{
   key: string
   label: string
@@ -330,10 +333,39 @@ export const ALL_TOOL_ROUTE_TARGETS: readonly ToolRouteTarget[] = TOOL_ROUTE_TAR
  * changed the persisted page ids, so it rode a `STAGE2_QUESTION_PATH_VERSION`
  * bump plus a decode rule (`D8`) — see `decodeStage2CompletedQuestionIds`.
  *
- * Pages need NOT follow the canonical family order: the persisted answer is
- * sorted into `TOOL_REPORTED_FORMS_BY_FAMILY` order when it is written.
+ * Pages are asked in wash-day order (the `TOOL_OVERVIEW_SECTIONS` sequence; a
+ * two-page family keeps `:1` before `:2`). They need NOT follow the canonical
+ * family order: each page's answer is stored on its own, sorted into
+ * `TOOL_REPORTED_FORMS_BY_FAMILY` order when it is written.
  */
 export const TOOL_FORM_PAGES = [
+  {
+    pageKey: "wash_application:1",
+    family: "wash_application",
+    forms: ["scalp_brush", "applicator_bottle", "applicator_comb", "water_spray_bottle"],
+  },
+  {
+    pageKey: "drying_textiles:1",
+    family: "drying_textiles",
+    forms: ["microfiber_towel", "smooth_cotton_cloth", "drying_wrap"],
+  },
+  {
+    pageKey: "brushes_combs:1",
+    family: "brushes_combs",
+    forms: [
+      "wide_tooth_comb",
+      "detangling_brush",
+      "paddle_brush",
+      "vent_brush",
+      "boar_bristle",
+      "fingers",
+    ],
+  },
+  {
+    pageKey: "brushes_combs:2",
+    family: "brushes_combs",
+    forms: ["round_brush", "styling_brush", "hair_pick", "sectioning_comb"],
+  },
   {
     pageKey: "airflow:1",
     family: "airflow",
@@ -365,23 +397,6 @@ export const TOOL_FORM_PAGES = [
     ],
   },
   {
-    pageKey: "brushes_combs:1",
-    family: "brushes_combs",
-    forms: [
-      "wide_tooth_comb",
-      "detangling_brush",
-      "paddle_brush",
-      "vent_brush",
-      "boar_bristle",
-      "fingers",
-    ],
-  },
-  {
-    pageKey: "brushes_combs:2",
-    family: "brushes_combs",
-    forms: ["round_brush", "styling_brush", "hair_pick", "sectioning_comb"],
-  },
-  {
     pageKey: "securing_sectioning:1",
     family: "securing_sectioning",
     forms: ["soft_hair_tie", "scrunchie", "claw_clip", "sectioning_clip"],
@@ -392,19 +407,9 @@ export const TOOL_FORM_PAGES = [
     forms: ["root_volume_clip", "hair_pin", "headband"],
   },
   {
-    pageKey: "wash_application:1",
-    family: "wash_application",
-    forms: ["scalp_brush", "applicator_bottle", "applicator_comb", "water_spray_bottle"],
-  },
-  {
     pageKey: "night_protection:1",
     family: "night_protection",
     forms: ["pillowcase", "bonnet", "length_tip_sleeve", "soft_night_tie"],
-  },
-  {
-    pageKey: "drying_textiles:1",
-    family: "drying_textiles",
-    forms: ["microfiber_towel", "smooth_cotton_cloth", "drying_wrap"],
   },
 ] as const satisfies ReadonlyArray<{
   pageKey: string
@@ -441,4 +446,42 @@ export function toolFamiliesForSections(sections: readonly ToolOverviewSectionKe
   return TOOL_OVERVIEW_SECTIONS.filter((section) => chosen.has(section.key)).flatMap((section) => [
     ...section.families,
   ])
+}
+
+/**
+ * The canonical order of the overview answer (`toolFamiliesWithSomething`): every family in
+ * wash-day section order. A stored overview answer is an ordered, duplicate-free subset of it.
+ */
+export const TOOL_OVERVIEW_FAMILY_ORDER: readonly ToolFamily[] = TOOL_OVERVIEW_SECTIONS.flatMap(
+  (section) => [...section.families],
+)
+
+export type ToolFormPage = (typeof TOOL_FORM_PAGES)[number]
+
+const TOOL_FORM_PAGE_BY_KEY = new Map<string, ToolFormPage>(
+  TOOL_FORM_PAGES.map((page) => [page.pageKey, page] as const),
+)
+
+export function toolFormPage(pageKey: string): ToolFormPage | undefined {
+  return TOOL_FORM_PAGE_BY_KEY.get(pageKey)
+}
+
+export function isToolFormPageKey(value: string): value is ToolFormPageKey {
+  return TOOL_FORM_PAGE_BY_KEY.has(value)
+}
+
+/** The pages of one family, in page order. */
+export function toolFormPagesOfFamily(family: ToolFamily): ToolFormPage[] {
+  return TOOL_FORM_PAGES.filter((page) => page.family === family)
+}
+
+type ToolFormCareKeyOf<Key extends string> = Key extends `${infer Family}:${infer Index}`
+  ? `toolForms_${Family}_${Index}`
+  : never
+
+/** The `care_habits` key one page is stored under (`brushes_combs:2` → `toolForms_brushes_combs_2`). */
+export type ToolFormCareKey = ToolFormCareKeyOf<ToolFormPageKey>
+
+export function toolFormCareKey(pageKey: ToolFormPageKey): ToolFormCareKey {
+  return `toolForms_${pageKey.replace(":", "_")}` as ToolFormCareKey
 }
