@@ -15,7 +15,14 @@
  * only when every record still matches it, and the log is never rewritten.
  *
  * `build` refuses an output directory that already holds files, so a rebuild can never leave
- * a previous run's reveals or formula-pass records inside a fresh kit.
+ * a previous run's reveals or formula-pass records inside a fresh kit. Its last step writes
+ * `<out>/held/build-complete.json` (the full id list and each stage-A packet's SHA-256); `release`
+ * refuses without it and derives the cohort from it, so an interrupted build can never release a
+ * partial cohort. A first release is "no release log AND no reveal already in the lane": a deleted
+ * log over released reveals fails closed instead of minting a fresh freeze.
+ *
+ * The tool enforces the formula-first order for honest operation by the orchestrator; it is not a
+ * security boundary against someone with write access to the kit directory.
  *
  * Each lane also gets a scrubbed copy of the standard (Section 13.10 worked examples removed),
  * and the build fails if any batch brand or product name remains in it.
@@ -31,6 +38,7 @@ import { createHash } from "node:crypto"
 import {
   copyFileSync,
   existsSync,
+  lstatSync,
   mkdirSync,
   readdirSync,
   readFileSync,
@@ -156,14 +164,14 @@ const isFilledString = (value: unknown) => typeof value === "string" && value.tr
 function validateFormulaPassRecord(options: {
   lane: string
   id: string
-  passFile: string
-  formulaFile: string
+  passBytes: Buffer
+  formulaBytes: Buffer
 }) {
-  const { lane, id, passFile, formulaFile } = options
+  const { lane, id, passBytes, formulaBytes } = options
   const where = `${lane}: formula-pass record ${id}`
   let record: unknown
   try {
-    record = JSON.parse(readFileSync(passFile, "utf8"))
+    record = JSON.parse(passBytes.toString("utf8"))
   } catch {
     throw new Error(`${where}: is not valid JSON`)
   }
@@ -172,9 +180,8 @@ function validateFormulaPassRecord(options: {
   if (!object(record)) throw new Error(`${where}: blindId missing (record is not a JSON object)`)
   if (record.blindId !== id)
     throw new Error(`${where}: blindId must equal "${id}", found ${JSON.stringify(record.blindId)}`)
-  const expected = (
-    JSON.parse(readFileSync(formulaFile, "utf8")) as { inciFingerprintSha256: string }
-  ).inciFingerprintSha256
+  const expected = (JSON.parse(formulaBytes.toString("utf8")) as { inciFingerprintSha256: string })
+    .inciFingerprintSha256
   if (record.inciFingerprintSha256 !== expected)
     throw new Error(
       `${where}: inciFingerprintSha256 must match the stage-A packet (${expected}), found ${JSON.stringify(record.inciFingerprintSha256)}`,
@@ -189,12 +196,46 @@ function validateFormulaPassRecord(options: {
   }
 }
 
-const sha256File = (file: string) => createHash("sha256").update(readFileSync(file)).digest("hex")
+const sha256Bytes = (bytes: Buffer | string) => createHash("sha256").update(bytes).digest("hex")
 
-const writeJson = (file: string, data: unknown) => {
-  mkdirSync(path.dirname(file), { recursive: true })
-  writeFileSync(file, `${JSON.stringify(data, null, 2)}\n`)
+/** Blind-id prefix: one capital letter, then up to seven capitals or digits. */
+const ID_PREFIX = /^[A-Z][A-Z0-9]{0,7}$/
+const ID_PATTERN = /^[A-Z][A-Z0-9]{0,7}\d{2,}$/
+
+/** Join `parts` under `root` and assert the result is still inside `root`. */
+export function resolveInside(root: string, ...parts: string[]) {
+  const resolvedRoot = path.resolve(root)
+  const target = path.resolve(resolvedRoot, ...parts)
+  const relative = path.relative(resolvedRoot, target)
+  if (relative === "" || relative.startsWith("..") || path.isAbsolute(relative))
+    throw new Error(`path ${JSON.stringify(parts.join("/"))} resolves outside ${resolvedRoot}`)
+  return target
 }
+
+/** Writes JSON under `root` and returns the SHA-256 of the exact bytes written. */
+const writeJson = (root: string, parts: string[], data: unknown) => {
+  const file = resolveInside(root, ...parts)
+  const text = `${JSON.stringify(data, null, 2)}\n`
+  mkdirSync(path.dirname(file), { recursive: true })
+  writeFileSync(file, text)
+  return sha256Bytes(text)
+}
+
+/** Reads a regular file once; a missing path returns null, a symlink or other type is refused. */
+function readRegularFile(file: string, label: string): Buffer | null {
+  let stat
+  try {
+    stat = lstatSync(file)
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null
+    throw error
+  }
+  if (stat.isSymbolicLink()) throw new Error(`${label}: is a symlink; only regular files are read`)
+  if (!stat.isFile()) throw new Error(`${label}: is not a regular file`)
+  return readFileSync(file)
+}
+
+const BUILD_MARKER = "build-complete.json"
 
 export function buildLaneKit(options: {
   packets: FreezePacket[]
@@ -203,6 +244,9 @@ export function buildLaneKit(options: {
   seed: number
   prefix?: string
 }) {
+  const prefix = options.prefix ?? "K"
+  if (!ID_PREFIX.test(prefix))
+    throw new Error(`prefix ${JSON.stringify(prefix)} must match ${ID_PREFIX} (blind id prefix)`)
   const packets = options.packets.filter((p) => p.status !== "blocked")
   packets.forEach(validate)
   if (existsSync(options.outDir) && readdirSync(options.outDir).length > 0)
@@ -210,7 +254,7 @@ export function buildLaneKit(options: {
       `output directory ${options.outDir} exists and is not empty; build into a new or empty directory (a rebuild would leave stale reveals and formula-pass records)`,
     )
   const standard = scrubStandard(options.standardText, packets)
-  const prefix = options.prefix ?? "K"
+  const stageASha256: Record<string, Record<string, string>> = { "lane-a": {}, "lane-b": {} }
   const mapping = seededShuffle(packets, options.seed).map((p, index) => {
     const blindId = `${prefix}${String(index + 1).padStart(2, "0")}`
     const formula = {
@@ -238,44 +282,115 @@ export function buildLaneKit(options: {
         })),
     }
     for (const lane of LANES) {
-      writeJson(path.join(options.outDir, lane, "formula", `${blindId}.json`), formula)
-      writeJson(path.join(options.outDir, "held", lane, "reveal", `${blindId}.json`), reveal)
+      stageASha256[lane]![blindId] = writeJson(
+        options.outDir,
+        [lane, "formula", `${blindId}.json`],
+        formula,
+      )
+      writeJson(options.outDir, ["held", lane, "reveal", `${blindId}.json`], reveal)
     }
     return { blindId, slot: p.slot, productId: p.productId, fingerprint: p.inciFingerprintSha256 }
   })
   for (const lane of LANES) {
-    mkdirSync(path.join(options.outDir, lane, "out", "formula-pass"), { recursive: true })
-    writeFileSync(path.join(options.outDir, lane, "classification-standard.md"), standard)
+    mkdirSync(resolveInside(options.outDir, lane, "out", "formula-pass"), { recursive: true })
+    writeFileSync(resolveInside(options.outDir, lane, "classification-standard.md"), standard)
   }
   // The mapping stays outside every lane root.
-  writeJson(path.join(options.outDir, "blind-mapping.json"), mapping)
+  writeJson(options.outDir, ["blind-mapping.json"], mapping)
+  // Last step: `release` refuses a kit without this marker (an interrupted build).
+  writeJson(options.outDir, ["held", BUILD_MARKER], {
+    builtAt: new Date().toISOString(),
+    ids: mapping.map((entry) => entry.blindId).sort(),
+    stageASha256,
+  })
   return { mapping }
 }
 
 export function releaseReveal(outDir: string, lane: string) {
+  if (!(LANES as readonly string[]).includes(lane))
+    throw new Error(`unknown lane ${JSON.stringify(lane)}; expected ${LANES.join(" | ")}`)
   const held = path.join(outDir, "held", lane, "reveal")
   const passDir = path.join(outDir, lane, "out", "formula-pass")
-  const ids = readdirSync(held)
+
+  // The cohort comes from the completion marker, never from whatever files happen to exist.
+  const markerBytes = readRegularFile(
+    path.join(outDir, "held", BUILD_MARKER),
+    "build-complete marker",
+  )
+  if (!markerBytes)
+    throw new Error(
+      `${lane}: held/${BUILD_MARKER} missing; the build did not complete, so no reveal is released`,
+    )
+  let marker: { ids: string[]; stageASha256: Record<string, Record<string, string>> }
+  try {
+    marker = JSON.parse(markerBytes.toString("utf8"))
+  } catch {
+    throw new Error(`${lane}: held/${BUILD_MARKER} is not valid JSON`)
+  }
+  const stageA = marker.stageASha256?.[lane]
+  if (
+    !Array.isArray(marker.ids) ||
+    marker.ids.length === 0 ||
+    !marker.ids.every((id) => typeof id === "string" && ID_PATTERN.test(id)) ||
+    !stageA
+  )
+    throw new Error(`${lane}: held/${BUILD_MARKER} is malformed (ids / stageASha256.${lane})`)
+  const ids = [...marker.ids].sort()
+
+  const unrecorded = (existsSync(held) ? readdirSync(held) : [])
     .filter((file) => file.endsWith(".json"))
     .map((file) => file.slice(0, -".json".length))
-    .sort()
-  const missing = ids.filter((id) => !existsSync(path.join(passDir, `${id}.json`)))
+    .filter((id) => !ids.includes(id))
+  if (unrecorded.length)
+    throw new Error(`${lane}: held reveal ${unrecorded.join(", ")} not recorded in ${BUILD_MARKER}`)
+
+  const formulaBytes: Record<string, Buffer> = {}
+  for (const id of ids) {
+    if (!readRegularFile(path.join(held, `${id}.json`), `${lane}: held reveal ${id}`))
+      throw new Error(`${lane}: held reveal ${id} missing; the kit is incomplete`)
+    const bytes = readRegularFile(
+      path.join(outDir, lane, "formula", `${id}.json`),
+      `${lane}: stage-A packet ${id}`,
+    )
+    if (!bytes) throw new Error(`${lane}: stage-A packet ${id} missing; the kit is incomplete`)
+    if (sha256Bytes(bytes) !== stageA[id])
+      throw new Error(
+        `${lane}: stage-A packet ${id} changed since the build (does not match ${BUILD_MARKER})`,
+      )
+    formulaBytes[id] = bytes
+  }
+
+  // Each formula-pass record is read once; the same buffer is validated and hashed.
+  const passBytes: Record<string, Buffer> = {}
+  const missing: string[] = []
+  for (const id of ids) {
+    const bytes = readRegularFile(
+      path.join(passDir, `${id}.json`),
+      `${lane}: formula-pass record ${id}`,
+    )
+    if (bytes) passBytes[id] = bytes
+    else missing.push(id)
+  }
   if (missing.length)
     throw new Error(`${lane}: no formula-pass record yet for ${missing.join(", ")}`)
-  for (const id of ids)
+  const formulaPassSha256: Record<string, string> = {}
+  for (const id of ids) {
     validateFormulaPassRecord({
       lane,
       id,
-      passFile: path.join(passDir, `${id}.json`),
-      formulaFile: path.join(outDir, lane, "formula", `${id}.json`),
+      passBytes: passBytes[id]!,
+      formulaBytes: formulaBytes[id]!,
     })
-  const formulaPassSha256: Record<string, string> = {}
-  for (const id of ids) formulaPassSha256[id] = sha256File(path.join(passDir, `${id}.json`))
+    formulaPassSha256[id] = sha256Bytes(passBytes[id]!)
+  }
+
   const logFile = path.join(outDir, "held", lane, "release-log.json")
-  if (existsSync(logFile)) {
+  const revealDir = path.join(outDir, lane, "reveal")
+  const logBytes = readRegularFile(logFile, `${lane}: release log`)
+  if (logBytes) {
     // The first release log is the freeze evidence: re-release must match it exactly.
     const logged = (
-      JSON.parse(readFileSync(logFile, "utf8")) as {
+      JSON.parse(logBytes.toString("utf8")) as {
         formulaPassSha256: Record<string, string>
       }
     ).formulaPassSha256
@@ -293,11 +408,21 @@ export function releaseReveal(outDir: string, lane: string) {
         `${lane}: release log already exists and no longer matches the formula-pass records (${problems.join("; ")}); the log is not rewritten`,
       )
   } else {
-    writeJson(logFile, { lane, releasedAt: new Date().toISOString(), formulaPassSha256 })
+    // First release = no log AND no reveal already in the lane. A missing log over released
+    // reveals is lost freeze evidence, not a fresh start.
+    if (existsSync(revealDir) && readdirSync(revealDir).length > 0)
+      throw new Error(
+        `${lane}: release evidence missing but reveals already released (${logFile} is absent while ${revealDir} holds packets); the freeze cannot be re-established`,
+      )
+    writeJson(outDir, ["held", lane, "release-log.json"], {
+      lane,
+      releasedAt: new Date().toISOString(),
+      formulaPassSha256,
+    })
   }
-  mkdirSync(path.join(outDir, lane, "reveal"), { recursive: true })
+  mkdirSync(revealDir, { recursive: true })
   for (const id of ids)
-    copyFileSync(path.join(held, `${id}.json`), path.join(outDir, lane, "reveal", `${id}.json`))
+    copyFileSync(path.join(held, `${id}.json`), path.join(revealDir, `${id}.json`))
   return ids.map((blindId) => ({ blindId, formulaPassSha256: formulaPassSha256[blindId] }))
 }
 

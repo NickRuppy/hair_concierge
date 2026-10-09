@@ -24,7 +24,7 @@ const CALIBRATION_ROOT = "data/research/shampoo-inci/v1.6/calibration/"
 // itself, so an artifact edit plus a matching manifest edit would otherwise pass. Any change
 // to the manifest or the normative standard must also change these constants: a visible,
 // reviewable test edit.
-const MANIFEST_SHA256 = "7a231dcc39f69a591a49fdef36d82eeb013972b25168edb76fb8e9d98f3eabcf"
+const MANIFEST_SHA256 = "37f834962b6641eb9d693424e62ab016d0d48659a7127e7e16bbab62a773a195"
 const NORMATIVE_STANDARD_SHA256 = "3b70a145e23e381f5c83ded0092d86d9642ddb7f570dfc9d7414a843659baf98"
 
 type Manifest = {

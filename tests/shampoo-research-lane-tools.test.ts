@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { createHash } from "node:crypto"
 import {
   existsSync,
   mkdirSync,
@@ -6,6 +7,7 @@ import {
   readdirSync,
   readFileSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs"
 import { tmpdir } from "node:os"
@@ -16,6 +18,7 @@ import {
   buildLaneKit,
   inciFingerprint,
   releaseReveal,
+  resolveInside,
   type FreezePacket,
 } from "../scripts/shampoo-research/build-lane-kit"
 import { compareLaneDirs, comparisonFields } from "../scripts/shampoo-research/compare-lanes"
@@ -350,6 +353,158 @@ test("the lane kit refuses to build over an existing, non-empty output directory
     // A fresh path is fine.
     buildLaneKit({ ...options, outDir: path.join(out, "kit-2") })
   })
+})
+
+test("a deleted release log cannot reset the freeze once reveals have been released", () => {
+  withTempDir((out) => {
+    const { first, second } = twoProductKit(out)
+    for (const id of [first, second]) writePass(out, "lane-a", id, validPassRecord(out, id))
+    releaseReveal(out, "lane-a")
+    rmSync(path.join(out, "held", "lane-a", "release-log.json"))
+    assert.throws(
+      () => releaseReveal(out, "lane-a"),
+      /release evidence missing but reveals already released/,
+    )
+    assert.equal(
+      existsSync(path.join(out, "held", "lane-a", "release-log.json")),
+      false,
+      "no new log is minted over released reveals",
+    )
+  })
+})
+
+test("the blind id prefix is validated and every written path stays inside the kit", () => {
+  withTempDir((dir) => {
+    const options = { packets: [packet()], standardText: STANDARD, seed: 1 }
+    for (const prefix of [
+      "../evil",
+      "a/b",
+      "",
+      "k",
+      "K-1",
+      "K_1",
+      "ABCDEFGHI",
+      " K",
+      "K\n",
+      "..",
+    ]) {
+      const outDir = path.join(dir, "kit")
+      assert.throws(
+        () => buildLaneKit({ ...options, outDir, prefix }),
+        /prefix/,
+        `prefix ${JSON.stringify(prefix)} refused`,
+      )
+      assert.equal(existsSync(outDir), false, "nothing is written for a refused prefix")
+    }
+    assert.deepEqual(readdirSync(dir), [], "nothing escaped the temp dir either")
+    const { mapping } = buildLaneKit({ ...options, outDir: path.join(dir, "ok"), prefix: "AB7" })
+    assert.equal(mapping[0]!.blindId, "AB701")
+
+    const root = path.join(dir, "root")
+    assert.equal(
+      resolveInside(root, "lane-a", "formula", "K01.json"),
+      path.join(root, "lane-a", "formula", "K01.json"),
+    )
+    assert.throws(() => resolveInside(root, "..", "evil.json"), /outside/)
+    assert.throws(() => resolveInside(root, "lane-a", "../../evil.json"), /outside/)
+    assert.throws(() => resolveInside(root, "/etc/passwd"), /outside/)
+  })
+})
+
+test("release reads each formula-pass record once, as a regular file, and rejects symlinks", () => {
+  withTempDir((out) => {
+    const { first, second } = twoProductKit(out)
+    writePass(out, "lane-a", second, validPassRecord(out, second))
+
+    // A symlinked record is refused even when the target is a valid record.
+    const target = path.join(out, "elsewhere.json")
+    writeFileSync(target, JSON.stringify(validPassRecord(out, first)))
+    const link = path.join(out, "lane-a", "out", "formula-pass", `${first}.json`)
+    symlinkSync(target, link)
+    assert.throws(() => releaseReveal(out, "lane-a"), new RegExp(`${first}.*(symlink|regular)`))
+    rmSync(link)
+
+    // So is a non-regular file (a directory) in the record's place.
+    mkdirSync(link)
+    assert.throws(() => releaseReveal(out, "lane-a"), new RegExp(`${first}.*regular`))
+    rmSync(link, { recursive: true })
+
+    // A dangling symlink is not "missing": it is refused too, and nothing is released.
+    symlinkSync(path.join(out, "does-not-exist.json"), link)
+    assert.throws(() => releaseReveal(out, "lane-a"), new RegExp(`${first}.*(symlink|regular)`))
+    rmSync(link)
+
+    assert.equal(existsSync(path.join(out, "lane-a", "reveal")), false, "nothing is released")
+    assert.equal(existsSync(path.join(out, "held", "lane-a", "release-log.json")), false)
+
+    // The log pins the bytes that were validated.
+    const file = writePass(out, "lane-a", first, validPassRecord(out, first))
+    releaseReveal(out, "lane-a")
+    const log = JSON.parse(
+      readFileSync(path.join(out, "held", "lane-a", "release-log.json"), "utf8"),
+    )
+    assert.equal(
+      log.formulaPassSha256[first],
+      createHash("sha256").update(readFileSync(file)).digest("hex"),
+    )
+  })
+})
+
+test("build writes a completion marker last and release derives the cohort from it", () => {
+  withTempDir((out) => {
+    const { first, second } = twoProductKit(out)
+    const markerFile = path.join(out, "held", "build-complete.json")
+    const marker = JSON.parse(readFileSync(markerFile, "utf8"))
+    assert.deepEqual(marker.ids, [first, second].sort())
+    for (const lane of ["lane-a", "lane-b"])
+      for (const id of marker.ids)
+        assert.equal(
+          marker.stageASha256[lane][id],
+          createHash("sha256")
+            .update(readFileSync(path.join(out, lane, "formula", `${id}.json`)))
+            .digest("hex"),
+        )
+    for (const id of [first, second]) writePass(out, "lane-a", id, validPassRecord(out, id))
+    assert.equal(releaseReveal(out, "lane-a").length, 2)
+  })
+})
+
+test("release refuses an interrupted build and an incomplete cohort", () => {
+  const expectRefused = (mutate: (out: string, ids: [string, string]) => void, pattern: RegExp) =>
+    withTempDir((out) => {
+      const { first, second } = twoProductKit(out)
+      for (const id of [first, second]) writePass(out, "lane-a", id, validPassRecord(out, id))
+      mutate(out, [first, second])
+      assert.throws(() => releaseReveal(out, "lane-a"), pattern)
+      assert.equal(existsSync(path.join(out, "lane-a", "reveal")), false, "nothing is released")
+      assert.equal(existsSync(path.join(out, "held", "lane-a", "release-log.json")), false)
+    })
+
+  // Interrupted build: no completion marker.
+  expectRefused((out) => rmSync(path.join(out, "held", "build-complete.json")), /build-complete/)
+  // A held reveal, a stage-A packet or a formula-pass record is gone.
+  expectRefused(
+    (out, [id]) => rmSync(path.join(out, "held", "lane-a", "reveal", `${id}.json`)),
+    /held reveal.*never|missing/,
+  )
+  expectRefused(
+    (out, [id]) => rmSync(path.join(out, "lane-a", "formula", `${id}.json`)),
+    /stage-A packet/,
+  )
+  expectRefused(
+    (out, [id]) => rmSync(path.join(out, "lane-a", "out", "formula-pass", `${id}.json`)),
+    /no formula-pass record/,
+  )
+  // A stage-A packet that no longer matches the marker.
+  expectRefused((out, [id]) => {
+    const file = path.join(out, "lane-a", "formula", `${id}.json`)
+    writeFileSync(file, `${readFileSync(file, "utf8")} `)
+  }, /stage-A packet.*(changed|match)/)
+  // A reveal that the build never recorded.
+  expectRefused(
+    (out) => writeFileSync(path.join(out, "held", "lane-a", "reveal", "K98.json"), "{}"),
+    /K98.*build-complete/,
+  )
 })
 
 test("the lane comparator counts researchCombinationTargets as a judged decision (Section 14)", () => {
