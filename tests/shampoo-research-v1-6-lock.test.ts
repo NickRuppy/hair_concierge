@@ -148,9 +148,9 @@ test("the v1.6 lock receipt is consistent with the manifest, the standard and th
     sha256: manifest.rulings_ledger.sha256,
   })
   const ledger = readFileSync(path.resolve(receipt.rulings.ledger_snapshot.path), "utf8")
-  for (const ruling of ["R1", "R11", "R12", "R14", "R15", "R16"])
+  for (const ruling of ["R1", "R11", "R12", "R14", "R15", "R16", "R17"])
     assert.match(ledger, new RegExp(`^## ${ruling} — `, "m"), `ledger records ${ruling}`)
-  for (const ruling of ["R15", "R16.1", "R16.2", "R16.3", "R16.4"])
+  for (const ruling of ["R15", "R16.1", "R16.2", "R16.3", "R16.4", "R17.1", "R17.2", "R17.3"])
     assert.ok(receipt.rulings.applied.includes(ruling), `${ruling} applied`)
   assert.equal(receipt.post_calibration_rulings.recalibrated, false)
 

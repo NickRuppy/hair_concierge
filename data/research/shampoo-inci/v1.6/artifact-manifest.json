@@ -5,9 +5,9 @@
   "model_version": "shampoo-inci-v1.6",
   "normative_source": {
     "path": "docs/research/shampoo-inci/v1.6/classification-standard.md",
-    "bytes": 125769,
-    "sha256": "eb89b8961322295be957433ee7cc06a5cf34c059b15e50f14d424ee7af8fd7cd",
-    "verification": "locked v1.6 standard; candidate text after R14-R16 with the LOCKED preamble and file references re-pointed to the locked package"
+    "bytes": 134087,
+    "sha256": "a4669d9f08125eef0d948e83775189411cf3b2edcac64f9bb91a2a24d16650cc",
+    "verification": "locked v1.6 standard; candidate text after R14-R16 with the LOCKED preamble and file references re-pointed to the locked package, plus the post-lock amendment R17 applied in place before publication"
   },
   "runbook": {
     "path": "docs/research/shampoo-inci/v1.6/runbook.md",
@@ -17,26 +17,26 @@
   },
   "rule_change_ledger": {
     "path": "docs/research/shampoo-inci/v1.6/rule-changes.md",
-    "bytes": 41025,
-    "sha256": "7278d51ce26a5a3a9ae43f85c4a949fcdc2d7ad2a1b6f6a585ed7f10f4be3124",
-    "verification": "rows 1-108 vs v1.4; the candidate changelog at lock with references re-pointed"
+    "bytes": 44723,
+    "sha256": "9eae3db7a468cce9f111d7294f01c62569457b973d8595cb6c61f8c140224c34",
+    "verification": "rows 1-114 vs v1.4; the candidate changelog at lock with references re-pointed (rows 1-108), plus rows 109-114 for the post-lock amendment R17"
   },
   "readme": {
     "path": "docs/research/shampoo-inci/v1.6/README.md",
-    "bytes": 6281,
-    "sha256": "e49633405123576302f6a7e1964e59d431c44a09471b79b1a54f28cfacda9246",
+    "bytes": 6777,
+    "sha256": "d179e839dcad2428c7d33166a9771235a34c0b8fc55510a033f75c2f7e03969f",
     "verification": "v1.6 package README (status, authority, changes, calibration evidence, open after lock); the top-level docs/research/shampoo-inci/README.md is the living entry point and is not pinned"
   },
   "rulings_ledger": {
     "path": "data/research/shampoo-inci/v1.6/rulings-ledger.md",
-    "bytes": 11111,
-    "sha256": "3a8126584fa47bc33695b31c767f3510c2381f75f3d85e4470c097e6499a7ad6",
-    "verification": "snapshot of plans/shampoo-v16/rulings.md at R16 (R1-R16)"
+    "bytes": 12459,
+    "sha256": "fa62298ced2eae6212d756088a21ce7ac7f40d7e3b2126f8a5bfe7ee9f58c1a4",
+    "verification": "snapshot of plans/shampoo-v16/rulings.md at R17 (R1-R17)"
   },
   "logic_lock_receipt": {
     "path": "data/research/shampoo-inci/v1.6/v1.6-logic-lock-receipt.json",
-    "bytes": 10500,
-    "sha256": "83451237972c869b8bd7a2384df426b9a67bd24034d667f5250504502b4ef2ea"
+    "bytes": 12337,
+    "sha256": "1c37240f2081f839ed72573972bf4335be1d2ffddd65d9631ac12186e00971dc"
   },
   "calibration": {
     "root": "data/research/shampoo-inci/v1.6/calibration/",

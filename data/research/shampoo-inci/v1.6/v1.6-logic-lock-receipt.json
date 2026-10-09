@@ -8,8 +8,8 @@
   "decision_ruling": "R14",
   "normative_standard": {
     "path": "docs/research/shampoo-inci/v1.6/classification-standard.md",
-    "bytes": 125769,
-    "sha256": "eb89b8961322295be957433ee7cc06a5cf34c059b15e50f14d424ee7af8fd7cd"
+    "bytes": 134087,
+    "sha256": "a4669d9f08125eef0d948e83775189411cf3b2edcac64f9bb91a2a24d16650cc"
   },
   "base_method": {
     "policy_id": "shampoo-classification-v1.4",
@@ -21,7 +21,8 @@
   "candidate_working_record": {
     "path": "plans/shampoo-v16/v1.6-candidate/classification-standard.md",
     "sha256_at_lock": "022ea0dfd12c741095879033d433e2edb6accd978b85e5ce74e978579433f0ac",
-    "note": "Not normative and not pinned. The locked text equals this candidate except for the Version preamble, the 'What locked means' list, file references re-pointed to the locked package (rule-changes.md, the calibration copy, the rulings-ledger snapshot), the T7 open-question reference and the Section 14 lock-gate heading."
+    "note": "Not normative and not pinned. The locked text equals this candidate except for the Version preamble, the 'What locked means' list, file references re-pointed to the locked package (rule-changes.md, the calibration copy, the rulings-ledger snapshot), the T7 open-question reference and the Section 14 lock-gate heading. The post-lock amendment R17 was mirrored into it after the lock (sha256_after_r17); sha256_at_lock is the candidate as it was at lock.",
+    "sha256_after_r17": "0dd9e20227bfbca0daeda974f92e971aab813dcb774d1a5d8e6a121ab5eb3c34"
   },
   "approved_scope": {
     "category": "shampoo",
@@ -101,8 +102,8 @@
   "rulings": {
     "ledger_snapshot": {
       "path": "data/research/shampoo-inci/v1.6/rulings-ledger.md",
-      "bytes": 11111,
-      "sha256": "3a8126584fa47bc33695b31c767f3510c2381f75f3d85e4470c097e6499a7ad6"
+      "bytes": 12459,
+      "sha256": "fa62298ced2eae6212d756088a21ce7ac7f40d7e3b2126f8a5bfe7ee9f58c1a4"
     },
     "living_ledger_path": "plans/shampoo-v16/rulings.md",
     "applied": [
@@ -124,7 +125,10 @@
       "R16.1",
       "R16.2",
       "R16.3",
-      "R16.4"
+      "R16.4",
+      "R17.1",
+      "R17.2",
+      "R17.3"
     ],
     "normative_in_standard": {
       "R2_R3": "three-tier thickness fit (T1/T5) and projected live weight (W-LIVE, T7)",
@@ -137,7 +141,10 @@
       "R16.1": "the same for a separate dry-scalp unit; research-only combination value dry",
       "R16.2": "only D1-true explicit deep cleansers with a strong formula record clarifying; strong oily-scalp shampoos without D1 record regular",
       "R16.3": "a deep-cleanser entry needs a strong formula; D1 on an ordinary formula gets the informational note deep_cleansing_name_ordinary_formula instead of a review flag",
-      "R16.4": "E4, C2 humectant and CSA lists stay closed; additions deferred to one batch decision after the Track A/B research"
+      "R16.4": "E4, C2 humectant and CSA lists stay closed; additions deferred to one batch decision after the Track A/B research",
+      "R17.1": "a dandruff claim plus a recognized anti-dandruff active (S-DANDRUFF passed) is always the primary target, even when the product name names another target (S-PRIMARY)",
+      "R17.2": "a dandruff-primary product projects no secondary target at all (no oily, sensitive or dry rows); oily joins sensitive and dry as a research-only researchCombinationTargets value (gate: the S-OILY formula clause; never dry together with oily)",
+      "R17.3": "an anti-dandruff active without a dandruff claim makes a regular shampoo: no dandruff target, every other target decided as without the active, only the note active_without_dandruff_positioning"
     },
     "process_or_catalog_rulings": [
       "R1 calibration set",
@@ -220,14 +227,18 @@
       "R16.1",
       "R16.2",
       "R16.3",
-      "R16.4"
+      "R16.4",
+      "R17.1",
+      "R17.2",
+      "R17.3"
     ],
     "recalibrated": false,
-    "basis": "R13: lock path without a third calibration round; R14 approved the lock. Rule-changes rows 102-108.",
-    "expected_effect": "R15/R16.1 remove sensitive/dry secondary rows from dandruff-primary products (conservative; N1 must confirm the irritated and dry cells before any apply); R16.2 turns strong oily-scalp shampoos without D1 from amber to green for oily scalp (by ruling); R16.3 turns the ordinary-formula D1 review flag into a note; R16.4 changes nothing"
+    "basis": "R13: lock path without a third calibration round; R14 approved the lock. Rule-changes rows 102-108. R17 was ruled after the lock and applied in place before the locked package was first published (rule-changes rows 109-114); the receipt and manifest pins were refreshed with it.",
+    "expected_effect": "R15/R16.1 remove sensitive/dry secondary rows from dandruff-primary products (conservative; N1 must confirm the irritated and dry cells before any apply); R16.2 turns strong oily-scalp shampoos without D1 from amber to green for oily scalp (by ruling); R16.3 turns the ordinary-formula D1 review flag into a note; R16.4 changes nothing; R17.1 makes a passing dandruff target primary even when the name names another target (dandruff rows only; conservative); R17.2 removes oily secondary rows from dandruff-primary products (conservative; e.g. H&S Classic Clean, not recommended live; N1 must confirm the oily cells before any apply) and adds the research-only oily combination; R17.3 writes down the existing reading that an active without a dandruff claim is a regular shampoo (no change)"
   },
   "known_limits_retained": [
     "R15 and R16.1-R16.4 were applied after the unseen check v2 and were not exercised by two sealed lanes.",
+    "R17.1-R17.3 were ruled after the lock and applied in place before publication; they were not exercised by two sealed lanes, and the oily combination value and the dry-plus-oily contradiction rule have no calibrated record.",
     "The unseen check covered six products; the dandruff + dry combination value (R16.1) and the ordinary-formula D1 note (R16.3) have no calibrated record.",
     "Lane agreement measures repeatability, not finished-product or consumer accuracy; INCI order is a prominence proxy, never a concentration.",
     "Exception register entry X1 (Monday Volume, coarse x oily) stays a temporary bridge until a lighter oily-scalp shampoo passes review (R5).",

@@ -26,6 +26,13 @@ Pre-lock revision (2026-10-10, rulings R14–R16):
 - **R16.4 (closed lists).** E4, C2 humectant and CSA lists unchanged; additions decided in one batch after the Track A/B research.
 - Changelog rows 102–108. Open questions 3–6 are ruled; 1–2 stay open for the later app PR.
 
+Post-lock amendment (2026-10-10, ruling R17), applied in place to the locked text before publication and mirrored here:
+
+- **R17.1 (dandruff claim + active = dandruff path, always).** A passing dandruff target is the primary target even when the product name names another target such as "Sensitive".
+- **R17.2 (oily is a sub-feature too).** A dandruff-primary product projects no secondary target at all; oily-scalp suitability joins sensitive and dry as research-only `researchCombinationTargets` (`"oily"`, gate = the S-OILY formula clause).
+- **R17.3 (active without a dandruff claim = regular shampoo).** Its sensitive, dry and oily paths stay open; only the note `active_without_dandruff_positioning` remains.
+- Changelog rows 109–114. Not exercised by calibration lanes.
+
 | File | Purpose |
 | --- | --- |
 | `classification-standard.md` | The full normative candidate, with rule IDs that calibration lanes cite. |
