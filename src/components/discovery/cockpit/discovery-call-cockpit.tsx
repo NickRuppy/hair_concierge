@@ -17,6 +17,7 @@ import type { DiscoveryPropertyRow } from "@/lib/discovery/property-rows"
 import {
   runsheetEntryInHerWeek,
   runsheetLockedIn,
+  runsheetNoVerdictLabel,
   runsheetVerdictFit,
   type WashAnchor,
 } from "@/lib/discovery/runsheet"
@@ -32,7 +33,6 @@ import { formatDiscoveryTimestamp } from "./format"
 import { RunsheetLockedInSection } from "./runsheet-locked-in"
 import { discoveryCallSheetWriteOutcome, RUNSHEET_SAVE_COPY } from "./runsheet-save"
 import {
-  FREQUENCY_ROW_NOT_COMPARABLE,
   RunsheetCard,
   RunsheetCategoryChip,
   RunsheetChip,
@@ -146,6 +146,11 @@ const NO_PRODUCT = "Kein Produkt angegeben"
 const UNDECIDED_HINT = "Noch nicht entschieden."
 const FROZEN_HINT =
   "Diese Beratung ist inzwischen finalisiert. Seite neu laden, dann die Finalisierung aufheben."
+const RESET_LABEL = "Testlauf zurücksetzen"
+const RESET_CONFIRM_PREFIX = "Alle"
+const RESET_CONFIRM_TAIL = "Score, Brief und Notizen bleiben."
+const RESET_FROZEN = "Der Call ist finalisiert — erst Finalisieren aufheben."
+const RESET_PENDING_KEY = "__reset__"
 const WRITE_ERROR = "Nicht gespeichert. Bitte noch einmal."
 const NO_OPTIONS_HINT = "Keine Alternative im Katalog. Nur behalten oder offen lassen."
 const SORT_LABEL = "Sortieren:"
@@ -421,6 +426,38 @@ export function DiscoveryCallCockpit({
     }
   }
 
+  // A2 „Testlauf zurücksetzen": every product decision of this call goes (confirmed first);
+  // the refresh re-seeds the selections from the server.
+  const decidedCount = Object.values(selections).filter(Boolean).length
+  async function resetDecisions() {
+    const confirmed =
+      typeof window === "undefined" ||
+      window.confirm(
+        `${RESET_CONFIRM_PREFIX} ${decidedCount} ${decidedCount === 1 ? "Entscheidung" : "Entscheidungen"} zurücksetzen? ${RESET_CONFIRM_TAIL}`,
+      )
+    if (!confirmed) return
+    setPending(RESET_PENDING_KEY)
+    setError(null)
+    const endWrite = beginDiscoveryDecisionWrite()
+    try {
+      const response = await fetch(`/api/admin/beratung/${enrollmentId}/decisions`, {
+        method: "DELETE",
+      })
+      if (!response.ok) {
+        const body = (await response.json().catch(() => null)) as { code?: string } | null
+        setError(body?.code === "finalized" ? RESET_FROZEN : WRITE_ERROR)
+        return
+      }
+      setSelections({})
+      router.refresh()
+    } catch {
+      setError(WRITE_ERROR)
+    } finally {
+      endWrite()
+      setPending(null)
+    }
+  }
+
   async function toggleFinalize() {
     setFinalizePending(true)
     setError(null)
@@ -493,7 +530,9 @@ export function DiscoveryCallCockpit({
                     washFrequency={washFrequency}
                     allowedRange={step.idealAllowedRange}
                     noVerdict={
-                      <RunsheetChip tone="neutral">{FREQUENCY_ROW_NOT_COMPARABLE}</RunsheetChip>
+                      <RunsheetChip tone="neutral">
+                        {runsheetNoVerdictLabel(step.frequencyLabel)}
+                      </RunsheetChip>
                     }
                   />
                 ) : null
@@ -625,6 +664,19 @@ export function DiscoveryCallCockpit({
           ]}
         </Bucket>
         <RunsheetLockedInSection lockedIn={lockedIn} />
+        {!frozen && decidedCount > 0 ? (
+          <div className="flex justify-end">
+            <button
+              type="button"
+              id="runsheet-reset-decisions"
+              onClick={resetDecisions}
+              disabled={pending !== null}
+              className="text-[12px] font-bold text-muted-foreground underline disabled:opacity-50"
+            >
+              {RESET_LABEL}
+            </button>
+          </div>
+        ) : null}
         {products.styling.length > 0 ? (
           <p className="text-[13px] text-muted-foreground">{`${DISCOVERY_STYLING_LABEL}: ${products.styling
             .map((entry) => entry.label)

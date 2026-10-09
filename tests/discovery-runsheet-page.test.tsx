@@ -600,13 +600,14 @@ test("a failing call-sheet read leaves the runsheet empty instead of failing the
 test("checklist: research with GTIN, bleach cadence and detangling asks from her profile", async () => {
   const markup = await renderPage()
   assert.ok(markup.includes(`Recherche abschließen — Gescanntes Produkt · ${GTIN} (Conditioner)`))
-  assert.ok(
-    markup.includes(
-      "Im Call klären: Färbe-/Blondier-Rhythmus · Entwirren (Kamm oder Bürste) · Einkaufsort",
-    ),
-  )
-  // R17: the same asks sit as „kurz fragen" chips in the Hebel card.
-  assert.ok(markup.includes("kurz fragen: Färbe-/Blondier-Rhythmus"))
+  // E4: the asks are listed ONCE, at the top of „Fragen für den Call"; the checklist points
+  // there and the Hebel card carries no chips.
+  assert.ok(markup.includes("Offene Punkte im Call klären — stehen unter Fragen für den Call"))
+  const asks =
+    "Außerdem klären: Färbe-/Blondier-Rhythmus · Entwirren (Kamm oder Bürste) · Einkaufsort"
+  assert.equal(markup.split(asks).length - 1, 1)
+  assert.ok(!markup.includes("kurz fragen:"))
+  assert.ok(markup.indexOf("Fragen für den Call") < markup.indexOf(asks))
 })
 
 test("routine: wash day and in-between days, today's wash frequency, no price row", async () => {
@@ -1221,7 +1222,7 @@ test("checklist lines: one research line per product, the asks on one line", () 
       "Recherche abschließen — Balea Spülung · 4001 (Conditioner)",
       "Baseline-Score abfragen (1–10) und oben eintragen",
       "Consult-Brief prüfen (Diagnose, Hebel, Begründungen)",
-      "Im Call klären: Einkaufsort",
+      "Offene Punkte im Call klären — stehen unter Fragen für den Call",
     ],
   )
 })
@@ -1601,7 +1602,7 @@ test("frequency row: every product of hers shows her answer next to the Idealpla
   assert.ok(!markup.includes("nicht vergleichbar"))
 })
 
-test("frequency row: a rhythm without a band shows both sides and „nicht vergleichbar“", async () => {
+test("frequency row: a rhythm without a band shows both sides and „kein fester Rhythmus“", async () => {
   const markup = await renderPage({
     loadModel: async () =>
       model({
@@ -1612,7 +1613,9 @@ test("frequency row: a rhythm without a band shows both sides and „nicht vergl
   const shampoo = entryTextOf(markup, "Shampoo")
   assert.ok(shampoo.includes("Angabe: Täglich"), shampoo)
   assert.ok(shampoo.includes("Idealplan: nach Bedarf"), shampoo)
-  assert.ok(shampoo.includes("nicht vergleichbar"), shampoo)
+  // E3: „nach Bedarf" is deliberately rhythm-free — said so, not flagged as incomparable.
+  assert.ok(shampoo.includes("kein fester Rhythmus"), shampoo)
+  assert.ok(!shampoo.includes("nicht vergleichbar"), shampoo)
   assert.ok(!markup.includes(CHIP_MARK))
 })
 

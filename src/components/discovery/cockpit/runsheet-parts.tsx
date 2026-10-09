@@ -178,7 +178,6 @@ const FREQUENCY_ROW_LABEL = "Wie oft"
 const FREQUENCY_ROW_OWNED = "Angabe:"
 const FREQUENCY_ROW_IDEAL = "Idealplan:"
 const FREQUENCY_ROW_NOT_ASKED = "keine Angabe"
-export const FREQUENCY_ROW_NOT_COMPARABLE = "nicht vergleichbar"
 
 /**
  * „Wie oft — Angabe: Täglich ⇄ Idealplan: nach Bedarf": her answer next to the step's
@@ -245,7 +244,7 @@ export const RUNSHEET_ASK_TOPIC: Record<
 const RESEARCH_OPEN = "Recherche abschließen"
 const SCORE_MISSING = "Baseline-Score abfragen (1–10) und oben eintragen"
 const BRIEF_CHECK = "Consult-Brief prüfen (Diagnose, Hebel, Begründungen)"
-const ASK_PREFIX = "Im Call klären:"
+const ASK_SEE_QUESTIONS = "Offene Punkte im Call klären — stehen unter Fragen für den Call"
 
 export type RunsheetChecklistLine = { id: string; label: string }
 
@@ -276,7 +275,8 @@ export function runsheetChecklistLines(
     }
   }
   lines.push({ id: "brief_check", label: BRIEF_CHECK })
-  if (asks.length > 0) lines.push({ id: "ask", label: `${ASK_PREFIX} ${asks.join(" · ")}` })
+  // E4: one list — the topics themselves sit at the top of „Fragen für den Call".
+  if (asks.length > 0) lines.push({ id: "ask", label: ASK_SEE_QUESTIONS })
   return lines
 }
 
