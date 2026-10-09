@@ -19,6 +19,7 @@ import {
   inciFingerprint,
   releaseReveal,
   resolveInside,
+  scrubStandard,
   type FreezePacket,
 } from "../scripts/shampoo-research/build-lane-kit"
 import { compareLaneDirs, comparisonFields } from "../scripts/shampoo-research/compare-lanes"
@@ -162,12 +163,68 @@ test("the lane kit fails closed on missing evidence inputs, a wrong fingerprint 
     const unknownKind = packet()
     unknownKind.sources[0]!.sourceKind = "blog" as never
     assert.throws(() => build(unknownKind), /sourceKind/)
-    assert.throws(() => build(packet(), `${STANDARD}\nMustermarke appears here`), /Mustermarke/)
+    // A name the scrub cannot replace on word boundaries (here an inflected form) still fails closed.
+    assert.throws(() => build(packet(), `${STANDARD}\nMustermarkes Pflegeserie`), /Mustermarke/)
     assert.throws(
-      () => build(packet(), `${STANDARD}\nsee Glanzwunder Shampoo`),
+      () => build(packet(), `${STANDARD}\nsee Glanzwunder Shampoos`),
       /Glanzwunder Shampoo/,
     )
   })
+})
+
+const SCRUB_UUID = "6dc65df2-2466-43e4-bdc2-3a05803f305c"
+const SCRUB_STANDARD = [
+  "# Standard",
+  "Hair that is being treated needs care; being conservative is the default.",
+  "### 13.9 Review flags",
+  "flags",
+  "### 13.10 Worked examples (non-normative)",
+  "| Mustermarke Glanzwunder Shampoo | example row |",
+  "### 13.11 No-gap invariant",
+  "Heavy shampoos stay out unless the register says so.",
+  "### 13.12 Exception register",
+  `| X1 | Mustermarke Glanzwunder Shampoo (\`${SCRUB_UUID}\`) | coarse x oily |`,
+  "Mustermarke's volume row stays; Mustermarke Volumenwunder is the sibling.",
+  "The Being Big Hair Shampoo is a second case, and Being as a brand stands alone here.",
+  "Monday Volume keeps working under the register.",
+].join("\n")
+
+function scrubBatch() {
+  return [
+    packet({ productId: SCRUB_UUID }),
+    packet({ slot: "T02", productId: "catalog-2", brand: "Being", name: "Being Big Hair Shampoo" }),
+    packet({
+      slot: "T03",
+      productId: "catalog-3",
+      brand: "Monday Haircare",
+      name: "Monday Haircare Volume",
+    }),
+  ]
+}
+
+test("the standard scrub replaces batch names with a placeholder and drops 13.10", () => {
+  const scrubbed = scrubStandard(SCRUB_STANDARD, scrubBatch())
+  assert.ok(!scrubbed.includes("13.10 Worked examples"))
+  assert.ok(scrubbed.includes("### 13.11 No-gap invariant"))
+  assert.ok(scrubbed.includes("### 13.12 Exception register"))
+  assert.ok(!scrubbed.includes(SCRUB_UUID), "product uuid is replaced")
+  for (const name of ["Mustermarke", "Glanzwunder", "Being Big Hair", "Being as a brand", "Monday"])
+    assert.ok(!scrubbed.includes(name), `${name} is scrubbed`)
+  assert.ok(scrubbed.includes("[catalog product]"))
+  assert.match(scrubbed, /\| X1 \| (\[catalog product\] ?)+\(`\[catalog product\]`\)/)
+})
+
+test("the standard scrub keeps ordinary words that only share a brand's spelling", () => {
+  const scrubbed = scrubStandard(SCRUB_STANDARD, scrubBatch())
+  assert.ok(scrubbed.includes("is being treated needs care; being conservative"))
+  assert.ok(scrubbed.includes("Heavy shampoos stay out"))
+})
+
+test("the standard scrub fails closed when a batch name survives replacement", () => {
+  assert.throws(
+    () => scrubStandard(`${SCRUB_STANDARD}\nMustermarkes Serie`, scrubBatch()),
+    /scrubbed standard still names batch products: .*Mustermarke/,
+  )
 })
 
 const REQUIRED_PROPERTIES = ["cleansingStrength", "conditioningLevel", "weightPotential"] as const
