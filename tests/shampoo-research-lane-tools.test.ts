@@ -167,22 +167,51 @@ test("the lane kit fails closed on missing evidence inputs, a wrong fingerprint 
   })
 })
 
+const REQUIRED_PROPERTIES = ["cleansingStrength", "conditioningLevel", "weightPotential"] as const
+
+function validPassRecord(out: string, id: string) {
+  const formula = JSON.parse(
+    readFileSync(path.join(out, "lane-a", "formula", `${id}.json`), "utf8"),
+  )
+  return {
+    blindId: id,
+    inciFingerprintSha256: formula.inciFingerprintSha256 as string,
+    directProperties: Object.fromEntries(
+      REQUIRED_PROPERTIES.map((name) => [
+        name,
+        { value: "moderate", confidence: "high", rationale: `C1: provisional ${name}` },
+      ]),
+    ),
+  }
+}
+
+function writePass(out: string, lane: string, id: string, record: unknown) {
+  const passDir = path.join(out, lane, "out", "formula-pass")
+  mkdirSync(passDir, { recursive: true })
+  const file = path.join(passDir, `${id}.json`)
+  writeFileSync(file, typeof record === "string" ? record : JSON.stringify(record))
+  return file
+}
+
+function twoProductKit(out: string) {
+  const { mapping } = buildLaneKit({
+    packets: [packet(), packet({ slot: "T02", name: "Zweites Shampoo" })],
+    standardText: STANDARD,
+    outDir: out,
+    seed: 3,
+  })
+  const [first, second] = mapping.map((entry) => entry.blindId) as [string, string]
+  return { first, second }
+}
+
 test("a lane receives its reveal packets only after every formula-pass record exists", () => {
   withTempDir((out) => {
-    const { mapping } = buildLaneKit({
-      packets: [packet(), packet({ slot: "T02", name: "Zweites Shampoo" })],
-      standardText: STANDARD,
-      outDir: out,
-      seed: 3,
-    })
-    const [first, second] = mapping.map((entry) => entry.blindId)
-    const passDir = path.join(out, "lane-a", "out", "formula-pass")
-    mkdirSync(passDir, { recursive: true })
-    writeFileSync(path.join(passDir, `${first}.json`), "{}")
+    const { first, second } = twoProductKit(out)
+    writePass(out, "lane-a", first, validPassRecord(out, first))
     assert.throws(() => releaseReveal(out, "lane-a"), new RegExp(`${second}`))
     assert.equal(existsSync(path.join(out, "lane-a", "reveal")), false)
 
-    writeFileSync(path.join(passDir, `${second}.json`), "{}")
+    writePass(out, "lane-a", second, validPassRecord(out, second))
     const released = releaseReveal(out, "lane-a")
     assert.deepEqual(released.map((entry) => entry.blindId).sort(), [first, second].sort())
     assert.equal(readdirSync(path.join(out, "lane-a", "reveal")).length, 2)
@@ -195,6 +224,131 @@ test("a lane receives its reveal packets only after every formula-pass record ex
       false,
       "lane B is released separately",
     )
+  })
+})
+
+test("release refuses empty or incomplete formula-pass records and names the id and field", () => {
+  withTempDir((out) => {
+    const { first, second } = twoProductKit(out)
+    writePass(out, "lane-a", second, validPassRecord(out, second))
+    const expectRefused = (record: unknown, pattern: RegExp) => {
+      writePass(out, "lane-a", first, record)
+      assert.throws(() => releaseReveal(out, "lane-a"), pattern)
+      assert.equal(existsSync(path.join(out, "lane-a", "reveal")), false, "nothing is released")
+      assert.equal(existsSync(path.join(out, "held", "lane-a", "release-log.json")), false)
+    }
+    const good = () => validPassRecord(out, first)
+
+    expectRefused({}, new RegExp(`${first}.*blindId`))
+    expectRefused("{not json", new RegExp(`${first}.*JSON`))
+    expectRefused({ ...good(), blindId: second }, new RegExp(`${first}.*blindId`))
+    expectRefused(
+      { ...good(), inciFingerprintSha256: "0".repeat(64) },
+      new RegExp(`${first}.*inciFingerprintSha256`),
+    )
+    const { inciFingerprintSha256: _omitted, ...noFingerprint } = good()
+    expectRefused(noFingerprint, new RegExp(`${first}.*inciFingerprintSha256`))
+
+    for (const property of REQUIRED_PROPERTIES) {
+      const noProperty = good()
+      delete (noProperty.directProperties as Record<string, unknown>)[property]
+      expectRefused(noProperty, new RegExp(`${first}.*directProperties\\.${property}`))
+
+      const emptyValue = good()
+      ;(emptyValue.directProperties as Record<string, { value: string }>)[property]!.value = " "
+      expectRefused(emptyValue, new RegExp(`${first}.*directProperties\\.${property}\\.value`))
+
+      const emptyRationale = good()
+      ;(emptyRationale.directProperties as Record<string, { rationale: string }>)[
+        property
+      ]!.rationale = ""
+      expectRefused(
+        emptyRationale,
+        new RegExp(`${first}.*directProperties\\.${property}\\.rationale`),
+      )
+    }
+
+    writePass(out, "lane-a", first, good())
+    assert.equal(releaseReveal(out, "lane-a").length, 2, "a complete record is accepted")
+  })
+})
+
+test("the first release log is immutable: re-release is idempotent and never rewrites it", () => {
+  withTempDir((out) => {
+    const { first, second } = twoProductKit(out)
+    const files = [first, second].map((id) =>
+      writePass(out, "lane-a", id, validPassRecord(out, id)),
+    )
+    releaseReveal(out, "lane-a")
+    const logFile = path.join(out, "held", "lane-a", "release-log.json")
+    const logBytes = readFileSync(logFile)
+
+    const again = releaseReveal(out, "lane-a")
+    assert.equal(again.length, 2, "an unchanged re-release is allowed")
+    assert.deepEqual(readFileSync(logFile), logBytes, "log is byte-identical after re-release")
+
+    // A formula-pass record edited after release no longer matches the frozen log.
+    const edited = { ...validPassRecord(out, first), note: "changed after reveal" }
+    writeFileSync(files[0]!, JSON.stringify(edited))
+    assert.throws(() => releaseReveal(out, "lane-a"), new RegExp(`${first}.*changed`))
+    assert.deepEqual(readFileSync(logFile), logBytes, "log is never rewritten")
+
+    // Restoring the original bytes makes the idempotent re-release pass again.
+    writeFileSync(files[0]!, JSON.stringify(validPassRecord(out, first)))
+    assert.equal(releaseReveal(out, "lane-a").length, 2)
+
+    // A product added after the freeze (not in the log) fails closed.
+    const extra = "K99"
+    writeFileSync(
+      path.join(out, "held", "lane-a", "reveal", `${extra}.json`),
+      JSON.stringify({ blindId: extra }),
+    )
+    writeFileSync(
+      path.join(out, "lane-a", "formula", `${extra}.json`),
+      readFileSync(path.join(out, "lane-a", "formula", `${first}.json`)),
+    )
+    writePass(out, "lane-a", extra, { ...validPassRecord(out, first), blindId: extra })
+    assert.throws(() => releaseReveal(out, "lane-a"), new RegExp(extra))
+    assert.deepEqual(readFileSync(logFile), logBytes, "log is never rewritten")
+  })
+})
+
+test("a logged record that has since been removed fails closed without touching the log", () => {
+  withTempDir((out) => {
+    const { first, second } = twoProductKit(out)
+    const files = [first, second].map((id) =>
+      writePass(out, "lane-a", id, validPassRecord(out, id)),
+    )
+    releaseReveal(out, "lane-a")
+    const logFile = path.join(out, "held", "lane-a", "release-log.json")
+    const logBytes = readFileSync(logFile)
+    rmSync(files[1]!)
+    assert.throws(() => releaseReveal(out, "lane-a"), new RegExp(second))
+    assert.deepEqual(readFileSync(logFile), logBytes)
+  })
+})
+
+test("the lane kit refuses to build over an existing, non-empty output directory", () => {
+  withTempDir((out) => {
+    const options = { packets: [packet()], standardText: STANDARD, seed: 1 }
+    const target = path.join(out, "kit")
+
+    // An empty existing directory is fine.
+    mkdirSync(target)
+    const { mapping } = buildLaneKit({ ...options, outDir: target })
+    const id = mapping[0]!.blindId
+
+    // A second build would leave the first run's reveals and formula-pass records behind.
+    writePass(target, "lane-a", id, validPassRecord(target, id))
+    assert.throws(() => buildLaneKit({ ...options, outDir: target }), /not empty|exists/i)
+    assert.equal(
+      existsSync(path.join(target, "lane-a", "out", "formula-pass", `${id}.json`)),
+      true,
+      "existing kit is untouched",
+    )
+
+    // A fresh path is fine.
+    buildLaneKit({ ...options, outDir: path.join(out, "kit-2") })
   })
 })
 

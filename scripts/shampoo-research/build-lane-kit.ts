@@ -9,8 +9,13 @@
  * Stage B, `<out>/held/<lane>/reveal/<id>.json`: product name, brand and the verbatim claims
  * and directions per source with the source's CL-SRC grade. It is held outside the lane root
  * and copied to `<out>/<lane>/reveal/` by `--release <lane>` only after the lane has written a
- * formula-pass record `<out>/<lane>/out/formula-pass/<id>.json` for every product; the release
- * log pins each formula-pass record's SHA-256 (Section 3.2: the blind pass is frozen first).
+ * formula-pass record `<out>/<lane>/out/formula-pass/<id>.json` for every product and each record
+ * passes the completeness gate below; the release log pins each record's SHA-256 (Section 3.2:
+ * the blind pass is frozen first). The first release log is immutable: a re-release is allowed
+ * only when every record still matches it, and the log is never rewritten.
+ *
+ * `build` refuses an output directory that already holds files, so a rebuild can never leave
+ * a previous run's reveals or formula-pass records inside a fresh kit.
  *
  * Each lane also gets a scrubbed copy of the standard (Section 13.10 worked examples removed),
  * and the build fails if any batch brand or product name remains in it.
@@ -137,6 +142,55 @@ export function scrubStandard(standardText: string, packets: FreezePacket[]) {
   return scrubbed
 }
 
+/** Formula-stage fields a formula-pass record must carry before the reveal is released
+ * (runbook step 4): the record's own blind id, the stage-A fingerprint it was written against,
+ * and the three formula-derived direct properties with a value and a rationale each. */
+export const REQUIRED_FORMULA_PASS_PROPERTIES = [
+  "cleansingStrength",
+  "conditioningLevel",
+  "weightPotential",
+] as const
+
+const isFilledString = (value: unknown) => typeof value === "string" && value.trim() !== ""
+
+function validateFormulaPassRecord(options: {
+  lane: string
+  id: string
+  passFile: string
+  formulaFile: string
+}) {
+  const { lane, id, passFile, formulaFile } = options
+  const where = `${lane}: formula-pass record ${id}`
+  let record: unknown
+  try {
+    record = JSON.parse(readFileSync(passFile, "utf8"))
+  } catch {
+    throw new Error(`${where}: is not valid JSON`)
+  }
+  const object = (value: unknown): value is Record<string, unknown> =>
+    typeof value === "object" && value !== null && !Array.isArray(value)
+  if (!object(record)) throw new Error(`${where}: blindId missing (record is not a JSON object)`)
+  if (record.blindId !== id)
+    throw new Error(`${where}: blindId must equal "${id}", found ${JSON.stringify(record.blindId)}`)
+  const expected = (
+    JSON.parse(readFileSync(formulaFile, "utf8")) as { inciFingerprintSha256: string }
+  ).inciFingerprintSha256
+  if (record.inciFingerprintSha256 !== expected)
+    throw new Error(
+      `${where}: inciFingerprintSha256 must match the stage-A packet (${expected}), found ${JSON.stringify(record.inciFingerprintSha256)}`,
+    )
+  const properties = object(record.directProperties) ? record.directProperties : {}
+  for (const name of REQUIRED_FORMULA_PASS_PROPERTIES) {
+    const property = properties[name]
+    if (!object(property)) throw new Error(`${where}: directProperties.${name} missing`)
+    for (const field of ["value", "rationale"] as const)
+      if (!isFilledString(property[field]))
+        throw new Error(`${where}: directProperties.${name}.${field} missing or empty`)
+  }
+}
+
+const sha256File = (file: string) => createHash("sha256").update(readFileSync(file)).digest("hex")
+
 const writeJson = (file: string, data: unknown) => {
   mkdirSync(path.dirname(file), { recursive: true })
   writeFileSync(file, `${JSON.stringify(data, null, 2)}\n`)
@@ -151,6 +205,10 @@ export function buildLaneKit(options: {
 }) {
   const packets = options.packets.filter((p) => p.status !== "blocked")
   packets.forEach(validate)
+  if (existsSync(options.outDir) && readdirSync(options.outDir).length > 0)
+    throw new Error(
+      `output directory ${options.outDir} exists and is not empty; build into a new or empty directory (a rebuild would leave stale reveals and formula-pass records)`,
+    )
   const standard = scrubStandard(options.standardText, packets)
   const prefix = options.prefix ?? "K"
   const mapping = seededShuffle(packets, options.seed).map((p, index) => {
@@ -204,16 +262,39 @@ export function releaseReveal(outDir: string, lane: string) {
   const missing = ids.filter((id) => !existsSync(path.join(passDir, `${id}.json`)))
   if (missing.length)
     throw new Error(`${lane}: no formula-pass record yet for ${missing.join(", ")}`)
-  const formulaPassSha256: Record<string, string> = {}
   for (const id of ids)
-    formulaPassSha256[id] = createHash("sha256")
-      .update(readFileSync(path.join(passDir, `${id}.json`)))
-      .digest("hex")
-  writeJson(path.join(outDir, "held", lane, "release-log.json"), {
-    lane,
-    releasedAt: new Date().toISOString(),
-    formulaPassSha256,
-  })
+    validateFormulaPassRecord({
+      lane,
+      id,
+      passFile: path.join(passDir, `${id}.json`),
+      formulaFile: path.join(outDir, lane, "formula", `${id}.json`),
+    })
+  const formulaPassSha256: Record<string, string> = {}
+  for (const id of ids) formulaPassSha256[id] = sha256File(path.join(passDir, `${id}.json`))
+  const logFile = path.join(outDir, "held", lane, "release-log.json")
+  if (existsSync(logFile)) {
+    // The first release log is the freeze evidence: re-release must match it exactly.
+    const logged = (
+      JSON.parse(readFileSync(logFile, "utf8")) as {
+        formulaPassSha256: Record<string, string>
+      }
+    ).formulaPassSha256
+    const problems = [
+      ...ids.filter((id) => !(id in logged)).map((id) => `${id} added after release`),
+      ...Object.keys(logged)
+        .filter((id) => !ids.includes(id))
+        .map((id) => `${id} removed after release`),
+      ...ids
+        .filter((id) => id in logged && logged[id] !== formulaPassSha256[id])
+        .map((id) => `${id} changed after release`),
+    ]
+    if (problems.length)
+      throw new Error(
+        `${lane}: release log already exists and no longer matches the formula-pass records (${problems.join("; ")}); the log is not rewritten`,
+      )
+  } else {
+    writeJson(logFile, { lane, releasedAt: new Date().toISOString(), formulaPassSha256 })
+  }
   mkdirSync(path.join(outDir, lane, "reveal"), { recursive: true })
   for (const id of ids)
     copyFileSync(path.join(held, `${id}.json`), path.join(outDir, lane, "reveal", `${id}.json`))

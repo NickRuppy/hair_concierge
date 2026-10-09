@@ -11,8 +11,8 @@
   },
   "runbook": {
     "path": "docs/research/shampoo-inci/v1.6/runbook.md",
-    "bytes": 14061,
-    "sha256": "c3ca5339cd43aa76a1a0f01d07a40c45e20d753a762b8ee4437ae36965ea0a2b",
+    "bytes": 14855,
+    "sha256": "749f53ee7f4a1081390c3297f599eef44c0c8b92feef93b82cc8e33bd7f2d6b6",
     "verification": "new-product research procedure: formula freeze (with completeness, source tier and source kind), two-stage sealed lane kit (blind formula packets, reveal released only after the formula pass), compare including researchCombinationTargets, adjudication, apply and stop boundaries"
   },
   "rule_change_ledger": {
