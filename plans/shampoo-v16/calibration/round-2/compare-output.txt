@@ -1,0 +1,22 @@
+lane agreement 202/208 = 97.1%
+  DIFF ('G01', 'Guhl Anti Schuppen', 'conditioningLevel', 'moderate', 'low')
+  DIFF ('G02', 'Head & Shoulders DERMAXPRO Sha', 'conditioningLevel', 'moderate', 'high')
+  DIFF ('G02', 'Head & Shoulders DERMAXPRO Sha', 'fit.coarse', 'acceptable', 'ideal')
+  DIFF ('G12', 'Balea Professional Ultimate Vo', 'conditioningLevel', 'moderate', 'low')
+  DIFF ('G13', 'Lavera Basis Sensitiv', 'scalpComfortTarget', 'targeted', 'not_targeted')
+  DIFF ('G13', 'Lavera Basis Sensitiv', 'focusSecondary', ('scalp_active',), ())
+
+weight: slot | product | Aug-26 approved | v1.4 re-check | lane A | lane B
+   G01 | Guhl Anti Schuppen | low | moderate | low | low
+   G02 | Head & Shoulders DERMAXPRO Shampoo | moderate | moderate | moderate | moderate
+   G03 | Sebamed Every-Day Shampoo | low | low | low | low
+   G04 | Pantene Grow Abundance | moderate | moderate | moderate | moderate
+   G05 | Wahre Schätze Sanfte Hafermilch | moderate | moderate | moderate | moderate
+   G06 | Salthouse Anti Fett | low | low | low | low
+   G07 | ISANA Shampoo & Spülung 2 in 1 Vol | – | – | low | low
+   G08 | Cantu Shampoo Locken Pflege | moderate | moderate | moderate | moderate
+   G09 | Syoss Intense Curls | moderate | high | moderate | moderate
+   G10 | Garnier Fructis Locken Methode Feu | – | – | moderate | moderate
+   G11 | Guhl Hyaluron+ | moderate | moderate | moderate | moderate
+   G12 | Balea Professional Ultimate Volume | low | moderate | low | low
+   G13 | Lavera Basis Sensitiv | moderate | moderate | moderate | moderate
