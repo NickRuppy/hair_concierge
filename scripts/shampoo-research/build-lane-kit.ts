@@ -24,8 +24,9 @@
  * The tool enforces the formula-first order for honest operation by the orchestrator; it is not a
  * security boundary against someone with write access to the kit directory.
  *
- * Each lane also gets a scrubbed copy of the standard (Section 13.10 worked examples removed),
- * and the build fails if any batch brand or product name remains in it.
+ * Each lane also gets a scrubbed copy of the standard (Section 13.10 worked examples removed,
+ * batch brands, product names and product ids replaced by a placeholder), and the build fails
+ * if any batch brand or product name remains in it.
  *
  * Usage:
  *   npx tsx scripts/shampoo-research/build-lane-kit.ts build <full-packets-dir> <out-dir> --seed <n> [--prefix K]
@@ -132,21 +133,98 @@ function seededShuffle<T>(items: T[], seed: number) {
   return out
 }
 
-/** Section 13.10 and two catalog references name products (the same scrub as the historical
- * kits); they are dropped, and no batch brand or product name may remain. */
+const SCRUB_PLACEHOLDER = "[catalog product]"
+
+type ScrubTerm = {
+  text: string
+  /** Single capitalised words ("Being") are brands that are also ordinary words: they match only
+   * as written or in all caps, never as the lower-case word. Every other term is case-insensitive. */
+  caseSensitive: boolean
+}
+
+function escapeRegex(text: string) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+}
+
+function termPattern(term: ScrubTerm) {
+  const body = term.caseSensitive
+    ? `(?:${escapeRegex(term.text)}|${escapeRegex(term.text.toUpperCase())})`
+    : term.text.split(/\s+/).map(escapeRegex).join("\\s+")
+  return new RegExp(
+    `(?<![\\p{L}\\p{N}])${body}(?![\\p{L}\\p{N}])`,
+    term.caseSensitive ? "gu" : "giu",
+  )
+}
+
+function batchScrubTerms(packets: FreezePacket[], text: string): ScrubTerm[] {
+  const seen = new Map<string, ScrubTerm>()
+  const add = (raw: string | null | undefined) => {
+    const cleaned = (raw ?? "").replace(/\s+/g, " ").trim()
+    if (cleaned.length < 3) return
+    seen.set(cleaned, { text: cleaned, caseSensitive: /^\p{Lu}\p{Ll}+$/u.test(cleaned) })
+  }
+  for (const p of packets) {
+    for (const raw of [p.brand, p.name]) {
+      add(raw)
+      add(raw?.replace(/\s*\([^)]*\)/g, ""))
+    }
+    // "Monday Volume" names the brand "Monday Haircare" by its first word. That word counts as a
+    // brand mention unless the standard also uses it lower-case as an ordinary word ("hair").
+    const brand = (p.brand ?? "").replace(/\s*\([^)]*\)/g, "").trim()
+    const first = brand.split(/\s+/)[0] ?? ""
+    if (
+      brand.includes(" ") &&
+      /^\p{Lu}\p{Ll}{3,}$/u.test(first) &&
+      !new RegExp(`(?<![\\p{L}\\p{N}])${first.toLowerCase()}(?![\\p{L}\\p{N}])`, "u").test(text)
+    )
+      add(first)
+  }
+  return [...seen.values()].sort((a, b) => b.text.length - a.text.length)
+}
+
+function batchProductIds(packets: FreezePacket[]) {
+  return [
+    ...new Set(
+      packets.map((p) => p.productId).filter((id): id is string => !!id && id.length >= 8),
+    ),
+  ]
+}
+
+/** The lane copy of the standard: Section 13.10 (non-normative worked examples) is dropped as in
+ * the historical kits, the two catalog references are generalised, and every batch brand, product
+ * name and product id is replaced by a neutral placeholder (the register entry X1 names a batch
+ * product). The check then runs on the scrubbed text and fails closed if a name survives. The
+ * standard file itself is never modified. */
 export function scrubStandard(standardText: string, packets: FreezePacket[]) {
-  const scrubbed = standardText
+  let scrubbed = standardText
     .replace(/### 13\.10 Worked examples[\s\S]*?(?=### 13\.11)/, "")
     .replace(", e.g. OGX Renewing stays visible for normal hair", "")
     .replace(
       /\(pattern: Balea, regular-shampoo record `[^`]*` plus deep-cleanser record `[^`]*`, which owns the barcode\)/,
       "(an existing pattern in the catalog)",
     )
-  const leaks = packets
-    .flatMap((p) => [p.brand, p.name])
-    .filter((term) => term && scrubbed.toLowerCase().includes(term.toLowerCase()))
+  const ids = batchProductIds(packets)
+  for (const id of ids)
+    scrubbed = scrubbed.replace(new RegExp(escapeRegex(id), "gi"), SCRUB_PLACEHOLDER)
+  const terms = batchScrubTerms(packets, scrubbed)
+  for (const term of terms) scrubbed = scrubbed.replace(termPattern(term), SCRUB_PLACEHOLDER)
+  // Fail-closed check: stricter than the replacement (no word boundaries), so inflected or
+  // embedded forms the replacement skipped still stop the build.
+  const lowered = scrubbed.toLowerCase()
+  const leaks = [
+    ...ids.filter((id) => lowered.includes(id.toLowerCase())),
+    ...terms
+      .filter((term) =>
+        term.caseSensitive
+          ? scrubbed.includes(term.text) || scrubbed.includes(term.text.toUpperCase())
+          : lowered.includes(term.text.toLowerCase()),
+      )
+      .map((term) => term.text),
+  ]
   if (leaks.length)
-    throw new Error(`scrubbed standard still names batch products: ${leaks.join(", ")}`)
+    throw new Error(
+      `scrubbed standard still names batch products: ${[...new Set(leaks)].join(", ")}`,
+    )
   return scrubbed
 }
 
