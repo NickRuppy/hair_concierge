@@ -75,3 +75,11 @@ Nick: a dandruff shampoo with explicit soothing wording (e.g. Guhl Anti Schuppen
 ## R13 — Lock path (2026-10-09)
 
 Apply R11/R12 + the round-2 wording clarifications, then run the unseen check on fresh Track B products; lock v1.6 if it holds. No third calibration round.
+
+## R14 — Lock v1.6 (2026-10-10)
+
+Nick approved locking after round 1 (97.4%), round 2 (97.1%) and the unseen check v2 (95.8%). Adjudication: Garnier Wahre Schätze Kokosmilch & Macadamia weight = `moderate` (genuine low/moderate boundary, resolved conservatively per P0/W3 → fine `acceptable`). Aussie Bouncy Curls stays `needs_research` until its formula source is re-verified.
+
+## R15 — Anti-dandruff is the path; sensitive is a sub-attribute (2026-10-10)
+
+Nick: anti-dandruff shampoos with their own sensitive-scalp claim (e.g. "Anti Schuppen … Sensitive") are dandruff products first — "it's more like a path: they need to be anti-dandruff, and then within anti-dandruff they can be for sensitive scalp or not." So any product whose primary target is `dandruff` projects dandruff rows only, whether its sensitive wording is bundled (R12) or a separate claim. Sensitive suitability is recorded in research (`researchCombinationTargets: ["sensitive"]` when the S-SENSITIVE formula gate passes) for the dandruff + irritated profile follow-up (`handover_scalp_combination.md`). An irritated-only user is never sent to an anti-dandruff active. N1 coverage of the irritated cells is checked before any apply.

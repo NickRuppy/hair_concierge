@@ -76,7 +76,7 @@ Round 1 showed that oily-scalp positioning could be read as two different focus 
 
 **Recommendation:** B. A strong cleanser is what the oily-scalp profile is for. Showing those products amber to exactly those users looks like a mistake to them. B shows more products as green, so it needs your ruling; until then A applies.
 
-## 6. Anti-dandruff shampoo with its own "für empfindliche Kopfhaut" claim: show it to people with only an irritated scalp?
+## 6. Anti-dandruff shampoo with its own "für empfindliche Kopfhaut" claim: show it to people with only an irritated scalp? — RULED (R15, 2026-10-10): option B for the sensitive case
 
 R12 keeps an anti-dandruff shampoo away from people who only have an irritated scalp when the soothing words sit next to its dandruff claim. An older rule still applies when the soothing claim stands on its own: if the shampoo's own page has a separate section such as "Für empfindliche Kopfhaut" and the formula has a soothing ingredient high in the list (panthenol, allantoin and similar), the product also gets irritated-scalp rows. People with only an irritated scalp then see an anti-dandruff shampoo. The same holds for a separate dry-scalp claim and dry-scalp users.
 
