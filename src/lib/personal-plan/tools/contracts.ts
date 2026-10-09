@@ -101,15 +101,32 @@ export const TOOL_PRODUCT_TYPES = TOOL_FAMILIES.flatMap(
  * It is deliberately NOT a `ToolProductType`: it never appears in
  * `TOOL_PRODUCT_TYPES_BY_FAMILY`, never in a route's `recommendedProductTypes`,
  * never as an asset lead form. It is never recommendable, and it is legal only
- * inside the reported `brushes_combs` set.
+ * inside its own family's reported set.
+ *
+ * Hair Tools port (2026-10-09, fix round 1): `frottee` („Frottee-Handtuch",
+ * `drying_textiles`) and `diffuser` („Diffusor-Aufsatz", `airflow`) join it. They
+ * exist so the Feinschliff derives `towel.material = frottee` and offers the
+ * drying route „Mit Diffusor" from the tool inventory; they add no guidance
+ * route — the textile and airflow routes keep reading the derived care facts.
  */
-export const TOOL_ANSWER_ONLY_FORMS = ["fingers"] as const
+export const TOOL_ANSWER_ONLY_FORMS = ["fingers", "frottee", "diffuser"] as const
 export type ToolAnswerOnlyForm = (typeof TOOL_ANSWER_ONLY_FORMS)[number]
 
 export const TOOL_ANSWER_ONLY_FORMS_BY_FAMILY: Partial<
   Record<ToolFamily, readonly ToolAnswerOnlyForm[]>
 > = {
   brushes_combs: ["fingers"],
+  drying_textiles: ["frottee"],
+  airflow: ["diffuser"],
+}
+
+/**
+ * Where an answer-only token sorts inside its family: directly after the named
+ * form. A token without an entry sorts after every real form (`fingers`).
+ */
+const TOOL_ANSWER_ONLY_FORM_SORTS_AFTER: Partial<Record<ToolAnswerOnlyForm, ToolProductType>> = {
+  frottee: "microfiber_towel",
+  diffuser: "hair_dryer",
 }
 
 /** What a reported Tool answer may contain: real forms plus the answer-only tokens. */
@@ -121,17 +138,21 @@ export type ToolReportedForm = ToolProductType | ToolAnswerOnlyForm
  * The persisted answer arrays are validated as an ordered, duplicate-free subset
  * of this list, so the stored value of a family is one canonical array rather
  * than "whatever order the pages happened to be walked in". Answer-only tokens
- * sort after the real forms: they are an addition to the taxonomy, never a
- * member of it.
+ * are an addition to the taxonomy, never a member of it: `fingers` sorts after
+ * the real forms, `frottee` directly after the Mikrofaser-Handtuch and
+ * `diffuser` directly after the Föhn (`TOOL_ANSWER_ONLY_FORM_SORTS_AFTER`).
  */
 export const TOOL_REPORTED_FORMS_BY_FAMILY = Object.fromEntries(
-  TOOL_FAMILIES.map((family) => [
-    family,
-    [
-      ...(TOOL_PRODUCT_TYPES_BY_FAMILY[family] as readonly ToolProductType[]),
-      ...(TOOL_ANSWER_ONLY_FORMS_BY_FAMILY[family] ?? []),
-    ] as readonly ToolReportedForm[],
-  ]),
+  TOOL_FAMILIES.map((family) => {
+    const tokens = TOOL_ANSWER_ONLY_FORMS_BY_FAMILY[family] ?? []
+    const order: ToolReportedForm[] = []
+    for (const form of TOOL_PRODUCT_TYPES_BY_FAMILY[family] as readonly ToolProductType[]) {
+      order.push(form)
+      order.push(...tokens.filter((token) => TOOL_ANSWER_ONLY_FORM_SORTS_AFTER[token] === form))
+    }
+    order.push(...tokens.filter((token) => TOOL_ANSWER_ONLY_FORM_SORTS_AFTER[token] === undefined))
+    return [family, order as readonly ToolReportedForm[]]
+  }),
 ) as Record<ToolFamily, readonly ToolReportedForm[]>
 
 /** Canonical order + de-duplication for one family's reported answer. */

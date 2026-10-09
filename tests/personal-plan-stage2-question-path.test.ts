@@ -397,8 +397,16 @@ test("rollout on: settled pages derive the thing-fields and open one heat questi
   ])
   assert.equal(contract.path.firstUnresolvedQuestionId, "towel_handling")
   assert.equal(isStage2TowelMaterialDerived(toolsOn, lenaAnswers()), true)
-  // She owns a Föhn, so both blow-dry routes are offered (the Diffusor is a Föhn attachment).
+  // §6: Föhn + Warmluftbürste, no Diffusor-Aufsatz → „Mit Diffusor" is absent.
   assert.deepEqual(getStage2DryingRouteOptions(toolsOn, lenaAnswers()), [
+    "air_dry",
+    "ordinary_blow_dry",
+  ])
+  const withDiffuser = {
+    ...lenaAnswers(),
+    toolForms: { ...lenaAnswers().toolForms, "airflow:1": ["hair_dryer", "diffuser"] },
+  } as PersonalPlanRefinementAnswersV1
+  assert.deepEqual(getStage2DryingRouteOptions(toolsOn, withDiffuser), [
     "air_dry",
     "ordinary_blow_dry",
     "diffuser_or_airflow_shaping",
@@ -416,21 +424,36 @@ test("rollout on: the towel question asks only the technique when the material i
   assert.equal(path.firstUnresolvedQuestionId, "drying_routes")
 })
 
-test("rollout on: a Nichts-davon textiles page leaves the full towel question in Gewohnheiten", () => {
+test("rollout on: Frottee is derived from its card and keeps the technique question", () => {
   const answers = {
     ...lenaAnswers(),
-    toolForms: { ...lenaAnswers().toolForms, "drying_textiles:1": [] },
+    toolForms: { ...lenaAnswers().toolForms, "drying_textiles:1": ["frottee"] },
     towel: { material: "frottee" as const, technique: "rough_rubbing" as const },
-  }
-  assert.equal(isStage2TowelMaterialDerived(toolsOn, answers), false)
+  } as PersonalPlanRefinementAnswersV1
+  assert.equal(isStage2TowelMaterialDerived(toolsOn, answers), true)
   const contract = resolveStage2RefinementContract({
     triggerContext: toolsOn,
     answers,
     completedQuestionIds: [...lenaToolIds, "towel_handling"],
   })
-  // The member's own Frottee answer is neither overwritten nor reopened.
   assert.deepEqual(contract.answers.towel, { material: "frottee", technique: "rough_rubbing" })
   assert.equal(contract.path.completedQuestionIds.includes("towel_handling"), true)
+})
+
+test("rollout on: a Nichts-davon textiles page is kein Handtuch and skips the towel question", () => {
+  const answers = {
+    ...lenaAnswers(),
+    toolForms: { ...lenaAnswers().toolForms, "drying_textiles:1": [] },
+    towel: { material: "frottee" as const, technique: "rough_rubbing" as const },
+  } as PersonalPlanRefinementAnswersV1
+  const contract = resolveStage2RefinementContract({
+    triggerContext: toolsOn,
+    answers,
+    completedQuestionIds: [...lenaToolIds, "towel_handling"],
+  })
+  assert.deepEqual(contract.answers.towel, { material: "no_towel" })
+  assert.equal(contract.path.orderedQuestionIds.includes("towel_handling"), false)
+  assert.equal(contract.path.firstUnresolvedQuestionId, "drying_routes")
 })
 
 test("rollout on: drying routes are offered per owned airflow form; others cannot complete", () => {

@@ -2,6 +2,8 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  isToolAnswerOnlyForm,
+  toolProductTypesOf,
   TOOL_FAMILIES,
   TOOL_REPORTED_FORMS_BY_FAMILY,
   type ToolFamily,
@@ -15,6 +17,7 @@ import {
   isToolOverviewAnswerValid,
   isToolPageAnswerValid,
   projectToolInventoryFromCareFacts,
+  projectToolPrefillFromCareFacts,
   reportedToolInventory,
   reportedToolInventoryFromFacts,
   resolvedToolInventory,
@@ -28,6 +31,8 @@ import {
   TOOL_OVERVIEW_SECTIONS,
   toolFamiliesForSections,
   toolFormCareKey,
+  toolImageSrc,
+  toolReportedFormLabel,
 } from "@/lib/personal-plan/tools/labels"
 import { TOOL_OVERVIEW_OPTIONS } from "@/lib/personal-plan/tools/stage2"
 import { ADDITIONAL_HEAT_TOOLS } from "@/lib/personal-plan/refinement/types"
@@ -239,7 +244,7 @@ test("the heat-source map turns airflow and heated forms into additional heat to
   )
 })
 
-test("drying-route options follow the owned airflow forms", () => {
+test("drying-route options follow the owned airflow forms; „Mit Diffusor“ needs the Diffusor", () => {
   assert.equal(dryingRouteOptionsFromToolInventory({}), null)
   assert.deepEqual(dryingRouteOptionsFromToolInventory({ airflow: [] }), ["air_dry"])
   assert.deepEqual(dryingRouteOptionsFromToolInventory({ airflow: ["hot_air_brush"] }), [
@@ -249,11 +254,46 @@ test("drying-route options follow the owned airflow forms", () => {
   assert.deepEqual(dryingRouteOptionsFromToolInventory({ airflow: ["hair_dryer"] }), [
     "air_dry",
     "ordinary_blow_dry",
+  ])
+  assert.deepEqual(dryingRouteOptionsFromToolInventory({ airflow: ["hair_dryer", "diffuser"] }), [
+    "air_dry",
+    "ordinary_blow_dry",
     "diffuser_or_airflow_shaping",
   ])
 })
 
-test("towel material is derived only from a named drying textile", () => {
+test("Frottee and Diffusor are answer-only forms sorted after Mikrofaser and Föhn", () => {
+  assert.deepEqual(TOOL_REPORTED_FORMS_BY_FAMILY.drying_textiles, [
+    "microfiber_towel",
+    "frottee",
+    "smooth_cotton_cloth",
+    "drying_wrap",
+  ])
+  assert.deepEqual(TOOL_REPORTED_FORMS_BY_FAMILY.airflow, [
+    "hair_dryer",
+    "diffuser",
+    "hot_air_brush",
+    "air_multi_styler",
+  ])
+  assert.equal(TOOL_REPORTED_FORMS_BY_FAMILY.brushes_combs.at(-1), "fingers")
+  for (const token of ["frottee", "diffuser", "fingers"])
+    assert.equal(isToolAnswerOnlyForm(token), true)
+  // Never a product: the route engine reads them away.
+  assert.deepEqual(toolProductTypesOf(["microfiber_towel", "frottee"]), ["microfiber_towel"])
+  assert.deepEqual(toolProductTypesOf(["hair_dryer", "diffuser"]), ["hair_dryer"])
+  assert.equal(isToolPageAnswerValid("drying_textiles:1", ["microfiber_towel", "frottee"]), true)
+  assert.equal(isToolPageAnswerValid("drying_textiles:1", ["frottee", "microfiber_towel"]), false)
+  assert.equal(
+    isToolPageAnswerValid("airflow:1", ["hair_dryer", "diffuser", "hot_air_brush"]),
+    true,
+  )
+  assert.equal(toolReportedFormLabel("frottee"), "Frottee-Handtuch")
+  assert.equal(toolReportedFormLabel("diffuser"), "Diffusor-Aufsatz")
+  assert.equal(toolImageSrc("frottee"), "/images/tools/frottee.webp")
+  assert.equal(toolImageSrc("diffuser"), "/images/tools/diffuser.webp")
+})
+
+test("towel material is always derived from a settled textiles page", () => {
   assert.equal(
     careFactsFromToolInventory({ drying_textiles: ["microfiber_towel"] }).towelMaterial,
     "mikrofaser",
@@ -266,15 +306,23 @@ test("towel material is derived only from a named drying textile", () => {
     careFactsFromToolInventory({ drying_textiles: ["drying_wrap"] }).towelMaterial,
     "turban_mikrofaser",
   )
-  // Several textiles: the first in canonical family order wins.
+  assert.equal(
+    careFactsFromToolInventory({ drying_textiles: ["frottee"] }).towelMaterial,
+    "frottee",
+  )
+  // Several textiles: a suitable textile wins over Frottee, then canonical order.
+  assert.equal(
+    careFactsFromToolInventory({ drying_textiles: ["frottee", "drying_wrap"] }).towelMaterial,
+    "turban_mikrofaser",
+  )
   assert.equal(
     careFactsFromToolInventory({ drying_textiles: ["smooth_cotton_cloth", "drying_wrap"] })
       .towelMaterial,
     "tshirt",
   )
-  // „Nichts davon" says nothing about a Frottee towel (no terry form exists) or about drying
-  // without a towel, so the material stays a Gewohnheiten answer.
-  assert.equal(careFactsFromToolInventory({ drying_textiles: [] }).towelMaterial, undefined)
+  // „Nichts davon" (or an unticked section) is „kein Handtuch".
+  assert.equal(careFactsFromToolInventory({ drying_textiles: [] }).towelMaterial, "no_towel")
+  // Unknown stays unknown.
   assert.equal(careFactsFromToolInventory({}).towelMaterial, undefined)
 })
 
@@ -303,11 +351,26 @@ test("brush forms map onto the legacy brush vocabulary; the rest drop out of tha
   assert.equal(careFactsFromToolInventory({}).brushesCombs, undefined)
 })
 
-/* ── C. round trip with the existing pre-fill projection ─────────────────── */
+/* ── C. round trip with the pre-fill projection ──────────────────────────── */
+
+test("the pre-fill adds Frottee and Diffusor; the engine projection stays as it was", () => {
+  const care = {
+    ...EMPTY_TOOL_CARE_FACTS,
+    towelMaterial: "frottee" as const,
+    dryingRoutes: ["diffuser_or_airflow_shaping" as const],
+  }
+  assert.deepEqual(projectToolPrefillFromCareFacts(care), {
+    airflow: ["hair_dryer", "diffuser"],
+    drying_textiles: ["frottee"],
+  })
+  // Fixture 21 (`D4`): the route engine still sees no drying-textile ownership for Frottee.
+  assert.deepEqual(projectToolInventoryFromCareFacts(care), { airflow: ["hair_dryer"] })
+  assert.deepEqual(projectToolPrefillFromCareFacts({ ...care, provenance: "assumed" }), {})
+})
 
 /** What a member's confirmed pre-fill looks like: every family answered, the pre-fill kept. */
 function confirmPrefill(care: ToolCareFacts): ToolInventory {
-  const projected = projectToolInventoryFromCareFacts(care)
+  const projected = projectToolPrefillFromCareFacts(care)
   return Object.fromEntries(
     TOOL_FAMILIES.map((family: ToolFamily) => [family, [...(projected[family] ?? [])]]),
   )
@@ -338,14 +401,15 @@ test("round trip: confirming the pre-fill keeps every stored drying route offere
 })
 
 test("round trip: towel material and night protection survive, with the documented losses", () => {
-  for (const material of ["mikrofaser", "tshirt", "turban_mikrofaser"] as const) {
+  for (const material of [
+    "mikrofaser",
+    "tshirt",
+    "turban_mikrofaser",
+    "frottee",
+    "no_towel",
+  ] as const) {
     const care = { ...EMPTY_TOOL_CARE_FACTS, towelMaterial: material }
     assert.equal(careFactsFromToolInventory(confirmPrefill(care)).towelMaterial, material)
-  }
-  // Frottee and „kein Handtuch" name no textile form: nothing is derived, the stored answer stays.
-  for (const material of ["frottee", "no_towel"] as const) {
-    const care = { ...EMPTY_TOOL_CARE_FACTS, towelMaterial: material }
-    assert.equal(careFactsFromToolInventory(confirmPrefill(care)).towelMaterial, undefined)
   }
   for (const protection of NIGHT_PROTECTIONS) {
     const care = { ...EMPTY_TOOL_CARE_FACTS, nightProtection: [protection] }

@@ -85,12 +85,18 @@ export const TOOL_PRODUCT_TYPE_LABELS = {
  */
 export const TOOL_ANSWER_ONLY_FORM_LABELS = {
   fingers: "Nur Finger",
+  // Kept identical to the legacy towel vocabulary's label (`TOWEL_MATERIAL_LABELS.frottee`).
+  frottee: "Frottee-Handtuch",
+  diffuser: "Diffusor-Aufsatz",
 } as const satisfies Record<ToolAnswerOnlyForm, string>
 
-/** Short clarifying line under an answer-only card. Product cards carry none. */
-export const TOOL_ANSWER_ONLY_FORM_HINTS = {
+/**
+ * Short clarifying line under an answer-only card, where its name alone is
+ * ambiguous. Product cards — and answer-only cards named by their thing — carry none.
+ */
+export const TOOL_ANSWER_ONLY_FORM_HINTS: Partial<Record<ToolAnswerOnlyForm, string>> = {
   fingers: "Du entwirrst mit den Händen.",
-} as const satisfies Record<ToolAnswerOnlyForm, string>
+}
 
 /** Short purpose line under the product type. Never replaces the category name. */
 export const TOOL_ROUTE_PURPOSE_COPY = {
@@ -219,6 +225,8 @@ const TOOL_FORM_PHOTOS: Record<ToolReportedForm, string> = {
   smooth_cotton_cloth: "smooth_cotton_cloth",
   drying_wrap: "drying_wrap",
   fingers: "fingers",
+  frottee: "frottee",
+  diffuser: "diffuser",
 }
 
 /** The card label for anything a reported answer may contain (`D9b`). */
@@ -347,7 +355,7 @@ export const TOOL_FORM_PAGES = [
   {
     pageKey: "drying_textiles:1",
     family: "drying_textiles",
-    forms: ["microfiber_towel", "smooth_cotton_cloth", "drying_wrap"],
+    forms: ["microfiber_towel", "frottee", "smooth_cotton_cloth", "drying_wrap"],
   },
   {
     pageKey: "brushes_combs:1",
@@ -369,7 +377,7 @@ export const TOOL_FORM_PAGES = [
   {
     pageKey: "airflow:1",
     family: "airflow",
-    forms: ["hair_dryer", "hot_air_brush", "air_multi_styler"],
+    forms: ["hair_dryer", "diffuser", "hot_air_brush", "air_multi_styler"],
   },
   {
     pageKey: "heated_styling:1",

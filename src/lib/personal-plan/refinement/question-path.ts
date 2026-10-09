@@ -169,7 +169,11 @@ export function getOrderedQuestionIds(
     // Further heat tools and night protection are derived from the pages, so their
     // Gewohnheiten questions leave the path; the towel question keeps the technique.
     ids.push(...getToolQuestionIds(triggerContext, answers))
-    ids.push("towel_handling", "drying_routes")
+    // „Kein Handtuch" derived from the textiles page leaves nothing to ask about the towel.
+    if (getStage2ToolDerivedCareFacts(triggerContext, answers)?.towelMaterial !== "no_towel") {
+      ids.push("towel_handling")
+    }
+    ids.push("drying_routes")
     ids.push(...getSelectedStage2HeatEventSources(answers).map(createStage2HeatEventId))
     return ids
   }
@@ -223,7 +227,8 @@ export function getStage2DryingRouteOptions(
 
 /**
  * Whether the towel material comes from the textiles page, so the towel question asks only
- * the technique. False while the rollout is off or the page names no textile.
+ * the technique (and leaves the path entirely for a derived „kein Handtuch"). False while the
+ * rollout is off or the textiles family is not settled yet.
  */
 export function isStage2TowelMaterialDerived(
   triggerContext: Stage2TriggerContext,

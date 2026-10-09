@@ -151,6 +151,9 @@ async function attemptRebase(
   // No source draft: no clone and no refined parameters. A plan with a refined head but no
   // draft is the RPC's to refuse (`invalid_source`), not this lane's to guess around.
   if (sourceDraft) {
+    // The refined clone follows the member's real rollout, so a confirmed tools module survives
+    // the rebase; fail closed (off) if the lookup fails.
+    const toolsEnabled = await deps.toolsEnabled(userId).catch(() => false)
     let projection: ReturnType<typeof buildRebaseProjection>
     try {
       projection = buildRebaseProjection({
@@ -159,9 +162,9 @@ async function attemptRebase(
         sourceId,
         hasRefinedHead: plan.currentRefinedNeedVersionId !== null,
         now: deps.now(),
-        // Tools-off by design: the facts lane recomputes a product-only initial snapshot (same
-        // as Stage 1), so the clone it rebases is validated against the product-only path.
-        toolsEnabled: false,
+        // The initial snapshot above stays product-only (exactly Stage 1); only the refined
+        // clone's question path follows the rollout.
+        toolsEnabled: toolsEnabled === true,
       })
     } catch (error) {
       if (error instanceof RebaseProjectionIncompleteError) {

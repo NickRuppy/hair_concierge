@@ -293,6 +293,28 @@ export function projectToolInventoryFromCareFacts(care: ToolCareFacts): ToolDeri
 }
 
 /**
+ * The Feinschliff pre-fill (UI starting value and the assumption rules): the engine projection
+ * plus the answer-only cards a care answer names — a stored `towel.material = frottee` ticks
+ * „Frottee-Handtuch", a stored „Mit Diffusor" drying route ticks „Diffusor-Aufsatz". The engine
+ * projection itself (`projectToolInventoryFromCareFacts`) stays token-free, so route ownership
+ * is unchanged (fixture 21, `D4`). Direct acceptance's assumed defaults pre-fill nothing.
+ */
+export function projectToolPrefillFromCareFacts(
+  care: ToolCareFacts,
+): Partial<Record<ToolFamily, ToolReportedForm[]>> {
+  if (care.provenance === "assumed") return {}
+  const prefill: Partial<Record<ToolFamily, ToolReportedForm[]>> = {
+    ...projectToolInventoryFromCareFacts(care),
+  }
+  const add = (family: ToolFamily, form: ToolReportedForm) => {
+    prefill[family] = sortToolReportedForms(family, [...(prefill[family] ?? []), form])
+  }
+  if (care.towelMaterial === "frottee") add("drying_textiles", "frottee")
+  if (care.dryingRoutes?.includes("diffuser_or_airflow_shaping")) add("airflow", "diffuser")
+  return prefill
+}
+
+/**
  * Where each projected family's evidence came from (`D4`, clarified 2026-08-25).
  *
  * Provenance follows **what the answer is**, not which store it arrived through.
@@ -630,9 +652,8 @@ export function resolvedToolInventory(answers: ToolAnswerState): ToolInventory {
  *   the drying route the user picks in Gewohnheiten (`ordinary_blow_dry`, or
  *   `diffuser_airflow_shaping` through „Mit Diffusor").
  * - `dryingRoutes`: the drying routes Gewohnheiten offers because the form is owned
- *   (`air_dry` is always offered). There is no Diffusor form, and a Diffusor is a Föhn
- *   attachment, so the Föhn offers „Mit Diffusor" (provisional default, see the Task-4
- *   report; vetoable at ready-check).
+ *   (`air_dry` is always offered). „Mit Diffusor" is offered only for the answer-only
+ *   `diffuser` card („Diffusor-Aufsatz").
  * - `towelMaterial` / `nightProtection` / `brushType`: the existing vocabulary value.
  */
 export type ToolFormCareFact = {
@@ -645,7 +666,8 @@ export type ToolFormCareFact = {
 
 export const TOOL_FORM_CARE_FACTS = {
   // airflow
-  hair_dryer: { dryingRoutes: ["ordinary_blow_dry", "diffuser_or_airflow_shaping"] },
+  hair_dryer: { dryingRoutes: ["ordinary_blow_dry"] },
+  diffuser: { dryingRoutes: ["diffuser_or_airflow_shaping"] },
   hot_air_brush: { additionalHeatTool: "dryer_brush", dryingRoutes: ["ordinary_blow_dry"] },
   air_multi_styler: { additionalHeatTool: "hot_air_styler", dryingRoutes: ["ordinary_blow_dry"] },
   // heated_styling
@@ -693,9 +715,18 @@ export const TOOL_FORM_CARE_FACTS = {
   soft_night_tie: { nightProtection: "loose_tied" },
   // drying_textiles — the inverse of the existing pre-fill projection (`mapTowelMaterial`)
   microfiber_towel: { towelMaterial: "mikrofaser" },
+  frottee: { towelMaterial: "frottee" },
   smooth_cotton_cloth: { towelMaterial: "tshirt" },
   drying_wrap: { towelMaterial: "turban_mikrofaser" },
 } as const satisfies Record<ToolReportedForm, ToolFormCareFact>
+
+/** Which textile names the towel material when several are owned. */
+const TOWEL_MATERIAL_PRIORITY: readonly ToolReportedForm[] = [
+  "microfiber_towel",
+  "smooth_cotton_cloth",
+  "drying_wrap",
+  "frottee",
+]
 
 /** The care facts the tool inventory decides. A key is present only when it is derived. */
 export type ToolDerivedCareFacts = {
@@ -724,10 +755,9 @@ function inOrder<T extends string>(values: Iterable<T>, order: readonly T[]): T[
  * A family that is unknown (absent / `null`) derives nothing.
  *
  * - `additionalHeatTools` once BOTH `airflow` and `heated_styling` are known.
- * - `towelMaterial` only when `drying_textiles` names a textile; a „Nichts davon" textiles page
- *   derives nothing, because no Frottee form exists and „kein Handtuch" is not the same answer
- *   (`D4`): the material then stays a Gewohnheiten answer. Several textiles → the first in
- *   canonical family order.
+ * - `towelMaterial` once `drying_textiles` is known: `[]` (or an unticked section) is
+ *   `no_towel`; several textiles → a suitable one wins over Frottee
+ *   (`TOWEL_MATERIAL_PRIORITY`), so a reported suitable textile never reads as an upgrade case.
  * - `nightProtection` once `night_protection` is known (`[]` = none).
  * - `brushesCombs` once `brushes_combs` is known (forms without a legacy value drop out).
  */
@@ -746,10 +776,9 @@ export function careFactsFromToolInventory(inventory: ToolInventory): ToolDerive
   }
   const textiles = known(inventory, "drying_textiles")
   if (textiles) {
-    const material = sortToolReportedForms("drying_textiles", textiles)
-      .map((form) => careFactOf(form).towelMaterial)
-      .find((value): value is TowelMaterial => value !== undefined)
-    if (material) facts.towelMaterial = material
+    const owned = new Set<ToolReportedForm>(textiles)
+    const lead = TOWEL_MATERIAL_PRIORITY.find((form) => owned.has(form))
+    facts.towelMaterial = lead ? (careFactOf(lead).towelMaterial ?? "no_towel") : "no_towel"
   }
   const night = known(inventory, "night_protection")
   if (night) {

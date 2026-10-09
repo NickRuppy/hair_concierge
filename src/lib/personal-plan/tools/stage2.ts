@@ -15,7 +15,7 @@ import {
   toolReportedFormLabel,
   type ToolOverviewSectionKey,
 } from "./labels"
-import { projectToolInventoryFromCareFacts, type ToolCareFacts } from "./facts"
+import { projectToolPrefillFromCareFacts, type ToolCareFacts } from "./facts"
 
 /**
  * Feinschliff presentation for the Tool trip.
@@ -121,7 +121,9 @@ export function toolFormPagePresentation(pageKey: string): ToolFormPagePresentat
       label: toolReportedFormLabel(form),
       // Only the answer-only cards („Nur Finger") need a clarifying line; a
       // product card is named by its own form.
-      ...(isToolAnswerOnlyForm(form) ? { hint: TOOL_ANSWER_ONLY_FORM_HINTS[form] } : {}),
+      ...(isToolAnswerOnlyForm(form) && TOOL_ANSWER_ONLY_FORM_HINTS[form]
+        ? { hint: TOOL_ANSWER_ONLY_FORM_HINTS[form] }
+        : {}),
       imageUrl: toolImageSrc(form),
       imageAlt: toolImageAlt(form),
     })),
@@ -148,7 +150,7 @@ export function toolQuestionLabel(questionId: string): string {
  */
 export function defaultToolSectionsFromCare(care: ToolCareFacts): ToolOverviewSectionKey[] {
   const reportedFamilies = new Set(
-    Object.entries(projectToolInventoryFromCareFacts(care))
+    Object.entries(projectToolPrefillFromCareFacts(care))
       .filter(([, forms]) => Array.isArray(forms) && forms.length > 0)
       .map(([family]) => family),
   )
@@ -159,9 +161,9 @@ export function defaultToolSectionsFromCare(care: ToolCareFacts): ToolOverviewSe
 
 export function defaultToolFormsFromCare(
   care: ToolCareFacts,
-): Partial<Record<ToolFamily, ToolProductType[]>> {
-  const projected = projectToolInventoryFromCareFacts(care)
-  const defaults: Partial<Record<ToolFamily, ToolProductType[]>> = {}
+): Partial<Record<ToolFamily, ToolReportedForm[]>> {
+  const projected = projectToolPrefillFromCareFacts(care)
+  const defaults: Partial<Record<ToolFamily, ToolReportedForm[]>> = {}
   for (const [family, forms] of Object.entries(projected)) {
     if (Array.isArray(forms) && forms.length > 0) defaults[family as ToolFamily] = [...forms]
   }
@@ -193,4 +195,21 @@ export function toolFormPreselection(
 ): ToolReportedForm[] | undefined {
   const forms = defaultToolFormsFromCare(care)[family]
   return forms && forms.length > 0 ? sortToolReportedForms(family, forms) : undefined
+}
+
+/**
+ * One page's starting value: the family pre-fill narrowed to the forms that page offers.
+ * `undefined` when the care answers imply nothing for it.
+ */
+export function toolPagePreselection(
+  care: ToolCareFacts,
+  pageKey: string,
+): ToolReportedForm[] | undefined {
+  const page = TOOL_FORM_PAGES.find((candidate) => candidate.pageKey === pageKey)
+  if (!page) return undefined
+  const offered = new Set<string>(page.forms)
+  const forms = (defaultToolFormsFromCare(care)[page.family] ?? []).filter((form) =>
+    offered.has(form),
+  )
+  return forms.length > 0 ? sortToolReportedForms(page.family, forms) : undefined
 }

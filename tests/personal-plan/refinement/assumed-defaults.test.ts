@@ -589,14 +589,15 @@ test("rule assume:tools_form:derived_from_care fills each page with the implied 
   assert.deepEqual(resolution.answers.dryingRoutes, ["ordinary_blow_dry"])
 })
 
-test("rollout on, no answers: today's defaults plus an empty tool inventory", () => {
+test("rollout on, no answers: an empty tool inventory, kein Handtuch, air drying", () => {
   const resolution = resolve(TOOLS_ON_CONTEXT)
   assert.deepEqual(resolution.answers, {
     currentProductCategories: [],
     wetWashFrequency: "weekly_2x",
     toolFamiliesWithSomething: [],
     toolForms: Object.fromEntries(TOOL_FORM_PAGES.map((page) => [page.pageKey, []])),
-    towel: { material: "mikrofaser", technique: "gentle_press" },
+    // An empty tool inventory is „kein Handtuch" (plan §4); the towel question leaves the path.
+    towel: { material: "no_towel" },
     dryingRoutes: ["air_dry"],
     additionalHeatTools: [],
     heatEvents: {},
@@ -606,7 +607,6 @@ test("rollout on, no answers: today's defaults plus an empty tool inventory", ()
     "current_product_categories",
     "wet_wash_frequency",
     "tools_overview",
-    "towel_handling",
     "drying_routes",
   ])
 })
@@ -770,4 +770,25 @@ test("the tools rules cover the overview and every page explicitly", () => {
   assert.equal(overviewRules.length, 1)
   assert.equal(pageRules.length, 1)
   assert.equal(TOOL_OVERVIEW_SECTIONS.length, 4)
+})
+
+test("rollout on: a Frottee + Diffusor member's assumed inventory keeps both answers", () => {
+  const answers: PersonalPlanRefinementAnswersV1 = {
+    towel: { material: "frottee", technique: "rough_rubbing" },
+    dryingRoutes: ["diffuser_or_airflow_shaping"],
+    heatEvents: {
+      "heat:diffuser_airflow_shaping": { frequency: "weekly_1x", protectionConsistency: "unsure" },
+    },
+  }
+  const resolution = resolve(TOOLS_ON_CONTEXT, answers, [
+    "towel_handling",
+    "drying_routes",
+    "heat:diffuser_airflow_shaping",
+  ])
+  assert.deepEqual(resolution.answers.toolForms?.["drying_textiles:1"], ["frottee"])
+  assert.deepEqual(resolution.answers.toolForms?.["airflow:1"], ["hair_dryer", "diffuser"])
+  assert.deepEqual(resolution.answers.towel, { material: "frottee", technique: "rough_rubbing" })
+  assert.deepEqual(resolution.answers.dryingRoutes, ["diffuser_or_airflow_shaping"])
+  assert.deepEqual(resolution.answers.heatEvents, answers.heatEvents)
+  assert.equal(resolution.assumedQuestionIds.includes("drying_routes"), false)
 })
