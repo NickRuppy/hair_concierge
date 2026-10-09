@@ -117,18 +117,9 @@ function evaluateFacts(input: Stage3AuthorityInput<"leave_in">, facts: Stage3Lea
         ),
       ],
     }
-  if (input.role === "pre_heat_application" && !facts.spec.applicationStages?.includes("pre_heat"))
-    return {
-      verdict: "mismatch" as const,
-      criteria: [
-        criterion(
-          "leave_in.application",
-          "Anwendungszeitpunkt",
-          "fail",
-          "Die Anwendung vor Hitze ist nicht bestätigt.",
-        ),
-      ],
-    }
+  // A verified heat claim and the verified pre-heat protocol establish this
+  // use. `applicationStages` records what the product directions literally
+  // say; a silent label must not contradict the shared protocol's timing.
   const weightResult = orderedAxisFitResult(
     facts.spec.weight as (typeof WEIGHTS)[number],
     target.weight,
