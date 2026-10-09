@@ -48,6 +48,7 @@ import {
   type DiscoveryRoutineSource,
   type DiscoveryStepDepth,
 } from "./load-ideal-routine"
+import type { DiscoveryEqualOption } from "./equal-options"
 import {
   loadDiscoveryRecommendationPropertyRows,
   loadParticipantScanVerdicts,
@@ -615,6 +616,9 @@ export async function loadDiscoveryCockpitModel(
       ...ideal.steps.flatMap((entry) =>
         entry.preview?.kind === "recommendation" ? [entry.preview.productId] : [],
       ),
+      ...ideal.steps.flatMap((entry) =>
+        (entry.equalOptions ?? []).map((option) => option.productId),
+      ),
       ...verdicts.flatMap((verdict) =>
         verdict.status === "verdict" && verdict.payload.kind === "in_catalog"
           ? verdict.payload.alternatives.map((alternative) => alternative.productId)
@@ -725,7 +729,11 @@ export type DiscoveryCockpitSwapOption = {
   priceLabel: string | null
   /** The catalog packshot (`products.image_url`), for the option's thumbnail; null = none. */
   imageUrl: string | null
-  origin: "alternative" | "ideal_recommendation"
+  /**
+   * `equal_alternative`: rated exactly as well as the Idealplan's pick, which a house
+   * default chose among equals (Bondbuilder tie, see `equal-options.ts`).
+   */
+  origin: "alternative" | "ideal_recommendation" | "equal_alternative"
   /**
    * Target-vs-product rows for a displayed alternative or (F1) the Idealplan's
    * recommendation; null when there are none.
@@ -954,6 +962,25 @@ function idealRecommendationOption(
   }
 }
 
+/** An equally ideal product next to the Idealplan's tie-default pick (T1). */
+function equalAlternativeOption(
+  option: DiscoveryEqualOption,
+  identities: ReadonlyMap<string, DiscoveryProductIdentity>,
+): DiscoveryCockpitSwapOption {
+  const brand = identities.get(option.productId)?.brand ?? null
+  return {
+    productId: option.productId,
+    name: option.productName,
+    brand,
+    label: optionLabel(option.productId, { name: option.productName, brand }, identities),
+    verdictLabel: SCAN_VERDICT_COPY.ideal.label,
+    priceLabel: option.priceLabel,
+    imageUrl: identities.get(option.productId)?.imageUrl ?? option.imageUrl,
+    origin: "equal_alternative",
+    propertyRows: null,
+  }
+}
+
 /**
  * The „Eingetragene Produkte" rows: every captured product (not „benutze ich nicht"), named
  * like the routine names it once it has a catalog product — her own or auto-linked — and
@@ -1046,8 +1073,14 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
               alternativeRows.get(alternative.productId) ?? null,
             ),
           )
-        : ideal && !ownedInStep.has(ideal.productId)
-          ? [ideal]
+        : ideal
+          ? [
+              ideal,
+              // T1: a tie-default pick brings its equals — the call may choose any of them.
+              ...(step.equalOptions ?? []).map((option) =>
+                equalAlternativeOption(option, identities),
+              ),
+            ].filter((option) => !ownedInStep.has(option.productId))
           : []
 
     return {

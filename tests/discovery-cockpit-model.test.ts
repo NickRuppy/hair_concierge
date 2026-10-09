@@ -231,6 +231,72 @@ test("an empty step offers the Idealplan's own recommendation instead", () => {
   assert.equal(view.steps[0].outcome, "ideal")
 })
 
+test("a tie-default pick brings its equals: the call may choose any, the route accepts them", () => {
+  const equal = (productId: string, productName: string) => ({
+    productId,
+    productName,
+    priceLabel: "8,95 €",
+    imageUrl: `https://catalog.example/${productId}.jpg`,
+  })
+  const view = buildDiscoveryCockpitView(
+    model({
+      steps: [
+        step({
+          preview: idealPreview(ids.ideal),
+          equalOptions: [
+            equal(ids.alternativeA, "Elvital Pre-Shampoo"),
+            equal(ids.alternativeB, "Redken Concentrate"),
+          ],
+        }),
+      ],
+      items: [],
+    }),
+  )
+  assert.deepEqual(
+    view.steps[0].swapOptions.map((option) => [option.productId, option.origin]),
+    [
+      [ids.ideal, "ideal_recommendation"],
+      [ids.alternativeA, "equal_alternative"],
+      [ids.alternativeB, "equal_alternative"],
+    ],
+  )
+  assert.equal(view.steps[0].swapOptions[1].verdictLabel, "Passt")
+  assert.equal(view.steps[0].swapOptions[1].priceLabel, "8,95 €")
+  assert.deepEqual(discoveryCockpitSwapOptionIds(view, view.steps[0].decisionKey, null), [
+    ids.ideal,
+    ids.alternativeA,
+    ids.alternativeB,
+  ])
+})
+
+test("equal options never move the routine fingerprint (nothing prints until chosen)", () => {
+  const plain = composeDiscoveryRefinedRoutine({
+    steps: [step({ preview: idealPreview(ids.ideal) })],
+    items: [],
+    decisions: [],
+    swapProducts: [],
+  })
+  const withEquals = composeDiscoveryRefinedRoutine({
+    steps: [
+      step({
+        preview: idealPreview(ids.ideal),
+        equalOptions: [
+          {
+            productId: ids.alternativeA,
+            productName: "Elvital Pre-Shampoo",
+            priceLabel: null,
+            imageUrl: null,
+          },
+        ],
+      }),
+    ],
+    items: [],
+    decisions: [],
+    swapProducts: [],
+  })
+  assert.equal(withEquals.sourceHash, plain.sourceHash)
+})
+
 test("a step whose verdict failed keeps the Idealplan pick, never the product itself", () => {
   const failed = buildDiscoveryCockpitView(
     model({
