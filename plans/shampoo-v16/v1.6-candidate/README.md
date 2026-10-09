@@ -33,6 +33,8 @@ Post-lock amendment (2026-10-10, ruling R17), applied in place to the locked tex
 - **R17.3 (active without a dandruff claim = regular shampoo).** Its sensitive, dry and oily paths stay open; only the note `active_without_dandruff_positioning` remains.
 - Changelog rows 109–114. Not exercised by calibration lanes.
 
+Review fix (2026-10-10), text only, mirrored from the locked text: S-DANDRUFF's wording sentence applies to a dandruff-primary product; a dandruff claim that fails S-DANDRUFF follows E2a/E2b layer 1. Changelog row 115; no rule or ruling changed.
+
 | File | Purpose |
 | --- | --- |
 | `classification-standard.md` | The full normative candidate, with rule IDs that calibration lanes cite. |

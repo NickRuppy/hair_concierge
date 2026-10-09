@@ -16,12 +16,12 @@ Status: **LOCKED v1.6 (2026-10-10, ruling R14), amended by ruling R17 before pub
 | File | Purpose |
 | --- | --- |
 | [`classification-standard.md`](./classification-standard.md) | The normative locked standard: eight direct properties plus the production projection block (Section 13), with stable rule IDs. |
-| [`rule-changes.md`](./rule-changes.md) | Every rule change from v1.4, rows 1–114, each with its source (ruling, weight method, or the calibration ambiguity it closes) and whether it could change a live value. |
+| [`rule-changes.md`](./rule-changes.md) | Every rule change from v1.4, rows 1–115, each with its source (ruling, weight method, or the calibration ambiguity it closes) and whether it could change a live value. |
 | [`runbook.md`](./runbook.md) | How to research a new German shampoo under v1.6: formula freeze, sealed two-lane validation, adjudication, stop boundary. |
 
 ## Authority
 
-- The standard in this directory is the only normative v1.6 text. It is byte-frozen; a rule change is a new version with its own calibration and lock receipt. The one exception, ruling R17, was applied in place before the package was first published, with every pin refreshed.
+- The standard in this directory is the only normative v1.6 text. It is byte-frozen; a rule change is a new version with its own calibration and lock receipt. The exceptions, ruling R17 and a text-only review fix that changes no rule (rule-changes row 115), were applied in place before the package was first published, with every pin refreshed.
 - Locking approves the research method only. Product Intake reconciliation, catalog or Supabase writes, recommendation changes and user-facing copy each need their own approval (standard Section 16).
 - The shipped Production Light adapter (`src/lib/shampoo/production-light-adapter.ts`) is still pinned to v1.4. Re-pinning it to v1.6 is a separate, reviewed change.
 - The candidate working record (`plans/shampoo-v16/v1.6-candidate/`) and the living rulings ledger (`plans/shampoo-v16/rulings.md`) show how the standard got here. They are not normative; the receipt pins a snapshot of the ledger at R17 (`data/research/shampoo-inci/v1.6/rulings-ledger.md`).
@@ -46,7 +46,7 @@ All under [`data/research/shampoo-inci/v1.6/calibration/`](../../../../data/rese
 | Round 2 | 13 gold | 202/208 = 97.1% | `round-2/round-2-report.md` |
 | Unseen check v2 | 6 fresh Track B products | 92/96 = 95.8% | `unseen-v2/unseen-v2-report.md` |
 
-Two sealed Opus lanes per run, frozen and blinded packets, no web. Adjudication (R14): Garnier Wahre Schätze Kokosmilch & Macadamia weight `moderate` (genuine low/moderate boundary, resolved conservatively per P0/W3); Aussie Bouncy Curls stays `needs_research` until its formula source is re-verified. Rulings R15 and R16 were applied after the unseen check without a further calibration round (R13), and R17 after the lock, before the package was first published; the lock receipt records both as known limits.
+Two sealed Opus lanes per run, frozen packets under blind ids, no web. The lane kits were single packets (product name, brand and claims delivered with the INCI; lanes self-reported working formula-first) without completeness or source-tier evidence; new runs use the two-stage kit (runbook step 3), and the receipt lists this as a known limit. Counting `researchCombinationTargets` as Section 14 requires leaves rounds 1 and 2 unchanged and makes the unseen check 98/102 = 96.1% (`calibration/research-combination-addendum.md`). Adjudication (R14): Garnier Wahre Schätze Kokosmilch & Macadamia weight `moderate` (genuine low/moderate boundary, resolved conservatively per P0/W3); Aussie Bouncy Curls stays `needs_research` until its formula source is re-verified. Rulings R15 and R16 were applied after the unseen check without a further calibration round (R13), and R17 after the lock, before the package was first published; the lock receipt records both as known limits.
 
 ## Open after lock
 

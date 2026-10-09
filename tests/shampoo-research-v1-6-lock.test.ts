@@ -1,6 +1,15 @@
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
-import { readdirSync, readFileSync, statSync } from "node:fs"
+import {
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from "node:fs"
+import { tmpdir } from "node:os"
 import path from "node:path"
 import test from "node:test"
 
@@ -10,6 +19,13 @@ const MANIFEST_PATH = "data/research/shampoo-inci/v1.6/artifact-manifest.json"
 const RECEIPT_PATH = "data/research/shampoo-inci/v1.6/v1.6-logic-lock-receipt.json"
 const STANDARD_PATH = "docs/research/shampoo-inci/v1.6/classification-standard.md"
 const CALIBRATION_ROOT = "data/research/shampoo-inci/v1.6/calibration/"
+
+// Independent anchors. The manifest pins every other file, but nothing pins the manifest
+// itself, so an artifact edit plus a matching manifest edit would otherwise pass. Any change
+// to the manifest or the normative standard must also change these constants: a visible,
+// reviewable test edit.
+const MANIFEST_SHA256 = "3efe2c659e43cecd2229c6aae735c7146a12817f6cd6d84d6003b7e9de5324b4"
+const NORMATIVE_STANDARD_SHA256 = "3b70a145e23e381f5c83ded0092d86d9642ddb7f570dfc9d7414a843659baf98"
 
 type Manifest = {
   schema_version: string
@@ -70,7 +86,9 @@ function assertPinned(artifact: Pinned) {
 
 function listFiles(relativeDir: string): string[] {
   return readdirSync(path.resolve(relativeDir), { withFileTypes: true }).flatMap((entry) => {
-    if (entry.name === ".DS_Store") return [] // local Finder noise, never tracked
+    // Local Finder noise, never tracked: skip only a *file* named exactly .DS_Store, so a
+    // directory of that name (and everything under it) is still inventoried.
+    if (entry.isFile() && entry.name === ".DS_Store") return []
     const child = `${relativeDir.replace(/\/$/, "")}/${entry.name}`
     return entry.isDirectory() ? listFiles(child) : [child]
   })
@@ -78,6 +96,40 @@ function listFiles(relativeDir: string): string[] {
 
 const manifest = readJson<Manifest>(MANIFEST_PATH)
 const receipt = readJson<Receipt>(RECEIPT_PATH)
+
+test("the inventory scanner skips only files named exactly .DS_Store, never a directory or its subtree", () => {
+  const root = mkdtempSync(path.join(tmpdir(), "shampoo-v16-inventory-"))
+  try {
+    mkdirSync(path.join(root, "pkg", ".DS_Store", "nested"), { recursive: true })
+    writeFileSync(path.join(root, "pkg", ".DS_Store", "hidden.json"), "{}")
+    writeFileSync(path.join(root, "pkg", ".DS_Store", "nested", "deep.json"), "{}")
+    writeFileSync(path.join(root, "pkg", ".DS_Store.json"), "{}")
+    writeFileSync(path.join(root, "pkg", ".DS_Storex"), "")
+    mkdirSync(path.join(root, "pkg", "sub"))
+    writeFileSync(path.join(root, "pkg", "sub", ".DS_Store"), "")
+    writeFileSync(path.join(root, "pkg", "sub", "kept.md"), "")
+    const listed = listFiles(path.join(root, "pkg")).map((file) => path.relative(root, file))
+    assert.deepEqual(listed.sort(), [
+      "pkg/.DS_Store.json",
+      "pkg/.DS_Store/hidden.json",
+      "pkg/.DS_Store/nested/deep.json",
+      "pkg/.DS_Storex",
+      "pkg/sub/kept.md",
+    ])
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test("the manifest and the normative standard match the hashes hardcoded in this test", () => {
+  assert.equal(sha256(MANIFEST_PATH), MANIFEST_SHA256, `${MANIFEST_PATH}: independent anchor`)
+  assert.equal(
+    sha256(STANDARD_PATH),
+    NORMATIVE_STANDARD_SHA256,
+    `${STANDARD_PATH}: independent anchor`,
+  )
+  assert.equal(manifest.normative_source.sha256, NORMATIVE_STANDARD_SHA256)
+})
 
 test("Shampoo standard v1.6 stays byte-immutable: every manifest artifact matches its pin", () => {
   assert.equal(manifest.schema_version, "shampoo-research-artifact-manifest.v1.6")

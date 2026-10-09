@@ -2,7 +2,7 @@
 
 Use this procedure to research a current German regular shampoo under the locked standard `shampoo-classification-v1.6` ([`classification-standard.md`](./classification-standard.md)). It produces a research record and a projection proposal. It never approves a catalog product, writes to Supabase or changes recommendations (standard Section 16).
 
-It adapts the v1.4 runbook (`docs/research/shampoo-inci/v1.4/new-product-research-runbook.md`) to v1.6, and writes down the formula-freeze and sealed two-lane procedure practised in the v1.6 calibration (`data/research/shampoo-inci/v1.6/calibration/`: `freeze-brief.md`, the lane builders and the compare scripts).
+It adapts the v1.4 runbook (`docs/research/shampoo-inci/v1.4/new-product-research-runbook.md`) to v1.6, and writes down the formula-freeze and sealed two-lane procedure practised in the v1.6 calibration (`data/research/shampoo-inci/v1.6/calibration/`: `freeze-brief.md`, the lane builders and the compare scripts), with two corrections for every new run: the lane kit is delivered in two stages so the blind formula pass really is blind (step 3), and the comparison counts `researchCombinationTargets` (step 5). The historical calibration kits were single packets with name, brand and claims co-delivered and without completeness or source-tier evidence; see the lock receipt's known limits and `data/research/shampoo-inci/v1.6/calibration/README.md`.
 
 ## Required inputs
 
@@ -28,35 +28,41 @@ One worker per product, read-only browsing, no classification. This is the proce
 4. **Fingerprint.** SHA-256 of the canonical list after lower-casing, trimming, collapsing whitespace and joining with `|`. State the normalization in the packet. Position citations in records use the ID-2 normalized numbering.
 5. **Positioning.** German claims and usage directions verbatim, per source, with source type (`manufacturer` or `retailer`) and URL. Claims are graded later by CL-SRC/E1, so keep the source type exact; keep pack front/back apart when the source shows it.
 6. **Web hygiene.** Decline non-essential cookies, no logins, no forms. If a page fails or hangs twice, record it and move on.
+7. **Evidence inputs for the blind pass (standard Sections 2, 3.1, ID-1).** Record `formulaCompleteness` (`complete` only for an approved, canonical full-INCI capture of the exact product without a material conflict, ID-1; otherwise `not_known_complete`), `formulaSourceTier` (1–4, the Section 2 hierarchy position of the source the canonical list comes from) and `identityConfidence`. Give every source a `sourceKind` from the closed set `pack_front`, `pack_back`, `manufacturer_de`, `manufacturer_foreign`, `retailer`, which fixes its CL-SRC base grade.
 
-Packet fields: `slot, productId, name, brand, packSize, gtins[], sources[{url, retrievedAt, sourceType, gtinShown, inciVerbatim, claimsVerbatim, directionsVerbatim}], conflicts[], canonicalInci[], canonicalReason, inciFingerprintSha256, normalization, identityConfidence, status (frozen | frozen_with_conflict | blocked), blockReason, notes`. Examples: `calibration/packets/full/`, `calibration/unseen-v2/full/`.
+Packet fields: `slot, productId, name, brand, packSize, gtins[], sources[{url, retrievedAt, sourceType, sourceKind, gtinShown, inciVerbatim, claimsVerbatim, directionsVerbatim}], conflicts[], canonicalInci[], canonicalReason, inciFingerprintSha256, normalization, identityConfidence, formulaCompleteness, formulaSourceTier, status (frozen | frozen_with_conflict | blocked), blockReason, notes`. Examples of the older shape (without `sourceKind`, `formulaCompleteness` and `formulaSourceTier`): `calibration/packets/full/`, `calibration/unseen-v2/full/`.
 
 A packet is amended, never silently edited: an evidence-only amendment keeps the fingerprint, and the change is logged in the packet's `notes`. A change that moves the fingerprint is a new formula and a new freeze.
 
-## 3. Build the sealed lane kit (orchestrator)
+## 3. Build the two-stage sealed lane kit (orchestrator)
 
-From the frozen full packets, build one sanitized lane packet per product (pattern: `calibration/build_lanes.py`, `build_round2_kit.py`, `build_unseen_v2_kit.py`):
+From the frozen full packets, build the kit with `npx tsx scripts/shampoo-research/build-lane-kit.ts build <full-packets-dir> <run-root>/kit --seed <n>`. It fails closed when a packet lacks `formulaCompleteness`, `formulaSourceTier`, a valid `identityConfidence` or a known `sourceKind`, or when `inciFingerprintSha256` does not match `canonicalInci`. Per product and lane it writes two packets under fresh blind ids (seeded shuffle; the mapping `kit/blind-mapping.json` stays outside every lane root):
 
-- keep only classification inputs: product name, brand, pack size, canonical INCI, and verbatim claims and directions per source type;
-- drop slot, catalog id, GTINs, URLs, conflicts, notes, confidence and fingerprints;
-- assign fresh blind ids in a seeded shuffle and keep the mapping outside the lane (`blind-mapping.json`);
-- give each lane a scrubbed copy of the locked standard: Section 13.10 worked examples removed, catalog ids and product names removed, with an assertion that no batch product name remains in the copy. The scrubbed copy is a lane aid; the normative text stays the pinned standard.
+- **Stage A, `<lane>/formula/<id>.json` (blind formula pass, standard 3.1):** canonical INCI, its fingerprint and normalization, `formulaCompleteness`, `formulaSourceTier`, `identityConfidence` and pack size. No product name, brand, claims, directions, catalog id, GTIN or URL.
+- **Stage B, `held/<lane>/reveal/<id>.json` (post-unblind reconciliation, 3.2):** product name, brand, and per source the verbatim claims and directions with `sourceType`, `sourceKind` and its CL-SRC base grade `sourceGrade` (`pack_front` high; `pack_back` and `manufacturer_de` moderate; `manufacturer_foreign` and `retailer` low). The lane still grades a word in the exact product name `high` and a foreign manufacturer claim by a German source carrying the same claim (E1). Slot, catalog id, GTINs, URLs, conflicts and notes are dropped.
+
+The reveal stays in `held/`, outside the lane root, until the lane has frozen its formula pass. Each lane also gets a scrubbed copy of the locked standard (`<lane>/classification-standard.md`: Section 13.10 worked examples and catalog references removed; the build fails if a batch brand or product name remains). The scrubbed copy is a lane aid; the normative text stays the pinned standard.
+
+The historical builders (`calibration/build_lanes.py`, `build_round2_kit.py`, `build_unseen_v2_kit.py`) shipped one packet with name, brand and claims and are kept only as a record of the calibration runs; do not use them for new runs.
 
 ## 4. Sealed lanes
 
-Two independent lanes classify the same lane packets. Contract:
+Two independent lanes classify the same products. Contract:
 
-- **Inputs, and only these:** the scrubbed standard and the lane's own packets. No other lane's output, no reports, no rulings ledger, no catalog, no live rows, no earlier labels.
-- **No web of any kind.** The packet is the complete evidence; a product is never re-researched inside a lane. Missing evidence is closed by an evidence pass and a packet amendment (step 2), never by a lane guessing.
-- **Order inside a lane:** blind formula pass first (Section 3.1, Section 6.5), then unblind claims (3.2). Every blind-to-final change is recorded with its evidence.
-- **Output per product:** the eight direct properties, each with value, confidence, conclusion-first rationale, formula facts with normalized one-based positions, counter-signal and `neighboringAlternative` (N-ALT); the focus record fields and decision trace (7.4, F-TRACE); the full weight record (6.8); the projection block (Section 13: three thickness fits after T6, `weight`, primary and secondary scalp target, observed intensity, `explicitResetPositioning`, `deepCleanserListing` with `deepCleanserRecord: needs_record`, review flags, informational notes, `researchCombinationTargets`); a `selfCheck` (the 6.11 operator self-check); and an `uncertainties` list naming every reading the lane had to choose, with the alternative. Record shape: `calibration/unseen-v2/lane-a/Q01.json`.
-- **Seal confirmation.** The lane's handback lists every file it read, states that it used no web, and reports any incident (anything seen that could have contaminated it).
+- **Inputs, and only these:** the scrubbed standard and the lane's own packets, stage A first and stage B only after release. No other lane's output, no reports, no rulings ledger, no catalog, no live rows, no earlier labels.
+- **No web of any kind.** The packets are the complete evidence; a product is never re-researched inside a lane. Missing evidence is closed by an evidence pass and a packet amendment (step 2), never by a lane guessing.
+- **Order inside a lane, enforced by the kit:**
+  1. Blind formula pass on `<lane>/formula/` only (Sections 3.1, 6.5): write one formula-pass record per product to `<lane>/out/formula-pass/<id>.json` (provisional eight properties with rationales and confidence, formula facts with normalized positions, unresolved material ingredients).
+  2. The orchestrator runs `npx tsx scripts/shampoo-research/build-lane-kit.ts release <run-root>/kit <lane>`. It refuses while any formula-pass record is missing, pins each record's SHA-256 in `held/<lane>/release-log.json` and only then copies the reveal packets to `<lane>/reveal/`. A formula-pass record changed after release no longer matches the log.
+  3. Post-unblind reconciliation (3.2) with `<lane>/reveal/`: every blind-to-final change is recorded with its evidence.
+- **Output per product** (`<lane>/out/<id>.json`): the eight direct properties, each with value, confidence, conclusion-first rationale, formula facts with normalized one-based positions, counter-signal and `neighboringAlternative` (N-ALT); the focus record fields and decision trace (7.4, F-TRACE); the full weight record (6.8); the projection block (Section 13: three thickness fits after T6, `weight`, primary and secondary scalp target, observed intensity, `explicitResetPositioning`, `deepCleanserListing` with `deepCleanserRecord: needs_record`, review flags, informational notes, `researchCombinationTargets`); a `selfCheck` (the 6.11 operator self-check); and an `uncertainties` list naming every reading the lane had to choose, with the alternative. Record shape: `calibration/unseen-v2/lane-a/Q01.json`.
+- **Seal confirmation.** The lane's handback lists every file it read and when (formula packets before the release, reveal packets after), states that it used no web, and reports any incident (anything seen that could have contaminated it).
 
 Lanes never see catalog ids. The deep-cleanser record id and `review_live_value_differs` are resolved by the orchestrator only after both lanes are frozen (13.6 D2, Section 14).
 
 ## 5. Compare
 
-After both lanes are frozen (pattern: `calibration/round-2/compare.py`, `calibration/unseen-v2/compare.py`):
+After both lanes are frozen, run `npx tsx scripts/shampoo-research/compare-lanes.ts <run-root>/kit/lane-a/out <run-root>/kit/lane-b/out`. It counts every decision below, `researchCombinationTargets` included; the historical `calibration/*/compare.py` scripts predate that field and are not used for new runs (`calibration/research-combination-addendum.md`):
 
 - compare the seven judgment properties; recompute `dandruffSupport` mechanically;
 - compare the projection judgments: three thickness fits (after T6), primary and secondary scalp target; recompute `weight`, observed intensity, `deepCleanserListing` and rows mechanically from each lane's own properties;
@@ -96,7 +102,7 @@ Nothing in this runbook applies anything. A catalog apply is a separate, approve
 
 ## 9. Artifact checklist
 
-Each run writes a new versioned root containing: the pre-registration, full frozen packets, lane packets and blind mapping, both lanes' records and seal confirmations, the comparison output, the adjudication, the report and, when replayed, de-identified profile results. Historical runs, including `data/research/shampoo-inci/v1.6/calibration/`, are never overwritten or regenerated.
+Each run writes a new versioned root containing: the pre-registration, full frozen packets, the lane kit (formula and reveal packets, blind mapping, release logs), both lanes' formula-pass records, final records and seal confirmations, the comparison output, the adjudication, the report and, when replayed, de-identified profile results. Historical runs, including `data/research/shampoo-inci/v1.6/calibration/`, are never overwritten or regenerated.
 
 ## 10. Stop boundary
 

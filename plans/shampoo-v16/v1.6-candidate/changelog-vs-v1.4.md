@@ -16,6 +16,8 @@ Revision 2026-10-10 (pre-lock, R14–R16): rows 102–108 added. They record the
 
 Revision 2026-10-10 (post-lock amendment, R17): rows 109–114 added. They apply ruling R17 (the dandruff path, defined by the claim) in place, after the lock and before the locked package was first published, without a calibration round; no lane has exercised them. Rows 77, 103 and 104 are partly superseded by the rows that name them. No rule was set from a calibration product's expected value.
 
+Revision 2026-10-10 (review fix): row 115 added. A text-only reconciliation found in review, applied in place before the locked package was first published: S-DANDRUFF's wording sentence is scoped to `dandruff`-primary products to match E2b. No rule or ruling changed.
+
 | # | Section | Old rule (v1.4) | New rule (v1.6 candidate) | Source | Could change a live value? |
 | --- | --- | --- | --- | --- | --- |
 | 1 | Version | Policy `shampoo-classification-v1.4`, parked, stable | Candidate `shampoo-classification-v1.6-candidate`; not locked, not production-active; final ID only via lock receipt | E | No |
@@ -132,6 +134,7 @@ Revision 2026-10-10 (post-lock amendment, R17): rows 109–114 added. They apply
 | 112 | 11; 10 SC1; 13.5 S-DANDRUFF, S-ORDINARY; 13.9 | A recognized active without a dandruff claim emitted no dandruff target and a note; its other paths were not stated | The claim defines the dandruff path, not the ingredient: such a product is a regular shampoo, every other target is decided as without the active (sensitive, dry and oily paths open when their gates pass), its sensitive- or dry-scalp units are SC1 positioning, E2b does not apply; only the note `active_without_dandruff_positioning` remains | R17.3 | No (writes down the existing reading; Nick rejected blocking the sensitive/dry paths for such products) |
 | 113 | 13.10 | — | Three non-normative worked examples: a dandruff product whose name also names a sensitive scalp (R17.1), a dandruff product with oily-scalp wording (R17.2) and a sensitive-scalp product with an active but no dandruff claim (R17.3) | R17.1–R17.3 | No |
 | 114 | Version, 14, App. B | Locked at R14 with R15/R16 as pre-lock rulings | R17 applied in place after the lock and before the package was first published; lock receipt and manifest pins refreshed; listed as not lane-tested | R17 | No |
+| 115 | 13.5 S-DANDRUFF; 13.9 | S-DANDRUFF's last sentence said wording in or next to any dandruff claim never adds a projected target and may only feed `researchCombinationTargets`, which contradicted E2b layer 1 for a product whose dandruff claim fails S-DANDRUFF (there a separate unit, including an oily unit next to the dandruff unit, keeps its own path, and no combination is recorded) | Text-only review fix: the sentence applies to a `dandruff`-primary product (S-DANDRUFF passed, R17.2); for a dandruff claim that fails S-DANDRUFF, E2a and E2b layer 1 govern (inside-unit and bundled comfort/dryness wording never project; a separate unit keeps its S-SENSITIVE, S-DRY or S-OILY path; no combination). The three non-recording E2b notes in 13.9 name the `dandruff`-primary scope. Checked with no change needed: S-PRIMARY, S-SECONDARY, S-SENSITIVE/S-DRY/S-OILY, E2a, SC1 | review fix | No (wording reconciled with the existing E2b rule; no rule or ruling changed) |
 
 ## Carried over without change
 

@@ -8,8 +8,8 @@
   "decision_ruling": "R14",
   "normative_standard": {
     "path": "docs/research/shampoo-inci/v1.6/classification-standard.md",
-    "bytes": 134087,
-    "sha256": "a4669d9f08125eef0d948e83775189411cf3b2edcac64f9bb91a2a24d16650cc"
+    "bytes": 135220,
+    "sha256": "3b70a145e23e381f5c83ded0092d86d9642ddb7f570dfc9d7414a843659baf98"
   },
   "base_method": {
     "policy_id": "shampoo-classification-v1.4",
@@ -21,8 +21,9 @@
   "candidate_working_record": {
     "path": "plans/shampoo-v16/v1.6-candidate/classification-standard.md",
     "sha256_at_lock": "022ea0dfd12c741095879033d433e2edb6accd978b85e5ce74e978579433f0ac",
-    "note": "Not normative and not pinned. The locked text equals this candidate except for the Version preamble, the 'What locked means' list, file references re-pointed to the locked package (rule-changes.md, the calibration copy, the rulings-ledger snapshot), the T7 open-question reference and the Section 14 lock-gate heading. The post-lock amendment R17 was mirrored into it after the lock (sha256_after_r17); sha256_at_lock is the candidate as it was at lock.",
-    "sha256_after_r17": "0dd9e20227bfbca0daeda974f92e971aab813dcb774d1a5d8e6a121ab5eb3c34"
+    "note": "Not normative and not pinned. The locked text equals this candidate except for the Version preamble, the 'What locked means' list, file references re-pointed to the locked package (rule-changes.md, the calibration copy, the rulings-ledger snapshot), the T7 open-question reference and the Section 14 lock-gate heading. The post-lock amendment R17 was mirrored into it after the lock (sha256_after_r17), and the text-only review fix (rule-changes row 115) was mirrored as well (sha256_after_review_fix). sha256_at_lock is the candidate as it was at lock.",
+    "sha256_after_r17": "0dd9e20227bfbca0daeda974f92e971aab813dcb774d1a5d8e6a121ab5eb3c34",
+    "sha256_after_review_fix": "d1c892b3f6119746d750d7a8f7b1aa6809333b3d37afbe4aaa73b5c06a25d88b"
   },
   "approved_scope": {
     "category": "shampoo",
@@ -219,7 +220,11 @@
         "basis": "retailer claims name oils absent from the frozen INCI (ID-3 material conflict); re-verify the formula source",
         "ruling": "R14"
       }
-    ]
+    ],
+    "research_combination_addendum": {
+      "path": "data/research/shampoo-inci/v1.6/calibration/research-combination-addendum.md",
+      "summary": "Section 14 counts researchCombinationTargets; the historical comparators predate it. Recomputed with scripts/shampoo-research/compare-lanes.ts: round 1 296/304 and round 2 202/208 unchanged (records predate the field); unseen-v2 98/102 = 96.1% (+6 agreeing decisions, every value []). The recorded run figures above are the historical comparator output and stay as recorded."
+    }
   },
   "post_calibration_rulings": {
     "applied": [
@@ -243,7 +248,9 @@
     "Lane agreement measures repeatability, not finished-product or consumer accuracy; INCI order is a prominence proxy, never a concentration.",
     "Exception register entry X1 (Monday Volume, coarse x oily) stays a temporary bridge until a lighter oily-scalp shampoo passes review (R5).",
     "Closed ingredient lists may be too narrow; additions wait for the batch decision after the Track A/B research (R16.4).",
-    "AUSSIE Bouncy Curls stays needs_research until its formula source is re-verified."
+    "AUSSIE Bouncy Curls stays needs_research until its formula source is re-verified.",
+    "Rounds 1, 2 and the unseen check v2 used single-packet lane kits (product name, brand and claims co-delivered with the INCI); the blind formula pass was self-reported formula-first by the lanes, not enforced by the kit. Formula completeness, formula source tier and identity confidence were not delivered to the lanes. Future runs must use the two-stage kit (runbook step 3, scripts/shampoo-research/build-lane-kit.ts).",
+    "The historical comparators did not count researchCombinationTargets (Section 14); recomputed in calibration/research-combination-addendum.md: totals unchanged for rounds 1 and 2 (field absent), unseen-v2 98/102 with the field; no combination disagreement and no calibrated record of a non-empty combination value."
   ],
   "separate_gates": {
     "production_light_adapter": "pinned_to_v1.4; re-pin to v1.6 is a separate reviewed PR",
@@ -259,5 +266,12 @@
     "user_facing_copy_change": false,
     "commit_push_or_pr": false
   },
-  "production_writes": false
+  "production_writes": false,
+  "review_fix": {
+    "date": "2026-10-10",
+    "scope": "text-only reconciliation and procedure fixes found in review, applied before the locked package was first published; no rule or ruling changed",
+    "standard": "S-DANDRUFF wording sentence scoped to dandruff-primary products (S-DANDRUFF passed, R17.2); a dandruff claim that fails S-DANDRUFF follows E2a/E2b layer 1; the three non-recording E2b notes in 13.9 name the dandruff-primary scope (rule-changes row 115)",
+    "procedure": "runbook steps 2-5: freeze packets carry formulaCompleteness, formulaSourceTier and sourceKind; two-stage lane kit (scripts/shampoo-research/build-lane-kit.ts: formula/ packets without name, brand or claims, reveal/ released only after every formula-pass record exists); comparator counts researchCombinationTargets (scripts/shampoo-research/compare-lanes.ts)",
+    "pins": "tests/shampoo-research-v1-6-lock.test.ts hardcodes the SHA-256 of the artifact manifest and the normative standard as independent anchors; the calibration inventory skips only files named exactly .DS_Store"
+  }
 }

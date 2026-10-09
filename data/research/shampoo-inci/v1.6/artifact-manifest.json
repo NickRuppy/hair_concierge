@@ -5,26 +5,26 @@
   "model_version": "shampoo-inci-v1.6",
   "normative_source": {
     "path": "docs/research/shampoo-inci/v1.6/classification-standard.md",
-    "bytes": 134087,
-    "sha256": "a4669d9f08125eef0d948e83775189411cf3b2edcac64f9bb91a2a24d16650cc",
-    "verification": "locked v1.6 standard; candidate text after R14-R16 with the LOCKED preamble and file references re-pointed to the locked package, plus the post-lock amendment R17 applied in place before publication"
+    "bytes": 135220,
+    "sha256": "3b70a145e23e381f5c83ded0092d86d9642ddb7f570dfc9d7414a843659baf98",
+    "verification": "locked v1.6 standard; candidate text after R14-R16 with the LOCKED preamble and file references re-pointed to the locked package, plus the post-lock amendment R17 applied in place before publication; plus a text-only review fix (rule-changes row 115: S-DANDRUFF wording scoped to dandruff-primary products, 13.9 E2b note scope), no rule changed"
   },
   "runbook": {
     "path": "docs/research/shampoo-inci/v1.6/runbook.md",
-    "bytes": 10630,
-    "sha256": "fa0f6bf901b8c51a2bff2fac59eadf101dabd9e1f8863128fd8b3a2924e15899",
-    "verification": "new-product research procedure: formula freeze, sealed two-lane validation, compare, adjudication, apply and stop boundaries"
+    "bytes": 14061,
+    "sha256": "c3ca5339cd43aa76a1a0f01d07a40c45e20d753a762b8ee4437ae36965ea0a2b",
+    "verification": "new-product research procedure: formula freeze (with completeness, source tier and source kind), two-stage sealed lane kit (blind formula packets, reveal released only after the formula pass), compare including researchCombinationTargets, adjudication, apply and stop boundaries"
   },
   "rule_change_ledger": {
     "path": "docs/research/shampoo-inci/v1.6/rule-changes.md",
-    "bytes": 44723,
-    "sha256": "9eae3db7a468cce9f111d7294f01c62569457b973d8595cb6c61f8c140224c34",
-    "verification": "rows 1-114 vs v1.4; the candidate changelog at lock with references re-pointed (rows 1-108), plus rows 109-114 for the post-lock amendment R17"
+    "bytes": 46042,
+    "sha256": "6eacd811dc3f761d2bab9f6d048da800029a28cbbabc5f1aa9340807ea95e557",
+    "verification": "rows 1-115 vs v1.4; the candidate changelog at lock with references re-pointed (rows 1-108), plus rows 109-114 for the post-lock amendment R17 and row 115 for the text-only review fix"
   },
   "readme": {
     "path": "docs/research/shampoo-inci/v1.6/README.md",
-    "bytes": 6777,
-    "sha256": "d179e839dcad2428c7d33166a9771235a34c0b8fc55510a033f75c2f7e03969f",
+    "bytes": 7309,
+    "sha256": "b1ca03e5dfe6d40c77ab1f253cfea77fbd5fa31aebf7abae1eb8b4a8c65e145f",
     "verification": "v1.6 package README (status, authority, changes, calibration evidence, open after lock); the top-level docs/research/shampoo-inci/README.md is the living entry point and is not pinned"
   },
   "rulings_ledger": {
@@ -35,8 +35,8 @@
   },
   "logic_lock_receipt": {
     "path": "data/research/shampoo-inci/v1.6/v1.6-logic-lock-receipt.json",
-    "bytes": 12337,
-    "sha256": "1c37240f2081f839ed72573972bf4335be1d2ffddd65d9631ac12186e00971dc"
+    "bytes": 14897,
+    "sha256": "aa58a16660ad8f31a48be55ebbe53300568501b84af4795d050f92c60d8cf585"
   },
   "calibration": {
     "root": "data/research/shampoo-inci/v1.6/calibration/",
@@ -76,10 +76,20 @@
         "path": "data/research/shampoo-inci/v1.6/calibration/freeze-brief.md",
         "bytes": 2513,
         "sha256": "4eccd2f64ed990620e5e9b5ea1ad520ef97ef1ad206de8928ad623b70cde99d7"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6/calibration/research-combination-addendum.md",
+        "bytes": 2231,
+        "sha256": "7e973a898a816f5ea806956a7dc29d541a64eedbf6890558e97d82e1f4069d78"
       }
     ],
     "note": "Every file under the corpus root is pinned in artifacts (packets, lane records, reports, mappings, lane-kit and compare scripts). The scripts are provenance; they reference their original plans/ layout.",
     "artifacts": [
+      {
+        "path": "data/research/shampoo-inci/v1.6/calibration/README.md",
+        "bytes": 2910,
+        "sha256": "e9af61ed223b34669664ffe35704627482e3e8225fe2fffad78ee91765395198"
+      },
       {
         "path": "data/research/shampoo-inci/v1.6/calibration/blind-mapping.json",
         "bytes": 3663,
@@ -294,6 +304,11 @@
         "path": "data/research/shampoo-inci/v1.6/calibration/packets/lane/L19.json",
         "bytes": 5083,
         "sha256": "cb426fe8e13a9901c9536bbeee50899eb0c295f7affd9ff824da609bc9a6b0f3"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6/calibration/research-combination-addendum.md",
+        "bytes": 2231,
+        "sha256": "7e973a898a816f5ea806956a7dc29d541a64eedbf6890558e97d82e1f4069d78"
       },
       {
         "path": "data/research/shampoo-inci/v1.6/calibration/round-1/compare.py",
@@ -771,7 +786,7 @@
         "sha256": "ba36291a850274e15c55dc547380ba4282fb3f70a919efc6719299b9856aa4b4"
       }
     ],
-    "files": 138
+    "files": 140
   },
   "production_writes": false
 }
