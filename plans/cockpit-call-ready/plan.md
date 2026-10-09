@@ -13,15 +13,16 @@ Rulings (Nick, 2026-10-09):
   a deliberately empty step reads `Bewusst ohne Produkt` — never „offen". One pure helper derives it
   (`runsheet/decision-state.ts`), every place renders from it. `outcome` (hashed) is untouched.
 - **A2 „Testlauf zurücksetzen"**: deletes all product decisions of the intake (call sheet untouched), confirm
-  dialog, refused once finalised. New RPC `discovery_admin_reset_call_decisions(target_intake_id)` with
+  dialog, refused once finalised. Finalize keeps its accepted risk (no compare-and-set against a write from a
+  second tab in the same second; Nick 2026-10-09, option A) — same-tab overlaps are blocked in the UI. New RPC `discovery_admin_reset_call_decisions(target_intake_id)` with
   `FOR UPDATE` on the intake (race with finalize), DELETE handler on the decisions route reusing the guards.
 - **A3 Week view placement** (ruled after the steps-per-day research, 2026-10-09: multi-day by role):
   a step appears in EVERY column where it belongs — wash-only steps (shampoo, conditioner, mask, pre-wash
   oil, post-wash leave-in, pre-shampoo/post-wash bondbuilder) on Waschtag; finishing oil on Waschtag
   (optional, last) AND days without washing; heat steps (protectant, pre-heat leave-in) on Waschtag and on
   days without washing only when she uses a hot tool; scalp serum on Waschtag (days without washing only if
-  labelled for daily use — conservative default: Waschtag only); overnight bondbuilder on days without
-  washing. Defaults, not hard rules (convention, no trials). Research: scratchpad research/steps-per-day-type.md.
+  labelled for daily use — conservative default: Waschtag only); bondbuilders always on Waschtag (the
+  overnight rule was dropped by Nick 2026-10-09 — overnight use is said verbally). Defaults, not hard rules (convention, no trials). Research: scratchpad research/steps-per-day-type.md.
 - **E4 One question list**: drop the „kurz fragen" chips; the checklist line points to „Fragen für den Call".
   (D: the brief generator receives the code-side asks so it stops repeating them.)
 

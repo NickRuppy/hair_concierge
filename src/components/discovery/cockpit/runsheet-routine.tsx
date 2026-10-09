@@ -79,12 +79,8 @@ export function runsheetWeekPlacement(
   decisionKey: string,
   timingLabel: string | null,
   hotTool: boolean | null,
-  /** The step's product is an overnight leave-in (Bondbuilder `bedtime_leave_in`). */
-  overnight = false,
 ): { washDay: boolean; offDays: boolean } {
   const role = roleOf(decisionKey)
-  // An overnight treatment is an evening on a day without washing (research 2026-10-09).
-  if (overnight) return { washDay: false, offDays: true }
   if (role && WASH_ONLY_ROLES.has(role)) return { washDay: true, offDays: false }
   if (role && WASH_AND_OFF_ROLES.has(role)) return { washDay: true, offDays: true }
   if (role && HEAT_ROLES.has(role)) return { washDay: true, offDays: hotTool !== false }
@@ -230,29 +226,8 @@ export function runsheetWeek(
   }
   const all = [...lines.values()]
   const hotTool = options.hotTool ?? null
-  // The product a step puts into her week is applied overnight (swapped-in or the pick).
-  const overnightKeys = new Set(
-    steps.flatMap((step) => {
-      const product =
-        step.outcome === "swapped"
-          ? step.swapOptions.find((option) => option.productId === step.swapProductId)
-          : step.outcome === "ideal"
-            ? step.swapOptions.find((option) => option.origin === "ideal_recommendation")
-            : undefined
-      return product?.applicationMode === "bedtime_leave_in" ? [step.decisionKey] : []
-    }),
-  )
   const placed = all.map(
-    (line) =>
-      [
-        line,
-        runsheetWeekPlacement(
-          line.decisionKey,
-          line.timingLabel,
-          hotTool,
-          overnightKeys.has(line.decisionKey),
-        ),
-      ] as const,
+    (line) => [line, runsheetWeekPlacement(line.decisionKey, line.timingLabel, hotTool)] as const,
   )
   return {
     washDay: placed.filter(([, at]) => at.washDay).map(([line]) => line),

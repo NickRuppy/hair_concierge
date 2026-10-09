@@ -151,7 +151,6 @@ const RESET_LABEL = "Testlauf zurücksetzen"
 const RESET_CONFIRM_PREFIX = "Alle"
 const RESET_CONFIRM_TAIL = "Score, Brief und Notizen bleiben."
 const RESET_FROZEN = "Der Call ist finalisiert — erst Finalisieren aufheben."
-const RESET_PENDING_KEY = "__reset__"
 const WRITE_ERROR = "Nicht gespeichert. Bitte noch einmal."
 const NO_OPTIONS_HINT = "Keine Alternative im Katalog. Nur behalten oder offen lassen."
 const SORT_LABEL = "Sortieren:"
@@ -168,8 +167,6 @@ const DEPTH_FIT = "Warum das passt"
 const DEPTH_RHYTHM = "Wie oft · wann"
 
 const FINALIZE_LABEL = "Finalisieren"
-const ROUTINE_CHANGED_HINT =
-  "Während des Finalisierens hat sich die Routine geändert — bitte prüfen und noch einmal finalisieren."
 const UNFINALIZE_LABEL = "Finalisierung aufheben"
 const FINALIZE_HINT =
   "Entscheidungen bleiben bis dahin änderbar. Das PDF entsteht erst aus dem finalisierten Stand."
@@ -259,11 +256,8 @@ export function discoveryFinalizeWriteOutcome(
             ? `${RESEARCH_OPEN_HINT}.`
             : body?.code === "application_missing"
               ? APPLICATION_MISSING_ERROR
-              : body?.code === "routine_changed"
-                ? ROUTINE_CHANGED_HINT
-                : WRITE_ERROR,
-    // A routine that changed while finalising is shown fresh before the next try.
-    refresh: body?.code === "routine_changed",
+              : WRITE_ERROR,
+    refresh: false,
   }
 }
 
@@ -341,6 +335,11 @@ export function DiscoveryCallCockpit({
   )
   const [finalizedAt, setFinalizedAt] = useState<string | null>(initialFinalizedAt)
   const [pending, setPending] = useState<string | null>(null)
+  // „Testlauf zurücksetzen" runs on its own flag, and every decision write in flight is
+  // counted: a reset only starts once all of them have answered, and their answers never
+  // clear the reset's lock (Codex re-review, call-ready).
+  const [resetPending, setResetPending] = useState(false)
+  const [writesInFlight, setWritesInFlight] = useState(0)
   const [error, setError] = useState<string | null>(null)
   const [finalizePending, setFinalizePending] = useState(false)
   // R28 (iteration 3): the complexity chip's displayed value, lifted here so „Super
@@ -404,6 +403,7 @@ export function DiscoveryCallCockpit({
         : { decision: "swap", swapProductId: value }
     setSelections((current) => ({ ...current, [key]: next }))
     setPending(key)
+    setWritesInFlight((count) => count + 1)
     setError(null)
     const epoch = selectionEpoch.current
     const endWrite = beginDiscoveryDecisionWrite()
@@ -434,7 +434,8 @@ export function DiscoveryCallCockpit({
       setError(WRITE_ERROR)
     } finally {
       endWrite()
-      setPending(null)
+      setWritesInFlight((count) => count - 1)
+      setPending((current) => (current === key ? null : current))
     }
   }
 
@@ -448,7 +449,7 @@ export function DiscoveryCallCockpit({
         `${RESET_CONFIRM_PREFIX} ${decidedCount} ${decidedCount === 1 ? "Entscheidung" : "Entscheidungen"} zurücksetzen? ${RESET_CONFIRM_TAIL}`,
       )
     if (!confirmed) return
-    setPending(RESET_PENDING_KEY)
+    setResetPending(true)
     setError(null)
     const endWrite = beginDiscoveryDecisionWrite()
     try {
@@ -467,7 +468,7 @@ export function DiscoveryCallCockpit({
       setError(WRITE_ERROR)
     } finally {
       endWrite()
-      setPending(null)
+      setResetPending(false)
     }
   }
 
@@ -488,7 +489,6 @@ export function DiscoveryCallCockpit({
       const outcome = discoveryFinalizeWriteOutcome(response.ok, body)
       if (outcome.error) {
         setError(outcome.error)
-        if (outcome.refresh) router.refresh()
         return
       }
       setFinalizedAt(body?.callFinalizedAt ?? null)
@@ -586,9 +586,7 @@ export function DiscoveryCallCockpit({
                   other?.decision === "swap" && other.swapProductId ? [other.swapProductId] : [],
                 )}
                 // Codex (call-ready): nothing to click while a reset or finalising runs.
-                disabled={
-                  frozen || pending === key || pending === RESET_PENDING_KEY || finalizePending
-                }
+                disabled={frozen || pending === key || resetPending || finalizePending}
                 onChoose={(value) => void choose(step, value)}
               />
             </div>
@@ -689,7 +687,7 @@ export function DiscoveryCallCockpit({
               type="button"
               id="runsheet-reset-decisions"
               onClick={resetDecisions}
-              disabled={pending !== null || finalizePending}
+              disabled={writesInFlight > 0 || resetPending || finalizePending}
               className="text-[12px] font-bold text-muted-foreground underline disabled:opacity-50"
             >
               {RESET_LABEL}
@@ -713,12 +711,7 @@ export function DiscoveryCallCockpit({
           <button
             type="button"
             onClick={() => void toggleFinalize()}
-            disabled={
-              finalizePending ||
-              pending === RESET_PENDING_KEY ||
-              (!frozen && !submitted) ||
-              finalizeBlocked
-            }
+            disabled={finalizePending || resetPending || (!frozen && !submitted) || finalizeBlocked}
             className="rounded-lg bg-[var(--brand-coral)] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50"
           >
             {finalizePending ? FINALIZE_BUSY : frozen ? UNFINALIZE_LABEL : FINALIZE_LABEL}

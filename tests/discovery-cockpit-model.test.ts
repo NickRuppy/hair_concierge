@@ -238,7 +238,6 @@ test("a tie-default pick brings its equals: the call may choose any, the route a
     priceLabel: "8,95 €",
     imageUrl: `https://catalog.example/${productId}.jpg`,
     applicationLabel: "Vorwäsche, ausspülen",
-    applicationMode: "pre_shampoo",
   })
   const view = buildDiscoveryCockpitView(
     model({
@@ -289,7 +288,6 @@ test("equal options and the pick's application never move the routine fingerprin
       step({
         preview: idealPreview(ids.ideal),
         idealApplicationLabel: "Leave-in nach der Wäsche",
-        idealApplicationMode: "post_wash_leave_in",
         equalOptions: [
           {
             productId: ids.alternativeA,
@@ -297,7 +295,6 @@ test("equal options and the pick's application never move the routine fingerprin
             priceLabel: null,
             imageUrl: null,
             applicationLabel: null,
-            applicationMode: null,
           },
         ],
       }),

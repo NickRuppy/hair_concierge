@@ -214,3 +214,54 @@ test("A1 (Codex): an empty step without any proposal reads „Offen“ — never
   assert.ok(chips.includes("Offen"), chips.join(" | "))
   assert.ok(!chips.some((text) => text.startsWith("Vorschlag:")), chips.join(" | "))
 })
+
+test("A2 (Codex re-review): reset stays locked until EVERY decision write has answered", async () => {
+  const settles: Array<(response: Response) => void> = []
+  mock.method(globalThis, "fetch", () => new Promise<Response>((resolve) => settles.push(resolve)))
+  const oil = recommendation()
+  const router = {
+    refresh: mock.fn(),
+    push() {},
+    replace() {},
+    prefetch() {},
+    back() {},
+    forward() {},
+  }
+  render(
+    <AppRouterContext.Provider value={router as never}>
+      <DiscoveryCallCockpit
+        enrollmentId="enrollment-1"
+        steps={[
+          ...steps(true),
+          step({
+            decisionKey: "decision:oil",
+            category: "oil",
+            categoryLabel: "Öl",
+            swapOptions: [{ ...oil, productId: "rec-oil" }],
+            idealRecommendation: { ...oil, productId: "rec-oil" },
+            recommendationLabel: oil.label,
+          }),
+        ]}
+        submitted
+        initialFinalizedAt={null}
+        complexity={null}
+        complexityLocked={false}
+      />
+    </AppRouterContext.Provider>,
+  )
+  const radio = (name: string) =>
+    [...document.querySelectorAll<HTMLInputElement>('input[type="radio"]')].find(
+      (input) => input.name.includes(name) && !input.checked,
+    )!
+  // Two decision writes in flight: a keep on the mask, a swap on the oil.
+  await act(async () => fireEvent.click(radio("decision:mask")))
+  await act(async () => fireEvent.click(radio("decision:oil")))
+  assert.equal(settles.length, 2)
+  assert.ok(resetButton()?.disabled)
+  // The later write answers first (it held the per-step pending marker) — the earlier one is
+  // still open: reset stays locked.
+  await act(async () => settles[1]!(new Response("{}", { status: 200 })))
+  assert.ok(resetButton()?.disabled)
+  await act(async () => settles[0]!(new Response("{}", { status: 200 })))
+  assert.equal(resetButton()?.disabled, false)
+})

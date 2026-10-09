@@ -731,8 +731,6 @@ export type DiscoveryCockpitSwapOption = {
   imageUrl: string | null
   /** How it is applied, where equals need telling apart (E2); absent/null = not shown. */
   applicationLabel?: string | null
-  /** The raw application mode behind it (week placement: overnight → days without washing). */
-  applicationMode?: string | null
   /**
    * `equal_alternative`: rated exactly as well as the Idealplan's pick, which a house
    * default chose among equals (Bondbuilder tie, see `equal-options.ts`).
@@ -981,7 +979,6 @@ function equalAlternativeOption(
     priceLabel: option.priceLabel,
     imageUrl: identities.get(option.productId)?.imageUrl ?? option.imageUrl,
     applicationLabel: option.applicationLabel,
-    applicationMode: option.applicationMode,
     origin: "equal_alternative",
     propertyRows: null,
   }
@@ -1073,11 +1070,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
     // E2: with equals on offer, the pick names its application too — the comparison is the point.
     const idealWithApplication =
       ideal && step.equalOptions && step.equalOptions.length > 0
-        ? {
-            ...ideal,
-            applicationLabel: step.idealApplicationLabel ?? null,
-            applicationMode: step.idealApplicationMode ?? null,
-          }
+        ? { ...ideal, applicationLabel: step.idealApplicationLabel ?? null }
         : ideal
     const swapOptions =
       alternatives.length > 0

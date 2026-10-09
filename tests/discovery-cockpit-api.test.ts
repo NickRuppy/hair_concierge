@@ -364,7 +364,6 @@ test("an empty tie step accepts an equally ideal product and still refuses one n
         priceLabel: "8,95 €",
         imageUrl: null,
         applicationLabel: "Vorwäsche, ausspülen",
-        applicationMode: "pre_shampoo",
       },
     ],
   }
@@ -590,51 +589,6 @@ test("finalize stores the hash of the routine as composed right now", async () =
     finalizedSourceHash: expected,
   })
   assert.deepEqual(calls, [{ intakeId: ids.intake, sourceHash: expected }])
-})
-
-test("finalize re-checks under the freeze: a decision or reset that landed meanwhile undoes it (409)", async () => {
-  // Codex (cockpit call-ready): finalize composes BEFORE its UPDATE locks the intake, so a
-  // decision write — or „Testlauf zurücksetzen" — landing in between would be frozen under a
-  // stale fingerprint. After the UPDATE no decision write can land any more (every decision
-  // RPC refuses a finalised intake under the same row lock), so one re-composition decides.
-  const before = readyModel()
-  const after: DiscoveryCockpitModel = {
-    ...before,
-    routine: composeDiscoveryRefinedRoutine({
-      steps: [step],
-      items: [intakeItem],
-      decisions: [
-        {
-          decisionKey: DECISION_KEY,
-          decision: "keep",
-          swapProductId: null,
-          intakeItemId: ids.item,
-        },
-      ],
-      swapProducts: [],
-      ownedProducts: discoveryOwnedProductIdentities([verdict]),
-    }),
-  }
-  assert.notEqual(after.routine.sourceHash, before.routine.sourceHash)
-  const models = [before, after]
-  const unfinalized: string[] = []
-  const response = await createDiscoveryFinalizeHandler(
-    baseDeps({
-      loadModel: async () => models.shift() ?? after,
-      finalize: async (input: { intakeId: string; sourceHash: string }) => ({
-        ...submittedIntake,
-        callFinalizedAt: "2026-09-22T12:00:00.000Z",
-        finalizedSourceHash: input.sourceHash,
-      }),
-      unfinalize: async (intakeId: string) => {
-        unfinalized.push(intakeId)
-        return { ...submittedIntake, callFinalizedAt: null, finalizedSourceHash: null }
-      },
-    }),
-  )(finalizeRequest({ finalized: true }), params)
-  assert.equal(response.status, 409)
-  assert.equal(await code(response), "routine_changed")
-  assert.deepEqual(unfinalized, [ids.intake])
 })
 
 test("finalize refuses a composition whose recommendation brands could not be read", async () => {
