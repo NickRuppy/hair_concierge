@@ -63,3 +63,15 @@ John Frieda Silber (1–3 min), Plantur DMG Clinical (2 min), Bali Gents (2 min)
 ## R10 — Earlier holdout products are researched fresh (2026-10-07)
 
 Syoss Intense Repair, Elvital Bond Repair, ISANA Professional Plex: full v1.6 research like every other Track B product; their v1.4 holdout results are NOT carried forward (Nick: there was a reason they were put on hold). Decide on them after the fresh research; the old results are only a comparison point.
+
+## R11 — C2 humectant element; DERMAXPRO thick hair = amber (2026-10-09)
+
+Trace glycols and aloe juice alone do not satisfy C2's humectant element. H&S DERMAXPRO Beruhigende Pflege → conditioning `moderate` → coarse `acceptable` (amber). Recommendation adopted.
+
+## R12 — Dandruff + irritated scalp combination (2026-10-09, scope pending)
+
+Nick: a dandruff shampoo with explicit soothing wording (e.g. Guhl Anti Schuppen: "Deine juckende Kopfhaut wird beruhigt…") is the right product for people with dandruff AND an irritated scalp, for whom regular anti-dandruff shampoos may be too harsh. Verified 2026-10-09: the live profile stores one `scalp_condition` (single value) and the shampoo secondary bucket only derives from scalp type (oily/dry/balanced) when the condition is dandruff — the combination dandruff + irritated cannot be expressed today. Ruled option A: record it in research only — the product's research record carries `dandruff` primary + `sensitive` secondary as a research fact; live rows stay dandruff-only, so irritated-only users never receive an anti-dandruff active. Follow-up (option C, separate project): let the profile express dandruff + irritated together and prefer such products. Handoff: memory `handover_scalp_combination.md`.
+
+## R13 — Lock path (2026-10-09)
+
+Apply R11/R12 + the round-2 wording clarifications, then run the unseen check on fresh Track B products; lock v1.6 if it holds. No third calibration round.
