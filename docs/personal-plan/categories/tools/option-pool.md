@@ -226,7 +226,9 @@ The eight categories above are listed in their canonical (persisted) order. The 
 | Trocknen & Stylen | Haartrockner & Luftstyler (`airflow:1`); Hitzestyling-Tools (`heated_styling:1`); Heatless Styling & Setzen (`heatless_styling:1`); Clips, Haargummis & Fixierhilfen (`securing_sectioning:1`, `securing_sectioning:2`) |
 | Nachtschutz | Nachtschutz (`night_protection:1`) |
 
-The capture order is presentation only: category labels, product-type values and the canonical order of a stored answer do not change.
+Answer-only cards (answers, never recommendable products): „Nur Finger" on `brushes_combs:1`, „Frottee-Handtuch" (`frottee`) on `drying_textiles:1` after the Mikrofaser-Handtuch, „Diffusor-Aufsatz" (`diffuser`) on `airflow:1` after the Föhn. In a stored answer `frottee` sorts directly after `microfiber_towel` and `diffuser` directly after `hair_dryer`; `fingers` sorts last.
+
+The capture order is presentation only: category labels and product-type values do not change.
 
 ## How purposes are used
 
