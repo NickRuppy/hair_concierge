@@ -7,8 +7,9 @@
 | Candidate policy ID | `shampoo-classification-v1.6-candidate` |
 | Policy ID after lock | `shampoo-classification-v1.6` (assigned only by the lock receipt) |
 | Analysis model version | `shampoo-inci-v1.6-candidate` |
-| Status | **Candidate. Not locked. Not production-active.** |
-| Base method | `shampoo-classification-v1.4`, `docs/research/shampoo-inci/v1.4/classification-standard.md`, SHA-256 `0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24` (frozen, unchanged) |
+| Status | **Candidate, revised for calibration round 2 (2026-10-09). Not locked. Not production-active.** |
+| Base method | `shampoo-classification-v1.4`, `docs/research/shampoo-inci/v1.4/classification-standard.md`, SHA-256 `0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24` (frozen, unchanged), together with the two other sources the v1.4 README lists as consolidated into v1.4: the final weight method `docs/research/shampoo-inci/v1.4-draft/weight-potential-final-method.md` (`shampoo-weight-final-v1`, now merged into Section 6) and the operational amendment `docs/research/shampoo-inci/v1.4-draft/operational-amendment.md` (its focus, secondary and usage operating rules and decision trace, merged into Sections 7–9; its superseded route-count weight section is not carried) |
+| Round-2 revision | Rules added or sharpened to close the round-1 lane ambiguities (`plans/shampoo-v16/calibration/round-1/lane-a-ambiguities.md`, `lane-b-ambiguities.md`). Each change is a row in `changelog-vs-v1.4.md`. |
 | Merged overlay | Focus v1.5, approved by Nick 2026-09-03 (`plans/scan-db-expansion/research/shampoo-v14/focus-v15-amendment-plan.md`, contract `src/lib/shampoo/focus-v15.ts`) |
 | Settled clarifications | holdout-v3 adjudication (`data/research/shampoo-inci/holdout-v3/adjudication.json`) where it decided a rule question |
 | New in this version | Section 13, *Production projection assessment* |
@@ -52,8 +53,17 @@ Each property record includes:
 - `low | moderate | high` classification confidence;
 - a concise conclusion-first rationale;
 - exact supporting formula facts and one-based INCI positions where relevant;
-- counter-signals and the neighboring alternative (the adjacent value that was most plausible after the selected one, or `none`);
+- counter-signals and the neighboring alternative (`neighboringAlternative`, rule N-ALT below);
 - source identifiers.
+
+**N-ALT Neighboring alternative (round 2).** `neighboringAlternative` follows mechanically from the property's confidence (Section 12); it is not a lane convention:
+
+- confidence `high` → `none` (by definition, reasonable unknowns would not move the value);
+- confidence `moderate` or `low` → exactly one other value, never `none` (by definition, realistic unknowns could move the value).
+- For an ordered property (`cleansingStrength`, `conditioningLevel`, `weightPotential`) the neighbor is always one step away. If both adjacent values are possible, record the one the record's counter-signals and `whyNotNeighborBand` treat as more realistic. If the record finds both equally realistic, record the one that T4 or I3 (Section 13) would read as the less recommending outcome (for `weightPotential` the heavier value; for `conditioningLevel` the lower value; for `cleansingStrength` the value whose observed intensity would not match a projected bucket's expected intensity). If neither or both would, record the higher value.
+- For a categorical property, the neighbor is the single most plausible other value.
+
+Projection review flags (T4, I3) read only this field, so two lanes that agree on the value and its confidence produce the same flags.
 
 The `focusPrimary`/`focusSecondary` record additionally carries the care-direction verdict, claim role and decision trace defined in Section 7.4.
 
@@ -105,6 +115,17 @@ The manufacturer hierarchy applies to the exact German product, not to a differe
 
 Never combine ingredient lists across GTINs, sizes, markets or reformulations. Preserve conflicting evidence in provenance. If the conflict could change a property or a projected field and cannot be resolved, block the identity or keep the affected property low-confidence/unknown as permitted below.
 
+### Completeness, normalization and conflicts (round 2)
+
+**ID-1 Completeness.** A formula is complete only when its source is an approved, canonical full-INCI capture for the exact product without a material conflict. A non-empty ingredient string alone is not evidence of completeness. A formula that is not known to be complete returns `unknown` or low confidence wherever completeness matters (Sections 6, 10, 11).
+
+**ID-2 Normalization.** Multilingual synonyms or slash/parenthesis variants of one ingredient (for example `Aqua (Water, Eau)`, `Aqua/Water/Eau`, `Glycine Soja Oil / Soybean Oil`) are one INCI entry. One-based positions are counted after this normalization. Marker characters (`*`, `**`) are stripped from the name and kept as provenance.
+
+**ID-3 Material conflict.** A conflict is *material* only if resolving it either way could change a direct property or a projected field. Then the affected property is `low` confidence (or `unknown` where the property allows it) and the product returns `needs_research`. Otherwise record it as a note with no confidence effect. Specifically:
+
+- A generic disclaimer on a source ("Inhaltsstoffe können abweichen", "maßgeblich ist die Angabe auf der Verpackung") is not a conflict. Record it; no confidence effect.
+- A claim naming an ingredient that does not appear in the frozen INCI: first map the claim name to INCI (for example "Hyaluron" → `Sodium Hyaluronate`, "Keratin" → `Hydrolyzed Keratin`, "Koffein" → `Caffeine`). If no INCI entry matches, the claim is a conflict. It is material only when that ingredient, if present, could change a property or a gate (for example a recognized dandruff active, a silicone, a comfort route at a gate). A missing botanical or marketing extract with no such role is a note only.
+
 ## 3. Formula-first, claims-second sequence
 
 ### 3.1 Blind formula pass
@@ -146,6 +167,14 @@ Claims may not:
 
 Record every blind-to-final change with the revealed evidence and reason.
 
+**CL-SRC Claim source grading (round 2).** Every claim used anywhere in this standard (focus, usage role, scalp comfort, D1, scalp targets) is graded with the E1 positioning confidence (Section 13.3), not only scalp-target claims:
+
+- a word in the exact product name: `high`;
+- a manufacturer or pack source: `moderate` (when the frozen packet does not distinguish pack front from back, every manufacturer-source claim is `moderate`);
+- retailer copy only: `low`.
+
+A `low`-graded claim may act as a focus `candidate` only when the formula verdict independently supports that focus (for example `repair_supported`); it then caps the focus confidence at `moderate` and it can never act as `tie_breaker`. A `low`-graded claim never triggers a non-default usage role, `scalpComfortTarget: targeted`, D1 or a scalp target. Usage directions are graded the same way.
+
 ## 4. Cleansing strength
 
 Judge the complete surfactant architecture, not the reputation of one ingredient.
@@ -169,7 +198,49 @@ Judge the complete surfactant architecture, not the reputation of one ingredient
 
 SLES is evidence for strong cleansing but not an automatic `strong` label. Sulfate-free does not automatically mean low.
 
-**C1 (settled by holdout-v3).** An early alkyl ether sulfate (for example Sodium Laureth Sulfate or Sodium Myreth Sulfate) that is buffered by an amphoteric/betaine co-surfactant (for example Cocamidopropyl Betaine, Coco-Betaine, Sodium Cocoamphoacetate), with no second reinforcing anionic or reset route and no reset/deep-cleansing intent, is `moderate`, not `strong`. SLES plus additional anionic/reset routes often supports `strong`. Source: holdout-v3 decisions `eucerin-dermocapillaire-ph5/cleansingStrength` and `loreal-elvital-hydra-hyaluronic/cleansingStrength` (category `researcher_process_ambiguity`, effective `moderate`).
+`cleansingStrength` is formula-only. Claims, product names, usage directions and deep-cleansing positioning never set or move it (3.2). Reset or deep-cleansing *intent* belongs to `usageRole` (Section 9) and D1 (13.6), never to cleansing strength.
+
+### Surfactant conventions (round 2)
+
+C1 and C3–C6 are repeatability conventions for the candidate. They make two classifiers read the same surfactant system the same way; they are not potency measurements. Record the counter-signals (refatting, conditioning, polymers) that argue for the neighboring value; they may lower confidence to `moderate` (which then names the neighbor, N-ALT), but they never move the value away from the convention.
+
+**C3 Surfactant classes.**
+
+| Class | Members (examples, not exhaustive by chemistry) |
+| --- | --- |
+| Strong anionic, ether/sulfonate type | Alkyl ether sulfates (`Sodium Laureth Sulfate`, `Ammonium Laureth Sulfate`, `Sodium Myreth Sulfate`, `Sodium Pareth Sulfate`), alpha-olefin sulfonates (`Sodium C14-16 Olefin Sulfonate`), alkylbenzene sulfonates (`TEA-Dodecylbenzenesulfonate`) |
+| Strong anionic, alkyl sulfate type | `Sodium Lauryl Sulfate`, `Ammonium Lauryl Sulfate`, `Sodium Coco-Sulfate`, `TEA-Lauryl Sulfate`, `Magnesium Lauryl Sulfate` |
+| Mild anionic | Amino-acid acylates (glutamates, sarcosinates, glycinates, alaninates), taurates, isethionates, sulfosuccinates, sulfoacetates, ether carboxylates, lactylates |
+| Amphoteric | Betaines, sultaines/hydroxysultaines, amphoacetates/amphodiacetates, amphopropionates |
+| Nonionic cleansing | Alkyl glucosides (`Decyl Glucoside`, `Coco-Glucoside`, `Lauryl Glucoside`) |
+| Not a cleansing route and not a buffer | Hydrotropes (`Sodium Xylenesulfonate`, `Sodium Cumenesulfonate`), alkanolamide foam boosters/thickeners (`Cocamide MEA`, `Cocamide DEA`, `Cocamide DIPA`), low-ethoxylate thickeners (`Laureth-2`, `Laureth-3`), PEG/PPG esters and ethers used as thickeners or solubilizers (`PEG-120 Methyl Glucose Dioleate`, `PEG-55 Propylene Glycol Oleate`, `PEG-150 Distearate`, `PPG-5-Ceteth-20`), polyglyceryl esters, salt, acids, charcoal, clay, chelators |
+
+An unlisted surfactant is assigned to the class its chemistry names (sulfate, ether sulfate, sulfonate, acylate, betaine, glucoside); the record states the assignment.
+
+**C4 Position and roles.** Only prominent surfactants count (E3: listed before `Parfum`/`Fragrance`, else before the first listed preservative; for C rules only, when the formula declares neither, every listed surfactant counts as prominent). A surfactant listed after that point is recorded but is neither a primary route, a reinforcing route nor a buffer.
+
+- The *defining anionic* is the earliest prominent strong anionic (either strong type). If there is none, C6 applies.
+- A *reinforcing route* is any further prominent strong anionic (either type).
+- A *buffer* is a prominent amphoteric, nonionic glucoside or mild anionic.
+
+**C1 Ether/sulfonate-type chassis (settled by holdout-v3; scope sharpened in round 2).** Defining anionic of the ether/sulfonate type:
+
+- at least one buffer and no reinforcing route → `moderate`;
+- no buffer → `strong`;
+- a reinforcing route → `strong`.
+
+Source of the settled core (alkyl ether sulfate buffered by a betaine, no second anionic): holdout-v3 decisions `eucerin-dermocapillaire-ph5/cleansingStrength` and `loreal-elvital-hydra-hyaluronic/cleansingStrength` (category `researcher_process_ambiguity`, effective `moderate`). The holdout-v3 wording "and no reset/deep-cleansing intent" is removed: intent is a claim and cannot move cleansing strength (3.2). Formula reset architecture is exactly what this rule reads: an unbuffered or reinforced strong anionic.
+
+**C5 Alkyl sulfate chassis.** Defining anionic of the alkyl sulfate type (a harsher class than ether sulfates):
+
+- at least two buffers and no reinforcing route → `moderate`;
+- otherwise → `strong`.
+
+**C6 Chassis without a prominent strong anionic.**
+
+- The earliest prominent cleansing surfactant is an amphoteric or nonionic glucoside, or a mild anionic with at least one prominent amphoteric or glucoside co-surfactant → `low`.
+- Mild anionic(s) without a prominent amphoteric or glucoside co-surfactant → `moderate`.
+- No prominent cleansing surfactant at all → the formula is not interpretable under this convention; `cleansingStrength` confidence `low`.
 
 ## 5. Conditioning level
 
@@ -181,50 +252,162 @@ Consider cationic polymers/conditioners, silicones, amodimethicone systems, fatt
 | --- | --- |
 | `low` | Cleansing-led architecture with little substantive slip or manageability support. |
 | `moderate` | One meaningful conditioning system or several light routes provide noticeable but bounded rinse-off care. |
-| `high` | Multiple complementary conditioning systems or a clearly rich 2-in-1 architecture make substantial softness/slip likely. |
+| `high` | Multiple complementary conditioning systems or a rich architecture (W-RICH, Section 6) make substantial softness/slip likely. |
 
 Conditioning and weight are related but not equivalent. A formula can improve shine or slip without being highly conditioning or heavy.
 
-**C2 (settled by holdout-v3).** Cleansing strength does not lower `conditioningLevel`; it is captured separately. An early silicone plus a cationic polymer plus a pearlizing/fatty route plus humectants (for example early Dimethicone, Glycol Distearate, Panthenol/Glycerin and Guar Hydroxypropyltrimonium Chloride) are multiple complementary systems and support `high` even in a strong-cleansing chassis. Source: holdout-v3 decision `wella-invigo-nutri-enrich/conditioningLevel` (category `product_correction`, effective `high`).
+**C2 (settled by holdout-v3; "early" defined in round 2).** Cleansing strength does not lower `conditioningLevel`; it is captured separately. An early silicone plus a cationic polymer plus a pearlizing/fatty route plus humectants (for example early Dimethicone, Glycol Distearate, Panthenol/Glycerin and Guar Hydroxypropyltrimonium Chloride) are multiple complementary systems and support `high` even in a strong-cleansing chassis. Source: holdout-v3 decision `wella-invigo-nutri-enrich/conditioningLevel` (category `product_correction`, effective `high`).
+
+- *Early* means prominent (E3). A silicone listed after the E3 point is a supporting route only and does not satisfy C2.
+- A prominent nonvolatile payload lipid, butter or fatty alcohol (Section 6.3 family `payload_lipid`) may take the place of the early silicone. The other C2 elements (a cationic polymer, a pearlizing/fatty route and humectants) are still required. Weak refatters (`weak_refatter`) never take that place.
+- When C2 is not met, `high` still requires the `high` anchor's multiple complementary systems; one meaningful system plus light routes is `moderate`.
+
+**C7 2-in-1 claims (round 2).** A "2-in-1", "Shampoo & Spülung" or "mit Conditioner" claim never establishes richness or raises `conditioningLevel` (3.2). The value comes from the formula alone; a 2-in-1 product whose formula shows one conditioning system is `moderate` at most.
 
 ## 6. Weight potential
 
-`weightPotential` is a structured whole-formula judgment. It cannot be calculated from ingredient count or route count.
+This section is the complete weight method. It merges the final v1.4 weight method `shampoo-weight-final-v1` (`docs/research/shampoo-inci/v1.4-draft/weight-potential-final-method.md`), which the v1.4 README lists as one of the three consolidated v1.4 sources, into this standard. A classifier needs nothing else to judge weight. The earlier route-count calibration `shampoo-weight-v1` and the rule "a polymer means moderate" are superseded and are not part of this standard.
 
-### Mandatory subjudgments
+### 6.1 What the property means
 
-| Field | Values | Question |
+`weightPotential` is the formula-derived potential for a shampoo to leave noticeable or cumulative residue that can reduce movement, strand separation or root lift after rinsing. It is a trade-off dimension, not a quality score.
+
+`weightPotential` is a structured whole-formula judgment. It cannot be calculated from ingredient count, route count or a position window.
+
+### 6.2 Evidence boundary
+
+Supported by external formulation evidence:
+
+- Cationic polymers and silicone systems can support conditioning and deposition. Deposition depends on polymer chemistry, the silicone system, surfactant composition, dilution behavior and the hair substrate (Jordan et al. 2009, Lepilleur et al. 2011, Kwak et al. 2021, as cited by the v1.4 weight finalization work).
+- INCI order supports formula architecture and rough prominence. It does not reveal exact concentrations, particle size, charge density, pH, active content, finished-product deposition or consumer-perceived heaviness.
+
+Internal methodology choices (Chaarlie research anchors, not measurements):
+
+- The `low`/`moderate`/`high` anchors in 6.6.
+- `depositionLoad`, `persistence` and `resetCapacity` are structured expert judgments from the complete formula.
+- Ingredient recognition, family assignment and INCI positions are evidence-gathering steps only. No recognized ingredient, family count, marketing claim or INCI position assigns the final band by itself.
+
+### 6.3 Evidence extraction
+
+Record every deposition-relevant and reset-relevant ingredient with its exact normalized one-based position (ID-2), in these families:
+
+| Group | Family | What belongs here (examples) |
 | --- | --- | --- |
-| `depositionLoad` | `light`, `moderate`, `high` | How much hair-substantive conditioning material is plausibly delivered? |
-| `persistence` | `low`, `moderate`, `high` | How likely is residue to survive ordinary rinsing/repeated use or accumulate? |
-| `resetCapacity` | `weak`, `moderate`, `strong` | How strongly does the same formula remove residue or offset weight? |
+| Deposition | `silicone` | `Dimethicone`, `Dimethiconol`, `Amodimethicone`, other silicones and amino-silicones |
+| Deposition | `cationic_polymer` | `Guar Hydroxypropyltrimonium Chloride`, `Hydroxypropyl Guar Hydroxypropyltrimonium Chloride`, `Polyquaternium-n`, `Starch Hydroxypropyltrimonium Chloride`, `Hydroxypropyl Oxidized Starch PG-Trimonium Chloride` |
+| Deposition | `cationic_conditioner` | Quaternary conditioning agents that are not polymers, e.g. `Quaternium-80`, behentrimonium/cetrimonium salts |
+| Deposition | `payload_lipid` | Nonvolatile plant oils and butters, waxy/hydrogenated lipids, fatty alcohols, emollient esters/ethers (e.g. `Argania Spinosa Kernel Oil`, `Butyrospermum Parkii Butter`, `Hydrogenated Castor Oil`, `Hydrogenated Vegetable Oil`, `Cetearyl Alcohol`, `Dicaprylyl Ether`) |
+| Deposition | `weak_refatter` | Light refatting esters and lipid-like additives (e.g. `Glyceryl Oleate`, `PEG-7 Glyceryl Cocoate`, `Hydrogenated Palm Glycerides Citrate`, `Lecithin`, `Ascorbyl Palmitate`) |
+| Deposition | `protein_film` | Hydrolyzed proteins and amino-acid film routes |
+| Deposition | `film_former` | Film-forming polymers (e.g. acrylates copolymers) |
+| Reset | `anionic_surfactant`, `amphoteric_surfactant`, `nonionic_surfactant` | Classified as in C3 |
+| Excluded | — | Listed with the reason; never counted as deposition (see 6.4) |
+| Unresolved | — | Any ingredient whose weight-relevant function is unknown; listed with the reason (see 6.6, unknowns) |
 
-Record exact evidence positions, counterevidence, unresolved facts, `whyThisBand` and `whyNotNeighborBand`.
+Humectants (glycerin, panthenol, sodium hyaluronate and similar) are recorded as context, not as a deposition family.
 
-### Anchors
+### 6.4 Reviewed ingredient-role resolutions
+
+These resolve function recognition only. Position, surrounding routes, persistence and reset still decide the band.
+
+- `Quaternium-80`: cationic hair-conditioning signal (EU cosmetic ingredient inventory: antistatic/hair conditioning). Record it as a conditioning route; its position, the surrounding formula and reset capacity decide whether it is materially weight-relevant.
+- `Starch Hydroxypropyltrimonium Chloride`: cationic hair-conditioning polymer (CIR polysaccharide-gum assessment). Recognition removes an evidence gap; it does not assign `moderate` or `high`.
+- `Juniperus Virginiana Oil` and other essential/fragrance oils (citrus peel oils, mint, rosemary, tea tree, lavender and similar): fragrance materials, not nonvolatile payload lipids. Keep them visible as excluded evidence; they do not increase deposition load without separate formula-specific support.
+- `Glycine Soja Oil / Soybean Oil`: alias-normalized nonvolatile payload lipid.
+- `Hydrogenated Vegetable Oil`: emollient/waxy payload lipid. Waxy or hydrogenated lipids are more substantive than liquid oils at a similar position; reflect that in `persistence`, not in a fixed grade.
+- `PEG-40 Hydrogenated Castor Oil`, `PEG-60 Hydrogenated Castor Oil`: solubilizer/emulsifier; excluded from persistent payload evidence.
+- `Glycol Distearate` and similar pearlizing waxes, and PEG thickeners (e.g. `PEG-120 Methyl Glucose Dioleate`, `PEG-150 Distearate`): excluded from persistent deposition evidence for weight. Glycol distearate still counts as the pearlizing/fatty route for `conditioningLevel` (C2); the two properties are judged separately.
+
+### 6.5 Required sequence
+
+1. **Blind formula packet first.** Judge from the normalized INCI, formula fingerprint, source/completeness facts, formula architecture and this standard only. Brand, product name, claims, previous labels, other lane judgments and catalog values are hidden (3.1).
+2. **Extract objective observations** (6.3): conditioning polymers, silicones, oils/butters, fatty alcohols, refatters, proteins, film formers, unresolved weight-relevant ingredients, surfactant/reset clues and exact positions.
+3. **Make the three subjudgments** (6.6) from the whole formula.
+4. **Assign the final band** only after recording support, counterevidence and why the neighboring band is less likely.
+5. **Unblind claims last.** Claims may corroborate intended use or expose a conflict; they cannot decide the band (3.2). "Ohne zu beschweren", "leicht" or "für feines Haar" never lowers it; "reichhaltig" or "2-in-1" never raises it (C7).
+6. **Compare after freeze.** Any comparison with an earlier or approved value is made by the orchestrator after every blind result is hash-frozen, never inside a lane.
+
+### 6.6 Subjudgments, anchors and unknowns
+
+| Subjudgment | Values | Question | Evidence to consider |
+| --- | --- | --- | --- |
+| `depositionLoad` | `light`, `moderate`, `high` | How much hair-substantive conditioning material is plausibly delivered? | Cationic polymers, silicone/amino-silicone systems, lipid/fatty-alcohol/refatter architecture, protein or film-forming systems, formula prominence and reinforcing combinations. |
+| `persistence` | `low`, `moderate`, `high` | How likely is the residue to remain through ordinary rinsing/repeated use or accumulate? | Persistent silicone/polymer/lipid systems, multiple depositing technologies, wash-frequency implications, ordinary rinse-off limitations, and whether routes look light or weakly retained. |
+| `resetCapacity` | `weak`, `moderate`, `strong` | How strongly does the same shampoo architecture remove residue or offset weight? | Surfactant system breadth/strength (C3–C6), clarifying architecture, low-deposition architecture and counter-signals from refatting/deposition. Claimed reset intent is not evidence here. |
+
+Strong cleansing can raise reset capacity, but it never automatically cancels deposition. Rich conditioning can raise deposition and persistence, but it never automatically makes the product `high` if reset and formula context argue otherwise. A polymer or silicone is a clue, not an automatic moderate floor.
+
+**Band anchors**
 
 | Value | Whole-formula conclusion |
 | --- | --- |
-| `low` | Deposition is absent, light or low-persistence and the complete architecture does not make a noticeable reduction in movement/root lift likely. One light polymer, weak refatter, late protein or late oil can remain low. |
-| `moderate` | Noticeable but bounded residue is plausible from one meaningfully persistent system or interacting lighter routes, while reset, limited richness or rinse-off context argues against a strongly coating result. |
-| `high` | Multiple converging persistent systems or a clearly rich architecture with limited reset make noticeable loss of movement/root lift likely. One ingredient or one route kind is insufficient. |
+| `low` | Deposition is absent, light or low-persistence, and the complete architecture does not support a noticeable reduction in movement or root lift after rinsing. A single light conditioning polymer, weak refatter, late protein or late oil can still be `low` when counterevidence and reset capacity support that interpretation. |
+| `moderate` | The formula plausibly leaves noticeable but bounded conditioning residue. This can come from one meaningfully persistent system or interacting light/moderate routes, while rinse/reset capacity, limited richness or the ordinary rinse-off context argues against a strongly coating result. |
+| `high` | Multiple converging and plausibly persistent depositing systems, or a clearly rich conditioning architecture (W-RICH) with limited reset, make noticeable loss of movement/root lift likely. One ingredient or one route kind alone is insufficient. |
 
-Strong cleansing raises reset capacity but never automatically cancels deposition. A polymer or silicone is a clue, not an automatic moderate floor.
+**Unknowns.** If the formula is absent, materially conflicted (ID-3), not known to be complete (ID-1), or contains an unresolved weight-relevant ingredient that could plausibly move the band, return `null` or a `low`-confidence provisional band with the exact blocker. Never default an unknown to `low`.
 
-`weightPotential` also projects 1:1 into the live `weight` field (Section 13.4, W-LIVE). It is not re-judged for that projection.
+### 6.7 Settled and round-2 clarifications
 
-**W1 (settled by holdout-v3).** Silicone plus a cationic guar plus a late amodimethicone, in a formula with an effective sulfate/betaine cleansing base and without a rich 2-in-1 architecture, is `moderate`, not `high`. Source: holdout-v3 decision `loreal-elvital-hydra-hyaluronic/weightPotential` (category `product_correction`, effective `moderate`).
+**W1 (settled by holdout-v3; scope sharpened in round 2).** Silicone plus a cationic guar plus a late amodimethicone, in a formula with an effective sulfate/betaine cleansing base and without a rich architecture (W-RICH), is `moderate`, not `high`. Source: holdout-v3 decision `loreal-elvital-hydra-hyaluronic/weightPotential` (category `product_correction`, effective `moderate`).
 
-### Reviewed ingredient-function rows
+W1 applies only when all of its conditions hold: (a) the cleansing base is a C1/C5 sulfate chassis with a prominent buffer and `cleansingStrength` `moderate` or `strong`; (b) the deposition evidence is that silicone/guar/late-amodimethicone set; (c) no further persistent family converges (a prominent `payload_lipid`, a second cationic polymer, a `film_former`, or a protein film reinforcing the set). If any condition fails — extra converging families, a mild/sulfate-free chassis (C6), or an early oil/waxy lipid — W1 does not apply and the full method in 6.6 decides. W1 is never an argument for a lighter band outside its conditions.
 
-- `Quaternium-80`: cationic conditioning signal.
-- `Starch Hydroxypropyltrimonium Chloride`: cationic conditioning polymer.
-- `Juniperus Virginiana Oil`: essential fragrance oil; exclude from nonvolatile payload evidence without separate formula-specific support.
-- `Glycine Soja Oil / Soybean Oil`: alias-normalized nonvolatile payload lipid.
-- `Hydrogenated Vegetable Oil`: emollient/waxy payload lipid.
-- `PEG-40 Hydrogenated Castor Oil` and `PEG-60 Hydrogenated Castor Oil`: solubilizer/emulsifier evidence; exclude from persistent payload evidence.
+**W-RICH Rich architecture.** "Rich" (in the `high` anchors of Sections 5 and 6 and in W1) is established only by formula evidence: prominent `payload_lipid` material converging with a silicone or cationic deposition system. A "2-in-1", "reichhaltig" or "intensive Pflege" claim never establishes it (3.2, C7).
 
-These rows resolve function recognition only. Position, surrounding routes, persistence and reset still decide the band.
+**W2 Interacting systems (boundary reasoning).** Judge deposition evidence as one system, not ingredient by ingredient. When two or more distinct deposition families (6.3) are present, a `low` band requires `whyNotNeighborBand` to name the specific formula evidence that keeps their combined residue below noticeable — for example that each family is late/trace in the list, that the only families are `weak_refatter` plus humectants, or that a strong reset faces only light routes. "No persistent system" or "one light polymer" is not a sufficient reason when a second family is present. A single deposition family without a reinforcing route, facing moderate or strong reset, can remain `low` (no polymer floor). W2 is a reasoning requirement; it never assigns a band from a family count.
+
+**W3 Balanced boundary.** If, after the three subjudgments, two adjacent bands remain closely balanced, confidence is `low` (the product returns `needs_research`). A balanced boundary is never resolved toward the lighter band at `moderate` or `high` confidence (P0: a lighter band is the recommending direction).
+
+### 6.8 Mandatory reasoning fields
+
+Every `weightPotential` record includes:
+
+- canonical formula identifiers, source tier, capture date and formula fingerprint;
+- extracted evidence by family with exact normalized INCI positions, plus excluded and unresolved ingredients with reasons (6.3, 6.4);
+- `depositionLoad`, `persistence` and `resetCapacity`, each with a concise rationale;
+- formula counterevidence and unresolved facts;
+- the proposed `weightPotential`;
+- `whyThisBand`;
+- `whyNotNeighborBand`;
+- confidence with its limiting factor (6.9), and `neighboringAlternative` (N-ALT).
+
+`whyNotNeighborBand` names the real boundary. Examples:
+
+- `low` rather than `moderate`: the only depositing clue is light/late/weak, and reset capacity or sparse architecture makes noticeable residue unlikely.
+- `moderate` rather than `low`: at least one depositing system is plausible enough that calling the product lightweight would understate the residue risk.
+- `moderate` rather than `high`: deposition is plausible, but richness, persistence or limited-reset evidence is not strong enough for a heavy/coating conclusion.
+- `high` rather than `moderate`: multiple persistent systems or a rich architecture converge, and reset capacity does not sufficiently offset them.
+
+### 6.9 Weight confidence
+
+Confidence describes robustness under INCI-only uncertainty, not measured accuracy. It follows Section 12, applied to weight:
+
+| Confidence | Use when |
+| --- | --- |
+| `high` | Formula identity is exact and complete, recognition gaps are immaterial, the subjudgments converge, and reasonable unknown formulation details would not plausibly move the band. |
+| `moderate` | One band is best supported, but realistic unknowns could move it one adjacent band. This is the normal ceiling for many INCI-only calls. |
+| `low` | Material source conflict, recognition gaps, incomplete formula, closely balanced neighboring bands (W3) or missing context prevent a dependable band. |
+
+No percentages. Two agreeing classifiers improve repeatability evidence; they do not prove finished-product accuracy.
+
+### 6.10 Direct property versus derived fit
+
+`weightPotential` is a direct product property. Thickness fit and the live `weight` are derived from it (13.4); `weightPotential` projects 1:1 into `weight` (W-LIVE) and is not re-judged for that projection. When `weightPotential` changes, refresh only outputs demonstrably derived from it; do not reopen other properties unless the changed weight interpretation exposes a direct dependency.
+
+A broad one-directional shift of weight labels against an earlier baseline is a review trigger for the orchestrator, not proof that either set is correct, and never a reason to tune labels toward a distribution.
+
+### 6.11 Operator self-check
+
+Before accepting a weight record, confirm:
+
+- the formula fingerprint matches the frozen packet;
+- claims and previous labels were hidden during the formula judgment;
+- no ingredient, family count or position window directly assigned the band;
+- all three subjudgments are present with rationales;
+- counterevidence and `whyNotNeighborBand` are specific (W2 where it applies);
+- confidence names the limiting uncertainty without invented accuracy;
+- any comparison with an earlier value happens only after the blind result is frozen, outside the lane.
 
 ## 7. Primary focus
 
@@ -238,8 +421,8 @@ Primary focus is the dominant intended role. Claims identify the candidate job; 
 | `shine` | Gloss/smoothness is the dominant job, plausibly supported through smoothing, acidic alignment or a light film. A shine shampoo may be low-conditioning and low-weight. |
 | `repair` | Damage care for broken, brittle, chemically or mechanically stressed lengths, with a `repair_supported` or tie-broken `dual_supported` care-direction verdict (7.3). |
 | `moisture` | Hydration, dryness relief or nourishment of dry lengths, with a `moisture_supported` or tie-broken `dual_supported` verdict (7.3). |
-| `clarifying` | Explicit deep-cleaning/reset or oily-root/buildup role with compatible architecture. |
-| `scalp_active` | A formula-compatible, explicitly targeted cosmetic scalp need, including sensitive-scalp or anti-dandruff positioning. It does not by itself assert a recognized anti-dandruff active; `dandruffSupport` says that. |
+| `clarifying` | Explicit deep-cleaning/reset or oily-scalp/oily-root/buildup role with compatible architecture (F6). |
+| `scalp_active` | A formula-compatible, explicitly targeted cosmetic scalp need: sensitive, itchy or dry-feeling scalp, or anti-dandruff positioning. Oily-scalp positioning is `clarifying`, not `scalp_active` (F6). It does not by itself assert a recognized anti-dandruff active; `dandruffSupport` says that. |
 | `general` | Honest fallback: no specialist focus has a coherent claim-plus-formula case, the formula evidence is nonspecific, or competing directions cannot be resolved conservatively. |
 
 ### 7.2 Decision table
@@ -251,11 +434,28 @@ Primary focus is the dominant intended role. Claims identify the candidate job; 
 | Strong formula route without matching product positioning | Usually keep the positioned focus and record the route as a trade-off. |
 | Unsupported, contradictory or generic claims | `general`. |
 | Problem-led product with recognized dandruff active and anti-dandruff positioning | `scalp_active`. |
-| Explicit sensitive/itchy/dry-feeling scalp positioning with `scalpComfortTarget: targeted` | `scalp_active`. |
+| Explicit sensitive/itchy/dry-feeling scalp positioning (SC1) with `scalpComfortTarget: targeted` | `scalp_active`. |
 | Explicit deep-cleaning/reset product with compatible architecture | `clarifying`. |
+| Oily-scalp/oily-root positioning (E2 oily lexicon) with compatible architecture | `clarifying` (F6). |
 | Only mild/gentle cleansing positioning, no scalp target | Not a focus. Use the next dominant compatible job or `general`; mildness is captured by `cleansingStrength` and `usageRole`. |
+| Dominant claim is hair loss, hair growth or hair density | Ignore it for focus (F5); use the next dominant in-scope compatible job, else `general`. |
+| Scalp-specialist claim and a lengths-care claim compete | F7. |
 
-A strong-cleansing repair shampoo remains `repair` when that is its dominant compatible role; cleansing strength captures the chassis.
+A strong-cleansing repair shampoo remains `repair` when that is its dominant compatible role; cleansing strength captures the chassis. A strong-cleaning everyday repair shampoo is not automatically `clarifying`. A shine shampoo can be `shine` with light conditioning and low weight when it is positioned for gloss and has a plausible smoothing, acidic, film or cuticle-alignment route.
+
+### 7.2a Focus clarifications (round 2)
+
+**F5 Hair-loss claims.** Hair-loss, hair-growth and hair-density claims are medically adjacent and out of scope (E2, S-HAIRLOSS). They never select, support or break a tie for any focus. Determine focus from the remaining in-scope claims (a remaining lengths-care claim is a candidate checked against the formula as usual); if none remains, `general`. A caffeine or other "anti-hair-loss" ingredient is not a focus route.
+
+**F6 Oily scalp and `clarifying` compatibility.** Oily-scalp and oily-root positioning is part of `clarifying` (7.1), never `scalp_active`. `clarifying` is formula-compatible when `cleansingStrength` is `moderate` or `strong`, `conditioningLevel` is not `high` and `weightPotential` is not `high`; this applies to deep-cleaning/reset positioning and to oily-scalp positioning alike. An incompatible formula falls to the next dominant compatible job or `general`, and the record names the failed condition. The focus value does not change cleansing intensity, which stays formula truth (I1).
+
+**F7 Scalp-specialist versus lengths-care claims.** When the product carries both a qualifying scalp claim for `scalp_active` (an E2 sensitive, dry or dandruff claim unit; a name word without the scalp, such as "sensitiv" alone, is not one, see E1) and a lengths-care claim (repair, moisture, volume, shine):
+
+1. the role named in the exact product name is primary; a range or line word inside the product name counts as the name (E1);
+2. if both or neither appear in the product name, `scalp_active` is primary (the problem-led, narrower role), provided it is formula-compatible under 7.2 (dandruff active for dandruff positioning, `scalpComfortTarget: targeted` for sensitive or dry positioning); otherwise the lengths-care role is primary if compatible, else `general`;
+3. the other role is secondary only if it also passes Section 8 (distinct positioning and an independent route).
+
+**F-TRACE Decision trace (from the v1.4 operational amendment).** The `decisionTrace` (7.4) records, for primary focus: the claim direction or `null`, whether the formula is compatible, one compatible route, and the decision reason. For secondary focus: that the empty default was considered, the selected values, the matching distinct claims, the independent routes, why each is distinct from the primary, and the exception code when two values are used. For usage role (Section 9): the default `regular`, the exact non-default trigger code if any, the trigger evidence (at least one concise evidence string for every non-default trigger) and the rationale.
 
 ### 7.3 Repair/moisture care direction
 
@@ -281,7 +481,7 @@ In addition to Section 1.1, the focus record carries:
 - `claimRole`: `candidate`, `tie_breaker`, `corroborating` or `not_applicable`;
 - formula facts as ingredient plus exact one-based INCI position;
 - `counterSignal` (required, nonempty);
-- `neighboringAlternative` (a different focus value or `null`);
+- `neighboringAlternative` (a different focus value, or `none` when focus confidence is `high`; N-ALT);
 - `decisionTrace`: plain-language account of how formula, counter-signal and claim resolved the focus.
 
 ## 8. Secondary focus
@@ -296,21 +496,45 @@ Include one secondary focus only when all are true:
 
 **F2 (holdout-v3 operator clarification, now normative).** A benefit that is only an outcome of the same smoothing, deposition or restorative route used by the primary focus is not a secondary focus. Example: a `shine` claim delivered by the same silicone/smoothing route as the primary care focus does not add `shine`. Source: holdout-v3 decision `loreal-elvital-hydra-hyaluronic/focusSecondary` (effective `[]`).
 
-Two values require explicit multi-benefit positioning, two independent routes and a written `explicit_multi_benefit_two_routes` exception. Never use `general` as secondary, never repeat the primary focus, never use more than two values.
+**F3 Route independence (round 2).** A secondary route is independent only if it rests on at least one ingredient or system that the primary focus's recorded route does not cite. One ingredient never carries two focus routes; if the only formula support for the secondary claim is an ingredient already cited for the primary, the secondary is empty.
+
+**F4 pH adjusters (round 2).** Acids and their salts used as pH adjusters or buffers (`Citric Acid`, `Lactic Acid`, `Sodium Citrate`, `Sodium Lactate`, `Sodium Hydroxide`) are never an independent focus route on their own. They may support compatibility of a primary `shine` focus (acidic alignment, 7.1) but cannot create a secondary `shine`.
+
+Two values require explicit multi-benefit positioning, two independent routes, both distinct from the primary and from each other, and a written `explicit_multi_benefit_two_routes` exception that says why one secondary value would hide a material product role. Never use `general` as secondary, never repeat the primary focus, never use more than two values.
+
+Invalid secondary patterns (from the v1.4 operational amendment):
+
+| Invalid pattern | Use instead |
+| --- | --- |
+| `general` as a secondary value | Leave secondary empty. |
+| `shine` because a repair or moisture formula may smooth hair | Only if shine is separately positioned and has an independent route (F2, F3). |
+| `repair` for any protein or panthenol trace | Only when claim and route are both meaningful. |
+| `clarifying` only because cleansing is strong | `cleansingStrength: strong`; usage needs its own trigger (Section 9). |
+| A mildness or "gentle" benefit | Record cleansing strength and scalp exposure facts; not a focus. |
 
 ## 9. Usage role
 
 Usage role defaults to `regular`.
 
-| Value | Required product-level trigger |
-| --- | --- |
-| `regular` | No non-default trigger. This includes many ordinary strong-cleansing shampoos. |
-| `frequent` | Explicit daily/frequent/mild-use positioning **and** `cleansingStrength` is not `strong`. |
-| `alternating` | `cleansingStrength: strong` **and** clarifying/reset/buildup/oily-root intent or architecture. Strong cleansing alone is insufficient; a `moderate` formula is never `alternating`. |
-| `occasional_reset` | Explicit deep-cleansing/reset product (Section 13.6 D1 lexicon). It stays in this cohort as a `clarifying` regular shampoo and is flagged for a deep-cleanser entry (13.6 D2). |
-| `treatment` | Problem-led recognized active route, especially supported anti-dandruff formulas. |
+| Value | Trigger code | Required product-level trigger |
+| --- | --- | --- |
+| `regular` | `none` | No non-default trigger. This includes many ordinary strong-cleansing shampoos. |
+| `frequent` | `explicit_frequent_non_strong` | Explicit frequency wording (U2) **and** `cleansingStrength` is not `strong`. |
+| `alternating` | `strong_plus_reset_intent` | `cleansingStrength: strong` **and** reset intent (U4). Strong cleansing alone is insufficient; a `moderate` formula is never `alternating`. |
+| `occasional_reset` | `explicit_deep_cleansing` | D1 true (Section 13.6). It stays in this cohort as a regular shampoo; D2 decides the deep-cleanser flag. |
+| `treatment` | `recognized_active_problem_led` | `dandruffSupport: supported` **and** a qualifying E2 dandruff claim (U3). |
 
-These triggers are conjunctive and checked mechanically after `cleansingStrength` is final. Example: once holdout-v3 settled Eucerin DermoCapillaire pH5 at `moderate` cleansing, its explicit frequent-use positioning made `frequent` correct (decision `eucerin-dermocapillaire-ph5/usageRole`).
+These triggers are conjunctive and checked mechanically after `cleansingStrength` is final. Every non-default value records its trigger code and at least one evidence string (F-TRACE). Only claims graded `moderate` or `high` (CL-SRC) can fire a trigger. Example: once holdout-v3 settled Eucerin DermoCapillaire pH5 at `moderate` cleansing, its explicit frequent-use positioning made `frequent` correct (decision `eucerin-dermocapillaire-ph5/usageRole`).
+
+**U1 Precedence (round 2).** When more than one trigger fires, the first in this order wins: `occasional_reset`, `treatment`, `alternating`, `frequent`, `regular`. The losing triggers are recorded in the trace. (From the v1.4 operational amendment: a product that is both active-led and positioned for regular use is `treatment` when the recognized active is the reason to choose it.)
+
+**U2 Frequency wording.** The `frequent` trigger requires explicit frequency wording: "täglich", "tägliche Anwendung", "für jeden Tag", "Every-Day"/"Everyday", "für häufiges Waschen", "häufige Haarwäsche", "daily", "frequent use". "Mild", "sanft" or "sensitiv" without frequency wording does not fire it.
+
+**U3 `treatment` scope.** `treatment` needs both the recognized anti-dandruff active and a qualifying E2 dandruff claim unit graded `moderate` or `high`. An active without dandruff positioning (S-DANDRUFF note `active_without_dandruff_positioning`) is not `treatment`; check the other triggers. Hair-loss, hair-growth or caffeine positioning is out of scope and never fires `treatment` (F5).
+
+**U4 Reset intent for `alternating`.** Reset intent is a claim graded `moderate` or `high` containing any D1 lexicon term, the E2 oily lexicon (oily scalp or roots), or buildup/residue wording ("klärend", "Klärung", "entfernt Rückstände", "Ablagerungen", "Build-up", "Detox"). Reset intent can only fire `alternating`; it never moves `cleansingStrength` (Section 4).
+
+**U5 Deep-cleansing name with daily-use directions.** D1 is decided by its own sources (13.6). When D1 is true and the usage directions explicitly allow daily or frequent use, `usageRole` stays `occasional_reset` (U1), the conflict is recorded, and the product receives `review_reset_positioning_mismatch` (D3).
 
 This is not personalized cadence. Later fit logic may recommend a different schedule for a specific profile.
 
@@ -326,6 +550,14 @@ Use `targeted` when the post-unblind product is explicitly positioned for sensit
 Menthol, mint or fragrance is a counter-signal, not an automatic veto. In an explicitly sensitive or anti-itch product it can remain `targeted` when the overall architecture supports the role. Cleansing strength separately captures when the formula may be less suitable for dry-sensitive profiles.
 
 Use `not_targeted` for complete ordinary formulas without this intent/support. Use `unknown` only when formula identity/completeness or conflicting evidence prevents the decision.
+
+**SC1 What counts as explicit positioning (round 2).** "Explicitly positioned" means at least one E2 sensitive or E2 dry claim unit (13.3) graded `moderate` or `high` (CL-SRC). In addition:
+
+- itch, dryness, tightness or redness words that occur only inside a dandruff claim unit (E2a) are dandruff symptoms, not sensitive or dry-scalp positioning, and do not by themselves make the product `targeted`;
+- a product-name word that does not name the scalp ("sensitiv", "beruhigend", "sanft") is not explicit positioning on its own; it counts only together with a scalp-naming claim unit from a manufacturer or pack source, and is then graded by that source;
+- protective or "does no harm" wording ("trocknet die Kopfhaut nicht aus", "ohne zu reizen", "hautverträglich", "dermatologisch getestet", "pH-hautneutral") is mildness, not targeting.
+
+`targeted` additionally requires the credible supportive architecture above. A `targeted` product still has to pass the S-SENSITIVE or S-DRY formula gate separately; `targeted` alone never creates a target.
 
 ## 11. Dandruff support
 
@@ -354,6 +586,8 @@ Confidence describes how robust the classification is under the available eviden
 Do not attach invented accuracy percentages. Independent agreement measures process repeatability, not finished-product or consumer accuracy.
 
 A low-confidence property stays visible and makes a consolidated candidate `not_finalizable`. Never omit the product or promote confidence to satisfy a release gate. Projection confidence is derived mechanically (Section 13.8) and may never be higher than the inputs it depends on.
+
+Confidence also fixes `neighboringAlternative` (N-ALT): `high` means `none`, `moderate` or `low` means one named neighbor.
 
 ## 13. Production projection assessment
 
@@ -404,7 +638,11 @@ Why conservatism matters (informational, matcher behavior after the R2 PR): a pr
 
 **E1 Exact-product positioning.** Text that belongs to the exact German product: product name, pack front/back claims, the current exact manufacturer DE page's product claims and usage directions. Retailer copy counts only where it reproduces the manufacturer claim for the exact GTIN. Range-level or brand-level claims do not count. Positioning evidence confidence: `high` when the claim is in the product name or pack front; `moderate` when only on the pack back or exact manufacturer page; `low` when only in retailer copy or ambiguous. Low positioning confidence cannot support a target.
 
-**E2 Scalp-claim lexicon.** A scalp claim must name the scalp (or roots/ansatz for oily). Hair-length claims never count as scalp claims.
+- *Product name* is the full exact product name as frozen, including range or line words that are printed as part of it. A name word still has to meet E2 (name the scalp) to count as a scalp claim.
+- When the frozen packet labels sources only as `manufacturer` or `retailer` and does not separate pack front from back, a manufacturer-source claim is `moderate` and only the product name is `high`.
+- The same grading applies to every other claim use in this standard (CL-SRC, Section 3.2).
+
+**E2 Scalp-claim lexicon.** A scalp claim must name the scalp (or roots/ansatz for oily). Hair-length claims never count as scalp claims. Lexicon terms match case-insensitively on their stems, including inflections and compounds ("juckende Kopfhaut", "Kopfhautjucken", "fettigen Ansatz", "Anti-Schuppen-Shampoo"). Terms outside the lexicon do not qualify; the record notes them.
 
 | Target | Qualifying claim (German examples) | Does not qualify |
 | --- | --- | --- |
@@ -415,14 +653,23 @@ Why conservatism matters (informational, matcher behavior after the R2 PR): a pr
 
 Hair-loss, hair-growth or hair-density claims ("Haarausfall", "Wachstum", "Grow", "Coffein gegen Haarausfall") are medically adjacent and out of scope. They never create a scalp target and never count toward any gate.
 
-**E3 Prominent ingredient (INCI-order proxy).** An ingredient is *prominent* when it is listed before `Parfum`/`Fragrance`; if the formula declares no fragrance, before the first of `Sodium Benzoate`, `Potassium Sorbate`, `Phenoxyethanol`, `Benzyl Alcohol`, `Methylisothiazolinone`, `Methylchloroisothiazolinone`, `Sodium Salicylate`; if none of these is present, it is not prominent. This is a repeatability convention for projection gates only, not a concentration claim and not a weight rule.
+**E2a Claim units (round 2).** A *claim unit* is one product-name phrase, one headline, one bullet or one sentence. Rules:
 
-**E4 Route lists for scalp gates.** A route counts only if at least one listed ingredient is prominent (E3). Lists are closed for the candidate; an unlisted ingredient may count only with a written function rationale and caps the target's confidence at `moderate`.
+- A claim unit qualifies when it states that the product is for, against or acts on the scalp state: "für/bei …", "gegen …", "beruhigt/lindert/reduziert/reguliert …", "beugt … vor", or the state as the product's named problem ("Anti-Schuppen", "Kopfhaut Sensitive").
+- Protective or "does no harm" wording never qualifies: "trocknet die Kopfhaut nicht aus", "ohne auszutrocknen", "ohne zu reizen", "hautverträglich", "dermatologisch getestet", "pH-hautneutral".
+- **Dandruff units absorb their symptoms.** A claim unit that names dandruff ("Schuppen") is a dandruff claim only. Itch, dryness, tightness, redness or oiliness words in the same unit ("gegen Schuppen und Juckreiz", "bei Schuppen, trockener und juckender Kopfhaut") never create a sensitive, dry or oily claim and never add a target. A second target needs its own claim unit that does not name dandruff.
+- A unit that names two non-dandruff states (for example oily and sensitive) counts for both, subject to S-SECONDARY.
+
+**E3 Prominent ingredient (INCI-order proxy).** An ingredient is *prominent* when it is listed before `Parfum`/`Fragrance`; if the formula declares no fragrance, before the first of `Sodium Benzoate`, `Potassium Sorbate`, `Phenoxyethanol`, `Benzyl Alcohol`, `Methylisothiazolinone`, `Methylchloroisothiazolinone`, `Sodium Salicylate`; if none of these is present, it is not prominent. This is a repeatability convention for projection gates and for the cleansing (C4) and conditioning (C2) position conventions only. It is not a concentration claim and never a weight rule (Section 6 forbids position windows).
+
+Only a declared `Parfum`, `Fragrance` or `Parfum (Fragrance)` entry is the fragrance marker. Essential oils and fragrance allergens (`Limonene`, `Linalool`, citrus peel oils and similar) are not; when they are declared without `Parfum`, use the preservative fallback.
+
+**E4 Route lists for scalp gates.** A route counts only if at least one listed ingredient is prominent (E3). Lists are closed for the candidate (revised in round 2): an unlisted ingredient never passes a gate inside a classification lane. When a gate fails only because a prominent unlisted ingredient might be a comfort or humectant route, the lane applies S-FAIL and names the ingredient in the flag detail (`unlisted_route_candidate:<INCI name>`). Adding an ingredient to a list is a ruling by Nick that applies to all products from then on (open question 4).
 
 - Comfort routes: `Panthenol`, `Allantoin`, `Bisabolol`, `Urea`, `Polidocanol`, `Dipotassium Glycyrrhizate`, `Avena Sativa Kernel Extract`/`Avena Sativa Kernel Flour`, `Niacinamide`.
-- Humectant/refatting routes: `Glycerin`, `Urea`, `Sorbitol`, `Panthenol`, `Sodium PCA`, `Sodium Lactate`, `Betaine`, `Sodium Hyaluronate`, `Glyceryl Oleate`, `PEG-7 Glyceryl Cocoate`, `Glyceryl Cocoate`, and nonvolatile payload lipids recognized in Section 6.
+- Humectant/refatting routes: `Glycerin`, `Urea`, `Sorbitol`, `Panthenol`, `Sodium PCA`, `Sodium Lactate`, `Betaine`, `Sodium Hyaluronate`, `Glyceryl Oleate`, `PEG-7 Glyceryl Cocoate`, `Glyceryl Cocoate`, and nonvolatile plant oils, butters and hydrogenated/waxy lipids from the Section 6.3 `payload_lipid` family (not fatty alcohols or emollient ethers/esters, and never essential oils, 6.4).
 
-**E5 Neighboring alternative.** The `neighboringAlternative` recorded on a direct property (Section 1.1). Projection rules use it only to raise review flags, never to change a value.
+**E5 Neighboring alternative.** The `neighboringAlternative` recorded on a direct property, fixed by N-ALT (Section 1.1). Projection rules use it only to raise review flags, never to change a value.
 
 ### 13.4 Thickness fit
 
@@ -450,6 +697,8 @@ T1 is the fit for the balanced scalp (`ordinary` target). T6 adjusts it for scal
 - an `acceptable` fit whose neighbor would make it `not_suited` (only possible for the `ordinary` target, since T6 sets an `acceptable` floor for scalp-concern targets).
 
 A fit whose neighbor would make it **higher** raises no flag; it is already conservative.
+
+The neighbor is the one fixed by N-ALT, so a `high`-confidence input never raises T4. "After T6" is intentional: for a scalp-concern target, a fit that the neighbor would push from `acceptable` to `not_suited` is lifted back to `acceptable` by T6, so the final tier does not change and no flag is raised (R4: thickness never hides a scalp-concern product). An `ideal` fit that the neighbor would make `acceptable` is still flagged for every target.
 
 **T5 Emission (revised, R2).** `ideal` and `acceptable` fits become rows (13.7). `not_suited` is recorded with rationale for reviewers and never becomes a row. Every fit, including `not_suited`, is recorded in the projection block.
 
@@ -496,21 +745,34 @@ The scalp match is exact (ruling R4): the thickness relaxation in T6 never relax
 
 **S-OILY.** Positioning: E2 oily claim. Formula: `cleansingStrength` is `moderate` or `strong` **and** `weightPotential` is not `high` **and** `conditioningLevel` is not `high`. The weight clause is confirmed by ruling R4 and holds at every thickness; T6 never overrides it. The only permitted deviation is a named entry in the exception register (13.12); currently X1.
 
-**S-ORDINARY.** Applies when the product makes no E2 scalp claim at all. A regular shampoo with no scalp positioning projects `ordinary`.
+**S-ORDINARY (revised in round 2).** `ordinary` is the primary target whenever no specialist target is emitted. It is reached in exactly four ways, and the rationale names which:
 
-**S-FAIL (specialist gate failure).** When the product makes an E2 scalp claim but that target's formula gate fails and no other specialist target qualifies, propose `ordinary` as primary and add `review_specialist_gate_failed` naming the failed target and gate. The proposal is not applied until Nick rules. S-FAIL does not apply where a named register exception (13.12) lets that target pass for a thickness.
+1. the product makes no qualifying E2 claim unit (after E2a);
+2. its only scalp-adjacent positioning is hair loss/growth (S-HAIRLOSS);
+3. it has a recognized dandruff active but no dandruff claim (S-DANDRUFF, note `active_without_dandruff_positioning`);
+4. a claimed target failed and nothing else passed (S-FAIL, with review flag).
+
+**S-FAIL (specialist gate failure, revised in round 2).** A specialist target *fails* when the product has an E2 claim unit for it but either its positioning gate fails (the only qualifying claim units are graded `low`, E1) or its formula gate fails.
+
+- If no other specialist target passes: propose `ordinary` as primary and add `review_specialist_gate_failed` naming the failed target and gate (and `unlisted_route_candidate:<INCI name>` where E4 applies). The proposal is not applied until Nick rules.
+- If another specialist target passes: project the passing target(s) as usual and record the failed one as the informational note `claimed_target_not_projected:<target>` (not emitting a target is already conservative).
+- S-FAIL does not apply where a named register exception (13.12) lets that target pass for a thickness.
 
 **S-PRIMARY (precedence).** If several specialist targets pass, the primary is the one named in the exact product name; otherwise the first in this order: `dandruff`, `sensitive`, `dry`, `oily`.
 
-**S-SECONDARY.** At most one secondary target. It requires its own distinct E2 claim and its own formula gate pass. Never permitted:
+**S-SECONDARY.** At most one secondary target. It requires its own distinct E2 claim unit (never a symptom inside a dandruff unit, E2a) and its own formula gate pass. When more than one candidate qualifies for secondary, the precedence of S-PRIMARY decides (product name first, then `dandruff`, `sensitive`, `dry`, `oily`). Never permitted:
 
 - `ordinary` as secondary (a scalp-specialist product is not also projected to balanced scalp);
 - the pair `oily` + `dry` (contradictory scalp states);
 - a third qualifying target; keep primary plus the highest-precedence secondary and add `review_extra_scalp_target`.
 
-**S-HAIRLOSS.** Hair-loss/growth positioning (E2 exclusion) is ignored for targets. A product whose only scalp-adjacent positioning is hair loss projects `ordinary`, and the rationale states that the hair-loss claim was not evaluated.
+**S-HAIRLOSS.** Hair-loss/growth positioning (E2 exclusion) is ignored for targets. A product whose only scalp-adjacent positioning is hair loss projects `ordinary`, the rationale states that the hair-loss claim was not evaluated, and the informational note `hair_loss_claim_not_evaluated` is recorded. The note is also recorded when hair-loss positioning sits next to other positioning.
 
-**S-FOCUS consistency.** If a specialist target (`dandruff`, `sensitive`, `dry`) is projected while neither `focusPrimary` nor `focusSecondary` is `scalp_active`, add `review_focus_target_mismatch`.
+**S-FOCUS consistency (extended in round 2).** Add `review_focus_target_mismatch` when any of these holds:
+
+- a `dandruff`, `sensitive` or `dry` target is projected while neither `focusPrimary` nor `focusSecondary` is `scalp_active`;
+- an `oily` target is projected while neither `focusPrimary` nor `focusSecondary` is `clarifying` (F6);
+- `focusPrimary` or `focusSecondary` is `scalp_active` but the primary target is `ordinary` and no S-FAIL flag is already raised (a scalp role without a projected scalp target that nothing else explains).
 
 ### 13.6 Cleansing intensity and deep-cleanser listing
 
@@ -523,20 +785,30 @@ The scalp match is exact (ruling R4): the thickness relaxation in T6 never relax
 
 **I2 Never adjusted.** The observed intensity is written to every row of the product unchanged, even when it differs from the bucket's expected intensity (13.1). A resulting `supportive` match is a truthful trade-off, not an error.
 
-**I3 Boundary review.** If `cleansingStrength` has a `neighboringAlternative` that would produce a different observed intensity, and that different intensity would equal the expected intensity of a projected bucket where the current one does not, add `review_intensity_boundary`.
+**I3 Boundary review (direction-aware, revised in round 2).** Recompute I1 with `cleansingStrength` replaced by its `neighboringAlternative` (N-ALT) and every other property unchanged. For each projected bucket, add `review_intensity_boundary` naming the bucket only when the current observed intensity **equals** the bucket's expected intensity (13.1) and the neighbor's intensity would **not**. That is the case where doubt sits on the recommending side: the row is green, or ranked in the dandruff role, only because of the current call.
+
+When the current intensity already differs from the bucket's expectation (an amber row), no flag is raised even if the neighbor would match: the mismatch is already the conservative outcome (I2). A `high`-confidence `cleansingStrength` (neighbor `none`) never raises I3.
 
 **D1 Explicit reset positioning** (`positioning.explicitResetPositioning: true`) when the product name or a primary pack claim contains "Tiefenreinigung", "Tiefenreinigend", "Deep Clean"/"Deep Cleansing", "Clarifying Shampoo", "Detox-Reinigung", or the usage directions limit use to occasional resets (for example "1× pro Woche", "alle 1–2 Wochen", "nicht zur täglichen Anwendung").
+
+D1 details (round 2):
+
+- *Sources.* The product name (graded `high`) or a claim or usage direction from a manufacturer or pack source (graded `moderate`) counts; "primary pack claim" means any such manufacturer/pack claim when the packet does not separate front from back (E1). Retailer-only wording never makes D1 true (CL-SRC).
+- *Matching.* Case-insensitive on the stems `tiefenrein` (Tiefenreinigung, tiefenreinigend, tiefenreinigende, Tiefenreinigungs-), `deep clean` (Deep Clean, Deep Cleansing, Deep-Cleansing), `clarifying shampoo` and `detox-reinigung`.
+- *Not D1.* Care terms that share a prefix ("Tiefenpflege", "tiefenpflegend", "Tiefenspülung"), "porentief", "reinigt tief", "klärend" or "Detox" without "Reinigung". These are recorded; "klärend" and similar still count as reset intent for `alternating` (U4).
+- *Daily-use directions.* Daily-use directions do not make a true D1 false. They are recorded, and D3 adds `review_reset_positioning_mismatch` (U5).
 
 **D2 Deep-cleanser dual listing (revised per ruling R6).** `cleansingStrength: strong` **and** `focusPrimary: clarifying` **and** `usageRole: occasional_reset` **and** D1 true -> `deepCleanserListing: flagged`. The product:
 
 - keeps its regular-shampoo entry. Rows are assembled exactly as for any other product (13.7), with `observedCleansingIntensity: clarifying` (I1);
-- is flagged for a separate deep-cleanser catalog entry. A product record has exactly one `category_key` and `product_shampoo_specs.category_key` is only `shampoo`, so the deep-cleanser entry is a second product record (pattern: Balea, regular-shampoo record `0f71ff9d…` plus deep-cleanser record `375ee7a0…`, which owns the barcode). The flag records whether that record already exists (its product ID) or still needs to be created. Creating it is a separate catalog action under the deep-cleanser category's own rules, not part of this projection.
+- is flagged for a separate deep-cleanser catalog entry. A product record has exactly one `category_key` and `product_shampoo_specs.category_key` is only `shampoo`, so the deep-cleanser entry is a second product record (pattern: Balea, regular-shampoo record `0f71ff9d…` plus deep-cleanser record `375ee7a0…`, which owns the barcode). Creating it is a separate catalog action under the deep-cleanser category's own rules, not part of this projection.
+- **Lane visibility (round 2).** A sealed classification lane cannot see catalog ids and always records the flag with `deepCleanserRecord: needs_record`. After the lanes are frozen, the orchestrator resolves it against the catalog to the existing deep-cleanser product id or confirms that the record still has to be created. Lanes are never compared on this field; they are compared on `deepCleanserListing` only.
 
 D2 never removes, suppresses or blocks the regular-shampoo entry. In every other case `deepCleanserListing: not_flagged`.
 
 Informational (matcher behavior): no bucket expects `clarifying`, so every row of a `clarifying` product is amber (`supportive`) in the everyday role and is not ranked in the dandruff role. That is a truthful trade-off, not an error (I2).
 
-**D3 Mismatch.** D1 true but D2 not satisfied -> add `review_reset_positioning_mismatch`. The regular-shampoo rows are still assembled by the normal rules but stay blocked until Nick rules; D3 never routes the product out.
+**D3 Mismatch.** D1 true but D2 not satisfied, or D1 true with usage directions that allow daily or frequent use (U5) -> add `review_reset_positioning_mismatch`. The regular-shampoo rows are still assembled by the normal rules but stay blocked until Nick rules; D3 never routes the product out. The most common D2 failure is a deep-cleansing name over a formula whose `cleansingStrength` is only `moderate` (C1); whether such a product should get a deep-cleanser entry is open question 3.
 
 ### 13.7 Row assembly
 
@@ -555,7 +827,8 @@ Rows are always this full cross-product. A product cannot hold a target for one 
 
 - Thickness fit confidence = the lowest confidence among the direct properties T1 used for that thickness. T6 does not change it.
 - `weight` confidence = `weightPotential` confidence.
-- Scalp target confidence = the lowest of: the positioning evidence confidence (E1), and the confidence of every direct property its formula gate used; capped at `moderate` when an unlisted route was used (E4).
+- Scalp target confidence = the lowest of: the positioning evidence confidence (E1), and the confidence of every direct property its formula gate used.
+- `ordinary` target confidence (round 2): reached by S-ORDINARY way 1 (no qualifying claim) → `high` when the packet contains at least one manufacturer or pack source, `moderate` when it has retailer copy only; reached by ways 2–4 → `moderate`.
 - Observed intensity confidence = `cleansingStrength` confidence (plus `usageRole` and focus confidence for `clarifying`).
 - `deepCleanserListing` confidence = the lowest of `cleansingStrength`, `focusPrimary` and `usageRole` confidence and the D1 positioning evidence confidence (E1).
 - Any projected field with `low` confidence returns `needs_research`.
@@ -568,11 +841,11 @@ All review flags are blocking until Nick rules on the product (13.2). Flags and 
 | --- | --- |
 | `review_thickness_boundary` | T4 (now also for an `acceptable` fit that a neighbor would make `not_suited`, `ordinary` target only) |
 | `review_strong_cleansing_comfort_route` | S-SENSITIVE, S-DRY |
-| `review_specialist_gate_failed` | S-FAIL |
+| `review_specialist_gate_failed` | S-FAIL (only when no other specialist target passes; detail names the failed target, the gate, and any `unlisted_route_candidate:<INCI name>`) |
 | `review_extra_scalp_target` | S-SECONDARY |
-| `review_focus_target_mismatch` | S-FOCUS |
-| `review_intensity_boundary` | I3 |
-| `review_reset_positioning_mismatch` | D3 |
+| `review_focus_target_mismatch` | S-FOCUS (specialist target without matching focus, oily target without `clarifying`, or `scalp_active` focus with an unexplained `ordinary` target) |
+| `review_intensity_boundary` | I3 (direction-aware: only when the current intensity matches a bucket's expectation and the neighbor's would not) |
+| `review_reset_positioning_mismatch` | D3 (D2 not met, or D1 with daily-use directions, U5) |
 | `review_rule_conflict` | 13.2 |
 | `review_live_value_differs` | Every projected row set (including `weight`) that differs from the current live rows (program decision D4). Comparison happens after projection; live values are never an input. |
 
@@ -582,7 +855,9 @@ Informational notes are recorded in `informationalNotes`. They do not block, bec
 | --- | --- |
 | `active_without_dandruff_positioning` | S-DANDRUFF |
 | `scalp_concern_floor_applied` | T6, naming each thickness lifted from `not_suited` to `acceptable` |
-| `deep_cleanser_listing` | D2, with the existing deep-cleanser product ID or `needs_record` |
+| `deep_cleanser_listing` | D2. Lanes always record `needs_record`; the orchestrator resolves the existing deep-cleanser product ID after freeze |
+| `claimed_target_not_projected:<target>` | S-FAIL, when a claimed target fails but another specialist target passes |
+| `hair_loss_claim_not_evaluated` | S-HAIRLOSS |
 | `exception_applied:<ID>` | 13.12, naming the register entry |
 
 ### 13.10 Worked examples (non-normative)
@@ -632,6 +907,8 @@ For new batches, freeze selection and formulas before labels. Use two independen
 - lane B receives the same final evidence and policy but not lane A's answers;
 - compare seven judgment properties; recompute `dandruffSupport` mechanically;
 - compare the projection judgments: the three thickness fits (three tiers, after T6), the primary scalp target and the secondary scalp target (or its absence); recompute `weight`, observed intensity, `deepCleanserListing` and rows mechanically from each lane's own properties;
+- recompute each lane's review flags mechanically from its own properties, confidences and neighbors (N-ALT) and compare the flag sets as a diagnostic; a flag difference that traces back to a confidence difference is reported with that property;
+- resolve catalog-dependent fields (the deep-cleanser record id, `review_live_value_differs`) only after both lanes are frozen; lanes never see catalog ids;
 - preserve every disagreement before adjudication, with the rule ID each lane applied.
 
 Required pass bars for a routine research batch:
@@ -686,7 +963,11 @@ Applies when re-reading a v1.4 record whose `focusPrimary` or `focusSecondary` i
 | Source | Use in this standard |
 | --- | --- |
 | `docs/research/shampoo-inci/v1.4/classification-standard.md` | Base text of Sections 1–12, 14–16 |
-| `docs/research/shampoo-inci/v1.4/holdout-v3-operator-clarifications.md` | F2 adopted; repair/moisture clarification superseded by F1 |
+| `docs/research/shampoo-inci/v1.4/holdout-v3-operator-clarifications.md` | Non-normative explanation. F2 was adopted as a rule; the repair/moisture clarification is superseded by F1. Nothing else in it is operational. |
+| `docs/research/shampoo-inci/v1.4-draft/weight-potential-final-method.md` (`shampoo-weight-final-v1`) | Section 6 in full: meaning, evidence boundary, reviewed role resolutions, required sequence, subjudgments, anchors, unknowns, reasoning fields, confidence, derived-fit boundary, self-check. One of the three sources the v1.4 README lists as consolidated into v1.4. |
+| `docs/research/shampoo-inci/v1.4-draft/operational-amendment.md` | Secondary-focus invalid patterns and two-value requirement (Section 8), usage trigger codes and active-led precedence (Section 9, U1), decision trace (F-TRACE), shine and strong-repair examples (7.2), completeness note (ID-1). Its route-count weight section 4 is superseded and not carried. |
+| `docs/research/shampoo-inci/v1.4/new-product-research-runbook.md` | Decision-trace field list (F-TRACE) |
+| `plans/shampoo-v16/calibration/round-1/lane-a-ambiguities.md`, `lane-b-ambiguities.md` | Round-2 clarifications (N-ALT, ID-1–ID-3, CL-SRC, C1 scope, C3–C7, W1 scope, W-RICH, W2, W3, F3–F7, U1–U5, SC1, E1–E4 details, E2a, S-ORDINARY, S-FAIL, S-SECONDARY, S-HAIRLOSS note, S-FOCUS, I3, D1–D3, 13.8, 13.9). Each is a row in `changelog-vs-v1.4.md`. |
 | `data/research/shampoo-inci/holdout-v3/adjudication.json` | C1, C2, W1, F2, usage example, Appendix A Vichy row |
 | `plans/scan-db-expansion/research/shampoo-v14/focus-v15-amendment-plan.md`, `src/lib/shampoo/focus-v15.ts` | Section 7, 8 vocabulary, Appendix A |
 | `docs/product-intake-shampoo-production-light.md`, `src/lib/shampoo/production-light-adapter.ts` | 13.1 vocabulary, I1, D2, S-DANDRUFF positioning requirement, dry/sensitive `targeted` requirement, row assembly |
