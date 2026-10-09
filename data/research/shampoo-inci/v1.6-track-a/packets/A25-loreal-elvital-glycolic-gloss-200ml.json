@@ -1,0 +1,98 @@
+{
+  "slot": "A25",
+  "productId": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+  "name": "Ultimate Shampoo (catalog) = L'Oréal Paris Elvital Glycolic Gloss Shampoo, 200 ml",
+  "brand": "L'Oréal Paris",
+  "packSize": "200 ml",
+  "gtins": [
+    "3600524128005"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/1346429/l-oreal-paris-elvital-shampoo-glycolic-gloss",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "GTIN: 3600524128005 (dm-Artikelnummer 1346429; 'Shampoo Glycolic Gloss, 200 ml'); Lieferbar; 'Ohne Sulfat'",
+      "inciVerbatim": "INGREDIENTS: AQUA / WATER • SODIUM C14-16 OLEFIN SULFONATE • COCAMIDE MEA • GLYCERIN • COCAMIDOPROPYL BETAINE • GLYCOL DISTEARATE • SODIUM LAUROYL SARCOSINATE • PARFUM / FRAGRANCE • HEXYLENE GLYCOL • CI 17200 / RED 33 • CI 19140 / YELLOW 5 • COCO-BETAINE • SODIUM HYDROXIDE • SODIUM CHLORIDE • SODIUM BENZOATE • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • HYDROXYCITRONELLAL • PEG-55 PROPYLENE GLYCOL OLEATE • SALICYLIC ACID • POLYQUATERNIUM-7 • LIMONENE • BENZOIC ACID • LINALOOL • PINENE • BENZYL BENZOATE • LINALYL ACETATE • PROPYLENE GLYCOL • CARBOMER • CARVONE • GERANYL ACETATE • CITRIC ACID • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • CITRUS LIMON PEEL OIL • HEXYL CINNAMAL • GLYCOLIC ACID",
+      "claimsVerbatim": "Haarshampoo | Schenkt mehr Glanz und Geschmeidigkeit | Füllt die Haarfasern mit Pflege auf | Für stumpfes und glanzloses Haar | Das Shampoo Glycolic Gloss von L’ORÈAL PARiS füllt die Haarfasern mit Pflege auf. Stumpfes und glanzloses Haar wird wieder geschmeidig gepflegt, während die Formulierung diesem einen unglaublichen Glanz verleiht. Die Oberfläche der Haare wird spiegelglatt wodurch das Licht auf natürlich schöne Weise abprallt und für einen natürlich schönen Look sorgt. | Wirkung: Pflege, Glanz | Produkteigenschaften: ohne Sulfat | Haartyp: alle Haartypen, trockenes Haar, glanzloses Haar",
+      "directionsVerbatim": "Glycolic Gloss Shampoo: Sulfatfrei - Auf das nasse Haar auftragen und einmassieren, danach ausspülen. Für ein optimales Ergebnis danach die GLYCOLIC GLOSS SPÜLUNG und anschließend die GLYCOLIC GLOSS 5 MINUTEN HAAR-LAMINIERUNG verwenden. Außerhalb der Reichweite von Kindern aufbewahren. Kontakt mit den Augen vermeiden. Bei Kontakt mit den Augen sofort gründlich ausspülen. | Aufbewahrung: Kühl und trocken lagern."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-glycolic-gloss-shampoo/p/3600524128005",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "gtinShown": "GTIN in URL path /p/3600524128005; Artikelnummer 153527; '200 ml (1 L = 34,95 EUR)'",
+      "inciVerbatim": "AQUA / WATER • SODIUM C14-16 OLEFIN SULFONATE • COCAMIDE MEA • GLYCERIN • COCAMIDOPROPYL BETAINE • GLYCOL DISTEARATE • SODIUM LAUROYL SARCOSINATE • PARFUM / FRAGRANCE • HEXYLENE GLYCOL • CI 17200 / RED 33 • CI 19140 / YELLOW 5 • COCO-BETAINE • SODIUM HYDROXIDE • SODIUM CHLORIDE • SODIUM BENZOATE • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • HYDROXYCITRONELLAL • PEG-55 PROPYLENE GLYCOL OLEATE • SALICYLIC ACID • POLYQUATERNIUM-7 • LIMONENE • BENZOIC ACID • LINALOOL • BENZYL BENZOATE • PROPYLENE GLYCOL • CARBOMER • CITRIC ACID • HEXYL CINNAMAL • GLYCOLIC ACID (F.I.L. Z70032133/1).",
+      "claimsVerbatim": "Glänzendes Haar steht für gesundes Haar, das Licht dank seiner spiegelglatten Oberfläche perfekt reflektiert. Haarschäden irritieren die Schuppenschicht, wodurch die Haarfasern spröde, rau und stumpf aussehen und Licht nicht mehr reflektieren können. Die GlanzBehandlung für zu Hause mit [Glykolsäure] bestehend aus: Shampoo, Spülung, 5 Minuten Haar-Laminierung und Serum. Regeneriert die Haarfaser, verbessert die Haarqualität und versiegelt das Haar mit Glanz. | für glänzendes und gesundes Haar, füllt die Haarfasern mit Pflege auf. 2x mehr Glanz +88% Geschmeidigkeit | Shampoo für spiegelglattes und gepflegtes Haar | füllt die Haarfasern mit Pflege auf | für stumpfes und glanzloses Haar",
+      "directionsVerbatim": "Glycolic Gloss Shampoo: Sulfatfrei - Auf das nasse Haar auftragen und einmassieren, danach ausspülen. Für ein optimales Ergebnis danach die GLYCOLIC GLOSS SPÜLUNG und anschließend die GLYCOLIC GLOSS 5 MINUTEN HAAR-LAMINIERUNG verwenden."
+    },
+    {
+      "url": "https://www.loreal-paris.de/elvital/glycolic-gloss-spiegelglanz/shampoo",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de (DIFFERENT SKU: current Glycolic Gloss Spiegelglanz Shampoo 300 ml, GTIN 3600524230548; no 200 ml offered)",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "3600524230548 (300 ml); sizes offered 300 ml / 250 ml; 200 ml GTIN 3600524128005 NOT present",
+      "inciVerbatim": "1402020 E - INGREDIENTS: AQUA / WATER, SODIUM LAURETH SULFATE, GLYCOL DISTEARATE, SODIUM CHLORIDE, COCAMIDOPROPYL BETAINE, DIMETHICONE, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, COCAMIDE MEA, COCO-BETAINE, SODIUM BENZOATE, SODIUM HYDROXIDE, HYDROXYCITRONELLAL, STEARETH-6, PHENOXYETHANOL, ACETIC ACID, PEG-100 STEARATE, TRIDECETH-10, TRIDECETH-3, SALICYLIC ACID, LIMONENE, FUMARIC ACID, LINALOOL, PINENE, AMODIMETHICONE, CARBOMER, CARVONE, GERANYL ACETATE, CITRIC ACID, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, CITRUS LIMON PEEL OIL, HEXYLENE GLYCOL, HEXYL CINNAMAL, GLYCOLIC ACID, PARFUM / FRAGRANCE (F.I.L. Z70069886/1).",
+      "claimsVerbatim": "Das Elvital Glycolic Gloss Shampoo reinigt Kopfhaut und Haar und sorgt für einen strahlenden Spiegelglanz, der alle Blicke auf sich zieht. Gleichzeitig betört es mit einem fruchtig-floralen Duft. (page for the sulfate-based 300 ml product; not evidence for the 200 ml SKU)",
+      "directionsVerbatim": "Eine kleine Menge des Elvital Glycolic Gloss Shampoos von L’Oréal Paris auf das nasse Haar auftragen und aufschäumen. Anschließend das Shampoo mit einer sanften Kopfmassage sorgfältig verteilen und gründlich mit klarem Wasser ausspülen, bis keine Rückstände mehr im Haar vorhanden sind. Für optimale Pflege und maximalen Spiegelglanz empfiehlt sich im Anschluss die Verwendung der Elvital Glycolic Gloss Spülung sowie des passenden Leave-in-Serums."
+    }
+  ],
+  "conflicts": [
+    "dm.de vs Rossmann.de (both exact GTIN 3600524128005) differ in the fragrance-component tail: dm lists PINENE, LINALYL ACETATE, CARVONE, GERANYL ACETATE, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, CITRUS LIMON PEEL OIL which Rossmann omits; Rossmann appends '(F.I.L. Z70032133/1)'. Surfactant, conditioning and preservative core (first 23 entries) is identical. Rossmann list = 29 entries (+F.I.L.), dm = 35.",
+    "Identity/formula conflict with earlier work: the v1.3/v1.4 packet for this catalog row (loreal-elvital-glycolic-gloss) used the 300 ml SLES/dimethicone formula (GTIN 3600524293543, loreal-paris.de/dm 3138002/Budni) - a different, sulfate-based SKU. The catalog row's GTIN 3600524128005 (200 ml) is the sulfate-FREE Sodium C14-16 Olefin Sulfonate variant. Manufacturer page does not list the 200 ml pack.",
+    "Earlier (v1.3, not re-fetched) incidecoder.com list for the 200 ml variant matches the Rossmann (shorter) tail."
+  ],
+  "canonicalInci": [
+    "AQUA / WATER",
+    "SODIUM C14-16 OLEFIN SULFONATE",
+    "COCAMIDE MEA",
+    "GLYCERIN",
+    "COCAMIDOPROPYL BETAINE",
+    "GLYCOL DISTEARATE",
+    "SODIUM LAUROYL SARCOSINATE",
+    "PARFUM / FRAGRANCE",
+    "HEXYLENE GLYCOL",
+    "CI 17200 / RED 33",
+    "CI 19140 / YELLOW 5",
+    "COCO-BETAINE",
+    "SODIUM HYDROXIDE",
+    "SODIUM CHLORIDE",
+    "SODIUM BENZOATE",
+    "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+    "HYDROXYCITRONELLAL",
+    "PEG-55 PROPYLENE GLYCOL OLEATE",
+    "SALICYLIC ACID",
+    "POLYQUATERNIUM-7",
+    "LIMONENE",
+    "BENZOIC ACID",
+    "LINALOOL",
+    "PINENE",
+    "BENZYL BENZOATE",
+    "LINALYL ACETATE",
+    "PROPYLENE GLYCOL",
+    "CARBOMER",
+    "CARVONE",
+    "GERANYL ACETATE",
+    "CITRIC ACID",
+    "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+    "CITRUS LIMON PEEL OIL",
+    "HEXYL CINNAMAL",
+    "GLYCOLIC ACID"
+  ],
+  "canonicalReason": "No manufacturer page for the 200 ml SKU and no pack photo. Two exact-GTIN German retailers (dm, Rossmann) agree on the first 23 entries (all surfactants, conditioners, preservatives, colorants) but differ on the fragrance-component tail. The dm list (superset, product 'Lieferbar') is recorded as canonical and the Rossmann variant is preserved in sources; neither wins on authority, hence frozen_with_conflict.",
+  "inciFingerprintSha256": "d781cb2007e39fd64fe62e6bd73b3c65117915bcde182f6daf8d22763dfca1dc",
+  "normalization": "Canonical list = one entry per ingredient exactly as published on the winning source (case and punctuation kept in canonicalInci; trailing period stripped; bullet/asterisk/comma separators dropped; split synonym entries such as 'Aqua (Water, Eau)' kept as one item). Fingerprint: per ingredient lower-case, trim, collapse internal whitespace; join with '|'; sha256 of the UTF-8 string. Earlier v1.3/v1.4 fingerprints were computed over comma-joined lists and are not comparable.",
+  "identityConfidence": "moderate",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 4,
+  "status": "frozen_with_conflict",
+  "blockReason": null,
+  "notes": [
+    "Alternate (Rossmann) list fingerprint: 79ae8600840a296cc6a3343ed64b1e02edabe02a84026339fd3cc8ec7c5f87c2 (29 entries); entries only in dm list: PINENE; LINALYL ACETATE; CARVONE; GERANYL ACETATE; TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES; CITRUS LIMON PEEL OIL",
+    "Catalog row name is 'Ultimate Shampoo' (brand L'Oréal Paris); plans/scan-db-expansion batch-01 already contains a pending rename to 'Elvital Glycolic Gloss Shampoo'. Rossmann/dm both title the SKU Glycolic Gloss.",
+    "Claim vs INCI: 'Sulfatfrei/ohne Sulfat' consistent (Sodium C14-16 Olefin Sulfonate, Sodium Lauroyl Sarcosinate; no SLES/SLS). 'Glykolsäure' present as Glycolic Acid (last entry).",
+    "dm and Rossmann declare Cl 17200/Red 33 and Cl 19140/Yellow 5 (coloured product); the 300 ml SLES product has no colorants."
+  ]
+}

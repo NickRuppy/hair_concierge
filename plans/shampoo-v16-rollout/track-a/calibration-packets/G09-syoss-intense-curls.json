@@ -1,0 +1,106 @@
+{
+  "slot": "G09",
+  "productId": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+  "name": "Syoss Intense Curls Locken Shampoo",
+  "brand": "Syoss",
+  "packSize": "440 ml",
+  "gtins": [
+    "4015100860504"
+  ],
+  "sources": [
+    {
+      "url": "https://www.syoss.de/haarpflege/shampoo/syoss-intense-curls-locken-shampoo.html",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "manufacturer_de",
+      "gtinShown": "4015100860504 (page JSON-LD; 440 ml in image asset names)",
+      "inciVerbatim": "Shampoo:Aqua (Water, Eau), Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, PEG-7 Glyceryl Cocoate, Hydrolyzed Keratin, Panthenol, Dimethicone, Sodium Benzoate, Parfum (Fragrance), Citric Acid, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, PEG-40 Hydrogenated Castor Oil, Hydrogenated Castor Oil, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Hexyl Cinnamal, Laureth-23, Prunus Armeniaca (Apricot) Kernel Oil, Trideceth-10, Sodium Hydroxide, Citronellol, Tetramethyl Acetyloctahydronaphthalenes, Propylene Glycol, Limonene, Linalyl Acetate, Phenoxyethanol, Linalool, Sodium Salicylate, Potassium Sorbate",
+      "claimsVerbatim": "LOCKEN SHAMPOO INTENSE CURLS. Tiefenpflegende Formel mit 3% Panthenol-Feuchtigkeits-Komplex, stärkt das Haar von innen. Für rundum schönes und gesund aussehendes Haar. Produkt Details: Mit 3% Panthenol-Feuchtigkeits-Komplex; Reinigt sanft die Kopfhaut und welliges, lockiges Haar; Nährt und sorgt für definierte Locken und Wellen; Spendet langanhaltende Feuchtigkeit. (JSON-LD description: Für gewelltes, lockiges Haar)",
+      "directionsVerbatim": "Anwendung für professionelle Ergebnisse: Sanft im nassen Haar verteilen und gründlich ausspülen. Anschließend eine Tiefenspülung verwenden"
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-intense-curls/p/4015100860504",
+      "retrievedAt": "2026-10-08 (live, read via built-in browser)",
+      "sourceType": "retailer_rossmann_de_exact_gtin",
+      "gtinShown": "4015100860504; 440 ml (1 L = 9,07 EUR); delivery 09.-10.10.26 (orderable)",
+      "inciVerbatim": "Aqua (Water, Eau), Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, PEG-7 Glyceryl Cocoate, Hydrolyzed Keratin, Panthenol, Dimethicone, Sodium Benzoate, Parfum (Fragrance), Citric Acid, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, PEG-40 Hydrogenated Castor Oil, Hydrogenated Castor Oil, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Benzyl Salicylate, Hexyl Cinnamal, Laureth-23, Prunus Armeniaca (Apricot) Kernel Oil, Trideceth-10, Sodium Hydroxide, Citronellol, Tetramethyl Acetyloctahydronaphthalenes, Propylene Glycol, Limonene, Linalyl Acetate, Linalool, Phenoxyethanol, Sodium Salicylate",
+      "claimsVerbatim": "SYOSS Shampoo Intense Curls – Locken Shampoo für gewelltes, lockiges Haar mit Panthenol-Feuchtigkeits-Komplex. Das SYOSS Intense Curls Shampoo gibt gewelltem und lockigem Haar Feuchtigkeit und Definition. Mit seinem 3% Panthenol-Feuchtigkeits-Komplex stärkt das Locken Shampoo Naturlocken und -wellen von innen. Beim Haarewaschen werden die Haare sanft gereinigt, genährt und erhalten langanhaltend Feuchtigkeit. Die Formel enthält 88% Inhaltsstoffe natürlichen Ursprungs inklusive Wasser und der Flaschenkörper des Shampoos besteht aus 100% recyceltem Plastik (Kappe ausgenommen).",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und ausspülen. Nutze anschließend eine Spülung."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-intense-curls/p/4015100860504",
+      "retrievedAt": "2026-08-10 (prior v1.3 capture; superseded by live read above)",
+      "sourceType": "retailer_rossmann_de_exact_gtin_prior_capture",
+      "gtinShown": "4015100860504",
+      "inciVerbatim": "Aqua (Water, Eau), Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, PEG-7 Glyceryl Cocoate, Hydrolyzed Keratin, Panthenol, Dimethicone, Sodium Benzoate, Parfum (Fragrance), Citric Acid, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, PEG-40 Hydrogenated Castor Oil, Hydrogenated Castor Oil, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Benzyl Salicylate, Hexyl Cinnamal, Laureth-23, Prunus Armeniaca (Apricot) Kernel Oil, Trideceth-10, Sodium Hydroxide, Citronellol, Tetramethyl Acetyloctahydronaphthalenes, Propylene Glycol, Limonene, Linalyl Acetate, Linalool, Phenoxyethanol, Sodium Salicylate, Potassium Sorbate",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.dm.de/p/d/3047029/syoss-shampoo-intense-curls",
+      "retrievedAt": "2026-10-08 (read via dm product API in built-in browser)",
+      "sourceType": "retailer_dm_de_exact_gtin",
+      "gtinShown": "4015100860504; 440 ml; dm-Artikelnummer 3047029",
+      "inciVerbatim": "Ingredients: Aqua (Water, Eau), Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, PEG-7 Glyceryl Cocoate, Hydrolyzed Keratin, Panthenol, Dimethicone, Sodium Benzoate, Parfum (Fragrance), Citric Acid, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, PEG-40 Hydrogenated Castor Oil, Hydrogenated Castor Oil, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Benzyl Salicylate, Hexyl Cinnamal, Laureth-23, Prunus Armeniaca (Apricot) Kernel Oil, Trideceth-10, Sodium Hydroxide, Citronellol, Tetramethyl Acetyloctahydronaphthalenes, Propylene Glycol, Limonene, Linalyl Acetate, Linalool, Phenoxyethanol, Sodium Salicylate",
+      "claimsVerbatim": "Locken-Shampoo; Mit 3 % Panthenol-Feuchtigkeits-Komplex; Für definierte Locken und Wellen; Für Definition und Pflege. Das Intense Curls Shampoo von Syoss ist speziell für gewelltes und lockiges Haar entwickelt. Mit einem 3 % Panthenol-Feuchtigkeits-Komplex versorgt es die Haare mit intensiver Feuchtigkeit und sorgt gleichzeitig für eine klare Definition der Locken. Dieses Locken Shampoo stärkt Naturlocken und -wellen von innen, sodass sie voller Leben und Sprungkraft erscheinen. Die sanfte Reinigung sorgt für eine gründliche Pflege und spendet langanhaltende Feuchtigkeit. Ein unverzichtbares Produkt für alle, die ihre Locken optimal pflegen und zur Geltung bringen möchten.",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und ausspülen. Nutze anschließend eine Spülung."
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "inci_delta_same_gtin",
+      "between": [
+        "syoss.de (2026-10-08)",
+        "rossmann.de live (2026-10-08)",
+        "dm.de live (2026-10-08)"
+      ],
+      "description": "Rossmann.de and dm.de (two independent GTIN-anchored retailers, read live) carry the IDENTICAL list, which differs from syoss.de: extra 'Benzyl Salicylate' after PEG-120 Methyl Glucose Dioleate; tail ordered '..., Linalyl Acetate, Linalool, Phenoxyethanol, Sodium Salicylate' (syoss.de: '..., Linalyl Acetate, Phenoxyethanol, Linalool, Sodium Salicylate, Potassium Sorbate'); and the retailer list ENDS WITHOUT 'Potassium Sorbate'. Otherwise identical in content and order. All lists preserved verbatim, not merged.",
+      "retailerListNormalizedFingerprintSha256": "704b64c29c65f37f08a156162d72f1abaac8d5b1b2aaabfb1f74b5e458456c21"
+    },
+    {
+      "type": "inci_delta_between_rossmann_captures",
+      "description": "The 2026-08-10 Rossmann capture had the same extra 'Benzyl Salicylate' but still ended with 'Potassium Sorbate'; today's Rossmann page dropped 'Potassium Sorbate'. Prior-capture list normalized fingerprint: c468e39f983990383e5accb2817c6b2198713e8dc8f77b7070aa8918472005ef"
+    }
+  ],
+  "canonicalInci": [
+    "Aqua (Water",
+    "Eau)",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Sodium Chloride",
+    "PEG-7 Glyceryl Cocoate",
+    "Hydrolyzed Keratin",
+    "Panthenol",
+    "Dimethicone",
+    "Sodium Benzoate",
+    "Parfum (Fragrance)",
+    "Citric Acid",
+    "Amodimethicone",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "PEG-40 Hydrogenated Castor Oil",
+    "Hydrogenated Castor Oil",
+    "Glycol Distearate",
+    "Laureth-4",
+    "PEG-120 Methyl Glucose Dioleate",
+    "Hexyl Cinnamal",
+    "Laureth-23",
+    "Prunus Armeniaca (Apricot) Kernel Oil",
+    "Trideceth-10",
+    "Sodium Hydroxide",
+    "Citronellol",
+    "Tetramethyl Acetyloctahydronaphthalenes",
+    "Propylene Glycol",
+    "Limonene",
+    "Linalyl Acetate",
+    "Phenoxyethanol",
+    "Linalool",
+    "Sodium Salicylate",
+    "Potassium Sorbate"
+  ],
+  "canonicalReason": "Manufacturer DE page for the exact product wins by the brief's authority order and equals the prior v1.3 freeze. BUT two independent current GTIN-anchored German retailers (Rossmann.de, dm.de) agree with each other and differ from the manufacturer page, so the brief's second winning criterion points the other way; unresolved, hence frozen_with_conflict. The deltas are low-order only (Benzyl Salicylate = fragrance allergen added; Potassium Sorbate = preservative dropped); no cleansing or conditioning ingredient differs.",
+  "inciFingerprintSha256": "16c77de728f31b7b93d8ad80de3dc2f3aaa00a98ab18ee526da621da6e5228d0",
+  "identityConfidence": "high",
+  "status": "frozen_with_conflict",
+  "blockReason": null,
+  "notes": "Catalog name 'Syoss Intense Curls' = Syoss Intense Curls Locken Shampoo, 440 ml. Rossmann.de and dm.de were read via the built-in browser (curl hits a bot wall / the dm API timed out from curl). Orchestrator choice: pin the manufacturer list (as here) or the retailer list; either way the architecture (SLES + cocamidopropyl betaine, dimethicone + amodimethicone, hydrolyzed keratin, guar) is identical. The 2026-08-10 Rossmann capture still had Potassium Sorbate and Benzyl Salicylate (34 items), so Rossmann changed between captures.",
+  "normalization": "Split the canonical INCI string on commas (or bullets/pipes where the source uses them), trimmed; lower-case each item, trim, collapse internal whitespace to single spaces, join with '|' (no other change: parentheses, slashes, hyphens, spelling kept), sha256 over the UTF-8 string. Batch/F.I.L. codes, the 'INGREDIENTS:' prefix and the trailing period are removed before splitting."
+}
