@@ -484,4 +484,57 @@ test("historical Bondbuilder receipts keep replaying after products.market_segme
     ).rows,
     [{ preimage: true, readback: true, preimage_auth: false, readback_auth: false }],
   )
+
+  // The approved backfill classifies recommended rows by brand without moving updated_at, so
+  // whole-row receipt images stay equal, and from then on rejects a recommended product without
+  // a segment. Triggers are switched off only to stage the pilot as recommended (the curated
+  // publication gate would refuse it); CHECKs stay enforced throughout.
+  await pg.exec("SET session_replication_role = replica")
+  await pg.query("UPDATE public.products SET is_chaarlie_recommended=true WHERE id=$1", [productId])
+  await pg.exec("SET session_replication_role = origin")
+  // Production's timestamp trigger (00001_initial_schema.sql), absent from this local chain.
+  await pg.exec(`CREATE TRIGGER set_updated_at_products BEFORE UPDATE ON public.products
+    FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column()`)
+  const recommendedReadback = await readback()
+  const updatedAtBefore = (
+    await pg.query<{ updated_at: string }>(
+      "SELECT updated_at::text FROM public.products WHERE id=$1",
+      [productId],
+    )
+  ).rows[0].updated_at
+  await pg.exec(
+    await readFile(
+      new URL("supabase/migrations/20261009150000_products_market_segment_backfill.sql", ROOT),
+      "utf8",
+    ),
+  )
+  assert.deepEqual(
+    (
+      await pg.query("SELECT market_segment, updated_at::text FROM public.products WHERE id=$1", [
+        productId,
+      ])
+    ).rows,
+    [{ market_segment: "drugstore", updated_at: updatedAtBefore }],
+  )
+  assert.deepEqual(await readback(), recommendedReadback)
+  // The timestamp trigger is back on for ordinary writes.
+  await pg.query("UPDATE public.products SET sort_order = sort_order WHERE id=$1", [productId])
+  assert.notEqual(
+    (
+      await pg.query<{ updated_at: string }>(
+        "SELECT updated_at::text FROM public.products WHERE id=$1",
+        [productId],
+      )
+    ).rows[0].updated_at,
+    updatedAtBefore,
+  )
+  await pg.exec("SET session_replication_role = replica")
+  try {
+    await assert.rejects(
+      pg.query("UPDATE public.products SET market_segment=NULL WHERE id=$1", [productId]),
+      /products_recommended_requires_market_segment/,
+    )
+  } finally {
+    await pg.exec("SET session_replication_role = origin")
+  }
 })

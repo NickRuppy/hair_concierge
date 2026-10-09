@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { productSchema } from "../src/lib/validators"
+import { productSchema, recommendedProductLosesMarketSegment } from "../src/lib/validators"
 import { makeBondbuilderProfile } from "./fixtures/bondbuilder-research/profile"
 
 function buildBaseProduct(overrides: Record<string, unknown>) {
@@ -305,4 +305,29 @@ test("product schema accepts an optional market segment and rejects unknown buck
   const invalid = productSchema.safeParse(buildBaseProduct({ ...base, market_segment: "luxury" }))
   assert.equal(invalid.success, false)
   assert.ok(!invalid.success && invalid.error.issues.some((i) => i.path[0] === "market_segment"))
+})
+
+test("a recommended product cannot lose its market segment through an admin update", () => {
+  const recommended = { recommended: true, current: "drugstore" }
+  assert.equal(recommendedProductLosesMarketSegment({ ...recommended, requested: null }), true)
+  assert.equal(
+    recommendedProductLosesMarketSegment({ ...recommended, requested: undefined }),
+    false,
+  )
+  assert.equal(
+    recommendedProductLosesMarketSegment({ ...recommended, requested: "professional" }),
+    false,
+  )
+  assert.equal(
+    recommendedProductLosesMarketSegment({
+      recommended: true,
+      current: null,
+      requested: undefined,
+    }),
+    true,
+  )
+  assert.equal(
+    recommendedProductLosesMarketSegment({ recommended: false, current: null, requested: null }),
+    false,
+  )
 })

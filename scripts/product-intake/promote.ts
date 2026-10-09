@@ -23,6 +23,7 @@ type ProductRow = {
   is_active: boolean | null
   lifecycle_status?: string | null
   is_chaarlie_recommended: boolean | null
+  market_segment?: string | null
   image_url?: string | null
   suitable_thicknesses?: string[] | null
   updated_at?: string | null
@@ -65,7 +66,7 @@ type PromotionResult = PromotionPayload & {
 }
 
 const PRODUCT_SELECT =
-  "id,name,category,category_key,origin,is_active,lifecycle_status,is_chaarlie_recommended,image_url,suitable_thicknesses,updated_at"
+  "id,name,category,category_key,origin,is_active,lifecycle_status,is_chaarlie_recommended,market_segment,image_url,suitable_thicknesses,updated_at"
 
 const THICKNESS_INDEPENDENT_PROMOTION_CATEGORIES = new Set<PromotionCategory>([
   "heat_protectant",
@@ -226,9 +227,9 @@ async function missingSpecTables(
 
 /**
  * Promotion copies the market segment from the reviewed package stored on the approved
- * submission (`researched_payload.final`) when the package carries one. The classification only
- * becomes required with the later approved backfill (enforced then by a DB CHECK), so a missing
- * value never refuses promotion; a present but unknown value is malformed and does.
+ * submission (`researched_payload.final`) when the package carries one. A present but unknown
+ * value is malformed and refuses. Whether a segment is required is decided by the caller: a
+ * recommended product needs one (DB CHECK products_recommended_requires_market_segment).
  */
 export function reviewedMarketSegment(
   submission: ApprovedSubmissionRow,
@@ -302,6 +303,11 @@ export async function promoteProductById(params: {
 
   const approvedSubmission = await loadApprovedSubmissionForProduct(supabase, product.id)
   const marketSegment = reviewedMarketSegment(approvedSubmission, product.id)
+  if (!marketSegment && !product.market_segment) {
+    throw new PromotionGateError(
+      `Product ${product.id} needs a market_segment (drugstore or professional) in the reviewed package before it can be recommended`,
+    )
+  }
   const missingTables = await missingSpecTables(supabase, product.id, requiredSpecTables)
   if (missingTables.length > 0) {
     printJson({
