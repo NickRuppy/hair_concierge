@@ -8,7 +8,14 @@
 
 **Result:** `../calibration-set-r2.json`, built by `../build-calibration-r2.js`.
 
-> **After Nick's D7 ruling (curl-cream middle band → Styling):** 71 Styling products. `curl_cream` = 5; provisional = 4; hold 0:6 · 1:4 · 2:10 · 3:9 · 4:9 · review 33. The tables below show the state before D7.
+> **Current state, after D7, D8/D8b and the pre-push Codex review fixes:**
+> - 70 Styling products: `curl_cream` 5, `gel` 9; 5 provisional (the Bali Curls spray, with two INCIs under one GTIN, went back to provisional).
+> - C1/C2 claims on 56 of them.
+> - Hold: 1:4 · 2:9 · 3:11 · 4:10 · keine Herstellerangabe 36. There is no formula-derived 0 any more (D8).
+> - Wella EIMI levels now come from strength words, because no denominator is stated: Sugar Lift 3, Flowing Form 1.
+> - Balea Ultra Volumen = 4: its house-brand dm attribute counts as C2.
+>
+> The tables below show the state before these changes.
 
 ## Totals (90 products)
 

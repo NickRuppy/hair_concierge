@@ -8,11 +8,12 @@ const byId = Object.fromEntries(recs.map(r => [r.sample_id, r]));
 
 // Normalisation tables (brand scale -> Chaarlie 0-4). Numbers win over words on the same pack.
 const TABLES = {
-  "x/5 (Taft/Syoss/Wellaflex/Maria Nila/Wella EIMI; Henkel numbers shared across brands)": "1-2→1 · 3→2 · 4→3 · 5/5+→4",
+  "x/5 (Taft/Syoss/Wellaflex/Maria Nila; Henkel numbers shared across brands)": "1-2→1 · 3→2 · 4→3 · 5/5+→4",
   "x/6 (NIVEA MEN, Gard, Taft 6)": "1-2→1 · 3→2 · 4→3 · 5-6→4",
   "Alcina Hold-Faktor x/10": "1-2→1 · 3-5→2 · 6-7→3 · 8-10→4",
   "Taft gels (scale 4..14)": "number not comparable → use words ('maximal' → 4); else review",
   "Elnett ladder": "Normal→2 · Stark→3 · Extra stark→4 · 'Sehr stark' unranked → review",
+  "Wella EIMI": "no scale max stated → strength words decide",
   "Words": "leicht/sanft/soft/weich→1 · mittel/normal→2 · stark→3 · extra/ultra/mega/sehr stark, maximal, Max, Kleber→4; flexibel/natürlich/langanhaltend/perfekt/Nh = not strength → review",
 };
 // [hold, basis, claim_tier, extraFlags[], note]
@@ -20,8 +21,8 @@ const R2 = {
   "schwarzkopf-taft-power-haargel-halt-5": [4, "C2 'maximalen Halt von Taft' (gel numbers not comparable)", "C2", [], ""],
   "schwarzkopf-taft-schaumfestiger-volumen-halt-4-feines-haar": [3, "C2 Haltegrad 4 (x/5)", "C2", [], ""],
   "schwarzkopf-taft-foehn-spray-volumen-halt-3": [2, "C2 Haltegrad 3 (x/5)", "C2", [], ""],
-  "schwarzkopf-taft-haarspray-classic-halt-3": [2, "C2 Haltegrad 3", "C2", [], ""],
-  "schwarzkopf-taft-haarspray-glanz-halt-4": [3, "C2 Haltegrad 4", "C2", [], ""],
+  "schwarzkopf-taft-haarspray-classic-halt-3": [2, "C2 Haltegrad 3", "C2", ["d8b_identical_inci_sibling"], "INCI identical to Taft Glanz (Halt 4) — verify both against the pack"],
+  "schwarzkopf-taft-haarspray-glanz-halt-4": [3, "C2 Haltegrad 4", "C2", ["d8b_identical_inci_sibling"], "INCI identical to Taft Classic (Halt 3) — verify both against the pack"],
   "schwarzkopf-taft-haarspray-power-halt-5": [4, "C2 Haltegrad 5 'Tafts höchste Stufe'", "C2", ["renamed_power_cashmere"], ""],
   "schwarzkopf-taft-texturspray-aloe-boost": [null, "only C5 (AT press release), no hold claim; VP/VA present", "C5", ["possibly_delisted"], ""],
   "schwarzkopf-taft-haarpuder-volumen": [null, "C2 '24 Stunden' = duration only", "C2", [], ""],
@@ -38,14 +39,14 @@ const R2 = {
   "got2b-styling-paste-istyler-texture-clay": [4, "C2 'ultra krassem Halt'", "C2", [], ""],
   "loreal-paris-elnett-haarspray-extra-starker-halt": [4, "C1/C2 'Extra Starker Halt' (Elnett ladder)", "C1", [], ""],
   "loreal-men-expert-barber-club-styling-pomade": [null, "C2 'perfekten Halt' = no strength", "C2", [], "round 1 had 3 from Douglas"],
-  "loreal-paris-elnett-stylingspray-hitzeschutz-3-tage-glatt": [null, "C1 'Starker Halt' but no hold route → claim_formula_conflict", "C1", ["claim_formula_conflict","possibly_delisted"], "directions resolved: towel-dried, before blow-dry"],
+  "loreal-paris-elnett-stylingspray-hitzeschutz-3-tage-glatt": [3, "C1 'Starker Halt' (pack); D8b plausibility flag: no hold route — level kept", "C1", ["claim_formula_conflict","possibly_delisted"], "directions resolved: towel-dried, before blow-dry"],
   "wellaflex-schaumfestiger-locken-und-wellen-starker-halt": [2, "C1 3/5 dots (x/5)", "C1", [], "round 1 had 3 from words"],
-  "wella-eimi-sugar-lift": [2, "C2 Haltegrad 3 (x/5)", "C2", [], "round 1 had 3"],
-  "wella-professionals-eimi-flowing-form": [1, "C2 Haltegrad 2", "C2", [], ""],
+  "wella-eimi-sugar-lift": [3, "C2 'starker, dennoch beweglicher Halt' (Haltegrad 3, max unstated → words)", "C2", [], "flexibility: beweglich"],
+  "wella-professionals-eimi-flowing-form": [1, "C2 'leichter, flexibler Halt' (Haltegrad 2, max unstated → words)", "C2", [], ""],
   "guhl-foehn-spray-langzeit-volumen": [null, "C1/C2 '48h Halt' = duration", "C1", [], ""],
   "john-frieda-volume-lift-ansatz-booster": [null, "C2 no hold; relaunched", "C2", ["inci_changed"], ""],
   "nivea-men-styling-cream-active-craft-stylers": [3, "C1 4 of printed 1–6 scale", "C1", [], ""],
-  "garnier-fructis-leave-in-spray-diamond-sleek-glaettungsspray": [0, "no hold claim, no hold route", "C1", [], ""],
+  "garnier-fructis-leave-in-spray-diamond-sleek-glaettungsspray": [null, "no hold claim → keine Herstellerangabe (hold not used for smoothing_styler)", "C1", [], ""],
   "gard-haarspray-extrastark-pumpspray": [4, "C1 5 of printed 1–6", "C1", [], ""],
   "bali-curls-strong-hold-flaxseed-gel": [4, "C2 'Extra-starker Halt'", "C2", [], ""],
   "bali-gents-matt-paste": [3, "C2 'starkem Halt'", "C2", [], ""],
@@ -55,12 +56,14 @@ const R2 = {
   "alcina-ansatz-volumen-spray-aerosol": [3, "C2 Hold-Faktor 6/10, Flex 6/10", "C2", [], ""],
   "bumble-and-bumble-brilliantine": [null, "C3 Douglas chip only", "C3", [], ""],
   "bumble-and-bumble-surf-spray": [null, "C3 Douglas chip only", "C3", [], ""],
-  "color-wow-dream-coat-supernatural-spray": [0, "no hold route; C3 chip ignored", "C3", [], ""],
+  "color-wow-dream-coat-supernatural-spray": [null, "no manufacturer hold claim; C3 chip ignored", "C3", [], ""],
   "living-proof-full-dry-volume-texture-spray": [null, "C3 only ('weichen Halt'), US page differs (C5)", "C3", [], ""],
   "kevin-murphy-powder-puff-volume": [null, "C5 'Soft Hold' only", "C5", [], ""],
   "american-crew-fiber": [null, "C3 only (Haltfaktor 9, no max)", "C3", [], ""],
   "american-crew-pomade": [2, "C2 via cross-market exception: 'Mittlerer Halt' (Haltfaktor 7)", "C2", [], ""],
-  "cantu-shea-butter-extra-hold-edge-stay-gel": [null, "C3 + no hold route → conflict", "C3", ["claim_formula_conflict"], "Amazon.de only"],
+  "cantu-shea-butter-extra-hold-edge-stay-gel": [null, "C3 only (cannot assign); D8b plausibility flag: 'Extra Hold' with no hold route", "C3", ["claim_formula_conflict"], "Amazon.de only"],
+  "balea-styling-spray-ultra-volumen": [4, "house-brand C2 dm attribute 'sehr starker Halt' (+ 'flexiblen Halt' → beweglich)", "C2_house_brand", [], ""],
+  "balea-professional-glow-und-shine-finishing-spray": [null, "house-brand C2: no hold claim; fixative present", "C2_house_brand", [], ""],
   "maria-nila-curlicue-cream": [2, "C2 marianila.de 'Halt 3/5'", "C2", [], "round 1 review → 2"],
 };
 for (const [id, [hold, basis, tier, fl, note]] of Object.entries(R2)) {
@@ -74,7 +77,7 @@ for (const r of recs) if (r.route === "styling" && !r.claim_tier) r.claim_tier =
 const G0 = {
   "balea-locken-revitalizing-spray": ["styling", "refresher", 0, "D6: no L5, no conditioning"],
   "balea-leave-in-spray-sea-salt-care-define": ["styling", "salt_spray", null, "D6 (salt ≠ fixative-class hold)"],
-  "bali-curls-leave-in-spray-curl-defining": ["styling", "gel", null, "D6 after wording fix (starch ≠ fixative); C2 'langanhaltenden Halt' = duration; two formula versions under one GTIN"],
+  "bali-curls-leave-in-spray-curl-defining": ["provisional_boundary", "gel", null, "two INCIs under one GTIN (manufacturer version adds conditioning) — identify the pack formula, then apply D6/G0; C2 'langanhaltenden Halt' = duration"],
   "schwarzkopf-taft-styling-balm-locken-halt-3": ["styling", "curl_cream", 3, "D7 (Nick): middle band + named Styling Balm Locken → Styling; hold C2 'Starker Halt'"],
   "balea-professional-styling-cream-traumlocken": ["styling", "curl_cream", 2, "D7 (Nick): middle band + named Styling Cream → Styling; hold house-brand C2 'mittlerer Halt'"],
   "syoss-curl-control-hydrating-spray": ["provisional_boundary", "refresher", null, "German market unverified / possibly discontinued"],
@@ -119,8 +122,20 @@ for (const r of [...g1, ...g2]) {
   if (r.sample_id.includes("alverde-beach")) { fl.push("chip_ohne_alkohol_contradicts_inci"); }
   recs.push({ sample_id: r.sample_id, brand: r.brand, product_name: r.product_name, format: r.format, market_tier: r.market_tier, price_eur: r.price_eur,
     inci_source_tier: r.inci_source_tier, draft_subtype: r.subtype_candidate, route, v1_subtype: route === "leave_in" ? null : sub, proposed_hold_level: hold,
-    hold_basis: basis, proposed_finish: (r.finish_claim || "").toString().split(/[ :(]/)[0] || null, flags: fl, note, claim_tier: r.claim_tier, source_lane: "round2", round: 2 });
+    hold_basis: basis, proposed_finish: r.finish_claim || null, flags: fl, note, claim_tier: r.claim_tier, source_lane: "round2", round: 2 });
 }
+// Finish: normalise to the concept enum; frozen C1/C2 updates win.
+const FINISH_FROZEN = { "syoss-professional-performance-max-hold-power-wax": "glänzend" };
+const normFinish = v => { const t = (v || "").toString().toLowerCase();
+  if (/matt/.test(t)) return "matt"; if (/glänz|glanz|gloss|shine|wet/.test(t)) return "glänzend"; if (/natürlich|natural/.test(t)) return "natürlich"; return null; };
+for (const r of recs) r.proposed_finish = FINISH_FROZEN[r.sample_id] || normFinish(r.proposed_finish);
+// D8: never a formula-derived level — unclaimed strength is null ("keine Herstellerangabe"); 0 only for an explicit "kein Halt" claim.
+for (const r of recs) if (r.route === "styling" && r.proposed_hold_level === 0) { r.proposed_hold_level = null; r.hold_basis = (r.hold_basis ? r.hold_basis + " · " : "") + "D8: unclaimed → keine Herstellerangabe"; }
+// D3 is ruled: drop the historical alternative from active notes.
+for (const r of recs) if (r.flags.includes("decision_D3")) { r.flags = r.flags.filter(f => f !== "decision_D3").concat(["d3_ruled_t15"]); r.note = "T15 (2026-09-10), confirmed by D3: in-category Leave-in (incidental_film)"; }
+for (const r of recs) if (r.claim_tier === "C3" && r.flags.includes("house_brand_c2")) r.claim_tier = "C2_house_brand";
+// A level resolved from a frozen claim clears the old review flag.
+for (const r of recs) if (r.proposed_hold_level !== null) r.flags = r.flags.filter(f => f !== "hold_needs_review" && f !== "hold_unclaimed");
 const out = { version: "styling-calibration-r2", created: "2026-10-09", status: base.status.replace("DRY RUN", "ROUND 2"), normalisation_tables: TABLES, records: recs };
 fs.writeFileSync("calibration-set-r2.json", JSON.stringify(out, null, 2) + "\n");
 const st = recs.filter(r => r.route === "styling");

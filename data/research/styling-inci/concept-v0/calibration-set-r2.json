@@ -3,11 +3,12 @@
   "created": "2026-10-09",
   "status": "ROUND 2 of the normalisation rules on captured text. Most hold claims were captured from third-party retailer pages (C3); every level stays provisional until round 2 freezes C1/C2 claims (pack or manufacturer DE page; house brands Balea/alverde/Isana on their own retailer = C2).",
   "normalisation_tables": {
-    "x/5 (Taft/Syoss/Wellaflex/Maria Nila/Wella EIMI; Henkel numbers shared across brands)": "1-2→1 · 3→2 · 4→3 · 5/5+→4",
+    "x/5 (Taft/Syoss/Wellaflex/Maria Nila; Henkel numbers shared across brands)": "1-2→1 · 3→2 · 4→3 · 5/5+→4",
     "x/6 (NIVEA MEN, Gard, Taft 6)": "1-2→1 · 3→2 · 4→3 · 5-6→4",
     "Alcina Hold-Faktor x/10": "1-2→1 · 3-5→2 · 6-7→3 · 8-10→4",
     "Taft gels (scale 4..14)": "number not comparable → use words ('maximal' → 4); else review",
     "Elnett ladder": "Normal→2 · Stark→3 · Extra stark→4 · 'Sehr stark' unranked → review",
+    "Wella EIMI": "no scale max stated → strength words decide",
     "Words": "leicht/sanft/soft/weich→1 · mittel/normal→2 · stark→3 · extra/ultra/mega/sehr stark, maximal, Max, Kleber→4; flexibel/natürlich/langanhaltend/perfekt/Nh = not strength → review"
   },
   "records": [
@@ -85,7 +86,7 @@
       "price_eur": 9.95,
       "inci_source_tier": "retailer_product_page",
       "draft_subtype": "gel",
-      "route": "styling",
+      "route": "provisional_boundary",
       "v1_subtype": "gel",
       "proposed_hold_level": null,
       "hold_basis": "'mit Halt' (unquantified)",
@@ -99,7 +100,7 @@
       "source_lane": "lane1-gel-curl.json",
       "round": 1,
       "claim_tier": "C3",
-      "g0_verdict": "D6 after wording fix (starch ≠ fixative); C2 'langanhaltenden Halt' = duration; two formula versions under one GTIN"
+      "g0_verdict": "two INCIs under one GTIN (manufacturer version adds conditioning) — identify the pack formula, then apply D6/G0; C2 'langanhaltenden Halt' = duration"
     },
     {
       "sample_id": "schwarzkopf-taft-styling-balm-locken-halt-3",
@@ -206,8 +207,8 @@
       "draft_subtype": "curl_refresher",
       "route": "styling",
       "v1_subtype": "refresher",
-      "proposed_hold_level": 0,
-      "hold_basis": "no hold claim, no hold mechanism",
+      "proposed_hold_level": null,
+      "hold_basis": "no hold claim, no hold mechanism · D8: unclaimed → keine Herstellerangabe",
       "proposed_finish": "natürlich",
       "flags": [
         "claim_formula_conflict",
@@ -411,8 +412,8 @@
       "draft_subtype": "setting_lotion",
       "route": "styling",
       "v1_subtype": "blowdry_lotion",
-      "proposed_hold_level": 0,
-      "hold_basis": "none; no fixative",
+      "proposed_hold_level": null,
+      "hold_basis": "none; no fixative · D8: unclaimed → keine Herstellerangabe",
       "proposed_finish": "natürlich",
       "flags": [
         "claim_formula_conflict",
@@ -546,16 +547,16 @@
       "draft_subtype": "root_lift",
       "route": "styling",
       "v1_subtype": "blowdry_lotion",
-      "proposed_hold_level": null,
-      "hold_basis": "'flexiblen Halt' (flex only); dm chip 'sehr stark' (C3)",
+      "proposed_hold_level": 4,
+      "hold_basis": "house-brand C2 dm attribute 'sehr starker Halt' (+ 'flexiblen Halt' → beweglich)",
       "proposed_finish": "natürlich",
       "flags": [
-        "hold_needs_review",
         "house_brand_c2"
       ],
       "note": "damp roots; hairspray-grade resins — boundary vs hairspray",
       "source_lane": "lane2-mousse-lotion-root.json",
       "round": 1,
+      "round1_hold": null,
       "claim_tier": "C2_house_brand"
     },
     {
@@ -572,8 +573,10 @@
       "proposed_hold_level": 2,
       "hold_basis": "C2 Haltegrad 3",
       "proposed_finish": "natürlich",
-      "flags": [],
-      "note": "INCI identical to Glanz Halt 4",
+      "flags": [
+        "d8b_identical_inci_sibling"
+      ],
+      "note": "INCI identical to Glanz Halt 4 · INCI identical to Taft Glanz (Halt 4) — verify both against the pack",
       "source_lane": "lane3-hairspray-finish.json",
       "round": 1,
       "round1_hold": 2,
@@ -593,8 +596,10 @@
       "proposed_hold_level": 3,
       "hold_basis": "C2 Haltegrad 4",
       "proposed_finish": "glänzend",
-      "flags": [],
-      "note": "INCI identical to Classic Halt 3",
+      "flags": [
+        "d8b_identical_inci_sibling"
+      ],
+      "note": "INCI identical to Classic Halt 3 · INCI identical to Taft Classic (Halt 3) — verify both against the pack",
       "source_lane": "lane3-hairspray-finish.json",
       "round": 1,
       "round1_hold": 3,
@@ -700,7 +705,7 @@
       "route": "styling",
       "v1_subtype": "shine_finish",
       "proposed_hold_level": null,
-      "hold_basis": "no claim; PU-14/acrylates fixative present → unknown (never derived)",
+      "hold_basis": "house-brand C2: no hold claim; fixative present",
       "proposed_finish": "glänzend",
       "flags": [
         "hold_unclaimed"
@@ -708,7 +713,8 @@
       "note": "oils follow volatiles BUT fixative present → Styling (oil test only for fixative-free)",
       "source_lane": "lane3-hairspray-finish.json",
       "round": 1,
-      "claim_tier": "C3"
+      "round1_hold": null,
+      "claim_tier": "C2_house_brand"
     },
     {
       "sample_id": "bumble-and-bumble-brilliantine",
@@ -766,8 +772,8 @@
       "draft_subtype": "finish_shine",
       "route": "styling",
       "v1_subtype": "smoothing_styler",
-      "proposed_hold_level": 0,
-      "hold_basis": "no hold route; C3 chip ignored",
+      "proposed_hold_level": null,
+      "hold_basis": "no manufacturer hold claim; C3 chip ignored",
       "proposed_finish": "glänzend",
       "flags": [
         "retailer_chip_conflict"
@@ -901,13 +907,13 @@
       "draft_subtype": "salt_spray",
       "route": "styling",
       "v1_subtype": "blowdry_lotion",
-      "proposed_hold_level": 2,
-      "hold_basis": "C2 Haltegrad 3 (x/5)",
+      "proposed_hold_level": 3,
+      "hold_basis": "C2 'starker, dennoch beweglicher Halt' (Haltegrad 3, max unstated → words)",
       "proposed_finish": "glänzend",
       "flags": [
         "renamed_subtype"
       ],
-      "note": "marketed with sugar/texture; formula = VP/VA+PVP lotion · round 1 had 3",
+      "note": "marketed with sugar/texture; formula = VP/VA+PVP lotion · flexibility: beweglich",
       "source_lane": "lane4-texture.json",
       "round": 1,
       "round1_hold": 3,
@@ -1145,7 +1151,7 @@
       "v1_subtype": "molding",
       "proposed_hold_level": 4,
       "hold_basis": "C2 Haltegrad 5",
-      "proposed_finish": "natürlich",
+      "proposed_finish": "glänzend",
       "flags": [
         "inci_changed"
       ],
@@ -1336,7 +1342,7 @@
       "route": "styling",
       "v1_subtype": "smoothing_styler",
       "proposed_hold_level": 1,
-      "hold_basis": "C2 Haltegrad 2",
+      "hold_basis": "C2 'leichter, flexibler Halt' (Haltegrad 2, max unstated → words)",
       "proposed_finish": "natürlich",
       "flags": [
         "non_de_inci"
@@ -1383,7 +1389,7 @@
       "route": "styling",
       "v1_subtype": "gel",
       "proposed_hold_level": null,
-      "hold_basis": "C3 + no hold route → conflict",
+      "hold_basis": "C3 only (cannot assign); D8b plausibility flag: 'Extra Hold' with no hold route",
       "proposed_finish": "glänzend",
       "flags": [
         "claim_formula_conflict",
@@ -1427,8 +1433,8 @@
       "draft_subtype": "heat_styling_spray",
       "route": "styling",
       "v1_subtype": "smoothing_styler",
-      "proposed_hold_level": 0,
-      "hold_basis": "no hold claim, no hold route",
+      "proposed_hold_level": null,
+      "hold_basis": "no hold claim → keine Herstellerangabe (hold not used for smoothing_styler)",
       "proposed_finish": "glänzend",
       "flags": [],
       "note": "sleek via brush/iron",
@@ -1448,8 +1454,8 @@
       "draft_subtype": "heat_styling_spray",
       "route": "styling",
       "v1_subtype": "smoothing_styler",
-      "proposed_hold_level": null,
-      "hold_basis": "C1 'Starker Halt' but no hold route → claim_formula_conflict",
+      "proposed_hold_level": 3,
+      "hold_basis": "C1 'Starker Halt' (pack); D8b plausibility flag: no hold route — level kept",
       "proposed_finish": "natürlich",
       "flags": [
         "claim_formula_conflict",
@@ -1500,9 +1506,9 @@
       "proposed_finish": "glänzend",
       "flags": [
         "t15_baseline",
-        "decision_D3"
+        "d3_ruled_t15"
       ],
-      "note": "T15 (2026-09-10) ruled in-category Leave-in (incidental_film). Only if Nick picks D3(b) → smoothing_styler",
+      "note": "T15 (2026-09-10), confirmed by D3: in-category Leave-in (incidental_film)",
       "source_lane": "lane6-heat-boundary.json",
       "round": 1
     },
@@ -1624,7 +1630,7 @@
       "v1_subtype": "curl_cream",
       "proposed_hold_level": null,
       "hold_basis": "C3 'langanhaltenden Halt' = duration",
-      "proposed_finish": "geschmeidig",
+      "proposed_finish": "matt",
       "flags": [
         "d7_middle_band"
       ],
@@ -1646,7 +1652,7 @@
       "v1_subtype": null,
       "proposed_hold_level": null,
       "hold_basis": "",
-      "proposed_finish": "null;",
+      "proposed_finish": null,
       "flags": [],
       "note": "no fixative, rich conditioning",
       "claim_tier": "C3",
@@ -1750,7 +1756,7 @@
       "v1_subtype": "refresher",
       "proposed_hold_level": null,
       "hold_basis": "",
-      "proposed_finish": "natürlich-lebendig",
+      "proposed_finish": "glänzend",
       "flags": [
         "claim_formula_conflict"
       ],
@@ -1772,7 +1778,7 @@
       "v1_subtype": null,
       "proposed_hold_level": null,
       "hold_basis": "",
-      "proposed_finish": "glänzend/natürlich",
+      "proposed_finish": "glänzend",
       "flags": [],
       "note": "four cationics + cetearyl; starch only",
       "claim_tier": "C3",
@@ -1876,8 +1882,8 @@
       "draft_subtype": "shine_finish",
       "route": "styling",
       "v1_subtype": "shine_finish",
-      "proposed_hold_level": 0,
-      "hold_basis": "no hold claim, no hold route",
+      "proposed_hold_level": null,
+      "hold_basis": "no hold claim, no hold route · D8: unclaimed → keine Herstellerangabe",
       "proposed_finish": "glänzend",
       "flags": [],
       "note": "",
@@ -1896,8 +1902,8 @@
       "draft_subtype": "shine_finish",
       "route": "styling",
       "v1_subtype": "shine_finish",
-      "proposed_hold_level": 0,
-      "hold_basis": "no hold claim, no hold route",
+      "proposed_hold_level": null,
+      "hold_basis": "no hold claim, no hold route · D8: unclaimed → keine Herstellerangabe",
       "proposed_finish": "glänzend",
       "flags": [],
       "note": "",
@@ -1918,7 +1924,7 @@
       "v1_subtype": "texture_spray",
       "proposed_hold_level": null,
       "hold_basis": "'lang anhaltender Halt / flexibler Halt' = no strength word → review",
-      "proposed_finish": "matt/trocken",
+      "proposed_finish": "matt",
       "flags": [],
       "note": "",
       "claim_tier": "C2",
@@ -1938,7 +1944,7 @@
       "v1_subtype": "texture_spray",
       "proposed_hold_level": null,
       "hold_basis": "no hold claim; fixative → review",
-      "proposed_finish": "griffig,",
+      "proposed_finish": "matt",
       "flags": [],
       "note": "",
       "claim_tier": "C3",
@@ -1958,7 +1964,7 @@
       "v1_subtype": "salt_spray",
       "proposed_hold_level": null,
       "hold_basis": "no hold claim; salt route → review",
-      "proposed_finish": "natürlich/texturiert",
+      "proposed_finish": "matt",
       "flags": [],
       "note": "",
       "claim_tier": "C3",
@@ -1978,7 +1984,7 @@
       "v1_subtype": "salt_spray",
       "proposed_hold_level": null,
       "hold_basis": "no hold claim; salt route → review",
-      "proposed_finish": "natürlich/texturiert",
+      "proposed_finish": "natürlich",
       "flags": [
         "chip_ohne_alkohol_contradicts_inci"
       ],

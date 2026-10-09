@@ -83,7 +83,7 @@ S0 runs as steps, not as "first match wins". Every step fails toward review, nev
    | Garnier Sleek & Stay „Haarserum" (pure silicone) | Serum | Oil |
    | Bumble and bumble Brilliantine (oil-led) | Brilliantine | Styling |
    | Balea Glow & Shine Finishing Spray | Finishing Spray | Styling |
-4. **Names route only at the Oil boundary (D2).** Everywhere else a name never routes: "Gel Wax" contains no wax, "Texture Clay" contains no clay.
+4. **Names route in exactly two places:** the Oil boundary (D2: „Öl“/„Serum“ → Oil) and the curl-cream middle band (D7: a real fixative plus full care, sold as a curl/styling cream or balm → Styling). Everywhere else a name never routes: "Gel Wax" contains no wax, "Texture Clay" contains no clay.
 5. **Styling never fills the Personal-Plan heat-protection role.** This is kept from the Heat-Protectant decision.
 
 **Dry-run outcomes (72 products, after D2; before round 2).**
@@ -172,7 +172,7 @@ Routing (S0) and claim capture need authoritative sources. That makes them a sep
 | `blowdry_lotion` | hold level, target_zone (roots/all), heat_activated, alcohol load | Alcina Föhn 1 · Taft Föhn 2 · Alcina Ansatz 3 (roots) · Guhl (heat-activated starch) review |
 | `smoothing_styler` | heat_activated, format, weight, hold 0–1 | Color Wow · Garnier Sleek & Stay · Garnier Diamond Sleek · EIMI cream |
 | `hairspray` | hold level, flexibility, aerosol vs pump, finish | Taft 2/3/4 · Elnett 4 · Gard pump 4 · Syoss Max 4 |
-| `shine_finish` | weight, format (spray/serum), fixative present | Frizz Ease serum · Elvital Öl Magique · Balea Glow aerosol |
+| `shine_finish` | weight, base (ester/oil vs silicone), fixative present | got2b Glanz Spray (esters) · feschi (silicone) · Balea Glow aerosol (fixative + oils) · Brilliantine |
 | `salt_spray` | result mechanism (salt vs salt+polymer), finish, moment | Balea Sea Salt · Bumble Surf (MgSO4) |
 | `texture_spray` | fixative present, finish, residue | Living Proof 1 (VP/VA + particles) · Balea Volumenpuder 1 (starch only) |
 | `hair_powder` | fixative add-on, residue | four silica-silylate powders; Kevin Murphy adds VP/VA |
@@ -192,7 +192,7 @@ The scale therefore normalises **C1/C2 manufacturer claims** onto one ladder. It
 
 | Level | DE label (= dm's filter wording) | Meaning |
 |---|---|---|
-| 0 | Kein Halt | styling result without fixing: shine, smoothing, refresh |
+| 0 | Kein Halt | only when the manufacturer explicitly says so; unclaimed strength is „keine Herstellerangabe“, never 0 (D8) |
 | 1 | Leichter Halt | soft structure, hair moves freely |
 | 2 | Mittlerer Halt | holds a normal style through the day, restylable |
 | 3 | Starker Halt | firm, noticeably set |
@@ -206,11 +206,14 @@ House brands on their own retailer page count as C2: dm ↔ Balea/alverde, Rossm
 
    | Brand scale | Level 1 | Level 2 | Level 3 | Level 4 |
    |---|---|---|---|---|
-   | Taft / Gard | Halt 1–2 | Halt 3 | Halt 4 | Halt 5 / 5+ / 6 |
+   | Taft/Syoss sprays, foams, Föhnspray; Wellaflex; Maria Nila (x/5) | 1–2 | 3 | 4 | 5 / 5+ |
+   | NIVEA MEN, Gard, Taft 6 (printed 1–6) | 1–2 | 3 | 4 | 5–6 |
    | Alcina Hold-Faktor x/10 | 1–2 | 3–5 | 6–7 | 8–10 |
-   | Maria Nila, Wella x/5 | 1–2 | 3 | 4 | 5 |
 
-   The table grows per brand during calibration.
+   - Taft **gels** use a separate 4–14 scale, so their numbers are not comparable; only their words count („maximaler Halt“ → 4).
+   - Brands with no stated maximum (Wella EIMI, American Crew) are read by their strength words.
+   - Henkel numbers are shared across Taft, Syoss and got2b, and the number wins over inflated words (Syoss "3 = starker Halt" → 2).
+   - The table grows per brand; the exact tables live in `build-calibration-r2.js`.
 2. **Brand's own strength words.** When a pack has both a number and a word, the number wins: Taft Glanz says "Halt 4" and "Ultra starker Halt" and lands on 3.
 
    | Words | Level |
@@ -224,13 +227,17 @@ House brands on their own retailer page count as C2: dm ↔ Balea/alverde, Rossm
 3. **Brand word ladders** (Elnett: Normal < Stark < Extra stark < Sehr stark). Mid-ladder steps are marked uncertain.
 4. **Retailer chips** (dm "Halt" on third-party brands, Douglas "Haltgrad") are C3. They are **recorded as a trace and never assign a level** (T7). In the dry run they contradicted the brand claim on 4 products (e.g. Wellaflex "Starker Halt" vs dm chip "leicht") and were the only source on Bumble Surf, which therefore goes to review.
    - *Owner option:* admit C3 chips as a last resort. Not recommended.
-5. **No claim:**
-   - level **0** only if `hold_route = absent`;
-   - if `hold_route` is present or ambiguous → **review**.
+5. **No strength claim → „keine Herstellerangabe“ (D8).** No level is derived from the formula, in either direction.
 
    A strength is never borrowed from a similar formula. Example: Balea Haarpuder keeps its own house-brand "starker Halt" even though got2b's identical base says "leicht".
-6. **Formula sanity check** (may only send to review, never set or raise): a claim ≥ 1 with `hold_route = absent` is a `claim_formula_conflict` and goes to review.
-   - Dry-run trips: Cantu "Extra Hold", Elnett Stylingspray "Perfekter Halt", Bali Curls Curl Defining Spray "mit Halt" (starch only).
+6. **Plausibility flag (D8b; internal, never changes a level).** Two cases are flagged for review:
+   - a strength claim with no hold mechanism above the tail;
+   - same brand, identical INCI, different stated level → verify against the pack.
+
+   Round-2 trips:
+   - Elnett Stylingspray (pack "Starker Halt", level 3 kept, flagged);
+   - Cantu "Extra Hold" (C3 only, so no level anyway);
+   - Taft Classic/Glanz (identical INCI).
 
 ### Comparability rule
 
@@ -263,9 +270,9 @@ The app never says "this wax holds like that hairspray".
 
 Evidence: `round2/hold-research-community.md` and `round2/hold-research-ingredients.md`. Ingredients cannot predict hold; the best simple rule was right 3 times out of 6.
 
-### Dry-run result
+### Dry-run result (historical: round 1, after D2, before round 2 and D8; current numbers in §7)
 
-Of the 61 Styling products (after D2, before round 2):
+Of the 61 Styling products:
 
 | Assigned | Count |
 |---|---|
@@ -332,10 +339,10 @@ Rows are evaluated top-down and the first match wins. The short-hair row comes f
 | 7 | Frizz/shine on dry hair, no heat, not owned by Oil per S0 | `shine_finish` | — | 0 |
 | 8 | Style does not hold (`lost_shape`), straight hair or heat curls | `hairspray` (flexible for fine hair) | — | 2–3 |
 | 9 | Beach/texture look | `salt_spray` (wavy/straight) | `texture_spray` | 1 |
-| 10 | Second-day curls | `refresher` | — | 0–1 |
+| 10 | Second-day curls | day-2 **instruction** with the existing gel (D5) | `refresher` product only as an optional extra | — |
 
 Within a subtype, products are ranked by:
-- hold band match;
+- hold band match (**only in** gel, curl_cream, mousse, blowdry_lotion, hairspray, molding; D8);
 - weight vs thickness (fine → light);
 - finish preference (molding/texture only);
 - flexibility preference;
@@ -375,7 +382,7 @@ Examples: Lisa (fine, straight, blow-dries, „wenig Volumen“) → `blowdry_lo
 
 ## 7. Calibration set and round 2
 
-**Round 2 is done.** Results are in `data/research/styling-inci/concept-v0/round2/SUMMARY.md` and `calibration-set-r2.json` (90 products; after D7: 71 Styling, 55 of them with C1/C2 claims; hold 0:6 · 1:4 · 2:10 · 3:9 · 4:9 · review 33). Two new owner rulings came out of it: D7 (curl-cream middle band) and D8 (products without a stated hold strength). The round-1 plan below is kept for traceability.
+**Round 2 is done.** Results are in `data/research/styling-inci/concept-v0/round2/SUMMARY.md` and `calibration-set-r2.json` (90 products; after D7 and the pre-push review fixes: 70 Styling, 56 of them with C1/C2 claims; hold 1:4 · 2:9 · 3:11 · 4:10 · keine Herstellerangabe 36). Two new owner rulings came out of it: D7 (curl-cream middle band) and D8 (products without a stated hold strength). The round-1 plan below is kept for traceability.
 
 `calibration-set.json` lists all 72 products with route, subtype, proposed hold and finish, and flags (`g0_pending`, `house_brand_c2`, `claim_formula_conflict`, `retailer_chip_*`, `decision_D3`). The per-subtype first set is listed in §2.
 
