@@ -1,7 +1,7 @@
 {
   "version": "styling-calibration-r2",
   "created": "2026-10-09",
-  "status": "ROUND 2 of the normalisation rules on captured text. Most hold claims were captured from third-party retailer pages (C3); every level stays provisional until round 2 freezes C1/C2 claims (pack or manufacturer DE page; house brands Balea/alverde/Isana on their own retailer = C2).",
+  "status": "ROUND 2 COMPLETE (2026-10-09): claims frozen at C1/C2 where found (pack or manufacturer DE page; house brands Balea/alverde on dm, Isana on Rossmann = C2). Levels are provisional until the v1.0 lock.",
   "normalisation_tables": {
     "x/5 (Taft/Syoss/Wellaflex/Maria Nila; Henkel numbers shared across brands)": "1-2→1 · 3→2 · 4→3 · 5/5+→4",
     "x/6 (NIVEA MEN, Gard, Taft 6)": "1-2→1 · 3→2 · 4→3 · 5-6→4",
@@ -9,7 +9,7 @@
     "Taft gels (scale 4..14)": "number not comparable → use words ('maximal' → 4); else review",
     "Elnett ladder": "Normal→2 · Stark→3 · Extra stark→4 · 'Sehr stark' unranked → review",
     "Wella EIMI": "no scale max stated → strength words decide",
-    "Words": "leicht/sanft/soft/weich→1 · mittel/normal→2 · stark→3 · extra/ultra/mega/sehr stark, maximal, Max, Kleber→4; flexibel/natürlich/langanhaltend/perfekt/Nh = not strength → review"
+    "Words": "leicht/sanft/soft/weich→1 · mittel/normal→2 · stark→3 · extra/ultra/mega/sehr stark, maximal, Max, Power, Kleber→4; flexibel/natürlich/langanhaltend/perfekt/Nh = not strength → review"
   },
   "records": [
     {
@@ -1739,7 +1739,7 @@
       "proposed_finish": null,
       "flags": [],
       "note": "amidoamine conditioner r4 — D6 needs a G0 read",
-      "claim_tier": "C2_house_brand",
+      "claim_tier": "C3",
       "source_lane": "round2",
       "round": 2
     },
@@ -1819,13 +1819,11 @@
       "route": "styling",
       "v1_subtype": "gel",
       "proposed_hold_level": null,
-      "hold_basis": "C2 'Verleiht Halt' no strength",
+      "hold_basis": "C3 'Verleiht Halt' no strength",
       "proposed_finish": null,
-      "flags": [
-        "house_brand_c2"
-      ],
+      "flags": [],
       "note": "D6: starch only, no conditioning; liquid curl-hold spray filed as gel (spray format)",
-      "claim_tier": "C2_house_brand",
+      "claim_tier": "C3",
       "source_lane": "round2",
       "round": 2
     },

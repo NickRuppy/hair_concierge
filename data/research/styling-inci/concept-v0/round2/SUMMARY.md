@@ -10,7 +10,8 @@
 
 > **Current state, after D7, D8/D8b and the pre-push Codex review fixes:**
 > - 70 Styling products: `curl_cream` 5, `gel` 9; 5 provisional (the Bali Curls spray, with two INCIs under one GTIN, went back to provisional).
-> - C1/C2 claims on 56 of them.
+> - C1/C2 claims on 55 of them (C1 7 · C2 32 · C2 house brand 16); C3 13 · C5 2.
+> - Langhaarmädchen is not a dm house brand (the Leave-in standard names only dm ↔ Balea/alverde and Rossmann ↔ Isana), so its gap-fill records are C3, not C2.
 > - Hold: 1:4 · 2:9 · 3:11 · 4:10 · keine Herstellerangabe 36. There is no formula-derived 0 any more (D8).
 > - Wella EIMI levels now come from strength words, because no denominator is stated: Sugar Lift 3, Flowing Form 1.
 > - Balea Ultra Volumen = 4: its house-brand dm attribute counts as C2.

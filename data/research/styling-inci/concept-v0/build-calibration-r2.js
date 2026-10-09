@@ -14,7 +14,7 @@ const TABLES = {
   "Taft gels (scale 4..14)": "number not comparable → use words ('maximal' → 4); else review",
   "Elnett ladder": "Normal→2 · Stark→3 · Extra stark→4 · 'Sehr stark' unranked → review",
   "Wella EIMI": "no scale max stated → strength words decide",
-  "Words": "leicht/sanft/soft/weich→1 · mittel/normal→2 · stark→3 · extra/ultra/mega/sehr stark, maximal, Max, Kleber→4; flexibel/natürlich/langanhaltend/perfekt/Nh = not strength → review",
+  "Words": "leicht/sanft/soft/weich→1 · mittel/normal→2 · stark→3 · extra/ultra/mega/sehr stark, maximal, Max, Power, Kleber→4; flexibel/natürlich/langanhaltend/perfekt/Nh = not strength → review",
 };
 // [hold, basis, claim_tier, extraFlags[], note]
 const R2 = {
@@ -99,7 +99,7 @@ const G = {
   "balea-professional-definier-spray-traumlocken": ["provisional_boundary", "refresher", null, "", ["claim_formula_conflict"], "oils+protein, no cationic — does oil count as conditioning for D6?"],
   "schwarzkopf-professional-osis-curl-retouch": ["leave_in", null, null, "", [], "four cationics + cetearyl; starch only"],
   "balea-haargel-hair-jelly": ["styling", "gel", null, "C2 'flexiblen Halt' = flexibility only", ["house_brand_c2"], "light gel, PVP r6"],
-  "langhaarmaedchen-lockenspray-halt-sprungkraft": ["styling", "gel", null, "C2 'Verleiht Halt' no strength", ["house_brand_c2"], "D6: starch only, no conditioning; liquid curl-hold spray filed as gel (spray format)"],
+  "langhaarmaedchen-lockenspray-halt-sprungkraft": ["styling", "gel", null, "C3 'Verleiht Halt' no strength", ["house_brand_c2"], "D6: starch only, no conditioning; liquid curl-hold spray filed as gel (spray format)"],
 };
 const G2 = { // shine/texture/salt
   "_shine_hold_unclaimed_fixative": null,
@@ -124,6 +124,8 @@ for (const r of [...g1, ...g2]) {
     inci_source_tier: r.inci_source_tier, draft_subtype: r.subtype_candidate, route, v1_subtype: route === "leave_in" ? null : sub, proposed_hold_level: hold,
     hold_basis: basis, proposed_finish: r.finish_claim || null, flags: fl, note, claim_tier: r.claim_tier, source_lane: "round2", round: 2 });
 }
+// Langhaarmädchen is not a dm/Rossmann house brand (Leave-in standard names only dm↔Balea/alverde, Rossmann↔Isana): no house-brand C2.
+for (const r of recs) if (r.sample_id.startsWith("langhaarmaedchen-")) { r.flags = r.flags.filter(f => f !== "house_brand_c2"); r.claim_tier = "C3"; }
 // Finish: normalise to the concept enum; frozen C1/C2 updates win.
 const FINISH_FROZEN = { "syoss-professional-performance-max-hold-power-wax": "glänzend" };
 const normFinish = v => { const t = (v || "").toString().toLowerCase();
@@ -136,7 +138,7 @@ for (const r of recs) if (r.flags.includes("decision_D3")) { r.flags = r.flags.f
 for (const r of recs) if (r.claim_tier === "C3" && r.flags.includes("house_brand_c2")) r.claim_tier = "C2_house_brand";
 // A level resolved from a frozen claim clears the old review flag.
 for (const r of recs) if (r.proposed_hold_level !== null) r.flags = r.flags.filter(f => f !== "hold_needs_review" && f !== "hold_unclaimed");
-const out = { version: "styling-calibration-r2", created: "2026-10-09", status: base.status.replace("DRY RUN", "ROUND 2"), normalisation_tables: TABLES, records: recs };
+const out = { version: "styling-calibration-r2", created: "2026-10-09", status: "ROUND 2 COMPLETE (2026-10-09): claims frozen at C1/C2 where found (pack or manufacturer DE page; house brands Balea/alverde on dm, Isana on Rossmann = C2). Levels are provisional until the v1.0 lock.", normalisation_tables: TABLES, records: recs };
 fs.writeFileSync("calibration-set-r2.json", JSON.stringify(out, null, 2) + "\n");
 const st = recs.filter(r => r.route === "styling");
 const routes = {}; recs.forEach(r => routes[r.route] = (routes[r.route] || 0) + 1);
