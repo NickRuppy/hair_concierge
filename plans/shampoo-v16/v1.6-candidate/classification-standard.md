@@ -7,13 +7,14 @@
 | Candidate policy ID | `shampoo-classification-v1.6-candidate` |
 | Policy ID after lock | `shampoo-classification-v1.6` (assigned only by the lock receipt) |
 | Analysis model version | `shampoo-inci-v1.6-candidate` |
-| Status | **Candidate, revised for calibration round 2 (2026-10-09). Not locked. Not production-active.** |
+| Status | **Candidate, revised after calibration round 2 (2026-10-09). Not locked. Not production-active.** |
 | Base method | `shampoo-classification-v1.4`, `docs/research/shampoo-inci/v1.4/classification-standard.md`, SHA-256 `0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24` (frozen, unchanged), together with the two other sources the v1.4 README lists as consolidated into v1.4: the final weight method `docs/research/shampoo-inci/v1.4-draft/weight-potential-final-method.md` (`shampoo-weight-final-v1`, now merged into Section 6) and the operational amendment `docs/research/shampoo-inci/v1.4-draft/operational-amendment.md` (its focus, secondary and usage operating rules and decision trace, merged into Sections 7–9; its superseded route-count weight section is not carried) |
 | Round-2 revision | Rules added or sharpened to close the round-1 lane ambiguities (`plans/shampoo-v16/calibration/round-1/lane-a-ambiguities.md`, `lane-b-ambiguities.md`). Each change is a row in `changelog-vs-v1.4.md`. |
+| Post-round-2 revision | Rulings R11 (C2 humectant element) and R12 (dandruff + irritated scalp as a research-only combination) applied, and the clarifications listed in `plans/shampoo-v16/calibration/round-2/round-2-report.md` closed with general rules (changelog rows 87–101). |
 | Merged overlay | Focus v1.5, approved by Nick 2026-09-03 (`plans/scan-db-expansion/research/shampoo-v14/focus-v15-amendment-plan.md`, contract `src/lib/shampoo/focus-v15.ts`) |
 | Settled clarifications | holdout-v3 adjudication (`data/research/shampoo-inci/holdout-v3/adjudication.json`) where it decided a rule question |
 | New in this version | Section 13, *Production projection assessment* |
-| Rulings applied | Nick's phase-1 rulings R2–R6 of 2026-10-07 (`plans/shampoo-v16/rulings.md`): three-tier thickness fit and projected live `weight` (R2/R3), scalp-concern floor (R4), no-gap invariant and the Monday exception (R5), deep-cleanser dual listing (R6) |
+| Rulings applied | Nick's phase-1 rulings R2–R6 of 2026-10-07 (`plans/shampoo-v16/rulings.md`): three-tier thickness fit and projected live `weight` (R2/R3), scalp-concern floor (R4), no-gap invariant and the Monday exception (R5), deep-cleanser dual listing (R6). Rulings of 2026-10-09: C2 humectant element (R11), dandruff + irritated scalp recorded as a research-only combination (R12) |
 
 This document is self-contained. A classifier needs only this standard plus one product's frozen identity, INCI and claims packet. It does not need to read v1.4, v1.5 or any earlier version.
 
@@ -62,6 +63,7 @@ Each property record includes:
 - confidence `moderate` or `low` → exactly one other value, never `none` (by definition, realistic unknowns could move the value).
 - For an ordered property (`cleansingStrength`, `conditioningLevel`, `weightPotential`) the neighbor is always one step away. If both adjacent values are possible, record the one the record's counter-signals and `whyNotNeighborBand` treat as more realistic. If the record finds both equally realistic, record the one that T4 or I3 (Section 13) would read as the less recommending outcome (for `weightPotential` the heavier value; for `conditioningLevel` the lower value; for `cleansingStrength` the value whose observed intensity would not match a projected bucket's expected intensity). If neither or both would, record the higher value.
 - For a categorical property, the neighbor is the single most plausible other value.
+- For the set-valued `focusSecondary` (post-round 2), the value and the neighbor are both whole sets. The neighbor is the single most plausible other set, written as a set: `[]` is a valid neighbor of a non-empty selection, and a one-value set (for example `["shine"]`) is a valid neighbor of `[]`. Never record per-member neighbors. No projection rule reads this neighbor.
 
 Projection review flags (T4, I3) read only this field, so two lanes that agree on the value and its confidence produce the same flags.
 
@@ -82,6 +84,9 @@ No direct property is a quality score. Marketing claims, price and brand prestig
 | `deepCleanserListing` | `flagged`, `not_flagged` | 13.6 (D2) |
 | `reviewFlags` | zero or more codes from 13.9 | 13.9 |
 | `informationalNotes` | zero or more non-blocking codes from 13.9 | 13.9 |
+| `researchCombinationTargets` | `[]` or `["sensitive"]`; **research-only, never projected** | 13.5 (E2b, ruling R12) |
+
+`researchCombinationTargets` is a research fact for a future profile feature. It never becomes a row, a scalp target, a live column or a ranking input, and no apply reads it.
 
 Each projected field carries confidence, a conclusion-first rationale that names the rule IDs applied, and evidence references. The projection block is derived from finalized direct properties and exact-product positioning; it never changes a direct property.
 
@@ -120,6 +125,8 @@ Never combine ingredient lists across GTINs, sizes, markets or reformulations. P
 **ID-1 Completeness.** A formula is complete only when its source is an approved, canonical full-INCI capture for the exact product without a material conflict. A non-empty ingredient string alone is not evidence of completeness. A formula that is not known to be complete returns `unknown` or low confidence wherever completeness matters (Sections 6, 10, 11).
 
 **ID-2 Normalization.** Multilingual synonyms or slash/parenthesis variants of one ingredient (for example `Aqua (Water, Eau)`, `Aqua/Water/Eau`, `Glycine Soja Oil / Soybean Oil`) are one INCI entry. One-based positions are counted after this normalization. Marker characters (`*`, `**`) are stripped from the name and kept as provenance.
+
+- *Split entries (post-round 2).* When a packet or source splits the synonyms of one ingredient into separate list entries (for example `Aqua` and `Water`, or `Aqua` and `(Water, Eau)`), merge them into one entry before numbering. Every record cites **normalized** positions only, never the raw packet position, and states the normalization once in its identity or formula block (for example "Aqua/Water merged; normalized positions").
 
 **ID-3 Material conflict.** A conflict is *material* only if resolving it either way could change a direct property or a projected field. Then the affected property is `low` confidence (or `unknown` where the property allows it) and the product returns `needs_research`. Otherwise record it as a note with no confidence effect. Specifically:
 
@@ -170,7 +177,7 @@ Record every blind-to-final change with the revealed evidence and reason.
 **CL-SRC Claim source grading (round 2).** Every claim used anywhere in this standard (focus, usage role, scalp comfort, D1, scalp targets) is graded with the E1 positioning confidence (Section 13.3), not only scalp-target claims:
 
 - a word in the exact product name: `high`;
-- a manufacturer or pack source: `moderate` (when the frozen packet does not distinguish pack front from back, every manufacturer-source claim is `moderate`);
+- a manufacturer or pack source: `moderate` (when the frozen packet does not distinguish pack front from back, every manufacturer-source claim is `moderate`); a foreign-language or foreign-market manufacturer page is graded `low` unless a German source carries the same claim (E1, post-round 2);
 - retailer copy only: `low`.
 
 A `low`-graded claim may act as a focus `candidate` only when the formula verdict independently supports that focus (for example `repair_supported`); it then caps the focus confidence at `moderate` and it can never act as `tie_breaker`. A `low`-graded claim never triggers a non-default usage role, `scalpComfortTarget: targeted`, D1 or a scalp target. Usage directions are graded the same way.
@@ -217,6 +224,8 @@ C1 and C3–C6 are repeatability conventions for the candidate. They make two cl
 
 An unlisted surfactant is assigned to the class its chemistry names (sulfate, ether sulfate, sulfonate, acylate, betaine, glucoside); the record states the assignment.
 
+**C3a Emulsifier-grade fatty sulfates (post-round 2).** A C16–C18 alkyl sulfate (`Sodium Cetearyl Sulfate`, `Sodium Cetyl Sulfate`, `Sodium Stearyl Sulfate`) that appears in the same formula as a C16–C18 fatty alcohol (`Cetearyl Alcohol`, `Cetyl Alcohol`, `Stearyl Alcohol`) is the anionic part of an emulsifying-wax system. It belongs to the "not a cleansing route and not a buffer" class: it is never the defining anionic, never a reinforcing route (C1, C5) and never a buffer. The fatty alcohol keeps its own role (`payload_lipid` in 6.3; pearlizing/fatty route in C2). Without such a fatty alcohol in the formula, the fatty sulfate is classed by its chemistry as an alkyl sulfate (strong anionic), which is the conservative reading. The record names the pairing it relied on. Shorter-chain alkyl sulfates (`Sodium Lauryl Sulfate`, `Sodium Coco-Sulfate` and the other members of the alkyl sulfate row) are never covered by C3a.
+
 **C4 Position and roles.** Only prominent surfactants count (E3: listed before `Parfum`/`Fragrance`, else before the first listed preservative; for C rules only, when the formula declares neither, every listed surfactant counts as prominent). A surfactant listed after that point is recorded but is neither a primary route, a reinforcing route nor a buffer.
 
 - The *defining anionic* is the earliest prominent strong anionic (either strong type). If there is none, C6 applies.
@@ -260,6 +269,7 @@ Conditioning and weight are related but not equivalent. A formula can improve sh
 
 - *Early* means prominent (E3). A silicone listed after the E3 point is a supporting route only and does not satisfy C2.
 - A prominent nonvolatile payload lipid, butter or fatty alcohol (Section 6.3 family `payload_lipid`) may take the place of the early silicone. The other C2 elements (a cationic polymer, a pearlizing/fatty route and humectants) are still required. Weak refatters (`weak_refatter`) never take that place.
+- *Humectant element (ruling R11).* The humectant element requires a deliberate humectant route: at least one of `Glycerin`, `Panthenol`, `Sodium Hyaluronate`, `Sodium PCA`, `Urea`, `Sorbitol` or `Betaine` (the INCI `Betaine` itself, never an alkyl betaine surfactant such as `Cocamidopropyl Betaine`) listed as its own INCI entry. The list is closed, like the E4 lists, and additions are Nick's rulings (open question 4). Not a deliberate humectant route, alone or together: glycols and other solvents or extract carriers (`Butylene Glycol`, `Propylene Glycol`, `Triethylene Glycol`, `Dipropylene Glycol`, `Pentylene Glycol`, `Hexylene Glycol`, `Caprylyl Glycol`), aloe juice or other plant juices, waters and extracts (`Aloe Barbadensis Leaf Juice`, `Aloe Barbadensis Leaf Extract`), and `Sodium Lactate` (a pH buffer, F4). When the only candidates are such ingredients, C2 is not met; the formula is judged by the anchors (usually `moderate` for one meaningful system). When the other three C2 elements are present, the missing humectant route is recorded as the counter-signal and, at `moderate` or `low` confidence, `high` is the neighbor (N-ALT).
 - When C2 is not met, `high` still requires the `high` anchor's multiple complementary systems; one meaningful system plus light routes is `moderate`.
 
 **C7 2-in-1 claims (round 2).** A "2-in-1", "Shampoo & Spülung" or "mit Conditioner" claim never establishes richness or raises `conditioningLevel` (3.2). The value comes from the formula alone; a 2-in-1 product whose formula shows one conditioning system is `moderate` at most.
@@ -299,7 +309,7 @@ Record every deposition-relevant and reset-relevant ingredient with its exact no
 | Deposition | `payload_lipid` | Nonvolatile plant oils and butters, waxy/hydrogenated lipids, fatty alcohols, emollient esters/ethers (e.g. `Argania Spinosa Kernel Oil`, `Butyrospermum Parkii Butter`, `Hydrogenated Castor Oil`, `Hydrogenated Vegetable Oil`, `Cetearyl Alcohol`, `Dicaprylyl Ether`) |
 | Deposition | `weak_refatter` | Light refatting esters and lipid-like additives (e.g. `Glyceryl Oleate`, `PEG-7 Glyceryl Cocoate`, `Hydrogenated Palm Glycerides Citrate`, `Lecithin`, `Ascorbyl Palmitate`) |
 | Deposition | `protein_film` | Hydrolyzed proteins and amino-acid film routes |
-| Deposition | `film_former` | Film-forming polymers (e.g. acrylates copolymers) |
+| Deposition | `film_former` | Film-forming hair polymers (e.g. `PVP`, `VP/VA Copolymer`, `Polyester-37`); not the anionic acrylate thickeners resolved in 6.4 |
 | Reset | `anionic_surfactant`, `amphoteric_surfactant`, `nonionic_surfactant` | Classified as in C3 |
 | Excluded | — | Listed with the reason; never counted as deposition (see 6.4) |
 | Unresolved | — | Any ingredient whose weight-relevant function is unknown; listed with the reason (see 6.6, unknowns) |
@@ -317,6 +327,7 @@ These resolve function recognition only. Position, surrounding routes, persisten
 - `Hydrogenated Vegetable Oil`: emollient/waxy payload lipid. Waxy or hydrogenated lipids are more substantive than liquid oils at a similar position; reflect that in `persistence`, not in a fixed grade.
 - `PEG-40 Hydrogenated Castor Oil`, `PEG-60 Hydrogenated Castor Oil`: solubilizer/emulsifier; excluded from persistent payload evidence.
 - `Glycol Distearate` and similar pearlizing waxes, and PEG thickeners (e.g. `PEG-120 Methyl Glucose Dioleate`, `PEG-150 Distearate`): excluded from persistent deposition evidence for weight. Glycol distearate still counts as the pearlizing/fatty route for `conditioningLevel` (C2); the two properties are judged separately.
+- Anionic acrylate rheology polymers in a rinse-off shampoo (`Acrylates Copolymer`, `Acrylates/C10-30 Alkyl Acrylate Crosspolymer`, `Acrylates/Steareth-20 Methacrylate Copolymer`, `Carbomer`) (post-round 2): suspending and thickening agents that hold pearlizers, particles or actives in suspension. They carry no cationic charge and are recorded as excluded, not as `film_former`, like the PEG thickeners above. They therefore never count as a converging family for W1 (c) or W2. This resolves function recognition only; a cationic acrylate or acrylamide polymer (for example a `Polyquaternium-n` or an `…trimonium…` acrylamide copolymer) stays `cationic_polymer`. Any other acrylate whose role the record cannot name is unresolved (6.6, unknowns), never silently excluded.
 
 ### 6.5 Required sequence
 
@@ -353,11 +364,15 @@ Strong cleansing can raise reset capacity, but it never automatically cancels de
 
 W1 applies only when all of its conditions hold: (a) the cleansing base is a C1/C5 sulfate chassis with a prominent buffer and `cleansingStrength` `moderate` or `strong`; (b) the deposition evidence is that silicone/guar/late-amodimethicone set; (c) no further persistent family converges (a prominent `payload_lipid`, a second cationic polymer, a `film_former`, or a protein film reinforcing the set). If any condition fails — extra converging families, a mild/sulfate-free chassis (C6), or an early oil/waxy lipid — W1 does not apply and the full method in 6.6 decides. W1 is never an argument for a lighter band outside its conditions.
 
+*Set without amodimethicone (post-round 2).* Condition (b) names the complete set. A silicone plus a cationic guar **without** a late amodimethicone (or with an amino-silicone other than amodimethicone) is not the W1 set: W1 does not apply, and the full method in 6.6 decides. Missing an element creates no presumption in either direction: the record may not cite W1 as support for `moderate`, and the absence of amodimethicone is not by itself evidence for a lighter or heavier band.
+
 **W-RICH Rich architecture.** "Rich" (in the `high` anchors of Sections 5 and 6 and in W1) is established only by formula evidence: prominent `payload_lipid` material converging with a silicone or cationic deposition system. A "2-in-1", "reichhaltig" or "intensive Pflege" claim never establishes it (3.2, C7).
+
+*Limited reset (post-round 2).* W-RICH establishes richness only; it does not by itself reach the `high` weight anchor. The anchor's rich route needs W-RICH **and** limited reset, and "limited reset" means `resetCapacity: weak`. An effective ordinary chassis (`resetCapacity: moderate`, for example a C1 or C5 sulfate chassis with its buffers) or a `strong` reset is not limited. With W-RICH and `resetCapacity` `moderate` or `strong`, the band comes from the rest of the method: `high` only if the anchor's other route holds (multiple converging, plausibly persistent depositing systems that reset does not sufficiently offset), otherwise `moderate` with W-RICH recorded as the counter-signal and `high` as the neighbor (N-ALT). W3 still applies when the two bands remain closely balanced. For `conditioningLevel` (Section 5), W-RICH alone still counts as a rich architecture; reset capacity is a weight subjudgment only.
 
 **W2 Interacting systems (boundary reasoning).** Judge deposition evidence as one system, not ingredient by ingredient. When two or more distinct deposition families (6.3) are present, a `low` band requires `whyNotNeighborBand` to name the specific formula evidence that keeps their combined residue below noticeable — for example that each family is late/trace in the list, that the only families are `weak_refatter` plus humectants, or that a strong reset faces only light routes. "No persistent system" or "one light polymer" is not a sufficient reason when a second family is present. A single deposition family without a reinforcing route, facing moderate or strong reset, can remain `low` (no polymer floor). W2 is a reasoning requirement; it never assigns a band from a family count.
 
-**W3 Balanced boundary.** If, after the three subjudgments, two adjacent bands remain closely balanced, confidence is `low` (the product returns `needs_research`). A balanced boundary is never resolved toward the lighter band at `moderate` or `high` confidence (P0: a lighter band is the recommending direction).
+**W3 Balanced boundary.** If, after the three subjudgments, two adjacent bands remain closely balanced, confidence is `low` (the product returns `needs_research`). A balanced boundary is never resolved toward the lighter band at `moderate` or `high` confidence (P0: a lighter band is the recommending direction). W3 is unchanged by the post-round-2 clarifications above.
 
 ### 6.8 Mandatory reasoning fields
 
@@ -455,6 +470,8 @@ A strong-cleansing repair shampoo remains `repair` when that is its dominant com
 2. if both or neither appear in the product name, `scalp_active` is primary (the problem-led, narrower role), provided it is formula-compatible under 7.2 (dandruff active for dandruff positioning, `scalpComfortTarget: targeted` for sensitive or dry positioning); otherwise the lengths-care role is primary if compatible, else `general`;
 3. the other role is secondary only if it also passes Section 8 (distinct positioning and an independent route).
 
+*Name words that do not name the scalp (post-round 2).* A product-name word such as "Sensitiv", "Sensitive", "Mild", "Sanft", "Basis" or "Beruhigend" that does not name the scalp names no role for F7 step 1: it is neither a scalp role nor a lengths-care role, and it is ignored when steps 1 and 2 ask which role the product name names. F7 applies only when the product also has a qualifying scalp claim unit (above); a non-scalp name word alone never brings F7, `scalp_active`, `targeted` (SC1) or a scalp target into play, and focus is decided by 7.2 as usual.
+
 **F-TRACE Decision trace (from the v1.4 operational amendment).** The `decisionTrace` (7.4) records, for primary focus: the claim direction or `null`, whether the formula is compatible, one compatible route, and the decision reason. For secondary focus: that the empty default was considered, the selected values, the matching distinct claims, the independent routes, why each is distinct from the primary, and the exception code when two values are used. For usage role (Section 9): the default `regular`, the exact non-default trigger code if any, the trigger evidence (at least one concise evidence string for every non-default trigger) and the rationale.
 
 ### 7.3 Repair/moisture care direction
@@ -549,15 +566,24 @@ Use `targeted` when the post-unblind product is explicitly positioned for sensit
 
 Menthol, mint or fragrance is a counter-signal, not an automatic veto. In an explicitly sensitive or anti-itch product it can remain `targeted` when the overall architecture supports the role. Cleansing strength separately captures when the formula may be less suitable for dry-sensitive profiles.
 
+**CSA Credible supportive architecture (post-round 2).** The formula has a credible supportive architecture only when at least one route from the E4 comfort list or the E4 humectant/refatting list (13.3) is prominent (E3). The lists are closed here as in E4: a prominent unlisted ingredient does not count, and the record names it (`unlisted_route_candidate:<INCI name>`, carried into S-FAIL where a gate fails).
+
+- Not sufficient on their own, alone or together: a mild cleansing chassis (C6 `low`), the absence of fragrance or of a declared `Parfum`, an acidic pH, and positioning wording. They are supportive signals that may raise confidence once a listed route is present.
+- Counter-signals: `cleansingStrength: strong`; a prominent cooling agent (`Menthol`, `Menthyl Lactate`, `Menthoxypropanediol`, mint oils); prominent essential oils. With a listed prominent route present they do not veto `targeted`; they are recorded, `targeted` confidence is at most `moderate`, and the neighbor is `not_targeted` (N-ALT).
+- Without a listed prominent route, an explicitly positioned product is `not_targeted`; the record names the missing route. Its S-SENSITIVE or S-DRY gate therefore fails (S-FAIL), which sends the product to review instead of quietly passing.
+
+CSA is the formula half of `targeted`. The positioning half is SC1. R12 reuses CSA on its own for the research-only combination (E2b).
+
 Use `not_targeted` for complete ordinary formulas without this intent/support. Use `unknown` only when formula identity/completeness or conflicting evidence prevents the decision.
 
 **SC1 What counts as explicit positioning (round 2).** "Explicitly positioned" means at least one E2 sensitive or E2 dry claim unit (13.3) graded `moderate` or `high` (CL-SRC). In addition:
 
-- itch, dryness, tightness or redness words that occur only inside a dandruff claim unit (E2a) are dandruff symptoms, not sensitive or dry-scalp positioning, and do not by themselves make the product `targeted`;
+- itch, dryness, tightness or redness words that occur only inside a dandruff claim unit (E2a), or in a unit bundled with a dandruff claim (E2b, ruling R12), are dandruff symptoms, not sensitive or dry-scalp positioning, and do not by themselves make the product `targeted`;
 - a product-name word that does not name the scalp ("sensitiv", "beruhigend", "sanft") is not explicit positioning on its own; it counts only together with a scalp-naming claim unit from a manufacturer or pack source, and is then graded by that source;
-- protective or "does no harm" wording ("trocknet die Kopfhaut nicht aus", "ohne zu reizen", "hautverträglich", "dermatologisch getestet", "pH-hautneutral") is mildness, not targeting.
+- protective or "does no harm" wording ("trocknet die Kopfhaut nicht aus", "ohne zu reizen", "hautverträglich", "dermatologisch getestet", "pH-hautneutral", "schont empfindliche Kopfhaut", "auch für empfindliche Kopfhaut geeignet") is mildness, not targeting (E2a);
+- ingredient-reputation sentences ("Aloe Vera ist bekannt dafür, die Kopfhaut zu beruhigen", "X gilt als …", "X wird traditionell … verwendet") describe an ingredient, not the product, and are not positioning (E2a).
 
-`targeted` additionally requires the credible supportive architecture above. A `targeted` product still has to pass the S-SENSITIVE or S-DRY formula gate separately; `targeted` alone never creates a target.
+`targeted` additionally requires the credible supportive architecture (CSA) above. A `targeted` product still has to pass the S-SENSITIVE or S-DRY formula gate separately; `targeted` alone never creates a target.
 
 ## 11. Dandruff support
 
@@ -640,6 +666,7 @@ Why conservatism matters (informational, matcher behavior after the R2 PR): a pr
 
 - *Product name* is the full exact product name as frozen, including range or line words that are printed as part of it. A name word still has to meet E2 (name the scalp) to count as a scalp claim.
 - When the frozen packet labels sources only as `manufacturer` or `retailer` and does not separate pack front from back, a manufacturer-source claim is `moderate` and only the product name is `high`.
+- *Foreign-language manufacturer page (post-round 2).* A manufacturer page in another language or for another market (for example an English or UK page) is not the exact German manufacturer page, even when it shows the same product. Its claims are graded `low`, like retailer copy, unless a German source for the exact product (pack, exact German manufacturer page, or German retailer copy for the exact GTIN) carries the same claim in German; the claim is then graded by that German source, and the foreign page is only corroboration. A foreign page never counts as a formula source for the German product unless Section 2 allows it.
 - The same grading applies to every other claim use in this standard (CL-SRC, Section 3.2).
 
 **E2 Scalp-claim lexicon.** A scalp claim must name the scalp (or roots/ansatz for oily). Hair-length claims never count as scalp claims. Lexicon terms match case-insensitively on their stems, including inflections and compounds ("juckende Kopfhaut", "Kopfhautjucken", "fettigen Ansatz", "Anti-Schuppen-Shampoo"). Terms outside the lexicon do not qualify; the record notes them.
@@ -657,8 +684,23 @@ Hair-loss, hair-growth or hair-density claims ("Haarausfall", "Wachstum", "Grow"
 
 - A claim unit qualifies when it states that the product is for, against or acts on the scalp state: "für/bei …", "gegen …", "beruhigt/lindert/reduziert/reguliert …", "beugt … vor", or the state as the product's named problem ("Anti-Schuppen", "Kopfhaut Sensitive").
 - Protective or "does no harm" wording never qualifies: "trocknet die Kopfhaut nicht aus", "ohne auszutrocknen", "ohne zu reizen", "hautverträglich", "dermatologisch getestet", "pH-hautneutral".
-- **Dandruff units absorb their symptoms.** A claim unit that names dandruff ("Schuppen") is a dandruff claim only. Itch, dryness, tightness, redness or oiliness words in the same unit ("gegen Schuppen und Juckreiz", "bei Schuppen, trockener und juckender Kopfhaut") never create a sensitive, dry or oily claim and never add a target. A second target needs its own claim unit that does not name dandruff.
+- *Sparing and tolerance wording (post-round 2).* A unit that says the product spares or tolerates a scalp state, rather than acting for or on it, is protective wording even when it names the state: "schont (empfindliche) Kopfhaut", "schonend zur Kopfhaut", "auch für empfindliche Kopfhaut geeignet". This holds wherever the unit stands; under a heading about mildness or gentle cleansing ("Mild", "Sanfte Reinigung") it is never read as positioning.
+- *Ingredient-reputation sentences (post-round 2).* A unit whose subject is an ingredient and which reports its reputation, traditional use or general property ("Bio-Aloe Vera ist bekannt dafür, die Kopfhaut zu beruhigen", "Hafer gilt als beruhigend", "Kamille wird traditionell … verwendet", "X ist reich an …") describes the ingredient, not the product. It never qualifies. A unit qualifies only when the product itself, named or implied, is the one acting on the scalp state ("beruhigt die Kopfhaut", "Deine juckende Kopfhaut wird beruhigt").
+- **Dandruff units absorb their symptoms.** A claim unit that names dandruff ("Schuppen") is a dandruff claim only. Itch, dryness, tightness, redness or oiliness words in the same unit ("gegen Schuppen und Juckreiz", "bei Schuppen, trockener und juckender Kopfhaut") never create a sensitive, dry or oily claim and never add a target. A second target needs its own claim unit that does not name dandruff and is not bundled with a dandruff claim (E2b).
 - A unit that names two non-dandruff states (for example oily and sensitive) counts for both, subject to S-SECONDARY.
+
+**E2b Comfort wording bundled with a dandruff claim (ruling R12).** Bundling (layer 1 below) applies to every product with a qualifying E2 dandruff claim unit, whether or not its dandruff target passes S-DANDRUFF. The research-only combination (layer 2) additionally requires the `dandruff` target to be projected.
+
+- *Comfort wording* is itch, soothing, irritation, redness or tension wording about the scalp: "Juckreiz", "juckende Kopfhaut", "beruhigt", "beruhigende Pflege für die Kopfhaut", "lindert", "gereizte Kopfhaut", "Rötungen", "Irritationen", "Spannungsgefühl", and their inflections (E2). *Dryness wording* is E2 dry-scalp wording other than tension ("trockene Kopfhaut"). Oily wording is not covered by E2b.
+- *Bundled* means the comfort or dryness wording (a) sits in a dandruff claim unit (E2a), or (b) stands in its own unit next to a dandruff unit of the same source: the same paragraph, the sentence directly before or after, a headline and its subline or body, or the same bullet list. When a packet gives a source's claims as a plain list without layout, consecutive entries count as next to each other. The product name is its own unit and is next to no source text. When it is unclear whether a unit is bundled or separate, it is bundled (P0: bundled wording never creates a projected target).
+- *Separate* means a unit with sensitive- or dry-scalp wording that does not name dandruff and is not bundled, for example "Für empfindliche Kopfhaut" as its own headline or in its own bullet list or paragraph with no dandruff unit. A separate unit keeps the normal S-SECONDARY path unchanged.
+
+Bundled comfort wording is handled in two layers:
+
+1. **Projection (live rows).** `dandruff` stays the only target projected from the dandruff claim and its bundled wording. Bundled comfort or dryness wording never creates a projected `sensitive` or `dry` target, never counts as SC1 positioning and never adds a row (E2a, S-SECONDARY). Only a separate unit can add a projected secondary target.
+2. **Research-only combination.** When the bundled comfort wording comes from a source graded `moderate` or `high` (CL-SRC) **and** the formula passes the S-SENSITIVE formula gate, the research record carries `researchCombinationTargets: ["sensitive"]` and the informational note `suits_dandruff_with_irritated_scalp`. Because bundled wording is by definition not SC1 positioning, the gate's `scalpComfortTarget: targeted` clause is read as its formula half, CSA (Section 10); the gate is therefore CSA **and** at least one prominent comfort route (E4). With `cleansingStrength: strong` the field is still recorded and the note names `strong_cleansing` (no review flag, because nothing is projected). If the gate fails, or the wording is graded `low`, `researchCombinationTargets` is `[]` and only the note `dandruff_bundled_comfort_wording` is recorded, quoting the wording and naming the failed clause (and any `unlisted_route_candidate:<INCI name>`).
+
+R12 rules only the dandruff + irritated (`sensitive`) combination. Bundled tension wording ("Spannungsgefühl") is comfort wording and feeds that same combination. Bundled dryness wording is absorbed (no target, layer 1) but records no combination on its own; there is no `dry` combination value. `researchCombinationTargets` never feeds T6, S-FOCUS, row assembly, `required_protocol_roles`, N1 or `review_live_value_differs`. It exists so that a later profile feature that can express dandruff plus irritated scalp together (R12 follow-up, a separate project) can prefer such products.
 
 **E3 Prominent ingredient (INCI-order proxy).** An ingredient is *prominent* when it is listed before `Parfum`/`Fragrance`; if the formula declares no fragrance, before the first of `Sodium Benzoate`, `Potassium Sorbate`, `Phenoxyethanol`, `Benzyl Alcohol`, `Methylisothiazolinone`, `Methylchloroisothiazolinone`, `Sodium Salicylate`; if none of these is present, it is not prominent. This is a repeatability convention for projection gates and for the cleansing (C4) and conditioning (C2) position conventions only. It is not a concentration claim and never a weight rule (Section 6 forbids position windows).
 
@@ -737,7 +779,7 @@ Each target has a positioning gate (E1, E2) and a formula gate. Both must pass. 
 
 The scalp match is exact (ruling R4): the thickness relaxation in T6 never relaxes a gate in this section, and a target whose gate cannot be decided with certainty is not emitted (P0).
 
-**S-DANDRUFF.** Positioning: E2 dandruff claim. Formula: `dandruffSupport: supported`. Both required. If `dandruffSupport: supported` without a dandruff claim, emit no dandruff target and record the informational warning `active_without_dandruff_positioning` (not a review flag; already conservative).
+**S-DANDRUFF.** Positioning: E2 dandruff claim. Formula: `dandruffSupport: supported`. Both required. If `dandruffSupport: supported` without a dandruff claim, emit no dandruff target and record the informational warning `active_without_dandruff_positioning` (not a review flag; already conservative). Itch, soothing, tension or dryness wording in or next to the dandruff claim is handled by E2a/E2b (ruling R12): it never adds a projected target and may only add the research-only `researchCombinationTargets`.
 
 **S-SENSITIVE.** Positioning: E2 sensitive claim. Formula: `scalpComfortTarget: targeted` **and** at least one prominent comfort route (E4). If `cleansingStrength: strong`, emit the target with `review_strong_cleansing_comfort_route`.
 
@@ -760,7 +802,7 @@ The scalp match is exact (ruling R4): the thickness relaxation in T6 never relax
 
 **S-PRIMARY (precedence).** If several specialist targets pass, the primary is the one named in the exact product name; otherwise the first in this order: `dandruff`, `sensitive`, `dry`, `oily`.
 
-**S-SECONDARY.** At most one secondary target. It requires its own distinct E2 claim unit (never a symptom inside a dandruff unit, E2a) and its own formula gate pass. When more than one candidate qualifies for secondary, the precedence of S-PRIMARY decides (product name first, then `dandruff`, `sensitive`, `dry`, `oily`). Never permitted:
+**S-SECONDARY.** At most one secondary target. It requires its own distinct E2 claim unit (never a symptom inside a dandruff unit, E2a, and never comfort or dryness wording bundled with a dandruff claim, E2b) and its own formula gate pass. For a dandruff product (ruling R12): bundled comfort wording is handled by E2b only (research-only `researchCombinationTargets`, never a projected secondary); a separate, explicit sensitive- or dry-scalp unit (E2b) follows this rule unchanged and can project a secondary `sensitive` or `dry` target when its own gates pass (open question 6 asks whether that should stay so). When more than one candidate qualifies for secondary, the precedence of S-PRIMARY decides (product name first, then `dandruff`, `sensitive`, `dry`, `oily`). Never permitted:
 
 - `ordinary` as secondary (a scalp-specialist product is not also projected to balanced scalp);
 - the pair `oily` + `dry` (contradictory scalp states);
@@ -829,6 +871,8 @@ Rows are always this full cross-product. A product cannot hold a target for one 
 - `weight` confidence = `weightPotential` confidence.
 - Scalp target confidence = the lowest of: the positioning evidence confidence (E1), and the confidence of every direct property its formula gate used.
 - `ordinary` target confidence (round 2): reached by S-ORDINARY way 1 (no qualifying claim) → `high` when the packet contains at least one manufacturer or pack source, `moderate` when it has retailer copy only; reached by ways 2–4 → `moderate`.
+- When several S-ORDINARY ways apply at once (post-round 2), the rationale names every way that applies and the confidence is the lowest of their confidences. Example: way 1 with a manufacturer source (`high`) together with way 3 (`moderate`) → `moderate`.
+- `researchCombinationTargets` confidence (R12) = the lowest of the projected `dandruff` target confidence and the E1 grade of the bundled comfort wording. It is not a projected field: a `low` value never returns `needs_research`; the field is then `[]` and only the note `dandruff_bundled_comfort_wording` is recorded (E2b).
 - Observed intensity confidence = `cleansingStrength` confidence (plus `usageRole` and focus confidence for `clarifying`).
 - `deepCleanserListing` confidence = the lowest of `cleansingStrength`, `focusPrimary` and `usageRole` confidence and the D1 positioning evidence confidence (E1).
 - Any projected field with `low` confidence returns `needs_research`.
@@ -854,6 +898,8 @@ Informational notes are recorded in `informationalNotes`. They do not block, bec
 | Code | Raised by |
 | --- | --- |
 | `active_without_dandruff_positioning` | S-DANDRUFF |
+| `suits_dandruff_with_irritated_scalp` | E2b (R12): bundled comfort wording plus a passed S-SENSITIVE formula gate; accompanies `researchCombinationTargets: ["sensitive"]`; detail names `strong_cleansing` when `cleansingStrength` is `strong`. Research-only, never projected |
+| `dandruff_bundled_comfort_wording` | E2b (R12): bundled comfort wording whose S-SENSITIVE formula gate failed or whose source is graded `low`; quotes the wording and names the failed clause (and any `unlisted_route_candidate:<INCI name>`) |
 | `scalp_concern_floor_applied` | T6, naming each thickness lifted from `not_suited` to `acceptable` |
 | `deep_cleanser_listing` | D2. Lanes always record `needs_record`; the orchestrator resolves the existing deep-cleanser product ID after freeze |
 | `claimed_target_not_projected:<target>` | S-FAIL, when a claimed target fails but another specialist target passes |
@@ -872,6 +918,7 @@ These apply the rules to adjudicated v1.4 candidate values and calibration-v1 po
 | Guhl Hyaluron+ | M/M/M; `dandruffSupport: supported`; no scalp claim | fine acceptable, normal ideal, coarse acceptable | `moderate` | `ordinary`; note `active_without_dandruff_positioning` | `regular` | fine (acceptable), normal (ideal), coarse (acceptable) × `normal`/`balanced`/`regular` |
 | Hypothetical sensitive-scalp shampoo | M/M/H; "sensible Kopfhaut", `targeted`, prominent Panthenol | fine not_suited → acceptable (T6), normal acceptable, coarse ideal | `heavy` | `sensitive` | `regular` | fine (acceptable), normal (acceptable), coarse (ideal) × `irritationen`/`irritated`/`regular`; note `scalp_concern_floor_applied: fine` |
 | Hypothetical "Tiefenreinigung" shampoo | S/L/L; focus `clarifying`; `usageRole: occasional_reset`; D1 true; no scalp claim | fine ideal, normal ideal, coarse acceptable | `light` | `ordinary` | `clarifying` | fine, normal (ideal), coarse (acceptable) × `normal`/`balanced`/`clarifying` (amber in the everyday role through intensity); `deepCleanserListing: flagged` |
+| Hypothetical anti-dandruff shampoo with a soothing sentence (R12) | M/M/L; `dandruffSupport: supported`; manufacturer copy "Gegen Schuppen." followed directly by "Die juckende Kopfhaut wird beruhigt."; prominent Panthenol; CSA met | fine ideal, normal ideal, coarse acceptable | `light` | `dandruff` only (the itch sentence is bundled, E2b) | `regular` | fine, normal (ideal), coarse (acceptable) × `schuppen`/`dandruff`/`regular`; research-only `researchCombinationTargets: ["sensitive"]`, note `suits_dandruff_with_irritated_scalp`. Without a prominent comfort route: `[]` and note `dandruff_bundled_comfort_wording` |
 
 ### 13.11 No-gap invariant (ruling R5)
 
@@ -907,6 +954,7 @@ For new batches, freeze selection and formulas before labels. Use two independen
 - lane B receives the same final evidence and policy but not lane A's answers;
 - compare seven judgment properties; recompute `dandruffSupport` mechanically;
 - compare the projection judgments: the three thickness fits (three tiers, after T6), the primary scalp target and the secondary scalp target (or its absence); recompute `weight`, observed intensity, `deepCleanserListing` and rows mechanically from each lane's own properties;
+- compare `researchCombinationTargets` (R12) as a research judgment. A disagreement on it is reported and counts toward raw agreement, but its direction is never `toward_recommending`, because it creates no row, target or live value;
 - recompute each lane's review flags mechanically from its own properties, confidences and neighbors (N-ALT) and compare the flag sets as a diagnostic; a flag difference that traces back to a confidence difference is reported with that property;
 - resolve catalog-dependent fields (the deep-cleanser record id, `review_live_value_differs`) only after both lanes are frozen; lanes never see catalog ids;
 - preserve every disagreement before adjudication, with the rule ID each lane applied.
@@ -973,5 +1021,6 @@ Applies when re-reading a v1.4 record whose `focusPrimary` or `focusSecondary` i
 | `docs/product-intake-shampoo-production-light.md`, `src/lib/shampoo/production-light-adapter.ts` | 13.1 vocabulary, I1, D2, S-DANDRUFF positioning requirement, dry/sensitive `targeted` requirement, row assembly |
 | `src/lib/shampoo/constants.ts`, `src/lib/product-intake/category-validators.ts`, shampoo migrations | 13.1 bucket/route/intensity table |
 | `data/research/shampoo-production-light-v1/calibration-v1/`, pilot `adapter-input.json` files | Evidence that thickness/scalp judgments were previously unwritten and inconsistent; T1 follows the conservative side where they split |
-| `plans/shampoo-v16/rulings.md` (R2–R6, 2026-10-07) | Three-tier T1/T5, W-LIVE, T7 (R2/R3); T6 and P0 by target class (R4); N1 and register entry X1 (R5); I1 revision, D2 dual listing, D3 (R6) |
+| `plans/shampoo-v16/rulings.md` (R2–R6, 2026-10-07; R11–R12, 2026-10-09) | Three-tier T1/T5, W-LIVE, T7 (R2/R3); T6 and P0 by target class (R4); N1 and register entry X1 (R5); I1 revision, D2 dual listing, D3 (R6); C2 humectant element (R11); E2b and `researchCombinationTargets` (R12) |
+| `plans/shampoo-v16/calibration/round-2/round-2-report.md` and the round-2 lane `uncertainties` | Post-round-2 clarifications: C3a, C2 humectant element, CSA, SC1/E2a sparing and reputation wording, W1 set without amodimethicone, W-RICH limited reset, 6.4 acrylate thickeners, N-ALT for `focusSecondary`, ID-2 split entries, E1 foreign-language pages, 13.8 mixed S-ORDINARY ways, F7 non-scalp name words |
 | `src/lib/personal-plan/products/authority/categories/conditioner.ts`, `axis-fit.ts`, `shampoo.ts`, `src/lib/mobile/result-presentation.ts` | Live green/amber/red pattern and dandruff-role ranking that 13.1 and T7 describe (read-only reference) |

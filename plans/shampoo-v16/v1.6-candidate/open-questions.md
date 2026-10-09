@@ -10,9 +10,16 @@ The five earlier questions are all decided (rulings R2–R6, 2026-10-07, in `../
 | Heavy volume shampoo as the oily-scalp pick (Monday) | R5: temporary named exception + no-gap rule | S-OILY, 13.11 N1, 13.12 X1 |
 | "Tiefenreinigung" products | R6: stay regular shampoos (`clarifying`) and also get a deep-cleanser entry | I1, D2, D3 |
 
+Two questions from calibration round 2 are also decided (rulings of 2026-10-09) and written into the standard:
+
+| Question | Ruling | Where in the standard |
+| --- | --- | --- |
+| Do trace glycols or aloe juice count as the "humectants" in the high-conditioning rule? | R11: no; a deliberate humectant such as glycerin or panthenol is needed | C2 (humectant element) |
+| Dandruff shampoo with soothing words next to its dandruff claim (e.g. "Deine juckende Kopfhaut wird beruhigt") | R12 option A: shown for dandruff only; the research record notes that it also suits an irritated scalp, for a later profile feature | E2b, `researchCombinationTargets`, S-SECONDARY |
+
 Questions 1 and 2 remain from the R2–R6 round. Neither blocks the calibration lanes, because both concern how the live app shows a result, not how a product is classified. Both must be settled before the R2 PR (new `weight` column + shampoo rule) ships.
 
-Questions 3–5 are new (2026-10-09, after calibration round 1). Each came up while closing a round-1 ambiguity and would change what users see, so it is left for you. Until you rule, the standard applies the cautious answer described under each question, so round 2 can run without them.
+Questions 3–5 are from 2026-10-09, after calibration round 1. Question 6 is new after calibration round 2. Each came up while closing a round-1 ambiguity and would change what users see, so it is left for you. Until you rule, the standard applies the cautious answer described under each question, so round 2 can run without them.
 
 ## 1. How does the app turn "weight" into green or amber?
 
@@ -57,6 +64,8 @@ A sensitive- or dry-scalp product only gets that scalp target when one of a shor
 
 **Recommendation:** keep the lists closed for round 2. Afterwards, collect every ingredient the flags name and decide on additions in one batch. An addition then applies to every product, never to one product.
 
+Since round 2 the same closed-list approach also covers two related checks: the humectants that count for the high-conditioning rule (C2, ruling R11) and the "credible supportive architecture" a sensitive-scalp product needs (CSA). A batch decision on additions should cover all three lists at once.
+
 ## 5. Strong shampoo for oily scalp: green or amber for oily-scalp users?
 
 Round 1 showed that oily-scalp positioning could be read as two different focus values. The standard now settles it the way its own definition already said: oily scalp belongs to the "clarifying" focus. One consequence follows from an existing rule. A strong-cleansing shampoo with oily-scalp wording is treated as a reset-type product, so its cleansing level is recorded as "clarifying". The oily-scalp profile expects "regular", so the product shows amber for oily-scalp users.
@@ -67,3 +76,12 @@ Round 1 showed that oily-scalp positioning could be read as two different focus 
 
 **Recommendation:** B. A strong cleanser is what the oily-scalp profile is for. Showing those products amber to exactly those users looks like a mistake to them. B shows more products as green, so it needs your ruling; until then A applies.
 
+## 6. Anti-dandruff shampoo with its own "für empfindliche Kopfhaut" claim: show it to people with only an irritated scalp?
+
+R12 keeps an anti-dandruff shampoo away from people who only have an irritated scalp when the soothing words sit next to its dandruff claim. An older rule still applies when the soothing claim stands on its own: if the shampoo's own page has a separate section such as "Für empfindliche Kopfhaut" and the formula has a soothing ingredient high in the list (panthenol, allantoin and similar), the product also gets irritated-scalp rows. People with only an irritated scalp then see an anti-dandruff shampoo. The same holds for a separate dry-scalp claim and dry-scalp users.
+
+- **Example:** an "Anti-Schuppen" shampoo whose maker's page says "Gegen Schuppen" in the headline and, in a separate bullet list further down, "Für empfindliche Kopfhaut"; panthenol is listed before the perfume. Now: shown to dandruff users and, as a second scalp target, to irritated-scalp users.
+- **Option A (current, unchanged by R12):** keep it. Irritated-scalp users get more choices.
+- **Option B:** treat it like R12. Dandruff rows only; the irritated-scalp fit is kept in the research record for the later profile feature.
+
+**Recommendation:** B. R12's reason, that someone with only an irritated scalp should not get an anti-dandruff active, applies whether the soothing claim is next to the dandruff claim or further down the page; that is a layout difference, not a product difference. B removes rows, so the no-gap check (N1) must confirm the irritated-scalp cells stay filled before any apply (baseline 2026-10-05: fine 5, normal 3, coarse 2). Until you rule, A applies, because R12 ruled only the next-to-the-claim case.
