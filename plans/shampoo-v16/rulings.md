@@ -83,3 +83,10 @@ Nick approved locking after round 1 (97.4%), round 2 (97.1%) and the unseen chec
 ## R15 — Anti-dandruff is the path; sensitive is a sub-attribute (2026-10-10)
 
 Nick: anti-dandruff shampoos with their own sensitive-scalp claim (e.g. "Anti Schuppen … Sensitive") are dandruff products first — "it's more like a path: they need to be anti-dandruff, and then within anti-dandruff they can be for sensitive scalp or not." So any product whose primary target is `dandruff` projects dandruff rows only, whether its sensitive wording is bundled (R12) or a separate claim. Sensitive suitability is recorded in research (`researchCombinationTargets: ["sensitive"]` when the S-SENSITIVE formula gate passes) for the dandruff + irritated profile follow-up (`handover_scalp_combination.md`). An irritated-only user is never sent to an anti-dandruff active. N1 coverage of the irritated cells is checked before any apply.
+
+## R16 — Pre-lock rulings (2026-10-10)
+
+1. **Path dependence also for dry scalp:** a product whose primary target is `dandruff` never projects a secondary `dry` (or `sensitive`) target; a separate dry-scalp unit on a dandruff product is research-only (`researchCombinationTargets` may carry `dry` when the S-DRY formula gate passes). Within anti-dandruff, a product can additionally be for sensitive or dry scalp — never outside it.
+2. **Strong oily-scalp shampoo = green:** only explicit deep cleansers (D1 true: "Tiefenreinigung", "Clarifying", "1× pro Woche" …) record `cleansing_intensity = clarifying`. A strong-cleansing oily-scalp shampoo without D1 records `regular` and shows green for oily scalp (open question 5, option B).
+3. **Deep-cleanser entry needs a strong formula:** a "Tiefenreinigung" name on an ordinary-strength formula keeps only its regular-shampoo entry (normal strength); no deep-cleanser entry; the per-product review flag becomes an informational note (open question 3).
+4. **Closed ingredient lists stay closed for now:** E4 comfort, C2 humectant and CSA lists unchanged; flagged candidate ingredients are collected during the Track A/B research and additions are decided in one batch (open question 4, deferred).
