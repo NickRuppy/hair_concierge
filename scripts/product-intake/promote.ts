@@ -31,7 +31,10 @@ type ProductRow = {
 type ApprovedSubmissionRow = {
   id: string
   approved_product_id: string | null
+  researched_payload?: { final?: { product?: { market_segment?: unknown } | null } | null } | null
 }
+
+export type PromotionMarketSegment = "drugstore" | "professional"
 
 export class PromotionGateError extends Error {
   override name = "PromotionGateError"
@@ -54,6 +57,7 @@ type PromotionPayload = {
 
 type PromotionResult = PromotionPayload & {
   approved_submission_id?: string
+  market_segment?: PromotionMarketSegment
   missing_spec_tables?: RequiredSpecTable[]
   next_recommendation_state?: boolean
   promoted_at?: string
@@ -220,13 +224,31 @@ async function missingSpecTables(
   return results.filter((table): table is RequiredSpecTable => table !== null)
 }
 
+/**
+ * Promotion copies the market segment from the reviewed package stored on the approved
+ * submission (`researched_payload.final`) when the package carries one. The classification only
+ * becomes required with the later approved backfill (enforced then by a DB CHECK), so a missing
+ * value never refuses promotion; a present but unknown value is malformed and does.
+ */
+export function reviewedMarketSegment(
+  submission: ApprovedSubmissionRow,
+  productId: string,
+): PromotionMarketSegment | undefined {
+  const value = submission.researched_payload?.final?.product?.market_segment
+  if (value === "drugstore" || value === "professional") return value
+  if (value === undefined || value === null) return undefined
+  throw new PromotionGateError(
+    `Product ${productId} promotion found an unknown market_segment in the reviewed package (expected drugstore or professional)`,
+  )
+}
+
 async function loadApprovedSubmissionForProduct(
   supabase: SupabaseClient,
   productId: string,
 ): Promise<ApprovedSubmissionRow> {
   const { data, error } = await supabase
     .from("product_submissions")
-    .select("id,approved_product_id")
+    .select("id,approved_product_id,researched_payload")
     .eq("approved_product_id", productId)
     .eq("status", "approved")
     .limit(1)
@@ -279,6 +301,7 @@ export async function promoteProductById(params: {
   }
 
   const approvedSubmission = await loadApprovedSubmissionForProduct(supabase, product.id)
+  const marketSegment = reviewedMarketSegment(approvedSubmission, product.id)
   const missingTables = await missingSpecTables(supabase, product.id, requiredSpecTables)
   if (missingTables.length > 0) {
     printJson({
@@ -296,6 +319,7 @@ export async function promoteProductById(params: {
     const result = {
       ...payload,
       approved_submission_id: approvedSubmission.id,
+      ...(marketSegment ? { market_segment: marketSegment } : {}),
       required_spec_tables: requiredSpecTables,
     }
     printJson(result)
@@ -308,6 +332,7 @@ export async function promoteProductById(params: {
     .from("products")
     .update({
       is_chaarlie_recommended: true,
+      ...(marketSegment ? { market_segment: marketSegment } : {}),
       updated_at: updatedAt,
     })
     .eq("id", product.id)
@@ -333,6 +358,7 @@ export async function promoteProductById(params: {
     promoted_at: (data as { updated_at?: string | null }).updated_at ?? updatedAt,
     next_recommendation_state: true,
     approved_submission_id: approvedSubmission.id,
+    ...(marketSegment ? { market_segment: marketSegment } : {}),
     required_spec_tables: requiredSpecTables,
   }
   printJson(result)

@@ -11,6 +11,7 @@ import type { Stage1ProductExampleRolePreview } from "@/lib/personal-plan/produc
 import {
   computeStage1ProductExamplePreviews,
   createSupabaseStage1ProductExamplePreviewCandidateLoader,
+  type Stage1ProductExamplePreviewBudget,
   type Stage1ProductExamplePreviewCandidateLoader,
 } from "@/lib/personal-plan/product-previews"
 import type { Stage3CategoryProductFacts } from "@/lib/personal-plan/products/authority/contracts"
@@ -297,6 +298,12 @@ export async function loadDiscoveryIdealRoutine(
      * computation, so every legacy intake keeps its steps and its fingerprint.
      */
     routineOverride?: PlanRoutineContext | null
+    /**
+     * The participant's saved shopping budget (flag on, one was saved): the previews are
+     * allocated under it exactly like her own Stage-1 previews. Absent or null = no budget,
+     * the price-neutral previews as before. Never uncapped-by-default.
+     */
+    budget?: Stage1ProductExamplePreviewBudget | null
   } = {},
 ): Promise<DiscoveryIdealRoutineResult> {
   let context
@@ -323,6 +330,7 @@ export async function loadDiscoveryIdealRoutine(
     ...previewInput,
     snapshot,
     loadCandidates: loaded.loader,
+    ...(options.budget ? { budget: options.budget } : {}),
   })
 
   return {

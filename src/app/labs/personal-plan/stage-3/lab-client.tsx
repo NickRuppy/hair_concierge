@@ -14,6 +14,7 @@ import {
   createFixtureInventoryOnlyConditionerEntryContext,
   createFixtureOwnedSearchOverflowCatalog,
   createFixtureUncoveredConditionerEntryContext,
+  fixtureStage3BudgetScenario,
 } from "@/lib/personal-plan/products/fixture-scenarios"
 
 export function PersonalPlanStage3LabClient({ scenario }: { scenario?: string }) {
@@ -21,6 +22,8 @@ export function PersonalPlanStage3LabClient({ scenario }: { scenario?: string })
     () => (scenario === "legacy-prefill" ? createLegacyPrefillFixture() : undefined),
     [scenario],
   )
+  // Budget scenarios reuse the uncovered-Conditioner journey with an in-memory budget gate.
+  const budgetScenario = useMemo(() => fixtureStage3BudgetScenario(scenario), [scenario])
   // Labs deliberately owns an in-memory gateway. The production flow defaults
   // to the HTTP/server-authoritative gateway when no adapter is injected.
   const gateway = useMemo(
@@ -34,8 +37,9 @@ export function PersonalPlanStage3LabClient({ scenario }: { scenario?: string })
           scenario === FIXTURE_STAGE3_SCENARIOS.ownedSearchOverflow
             ? createFixtureOwnedSearchOverflowCatalog()
             : undefined,
+        budget: budgetScenario,
       }),
-    [scenario, legacyBootstrap],
+    [scenario, legacyBootstrap, budgetScenario],
   )
   const entryContext = useMemo(
     () =>
@@ -43,10 +47,10 @@ export function PersonalPlanStage3LabClient({ scenario }: { scenario?: string })
         ? createFixtureDeferredHeatProtectionEntryContext()
         : scenario === FIXTURE_STAGE3_SCENARIOS.inventoryOnlyConditioner
           ? createFixtureInventoryOnlyConditionerEntryContext()
-          : scenario === FIXTURE_STAGE3_SCENARIOS.uncoveredConditioner
+          : scenario === FIXTURE_STAGE3_SCENARIOS.uncoveredConditioner || budgetScenario
             ? createFixtureUncoveredConditionerEntryContext()
             : undefined,
-    [scenario],
+    [scenario, budgetScenario],
   )
 
   return (
@@ -63,7 +67,9 @@ export function PersonalPlanStage3LabClient({ scenario }: { scenario?: string })
               ? "fixture-draft-uncovered-conditioner"
               : scenario === FIXTURE_STAGE3_SCENARIOS.ownedSearchOverflow
                 ? "fixture-draft-owned-search-overflow"
-                : undefined
+                : budgetScenario
+                  ? `fixture-draft-${scenario}`
+                  : undefined
       }
       gateway={gateway}
       searchDebounceMs={0}

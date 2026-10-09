@@ -36,3 +36,15 @@ test("chat eval fixtures keep representative multi-turn runtime prompts", () => 
     ]),
   )
 })
+
+test("chat eval fixtures include a strict 5 euro saved-budget shampoo scenario", () => {
+  const scenario = SCENARIOS.find((item) => item.id === "shampoo-saved-budget-strict")
+
+  assert.ok(scenario)
+  assert.deepEqual(scenario.hair_profile.shopping_preferences, {
+    budget: { kind: "capped", limitEur: 5, allowExceptions: false },
+  })
+  assert.equal(scenario.turns.length, 1)
+  assert.equal(scenario.turns[0]?.metadata?.product_count_min, 1)
+  assert.match(scenario.turns[0]?.judge?.expected_behavior ?? "", /5 EUR/)
+})

@@ -4,6 +4,7 @@ import { STAGE1_PRODUCT_EXAMPLE_PREVIEW_CACHE_CONTROL } from "@/lib/personal-pla
 import {
   computeStage1ProductExamplePreviews,
   createSupabaseStage1ProductExamplePreviewCandidateLoader,
+  type Stage1ProductExamplePreviewBudget,
   type Stage1ProductExamplePreviewCandidateLoader,
 } from "@/lib/personal-plan/product-previews"
 import {
@@ -16,6 +17,11 @@ import {
   type Stage1PersistenceDependencies,
 } from "@/lib/personal-plan/persistence/stage1-service"
 import { createStage1SupabaseDependencies } from "@/lib/personal-plan/persistence/stage1-supabase"
+import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/products/stage3-persistence-supabase"
+import {
+  isProductMarketSegmentDisplayEnabled,
+  isShoppingBudgetEnabled,
+} from "@/lib/personal-plan/release"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
@@ -27,6 +33,12 @@ export type Stage1ProductExamplePreviewRouteDeps = {
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
   persistence: Stage1PersistenceDependencies
   loadCandidates: Stage1ProductExamplePreviewCandidateLoader
+  /**
+   * The saved budget the proposal is previewed under, or null when none applies. Wired only
+   * while the shopping-budget gate is on; omitted means price-neutral previews, as before.
+   */
+  loadShoppingBudget?: (userId: string) => Promise<Stage1ProductExamplePreviewBudget | null>
+  marketSegmentDisplayEnabled?: () => boolean
 }
 
 export async function GET() {
@@ -41,6 +53,24 @@ export async function GET() {
       loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
       persistence: createStage1SupabaseDependencies(admin as never),
       loadCandidates: createSupabaseStage1ProductExamplePreviewCandidateLoader(admin),
+      ...(isShoppingBudgetEnabled()
+        ? {
+            loadShoppingBudget: async (userId: string) => {
+              const shopping =
+                await createSupabaseStage3ProductionPersistence(admin).loadShoppingContext(userId)
+              return shopping.budget
+                ? {
+                    budget: shopping.budget,
+                    statedConcerns: {
+                      currentConcerns: shopping.currentConcerns,
+                      primaryConcern: shopping.primaryConcern,
+                    },
+                  }
+                : null
+            },
+          }
+        : {}),
+      marketSegmentDisplayEnabled: isProductMarketSegmentDisplayEnabled,
     }),
   )
 }
@@ -73,6 +103,10 @@ export async function handleStage1ProductExamplePreviews(
             ? { status: 503, body: { error: "temporarily_unavailable" } }
             : { status: 404, body: { error: "personal_plan_not_available" } }
     }
+    // An unreadable budget fails the request (503) rather than previewing price-neutral
+    // products that direct acceptance — which does read the budget — would then refuse.
+    const budget = (await deps.loadShoppingBudget?.(user.id)) ?? null
+    const marketSegmentDisplayEnabled = deps.marketSegmentDisplayEnabled?.() === true
     return {
       status: 200,
       body: await computeStage1ProductExamplePreviews({
@@ -80,6 +114,8 @@ export async function handleStage1ProductExamplePreviews(
         sourceNeedVersionId: result.needVersionId,
         snapshot: result.outputSnapshot as unknown as InitialNeedPlanSnapshot,
         loadCandidates: deps.loadCandidates,
+        ...(budget ? { budget } : {}),
+        ...(marketSegmentDisplayEnabled ? { marketSegmentDisplayEnabled } : {}),
       }),
     }
   } catch {

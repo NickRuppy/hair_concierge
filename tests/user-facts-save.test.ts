@@ -290,3 +290,52 @@ test("saveUserFacts forwards a null-clearing patch unchanged after validation", 
 
   assert.deepEqual(db.rpcCalls[0].args.p_patch, { concernRecurrence: null })
 })
+
+test("saveUserFacts sends the shopping_preferences domain through the RPC with the validated budget patch", async () => {
+  const db = new FakeSupabase({
+    data: { status: "ok", revision: 5, changed: true, diagnosticsHash: null },
+    error: null,
+  })
+  const provenance = {
+    source: { kind: "shopping_preferences_editor" as const },
+    schemaVersion: 1,
+    at: "2026-10-09T10:00:00.000Z",
+    fields: { budget: "user" as const },
+  }
+  const result = await saveUserFacts(db as never, {
+    userId: "user-1",
+    domain: "shopping_preferences",
+    patch: { budget: { kind: "capped", limitEur: 15, allowExceptions: true } },
+    provenance,
+    expectedRevision: 4,
+  })
+  assert.equal(result.status, "ok")
+  assert.equal(db.rpcCalls.length, 1)
+  assert.equal(db.rpcCalls[0]!.args.p_domain, "shopping_preferences")
+  assert.deepEqual(db.rpcCalls[0]!.args.p_patch, {
+    budget: { kind: "capped", limitEur: 15, allowExceptions: true },
+  })
+  assert.deepEqual(db.rpcCalls[0]!.args.p_provenance, provenance)
+  assert.equal(db.rpcCalls[0]!.args.p_expected_revision, 4)
+})
+
+test("saveUserFacts rejects an invalid shopping_preferences patch without calling the RPC", async () => {
+  for (const patch of [
+    { budget: { kind: "capped", limitEur: 10, allowExceptions: true } },
+    { budget: { kind: "uncapped", limitEur: 15 } },
+    { marketSegment: "professional" },
+  ]) {
+    const db = new FakeSupabase({ data: null, error: null })
+    await assert.rejects(
+      () =>
+        saveUserFacts(db as never, {
+          userId: "user-1",
+          domain: "shopping_preferences",
+          patch: patch as never,
+          provenance: VALID_PROVENANCE,
+        }),
+      UserFactsValidationError,
+    )
+    assert.equal(db.rpcCalls.length, 0)
+  }
+})

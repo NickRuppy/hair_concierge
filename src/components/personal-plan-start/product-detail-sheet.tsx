@@ -4,7 +4,7 @@ import Image from "next/image"
 
 import { BottomSheet, BottomSheetContent, BottomSheetTitle } from "@/components/ui/bottom-sheet"
 import { Button } from "@/components/ui/button"
-import type { NeedCardViewModel } from "./plan-start-cards"
+import { needCardProductBadges, type NeedCardViewModel } from "./plan-start-cards"
 
 /** Shown once a concrete product leads the card: the refinement can still improve it. */
 export const PRODUCT_REFINEMENT_HINT =
@@ -37,6 +37,7 @@ export function ProductDetailSheet({
  */
 export function ProductDetailSheetBody({ card }: { card: NeedCardViewModel }) {
   const product = card.product ?? null
+  const productBadges = needCardProductBadges(product)
 
   return (
     <div className="pb-2">
@@ -69,6 +70,19 @@ export function ProductDetailSheetBody({ card }: { card: NeedCardViewModel }) {
             ) : null}
             {product.netContentLabel ? (
               <span className="text-[#6a6560]">{product.netContentLabel}</span>
+            ) : null}
+            {productBadges.length ? (
+              <span className="flex flex-wrap gap-1" data-plan-start-detail-badges>
+                {productBadges.map((badge) => (
+                  <span
+                    key={badge}
+                    data-plan-start-detail-badge={badge}
+                    className="rounded-full bg-[rgba(107,80,160,0.12)] px-2 py-0.5 text-[10px] font-bold text-[#5b4690]"
+                  >
+                    {badge}
+                  </span>
+                ))}
+              </span>
             ) : null}
             {product.availabilityLabel ? (
               <span

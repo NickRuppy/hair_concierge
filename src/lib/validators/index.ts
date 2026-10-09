@@ -257,6 +257,9 @@ export const productSchema = z
     suitable_concerns: z.array(z.string()).default([]),
     is_active: z.boolean().default(true),
     lifecycle_status: z.enum(["active", "discontinued"]).default("active"),
+    // Optional until the approved classification backfill makes it required (then enforced by
+    // a DB CHECK); validated against the enum whenever it is sent.
+    market_segment: z.enum(["drugstore", "professional"]).nullable().optional(),
     sort_order: z.number().int().default(0),
     conditioner_specs: conditionerSpecsSchema.nullable().optional(),
     leave_in_specs: leaveInSpecsSchema.nullable().optional(),

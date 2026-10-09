@@ -79,6 +79,11 @@ export type AcceptIdealPlanOutcome =
   | { kind: "refinement_in_progress" }
   | { kind: "plan_already_accepted"; href: "/routine" }
   /**
+   * The shopping-budget gate is on and no budget is saved. Nothing was written; the budget
+   * question comes first, then a fresh explicit accept — never an automatic retry.
+   */
+  | { kind: "budget_required" }
+  /**
    * The plan cannot be accepted as it stands (`acceptance_not_ready`,
    * `conflict`, `stage_not_ready`). Re-posting the same payload can never
    * change that, so the refinement — which also ends in an accepted plan — is
@@ -112,6 +117,7 @@ export function interpretAcceptIdealPlanResponse(
     if (error === "plan_already_accepted") {
       return { kind: "plan_already_accepted", href: "/routine" }
     }
+    if (error === "budget_required") return { kind: "budget_required" }
     if (typeof error === "string" && REFINEMENT_REQUIRED_ERRORS.has(error)) {
       return { kind: "refinement_required" }
     }
@@ -165,6 +171,8 @@ export type AcceptIdealPlanFlowEffect =
   | { kind: "open_routine"; href: string }
   /** A refinement is already running — resume it in place. */
   | { kind: "continue_refinement" }
+  /** Ask the budget question; the proposal is accepted only on a later, explicit tap. */
+  | { kind: "ask_budget" }
   /** Acceptance cannot converge; the refinement reaches the same destination. */
   | { kind: "open_refinement_route"; href: typeof PLAN_ACCEPT_REFINE_HREF }
   | { kind: "error" }
@@ -195,6 +203,8 @@ export async function runAcceptIdealPlanFlow(dependencies: {
       return { kind: "open_routine", href: outcome.href }
     }
     if (outcome.kind === "refinement_in_progress") return { kind: "continue_refinement" }
+    // Never retried: the accept must follow a budget the person chose and a proposal they saw.
+    if (outcome.kind === "budget_required") return { kind: "ask_budget" }
     // Nothing about a re-post can resolve these, so do not offer a retry that
     // cannot work — the refinement ends in an accepted plan too.
     if (outcome.kind === "refinement_required") return openRefinement

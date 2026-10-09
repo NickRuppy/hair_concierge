@@ -725,7 +725,7 @@ test("promotion command blocks missing specs and stale guarded updates", async (
   await withSilencedConsole(async () => {
     const missingSpecSupabase = fakePromotionSupabase({
       product,
-      approvedSubmissionRows: [{ id: "submission-1", approved_product_id: "product-1" }],
+      approvedSubmissionRows: [reviewedSubmission("drugstore")],
       specRowsByTable: { product_mask_specs: [] },
       updateResult: { id: "product-1", updated_at: "2026-06-17T11:00:00.000Z" },
     })
@@ -745,7 +745,7 @@ test("promotion command blocks missing specs and stale guarded updates", async (
 
     const staleSupabase = fakePromotionSupabase({
       product,
-      approvedSubmissionRows: [{ id: "submission-1", approved_product_id: "product-1" }],
+      approvedSubmissionRows: [reviewedSubmission("drugstore")],
       specRowsByTable: {
         product_mask_specs: [{ product_id: "product-1" }],
         product_application_protocols: [{ product_id: "product-1" }],
@@ -816,7 +816,7 @@ test("promotion command requires an approved intake submission and updates only 
 
     const successSupabase = fakePromotionSupabase({
       product,
-      approvedSubmissionRows: [{ id: "submission-1", approved_product_id: "product-1" }],
+      approvedSubmissionRows: [reviewedSubmission("drugstore")],
       specRowsByTable: {
         product_mask_specs: [{ product_id: "product-1" }],
         product_application_protocols: [{ product_id: "product-1" }],
@@ -836,10 +836,133 @@ test("promotion command requires an approved intake submission and updates only 
     assert.equal(result.promoted_at, "2026-06-17T11:00:00.000Z")
     assert.deepEqual(successSupabase.updateCalls[0]?.patch, {
       is_chaarlie_recommended: true,
+      market_segment: "drugstore",
       updated_at: successSupabase.updateCalls[0]?.patch.updated_at,
     })
+    assert.equal(result.market_segment, "drugstore")
   })
 })
+
+test("promotion copies the reviewed market segment when present and never requires it", async () => {
+  const product = {
+    id: "product-1",
+    name: "Olaplex No.3",
+    category: "Maske",
+    category_key: "mask",
+    origin: "user_submitted",
+    is_active: true,
+    lifecycle_status: "active",
+    is_chaarlie_recommended: false,
+    image_url:
+      "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/products/mask.webp",
+    suitable_thicknesses: ["fine", "normal"],
+    updated_at: "2026-06-17T10:00:00.000Z",
+  }
+  const specRowsByTable = {
+    product_mask_specs: [{ product_id: "product-1" }],
+    product_application_protocols: [{ product_id: "product-1" }],
+  }
+
+  await withSilencedConsole(async () => {
+    const professional = fakePromotionSupabase({
+      product,
+      approvedSubmissionRows: [reviewedSubmission("professional")],
+      specRowsByTable,
+      updateResult: { id: "product-1", updated_at: "2026-06-17T11:00:00.000Z" },
+    })
+    const dryRun = await promoteProductById({
+      supabase: professional,
+      productId: "product-1",
+      confirm: false,
+      reviewer: "Nick",
+      notes: null,
+    })
+    assert.equal(dryRun.market_segment, "professional")
+    assert.equal(professional.updateCalls.length, 0)
+    await promoteProductById({
+      supabase: professional,
+      productId: "product-1",
+      confirm: true,
+      reviewer: "Nick",
+      notes: null,
+    })
+    assert.equal(professional.updateCalls[0]?.patch.market_segment, "professional")
+    assert.equal(professional.updateCalls[0]?.patch.is_chaarlie_recommended, true)
+
+    // Classification is optional until the approved backfill: a package without a segment
+    // still promotes (dry run and confirmed) and leaves the column untouched.
+    for (const researched_payload of [
+      undefined,
+      null,
+      {},
+      { final: { product: {} } },
+      { final: { product: { market_segment: null } } },
+    ]) {
+      const unsegmented = fakePromotionSupabase({
+        product,
+        approvedSubmissionRows: [
+          { id: "submission-1", approved_product_id: "product-1", researched_payload },
+        ],
+        specRowsByTable,
+        updateResult: { id: "product-1", updated_at: "2026-06-17T11:00:00.000Z" },
+      })
+      const dry = await promoteProductById({
+        supabase: unsegmented,
+        productId: "product-1",
+        confirm: false,
+        reviewer: "Nick",
+        notes: null,
+      })
+      assert.equal(dry.market_segment, undefined)
+      const promoted = await promoteProductById({
+        supabase: unsegmented,
+        productId: "product-1",
+        confirm: true,
+        reviewer: "Nick",
+        notes: null,
+      })
+      assert.equal(promoted.next_recommendation_state, true)
+      assert.equal(unsegmented.updateCalls[0]?.patch.is_chaarlie_recommended, true)
+      assert.equal("market_segment" in (unsegmented.updateCalls[0]?.patch ?? {}), false)
+    }
+
+    // A present but unknown value is malformed and still refuses.
+    for (const confirm of [false, true]) {
+      const invalid = fakePromotionSupabase({
+        product,
+        approvedSubmissionRows: [
+          {
+            id: "submission-1",
+            approved_product_id: "product-1",
+            researched_payload: { final: { product: { market_segment: "luxury" } } },
+          },
+        ],
+        specRowsByTable,
+        updateResult: { id: "product-1", updated_at: "2026-06-17T11:00:00.000Z" },
+      })
+      await assert.rejects(
+        () =>
+          promoteProductById({
+            supabase: invalid,
+            productId: "product-1",
+            confirm,
+            reviewer: "Nick",
+            notes: null,
+          }),
+        /unknown market_segment/,
+      )
+      assert.equal(invalid.updateCalls.length, 0)
+    }
+  })
+})
+
+function reviewedSubmission(marketSegment: "drugstore" | "professional" | null) {
+  return {
+    id: "submission-1",
+    approved_product_id: "product-1",
+    researched_payload: { final: { product: { market_segment: marketSegment } } },
+  }
+}
 
 function fakePromotionSupabase(params: {
   product: Record<string, unknown>

@@ -37,6 +37,8 @@ import {
   rerankPeelingProductsWithEngine,
   rerankShampooProductsWithEngine,
 } from "../src/lib/recommendation-engine"
+import { createChatBudgetEngineOrder } from "../src/lib/agent/tools/chat-budget"
+import { BONDBUILDER_TIE_DEFAULT_PRODUCT_ID } from "../src/lib/personal-plan/products/authority/categories/bondbuilder"
 import type { MatchedProduct } from "../src/lib/product-matching/matcher"
 import {
   LOW_DAMAGE_PROFILE,
@@ -199,6 +201,48 @@ test("engine conditioner reranking does not use CareBalance label without load-p
   )
   assert.equal(reranked[0]?.id, "rich")
   assert.doesNotMatch(JSON.stringify(reranked[0]?.recommendation_meta), /care_balance/i)
+})
+
+test("engine conditioner reranking orders by a capped budget before the final cut", () => {
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(SEVERE_DAMAGE_PROFILE, [])
+  const decision = runtime.categories.conditioner
+  const ids = ["first", "second", "third", "fourth"]
+  const prices = [12.9, 11.5, 9.9, 4.5]
+  const candidates = ids.map((id, index) =>
+    createMatchedProduct(id, "Conditioner", {
+      combined_score: 0.9 - index * 0.01,
+      price_eur: prices[index],
+      purchase_link_status: "available",
+    }),
+  )
+  const specs: ProductConditionerRerankSpecs[] = ids.map((id) => ({
+    product_id: id,
+    weight: "medium",
+    repair_level: "high",
+    balance_direction: "moisture",
+    ingredient_flags: [],
+  }))
+  const rerank = (
+    orderBeforeCut?: Parameters<typeof rerankConditionerProductsWithEngine>[0]["orderBeforeCut"],
+  ) =>
+    rerankConditionerProductsWithEngine({
+      candidates,
+      specs,
+      decision,
+      hairProfile: SEVERE_DAMAGE_PROFILE,
+      ...(orderBeforeCut ? { orderBeforeCut } : {}),
+    }).map((product) => product.id)
+
+  // Without a budget the engine's own top three stay as they are: the 4th never shows.
+  assert.deepEqual(rerank(), ["first", "second", "third"])
+
+  const hook = createChatBudgetEngineOrder({
+    budget: { kind: "capped", limitEur: 5, allowExceptions: false },
+    protectedProductIds: new Set(),
+  })
+  assert.ok(hook)
+  // Only the 4th is within 5 EUR: it now reaches the cut and leads, the rest keep fit order.
+  assert.deepEqual(rerank(hook.order), ["fourth", "first", "second"])
 })
 
 test("engine conditioner reranking excludes mismatches when three non-mismatches exist", () => {
@@ -2062,6 +2106,310 @@ test("engine bondbuilder reranking exposes protocol metadata without ranking by 
       ?.usage_protocol,
     "k18_leave_in",
   )
+})
+
+function bondbuilderBudgetFixture(
+  lanes: { chemicalCrosslinkLane: boolean; peptideChainLane: boolean },
+  products: Array<{
+    id: string
+    score: number
+    price: number
+    axis: "disulfide_crosslink" | "peptide_chain"
+  }>,
+) {
+  const decision: BondbuilderCategoryDecision = {
+    category: "bondbuilder",
+    relevant: true,
+    action: "add",
+    planReasonCodes: [],
+    currentInventory: null,
+    targetProfile: {
+      bondRepairIntensity: "intensive",
+      applicationMode: "pre_shampoo",
+      ...lanes,
+      mixedOrSevereCombo: false,
+      proteinBalanceSupportingOnly: false,
+      role: "recommended",
+    },
+    notes: [],
+  }
+  const candidates = products.map((product) =>
+    createMatchedProduct(product.id, "Bondbuilder", {
+      combined_score: product.score,
+      price_eur: product.price,
+      purchase_link_status: "available",
+    }),
+  )
+  const specs: ProductBondbuilderSpecs[] = products.map((product) => ({
+    product_id: product.id,
+    bond_repair_intensity: "intensive",
+    application_mode: "pre_shampoo",
+    bond_repair_axis: product.axis,
+    treatment_mode: "rinse_out",
+    product_format: "cream_treatment",
+    usage_protocol: "olaplex_3plus",
+  }))
+  const capped = createChatBudgetEngineOrder({
+    budget: { kind: "capped", limitEur: 5, allowExceptions: false },
+    protectedProductIds: new Set(),
+  })
+  assert.ok(capped)
+  const rerank = (withBudget: boolean) =>
+    rerankBondbuilderProductsWithEngine({
+      candidates,
+      specs,
+      decision,
+      ...(withBudget ? { orderBeforeCut: capped.order } : {}),
+    }).map((product) => product.id)
+  return rerank
+}
+
+test("engine bondbuilder reranking orders by a capped budget before the cut of two", () => {
+  const rerank = bondbuilderBudgetFixture(
+    { chemicalCrosslinkLane: true, peptideChainLane: false },
+    [
+      { id: "first", score: 0.9, price: 29.9, axis: "disulfide_crosslink" },
+      { id: "second", score: 0.89, price: 24.9, axis: "disulfide_crosslink" },
+      { id: "third", score: 0.88, price: 4.5, axis: "disulfide_crosslink" },
+    ],
+  )
+  assert.deepEqual(rerank(false), ["first", "second"])
+  // Equally trusted (all unrated) products are ordered cheaper first under a cap.
+  assert.deepEqual(rerank(true), ["third", "second"])
+})
+
+test("engine bondbuilder ranking ignores the repair lane: no forced pick per lane", () => {
+  const rerank = bondbuilderBudgetFixture({ chemicalCrosslinkLane: true, peptideChainLane: true }, [
+    { id: "crosslink-pricey", score: 0.9, price: 29.9, axis: "disulfide_crosslink" },
+    { id: "peptide-pricey", score: 0.85, price: 24.9, axis: "peptide_chain" },
+    { id: "crosslink-cheap", score: 0.88, price: 4.5, axis: "disulfide_crosslink" },
+  ])
+  // Type is worthless for ranking (Nick, 2026-10-09): no lane bonus, no dual-lane pick.
+  assert.deepEqual(rerank(false), ["crosslink-pricey", "crosslink-cheap"])
+  // With a cap: best affordable next to the cheapest equally trusted product, regardless of lane.
+  assert.deepEqual(rerank(true), ["crosslink-cheap", "peptide-pricey"])
+})
+
+// Production catalogue on 2026-10-09 (recommended + active), with its claim trust levels.
+const REAL_BONDBUILDERS: Array<{
+  id: string
+  price: number
+  trust: "high" | "medium" | "low"
+  intensity: "maintenance" | "intensive"
+  axis: "disulfide_crosslink" | "peptide_chain"
+  score: number
+}> = [
+  {
+    id: "loreal-elvital-bond",
+    price: 8.95,
+    trust: "medium",
+    intensity: "intensive",
+    axis: "disulfide_crosslink",
+    score: 0.95,
+  },
+  {
+    id: "ogx-sealing-serum",
+    price: 18.68,
+    trust: "low",
+    intensity: "intensive",
+    axis: "peptide_chain",
+    score: 0.94,
+  },
+  {
+    id: "redken-acidic-bonding",
+    price: 25.5,
+    trust: "medium",
+    intensity: "maintenance",
+    axis: "disulfide_crosslink",
+    score: 0.8,
+  },
+  {
+    id: "olaplex-3plus",
+    price: 34,
+    trust: "high",
+    intensity: "maintenance",
+    axis: "disulfide_crosslink",
+    score: 0.86,
+  },
+  {
+    id: "epres",
+    price: 48,
+    trust: "high",
+    intensity: "maintenance",
+    axis: "disulfide_crosslink",
+    score: 0.84,
+  },
+  {
+    id: "aveda-miraculous-oil",
+    price: 52,
+    trust: "low",
+    intensity: "intensive",
+    axis: "peptide_chain",
+    score: 0.93,
+  },
+  {
+    id: BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+    price: 56.25,
+    trust: "high",
+    intensity: "maintenance",
+    axis: "peptide_chain",
+    score: 0.7,
+  },
+  {
+    id: "kerastase-premiere",
+    price: 56.29,
+    trust: "medium",
+    intensity: "intensive",
+    axis: "disulfide_crosslink",
+    score: 0.9,
+  },
+]
+
+function realBondbuilderRerank(options: {
+  limitEur?: 5 | 15
+  mixedOrSevereCombo?: boolean
+  products?: typeof REAL_BONDBUILDERS
+  unpricedIds?: string[]
+}) {
+  const products = options.products ?? REAL_BONDBUILDERS
+  const decision: BondbuilderCategoryDecision = {
+    category: "bondbuilder",
+    relevant: true,
+    action: "add",
+    planReasonCodes: [],
+    currentInventory: null,
+    targetProfile: {
+      bondRepairIntensity: "intensive",
+      applicationMode: "pre_shampoo",
+      chemicalCrosslinkLane: true,
+      peptideChainLane: false,
+      mixedOrSevereCombo: options.mixedOrSevereCombo ?? false,
+      proteinBalanceSupportingOnly: false,
+      role: "recommended",
+    },
+    notes: [],
+  }
+  const candidates = products.map((product) =>
+    createMatchedProduct(product.id, "Bondbuilder", {
+      combined_score: product.score,
+      price_eur: options.unpricedIds?.includes(product.id) ? null : product.price,
+      purchase_link_status: "available",
+    }),
+  )
+  const specs: ProductBondbuilderSpecs[] = products.map((product) => ({
+    product_id: product.id,
+    bond_repair_intensity: product.intensity,
+    application_mode: "pre_shampoo",
+    bond_repair_axis: product.axis,
+    treatment_mode: "rinse_out",
+    product_format: "cream_treatment",
+    usage_protocol: "olaplex_3plus",
+    claim_trust_level: product.trust,
+  }))
+  const capped = options.limitEur
+    ? createChatBudgetEngineOrder({
+        budget: { kind: "capped", limitEur: options.limitEur, allowExceptions: false },
+        protectedProductIds: new Set(),
+      })
+    : null
+  return rerankBondbuilderProductsWithEngine({
+    candidates,
+    specs,
+    decision,
+    ...(capped ? { orderBeforeCut: capped.order } : {}),
+  }).map((product) => product.id)
+}
+
+test("engine bondbuilder ranking orders by trust, K18 among equals, not by intensity or relevance", () => {
+  // Without a budget: high trust first (K18 house default among the three high products), even
+  // though K18 has the lowest relevance and a mismatching intensity.
+  assert.deepEqual(realBondbuilderRerank({}), [BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "olaplex-3plus"])
+  assert.deepEqual(realBondbuilderRerank({ mixedOrSevereCombo: true }), [
+    BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+    "olaplex-3plus",
+    "epres",
+  ])
+})
+
+test("engine bondbuilder ranking without K18 keeps trust order and breaks ties by relevance", () => {
+  const withoutK18 = REAL_BONDBUILDERS.filter(
+    (product) => product.id !== BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+  )
+  assert.deepEqual(realBondbuilderRerank({ products: withoutK18, mixedOrSevereCombo: true }), [
+    "olaplex-3plus",
+    "epres",
+    "loreal-elvital-bond",
+  ])
+})
+
+test("engine bondbuilder Bis 15 € pairs the most trusted affordable product with the most trusted overall", () => {
+  // L'Oréal (8,95 €, medium) is the only affordable product. Under a cap the three high-trust
+  // products are ordered cheaper first (Nick, 2026-10-09), so Olaplex (34 €) is the comparison.
+  assert.deepEqual(realBondbuilderRerank({ limitEur: 15 }), [
+    "loreal-elvital-bond",
+    "olaplex-3plus",
+  ])
+  assert.deepEqual(realBondbuilderRerank({ limitEur: 15, mixedOrSevereCombo: true }), [
+    "loreal-elvital-bond",
+    "olaplex-3plus",
+    "epres",
+  ])
+})
+
+test("engine bondbuilder Bis 5 € with nothing affordable keeps the trust order, cheaper first", () => {
+  assert.deepEqual(realBondbuilderRerank({ limitEur: 5 }), ["olaplex-3plus", "epres"])
+})
+
+test("engine bondbuilder budget pairing never treats an unpriced product as affordable", () => {
+  // The unpriced L'Oréal drops under the cap instead of counting as within budget.
+  assert.deepEqual(realBondbuilderRerank({ limitEur: 15, unpricedIds: ["loreal-elvital-bond"] }), [
+    "olaplex-3plus",
+    "epres",
+  ])
+})
+
+test("engine bondbuilder ranking keeps a product without structured specs behind specified ones", () => {
+  const decision: BondbuilderCategoryDecision = {
+    category: "bondbuilder",
+    relevant: true,
+    action: "add",
+    planReasonCodes: [],
+    currentInventory: null,
+    targetProfile: {
+      bondRepairIntensity: "intensive",
+      applicationMode: "pre_shampoo",
+      chemicalCrosslinkLane: true,
+      peptideChainLane: false,
+      mixedOrSevereCombo: false,
+      proteinBalanceSupportingOnly: false,
+      role: "recommended",
+    },
+    notes: [],
+  }
+  const reranked = rerankBondbuilderProductsWithEngine({
+    candidates: [
+      createMatchedProduct("no-spec", "Bondbuilder", { combined_score: 0.99 }),
+      createMatchedProduct("low-trust", "Bondbuilder", { combined_score: 0.5 }),
+    ],
+    specs: [
+      {
+        product_id: "low-trust",
+        bond_repair_intensity: "maintenance",
+        application_mode: "pre_shampoo",
+        bond_repair_axis: "peptide_chain",
+        treatment_mode: "rinse_out",
+        product_format: "cream_treatment",
+        usage_protocol: "olaplex_3plus",
+        claim_trust_level: "low",
+      },
+    ],
+    decision,
+  })
+  assert.deepEqual(
+    reranked.map((product) => product.id),
+    ["low-trust", "no-spec"],
+  )
+  assert.equal("_trustRank" in reranked[0]!, false)
 })
 
 test("engine bondbuilder reranking excludes retired and add-on products from primary cards", () => {

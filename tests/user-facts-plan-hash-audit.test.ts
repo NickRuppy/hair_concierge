@@ -75,6 +75,7 @@ function factsFor(
     diagnostics,
     careHabits: null,
     quizContext,
+    shoppingPreferences: null,
     provenance,
     revision: 1,
   }

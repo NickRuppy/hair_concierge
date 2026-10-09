@@ -67,6 +67,10 @@ const assessmentSchema = z.object({
     .array(
       z.object({
         product: productSchema,
+        // Optional so budget-less / flag-off responses stay byte-identical; declared here
+        // because zod would otherwise strip them from the parsed output.
+        overBudget: z.boolean().optional(),
+        marketSegment: z.enum(["drugstore", "professional"]).optional(),
         verdict: z.enum(["ideal", "supportive"]),
         verdictLabel: z.string().min(1),
         verdictTitle: z.string().min(1),

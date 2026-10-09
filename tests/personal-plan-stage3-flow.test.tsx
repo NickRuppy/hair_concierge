@@ -18,7 +18,10 @@ import {
   Stage3CategoryFinalizing,
   Stage3NeedRevisionCheckpoint,
   Stage3ProductsFlow,
+  flowPhaseForDraft,
   normalizeCanonicalStage3LoadError,
+  parseStage3BudgetEnvelope,
+  progressForPhase,
   type Stage3RoutineHandoff,
   updateStage3RoleAssignments,
 } from "../src/components/personal-plan-products/stage3-products-flow"
@@ -30,6 +33,11 @@ import {
   OilGroupReview,
   oilGroupCommitLabel,
 } from "../src/components/personal-plan-products/oil-group-review"
+import { Stage3BudgetStep } from "../src/components/personal-plan-products/stage3-budget-step"
+import {
+  createFixtureUncoveredConditionerEntryContext,
+  fixtureStage3BudgetScenario,
+} from "../src/lib/personal-plan/products/fixture-scenarios"
 import { customerIoDestination } from "../src/lib/analytics/destinations/customerio"
 import { metaDestination } from "../src/lib/analytics/destinations/meta"
 import { postHogDestination } from "../src/lib/analytics/destinations/posthog"
@@ -6198,4 +6206,793 @@ test("every committed-group reset also forgets a stale all-deselected grouped sc
       `line ${index + 1} resets the committed group but would restore a stale, action-less all-deselected screen`,
     )
   }
+})
+
+/* ------------------------------------------------------------------ budget gate */
+
+function budgetStepOf(tree: ReactElement | null) {
+  return findByType<React.ComponentProps<typeof Stage3BudgetStep>>(tree, Stage3BudgetStep)
+}
+
+function fitComparisonOf(tree: ReactElement | null) {
+  return findByType<React.ComponentProps<typeof ProductFitComparison>>(tree, ProductFitComparison)
+}
+
+function budgetFlowHarness(
+  scenario: string,
+  options: { failOnce?: Array<"save_budget">; saved?: unknown[] } = {},
+) {
+  const budget = fixtureStage3BudgetScenario(scenario)
+  assert.ok(budget, `missing budget scenario ${scenario}`)
+  const gateway = createFixtureStage3Gateway({
+    searchDelayMs: 0,
+    budget,
+    failOnce: options.failOnce,
+  })
+  const saveShoppingBudget = gateway.saveShoppingBudget
+  gateway.saveShoppingBudget = async (value) => {
+    options.saved?.push(value)
+    return saveShoppingBudget(value)
+  }
+  const entryContext = createFixtureUncoveredConditionerEntryContext()
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext,
+      draftId: `draft-${scenario}`,
+      gateway,
+      searchDebounceMs: 0,
+      pendingRecoveryStorage: createMemoryPendingStage3RecoveryStorage(),
+    }),
+  )
+  return { harness, gateway }
+}
+
+test("budget phase gating: a decision-ready draft without a saved budget never opens decisions", () => {
+  const draft = createStage3Draft({
+    draftId: "draft-gate",
+    userId: "user-gate",
+    personalPlanId: "plan-gate",
+    refinedVersionId: "refined-gate",
+    requirements: [
+      {
+        category: "conditioner",
+        requiredRoles: ["conditioner_rinse_out"],
+        needSummary: "Pflege",
+        authorityVersion: CATEGORY_ROLE_POLICIES.conditioner.authorityVersion,
+      },
+    ],
+    now: "2026-10-09T00:00:00.000Z",
+  })
+  const decisionReady = { ...draft, pass: "product_decisions" as const, categoryCursor: null }
+  assert.equal(flowPhaseForDraft(decisionReady), "decisions")
+  assert.equal(flowPhaseForDraft(decisionReady, true), "budget")
+  // Capture, need revision and handoff are never replaced by the budget step.
+  assert.equal(flowPhaseForDraft({ ...draft, categoryCursor: "conditioner" }, true), "capture")
+  assert.equal(
+    flowPhaseForDraft({ ...decisionReady, pass: "need_revision_review" }, true),
+    "need_revision_review",
+  )
+  assert.equal(flowPhaseForDraft({ ...decisionReady, status: "completed" }, true), "handoff")
+
+  // Without a budget step the progress is exactly today's; with it the step adds one.
+  assert.equal(progressForPhase("decisions", 0, 2), 3)
+  assert.equal(progressForPhase("handoff", 0, 2), 5)
+  assert.equal(progressForPhase("budget", 0, 2, true), 3)
+  assert.equal(progressForPhase("decisions", 0, 2, true), 4)
+  assert.equal(progressForPhase("handoff", 0, 2, true), 6)
+})
+
+test("budget envelopes from an untyped transport body are parsed strictly", () => {
+  assert.deepEqual(parseStage3BudgetEnvelope({ status: "budget_required", suggestion: 15 }), {
+    status: "budget_required",
+    suggestion: 15,
+  })
+  assert.deepEqual(parseStage3BudgetEnvelope({ status: "budget_required" }), {
+    status: "budget_required",
+    suggestion: null,
+  })
+  assert.deepEqual(parseStage3BudgetEnvelope({ status: "budget_required", suggestion: 30 }), {
+    status: "budget_required",
+    suggestion: null,
+  })
+  assert.deepEqual(
+    parseStage3BudgetEnvelope({
+      status: "saved",
+      value: { kind: "capped", limitEur: 5, allowExceptions: true },
+    }),
+    { status: "saved", value: { kind: "capped", limitEur: 5, allowExceptions: true } },
+  )
+  assert.equal(parseStage3BudgetEnvelope({ status: "saved", value: { kind: "cheap" } }), undefined)
+  assert.equal(parseStage3BudgetEnvelope(undefined), undefined)
+  assert.equal(parseStage3BudgetEnvelope([]), undefined)
+})
+
+test("first run: the budget step opens before decisions with the suggestion preselected", async () => {
+  const saved: unknown[] = []
+  const { harness } = budgetFlowHarness("budget-required", { saved })
+
+  let tree = await renderSettled(harness)
+  let step = budgetStepOf(tree)
+  assert.ok(step, "budget step must open before any decision")
+  assert.equal(fitComparisonOf(tree), null)
+  assert.equal(step.props.screen, "limit")
+  assert.equal(step.props.suggestion, 15)
+  assert.deepEqual(step.props.answer, { limit: 15, allowExceptions: null })
+
+  // Another answer keeps the suggestion chip where it was; nothing is saved yet.
+  step.props.onSelectLimit(5)
+  tree = await renderSettled(harness)
+  step = budgetStepOf(tree)!
+  assert.deepEqual(step.props.answer, { limit: 5, allowExceptions: null })
+  assert.equal(step.props.suggestion, 15)
+  assert.deepEqual(saved, [])
+
+  // A capped answer asks the follow-up; Back returns to the first screen with the answer kept.
+  step.props.onContinue()
+  tree = await renderSettled(harness)
+  step = budgetStepOf(tree)!
+  assert.equal(step.props.screen, "flexibility")
+  const shell = findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)
+  shell!.props.onBack!()
+  tree = await renderSettled(harness)
+  step = budgetStepOf(tree)!
+  assert.equal(step.props.screen, "limit")
+  assert.deepEqual(step.props.answer, { limit: 5, allowExceptions: null })
+
+  step.props.onContinue()
+  tree = await renderSettled(harness)
+  budgetStepOf(tree)!.props.onSelectFlexibility(false)
+  tree = await renderSettled(harness)
+  assert.deepEqual(saved, [])
+  budgetStepOf(tree)!.props.onContinue()
+  tree = await renderUntil(harness, (current) => fitComparisonOf(current) !== null, "decisions")
+
+  assert.deepEqual(saved, [{ kind: "capped", limitEur: 5, allowExceptions: false }])
+  const comparison = fitComparisonOf(tree)!
+  assert.deepEqual(comparison.props.budget, {
+    kind: "capped",
+    limitEur: 5,
+    allowExceptions: false,
+  })
+  assert.equal(typeof comparison.props.onEditBudget, "function")
+  // 5 € strict with nothing affordable: the reloaded bundle is the budgeted one.
+  assert.equal(comparison.props.comparison.defaultProductId, null)
+  assert.equal(comparison.props.comparison.budgetNotice, "strict_none_affordable")
+
+  // Back from the first decision returns to the follow-up of the budget given in this journey.
+  findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)!.props.onBack!()
+  tree = await renderSettled(harness)
+  step = budgetStepOf(tree)!
+  assert.equal(step.props.screen, "flexibility")
+  assert.deepEqual(step.props.answer, { limit: 5, allowExceptions: false })
+  // Reconfirming the unchanged answer returns to the decision without another save.
+  step.props.onContinue()
+  tree = await renderUntil(harness, (current) => fitComparisonOf(current) !== null, "decisions")
+  assert.equal(saved.length, 1)
+})
+
+test("an uncapped answer saves directly without the follow-up", async () => {
+  const saved: unknown[] = []
+  const { harness } = budgetFlowHarness("budget-required", { saved })
+  let tree = await renderSettled(harness)
+  budgetStepOf(tree)!.props.onSelectLimit("uncapped")
+  tree = await renderSettled(harness)
+  budgetStepOf(tree)!.props.onContinue()
+  tree = await renderUntil(harness, (current) => fitComparisonOf(current) !== null, "decisions")
+  assert.deepEqual(saved, [{ kind: "uncapped" }])
+  assert.deepEqual(fitComparisonOf(tree)!.props.budget, { kind: "uncapped" })
+})
+
+test("a failed budget save keeps the answers and offers a retry", async () => {
+  const saved: unknown[] = []
+  const { harness } = budgetFlowHarness("budget-required", { saved, failOnce: ["save_budget"] })
+  let tree = await renderSettled(harness)
+  budgetStepOf(tree)!.props.onSelectLimit("uncapped")
+  tree = await renderSettled(harness)
+  budgetStepOf(tree)!.props.onContinue()
+  tree = await renderSettled(harness)
+  const step = budgetStepOf(tree)!
+  assert.equal(step.props.saveStatus, "unavailable")
+  assert.deepEqual(step.props.answer, { limit: "uncapped", allowExceptions: null })
+  assert.equal(fitComparisonOf(tree), null)
+
+  step.props.onContinue()
+  tree = await renderUntil(harness, (current) => fitComparisonOf(current) !== null, "decisions")
+  assert.deepEqual(saved, [{ kind: "uncapped" }, { kind: "uncapped" }])
+})
+
+test("a budget conflict keeps the answer and retries with the user's own choice", async () => {
+  const { harness, gateway } = budgetFlowHarness("budget-required")
+  const save = gateway.saveShoppingBudget
+  let conflictOnce = true
+  ;(gateway as { saveShoppingBudget: unknown }).saveShoppingBudget = async (value: never) => {
+    if (conflictOnce) {
+      conflictOnce = false
+      return { status: "conflict" as const }
+    }
+    return save(value)
+  }
+  let tree = await renderSettled(harness)
+  budgetStepOf(tree)!.props.onSelectLimit("uncapped")
+  tree = await renderSettled(harness)
+  budgetStepOf(tree)!.props.onContinue()
+  tree = await renderSettled(harness)
+  assert.equal(budgetStepOf(tree)!.props.saveStatus, "conflict")
+  assert.deepEqual(budgetStepOf(tree)!.props.answer, { limit: "uncapped", allowExceptions: null })
+  budgetStepOf(tree)!.props.onContinue()
+  tree = await renderUntil(harness, (current) => fitComparisonOf(current) !== null, "decisions")
+  assert.deepEqual(fitComparisonOf(tree)!.props.budget, { kind: "uncapped" })
+})
+
+test("a saved budget is reused: decisions open directly and „Ändern“ edits it", async () => {
+  const saved: unknown[] = []
+  const { harness } = budgetFlowHarness("budget-flex-improvement", { saved })
+  let tree = await renderUntil(
+    harness,
+    (current) => fitComparisonOf(current) !== null,
+    "decisions with a saved budget",
+  )
+  assert.equal(budgetStepOf(tree), null)
+  let comparison = fitComparisonOf(tree)!
+  assert.deepEqual(comparison.props.budget, {
+    kind: "capped",
+    limitEur: 15,
+    allowExceptions: true,
+  })
+  assert.equal(comparison.props.comparison.budgetNotice, "flex_improvement")
+
+  // Edit mode opens with the saved answer; Back without saving returns to the decision.
+  comparison.props.onEditBudget!()
+  tree = await renderSettled(harness)
+  let step = budgetStepOf(tree)!
+  assert.deepEqual(step.props.answer, { limit: 15, allowExceptions: true })
+  findByType<React.ComponentProps<typeof Stage3Shell>>(tree, Stage3Shell)!.props.onBack!()
+  tree = await renderSettled(harness)
+  assert.ok(fitComparisonOf(tree))
+  assert.deepEqual(saved, [])
+
+  // Changing the answer saves it and reloads the bundles with the new budget.
+  fitComparisonOf(tree)!.props.onEditBudget!()
+  tree = await renderSettled(harness)
+  budgetStepOf(tree)!.props.onSelectLimit("uncapped")
+  tree = await renderSettled(harness)
+  budgetStepOf(tree)!.props.onContinue()
+  tree = await renderUntil(
+    harness,
+    (current) =>
+      fitComparisonOf(current)?.props.comparison.budgetNotice === null &&
+      fitComparisonOf(current)?.props.budget?.kind === "uncapped",
+    "reloaded uncapped decisions",
+  )
+  assert.deepEqual(saved, [{ kind: "uncapped" }])
+  comparison = fitComparisonOf(tree)!
+  assert.equal(
+    comparison.props.comparison.defaultProductId,
+    comparison.props.comparison.alternatives[0]?.productId,
+  )
+  step = budgetStepOf(tree)!
+  assert.equal(step, null)
+})
+
+test("without a budget gate the flow is unchanged and never asks for a budget", async () => {
+  const gateway = createFixtureStage3Gateway({ searchDelayMs: 0 })
+  const entryContext = createFixtureUncoveredConditionerEntryContext()
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      entryContext,
+      draftId: "draft-no-budget",
+      gateway,
+      searchDebounceMs: 0,
+      pendingRecoveryStorage: createMemoryPendingStage3RecoveryStorage(),
+    }),
+  )
+  const tree = await renderUntil(
+    harness,
+    (current) => fitComparisonOf(current) !== null,
+    "decisions",
+  )
+  assert.equal(budgetStepOf(tree), null)
+  const comparison = fitComparisonOf(tree)!
+  assert.equal(comparison.props.budget, null)
+  assert.equal(comparison.props.onEditBudget, undefined)
+  assert.equal("defaultProductId" in comparison.props.comparison, false)
+  assert.equal("budgetNotice" in comparison.props.comparison, false)
+})
+
+test("a bootstrap that requires a budget mounts on the budget step", async () => {
+  const entryContext = createFixtureUncoveredConditionerEntryContext()
+  const draft = createStage3Draft({
+    draftId: "draft-bootstrap-budget",
+    userId: "user-bootstrap-budget",
+    personalPlanId: entryContext.personalPlanId,
+    refinedVersionId: entryContext.refinedVersionId,
+    requirements: entryContext.orderedCategories,
+    authoritySnapshot: entryContext.authoritySnapshot,
+    now: "2026-10-09T00:00:00.000Z",
+  })
+  assert.equal(draft.pass, "product_decisions")
+  const bootstrap = {
+    entryContext,
+    draft,
+    requirements: entryContext.orderedCategories,
+    authorityEvaluations: [],
+    fitComparisons: [],
+    budget: { status: "budget_required" as const, suggestion: 5 as const },
+  }
+  const gateway = createFixtureStage3Gateway({ searchDelayMs: 0 })
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      bootstrap,
+      gateway,
+      pendingRecoveryStorage: createMemoryPendingStage3RecoveryStorage(),
+    }),
+  )
+  const tree = await renderSettled(harness)
+  const step = budgetStepOf(tree)
+  assert.ok(step)
+  assert.equal(step.props.suggestion, 5)
+  assert.deepEqual(step.props.answer, { limit: 5, allowExceptions: null })
+})
+
+/* ------------------------------------------------------------ budget: whole-proposal preview */
+
+const BUDGET_CONDITIONER_KEY = "decision:conditioner:conditioner_rinse_out:gap"
+const BUDGET_MASK_KEY = "decision:mask:intensive_conditioning_mask:gap"
+
+function budgetTestCandidate(
+  productId: string,
+  category: "conditioner" | "mask",
+  role: "conditioner_rinse_out" | "intensive_conditioning_mask",
+) {
+  return {
+    productId,
+    category,
+    role,
+    verdict: "ideal" as const,
+    criteria: [],
+    recommendation: {
+      recommendationId: `recommendation-${productId}`,
+      productId,
+      category,
+      role,
+      displayName: `Produkt ${productId}`,
+      reason: "Passt.",
+      authorityRuleId: "rule",
+    },
+    factFingerprint: `fingerprint-${productId}`,
+  } as unknown as Stage3SelectedComparisonCandidate
+}
+
+function budgetTestBundle(
+  subjectKey: string,
+  category: "conditioner" | "mask",
+  role: "conditioner_rinse_out" | "intensive_conditioning_mask",
+  ids: string[],
+  budgetFields: Partial<Stage3FitComparison> | null,
+) {
+  const fitComparison = {
+    schemaVersion: 1,
+    mode: "comparison",
+    category,
+    role,
+    subjectKey,
+    sourceIdentity: null,
+    products: ids.map((productId) => ({
+      productId,
+      displayName: `Produkt ${productId}`,
+      category,
+      role,
+      source: "alternative" as const,
+      presentation: { priceLabel: "9,95 €", netContentLabel: "200 ml" },
+    })),
+    alternatives: ids.map((productId) => budgetTestCandidate(productId, category, role)),
+    dimensions: [],
+    evidenceRows: [],
+    ...(budgetFields ?? {}),
+  } as unknown as Stage3FitComparison
+  const authorityEvaluation = {
+    status: "known",
+    category,
+    subjectKey,
+    verdict: "unknown",
+    criteria: [],
+    allowedActions: ["leave_uncovered"],
+    recommendation: null,
+    productFactFingerprint: null,
+    recommendationFactFingerprint: null,
+    coverageRuleIds: ["rule"],
+  } as Stage3AuthorityEvaluation
+  return { authorityEvaluation, fitComparison }
+}
+
+/**
+ * Conditioner + Mask gaps with a saved flexible 15 € budget (or none). The projection stub
+ * mirrors the server: an expensive Conditioner pick uses the one exception, so the Mask default
+ * falls back to its affordable option.
+ */
+function twoRoleBudgetFlow(options: {
+  budget: { kind: "capped"; limitEur: 15; allowExceptions: true } | null
+  previewGate?: () => Promise<void>
+  /** Outcome of the n-th projection call (0-based); default "ok". */
+  previewOutcome?: (callIndex: number) => "ok" | "fail" | "conflict"
+  resolveDecisions?: (intents: Stage3AuthoritySemanticIntent[]) => Promise<Stage3MutationResponse>
+}) {
+  const base = createFixtureUncoveredConditionerEntryContext()
+  const entryContext: Stage3EntryContext = {
+    ...base,
+    orderedCategories: [
+      ...base.orderedCategories,
+      {
+        category: "mask",
+        requiredRoles: ["intensive_conditioning_mask"],
+        needSummary: "Intensive Pflege",
+        authorityVersion: CATEGORY_ROLE_POLICIES.mask.authorityVersion,
+      },
+    ],
+    inventoryPrompts: [
+      ...base.inventoryPrompts,
+      { category: "mask", allowsMultiple: true, allowsExplicitNone: true },
+    ],
+    authoritySnapshot: { ...base.authoritySnapshot!, orderedCategories: ["conditioner", "mask"] },
+  }
+  const draft = createStage3Draft({
+    draftId: "draft-two-role-budget",
+    userId: "user-two-role-budget",
+    personalPlanId: entryContext.personalPlanId,
+    refinedVersionId: entryContext.refinedVersionId,
+    requirements: entryContext.orderedCategories,
+    authoritySnapshot: entryContext.authoritySnapshot,
+    now: "2026-10-09T00:00:00.000Z",
+  })
+  assert.equal(draft.pass, "product_decisions")
+  assert.deepEqual(
+    deriveStage3DecisionSubjects(draft).map((subject) => subject.decisionKey),
+    [BUDGET_CONDITIONER_KEY, BUDGET_MASK_KEY],
+  )
+  const budgeted = options.budget !== null
+  const conditioner = () =>
+    budgetTestBundle(
+      BUDGET_CONDITIONER_KEY,
+      "conditioner",
+      "conditioner_rinse_out",
+      ["a", "x"],
+      budgeted ? { defaultProductId: "a", budgetNotice: null, budgetException: null } : null,
+    )
+  const mask = (allowanceUsed: boolean) =>
+    budgetTestBundle(
+      BUDGET_MASK_KEY,
+      "mask",
+      "intensive_conditioning_mask",
+      ["m1", "m2"],
+      budgeted
+        ? allowanceUsed
+          ? {
+              defaultProductId: "m1",
+              budgetNotice: "allowance_used_elsewhere",
+              budgetException: null,
+            }
+          : {
+              defaultProductId: "m2",
+              budgetNotice: "flex_improvement",
+              budgetException: { kind: "improvement", improvedDimensionIds: ["mask.weight"] },
+            }
+        : null,
+    )
+  const initial = [conditioner(), mask(false)]
+  const previewCalls: Stage3AuthoritySemanticIntent[][] = []
+  const resolveCalls: Stage3AuthoritySemanticIntent[][] = []
+  const saved: unknown[] = []
+  const fixture = createFixtureStage3Gateway({ searchDelayMs: 0 })
+  const gateway: Stage3ProductsGateway = {
+    ...fixture,
+    async loadShoppingBudget() {
+      return options.budget ? { status: "saved" as const, value: options.budget } : null
+    },
+    async saveShoppingBudget(value: never) {
+      saved.push(value)
+      return { status: "saved" as const, budget: value }
+    },
+    async reviewDecisionBundles() {
+      return initial
+    },
+    async previewDecisionBundles(input: { intents: Stage3AuthoritySemanticIntent[] }) {
+      const callIndex = previewCalls.length
+      previewCalls.push(input.intents)
+      await options.previewGate?.()
+      const outcome = options.previewOutcome?.(callIndex) ?? "ok"
+      if (outcome === "fail") throw new Stage3ProductsGatewayError("temporarily_unavailable")
+      if (outcome === "conflict") return { status: "conflict" as const, latestDraft: draft }
+      const allowanceUsed = input.intents.some(
+        (intent) =>
+          intent.subjectKey === BUDGET_CONDITIONER_KEY && intent.selectedCandidateId === "x",
+      )
+      return {
+        status: "ready" as const,
+        bundles: [conditioner(), mask(allowanceUsed)],
+        autoResolvedIntents: [],
+      }
+    },
+    async resolveDecisions(input: { intents: Stage3AuthoritySemanticIntent[] }) {
+      resolveCalls.push(input.intents)
+      if (options.resolveDecisions) return options.resolveDecisions(input.intents)
+      return { status: "conflict" as const, latestDraft: draft }
+    },
+  } as unknown as Stage3ProductsGateway
+  const harness = createClientStateHarness(() =>
+    Stage3ProductsFlow({
+      bootstrap: {
+        entryContext,
+        draft,
+        requirements: entryContext.orderedCategories,
+        authorityEvaluations: initial.map((bundle) => bundle.authorityEvaluation),
+        fitComparisons: initial.map((bundle) => bundle.fitComparison),
+        ...(options.budget ? { budget: { status: "saved" as const, value: options.budget } } : {}),
+      },
+      gateway,
+      pendingRecoveryStorage: createMemoryPendingStage3RecoveryStorage(),
+      finalizationTimeoutMs: 0,
+    }),
+  )
+  return { harness, previewCalls, resolveCalls, saved }
+}
+
+const FLEX_15 = { kind: "capped" as const, limitEur: 15 as const, allowExceptions: true as const }
+
+test("with a budget an expensive pick refreshes the other role's default and notice", async () => {
+  const gate = deferred<void>()
+  let gated = true
+  const { harness, previewCalls } = twoRoleBudgetFlow({
+    budget: FLEX_15,
+    previewGate: () => (gated ? gate.promise : Promise.resolve()),
+  })
+  let tree = await renderUntil(
+    harness,
+    (current) => fitComparisonOf(current)?.props.comparison.subjectKey === BUDGET_CONDITIONER_KEY,
+    "conditioner decision",
+  )
+  let comparison = fitComparisonOf(tree)!
+  assert.equal(comparison.props.comparison.defaultProductId, "a")
+  comparison.props.onAction("select_replacement", {
+    productId: "x",
+    factFingerprint: "fingerprint-x",
+  })
+  tree = await renderSettled(harness)
+  comparison = fitComparisonOf(tree)!
+  // The Mask screen opens but waits for the projection: no choice on a stale default.
+  assert.equal(comparison.props.comparison.subjectKey, BUDGET_MASK_KEY)
+  assert.equal(comparison.props.disabled, true)
+  assert.equal(comparison.props.comparison.defaultProductId, "m2")
+  assert.equal(previewCalls.length, 1)
+  assert.deepEqual(
+    previewCalls[0]!.map((intent) => [
+      intent.subjectKey,
+      intent.action,
+      intent.selectedCandidateId,
+    ]),
+    [[BUDGET_CONDITIONER_KEY, "select_replacement", "x"]],
+  )
+
+  gated = false
+  gate.resolve()
+  tree = await renderUntil(
+    harness,
+    (current) => fitComparisonOf(current)?.props.disabled === false,
+    "projected mask decision",
+  )
+  comparison = fitComparisonOf(tree)!
+  assert.equal(comparison.props.comparison.subjectKey, BUDGET_MASK_KEY)
+  assert.equal(comparison.props.comparison.defaultProductId, "m1")
+  assert.equal(comparison.props.comparison.budgetNotice, "allowance_used_elsewhere")
+
+  // The next choice projects ALL pending intents; the user's own Conditioner pick is kept.
+  comparison.props.onAction("select_replacement", {
+    productId: "m1",
+    factFingerprint: "fingerprint-m1",
+  })
+  await renderSettled(harness)
+  assert.equal(previewCalls.length, 2)
+  assert.deepEqual(
+    previewCalls[1]!.map((intent) => [intent.subjectKey, intent.selectedCandidateId]),
+    [
+      [BUDGET_CONDITIONER_KEY, "x"],
+      [BUDGET_MASK_KEY, "m1"],
+    ],
+  )
+})
+
+test("without a budget a pick in one role makes no projection call and keeps other bundles", async () => {
+  const { harness, previewCalls } = twoRoleBudgetFlow({
+    budget: null,
+    previewOutcome: () => "fail",
+  })
+  let tree = await renderUntil(
+    harness,
+    (current) => fitComparisonOf(current)?.props.comparison.subjectKey === BUDGET_CONDITIONER_KEY,
+    "conditioner decision",
+  )
+  fitComparisonOf(tree)!.props.onAction("select_replacement", {
+    productId: "x",
+    factFingerprint: "fingerprint-x",
+  })
+  tree = await renderSettled(harness)
+  const comparison = fitComparisonOf(tree)!
+  assert.equal(comparison.props.comparison.subjectKey, BUDGET_MASK_KEY)
+  assert.equal(comparison.props.disabled, false)
+  assert.equal("defaultProductId" in comparison.props.comparison, false)
+  assert.equal(previewCalls.length, 0)
+})
+
+test("budget_required on resolve opens the budget step and keeps every choice", async () => {
+  let requireBudget = true
+  const { harness, resolveCalls, saved, previewCalls } = twoRoleBudgetFlow({
+    budget: FLEX_15,
+    async resolveDecisions() {
+      if (requireBudget) {
+        requireBudget = false
+        throw new Stage3ProductsGatewayError("budget_required" as never, undefined, 409)
+      }
+      throw new Stage3ProductsGatewayError("rolled_back")
+    },
+  })
+  let tree = await renderUntil(
+    harness,
+    (current) => fitComparisonOf(current)?.props.comparison.subjectKey === BUDGET_CONDITIONER_KEY,
+    "conditioner decision",
+  )
+  fitComparisonOf(tree)!.props.onAction("select_replacement", {
+    productId: "x",
+    factFingerprint: "fingerprint-x",
+  })
+  tree = await renderUntil(
+    harness,
+    (current) => fitComparisonOf(current)?.props.disabled === false,
+    "mask decision",
+  )
+  fitComparisonOf(tree)!.props.onAction("select_replacement", {
+    productId: "m1",
+    factFingerprint: "fingerprint-m1",
+  })
+  tree = await renderUntil(harness, (current) => budgetStepOf(current) !== null, "budget step")
+  assert.equal(resolveCalls.length, 1)
+  assert.equal(systemStateTitle(tree), undefined, "no generic error for a missing budget")
+  const step = budgetStepOf(tree)!
+  // The last known answer is offered again; nothing is saved until the user confirms.
+  assert.deepEqual(step.props.answer, { limit: 15, allowExceptions: true })
+  assert.deepEqual(saved, [])
+
+  step.props.onContinue()
+  tree = await renderSettled(harness)
+  budgetStepOf(tree)!.props.onContinue()
+  await renderUntil(harness, () => resolveCalls.length === 2, "resubmitted decisions")
+  assert.deepEqual(saved, [FLEX_15])
+  // The saved budget re-projected the kept choices before they were submitted again.
+  assert.deepEqual(
+    previewCalls.at(-1)!.map((intent) => [intent.subjectKey, intent.selectedCandidateId]),
+    [
+      [BUDGET_CONDITIONER_KEY, "x"],
+      [BUDGET_MASK_KEY, "m1"],
+    ],
+  )
+  assert.deepEqual(
+    resolveCalls[1]!.map((intent) => [intent.subjectKey, intent.selectedCandidateId]),
+    [
+      [BUDGET_CONDITIONER_KEY, "x"],
+      [BUDGET_MASK_KEY, "m1"],
+    ],
+  )
+})
+
+test("a failed reload after a saved budget retries the load on „Weiter“ with the same answer", async () => {
+  const saved: unknown[] = []
+  const { harness, gateway } = budgetFlowHarness("budget-required", { saved })
+  const review = gateway.reviewDecisionBundles.bind(gateway)
+  let failReload = true
+  let reviewLoads = 0
+  gateway.reviewDecisionBundles = async (input) => {
+    reviewLoads += 1
+    if (failReload) {
+      failReload = false
+      throw new Stage3ProductsGatewayError("temporarily_unavailable")
+    }
+    return review(input)
+  }
+  let tree = await renderSettled(harness)
+  budgetStepOf(tree)!.props.onSelectLimit("uncapped")
+  tree = await renderSettled(harness)
+  budgetStepOf(tree)!.props.onContinue()
+  tree = await renderUntil(harness, (current) => systemStateTitle(current) !== undefined, "error")
+  assert.deepEqual(saved, [{ kind: "uncapped" }])
+  assert.equal(reviewLoads, 1)
+  assert.equal(fitComparisonOf(tree), null)
+
+  // Closing the error returns to the budget step with the answer kept.
+  findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)!.props
+    .onAction!()
+  tree = await renderSettled(harness)
+  const step = budgetStepOf(tree)!
+  assert.deepEqual(step.props.answer, { limit: "uncapped", allowExceptions: null })
+
+  // The unchanged answer no longer shortcuts into a review that never loaded: it reloads.
+  step.props.onContinue()
+  tree = await renderUntil(harness, (current) => fitComparisonOf(current) !== null, "decisions")
+  assert.equal(reviewLoads, 2)
+  assert.equal(saved.length, 1, "the saved budget is not saved again")
+  assert.deepEqual(fitComparisonOf(tree)!.props.budget, { kind: "uncapped" })
+  assert.equal(systemStateTitle(tree), undefined)
+})
+
+test("a failed budget projection blocks decisions until a retry applies the projection", async () => {
+  const { harness, previewCalls, resolveCalls } = twoRoleBudgetFlow({
+    budget: FLEX_15,
+    previewOutcome: (callIndex) => (callIndex === 0 ? "fail" : "ok"),
+  })
+  let tree = await renderUntil(
+    harness,
+    (current) => fitComparisonOf(current)?.props.comparison.subjectKey === BUDGET_CONDITIONER_KEY,
+    "conditioner decision",
+  )
+  fitComparisonOf(tree)!.props.onAction("select_replacement", {
+    productId: "x",
+    factFingerprint: "fingerprint-x",
+  })
+  tree = await renderUntil(
+    harness,
+    (current) => systemStateTitle(current) === "Passung wird aktualisiert.",
+    "projection error",
+  )
+  // The Mask screen with its stale exception default is never offered for a choice.
+  assert.equal(fitComparisonOf(tree), null)
+  const retry = findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)!
+  assert.equal(retry.props.actionLabel, "Erneut prüfen")
+  await renderSettled(harness)
+  assert.equal(resolveCalls.length, 0, "nothing is submitted while the projection failed")
+
+  retry.props.onAction!()
+  tree = await renderUntil(
+    harness,
+    (current) => fitComparisonOf(current)?.props.disabled === false,
+    "projected mask decision",
+  )
+  assert.equal(previewCalls.length, 2)
+  assert.deepEqual(
+    previewCalls[1]!.map((intent) => [intent.subjectKey, intent.selectedCandidateId]),
+    [[BUDGET_CONDITIONER_KEY, "x"]],
+  )
+  const comparison = fitComparisonOf(tree)!
+  assert.equal(comparison.props.comparison.subjectKey, BUDGET_MASK_KEY)
+  assert.equal(comparison.props.comparison.defaultProductId, "m1")
+  assert.equal(comparison.props.comparison.budgetNotice, "allowance_used_elsewhere")
+})
+
+test("a stale budget projection goes through conflict recovery and projects the kept choices", async () => {
+  const { harness, previewCalls } = twoRoleBudgetFlow({
+    budget: FLEX_15,
+    previewOutcome: (callIndex) => (callIndex === 0 ? "conflict" : "ok"),
+  })
+  let tree = await renderUntil(
+    harness,
+    (current) => fitComparisonOf(current)?.props.comparison.subjectKey === BUDGET_CONDITIONER_KEY,
+    "conditioner decision",
+  )
+  fitComparisonOf(tree)!.props.onAction("select_replacement", {
+    productId: "x",
+    factFingerprint: "fingerprint-x",
+  })
+  tree = await renderUntil(harness, () => previewCalls.length === 2, "re-projection")
+  // The existing conflict recovery reports the reload; the kept pick is projected again.
+  assert.equal(systemStateTitle(tree), "Die passenden Optionen wurden aktualisiert.")
+  assert.deepEqual(
+    previewCalls[1]!.map((intent) => [intent.subjectKey, intent.selectedCandidateId]),
+    [[BUDGET_CONDITIONER_KEY, "x"]],
+  )
+  findByType<React.ComponentProps<typeof Stage3SystemState>>(tree, Stage3SystemState)!.props
+    .onAction!()
+  tree = await renderUntil(
+    harness,
+    (current) => fitComparisonOf(current)?.props.disabled === false,
+    "projected mask decision",
+  )
+  const comparison = fitComparisonOf(tree)!
+  assert.equal(comparison.props.comparison.subjectKey, BUDGET_MASK_KEY)
+  assert.equal(comparison.props.comparison.defaultProductId, "m1")
 })

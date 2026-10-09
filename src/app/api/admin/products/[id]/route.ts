@@ -78,6 +78,8 @@ async function enrichBondbuilderResearchProfile(input: {
   profile: unknown
   reviewedBy: string
   productPayload: Record<string, unknown>
+  /** `undefined` means the form did not send the key. */
+  marketSegment?: "drugstore" | "professional" | null
 }): Promise<{ product: Record<string, unknown> } | null> {
   const validation = validateBondbuilderResearchProfile(input.profile)
   if (!validation.success) return null
@@ -88,6 +90,17 @@ async function enrichBondbuilderResearchProfile(input: {
   if (preimageError || !preimage || typeof preimage !== "object") return null
   const existingProduct = (preimage as { product?: Record<string, unknown> }).product
   if (!existingProduct) return null
+  // The receipt preimage deliberately omits `market_segment` (historical receipts stay equal),
+  // so it is compared against the live column instead.
+  if (input.marketSegment !== undefined) {
+    const { data: segmentRow, error: segmentError } = await input.supabase
+      .from("products")
+      .select("market_segment")
+      .eq("id", input.productId)
+      .single()
+    if (segmentError || !segmentRow) return null
+    if ((segmentRow.market_segment ?? null) !== input.marketSegment) return null
+  }
   // A research-only operation must not smuggle spine/lifecycle/fit changes.
   // The complete CAS preimage is checked again inside the transactional RPC.
   for (const [key, value] of Object.entries(input.productPayload)) {
@@ -176,8 +189,13 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     deep_cleansing_shampoo_specs,
     dry_shampoo_specs,
     peeling_specs,
-    ...productPayload
+    market_segment: requestedMarketSegment,
+    ...productPayloadWithoutSegment
   } = parsed.data
+  const productPayload =
+    requestedMarketSegment === undefined
+      ? productPayloadWithoutSegment
+      : { ...productPayloadWithoutSegment, market_segment: requestedMarketSegment }
 
   const nextCategory = parsed.data.category
   const updatedAt = new Date().toISOString()
@@ -188,7 +206,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       productId: id,
       profile: bondbuilder_specs.research_profile,
       reviewedBy: user.id,
-      productPayload,
+      productPayload: productPayloadWithoutSegment,
+      marketSegment: requestedMarketSegment,
     })
     return enriched
       ? NextResponse.json(enriched)

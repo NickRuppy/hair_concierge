@@ -41,6 +41,7 @@ import {
 } from "@/lib/personal-plan/products/state-machine"
 import {
   Stage3ProductsGatewayError,
+  type Stage3BootstrapBudgetEnvelope,
   type Stage3CompleteResponse,
   type Stage3DecisionReviewProjection,
   type Stage3DraftResponse,
@@ -78,6 +79,7 @@ import {
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 import type { Stage3Bootstrap } from "@/lib/personal-plan/products/stage2-entry-adapter"
 import type { Stage3FitComparison } from "@/lib/personal-plan/products/fit-comparison"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 import {
   PRODUCT_FREQUENCIES,
   PRODUCT_FREQUENCY_LABELS,
@@ -106,10 +108,28 @@ import {
 } from "./product-fit-comparison"
 import { OilGroupReview, type OilGroupReviewCase } from "./oil-group-review"
 import {
+  parseShoppingBudget,
+  saveStage3ShoppingBudget,
+  type Stage3BudgetSaveResult,
+} from "./stage3-budget-api"
+import {
+  EMPTY_STAGE3_BUDGET_ANSWER,
+  initialStage3BudgetAnswer,
+  sameStage3Budget,
+  Stage3BudgetStep,
+  stage3BudgetFromAnswer,
+  type Stage3BudgetAnswer,
+  type Stage3BudgetSaveStatus,
+  type Stage3BudgetScreen,
+} from "./stage3-budget-step"
+import {
   clearDependentHeatReviewStateOnOilChange,
   isCurrentStage3PreviewGeneration,
+  mergeStage3PreviewBundles,
   reconcileStage3PreviewProjection,
+  retainStage3ChoicesAllowedByBundles,
   shouldRefreshStage3Preview,
+  stage3DecisionIntentStillAllowed as decisionIntentStillAllowed,
   stage3ProjectedFinalDecisionIntents,
 } from "./stage3-preview-projection"
 import {
@@ -129,6 +149,8 @@ type FlowPhase =
   | "capture"
   | "roles"
   | "need_revision_review"
+  /** The package-price budget, asked once before the first decision when none is saved. */
+  | "budget"
   | "decisions"
   | "handoff"
 
@@ -142,10 +164,30 @@ export function normalizeCanonicalStage3LoadError(error: unknown): unknown {
   return error
 }
 
-function flowPhaseForDraft(draft: Stage3ProductDraft): FlowPhase {
+export function flowPhaseForDraft(draft: Stage3ProductDraft, budgetRequired = false): FlowPhase {
   if (draft.pass === "need_revision_review") return "need_revision_review"
   if (draft.pass === "ready_for_routine" || draft.status === "completed") return "handoff"
-  return draft.pass === "product_capture" && draft.categoryCursor ? "capture" : "decisions"
+  if (draft.pass === "product_capture" && draft.categoryCursor) return "capture"
+  // Decisions never open while the budget gate holds them; the budget step comes first.
+  return budgetRequired ? "budget" : "decisions"
+}
+
+/** A budget envelope from an untyped transport body; `undefined` when absent or malformed. */
+export function parseStage3BudgetEnvelope(
+  value: unknown,
+): Stage3BootstrapBudgetEnvelope | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined
+  const candidate = value as Record<string, unknown>
+  if (candidate.status === "budget_required") {
+    const suggestion =
+      candidate.suggestion === 5 || candidate.suggestion === 15 ? candidate.suggestion : null
+    return { status: "budget_required", suggestion }
+  }
+  if (candidate.status === "saved") {
+    const budget = parseShoppingBudget(candidate.value)
+    return budget ? { status: "saved", value: budget } : undefined
+  }
+  return undefined
 }
 
 type Stage3DecisionReviewBundle = {
@@ -203,12 +245,23 @@ type Stage3UiGateway = Stage3ProductsGateway & {
     intents: Stage3AuthoritySemanticIntent[]
   }) => Promise<Stage3DecisionReviewProjection>
   reviewDecisionBundles?: (input: { draftId: string }) => Promise<Stage3DecisionReviewBundle[]>
+  /**
+   * Budget state of a decision-ready draft for gateways that load bundles separately (Labs).
+   * The HTTP transport carries the same envelope on the Stage-3 bootstrap instead.
+   */
+  loadShoppingBudget?: (input: { draftId: string }) => Promise<Stage3BootstrapBudgetEnvelope | null>
+  /** Replaces the HTTP save of the budget (Labs: in memory). */
+  saveShoppingBudget?: (budget: ShoppingBudget) => Promise<Stage3BudgetSaveResult>
 }
 
 export type Stage3AuthorityDraftResponse = Stage3DraftResponse & {
   authorityEvaluations?: Stage3AuthorityEvaluation[]
   fitComparisons?: Stage3FitComparison[]
+  budget?: Stage3BootstrapBudgetEnvelope
 }
+
+/** The mounted bootstrap; `budget` mirrors the Stage-3 bootstrap envelope when the gate is on. */
+type Stage3FlowBootstrap = Stage3Bootstrap & { budget?: Stage3BootstrapBudgetEnvelope }
 
 export type Stage3RoutineHandoff = Pick<
   Extract<Stage3CompleteResponse, { status: "ready_for_routine" }>,
@@ -300,7 +353,7 @@ export function Stage3ProductsFlow({
   searchDebounceMs?: number
   finalizationTimeoutMs?: number
   entryContext?: Stage3EntryContext
-  bootstrap?: Stage3Bootstrap
+  bootstrap?: Stage3FlowBootstrap
   draftId?: string
   userId?: string
   gateway?: Stage3UiGateway
@@ -357,7 +410,45 @@ export function Stage3ProductsFlow({
   const [reviewSelectedKinds, setReviewSelectedKinds] =
     useState<PersonalPlanCategory[]>(initialOwnedCategories)
   const [productKindStatus, setProductKindStatus] = useState<"idle" | "saving" | "error">("idle")
-  const [phase, setPhase] = useState<FlowPhase>(() => flowPhaseForDraft(initialDraft))
+  const initialBudgetEnvelope = bootstrap?.budget
+  const budgetRequiredRef = useRef(
+    initialBudgetEnvelope?.status === "budget_required" && requiresFitReviewBundles(initialDraft),
+  )
+  const [phase, setPhase] = useState<FlowPhase>(() =>
+    flowPhaseForDraft(initialDraft, budgetRequiredRef.current),
+  )
+  const [savedBudget, setSavedBudget] = useState<ShoppingBudget | null>(() =>
+    initialBudgetEnvelope?.status === "saved" ? initialBudgetEnvelope.value : null,
+  )
+  const [budgetSuggestion, setBudgetSuggestion] = useState<5 | 15 | null>(() =>
+    initialBudgetEnvelope?.status === "budget_required" ? initialBudgetEnvelope.suggestion : null,
+  )
+  const [budgetAnswer, setBudgetAnswer] = useState<Stage3BudgetAnswer>(() =>
+    initialBudgetEnvelope?.status === "budget_required"
+      ? initialStage3BudgetAnswer({ saved: null, suggestion: initialBudgetEnvelope.suggestion })
+      : EMPTY_STAGE3_BUDGET_ANSWER,
+  )
+  const [budgetScreen, setBudgetScreen] = useState<Stage3BudgetScreen>("limit")
+  const [budgetSaveStatus, setBudgetSaveStatus] = useState<Stage3BudgetSaveStatus>("idle")
+  /** Where Back from the first budget screen leads: capture (gate) or the open decision (edit). */
+  const [budgetReturn, setBudgetReturn] = useState<"capture" | "decisions">("capture")
+  const [budgetStepShown, setBudgetStepShown] = useState(() => budgetRequiredRef.current)
+  /**
+   * Mirrors „a budget is saved“ for async callbacks: with a budget the server allocates it over
+   * the whole proposal, so every pending choice refreshes the other roles' bundles.
+   */
+  const budgetActiveRef = useRef(initialBudgetEnvelope?.status === "saved")
+  /** A budget was saved but its review bundles have not loaded yet (the reload failed). */
+  const budgetBundlesPendingRef = useRef(false)
+  /**
+   * The budget projection of the pending choices: review actions and submission wait while it
+   * loads and stay blocked after a failure until a retry succeeds.
+   */
+  const [budgetPreviewStatus, setBudgetPreviewStatus] = useState<"idle" | "loading" | "failed">(
+    "idle",
+  )
+  const budgetPreviewBlocked = budgetPreviewStatus !== "idle"
+  const budgetPreviewRequest = useRef(0)
   const [draft, setDraft] = useState<Stage3ProductDraft>(initialDraft)
   const recoveryScope = useMemo(
     () => pendingRecoveryScopeForDraft(initialDraft, personalPlanId),
@@ -688,6 +779,7 @@ export function Stage3ProductsFlow({
       bootstrap.draft,
       bootstrap.authorityEvaluations,
       bootstrap.fitComparisons,
+      bootstrap.budget,
     ).catch(() => {
       setSystemIssue({
         kind: "error",
@@ -923,6 +1015,7 @@ export function Stage3ProductsFlow({
       phase !== "decisions" ||
       authorityStatus !== "ready" ||
       decisionSubmitStatus !== "idle" ||
+      budgetPreviewBlocked ||
       pendingRecoveryMode ||
       systemIssue ||
       visibleDecisionSubjects.length === 0 ||
@@ -935,6 +1028,7 @@ export function Stage3ProductsFlow({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     authorityStatus,
+    budgetPreviewBlocked,
     decisionSubmitStatus,
     visibleDecisionSubjects,
     localReviewChoices,
@@ -959,6 +1053,8 @@ export function Stage3ProductsFlow({
               ? "idle"
               : "saving"
 
+  // The budget step counts as one more step only in journeys that actually show it.
+  const budgetInJourney = budgetStepShown || phase === "budget"
   const shell = (
     children: React.ReactNode,
     stepLabel: string,
@@ -969,8 +1065,8 @@ export function Stage3ProductsFlow({
     <Stage3Shell
       title="Produkte"
       currentStepLabel={stepLabel}
-      completedSteps={progressForPhase(phase, categoryIndex, requirements.length)}
-      totalSteps={requirements.length + 3}
+      completedSteps={progressForPhase(phase, categoryIndex, requirements.length, budgetInJourney)}
+      totalSteps={requirements.length + 3 + (budgetInJourney ? 1 : 0)}
       saveState={{
         status: shellSaveStatus,
         // Only recovery and system states name themselves; every capture label stays the
@@ -1290,6 +1386,23 @@ export function Stage3ProductsFlow({
     )
   }
 
+  if (phase === "budget") {
+    return shell(
+      <Stage3BudgetStep
+        screen={budgetScreen}
+        answer={budgetAnswer}
+        suggestion={budgetSuggestion}
+        saveStatus={budgetSaveStatus}
+        onSelectLimit={selectBudgetLimit}
+        onSelectFlexibility={selectBudgetFlexibility}
+        onContinue={() => void continueBudget()}
+      />,
+      "Budget",
+      backFromBudget,
+      budgetSaveStatus === "saving",
+    )
+  }
+
   if (phase === "decisions") {
     const clarification = inventoryClarifications[0]
     if (clarification) {
@@ -1359,6 +1472,20 @@ export function Stage3ProductsFlow({
         )
       }
     }
+    if (budgetPreviewStatus === "failed") {
+      // The pending choices could not be projected with the budget: the visible defaults may be
+      // stale, so nothing is chosen or submitted until the projection succeeds.
+      return shell(
+        <Stage3SystemState
+          state="error"
+          title="Passung wird aktualisiert."
+          message="Bitte prüfe den aktuellen Stand erneut."
+          actionLabel="Erneut prüfen"
+          onAction={() => void previewLocalDecisionBundles(localReviewChoices, reviewHistory)}
+        />,
+        CATEGORY_COPY[nextSubject.category].label,
+      )
+    }
     const reviewBundle = reviewBundles.get(nextSubject.decisionKey)
     if (!reviewBundle) {
       return shell(
@@ -1373,6 +1500,8 @@ export function Stage3ProductsFlow({
       )
     }
     const reviewControlsDisabled = decisionSubmitStatus !== "idle" || Boolean(pendingRecoveryMode)
+    // Back stays available while a budget projection runs; choosing waits for it.
+    const reviewActionsDisabled = reviewControlsDisabled || budgetPreviewBlocked
     // An UNDECIDED oil subject while a group has already committed IS a deselected follow-up
     // (see oilFollowUpCopy doc comment). A committed member can still be reached through Back —
     // it keeps its own screen, or the follow-up heading would ask again for what the context
@@ -1411,12 +1540,14 @@ export function Stage3ProductsFlow({
         onSelectedRecommendationChange={(productId) =>
           setSelectedRecommendation({ subjectKey: nextSubject.decisionKey, productId })
         }
-        disabled={reviewControlsDisabled}
+        disabled={reviewActionsDisabled}
         // The grouped screen owns the single commit action for every checked use case.
         hideActions={oilReviewGroup !== null}
         headingOverride={oilFollowUp?.headingOverride}
         scopeContextLine={oilFollowUp?.scopeContextLine}
         primaryActionLabelOverride={oilFollowUp?.primaryActionLabelOverride}
+        budget={savedBudget}
+        onEditBudget={savedBudget ? editBudget : undefined}
         onRetry={() => void reloadDecisionBundle(draft)}
         onAction={(action, selectedCandidate) =>
           void chooseFitDecision(nextSubject.decisionKey, action, selectedCandidate)
@@ -1431,7 +1562,7 @@ export function Stage3ProductsFlow({
           checkedKeys={oilGroupCheckedKeys}
           onToggle={(decisionKey) => toggleOilGroupUseCase(oilReviewGroup, decisionKey)}
           onCommit={() => commitOilGroup(oilReviewGroup)}
-          disabled={reviewControlsDisabled}
+          disabled={reviewActionsDisabled}
         >
           {comparison}
         </OilGroupReview>
@@ -1511,6 +1642,7 @@ export function Stage3ProductsFlow({
         loadedDraft,
         response.authorityEvaluations,
         response.fitComparisons,
+        response.budget,
       )
       restoreStage3ReviewDraft(loadedDraft, reviews, reviewDraftToRestore)
       analytics.track("personal_plan_stage3_flow_viewed", {
@@ -1529,6 +1661,7 @@ export function Stage3ProductsFlow({
         loadedDraft,
         response.authorityEvaluations,
         response.fitComparisons,
+        response.budget,
       )
       restoreStage3ReviewDraft(loadedDraft, reviews, reviewDraftToRestore)
       return
@@ -1566,7 +1699,7 @@ export function Stage3ProductsFlow({
     if (sameProductKinds(normalized, initial)) {
       setConfirmedOwnedCategories(normalized)
       setReviewedProductKinds(true)
-      setPhase(flowPhaseForDraft(initialDraft))
+      setPhase(flowPhaseForDraft(initialDraft, budgetRequiredRef.current))
       return
     }
     if (!onProductKindsCorrection) {
@@ -1588,12 +1721,52 @@ export function Stage3ProductsFlow({
     }
   }
 
+  /**
+   * Records what the server said about the budget. `undefined` = this load carried no budget
+   * information, so the current gate stays as it is; `null` = gate off.
+   */
+  function applyBudgetEnvelope(envelope: Stage3BootstrapBudgetEnvelope | null | undefined) {
+    if (envelope === undefined) return
+    if (envelope === null) {
+      budgetRequiredRef.current = false
+      return
+    }
+    if (envelope.status === "saved") {
+      budgetRequiredRef.current = false
+      budgetActiveRef.current = true
+      setSavedBudget(envelope.value)
+      return
+    }
+    budgetRequiredRef.current = true
+    budgetActiveRef.current = false
+    setSavedBudget(null)
+    setBudgetSuggestion(envelope.suggestion)
+    // An answer the user already gave in this session survives; only an empty one is preselected.
+    setBudgetAnswer((current) =>
+      current.limit === null
+        ? initialStage3BudgetAnswer({ saved: null, suggestion: envelope.suggestion })
+        : current,
+    )
+  }
+
+  /** The budget gate holds the decisions: no bundles exist until a budget is saved. */
+  function holdDecisionsForBudget(envelope: Stage3BootstrapBudgetEnvelope) {
+    applyBudgetEnvelope(envelope)
+    const bundles: Stage3DecisionReviewBundles = new Map()
+    setReviewBundles(bundles)
+    setDisplayedAlternative({ subjectKey: null, index: 0 })
+    setAuthorityStatus("ready")
+    return bundles
+  }
+
   async function loadDecisionReviewBundles(
     sourceDraft: Stage3ProductDraft,
     preloaded?: Stage3AuthorityEvaluation[],
     preloadedComparisons?: Stage3FitComparison[],
+    preloadedBudget?: Stage3BootstrapBudgetEnvelope | null,
   ): Promise<Stage3DecisionReviewBundles> {
     if (!requiresFitReviewBundles(sourceDraft)) {
+      budgetRequiredRef.current = false
       const bundles = new Map()
       setReviewBundles(bundles)
       setDisplayedAlternative({ subjectKey: null, index: 0 })
@@ -1601,6 +1774,11 @@ export function Stage3ProductsFlow({
       return bundles
     }
     setAuthorityStatus("loading")
+    let budget = preloadedBudget
+    if (budget === undefined && !preloaded && gateway.loadShoppingBudget) {
+      budget = await gateway.loadShoppingBudget({ draftId: sourceDraft.draftId })
+    }
+    if (budget?.status === "budget_required") return holdDecisionsForBudget(budget)
     let evaluations = preloaded
     let comparisons = preloadedComparisons ?? []
     if (!evaluations) {
@@ -1621,11 +1799,16 @@ export function Stage3ProductsFlow({
         if (!response.ok || !body || body.draft.draftId !== sourceDraft.draftId) {
           throw new Stage3ProductsGatewayError("temporarily_unavailable")
         }
+        const bodyBudget = parseStage3BudgetEnvelope(body.budget)
+        if (bodyBudget?.status === "budget_required") return holdDecisionsForBudget(bodyBudget)
+        budget = bodyBudget ?? budget
         evaluations = body.authorityEvaluations
         comparisons = body.fitComparisons ?? []
       }
     }
     if (!evaluations) throw new Stage3ProductsGatewayError("temporarily_unavailable")
+    applyBudgetEnvelope(budget)
+    budgetBundlesPendingRef.current = false
     const bundles = decisionReviewBundlesBySubject(evaluations, comparisons)
     setReviewBundles(bundles)
     setDisplayedAlternative({ subjectKey: null, index: 0 })
@@ -1639,23 +1822,217 @@ export function Stage3ProductsFlow({
       canonical.draft,
       canonical.authorityEvaluations,
       canonical.fitComparisons,
+      canonical.budget,
     )
-    setPhase("decisions")
+    enterDecisionPhase()
   }
 
   async function prepareDecisionPhase(
     sourceDraft: Stage3ProductDraft,
     preloaded?: Stage3AuthorityEvaluation[],
     preloadedComparisons?: Stage3FitComparison[],
+    preloadedBudget?: Stage3BootstrapBudgetEnvelope | null,
   ) {
     if (sourceDraft.pass === "need_revision_review") {
       setAuthorityStatus("ready")
       setPhase("need_revision_review")
       return new Map() as Stage3DecisionReviewBundles
     }
-    const bundles = await loadDecisionReviewBundles(sourceDraft, preloaded, preloadedComparisons)
-    setPhase("decisions")
+    const bundles = await loadDecisionReviewBundles(
+      sourceDraft,
+      preloaded,
+      preloadedComparisons,
+      preloadedBudget,
+    )
+    enterDecisionPhase()
     return bundles
+  }
+
+  /**
+   * Every way into the decisions passes here: while no budget is saved (gate on), the budget
+   * step opens instead, so a resumed or reloaded decision-ready draft can never skip it.
+   */
+  function enterDecisionPhase() {
+    if (budgetRequiredRef.current) {
+      openBudgetStep("capture")
+      return
+    }
+    setPhase("decisions")
+  }
+
+  function openBudgetStep(returnTo: "capture" | "decisions") {
+    setBudgetReturn(returnTo)
+    setBudgetScreen("limit")
+    setBudgetSaveStatus("idle")
+    setBudgetStepShown(true)
+    setPhase("budget")
+  }
+
+  /** „Ändern“ on the budget line: reopen the step with the saved answer, nothing saved yet. */
+  function editBudget() {
+    if (decisionSubmitInFlight.current || pendingRecoveryMode) return
+    setBudgetAnswer(initialStage3BudgetAnswer({ saved: savedBudget, suggestion: null }))
+    openBudgetStep("decisions")
+  }
+
+  function selectBudgetLimit(limit: Stage3BudgetAnswer["limit"]) {
+    if (budgetSaveStatus === "saving") return
+    setBudgetSaveStatus("idle")
+    setBudgetAnswer((current) =>
+      current.limit === limit ? current : { limit, allowExceptions: null },
+    )
+  }
+
+  function selectBudgetFlexibility(allowExceptions: boolean) {
+    if (budgetSaveStatus === "saving") return
+    setBudgetSaveStatus("idle")
+    setBudgetAnswer((current) => ({ ...current, allowExceptions }))
+  }
+
+  function backFromBudget() {
+    if (budgetSaveStatus === "saving") return
+    setBudgetSaveStatus("idle")
+    if (budgetScreen === "flexibility") {
+      setBudgetScreen("limit")
+      return
+    }
+    if (budgetReturn === "decisions" && !budgetRequiredRef.current) {
+      // A saved budget whose bundles failed to load cannot show the old review: load them first.
+      if (budgetBundlesPendingRef.current) {
+        void loadBundlesForSavedBudget()
+        return
+      }
+      setPhase("decisions")
+      return
+    }
+    const lastCategory = requirements[requirements.length - 1]?.category
+    if (lastCategory) void reopenCategory(lastCategory)
+    else onBackToRefinement?.()
+  }
+
+  async function continueBudget() {
+    if (budgetSaveStatus === "saving") return
+    const capped = budgetAnswer.limit === 5 || budgetAnswer.limit === 15
+    if (budgetScreen === "limit" && capped) {
+      setBudgetSaveStatus("idle")
+      setBudgetScreen("flexibility")
+      return
+    }
+    const budget = stage3BudgetFromAnswer(budgetAnswer)
+    if (!budget) return
+    // Reconfirming the saved answer needs no save and keeps the review exactly as it is, once its
+    // bundles loaded. After a failed reload the same answer retries the load instead.
+    if (!budgetRequiredRef.current && savedBudget && sameStage3Budget(budget, savedBudget)) {
+      if (budgetBundlesPendingRef.current) {
+        await loadBundlesForSavedBudget()
+        return
+      }
+      setBudgetSaveStatus("idle")
+      setPhase("decisions")
+      return
+    }
+    setBudgetSaveStatus("saving")
+    let result: Stage3BudgetSaveResult
+    try {
+      result = gateway.saveShoppingBudget
+        ? await gateway.saveShoppingBudget(budget)
+        : await saveStage3ShoppingBudget(budget)
+    } catch {
+      result = { status: "unavailable" }
+    }
+    if (result.status !== "saved") {
+      setBudgetSaveStatus(result.status)
+      return
+    }
+    budgetRequiredRef.current = false
+    budgetActiveRef.current = true
+    budgetBundlesPendingRef.current = true
+    setSavedBudget(result.budget)
+    await loadBundlesForSavedBudget()
+  }
+
+  /**
+   * Loads the review for the saved budget; decisions open only once it loaded. A failure keeps
+   * the budget step (answer kept) and marks the bundles pending, so „Weiter“ retries the load.
+   */
+  async function loadBundlesForSavedBudget() {
+    setBudgetSaveStatus("saving")
+    try {
+      await reloadBundlesAfterBudgetSave()
+    } catch (error) {
+      setBudgetSaveStatus("idle")
+      handleMutationError(error)
+      return
+    }
+    budgetBundlesPendingRef.current = false
+    // The reload projected every pending choice with the saved budget.
+    setBudgetPreviewStatus("idle")
+    setBudgetSaveStatus("idle")
+    setPhase("decisions")
+    // The server asked for the budget at completion, after every decision was already saved:
+    // nothing is left to review, so completion resumes directly.
+    if (activeDraft.status === "active" && !hasUnresolvedDecisionSubjects(activeDraft)) {
+      void completeFlow(activeDraft)
+    }
+  }
+
+  /** The server requires a budget before it resolves or completes: ask it, keep every choice. */
+  function requireBudgetBeforeDecisions() {
+    const lastSavedBudget = savedBudget
+    applyBudgetEnvelope({ status: "budget_required", suggestion: budgetSuggestion })
+    // The last answer this journey knew is offered again; it is saved only once confirmed.
+    setBudgetAnswer((current) =>
+      current.limit === null
+        ? initialStage3BudgetAnswer({ saved: lastSavedBudget, suggestion: budgetSuggestion })
+        : current,
+    )
+    budgetBundlesPendingRef.current = false
+    openBudgetStep("capture")
+  }
+
+  /**
+   * After a budget save the server recomputes every role with the new budget. Pending local
+   * choices travel along as preview intents so the server keeps them; choices the new review
+   * no longer offers fall back to their open screen.
+   */
+  async function reloadBundlesAfterBudgetSave() {
+    const intents = Object.values(localReviewChoices).flatMap((choice) =>
+      choice.kind === "decision" ? [choice.intent] : [],
+    )
+    let reviews: Stage3DecisionReviewBundles | null = null
+    if (intents.length > 0 && gateway.previewDecisionBundles) {
+      previewRequestGeneration.current += 1
+      setAuthorityStatus("loading")
+      const projection = await gateway.previewDecisionBundles({
+        draftId: activeDraft.draftId,
+        expectedRevision: activeDraft.revision,
+        intents,
+      })
+      if (projection.status === "ready") {
+        reviews = new Map(
+          projection.bundles.map(
+            (bundle) => [bundle.authorityEvaluation.subjectKey, bundle] as const,
+          ),
+        )
+        setReviewBundles(reviews)
+        setDisplayedAlternative({ subjectKey: null, index: 0 })
+        setAuthorityStatus("ready")
+      }
+    }
+    reviews ??= await loadDecisionReviewBundles(activeDraft)
+    setSelectedRecommendation({ subjectKey: null, productId: null })
+    const retainedChoices: Record<string, Stage3LocalReviewChoice> = {}
+    for (const [decisionKey, choice] of Object.entries(localReviewChoices)) {
+      if (choice.kind !== "decision" || decisionIntentStillAllowed(reviews, choice.intent)) {
+        retainedChoices[decisionKey] = choice
+      }
+    }
+    const retainedOrder = reviewHistory.filter((key) => retainedChoices[key])
+    if (Object.keys(retainedChoices).length !== Object.keys(localReviewChoices).length) {
+      setLocalReviewChoices(retainedChoices)
+      setReviewHistory(retainedOrder)
+      persistLocalReviewDraft(retainedChoices, retainedOrder)
+    }
   }
 
   async function resolveNeedRevision(input: {
@@ -1752,7 +2129,7 @@ export function Stage3ProductsFlow({
       const conflict = response.status === 409 ? parseStage3RevisionConflict(body) : null
       if (conflict) return conflict
       if (!response.ok) {
-        throw stage3GatewayErrorFromResponse(response, body)
+        throw stage3FlowErrorFromResponse(response, body)
       }
       if (!body || typeof body !== "object" || !("status" in body)) {
         throw new Stage3ProductsGatewayError("temporarily_unavailable")
@@ -1832,7 +2209,7 @@ export function Stage3ProductsFlow({
       const conflict = response.status === 409 ? parseStage3RevisionConflict(body) : null
       if (conflict) return conflict
       if (!response.ok) {
-        throw stage3GatewayErrorFromResponse(response, body)
+        throw stage3FlowErrorFromResponse(response, body)
       }
       if (!body || typeof body !== "object" || !("status" in body)) {
         throw new Stage3ProductsGatewayError("temporarily_unavailable")
@@ -2174,13 +2551,21 @@ export function Stage3ProductsFlow({
   }
 
   async function handlePendingRecoveryError(error: unknown, sourceDraft: Stage3ProductDraft) {
+    if (isStage3BudgetRequiredError(error)) {
+      // Nothing was resolved or completed: the server waits for a budget. Ask it; the pending
+      // choices stay and are projected with the new budget once it is saved.
+      clearPendingStage3Recovery(sourceDraft)
+      setPendingRecoveryMode(null)
+      requireBudgetBeforeDecisions()
+      return
+    }
     if (error instanceof Stage3ProductsGatewayError) {
       const disposition = classifyPendingStage3RecoveryError(error.code)
       if (disposition !== "reconcile_unknown_outcome") {
         clearPendingStage3Recovery(sourceDraft)
         setPendingRecoveryMode(null)
         if (disposition === "reopen_incomplete_decision") {
-          setPhase("decisions")
+          enterDecisionPhase()
           return
         }
         presentTerminalRecoveryError(error, disposition)
@@ -2309,6 +2694,7 @@ export function Stage3ProductsFlow({
           canonicalDraft,
           canonical.authorityEvaluations,
           canonical.fitComparisons,
+          canonical.budget,
         )
         if (!pendingDecisionIntentsStillAllowed(canonicalDraft, reviews, intent)) {
           clearPendingStage3Recovery(canonicalDraft)
@@ -2427,6 +2813,7 @@ export function Stage3ProductsFlow({
         canonical.draft,
         canonical.authorityEvaluations,
         canonical.fitComparisons,
+        canonical.budget,
       )
       clearPendingStage3Recovery(canonical.draft)
       setPendingRecoveryMode(null)
@@ -2437,7 +2824,7 @@ export function Stage3ProductsFlow({
         operation: recoveryAnalyticsOperation(intent),
         outcome: "resend_succeeded",
       })
-      if (hasUnresolvedDecisionSubjects(canonical.draft)) setPhase("decisions")
+      if (hasUnresolvedDecisionSubjects(canonical.draft)) enterDecisionPhase()
       else void completeFlow(canonical.draft)
       return
     }
@@ -2541,7 +2928,7 @@ export function Stage3ProductsFlow({
     if (response.status === "not_ready") {
       clearPendingStage3Recovery(canonicalDraft)
       setPendingRecoveryMode(null)
-      setPhase("decisions")
+      enterDecisionPhase()
       return
     }
     clearPendingStage3Recovery(response.draft)
@@ -2569,8 +2956,9 @@ export function Stage3ProductsFlow({
           response.draft,
           response.authorityEvaluations,
           response.fitComparisons,
+          response.budget,
         )
-        setPhase("decisions")
+        enterDecisionPhase()
       } else {
         void completeFlow(response.draft)
       }
@@ -2582,13 +2970,14 @@ export function Stage3ProductsFlow({
           response.draft,
           response.authorityEvaluations,
           response.fitComparisons,
+          response.budget,
         )
         restoreStage3ReviewDraft(
           response.draft,
           reviews,
           readStage3ReviewDraft(pendingRecoveryStorage, recoveryScope),
         )
-        setPhase("decisions")
+        enterDecisionPhase()
       } else {
         void completeFlow(response.draft)
       }
@@ -2742,6 +3131,7 @@ export function Stage3ProductsFlow({
         canonical.draft,
         canonical.authorityEvaluations,
         canonical.fitComparisons,
+        canonical.budget,
       )
     } catch (error) {
       finishDecisionSubmission()
@@ -2786,6 +3176,14 @@ export function Stage3ProductsFlow({
         setCurrentReviewSubjectKey(previousKey)
         return
       }
+    }
+    // Back from the first decision returns to the budget answer given in this journey; a reused
+    // saved budget was never shown, so Back goes to capture as before.
+    if (budgetStepShown && savedBudget) {
+      setBudgetAnswer(initialStage3BudgetAnswer({ saved: savedBudget, suggestion: null }))
+      openBudgetStep("capture")
+      setBudgetScreen(savedBudget.kind === "capped" ? "flexibility" : "limit")
+      return
     }
     await reopenCategory(subject.category)
   }
@@ -2921,6 +3319,7 @@ export function Stage3ProductsFlow({
         choices: nextChoices,
         leaveOnOilDecisionKeys,
         changedDecisionKeys: decisionKeys,
+        budgetActive: budgetActiveRef.current,
       })
     ) {
       void previewLocalDecisionBundles(nextChoices, nextOrder)
@@ -2930,21 +3329,55 @@ export function Stage3ProductsFlow({
   async function previewLocalDecisionBundles(
     choices: Record<string, Stage3LocalReviewChoice>,
     order: string[] = reviewHistory,
+    sourceDraft: Stage3ProductDraft = activeDraft,
+    afterConflict = false,
   ) {
     if (!gateway.previewDecisionBundles) return
+    const budgetActive = budgetActiveRef.current
     const intents = Object.values(choices).flatMap((choice) =>
       choice.kind === "decision" ? [choice.intent] : [],
     )
-    if (intents.length === 0) return
+    if (intents.length === 0) {
+      if (budgetActive) setBudgetPreviewStatus("idle")
+      return
+    }
     const requestGeneration = ++previewRequestGeneration.current
+    let budgetOutcome: "idle" | "failed" = "idle"
+    if (budgetActive) {
+      // Serialize: review actions and auto-submit wait until this projection is applied, so no
+      // choice is made on a bundle the pending choices already changed.
+      budgetPreviewRequest.current = requestGeneration
+      setBudgetPreviewStatus("loading")
+    }
     try {
       const projection = await gateway.previewDecisionBundles({
-        draftId: activeDraft.draftId,
-        expectedRevision: activeDraft.revision,
+        draftId: sourceDraft.draftId,
+        expectedRevision: sourceDraft.revision,
         intents,
       })
       if (!isCurrentStage3PreviewGeneration(requestGeneration, previewRequestGeneration.current))
         return
+      if (projection.status !== "ready" && budgetActive) {
+        if (afterConflict) {
+          // The draft moved again right after a reconciliation: let the user retry.
+          budgetOutcome = "failed"
+          return
+        }
+        // The canonical draft moved: the existing conflict recovery reloads it and keeps the
+        // still-allowed choices, which are then projected again with the budget.
+        const retained = await reconcileReviewedChoicesAfterConflict(
+          projection.latestDraft,
+          undefined,
+          { choices, order },
+        )
+        await previewLocalDecisionBundles(
+          retained.choices,
+          retained.order,
+          projection.latestDraft,
+          true,
+        )
+        return
+      }
       if (projection.status !== "ready") {
         // A stale projection cannot keep an earlier server-authored Heat
         // resolution hidden while the canonical draft is moving underneath it.
@@ -2959,29 +3392,47 @@ export function Stage3ProductsFlow({
         previousAutoResolvedIntents: autoResolvedIntents,
         projection,
       })
+      let nextChoices = reconciliation.choices
+      let nextOrder = reconciliation.order
+      if (budgetActive) {
+        // The budget spans the whole proposal: every projected role bundle replaces its
+        // predecessor (new defaults, notices, allowance). The user's own pending choices stay
+        // unless their role no longer offers them.
+        const retained = retainStage3ChoicesAllowedByBundles({
+          choices: nextChoices,
+          order: nextOrder,
+          reviews: mergeStage3PreviewBundles({ current: reviewBundles, projection, budgetActive }),
+        })
+        nextChoices = retained.choices
+        nextOrder = retained.order
+        setDisplayedAlternative({ subjectKey: null, index: 0 })
+        setSelectedRecommendation({ subjectKey: null, productId: null })
+        if (retained.droppedKeys.length > 0) setCurrentReviewSubjectKey(retained.droppedKeys[0]!)
+      }
       setLocallyResolvedDecisionKeys(reconciliation.locallyResolvedDecisionKeys)
       setAutoResolvedIntents(reconciliation.autoResolvedIntents)
-      setLocalReviewChoices(reconciliation.choices)
-      setReviewHistory(reconciliation.order)
-      persistLocalReviewDraft(reconciliation.choices, reconciliation.order)
-      setReviewBundles(
-        (current) =>
-          new Map([
-            ...current,
-            // This projection exists solely to re-evaluate Heat after the local
-            // Oil selection. Other review bundles remain the original server
-            // snapshot until the final atomic server validation.
-            ...projection.bundles
-              .filter((bundle) => bundle.authorityEvaluation.category === "heat_protectant")
-              .map((bundle) => [bundle.authorityEvaluation.subjectKey, bundle] as const),
-          ]),
+      setLocalReviewChoices(nextChoices)
+      setReviewHistory(nextOrder)
+      persistLocalReviewDraft(nextChoices, nextOrder)
+      // Without a budget this projection exists solely to re-evaluate Heat after the local Oil
+      // selection; other review bundles remain the original server snapshot until the final
+      // atomic server validation.
+      setReviewBundles((current) =>
+        mergeStage3PreviewBundles({ current, projection, budgetActive }),
       )
     } catch {
       if (!isCurrentStage3PreviewGeneration(requestGeneration, previewRequestGeneration.current))
         return
+      // With a budget the old bundles may carry stale defaults: block until a retry succeeds.
+      if (budgetActive) budgetOutcome = "failed"
       // Keep the original server bundle visible if the read-only projection is unavailable.
       setLocallyResolvedDecisionKeys(new Set())
       setAutoResolvedIntents([])
+    } finally {
+      // Only the latest budget projection settles the review; a superseded one leaves it to it.
+      if (budgetActive && budgetPreviewRequest.current === requestGeneration) {
+        setBudgetPreviewStatus(budgetOutcome)
+      }
     }
   }
 
@@ -3031,11 +3482,22 @@ export function Stage3ProductsFlow({
         choice.intent.subjectKey.includes("decision:oil:leave_on_fibre_conditioning:"),
     )
     if (restoredOilSelection) void previewLocalDecisionBundles(restored.choices)
+    else if (
+      budgetActiveRef.current &&
+      Object.values(restored.choices).some((choice) => choice.kind === "decision")
+    ) {
+      // Server bundles were computed without the restored choices; project them with the budget.
+      void previewLocalDecisionBundles(restored.choices, restored.order)
+    }
   }
 
   async function reconcileReviewedChoicesAfterConflict(
     latestDraft: Stage3ProductDraft,
     preloadedReviews?: Stage3DecisionReviewBundles,
+    pending: { choices: Record<string, Stage3LocalReviewChoice>; order: string[] } = {
+      choices: localReviewChoices,
+      order: reviewHistory,
+    },
   ) {
     setDraft(latestDraft)
     categoryCapture.synchronizeRevision(latestDraft.revision)
@@ -3046,8 +3508,8 @@ export function Stage3ProductsFlow({
     const retainedChoices: Record<string, Stage3LocalReviewChoice> = {}
     const invalidKeys: string[] = []
 
-    for (const decisionKey of reviewHistory) {
-      const choice = localReviewChoices[decisionKey]
+    for (const decisionKey of pending.order) {
+      const choice = pending.choices[decisionKey]
       if (!choice) continue
       if (choice.kind === "decision") {
         if (!unresolvedKeys.has(decisionKey)) continue
@@ -3064,7 +3526,7 @@ export function Stage3ProductsFlow({
       else invalidKeys.push(decisionKey)
     }
 
-    const retainedOrder = reviewHistory.filter((key) => retainedChoices[key])
+    const retainedOrder = pending.order.filter((key) => retainedChoices[key])
     setLocalReviewChoices(retainedChoices)
     setReviewHistory(retainedOrder)
     previewRequestGeneration.current += 1
@@ -3100,9 +3562,10 @@ export function Stage3ProductsFlow({
       actionLabel: "Auswahl prüfen",
       retry: () => {
         setSystemIssue(null)
-        setPhase("decisions")
+        enterDecisionPhase()
       },
     })
+    return { choices: retainedChoices, order: retainedOrder }
   }
 
   async function submitReviewedDecisions() {
@@ -3233,6 +3696,7 @@ export function Stage3ProductsFlow({
             canonical.draft,
             canonical.authorityEvaluations,
             canonical.fitComparisons,
+            canonical.budget,
           )
           await reconcileReviewedChoicesAfterConflict(canonical.draft, reviews)
         } catch (reconciliationError) {
@@ -3350,7 +3814,7 @@ export function Stage3ProductsFlow({
           message: "Prüfe die letzte Entscheidung.",
           retry: () => {
             setSystemIssue(null)
-            setPhase("decisions")
+            enterDecisionPhase()
           },
         })
         return
@@ -3428,7 +3892,7 @@ export function Stage3ProductsFlow({
       actionLabel: "Weiter prüfen",
       retry: () => {
         setSystemIssue(null)
-        setPhase(flowPhaseForDraft(latestDraft))
+        setPhase(flowPhaseForDraft(latestDraft, budgetRequiredRef.current))
       },
     })
   }
@@ -3847,11 +4311,18 @@ function requirement(
   }
 }
 
-function progressForPhase(phase: FlowPhase, categoryIndex: number, requirementCount: number) {
+export function progressForPhase(
+  phase: FlowPhase,
+  categoryIndex: number,
+  requirementCount: number,
+  budgetInJourney = false,
+) {
+  const budgetStep = budgetInJourney ? 1 : 0
   if (phase === "product_kinds") return 0
   if (phase === "capture" || phase === "roles") return categoryIndex + 1
-  if (phase === "decisions") return requirementCount + 1
-  return requirementCount + 3
+  if (phase === "budget") return requirementCount + 1
+  if (phase === "decisions") return requirementCount + 1 + budgetStep
+  return requirementCount + 3 + budgetStep
 }
 
 function initialProductKindsFromAuthority(
@@ -4092,30 +4563,31 @@ function partitionStage3ReviewDraft(
   }
 }
 
-function decisionIntentStillAllowed(
-  reviews: Stage3DecisionReviewBundles,
-  intent: Stage3AuthoritySemanticIntent,
-) {
-  const review = reviews.get(intent.subjectKey)
-  const evaluation = review?.authorityEvaluation
-  if (intent.action === "select_replacement") {
-    return Boolean(
-      review?.fitComparison.alternatives.some(
-        (candidate) =>
-          candidate.productId === intent.selectedCandidateId &&
-          candidate.factFingerprint === intent.selectedCandidateFactFingerprint,
-      ),
+/** Server code for resolve/complete while the budget flag is on and no budget is saved (409). */
+const STAGE3_BUDGET_REQUIRED_CODE = "budget_required"
+
+export function isStage3BudgetRequiredError(error: unknown): boolean {
+  return (
+    error instanceof Stage3ProductsGatewayError &&
+    (error.code as string) === STAGE3_BUDGET_REQUIRED_CODE
+  )
+}
+
+/** Like `stage3GatewayErrorFromResponse`, but keeps the budget gate's own code. */
+function stage3FlowErrorFromResponse(response: Response, body: unknown) {
+  if (
+    body &&
+    typeof body === "object" &&
+    "error" in body &&
+    body.error === STAGE3_BUDGET_REQUIRED_CODE
+  ) {
+    return new Stage3ProductsGatewayError(
+      STAGE3_BUDGET_REQUIRED_CODE as Stage3ProductsGatewayError["code"],
+      undefined,
+      response.status,
     )
   }
-  if (!evaluation?.allowedActions.some((allowedAction) => allowedAction === intent.action)) {
-    return false
-  }
-  if (intent.action !== "plan_recommendation") return true
-  if (!intent.selectedCandidateId) return false
-  return (
-    evaluation.status === "known" &&
-    evaluation.recommendation?.productId === intent.selectedCandidateId
-  )
+  return stage3GatewayErrorFromResponse(response, body)
 }
 
 function isCategoryCaptureRetryLimitedError(error: unknown): error is Error & { retryAt: number } {

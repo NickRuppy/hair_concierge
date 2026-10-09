@@ -20,6 +20,7 @@ import {
   PERSONAL_PLAN_MIGRATIONS,
   PERSONAL_PLAN_STUB_PREREQUISITES,
   USER_FACTS_LOCK_MIGRATION,
+  USER_FACTS_SHOPPING_PREFERENCES_MIGRATION,
 } from "../../tests/personal-plan-pglite-migration.fixtures"
 
 const exec = promisify(execFile)
@@ -131,8 +132,11 @@ export async function createProofDatabase(database: string, options: { lock: boo
   return sql
 }
 
-/** The lock migration, applied last — after any legacy seed, exactly the rollout order. */
+/** The lock migration, applied last — after any legacy seed, exactly the rollout order — then
+ * the `shopping_preferences` extension of it (current mode). */
 export async function applyProofLock(database: string) {
   const root = new URL("../../", import.meta.url)
-  await proofSql(database)(await readFile(new URL(USER_FACTS_LOCK_MIGRATION, root), "utf8"))
+  const sql = proofSql(database)
+  await sql(await readFile(new URL(USER_FACTS_LOCK_MIGRATION, root), "utf8"))
+  await sql(await readFile(new URL(USER_FACTS_SHOPPING_PREFERENCES_MIGRATION, root), "utf8"))
 }

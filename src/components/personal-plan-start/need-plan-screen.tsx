@@ -49,6 +49,8 @@ export type NeedPlanScreenNextStatus = "idle" | "preparing" | "loading" | "error
 
 export const PLAN_START_ACCEPT_LABEL = "Zu deiner Routine"
 export const PLAN_START_ACCEPT_PENDING_LABEL = "Routine wird eingerichtet …"
+/** The accept CTA while no budget is saved: the budget question comes first (journey 5). */
+export const PLAN_START_BUDGET_FIRST_LABEL = "Weiter"
 export const PLAN_START_REFINE_LABEL = "Auf meine Produkte abstimmen"
 export const PLAN_START_REFINE_PENDING_LABEL = "Deine Produkte werden geöffnet …"
 export const PLAN_START_REFINE_ERROR =
@@ -68,6 +70,8 @@ type NeedPlanScreenProps = {
   nextStatus?: NeedPlanScreenNextStatus
   /** Non-blocking status line under the CTA, e.g. while a fallback route opens. */
   nextNotice?: string | null
+  /** The accept CTA leads into the budget question first, so it reads „Weiter". */
+  budgetFirst?: boolean
 }
 
 export function NeedPlanScreen({
@@ -78,6 +82,7 @@ export function NeedPlanScreen({
   nextIntent = "refine",
   nextStatus = "idle",
   nextNotice,
+  budgetFirst = false,
 }: NeedPlanScreenProps) {
   const transitionLayer = usePersonalPlanTransitionLayer()
   const [actionPortalTarget, setActionPortalTarget] = useState<HTMLElement | null>(null)
@@ -98,7 +103,9 @@ export function NeedPlanScreen({
       : screen.kind === "basis" && hasOptionalPage
         ? "Optionale Empfehlungen"
         : accepts
-          ? PLAN_START_ACCEPT_LABEL
+          ? budgetFirst
+            ? PLAN_START_BUDGET_FIRST_LABEL
+            : PLAN_START_ACCEPT_LABEL
           : PLAN_START_REFINE_LABEL
 
   const actionNav =
