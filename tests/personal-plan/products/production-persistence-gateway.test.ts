@@ -177,6 +177,8 @@ function persistence(draft = readyDraft()): Stage3ProductionPersistence {
             heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
           },
     loadDraft: async (input) => (input.userId === "owner-a" ? draft : null),
+    loadShoppingContext: async () => ({ budget: null, currentConcerns: [], primaryConcern: null }),
+    loadCatalogPackagePrices: async () => [],
   }
 }
 

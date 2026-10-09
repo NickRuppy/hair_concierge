@@ -1,0 +1,308 @@
+{
+ "blindId": "Q01",
+ "policy": "shampoo-classification-v1.6-candidate",
+ "identity": {
+  "brand": "JOHN FRIEDA",
+  "productName": "Violet Crush Intensiv Silber Shampoo",
+  "packSize": "250 ml",
+  "market": "DE",
+  "formulaSource": "frozen packet canonicalInci (treated as approved canonical full-INCI capture, ID-1)",
+  "normalization": "ID-2: 'Water/Aqua/Eau' is one entry; no split entries; normalized positions = packet positions (22 entries)",
+  "formulaFingerprint": "sha256(newline-joined normalized INCI) = 3c1b85ae5785e6c6a19e63bdd1cb205fb4f435783d3116823fd3cf8f5fba447b",
+  "prominenceCutoff": "E3: Fragrance/Parfum at #14 -> prominent = #1-#13",
+  "claimInciConflicts": "none material (ID-3): 'Provitamin B5' -> Panthenol #11; 'violette Pigmente' -> Acid Violet 43 #22 / Acid Blue 9 #21; 'silikonfrei' consistent with INCI",
+  "sourceGrading": "CL-SRC/E1: manufacturer source = moderate; two retailer sources = low; product name = high"
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "C1: defining anionic is Sodium Laureth Sulfate #2 (ether type, C3); prominent buffers Coco-Glucoside #3 (nonionic glucoside) and Cocamidopropyl Betaine #4 (amphoteric); no reinforcing strong anionic -> moderate. Counter-signals toward lower: Hydrogenated Vegetable Oil #7, Glyceryl Oleate #8 refatting. Convention applies cleanly; claims ('sanft gereinigt', 'Intensiv') ignored (Section 4, 3.2).",
+   "ruleIds": [
+    "C3",
+    "C4",
+    "C1",
+    "E3",
+    "3.2",
+    "N-ALT"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Section 5 high anchor via W-RICH: prominent payload_lipid Hydrogenated Vegetable Oil #7 (waxy) converges with prominent cationic Guar Hydroxypropyltrimonium Chloride #9; plus weak refatter Glyceryl Oleate #8 and humectant Panthenol #11 (R11 list, prominent). C2 strictly not met: no early silicone (payload lipid takes its place) and no distinct pearlizing/fatty-alcohol route besides HVO itself (Glyceryl Oleate is only a weak refatter). Counter-signals: HVO sits after Sodium Chloride #6 so its level is likely modest; guar mid-list; silicone-free. 'reichhaltige Formel' claim ignored (C7, W-RICH). Moderate confidence, neighbor moderate (N-ALT).",
+   "ruleIds": [
+    "C2",
+    "R11",
+    "W-RICH",
+    "E3",
+    "C7",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "high",
+   "evidenceByFamily": {
+    "cationic_polymer": [
+     "Guar Hydroxypropyltrimonium Chloride #9"
+    ],
+    "payload_lipid": [
+     "Hydrogenated Vegetable Oil #7 (waxy/hydrogenated, 6.4)"
+    ],
+    "weak_refatter": [
+     "Glyceryl Oleate #8"
+    ],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "anionic_surfactant": [
+     "Sodium Laureth Sulfate #2"
+    ],
+    "amphoteric_surfactant": [
+     "Cocamidopropyl Betaine #4"
+    ],
+    "nonionic_surfactant": [
+     "Coco-Glucoside #3"
+    ],
+    "humectant_context": [
+     "Panthenol #11"
+    ]
+   },
+   "excluded": [
+    "Citrus Aurantium Peel Oil #16, Citrus Limon Peel Oil #17 (essential/fragrance oils, 6.4)",
+    "Acid Blue 9 #21, Acid Violet 43 #22 (toning colorants, trace; not a residue-forming conditioning route)",
+    "Sorbitan Caprylate #10 (preservative booster/solubilizer, not a deposition route)",
+    "Tetrasodium Glutamate Diacetate #12 (chelator)",
+    "Citric Acid #5, Sodium Chloride #6"
+   ],
+   "unresolved": [],
+   "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Cationic guar plus a prominent waxy lipid and a refatter co-deposit; both deposition systems sit after the salt, so load is bounded."
+   },
+   "persistence": {
+    "value": "moderate",
+    "rationale": "Hydrogenated (waxy) lipid is more substantive than a liquid oil (6.4); guar is a moderately retained polymer; no silicone."
+   },
+   "resetCapacity": {
+    "value": "moderate",
+    "rationale": "C1 ether-sulfate chassis with two prominent buffers: effective ordinary reset, not strong and not weak."
+   },
+   "whyThisBand": "W-RICH holds (prominent HVO #7 + cationic guar #9), so noticeable but bounded residue is plausible; three deposition families interact (W2).",
+   "whyNotNeighborBand": "Not high: W-RICH-limited-reset requires resetCapacity weak; here reset is moderate (C1 chassis with buffers), there is no silicone, and the converging systems are mid-list after the salt, so the anchor's 'multiple persistent systems not offset by reset' route is not met. Not low: two distinct deposition families (W2) with a prominent waxy lipid make a lightweight call an understatement.",
+   "confidenceLimitingFactor": "Concentrations of HVO and guar unknown; W-RICH present makes high the realistic neighbor (W-RICH limited reset clause).",
+   "rationale": "Section 6.6 subjudgments moderate/moderate/moderate -> moderate. W1 not applicable (no silicone/guar/amodimethicone set). Claims ('reichhaltige Formel') hidden during judgment (6.5).",
+   "ruleIds": [
+    "6.3",
+    "6.4",
+    "6.5",
+    "6.6",
+    "W-RICH",
+    "W2",
+    "W1",
+    "W3",
+    "6.8",
+    "N-ALT"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "shine",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Panthenol #11"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Guar HPTC #9",
+     "Hydrogenated Vegetable Oil #7",
+     "Glyceryl Oleate #8"
+    ],
+    "limitation": "single humectant is not a coherent humectant cluster; no damage-care cluster"
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Manufacturer claim 'strahlendes, hydratisiertes ... Blond' (moderate) and retailer 'Schützt & hydratisiert' (low, range-level) point to shine/moisture, but the dominant job is yellow-tone neutralization, which has no focus value; 'hydratisiert' is footnoted as a whole-routine result (** inkl. Maske).",
+   "decisionTrace": {
+    "claimDirection": "toning/anti-yellow (not in focus vocabulary); minor 'strahlend'/'hydratisiert'",
+    "formulaCompatible": "n/a for toning; moisture verdict nonspecific",
+    "compatibleRoute": "violet colorants #21-#22 (toning, not a focus route)",
+    "decisionReason": "7.2 unsupported/generic claim relative to focus vocabulary -> general; moisture blocked by nonspecific verdict (F1); 'strahlend' describes blond tone brilliance, not a positioned gloss job."
+   },
+   "rationale": "7.2 + F1: dominant job is toning; no focus value covers it; moisture candidate fails the 7.3 verdict (nonspecific) -> general.",
+   "ruleIds": [
+    "7.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "CL-SRC",
+    "F-TRACE",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "moisture"
+   ],
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": "'hydratisiertes Blond' (manufacturer, moderate) considered",
+    "independentRoutes": "none: Panthenol #11 alone is not a moisture route cluster",
+    "exceptionCode": null
+   },
+   "rationale": "Section 8: no secondary passes distinct positioning plus an independent compatible route; moisture verdict nonspecific (7.3).",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "moderate",
+   "neighboringAlternative": "occasional_reset",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Section 9 default regular. alternating impossible (cleansingStrength moderate). Manufacturer direction 'Wöchentlich oder nach Bedarf anwenden, um Gelbstich zu neutralisieren' is a toning cadence, not an occasional-reset limit, so D1 is not met and occasional_reset does not fire; retailer 'abwechselnd mit deinem regulären Shampoo verwenden' is low-graded (CL-SRC) and could only matter for alternating anyway. Moderate confidence because the weekly direction is the realistic route to occasional_reset.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U4",
+    "D1",
+    "CL-SRC",
+    "F-TRACE"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No E2 sensitive/dry scalp claim unit (SC1); 'ohne auszutrocknen' is hair-directed protective wording (E2a). Complete ordinary formula -> not_targeted.",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "E2",
+    "E2a"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Section 11: complete INCI contains neither Piroctone Olamine nor Climbazole.",
+   "ruleIds": [
+    "11"
+   ]
+  }
+ },
+ "projection": {
+  "status": "proposal (blocked by review flags)",
+  "thicknesses": [
+   {
+    "thickness": "fine",
+    "fit": "acceptable",
+    "confidence": "moderate"
+   },
+   {
+    "thickness": "normal",
+    "fit": "ideal",
+    "confidence": "moderate"
+   },
+   {
+    "thickness": "coarse",
+    "fit": "ideal",
+    "confidence": "moderate"
+   }
+  ],
+  "thicknessFit": {
+   "fine": "acceptable",
+   "normal": "ideal",
+   "coarse": "ideal"
+  },
+  "thicknessRationale": "T1: W moderate -> fine acceptable, normal ideal; coarse ideal because C high. T6 not applicable (ordinary target). Confidence = lowest T1 input (W moderate; coarse also C moderate) (13.8). T2: 'für natürliches und coloriertes Blond' etc. do not change fit.",
+  "weight": "moderate",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential moderate -> moderate.",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "confidence": "high",
+    "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit; packet has a manufacturer source -> high (13.8)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "observedCleansingIntensity": "regular",
+  "cleansingIntensity": "regular",
+  "observedCleansingIntensityConfidence": "high",
+  "intensityRationale": "I1: cleansingStrength moderate -> regular; equals normal-bucket expectation; I3 not raised (cleansingStrength high confidence, neighbor none).",
+  "positioning": {
+   "explicitResetPositioning": false,
+   "rationale": "D1: no 'tiefenrein'/'deep clean'/'clarifying shampoo'/'detox-reinigung' stem; weekly toning direction does not limit use to occasional resets."
+  },
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserRationale": "D2 not met (D1 false, cleansing moderate, focus general).",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   {
+    "code": "review_thickness_boundary",
+    "detail": "fine: acceptable -> not_suited if weightPotential were high (N-ALT neighbor); ordinary target (T4)"
+   },
+   {
+    "code": "review_thickness_boundary",
+    "detail": "normal: ideal -> acceptable if weightPotential were high (T4)"
+   },
+   {
+    "code": "review_thickness_boundary",
+    "detail": "coarse: ideal -> acceptable if conditioningLevel were moderate (T4)"
+   }
+  ],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs resolved by orchestrator after freeze (13.9, 14)"
+ },
+ "uncertainties": [
+  "C2/W-RICH (conditioningLevel): high rests on W-RICH (HVO #7 + guar #9) counting as a rich architecture for Section 5; C2 itself is not met (no distinct pearlizing/fatty-alcohol route). A reader requiring full C2 would land moderate.",
+  "D1 (usageRole/positioning): 'Wöchentlich oder nach Bedarf anwenden' resembles the D1 example '1× pro Woche' but is a toning cadence, not a reset limit; read as D1 false. If read as D1 true, usageRole -> occasional_reset and D3 review_reset_positioning_mismatch would be raised.",
+  "focusPrimary: toning/anti-yellow is not a focus value; general chosen over shine ('strahlendes Blond')."
+ ]
+}

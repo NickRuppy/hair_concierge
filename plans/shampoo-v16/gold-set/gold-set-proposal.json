@@ -1,0 +1,36 @@
+{
+  "schema": "shampoo-v16-gold-set-proposal-v1",
+  "date": "2026-10-05",
+  "status": "proposal",
+  "excludedHoldoutV3": "all 10 holdout-v3 products; also live Elvital Hydra Hyaluronic cc9318d2-13af-4c83-8b5e-7effb687c92f (same INCI as holdout loreal-elvital-hydra-hyaluronic)",
+  "gold": [
+    { "slot": "G01", "role": "dandruff, clear case", "productId": "744de604-d266-453b-a56b-eea92c5ca565", "name": "Guhl Anti Schuppen", "cohort": "C50", "candidateId": "guhl-anti-schuppen" },
+    { "slot": "G02", "role": "dandruff with soothing/gentle language", "productId": "088b1427-ed22-424e-8cfd-ea2578120ae6", "name": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege", "cohort": "C50", "candidateId": "head-shoulders-dermaxpro-shampoo-beruhigende-pflege" },
+    { "slot": "G03", "role": "irritated, mildest formula", "productId": "e7bfd306-b128-4735-a9f8-0eeacdbd5013", "name": "Sebamed Every-Day Shampoo", "cohort": "C50", "candidateId": "sebamed-every-day-shampoo" },
+    { "slot": "G04", "role": "irritated, label vs formula, hair-loss claim", "productId": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18", "name": "Pantene Grow Abundance", "cohort": "C50", "candidateId": "pantene-grow-abundance" },
+    { "slot": "G05", "role": "dry route, gentle-language case, earlier hard case", "productId": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33", "name": "Wahre Schätze Sanfte Hafermilch", "cohort": "C50", "candidateId": "wahre-schatze-sanfte-hafermilch" },
+    { "slot": "G06", "role": "oily / clarifying, polymer-floor control", "productId": "03b847e5-01b9-40e5-950a-98efc73abb3a", "name": "Salthouse Anti Fett", "cohort": "C50", "candidateId": "salthouse-anti-fett" },
+    { "slot": "G07", "role": "2-in-1 with conditioning", "productId": "22f95dcb-12de-4d62-b206-f03dbd6e94a0", "name": "ISANA Shampoo & Spülung 2 in 1 Volumen Malve & Acai", "cohort": "X14", "candidateId": "isana-2in1-volumen" },
+    { "slot": "G08", "role": "suspicious live label", "productId": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0", "name": "Cantu Shampoo Locken Pflege", "cohort": "C50", "candidateId": "cantu-locken-pflege", "preFreezeCheck": "name vs source mismatch (Cleansing Cream Shampoo)" },
+    { "slot": "G09", "role": "curl / coarse rich formula", "productId": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946", "name": "Syoss Intense Curls", "cohort": "C50", "candidateId": "syoss-intense-curls" },
+    { "slot": "G10", "role": "moisture focus (v1.5)", "productId": "286071ba-9c9a-4c60-979c-7e51df949fbf", "name": "Garnier Fructis Locken Methode Feuchtigkeits-Shampoo", "cohort": "X14", "candidateId": "fructis-locken-methode" },
+    { "slot": "G11", "role": "earlier hard case: formula conflict + hidden dandruff active", "productId": "16ebefbe-48d8-4c7f-9c81-b903651a6e03", "name": "Guhl Hyaluron+", "cohort": "C50", "candidateId": "guhl-hyaluron-plus", "preFreezeCheck": "official vs retailer INCI under one GTIN" },
+    { "slot": "G12", "role": "fine-hair volume, light formula", "productId": "d01de47e-e360-4b31-9924-e3e5bc31ccdc", "name": "Balea Professional Ultimate Volume", "cohort": "C50", "candidateId": "balea-professional-ultimate-volume" }
+  ],
+  "unseen": [
+    { "slot": "U1", "role": "deep-cleansing legacy", "productId": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c", "name": "Balea Tiefenreinigung", "cohort": "L4", "preResearchCheck": "legacy duplicate of deep_cleansing row 375ee7a0 (GTIN 4070765001020)" },
+    { "slot": "U2", "role": "deep-cleansing, all thicknesses", "productId": "41b99629-5a1c-402f-a486-d41780e89e66", "name": "Herbal Essences Tiefenreinigung & Glanz Shampoo Limettenduft", "cohort": "L4", "preResearchCheck": "category ownership (shampoo vs deep_cleansing_shampoo); GTIN 8006530123556" },
+    { "slot": "U3", "role": "caffeine / hair-thinning positioning", "productId": "0d341836-96b3-4364-9319-a7f0884b3da9", "name": "Plantur 39 Phyto-Coffein-Shampoo für feines, brüchiges Haar", "cohort": "L4", "preResearchCheck": "GTIN 4008666705082; user-submitted" },
+    { "slot": "U4", "role": "charcoal clarifying", "productId": "7200bb0b-7463-433b-86c8-744f5c1431de", "name": "Wahre Schätze Aktivkohle", "cohort": "L4", "preResearchCheck": "GTIN 3600542512466; brand string vs Garnier Wahre Schätze" },
+    { "slot": "U5", "role": "dandruff + oily dual route", "productId": "1e61a644-94b0-4356-ab55-f58572fa1e18", "name": "head&shoulders Anti-Schuppen Shampoo Classic Clean", "cohort": "X14" },
+    { "slot": "U6", "role": "rich coarse formula, sulfate-free chassis", "productId": "bef4f219-2c1f-4e02-8e3a-93056b95465a", "name": "Keratin Oil Shampoo (OGX)", "cohort": "C50", "candidateId": "ogx-keratin-oil" }
+  ],
+  "bench": {
+    "G04": "d408aca9-cd16-4cb0-90e7-bab26a698000 Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+    "G07": "4a45948b-53a6-48ac-9c02-20718c1d19c4 Being Big Hair Shampoo",
+    "G08": "c07a181b-3d55-4d47-ad68-9c1e324d4496 Hask Curl Care Shampoo",
+    "G09": "1623a993-3ff4-43be-82c1-95a1ee57ec52 Langhaarmädchen Beautiful Curls Shampoo",
+    "G11": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f Head & Shoulders Anti Schuppen Sensitive; 7b5ec424-d21f-4eb8-999e-7aed98e94b86 OGX Rosemary Mint",
+    "optional13th": "3d94c017-9edb-4ba0-accd-4772e262f012 Lavera Basis Sensitiv (adds normal x irritated, natural chassis)"
+  }
+}

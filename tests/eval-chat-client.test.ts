@@ -65,3 +65,12 @@ test("buildEvalSeedPayloads seeds shampoo usage from profile override when inven
     },
   ])
 })
+
+test("buildEvalSeedPayloads keeps the saved budget out of the legacy column seed", () => {
+  const { hairProfileRow } = buildEvalSeedPayloads("user_eval", {
+    hair_texture: "wavy",
+    shopping_preferences: { budget: { kind: "capped", limitEur: 5, allowExceptions: false } },
+  })
+
+  assert.deepEqual(hairProfileRow, { user_id: "user_eval", hair_texture: "wavy" })
+})

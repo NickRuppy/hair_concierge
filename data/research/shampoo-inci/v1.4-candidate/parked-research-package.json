@@ -52,8 +52,21 @@
   "integrityValidationCommand": "npm run research:shampoo:validate-parked-v14",
   "archiveScope": "Frozen methodology, source evidence, research outputs, holdout results and integrity validation. Generation, catalog-import, database, Lab and production-matching code are intentionally excluded.",
   "archiveContent": {
-    "files": 519,
-    "sha256": "7b8bf543ad23cbdda10249fe950ddd9217eb03858b39a4116c5c3f1243bd4a55"
+    "files": 518,
+    "sha256": "c4fc7673fe92c6f3bb2b31c5a5661f214dafc401d9ab134d0caf2ef3d017c15b"
+  },
+  "archiveContentRepin": {
+    "date": "2026-10-10",
+    "reason": "Shampoo v1.6 was locked next to this package. The archive fingerprint is scoped to the frozen v1.4 package: the locked v1.6 package (its own byte pins in data/research/shampoo-inci/v1.6/artifact-manifest.json) and the shared top-level README (the living entry point, edited to name v1.6 as the active method) are excluded. The 518 remaining files were verified byte-identical to the previous pin: the new fingerprint equals the fingerprint of the pre-lock git tree with only the README removed from scope.",
+    "previous": {
+      "files": 519,
+      "sha256": "7b8bf543ad23cbdda10249fe950ddd9217eb03858b39a4116c5c3f1243bd4a55"
+    },
+    "excludedFromScope": [
+      "data/research/shampoo-inci/v1.6/",
+      "docs/research/shampoo-inci/v1.6/",
+      "docs/research/shampoo-inci/README.md"
+    ]
   },
   "stopBoundary": "No catalog, database, matching, user-facing, deployment, or production activation is authorized by this package."
 }

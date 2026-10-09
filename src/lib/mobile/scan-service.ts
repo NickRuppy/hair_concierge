@@ -33,6 +33,7 @@ import {
 import { buildScanVerdict, isNotNeeded, type ScanRoleFacts } from "@/lib/scan/resolve-verdict"
 import type { ScanVerdictPayload } from "@/lib/scan/types"
 import type { ScanEvaluationContext } from "@/lib/scan/profile-context"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 
 import {
   mobileMismatchSummary,
@@ -61,6 +62,7 @@ type ProductRow = {
   affiliate_link: string | null
   purchase_link_status: string | null
   price_checked_at: string | null
+  market_segment?: string | null
   sort_order?: number | null
   brand_identity?: { canonical_name: string | null } | { canonical_name: string | null }[] | null
   product_line?: { canonical_name: string | null } | { canonical_name: string | null }[] | null
@@ -88,6 +90,8 @@ export type MobileScanResolveInput = {
   identifier?: { type: "ean"; value: string }
   /** Internal request context; not accepted from the native JSON body. */
   retailerImageOrigin?: string
+  /** Saved shopping budget, flag-gated and loaded fail-open by the route; not from the body. */
+  budget?: ShoppingBudget | null
 }
 
 const defaultDependencies = {
@@ -145,7 +149,14 @@ export async function resolveMobileScan(
       code: "profile_target_invalid",
     })
 
-  const loaded = await loadVerdict(client, category, productRow.id, decision, context)
+  const loaded = await loadVerdict(
+    client,
+    category,
+    productRow.id,
+    decision,
+    context,
+    input.budget ?? null,
+  )
   const verdict = loaded.verdict
   const revision = context.refinedVersionId
   if (verdict.kind === "not_needed") {
@@ -201,8 +212,14 @@ export async function resolveMobileScan(
         alternative.criteria ?? [],
         verdict.fitNarrative?.fit ?? null,
       )
+      // Native keeps the allocation order (budget-first) from the verdict; the optional
+      // metadata is carried explicitly because the contract zod strips unknown keys.
       return {
         product: toMobileProduct(alternativeRow),
+        ...(alternative.overBudget !== undefined ? { overBudget: alternative.overBudget } : {}),
+        ...(alternative.marketSegment !== undefined
+          ? { marketSegment: alternative.marketSegment }
+          : {}),
         verdict: alternative.verdict,
         verdictLabel: alternative.verdictLabel,
         verdictTitle: mobileVerdictTitle(alternative.verdict, rows),
@@ -300,6 +317,7 @@ async function loadVerdict(
   productId: string,
   decision: PlanCategoryDecision,
   context: ScanEvaluationContext,
+  budget: ShoppingBudget | null,
 ): Promise<{ verdict: ScanVerdictPayload; productFactsMissing: boolean }> {
   const primaryRole = decision.roles[0] ?? CATEGORY_ROLE_POLICIES[category].allowedRoles[0]
   const roles = ROLE_SENSITIVE_CANDIDATE_CATEGORIES.has(category)
@@ -364,6 +382,7 @@ async function loadVerdict(
       refinedVersionId: context.refinedVersionId,
       refinedInputHash: context.refinedInputHash,
       alternativeSelection: "native",
+      ...(budget ? { budget } : {}),
     }),
   }
 }
@@ -459,7 +478,7 @@ async function loadProductById(client: SupabaseClient, id: string): Promise<Prod
   const { data, error } = await client
     .from("products")
     .select(
-      "id,name,brand,category_key,image_url,price_eur,currency,affiliate_link,purchase_link_status,price_checked_at,brand_identity:brands(canonical_name),product_line:product_lines(canonical_name)",
+      "id,name,brand,category_key,image_url,price_eur,currency,affiliate_link,purchase_link_status,price_checked_at,market_segment,brand_identity:brands(canonical_name),product_line:product_lines(canonical_name)",
     )
     .eq("id", id)
     .eq("is_active", true)

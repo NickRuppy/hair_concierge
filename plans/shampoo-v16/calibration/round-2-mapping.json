@@ -1,0 +1,80 @@
+[
+  {
+    "round2Id": "P01",
+    "round1Id": "L11",
+    "slot": "G04",
+    "productId": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18"
+  },
+  {
+    "round2Id": "P02",
+    "round1Id": "L15",
+    "slot": "G03",
+    "productId": "e7bfd306-b128-4735-a9f8-0eeacdbd5013"
+  },
+  {
+    "round2Id": "P03",
+    "round1Id": "L01",
+    "slot": "G06",
+    "productId": "03b847e5-01b9-40e5-950a-98efc73abb3a"
+  },
+  {
+    "round2Id": "P04",
+    "round1Id": "L18",
+    "slot": "G02",
+    "productId": "088b1427-ed22-424e-8cfd-ea2578120ae6"
+  },
+  {
+    "round2Id": "P05",
+    "round1Id": "L08",
+    "slot": "G07",
+    "productId": "22f95dcb-12de-4d62-b206-f03dbd6e94a0"
+  },
+  {
+    "round2Id": "P06",
+    "round1Id": "L14",
+    "slot": "G05",
+    "productId": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33"
+  },
+  {
+    "round2Id": "P07",
+    "round1Id": "L19",
+    "slot": "G10",
+    "productId": "286071ba-9c9a-4c60-979c-7e51df949fbf"
+  },
+  {
+    "round2Id": "P08",
+    "round1Id": "L03",
+    "slot": "G13",
+    "productId": "3d94c017-9edb-4ba0-accd-4772e262f012"
+  },
+  {
+    "round2Id": "P09",
+    "round1Id": "L09",
+    "slot": "G11",
+    "productId": "16ebefbe-48d8-4c7f-9c81-b903651a6e03"
+  },
+  {
+    "round2Id": "P10",
+    "round1Id": "L05",
+    "slot": "G09",
+    "productId": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946"
+  },
+  {
+    "round2Id": "P11",
+    "round1Id": "L12",
+    "slot": "G12",
+    "productId": "d01de47e-e360-4b31-9924-e3e5bc31ccdc"
+  },
+  {
+    "round2Id": "P12",
+    "round1Id": "L07",
+    "slot": "G01",
+    "productId": "744de604-d266-453b-a56b-eea92c5ca565"
+  },
+  {
+    "round2Id": "P13",
+    "round1Id": "L16",
+    "slot": "G08",
+    "productId": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0"
+  }
+]

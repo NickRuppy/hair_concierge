@@ -47,6 +47,7 @@ function uneditedFacts(revision = 4): UserFacts {
     diagnostics: projected.diagnostics,
     careHabits: null,
     quizContext: projected.quizContext,
+    shoppingPreferences: null,
     provenance: {},
     revision,
   }

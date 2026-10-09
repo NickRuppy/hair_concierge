@@ -1,0 +1,74 @@
+{
+  "slot": "U2-02",
+  "productId": null,
+  "name": "Men Intense Power Deep Caring Shampoo",
+  "brand": "Syoss",
+  "packSize": "440 ml",
+  "gtins": [
+    "4015100860443"
+  ],
+  "sources": [
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-men-intense-power/p/4015100860443",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "german_retailer_exact_gtin_url",
+      "gtinShown": "4015100860443 (URL ends /p/4015100860443); Rossmann Artikelnummer 179951",
+      "inciVerbatim": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Hydrolyzed Keratin, Caffeine, Sodium Benzoate, Parfum (Fragrance), Coco-Glucoside, Glyceryl Oleate, Citric Acid, PEG-7 Glyceryl Cocoate, Glycol Distearate, Laureth-4, Hydrogenated Castor Oil, PEG-120 Methyl Glucose Dioleate, Hexyl Cinnamal, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Tetramethyl Acetyloctahydronaphthalenes, Sodium Hydroxide, Citronellol, Propylene Glycol",
+      "claimsVerbatim": "SYOSS Shampoo MEN Intense Power – Aktivierendes Shampoo für normales Haar mit Koffein-Energy-Komplex Das SYOSS MEN Intense Shampoo reinigt und erfrischt normales Haar und stimuliert die Haarwurzeln ab der ersten Anwendung. Es kombiniert pflegende Inhaltsstoffe mit einem 4% Koffein-Energy-Komplex. Das Shampoo aktiviert Haarwachstumsfaktoren und die Haare werden von innen gestärkt, für schönes und gesund aussehendes Haar. Die Formel enthält 93% Inhaltsstoffe natürlichen Ursprungs inklusive Wasser und der Flaschenkörper des Shampoos besteht aus 100% recyceltem Plastik (Kappe ausgenommen). SYOSS entwickelt mit mehr als 45 Jahren Haar-Expertise Produkte für professionelle Performance. | für normales Haar – Das Männer Shampoo eignet sich für normales Haar und stimuliert die Haarwurzeln ab der ersten Anwendung | aktivierende Wirkung – Die pflegende Koffein Shampoo-Formel reinigt und erfrischt das Haar, stärkt es von innen und aktiviert Haarwachstumsfaktoren | Koffein-Energy-Komplex – In dem Haarpflege Shampoo vereinen sich pflegende Inhaltsstoffe mit einem 4% Koffein-Energy-Komplex, für schönes und gesund aussehendes Haar | Inhaltsstoffe natürlichen Ursprungs – Das aktivierende Shampoo enthält 93% Inhaltsstoffe natürlichen Ursprungs, inklusive Wasser | 100% recyceltes Plastik – Der Flaschenkörper des Shampoos besteht aus 100% recyceltem Plastik (Kappe ausgenommen)",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und ausspülen.",
+      "note": "Price 3,99 EUR, 440 ml. Inhaltsstoffe and Anwendung accordions expanded in the browser tab."
+    },
+    {
+      "url": "https://www.dm.de/p/d/3047033/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "german_retailer_gtin_on_page",
+      "gtinShown": "GTIN: 4015100860443 (page text and JSON-LD); dm-Artikelnummer 3047033",
+      "inciVerbatim": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Hydrolyzed Keratin, Caffeine, Sodium Benzoate, Parfum (Fragrance), Coco-Glucoside, Glyceryl Oleate, Citric Acid, PEG-7 Glyceryl Cocoate, Glycol Distearate, Laureth-4, Hydrogenated Castor Oil, PEG-120 Methyl Glucose Dioleate, Hexyl Cinnamal, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Tetramethyl Acetyloctahydronaphthalenes, Sodium Hydroxide, Citronellol, Propylene Glycol",
+      "claimsVerbatim": "Shampoo mit aktivierender Koffein-Formel | Für normales Haar | Stärkt das Haar von innen | Stimuliert die Haarwurzeln | 4 % Koffein-Energy-Komplex | Das Shampoo Men Intense Power von Syoss bietet eine aktivierende Wirkung für normales Haar. Die pflegende Koffein-Formel reinigt und erfrischt das Haar, stärkt es von innen und aktiviert Haarwachstumsfaktoren. Mit einem 4 % Koffein-Energy-Komplex stimuliert das Shampoo die Haarwurzeln ab der ersten Anwendung und sorgt für schönes und gesund aussehendes Haar. Die Kombination aus pflegenden Inhaltsstoffen und Koffein sorgt für eine intensive Haarpflege, die das Haar kräftigt und revitalisiert. Ideal für Männer, die eine effektive und erfrischende Haarpflege suchen. | Produkteigenschaften: Ohne Alkohol, ohne Silikone, ohne Ammoniak",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und ausspülen.",
+      "note": "Price 3,95 EUR; Henkel AG & Co. KGaA, Düsseldorf."
+    },
+    {
+      "url": "https://www.syoss.net/care/shampoo/syoss-men-intense-power-deep-caring-shampoo.html",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_international_en",
+      "gtinShown": null,
+      "inciVerbatim": null,
+      "claimsVerbatim": "Deeply caring formula with 4% Caffeine-Energy-Complex, strengthens your hair from the inside. For beautiful and healthy-looking hair from within. | With 4% Caffeine-Energy-Complex | Cleans and refreshes normal hair | Activates hair growth factors | Stimulates hair roots from the 1st wash | Professional performance",
+      "directionsVerbatim": null,
+      "note": "International English page (syoss.net); no German manufacturer page found (syoss.de guessed URL returned an error page, not retried). Ingredients accordion did not expand in two attempts; INCI not captured from this source."
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua (Water, Eau)",
+    "Sodium Laureth Sulfate",
+    "Sodium Chloride",
+    "Cocamidopropyl Betaine",
+    "Hydrolyzed Keratin",
+    "Caffeine",
+    "Sodium Benzoate",
+    "Parfum (Fragrance)",
+    "Coco-Glucoside",
+    "Glyceryl Oleate",
+    "Citric Acid",
+    "PEG-7 Glyceryl Cocoate",
+    "Glycol Distearate",
+    "Laureth-4",
+    "Hydrogenated Castor Oil",
+    "PEG-120 Methyl Glucose Dioleate",
+    "Hexyl Cinnamal",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Tetramethyl Acetyloctahydronaphthalenes",
+    "Sodium Hydroxide",
+    "Citronellol",
+    "Propylene Glycol"
+  ],
+  "canonicalReason": "Two independent German retailers (Rossmann exact-GTIN URL, dm GTIN on page) show identical lists; list also identical to the 2026-09-02 stored evidence. Manufacturer page did not expose an INCI.",
+  "inciFingerprintSha256": "1a925733f7678463a8bd4ee1952ce8a52b2c3a24a56ad23fdf3c9445c544f994",
+  "normalization": "Split verbatim INCI on commas outside parentheses; per item trim, lower-case, collapse internal whitespace; join items with '|'; sha256 (utf-8) hex. Original-case ingredient list is kept in canonicalInci[].",
+  "identityConfidence": "high",
+  "status": "frozen",
+  "blockReason": null,
+  "notes": "Catalog productId: none (not yet in catalog); Track B row b02-i01. Prices differ slightly between retailers (3,99 vs 3,95), irrelevant to identity. Rossmann Dänemark page from earlier evidence not re-fetched."
+}

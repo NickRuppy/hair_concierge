@@ -245,6 +245,10 @@ function withRecommendation(
       availabilityLabel: preview.commerce.availabilityLabel,
       purchaseLinkStatus: preview.commerce.purchaseLinkStatus,
       productUrl: preview.commerce.productUrl,
+      // Optional transport, mapped only when present so cards without budget/tier data keep
+      // exactly their previous shape.
+      ...(preview.commerce.overBudget === true ? { overBudget: true } : {}),
+      ...(preview.commerce.marketSegment ? { marketSegment: preview.commerce.marketSegment } : {}),
     },
     fallbackNote: null,
     detailBlocks: [

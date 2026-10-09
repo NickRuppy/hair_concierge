@@ -9,6 +9,7 @@ import type {
 } from "@/lib/personal-plan/products/authority/catalog-facts"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import type { PlanCategoryDecision, PlanProductRole } from "@/lib/personal-plan/types"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 
 import type { ScanEvaluationContext } from "./profile-context"
 import { buildScanVerdict, isNotNeeded, type ScanRoleFacts } from "./resolve-verdict"
@@ -47,6 +48,11 @@ export async function loadScanVerdictForProduct(
    * it; `/api/scan/resolve` passes a callback that restores the original two-stage split.
    */
   onEnterVerdictStage?: () => void,
+  /**
+   * The user's saved shopping budget, already flag-gated and loaded fail-open by the caller.
+   * Default none: callers that pass nothing (discovery, tests) get the pre-budget verdict.
+   */
+  budget?: ShoppingBudget | null,
 ): Promise<ScanVerdictPayload> {
   const shampooTarget =
     category === "shampoo" && decision.target?.category === "shampoo" ? decision.target : null
@@ -124,5 +130,6 @@ export async function loadScanVerdictForProduct(
     heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
     refinedVersionId: context.refinedVersionId,
     refinedInputHash: context.refinedInputHash,
+    ...(budget ? { budget } : {}),
   })
 }

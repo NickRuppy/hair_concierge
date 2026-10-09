@@ -348,6 +348,118 @@ test("a write recomputes only the columns owned by its own domain", async (t) =>
   }
 })
 
+const SHOPPING_PROVENANCE = {
+  source: { kind: "shopping_preferences_editor" },
+  schemaVersion: 1,
+  at: "2026-10-09T10:00:00.000Z",
+  fields: { budget: "user" },
+}
+
+test("a shopping_preferences write changes only its own column, provenance, revision and updated_at", async (t) => {
+  const pg = await freshDatabase(t)
+  await saveUserFacts(pg, {
+    userId: USER,
+    domain: "diagnostics",
+    patch: FULL_DIAGNOSTICS,
+    provenance: DIAGNOSTICS_PROVENANCE,
+  })
+  await saveUserFacts(pg, {
+    userId: USER,
+    domain: "care_habits",
+    patch: { dryingRoutes: ["ordinary_blow_dry"], nightProtection: ["silk_satin_bonnet"] },
+    provenance: CARE_HABITS_PROVENANCE,
+  })
+  await saveUserFacts(pg, {
+    userId: USER,
+    domain: "quiz_context",
+    patch: { routineClarity: "clear" },
+    provenance: QUIZ_CONTEXT_PROVENANCE,
+  })
+  const before = (await readHairProfile(pg, USER))!
+  assert.equal(before.shopping_preferences, null, "never collected")
+  assert.equal(before.facts_revision, 3)
+
+  const saved = await saveUserFacts(pg, {
+    userId: USER,
+    domain: "shopping_preferences",
+    patch: { budget: { kind: "capped", limitEur: 5, allowExceptions: false } },
+    provenance: SHOPPING_PROVENANCE,
+    expectedRevision: 3,
+  })
+  assert.equal(saved.status, "ok")
+  assert.equal(saved.revision, 4, "door semantics: a write bumps facts_revision")
+  assert.equal(saved.changed, true)
+
+  const after = (await readHairProfile(pg, USER))!
+  assert.deepEqual(after.shopping_preferences, {
+    budget: { kind: "capped", limitEur: 5, allowExceptions: false },
+  })
+  assert.equal(after.facts_revision, 4)
+  assert.deepEqual(after.facts_provenance, {
+    ...before.facts_provenance,
+    shopping_preferences: SHOPPING_PROVENANCE,
+  })
+  // Everything else — the three documents and all 21 derived legacy columns — is untouched.
+  const rest = ({
+    shopping_preferences: _shopping,
+    facts_provenance: _provenance,
+    facts_revision: _revision,
+    updated_at: _updatedAt,
+    ...columns
+  }: typeof after) => columns
+  assert.ok(Object.keys(rest(after)).length >= 24)
+  assert.deepEqual(rest(after), rest(before))
+
+  // `budget` is replaced whole, never merged field by field.
+  const replaced = await saveUserFacts(pg, {
+    userId: USER,
+    domain: "shopping_preferences",
+    patch: { budget: { kind: "uncapped" } },
+    provenance: { ...SHOPPING_PROVENANCE, at: "2026-10-09T11:00:00.000Z" },
+  })
+  assert.equal(replaced.status, "ok")
+  assert.deepEqual((await readHairProfile(pg, USER))!.shopping_preferences, {
+    budget: { kind: "uncapped" },
+  })
+
+  // A top-level null clears the budget: back to "not collected".
+  await saveUserFacts(pg, {
+    userId: USER,
+    domain: "shopping_preferences",
+    patch: { budget: null },
+    provenance: { ...SHOPPING_PROVENANCE, at: "2026-10-09T12:00:00.000Z" },
+  })
+  const cleared = (await readHairProfile(pg, USER))!
+  assert.deepEqual(cleared.shopping_preferences, {})
+  assert.deepEqual(rest(cleared), rest(before))
+})
+
+test("a shopping_preferences write on a missing row creates it; a stale revision is rejected", async (t) => {
+  const pg = await freshDatabase(t)
+  const stale = await saveUserFacts(pg, {
+    userId: USER,
+    domain: "shopping_preferences",
+    patch: { budget: { kind: "uncapped" } },
+    provenance: SHOPPING_PROVENANCE,
+    expectedRevision: 5,
+  })
+  assert.equal(stale.status, "revision_conflict")
+  assert.equal(await readHairProfile(pg, USER), null)
+
+  const created = await saveUserFacts(pg, {
+    userId: USER,
+    domain: "shopping_preferences",
+    patch: { budget: { kind: "uncapped" } },
+    provenance: SHOPPING_PROVENANCE,
+    expectedRevision: 0,
+  })
+  assert.equal(created.status, "ok")
+  assert.equal(created.created, true)
+  const row = (await readHairProfile(pg, USER))!
+  assert.equal(row.diagnostics, null)
+  assert.equal(row.facts_revision, 1)
+})
+
 test("a care_habits write leaves legacy diagnostics columns alone when diagnostics is still NULL", async (t) => {
   // A pre-migration onboarding row: narrow columns filled, no fact domains yet — seeded before
   // the lock (20261003120000), as production rows are.

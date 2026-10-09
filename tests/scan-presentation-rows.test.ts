@@ -95,6 +95,7 @@ test("presentation rows select the full commerce column list, dedupe ids and nor
         affiliate_link: "https://shop.test/a",
         purchase_link_status: "available",
         price_checked_at: "2026-09-01T00:00:00.000Z",
+        market_segment: "professional",
       },
       {
         id: "product-2",
@@ -108,6 +109,8 @@ test("presentation rows select the full commerce column list, dedupe ids and nor
         // Anything outside the two known states must normalize to null.
         purchase_link_status: "pending",
         price_checked_at: null,
+        // Unknown buckets normalize to null like the link status.
+        market_segment: "luxury",
       },
     ],
     error: null,
@@ -120,14 +123,14 @@ test("presentation rows select the full commerce column list, dedupe ids and nor
 
   assert.equal(
     recorded.columns,
-    "id, name, brand, category_key, image_url, price_eur, currency, affiliate_link, purchase_link_status, price_checked_at",
+    "id, name, brand, category_key, image_url, price_eur, currency, affiliate_link, purchase_link_status, price_checked_at, market_segment",
   )
   assert.deepEqual(recorded.in, [["id", ["product-1", "product-2"]]])
   assert.deepEqual(
-    rows.map((row) => [row.id, row.category, row.purchaseLinkStatus]),
+    rows.map((row) => [row.id, row.category, row.purchaseLinkStatus, row.marketSegment]),
     [
-      ["product-1", "shampoo", "available"],
-      ["product-2", "mask", null],
+      ["product-1", "shampoo", "available", "professional"],
+      ["product-2", "mask", null, null],
     ],
   )
 })

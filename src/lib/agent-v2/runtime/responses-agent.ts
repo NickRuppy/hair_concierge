@@ -71,6 +71,7 @@ import {
   getVisibleProductUsageItems,
   type ProductUsageFrequencyLike,
 } from "@/lib/product-usage/shampoo-fallback"
+import { isShoppingBudgetEnabled } from "@/lib/personal-plan/release"
 import { normalizeProductFrequency } from "@/lib/vocabulary"
 import {
   serializeTrackingDiaryDataItem,
@@ -1105,6 +1106,10 @@ function buildInputItems(
     },
   ]
 
+  if (isShoppingBudgetEnabled()) {
+    items.push({ role: "system", content: buildSavedBudgetGuidance() })
+  }
+
   if (userContext.careBalanceContext) {
     items.push({
       role: "system",
@@ -1864,6 +1869,15 @@ function isEvidenceQuoteGroundedInLatestMessage(evidenceQuote: string, message: 
   const normalizedQuote = normalizeEvidenceText(evidenceQuote)
   const normalizedMessage = normalizeEvidenceText(message)
   return normalizedQuote.length >= 4 && normalizedMessage.includes(normalizedQuote)
+}
+
+function buildSavedBudgetGuidance(): string {
+  return [
+    "Saved shopping budget policy.",
+    "When a select_products result carries a budget (and the profile has shopping_preferences.budget), respect it: recommend within-budget products first, mention price relative to the budget only when it matters, and present a product with over_budget true only as a clearly labelled alternative that costs more than the saved limit.",
+    "Without a saved budget, never claim a product is affordable, cheap, or within budget.",
+    "You cannot change the budget. If the user wants to change it, say it can be changed in their plan under „Budget · Ändern“.",
+  ].join("\n")
 }
 
 function buildAnswerQualityGuidance(): string {

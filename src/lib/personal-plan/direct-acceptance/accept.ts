@@ -20,6 +20,7 @@ import type { Stage2RefinementHandoff } from "../refinement/session"
 import { semanticHash } from "../routine/canonicalize"
 import type { KnownCareAnswers } from "@/lib/user-facts/known-care-answers"
 import type { SaveUserFactsInput, SaveUserFactsResult } from "@/lib/user-facts/save"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 
 import {
   buildDirectAcceptanceStage2Defaults,
@@ -52,6 +53,12 @@ export type DirectAcceptanceErrorCode =
   | "refinement_in_progress"
   /** The plan already has an active Routine that direct acceptance did not create. */
   | "plan_already_accepted"
+  /**
+   * The shopping-budget gate is on, no budget is saved yet and the plan has no active Routine
+   * (`plan_already_accepted` wins). Raised before anything is written, so the Stage-2 draft's
+   * answers stay untouched; the caller asks the budget question and tries again.
+   */
+  | "budget_required"
 
 export class DirectAcceptanceError extends Error {
   constructor(
@@ -121,7 +128,19 @@ export type DirectAcceptancePlanStateReader = {
 
 export type AcceptIdealPlanDeps = {
   userId: string
-  flags: { stage2Enabled: boolean; stage3Enabled: boolean; stage4Enabled: boolean }
+  flags: {
+    stage2Enabled: boolean
+    stage3Enabled: boolean
+    stage4Enabled: boolean
+    /** `SHOPPING_BUDGET_ENABLED`; absent = off, the pre-budget behaviour. */
+    shoppingBudgetEnabled?: boolean
+  }
+  /**
+   * The saved per-package budget, or null when none was collected (never implied "uncapped").
+   * Read only while `flags.shoppingBudgetEnabled` is on, and required then. The budget itself
+   * reaches the products through the Stage-3 gateway's own evaluation context.
+   */
+  loadShoppingBudget?: (userId: string) => Promise<ShoppingBudget | null>
   refinementPersistence: Stage2RefinementPersistence
   planState: DirectAcceptancePlanStateReader
   stage3Gateway: DirectAcceptanceStage3Gateway
@@ -377,6 +396,18 @@ export async function acceptIdealPlan(
   }
 }
 
+/**
+ * With the shopping-budget gate on, the proposal is only defined once a budget is saved: the
+ * Stage-3 evaluation allocates it, and an accept without one would plan price-neutral products
+ * the person never agreed to pay for. A missing loader is a wiring bug, not a missing budget.
+ */
+async function assertShoppingBudgetSaved(deps: AcceptIdealPlanDeps): Promise<void> {
+  if (deps.flags.shoppingBudgetEnabled !== true) return
+  if (!deps.loadShoppingBudget) throw new Error("direct_accept_shopping_budget_loader_missing")
+  const budget = await deps.loadShoppingBudget(deps.userId)
+  if (!budget) throw new DirectAcceptanceError("budget_required")
+}
+
 /** A draft the user has not touched yet, or one holding only our own defaults. */
 function isUntouchedDraft(draft: Stage2PersistedDraft): boolean {
   return Object.keys(draft.answers).length === 0 && draft.completedQuestionIds.length === 0
@@ -502,6 +533,12 @@ async function completeSyntheticRefinement(deps: AcceptIdealPlanDeps): Promise<{
   ) {
     throw new DirectAcceptanceError("plan_already_accepted")
   }
+
+  // The budget gate comes AFTER `plan_already_accepted` (an accepted plan is never asked for
+  // a budget: no new purchase happens there) and BEFORE any write — the draft's answers, the
+  // refined version and Stage 3 stay untouched (journey 5, C7). A plan whose active Routine is
+  // this flow's own (the idempotent double-accept replay) is accepted already, so it is exempt.
+  if (!activeRoutineVersionId) await assertShoppingBudgetSaved(deps)
 
   // Only computed once the guards above have let this accept through.
   const { previewedRoleKeys, refinementRequiredCategories } = stage1PreviewedRoleKeysForDraft(draft)

@@ -61,6 +61,8 @@ export function createProductionStage3RecomputeDeps(input: {
     gateway: createProductionStage3ProductsGateway({
       userId,
       persistence,
+      // Background recompute is not a user edit: never gated on a missing budget.
+      requireBudgetForNewPurchases: false,
       compiler: createInitialRoutineCandidateCompiler(),
       cadenceAuthorityReader: createSupabaseRoutineCadenceAuthorityReader(
         admin as unknown as RoutineCadenceAuthorityReadClient,

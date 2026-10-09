@@ -1,0 +1,119 @@
+{
+  "blindId": "L04",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: Sodium Laureth Sulfate #2 is the stronger route, buffered by milder secondary anionics (Disodium Laureth Sulfosuccinate #5, Sodium Lauroyl Glutamate #7), nonionic Laureth-2 #3 and Panthenol #4 / PEG-120 Methyl Glucose Dioleate #10. Moderate anchor: one stronger route substantially buffered by secondary surfactants. No amphoteric, so C1 does not apply directly; no clarifying/reset intent.",
+      "ruleIds": ["§4", "C1"],
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Laureth-2 #3", "Disodium Laureth Sulfosuccinate #5", "Sodium Lauroyl Glutamate #7"],
+      "counterSignal": "Three anionic routes and no betaine buffer can be read as 'multiple reinforcing cleansing routes' (strong).",
+      "neighboringAlternative": "strong",
+      "sources": ["packet INCI"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: cleansing-led; only a light cationic polymer (Polyquaternium-7 #13), Panthenol #4 and late Hydrolyzed Wheat Protein #17. No silicone, fatty alcohol or lipid. Claims corroborate ('bewusst leicht dosierte Pflegestoffe').",
+      "ruleIds": ["§5"],
+      "formulaFacts": ["Panthenol #4", "Polyquaternium-7 #13", "Hydrolyzed Wheat Protein #17"],
+      "counterSignal": "Polyquaternium-7 gives some slip.",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI", "manufacturer claims (corroborating)"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: one light polymer (#13) and a late protein (#17); nothing persistent.",
+      "ruleIds": ["§6"],
+      "subjudgments": {"depositionLoad": "light", "persistence": "low", "resetCapacity": "moderate"},
+      "whyThisBand": "One light polymer and late protein, anchor says this can remain low.",
+      "whyNotNeighborBand": "No persistent system for moderate.",
+      "formulaFacts": ["Polyquaternium-7 #13", "Hydrolyzed Wheat Protein #17"],
+      "counterSignal": "none material",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "rationale": "General: the dominant positioning is menopausal hair loss / root activation (Phyto-Coffein), which is medically adjacent and outside scope, so it cannot carry a focus. The remaining claims ('für feines, brüchiges Haar', volume retained because care is lightly dosed) are thickness/outcome language; repair for brittle hair has a nonspecific verdict (one protein token #17 + Panthenol #4 is not a coherent damage-care cluster); volume is a by-product claim, not the product's dominant job.",
+      "ruleIds": ["7.1", "7.2", "7.3", "E2"],
+      "careDirection": {"verdict": "nonspecific", "moistureRoutes": ["Panthenol #4", "Propylene Glycol #8"], "repairRoutes": ["Hydrolyzed Wheat Protein #17"], "sharedRoutes": ["Polyquaternium-7 #13"], "limitation": "Single protein token; light conditioning only."},
+      "claimRole": "not_applicable",
+      "formulaFacts": ["Caffeine #9", "Polyquaternium-7 #13", "Hydrolyzed Wheat Protein #17"],
+      "counterSignal": "Light, volume-compatible formula with an explicit 'Frisur behält ihr Volumen' claim.",
+      "neighboringAlternative": "volume",
+      "decisionTrace": "Blind: light SLES/sulfosuccinate/glutamate chassis, low conditioning -> nonspecific. Unblind: dominant hair-loss claims are out of scope; brittle-hair claim fails repair verdict; volume is secondary outcome wording -> general.",
+      "sources": ["manufacturer claims", "retailer claims"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: no distinct secondary positioning with an independent route; the volume wording is an outcome of the light conditioning load, i.e. a restatement of conditioning/weight (§8 condition 3).",
+      "ruleIds": ["§8"],
+      "counterSignal": "Volume wording present.",
+      "neighboringAlternative": "volume",
+      "sources": ["manufacturer claims"]
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "moderate",
+      "rationale": "Frequent: explicit 'Täglich anwenden' / 'Bei jeder Haarwäsche benutzen' and cleansingStrength moderate (not strong). Caffeine is not a recognized active under this cosmetic standard (hair loss out of scope), so not treatment.",
+      "ruleIds": ["§9", "E2"],
+      "counterSignal": "If cleansing were strong, the role would fall to regular.",
+      "neighboringAlternative": "regular",
+      "sources": ["manufacturer directions"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: no sensitive/itchy/dry-scalp positioning ('Widerstandskraft von Kopfhaut' is hair-loss/root positioning); complete ordinary formula.",
+      "ruleIds": ["§10"],
+      "counterSignal": "Niacinamide #16 (listed comfort route) is present but without positioning.",
+      "neighboringAlternative": "none",
+      "sources": ["manufacturer claims", "packet INCI"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole; Zinc PCA #15 is not a recognized active under §11.",
+      "ruleIds": ["§11"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    }
+  },
+  "projection": {
+    "status": "proposal",
+    "thicknessFit": {"fine": "ideal", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitConfidence": {"fine": "high", "normal": "high", "coarse": "high"},
+    "thicknessRationale": "T1 W low, C low: fine ideal, normal ideal, coarse acceptable. T2: 'für feines Haar' claim corroborates only. T4: no neighbors on W or C -> no flags.",
+    "weight": "light",
+    "weightConfidence": "high",
+    "weightRationale": "W-LIVE: low -> light.",
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetConfidence": "high",
+    "scalpTargetRationale": "S-HAIRLOSS: the only scalp-adjacent positioning is hair loss / root activation, which was not evaluated and creates no target; no E2 scalp claim -> S-ORDINARY.",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "moderate",
+    "cleansingIntensityRationale": "I1: moderate -> regular. I3: neighbor strong would also give regular (no clarifying focus/usage) -> no flag.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "No D1 term; D2 not met.",
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "liveComparison": "Not evaluated (live rows not in sealed packet)."
+  },
+  "uncertainties": [
+    "Focus when the dominant claim is out-of-scope hair loss: §7 has no explicit row; S-HAIRLOSS covers targets only. Resolved to general (7.2 'unsupported/generic claims').",
+    "usageRole 'treatment' is defined as 'problem-led recognized active route'; standard does not state whether hair-loss actives (caffeine) can count. Treated as not recognized because hair-loss efficacy is out of scope.",
+    "C1 assumes an amphoteric buffer; a SLES + sulfosuccinate + glutamate system without betaine is not covered; resolved by the moderate anchor ('substantially buffered by secondary surfactants')."
+  ]
+}

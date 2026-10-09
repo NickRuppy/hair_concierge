@@ -24,6 +24,7 @@ import {
   withEligibleAlternatives,
 } from "@/lib/scan/product-presentation"
 import type { ScanEvaluationContext } from "@/lib/scan/profile-context"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 import { buildScanVerdict } from "@/lib/scan/resolve-verdict"
 import type {
   ScanPresentedVerdictPayload,
@@ -115,6 +116,7 @@ export type DiscoveryVerdictDeps = {
     productId: string,
     decision: ScanEvaluationContext["snapshot"]["decisions"][number],
     context: ScanEvaluationContext,
+    budget?: ShoppingBudget | null,
   ) => Promise<ScanVerdictPayload>
 }
 
@@ -136,7 +138,7 @@ export const DISCOVERY_VERDICT_DEPS: DiscoveryVerdictDeps = {
   loadPresentationRows: createPresentationRowLoader("discovery_presentation_lookup_failed"),
   isProductSearchQuarantined,
   loadQuarantinedProductIdsAmong,
-  loadScanVerdict: (client, category, productId, decision, context) =>
+  loadScanVerdict: (client, category, productId, decision, context, budget) =>
     loadScanVerdictForProduct(
       client,
       DISCOVERY_SCAN_VERDICT_DEPS,
@@ -144,6 +146,8 @@ export const DISCOVERY_VERDICT_DEPS: DiscoveryVerdictDeps = {
       productId,
       decision,
       context,
+      undefined,
+      budget,
     ),
 }
 
@@ -153,6 +157,8 @@ export async function loadParticipantScanVerdicts(
   items: readonly DiscoveryIntakeItem[],
   context: ScanEvaluationContext,
   deps: DiscoveryVerdictDeps = DISCOVERY_VERDICT_DEPS,
+  /** Pass-through only (cockpit budget wiring is Task 8); default none keeps verdicts unchanged. */
+  budget: ShoppingBudget | null = null,
 ): Promise<DiscoveryParticipantVerdict[]> {
   // Controller ruling: an item still in research carries no catalog product, so it gets no
   // verdict at all and surfaces through `unassignedIntakeProducts` instead. Neither does an
@@ -167,7 +173,7 @@ export async function loadParticipantScanVerdicts(
   // end up offering — the cockpit lists a whole inventory, so per-item reads would be a
   // request per product.
   const verdicts = await Promise.all(
-    owned.map((item) => resolveItemVerdict(admin, userId, item, context, deps)),
+    owned.map((item) => resolveItemVerdict(admin, userId, item, context, deps, budget)),
   )
   const presentationIds = [
     ...owned.map((item) => item.productId),
@@ -274,6 +280,7 @@ async function resolveItemVerdict(
   item: DiscoveryIntakeItem & { productId: string },
   context: ScanEvaluationContext,
   deps: DiscoveryVerdictDeps,
+  budget: ShoppingBudget | null,
 ): Promise<ItemVerdict> {
   const { id: itemId, productId } = item
   try {
@@ -303,7 +310,14 @@ async function resolveItemVerdict(
     const decision = context.snapshot.decisions.find((entry) => entry.category === active.category)
     if (!decision) return { kind: "decision_missing", itemId, productId }
 
-    const verdict = await deps.loadScanVerdict(admin, active.category, active.id, decision, context)
+    const verdict = await deps.loadScanVerdict(
+      admin,
+      active.category,
+      active.id,
+      decision,
+      context,
+      ...(budget ? [budget] : []),
+    )
     return {
       kind: "verdict",
       itemId,

@@ -1,0 +1,131 @@
+{
+  "blindId": "P04",
+  "formulaIdentity": {
+    "productName": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "231755f3c71fb28ef1cb00935dfc90df12aade45632c688b6238f9eb4e1a790c",
+    "fingerprintMethod": "sha256 of packet canonicalInci joined with ', '",
+    "sourceTier": "frozen packet canonical INCI; positioning: 1 manufacturer + 3 retailers",
+    "captureDate": "not stated in packet",
+    "completeness": "treated as complete canonical capture (ID-1)",
+    "e3MarkerPosition": "Parfum at 12; prominent = 1-11",
+    "conflictNotes": "Claims name 'Ceramide(-Komplex)', 'Kaktus-Extrakt' and 'Vitamin E'; no ceramide, cactus (Opuntia) or Tocopherol entry in the INCI. None is a dandruff active, silicone or closed-list E4 gate route, so per ID-3 these are notes with no confidence effect. 'Aloe' maps to Aloe Barbadensis Leaf Juice (24)."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "strong",
+      "rationale": "Moderate by C1: Sodium Laureth Sulfate (2, ether type) buffered by prominent Cocamidopropyl Betaine (4); no prominent reinforcing anionic. TEA-Dodecylbenzenesulfonate (17) is after Parfum (12) and recorded only (C4). Counter-signals toward strong: that late sulfonate, hydrotrope Sodium Xylenesulfonate (3) and Cocamide MEA (9) (not routes, C3); confidence moderate.",
+      "ruleIds": ["C1", "C3", "C4", "E3", "N-ALT"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High by C2: early (prominent) silicone Dimethiconol (7), pearlizing/fatty route Glycol Distearate (10), cationic polymer Guar Hydroxypropyltrimonium Chloride (14), second silicone Dimethicone (13), humectants Butylene Glycol (23), Aloe Barbadensis Leaf Juice (24), Propylene Glycol (32). Counter-signal toward moderate: the humectant element is only glycols/aloe late in the list (no glycerin/panthenol); confidence moderate. C2 says strong-ish cleansing does not lower it.",
+      "ruleIds": ["C2", "E3", "5", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidenceByFamily": {
+        "silicone": ["Dimethiconol (7)", "Dimethicone (13)"],
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride (14)"],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["Sodium Laureth Sulfate (2, anionic ether)", "Cocamidopropyl Betaine (4, amphoteric)", "TEA-Dodecylbenzenesulfonate (17, anionic, non-prominent)"],
+        "humectantContext": ["Butylene Glycol (23)", "Aloe Barbadensis Leaf Juice (24)", "Propylene Glycol (32)", "Triethylene Glycol (31)"],
+        "excluded": ["Glycol Distearate (10): pearlizing wax (6.4)", "Cocamide MEA (9): alkanolamide thickener", "Sodium Xylenesulfonate (3): hydrotrope", "Trideceth-10 (20): emulsifier", "Menthol (16) and fragrance allergens", "Oryza Sativa Bran Extract (30): trace extract"],
+        "unresolved": []
+      },
+      "subjudgments": {
+        "depositionLoad": {"value": "moderate", "rationale": "Prominent Dimethiconol plus Dimethicone and guar coacervate: a real deposition system, but no lipid or film reinforcement."},
+        "persistence": {"value": "moderate", "rationale": "Silicones are persistent; single polymer and no waxy lipid limit accumulation."},
+        "resetCapacity": {"value": "moderate", "rationale": "C1 SLES/betaine chassis, late sulfonate; ordinary reset."}
+      },
+      "counterevidence": "Early dimethiconol (7) and two silicones argue toward high; absence of any payload lipid, film former or second polymer and an effective SLES base argue against it.",
+      "whyThisBand": "One meaningfully persistent silicone/guar system against ordinary reset leaves noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: deposition comes from one silicone/guar system without W-RICH (no prominent payload lipid) and reset is not limited. Not low: a prominent silicone with a cationic guar is plausible enough that lightweight would understate residue (W2).",
+      "confidenceLimitingFactor": "Dimethiconol emulsion level/MW unknown; could move it one band toward high.",
+      "rationale": "Moderate: silicone/guar system (7, 13, 14), no rich lipid architecture, moderate reset. W1 conditions not strictly met (no amodimethicone), full 6.6 method decides; result coincides.",
+      "ruleIds": ["6.3", "6.4", "6.5", "6.6", "W1", "W2", "W-RICH", "6.9", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedConditioningRoutes": [], "limitation": "Not a repair/moisture decision."},
+      "claimRole": "candidate",
+      "counterSignal": "Menthol (16) and fragrance in a scalp-soothing product; no E4 comfort route prominent; strong-leaning SLES chassis.",
+      "decisionTrace": "Manufacturer: 'Anti-Schuppen Wirkung mit Pirocton Olamin' (E2 dandruff unit, moderate) plus recognized active Piroctone Olamine (6) -> 7.2 problem-led dandruff row -> scalp_active. No lengths-care role in the product name ('Beruhigende Pflege' is not a lengths role), so F7 does not move it.",
+      "rationale": "scalp_active by 7.2: anti-dandruff positioning with a recognized active.",
+      "ruleIds": ["7.2", "F7", "E2", "CL-SRC", "11"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "decisionTrace": "Empty default considered. 'Feuchtigkeitsspendend' refers to scalp moisture and the formula has no moisture_supported cluster (glycols/aloe late); 'geschmeidiges Haar' is an outcome of the silicone route (F2).",
+      "rationale": "Empty (Section 8, F2, F3).",
+      "ruleIds": ["8", "F2", "F3"]
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "recognized_active_problem_led",
+      "triggerEvidence": ["Piroctone Olamine (6)", "Manufacturer: 'Anti-Schuppen Wirkung mit Pirocton Olamin - klinisch getestet' (moderate)"],
+      "decisionTrace": "Default regular considered; dandruffSupport supported and qualifying E2 dandruff unit graded moderate -> treatment (U3). No reset, no frequency trigger; treatment wins by U1 anyway.",
+      "rationale": "Treatment: recognized active plus moderate-graded dandruff claim (U3).",
+      "ruleIds": ["9", "U1", "U3", "CL-SRC", "F-TRACE"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "rationale": "Explicit positioning exists: manufacturer 'Shampoo gegen Kopfhautjucken' and 'Sofortige Linderung juckender Kopfhaut' are E2 sensitive units not naming dandruff (SC1, moderate); other itch/dryness units name 'Schuppen' and are absorbed as dandruff symptoms (E2a). But the formula lacks a credible supportive architecture: SLES chassis with late sulfonate, Menthol (16), Parfum, no E4 comfort route, no glycerin/panthenol; only Aloe juice (24) and glycols late. The itch relief rests on the anti-dandruff active. Hence not_targeted, moderate (neighbor targeted).",
+      "ruleIds": ["10", "SC1", "E2", "E2a"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Complete INCI contains Piroctone Olamine (6).",
+      "ruleIds": ["11"]
+    }
+  },
+  "projection": {
+    "thicknessFit": {"fine": "acceptable", "normal": "ideal", "coarse": "ideal"},
+    "thicknessFitConfidence": {"fine": "moderate", "normal": "moderate", "coarse": "moderate"},
+    "thicknessRationale": "T1 W moderate, C high: fine acceptable, normal ideal, coarse ideal. Dandruff target; no not_suited fit so T6 does not lift anything. T4: normal ideal -> W neighbor high gives acceptable (lower) -> flag normal. Coarse ideal -> C neighbor moderate gives acceptable (lower) -> flag coarse (W neighbor high keeps ideal). Fine acceptable -> W neighbor high gives not_suited, lifted back by T6 -> no flag.",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "scalpTargets": {"primary": "dandruff", "secondary": null},
+    "scalpTargetConfidence": {"primary": "moderate"},
+    "scalpTargetRationale": "S-DANDRUFF: manufacturer E2 dandruff unit (moderate) and dandruffSupport supported (high) -> pass; confidence moderate. S-SENSITIVE: manufacturer itch units exist but formula gate fails (scalpComfortTarget not_targeted; no prominent E4 comfort route) -> note claimed_target_not_projected:sensitive. S-DRY: only non-dandruff dry unit is retailer copy ('für trockene, juckende Kopfhaut', low) -> positioning fails -> note claimed_target_not_projected:dry. Another target passed, so no S-FAIL flag.",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "moderate",
+    "cleansingIntensityRationale": "I1: moderate -> regular, equals schuppen expectation. I3: neighbor strong with usageRole treatment -> regular, still matches -> no flag.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "D1 false; D2 not met.",
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"},
+      {"thickness": "normal", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"}
+    ],
+    "requiredProtocolRoles": ["shampoo_dandruff"],
+    "reviewFlags": ["review_thickness_boundary: normal", "review_thickness_boundary: coarse"],
+    "informationalNotes": ["claimed_target_not_projected:sensitive", "claimed_target_not_projected:dry"]
+  },
+  "uncertainties": [
+    "Whether 'gegen Kopfhautjucken' in an anti-dandruff product's headline is a stand-alone sensitive unit or implicitly a dandruff symptom: E2a absorbs only units that name 'Schuppen', so it was treated as sensitive; outcome is unchanged because the sensitive formula gate fails either way.",
+    "C2 humectant element satisfied only by late glycols/aloe."
+  ]
+}

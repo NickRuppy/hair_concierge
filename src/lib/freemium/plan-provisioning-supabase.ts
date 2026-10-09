@@ -13,6 +13,7 @@ import {
   isPersonalPlanStage2Enabled,
   isPersonalPlanStage3Enabled,
   isPersonalPlanStage4Enabled,
+  isShoppingBudgetEnabled,
 } from "@/lib/personal-plan/release"
 import { createInitialRoutineCandidateCompiler } from "@/lib/personal-plan/routine-candidate-compiler"
 import {
@@ -218,7 +219,11 @@ async function acceptInitialRoutineForUser(
           stage2Enabled: isPersonalPlanStage2Enabled(),
           stage3Enabled: isPersonalPlanStage3Enabled(),
           stage4Enabled: isPersonalPlanStage4Enabled(),
+          shoppingBudgetEnabled: isShoppingBudgetEnabled(),
         },
+        loadShoppingBudget: async (id) =>
+          (await createSupabaseStage3ProductionPersistence(admin as never).loadShoppingContext(id))
+            .budget,
         refinementPersistence: createSupabaseStage2RefinementPersistence(admin as never),
         saveFacts: (factsInput) => saveUserFacts(admin as never, factsInput),
         loadKnownCareAnswers: (id) => loadKnownCareAnswers(admin as never, id),
@@ -289,6 +294,17 @@ export async function classifyRoutineAcceptanceFailure(
   // overwriting it is exactly what the guard exists to prevent. `plan_already_accepted` is
   // raised only AFTER `loadActiveRoutineVersionId` returned an id, so it is proof.
   if (error.code === "plan_already_accepted") return "already_accepted"
+
+  // The shopping-budget gate is on and the buyer has not said what a product may cost (C7).
+  // Raised before anything was written, so nothing is half-built; the sheet asks the budget
+  // question and completes again. A buyer who already HAS a Routine is not asked.
+  if (error.code === "budget_required") {
+    if ((await confirmActiveRoutine()) === true) return "already_accepted"
+    console.info("[freemium] post-purchase routine acceptance waits for the budget", {
+      code: error.code,
+    })
+    return "budget_required"
+  }
 
   // `conflict` and `refinement_in_progress` are NOT proof. For a card payment the two
   // provisioning lanes — the in-sheet completion and `checkout.session.completed` — enter

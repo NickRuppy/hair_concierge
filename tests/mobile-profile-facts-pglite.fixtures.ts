@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises"
 
 import {
-  applyUserFactsLock,
+  applyCurrentUserFacts,
   migratedPersonalPlanDatabase,
   type PersonalPlanTestDb,
 } from "./personal-plan-pglite-migration.fixtures"
@@ -73,7 +73,7 @@ export async function mobileFactsDatabase(
     ...(options.cleanSwitch === false ? [] : CLEAN_SWITCH_MIGRATIONS),
   ]
   for (const file of files) await pg.exec(await readFile(new URL(file, ROOT), "utf8"))
-  if (options.cleanSwitch !== false && options.lock !== false) await applyUserFactsLock(pg)
+  if (options.cleanSwitch !== false && options.lock !== false) await applyCurrentUserFacts(pg)
   return pg
 }
 

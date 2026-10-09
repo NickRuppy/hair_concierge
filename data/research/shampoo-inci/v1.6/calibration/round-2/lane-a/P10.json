@@ -1,0 +1,141 @@
+{
+  "blindId": "P10",
+  "identity": {
+    "productName": "Syoss Intense Curls Locken Shampoo",
+    "brand": "Syoss",
+    "market": "DE",
+    "packSize": "440 ml",
+    "formulaSource": "frozen packet canonicalInci (tier not stated; treated as approved canonical capture, ID-1)",
+    "normalization": "ID-2: packet entries 'Aqua (Water' and 'Eau)' are one INCI entry 'Aqua (Water, Eau)'; all positions below are counted after this normalization (32 entries).",
+    "normalizedInciCount": 32,
+    "formulaFingerprintSha256": "edaa5286fa61f1a33f0af9c6acda123b09b5d80ddb624e24d083f77eaf35a3bb",
+    "fingerprintMethod": "lane-computed SHA-256 of ID-2-normalized INCI names joined with ', '",
+    "positioningSourceGrades": "product name high ('Intense Curls Locken' - texture only); manufacturer moderate; retailers low",
+    "conflicts": "'Panthenol-Feuchtigkeits-Komplex' maps to Panthenol (7); '3%' unprovable from INCI - note only."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "strong",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate (2) with one prominent buffer Cocamidopropyl Betaine (3), no reinforcing route; E3 point Parfum (Fragrance) (10). Laureth-4/-23, Trideceth-10, PEG esters are not routes (C3). Refatting/conditioning counter-signals recorded (PEG-7 Glyceryl Cocoate 5, Dimethicone 8); the realistic unknown is the single buffer's level -> neighbor strong.",
+      "ruleIds": ["C1", "C3", "C4", "E3", "ID-2", "N-ALT"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "High by C2: early (prominent) silicone Dimethicone (8), cationic polymer Guar Hydroxypropyltrimonium Chloride (13), pearlizing Glycol Distearate (16), humectant Panthenol (7); reinforced by Amodimethicone (12), Hydrolyzed Keratin (6), PEG-7 Glyceryl Cocoate (5), Hydrogenated Castor Oil (15), Apricot Kernel Oil (21). Multiple complementary systems; reasonable unknowns would not move it.",
+      "ruleIds": ["C2", "§5", "E3"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "formulaIdentifiers": {"fingerprint": "edaa5286fa61f1a33f0af9c6acda123b09b5d80ddb624e24d083f77eaf35a3bb", "sourceTier": "frozen packet canonical INCI (tier not stated)", "captureDate": "not stated in packet"},
+      "evidenceByFamily": {
+        "silicone": ["Dimethicone (8)", "Amodimethicone (12)"],
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride (13)"],
+        "cationic_conditioner": [],
+        "payload_lipid": ["Hydrogenated Castor Oil (15) - waxy", "Prunus Armeniaca Kernel Oil (21)"],
+        "weak_refatter": ["PEG-7 Glyceryl Cocoate (5)"],
+        "protein_film": ["Hydrolyzed Keratin (6)"],
+        "film_former": [],
+        "reset": ["anionic: Sodium Laureth Sulfate (2)", "amphoteric: Cocamidopropyl Betaine (3)"],
+        "humectantContext": ["Panthenol (7)", "Propylene Glycol (26)"],
+        "excluded": ["PEG-40 Hydrogenated Castor Oil (14) - solubilizer (6.4)", "Glycol Distearate (16) - pearlizer (6.4)", "PEG-120 Methyl Glucose Dioleate (18) - PEG thickener (6.4)", "Laureth-4 (17), Laureth-23 (20), Trideceth-10 (22) - emulsifiers/solubilizers"],
+        "unresolved": []
+      },
+      "depositionLoad": {"value": "moderate", "rationale": "Prominent dimethicone + amodimethicone + guar form a substantial silicone/coacervate system; keratin is prominent but a low-persistence hydrolysate; lipids are post-fragrance."},
+      "persistence": {"value": "moderate", "rationale": "Dimethicone and amino-silicone are persistent and can accumulate; protein and post-fragrance oils add little persistence; no prominent waxy lipid."},
+      "resetCapacity": {"value": "moderate", "rationale": "SLES with one betaine buffer and a refatter: ordinary reset."},
+      "counterEvidence": "W1 is excluded by condition (c): a prominent protein film (Hydrolyzed Keratin 6) reinforces the silicone/guar/amodimethicone set, and a waxy lipid (15) is present. Multiple families converge, pulling toward high.",
+      "whyThisBand": "A persistent silicone/amino-silicone/guar system on an ordinary sulfate chassis gives noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: the extra families beyond the silicone/guar/amodimethicone set are a low-persistence protein hydrolysate and post-fragrance lipids; there is no W-RICH (no prominent payload lipid) and reset is not limited. Not low: a prominent dimethicone with amodimethicone and guar is plainly a depositing system (W2).",
+      "limitingFactor": "Several converging families with unknown levels; high is a realistic one-step neighbor (close to W3, but moderate judged better supported).",
+      "rationale": "Moderate (depositionLoad moderate, persistence moderate, resetCapacity moderate); neighbor high.",
+      "ruleIds": ["§6.3", "§6.4", "§6.6", "W1", "W-RICH", "W2", "W3", "§6.9", "N-ALT"],
+      "selfCheck": "Fingerprint matches; blind judgment; no count/position assigned band; three subjudgments present; whyNotNeighborBand specific; no in-lane comparison."
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "neighboringAlternative": "repair",
+      "careDirection": {"verdict": "dual_supported", "moistureRoutes": ["Panthenol (7)", "PEG-7 Glyceryl Cocoate (5)"], "repairRoutes": ["Hydrolyzed Keratin (6)", "Amodimethicone (12)", "Hydrogenated Castor Oil (15)"], "sharedConditioningRoutes": ["Dimethicone (8)", "Guar Hydroxypropyltrimonium Chloride (13)"], "limitation": "Humectant side rests mainly on one prominent humectant (panthenol); repair side on keratin + amino-silicone."},
+      "claimRole": "tie_breaker",
+      "counterSignal": "'stärkt das Haar von innen' (repair-ish) and a deposition-heavy formula; humectant cluster is thin.",
+      "rationale": "Moisture: formula genuinely supports both directions (dual_supported); manufacturer positioning ('Panthenol-Feuchtigkeits-Komplex', 'Spendet langanhaltende Feuchtigkeit', 'Nährt') breaks the tie toward moisture (claim graded moderate, so it may act as tie_breaker, CL-SRC; F1). 'Locken/Curls' is texture, not a focus (T2).",
+      "decisionTrace": {"claimDirection": "moisture (manufacturer, moderate)", "formulaCompatible": true, "compatibleRoute": "Panthenol (7) with PEG-7 Glyceryl Cocoate (5)", "decisionReason": "dual_supported verdict, tie broken by dominant moisture positioning."},
+      "ruleIds": ["F1", "§7.3", "CL-SRC", "T2", "F-TRACE"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": "repair",
+      "rationale": "Empty: the only repair-like claim, 'stärkt das Haar von innen', is attributed to the same 'Panthenol-Feuchtigkeits-Komplex' as the moisture primary, so it is not distinct positioning with its own route (F2, F3). 'Tiefenpflegende' is care wording.",
+      "decisionTrace": {"emptyDefaultConsidered": true, "selected": [], "matchingClaims": ["stärkt das Haar von innen (manufacturer) - same panthenol complex"], "independentRoutes": [], "exceptionCode": null},
+      "ruleIds": ["§8", "F2", "F3", "F-TRACE"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "rationale": "Regular: no frequency wording, no reset intent, no D1 ('Tiefenpflegende' and 'Tiefenspülung' are explicitly not D1), no dandruff.",
+      "decisionTrace": "default regular; no trigger fired.",
+      "ruleIds": ["§9", "U1", "D1"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No E2 scalp claim; 'Reinigt sanft die Kopfhaut' is mildness.",
+      "ruleIds": ["§10", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "ruleIds": ["§11"]
+    }
+  },
+  "projection": {
+    "thicknessFit": {"fine": "acceptable", "normal": "ideal", "coarse": "ideal"},
+    "thicknessFitDetail": {
+      "fine": {"confidence": "moderate", "rationale": "T1 W moderate -> acceptable. T4 (ordinary): W neighbor high -> not_suited -> flag fine."},
+      "normal": {"confidence": "moderate", "rationale": "T1 W moderate -> ideal. T4: neighbor high -> acceptable -> flag normal."},
+      "coarse": {"confidence": "moderate", "rationale": "T1 C high -> ideal; W neighbor high -> ideal (same); C high confidence -> no flag."},
+      "ruleIds": ["T1", "T2", "T4", "13.8"]
+    },
+    "weight": "moderate",
+    "weightDetail": {"confidence": "moderate", "rationale": "W-LIVE moderate -> moderate.", "ruleIds": ["W-LIVE"]},
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetsDetail": {
+      "primary": {"target": "ordinary", "bucket": "normal", "route": "balanced", "confidence": "high", "rationale": "S-ORDINARY way 1 (no qualifying E2 claim); manufacturer source present -> high."},
+      "secondary": null,
+      "ruleIds": ["S-ORDINARY", "13.8"]
+    },
+    "cleansingIntensity": "regular",
+    "cleansingIntensityDetail": {"confidence": "moderate", "rationale": "I1 moderate -> regular. I3: neighbor strong with usageRole regular -> regular, same -> no flag.", "ruleIds": ["I1", "I3"]},
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserDetail": {"confidence": "moderate", "rationale": "D1 false; D2 not met.", "ruleIds": ["D1", "D2"]},
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [
+      {"code": "review_thickness_boundary", "detail": "fine: weightPotential neighbor high would make fine not_suited (T4, ordinary target)."},
+      {"code": "review_thickness_boundary", "detail": "normal: weightPotential neighbor high would make normal acceptable (T4)."}
+    ],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "Weight moderate vs high is close (multiple families, W1 excluded by prominent keratin); lane did not find it balanced enough for W3 low confidence.",
+    "Care-direction verdict dual vs repair_supported: if the single prominent humectant is not a 'coherent humectant cluster', the verdict is repair_supported and focus would become general or repair."
+  ]
+}

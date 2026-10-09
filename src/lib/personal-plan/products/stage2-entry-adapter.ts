@@ -31,6 +31,7 @@ export type Stage3Bootstrap = {
   authorityEvaluations: Stage3BootstrapResponse["authorityEvaluations"]
   fitComparisons?: Stage3BootstrapResponse["fitComparisons"]
   catalogThumbnails?: Record<string, string>
+  budget?: Stage3BootstrapResponse["budget"]
 }
 
 export function buildStage3Bootstrap(
@@ -69,6 +70,8 @@ export function buildStage3Bootstrap(
     authorityEvaluations: response.authorityEvaluations,
     fitComparisons: response.fitComparisons,
     catalogThumbnails: response.catalogThumbnails,
+    // Present only when the shopping-budget gate is on (budget_required or the saved value).
+    ...(response.budget ? { budget: response.budget } : {}),
   }
 }
 

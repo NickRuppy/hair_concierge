@@ -1,3 +1,5 @@
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
+
 import { CATEGORY_ROLE_POLICIES } from "./authorities"
 import type {
   Stage3AuthoritySnapshotV1,
@@ -11,7 +13,63 @@ export const FIXTURE_STAGE3_SCENARIOS = {
   inventoryOnlyConditioner: "inventory-only-conditioner",
   uncoveredConditioner: "uncovered-conditioner",
   ownedSearchOverflow: "owned-search-overflow",
+  budgetRequired: "budget-required",
+  budgetStrictZero: "budget-strict-zero",
+  budgetStrictOne: "budget-strict-one",
+  budgetFlexImprovement: "budget-flex-improvement",
+  budgetFlexGap: "budget-flex-gap",
+  budgetOpen: "budget-open",
 } as const
+
+/**
+ * Labs-only budget state for the uncovered-Conditioner journey. `saved: null` starts at the
+ * budget step; `prices` are the package prices of the three fixture Conditioner candidates in
+ * their fit order (best first), so the real budget policy decides order, default and notice.
+ */
+export type FixtureStage3BudgetScenario = {
+  saved: ShoppingBudget | null
+  suggestion: 5 | 15 | null
+  prices: readonly [number, number, number]
+}
+
+const FIXTURE_BUDGET_SCENARIOS: Record<string, FixtureStage3BudgetScenario> = {
+  [FIXTURE_STAGE3_SCENARIOS.budgetRequired]: {
+    saved: null,
+    suggestion: 15,
+    prices: [24.9, 11.95, 12.95],
+  },
+  [FIXTURE_STAGE3_SCENARIOS.budgetStrictZero]: {
+    saved: { kind: "capped", limitEur: 5, allowExceptions: false },
+    suggestion: null,
+    prices: [24.9, 9.95, 12.95],
+  },
+  [FIXTURE_STAGE3_SCENARIOS.budgetStrictOne]: {
+    saved: { kind: "capped", limitEur: 5, allowExceptions: false },
+    suggestion: null,
+    prices: [11.95, 3.95, 7.45],
+  },
+  [FIXTURE_STAGE3_SCENARIOS.budgetFlexImprovement]: {
+    saved: { kind: "capped", limitEur: 15, allowExceptions: true },
+    suggestion: null,
+    prices: [24.9, 11.95, 12.95],
+  },
+  [FIXTURE_STAGE3_SCENARIOS.budgetFlexGap]: {
+    saved: { kind: "capped", limitEur: 5, allowExceptions: true },
+    suggestion: null,
+    prices: [9.95, 12.95, 24.9],
+  },
+  [FIXTURE_STAGE3_SCENARIOS.budgetOpen]: {
+    saved: { kind: "uncapped" },
+    suggestion: null,
+    prices: [24.9, 11.95, 12.95],
+  },
+}
+
+export function fixtureStage3BudgetScenario(
+  scenario: string | undefined,
+): FixtureStage3BudgetScenario | undefined {
+  return scenario ? FIXTURE_BUDGET_SCENARIOS[scenario] : undefined
+}
 
 export function createFixtureDeferredHeatProtectionEntryContext(): Stage3EntryContext {
   const refinedVersionId = "fixture-refined-deferred-heat-protection"

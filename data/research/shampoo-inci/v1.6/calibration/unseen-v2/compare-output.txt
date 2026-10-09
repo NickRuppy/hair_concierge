@@ -1,0 +1,5 @@
+DIFF Q02 Shampoo Oil Repair Marulaöl focusPrimary moisture general
+DIFF Q03 Wahre Schätze Pflegendes Shampoo Kokosmi weightPotential moderate low
+DIFF Q03 Wahre Schätze Pflegendes Shampoo Kokosmi fit.fine acceptable ideal
+DIFF Q03 Wahre Schätze Pflegendes Shampoo Kokosmi weight moderate light
+agreement 92/96 = 95.8%

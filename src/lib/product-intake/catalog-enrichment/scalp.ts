@@ -636,6 +636,7 @@ export async function preflightScalp(options: {
         is_active: true,
         lifecycle_status: "active",
         is_chaarlie_recommended: true,
+        ...(product.market_segment ? { market_segment: product.market_segment } : {}),
       },
       image_asset: {
         storage_bucket: "product-images",

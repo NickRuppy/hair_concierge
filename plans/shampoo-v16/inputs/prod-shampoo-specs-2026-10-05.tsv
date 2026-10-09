@@ -1,0 +1,72 @@
+# Read-only snapshot of prod (project pqdkhefxsxkyeqelqegq) taken 2026-10-05: every product with product_shampoo_specs rows.
+# specs = thickness:scalp_route/cleansing_intensity (one entry per spec row). rec = is_chaarlie_recommended. created = products.created_at date.
+# cohort: C50 = in data/research/shampoo-inci/v1.4-candidate/candidate.json; X14 = scan-expansion batch applied 2026-09-04; L4 = legacy, never researched.
+id	brand	name	rec	created	cohort	specs
+b000d235-1fc6-434c-9ba1-f1207d36cded	Balea	Balea 2 in 1 Urea 5%	true	2026-03-03	C50	fine:dry/gentle
+ead1333b-6839-464d-b272-673d39bb95a4	Balea	Balea Aqua Hyaluron	true	2026-03-03	C50	fine:balanced/gentle
+eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d	Balea	Balea Kopfhaut Sensitive Shampoo	true	2026-03-03	C50	normal:irritated/gentle
+d01de47e-e360-4b31-9924-e3e5bc31ccdc	Balea	Balea Professional Ultimate Volume	true	2026-03-03	C50	fine:balanced/regular
+0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c	Balea	Balea Tiefenreinigung	true	2026-03-03	L4	fine:oily/clarifying
+a79513be-e34b-4a1e-b7eb-b3d4b58160be	Balea	Balea Ultra Sensitive	true	2026-03-03	C50	fine:irritated/gentle
+f184aef4-d8f9-4956-bcd6-ba1bf1ebeace	Balea Med	Balea Med Anti Schuppen	true	2026-03-03	C50	fine:dandruff/regular
+4a45948b-53a6-48ac-9c02-20718c1d19c4	Being	Being Big Hair Shampoo	false	2026-09-04	X14	fine:balanced/regular
+a1c3dc8d-2638-497f-8c7f-9b491c9003b0	Cantu	Cantu Shampoo Locken Pflege	true	2026-03-03	C50	coarse:balanced/gentle
+1f51a69f-c946-4898-9091-2fd2c59fb467	Dejan Garz	Dejan Garz Shampoo	true	2026-03-03	C50	fine:balanced/regular
+286071ba-9c9a-4c60-979c-7e51df949fbf	Garnier Fructis	Garnier Fructis Locken Methode Feuchtigkeits-Shampoo	false	2026-09-04	X14	coarse:balanced/regular, normal:balanced/regular
+0017381a-84ba-46dd-9b6e-7ef457e8b5b4	Garnier Wahre Schätze	Garnier Wahre Schätze Shampoo Honig Schätze	false	2026-09-04	X14	fine:balanced/regular, normal:balanced/regular
+744de604-d266-453b-a56b-eea92c5ca565	Guhl	Guhl Anti Schuppen	true	2026-03-03	C50	normal:dandruff/regular
+cd7461cc-7fde-40dd-8d39-fca1aa8f30bf	Guhl	Guhl Frische und Leichtigkeit	true	2026-03-03	C50	normal:oily/regular
+16ebefbe-48d8-4c7f-9c81-b903651a6e03	Guhl	Guhl Hyaluron+	true	2026-03-03	C50	fine:balanced/gentle
+02afbd03-1c7d-467c-8a07-a8b226d6f535	Guhl	Guhl Kopfhaut Sensitive	true	2026-03-03	C50	normal:irritated/gentle
+9bfad335-a086-45a0-9af7-f26b36b4ecff	Guhl	Guhl Kraft & Fülle	true	2026-03-03	C50	normal:oily/regular
+a06cfc4d-c4f5-457e-a94e-26559f96f0e9	Hair Biology	Hair Biology Revitalize & Soothe	false	2026-03-03	C50	normal:dry/gentle
+c07a181b-3d55-4d47-ad68-9c1e324d4496	Hask	Hask Curl Care Shampoo	true	2026-03-03	C50	coarse:balanced/gentle
+17b6d50e-ca5b-4f66-bdd7-39bd19afe748	Hask	Hask Shampoo Argan Oil	true	2026-03-03	C50	coarse:dry/gentle
+716a4f4e-6ba4-4742-a1cf-75e90ae1da3f	Head & Shoulders	Head & Shoulders Anti Schuppen Sensitive	true	2026-03-03	C50	coarse:dandruff/regular
+d408aca9-cd16-4cb0-90e7-bab26a698000	Head & Shoulders	Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege	true	2026-03-03	C50	coarse:irritated/gentle
+088b1427-ed22-424e-8cfd-ea2578120ae6	Head & Shoulders	Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege	true	2026-03-03	C50	coarse:dandruff/gentle, fine:dandruff/gentle
+1e61a644-94b0-4356-ab55-f58572fa1e18	head&shoulders	head&shoulders Anti-Schuppen Shampoo Classic Clean	false	2026-09-04	X14	coarse:dandruff/regular, coarse:oily/regular, fine:dandruff/regular, fine:oily/regular, normal:dandruff/regular, normal:oily/regular
+2e887538-3b92-4344-9bbd-1761383ba4a6	Herbal Essences	Herbal Essences Shampoo Fiji	false	2026-09-04	X14	fine:balanced/regular, normal:balanced/regular
+41b99629-5a1c-402f-a486-d41780e89e66	Herbal Essences	Herbal Essences Tiefenreinigung & Glanz Shampoo Limettenduft	false	2026-08-21	L4	coarse:balanced/clarifying, fine:balanced/clarifying, normal:balanced/clarifying
+22f95dcb-12de-4d62-b206-f03dbd6e94a0	ISANA	ISANA Shampoo & Spülung 2 in 1 Volumen Malve & Acai	false	2026-09-04	X14	fine:balanced/regular
+86f44889-b2c9-40a1-9190-58d7f738b6ca	ISANA	ISANA Shampoo Sensitiv Baumwoll- & Kornblume	false	2026-09-04	X14	fine:irritated/regular, normal:irritated/regular
+88c230c5-1020-4648-a10e-c2a1e8c87e0e	L'Oréal Paris	Ultimate Shampoo	false	2026-07-03	C50	coarse:balanced/regular, fine:balanced/regular, normal:balanced/regular
+cc9318d2-13af-4c83-8b5e-7effb687c92f	L'Oréal Paris Elvital	L'Oréal Paris Elvital Hydra Hyaluronic 72H Feuchtigkeit-Auffüllendes Shampoo	false	2026-09-04	X14	coarse:balanced/regular, normal:balanced/regular
+1623a993-3ff4-43be-82c1-95a1ee57ec52	Langhaarmädchen	Langhaarmädchen Beautiful Curls Shampoo	true	2026-03-03	C50	coarse:balanced/gentle
+e76e0ed4-bd20-40cd-84ae-e93030610d40	Langhaarmädchen	Langhaarmädchen Lovely Long	true	2026-03-03	C50	normal:balanced/regular
+3d94c017-9edb-4ba0-accd-4772e262f012	Lavera	Lavera Basis Sensitiv	true	2026-03-03	C50	normal:irritated/gentle
+6dc65df2-2466-43e4-bdc2-3a05803f305c	Monday Haircare	Monday Haircare Volume Kraft & Fülle Shampoo	true	2026-03-03	C50	coarse:oily/regular, normal:oily/regular
+a7ff335a-7e81-4cf4-9c20-9209bff4386b	Neqi	Neqi Moisture Mystery	true	2026-03-03	C50	fine:dry/gentle, normal:balanced/gentle
+64fb44d5-8701-46ab-bcba-f1747f071e48	Neqi	Neqi Volume Victory	true	2026-03-03	C50	fine:balanced/regular
+f033afbe-281a-419e-a245-3ad83d721bd0	Nivea	Nivea Shampoo&Conditioner 2in1	true	2026-03-03	C50	normal:dry/regular
+eb99d805-20d4-4dbb-9651-17c9e954a769	NIVEA	NIVEA Power Repair Reparatur Shampoo	false	2026-09-04	X14	coarse:balanced/regular, normal:balanced/regular
+3f3c7d89-9e7b-4e91-85f7-d3c58d304918	OGX	Biotin & Collagen Shampoo	true	2026-03-03	C50	fine:balanced/regular
+bef4f219-2c1f-4e02-8e3a-93056b95465a	OGX	Keratin Oil Shampoo	true	2026-03-03	C50	coarse:dry/gentle
+2ecd3c9d-90f6-45a3-a72c-daefed50be10	OGX	OGX Renewing + Argan Oil of Morocco Shampoo	true	2026-03-03	C50	normal:balanced/gentle
+7b5ec424-d21f-4eb8-999e-7aed98e94b86	OGX	Rosemary Mint Shampoo	true	2026-03-03	C50	normal:oily/clarifying
+5effc311-25d7-44dd-8c16-b93c182068d3	Pantene	Pantene Anti Schuppen	true	2026-03-03	C50	normal:dandruff/regular
+7373656d-5fd7-46e8-81a3-2ef29e3c4c18	Pantene	Pantene Grow Abundance	true	2026-03-03	C50	fine:irritated/regular
+fcbc469f-93c8-4be5-85db-e789b09189c7	Pantene	Pantene Hydra Glow Shampoo	true	2026-03-03	C50	fine:balanced/gentle
+6fde3fe2-3850-4502-b9f2-ebb17eb13bad	Pantene	Pantene Pro-V Volumen Pur	true	2026-03-03	C50	fine:oily/regular
+0d341836-96b3-4364-9319-a7f0884b3da9	Plantur	Plantur 39 Phyto-Coffein-Shampoo für feines, brüchiges Haar	false	2026-08-21	L4	fine:balanced/regular
+03b847e5-01b9-40e5-950a-98efc73abb3a	Salthouse	Salthouse Anti Fett	true	2026-03-03	C50	fine:oily/clarifying
+1ef2be82-259c-4a1f-af2e-3ac3403f9731	Salthouse	Salthouse Anti Juckreiz	true	2026-03-03	C50	fine:irritated/gentle
+261e5c9f-d312-4206-82da-fbd0ab6f3614	Salthouse	Salthouse Anti Schuppen	true	2026-03-03	C50	fine:dandruff/regular
+57bae8c8-0ebd-4722-b955-c760d8ffcdbb	Sante	Sante Glossy Shine	true	2026-03-03	C50	normal:balanced/regular
+678119a0-9070-4faf-b9ed-7c0ac008767e	Sante	Sante Sensitive Care	true	2026-03-03	C50	coarse:irritated/gentle
+e4e4fd05-33fd-4048-9553-76815bff5d43	schauma	schauma Shampoo Repair & Pflege	false	2026-09-04	X14	coarse:balanced/regular
+9d8d4709-4041-495e-98ee-e0261fa30e27	Schauma	Schauma Anti Schuppen	true	2026-03-03	C50	normal:dandruff/regular
+e859d6e0-e991-4081-84b5-b81862c82475	Schwarzkopf GLISS	Schwarzkopf GLISS Sealing Miracle Versiegelndes Shampoo	false	2026-09-04	X14	coarse:balanced/regular, normal:balanced/regular
+3405f33b-ae5f-4185-b72b-68c9a87f7c06	Schwarzkopf GLISS	Schwarzkopf GLISS Shampoo Liquid Silk	false	2026-09-04	X14	coarse:balanced/regular, normal:balanced/regular
+bb1b029f-a8fa-4276-8268-f6ce418128c7	Schwarzkopf GLISS	Schwarzkopf GLISS Shampoo Total Repair	false	2026-09-04	X14	coarse:balanced/regular
+303b4c0c-53a4-46de-883d-c29e448ee590	Sebamed	Sebamed Anti Schuppen	true	2026-03-03	C50	fine:dandruff/regular
+7e95671b-41a7-4f5c-9188-e535e46678ba	Sebamed	Sebamed Anti Schuppen Plus	true	2026-03-03	C50	fine:oily/regular
+e7bfd306-b128-4735-a9f8-0eeacdbd5013	Sebamed	Sebamed Every-Day Shampoo	true	2026-03-03	C50	fine:irritated/gentle
+51a0b647-2794-49a3-96e1-e7695432561e	Sebamed	Sebamed Urea 5%	true	2026-03-03	C50	fine:dry/gentle, fine:irritated/gentle
+515de93c-1c77-465d-ae0d-2a8d6ddb3d73	Swiss-O-Par	Swiss-O-Par Teebaumöl	true	2026-03-03	C50	fine:oily/regular
+4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946	Syoss	Syoss Intense Curls	true	2026-03-03	C50	coarse:balanced/gentle
+b761256d-c0d2-4413-9fa5-8ab950ef69bf	Syoss	Syoss Intense Fullness Shampoo	false	2026-06-29	C50	fine:balanced/regular
+f8a8fd56-aeb0-4096-8d9d-5af484e3889f	Syoss	Syoss Intense Volume Shampoo	false	2026-06-27	C50	fine:balanced/gentle
+0ab645f9-d46d-4cf2-96a5-b5e00f74cae2	Syoss	Syoss Shampoo Intense Keratin	false	2026-09-04	X14	coarse:balanced/regular
+7200bb0b-7463-433b-86c8-744f5c1431de	Wahre Schätze	Wahre Schätze Aktivkohle	true	2026-03-03	L4	normal:oily/clarifying
+0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33	Wahre Schätze	Wahre Schätze Sanfte Hafermilch	true	2026-03-03	C50	normal:dry/gentle

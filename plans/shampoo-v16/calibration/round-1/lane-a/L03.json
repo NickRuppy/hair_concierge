@@ -1,0 +1,121 @@
+{
+  "blindId": "L03",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: primary anionic Sodium Coco-Sulfate #3 is substantially buffered by Glycerin #4, Cocamidopropyl Betaine #5, Lauryl Glucoside #6, Coco-Glucoside #24 and refatters (Sunflower Seed Oil #11, PCA Glyceryl Oleate #16). Not low because an alkyl sulfate leads the surfactant system; not strong because there is no reinforcing anionic/reset route.",
+      "ruleIds": ["§4"],
+      "formulaFacts": ["Sodium Coco-Sulfate #3", "Glycerin #4", "Cocamidopropyl Betaine #5", "Lauryl Glucoside #6", "Sodium Cetearyl Sulfate #19", "Coco-Glucoside #24"],
+      "counterSignal": "Broad amphoteric/nonionic buffering and refatting push toward low.",
+      "neighboringAlternative": "low",
+      "sources": ["packet INCI"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: several light routes - Sunflower Seed Oil #11, Cetearyl Alcohol #15, PCA Glyceryl Oleate #16, late Guar Hydroxypropyltrimonium Chloride #21 - plus humectants (Glycerin #4, Sodium Hyaluronate #10, Betaine #17). No silicone; bounded rinse-off care.",
+      "ruleIds": ["§5"],
+      "formulaFacts": ["Glycerin #4", "Sodium Hyaluronate #10", "Helianthus Annuus Seed Oil #11", "Cetearyl Alcohol #15", "PCA Glyceryl Oleate #16", "Guar Hydroxypropyltrimonium Chloride #21"],
+      "counterSignal": "The cationic polymer is late (#21) and lipids are mid-list; could read low.",
+      "neighboringAlternative": "low",
+      "sources": ["packet INCI"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: light, low-persistence deposition - mid-list oil #11 and fatty alcohol #15, late guar #21, no silicone - in an effective coco-sulfate chassis.",
+      "ruleIds": ["§6"],
+      "subjudgments": {"depositionLoad": "light", "persistence": "low", "resetCapacity": "moderate"},
+      "whyThisBand": "Lighter routes only, none persistent.",
+      "whyNotNeighborBand": "Interacting lighter routes (oil + fatty alcohol + guar) are the plausible path to moderate, recorded as neighbor.",
+      "formulaFacts": ["Helianthus Annuus Seed Oil #11", "Cetearyl Alcohol #15", "Guar Hydroxypropyltrimonium Chloride #21"],
+      "counterSignal": "Several interacting light routes.",
+      "neighboringAlternative": "moderate",
+      "sources": ["packet INCI"]
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "rationale": "Moisture: variant name 'Hydrate & Care' and the dominant manufacturer copy ('Spendet intensive Feuchtigkeit', 'hilft, Trockenheit spürbar zu mildern', 'für normales und trockenes Haar') identify a dry-lengths hydration job; verdict moisture_supported (F1).",
+      "ruleIds": ["7.2", "7.3", "F1"],
+      "careDirection": {"verdict": "moisture_supported", "moistureRoutes": ["Aloe Barbadensis Leaf Juice #2", "Glycerin #4", "Sodium Hyaluronate #10", "PCA Glyceryl Oleate #16", "Betaine #17"], "repairRoutes": [], "sharedRoutes": ["Helianthus Annuus Seed Oil #11", "Cetearyl Alcohol #15", "Guar Hydroxypropyltrimonium Chloride #21"], "limitation": "Rinse-off; humectant deposition is bounded; order is qualitative."},
+      "claimRole": "candidate",
+      "formulaFacts": ["Glycerin #4", "Sodium Hyaluronate #10", "Betaine #17"],
+      "counterSignal": "Range name 'basis sensitiv' and 'Schont empfindliche Kopfhaut' make scalp_active a close alternative.",
+      "neighboringAlternative": "scalp_active",
+      "decisionTrace": "Blind: humectant cluster + light emollients -> moisture_supported. Unblind: 'Hydrate & Care' and most copy are hydration; sensitive-scalp positioning is range-level/secondary -> moisture primary, scalp_active secondary.",
+      "sources": ["product name", "manufacturer claims", "packet INCI"]
+    },
+    "focusSecondary": {
+      "value": ["scalp_active"],
+      "confidence": "moderate",
+      "rationale": "scalp_active: distinct exact-product sensitive-scalp positioning ('Schont empfindliche Kopfhaut', 'Sanft zur Kopfhaut', aloe 'die Kopfhaut zu beruhigen', range 'sensitiv' in name) with scalpComfortTarget targeted and an independent mild buffered cleansing route (betaine #5, glucosides #6/#24, refatting) that is not the humectant deposition route (§8, 7.2 sensitive row).",
+      "ruleIds": ["§8", "7.2", "F2"],
+      "counterSignal": "Scalp claims are partly mildness language ('sanft'); no listed comfort route (E4).",
+      "neighboringAlternative": "none",
+      "sources": ["manufacturer claims"]
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "moderate",
+      "rationale": "Frequent: explicit 'Tag für Tag' and mild ('Meine sanfte Haarpflege', pH-neutral) positioning, and cleansingStrength moderate (not strong) (§9).",
+      "ruleIds": ["§9"],
+      "counterSignal": "Daily wording is attached to the moisture benefit, not a usage instruction.",
+      "neighboringAlternative": "regular",
+      "sources": ["manufacturer claims"]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "rationale": "Targeted: explicit sensitive-scalp positioning ('Schont empfindliche Kopfhaut', 'basis sensitiv', user study 'Sanft zur Kopfhaut') and a credible supportive architecture: buffered moderate cleansing, humectant/refatting support (Glycerin #4, Sodium Hyaluronate #10, Betaine #17, PCA Glyceryl Oleate #16, oil #11), aloe #2. Counter-signals: fragrance #28 with many essential-oil allergens, no panthenol/allantoin/bisabolol; not a veto (§10).",
+      "ruleIds": ["§10"],
+      "counterSignal": "Fragrance and essential-oil load; no listed comfort route.",
+      "neighboringAlternative": "not_targeted",
+      "sources": ["manufacturer claims", "packet INCI"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole in the complete INCI.",
+      "ruleIds": ["§11"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    }
+  },
+  "projection": {
+    "status": "proposal_blocked_by_review",
+    "thicknessFit": {"fine": "ideal", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitConfidence": {"fine": "moderate", "normal": "moderate", "coarse": "moderate"},
+    "thicknessRationale": "Proposed target ordinary (S-FAIL), so T1 applies without T6: W low, C moderate -> fine ideal, normal ideal, coarse acceptable. T4: W neighbor moderate would make fine acceptable -> review_thickness_boundary (fine). Normal stays ideal; coarse stays acceptable (C neighbor low, W neighbor moderate) -> not lowered to not_suited.",
+    "weight": "light",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: low -> light.",
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetConfidence": "moderate",
+    "scalpTargetRationale": "S-SENSITIVE positioning passes (E2 'empfindliche Kopfhaut' on the exact manufacturer page, E1 moderate; name 'sensitiv' alone does not name the scalp). Formula gate: scalpComfortTarget targeted passes, but no E4-listed comfort route is present (no Panthenol, Allantoin, Bisabolol, Urea, Polidocanol, Dipotassium Glycyrrhizate, Avena, Niacinamide). Aloe Barbadensis Leaf Juice #2 is unlisted; counting it would need a written function rationale and is a judgment that P0 does not let this lane take toward recommending. Gate fails -> S-FAIL: propose ordinary + review_specialist_gate_failed (sensitive: no prominent listed comfort route). No dry-scalp claim ('trockenes Haar' is hair).",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "moderate",
+    "cleansingIntensityRationale": "I1: moderate -> regular. I3: neighbor low -> gentle; for the projected ordinary bucket (expects regular) the current value already matches -> no flag. (Had sensitive been emitted, gentle would equal irritationen's expected intensity and I3 would fire.)",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "No D1 term; D2 not met.",
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": ["review_specialist_gate_failed:sensitive:no_prominent_listed_comfort_route", "review_thickness_boundary:fine"],
+    "informationalNotes": [],
+    "liveComparison": "Not evaluated (live rows not in sealed packet)."
+  },
+  "uncertainties": [
+    "E4 unlisted route: Aloe Barbadensis Leaf Juice #2 is explicitly claimed as scalp-calming, but the comfort list is closed; the standard permits an unlisted route 'with a written function rationale' without saying who may write it or how doubtful it may be. Resolved conservatively (P0) as gate failure -> S-FAIL.",
+    "7.2 has both 'multiple claims, one dominates name' and 'explicit sensitive scalp + targeted -> scalp_active' rows; the name carries both 'sensitiv' (range) and 'Hydrate & Care' (variant). Chose moisture primary, scalp_active secondary.",
+    "E2 sensitive lexicon includes 'Kopfhaut Sensitive' but the name only says 'basis sensitiv' without scalp; treated as not naming the scalp, so positioning confidence is moderate (manufacturer page), not high.",
+    "Manufacturer directions captured only partially (image); retailer directions used for directions-type evidence, not material here.",
+    "S-FAIL vs S-ORDINARY: once scalp_active is secondary focus and the sensitive gate fails, S-FOCUS cannot fire because no specialist target is projected; the mismatch between focus scalp_active and ordinary target is not itself flagged by any rule."
+  ]
+}

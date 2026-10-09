@@ -132,6 +132,7 @@ function asFacts(
     diagnostics: projected.diagnostics,
     careHabits: null,
     quizContext: projected.quizContext,
+    shoppingPreferences: null,
     provenance,
     revision: 1,
   }

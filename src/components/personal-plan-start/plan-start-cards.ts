@@ -23,6 +23,25 @@ export type NeedCardProduct = {
   purchaseLinkStatus?: "available" | "unavailable" | null
   /** Only set when the purchase link is available and safe. */
   productUrl: string | null
+  /** Present only under a saved budget: the package price is above it („Über deinem Budget"). */
+  overBudget?: boolean
+  /** Present only for a known Drogerie/Profi tier while the badge gate is on. */
+  marketSegment?: "drugstore" | "professional"
+}
+
+export const NEED_CARD_OVER_BUDGET_BADGE = "Über deinem Budget"
+export const NEED_CARD_MARKET_SEGMENT_BADGES = {
+  drugstore: "Drogerie",
+  professional: "Profi",
+} as const
+
+/** The product badges a card shows, in display order. Empty without budget/tier data. */
+export function needCardProductBadges(product: NeedCardProduct | null | undefined): string[] {
+  if (!product) return []
+  return [
+    ...(product.marketSegment ? [NEED_CARD_MARKET_SEGMENT_BADGES[product.marketSegment]] : []),
+    ...(product.overBudget ? [NEED_CARD_OVER_BUDGET_BADGE] : []),
+  ]
 }
 
 /** Honest state for a category without a qualifying product recommendation. */

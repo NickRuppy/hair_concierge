@@ -40,6 +40,7 @@ type ProductDraft = {
   tags: string[]
   suitable_thicknesses: string[]
   suitable_concerns: string[]
+  market_segment?: "drugstore" | "professional"
   sort_order_hint: number
   spec:
     | {
@@ -615,6 +616,7 @@ export function buildProductPayload(params: {
     product_line_id: params.identity.product_line_id,
     origin: "curated",
     is_chaarlie_recommended: true,
+    ...(params.draft.market_segment ? { market_segment: params.draft.market_segment } : {}),
   }
 }
 

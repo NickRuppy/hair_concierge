@@ -1,5 +1,7 @@
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
+import type { BudgetCandidateView, BudgetNotice } from "@/lib/personal-plan/products/budget-policy"
 import type { PlanProductRole } from "@/lib/personal-plan/types"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 
 export const CATEGORY_COPY: Record<
   PersonalPlanCategory,
@@ -134,4 +136,116 @@ export const ROLE_COPY: Record<PlanProductRole, { label: string; description: st
   },
   density_claim_tonic: { label: "Kopfhaut-Tonic", description: "Mit begrenzter Evidenz" },
   scalp_exfoliant: { label: "Kopfhaut klären", description: "Bei Bedarf" },
+}
+
+/* ---------------------------------------------------------------- budget */
+
+/** A saved package-price budget, as the shopping-preferences door stores it. */
+export type Stage3ShoppingBudget = ShoppingBudget
+export type Stage3BudgetNotice = BudgetNotice
+export type Stage3BudgetLabelKind = BudgetCandidateView["label"]
+
+export const STAGE3_BUDGET_COPY = {
+  eyebrow: "Dein Budget",
+  question: "Was darf ein Pflegeprodukt ungefähr kosten?",
+  helper: "Preis pro Packung – gilt für jedes Produkt deiner Routine.",
+  limitOptions: [
+    { value: 5, label: "Bis 5 €" },
+    { value: 15, label: "Bis 15 €" },
+    { value: "uncapped", label: "Keine feste Preisgrenze" },
+  ],
+  suggestionChip: "Wie deine bisherigen Produkte",
+  strictOption: {
+    label: "Ja, für jedes.",
+    description: "Teurere zeigen wir nur, wenn es im Budget kaum Passendes gibt.",
+  },
+  flexibleOption: {
+    label: "Einzelne dürfen mehr kosten.",
+    description: "Nur einzelne – wenn sie deutlich besser passen.",
+  },
+  continueLabel: "Weiter",
+  retryLabel: "Erneut versuchen",
+  conflictRetryLabel: "Meine Auswahl speichern",
+  unavailableMessage: "Nicht gespeichert. Deine Auswahl bleibt erhalten.",
+  conflictMessage:
+    "Dein Budget wurde gerade an anderer Stelle geändert. Deine Auswahl ist noch nicht gespeichert.",
+  editLabel: "Ändern",
+  overBudgetBadge: "Über deinem Budget",
+} as const
+
+export const STAGE3_BUDGET_LIMIT_OPTIONS = STAGE3_BUDGET_COPY.limitOptions
+
+/** „Bis 15 € für jedes Produkt?“ — the follow-up for a capped answer. */
+export function budgetFlexibilityQuestion(limitEur: 5 | 15): string {
+  return `Bis ${limitEur} € für jedes Produkt?`
+}
+
+/** The value of the compact budget line above a budgeted comparison (without the „Budget:“ lead). */
+export function budgetLineValue(budget: Stage3ShoppingBudget): string {
+  if (budget.kind === "uncapped") return "Ohne feste Preisgrenze"
+  return budget.allowExceptions
+    ? `Bis ${budget.limitEur} € · einzelne dürfen mehr kosten`
+    : `Bis ${budget.limitEur} € für jedes Produkt`
+}
+
+/** Card label for a budgeted alternative; `null` keeps the card's existing label. */
+export function budgetCardLabel(labelKind: Stage3BudgetLabelKind | undefined): string | null {
+  if (labelKind === "within_budget") return "Im Budget"
+  if (labelKind === "recommended") return "Empfohlen"
+  if (labelKind === "alternative") return "Alternative"
+  return null
+}
+
+const BUDGET_DIMENSION_LABELS: Record<string, string> = {
+  "conditioner.weight": "Pflegegewicht",
+  "mask.weight": "Pflegegewicht",
+  "leave_in.weight": "Pflegegewicht",
+  "oil.weight": "Pflegegewicht",
+  "conditioner.repair_support": "Repair-Unterstützung",
+  "mask.repair_support": "Repair-Unterstützung",
+  "leave_in.repair_support": "Repair-Unterstützung",
+}
+
+/** German dative preposition + article for the dimension labels the budget can name. */
+function withDativePreposition(label: string): string {
+  if (label === "Pflegegewicht") return `beim ${label}`
+  if (label === "Repair-Unterstützung") return `bei der ${label}`
+  return `bei ${label}`
+}
+
+/**
+ * The info notice a budgeted comparison carries. Returns `null` when the notice needs a value
+ * the client does not have (the saved limit, or an improved dimension's label).
+ */
+export function budgetNoticeCopy(input: {
+  notice: Stage3BudgetNotice
+  budget: Stage3ShoppingBudget | null
+  improvedDimensionIds?: readonly string[]
+  /** Label lookup from the comparison's own evidence rows (rowId = dimensionId). */
+  dimensionLabel?: (dimensionId: string) => string | null
+}): string | null {
+  const limit = input.budget?.kind === "capped" ? input.budget.limitEur : null
+  switch (input.notice) {
+    case "strict_none_affordable":
+      return limit === null
+        ? null
+        : `Bis ${limit} € gibt es hier nichts, das zu deinem Haar passt. Du kannst eine teurere Option wählen oder ohne neues Produkt weitergehen.`
+    case "strict_one_affordable":
+      return limit === null
+        ? null
+        : `Nur eine passende Option bis ${limit} €. Weitere Optionen liegen über deinem Budget.`
+    case "flex_gap":
+      return limit === null
+        ? null
+        : `Bis ${limit} € gibt es hier nichts Passendes. Diese Option liegt darüber.`
+    case "allowance_used_elsewhere":
+      return "Ein Produkt liegt schon über deinem Budget. Hier bleiben wir im Budget."
+    case "flex_improvement": {
+      const dimensionId = input.improvedDimensionIds?.[0]
+      if (!dimensionId) return null
+      const label = input.dimensionLabel?.(dimensionId) ?? BUDGET_DIMENSION_LABELS[dimensionId]
+      if (!label) return null
+      return `Passt ${withDativePreposition(label)} deutlich besser als die Option im Budget.`
+    }
+  }
 }

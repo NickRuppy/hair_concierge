@@ -17,6 +17,7 @@ type DryShampooSeedProduct = {
   price_eur: number
   currency: "EUR"
   sort_order: number
+  market_segment?: "drugstore" | "professional"
   specs: Omit<ProductDryShampooSpecs, "product_id">
 }
 
@@ -275,6 +276,7 @@ async function main() {
       is_active: true,
       lifecycle_status: "active",
       sort_order: product.sort_order,
+      ...(product.market_segment ? { market_segment: product.market_segment } : {}),
     }
 
     const { data: saved, error: productError } = existing

@@ -15,7 +15,21 @@ import {
   type Stage3FitComparisonPosition,
 } from "@/lib/personal-plan/products/comparison-dimensions"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
-import { buildStage3FitComparison } from "@/lib/personal-plan/products/fit-comparison"
+import {
+  orderStandaloneAlternatives,
+  type BudgetCandidate,
+  type BudgetRoleAllocation,
+} from "@/lib/personal-plan/products/budget-policy"
+import {
+  buildStage3FitComparison,
+  rankStage3ComparisonCandidates,
+  STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
+  STAGE3_NATIVE_FIT_COMPARISON_ALTERNATIVE_LIMIT,
+  usablePackagePriceEur,
+  type Stage3RankedComparisonCandidate,
+} from "@/lib/personal-plan/products/fit-comparison"
+import { isProductMarketSegmentDisplayEnabled } from "@/lib/personal-plan/release"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 import type {
   PlanCategoryDecision,
   PlanHairThickness,
@@ -81,6 +95,12 @@ export type BuildScanVerdictInput = {
   refinedInputHash: string
   /** Native presentation may select from the full eligible pool; web retains its default. */
   alternativeSelection?: "web" | "native"
+  /**
+   * The user's saved shopping budget (flag-gated by the caller). Only a capped budget changes
+   * anything: within-budget alternatives come first and carry `overBudget`/`budgetLimitEur`.
+   * Absent, null or uncapped leaves ordering and payload exactly as without a budget.
+   */
+  budget?: ShoppingBudget | null
 }
 
 export function buildScanVerdict(input: BuildScanVerdictInput): ScanVerdictPayload {
@@ -219,8 +239,39 @@ function inCatalogPayload(input: BuildScanVerdictInput): ScanInCatalogVerdictPay
   if (!best || !facts) return unclearPayload(input)
 
   const authorityInput = scanAuthorityInput(input, best.role)
+  const selection = input.alternativeSelection ?? "web"
+  const cappedBudget = input.budget?.kind === "capped" ? input.budget : null
+  let budgetOptions:
+    | {
+        budgetAllocation: BudgetRoleAllocation
+        rankedCandidates: Stage3RankedComparisonCandidate[]
+      }
+    | undefined
+  if (cappedBudget) {
+    // Standalone ordering only: the price-neutral fit ranking stays the source of fit, the
+    // budget just moves affordable products first. No routine quota, no allowance.
+    const ranked = rankStage3ComparisonCandidates(authorityInput, best.evaluation, selection)
+    const views = orderStandaloneAlternatives(
+      ranked.map(toBudgetCandidate),
+      cappedBudget,
+      selection === "native"
+        ? STAGE3_NATIVE_FIT_COMPARISON_ALTERNATIVE_LIMIT
+        : STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
+    )
+    budgetOptions = {
+      budgetAllocation: {
+        roleKey: best.role,
+        candidates: views,
+        defaultProductId: null,
+        exception: null,
+        notice: null,
+      },
+      rankedCandidates: ranked,
+    }
+  }
   const comparison = buildStage3FitComparison(authorityInput, best.evaluation, undefined, {
-    alternativeSelection: input.alternativeSelection ?? "web",
+    alternativeSelection: selection,
+    ...budgetOptions,
   })
   const dimensions = renderedDimensions(comparison.dimensions).map((dimension) =>
     scanDimension(dimension, facts.productId, { withoutTarget: false }),
@@ -249,7 +300,11 @@ function inCatalogPayload(input: BuildScanVerdictInput): ScanInCatalogVerdictPay
       : null,
     // Ruling R12: alternatives show on every in_catalog verdict, `ideal` included — a
     // fitting product is not a reason to hide what else would fit.
-    alternatives: alternativesFrom(comparison),
+    alternatives: alternativesFrom(comparison, {
+      category: input.category,
+      candidates: factsForRole(input, best.role).recommendationCandidates,
+      budgetLimitEur: cappedBudget?.limitEur,
+    }),
     mobileDimensions: comparison.dimensions,
     mobileAuthority: {
       status: best.evaluation.status,
@@ -300,14 +355,42 @@ function subtitleFor(
     : scanCriterionSubtitle(coverage.matches, coverage.total)
 }
 
+function toBudgetCandidate(candidate: Stage3RankedComparisonCandidate): BudgetCandidate {
+  return {
+    productId: candidate.productId,
+    priceEur: usablePackagePriceEur(candidate.facts),
+    verdict: candidate.verdict,
+    cautionCount: candidate.cautionCount,
+    needDistances: {},
+  }
+}
+
+const MARKET_SEGMENT_CATEGORIES: ReadonlySet<PersonalPlanCategory> = new Set([
+  "shampoo",
+  "conditioner",
+  "mask",
+])
+
 function alternativesFrom(
   comparison: ReturnType<typeof buildStage3FitComparison>,
+  budget: {
+    category: PersonalPlanCategory
+    candidates: readonly Stage3CategoryProductFacts[]
+    budgetLimitEur: 5 | 15 | undefined
+  },
 ): ScanAlternative[] {
   const presentationById = new Map(
     comparison.products.map((product) => [product.productId, product]),
   )
+  const segmentById = new Map(
+    budget.candidates.map((candidate) => [candidate.productId, candidate.marketSegment ?? null]),
+  )
+  const showSegment =
+    MARKET_SEGMENT_CATEGORIES.has(budget.category) && isProductMarketSegmentDisplayEnabled()
   return comparison.alternatives.map((candidate) => {
     const product = presentationById.get(candidate.productId)
+    const marketSegment = showSegment ? segmentById.get(candidate.productId) : null
+    const overBudget = product?.presentation?.overBudget
     return {
       productId: candidate.productId,
       displayName: product?.displayName ?? candidate.recommendation.displayName,
@@ -316,6 +399,12 @@ function alternativesFrom(
       netContentLabel: product?.presentation?.netContentLabel ?? null,
       verdict: candidate.verdict,
       verdictLabel: SCAN_VERDICT_COPY[candidate.verdict].label,
+      // Optional metadata: keys exist only when the value does, so responses without a
+      // budget / with the display flag off carry exactly the pre-Task-7 keys.
+      ...(budget.budgetLimitEur !== undefined && overBudget !== undefined
+        ? { overBudget, budgetLimitEur: budget.budgetLimitEur }
+        : {}),
+      ...(marketSegment ? { marketSegment } : {}),
       // T8: already computed by `buildStage3FitComparison` — carried through for the
       // free-tier masked serializer only, see `ScanAlternative.criteria`.
       criteria: candidate.criteria,

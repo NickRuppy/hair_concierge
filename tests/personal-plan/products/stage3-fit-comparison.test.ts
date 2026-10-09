@@ -15,6 +15,7 @@ import type {
 } from "../../../src/lib/personal-plan/products/contracts"
 import {
   buildStage3FitComparison,
+  rankStage3ComparisonCandidates,
   stage3CriterionEvidenceRelation,
   STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT,
 } from "../../../src/lib/personal-plan/products/fit-comparison"
@@ -1429,6 +1430,71 @@ test("Bondbuilder tie-default pin decides the order only after verdict, coverage
   )
 })
 
+function trustedBondbuilderFacts(
+  productId: string,
+  claimTrustLevel: string | null,
+  overrides: Parameters<typeof factsFor>[3] = {},
+) {
+  const facts = factsFor("bondbuilder", "specialized_bond_treatment", productId, overrides)
+  return { ...facts, spec: { ...facts.spec, claimTrustLevel } }
+}
+
+test("Bondbuilder comparison ranks by trust tier, then the K18 default, before catalog order", () => {
+  const input = authorityInput("bondbuilder", "specialized_bond_treatment", {
+    productFacts: null,
+    capturedProductId: null,
+    subjectIdentity: null,
+    candidates: [
+      trustedBondbuilderFacts("loreal-elvital-bond", "medium", { sortOrder: 1, priceEur: 8.95 }),
+      trustedBondbuilderFacts("ogx-sealing-serum", "low", { sortOrder: 2, priceEur: 18.68 }),
+      trustedBondbuilderFacts("redken-acidic-bonding", "medium", { sortOrder: 3, priceEur: 25.5 }),
+      trustedBondbuilderFacts("olaplex-3plus", "high", { sortOrder: 4, priceEur: 34 }),
+      trustedBondbuilderFacts("epres", "high", { sortOrder: 5, priceEur: 48 }),
+      trustedBondbuilderFacts("aveda", "low", { sortOrder: 6, priceEur: 52 }),
+      trustedBondbuilderFacts(BONDBUILDER_TIE_DEFAULT_PRODUCT_ID, "high", {
+        sortOrder: 7,
+        priceEur: 56.25,
+      }),
+      trustedBondbuilderFacts("kerastase-premiere", "medium", { sortOrder: 8, priceEur: 56.29 }),
+    ],
+  })
+
+  assert.deepEqual(
+    rankStage3ComparisonCandidates(input as unknown as Stage3AuthorityInput).map(
+      (candidate) => candidate.productId,
+    ),
+    [
+      BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+      "olaplex-3plus",
+      "epres",
+      "loreal-elvital-bond",
+      "redken-acidic-bonding",
+      "kerastase-premiere",
+      "ogx-sealing-serum",
+      "aveda",
+    ],
+  )
+})
+
+test("Bondbuilder comparison never ranks a more trusted add-on above a standalone ideal product", () => {
+  const input = authorityInput("bondbuilder", "specialized_bond_treatment", {
+    productFacts: factsFor("bondbuilder", "specialized_bond_treatment", "owned"),
+    candidates: [
+      trustedBondbuilderFacts("add-on-high", "high", { relationship: "add_on", sortOrder: 1 }),
+      trustedBondbuilderFacts("standalone-low", "low", { sortOrder: 2 }),
+    ],
+  })
+
+  const ranked = rankStage3ComparisonCandidates(input as unknown as Stage3AuthorityInput)
+  assert.deepEqual(
+    ranked.map((candidate) => [candidate.productId, candidate.verdict]),
+    [
+      ["standalone-low", "ideal"],
+      ["add-on-high", "supportive"],
+    ],
+  )
+})
+
 // Inverse guard for the same invariant: when candidates are NOT tied on coverage, the pin must
 // never override it. "partial-coverage-pin" misses the care_direction dimension (its
 // balanceDirection is "balanced" against a "moisture" target — a caution, not a fail, so it stays
@@ -2308,4 +2374,80 @@ test("mask evidence row names the full accepted care-direction set as the target
   assert.equal(row?.target?.valueLabel, "Feuchtigkeit · ausgeglichen ok")
   assert.equal(row?.productValues[0]?.valueLabel, "ausgeglichen")
   assert.equal(row?.productValues[0]?.relation, "in_target")
+})
+
+function withMarketSegmentDisplay<T>(enabled: boolean, run: () => T): T {
+  const previous = process.env.PRODUCT_MARKET_SEGMENT_DISPLAY_ENABLED
+  if (enabled) process.env.PRODUCT_MARKET_SEGMENT_DISPLAY_ENABLED = "true"
+  else delete process.env.PRODUCT_MARKET_SEGMENT_DISPLAY_ENABLED
+  try {
+    return run()
+  } finally {
+    if (previous === undefined) delete process.env.PRODUCT_MARKET_SEGMENT_DISPLAY_ENABLED
+    else process.env.PRODUCT_MARKET_SEGMENT_DISPLAY_ENABLED = previous
+  }
+}
+
+function segmentedConditionerInput() {
+  return authorityInput("conditioner", "conditioner_rinse_out", {
+    productFacts: {
+      ...factsFor("conditioner", "conditioner_rinse_out", "owned", { recommendable: false }),
+      marketSegment: "drugstore",
+    },
+    candidates: [
+      {
+        ...factsFor("conditioner", "conditioner_rinse_out", "salon", { sortOrder: 1 }),
+        marketSegment: "professional",
+      },
+      {
+        ...factsFor("conditioner", "conditioner_rinse_out", "unsegmented", { sortOrder: 2 }),
+        marketSegment: null,
+      },
+    ],
+  })
+}
+
+test("display flag on: shampoo/conditioner/mask presentations carry a known market segment", () => {
+  const comparison = withMarketSegmentDisplay(true, () =>
+    buildStage3FitComparison(segmentedConditionerInput()),
+  )
+  const segments = new Map(
+    comparison.products.map((product) => [product.productId, product.presentation]),
+  )
+  assert.equal(segments.get("owned")?.marketSegment, "drugstore")
+  assert.equal(segments.get("salon")?.marketSegment, "professional")
+  assert.equal(segments.has("unsegmented"), true)
+  assert.equal("marketSegment" in segments.get("unsegmented")!, false)
+})
+
+test("display flag off or a category outside the badge scope leaves the presentation unchanged", () => {
+  const off = withMarketSegmentDisplay(false, () =>
+    buildStage3FitComparison(segmentedConditionerInput()),
+  )
+  assert.ok(
+    off.products.every(
+      (product) =>
+        JSON.stringify(Object.keys(product.presentation ?? {})) ===
+        JSON.stringify(["priceLabel", "netContentLabel"]),
+    ),
+  )
+
+  const leaveIn = withMarketSegmentDisplay(true, () =>
+    buildStage3FitComparison(
+      authorityInput("leave_in", "post_wash_leave_in", {
+        productFacts: {
+          ...factsFor("leave_in", "post_wash_leave_in", "owned", { recommendable: false }),
+          marketSegment: "professional",
+        },
+        candidates: [
+          {
+            ...factsFor("leave_in", "post_wash_leave_in", "salon", { sortOrder: 1 }),
+            marketSegment: "professional",
+          },
+        ],
+      }),
+    ),
+  )
+  assert.ok(leaveIn.products.length > 0)
+  assert.ok(leaveIn.products.every((product) => !("marketSegment" in (product.presentation ?? {}))))
 })
