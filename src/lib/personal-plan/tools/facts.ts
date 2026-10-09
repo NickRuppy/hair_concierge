@@ -1,7 +1,10 @@
-import type {
-  NightProtection,
-  TowelMaterial,
-  TowelTechnique,
+import {
+  BRUSH_TYPES,
+  NIGHT_PROTECTIONS,
+  type BrushType,
+  type NightProtection,
+  type TowelMaterial,
+  type TowelTechnique,
 } from "@/lib/vocabulary/onboarding-care"
 
 import type {
@@ -13,6 +16,8 @@ import type {
   Stage2HeatEventRoute,
   Stage2HeatEventSource,
   Stage2HeatEventTool,
+  Stage2AnswerProvenance,
+  Stage2QuestionId,
 } from "../refinement/types"
 import {
   createStage2HeatEventId,
@@ -20,19 +25,34 @@ import {
   getStage2HeatEventDefinition,
   requiresStage2HeatProtection,
 } from "../refinement/heat-events"
-import { HEAT_PROTECTION_CONSISTENCIES } from "../refinement/types"
+import {
+  ADDITIONAL_HEAT_TOOLS,
+  DRYING_ROUTES,
+  HEAT_PROTECTION_CONSISTENCIES,
+} from "../refinement/types"
+import type { CareHabitsV1, FieldProvenanceValue } from "@/lib/user-facts/schema"
 
 import {
   isToolAnswerOnlyForm,
+  sortToolReportedForms,
   TOOL_ANSWER_ONLY_FORMS_BY_FAMILY,
   TOOL_FAMILIES,
   TOOL_PRODUCT_TYPES_BY_FAMILY,
+  TOOL_REPORTED_FORMS_BY_FAMILY,
   toolProductTypesOf,
   type ToolFamily,
   type ToolOwnershipProvenance,
   type ToolProductType,
   type ToolReportedForm,
 } from "./contracts"
+import {
+  TOOL_FORM_PAGES,
+  TOOL_OVERVIEW_FAMILY_ORDER,
+  toolFormCareKey,
+  toolFormPage,
+  toolFormPagesOfFamily,
+  type ToolFormPageKey,
+} from "./labels"
 
 /**
  * Care facts the Tool engine may read. Every field is tri-state: `null` means the
@@ -509,4 +529,353 @@ export function normalizeToolInventory(raw: unknown): ToolInventory {
     )
   }
   return inventory
+}
+
+// --- per-page answers, the derived care facts and the reported-ownership oracle ----------
+//
+// Hair Tools port (plan `plans/2026-10-09-hair-tools-port.md` Rev. 5 §4). The Feinschliff
+// stores ONE answer per product-form page (`toolForms[pageKey]`), never per family. The
+// thing-facts Gewohnheiten used to ask for — further heat tools, towel material, night
+// protection — are derived from those pages (`careFactsFromToolInventory`), and brushes feed
+// the legacy `brushesCombs` slot.
+
+/** The part of the refinement answers the Tool trip owns. */
+export type ToolAnswerState = Pick<
+  PersonalPlanRefinementAnswersV1,
+  "toolFamiliesWithSomething" | "toolForms"
+>
+
+function isOrderedSubset(value: unknown, order: readonly string[]): boolean {
+  if (!Array.isArray(value)) return false
+  if (new Set(value).size !== value.length) return false
+  let last = -1
+  for (const item of value) {
+    const index = typeof item === "string" ? order.indexOf(item) : -1
+    if (index <= last) return false
+    last = index
+  }
+  return true
+}
+
+/** `tools_overview`: an ordered, duplicate-free subset of the wash-day family order. */
+export function isToolOverviewAnswerValid(value: unknown): value is ToolFamily[] {
+  return isOrderedSubset(value, TOOL_OVERVIEW_FAMILY_ORDER)
+}
+
+/**
+ * `tools:<pageKey>`: an ordered (canonical FAMILY order), duplicate-free subset of the forms
+ * that page offers. `[]` is the page's „Nichts davon".
+ */
+export function isToolPageAnswerValid(
+  pageKey: ToolFormPageKey,
+  value: unknown,
+): value is ToolReportedForm[] {
+  const page = toolFormPage(pageKey)
+  if (!page) return false
+  const offered = new Set<string>(page.forms)
+  const order = TOOL_REPORTED_FORMS_BY_FAMILY[page.family].filter((form) => offered.has(form))
+  return isOrderedSubset(value, order)
+}
+
+/**
+ * Family view of the per-page answers: every family with at least one stored page, its pages
+ * unioned in canonical order. Says nothing about whether the family is complete — see
+ * `resolvedToolInventory` for that.
+ */
+export function toolFormsByFamily(answers: ToolAnswerState): ToolInventory {
+  const inventory: ToolInventory = {}
+  for (const family of TOOL_FAMILIES) {
+    const pages = toolFormPagesOfFamily(family)
+      .map((page) => answers.toolForms?.[page.pageKey])
+      .filter((forms): forms is ToolReportedForm[] => Array.isArray(forms))
+    if (pages.length === 0) continue
+    inventory[family] = sortToolReportedForms(family, pages.flat())
+  }
+  return inventory
+}
+
+/**
+ * The families the Tool trip has settled, for the derivation: nothing before the overview is
+ * answered; afterwards an unticked family is an explicit none (`D3a`) and a ticked family is
+ * settled once every one of its pages holds a valid answer.
+ */
+export function resolvedToolInventory(answers: ToolAnswerState): ToolInventory {
+  if (!isToolOverviewAnswerValid(answers.toolFamiliesWithSomething)) return {}
+  const ticked = new Set<ToolFamily>(answers.toolFamiliesWithSomething)
+  const inventory: ToolInventory = {}
+  for (const family of TOOL_FAMILIES) {
+    if (!ticked.has(family)) {
+      inventory[family] = []
+      continue
+    }
+    const pages = toolFormPagesOfFamily(family).map((page) => ({
+      pageKey: page.pageKey,
+      forms: answers.toolForms?.[page.pageKey],
+    }))
+    if (!pages.every(({ pageKey, forms }) => isToolPageAnswerValid(pageKey, forms))) continue
+    inventory[family] = sortToolReportedForms(
+      family,
+      pages.flatMap(({ forms }) => forms ?? []),
+    )
+  }
+  return inventory
+}
+
+/**
+ * What one reported form means for the care facts Gewohnheiten no longer asks for. Total over
+ * every reported form: `{}` is an explicit "maps to nothing".
+ *
+ * - `additionalHeatTool`: the heat source the form opens (`heat:<source>`), via
+ *   `additionalHeatTools`. The Föhn opens no additional heat tool: its heat event comes from
+ *   the drying route the user picks in Gewohnheiten (`ordinary_blow_dry`, or
+ *   `diffuser_airflow_shaping` through „Mit Diffusor").
+ * - `dryingRoutes`: the drying routes Gewohnheiten offers because the form is owned
+ *   (`air_dry` is always offered). There is no Diffusor form, and a Diffusor is a Föhn
+ *   attachment, so the Föhn offers „Mit Diffusor" (provisional default, see the Task-4
+ *   report; vetoable at ready-check).
+ * - `towelMaterial` / `nightProtection` / `brushType`: the existing vocabulary value.
+ */
+export type ToolFormCareFact = {
+  additionalHeatTool?: AdditionalHeatTool
+  dryingRoutes?: readonly DryingRoute[]
+  towelMaterial?: TowelMaterial
+  nightProtection?: NightProtection
+  brushType?: BrushType
+}
+
+export const TOOL_FORM_CARE_FACTS = {
+  // airflow
+  hair_dryer: { dryingRoutes: ["ordinary_blow_dry", "diffuser_or_airflow_shaping"] },
+  hot_air_brush: { additionalHeatTool: "dryer_brush", dryingRoutes: ["ordinary_blow_dry"] },
+  air_multi_styler: { additionalHeatTool: "hot_air_styler", dryingRoutes: ["ordinary_blow_dry"] },
+  // heated_styling
+  flat_iron: { additionalHeatTool: "straightener" },
+  curling_iron: { additionalHeatTool: "curling_or_wave_iron" },
+  curling_wand: { additionalHeatTool: "curling_or_wave_iron" },
+  wave_iron: { additionalHeatTool: "curling_or_wave_iron" },
+  automatic_curler: { additionalHeatTool: "curling_or_wave_iron" },
+  heated_rollers: { additionalHeatTool: "thermal_rollers" },
+  heated_brush: { additionalHeatTool: "straightener" },
+  heated_multi_styler: { additionalHeatTool: "curling_or_wave_iron" },
+  // heatless_styling — no heat
+  heatless_curling_band: {},
+  setting_roller: {},
+  foam_roller: {},
+  flexi_rod: {},
+  setting_former: {},
+  // brushes_combs → legacy `brushesCombs` (forms without a legacy value drop out of that slot)
+  wide_tooth_comb: { brushType: "wide_tooth_comb" },
+  detangling_brush: { brushType: "detangling" },
+  paddle_brush: { brushType: "paddle" },
+  vent_brush: {},
+  round_brush: { brushType: "round" },
+  boar_bristle: { brushType: "boar_bristle" },
+  styling_brush: {},
+  hair_pick: {},
+  sectioning_comb: {},
+  fingers: { brushType: "fingers" },
+  // securing_sectioning, wash_application — no care fact
+  soft_hair_tie: {},
+  scrunchie: {},
+  claw_clip: {},
+  sectioning_clip: {},
+  root_volume_clip: {},
+  hair_pin: {},
+  headband: {},
+  scalp_brush: {},
+  applicator_bottle: {},
+  applicator_comb: {},
+  water_spray_bottle: {},
+  // night_protection
+  pillowcase: { nightProtection: "silk_satin_pillow" },
+  bonnet: { nightProtection: "silk_satin_bonnet" },
+  length_tip_sleeve: { nightProtection: "length_tip_accessory" },
+  soft_night_tie: { nightProtection: "loose_tied" },
+  // drying_textiles — the inverse of the existing pre-fill projection (`mapTowelMaterial`)
+  microfiber_towel: { towelMaterial: "mikrofaser" },
+  smooth_cotton_cloth: { towelMaterial: "tshirt" },
+  drying_wrap: { towelMaterial: "turban_mikrofaser" },
+} as const satisfies Record<ToolReportedForm, ToolFormCareFact>
+
+/** The care facts the tool inventory decides. A key is present only when it is derived. */
+export type ToolDerivedCareFacts = {
+  additionalHeatTools?: AdditionalHeatTool[]
+  towelMaterial?: TowelMaterial
+  nightProtection?: NightProtection[]
+  brushesCombs?: BrushType[]
+}
+
+function known(inventory: ToolInventory, family: ToolFamily): ToolReportedForm[] | null {
+  const forms = inventory[family]
+  return Array.isArray(forms) ? forms : null
+}
+
+function careFactOf(form: ToolReportedForm): ToolFormCareFact {
+  return TOOL_FORM_CARE_FACTS[form]
+}
+
+function inOrder<T extends string>(values: Iterable<T>, order: readonly T[]): T[] {
+  const selected = new Set(values)
+  return order.filter((value) => selected.has(value))
+}
+
+/**
+ * The Gewohnheiten thing-facts a settled inventory derives (plan §4 „Derived thing-fields").
+ * A family that is unknown (absent / `null`) derives nothing.
+ *
+ * - `additionalHeatTools` once BOTH `airflow` and `heated_styling` are known.
+ * - `towelMaterial` only when `drying_textiles` names a textile; a „Nichts davon" textiles page
+ *   derives nothing, because no Frottee form exists and „kein Handtuch" is not the same answer
+ *   (`D4`): the material then stays a Gewohnheiten answer. Several textiles → the first in
+ *   canonical family order.
+ * - `nightProtection` once `night_protection` is known (`[]` = none).
+ * - `brushesCombs` once `brushes_combs` is known (forms without a legacy value drop out).
+ */
+export function careFactsFromToolInventory(inventory: ToolInventory): ToolDerivedCareFacts {
+  const facts: ToolDerivedCareFacts = {}
+  const airflow = known(inventory, "airflow")
+  const heated = known(inventory, "heated_styling")
+  if (airflow && heated) {
+    facts.additionalHeatTools = inOrder(
+      [...airflow, ...heated].flatMap((form) => {
+        const tool = careFactOf(form).additionalHeatTool
+        return tool ? [tool] : []
+      }),
+      ADDITIONAL_HEAT_TOOLS,
+    )
+  }
+  const textiles = known(inventory, "drying_textiles")
+  if (textiles) {
+    const material = sortToolReportedForms("drying_textiles", textiles)
+      .map((form) => careFactOf(form).towelMaterial)
+      .find((value): value is TowelMaterial => value !== undefined)
+    if (material) facts.towelMaterial = material
+  }
+  const night = known(inventory, "night_protection")
+  if (night) {
+    facts.nightProtection = inOrder(
+      night.flatMap((form) => {
+        const protection = careFactOf(form).nightProtection
+        return protection ? [protection] : []
+      }),
+      NIGHT_PROTECTIONS,
+    )
+  }
+  const brushes = known(inventory, "brushes_combs")
+  if (brushes) {
+    facts.brushesCombs = inOrder(
+      brushes.flatMap((form) => {
+        const brush = careFactOf(form).brushType
+        return brush ? [brush] : []
+      }),
+      BRUSH_TYPES,
+    )
+  }
+  return facts
+}
+
+/**
+ * The drying routes Gewohnheiten offers for a settled `airflow` family: `air_dry` always, the
+ * rest per owned form (`TOOL_FORM_CARE_FACTS[form].dryingRoutes`). `null` while `airflow` is
+ * unknown — every route stays offered then.
+ */
+export function dryingRouteOptionsFromToolInventory(
+  inventory: ToolInventory,
+): DryingRoute[] | null {
+  const airflow = known(inventory, "airflow")
+  if (!airflow) return null
+  return inOrder(
+    ["air_dry", ...airflow.flatMap((form) => careFactOf(form).dryingRoutes ?? [])],
+    DRYING_ROUTES,
+  )
+}
+
+// --- the reported-ownership oracle (`D5`) ------------------------------------------------
+
+type ReportedPage = { forms: ToolReportedForm[] }
+
+/**
+ * Family inventory from the pages that count as REPORTED. A family is listed when one of its
+ * pages names forms (the union of the reported pages), or — as an explicit none — when every
+ * one of its pages is reported. Anything else stays unknown.
+ */
+function inventoryFromReportedPages(
+  reported: Partial<Record<ToolFormPageKey, ReportedPage>>,
+): ToolInventory {
+  const inventory: ToolInventory = {}
+  for (const family of TOOL_FAMILIES) {
+    const pages = toolFormPagesOfFamily(family)
+    const present = pages
+      .map((page) => reported[page.pageKey])
+      .filter((page): page is ReportedPage => page !== undefined)
+    if (present.length === 0) continue
+    const forms = sortToolReportedForms(
+      family,
+      present.flatMap((page) => page.forms),
+    )
+    if (forms.length > 0 || present.length === pages.length) inventory[family] = forms
+  }
+  return inventory
+}
+
+/**
+ * Reported ownership from a refinement draft (`D5`): a page counts iff its own question id
+ * completed with `user` provenance, or the overview completed as `user` and the page's family
+ * is unticked (→ `[]`). Assumed answers never enter the inventory.
+ */
+export function reportedToolInventory(input: {
+  answers: ToolAnswerState
+  completedQuestionIds: readonly Stage2QuestionId[]
+  answerProvenance: Stage2AnswerProvenance
+}): ToolInventory {
+  const completed = new Set(input.completedQuestionIds)
+  const isUser = (id: Stage2QuestionId) =>
+    completed.has(id) && input.answerProvenance[id] !== "assumed"
+  const overviewUser =
+    isUser("tools_overview") && isToolOverviewAnswerValid(input.answers.toolFamiliesWithSomething)
+  const ticked = new Set<ToolFamily>(input.answers.toolFamiliesWithSomething ?? [])
+  const reported: Partial<Record<ToolFormPageKey, ReportedPage>> = {}
+  for (const page of TOOL_FORM_PAGES) {
+    if (overviewUser && !ticked.has(page.family)) {
+      reported[page.pageKey] = { forms: [] }
+      continue
+    }
+    const forms = input.answers.toolForms?.[page.pageKey]
+    if (isUser(`tools:${page.pageKey}`) && isToolPageAnswerValid(page.pageKey, forms)) {
+      reported[page.pageKey] = { forms }
+    }
+  }
+  return inventoryFromReportedPages(reported)
+}
+
+/**
+ * Reported ownership from the stored `care_habits` facts — the same rule over the per-page
+ * keys (`toolForms_<family>_<n>`) and their field provenance.
+ */
+export function reportedToolInventoryFromFacts(
+  careHabits: Partial<CareHabitsV1> | null,
+  fieldProvenance: Record<string, FieldProvenanceValue> | undefined,
+): ToolInventory {
+  if (!careHabits) return {}
+  const facts = careHabits as Record<string, unknown>
+  const overview = facts.toolFamiliesWithSomething
+  const overviewUser =
+    fieldProvenance?.toolFamiliesWithSomething === "user" && isToolOverviewAnswerValid(overview)
+  const ticked = new Set<ToolFamily>(overviewUser ? (overview as ToolFamily[]) : [])
+  const reported: Partial<Record<ToolFormPageKey, ReportedPage>> = {}
+  for (const page of TOOL_FORM_PAGES) {
+    if (overviewUser && !ticked.has(page.family)) {
+      reported[page.pageKey] = { forms: [] }
+      continue
+    }
+    const key = toolFormCareKey(page.pageKey)
+    const forms = sortToolReportedForms(
+      page.family,
+      Array.isArray(facts[key]) ? (facts[key] as string[]) : [],
+    )
+    if (fieldProvenance?.[key] === "user" && Array.isArray(facts[key])) {
+      if (isToolPageAnswerValid(page.pageKey, forms)) reported[page.pageKey] = { forms }
+    }
+  }
+  return inventoryFromReportedPages(reported)
 }

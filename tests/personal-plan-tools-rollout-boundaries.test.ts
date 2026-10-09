@@ -70,7 +70,7 @@ test("off keeps the trigger context byte-identical: no rollout key, no tool ids,
   assert.equal(status.modules.find((entry) => entry.module === "tools")?.status, "not_applicable")
 })
 
-test("on carries the server decision on the context and, until tool questions land, changes no path", () => {
+test("on carries the server decision on the context and inserts the tools block before Gewohnheiten", () => {
   const snapshot = initialSnapshot()
   const on = deriveStage2TriggerContext(snapshot, { toolsEnabled: true })
   const off = deriveStage2TriggerContext(snapshot, { toolsEnabled: false })
@@ -79,7 +79,14 @@ test("on carries the server decision on the context and, until tool questions la
   const { toolsEnabled: _flag, ...rest } = on
   assert.deepEqual(rest, off)
   const answers = { currentProductCategories: ["shampoo"] as never }
-  assert.deepEqual(getOrderedQuestionIds(on, answers), getOrderedQuestionIds(off, answers))
+  const offIds = getOrderedQuestionIds(off, answers)
+  const onIds = getOrderedQuestionIds(on, answers)
+  assert.equal(offIds.some(isToolQuestion), false)
+  // Same Produkte block, then the tools, then Gewohnheiten without the thing-questions.
+  const habitsStart = offIds.indexOf("towel_handling")
+  assert.deepEqual(onIds.slice(0, habitsStart), offIds.slice(0, habitsStart))
+  assert.deepEqual(onIds.slice(habitsStart), ["tools_overview", "towel_handling", "drying_routes"])
+  assert.equal(getStage2ModulePathStates(onIds, [])["tools"].status, "open")
 })
 
 test("a stored context without the key decodes as off", () => {
@@ -149,7 +156,8 @@ test("the persisted draft's trigger context follows the server flag, and only a 
     assert.ok(draft)
     assert.equal(draft.triggerContext.toolsEnabled, toolsEnabled ? true : undefined)
     const session = await loadExistingStage2RefinementSession({ userId: "user-1", persistence })
-    assert.equal(session?.path.orderedQuestionIds.some(isToolQuestion), false)
+    // Only the server flag puts the tool questions on the persisted draft's path.
+    assert.equal(session?.path.orderedQuestionIds.some(isToolQuestion), toolsEnabled)
   }
 })
 

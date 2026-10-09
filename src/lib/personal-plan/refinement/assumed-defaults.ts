@@ -1,5 +1,18 @@
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 import { TOWEL_MATERIALS } from "@/lib/vocabulary/onboarding-care"
+import { sortToolReportedForms, type ToolFamily } from "@/lib/personal-plan/tools/contracts"
+import { projectToolCareFacts } from "@/lib/personal-plan/tools/facts"
+import {
+  isToolFormPageKey,
+  TOOL_FORM_PAGES,
+  toolFamiliesForSections,
+  toolFormPage,
+  type ToolFormPageKey,
+} from "@/lib/personal-plan/tools/labels"
+import {
+  defaultToolFormsFromCare,
+  defaultToolSectionsFromCare,
+} from "@/lib/personal-plan/tools/stage2"
 
 import { createStage2HeatEventId, requiresStage2HeatProtection } from "./heat-events"
 import {
@@ -76,6 +89,8 @@ export const STAGE2_ASSUMPTION_RULE_IDS = [
   "assume:heat_event:ordinary_airflow_minimum",
   "assume:heat_event:protected_minimum",
   "assume:night_protection:none",
+  "assume:tools_overview:derived_from_care",
+  "assume:tools_form:derived_from_care",
 ] as const
 export type Stage2AssumptionRuleId = (typeof STAGE2_ASSUMPTION_RULE_IDS)[number]
 
@@ -86,8 +101,12 @@ type Stage2AssumptionInput = {
 
 export type Stage2AssumptionRule = {
   ruleId: Stage2AssumptionRuleId
-  /** Canonical question the rule stands in for; `heat:*` covers every derived heat-event question. */
-  questionId: Stage2StaticQuestionId | "heat:*"
+  /**
+   * Canonical question the rule stands in for; `heat:*` covers every derived heat-event question
+   * and `tools:*` every product-form page. Wildcards are explicit: a question without a rule
+   * throws.
+   */
+  questionId: Stage2StaticQuestionId | "heat:*" | "tools_overview" | "tools:*"
   /** When the rule fires, on top of "this question is on the path and has no valid user answer". */
   condition: string
   /** Why this value and not a defensible alternative. */
@@ -237,6 +256,41 @@ export const STAGE2_ASSUMPTION_RULES: readonly Stage2AssumptionRule[] = [
       "No night protection introduces no habit and no product; unchanged from the direct-acceptance default („Kein besonderer Haarschutz über Nacht“).",
     write: ({ answers }) => ({ ...answers, nightProtection: [] }),
   },
+  {
+    ruleId: "assume:tools_overview:derived_from_care",
+    questionId: "tools_overview",
+    condition: "the Hair Tools rollout is on — the overview opens the tools module",
+    rationale:
+      "Ticks exactly the sections the member's own care answers already imply (`defaultToolSectionsFromCare`, the same starting value the overview shows), so the assumed inventory reproduces the facts she gave and invents no ownership; with nothing implied it ticks nothing. Assumed answers never count as reported ownership (`D5`).",
+    write: ({ answers }) =>
+      withToolOverview(
+        answers,
+        toolFamiliesForSections(defaultToolSectionsFromCare(projectToolCareFacts(answers))),
+      ),
+  },
+  {
+    ruleId: "assume:tools_form:derived_from_care",
+    questionId: "tools:*",
+    condition: "the overview ticked the page's family and the page is open",
+    rationale:
+      "The page offers what the care answers imply for its family (`defaultToolFormsFromCare` ∩ the page's forms), so the derived thing-fields come back as the member reported them; everything else is the page's „Nichts davon\". Never evidence of ownership (`D5`).",
+    write: ({ answers, questionId }) => {
+      const page = toolFormPage(questionId.slice("tools:".length))
+      if (!page) throw new Error(`Unknown Stage 2 tool page: ${questionId}`)
+      const implied = defaultToolFormsFromCare(projectToolCareFacts(answers))[page.family] ?? []
+      const offered = new Set<string>(page.forms)
+      return {
+        ...answers,
+        toolForms: {
+          ...answers.toolForms,
+          [page.pageKey]: sortToolReportedForms(
+            page.family,
+            implied.filter((form) => offered.has(form)),
+          ),
+        },
+      }
+    },
+  },
 ]
 
 /* ── resolution ──────────────────────────────────────────────────────────── */
@@ -286,7 +340,7 @@ export function resolveAssumedAnswers(input: {
     }).answers
     const orderedQuestionIds = getOrderedQuestionIds(input.triggerContext, answers)
     const openQuestionId = orderedQuestionIds.find(
-      (questionId) => !isStage2QuestionAnswerValid(questionId, answers),
+      (questionId) => !isStage2QuestionAnswerValid(questionId, answers, input.triggerContext),
     )
     if (!openQuestionId) {
       const assumedQuestionIds = orderedQuestionIds.filter((questionId) =>
@@ -309,14 +363,16 @@ export function resolveAssumedAnswers(input: {
   throw new Error("Stage 2 assumed-default resolution did not reach a fixed point")
 }
 
+function ruleQuestionIdFor(questionId: Stage2QuestionId): Stage2AssumptionRule["questionId"] {
+  if (questionId.startsWith("heat:")) return "heat:*"
+  if (questionId.startsWith("tools:")) return "tools:*"
+  return questionId as Stage2StaticQuestionId | "tools_overview"
+}
+
 function findAssumptionRule(input: Stage2AssumptionInput): Stage2AssumptionRule {
-  const isHeatEvent = input.questionId.startsWith("heat:")
+  const ruleQuestionId = ruleQuestionIdFor(input.questionId)
   const rule = STAGE2_ASSUMPTION_RULES.find(
-    (candidate) =>
-      (isHeatEvent
-        ? candidate.questionId === "heat:*"
-        : candidate.questionId === input.questionId) &&
-      (candidate.matches?.(input) ?? true),
+    (candidate) => candidate.questionId === ruleQuestionId && (candidate.matches?.(input) ?? true),
   )
   if (!rule) {
     throw new Error(`No Stage 2 assumption rule for canonical question: ${input.questionId}`)
@@ -345,7 +401,9 @@ const STAGE2_ANSWER_KEY_BY_QUESTION_ID: Record<
 /**
  * Narrows an answer set to the answers owned by the given canonical question
  * ids. The provenance read path uses it to strip assumed answers back out
- * before re-resolving them.
+ * before re-resolving them. A tool page owns exactly its own `toolForms[pageKey]`;
+ * the overview owns `toolFamiliesWithSomething` and the explicit `[]` it wrote on every page of
+ * an unticked family.
  */
 export function selectStage2Answers(
   answers: PersonalPlanRefinementAnswersV1,
@@ -354,6 +412,9 @@ export function selectStage2Answers(
   const selected: PersonalPlanRefinementAnswersV1 = {}
   const heatEvents: Record<string, HeatEventAnswer> = {}
   let hasHeatEvent = false
+
+  const toolForms: Partial<Record<ToolFormPageKey, unknown>> = {}
+  let hasToolForm = false
 
   for (const questionId of questionIds) {
     if (questionId.startsWith("heat:")) {
@@ -364,15 +425,61 @@ export function selectStage2Answers(
       }
       continue
     }
+    if (questionId === "tools_overview") {
+      if (answers.toolFamiliesWithSomething !== undefined) {
+        selected.toolFamiliesWithSomething = answers.toolFamiliesWithSomething
+        // The overview also wrote the explicit none of every unticked family's pages.
+        for (const pageKey of overviewOwnedPages(answers.toolFamiliesWithSomething)) {
+          const forms = answers.toolForms?.[pageKey]
+          if (forms === undefined) continue
+          toolForms[pageKey] = forms
+          hasToolForm = true
+        }
+      }
+      continue
+    }
+    if (questionId.startsWith("tools:")) {
+      const pageKey = questionId.slice("tools:".length)
+      const forms = isToolFormPageKey(pageKey) ? answers.toolForms?.[pageKey] : undefined
+      if (isToolFormPageKey(pageKey) && forms !== undefined) {
+        toolForms[pageKey] = forms
+        hasToolForm = true
+      }
+      continue
+    }
     const answerKey = STAGE2_ANSWER_KEY_BY_QUESTION_ID[questionId as Stage2StaticQuestionId]
     if (!answerKey) continue
     const value = answers[answerKey]
     if (value !== undefined) (selected as Record<string, unknown>)[answerKey] = value
   }
+  if (hasToolForm) selected.toolForms = toolForms as PersonalPlanRefinementAnswersV1["toolForms"]
   return hasHeatEvent ? { ...selected, heatEvents } : selected
 }
 
 /* ── helpers ─────────────────────────────────────────────────────────────── */
+
+/**
+ * The overview answer exactly as an interactive submit stores it (`session.ts`): the families,
+ * plus an explicit `[]` on every page of an unticked family.
+ */
+function withToolOverview(
+  answers: PersonalPlanRefinementAnswersV1,
+  families: readonly ToolFamily[],
+): PersonalPlanRefinementAnswersV1 {
+  const ticked = new Set(families)
+  const toolForms = { ...answers.toolForms }
+  for (const page of TOOL_FORM_PAGES) {
+    if (!ticked.has(page.family)) toolForms[page.pageKey] = []
+  }
+  return { ...answers, toolFamiliesWithSomething: [...families], toolForms }
+}
+
+/** The pages the overview answer stands for: every page of a family it left unticked. */
+function overviewOwnedPages(families: readonly ToolFamily[] | undefined): ToolFormPageKey[] {
+  if (!families) return []
+  const ticked = new Set(families)
+  return TOOL_FORM_PAGES.filter((page) => !ticked.has(page.family)).map((page) => page.pageKey)
+}
 
 function heatEventSource(questionId: Stage2QuestionId): Stage2HeatEventSource {
   return questionId.slice("heat:".length) as Stage2HeatEventSource

@@ -31,6 +31,7 @@ import {
   projectToolCareFacts,
   projectToolInventoryFromCareFacts,
   reportedFormsFor,
+  toolFormsByFamily,
   toolHeatProtectionEvents,
   uncoveredToolHeatProtectionEvents,
   type ToolCareFacts,
@@ -2255,6 +2256,110 @@ test("fixture 125 — tools-heat-protection-legacy-diffuser-value-ignored", () =
   assert.equal(event.covered, true)
   assert.equal(event.consistencyNudge, false)
   assert.equal(event.protectionConsistency, null)
+})
+
+test("fixture 116 — tools-onboarding-submitted-unchecked", () => {
+  const triggerContext = {
+    relevantCategories: [],
+    hasReportedIrritatedScalp: false,
+    dryShampooBridgeEligibility: "ineligible" as const,
+    toolsEnabled: true,
+  }
+  // The care answers that make the preselection real: the user already told us
+  // they blow-dry, so the airflow section arrives pre-ticked (`D3a` condition 1).
+  const answers: PersonalPlanRefinementAnswersV1 = {
+    currentProductCategories: [],
+    wetWashFrequency: "weekly_2x",
+    towel: { material: "no_towel" },
+    dryingRoutes: ["ordinary_blow_dry"],
+    additionalHeatTools: [],
+    heatEvents: { "heat:ordinary_blow_dry": { frequency: "weekly_2x" } },
+    nightProtection: [],
+  }
+  const care = careFrom(answers)
+  assert.deepEqual(
+    defaultToolSectionsFromCare(care),
+    ["trocknen_stylen"],
+    "the care-implied section is pre-ticked, so an unticked card is a real choice",
+  )
+  assert.deepEqual(defaultToolFormsFromCare(care).airflow, ["hair_dryer"])
+
+  // Condition 2: the withdrawn promise is gone and the ratified copy is shipped.
+  assert.equal(
+    TOOL_OVERVIEW_LEAD,
+    "Wähle die Bereiche, aus denen du schon Produkte hast. Nicht gewählt = hast du nicht.",
+  )
+
+  const session = saveStage2SessionAnswer(
+    createStage2RefinementSession({
+      pathVersion: "test",
+      triggerContext,
+      answers,
+      completedQuestionIds: [
+        "current_product_categories",
+        "wet_wash_frequency",
+        "towel_handling",
+        "drying_routes",
+        "additional_heat_tools",
+        "heat:ordinary_blow_dry",
+        "night_protection",
+      ],
+    }),
+    { questionId: "tools_overview", answer: ["trocknen_stylen"] },
+  )
+
+  // Port regroup (plan 2026-10-09 §4): „Trocknen & Stylen" also holds the securing family.
+  assert.deepEqual(session.answers.toolFamiliesWithSomething, [
+    "airflow",
+    "heated_styling",
+    "heatless_styling",
+    "securing_sectioning",
+  ])
+  // `D3a`: every unchecked family is an explicit none — no unknowns remain. Answers are
+  // stored per page since the port, so every page of an unchecked family is `[]`.
+  for (const pageKey of [
+    "wash_application:1",
+    "drying_textiles:1",
+    "brushes_combs:1",
+    "brushes_combs:2",
+    "night_protection:1",
+  ] as const) {
+    assert.deepEqual(
+      session.answers.toolForms?.[pageKey],
+      [],
+      `${pageKey} must be an explicit none`,
+    )
+  }
+  for (const family of [
+    "brushes_combs",
+    "wash_application",
+    "night_protection",
+    "drying_textiles",
+  ] as const) {
+    assert.deepEqual(
+      toolFormsByFamily(session.answers)[family],
+      [],
+      `${family} must be an explicit none`,
+    )
+  }
+  // The checked families stay open for their own pages rather than being
+  // answered on the user's behalf.
+  for (const family of [
+    "airflow",
+    "heated_styling",
+    "heatless_styling",
+    "securing_sectioning",
+  ] as const) {
+    assert.equal(toolFormsByFamily(session.answers)[family], undefined)
+  }
+  // `D3c`: the care-implied airflow evidence survives the submit — the overview
+  // never writes synthesized emptiness over a preselection the user kept.
+  const merged = mergeToolInventories(
+    projectToolInventoryFromCareFacts(care),
+    toolFormsByFamily(session.answers),
+  )
+  assert.deepEqual(inventoryFor(merged, "airflow"), ["hair_dryer"])
+  assert.deepEqual(inventoryFor(merged, "brushes_combs"), [])
 })
 
 // --- coverage of the oracle ---------------------------------------------------

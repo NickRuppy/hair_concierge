@@ -16,7 +16,11 @@ import {
   type FactsProvenance,
   type QuizContextV1,
 } from "./schema"
-import { knownCareAnswers, type KnownCareAnswers } from "./known-care-answers"
+import {
+  knownCareAnswers,
+  toolAnswersFromCareHabits,
+  type KnownCareAnswers,
+} from "./known-care-answers"
 import { toStage1Source } from "./stage1-source"
 
 export { toStage1Source } from "./stage1-source"
@@ -132,15 +136,15 @@ export function parseUserFactsRow(userId: string, data: UserFactsRow): UserFacts
 }
 
 /** `PersonalPlanRefinementAnswersV1` is `CareHabitsV1` minus the legacy `brushesCombs` field
- * (no Stage-2 version ever carried it). Absent fields stay absent — this never synthesises a
- * key that was not present in the stored domain. */
+ * (no Stage-2 version ever carried it), with the per-page Hair Tools keys
+ * (`toolForms_<family>_<n>`) folded back into the nested `toolForms[pageKey]` answers, each
+ * sorted into its family's canonical order. Absent fields stay absent — this never synthesises
+ * a key that was not present in the stored domain. */
 export function toRefinementAnswers(
   facts: Pick<UserFacts, "careHabits">,
 ): PersonalPlanRefinementAnswersV1 {
   if (!facts.careHabits) return {}
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- destructured only to drop it
-  const { brushesCombs, ...refinementAnswers } = facts.careHabits
-  return refinementAnswers
+  return toolAnswersFromCareHabits(facts.careHabits)
 }
 
 /** The member's stored care answers an assumption must not replace (see `knownCareAnswers`). */

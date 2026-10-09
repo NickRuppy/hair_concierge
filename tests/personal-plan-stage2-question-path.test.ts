@@ -4,10 +4,17 @@ import test from "node:test"
 import {
   pruneStage2Answers,
   getEffectiveDryShampooBridgePreference,
+  getStage2DryingRouteOptions,
+  getStage2ModulePathStates,
+  isStage2QuestionAnswerValid,
+  isStage2TowelMaterialDerived,
   resolveStage2Path,
   resolveStage2RefinementContract,
   validateStage2Answers,
 } from "../src/lib/personal-plan/refinement/question-path"
+import { createStage2RefinementSession } from "../src/lib/personal-plan/refinement/session"
+import type { PersonalPlanRefinementAnswersV1 } from "../src/lib/personal-plan/refinement/types"
+import type { ToolFamily } from "../src/lib/personal-plan/tools/contracts"
 
 const neutralContext = {
   relevantCategories: [],
@@ -238,4 +245,377 @@ test("an invalid marked-complete answer is absent from both canonical completion
   })
   assert.equal(contract.completedQuestionIds.includes("current_product_categories"), false)
   assert.equal(contract.path.completedQuestionIds.includes("current_product_categories"), false)
+})
+
+/* ── Hair Tools (rollout on): the tools block, derived thing-fields, filtered drying ─────── */
+
+const toolsOn = { ...neutralContext, toolsEnabled: true as const }
+
+/** A member whose Produkte and the old Gewohnheiten were answered with the rollout off. */
+const answeredBeforeTools = {
+  currentProductCategories: [],
+  wetWashFrequency: "weekly_2x" as const,
+  towel: { material: "frottee" as const, technique: "rough_rubbing" as const },
+  dryingRoutes: ["ordinary_blow_dry" as const],
+  additionalHeatTools: ["straightener" as const],
+  heatEvents: {
+    "heat:ordinary_blow_dry": { frequency: "weekly_2x" as const },
+    "heat:straightener": {
+      frequency: "weekly_1x" as const,
+      protectionConsistency: "always" as const,
+    },
+  },
+  nightProtection: ["silk_satin_pillow" as const],
+}
+const answeredBeforeToolsIds = [
+  "current_product_categories",
+  "wet_wash_frequency",
+  "towel_handling",
+  "drying_routes",
+  "additional_heat_tools",
+  "heat:ordinary_blow_dry",
+  "heat:straightener",
+  "night_protection",
+] as const
+
+test("rollout on: the tools block sits between Produkte and Gewohnheiten; thing-questions leave", () => {
+  const before = resolveStage2Path({
+    triggerContext: toolsOn,
+    answers: answeredBeforeTools,
+    completedQuestionIds: [...answeredBeforeToolsIds],
+  })
+  assert.deepEqual(before.orderedQuestionIds, [
+    "current_product_categories",
+    "wet_wash_frequency",
+    "tools_overview",
+    "towel_handling",
+    "drying_routes",
+    "heat:ordinary_blow_dry",
+    "heat:straightener",
+  ])
+  assert.equal(before.firstUnresolvedQuestionId, "tools_overview")
+
+  const after = resolveStage2Path({
+    triggerContext: toolsOn,
+    answers: {
+      ...answeredBeforeTools,
+      // Abtrocknen & Entwirren + Trocknen & Stylen + Nachtschutz, in wash-day order.
+      toolFamiliesWithSomething: [
+        "drying_textiles",
+        "brushes_combs",
+        "airflow",
+        "heated_styling",
+        "heatless_styling",
+        "securing_sectioning",
+        "night_protection",
+      ],
+    },
+    completedQuestionIds: [...answeredBeforeToolsIds, "tools_overview"],
+  })
+  assert.deepEqual(after.orderedQuestionIds, [
+    "current_product_categories",
+    "wet_wash_frequency",
+    "tools_overview",
+    "tools:drying_textiles:1",
+    "tools:brushes_combs:1",
+    "tools:brushes_combs:2",
+    "tools:airflow:1",
+    "tools:heated_styling:1",
+    "tools:heatless_styling:1",
+    "tools:securing_sectioning:1",
+    "tools:securing_sectioning:2",
+    "tools:night_protection:1",
+    "towel_handling",
+    "drying_routes",
+    "heat:ordinary_blow_dry",
+    "heat:straightener",
+  ])
+  assert.equal(after.firstUnresolvedQuestionId, "tools:drying_textiles:1")
+  // Gewohnheiten stays complete until a page actually changes one of its facts.
+  const modules = getStage2ModulePathStates(after.orderedQuestionIds, after.completedQuestionIds)
+  assert.equal(modules.products.status, "complete")
+  assert.equal(modules.tools.status, "open")
+  assert.equal(modules.habits.status, "complete")
+})
+
+/** Lena (§6): textiles, brushes, airflow, heated, heatless, securing and night ticked. */
+function lenaAnswers() {
+  return {
+    currentProductCategories: [],
+    wetWashFrequency: "weekly_2x" as const,
+    toolFamiliesWithSomething: [
+      "drying_textiles",
+      "brushes_combs",
+      "airflow",
+      "heated_styling",
+      "heatless_styling",
+      "securing_sectioning",
+      "night_protection",
+    ] as ToolFamily[],
+    toolForms: {
+      "drying_textiles:1": ["microfiber_towel"],
+      "brushes_combs:1": ["wide_tooth_comb"],
+      "brushes_combs:2": ["round_brush"],
+      "airflow:1": ["hair_dryer", "hot_air_brush"],
+      "heated_styling:1": ["flat_iron"],
+      "heatless_styling:1": [],
+      "securing_sectioning:1": [],
+      "securing_sectioning:2": [],
+      "night_protection:1": ["pillowcase"],
+    } as PersonalPlanRefinementAnswersV1["toolForms"],
+  }
+}
+const lenaToolIds = [
+  "current_product_categories",
+  "wet_wash_frequency",
+  "tools_overview",
+  "tools:drying_textiles:1",
+  "tools:brushes_combs:1",
+  "tools:brushes_combs:2",
+  "tools:airflow:1",
+  "tools:heated_styling:1",
+  "tools:heatless_styling:1",
+  "tools:securing_sectioning:1",
+  "tools:securing_sectioning:2",
+  "tools:night_protection:1",
+] as const
+
+test("rollout on: settled pages derive the thing-fields and open one heat question pair per tool", () => {
+  const contract = resolveStage2RefinementContract({
+    triggerContext: toolsOn,
+    answers: lenaAnswers(),
+    completedQuestionIds: [...lenaToolIds],
+  })
+  assert.deepEqual(contract.answers.additionalHeatTools, ["dryer_brush", "straightener"])
+  assert.deepEqual(contract.answers.nightProtection, ["silk_satin_pillow"])
+  assert.deepEqual(contract.answers.towel, { material: "mikrofaser" })
+  assert.deepEqual(contract.path.orderedQuestionIds.slice(lenaToolIds.length), [
+    "towel_handling",
+    "drying_routes",
+    "heat:dryer_brush",
+    "heat:straightener",
+  ])
+  assert.equal(contract.path.firstUnresolvedQuestionId, "towel_handling")
+  assert.equal(isStage2TowelMaterialDerived(toolsOn, lenaAnswers()), true)
+  // She owns a Föhn, so both blow-dry routes are offered (the Diffusor is a Föhn attachment).
+  assert.deepEqual(getStage2DryingRouteOptions(toolsOn, lenaAnswers()), [
+    "air_dry",
+    "ordinary_blow_dry",
+    "diffuser_or_airflow_shaping",
+  ])
+})
+
+test("rollout on: the towel question asks only the technique when the material is derived", () => {
+  const answers = { ...lenaAnswers(), towel: { technique: "gentle_press" } as never }
+  const path = resolveStage2Path({
+    triggerContext: toolsOn,
+    answers,
+    completedQuestionIds: [...lenaToolIds, "towel_handling"],
+  })
+  assert.equal(path.completedQuestionIds.includes("towel_handling"), true)
+  assert.equal(path.firstUnresolvedQuestionId, "drying_routes")
+})
+
+test("rollout on: a Nichts-davon textiles page leaves the full towel question in Gewohnheiten", () => {
+  const answers = {
+    ...lenaAnswers(),
+    toolForms: { ...lenaAnswers().toolForms, "drying_textiles:1": [] },
+    towel: { material: "frottee" as const, technique: "rough_rubbing" as const },
+  }
+  assert.equal(isStage2TowelMaterialDerived(toolsOn, answers), false)
+  const contract = resolveStage2RefinementContract({
+    triggerContext: toolsOn,
+    answers,
+    completedQuestionIds: [...lenaToolIds, "towel_handling"],
+  })
+  // The member's own Frottee answer is neither overwritten nor reopened.
+  assert.deepEqual(contract.answers.towel, { material: "frottee", technique: "rough_rubbing" })
+  assert.equal(contract.path.completedQuestionIds.includes("towel_handling"), true)
+})
+
+test("rollout on: drying routes are offered per owned airflow form; others cannot complete", () => {
+  const noAirflow = {
+    ...lenaAnswers(),
+    toolFamiliesWithSomething: ["drying_textiles", "brushes_combs"] as ToolFamily[],
+  }
+  assert.deepEqual(getStage2DryingRouteOptions(toolsOn, noAirflow), ["air_dry"])
+  const hotAirBrushOnly = {
+    ...lenaAnswers(),
+    toolForms: { ...lenaAnswers().toolForms, "airflow:1": ["hot_air_brush"] },
+  } as PersonalPlanRefinementAnswersV1
+  assert.deepEqual(getStage2DryingRouteOptions(toolsOn, hotAirBrushOnly), [
+    "air_dry",
+    "ordinary_blow_dry",
+  ])
+  const towelDone = {
+    towel: { material: "mikrofaser" as const, technique: "gentle_press" as const },
+  }
+  const ids = [...lenaToolIds, "towel_handling", "drying_routes"] as const
+  // A route the tools no longer back reopens the question …
+  const reopened = resolveStage2Path({
+    triggerContext: toolsOn,
+    answers: { ...noAirflow, ...towelDone, dryingRoutes: ["ordinary_blow_dry"] },
+    completedQuestionIds: [...ids],
+  })
+  assert.equal(reopened.firstUnresolvedQuestionId, "drying_routes")
+  // … an offered one completes it, and a stored empty answer stays valid.
+  for (const dryingRoutes of [["air_dry"], []] as const) {
+    const path = resolveStage2Path({
+      triggerContext: toolsOn,
+      answers: { ...noAirflow, ...towelDone, dryingRoutes: [...dryingRoutes] },
+      completedQuestionIds: [...ids],
+    })
+    assert.equal(path.completedQuestionIds.includes("drying_routes"), true)
+  }
+  // Before the airflow page is settled every route is offered.
+  assert.deepEqual(getStage2DryingRouteOptions(toolsOn, {}), [
+    "air_dry",
+    "ordinary_blow_dry",
+    "diffuser_or_airflow_shaping",
+  ])
+  assert.deepEqual(getStage2DryingRouteOptions(neutralContext, noAirflow), [
+    "air_dry",
+    "ordinary_blow_dry",
+    "diffuser_or_airflow_shaping",
+  ])
+})
+
+test("rollout on: adding a heat tool later reopens only that tool's heat question", () => {
+  const complete = {
+    ...lenaAnswers(),
+    towel: { material: "mikrofaser" as const, technique: "gentle_press" as const },
+    dryingRoutes: ["air_dry" as const],
+    heatEvents: {
+      "heat:dryer_brush": {
+        frequency: "weekly_1x" as const,
+        protectionConsistency: "always" as const,
+      },
+      "heat:straightener": {
+        frequency: "weekly_1x" as const,
+        protectionConsistency: "sometimes" as const,
+      },
+    },
+  }
+  const completeIds = [
+    ...lenaToolIds,
+    "towel_handling",
+    "drying_routes",
+    "heat:dryer_brush",
+    "heat:straightener",
+  ] as const
+  const done = resolveStage2Path({
+    triggerContext: toolsOn,
+    answers: complete,
+    completedQuestionIds: [...completeIds],
+  })
+  assert.equal(done.firstUnresolvedQuestionId, null)
+
+  const withCurlingIron = resolveStage2Path({
+    triggerContext: toolsOn,
+    answers: {
+      ...complete,
+      toolForms: { ...complete.toolForms, "heated_styling:1": ["flat_iron", "curling_iron"] },
+    },
+    completedQuestionIds: [...completeIds],
+  })
+  const modules = getStage2ModulePathStates(
+    withCurlingIron.orderedQuestionIds,
+    withCurlingIron.completedQuestionIds,
+  )
+  assert.equal(modules.tools.status, "complete")
+  assert.deepEqual(modules.habits.openQuestionIds, ["heat:curling_or_wave_iron"])
+})
+
+test("rollout on: page answers are validated per page", () => {
+  const answers = {
+    ...lenaAnswers(),
+    toolForms: { ...lenaAnswers().toolForms, "brushes_combs:1": ["round_brush"] },
+  } as PersonalPlanRefinementAnswersV1
+  const path = resolveStage2Path({
+    triggerContext: toolsOn,
+    answers,
+    completedQuestionIds: [...lenaToolIds],
+  })
+  assert.equal(path.firstUnresolvedQuestionId, "tools:brushes_combs:1")
+  assert.equal(
+    isStage2QuestionAnswerValid("tools_overview", { toolFamiliesWithSomething: [] }),
+    true,
+  )
+  assert.equal(
+    isStage2QuestionAnswerValid("tools:airflow:1", { toolForms: { "airflow:1": ["hair_dryer"] } }),
+    true,
+  )
+  assert.equal(isStage2QuestionAnswerValid("tools:airflow:1", {}), false)
+})
+
+test("rollout on: prune keeps per-page answers, empties unticked families and drops unknown keys", () => {
+  const pruned = pruneStage2Answers({
+    triggerContext: toolsOn,
+    answers: {
+      toolFamiliesWithSomething: ["airflow"],
+      toolForms: {
+        "airflow:1": ["hair_dryer"],
+        "night_protection:1": ["bonnet"],
+        // The August drafts stored one array per FAMILY; that shape is not a page answer.
+        airflow: ["hair_dryer"],
+      } as never,
+    },
+    completedQuestionIds: [],
+  })
+  assert.deepEqual(pruned.answers.toolForms, {
+    "airflow:1": ["hair_dryer"],
+    "night_protection:1": [],
+  })
+  assert.deepEqual(pruned.prunedAnswerKeys, ["toolForms"])
+})
+
+test("rollout off: tool answers are kept untouched, nothing is derived, the path is today's", () => {
+  const answers = {
+    ...answeredBeforeTools,
+    ...lenaAnswers(),
+    toolForms: { ...lenaAnswers().toolForms, airflow: ["hair_dryer"] } as never,
+  }
+  const contract = resolveStage2RefinementContract({
+    triggerContext: neutralContext,
+    answers,
+    completedQuestionIds: [...answeredBeforeToolsIds],
+  })
+  assert.deepEqual(contract.answers, answers)
+  assert.deepEqual(contract.prunedAnswerKeys, [])
+  assert.deepEqual(contract.path.orderedQuestionIds, [
+    "current_product_categories",
+    "wet_wash_frequency",
+    "towel_handling",
+    "drying_routes",
+    "additional_heat_tools",
+    "heat:ordinary_blow_dry",
+    "heat:straightener",
+    "night_protection",
+  ])
+  assert.equal(contract.isComplete, true)
+})
+
+test("rollout on: a complete draft whose path grew loads complete with an open first question", () => {
+  const session = createStage2RefinementSession({
+    pathVersion: "test",
+    triggerContext: toolsOn,
+    answers: answeredBeforeTools,
+    completedQuestionIds: [...answeredBeforeToolsIds],
+    status: "complete",
+    completedHandoff: { refinedVersionId: "refined-1", nextHref: "/plan-start" },
+    tolerateGrownPath: true,
+  })
+  assert.equal(session.status, "complete")
+  assert.equal(session.path.firstUnresolvedQuestionId, "tools_overview")
+  const modules = getStage2ModulePathStates(
+    session.path.orderedQuestionIds,
+    session.path.completedQuestionIds,
+  )
+  assert.deepEqual(
+    [modules.products.status, modules.tools.status, modules.habits.status],
+    ["complete", "open", "complete"],
+  )
+  // Its stored thing-facts are not touched before the tools are settled.
+  assert.deepEqual(session.answers.additionalHeatTools, ["straightener"])
+  assert.deepEqual(session.answers.nightProtection, ["silk_satin_pillow"])
 })

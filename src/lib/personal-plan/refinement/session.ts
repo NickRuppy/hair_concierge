@@ -7,6 +7,18 @@ import type {
 } from "./types"
 import { resolveStage2RefinementContract } from "./question-path"
 import { Stage2RefinementError } from "./gateway"
+import {
+  sortToolReportedForms,
+  type ToolFamily,
+  type ToolReportedForm,
+} from "@/lib/personal-plan/tools/contracts"
+import {
+  TOOL_FORM_PAGES,
+  TOOL_OVERVIEW_FAMILY_ORDER,
+  toolFamiliesForSections,
+  toolFormPage,
+  type ToolOverviewSectionKey,
+} from "@/lib/personal-plan/tools/labels"
 
 export type Stage2RefinementHandoff = {
   refinedVersionId: string
@@ -141,6 +153,43 @@ function replaceQuestionAnswer(
   answer: unknown,
 ): PersonalPlanRefinementAnswersV1 {
   const next = structuredClone(answers)
+  if (questionId === "tools_overview") {
+    // The UI answers in presentation sections; the families behind them are what is stored,
+    // in wash-day order. Submitting the overview is a real answer about every family: each
+    // page of an unticked family becomes an explicit none (`D3a`); ticked families keep their
+    // pages (answered or still open).
+    const families = new Set<ToolFamily>(
+      toolFamiliesForSections((structuredClone(answer) ?? []) as ToolOverviewSectionKey[]),
+    )
+    next.toolFamiliesWithSomething = TOOL_OVERVIEW_FAMILY_ORDER.filter((family) =>
+      families.has(family),
+    )
+    const toolForms = { ...next.toolForms }
+    for (const page of TOOL_FORM_PAGES) {
+      if (!families.has(page.family)) toolForms[page.pageKey] = []
+    }
+    next.toolForms = toolForms
+    return next
+  }
+  if (questionId.startsWith("tools:")) {
+    // One page writes only its own answer, sorted into the family's canonical order.
+    const page = toolFormPage(questionId.slice("tools:".length))
+    if (page) {
+      // A value outside the family is kept as submitted, so validation rejects the answer
+      // instead of silently turning it into „Nichts davon".
+      const submitted = structuredClone(answer)
+      const sorted = Array.isArray(submitted)
+        ? sortToolReportedForms(page.family, submitted as string[])
+        : null
+      next.toolForms = {
+        ...next.toolForms,
+        [page.pageKey]: (sorted && sorted.length === new Set(submitted as string[]).size
+          ? sorted
+          : submitted) as ToolReportedForm[],
+      }
+    }
+    return next
+  }
   if (questionId.startsWith("heat:")) {
     next.heatEvents = {
       ...next.heatEvents,

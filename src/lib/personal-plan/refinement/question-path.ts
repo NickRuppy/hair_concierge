@@ -43,6 +43,21 @@ import {
   getSelectedStage2HeatEventSources,
   requiresStage2HeatProtection,
 } from "./heat-events"
+import type { ToolFamily } from "@/lib/personal-plan/tools/contracts"
+import {
+  careFactsFromToolInventory,
+  dryingRouteOptionsFromToolInventory,
+  isToolOverviewAnswerValid,
+  isToolPageAnswerValid,
+  resolvedToolInventory,
+  type ToolDerivedCareFacts,
+} from "@/lib/personal-plan/tools/facts"
+import {
+  isToolFormPageKey,
+  toolFormPage,
+  toolFormPagesForFamilies,
+  type ToolFormPageKey,
+} from "@/lib/personal-plan/tools/labels"
 
 const BASE_QUESTION_IDS: Stage2QuestionId[] = ["current_product_categories", "wet_wash_frequency"]
 const END_QUESTION_IDS: Stage2QuestionId[] = [
@@ -97,6 +112,13 @@ export function pruneStage2Answers(input: PathInput): Stage2PrunedAnswers {
     remove("dryShampooVisibleHairColor")
   }
 
+  if (input.triggerContext.toolsEnabled === true) {
+    if (normalizeToolForms(answers)) prunedAnswerKeys.push("toolForms")
+    applyDerivedToolCareFacts(answers)
+  }
+  // Rollout off is non-destructive: tool answers are hidden from the path, never deleted, so a
+  // rollback cannot erase reported ownership on the next ordinary save.
+
   if (
     answers.towel &&
     (!answers.towel.material || answers.towel.material === "no_towel") &&
@@ -142,10 +164,119 @@ export function getOrderedQuestionIds(
     if (answers.dryShampooBridgePreference === "accept") ids.push("dry_shampoo_visible_hair_color")
   }
   if (categories.includes("oil")) ids.push("oil_purposes")
+  if (triggerContext.toolsEnabled === true) {
+    // Rev. 5: Deine Tools before Gewohnheiten, and the things are asked once — in the tools.
+    // Further heat tools and night protection are derived from the pages, so their
+    // Gewohnheiten questions leave the path; the towel question keeps the technique.
+    ids.push(...getToolQuestionIds(triggerContext, answers))
+    ids.push("towel_handling", "drying_routes")
+    ids.push(...getSelectedStage2HeatEventSources(answers).map(createStage2HeatEventId))
+    return ids
+  }
   ids.push(...END_QUESTION_IDS.slice(0, 3))
   ids.push(...getSelectedStage2HeatEventSources(answers).map(createStage2HeatEventId))
   ids.push(...END_QUESTION_IDS.slice(3))
   return ids
+}
+
+/**
+ * The tools block: the overview, then — once it is answered — one page per page key of every
+ * ticked family, in wash-day order. Empty while the rollout is off.
+ */
+export function getToolQuestionIds(
+  triggerContext: Stage2TriggerContext,
+  answers: PersonalPlanRefinementAnswersV1,
+): Stage2QuestionId[] {
+  if (triggerContext.toolsEnabled !== true) return []
+  const ids: Stage2QuestionId[] = ["tools_overview"]
+  if (!isToolOverviewAnswerValid(answers.toolFamiliesWithSomething)) return ids
+  for (const page of toolFormPagesForFamilies(answers.toolFamiliesWithSomething)) {
+    ids.push(`tools:${page.pageKey}`)
+  }
+  return ids
+}
+
+/**
+ * The care facts the settled tool pages derive (`careFactsFromToolInventory`), or `null` while
+ * the rollout is off. A key is present only once its source pages are settled.
+ */
+export function getStage2ToolDerivedCareFacts(
+  triggerContext: Stage2TriggerContext,
+  answers: PersonalPlanRefinementAnswersV1,
+): ToolDerivedCareFacts | null {
+  if (triggerContext.toolsEnabled !== true) return null
+  return careFactsFromToolInventory(resolvedToolInventory(answers))
+}
+
+/**
+ * The drying routes the Gewohnheiten page offers: with the rollout on and the airflow page
+ * settled, `air_dry` plus the routes the owned airflow forms back; otherwise every route.
+ * The UI renders exactly these options; a stored answer outside them is incomplete.
+ */
+export function getStage2DryingRouteOptions(
+  triggerContext: Stage2TriggerContext,
+  answers: PersonalPlanRefinementAnswersV1,
+): readonly DryingRoute[] {
+  if (triggerContext.toolsEnabled !== true) return DRYING_ROUTES
+  return dryingRouteOptionsFromToolInventory(resolvedToolInventory(answers)) ?? DRYING_ROUTES
+}
+
+/**
+ * Whether the towel material comes from the textiles page, so the towel question asks only
+ * the technique. False while the rollout is off or the page names no textile.
+ */
+export function isStage2TowelMaterialDerived(
+  triggerContext: Stage2TriggerContext,
+  answers: PersonalPlanRefinementAnswersV1,
+): boolean {
+  return getStage2ToolDerivedCareFacts(triggerContext, answers)?.towelMaterial !== undefined
+}
+
+/**
+ * Per-page normalization (rollout on): keys that are not a page are dropped (the August drafts
+ * stored one array per family), and once the overview is answered every page of an unticked
+ * family holds the explicit none it stands for. Mutates `answers`; reports whether it changed.
+ */
+function normalizeToolForms(answers: PersonalPlanRefinementAnswersV1): boolean {
+  if (!answers.toolForms) return false
+  const ticked = isToolOverviewAnswerValid(answers.toolFamiliesWithSomething)
+    ? new Set<ToolFamily>(answers.toolFamiliesWithSomething)
+    : null
+  let changed = false
+  const next: Partial<Record<ToolFormPageKey, (typeof answers.toolForms)[ToolFormPageKey]>> = {}
+  for (const [key, forms] of Object.entries(answers.toolForms)) {
+    if (!isToolFormPageKey(key)) {
+      changed = true
+      continue
+    }
+    const page = toolFormPage(key)
+    if (ticked && page && !ticked.has(page.family) && (forms?.length ?? 0) > 0) {
+      next[key] = []
+      changed = true
+      continue
+    }
+    next[key] = forms
+  }
+  if (changed) answers.toolForms = next
+  return changed
+}
+
+/**
+ * Writes the derived thing-fields into the answers (rollout on), so heat events, validation,
+ * the plan and the facts write all read one value. Before its source pages are settled a
+ * field keeps whatever the member answered earlier.
+ */
+function applyDerivedToolCareFacts(answers: PersonalPlanRefinementAnswersV1): void {
+  const derived = careFactsFromToolInventory(resolvedToolInventory(answers))
+  if (derived.additionalHeatTools) answers.additionalHeatTools = derived.additionalHeatTools
+  if (derived.nightProtection) answers.nightProtection = derived.nightProtection
+  if (derived.towelMaterial) {
+    const technique = answers.towel?.technique
+    answers.towel = {
+      material: derived.towelMaterial,
+      ...(technique !== undefined ? { technique } : {}),
+    }
+  }
 }
 
 /**
@@ -243,7 +374,8 @@ export function resolveStage2RefinementContract(input: PathInput): Stage2Refinem
   const orderedQuestionIds = getOrderedQuestionIds(input.triggerContext, pruned.answers)
   const completedQuestionIds = orderedQuestionIds.filter(
     (id) =>
-      pruned.completedQuestionIds.includes(id) && isStage2QuestionAnswerValid(id, pruned.answers),
+      pruned.completedQuestionIds.includes(id) &&
+      isStage2QuestionAnswerValid(id, pruned.answers, input.triggerContext),
   )
   const firstUnresolvedQuestionId =
     orderedQuestionIds.find((id) => !completedQuestionIds.includes(id)) ?? null
@@ -255,7 +387,7 @@ export function resolveStage2RefinementContract(input: PathInput): Stage2Refinem
     prunedAnswerKeys: pruned.prunedAnswerKeys,
   }
   const validationErrors = orderedQuestionIds.flatMap((questionId) =>
-    isStage2QuestionAnswerValid(questionId, pruned.answers)
+    isStage2QuestionAnswerValid(questionId, pruned.answers, input.triggerContext)
       ? []
       : [`${questionId} is invalid or incomplete`],
   )
@@ -304,12 +436,26 @@ function isOrderedKnownArray<T extends string>(
  * Whether the stored answer for one canonical question is structurally usable.
  * The single validity oracle for the path model — also the resolver's test for
  * "this question is still open" (see `assumed-defaults.ts`).
+ *
+ * `triggerContext` matters only for the rollout-on drying filter: with the rollout on, a
+ * drying answer must stay within `getStage2DryingRouteOptions`. Without it the check is
+ * today's.
  */
 export function isStage2QuestionAnswerValid(
   questionId: Stage2QuestionId,
   answers: PersonalPlanRefinementAnswersV1,
+  triggerContext?: Stage2TriggerContext,
 ): boolean {
   if (questionId.startsWith("heat:")) return isHeatEventAnswerValid(questionId, answers)
+  if (questionId === "tools_overview") {
+    return isToolOverviewAnswerValid(answers.toolFamiliesWithSomething)
+  }
+  if (questionId.startsWith("tools:")) {
+    const pageKey = questionId.slice("tools:".length)
+    return (
+      isToolFormPageKey(pageKey) && isToolPageAnswerValid(pageKey, answers.toolForms?.[pageKey])
+    )
+  }
   switch (questionId) {
     case "current_product_categories":
       return isOrderedKnownArray(answers.currentProductCategories, STAGE2_PRODUCT_CATEGORIES)
@@ -335,7 +481,13 @@ export function isStage2QuestionAnswerValid(
     case "towel_handling":
       return isTowelHandlingValid(answers)
     case "drying_routes":
-      return isOrderedKnownArray<DryingRoute>(answers.dryingRoutes, DRYING_ROUTES)
+      return (
+        isOrderedKnownArray<DryingRoute>(answers.dryingRoutes, DRYING_ROUTES) &&
+        (triggerContext?.toolsEnabled !== true ||
+          answers.dryingRoutes.every((route) =>
+            getStage2DryingRouteOptions(triggerContext, answers).includes(route),
+          ))
+      )
     case "additional_heat_tools":
       return isOrderedKnownArray<AdditionalHeatTool>(
         answers.additionalHeatTools,

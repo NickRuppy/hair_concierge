@@ -4,6 +4,7 @@ import test from "node:test"
 import {
   cloneStage2RefinementSession,
   createStage2RefinementSession,
+  saveStage2SessionAnswer,
 } from "../src/lib/personal-plan/refinement/session"
 
 const triggerContext = {
@@ -135,5 +136,94 @@ test("grown-path tolerance does not excuse a missing handoff on a complete sessi
         tolerateGrownPath: true,
       }),
     /handoff/i,
+  )
+})
+
+/* ── Hair Tools (rollout on): the overview and the per-page writes ─────────── */
+
+const toolsOn = { ...triggerContext, toolsEnabled: true as const }
+
+function sessionAtOverview() {
+  return createStage2RefinementSession({
+    pathVersion: "stage2-v1",
+    triggerContext: toolsOn,
+    answers: { currentProductCategories: [], wetWashFrequency: "weekly_1x" },
+    completedQuestionIds: ["current_product_categories", "wet_wash_frequency"],
+  })
+}
+
+test("submitting the overview stores families and makes every page of an unticked family none", () => {
+  const session = saveStage2SessionAnswer(sessionAtOverview(), {
+    questionId: "tools_overview",
+    // The UI answers in sections; the order it sends them in does not matter.
+    answer: ["trocknen_stylen", "abtrocknen_entwirren"],
+  })
+  assert.deepEqual(session.answers.toolFamiliesWithSomething, [
+    "drying_textiles",
+    "brushes_combs",
+    "airflow",
+    "heated_styling",
+    "heatless_styling",
+    "securing_sectioning",
+  ])
+  assert.deepEqual(session.answers.toolForms, {
+    "wash_application:1": [],
+    "night_protection:1": [],
+  })
+  assert.equal(session.path.firstUnresolvedQuestionId, "tools:drying_textiles:1")
+  // Night protection is derived as none straight away; no Gewohnheiten question asks for it.
+  assert.deepEqual(session.answers.nightProtection, [])
+  assert.equal(session.path.orderedQuestionIds.includes("night_protection"), false)
+})
+
+test("re-submitting the overview empties a family the user unticks", () => {
+  let session = saveStage2SessionAnswer(sessionAtOverview(), {
+    questionId: "tools_overview",
+    answer: ["nachtschutz"],
+  })
+  session = saveStage2SessionAnswer(session, {
+    questionId: "tools:night_protection:1",
+    answer: ["bonnet"],
+  })
+  assert.deepEqual(session.answers.nightProtection, ["silk_satin_bonnet"])
+  session = saveStage2SessionAnswer(session, { questionId: "tools_overview", answer: [] })
+  assert.deepEqual(session.answers.toolFamiliesWithSomething, [])
+  assert.deepEqual(session.answers.toolForms?.["night_protection:1"], [])
+  assert.deepEqual(session.answers.nightProtection, [])
+})
+
+test("a page writes only its own answer, sorted into canonical family order", () => {
+  let session = saveStage2SessionAnswer(sessionAtOverview(), {
+    questionId: "tools_overview",
+    answer: ["abtrocknen_entwirren"],
+  })
+  session = saveStage2SessionAnswer(session, {
+    questionId: "tools:drying_textiles:1",
+    answer: [],
+  })
+  session = saveStage2SessionAnswer(session, {
+    questionId: "tools:brushes_combs:1",
+    answer: ["fingers", "wide_tooth_comb"],
+  })
+  assert.deepEqual(session.answers.toolForms?.["brushes_combs:1"], ["wide_tooth_comb", "fingers"])
+  assert.equal(session.answers.toolForms?.["brushes_combs:2"], undefined)
+  assert.equal(session.path.firstUnresolvedQuestionId, "tools:brushes_combs:2")
+  // A form of the other page is not this page's answer.
+  assert.throws(
+    () =>
+      saveStage2SessionAnswer(session, {
+        questionId: "tools:brushes_combs:2",
+        answer: ["wide_tooth_comb"],
+      }),
+    /invalid/i,
+  )
+  // Nor is a form of another family silently read as „Nichts davon".
+  assert.throws(
+    () =>
+      saveStage2SessionAnswer(session, {
+        questionId: "tools:brushes_combs:2",
+        answer: ["hair_dryer"],
+      }),
+    /invalid/i,
   )
 })

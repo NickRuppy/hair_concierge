@@ -1,4 +1,6 @@
 import { PRODUCT_FREQUENCIES, type ProductFrequency } from "@/lib/vocabulary/frequencies"
+import type { ToolFamily, ToolReportedForm } from "@/lib/personal-plan/tools/contracts"
+import type { ToolFormPageKey } from "@/lib/personal-plan/tools/labels"
 import type {
   NightProtection,
   TowelMaterial,
@@ -85,6 +87,17 @@ export type PersonalPlanRefinementAnswersV1 = {
   additionalHeatTools?: AdditionalHeatTool[]
   heatEvents?: Record<string, HeatEventAnswer>
   nightProtection?: NightProtection[]
+  /**
+   * The Tools overview answer (`tools_overview`): the families the user owns something in, in
+   * wash-day order (`TOOL_OVERVIEW_FAMILY_ORDER`). Every family NOT listed is an explicit none.
+   * Only on the path while the Hair Tools rollout is on.
+   */
+  toolFamiliesWithSomething?: ToolFamily[]
+  /**
+   * One answer per product-form PAGE (`tools:<pageKey>`), each sorted into its family's
+   * canonical order. An absent page is unanswered. `toolFormsByFamily` unions a family's pages.
+   */
+  toolForms?: Partial<Record<ToolFormPageKey, ToolReportedForm[]>>
 }
 
 export type Stage2StaticQuestionId =
@@ -99,12 +112,8 @@ export type Stage2StaticQuestionId =
   | "additional_heat_tools"
   | "night_protection"
 export type Stage2HeatEventQuestionId = `heat:${Stage2HeatEventSource}`
-/**
- * Questions of the `tools` module (Hair Tools port). Only the id shape is fixed here; the
- * concrete ids (`tools_overview`, `tools:<pageKey>`) join the canonical path with the tool
- * questions themselves, so today's path produces none and the module is `not_applicable`.
- */
-export type Stage2ToolsQuestionId = "tools_overview" | `tools:${string}`
+/** Questions of the `tools` module: the overview, then one question per product-form page. */
+export type Stage2ToolsQuestionId = "tools_overview" | `tools:${ToolFormPageKey}`
 export type Stage2QuestionId =
   | Stage2StaticQuestionId
   | Stage2HeatEventQuestionId
@@ -116,9 +125,10 @@ export type Stage2TriggerContext = {
   hasReportedIrritatedScalp: boolean
   dryShampooBridgeEligibility: "unknown" | "eligible" | "ineligible"
   /**
-   * Server-resolved Hair Tools rollout for this request. Optional on the type so
-   * stored/fixture contexts decode; `deriveStage2TriggerContext` always sets it.
-   * Absent means off.
+   * Server-resolved Hair Tools rollout for this request. `deriveStage2TriggerContext` sets it
+   * only when the rollout is on (`true`) and omits the key otherwise, so stored contexts and
+   * input hashes of members without the rollout never change. Absent means off — read it as
+   * `=== true`.
    */
   toolsEnabled?: boolean
 }

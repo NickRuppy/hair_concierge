@@ -5,6 +5,19 @@ import type {
   Stage2StaticQuestionId,
 } from "@/lib/personal-plan/refinement/types"
 
+import {
+  careFactsFromToolInventory,
+  isToolOverviewAnswerValid,
+  isToolPageAnswerValid,
+} from "@/lib/personal-plan/tools/facts"
+import {
+  TOOL_FORM_PAGES,
+  toolFormCareKey,
+  toolFormPagesOfFamily,
+  type ToolFormPageKey,
+} from "@/lib/personal-plan/tools/labels"
+import type { ToolFamily, ToolReportedForm } from "@/lib/personal-plan/tools/contracts"
+
 import type { CareHabitsPatch, FieldProvenanceValue } from "./schema"
 
 /**
@@ -15,16 +28,86 @@ import type { CareHabitsPatch, FieldProvenanceValue } from "./schema"
  */
 
 /**
- * The `care_habits` patch is exactly the draft's own `PersonalPlanRefinementAnswersV1`
- * answers, spread as-is: every present field named, every absent field omitted (never
- * `null`). An absent field is NOT the user clearing it — it means the current refinement
- * path never asked that question (e.g. a conditional question that closed once another
- * answer changed), so the field-level merge inside `user_facts_save_v1` must keep
- * whatever value an earlier write recorded for it, not erase it. `brushesCombs`
- * (legacy-only; see `schema.ts`) is never set here — Feinschliff has no brush question.
+ * The `care_habits` patch is the draft's own `PersonalPlanRefinementAnswersV1` answers, spread
+ * as-is: every present field named, every absent field omitted (never `null`). An absent field
+ * is NOT the user clearing it — it means the current refinement path never asked that question
+ * (e.g. a conditional question that closed once another answer changed), so the field-level
+ * merge inside `user_facts_save_v1` must keep whatever value an earlier write recorded for it,
+ * not erase it.
+ *
+ * Hair Tools: the nested per-page answers (`toolForms`) never reach the facts. Each SETTLED
+ * page becomes its own key (`toolForms_<family>_<n>`) — a page whose question completed, or
+ * any page of a family the submitted overview left unticked (an explicit `[]`) — and the
+ * legacy `brushesCombs` slot is derived once both brush pages are settled. Unsettled pages are
+ * omitted. The derived thing-fields (`additionalHeatTools`, `towel.material`,
+ * `nightProtection`) are already in the answers (the path writes them), so they spread as-is.
+ * Without `completion` every stored page counts as settled.
  */
-export function toCareHabitsPatch(answers: PersonalPlanRefinementAnswersV1): CareHabitsPatch {
-  return { ...answers } as CareHabitsPatch
+export function toCareHabitsPatch(
+  answers: PersonalPlanRefinementAnswersV1,
+  completion?: { completedQuestionIds: readonly Stage2QuestionId[] },
+): CareHabitsPatch {
+  const { toolForms, ...rest } = answers
+  if (toolForms === undefined && answers.toolFamiliesWithSomething === undefined) {
+    return { ...rest } as CareHabitsPatch
+  }
+  const settled = settledToolPages(answers, completion?.completedQuestionIds)
+  const patch: Record<string, unknown> = { ...rest }
+  if (!settled.overviewSettled) delete patch.toolFamiliesWithSomething
+  for (const [pageKey, forms] of Object.entries(settled.pages) as [
+    ToolFormPageKey,
+    ToolReportedForm[],
+  ][]) {
+    patch[toolFormCareKey(pageKey)] = [...forms]
+  }
+  const brushes = settledFamilyForms(settled.pages, "brushes_combs")
+  if (brushes) {
+    patch.brushesCombs = careFactsFromToolInventory({ brushes_combs: brushes }).brushesCombs
+  }
+  return patch as CareHabitsPatch
+}
+
+type SettledToolPages = {
+  overviewSettled: boolean
+  pages: Partial<Record<ToolFormPageKey, ToolReportedForm[]>>
+}
+
+/**
+ * The pages the facts may record: an answered page whose question completed (or, without a
+ * completion list, any valid stored page), plus every page of a family the settled overview
+ * left unticked.
+ */
+function settledToolPages(
+  answers: PersonalPlanRefinementAnswersV1,
+  completedQuestionIds?: readonly Stage2QuestionId[],
+): SettledToolPages {
+  const completed = completedQuestionIds ? new Set(completedQuestionIds) : null
+  const overviewSettled =
+    isToolOverviewAnswerValid(answers.toolFamiliesWithSomething) &&
+    (completed === null || completed.has("tools_overview"))
+  const ticked = new Set<ToolFamily>(answers.toolFamiliesWithSomething ?? [])
+  const pages: SettledToolPages["pages"] = {}
+  for (const page of TOOL_FORM_PAGES) {
+    if (overviewSettled && !ticked.has(page.family)) {
+      pages[page.pageKey] = []
+      continue
+    }
+    const forms = answers.toolForms?.[page.pageKey]
+    if (!isToolPageAnswerValid(page.pageKey, forms)) continue
+    if (completed && !completed.has(`tools:${page.pageKey}`)) continue
+    pages[page.pageKey] = forms
+  }
+  return { overviewSettled, pages }
+}
+
+/** A family's forms once every one of its pages is settled; otherwise `null`. */
+function settledFamilyForms(
+  pages: SettledToolPages["pages"],
+  family: ToolFamily,
+): ToolReportedForm[] | null {
+  const familyPages = toolFormPagesOfFamily(family)
+  if (!familyPages.every((page) => pages[page.pageKey] !== undefined)) return null
+  return familyPages.flatMap((page) => pages[page.pageKey] ?? [])
 }
 
 /**
@@ -72,19 +155,23 @@ export function toFieldProvenance(input: {
   const fields: Record<string, FieldProvenanceValue> = {}
   let heatEventSeen = false
   let heatEventAssumed = false
+  const provenanceOf = (id: Stage2QuestionId): FieldProvenanceValue =>
+    input.answerProvenance[id] === "assumed" ? "assumed" : "user"
 
   for (const id of input.completedQuestionIds) {
-    const value: FieldProvenanceValue =
-      input.answerProvenance[id] === "assumed" ? "assumed" : "user"
+    const value = provenanceOf(id)
     if (id.startsWith("heat:")) {
       heatEventSeen = true
       if (value === "assumed") heatEventAssumed = true
       continue
     }
+    if (id === "tools_overview" || id.startsWith("tools:")) continue
     const field = CARE_HABITS_FIELD_BY_STATIC_QUESTION_ID[id as Stage2StaticQuestionId]
     if (!field) continue
     fields[field] = value
   }
+
+  if (input.answers) Object.assign(fields, toolFieldProvenance(input, provenanceOf, fields))
 
   if (heatEventSeen) {
     fields.heatEvents = heatEventAssumed ? "assumed" : "user"
@@ -92,6 +179,76 @@ export function toFieldProvenance(input: {
     fields.heatEvents =
       fields.dryingRoutes === "user" && fields.additionalHeatTools === "user" ? "user" : "assumed"
   }
+
+  return fields
+}
+
+/**
+ * Hair Tools provenance, via the same settled-page rule as `toCareHabitsPatch`: each settled
+ * page carries its own question's provenance (an unticked family's pages carry the overview's),
+ * and a derived field carries its source pages' — `user` only when every source is `user`.
+ * `additionalHeatTools` / `nightProtection` take it only when their own (rollout-off) question
+ * did not complete; the towel combines the textiles page with the technique answer.
+ */
+function toolFieldProvenance(
+  input: {
+    completedQuestionIds: readonly Stage2QuestionId[]
+    answers?: PersonalPlanRefinementAnswersV1
+  },
+  provenanceOf: (id: Stage2QuestionId) => FieldProvenanceValue,
+  staticFields: Record<string, FieldProvenanceValue>,
+): Record<string, FieldProvenanceValue> {
+  const answers = input.answers ?? {}
+  const settled = settledToolPages(answers, input.completedQuestionIds)
+  const fields: Record<string, FieldProvenanceValue> = {}
+  if (Object.keys(settled.pages).length === 0 && !settled.overviewSettled) return fields
+
+  const overview = settled.overviewSettled ? provenanceOf("tools_overview") : undefined
+  if (overview) fields.toolFamiliesWithSomething = overview
+  const ticked = new Set<ToolFamily>(answers.toolFamiliesWithSomething ?? [])
+  const pageProvenance: Partial<Record<ToolFormPageKey, FieldProvenanceValue>> = {}
+  for (const page of TOOL_FORM_PAGES) {
+    if (settled.pages[page.pageKey] === undefined) continue
+    const value =
+      overview && !ticked.has(page.family) ? overview : provenanceOf(`tools:${page.pageKey}`)
+    pageProvenance[page.pageKey] = value
+    fields[toolFormCareKey(page.pageKey)] = value
+  }
+
+  const familiesProvenance = (families: readonly ToolFamily[]) => {
+    const values = families.flatMap((family) =>
+      toolFormPagesOfFamily(family).map((page) => pageProvenance[page.pageKey]),
+    )
+    if (values.some((value) => value === undefined)) return undefined
+    return values.every((value) => value === "user") ? "user" : "assumed"
+  }
+  const completed = new Set(input.completedQuestionIds)
+
+  const heat = familiesProvenance(["airflow", "heated_styling"])
+  if (
+    heat &&
+    answers.additionalHeatTools !== undefined &&
+    !completed.has("additional_heat_tools")
+  ) {
+    fields.additionalHeatTools = heat
+  }
+  const night = familiesProvenance(["night_protection"])
+  if (night && answers.nightProtection !== undefined && !completed.has("night_protection")) {
+    fields.nightProtection = night
+  }
+  const textiles = familiesProvenance(["drying_textiles"])
+  const textileForms = settledFamilyForms(settled.pages, "drying_textiles")
+  if (
+    textiles &&
+    textileForms &&
+    answers.towel !== undefined &&
+    careFactsFromToolInventory({ drying_textiles: textileForms }).towelMaterial !== undefined
+  ) {
+    const technique = staticFields.towel
+    fields.towel = textiles === "user" && (technique ?? "user") === "user" ? "user" : "assumed"
+  }
+  const brushes = familiesProvenance(["brushes_combs"])
+  if (brushes) fields.brushesCombs = brushes
 
   return fields
 }

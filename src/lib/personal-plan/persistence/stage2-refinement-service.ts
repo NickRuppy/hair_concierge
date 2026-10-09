@@ -240,7 +240,7 @@ export function createStage2RefinementService(input: {
     const facts = await input.saveFacts({
       userId: input.userId,
       domain: "care_habits",
-      patch: toCareHabitsPatch(draft.answers),
+      patch: toCareHabitsPatch(draft.answers, { completedQuestionIds: draft.completedQuestionIds }),
       provenance: {
         source: { kind: "feinschliff_draft", id: draft.id },
         schemaVersion: CARE_HABITS_SCHEMA_VERSION,
