@@ -1,0 +1,142 @@
+{
+  "blindId": "P13",
+  "identity": {
+    "productName": "Cantu Shea Butter Cleansing Cream Shampoo",
+    "brand": "Cantu",
+    "market": "DE",
+    "packSize": "400 ml",
+    "formulaSource": "frozen packet canonicalInci (tier not stated; treated as approved canonical capture, ID-1)",
+    "normalizedInciCount": 26,
+    "formulaFingerprintSha256": "f3503c99dd4243458c3fd3c95f9bd19ca6ba1a37895c80fe4d1e3e9bfb93fb76",
+    "fingerprintMethod": "lane-computed SHA-256 of ID-2-normalized INCI names joined with ', '",
+    "positioningSourceGrades": "product name high; manufacturer (English-language page) moderate per packet source label; retailer low",
+    "conflicts": "Manufacturer page: generic disclaimer that the online ingredient list may vary from the pack ('formulations are updated occasionally') and 'New improved formula!' - generic disclaimer, no differing INCI shown -> note only, no confidence effect (ID-3). Manufacturer copy is English with UK spelling ('coloured'); E1 asks for the DE manufacturer page - recorded as uncertainty.",
+    "e3Point": "Parfum (Fragrance) at 9."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "strong",
+      "rationale": "Moderate: C1 sulfonate-type chassis, Sodium C14-16 Olefin Sulfonate (2) with one prominent buffer Cocamidopropyl Betaine (3), no reinforcing route; Cocamide DIPA (4) and PEG-150 Distearate (8) are not routes (C3). Polysorbate 20 (22) and Steareth-4 (18) are post-fragrance emulsifiers. Single buffer -> neighbor strong. 'Ohne Sulfate'/'gently' claims do not move cleansing (3.2).",
+      "ruleIds": ["C1", "C3", "C4", "E3", "N-ALT"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: several light routes - Glycerin (5), Shea Butter (10), Glycol Distearate (13), Panthenol (14), Guar Hydroxypropyltrimonium Chloride (15), Polyquaternium-39 (19), film formers - but no early silicone and no prominent payload lipid (shea after Parfum), so C2 not met. Every conditioning route except glycerin is post-fragrance -> neighbor low.",
+      "ruleIds": ["§5", "C2", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "formulaIdentifiers": {"fingerprint": "f3503c99dd4243458c3fd3c95f9bd19ca6ba1a37895c80fe4d1e3e9bfb93fb76", "sourceTier": "frozen packet canonical INCI (tier not stated)", "captureDate": "not stated in packet"},
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride (15)", "Polyquaternium-39 (19)"],
+        "cationic_conditioner": [],
+        "payload_lipid": ["Butyrospermum Parkii (Shea) Butter (10)"],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": ["Acrylates Copolymer (6)", "Polyester-37 (11) - film-forming polymer (recognition from chemistry; post-fragrance)"],
+        "reset": ["anionic: Sodium C14-16 Olefin Sulfonate (2)", "amphoteric: Cocamidopropyl Betaine (3)"],
+        "humectantContext": ["Glycerin (5)", "Panthenol (14)"],
+        "excluded": ["Cocamide DIPA (4) - foam booster", "PEG-150 Distearate (8) - PEG thickener (6.4)", "Glycol Distearate (13) - pearlizer (6.4)", "Steareth-4 (18), Polysorbate 20 (22) - emulsifier/solubilizer", "Tocopherol (24) - antioxidant", "Ethylhexylglycerin (16), Disodium EDTA (17) - preservative booster/chelator"],
+        "unresolved": []
+      },
+      "depositionLoad": {"value": "moderate", "rationale": "Prominent acrylates copolymer film former plus waxy shea butter, two cationic polymers and Polyester-37: several converging families, mostly post-fragrance."},
+      "persistence": {"value": "moderate", "rationale": "Film formers and PQ-39/guar can build up; shea is waxy; no silicone."},
+      "resetCapacity": {"value": "moderate", "rationale": "Olefin sulfonate with one betaine buffer: ordinary reset."},
+      "counterEvidence": "Four deposition families converge (film former, payload lipid, two cationic polymers) - toward high; most sit after Parfum, no W-RICH (shea not prominent), and the acrylates copolymer may function mainly as a suspending polymer - toward moderate/low.",
+      "whyThisBand": "Several converging depositing systems make bounded noticeable residue plausible; ordinary reset and post-fragrance positions bound it.",
+      "whyNotNeighborBand": "Not high: no rich architecture (shea after Parfum), no silicone, cationic polymers late, reset not limited. Not low (W2): a prominent film former plus a waxy butter and two cationic polymers is not a set of only late/trace or weak routes.",
+      "limitingFactor": "Multiple families with unknown levels; lane judged high the more realistic neighbor because four families converge.",
+      "rationale": "Moderate (depositionLoad moderate, persistence moderate, resetCapacity moderate); neighbor high.",
+      "ruleIds": ["§6.3", "§6.4", "§6.6", "W-RICH", "W2", "§6.9", "N-ALT"],
+      "selfCheck": "Fingerprint matches; blind judgment ('ohne es zu beschweren' ignored); no count/position assigned band; three subjudgments present; W2 reason specific; no in-lane comparison."
+    },
+    "focusPrimary": {
+      "value": "clarifying",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedConditioningRoutes": [], "limitation": "Buildup-removal role; repair/moisture verdict would be nonspecific (no protein, lipid post-fragrance)."},
+      "claimRole": "candidate",
+      "counterSignal": "'Gently'/'sanft', creamy care and shea/'nourish curls' positioning; cleansing only moderate; manufacturer copy may be a non-DE page.",
+      "rationale": "Clarifying: explicit buildup-removal role in the manufacturer source ('Rich creamy lather removes buildup', 'gently removes heavy build-up from the hair and scalp', directions for a second lather on heavy build-up; moderate) corroborated by retailer ('Entfernt sanft Produktrückstände', low). F6 compatibility: cleansingStrength moderate, conditioningLevel moderate (not high), weightPotential moderate (not high) -> compatible. Repair ('protect against breakage') has no repair_supported route; moisture/nourish is nonspecific.",
+      "decisionTrace": {"claimDirection": "buildup removal (manufacturer, moderate)", "formulaCompatible": true, "compatibleRoute": "Sodium C14-16 Olefin Sulfonate (2) + Cocamidopropyl Betaine (3) chassis", "decisionReason": "Only claim direction with a compatible formula case; F6 conditions met."},
+      "ruleIds": ["§7.1", "F6", "F1", "CL-SRC", "F-TRACE"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: breakage-protection claim lacks a repair_supported route (no protein/damage-care cluster); 'nourish curls' is nonspecific; mildness is not a focus.",
+      "decisionTrace": {"emptyDefaultConsidered": true, "selected": [], "matchingClaims": ["Helps protect against breakage (manufacturer)"], "independentRoutes": [], "exceptionCode": null},
+      "ruleIds": ["§8", "F1", "F3", "F-TRACE"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "alternating",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "rationale": "Regular: reset intent exists (U4 buildup wording 'removes buildup', manufacturer, moderate) but alternating requires cleansingStrength strong and the formula is moderate; no D1 term ('Cleansing Cream' is not D1; no occasional-use direction); no U2 wording. If cleansingStrength moved to its neighbor strong, alternating would fire -> moderate, neighbor alternating.",
+      "decisionTrace": "default regular; occasional_reset no (D1 false); treatment no; alternating blocked (moderate cleansing; reset-intent evidence recorded: 'removes buildup', 'second lather ... heavy product build up'); frequent no.",
+      "ruleIds": ["§9", "U1", "U4", "D1", "F-TRACE"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No E2 sensitive/dry scalp claim; 'sanfte Reinigung und Pflege von Haar und Kopfhaut' is mildness.",
+      "ruleIds": ["§10", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No Piroctone Olamine or Climbazole. Generic manufacturer disclaimer is not a material conflict (ID-3).",
+      "ruleIds": ["§11", "ID-3"]
+    }
+  },
+  "projection": {
+    "thicknessFit": {"fine": "acceptable", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitDetail": {
+      "fine": {"confidence": "moderate", "rationale": "T1 W moderate -> acceptable. T4 (ordinary): W neighbor high -> not_suited -> flag fine."},
+      "normal": {"confidence": "moderate", "rationale": "T1 W moderate -> ideal. T4: neighbor high -> acceptable -> flag normal."},
+      "coarse": {"confidence": "moderate", "rationale": "T1 W moderate, C moderate -> acceptable; W neighbor high -> ideal (higher), C neighbor low -> acceptable -> no flag. 'Strukturiertes Haar'/curls is texture, not thickness (T2)."},
+      "ruleIds": ["T1", "T2", "T4", "13.8"]
+    },
+    "weight": "moderate",
+    "weightDetail": {"confidence": "moderate", "rationale": "W-LIVE moderate -> moderate.", "ruleIds": ["W-LIVE"]},
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetsDetail": {
+      "primary": {"target": "ordinary", "bucket": "normal", "route": "balanced", "confidence": "high", "rationale": "S-ORDINARY way 1 (no qualifying E2 claim; buildup is not an oily-scalp claim); packet has a manufacturer source -> high."},
+      "secondary": null,
+      "ruleIds": ["S-ORDINARY", "E2", "13.8"]
+    },
+    "cleansingIntensity": "regular",
+    "cleansingIntensityDetail": {"confidence": "moderate", "rationale": "I1 moderate -> regular. I3: neighbor strong with usageRole regular (unchanged) -> regular, same -> no flag.", "ruleIds": ["I1", "I3"]},
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserDetail": {"confidence": "moderate", "rationale": "D1 false (no D1 stem: 'Cleansing Cream', 'removes buildup' are not D1; no occasional-use limit); D2 not met.", "ruleIds": ["D1", "D2", "D3"]},
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [
+      {"code": "review_thickness_boundary", "detail": "fine: weightPotential neighbor high would make fine not_suited (T4, ordinary target)."},
+      {"code": "review_thickness_boundary", "detail": "normal: weightPotential neighbor high would make normal acceptable (T4)."}
+    ],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "E1/CL-SRC: the manufacturer source is English with UK spelling; E1 requires the DE manufacturer page, but CL-SRC grades by packet source type. Lane graded it moderate. If it is not exact-DE positioning, the buildup claim is retailer-only (low) and focus falls to general (no projection change).",
+    "7.1 'buildup role' for a product also positioned as gentle/creamy care: clarifying vs general is a judgment.",
+    "Polyester-37 function recognized from chemistry as film-forming; post-fragrance, judged not band-moving."
+  ]
+}

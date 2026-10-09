@@ -1,0 +1,120 @@
+{
+  "blindId": "L14",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: C1 pattern - Sodium Laureth Sulfate #2 buffered by Coco-Betaine #3, refatting Glycerin #5 and Glycine Soja Oil #6; no second anionic/reset route or intent.",
+      "ruleIds": ["§4", "C1"],
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Coco-Betaine #3", "Glycerin #5", "Glycine Soja Oil #6"],
+      "counterSignal": "none material",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: several routes - pearlizer Glycol Distearate #4, Glycerin #5, payload lipid Glycine Soja Oil #6 (§6 reviewed row), emollient Dicaprylyl Ether #13, late cationic polymers Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #19 and Polyquaternium-7 #22. No silicone; cationic delivery is late.",
+      "ruleIds": ["§5", "§6 reviewed rows"],
+      "formulaFacts": ["Glycol Distearate #4", "Glycerin #5", "Glycine Soja Oil #6", "Dicaprylyl Ether #13", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #19", "Polyquaternium-7 #22"],
+      "counterSignal": "Lipid + pearlizer + two cationic polymers + humectant could be 'multiple complementary systems' (high).",
+      "neighboringAlternative": "high",
+      "sources": ["packet INCI"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: early nonvolatile lipid Glycine Soja Oil #6 with emollient Dicaprylyl Ether #13 and pearlizer #4 interacting with two cationic polymers - noticeable but bounded residue, limited by an effective SLES/betaine base and late cationics. PEG-60 Hydrogenated Castor Oil #12 excluded as solubilizer (§6 row).",
+      "ruleIds": ["§6"],
+      "subjudgments": {"depositionLoad": "moderate", "persistence": "moderate", "resetCapacity": "moderate"},
+      "whyThisBand": "Early oil plus interacting lighter routes; reset bounds them.",
+      "whyNotNeighborBand": "Not high: no silicone, no rich 2-in-1. Low is the realistic neighbor because rinse-off oil deposition with late cationics may be slight.",
+      "formulaFacts": ["Glycol Distearate #4", "Glycine Soja Oil #6", "Dicaprylyl Ether #13"],
+      "counterSignal": "Silicone-free, effective base.",
+      "neighboringAlternative": "low",
+      "sources": ["packet INCI"]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "moderate",
+      "rationale": "scalp_active: dominant exact-product positioning is a soothing shampoo for itchy/sensitive scalp ('Beruhigendes Shampoo', 'wirkt beruhigend auf die juckende Kopfhaut', 'für ... sensible Kopfhaut', ECARF) with scalpComfortTarget targeted (7.2 sensitive row).",
+      "ruleIds": ["7.2"],
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedRoutes": [], "limitation": "Primary is not a repair/moisture decision; moisture assessed as secondary."},
+      "claimRole": "candidate",
+      "formulaFacts": ["Coco-Betaine #3", "Aloe Barbadensis Leaf Juice #7", "Avena Sativa Kernel Extract #8"],
+      "counterSignal": "SLES chassis and fragrance; equal-weight moisture claim.",
+      "neighboringAlternative": "moisture",
+      "decisionTrace": "Blind: buffered SLES, oat/aloe, humectant + lipid -> scalp-comfort and moisture compatible. Unblind: 'Beruhigendes Shampoo' + itchy/sensitive scalp -> scalp_active primary.",
+      "sources": ["manufacturer claims", "retailer claims"]
+    },
+    "focusSecondary": {
+      "value": ["moisture"],
+      "confidence": "moderate",
+      "rationale": "moisture: distinct positioning ('spendet Feuchtigkeit und sorgt für geschmeidiges Haar', 'schenkt dem Haar Feuchtigkeit') with an independent moisture_supported route - humectant cluster Glycerin #5, Aloe #7, Propylene Glycol #18 plus emollient/deposition Glycine Soja Oil #6, Dicaprylyl Ether #13 - separate from the scalp-comfort route (oat #8, buffered cleansing) (§8, F1).",
+      "ruleIds": ["§8", "7.3", "F1"],
+      "careDirection": {"verdict": "moisture_supported", "moistureRoutes": ["Glycerin #5", "Aloe Barbadensis Leaf Juice #7", "Propylene Glycol #18"], "repairRoutes": [], "sharedRoutes": ["Glycine Soja Oil #6", "Dicaprylyl Ether #13", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #19"], "limitation": "Aloe also supports the scalp-comfort claim; rinse-off."},
+      "counterSignal": "Partial overlap with the scalp route (aloe).",
+      "neighboringAlternative": "none",
+      "sources": ["manufacturer claims", "packet INCI"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: no daily/frequent, reset or treatment trigger ('sanft einmassieren' is a direction, not frequency).",
+      "ruleIds": ["§9"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["manufacturer directions"]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "rationale": "Targeted: explicit sensitive/itchy scalp positioning and credible supportive architecture - buffered moderate cleansing, Avena Sativa Kernel Extract #8, Aloe #7, Glycerin #5, Glycine Soja Oil #6 refatting, ECARF 'hochverträglich'. Counter-signals: SLES chassis and fragrance #27 (not a veto).",
+      "ruleIds": ["§10"],
+      "counterSignal": "Fragrance; SLES.",
+      "neighboringAlternative": "not_targeted",
+      "sources": ["manufacturer claims", "packet INCI"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole; Salicylic Acid #26 alone does not count.",
+      "ruleIds": ["§11"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    }
+  },
+  "projection": {
+    "status": "proposal",
+    "thicknessFit": {"fine": "acceptable", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitConfidence": {"fine": "moderate", "normal": "moderate", "coarse": "moderate"},
+    "thicknessRationale": "T1 W moderate, C moderate: fine acceptable, normal ideal, coarse acceptable; T6 applies (sensitive) but nothing is not_suited. T4: W neighbor low keeps normal ideal and raises fine; C neighbor high raises coarse -> no flags.",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: moderate -> moderate.",
+    "scalpTargets": {"primary": "sensitive", "secondary": null},
+    "scalpTargetConfidence": "moderate",
+    "scalpTargetRationale": "S-SENSITIVE: E2 'sensible Kopfhaut' / 'juckende Kopfhaut' / 'beruhigt' on the exact manufacturer page (E1 moderate; canonical name has no scalp term). Formula: scalpComfortTarget targeted + prominent comfort route Avena Sativa Kernel Extract #8 (before Parfum #27) + cleansing not strong -> pass. No dry-scalp claim. Confidence = min(positioning moderate, scalpComfort moderate, cleansing high) = moderate. S-FOCUS: scalp_active primary -> no mismatch.",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: moderate -> regular (irritationen expects gentle; I2 keeps regular -> amber). I3: no cleansing neighbor -> no flag.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "No D1 term.",
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"},
+      {"thickness": "normal", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "liveComparison": "Not evaluated (live rows not in sealed packet)."
+  },
+  "uncertainties": [
+    "Product identity: canonical name 'Wahre Schätze Sanfte Hafermilch' vs manufacturer name 'Beruhigendes Shampoo Sanfte Hafermilch'; positioning confidence graded moderate (manufacturer page) because no pack front is in the packet.",
+    "E4 lists 'Avena Sativa Kernel Extract/Avena Sativa Kernel Flour'; this INCI is 'AVENA SATIVA KERNEL EXTRACT / OAT KERNEL EXTRACT' -> matched as listed.",
+    "F2 independence when one ingredient (aloe) serves both the scalp-comfort and moisture claims; treated moisture route (glycerin/oil) as independent."
+  ]
+}

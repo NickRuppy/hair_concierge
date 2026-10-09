@@ -1,0 +1,83 @@
+{
+  "slot": "G07",
+  "productId": "22f95dcb-12de-4d62-b206-f03dbd6e94a0",
+  "name": "ISANA Shampoo & Spülung 2in1 Volumen (catalog: ISANA Shampoo & Spülung 2 in 1 Volumen Malve & Acai)",
+  "brand": "ISANA",
+  "packSize": "300 ml",
+  "gtins": [
+    "4305615566115"
+  ],
+  "sources": [
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-und-spuelung-2in1-volumen/p/4305615566115",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "retailer_rossmann_de_own_brand_exact_gtin",
+      "gtinShown": "4305615566115 (page structured data and URL); 300 ml; Artikelnummer 015869; 0,65 EUR",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Malva Sylvestris Flower Extract, Euterpe Oleracea Fruit Extract, Hydrolyzed Wheat Protein, Niacinamide, Panthenol, Pantolactone, Coco-Glucoside, Glyceryl Oleate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Magnesium Sulfate, Tocopherol, Hydrogenated Palm Glycerides Citrate, PEG-3 Distearate, Propylene Glycol, Glycerin, Parfum, Benzyl Salicylate, Linalool, Sodium Benzoate, Potassium Sorbate, Benzoic Acid, Phenoxyethanol, Citric Acid, Sodium Hydroxide.",
+      "claimsVerbatim": "Das ISANA SHAMPOO & SPÜLUNG 2IN1 VOLUMEN mit Soft-Care-Komplex und Weizenprotein vereint die reinigende Wirkung eines Shampoos mit der einzigartigen Pflege einer Spülung. Mit seiner speziellen Formel verleiht es auch kraftlosem und feinem Haar Volumen. | Hautverträglichkeit: dermatologisch bestätigt und pH-hautneutral | Malve & Acai | ohne Silikone | kraftloses & feines Haar",
+      "directionsVerbatim": "In das feuchte Haar einmassieren. Gründlich ausspülen. Warnhinweis: Augenkontakt vermeiden.",
+      "note": "Read via built-in browser (curl hits Rossmann bot wall). Rossmann is the ISANA owner (Dirk Rossmann GmbH, Burgwedel; Ursprungsland EU). Delivery 10.-12.10.26, i.e. currently orderable."
+    },
+    {
+      "url": "https://shop.rossmann.hu/termek/isana-hair-dusito-2in1-sampon-300-ml",
+      "retrievedAt": "2026-09-03 (pilot packet; not re-read)",
+      "sourceType": "retailer_rossmann_hu_prior_capture",
+      "gtinShown": "mpn 4305615566115",
+      "inciVerbatim": "(per pilot packet: matches Rossmann DE order; not re-read today)",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.drogas.lv/lv/matiem/matu-kopsana/sampuni/isana-2in1-sampuns-un-kondicionieris-vajiem-un-planiem-matiem-300ml/p/BP_334920",
+      "retrievedAt": "2026-09-03 (pilot packet; search-index snippet only, not re-read)",
+      "sourceType": "retailer_drogas_lv_prior_capture",
+      "gtinShown": "4305615566115",
+      "inciVerbatim": null,
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "name_only",
+      "description": "Catalog name 'ISANA Shampoo & Spülung 2 in 1 Volumen Malve & Acai' vs current Rossmann DE title 'Shampoo & Spülung 2in1 Volumen' (Malve & Acai appears in the product's own feature line). Same GTIN 4305615566115; identity not in doubt."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Sodium Chloride",
+    "Cocamidopropyl Betaine",
+    "Malva Sylvestris Flower Extract",
+    "Euterpe Oleracea Fruit Extract",
+    "Hydrolyzed Wheat Protein",
+    "Niacinamide",
+    "Panthenol",
+    "Pantolactone",
+    "Coco-Glucoside",
+    "Glyceryl Oleate",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Magnesium Sulfate",
+    "Tocopherol",
+    "Hydrogenated Palm Glycerides Citrate",
+    "PEG-3 Distearate",
+    "Propylene Glycol",
+    "Glycerin",
+    "Parfum",
+    "Benzyl Salicylate",
+    "Linalool",
+    "Sodium Benzoate",
+    "Potassium Sorbate",
+    "Benzoic Acid",
+    "Phenoxyethanol",
+    "Citric Acid",
+    "Sodium Hydroxide"
+  ],
+  "canonicalReason": "Rossmann is the ISANA brand owner and Rossmann.de is the manufacturer-equivalent exact-GTIN German source; today's list is identical (28 items, same order, same punctuation) to the 2026-09-03 pilot packet's canonical list, which was corroborated by the Rossmann HU page.",
+  "inciFingerprintSha256": "4eddf07f65699119e28271f06d3321a7a729de2b283c053a659895ef9dda3433",
+  "identityConfidence": "high",
+  "status": "frozen",
+  "blockReason": null,
+  "notes": "Prior pilot fingerprint (0498a74c...) was computed over a comma-space-joined string, not the brief's '|' method, but the item list is identical. 'ohne Silikone' claim is consistent with the list (no silicones). Earlier pilot: sources and adjudication in plans/scan-db-expansion/research/shampoo-v14/pilot/isana-2in1-volumen/. Product is X14 (not yet recommended).",
+  "normalization": "Split the canonical INCI string on commas (or bullets/pipes where the source uses them), trimmed; lower-case each item, trim, collapse internal whitespace to single spaces, join with '|' (no other change: parentheses, slashes, hyphens, spelling kept), sha256 over the UTF-8 string. Batch/F.I.L. codes, the 'INGREDIENTS:' prefix and the trailing period are removed before splitting."
+}

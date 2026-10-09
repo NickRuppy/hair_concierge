@@ -22,6 +22,11 @@ export interface HairProfileOverrides {
   goals?: string[]
   uses_heat_protection?: boolean
   onboarding_completed?: boolean
+  /** Saved per-package budget, written through the facts door after the profile seed. The eval
+   *  server needs SHOPPING_BUDGET_ENABLED=true for chat to read it. */
+  shopping_preferences?: {
+    budget: { kind: "capped"; limitEur: 5 | 15; allowExceptions: boolean } | { kind: "uncapped" }
+  }
 }
 
 export interface RoutineInventorySeed {

@@ -1,0 +1,157 @@
+{
+  "baseline_version": 1,
+  "captured_at": "2026-10-02T09:46:42.406331+00:00",
+  "production": {
+    "project_ref": "pqdkhefxsxkyeqelqegq",
+    "deployment_id": "dpl_3rEbamS7J57reDHDbzdVCE6mWCPb",
+    "domain": "chaarlie.de",
+    "state": "READY",
+    "target": "production",
+    "commit_sha": "3abfe00a7843882f01009de701affa7b1dff697f"
+  },
+  "catalog_counts": [
+    {
+      "total": 75,
+      "active": 73,
+      "category_key": "conditioner",
+      "with_package_size": 28,
+      "active_recommended": 42
+    },
+    {
+      "total": 15,
+      "active": 5,
+      "category_key": "deep_cleansing_shampoo",
+      "with_package_size": 0,
+      "active_recommended": 5
+    },
+    {
+      "total": 58,
+      "active": 55,
+      "category_key": "mask",
+      "with_package_size": 19,
+      "active_recommended": 34
+    },
+    {
+      "total": 71,
+      "active": 68,
+      "category_key": "shampoo",
+      "with_package_size": 16,
+      "active_recommended": 49
+    }
+  ],
+  "products_schema": {
+    "has_market_segment": false,
+    "has_net_content_value": true,
+    "has_net_content_unit": true
+  },
+  "research_contracts": {
+    "base_shampoo_method": "v1.4",
+    "focus_overlay": "shampoo-focus-v15-overlay-v1",
+    "production_light_adapter": "shampoo-production-light-v1",
+    "full_research_model_live": false,
+    "focus_overlay_is_separate_from_adapter_input": true
+  },
+  "profile_write_contract": {
+    "canonical_save_path": "saveUserFacts -> user_facts_save_v1",
+    "competing_profile_writer_authorized": false,
+    "lock_source": "supabase/pending/20260930120000_user_facts_lock.sql",
+    "live_lock_application_checked": false
+  },
+  "existing_product_audit": [
+    {
+      "id": "514ffd65-e4a5-4f7f-96c5-0f194e3b3b36",
+      "name": "Serie Expert Metal DX Shampoo",
+      "brand": "L'Oreal Professionnel",
+      "is_active": false,
+      "category_key": "deep_cleansing_shampoo",
+      "lifecycle_status": "discontinued",
+      "net_content_unit": null,
+      "net_content_value": null,
+      "is_chaarlie_recommended": false,
+      "regular_shampoo_spec_rows": 0
+    },
+    {
+      "id": "caa94951-57d9-441d-bd46-5d7debbf365f",
+      "name": "Clarifying Shampoo",
+      "brand": "Moroccanoil",
+      "is_active": false,
+      "category_key": "deep_cleansing_shampoo",
+      "lifecycle_status": "discontinued",
+      "net_content_unit": null,
+      "net_content_value": null,
+      "is_chaarlie_recommended": false,
+      "regular_shampoo_spec_rows": 0
+    },
+    {
+      "id": "1a6e731e-8fb2-43b4-9f4c-2d7f6dd06dca",
+      "name": "No.4C Bond Maintenance Clarifying Shampoo",
+      "brand": "OLAPLEX",
+      "is_active": false,
+      "category_key": "deep_cleansing_shampoo",
+      "lifecycle_status": "discontinued",
+      "net_content_unit": null,
+      "net_content_value": null,
+      "is_chaarlie_recommended": false,
+      "regular_shampoo_spec_rows": 0
+    },
+    {
+      "id": "e937c8aa-fc99-4731-b848-e5bd988fcc17",
+      "name": "Detox Shampoo",
+      "brand": "OUAI",
+      "is_active": false,
+      "category_key": "deep_cleansing_shampoo",
+      "lifecycle_status": "discontinued",
+      "net_content_unit": null,
+      "net_content_value": null,
+      "is_chaarlie_recommended": false,
+      "regular_shampoo_spec_rows": 0
+    }
+  ],
+  "missing_canonical_brands": [
+    "GLYNT",
+    "Revlon Professional",
+    "Kérastase",
+    "NEUTREA",
+    "Nõberu of Sweden",
+    "Gallinée",
+    "O&M",
+    "AntidotPro",
+    "Aveda",
+    "Sebastian Professional",
+    "System Professional",
+    "KMS"
+  ],
+  "candidate_reconciliation": {
+    "candidate_count": 39,
+    "live_catalog_identity_count": 371,
+    "name_match_count": 0,
+    "method": "Normalized brand plus exact name and optional line; canonical and legacy brand spellings checked across all products. This is a preliminary name-based pass, not an exact-GTIN publish deduplication.",
+    "gtin_reconciliation": "required before new intake package creation"
+  },
+  "historical_wave": {
+    "source_date": "2026-07-30",
+    "source_files_sha256": {
+      "manifest.json": "0c11ae3e3f92b691e92f34e41d9698165ad0953e66d8caa5c4771ad5ac2e505d",
+      "research-output-contract.md": "f27190c7497b56e63b1d170dc07d529a486a7b5cb8730fcaaf24db9e07a9f094",
+      "batch-a.json": "249f3552440d0805524631b2e7dbc7bf5f273716bbae256635635b32dbf57e69",
+      "batch-b.json": "a0d3c48ed270b5a3abe616a959b67d6b25b783de7db768b34216760281d9f574",
+      "batch-c.json": "56a1c8f39dc9536ff4a80db69ef509f3530f60a865e4d5305e334f7a1b1c95eb",
+      "batch-d.json": "2cec34cf9b3fc08f879ecdf229d293245d4945699abae9b148f37774323cb9f3"
+    },
+    "total": 47,
+    "new_candidates": 39,
+    "existing_records": 4,
+    "deferred_identities": 3,
+    "excluded": 1,
+    "legacy_status_counts": {
+      "researched": 31,
+      "ambiguous": 8
+    },
+    "current_readiness": "not_assessed"
+  },
+  "verification_limits": [
+    "No manufacturer or retailer page refresh in this baseline task.",
+    "No new ingredient classification, image processing, catalog audit repair, approval or publication.",
+    "Separate live queries are not a transactionally consistent multi-relation snapshot; refresh before any write."
+  ]
+}

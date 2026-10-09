@@ -143,7 +143,7 @@ test("every hair_profiles column is classified: each fact column is guarded, eac
     "SELECT public.hair_profiles_fact_column_defaults_v1() AS facts",
   )
   const factColumns = Object.keys(defaults[0]!.facts).sort()
-  assert.equal(factColumns.length, 26, "3 documents + provenance + revision + 21 derived columns")
+  assert.equal(factColumns.length, 27, "4 documents + provenance + revision + 21 derived columns")
   assert.deepEqual(
     [...factColumns, ...NON_FACT_COLUMNS].sort(),
     columns.map((column) => column.name),
@@ -217,6 +217,42 @@ test("rejected: a direct update of a derived column, of a document, of facts_rev
     ["user_id"],
   )
   assert.deepEqual(await readRow(pg, OWNER), before)
+})
+
+test("rejected: a direct update of shopping_preferences outside the door; a door write succeeds", async (t) => {
+  const pg = await lockedWithFacts(t)
+  const before = await readRow(pg, OWNER)
+  await rejectsOutsideDoor(
+    pg.query(
+      `UPDATE public.hair_profiles SET shopping_preferences = '{"budget":{"kind":"uncapped"}}' WHERE user_id = $1`,
+      [OWNER],
+    ),
+    ["shopping_preferences"],
+  )
+  await rejectsOutsideDoor(
+    pg.query(`INSERT INTO public.hair_profiles (user_id, shopping_preferences) VALUES ($1, '{}')`, [
+      id(4, 4),
+    ]),
+    ["shopping_preferences"],
+  )
+  assert.deepEqual(await readRow(pg, OWNER), before)
+
+  const saved = await saveUserFacts(pg, {
+    userId: OWNER,
+    domain: "shopping_preferences",
+    patch: { budget: { kind: "capped", limitEur: 15, allowExceptions: true } },
+    provenance: {
+      source: { kind: "shopping_preferences_editor" },
+      schemaVersion: 1,
+      at: "2026-10-09T00:00:00.000Z",
+      fields: { budget: "user" },
+    },
+  })
+  assert.equal(saved.status, "ok")
+  const row = (await readRow(pg, OWNER))!
+  assert.deepEqual(row.shopping_preferences, {
+    budget: { kind: "capped", limitEur: 15, allowExceptions: true },
+  })
 })
 
 test("rejected: an insert carrying a fact value, also as an upsert", async (t) => {
@@ -558,6 +594,41 @@ test("the guard and the apply-time check hold the same fact columns and defaults
   assert.equal(literals.length, 2, "one literal in the guard, one in the apply-time check")
   assert.deepEqual(literals[0], literals[1])
   assert.equal(Object.keys(literals[0]!).length, 26)
+})
+
+test("the shopping_preferences migration's guard and apply-time check hold the same 27 fact columns and defaults", async () => {
+  const sql = await readFile(
+    new URL(
+      "../supabase/migrations/20261009130000_user_facts_shopping_preferences.sql",
+      import.meta.url,
+    ),
+    "utf8",
+  )
+  const literals = [...sql.matchAll(/'(\{\s*"diagnostics": null[\s\S]*?\})'::jsonb/g)].map(
+    (match) => JSON.parse(match[1]!) as Record<string, unknown>,
+  )
+  assert.equal(literals.length, 2, "one literal in the guard, one in the defaults function")
+  assert.deepEqual(literals[0], literals[1])
+  assert.equal(Object.keys(literals[0]!).length, 27)
+  assert.equal(literals[0]!.shopping_preferences, null)
+})
+
+test("the shopping_preferences migration refuses to apply over a column it does not classify", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t, { lock: false })
+  await applyUserFactsLock(pg)
+  await pg.exec("ALTER TABLE public.hair_profiles ADD COLUMN shampoo_frequency text")
+  await assert.rejects(
+    pg.exec(
+      await readFile(
+        new URL(
+          "../supabase/migrations/20261009130000_user_facts_shopping_preferences.sql",
+          import.meta.url,
+        ),
+        "utf8",
+      ),
+    ),
+    /hair_profiles_unclassified_column/,
+  )
 })
 
 // ---------------------------------------------------------------------------

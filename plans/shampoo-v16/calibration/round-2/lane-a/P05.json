@@ -1,0 +1,138 @@
+{
+  "blindId": "P05",
+  "identity": {
+    "productName": "ISANA Shampoo & Spülung 2in1 Volumen",
+    "brand": "ISANA",
+    "market": "DE",
+    "packSize": "300 ml",
+    "formulaSource": "frozen packet canonicalInci (tier not stated; treated as approved canonical capture, ID-1)",
+    "normalizedInciCount": 28,
+    "formulaFingerprintSha256": "0498a74c1f5f3b6e06c589d969a79f962f77af8d7cb7c93f0b7cca6a9f56dfb6",
+    "fingerprintMethod": "lane-computed SHA-256 of ID-2-normalized INCI names joined with ', '",
+    "positioningSourceGrades": "retailer only -> low; product name high ('Volumen', '2in1')",
+    "conflicts": "'Soft-Care-Komplex' has no INCI of that name (marketing name) - note only."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate (2) with two prominent buffers Cocamidopropyl Betaine (4) and Coco-Glucoside (11), no reinforcing route; E3 point Parfum (20). Counter-signals (weak refatters Glyceryl Oleate 12, Hydrogenated Palm Glycerides Citrate 16) recorded; the two-buffer convention is robust.",
+      "ruleIds": ["C1", "C3", "C4", "E3"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: several light routes - cationic guar Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (13), Hydrolyzed Wheat Protein (7), weak refatters (12, 16), PEG-3 Distearate (17), humectants Panthenol (9), Glycerin (19). No silicone or payload lipid; C2 not met. The '2in1'/'Spülung' claim does not raise the value (C7). Neighbor low (no substantive system beyond one guar).",
+      "ruleIds": ["§5", "C2", "C7", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "formulaIdentifiers": {"fingerprint": "0498a74c1f5f3b6e06c589d969a79f962f77af8d7cb7c93f0b7cca6a9f56dfb6", "sourceTier": "frozen packet canonical INCI (tier not stated)", "captureDate": "not stated in packet"},
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (13)"],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": ["Glyceryl Oleate (12)", "Hydrogenated Palm Glycerides Citrate (16)"],
+        "protein_film": ["Hydrolyzed Wheat Protein (7)"],
+        "film_former": [],
+        "reset": ["anionic: Sodium Laureth Sulfate (2)", "amphoteric: Cocamidopropyl Betaine (4)", "nonionic: Coco-Glucoside (11)"],
+        "humectantContext": ["Niacinamide (8)", "Panthenol (9)", "Pantolactone (10)", "Propylene Glycol (18)", "Glycerin (19)"],
+        "excluded": ["PEG-3 Distearate (17) - pearlizing/thickening PEG ester (6.4 analog)", "Malva Sylvestris Flower Extract (5), Euterpe Oleracea Fruit Extract (6) - botanical extracts", "Tocopherol (15) - antioxidant", "Magnesium Sulfate (14) - salt"],
+        "unresolved": []
+      },
+      "depositionLoad": {"value": "light", "rationale": "One mid-list guar, a water-soluble wheat protein hydrolysate and two weak refatters; no silicone, lipid or film former."},
+      "persistence": {"value": "low", "rationale": "Protein hydrolysate and weak refatters are weakly retained; single guar without silicone coacervate partner."},
+      "resetCapacity": {"value": "moderate", "rationale": "SLES with betaine and glucoside: effective ordinary rinse."},
+      "counterEvidence": "Three deposition families (cationic polymer, protein film, weak refatter) are present and the protein is fairly early (7); a 2in1 architecture may be intended to deposit.",
+      "whyThisBand": "The combined deposit is light and low-persistence and faces a well-buffered sulfate reset; no noticeable loss of lift expected.",
+      "whyNotNeighborBand": "Not moderate (W2): the families present are one light cationic guar, a water-soluble protein hydrolysate (low persistence) and weak refatters only; there is no silicone, payload lipid, film former or second cationic polymer that could make the combined residue persistent, and a two-buffer SLES reset faces only light routes.",
+      "limitingFactor": "Three light families converge; their actual levels are unknown, so moderate is a realistic one-step neighbor.",
+      "rationale": "Low (depositionLoad light, persistence low, resetCapacity moderate); confidence moderate because multiple light families make moderate realistic.",
+      "ruleIds": ["§6.3", "§6.4", "§6.6", "W2", "W3", "§6.9", "C7", "N-ALT"],
+      "selfCheck": "Fingerprint matches; blind formula judgment; claims ('2in1', 'Volumen') not used; no count/position assigned band; three subjudgments present; W2 reason names the specific light families; no in-lane comparison."
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedConditioningRoutes": [], "limitation": "Volume focus."},
+      "claimRole": "candidate",
+      "counterSignal": "'2in1' conditioning positioning; all descriptive copy is retailer-only (low); guar and refatters deposit a little.",
+      "rationale": "Volume: 'Volumen' is in the exact product name (high, CL-SRC/E1), retailer copy 'verleiht ... feinem Haar Volumen' corroborates (low). Formula compatible: weightPotential low, silicone-free, protein body route, no rich deposition.",
+      "decisionTrace": {"claimDirection": "volume (product name, high)", "formulaCompatible": true, "compatibleRoute": "Hydrolyzed Wheat Protein (7) in a low-weight, silicone-free architecture", "decisionReason": "Single dominant name claim with compatible light formula."},
+      "ruleIds": ["§7.1", "§7.2", "CL-SRC", "E1", "C7", "F-TRACE"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: '2in1' is not a focus and not a richness signal (C7); no distinct moderate+ graded repair/moisture positioning.",
+      "decisionTrace": {"emptyDefaultConsidered": true, "selected": [], "matchingClaims": [], "independentRoutes": [], "exceptionCode": null},
+      "ruleIds": ["§8", "C7", "F-TRACE"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "rationale": "Regular: no frequency, reset, D1 or dandruff trigger.",
+      "decisionTrace": "default regular; no trigger fired.",
+      "ruleIds": ["§9", "U1"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No E2 scalp claim; 'dermatologisch bestätigt und pH-hautneutral' is mildness (SC1).",
+      "ruleIds": ["§10", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "ruleIds": ["§11"]
+    }
+  },
+  "projection": {
+    "thicknessFit": {"fine": "ideal", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitDetail": {
+      "fine": {"confidence": "moderate", "rationale": "T1 W low -> ideal. T4: W neighbor moderate -> acceptable (lower) -> review_thickness_boundary:fine."},
+      "normal": {"confidence": "moderate", "rationale": "T1 W low -> ideal; neighbor moderate keeps ideal."},
+      "coarse": {"confidence": "moderate", "rationale": "T1 W low, C moderate -> acceptable; neighbors (W moderate, C low) keep acceptable."},
+      "ruleIds": ["T1", "T2", "T4", "13.8"]
+    },
+    "weight": "light",
+    "weightDetail": {"confidence": "moderate", "rationale": "W-LIVE low -> light.", "ruleIds": ["W-LIVE"]},
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetsDetail": {
+      "primary": {"target": "ordinary", "bucket": "normal", "route": "balanced", "confidence": "moderate", "rationale": "S-ORDINARY way 1 (no qualifying E2 claim unit). Packet has retailer copy only -> moderate (13.8)."},
+      "secondary": null,
+      "ruleIds": ["S-ORDINARY", "13.8"]
+    },
+    "cleansingIntensity": "regular",
+    "cleansingIntensityDetail": {"confidence": "high", "rationale": "I1 moderate -> regular; high-confidence cleansing -> no I3.", "ruleIds": ["I1", "I3"]},
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserDetail": {"confidence": "moderate", "rationale": "D1 false; D2 not met.", "ruleIds": ["D1", "D2"]},
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [
+      {"code": "review_thickness_boundary", "detail": "fine: weightPotential neighbor moderate would make fine acceptable (T4)."}
+    ],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "Weight low vs moderate with three light families (guar + protein + weak refatters): W2 boundary judgment; lane chose low at moderate confidence."
+  ]
+}

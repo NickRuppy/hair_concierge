@@ -7,7 +7,11 @@ import { useState } from "react"
 import type { Stage1Category } from "@/lib/personal-plan/types"
 import { cn } from "@/lib/utils"
 
-import type { NeedCardGroupViewModel, NeedCardViewModel } from "./plan-start-cards"
+import {
+  needCardProductBadges,
+  type NeedCardGroupViewModel,
+  type NeedCardViewModel,
+} from "./plan-start-cards"
 import { ProductDetailSheet } from "./product-detail-sheet"
 
 // Re-exported so existing importers (the barrel, tests, other client
@@ -16,7 +20,10 @@ import { ProductDetailSheet } from "./product-detail-sheet"
 // header comment for why.
 export {
   isNeedCardGroup,
+  needCardProductBadges,
   NEED_CARD_FALLBACK_NOTE,
+  NEED_CARD_MARKET_SEGMENT_BADGES,
+  NEED_CARD_OVER_BUDGET_BADGE,
   type NeedCardGroupViewModel,
   type NeedCardProduct,
   type NeedCardTone,
@@ -76,6 +83,7 @@ function NeedCardEntry({
   const categoryStyle = CATEGORY_CARD_STYLES[card.category] ?? NEUTRAL_CARD_STYLE
   const product = card.product ?? null
   const subline = product ? [card.targetType, product.priceLabel].filter(Boolean).join(" · ") : null
+  const productBadges = needCardProductBadges(product)
   const Container = shellClassName ? "article" : "div"
 
   return (
@@ -146,6 +154,7 @@ function NeedCardEntry({
               {subline}
             </span>
           ) : null}
+          {productBadges.length ? <NeedCardProductBadges badges={productBadges} /> : null}
           <span className="mt-0.5 line-clamp-2 block text-[9.8px] leading-[1.32] text-[#5f5954]">
             {card.purpose}
           </span>
@@ -182,6 +191,23 @@ function NeedCardEntry({
 
       <ProductDetailSheet card={card} open={open} onOpenChange={setOpen} />
     </Container>
+  )
+}
+
+/** Drogerie/Profi tier and „Über deinem Budget" — rendered only when the preview carried them. */
+export function NeedCardProductBadges({ badges }: { badges: string[] }) {
+  return (
+    <span className="mt-1 flex flex-wrap gap-1" data-plan-start-card-badges>
+      {badges.map((badge) => (
+        <span
+          key={badge}
+          data-plan-start-card-badge={badge}
+          className="rounded-full bg-[rgba(107,80,160,0.12)] px-1.5 py-0.5 text-[8px] font-extrabold uppercase tracking-[0.08em] text-[#5b4690]"
+        >
+          {badge}
+        </span>
+      ))}
+    </span>
   )
 }
 

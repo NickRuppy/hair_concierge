@@ -370,6 +370,7 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
         const bootstrap = await composeStage3BootstrapResponse({
           loaded,
           reviewDecisionBundles: gateway.reviewDecisionBundles.bind(gateway),
+          shoppingBudgetEnvelope: gateway.shoppingBudgetEnvelope?.bind(gateway),
         })
         return response(bootstrap, 200, {
           "Server-Timing": serverTiming(auth.phases),
@@ -457,7 +458,10 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
         return response(result, 200, { "Server-Timing": serverTiming(auth.phases) })
       } catch (error) {
         if (error instanceof Stage3AuthorityMutationError) {
-          if (error.code === "stage3_replacement_candidate_invalid") {
+          if (
+            error.code === "stage3_replacement_candidate_invalid" ||
+            error.code === "budget_required"
+          ) {
             log("conflict", started, error.code, auth.phases)
             return response({ error: error.code }, 409, {
               "Server-Timing": serverTiming(auth.phases),
@@ -559,7 +563,11 @@ type Stage3RouteGateway = Stage3ProductsGateway &
   Partial<
     Pick<
       Stage3AuthorityProductionGateway,
-      "evaluateDecisions" | "resolveDecision" | "resolveDecisions" | "previewDecisionBundles"
+      | "evaluateDecisions"
+      | "resolveDecision"
+      | "resolveDecisions"
+      | "previewDecisionBundles"
+      | "shoppingBudgetEnvelope"
     >
   >
 

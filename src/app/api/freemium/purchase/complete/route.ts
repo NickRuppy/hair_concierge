@@ -43,7 +43,7 @@ import { createClient } from "@/lib/supabase/server"
  * So the sheet does not unlock anything on that callback; it calls this endpoint, which
  * re-reads the Checkout Session from Stripe and decides.
  *
- * Four outcomes the sheet can act on:
+ * Five outcomes the sheet can act on:
  *   - `complete`     — payment verified, account activated, plan admitted and provisioned.
  *     The sheet closes into the unlocked surface.
  *   - `provisioning` — payment verified and the entitlement is LIVE, but the plan itself
@@ -53,6 +53,9 @@ import { createClient } from "@/lib/supabase/server"
  *   - `pending`      — an asynchronous payment method is still settling (or the Session has
  *     no subscription yet). The sheet shows its processing state; the webhook lane finishes
  *     the same work when the payment lands, and a later poll flips to `complete`.
+ *   - `budget_required` — verified and entitled, but the shopping-budget gate is on and no
+ *     budget is saved, so the Routine is deliberately not built yet. The sheet asks the budget
+ *     question and completes again.
  *   - `failed`       — the Session is terminally unusable: expired, abandoned (Stripe still
  *     reports it `open`), or the wrong owner shape. The sheet returns to plan selection with
  *     the free session untouched and one retry.
@@ -115,6 +118,12 @@ const PENDING_ACTIVATION_CODES = new Set([
 export type FreemiumPurchaseCompletionResponse =
   | { status: "complete"; routineReady: boolean }
   | { status: "provisioning"; retryable: boolean; reason: string }
+  /**
+   * Payment verified, entitlement live, plan derived — and the Routine waits for the budget
+   * answer (C7). Not retryable: polling cannot converge. The sheet asks the budget question,
+   * saves it, and calls this endpoint again, which then accepts the Routine.
+   */
+  | { status: "budget_required" }
   | { status: "pending" }
   | { status: "failed"; reason: string }
 
@@ -421,10 +430,19 @@ async function provisionAndAnswer(
     provider: input.provider,
     outcome: provisioning.outcome,
     routineAccepted: provisioning.outcome === "provisioned" ? provisioning.routineAccepted : false,
+    ...(provisioning.outcome === "provisioned" && provisioning.budgetRequired
+      ? { budgetRequired: true }
+      : {}),
   })
 
   if (provisioning.outcome === "provisioned" && provisioning.routineAccepted) {
     return json({ status: "complete", routineReady: true })
+  }
+
+  // The Routine waits for the buyer's budget answer — a distinct, non-retryable state, never
+  // `routine_not_accepted`, whose poll could only loop until the buyer answers.
+  if (provisioning.outcome === "provisioned" && provisioning.budgetRequired) {
+    return json({ status: "budget_required" })
   }
 
   // Admitted, pinned and derived, but the Routine is not ACTIVE yet — the webhook lane

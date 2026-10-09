@@ -312,6 +312,12 @@ function refinedInputHashFor(refinedVersionId: string): string {
 
 function createPersistence(world: World): Stage3ProductionPersistence {
   return {
+    async loadShoppingContext() {
+      return { budget: null, currentConcerns: [], primaryConcern: null }
+    },
+    async loadCatalogPackagePrices() {
+      return []
+    },
     async loadOrCreate({ personalPlanId, refinedVersionId }) {
       const existing = [...world.drafts.values()].find(
         (draft) => draft.refinedVersionId === refinedVersionId && draft.status !== "stale",

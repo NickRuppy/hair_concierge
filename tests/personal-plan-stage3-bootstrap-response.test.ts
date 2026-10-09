@@ -199,3 +199,67 @@ test("Stage 3 bootstrap review completeness excludes inventory dispositions", ()
     true,
   )
 })
+
+test("Stage 3 bootstrap parser accepts the budget_required envelope without review bundles", () => {
+  for (const suggestion of [5, 15, null] as const) {
+    const response = decisionReadyBootstrapResponse()
+    response.authorityEvaluations = []
+    response.fitComparisons = []
+    response.budget = { status: "budget_required", suggestion }
+
+    const parsed = parseStage3BootstrapResponse(response, { personalPlanId, refinedVersionId })
+
+    assert.deepEqual(parsed.budget, { status: "budget_required", suggestion })
+    assert.deepEqual(parsed.fitComparisons, [])
+  }
+})
+
+test("Stage 3 bootstrap parser accepts a saved budget alongside complete review bundles", () => {
+  const response = decisionReadyBootstrapResponse()
+  response.budget = {
+    status: "saved",
+    value: { kind: "capped", limitEur: 15, allowExceptions: false },
+  }
+
+  const parsed = parseStage3BootstrapResponse(response, { personalPlanId, refinedVersionId })
+
+  assert.deepEqual(parsed.budget, response.budget)
+  assert.equal(parsed.fitComparisons.length, 1)
+})
+
+test("Stage 3 bootstrap parser still requires complete reviews with a saved budget", () => {
+  const response = decisionReadyBootstrapResponse()
+  response.fitComparisons = []
+  response.budget = { status: "saved", value: { kind: "uncapped" } }
+  assert.throws(
+    () => parseStage3BootstrapResponse(response, { personalPlanId, refinedVersionId }),
+    (error: unknown) =>
+      error instanceof Stage3BootstrapContractError &&
+      error.violation === "incomplete_decision_reviews",
+  )
+})
+
+test("Stage 3 bootstrap parser rejects a malformed budget envelope", () => {
+  for (const budget of [
+    null,
+    "budget_required",
+    { status: "ready" },
+    { status: "budget_required" },
+    { status: "budget_required", suggestion: 10 },
+    { status: "budget_required", suggestion: null, x: 1 },
+    { status: "saved" },
+    { status: "saved", value: { kind: "capped", limitEur: 10, allowExceptions: true } },
+    { status: "saved", value: { kind: "uncapped" }, suggestion: 5 },
+  ]) {
+    const response = decisionReadyBootstrapResponse() as Record<string, unknown>
+    response.authorityEvaluations = []
+    response.fitComparisons = []
+    response.budget = budget
+    assert.throws(
+      () => parseStage3BootstrapResponse(response, { personalPlanId, refinedVersionId }),
+      (error: unknown) =>
+        error instanceof Stage3BootstrapContractError &&
+        error.violation === "invalid_budget_envelope",
+    )
+  }
+})

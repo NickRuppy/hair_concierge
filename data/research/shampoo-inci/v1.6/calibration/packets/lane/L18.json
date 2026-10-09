@@ -1,0 +1,65 @@
+{
+  "blindId": "L18",
+  "productName": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
+  "brand": "Head & Shoulders",
+  "packSize": "250 ml",
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Sodium Xylenesulfonate",
+    "Cocamidopropyl Betaine",
+    "Sodium Citrate",
+    "Piroctone Olamine",
+    "Dimethiconol",
+    "Citric Acid",
+    "Cocamide MEA",
+    "Glycol Distearate",
+    "Sodium Chloride",
+    "Parfum",
+    "Dimethicone",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Sodium Benzoate",
+    "Menthol",
+    "TEA-Dodecylbenzenesulfonate",
+    "Sodium Salicylate",
+    "Tetrasodium EDTA",
+    "Trideceth-10",
+    "Sodium Hydroxide",
+    "Hexyl Cinnamal",
+    "Butylene Glycol",
+    "Aloe Barbadensis Leaf Juice",
+    "Linalool",
+    "Hydroxycitronellal",
+    "Geraniol",
+    "Citronellol",
+    "Acetic Acid",
+    "Oryza Sativa Bran Extract",
+    "Triethylene Glycol",
+    "Propylene Glycol",
+    "Benzyl Alcohol",
+    "CI 42090",
+    "CI 19140"
+  ],
+  "positioningSources": [
+    {
+      "sourceType": "retailer",
+      "claimsVerbatim": "Anti-Schuppen-Shampoo | Mit Aloe Vera | Schutz vor Schuppen und Feuchtigkeitsverlust | Einfache Anwendung | Das Head & Shoulders DermaXPro Beruhigende Pflege Anti-Schuppen-Shampoo wurde speziell für trockene, juckende Kopfhaut entwickelt. Die Formel mit Aloe Vera-Extrakt, Ceramiden und Pirocton-Olamin kann bei Juckreiz helfen, sowie dabei den Ceramidespiegel der Haut wiederherzustellen. Das Shampoo spendet zudem Feuchtigkeit und kann vor Schuppenbildung schützen. Es reinigt sanft, pflegt die Kopfhaut intensiv und sorgt für ein schuppenfreies Haargefühl. | Wirkung: Anti-Schuppen, Pflege, Feuchtigkeit",
+      "directionsVerbatim": ""
+    },
+    {
+      "sourceType": "retailer",
+      "claimsVerbatim": "Wussten Sie, dass Ihre trockene, schuppige Kopfhaut mehr als nur Feuchtigkeit braucht? Bei trockener Kopfhaut fehlt es der Haut an Ceramiden - den natürlichen Lipiden, die normalerweise in der Haut vorkommen und helfen, die Zellen zusammenzuhalten und Feuchtigkeitsverlust zu verhindern. Das Head & Shoulders DermaXPro Beruhigende Pflege Anti-Schuppen-Shampoo mit Aloe Vera-Extrakt und Ceramide-Komplex (Piroctone Olamine + Ceramide) wirkt auf der Kopfhautoberfläche und hilft, den Ceramidespiegel wiederherzustellen und das Austrocknen der Haut zu verhindern. Es wurde speziell für juckende* Kopfhaut entwickelt und es ist klinisch nachgewiesen, dass es die Haut-Ceramide wiederherstellt und den Juckreiz* der Kopfhaut reduziert. Das Ergebnis? Eine mit Feuchtigkeit versorgte, beruhigte und schuppenfreie** Kopfhaut, damit Ihr Haar in voller Pracht erstrahlen kann. | beruhigend bei trockener, juckender Kopfhaut (Juckreiz verbunden mit Schuppen) | stärkt die natürliche Hautbarriere & stellt das natürliche Gleichgewicht der Kopfhaut wieder her | verhindert Trockenheit & Juckreiz verbunden mit Schuppen bei regelmäßiger Anwendung | Anti-Schuppen Wirkung mit Pirocton Olamin - klinisch getestet | dermatologisch getestet | *Juckreiz aufgrund von Schuppen **Sichtbare Schuppen, ab der ersten Anwendung",
+      "directionsVerbatim": "Shampoo im Haar verteilen. Aufschäumen, dann ausspülen."
+    },
+    {
+      "sourceType": "manufacturer",
+      "claimsVerbatim": "Head & Shoulders DERMA X PRO Shampoo gegen Kopfhautjucken, reinigt und stärkt die Kopfhautbarriere. | Sofortige Linderung juckender Kopfhaut & geschmeidiges Haar (image text) | Text zu Aloe Vera Extrakt und Ceramide-Komplex zur Beruhigung und Stärkung der Kopfhautbarriere (image alt text) | Beruhigend bei trockener, juckender Kopfhaut (Juckreiz verbunden mit Schuppen) | Stärkt die natürliche Hautbarriere & stellt das natürliche Gleichgewicht der Kopfhaut wieder her | Verhindert Trockenheit & Juckreiz verbunden mit Schuppen bei regelmäßiger Anwendung | Anti-Schuppen Wirkung mit Pirocton Olamin - klinisch getestet | Feuchtigkeitsspendend mit Kaktus-Extrakt, aktiver Aloe & Vitamin E | Dermatologisch getestet | Wussten Sie, dass trockene, juckende Kopfhaut mehr als nur Feuchtigkeit benötigt? | Das Ergebnis? Eine mit Feuchtigkeit versorgte, schuppenfreie* Kopfhaut. | *sichtbare Schuppen, bei regelmäßiger Anwendung",
+      "directionsVerbatim": "Anwendung: Shampoo ins nasse Haar einmassieren, ausspülen und Conditioner verwenden."
+    },
+    {
+      "sourceType": "retailer",
+      "claimsVerbatim": "Mit Kaktus-Extrakt, aktiver Aloe und Vitamin E für trockene, juckende Kopfhaut. (Besonderheiten field; no INCI on page)",
+      "directionsVerbatim": ""
+    }
+  ]
+}

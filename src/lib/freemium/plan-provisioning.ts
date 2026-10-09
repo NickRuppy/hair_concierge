@@ -55,6 +55,21 @@ export type FreemiumProvisioningResult =
       needVersionId: string
       /** `false` when the plan is entitled and derived but has no accepted Routine yet. */
       routineAccepted: boolean
+      budgetRequired?: never
+    }
+  /**
+   * Entitled and derived, and the Routine is deliberately NOT built yet: the shopping-budget
+   * gate is on and the buyer has not saved a budget (C7). Not a failure and not retryable —
+   * nothing converges until the buyer answers the budget question, after which completion runs
+   * again and accepts the Routine.
+   */
+  | {
+      outcome: "provisioned"
+      enrollmentSourceId: string
+      personalPlanId: string
+      needVersionId: string
+      routineAccepted: false
+      budgetRequired: true
     }
   /** No attached Personal-Plan quiz artifact — nothing to derive a plan from. */
   | { outcome: "no_quiz_artifact" }
@@ -95,6 +110,8 @@ export type AcceptInitialRoutineResult =
    * call converges once the winner commits.
    */
   | "in_progress"
+  /** The shopping-budget gate is on and no budget is saved; nothing was written. */
+  | "budget_required"
   | "unavailable"
 
 export type FreemiumProvisioningDependencies = {
@@ -215,11 +232,17 @@ export function createFreemiumProvisioningService(deps: FreemiumProvisioningDepe
         accepted = "unavailable"
       }
 
-      return {
+      const provisioned = {
         outcome: "provisioned",
         enrollmentSourceId: admission.id,
         personalPlanId: need.personalPlanId,
         needVersionId: need.needVersionId,
+      } as const
+      if (accepted === "budget_required") {
+        return { ...provisioned, routineAccepted: false, budgetRequired: true }
+      }
+      return {
+        ...provisioned,
         routineAccepted: accepted === "accepted" || accepted === "already_accepted",
       }
     },

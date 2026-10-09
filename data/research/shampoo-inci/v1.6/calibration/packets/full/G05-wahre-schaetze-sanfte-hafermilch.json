@@ -1,0 +1,101 @@
+{
+  "slot": "G05",
+  "productId": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+  "name": "Wahre Schätze Sanfte Hafermilch (Garnier Wahre Schätze Beruhigendes Shampoo Sanfte Hafermilch)",
+  "brand": "Wahre Schätze (Garnier)",
+  "packSize": "UNRESOLVED: prior record/catalog says 250 ml bound to GTIN 3600542461658, but Garnier DE and dm show 3600542461658 = 300 ml and 250 ml = 3600542461542. Formula is identical across sizes.",
+  "gtins": [
+    "3600542461658",
+    "3600542461542"
+  ],
+  "sources": [
+    {
+      "url": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/sanfte-hafermilch/beruhigendes-shampoo",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "manufacturer_de",
+      "gtinShown": "One page, one INCI, four sizes with EANs in page markup: 250 ml = 3600542461542 (page default variant, dimension35 \"250 ml\"), 300 ml = 3600542461658, 400 ml = 3600542461450, 1000 ml = 3600542499668 (size per product image file names and page analytics)",
+      "inciVerbatim": "1229017 - INGREDIENTS: AQUA / WATER • SODIUM LAURETH SULFATE • COCO-BETAINE • GLYCOL DISTEARATE • GLYCERIN • GLYCINE SOJA OIL / SOYBEAN OIL • ALOE BARBADENSIS LEAF JUICE • AVENA SATIVA KERNEL EXTRACT / OAT KERNEL EXTRACT • ORYZA SATIVA STARCH / RICE STARCH • PPG-5-CETETH-20 • PEG-55 PROPYLENE GLYCOL OLEATE • PEG-60 HYDROGENATED CASTOR OIL • DICAPRYLYL ETHER • DILAURYL THIODIPROPIONATE • CARBOMER • SODIUM CHLORIDE • SODIUM HYDROXIDE • PROPYLENE GLYCOL • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CITRIC ACID • XANTHAN GUM • POLYQUATERNIUM-7 • TOCOPHEROL • POTASSIUM SORBATE • SODIUM BENZOATE • SALICYLIC ACID • PARFUM / FRAGRANCE (F.I.L. C253486/1).",
+      "claimsVerbatim": "Das Garnier Wahre Schätze Beruhigendes Shampoo Sanfte Hafermilch spendet Feuchtigkeit und sorgt für geschmeidiges Haar. Das Shampoo wirkt beruhigend auf die juckende Kopfhaut. Dank der enthaltenen Reiscreme und Hafermilch fühlt sich das Haar wieder gesund und geschmeidig an. Die beruhigende Rezeptur ist silikonfrei und sorgt so für ein natürliches Haargefühl. Durch die hochverträgliche Formel eignet sich das Shampoo ideal für empfindliches Haar und sensible Kopfhaut. | Das Wahre Schätze Shampoo Sanfte Hafermilch von Garnier ist besonders für sensible Kopfhaut und empfindliche Haare geeignet. Das Shampoo ist allergikerfreundlich, hochverträglich und ECARF-zertifiziert. | Das Wahre Schätze Beruhigendes Shampoo Sanfte Hafermilch überzeugt mit natürlichen Extrakten und einer silikonfreien Formel. Für ein natürliches Haargefühl und Erleichterung bei juckender Kopfhaut sorgen die Inhaltsstoffe Reiscreme und Hafermilch.",
+      "directionsVerbatim": "Für gesund aussehendes und geschmeidiges Haar das Garnier Wahre Schätze Shampoo Sanfte Hafermilch sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-shampoo-sanfte-hafermilch-empfindliches-haar-und-sensible-kopfhaut/p/3600542461542",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "retailer_rossmann_de",
+      "gtinShown": "3600542461542 (URL), \"250 ml (1 L = 9,96 €)\", Rossmann Artikelnummer 122132",
+      "inciVerbatim": "1229017 - INGREDIENTS: AQUA / WATER • SODIUM LAURETH SULFATE • COCO-BETAINE • GLYCOL DISTEARATE • GLYCERIN • GLYCINE SOJA OIL / SOYBEAN OIL • ALOE BARBADENSIS LEAF JUICE • AVENA SATIVA KERNEL EXTRACT / OAT KERNEL EXTRACT • ORYZA SATIVA STARCH / RICE STARCH • PPG-5-CETETH-20 • PEG-55 PROPYLENE GLYCOL OLEATE • PEG-60 HYDROGENATED CASTOR OIL • DICAPRYLYL ETHER • DILAURYL THIODIPROPIONATE • CARBOMER • SODIUM CHLORIDE • SODIUM HYDROXIDE • PROPYLENE GLYCOL • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CITRIC ACID • XANTHAN GUM • POLYQUATERNIUM-7 • TOCOPHEROL • POTASSIUM SORBATE • SODIUM BENZOATE • SALICYLIC ACID • PARFUM / FRAGRANCE (F.I.L. C253486/1).",
+      "claimsVerbatim": "Garnier Wahre Schätze Beruhigendes Shampoo Sanfte Hafermilch nährt und verwöhnt empfindliches Haar intensiv – vom Ansatz bis in die Spitzen. Das Shampoo vereint Reiscreme und Bio-Hafermilch in einer cremig-sanften Pflegerezeptur für besonders geschmeidiges Haar. Die Hafermilch ist für ihre beruhigende Wirkung auf die empfindliche und juckende Kopfhaut bekannt; während die Reiscreme pflegende; schützende und feuchtigkeitsspendende Eigenschaften besitzt. Die hochverträgliche Formel wurde durch ECARF zertifiziert. Für eine beruhigte Kopfhaut und gepflegtere Haare. | hochverträglich - ohne Silikone; für ein natürliches Haargefühl | hochverträgliche Rezeptur für eine beruhigte Kopfhaut und gepflegtere Haare | schenkt dem Haar Feuchtigkeit | für empfindliches Haar und sensible Kopfhaut | Flaschenkörper aus 100% recyceltem Plastik & recycelbar. Nachfüllbar",
+      "directionsVerbatim": "Für gesund aussehendes; strahlend schönes Haar das Garnier Wahre Schätze Shampoo Sanfte Hafermilch sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1670195/",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "retailer_dm_de",
+      "gtinShown": "3600542461658 (JSON-LD gtin), title \"Shampoo Sanfte Hafermilch, 300 ml\"",
+      "inciVerbatim": "INGREDIENTS: AQUA / WATER • SODIUM LAURETH SULFATE • COCO-BETAINE • GLYCOL DISTEARATE • GLYCERIN • GLYCINE SOJA OIL / SOYBEAN OIL • ALOE BARBADENSIS LEAF JUICE • AVENA SATIVA KERNEL EXTRACT / OAT KERNEL EXTRACT • ORYZA SATIVA STARCH / RICE STARCH • PPG-5-CETETH- 20 • PEG-55 PROPYLENE GLYCOL OLEATE • PEG-60 HYDROGENATED CASTOR OIL • DICAPRYLYL ETHER • DILAURYL THIODIPROPIONATE • CARBOMER • SODIUM CHLORIDE • SODIUM HYDROXIDE • PROPYLENE GLYCOL • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CITRIC ACID • XANTHAN GUM • POLYQUATERNIUM-7 • TOCOPHEROL • POTASSIUM SORBATE • SODIUM BENZOATE • SALICYLIC ACID • PARFUM / FRAGRANCE",
+      "claimsVerbatim": "Wirkung: Pflege | Produkteigenschaften: ohne Silikone | Haartyp: alle Haartypen (Produktmerkmale)",
+      "directionsVerbatim": "Für gesund aussehendes; strahlend schönes Haar das Garnier Wahre Schätze Shampoo Sanfte Hafermilch sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen."
+    },
+    {
+      "url": "repo: data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/formula-source.json",
+      "retrievedAt": "2026-08-10 (prior capture)",
+      "sourceType": "prior_manufacturer_de",
+      "gtinShown": "3600542461658 with packSize \"250 ml\" (this binding is what is now contradicted)",
+      "inciVerbatim": "1229017 - INGREDIENTS: AQUA / WATER • SODIUM LAURETH SULFATE • COCO-BETAINE • GLYCOL DISTEARATE • GLYCERIN • GLYCINE SOJA OIL / SOYBEAN OIL • ALOE BARBADENSIS LEAF JUICE • AVENA SATIVA KERNEL EXTRACT / OAT KERNEL EXTRACT • ORYZA SATIVA STARCH / RICE STARCH • PPG-5-CETETH-20 • PEG-55 PROPYLENE GLYCOL OLEATE • PEG-60 HYDROGENATED CASTOR OIL • DICAPRYLYL ETHER • DILAURYL THIODIPROPIONATE • CARBOMER • SODIUM CHLORIDE • SODIUM HYDROXIDE • PROPYLENE GLYCOL • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CITRIC ACID • XANTHAN GUM • POLYQUATERNIUM-7 • TOCOPHEROL • POTASSIUM SORBATE • SODIUM BENZOATE • SALICYLIC ACID • PARFUM / FRAGRANCE (F.I.L. C253486/1)",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "pack_gtin_binding",
+      "summary": "Catalog/prior research bound GTIN 3600542461658 to the 250 ml pack. Garnier DE and dm.de show 3600542461658 = 300 ml (dm article 1670195); the 250 ml pack is 3600542461542 (Garnier page default variant; Rossmann URL/250 ml). The ingredient list is identical for 250 ml and 300 ml sources, so the formula freeze is unaffected, but pack size/GTIN pairing in the catalog needs review."
+    },
+    {
+      "type": "cosmetic_inci_variance",
+      "summary": "Not a formula conflict: dm omits the \"(F.I.L. C253486/1)\" fragrance code and shows \"PPG-5-CETETH- 20\" with a stray space; Garnier/Rossmann carry a trailing period and a \"1229017 - \" article prefix. Canonical list uses the Garnier page text without prefix/trailing period."
+    }
+  ],
+  "canonicalReason": "Manufacturer DE page (Garnier) is the exact brand source and agrees verbatim (modulo cosmetic variance) with Rossmann (250 ml, GTIN ...542) and dm (300 ml, GTIN ...658) and with the prior capture. Formula is shared across sizes on the manufacturer page. Pack/GTIN pairing is the only open item.",
+  "identityConfidence": "moderate",
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Prior v1.4 fingerprint (normalized with slashes collapsed, F.I.L. note dropped, comma-joined) d66a4eec70514e9f075ae9ded2ab737377540ad256c216ed484986e0b3386730 - same ingredients, different normalization.",
+    "Catalog brand string 'Wahre Schätze' vs retailer/manufacturer brand 'Garnier Wahre Schätze'; Rossmann title is 'Shampoo Sanfte Hafermilch Empfindliches Haar & Sensible Kopfhaut'; dm 400 ml listing (article 1670304) is 'Shampoo Sanfte Hafermilch, empfindliches Haar, 400 ml' (GTIN ...450 per Garnier page) - not fetched.",
+    "dm.de GTIN search for 3600542461658 returns no hit, but the dm product page 1670195 (300 ml) carries that GTIN in JSON-LD; WebSearch snippet states it is currently not available online.",
+    "Catalog list of other GTINs found: refill pack 3600542617710 (250 ml Nachfüllpack, separate product, not bound here); an eBay listing shows an unrelated GTIN 3600541887602 (ignored). The 'Garnier mildes 2in1 Kindershampoo Sanfte Hafermilch' (3600542463348) is a different product.",
+    "Claims centre on soothing for sensitive/itchy scalp via oat milk and rice cream, ECARF-certified 'hochverträglich', silicone-free; Garnier page states 'Das Shampoo wirkt beruhigend auf die juckende Kopfhaut'."
+  ],
+  "canonicalInci": [
+    "AQUA / WATER",
+    "SODIUM LAURETH SULFATE",
+    "COCO-BETAINE",
+    "GLYCOL DISTEARATE",
+    "GLYCERIN",
+    "GLYCINE SOJA OIL / SOYBEAN OIL",
+    "ALOE BARBADENSIS LEAF JUICE",
+    "AVENA SATIVA KERNEL EXTRACT / OAT KERNEL EXTRACT",
+    "ORYZA SATIVA STARCH / RICE STARCH",
+    "PPG-5-CETETH-20",
+    "PEG-55 PROPYLENE GLYCOL OLEATE",
+    "PEG-60 HYDROGENATED CASTOR OIL",
+    "DICAPRYLYL ETHER",
+    "DILAURYL THIODIPROPIONATE",
+    "CARBOMER",
+    "SODIUM CHLORIDE",
+    "SODIUM HYDROXIDE",
+    "PROPYLENE GLYCOL",
+    "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+    "CITRIC ACID",
+    "XANTHAN GUM",
+    "POLYQUATERNIUM-7",
+    "TOCOPHEROL",
+    "POTASSIUM SORBATE",
+    "SODIUM BENZOATE",
+    "SALICYLIC ACID",
+    "PARFUM / FRAGRANCE (F.I.L. C253486/1)"
+  ],
+  "inciFingerprintSha256": "22bedf0cd1a87fec074e6fba8724488bdfc5b3c97a6aa424e3512c022d440014",
+  "normalization": "Split the canonical raw INCI on ',' (or '•' where the source uses bullets); per ingredient: lower-case, trim, collapse internal whitespace; drop leading code/prefix text that is not an ingredient (e.g. '1229017 - INGREDIENTS:'); keep asterisks, parentheses and slashes as published; join the normalized ingredients with '|' and sha256 the UTF-8 string. Note: the v1.3/v1.4 fingerprints in earlier files were computed over ', '-joined (comma, no space) lists, so they differ from this '|' fingerprint even for identical lists."
+}

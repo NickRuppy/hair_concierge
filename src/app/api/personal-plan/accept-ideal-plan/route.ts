@@ -20,6 +20,7 @@ import {
   isPersonalPlanStage2Enabled,
   isPersonalPlanStage3Enabled,
   isPersonalPlanStage4Enabled,
+  isShoppingBudgetEnabled,
 } from "@/lib/personal-plan/release"
 import { createInitialRoutineCandidateCompiler } from "@/lib/personal-plan/routine-candidate-compiler"
 import {
@@ -73,6 +74,7 @@ const STATUS_BY_CODE = {
   acceptance_not_ready: 409,
   refinement_in_progress: 409,
   plan_already_accepted: 409,
+  budget_required: 409,
 } as const
 
 export type AcceptIdealPlanRouteDeps = {
@@ -149,7 +151,10 @@ export const POST = createAcceptIdealPlanRouteHandler({
           stage2Enabled: isPersonalPlanStage2Enabled(),
           stage3Enabled: isPersonalPlanStage3Enabled(),
           stage4Enabled: isPersonalPlanStage4Enabled(),
+          shoppingBudgetEnabled: isShoppingBudgetEnabled(),
         },
+        loadShoppingBudget: async (id) =>
+          (await createSupabaseStage3ProductionPersistence(admin).loadShoppingContext(id)).budget,
         refinementPersistence: createSupabaseStage2RefinementPersistence(admin),
         saveFacts: (factsInput) => saveUserFacts(admin, factsInput),
         loadKnownCareAnswers: (id) => loadKnownCareAnswers(admin, id),

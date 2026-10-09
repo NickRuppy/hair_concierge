@@ -366,3 +366,175 @@ test("research-only Bondbuilder availability does not relax other curated catego
     false,
   )
 })
+
+test("historical Bondbuilder receipts keep replaying after products.market_segment is added and set", async (t) => {
+  const pg = await database(t)
+  const input = await request("P04")
+  await pg.exec("SET ROLE service_role")
+  const productId = (
+    await pg.query<{ receipt: { product_id: string } }>(
+      "SELECT public.bondbuilder_internal_admit_v1($1,$2,$3,'nick') AS receipt",
+      [input, digest(input), "c0000000-0000-4000-8000-0000000000a4"],
+    )
+  ).rows[0].receipt.product_id
+  await pg.exec("RESET ROLE")
+
+  const readback = async () =>
+    (
+      await pg.query<{ readback: Record<string, unknown> }>(
+        "SELECT public.bondbuilder_internal_admission_readback_v1($1) AS readback",
+        [productId],
+      )
+    ).rows[0].readback
+  const researchPreimage = async () =>
+    (
+      await pg.query<{ preimage: Record<string, unknown> }>(
+        "SELECT public.bondbuilder_research_preimage_v1($1) AS preimage",
+        [productId],
+      )
+    ).rows[0].preimage
+  const activate = async (preimage: unknown, dryRun: boolean) => {
+    await pg.exec("SET ROLE service_role")
+    try {
+      return (
+        await pg.query<{ receipt: { outcome: string } }>(
+          "SELECT public.bondbuilder_catalogue_activate_v1($1,$2,$3,'nick',$4) AS receipt",
+          [productId, preimage, "d0000000-0000-4000-8000-0000000000a4", dryRun],
+        )
+      ).rows[0].receipt.outcome
+    } finally {
+      await pg.exec("RESET ROLE")
+    }
+  }
+  const available = async () =>
+    (
+      await pg.query<{ available: boolean }>(
+        "SELECT public.bondbuilder_catalogue_available_v1($1) AS available",
+        [productId],
+      )
+    ).rows[0].available
+
+  // Historical state: admission receipt stored and activation applied BEFORE the column exists.
+  const historicalReadback = await readback()
+  assert.equal(await activate(historicalReadback, false), "applied")
+  const postActivationReadback = await readback()
+  const historicalPreimage = await researchPreimage()
+
+  await pg.exec(
+    await readFile(
+      new URL("supabase/migrations/20261009140000_products_market_segment.sql", ROOT),
+      "utf8",
+    ),
+  )
+
+  // Column exists and is nullable, constrained, and stays out of both serialized images.
+  assert.deepEqual(
+    (
+      await pg.query(
+        "SELECT is_nullable FROM information_schema.columns WHERE table_name='products' AND column_name='market_segment'",
+      )
+    ).rows,
+    [{ is_nullable: "YES" }],
+  )
+  assert.equal(await available(), true, "stored admission readback still compares equal")
+  assert.deepEqual(await readback(), postActivationReadback)
+  assert.deepEqual(await researchPreimage(), historicalPreimage)
+  assert.equal(await activate(historicalReadback, false), "already_applied")
+
+  // Backfill-style write: setting the segment must not change any receipt image either.
+  await pg.query("UPDATE public.products SET market_segment='professional' WHERE id=$1", [
+    productId,
+  ])
+  const afterSegment = await readback()
+  assert.deepEqual(afterSegment, postActivationReadback)
+  assert.equal(
+    Object.prototype.hasOwnProperty.call(afterSegment.product as object, "market_segment"),
+    false,
+  )
+  assert.deepEqual(await researchPreimage(), historicalPreimage)
+  assert.equal(await available(), true)
+  assert.equal(await activate(historicalReadback, false), "already_applied")
+
+  // The value CHECK rejects unknown buckets and still allows NULL.
+  await assert.rejects(
+    pg.query("UPDATE public.products SET market_segment='luxury' WHERE id=$1", [productId]),
+    /products_market_segment_value_check/,
+  )
+  await pg.query("UPDATE public.products SET market_segment=NULL WHERE id=$1", [productId])
+
+  // The re-created functions keep their original privileges.
+  await pg.exec("SET ROLE anon")
+  await assert.rejects(
+    pg.query("SELECT public.bondbuilder_internal_admission_readback_v1($1)", [productId]),
+    /permission denied/,
+  )
+  await assert.rejects(
+    pg.query("SELECT public.bondbuilder_research_preimage_v1($1)", [productId]),
+    /permission denied/,
+  )
+  await pg.exec("RESET ROLE")
+  assert.deepEqual(
+    (
+      await pg.query(
+        `SELECT has_function_privilege('service_role', 'public.bondbuilder_research_preimage_v1(uuid)', 'EXECUTE') AS preimage,
+                has_function_privilege('service_role', 'public.bondbuilder_internal_admission_readback_v1(uuid)', 'EXECUTE') AS readback,
+                has_function_privilege('authenticated', 'public.bondbuilder_research_preimage_v1(uuid)', 'EXECUTE') AS preimage_auth,
+                has_function_privilege('authenticated', 'public.bondbuilder_internal_admission_readback_v1(uuid)', 'EXECUTE') AS readback_auth`,
+      )
+    ).rows,
+    [{ preimage: true, readback: true, preimage_auth: false, readback_auth: false }],
+  )
+
+  // The approved backfill classifies recommended rows by brand without moving updated_at, so
+  // whole-row receipt images stay equal, and from then on rejects a recommended product without
+  // a segment. Triggers are switched off only to stage the pilot as recommended (the curated
+  // publication gate would refuse it); CHECKs stay enforced throughout.
+  await pg.exec("SET session_replication_role = replica")
+  await pg.query("UPDATE public.products SET is_chaarlie_recommended=true WHERE id=$1", [productId])
+  await pg.exec("SET session_replication_role = origin")
+  // Production's timestamp trigger (00001_initial_schema.sql), absent from this local chain.
+  await pg.exec(`CREATE TRIGGER set_updated_at_products BEFORE UPDATE ON public.products
+    FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column()`)
+  const recommendedReadback = await readback()
+  const updatedAtBefore = (
+    await pg.query<{ updated_at: string }>(
+      "SELECT updated_at::text FROM public.products WHERE id=$1",
+      [productId],
+    )
+  ).rows[0].updated_at
+  await pg.exec(
+    await readFile(
+      new URL("supabase/migrations/20261009150000_products_market_segment_backfill.sql", ROOT),
+      "utf8",
+    ),
+  )
+  assert.deepEqual(
+    (
+      await pg.query("SELECT market_segment, updated_at::text FROM public.products WHERE id=$1", [
+        productId,
+      ])
+    ).rows,
+    [{ market_segment: "drugstore", updated_at: updatedAtBefore }],
+  )
+  assert.deepEqual(await readback(), recommendedReadback)
+  // The timestamp trigger is back on for ordinary writes.
+  await pg.query("UPDATE public.products SET sort_order = sort_order WHERE id=$1", [productId])
+  assert.notEqual(
+    (
+      await pg.query<{ updated_at: string }>(
+        "SELECT updated_at::text FROM public.products WHERE id=$1",
+        [productId],
+      )
+    ).rows[0].updated_at,
+    updatedAtBefore,
+  )
+  await pg.exec("SET session_replication_role = replica")
+  try {
+    await assert.rejects(
+      pg.query("UPDATE public.products SET market_segment=NULL WHERE id=$1", [productId]),
+      /products_recommended_requires_market_segment/,
+    )
+  } finally {
+    await pg.exec("SET session_replication_role = origin")
+  }
+})

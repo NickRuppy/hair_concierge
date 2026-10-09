@@ -1,0 +1,70 @@
+{
+  "slot": "U2-06",
+  "productId": null,
+  "name": "Wahre Schätze Pflegendes Shampoo Kokosmilch & Macadamia (Normales & Trockenes Haar)",
+  "brand": "Garnier Wahre Schätze",
+  "packSize": "250 ml",
+  "gtins": [
+    "3600542462402"
+  ],
+  "sources": [
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-shampoo-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462402",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "german_retailer_exact_gtin_url",
+      "gtinShown": "3600542462402 (URL ends /p/3600542462402)",
+      "inciVerbatim": "1161774 G - INGREDIENTS: AQUA / WATER • SODIUM LAURETH SULFATE • COCO-BETAINE • GLYCERIN • GLYCOL DISTEARATE • SODIUM CHLORIDE • PARFUM / FRAGRANCE • MACADAMIA INTEGRIFOLIA SEED OIL • COCOS NUCIFERA OIL / COCONUT OIL • CARBOMER • PPG-5-CETETH-20 • SODIUM HYDROXIDE • CITRIC ACID • POLYQUATERNIUM-10 • SODIUM BENZOATE • LINALOOL • LIMONENE • BENZYL ALCOHOL • BENZYL SALICYLATE (F.I.L. Z290484/1).",
+      "claimsVerbatim": "Das Garnier Wahre Schätze Pflegendes Shampoo Kokosmilch und Macadamia verwöhnt normales bis trockenes Haar mit einer intensiven Pflege. | Das Garnier Wahre Schätze Pflegendes Shampoo Kokosmilch und Macadamia verwöhnt trockenes Haar mit einer intensiven Pflege. Diese pflegende Rezeptur des Shampoos sorgt für fühlbar weiches, geschmeidiges Haar, das vom Ansatz bis in die Spitzen seidig glänzt. Das cremige Garnier Wahre Schätze Nährendes Shampoo reinigt sanft und verwöhnt außerdem mit einem sinnlichen Duft.",
+      "directionsVerbatim": "Für gesund aussehendes, strahlend schönes Haar das Garnier Wahre Schätze Shampoo Kokosmilch & Macadamia sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen.",
+      "note": "Price 2,49 EUR, 250 ml. Bullet-separated list with a leading batch code '1161774 G - INGREDIENTS:'. Warnhinweis: 'Nicht für Kinder unter 3 Jahren verwenden. Bei Kontakt mitden Augen diese sofort spülen.' Contact: GARNIER, Paris."
+    },
+    {
+      "url": "https://www.budni.de/sortiment/produkte/5399571009",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "german_retailer_gtin_on_page",
+      "gtinShown": "3600542462402 (shown in page text)",
+      "inciVerbatim": "Aqua/Water, Sodium Laureth Sulfate, Coco-Betaine, Glycerin, Glycol Distearate, Sodium Chloride, Parfum/Fragrance, Macadamia Integrifolia Seed Oil, Cocos Nucifera Oil/Coconut Oil, Carbomer, Ppg-5-Ceteth-20, Sodium Hydroxide, Citric Acid, Polyquaternium-10, Sodium Benzoate, Linalool, Limonene, Benzyl Alcohol, Benzyl Salicylate (F.I.L. Z70019986/1)",
+      "claimsVerbatim": "pflegendes Shampoo | ohne Silikone, für ein natürliches Haargefühl | mit Kokosmilch und Macadamia | pflegt und spendet Geschmeidigkeit",
+      "directionsVerbatim": null,
+      "note": "Title 'Wahre Schätze Pflegendes Shampoo Kokosmilch und Acadamia'. Origin listed as Sambia (as shown). No directions shown."
+    }
+  ],
+  "conflicts": [
+    {
+      "field": "inci_formatting_and_batch_code",
+      "between": [
+        "rossmann.de",
+        "budni.de"
+      ],
+      "description": "Same 19 ingredients in the same order. Differences are formatting only: Rossmann upper-case, bullet-separated, spaces around slashes ('AQUA / WATER'), leading code '1161774 G - INGREDIENTS:'; Budni mixed-case, comma-separated, no spaces around slashes ('Aqua/Water', 'Ppg-5-Ceteth-20'). The trailing 'F.I.L.' batch code differs (Z290484/1 vs Z70019986/1). Not an ingredient difference."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua/Water",
+    "Sodium Laureth Sulfate",
+    "Coco-Betaine",
+    "Glycerin",
+    "Glycol Distearate",
+    "Sodium Chloride",
+    "Parfum/Fragrance",
+    "Macadamia Integrifolia Seed Oil",
+    "Cocos Nucifera Oil/Coconut Oil",
+    "Carbomer",
+    "PPG-5-Ceteth-20",
+    "Sodium Hydroxide",
+    "Citric Acid",
+    "Polyquaternium-10",
+    "Sodium Benzoate",
+    "Linalool",
+    "Limonene",
+    "Benzyl Alcohol",
+    "Benzyl Salicylate"
+  ],
+  "canonicalReason": "Rossmann exact-GTIN list and Budni GTIN-on-page list contain the same 19 ingredients in the same order; they differ only in typography and in the trailing F.I.L. batch code, which is not an ingredient.",
+  "inciFingerprintSha256": "e345da34eca54dc3be5a3e2769b01adce05e2e858c387cd0a6fd8bcdf0bc04f7",
+  "normalization": "Remove the trailing '(F.I.L. ...)' batch code and any leading batch-code prefix; split on commas or '•'; per item trim, lower-case, collapse internal whitespace and remove spaces around '/'; join items with '|'; sha256 (utf-8) hex. Original-case list is kept in canonicalInci[] (Budni casing, with 'PPG-5-Ceteth-20' written conventionally). This file's normalization is the standard one plus the batch-code and slash-spacing rules.",
+  "identityConfidence": "high",
+  "status": "frozen",
+  "blockReason": null,
+  "notes": "Catalog productId: none (not yet in catalog); Track B row b04-i05. Fresh capture (no INCI on file). dm.de lists this product only in 400 ml (dm 1670202, different GTIN) so it is not used as a source for the 250 ml pack; no Garnier DE manufacturer page was found by search, none attempted."
+}

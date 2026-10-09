@@ -1,0 +1,103 @@
+{
+  "slot": "G11",
+  "productId": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+  "name": "Guhl Hyaluron+ Pflege Feuchtigkeits-Shampoo (catalog: Guhl Hyaluron+)",
+  "brand": "Guhl",
+  "packSize": "250 ml",
+  "gtins": [
+    "4072600720219"
+  ],
+  "sources": [
+    {
+      "url": "https://www.guhl.com/produkt/hyaluron-pflege/hyaluron-pflege-shampoo/",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "manufacturer_de",
+      "gtinShown": null,
+      "inciVerbatim": "Aqua , Sodium Laureth Sulfate , Coco-Glucoside , Cocamidopropyl Betaine , Sodium Chloride , Hydrogenated Vegetable Oil , Lactic Acid , Glyceryl Oleate , Guar Hydroxypropyltrimonium Chloride , Sorbitan Caprylate , Erythritol , Glycerin , Panthenol , Tetrasodium Glutamate Diacetate , Piroctone Olamine , Citric Acid , Hydrolyzed Hyaluronic Acid , Sodium Hyaluronate , Sodium Benzoate , Parfum , Tetramethyl Acetyloctahydronaphthalenes , CI 45100, CI 60730",
+      "claimsVerbatim": "Hyaluron+ Pflege Feuchtigkeits-Shampoo. Mit natürlichem Hyaluron ohne Silikone. Für feuchtigkeitsbedürftiges Haar. Dein Haar fühlt sich trocken und stumpf an? Es braucht intensive Feuchtigkeit, um wieder geschmeidig zu glänzen! Dafür haben wir das Guhl Hyaluron⁺ Pflege Feuchtigkeits-Shampoo mit 2-fach Wirkung entwickelt, das dein trockenes Haar mit einem Feuchtigkeits-Boost intensiv versorgt und es bis in die Spitzen pflegt. Unsere Formulierung mit natürlichem Hyaluron rehydriert dein Haar sofort und füllt es nachhaltig mit Feuchtigkeit auf* – für sichtbar gepflegte und gesund glänzende Längen. Das pastellfarbene Shampoo mit spritzigen Zitrusnoten und weißen Blüten verwöhnt mit reichhaltigem Schaum und verwandelt jede Haarwäsche in einen Verwöhnmoment. *Bei regelmäßiger Anwendung. Inhaltsstoffe zu 95% natürlichen Ursprungs* und zu 98% biologisch abbaubar** ohne Silikone keine Parabene keine Mikroplastik. (Pack size shown: 250 ml.)",
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.dm.de/p/d/1688644/guhl-shampoo-hyaluron-pflege (via https://products.dm.de/product/products/detail/DE/dan/1688644)",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "retailer_dm_de_exact_gtin",
+      "gtinShown": "4072600720219",
+      "inciVerbatim": null,
+      "claimsVerbatim": "Reinigt und füllt das Haar sofort mit Feuchtigkeit auf; Ohne zu beschweren; Mit natürlichem Hyaluron; Für fühlbar und sichtbar hydratisiertes & glänzendes Haar; Silikonfrei & ohne Tierversuche. Das GUHL Hyaluron & Pflege Shampoo ist eine wirkungsvolle Feuchtigkeitspflege für feuchtigkeitsbedürftiges Haar. Das Shampoo mit natürlichem Hyaluron reinigt und füllt das Haar sofort mit Feuchtigkeit auf – für fühlbar und sichtbar hydratisiertes und gesund-glänzendes Haar. Es hat eine dermatologisch bestätigte, vegane Formulierung.",
+      "directionsVerbatim": "ANWENDUNG: Eine kleine Menge sanft ins nasse Haar einmassieren. Gut ausspülen.",
+      "note": "Current dm.de page has NO Inhaltsstoffe section (the 2026-08-10 dm-at capture had one). Title now 'Shampoo Hyaluron+ Pflege', 3,95 EUR."
+    },
+    {
+      "url": "https://www.dm.at/p/d/1688644/guhl-hyaluron-pflege-feuchtigkeits-shampoo (via https://products.dm.de/product/products/detail/AT/dan/1688644)",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "retailer_dm_at_exact_gtin",
+      "gtinShown": "4072600720219",
+      "inciVerbatim": "Ingredients: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Glycol Distearate, Sodium Chloride, Citric Acid, Glycerin, Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Panthenol, Tetrasodium Glutamate Diacetate, Lactic Acid, Piroctone Olamine, Glycine, Hydrolyzed Hyaluronic Acid, Sodium Hyaluronate, Sodium Benzoate, Parfum, CI 17200, CI 60730.",
+      "claimsVerbatim": "Shampoo für feuchtigkeitsbedürftiges Haar; Mit natürlichem Hyaluron; Besonders ergiebige Formulierung; Versorgt das Haar mit Feuchtigkeit; Ohne Silikone. Wenn Ihr Haar besonders feuchtigkeitsbedürftig ist, leistet das Hyaluron+ Pflege Feuchtigkeits-Shampoo von GUHL sofortige Abhilfe. Die besonders ergiebige Formulierung enthält natürliches Hyaluron und schenkt Ihrem Haar intensive Pflege. Dabei wird Ihre Haarpracht mit Feuchtigkeit versorgt und bei regelmäßiger Anwendung mit Feuchtigkeit aufgefüllt. Für fühlbar hydratisiertes und natürlich glänzendes Haar, ohne zu beschweren.",
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-guhl-hyaluron-pflege-feuchtigkeits-shampoo/p/4072600720219",
+      "retrievedAt": "2026-10-08 (live, read via built-in browser; also matches 2026-08-10 prior capture)",
+      "sourceType": "retailer_rossmann_de_exact_gtin",
+      "gtinShown": "4072600720219 (page structured data); 250 ml (1 L = 15,96 EUR)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Glycol Distearate, Sodium Chloride, Citric Acid, Glycerin, Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Panthenol, Tetrasodium Glutamate Diacetate, Lactic Acid, Piroctone Olamine, Glycine, Hydrolyzed Hyaluronic Acid, Sodium Hyaluronate, Sodium Benzoate, Parfum, CI 17200, CI 60730",
+      "claimsVerbatim": "Trockenes und sprödes Haar verlangt nach einer besonderen Pflege, die es tiefenwirksam mit Feuchtigkeit versorgt, ohne es zu beschweren. Die Guhl Hyaluron⁺ Pflege Linie, bestehend aus Feuchtigkeits-Shampoo und Feuchtigkeits-Spülung, versorgt das Haar intensiv mit Feuchtigkeit und sorgt für schwerelos geschmeidiges Haar, das gesund glänzt. Der elegante Duft mit spritzigen Zitrusnoten, weißen Blüten und warmem Amber umhüllt das Haar und macht die Anwendung zu einem sinnlichen Pflegeerlebnis. Guhl Shampoos überzeugen durch ihre Qualität. Die Formulierungen sind sanft zur Kopfhaut, dermatologisch bestätigt und besonders ergiebig – dank des reichhaltigen, seidigen Schaums. Die Inhaltsstoffe des Hyaluron⁺ Pflege Feuchtigkeits-Shampoos sind zu 95% natürlichen Ursprungs* und zu 98% biologisch abbaubar **. Auf Silikone und tierische Inhaltsstoffe wird in den Formulierungen gänzlich verzichtet.",
+      "directionsVerbatim": "Guhl Shampoos sind besonders ergiebig. Eine kleine Menge ist ausreichend. Sanft ins nasse Haar einmassieren und genießen. Gut ausspülen.",
+      "note": "Rossmann page also shows warning block headed 'GEFAHR' (text not captured). INCI without trailing period."
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "two_formula_variants_same_gtin",
+      "variantA_official_guhl_com": {
+        "source": "guhl.com (2026-10-08)",
+        "inciVerbatim": "Aqua , Sodium Laureth Sulfate , Coco-Glucoside , Cocamidopropyl Betaine , Sodium Chloride , Hydrogenated Vegetable Oil , Lactic Acid , Glyceryl Oleate , Guar Hydroxypropyltrimonium Chloride , Sorbitan Caprylate , Erythritol , Glycerin , Panthenol , Tetrasodium Glutamate Diacetate , Piroctone Olamine , Citric Acid , Hydrolyzed Hyaluronic Acid , Sodium Hyaluronate , Sodium Benzoate , Parfum , Tetramethyl Acetyloctahydronaphthalenes , CI 45100, CI 60730"
+      },
+      "variantB_retailers": {
+        "sources": [
+          "dm.at API (2026-10-08)",
+          "rossmann.de live (2026-10-08, read in browser; same as 2026-08-10 capture)"
+        ],
+        "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Glycol Distearate, Sodium Chloride, Citric Acid, Glycerin, Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Panthenol, Tetrasodium Glutamate Diacetate, Lactic Acid, Piroctone Olamine, Glycine, Hydrolyzed Hyaluronic Acid, Sodium Hyaluronate, Sodium Benzoate, Parfum, CI 17200, CI 60730"
+      },
+      "description": "Official list: Coco-Glucoside before Cocamidopropyl Betaine; contains Hydrogenated Vegetable Oil, Lactic Acid early (positions 6-7), Tetramethyl Acetyloctahydronaphthalenes (fragrance), colorants CI 45100 + CI 60730; NO Glycol Distearate, NO Glycine. Retailer list: Cocamidopropyl Betaine before Coco-Glucoside; Glycol Distearate at position 5, Citric Acid at 7, Lactic Acid at 15, Glycine at 17; NO Hydrogenated Vegetable Oil, NO Tetramethyl Acetyloctahydronaphthalenes; colorants CI 17200 + CI 60730. The two retailers (dm.at, Rossmann.de, both read live on 2026-10-08) agree with each other character-for-character after normalization. Piroctone Olamine is in both (position 15 official, 16 retailer). Lists preserved verbatim, never merged."
+    },
+    {
+      "type": "secondary_unverified",
+      "description": "A web-search result summary (2026-10-08) said the Albert Heijn NL page for 'Guhl Hyaluron+ verzorging shampoo' shows the official-style list (Hydrogenated Vegetable Oil, CI 45100). AH page itself returned Access Denied, so this is NOT used as a source; it only suggests the official variant is in circulation in other markets."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Coco-Glucoside",
+    "Cocamidopropyl Betaine",
+    "Sodium Chloride",
+    "Hydrogenated Vegetable Oil",
+    "Lactic Acid",
+    "Glyceryl Oleate",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Sorbitan Caprylate",
+    "Erythritol",
+    "Glycerin",
+    "Panthenol",
+    "Tetrasodium Glutamate Diacetate",
+    "Piroctone Olamine",
+    "Citric Acid",
+    "Hydrolyzed Hyaluronic Acid",
+    "Sodium Hyaluronate",
+    "Sodium Benzoate",
+    "Parfum",
+    "Tetramethyl Acetyloctahydronaphthalenes",
+    "CI 45100",
+    "CI 60730"
+  ],
+  "canonicalReason": "Manufacturer DE page (current, 2026-10-08) wins by authority order and matches the prior pin. Circumstantial support that it is the newer formula: the current dm.de DE page now carries new copy mirroring guhl.com ('Reinigt und füllt das Haar sofort mit Feuchtigkeit auf', 'Silikonfrei') and dropped the old INCI block, while dm.at still carries the older copy and the retailer list, and Rossmann.de (live today) also shows the retailer list with older-style marketing copy ('Trockenes und sprödes Haar verlangt nach...'). No source dates either formula, so this is a judgment, hence frozen_with_conflict. If the pack in a German shop is still the old batch, the retailer variant would be the on-shelf formula.",
+  "inciFingerprintSha256": "eef000f8a7dc826481f7acb578e7b176abe38a6664108469cd96bfbd4ca9a841",
+  "identityConfidence": "high",
+  "status": "frozen_with_conflict",
+  "blockReason": null,
+  "notes": "Retailer-variant fingerprint (sha256 of normalized list, same method): 4c5ed44cbac1e92ecc8d8023e213a72a6e2190dd1093bc528e51d2639f8e6b54. Which variant is 'current' could not be proven: Rossmann.de live shows the retailer variant, dm.de DE has no INCI any more, AH blocked. Hidden anti-dandruff active Piroctone Olamine is in BOTH variants (official position 15 of 23; retailer position 16 of 23), so the G11 dandruff-support question does not depend on which variant is pinned; cleansing/conditioning-relevant deltas are Hydrogenated Vegetable Oil + Lactic Acid (official) vs Glycol Distearate + Glycine (retailer). Prior pin: data/research/shampoo-inci/v1.3/products/guhl-hyaluron-plus/formula-source.json (official, same list). Official page does not show a GTIN.",
+  "normalization": "Split the canonical INCI string on commas (or bullets/pipes where the source uses them), trimmed; lower-case each item, trim, collapse internal whitespace to single spaces, join with '|' (no other change: parentheses, slashes, hyphens, spelling kept), sha256 over the UTF-8 string. Batch/F.I.L. codes, the 'INGREDIENTS:' prefix and the trailing period are removed before splitting."
+}

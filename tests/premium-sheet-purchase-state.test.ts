@@ -331,3 +331,63 @@ test("Y4: an expired or abandoned Session is a failure with its own reason, retr
     )
   }
 })
+
+/* ---- C7: the budget phase ---------------------------------------------------------------- */
+
+const budgetRequired: PremiumSheetPurchaseEvent = {
+  type: "verification_budget_required",
+  sessionId: SESSION,
+}
+
+test("C7: budget_required parks a verified purchase on the budget question", () => {
+  const state = run([start, ready, completed, budgetRequired])
+  assert.deepEqual(state, { phase: "budget", sessionId: SESSION, cancelled: false })
+  // Money moved: not pollable, not terminal (a reload resumes it), no plan rows.
+  assert.equal(premiumSheetPollableSessionId(state), null)
+  assert.equal(isPremiumSheetPurchaseTerminal(state), false)
+  assert.equal(isPremiumSheetPlanSelectionActive(state), false)
+})
+
+test("C7: the budget phase never falls back to plans or a failure", () => {
+  const parked = run([start, ready, completed, budgetRequired])
+  for (const event of [
+    { type: "returned_to_plans" },
+    { type: "checkout_failed", reason: "checkout_unavailable" },
+    { type: "verification_failed", sessionId: SESSION, reason: "verification_failed" },
+    budgetRequired,
+  ] as PremiumSheetPurchaseEvent[]) {
+    assert.deepEqual(premiumSheetPurchaseReducer(parked, event), parked)
+  }
+})
+
+test("C7: cancel keeps the phase; the next answer for the Session moves it on", () => {
+  const cancelled = run([
+    start,
+    ready,
+    completed,
+    budgetRequired,
+    { type: "budget_question_cancelled" },
+  ])
+  assert.deepEqual(cancelled, { phase: "budget", sessionId: SESSION, cancelled: true })
+  assert.deepEqual(
+    premiumSheetPurchaseReducer(cancelled, {
+      type: "verification_complete",
+      sessionId: SESSION,
+      routineReady: true,
+    }),
+    { phase: "unlocked", routineReady: true },
+  )
+  assert.deepEqual(
+    premiumSheetPurchaseReducer(cancelled, { type: "verification_pending", sessionId: SESSION }),
+    { phase: "pending", sessionId: SESSION },
+  )
+  // An answer about another Session is dropped.
+  assert.deepEqual(
+    premiumSheetPurchaseReducer(cancelled, {
+      type: "verification_complete",
+      sessionId: "cs_other",
+      routineReady: true,
+    }),
+    cancelled,
+  )
+})

@@ -59,7 +59,8 @@ export type Stage3OptionalEntryRouteDeps = {
   }) => Promise<Stage3DraftResponse>
   gatewayFor: (
     userId: string,
-  ) => Pick<Stage3AuthorityProductionGateway, "prepareLoadedDraft" | "reviewDecisionBundles">
+  ) => Pick<Stage3AuthorityProductionGateway, "prepareLoadedDraft" | "reviewDecisionBundles"> &
+    Partial<Pick<Stage3AuthorityProductionGateway, "shoppingBudgetEnvelope">>
 }
 
 function response(body: unknown, status = 200, headers?: HeadersInit) {
@@ -146,6 +147,7 @@ export function createStage3OptionalEntryRouteHandler(deps: Stage3OptionalEntryR
       const bootstrap = await composeStage3BootstrapResponse({
         loaded: result,
         reviewDecisionBundles: gateway.reviewDecisionBundles.bind(gateway),
+        shoppingBudgetEnvelope: gateway.shoppingBudgetEnvelope?.bind(gateway),
       })
       phases.operation = Date.now() - phaseStarted
       return response(bootstrap, 200, {

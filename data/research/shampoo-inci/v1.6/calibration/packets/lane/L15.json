@@ -1,0 +1,34 @@
+{
+  "blindId": "L15",
+  "productName": "Sebamed Every-Day Shampoo",
+  "brand": "Sebamed",
+  "packSize": "200 ml",
+  "canonicalInci": [
+    "Aqua",
+    "Decyl Glucoside",
+    "Disodium Laureth Sulfosuccinate",
+    "Sodium Lauryl Sulfoacetate",
+    "PEG-55 Propylene Glycol Oleate",
+    "Propylene Glycol",
+    "Parfum",
+    "Phenoxyethanol",
+    "Sodium Benzoate",
+    "Citric Acid",
+    "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+    "Lactic Acid",
+    "Sodium Chloride",
+    "Sodium Lactate"
+  ],
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer",
+      "claimsVerbatim": "Schonende, seifenfreie Reinigung für empfindliche Kopfhaut | Die sebamed Hautreinigungs- und Pflegeprodukte sind besonders hautverträglich und stärken die Barrierefunktion der empfindlichen Haut und ihre Widerstandskräfte gegen Reizeinflüsse. | Das sebamed Every‑Day Shampoo ist ein seifenfreies Shampoo für die tägliche Haarwäsche. Die besonders milde, reinigende Zuckertensid‑Formel schützt Kopfhaut und Haar vor dem Austrocknen und trägt dazu bei, ihre natürliche Balance zu bewahren. Zusätzlich wird das Hautmikrobiom stabillisiert. | Der pH-Wert der gesunden Haut liegt durchschnittlich bei 5,5. sebamed mit dem pH-Wert 5,5 stärkt die Funktion des natürlichen Hautschutzmantels auch gegen schädliche Umwelteinflüsse und trägt zur Gesunderhaltung der Haut bei. Alle sebamed Produkte sind in über 400 Studien dermatologisch-klinisch getestet. | pH-Wert 5,5 | Der leicht saure pH-Wert entspricht dem natürlichen Milieu und unterstützt die gesunde Barrierefunktion und Mikrobiombalance der Haut | Haartyp: normal/jeder Haartyp",
+      "directionsVerbatim": "Shampoo in der Handinnenfläche aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Ausspülen. Für die tägliche Anwendung geeignet."
+    },
+    {
+      "sourceType": "retailer",
+      "claimsVerbatim": "Sanfte Zuckertensid-Formel für milde Reinigung | Seifenfrei & schonend zur Kopfhaut | Schützt Haar & Kopfhaut vor Austrocknung | Geeignet für alle Haartypen & Haarstrukturen | Mit dem Every-Day Shampoo von sebamed gelingt die tägliche Haarpflege besonders sanft und schonend. Die milde Zuckertensid-Formel reinigt Kopfhaut und Haar gründlich, ohne zu reizen oder auszutrocknen. Durch die seifenfreie Rezeptur bleibt das natürliche Gleichgewicht der Kopfhaut erhalten und das Haar erhält mehr Fülle und Glanz. Für alle Haartypen geeignet, sorgt das Shampoo für ein angenehmes Frischegefühl und ein gepflegtes Aussehen – Tag für Tag. Die leichte Textur lässt sich mühelos ausspülen und hinterlässt ein geschmeidiges Haargefühl.",
+      "directionsVerbatim": "Das Haar anfeuchten, Shampoo in der Handinnenfläche verreiben, aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Gründlich ausspülen."
+    }
+  ]
+}

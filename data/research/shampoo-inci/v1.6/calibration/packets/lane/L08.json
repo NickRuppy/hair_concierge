@@ -1,0 +1,43 @@
+{
+  "blindId": "L08",
+  "productName": "ISANA Shampoo & Spülung 2in1 Volumen",
+  "brand": "ISANA",
+  "packSize": "300 ml",
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Sodium Chloride",
+    "Cocamidopropyl Betaine",
+    "Malva Sylvestris Flower Extract",
+    "Euterpe Oleracea Fruit Extract",
+    "Hydrolyzed Wheat Protein",
+    "Niacinamide",
+    "Panthenol",
+    "Pantolactone",
+    "Coco-Glucoside",
+    "Glyceryl Oleate",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Magnesium Sulfate",
+    "Tocopherol",
+    "Hydrogenated Palm Glycerides Citrate",
+    "PEG-3 Distearate",
+    "Propylene Glycol",
+    "Glycerin",
+    "Parfum",
+    "Benzyl Salicylate",
+    "Linalool",
+    "Sodium Benzoate",
+    "Potassium Sorbate",
+    "Benzoic Acid",
+    "Phenoxyethanol",
+    "Citric Acid",
+    "Sodium Hydroxide"
+  ],
+  "positioningSources": [
+    {
+      "sourceType": "retailer",
+      "claimsVerbatim": "Das ISANA SHAMPOO & SPÜLUNG 2IN1 VOLUMEN mit Soft-Care-Komplex und Weizenprotein vereint die reinigende Wirkung eines Shampoos mit der einzigartigen Pflege einer Spülung. Mit seiner speziellen Formel verleiht es auch kraftlosem und feinem Haar Volumen. | Hautverträglichkeit: dermatologisch bestätigt und pH-hautneutral | Malve & Acai | ohne Silikone | kraftloses & feines Haar",
+      "directionsVerbatim": "In das feuchte Haar einmassieren. Gründlich ausspülen. Warnhinweis: Augenkontakt vermeiden."
+    }
+  ]
+}

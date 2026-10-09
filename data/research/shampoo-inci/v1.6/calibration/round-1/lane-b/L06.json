@@ -1,0 +1,102 @@
+{
+  "blindId": "L06",
+  "status": "projected_with_review",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: sulfate-free architecture dominated by mild amino-acid/nonionic/amphoteric routes - Sodium Methyl Cocoyl Taurate #2, Decyl Glucoside #3, Cocamidopropyl Betaine #4, Coco-Glucoside #9 - with no alkyl(ether) sulfate and meaningful refatting (Argania Spinosa Kernel Oil #7, Hydrogenated Castor Oil #12). Limited anionic reset.",
+      "ruleIds": ["§4"],
+      "formulaFacts": ["Sodium Methyl Cocoyl Taurate #2", "Decyl Glucoside #3", "Cocamidopropyl Betaine #4", "Coco-Glucoside #9"],
+      "counterSignal": "taurate is an effective anionic primary and the system is balanced; 'sulfate-free does not automatically mean low'",
+      "neighboringAlternative": "moderate"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: multiple complementary systems - Hydrolyzed Keratin #6, Argania Spinosa Kernel Oil #7, Amodimethicone #10, Guar Hydroxypropyltrimonium Chloride #11, Hydrogenated Castor Oil #12, pearlizing Glycol Distearate #15 - all before the preservatives.",
+      "ruleIds": ["§5", "C2"],
+      "formulaFacts": ["Hydrolyzed Keratin #6", "Argania Spinosa Kernel Oil #7", "Amodimethicone #10", "Guar Hydroxypropyltrimonium Chloride #11", "Hydrogenated Castor Oil #12", "Glycol Distearate #15"],
+      "counterSignal": "no dimethicone; individual routes mid-list",
+      "neighboringAlternative": "moderate"
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: depositionLoad high (early argan oil #7, amodimethicone #10, guar #11, hydrogenated castor oil #12, keratin #6), persistence moderate-high (amodimethicone, waxy castor), resetCapacity weak (mild taurate/glucoside system). Multiple converging persistent systems with limited reset.",
+      "ruleIds": ["§6", "W1"],
+      "subjudgments": { "depositionLoad": "high", "persistence": "moderate", "resetCapacity": "weak" },
+      "formulaFacts": ["Argania Spinosa Kernel Oil #7", "Amodimethicone #10", "Guar Hydroxypropyltrimonium Chloride #11", "Hydrogenated Castor Oil #12"],
+      "counterSignal": "W1-style silicone+guar formulas can be moderate; here the cleansing base is not an effective sulfate/betaine base, so W1 does not apply",
+      "whyThisBand": "converging oil + aminosilicone + cationic + waxy lipid with weak reset",
+      "whyNotNeighborBand": "moderate requires reset or limited richness arguing against coating; neither present",
+      "neighboringAlternative": "moderate"
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "moderate",
+      "rationale": "Repair: 'Strength & Length + Keratin Oil' name and claims 'Anti-Haarbruch', 'strapaziertes Haar', 'reduziert Spliss', 'repariert'; verdict repair_supported from a coherent damage-care/deposition cluster (Hydrolyzed Keratin #6, Amodimethicone #10, argan oil #7, guar #11).",
+      "ruleIds": ["§7.2", "§7.3", "F1"],
+      "careDirection": { "verdict": "repair_supported", "repairRoutes": ["Hydrolyzed Keratin #6", "Amodimethicone #10"], "sharedConditioningRoutes": ["Argania Spinosa Kernel Oil #7", "Guar Hydroxypropyltrimonium Chloride #11", "Hydrogenated Castor Oil #12"], "limitation": "breakage figures are shampoo+conditioner claims; rinse-off" },
+      "claimRole": "candidate",
+      "counterSignal": "positioning is retailer-only (no manufacturer source in packet)",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Formula repair_supported; claims consistently damage/breakage -> repair."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: 'Glanz' is an outcome of the same oil/aminosilicone route (F2).",
+      "ruleIds": ["§8", "F2"],
+      "neighboringAlternative": "shine"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: no daily/frequent, reset or treatment trigger.",
+      "ruleIds": ["§9"],
+      "neighboringAlternative": "none"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No scalp positioning.",
+      "ruleIds": ["§10"],
+      "neighboringAlternative": "none"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole.",
+      "ruleIds": ["§11"],
+      "neighboringAlternative": "none"
+    }
+  },
+  "projection": {
+    "thicknessFit": { "fine": "not_suited", "normal": "acceptable", "coarse": "ideal" },
+    "thicknessFitConfidence": { "fine": "moderate", "normal": "moderate", "coarse": "moderate" },
+    "thicknessRationale": "T1 W high: fine not_suited, normal acceptable, coarse ideal. Ordinary target, no T6. T4: W neighbor moderate would raise fine/normal (no flag); coarse stays ideal at W moderate with C high and at W high with C moderate -> no flag.",
+    "weight": "heavy",
+    "weightConfidence": "moderate",
+    "scalpTargets": { "primary": "ordinary", "secondary": null },
+    "scalpTargetRationale": "S-ORDINARY: no E2 scalp claim.",
+    "scalpTargetConfidence": "high",
+    "cleansingIntensity": "gentle",
+    "cleansingIntensityRationale": "I1 low -> gentle (differs from normal bucket's regular; I2 keeps it). I3: neighbor moderate -> regular would equal the expected intensity -> review_intensity_boundary.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "D1 false.",
+    "rows": [
+      { "thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "gentle", "weight": "heavy", "tier": "acceptable" },
+      { "thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "gentle", "weight": "heavy", "tier": "ideal" }
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": ["review_intensity_boundary"],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "§4 low vs moderate: a taurate/glucoside/betaine system literally matches the low anchor ('amino-acid/nonionic/amphoteric routes') but also the moderate anchor ('balanced surfactant system'); the standard gives no sulfate-free anchor example. Resolved low with neighbor moderate, which raises I3.",
+    "All positioning is retailer copy; §3.2/§7 do not grade focus claims by source tier (E1 grading only applies to scalp targets).",
+    "W1 is scoped to 'effective sulfate/betaine cleansing base'; the standard does not say how to treat the same deposition stack on a mild sulfate-free base. Resolved high (weak reset)."
+  ]
+}

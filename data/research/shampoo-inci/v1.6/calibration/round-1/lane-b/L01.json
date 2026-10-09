@@ -1,0 +1,108 @@
+{
+  "blindId": "L01",
+  "status": "projected",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: early alkyl ether sulfate (Sodium Laureth Sulfate #2) buffered by Cocamidopropyl Betaine #3, no second reinforcing anionic or reset surfactant; C1 sets this pattern to moderate. Oily-scalp 'klärend' positioning is not a deep-cleansing/reset claim and claims cannot assign cleansing (3.2).",
+      "ruleIds": ["C1", "§4", "§3.2"],
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Cocamidopropyl Betaine #3", "Sodium Chloride #4"],
+      "counterSignal": "Anti-Fett / 'klärende Formel' oily-scalp intent could be read as reset intent that C1 excludes",
+      "neighboringAlternative": "strong"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: cleansing-led; the only substantive conditioning route is Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #6 listed after the preservative Sodium Benzoate #5; Panthenol #11 and Glycerin #16 are late humectants; no silicone, fatty alcohol or lipid.",
+      "ruleIds": ["§5"],
+      "formulaFacts": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #6", "Panthenol #11", "Glycerin #16"],
+      "counterSignal": "a cationic guar is present and could be read as one meaningful system (moderate)",
+      "neighboringAlternative": "moderate"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: depositionLoad light (one late cationic guar), persistence low, resetCapacity moderate (SLES/betaine base). One light polymer can remain low per the §6 anchor; no silicone, oil payload or fatty alcohol.",
+      "ruleIds": ["§6"],
+      "subjudgments": { "depositionLoad": "light", "persistence": "low", "resetCapacity": "moderate" },
+      "formulaFacts": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #6"],
+      "counterSignal": "cationic guar deposits on hair",
+      "whyThisBand": "single light polymer, no persistent payload",
+      "whyNotNeighborBand": "moderate needs one meaningfully persistent system or interacting routes; none present",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "clarifying",
+      "confidence": "moderate",
+      "rationale": "Clarifying: name and every source position the product as 'Anti-Fett' for 'schnell fettende Kopfhaut' (oily-root role, which §7.1 places under clarifying); SLES/betaine chassis with no rich conditioning is compatible. Not scalp_active, whose §7.1 meaning names sensitive/anti-dandruff needs.",
+      "ruleIds": ["§7.1", "§7.2"],
+      "careDirection": { "verdict": "not_applicable", "limitation": "not a repair/moisture decision" },
+      "claimRole": "candidate",
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Cocamidopropyl Betaine #3", "no silicone/oil payload"],
+      "counterSignal": "cleansing is only moderate (C1); oily-scalp could also be read as a targeted scalp need (scalp_active)",
+      "neighboringAlternative": "scalp_active",
+      "decisionTrace": "Formula: plain SLES/betaine, light, compatible with oily-root role. Claim: dominant Anti-Fett in name. Resolved to clarifying."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: Panthenol moisture and 'Problemhaut/Neurodermitis' tolerability statements are not distinct positioning with an independent formula route; disease-basis-care claims are out of scope.",
+      "ruleIds": ["§8", "F2"],
+      "counterSignal": "Panthenol 'Feuchtigkeitshaushalt' claim",
+      "neighboringAlternative": "scalp_active"
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "moderate",
+      "rationale": "Frequent: explicit 'Für die tägliche Haarwäsche geeignet' (manufacturer) and cleansingStrength is moderate (not strong); trigger is conjunctive and met.",
+      "ruleIds": ["§9"],
+      "counterSignal": "if cleansing were strong, oily-root intent would make it alternating",
+      "neighboringAlternative": "regular"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "rationale": "Not targeted: primary positioning is oily scalp; tolerability claims ('Problemhaut', basis care for Neurodermitis/Psoriasis) are disease-adjacent and not an E2 sensitive/itchy claim on the manufacturer page; 'schützt vor Reizeffekten' appears only in retailer copy. Formula carries Menthol #14, Mentha Arvensis Leaf Oil #15 and citrus oil #12 cooling/essential-oil exposure.",
+      "ruleIds": ["§10", "E2"],
+      "counterSignal": "'Sehr gute Hautverträglichkeit bei Problemhaut', Panthenol",
+      "neighboringAlternative": "targeted"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole.",
+      "ruleIds": ["§11"],
+      "neighboringAlternative": "none"
+    }
+  },
+  "projection": {
+    "thicknessFit": { "fine": "ideal", "normal": "ideal", "coarse": "acceptable" },
+    "thicknessFitConfidence": { "fine": "high", "normal": "high", "coarse": "moderate" },
+    "thicknessRationale": "T1 W low: fine ideal, normal ideal, coarse acceptable (C low, not high). T6: no not_suited to lift. T4: W neighbor none; C neighbor moderate keeps coarse acceptable -> no flag.",
+    "weight": "light",
+    "weightConfidence": "high",
+    "scalpTargets": { "primary": "oily", "secondary": null },
+    "scalpTargetRationale": "S-OILY: E2 oily claim 'Anti-Fett' in product name plus 'schnell fettende Kopfhaut' (E1 high); formula gate cleansing moderate, W low (not high), C low (not high) -> pass. Sensitive: no manufacturer E2 claim (retailer-only 'Reizeffekten' is low E1) and scalpComfortTarget not_targeted -> no target, no S-FAIL. S-FOCUS not applicable to oily.",
+    "scalpTargetConfidence": "moderate",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate -> regular, equal to oily bucket expectation. I3: neighbor strong would yield clarifying (with alternating + clarifying focus) which is not the expected intensity -> no flag.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "D1 false ('klärend' is not a D1 lexicon term; directions allow daily use). D2 not met.",
+    "rows": [
+      { "thickness": "fine", "shampoo_bucket": "dehydriert-fettig", "scalp_route": "oily", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal" },
+      { "thickness": "normal", "shampoo_bucket": "dehydriert-fettig", "scalp_route": "oily", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal" },
+      { "thickness": "coarse", "shampoo_bucket": "dehydriert-fettig", "scalp_route": "oily", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable" }
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "C1/§4: C1 excludes products with 'reset/deep-cleansing intent', and the strong anchor names 'oily-root architecture', but §3.2 forbids claims from assigning cleansing. Resolved: oily-scalp intent is not deep-cleansing intent and the architecture is plain SLES/betaine -> moderate (neighbor strong).",
+    "§7.1: oily-scalp positioning fits both 'clarifying' (oily-root role) and 'scalp_active' (targeted cosmetic scalp need). Resolved to clarifying because §7.1 names oily-root under clarifying explicitly.",
+    "E3: no Parfum declared but essential oils present; prominence cut at Sodium Benzoate #5, so Panthenol #11 is not prominent (only relevant had a sensitive gate been tested).",
+    "review_live_value_differs cannot be evaluated: no live rows in the packet."
+  ]
+}

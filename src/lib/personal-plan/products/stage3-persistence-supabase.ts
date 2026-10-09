@@ -31,6 +31,7 @@ import { Stage3AuthoritySnapshotError } from "./authority/snapshot"
 import { effectiveStage3CategoryDecisions } from "./product-load-resolution"
 import { semanticHash } from "@/lib/personal-plan/routine/canonicalize"
 import { isPersonalPlanStage3ThumbnailsEnabled } from "@/lib/personal-plan/release"
+import { shoppingBudgetSchema } from "@/lib/user-facts/schema"
 
 type AdminClient = SupabaseClient
 type Stage3OptionalMigrationState = {
@@ -653,7 +654,63 @@ export function createSupabaseStage3ProductionPersistence(
       if (error) throw new Error("stage3_draft_load_failed")
       return data ? mapStage3Draft(data) : null
     },
+    async loadCatalogPackagePrices(productIds) {
+      if (productIds.length === 0) return []
+      const { data, error } = await client
+        .from("products")
+        .select("id,price_eur,purchase_link_status")
+        .in("id", productIds)
+      if (error) throw new Error("stage3_catalog_prices_unavailable")
+      return ((data ?? []) as Array<Record<string, unknown>>).flatMap((row) =>
+        typeof row.id === "string"
+          ? [
+              {
+                productId: row.id,
+                priceEur:
+                  typeof row.price_eur === "number"
+                    ? row.price_eur
+                    : typeof row.price_eur === "string" && row.price_eur.trim() !== ""
+                      ? Number(row.price_eur)
+                      : null,
+                purchaseLinkStatus:
+                  row.purchase_link_status === "available" ||
+                  row.purchase_link_status === "unavailable"
+                    ? row.purchase_link_status
+                    : null,
+              },
+            ]
+          : [],
+      )
+    },
+    async loadShoppingContext(userId) {
+      const { data, error } = await client
+        .from("hair_profiles")
+        .select("shopping_preferences, diagnostics")
+        .eq("user_id", userId)
+        .maybeSingle()
+      if (error) throw new Error("stage3_shopping_preferences_unavailable")
+      const preferences = plainObject(data?.shopping_preferences)
+      const budget = shoppingBudgetSchema.safeParse(preferences?.budget)
+      const diagnostics = plainObject(data?.diagnostics)
+      const currentConcerns = Array.isArray(diagnostics?.currentConcerns)
+        ? diagnostics.currentConcerns.filter(
+            (concern): concern is string => typeof concern === "string",
+          )
+        : []
+      return {
+        budget: budget.success ? budget.data : null,
+        currentConcerns,
+        primaryConcern:
+          typeof diagnostics?.primaryConcern === "string" ? diagnostics.primaryConcern : null,
+      }
+    },
   }
+}
+
+function plainObject(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null
 }
 
 export function buildAuthorityRefreshDraft(

@@ -1,0 +1,103 @@
+{
+  "blindId": "L08",
+  "status": "projected",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: Sodium Laureth Sulfate #2 buffered by Cocamidopropyl Betaine #4 and Coco-Glucoside #11, no second reinforcing anionic or reset route, no reset intent (C1).",
+      "ruleIds": ["C1", "§4"],
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Cocamidopropyl Betaine #4", "Coco-Glucoside #11"],
+      "counterSignal": "betaine only after Sodium Chloride #3",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: several light routes - Hydrolyzed Wheat Protein #7, Panthenol #9, Glyceryl Oleate #12, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #13, PEG-3 Distearate #17, Glycerin #19. The '2in1' claim cannot raise conditioning (3.2); no silicone or rich lipid, so not a rich 2-in-1 architecture.",
+      "ruleIds": ["§5", "§3.2"],
+      "formulaFacts": ["Hydrolyzed Wheat Protein #7", "Panthenol #9", "Glyceryl Oleate #12", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #13", "PEG-3 Distearate #17"],
+      "counterSignal": "each route is light; could be read as cleansing-led (low)",
+      "neighboringAlternative": "low"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: depositionLoad light (one guar, weak refatter, protein), persistence low (silicone-free), resetCapacity moderate.",
+      "ruleIds": ["§6"],
+      "subjudgments": { "depositionLoad": "light", "persistence": "low", "resetCapacity": "moderate" },
+      "formulaFacts": ["Glyceryl Oleate #12", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #13"],
+      "counterSignal": "2in1 positioning",
+      "whyThisBand": "light, low-persistence routes",
+      "whyNotNeighborBand": "no persistent system",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "confidence": "moderate",
+      "rationale": "Volume: 'Volumen' in the product name and 'verleiht kraftlosem und feinem Haar Volumen'; light silicone-free formula is compatible.",
+      "ruleIds": ["§7.2", "§7.1"],
+      "careDirection": { "verdict": "not_applicable", "limitation": "volume focus" },
+      "claimRole": "candidate",
+      "formulaFacts": ["no silicone", "Hydrolyzed Wheat Protein #7"],
+      "counterSignal": "2in1 conditioning positioning; claims are retailer copy only",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Name-dominant volume claim with compatible light formula -> volume."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "No distinct secondary positioning with an independent route.",
+      "ruleIds": ["§8"],
+      "neighboringAlternative": "none"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "No non-default trigger.",
+      "ruleIds": ["§9"],
+      "neighboringAlternative": "none"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "'dermatologisch bestätigt und pH-hautneutral' is tolerability wording without a scalp condition.",
+      "ruleIds": ["§10", "E2"],
+      "neighboringAlternative": "none"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole.",
+      "ruleIds": ["§11"],
+      "neighboringAlternative": "none"
+    }
+  },
+  "projection": {
+    "thicknessFit": { "fine": "ideal", "normal": "ideal", "coarse": "acceptable" },
+    "thicknessFitConfidence": { "fine": "high", "normal": "high", "coarse": "moderate" },
+    "thicknessRationale": "T1 W low: fine ideal, normal ideal, coarse acceptable (C moderate). T2: 'feines Haar' corroboration only. T4: no lower neighbor outcome.",
+    "weight": "light",
+    "weightConfidence": "high",
+    "scalpTargets": { "primary": "ordinary", "secondary": null },
+    "scalpTargetRationale": "S-ORDINARY: no E2 scalp claim.",
+    "scalpTargetConfidence": "high",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityRationale": "I1 moderate -> regular; no neighbor -> no I3.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "D1 false.",
+    "rows": [
+      { "thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal" },
+      { "thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal" },
+      { "thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable" }
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "§5 'clearly rich 2-in-1 architecture': a product named 2in1 whose formula is light; standard does not define what makes a 2-in-1 'rich'. Resolved on formula only (moderate).",
+    "13.8: ordinary target confidence has no formula gate; recorded as high because positioning absence is unambiguous (standard does not define confidence for S-ORDINARY)."
+  ]
+}

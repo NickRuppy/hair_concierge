@@ -1,3 +1,4 @@
+import { isProductMarketSegmentDisplayEnabled } from "@/lib/personal-plan/release"
 import type { PlanProductRole } from "@/lib/personal-plan/types"
 
 import type {
@@ -19,6 +20,10 @@ import {
   orderedAxisFitResult,
   repairSupportAxisFitResult,
 } from "./authority/categories/axis-fit"
+import {
+  BONDBUILDER_TIE_DEFAULT_PRODUCT_ID,
+  bondbuilderTrustRank,
+} from "./authority/categories/bondbuilder"
 import { evaluateStage3Authority } from "./authority/evaluate"
 import { supportiveOwnedRecommendation } from "./authority/supportive-owned-recommendation"
 import { compareRankableCandidates, type RankableCandidate } from "./candidate-ranking"
@@ -35,6 +40,7 @@ import {
   type Stage3FitComparisonProduct,
 } from "./comparison-dimensions"
 import { compactCriterionSchema } from "./fit-comparison-schema"
+import type { BudgetCandidateView, BudgetNotice, BudgetRoleAllocation } from "./budget-policy"
 
 export type {
   ComparisonProductEntry,
@@ -72,7 +78,14 @@ export type Stage3FitEvidenceRow = {
   }>
 }
 
-export type Stage3FitComparison =
+/** Present only when a budget allocation shaped the comparison; absent (not null) otherwise. */
+export type Stage3FitComparisonBudgetFields = {
+  defaultProductId?: string | null
+  budgetNotice?: BudgetNotice | null
+  budgetException?: BudgetRoleAllocation["exception"]
+}
+
+export type Stage3FitComparison = (
   | {
       schemaVersion: 1
       mode: "comparison"
@@ -98,6 +111,8 @@ export type Stage3FitComparison =
       evidenceRows?: Stage3FitEvidenceRow[]
       reason: "specialist_category" | "no_exact_product"
     }
+) &
+  Stage3FitComparisonBudgetFields
 
 export type Stage3SelectedComparisonCandidate = {
   productId: string
@@ -118,6 +133,9 @@ export function stage3FitComparisonForTransport(
   return { ...comparison, dimensions: [] }
 }
 
+/** One fit-ranked comparison candidate with the facts the budget policy and cards need. */
+export type Stage3RankedComparisonCandidate = CandidateAssessment
+
 type CandidateAssessment = Stage3SelectedComparisonCandidate & {
   catalogSortOrder: number | null | undefined
   facts: Stage3CategoryProductFacts
@@ -131,18 +149,49 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
   input: Stage3AuthorityInput<C>,
   subjectEvaluation?: Stage3AuthorityEvaluation,
   context?: Stage3EvaluationContext,
-  options?: { alternativeSelection?: Stage3FitComparisonAlternativeSelection },
+  options?: {
+    alternativeSelection?: Stage3FitComparisonAlternativeSelection
+    /** This subject's slice of a proposal-wide budget allocation. */
+    budgetAllocation?: BudgetRoleAllocation
+    /** The full fit ranking already computed for the allocation (budget path only). */
+    rankedCandidates?: readonly Stage3RankedComparisonCandidate[]
+    /**
+     * A stored choice that must stay visible (price-neutral path only): a ranking change may
+     * push a still-eligible chosen product out of the bounded shortlist.
+     */
+    keepCandidateId?: string | null
+  },
 ): Stage3FitComparison {
   const authorityInput = input as unknown as Stage3AuthorityInput
   const authorityEvaluation = subjectEvaluation ?? evaluateStage3Authority(authorityInput)
-  const selectedCandidates = boundedSelectedComparisonCandidateAssessments(
-    authorityInput,
-    authorityEvaluation,
-    options?.alternativeSelection ?? "web",
-  )
+  const selection = options?.alternativeSelection ?? "web"
+  const allocation = options?.budgetAllocation
+  const selectedCandidates = allocation
+    ? budgetedComparisonCandidates(
+        options?.rankedCandidates ??
+          rankStage3ComparisonCandidates(authorityInput, authorityEvaluation, selection),
+        allocation,
+        selection,
+      )
+    : boundedSelectedComparisonCandidateAssessments(
+        authorityInput,
+        authorityEvaluation,
+        selection,
+        options?.keepCandidateId ?? null,
+      )
+  const budgetViews = allocation
+    ? new Map(allocation.candidates.map((view) => [view.productId, view]))
+    : undefined
+  const budgetFields: Stage3FitComparisonBudgetFields = allocation
+    ? {
+        defaultProductId: allocation.defaultProductId,
+        budgetNotice: allocation.notice,
+        budgetException: allocation.exception,
+      }
+    : {}
   const entries = [
     ...currentComparisonProductEntries(authorityInput, authorityEvaluation),
-    ...alternativeProductEntries(authorityInput, selectedCandidates),
+    ...alternativeProductEntries(authorityInput, selectedCandidates, budgetViews),
   ]
   const products = entries.map((entry) => entry.product)
   const alternatives = selectedCandidates.map(publicSelectedCandidate)
@@ -172,6 +221,7 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
       alternatives,
       dimensions,
       evidenceRows,
+      ...budgetFields,
     }
   }
 
@@ -187,7 +237,27 @@ export function buildStage3FitComparison<C extends PersonalPlanCategory>(
     dimensions: [],
     evidenceRows,
     reason: products.length > 0 ? "specialist_category" : "no_exact_product",
+    ...budgetFields,
   }
+}
+
+/** The allocation's candidates in its order, mapped back to assessments; unknown IDs drop out. */
+function budgetedComparisonCandidates(
+  ranked: readonly CandidateAssessment[],
+  allocation: BudgetRoleAllocation,
+  selection: Stage3FitComparisonAlternativeSelection,
+): CandidateAssessment[] {
+  const byId = new Map(ranked.map((candidate) => [candidate.productId, candidate]))
+  const limit =
+    selection === "native"
+      ? STAGE3_NATIVE_FIT_COMPARISON_ALTERNATIVE_LIMIT
+      : STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT
+  return allocation.candidates
+    .flatMap((view) => {
+      const candidate = byId.get(view.productId)
+      return candidate ? [candidate] : []
+    })
+    .slice(0, limit)
 }
 
 function currentComparisonProductEntries(
@@ -225,13 +295,14 @@ function currentComparisonProductEntries(
 function alternativeProductEntries(
   input: Stage3AuthorityInput,
   alternatives: readonly CandidateAssessment[],
+  budgetViews?: ReadonlyMap<string, BudgetCandidateView>,
 ): ComparisonProductEntry[] {
   return alternatives.map((candidate) => ({
     product: {
       productId: candidate.productId,
       displayName: candidate.recommendation.displayName,
       presentationImageUrl: candidate.facts.presentationImageUrl ?? null,
-      presentation: presentationFor(candidate.facts),
+      presentation: presentationFor(candidate.facts, budgetViews?.get(candidate.productId)),
       category: candidate.category,
       role: candidate.role,
       source: "alternative",
@@ -242,6 +313,7 @@ function alternativeProductEntries(
 
 function presentationFor(
   facts: Stage3CategoryProductFacts,
+  budgetView?: BudgetCandidateView,
 ): Stage3FitComparisonProduct["presentation"] {
   return {
     priceLabel: priceLabel(facts),
@@ -251,7 +323,52 @@ function presentationFor(
       (facts.netContentUnit === "ml" || facts.netContentUnit === "g")
         ? `${formatNumber(facts.netContentValue)} ${facts.netContentUnit}`
         : null,
+    ...(budgetView
+      ? {
+          packagePriceEur: usablePackagePriceEur(facts),
+          overBudget: budgetView.overBudget,
+          labelKind: budgetView.label,
+        }
+      : {}),
+    ...marketSegmentBadge(facts),
   }
+}
+
+const MARKET_SEGMENT_BADGE_CATEGORIES: ReadonlySet<PersonalPlanCategory> = new Set([
+  "shampoo",
+  "conditioner",
+  "mask",
+])
+
+/**
+ * The Drogerie/Profi badge: only behind the display flag, only for shampoo, conditioner and mask,
+ * and only for a known segment. Absent (not null) otherwise, so flag-off bytes stay unchanged.
+ */
+function marketSegmentBadge(
+  facts: Stage3CategoryProductFacts,
+): { marketSegment: "drugstore" | "professional" } | Record<string, never> {
+  const segment = facts.marketSegment
+  return isProductMarketSegmentDisplayEnabled() &&
+    MARKET_SEGMENT_BADGE_CATEGORIES.has(facts.category) &&
+    (segment === "drugstore" || segment === "professional")
+    ? { marketSegment: segment }
+    : {}
+}
+
+/**
+ * The package price the budget may use: only a buyable link with a finite positive EUR price.
+ * Anything else is unknown, and unknown prices are never treated as affordable.
+ */
+export function usablePackagePriceEur(
+  facts: Pick<Stage3CategoryProductFacts, "priceEur" | "purchaseLinkStatus">,
+): number | null {
+  const price = facts.priceEur
+  return facts.purchaseLinkStatus === "available" &&
+    typeof price === "number" &&
+    Number.isFinite(price) &&
+    price > 0
+    ? price
+    : null
 }
 
 /**
@@ -276,7 +393,11 @@ function formatNumber(value: number): string {
   return new Intl.NumberFormat("de-DE", { maximumFractionDigits: 2 }).format(value)
 }
 
-function selectedComparisonCandidateAssessments(
+/**
+ * The complete price-neutral fit ranking of eligible comparison candidates (best first), before
+ * any display bound. The budget policy consumes this list; it never re-ranks by fit.
+ */
+export function rankStage3ComparisonCandidates(
   input: Stage3AuthorityInput,
   subjectEvaluation?: Stage3AuthorityEvaluation,
   selection: Stage3FitComparisonAlternativeSelection = "web",
@@ -297,13 +418,39 @@ function selectedComparisonCandidateAssessments(
       (candidate) =>
         selection === "native" || (candidate.targetCount > 0 && candidate.targetMatchCount > 0),
     )
-    .sort((left, right) =>
-      compareWithAuthorityPin(
-        toRankableCandidate(left),
-        toRankableCandidate(right),
-        pinnedRecommendationProductId,
-      ),
+    .sort(
+      (left, right) =>
+        (input.category === "bondbuilder" ? compareBondbuilderTrust(left, right) : 0) ||
+        compareWithAuthorityPin(
+          toRankableCandidate(left),
+          toRankableCandidate(right),
+          pinnedRecommendationProductId,
+        ),
     )
+}
+
+/**
+ * Bondbuilders rank by claim trust level inside the same verdict (Nick, 2026-10-09): verdict
+ * first (trust never lifts a worse fit), then trust tier, then the K18 house default among equally
+ * trusted candidates. Everything else falls through to the shared comparator.
+ */
+export function compareBondbuilderTrust(
+  left: Pick<CandidateAssessment, "verdict" | "facts" | "productId">,
+  right: Pick<CandidateAssessment, "verdict" | "facts" | "productId">,
+): number {
+  const verdictOrder = Number(left.verdict !== "ideal") - Number(right.verdict !== "ideal")
+  if (verdictOrder !== 0) return verdictOrder
+  const trustOrder = candidateTrustRank(left.facts) - candidateTrustRank(right.facts)
+  if (trustOrder !== 0) return trustOrder
+  return (
+    Number(right.productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID) -
+    Number(left.productId === BONDBUILDER_TIE_DEFAULT_PRODUCT_ID)
+  )
+}
+
+/** The Bondbuilder trust rank of a candidate (lower is better); other categories never rank. */
+export function candidateTrustRank(facts: Stage3CategoryProductFacts): number {
+  return facts.category === "bondbuilder" ? bondbuilderTrustRank(facts.spec.claimTrustLevel) : 0
 }
 
 /**
@@ -359,14 +506,21 @@ function boundedSelectedComparisonCandidateAssessments(
   input: Stage3AuthorityInput,
   subjectEvaluation?: Stage3AuthorityEvaluation,
   selection: Stage3FitComparisonAlternativeSelection = "web",
+  keepCandidateId: string | null = null,
 ): CandidateAssessment[] {
-  const candidates = selectedComparisonCandidateAssessments(input, subjectEvaluation, selection)
+  const candidates = rankStage3ComparisonCandidates(input, subjectEvaluation, selection)
   if (selection === "native") {
     return candidates
       .sort(compareNativePresentationCandidates)
       .slice(0, STAGE3_NATIVE_FIT_COMPARISON_ALTERNATIVE_LIMIT)
   }
-  return candidates.slice(0, STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT)
+  const bounded = candidates.slice(0, STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT)
+  const kept = keepCandidateId
+    ? candidates.find((candidate) => candidate.productId === keepCandidateId)
+    : undefined
+  if (!kept || bounded.includes(kept)) return bounded
+  // The stored choice takes the last slot so the shortlist keeps its size.
+  return [...bounded.slice(0, STAGE3_FIT_COMPARISON_ALTERNATIVE_LIMIT - 1), kept]
 }
 
 /** Native carousel policy is presentation-only: verdict, then comparable EUR price, then ID. */

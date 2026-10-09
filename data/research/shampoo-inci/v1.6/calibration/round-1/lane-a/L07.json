@@ -1,0 +1,123 @@
+{
+  "blindId": "L07",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: C1 pattern - Sodium Laureth Sulfate #2 buffered by Cocamidopropyl Betaine #3 and Coco-Glucoside #4, refatting Glyceryl Oleate #7, no second anionic/reset route, no reset intent. Chelator Tetrasodium Glutamate Diacetate #13 is a minor late route.",
+      "ruleIds": ["§4", "C1"],
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Cocamidopropyl Betaine #3", "Coco-Glucoside #4", "Glyceryl Oleate #7"],
+      "counterSignal": "Late chelator.",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one meaningful cationic system (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #9) plus refatter Glyceryl Oleate #7 and humectants Panthenol #12, Glycerin #14; no silicone.",
+      "ruleIds": ["§5"],
+      "formulaFacts": ["Glyceryl Oleate #7", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #9", "Panthenol #12", "Glycerin #14"],
+      "counterSignal": "Silicone-free, light routes only.",
+      "neighboringAlternative": "low",
+      "sources": ["packet INCI"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: one light polymer (#9) and a light refatter (#7); no persistent system.",
+      "ruleIds": ["§6"],
+      "subjudgments": {"depositionLoad": "light", "persistence": "low", "resetCapacity": "moderate"},
+      "whyThisBand": "Light, non-persistent deposition.",
+      "whyNotNeighborBand": "No meaningfully persistent system.",
+      "formulaFacts": ["Glyceryl Oleate #7", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #9"],
+      "counterSignal": "none material",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "rationale": "scalp_active: problem-led product with recognized dandruff active (Piroctone Olamine #6) and anti-dandruff positioning ('Anti Schuppen' in name) (7.2).",
+      "ruleIds": ["7.2"],
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedRoutes": [], "limitation": "Not a repair/moisture decision."},
+      "claimRole": "candidate",
+      "formulaFacts": ["Piroctone Olamine #6", "Zinc PCA #11"],
+      "counterSignal": "Fragrance and colorants are tolerability counter-signals.",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Blind: recognized active #6 -> scalp_active compatible. Unblind: name 'Anti Schuppen' -> scalp_active.",
+      "sources": ["product name", "manufacturer claims", "packet INCI"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: the itchy-scalp role is part of scalp_active (never repeat primary, §8; Appendix A Vichy row logic).",
+      "ruleIds": ["§8"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["manufacturer claims"]
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "rationale": "Treatment: supported anti-dandruff formula with problem-led positioning ('bekämpft ... die Ursache von Schuppen', 'bei regelmäßiger Anwendung') (§9).",
+      "ruleIds": ["§9"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["manufacturer claims", "packet INCI"]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "rationale": "Targeted: explicit itchy/tight scalp positioning ('Bei Schuppen und juckender Kopfhaut', 'juckende Kopfhaut wird beruhigt', 'Spannungsgefühl reduziert', 'sanft zur Kopfhaut') with supportive architecture: moderate buffered cleansing, Glyceryl Oleate #7, Panthenol #12, Glycerin #14, Malva #16. Counter: fragrance #19 and colorants.",
+      "ruleIds": ["§10"],
+      "counterSignal": "Fragrance and dyes; not a veto.",
+      "neighboringAlternative": "not_targeted",
+      "sources": ["manufacturer claims", "packet INCI"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains Piroctone Olamine #6.",
+      "ruleIds": ["§11"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    }
+  },
+  "projection": {
+    "status": "proposal_blocked_by_review",
+    "thicknessFit": {"fine": "ideal", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitConfidence": {"fine": "high", "normal": "high", "coarse": "moderate"},
+    "thicknessRationale": "T1 W low, C moderate: fine ideal, normal ideal, coarse acceptable; scalp-concern targets so T6 applies but nothing is not_suited. T4: W has no neighbor; C neighbor low keeps coarse acceptable -> no flags.",
+    "weight": "light",
+    "weightConfidence": "high",
+    "weightRationale": "W-LIVE: low -> light.",
+    "scalpTargets": {"primary": "dandruff", "secondary": "sensitive"},
+    "scalpTargetConfidence": {"dandruff": "high", "sensitive": "moderate"},
+    "scalpTargetRationale": "S-DANDRUFF: 'Anti Schuppen' in name (E1 high) + dandruffSupport supported -> pass. S-SENSITIVE: E2 'juckende Kopfhaut ... beruhigt' on manufacturer page (E1 moderate) + scalpComfortTarget targeted + prominent comfort route Panthenol #12 (before Parfum #19) + cleansing not strong -> pass. S-DRY: E2 'spannende Kopfhaut'/'Spannungsgefühl' (manufacturer, moderate) + targeted + prominent humectant Glycerin #14 / Panthenol #12 / Glyceryl Oleate #7 -> also passes. S-PRIMARY: dandruff (named in product name). S-SECONDARY: only one secondary; highest precedence of the remaining = sensitive; dry is a third qualifying target -> review_extra_scalp_target. S-FOCUS: scalp_active primary -> no mismatch.",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: moderate -> regular. Equals schuppen's expected regular; differs from irritationen's expected gentle (I2: truthful amber for sensitive rows). I3: no cleansing neighbor -> no flag.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "No D1 term.",
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "fine", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "normal", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "normal", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable"},
+      {"thickness": "coarse", "shampoo_bucket": "irritationen", "scalp_route": "irritated", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_dandruff", "shampoo_everyday"],
+    "reviewFlags": ["review_extra_scalp_target:dry"],
+    "informationalNotes": [],
+    "liveComparison": "Not evaluated (live rows not in sealed packet)."
+  },
+  "uncertainties": [
+    "E2 dry lexicon lists 'Spannungsgefühl der Kopfhaut'; the product says 'juckenden, spannenden Kopfhaut' and 'Spannungsgefühl reduziert' as part of a dandruff/itch claim. Treated as a qualifying dry claim, which makes three targets pass and raises review_extra_scalp_target; the standard does not say whether a tension claim embedded in an itch/dandruff claim is a distinct dry-scalp claim.",
+    "S-SECONDARY 'highest-precedence secondary' between sensitive and dry: used the S-PRIMARY order (sensitive before dry).",
+    "Malva Sylvestris (#16) is not in the E4 comfort list; not needed because Panthenol #12 is prominent.",
+    "13.8 scalp target confidence for sensitive: positioning moderate (manufacturer page only) caps it at moderate."
+  ]
+}

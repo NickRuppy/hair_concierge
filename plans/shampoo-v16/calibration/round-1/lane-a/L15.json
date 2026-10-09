@@ -1,0 +1,119 @@
+{
+  "blindId": "L15",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: nonionic Decyl Glucoside #2 leads, with mild anionics Disodium Laureth Sulfosuccinate #3 and Sodium Lauryl Sulfoacetate #4 and refatting PEG-55 Propylene Glycol Oleate #5; no sulfate, no reset route.",
+      "ruleIds": ["§4"],
+      "formulaFacts": ["Decyl Glucoside #2", "Disodium Laureth Sulfosuccinate #3", "Sodium Lauryl Sulfoacetate #4", "PEG-55 Propylene Glycol Oleate #5"],
+      "counterSignal": "Two anionic routes at #3/#4 and no amphoteric; 'sulfate-free does not automatically mean low'.",
+      "neighboringAlternative": "moderate",
+      "sources": ["packet INCI"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: only a late cationic starch (Hydroxypropyl Oxidized Starch PG-Trimonium Chloride #11, after preservatives) and humectants Propylene Glycol #6, Sodium Lactate #14.",
+      "ruleIds": ["§5"],
+      "formulaFacts": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride #11"],
+      "counterSignal": "none material",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: one late light cationic polymer; no persistent deposition.",
+      "ruleIds": ["§6"],
+      "subjudgments": {"depositionLoad": "light", "persistence": "low", "resetCapacity": "weak"},
+      "whyThisBand": "Almost no deposition.",
+      "whyNotNeighborBand": "No persistent system.",
+      "formulaFacts": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride #11"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "moderate",
+      "rationale": "scalp_active: lead manufacturer claim 'Schonende, seifenfreie Reinigung für empfindliche Kopfhaut' plus 'schützt Kopfhaut ... vor dem Austrocknen' is explicit sensitive-scalp positioning, and scalpComfortTarget is targeted (7.2 sensitive row). Not merely mildness because the claim names a scalp condition.",
+      "ruleIds": ["7.2", "Appendix A"],
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedRoutes": [], "limitation": "Not a repair/moisture decision."},
+      "claimRole": "candidate",
+      "formulaFacts": ["Decyl Glucoside #2", "Lactic Acid #12", "Sodium Lactate #14"],
+      "counterSignal": "Much of the copy is mildness/everyday language, which alone is not a focus (7.2); no listed comfort route; fragrance.",
+      "neighboringAlternative": "general",
+      "decisionTrace": "Blind: very mild glucoside system, minimal conditioning -> gentle chassis, no specialist route. Unblind: sensitive-scalp lead claim + targeted -> scalp_active.",
+      "sources": ["manufacturer claims"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: 'mehr Fülle und Glanz' (retailer) has no independent route and is an outcome claim.",
+      "ruleIds": ["§8", "F2"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["retailer claims"]
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "moderate",
+      "rationale": "Frequent: 'Every-Day' in name, 'für die tägliche Haarwäsche', and cleansingStrength low (not strong) (§9).",
+      "ruleIds": ["§9"],
+      "counterSignal": "none",
+      "neighboringAlternative": "regular",
+      "sources": ["product name", "manufacturer directions"]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "rationale": "Targeted: explicit sensitive-scalp positioning ('für empfindliche Kopfhaut', 'Widerstandskräfte gegen Reizeinflüsse') with supportive architecture: genuinely mild glucoside-led cleansing, pH 5.5 lactic acid/sodium lactate buffer, refatting PEG-55 PG Oleate #5. Counter: fragrance #7; no allantoin/panthenol-type comfort route.",
+      "ruleIds": ["§10"],
+      "counterSignal": "Fragrance, no listed comfort route.",
+      "neighboringAlternative": "not_targeted",
+      "sources": ["manufacturer claims", "packet INCI"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole.",
+      "ruleIds": ["§11"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    }
+  },
+  "projection": {
+    "status": "proposal_blocked_by_review",
+    "thicknessFit": {"fine": "ideal", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitConfidence": {"fine": "high", "normal": "high", "coarse": "high"},
+    "thicknessRationale": "Proposed target ordinary (S-FAIL): T1 W low, C low -> fine ideal, normal ideal, coarse acceptable. T4: no neighbors on W or C -> no flags.",
+    "weight": "light",
+    "weightConfidence": "high",
+    "weightRationale": "W-LIVE: low -> light.",
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetConfidence": "moderate",
+    "scalpTargetRationale": "S-SENSITIVE: E2 'empfindliche Kopfhaut' (manufacturer, E1 moderate) passes; formula: targeted passes but no prominent E4 comfort route (prominent set before Parfum #7: Decyl Glucoside, Disodium Laureth Sulfosuccinate, Sodium Lauryl Sulfoacetate, PEG-55 Propylene Glycol Oleate, Propylene Glycol - none listed) -> fails. S-DRY: 'schützt Kopfhaut ... vor dem Austrocknen' is a protective statement, not a listed dry-scalp claim; even if accepted, no prominent listed humectant (Sodium Lactate #14 is after Parfum) -> would fail. No other specialist target -> S-FAIL: propose ordinary + review_specialist_gate_failed. S-FOCUS cannot fire (no specialist target projected) even though focus is scalp_active.",
+    "cleansingIntensity": "gentle",
+    "cleansingIntensityConfidence": "moderate",
+    "cleansingIntensityRationale": "I1: low -> gentle (ordinary bucket expects regular; I2 keeps gentle -> amber). I3: neighbor moderate -> regular, equal to the projected bucket's expected intensity while gentle is not -> review_intensity_boundary.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "No D1 term.",
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "gentle", "weight": "light", "tier": "ideal"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "gentle", "weight": "light", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "gentle", "weight": "light", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": ["review_specialist_gate_failed:sensitive:no_prominent_listed_comfort_route", "review_intensity_boundary"],
+    "informationalNotes": [],
+    "liveComparison": "Not evaluated (live rows not in sealed packet)."
+  },
+  "uncertainties": [
+    "§10 accepts 'mild/balanced cleansing' and pH/barrier support as supportive architecture for targeted, but S-SENSITIVE then demands a prominent E4 comfort route that a minimalist sensitive-scalp formula need not contain; a product can be scalp_active/targeted yet fail its target gate. Resolved by S-FAIL (review).",
+    "E2 dry lexicon does not cover protective wording ('schützt ... Kopfhaut vor dem Austrocknen'); treated as not qualifying.",
+    "I3 here fires toward a stronger-intensity reading that would make the ordinary row green; the standard does not distinguish the direction of I3 flags."
+  ]
+}

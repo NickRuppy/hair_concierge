@@ -8,10 +8,12 @@ import {
   diagnosticsPatchSchema,
   domainProvenanceSchema,
   quizContextPatchSchema,
+  shoppingPreferencesPatchSchema,
   type CareHabitsPatch,
   type DiagnosticsPatch,
   type DomainProvenance,
   type QuizContextPatch,
+  type ShoppingPreferencesPatch,
 } from "./schema"
 
 /**
@@ -96,6 +98,16 @@ export type SaveUserFactsInput =
       draftBinding?: DraftBinding
       expectedUpdatedAt?: string
     }
+  | {
+      userId: string
+      domain: "shopping_preferences"
+      patch: ShoppingPreferencesPatch
+      provenance: DomainProvenance
+      expectedRevision?: number
+      mode?: "upsert" | "create_only"
+      draftBinding?: DraftBinding
+      expectedUpdatedAt?: string
+    }
 
 export type SaveUserFactsResult =
   | {
@@ -127,6 +139,7 @@ const PATCH_SCHEMAS = {
   diagnostics: diagnosticsPatchSchema,
   care_habits: careHabitsPatchSchema,
   quiz_context: quizContextPatchSchema,
+  shopping_preferences: shoppingPreferencesPatchSchema,
 } as const
 
 // Validates the raw `user_facts_save_v1` RPC payload. `invalid_input` is included here (it is
