@@ -1,4 +1,4 @@
-# Nomi consult finish — plan (Rev. 1, 2026-10-09)
+# Nomi consult finish — plan (Rev. 2, 2026-10-09)
 
 Goal: make Nomi's (enrollment `6ebb7e7b…`) real call outcome expressible in the cockpit and printable
 without false promises. Nick's rulings 2026-10-09 (chat):
@@ -41,9 +41,33 @@ Today an empty step offers exactly one swap option: the Idealplan pick. For a ti
   placement, Bond-Repair-Tag order) — fix location decided from the compiler map; anything that would
   change member-facing `/anwendung` is split out, not slipped in.
 
-## T4 — Dry-scalp wash band (pending research)
+## T4 — Dry-scalp wash band (ruled: research band)
 
-Only if the care-expert evidence supports it; otherwise dropped from this PR.
+Care-expert research (scratchpad report; Punyani 2021, Fajuyigbe 2024, AAD — indirect evidence, low–moderate
+confidence): no evidence that 2×/week with a mild shampoo harms a dry scalp; longer gaps tend to worsen flaking.
+Ruled 2026-10-09: dry scalp + straight/wavy → preferred `weekly_2x`, min `weekly_1x`, max `weekly_3_4x`;
+dry + curly/coily (and unknown pattern, conservative) keeps the old band (1× / every 2 weeks / 1×).
+Deterministic rule — TDD in `needs.ts` + `categories/shampoo.ts` (both tables).
+
+## T5 — Mask day (ruled: in this PR)
+
+V2 shampoo template (`standard_rinse_out_cleanse`) is wash-day only, so `intensive_care_day` (requires cleanse +
+intensive_care) never forms → every rinse-out mask is `!instructed` → discovery gap (and likely missing on
+member `/anwendung`). Fix in the V2 compiler, mirroring the existing bond-repair extension: with a rinse-out
+mask in the routine, the standard cleanse protocol is also compatible with `intensive_care_day`. Verify member
+impact first (production audit), regression test with the shared templates.
+
+## T6 — Heat protection placement (ruled: in this PR)
+
+(a) A dry-only protectant must not appear on days without heat (`between_wash_care_day`, `refresh_day`): gate
+heat-protection items to the days a heat event applies to (existing `oilHeatEventMatchesDay`-style mapping).
+(b) Blow-drying (`airflow_shaping`) with only a dry-hair protectant: no silent omission — scope decided from
+the compiler's heat-occurrence model; member-facing, regression-tested.
+
+## T7 — Olaplex Nº.5 (parallel, catalog lane — not this PR)
+
+Both formulas researched as separate catalog products (exact-EAN legacy = Nomi's submission; current
+Strengthening formula = new candidate). Local packages only; Nick signs off before publish.
 
 ## Out of scope
 

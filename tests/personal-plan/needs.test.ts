@@ -44,6 +44,22 @@ test("INITIAL-02: quiz-led Shampoo cadence keeps current behavior unknown", () =
   })
 })
 
+test("dry scalp cadence band follows hair pattern (straight/wavy 2×, curly/coily 1×)", () => {
+  const band = (texture: "straight" | "wavy" | "curly" | "coily") => {
+    const { preferred, minimum, maximum } = assess({ scalpOiliness: "dry", texture }).shampooCadence
+    return [preferred, minimum, maximum]
+  }
+  assert.deepEqual(band("straight"), ["weekly_2x", "weekly_1x", "weekly_3_4x"])
+  assert.deepEqual(band("wavy"), ["weekly_2x", "weekly_1x", "weekly_3_4x"])
+  assert.deepEqual(band("curly"), ["weekly_1x", "biweekly_1x", "weekly_1x"])
+  assert.deepEqual(band("coily"), ["weekly_1x", "biweekly_1x", "weekly_1x"])
+  assert.ok(
+    assess({ scalpOiliness: "dry", texture: "straight" }).shampooCadence.sourceFacts.includes(
+      "hair.texture:straight",
+    ),
+  )
+})
+
 test("INITIAL-04: oily scalp contributes one Reset point while product load stays deferred", () => {
   const assessment = assess({ scalpOiliness: "oily" })
   assert.equal(assessment.resetLoad.knowledgeState, "partial")
