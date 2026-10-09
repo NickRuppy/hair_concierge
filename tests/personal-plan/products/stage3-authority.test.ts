@@ -369,6 +369,36 @@ for (const category of Object.keys(CATEGORY_ROLE_POLICIES) as PersonalPlanCatego
   })
 }
 
+test("Leave-in heat claim and verified shared protocol cover pre-heat without a label timing claim", () => {
+  const heatInput = input("leave_in", "known") as Stage3AuthorityInput<"leave_in">
+  heatInput.role = "pre_heat_application"
+  heatInput.categoryDecision.roles = ["pre_heat_application"]
+  if (heatInput.categoryDecision.target?.category !== "leave_in") throw new Error("fixture")
+  heatInput.categoryDecision.target.roles = ["pre_heat_application"]
+  if (heatInput.productFacts?.category !== "leave_in") throw new Error("fixture")
+  heatInput.productFacts.spec.roles = ["post_wash_leave_in", "pre_heat_application"]
+  heatInput.productFacts.spec.providesHeatProtection = true
+  heatInput.productFacts.spec.applicationStages = ["towel_dry"]
+  heatInput.productFacts.protocols = [
+    { role: "pre_heat_application", status: "verified_complete", fingerprint: "shared-heat" },
+  ]
+
+  const covered = evaluateStage3Authority(heatInput as never)
+  assert.equal(covered.status, "known")
+  if (covered.status === "known") assert.equal(covered.verdict, "ideal")
+
+  heatInput.productFacts.protocols = []
+  assert.equal(evaluateStage3Authority(heatInput as never).status, "unknown")
+
+  heatInput.productFacts.protocols = [
+    { role: "pre_heat_application", status: "verified_complete", fingerprint: "shared-heat" },
+  ]
+  heatInput.productFacts.spec.providesHeatProtection = false
+  const noHeatClaim = evaluateStage3Authority(heatInput as never)
+  assert.equal(noHeatClaim.status, "known")
+  if (noHeatClaim.status === "known") assert.equal(noHeatClaim.verdict, "mismatch")
+})
+
 test("supportive owned-product verdicts retain explicit keep and uncovered actions", () => {
   const conditionerInput = input("conditioner", "known") as Stage3AuthorityInput<"conditioner">
   if (conditionerInput.productFacts?.category !== "conditioner") throw new Error("fixture")
