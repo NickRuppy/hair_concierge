@@ -18,6 +18,8 @@ const CHAIN = [
   "20260925150000_discovery_admin_item_usage_styling.sql",
   "20260927120000_discovery_call_decisions_per_item.sql",
   "20260928120000_discovery_call_sheets.sql",
+  "20260929160000_discovery_call_sheet_complexity.sql",
+  "20261009120000_discovery_call_sheet_half_point_score.sql",
 ]
 
 const predecessorSchema = `
@@ -91,7 +93,7 @@ test("one sheet per enrollment; an unknown enrollment is refused", async (t) => 
   )
 })
 
-test("baseline_score is 1–10 or null", async (t) => {
+test("baseline_score is 1–10 in half points, or null", async (t) => {
   const pg = await migrated(t)
   const set = async (score: number | null) => {
     const id = await enrollment(pg)
@@ -100,8 +102,8 @@ test("baseline_score is 1–10 or null", async (t) => {
       [id, score],
     )
   }
-  for (const ok of [1, 10, null]) await set(ok)
-  for (const bad of [0, 11, -1]) {
+  for (const ok of [1, 10, 7.5, 1.5, null]) await set(ok)
+  for (const bad of [0, 11, -1, 0.5, 10.5, 7.25, 7.3]) {
     await assert.rejects(set(bad), /discovery_call_sheets_baseline_score_check/)
   }
 })

@@ -319,9 +319,11 @@ function parseRevision(value: unknown): DiscoveryCallSheetBriefRevision | null {
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/
 
+/** A score 1–10 in half points („7,5"). PostgREST may hand a numeric column back as text. */
 function scoreOf(value: unknown): number | null {
-  return typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= 10
-    ? value
+  const score = typeof value === "string" && value.trim() !== "" ? Number(value) : value
+  return typeof score === "number" && Number.isInteger(score * 2) && score >= 1 && score <= 10
+    ? score
     : null
 }
 
