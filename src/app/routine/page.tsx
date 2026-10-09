@@ -32,6 +32,7 @@ import {
   loadCachedAuthenticatedAppUserId,
   loadCachedPersonalPlanJourneyAccessForUser,
 } from "@/lib/personal-plan/navigation-access"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 
@@ -56,7 +57,15 @@ export type RoutinePageResolverDeps = {
    * Optional and failure-tolerant like `readPortfolioPresentation` above — a
    * missing dep or a failed read just means no banner, never a broken page.
    */
-  readRefinementBanner?: (userId: string) => Promise<RoutineRefinementBannerViewModel | null>
+  readRefinementBanner?: (
+    userId: string,
+    options: { toolsEnabled: boolean },
+  ) => Promise<RoutineRefinementBannerViewModel | null>
+  /**
+   * Server-resolved Hair Tools rollout for the banner's module states. Fail closed: an unwired
+   * or failing dep means off. Browser input never reaches it.
+   */
+  toolsEnabled?: (userId: string) => Promise<boolean>
 }
 
 export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
@@ -91,7 +100,10 @@ export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
     let refinementBanner: RoutineRefinementBannerViewModel | null = null
     if (deps.readRefinementBanner) {
       try {
-        refinementBanner = await deps.readRefinementBanner(userId)
+        const toolsEnabled = deps.toolsEnabled
+          ? await deps.toolsEnabled(userId).catch(() => false)
+          : false
+        refinementBanner = await deps.readRefinementBanner(userId, { toolsEnabled })
       } catch {
         // Cosmetic and deliberately failure-tolerant, like the presentation
         // load above: a failed banner read must never hide or break the
@@ -129,10 +141,12 @@ const defaultDeps: RoutinePageResolverDeps = {
       planId,
       portfolioVersionId,
     ),
-  readRefinementBanner: async (userId) => {
+  toolsEnabled: async (userId) => isPersonalPlanToolsEnabledForUser(userId, createAdminClient()),
+  readRefinementBanner: async (userId, { toolsEnabled }) => {
     const result = await loadRefinementStatusForUser(
       createAdminClient() as unknown as Parameters<typeof loadRefinementStatusForUser>[0],
       userId,
+      { toolsEnabled },
     )
     if (result.status !== "ok" || !result.data.banner.visible || !result.data.banner.module) {
       return null

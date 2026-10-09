@@ -14,6 +14,7 @@ import {
   type Stage2PersistedDraft,
 } from "@/lib/personal-plan/persistence/stage2-refinement-service"
 import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import { Stage2RefinementError } from "@/lib/personal-plan/refinement/gateway"
 import { STAGE2_MODULES, type Stage2Module } from "@/lib/personal-plan/refinement/types"
 import {
@@ -27,9 +28,12 @@ export type Stage2OptionalEntryRouteDeps = {
   getUserId: () => Promise<string | null>
   enabled: () => boolean
   loadStage2Access: (userId: string) => Promise<PersonalPlanStage2Access>
+  /** Server-resolved Hair Tools rollout for this user; browser input never reaches it. */
+  toolsEnabled: (userId: string) => Promise<boolean>
   openOptionalRefinement: (input: {
     userId: string
     module: Stage2Module
+    toolsEnabled: boolean
   }) => Promise<Stage2PersistedDraft>
   /** Logs + reports a failure the route answers with a generic 503. Defaults to Sentry. */
   reportUnexpectedError?: (route: Stage2UnexpectedErrorRoute, error: unknown) => void
@@ -113,10 +117,12 @@ export function createStage2OptionalEntryRouteHandler(deps: Stage2OptionalEntryR
     try {
       const parsed = requestSchema.safeParse(await request.json().catch(() => null))
       if (!parsed.success) throw new Stage2OptionalEntryInvalidRequestError()
+      const toolsEnabled = await deps.toolsEnabled(userId).catch(() => false)
       phaseStarted = Date.now()
       const draft = await deps.openOptionalRefinement({
         userId,
         module: parsed.data.module,
+        toolsEnabled,
       })
       phases.operation = Date.now() - phaseStarted
       console.info("personal_plan_stage2_optional_entry_api", {
@@ -140,6 +146,7 @@ export const POST = createStage2OptionalEntryRouteHandler({
   enabled: () => isPersonalPlanAppV1Enabled(),
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   loadStage2Access: loadPersonalPlanStage2AccessForUser,
-  openOptionalRefinement: ({ userId, module }) =>
-    openOptionalRefinement({ userId, module, client: createAdminClient() }),
+  toolsEnabled: async (userId) => isPersonalPlanToolsEnabledForUser(userId, createAdminClient()),
+  openOptionalRefinement: ({ userId, module, toolsEnabled }) =>
+    openOptionalRefinement({ userId, module, toolsEnabled, client: createAdminClient() }),
 })

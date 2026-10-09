@@ -159,6 +159,7 @@ test("eligible fully-assumed complete parent opens with a skipped seed and no le
 
   const result = await openOptionalRefinement({
     userId: "user-1",
+    toolsEnabled: false,
     module: "products",
     client: client as never,
   })
@@ -204,6 +205,7 @@ test("openOptionalRefinement reuses an existing in-progress draft even without a
   const existing = draft({ id: "draft-open", status: "in_progress", refinedVersionId: null })
   const result = await openOptionalRefinement({
     userId: "user-1",
+    toolsEnabled: false,
     module: "habits",
     deps: {
       loadContext: async () => context({ currentDraft: existing, latestCompleteDraft: null }),
@@ -238,6 +240,7 @@ for (const provenance of ["assumed", "user"] as const) {
     const opened = draft({ id: "draft-cloned", status: "in_progress", refinedVersionId: null })
     const result = await openOptionalRefinement({
       userId: "user-1",
+      toolsEnabled: false,
       module: "products",
       deps: {
         loadContext: async () => context({ latestCompleteDraft: parent }),
@@ -265,6 +268,7 @@ test("openOptionalRefinement rejects missing parent state without opening a draf
   await assert.rejects(
     openOptionalRefinement({
       userId: "user-1",
+      toolsEnabled: false,
       module: "products",
       deps: {
         loadContext: async () => context({ latestCompleteDraft: null }),
@@ -292,6 +296,7 @@ for (const [label, ctx] of [
     await assert.rejects(
       openOptionalRefinement({
         userId: "user-1",
+        toolsEnabled: false,
         module: "tools",
         deps: {
           loadContext: async () => ctx(),
@@ -309,6 +314,7 @@ test("openOptionalRefinement still rejects an unknown module as invalid_module",
   await assert.rejects(
     openOptionalRefinement({
       userId: "user-1",
+      toolsEnabled: false,
       module: "nope" as never,
       deps: {
         loadContext: async () => context(),

@@ -14,6 +14,7 @@ type AdminClient = SupabaseClient
 /** Server-only persistence adapter. It is intentionally supplied only to route composition. */
 export function createSupabaseStage2RefinementPersistence(
   client: AdminClient,
+  options: { toolsEnabled: boolean },
 ): Stage2RefinementPersistence & Stage2RefinementResumeReader {
   async function loadSource(userId: string) {
     const { data: plan, error: planError } = await client
@@ -44,6 +45,7 @@ export function createSupabaseStage2RefinementPersistence(
       initial,
       triggerContext: deriveStage2TriggerContext(
         initial.output_snapshot as InitialNeedPlanSnapshot,
+        { toolsEnabled: options.toolsEnabled },
       ),
     }
   }

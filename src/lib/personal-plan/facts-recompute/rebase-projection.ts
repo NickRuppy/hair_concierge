@@ -46,6 +46,8 @@ export type RebaseProjectionInput = {
   sourceId: string
   hasRefinedHead: boolean
   now: Date
+  /** Server-resolved Hair Tools rollout: decides the question path the clone must satisfy. */
+  toolsEnabled: boolean
 }
 
 export type RebaseClone = {
@@ -84,7 +86,9 @@ export class RebaseProjectionIncompleteError extends Error {
 
 export function buildRebaseProjection(input: RebaseProjectionInput): RebaseProjection {
   const { sourceDraft, newInitial } = input
-  const triggerContext = deriveStage2TriggerContext(newInitial.outputSnapshot)
+  const triggerContext = deriveStage2TriggerContext(newInitial.outputSnapshot, {
+    toolsEnabled: input.toolsEnabled,
+  })
   const clone =
     sourceDraft.status === "complete"
       ? resolvedClone(sourceDraft, triggerContext)

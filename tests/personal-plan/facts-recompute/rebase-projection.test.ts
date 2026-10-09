@@ -74,7 +74,7 @@ function parentFrom(envelope: unknown, id = NEW_INITIAL_ID): Parent {
     id,
     inputSnapshot: computed.snapshot.sourceQuiz as unknown as JsonValue,
     outputSnapshot: computed.snapshot,
-    triggerContext: deriveStage2TriggerContext(computed.snapshot),
+    triggerContext: deriveStage2TriggerContext(computed.snapshot, { toolsEnabled: false }),
   }
 }
 
@@ -142,6 +142,7 @@ function project(
     sourceId: ARTIFACT_ID,
     hasRefinedHead: options.hasRefinedHead ?? true,
     now: NOW,
+    toolsEnabled: false,
   })
 }
 

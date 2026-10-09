@@ -115,6 +115,12 @@ export type Stage2TriggerContext = {
   relevantCategories: Stage2ProductCategory[]
   hasReportedIrritatedScalp: boolean
   dryShampooBridgeEligibility: "unknown" | "eligible" | "ineligible"
+  /**
+   * Server-resolved Hair Tools rollout for this request. Optional on the type so
+   * stored/fixture contexts decode; `deriveStage2TriggerContext` always sets it.
+   * Absent means off.
+   */
+  toolsEnabled?: boolean
 }
 
 export type Stage2PathState = {

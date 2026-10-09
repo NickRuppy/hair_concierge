@@ -112,6 +112,7 @@ function handlersFor(tables: Record<string, Row[]>, userId: string | null = ids.
   return createRefinementStatusRouteHandlers({
     getUserId: async () => userId,
     client: () => makeClient(tables) as never,
+    toolsEnabled: async () => false,
   })
 }
 

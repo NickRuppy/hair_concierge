@@ -12,6 +12,7 @@ import {
   type PersonalPlanJourneyAccess,
 } from "@/lib/personal-plan/journey-access"
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 
 export const runtime = "nodejs"
 
@@ -19,6 +20,8 @@ export type Stage1RouteDeps = {
   getAuthenticatedUser: () => Promise<{ id: string } | null>
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
   persistence: Stage1PersistenceDependencies
+  /** Server-resolved Hair Tools rollout for this user; browser input never reaches it. */
+  toolsEnabled: (userId: string) => Promise<boolean>
 }
 
 export async function GET() {
@@ -31,6 +34,8 @@ export async function GET() {
       getAuthenticatedUser: async () => (user ? { id: user.id } : null),
       loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
       persistence: createStage1SupabaseDependencies(createAdminClient() as never),
+      toolsEnabled: async (userId) =>
+        isPersonalPlanToolsEnabledForUser(userId, createAdminClient()),
     }),
   )
 }
@@ -62,7 +67,10 @@ export async function handleStage1LoadOrCreate(deps: Stage1RouteDeps) {
     userId: user.id,
   })
   switch (result.status) {
-    case "completed":
+    case "completed": {
+      // Relayed to the client's snapshot adapter so its Stage-2 trigger context follows the
+      // server's decision. Omitted when off, so the response stays as it was.
+      const toolsEnabled = await deps.toolsEnabled(user.id).catch(() => false)
       return {
         status: 200,
         body: {
@@ -70,8 +78,10 @@ export async function handleStage1LoadOrCreate(deps: Stage1RouteDeps) {
           personalPlanId: result.personalPlanId,
           needVersionId: result.needVersionId,
           outputSnapshot: result.outputSnapshot,
+          ...(toolsEnabled ? { toolsEnabled: true } : {}),
         },
       }
+    }
     case "personal_plan_not_available":
       return { status: 404, body: { error: "personal_plan_not_available" } }
     case "activation_pending":

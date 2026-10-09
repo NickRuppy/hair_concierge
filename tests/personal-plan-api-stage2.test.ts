@@ -46,6 +46,7 @@ function deps(overrides: Partial<Stage2RouteDeps> = {}): Stage2RouteDeps {
     enabled: () => true,
     getUserId: async () => "owner-1",
     loadStage2Access: async () => stage2Access,
+    toolsEnabled: async () => false,
     gatewayFor: () => gateway(),
     // Default: "no active routine" — the vast majority of Stage 2 tests never
     // touch the habits-recompute lane, so this must be a harmless no-op.
@@ -77,6 +78,7 @@ function completeDeps(overrides: Partial<Stage2CompleteRouteDeps> = {}): Stage2C
     enabled: () => true,
     getUserId: async () => "owner-1",
     loadStage2Access: async () => stage2Access,
+    toolsEnabled: async () => false,
     gatewayFor: () => gateway(),
     ...overrides,
   }

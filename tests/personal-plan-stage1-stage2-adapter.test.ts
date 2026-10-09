@@ -73,7 +73,7 @@ function initialSnapshot() {
 
 test("a real Stage 1 snapshot drives Stage 2 triggers and a refined Stage 1 recomputation", () => {
   const initial = initialSnapshot()
-  const triggerContext = deriveStage2TriggerContext(initial)
+  const triggerContext = deriveStage2TriggerContext(initial, { toolsEnabled: false })
 
   assert.deepEqual(triggerContext, {
     relevantCategories: initial.renderedOrder,
@@ -144,7 +144,7 @@ test("a real Stage 1 snapshot drives Stage 2 triggers and a refined Stage 1 reco
 })
 
 test("refined towel technique projects only explicit rough rubbing as mechanical exposure", () => {
-  const triggerContext = deriveStage2TriggerContext(initialSnapshot())
+  const triggerContext = deriveStage2TriggerContext(initialSnapshot(), { toolsEnabled: false })
 
   for (const [towel, expected] of [
     [{ material: "frottee", technique: "rough_rubbing" }, ["towel_rough_rubbing"]],
@@ -162,7 +162,7 @@ test("refined towel technique projects only explicit rough rubbing as mechanical
 })
 
 test("completed current-product categories clear current-product-load deferrals", () => {
-  const triggerContext = deriveStage2TriggerContext(initialSnapshot())
+  const triggerContext = deriveStage2TriggerContext(initialSnapshot(), { toolsEnabled: false })
   const routine = buildPlanRoutineContextFromCompletedRefinement({
     triggerContext,
     answers: {
@@ -200,7 +200,7 @@ test("completed current-product categories clear current-product-load deferrals"
 })
 
 test("current product categories stay inventory-routing facts instead of frequency load", () => {
-  const triggerContext = deriveStage2TriggerContext(initialSnapshot())
+  const triggerContext = deriveStage2TriggerContext(initialSnapshot(), { toolsEnabled: false })
   const routine = buildPlanRoutineContextFromCompletedRefinement({
     triggerContext,
     answers: {
@@ -257,7 +257,7 @@ test("current product categories stay inventory-routing facts instead of frequen
 })
 
 test("the adapter rejects an incomplete refinement contract", () => {
-  const triggerContext = deriveStage2TriggerContext(initialSnapshot())
+  const triggerContext = deriveStage2TriggerContext(initialSnapshot(), { toolsEnabled: false })
 
   assert.throws(
     () =>
@@ -273,7 +273,7 @@ test("the adapter rejects an incomplete refinement contract", () => {
 test("an untriggered scalp detail stays an explicit unknown", () => {
   const initial = initialSnapshot()
   const triggerContext = {
-    ...deriveStage2TriggerContext(initial),
+    ...deriveStage2TriggerContext(initial, { toolsEnabled: false }),
     hasReportedIrritatedScalp: false,
   }
   const answers = { ...completedAnswers, scalpIrritationDetail: undefined }

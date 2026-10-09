@@ -3,6 +3,7 @@ import { z } from "zod"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import { createSupabaseStage2RefinementPersistence } from "@/lib/personal-plan/persistence/stage2-refinement-supabase"
 import { createPersistedStage2RefinementGateway } from "@/lib/personal-plan/refinement/production-persistence-gateway"
 import {
@@ -21,7 +22,9 @@ const completeRequestSchema = z
 export type Stage2CompleteRouteDeps = {
   enabled: () => boolean
   getUserId: () => Promise<string | null>
-  gatewayFor: (userId: string) => Stage2RefinementGateway
+  /** Server-resolved Hair Tools rollout for this user; browser input never reaches it. */
+  toolsEnabled: (userId: string) => Promise<boolean>
+  gatewayFor: (userId: string, options: { toolsEnabled: boolean }) => Stage2RefinementGateway
   loadStage2Access: (userId: string) => Promise<PersonalPlanStage2Access>
 }
 
@@ -78,7 +81,8 @@ export function createStage2CompleteRouteHandler(deps: Stage2CompleteRouteDeps) 
     if (!parsed.success) return response({ error: "invalid_request" }, 400)
     try {
       phaseStarted = Date.now()
-      const result = await deps.gatewayFor(userId).complete(parsed.data)
+      const toolsEnabled = await deps.toolsEnabled(userId).catch(() => false)
+      const result = await deps.gatewayFor(userId, { toolsEnabled }).complete(parsed.data)
       phases.operation = Date.now() - phaseStarted
       console.info("personal_plan_stage2_api", {
         event: "complete",
@@ -95,11 +99,12 @@ export const POST = createStage2CompleteRouteHandler({
   enabled: isPersonalPlanAppV1Enabled,
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   loadStage2Access: loadPersonalPlanStage2AccessForUser,
-  gatewayFor: (userId) => {
+  toolsEnabled: async (userId) => isPersonalPlanToolsEnabledForUser(userId, createAdminClient()),
+  gatewayFor: (userId, { toolsEnabled }) => {
     const admin = createAdminClient()
     return createPersistedStage2RefinementGateway({
       userId,
-      persistence: createSupabaseStage2RefinementPersistence(admin),
+      persistence: createSupabaseStage2RefinementPersistence(admin, { toolsEnabled }),
       admin,
     })
   },

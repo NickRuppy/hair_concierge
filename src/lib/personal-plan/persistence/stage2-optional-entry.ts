@@ -74,12 +74,14 @@ export async function openOptionalRefinement(input: {
   module: Stage2Module
   client?: Stage2OptionalEntryClient
   deps?: Stage2OptionalEntryDeps
+  /** Server-resolved Hair Tools rollout; decides whether a tools path exists for this request. */
+  toolsEnabled: boolean
 }): Promise<Stage2PersistedDraft> {
   if (!STAGE2_MODULES.includes(input.module)) {
     throw new Stage2OptionalEntryError("invalid_module")
   }
   const userId = normalizeRequiredId(input.userId, "userId")
-  const deps = input.deps ?? defaultDeps(input.client)
+  const deps = input.deps ?? defaultDeps(input.client, { toolsEnabled: input.toolsEnabled })
   const context = await deps.loadContext(userId)
 
   // A module without questions on the draft's path (`tools` while its rollout is off) is not
@@ -125,11 +127,14 @@ export async function openOptionalRefinement(input: {
   })
 }
 
-function defaultDeps(client: Stage2OptionalEntryClient | undefined): Stage2OptionalEntryDeps {
+function defaultDeps(
+  client: Stage2OptionalEntryClient | undefined,
+  options: { toolsEnabled: boolean },
+): Stage2OptionalEntryDeps {
   if (!client) throw new Stage2OptionalEntryError("stage2_optional_client_required")
   return {
-    loadContext: (userId) => loadOptionalStage2Context(client, userId),
-    openPreparedDraft: (request) => openPreparedDraftWithRpc(client, request),
+    loadContext: (userId) => loadOptionalStage2Context(client, userId, options),
+    openPreparedDraft: (request) => openPreparedDraftWithRpc(client, request, options),
   }
 }
 
@@ -153,6 +158,7 @@ function skippedSeed(): OptionalStage2Seed {
 async function loadOptionalStage2Context(
   client: Stage2OptionalEntryClient,
   userId: string,
+  options: { toolsEnabled: boolean },
 ): Promise<OptionalStage2Context> {
   const { data: plan, error: planError } = await client
     .from("personal_plans")
@@ -172,7 +178,7 @@ async function loadOptionalStage2Context(
   if (initialError || !initial) {
     throw new Stage2OptionalEntryError("stage2_initial_need_unavailable")
   }
-  const triggerContext = deriveStage2TriggerContext(initial.output_snapshot as never)
+  const triggerContext = deriveStage2TriggerContext(initial.output_snapshot as never, options)
   const columns =
     "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id"
 
@@ -207,6 +213,7 @@ async function loadOptionalStage2Context(
 async function openPreparedDraftWithRpc(
   client: Stage2OptionalEntryClient,
   input: OpenPreparedOptionalDraftInput,
+  options: { toolsEnabled: boolean },
 ): Promise<Stage2PersistedDraft> {
   const { data, error } = await client.rpc(OPEN_OPTIONAL_STAGE2_REFINEMENT_RPC, {
     p_user_id: input.userId,
@@ -243,7 +250,7 @@ async function openPreparedDraftWithRpc(
   }
   return mapDraft(
     result.draft as Record<string, unknown>,
-    deriveStage2TriggerContext(input.context.initial.output_snapshot as never),
+    deriveStage2TriggerContext(input.context.initial.output_snapshot as never, options),
     {
       prepared_artifact_source_id: input.context.initial.prepared_artifact_source_id,
       stage1_source_lead_id: input.context.initial.stage1_source_lead_id,

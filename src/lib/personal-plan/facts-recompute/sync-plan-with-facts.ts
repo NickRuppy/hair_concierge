@@ -159,6 +159,9 @@ async function attemptRebase(
         sourceId,
         hasRefinedHead: plan.currentRefinedNeedVersionId !== null,
         now: deps.now(),
+        // Tools-off by design: the facts lane recomputes a product-only initial snapshot (same
+        // as Stage 1), so the clone it rebases is validated against the product-only path.
+        toolsEnabled: false,
       })
     } catch (error) {
       if (error instanceof RebaseProjectionIncompleteError) {

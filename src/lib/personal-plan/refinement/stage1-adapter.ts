@@ -24,6 +24,7 @@ type CompletedRefinementInput = {
 
 export function deriveStage2TriggerContext(
   snapshot: InitialNeedPlanSnapshot,
+  options: { toolsEnabled: boolean },
 ): Stage2TriggerContext {
   const dryShampoo = snapshot.decisions.find((decision) => decision.category === "dry_shampoo")
 
@@ -35,6 +36,9 @@ export function deriveStage2TriggerContext(
       dryShampoo.deferredFacts.includes("dry_shampoo_bridge_preference")
         ? "eligible"
         : "ineligible",
+    // Absent means off, so tools-off contexts (and the refined input hash derived from them) stay
+    // byte-identical to the pre-rollout shape.
+    ...(options.toolsEnabled ? { toolsEnabled: true } : {}),
   }
 }
 

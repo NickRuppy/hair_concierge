@@ -10,6 +10,7 @@ import { createProductionSyncPlanWithFacts } from "@/lib/personal-plan/facts-rec
 import type { SyncPlanWithFacts } from "@/lib/personal-plan/facts-recompute/types"
 import { createClient } from "@/lib/supabase/server"
 import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import { createSupabaseStage2RefinementPersistence } from "@/lib/personal-plan/persistence/stage2-refinement-supabase"
 import { createPersistedStage2RefinementGateway } from "@/lib/personal-plan/refinement/production-persistence-gateway"
 import {
@@ -29,7 +30,9 @@ import type { Stage3RecomputeResult } from "@/lib/personal-plan/refinement-recom
 
 export type Stage2RouteDeps = {
   getUserId: () => Promise<string | null>
-  gatewayFor: (userId: string) => Stage2RefinementGateway
+  /** Server-resolved Hair Tools rollout for this user; browser input never reaches it. */
+  toolsEnabled: (userId: string) => Promise<boolean>
+  gatewayFor: (userId: string, options: { toolsEnabled: boolean }) => Stage2RefinementGateway
   enabled: () => boolean
   loadStage2Access: (userId: string) => Promise<PersonalPlanStage2Access>
   /**
@@ -226,7 +229,8 @@ export function createStage2RouteHandlers(deps: Stage2RouteDeps) {
     }
     try {
       phaseStarted = Date.now()
-      const result = await operation(deps.gatewayFor(userId), userId)
+      const toolsEnabled = await deps.toolsEnabled(userId).catch(() => false)
+      const result = await operation(deps.gatewayFor(userId, { toolsEnabled }), userId)
       phases.operation = Date.now() - phaseStarted
       console.info("personal_plan_stage2_api", {
         event,
@@ -340,11 +344,12 @@ const handlers = createStage2RouteHandlers({
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   loadStage2Access: loadPersonalPlanStage2AccessForUser,
   syncPlanWithFacts: (input) => createProductionSyncPlanWithFacts(createAdminClient())(input),
-  gatewayFor: (userId) => {
+  toolsEnabled: async (userId) => isPersonalPlanToolsEnabledForUser(userId, createAdminClient()),
+  gatewayFor: (userId, { toolsEnabled }) => {
     const admin = createAdminClient()
     return createPersistedStage2RefinementGateway({
       userId,
-      persistence: createSupabaseStage2RefinementPersistence(admin),
+      persistence: createSupabaseStage2RefinementPersistence(admin, { toolsEnabled }),
       admin,
     })
   },

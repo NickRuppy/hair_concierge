@@ -195,6 +195,7 @@ function asInitialNeedPlanSnapshot(value: unknown): InitialNeedPlanSnapshot | nu
 
 export function adaptInitialNeedSnapshotToPlanStartViewModel(
   value: unknown,
+  options: { toolsEnabled: boolean },
 ): PlanStartReadyViewModel | null {
   const snapshot = asInitialNeedPlanSnapshot(value)
   if (!snapshot) return null
@@ -224,7 +225,9 @@ export function adaptInitialNeedSnapshotToPlanStartViewModel(
     // The Stage-2 defaults a direct acceptance would apply, available without
     // loading Stage 2. This is the very context the persisted Stage-2 draft
     // derives from the same initial snapshot, so both paths describe one truth.
-    stage2TriggerContext: deriveStage2TriggerContext(snapshot),
+    stage2TriggerContext: deriveStage2TriggerContext(snapshot, {
+      toolsEnabled: options.toolsEnabled,
+    }),
     basis: screenFor("basis", visibleBasisCards, hasOptionalPage),
     optional: hasOptionalPage ? screenFor("optional", visibleOptionalCards, hasOptionalPage) : null,
   }

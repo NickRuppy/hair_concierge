@@ -471,7 +471,11 @@ export function interpretPlanStartApiResponse(status: number, body: unknown): Pl
     body.status === "completed" &&
     "outputSnapshot" in body
   ) {
-    const plan = adaptInitialNeedSnapshotToPlanStartViewModel(body.outputSnapshot)
+    // The Stage-1 route resolves the Hair Tools rollout server-side and echoes it; the browser
+    // only relays that echo to the adapter, it never decides it (absent means off).
+    const plan = adaptInitialNeedSnapshotToPlanStartViewModel(body.outputSnapshot, {
+      toolsEnabled: "toolsEnabled" in body && body.toolsEnabled === true,
+    })
     const personalPlanId =
       "personalPlanId" in body && typeof body.personalPlanId === "string"
         ? body.personalPlanId

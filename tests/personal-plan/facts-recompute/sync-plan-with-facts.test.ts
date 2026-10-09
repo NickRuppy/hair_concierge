@@ -271,6 +271,7 @@ test("rebased with an in-progress source draft and a refined head: the RPC gets 
     sourceId: ARTIFACT_ID,
     hasRefinedHead: true,
     now: NOW,
+    toolsEnabled: false,
   })
   assert.deepEqual(params, {
     p_user_id: USER_ID,
@@ -566,4 +567,23 @@ test("an RPC result with an unknown status → unexpected_error", async () => {
     reason: "unexpected_error",
     retryable: true,
   })
+})
+
+test("the facts lane stays product-only: no tool plan in the initial snapshot, no rollout flag in the refined input", async () => {
+  const { deps, calls } = createDeps()
+  await run(deps)
+  const params = calls.rebase[0]!
+  const initial = params.p_initial_output_snapshot as unknown as {
+    toolPlan?: unknown
+    renderedOrder: string[]
+  }
+  assert.equal("toolPlan" in initial, false)
+  assert.equal(
+    initial.renderedOrder.some((category) => category.startsWith("tool")),
+    false,
+  )
+  const refinedInput = params.p_refined_input_snapshot as unknown as {
+    triggerContext: Record<string, unknown>
+  }
+  assert.equal("toolsEnabled" in refinedInput.triggerContext, false)
 })
