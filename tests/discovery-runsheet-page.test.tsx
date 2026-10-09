@@ -717,6 +717,63 @@ test("week placement: a step sits in every column it belongs to (A3)", () => {
   })
 })
 
+test("week placement: an overnight Bondbuilder sits on days without washing — swapped in or proposed (Codex)", () => {
+  const view = buildDiscoveryCockpitView(model())
+  const base = view.steps[0]!
+  const overnight = {
+    productId: "ogx",
+    name: "OGX Sealing Serum",
+    brand: "OGX",
+    label: "OGX Sealing Serum",
+    verdictLabel: "Passt",
+    priceLabel: null,
+    imageUrl: null,
+    origin: "equal_alternative" as const,
+    propertyRows: null,
+    applicationLabel: "Abends, über Nacht im Haar",
+    applicationMode: "bedtime_leave_in",
+  }
+  const bond = {
+    ...base,
+    decisionKey: "decision:bondbuilder:specialized_bond_treatment:gap",
+    category: "bondbuilder" as const,
+    categoryLabel: "Bondbuilder",
+    intakeItemId: null,
+    ownedLabel: null,
+  }
+  const swapped = runsheetWeek([
+    {
+      ...bond,
+      outcome: "swapped" as const,
+      swapProductId: "ogx",
+      swapProductLabel: "OGX Sealing Serum",
+      swapOptions: [overnight],
+    },
+  ])
+  assert.deepEqual([swapped.washDay.length, swapped.offDays.length], [0, 1])
+  const proposed = runsheetWeek([
+    {
+      ...bond,
+      outcome: "ideal" as const,
+      recommendationLabel: "OGX Sealing Serum",
+      swapOptions: [{ ...overnight, origin: "ideal_recommendation" as const }],
+    },
+  ])
+  assert.deepEqual([proposed.washDay.length, proposed.offDays.length], [0, 1])
+  // A pre-shampoo pick stays on the wash day.
+  const preShampoo = runsheetWeek([
+    {
+      ...bond,
+      outcome: "ideal" as const,
+      recommendationLabel: "Elvital",
+      swapOptions: [
+        { ...overnight, origin: "ideal_recommendation" as const, applicationMode: "pre_shampoo" },
+      ],
+    },
+  ])
+  assert.deepEqual([preShampoo.washDay.length, preShampoo.offDays.length], [1, 0])
+})
+
 test("closing: the approved referral text, the copy button, and the unchanged finalize bar", async () => {
   const markup = await renderPage()
   assert.equal(

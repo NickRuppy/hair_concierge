@@ -172,3 +172,45 @@ test("A2: a finalised-in-between refusal names it and keeps the decisions", asyn
   assert.equal(router.refresh.mock.callCount(), 0)
   assert.ok(resetButton())
 })
+
+test("A2 (Codex): while a reset runs, no choice and no Finalisieren can be clicked", async () => {
+  let settle!: (response: Response) => void
+  mock.method(globalThis, "fetch", () => new Promise<Response>((resolve) => (settle = resolve)))
+  mock.method(window, "confirm", () => true)
+  renderCockpit({ decided: true })
+  await act(async () => fireEvent.click(resetButton()!))
+  const radios = [...document.querySelectorAll<HTMLInputElement>('input[type="radio"]')]
+  assert.ok(radios.length > 0)
+  assert.ok(radios.every((radio) => radio.disabled))
+  const finalize = [...document.querySelectorAll<HTMLButtonElement>("button")].find(
+    (button) => button.textContent === "Finalisieren",
+  )
+  assert.ok(finalize?.disabled)
+  await act(async () => settle(new Response(JSON.stringify({ deleted: 1 }), { status: 200 })))
+})
+
+test("A1 (Codex): an empty step without any proposal reads „Offen“ — never „Vorschlag: …“", () => {
+  const router = {
+    refresh: mock.fn(),
+    push() {},
+    replace() {},
+    prefetch() {},
+    back() {},
+    forward() {},
+  }
+  render(
+    <AppRouterContext.Provider value={router as never}>
+      <DiscoveryCallCockpit
+        enrollmentId="enrollment-1"
+        steps={[step({ decisionKey: "decision:oil", category: "oil", categoryLabel: "Öl" })]}
+        submitted
+        initialFinalizedAt={null}
+        complexity={null}
+        complexityLocked={false}
+      />
+    </AppRouterContext.Provider>,
+  )
+  const chips = [...document.querySelectorAll("span")].map((span) => span.textContent ?? "")
+  assert.ok(chips.includes("Offen"), chips.join(" | "))
+  assert.ok(!chips.some((text) => text.startsWith("Vorschlag:")), chips.join(" | "))
+})

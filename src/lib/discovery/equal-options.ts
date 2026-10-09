@@ -36,6 +36,13 @@ export type DiscoveryEqualOption = {
    * the catalog facts carry no application mode.
    */
   applicationLabel: string | null
+  /** The raw catalog application mode (`bedtime_leave_in`, …) — placement reads it (A3). */
+  applicationMode: string | null
+}
+
+/** The raw application mode of a candidate whose facts carry one (Bondbuilder specs). */
+export function discoveryApplicationModeOf(candidate: Stage3CategoryProductFacts): string | null {
+  return (candidate as { spec?: { applicationMode?: string | null } }).spec?.applicationMode ?? null
 }
 
 /** The application label of a candidate whose facts carry one (Bondbuilder specs). */
@@ -118,6 +125,7 @@ export function discoveryEqualOptions(input: {
         }).priceLabel,
         imageUrl: candidate.presentationImageUrl?.trim() || null,
         applicationLabel: discoveryApplicationLabelOf(candidate),
+        applicationMode: discoveryApplicationModeOf(candidate),
       }
     })
     .sort(

@@ -37,6 +37,7 @@ import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 
 import {
   discoveryApplicationLabelOf,
+  discoveryApplicationModeOf,
   discoveryEqualOptions,
   type DiscoveryEqualOption,
 } from "./equal-options"
@@ -107,6 +108,8 @@ export type DiscoveryIdealStep = {
   equalOptions?: DiscoveryEqualOption[]
   /** The pick's own application label when it has equals to be told apart from (E2). */
   idealApplicationLabel?: string | null
+  /** The pick's raw application mode alongside (week placement, A3). */
+  idealApplicationMode?: string | null
 }
 
 /** A malformed decision target must thin the step detail, not fail the whole cockpit. */
@@ -411,6 +414,7 @@ export function withDiscoveryEqualOptions(
       ...step,
       equalOptions,
       idealApplicationLabel: selected ? discoveryApplicationLabelOf(selected) : null,
+      idealApplicationMode: selected ? discoveryApplicationModeOf(selected) : null,
     }
   })
 }

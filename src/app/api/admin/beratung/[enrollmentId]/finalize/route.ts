@@ -32,9 +32,9 @@ import {
  *
  * Batch 5 (P1-5): finalising is refused (409 `category_open`) while any product's usage is
  * unknown („Kategorie offen") — re-checked here from the composition it fingerprints, so
- * every product is understood before she gets a result. Accepted risk (plan Rev. 3): no
- * compare-and-set against a concurrent usage write; the correction itself refuses while
- * finalised.
+ * every product is understood before she gets a result. A write landing between the
+ * composition and the UPDATE (a decision, a usage correction, a reset) is caught by one
+ * re-composition after the freeze (cockpit call-ready) — 409 `routine_changed`, undone.
  *
  * Batch 6 (Nick, 2026-09-24): finalising is also refused while any captured product is not
  * yet resolved to a catalog product (409 `research_open`), and while a printed product has
@@ -111,6 +111,16 @@ export function createDiscoveryFinalizeHandler(overrides: DiscoveryFinalizeRoute
       // The UPDATE carries the `submitted` predicate too, so a state that changed between
       // the read and the write lands here rather than storing an impossible pair.
       if (!finalized) return discoveryCockpitError("not_submitted", 409)
+      // Compare-and-set after the freeze (cockpit call-ready, Codex): the composition above
+      // ran BEFORE the UPDATE took the intake row lock, so a decision write or „Testlauf
+      // zurücksetzen" landing in between would sit under a stale fingerprint. From here on
+      // every decision RPC refuses (same lock, finalised), so ONE re-composition is exact:
+      // anything different undoes the finalisation and asks to try again.
+      const recheck = await resolveDiscoveryCockpitView(admin, intake, guardOverrides)
+      if (!recheck.ok || recheck.view.sourceHash !== composed.view.sourceHash) {
+        await applyUnfinalize(intake.id, admin)
+        return discoveryCockpitError("routine_changed", 409)
+      }
       return discoveryCockpitJson({
         callFinalizedAt: finalized.callFinalizedAt,
         finalizedSourceHash: finalized.finalizedSourceHash,

@@ -238,6 +238,7 @@ test("a tie-default pick brings its equals: the call may choose any, the route a
     priceLabel: "8,95 €",
     imageUrl: `https://catalog.example/${productId}.jpg`,
     applicationLabel: "Vorwäsche, ausspülen",
+    applicationMode: "pre_shampoo",
   })
   const view = buildDiscoveryCockpitView(
     model({
@@ -276,7 +277,7 @@ test("a tie-default pick brings its equals: the call may choose any, the route a
   ])
 })
 
-test("equal options never move the routine fingerprint (nothing prints until chosen)", () => {
+test("equal options and the pick's application never move the routine fingerprint", () => {
   const plain = composeDiscoveryRefinedRoutine({
     steps: [step({ preview: idealPreview(ids.ideal) })],
     items: [],
@@ -287,6 +288,8 @@ test("equal options never move the routine fingerprint (nothing prints until cho
     steps: [
       step({
         preview: idealPreview(ids.ideal),
+        idealApplicationLabel: "Leave-in nach der Wäsche",
+        idealApplicationMode: "post_wash_leave_in",
         equalOptions: [
           {
             productId: ids.alternativeA,
@@ -294,6 +297,7 @@ test("equal options never move the routine fingerprint (nothing prints until cho
             priceLabel: null,
             imageUrl: null,
             applicationLabel: null,
+            applicationMode: null,
           },
         ],
       }),

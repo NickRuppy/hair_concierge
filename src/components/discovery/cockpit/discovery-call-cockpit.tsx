@@ -168,6 +168,8 @@ const DEPTH_FIT = "Warum das passt"
 const DEPTH_RHYTHM = "Wie oft · wann"
 
 const FINALIZE_LABEL = "Finalisieren"
+const ROUTINE_CHANGED_HINT =
+  "Während des Finalisierens hat sich die Routine geändert — bitte prüfen und noch einmal finalisieren."
 const UNFINALIZE_LABEL = "Finalisierung aufheben"
 const FINALIZE_HINT =
   "Entscheidungen bleiben bis dahin änderbar. Das PDF entsteht erst aus dem finalisierten Stand."
@@ -257,8 +259,11 @@ export function discoveryFinalizeWriteOutcome(
             ? `${RESEARCH_OPEN_HINT}.`
             : body?.code === "application_missing"
               ? APPLICATION_MISSING_ERROR
-              : WRITE_ERROR,
-    refresh: false,
+              : body?.code === "routine_changed"
+                ? ROUTINE_CHANGED_HINT
+                : WRITE_ERROR,
+    // A routine that changed while finalising is shown fresh before the next try.
+    refresh: body?.code === "routine_changed",
   }
 }
 
@@ -352,6 +357,8 @@ export function DiscoveryCallCockpit({
     setComplexityValue(complexity)
     complexityWriteTicket.current += 1
   }
+  // Bumped by a reset: a decision answer from before it never rolls an old choice back in.
+  const selectionEpoch = useRef(0)
   const [syncedKey, setSyncedKey] = useState(stateKey)
   if (stateKey !== syncedKey) {
     setSyncedKey(stateKey)
@@ -398,6 +405,7 @@ export function DiscoveryCallCockpit({
     setSelections((current) => ({ ...current, [key]: next }))
     setPending(key)
     setError(null)
+    const epoch = selectionEpoch.current
     const endWrite = beginDiscoveryDecisionWrite()
     try {
       const response = await fetch(`/api/admin/beratung/${enrollmentId}/decisions`, {
@@ -414,13 +422,15 @@ export function DiscoveryCallCockpit({
         ? null
         : ((await response.json().catch(() => null)) as { code?: string } | null)
       const outcome = discoveryDecisionWriteOutcome(response.ok, body)
-      if (outcome.rollback) {
+      if (outcome.rollback && epoch === selectionEpoch.current) {
         setSelections((current) => ({ ...current, [key]: previous }))
       }
       if (outcome.error) setError(outcome.error)
       if (outcome.refresh) router.refresh()
     } catch {
-      setSelections((current) => ({ ...current, [key]: previous }))
+      if (epoch === selectionEpoch.current) {
+        setSelections((current) => ({ ...current, [key]: previous }))
+      }
       setError(WRITE_ERROR)
     } finally {
       endWrite()
@@ -450,6 +460,7 @@ export function DiscoveryCallCockpit({
         setError(body?.code === "finalized" ? RESET_FROZEN : WRITE_ERROR)
         return
       }
+      selectionEpoch.current += 1
       setSelections({})
       router.refresh()
     } catch {
@@ -477,6 +488,7 @@ export function DiscoveryCallCockpit({
       const outcome = discoveryFinalizeWriteOutcome(response.ok, body)
       if (outcome.error) {
         setError(outcome.error)
+        if (outcome.refresh) router.refresh()
         return
       }
       setFinalizedAt(body?.callFinalizedAt ?? null)
@@ -573,7 +585,10 @@ export function DiscoveryCallCockpit({
                 takenSwapIds={siblings.flatMap((other) =>
                   other?.decision === "swap" && other.swapProductId ? [other.swapProductId] : [],
                 )}
-                disabled={frozen || pending === key}
+                // Codex (call-ready): nothing to click while a reset or finalising runs.
+                disabled={
+                  frozen || pending === key || pending === RESET_PENDING_KEY || finalizePending
+                }
                 onChoose={(value) => void choose(step, value)}
               />
             </div>
@@ -674,7 +689,7 @@ export function DiscoveryCallCockpit({
               type="button"
               id="runsheet-reset-decisions"
               onClick={resetDecisions}
-              disabled={pending !== null}
+              disabled={pending !== null || finalizePending}
               className="text-[12px] font-bold text-muted-foreground underline disabled:opacity-50"
             >
               {RESET_LABEL}
@@ -698,7 +713,12 @@ export function DiscoveryCallCockpit({
           <button
             type="button"
             onClick={() => void toggleFinalize()}
-            disabled={finalizePending || (!frozen && !submitted) || finalizeBlocked}
+            disabled={
+              finalizePending ||
+              pending === RESET_PENDING_KEY ||
+              (!frozen && !submitted) ||
+              finalizeBlocked
+            }
             className="rounded-lg bg-[var(--brand-coral)] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50"
           >
             {finalizePending ? FINALIZE_BUSY : frozen ? UNFINALIZE_LABEL : FINALIZE_LABEL}
@@ -1026,6 +1046,10 @@ function DecisionChip({
           : bucket === "weglassen"
             ? DROP_LABEL
             : SWAP_CHIP
+  // Nothing proposed for an empty step: just „Offen" (Codex, call-ready).
+  if (state === "offen" && empty) {
+    return <RunsheetChip tone="pending">{RUNSHEET_DECISION_STATE_LABELS.offen}</RunsheetChip>
+  }
   // Her own undecided product reads „Offen" first; the engine's idea follows as a hint.
   return (
     <RunsheetChip tone={state === "offen" ? "pending" : "neutral"}>
