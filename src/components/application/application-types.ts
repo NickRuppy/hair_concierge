@@ -6,6 +6,13 @@ import type {
 export type ApplicationProductActionView = {
   actionKey: string
   copyDe: string
+  /**
+   * `variant_heading`: „Auf trockenem Haar (empfohlen)" / „Nach leichtem Anfeuchten" — the
+   * compiler merges two method variants of one product under such headings (`method-*`
+   * steps). Not an instruction. (The compiler's `section` action alone does not mean this: it
+   * also marks real preparation steps such as „wet" or „towel-dry".)
+   */
+  kind?: "variant_heading"
 }
 
 export type ApplicationProductStepView = {

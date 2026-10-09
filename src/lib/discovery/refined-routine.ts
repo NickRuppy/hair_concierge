@@ -634,7 +634,35 @@ export function withDiscoveryApplicationHash(
   application: { days: readonly unknown[] } | null,
 ): DiscoveryRefinedRoutine {
   if (!application || application.days.length === 0) return routine
-  return { ...routine, sourceHash: discoveryRoutineSourceHash(routine, application) }
+  return {
+    ...routine,
+    sourceHash: discoveryRoutineSourceHash(routine, withoutVariantHeadings(application)),
+  }
+}
+
+/**
+ * A printed product's `headings` (which of its actions are variant headings) is layout only —
+ * the same words are hashed in `actions` — so it stays out of the fingerprint: a sheet
+ * finalised before headings were marked does not drift (Nomi consult finish T3).
+ */
+function withoutVariantHeadings(application: { days: readonly unknown[] }): unknown {
+  return {
+    ...application,
+    days: application.days.map((day) => {
+      if (!day || typeof day !== "object" || !Array.isArray((day as { steps?: unknown }).steps))
+        return day
+      const { steps } = day as { steps: unknown[] }
+      return {
+        ...day,
+        steps: steps.map((step) => {
+          if (!step || typeof step !== "object" || !("headings" in step)) return step
+          const { headings: _layout, ...hashed } = step as { headings?: unknown }
+          void _layout
+          return hashed
+        }),
+      }
+    }),
+  }
 }
 
 /** Every swap target the decisions reference, for one batched products-by-id select. */
