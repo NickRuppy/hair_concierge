@@ -1099,7 +1099,10 @@ test("score helpers: staircase scales onto the gap, German decimals, strict pars
   assert.equal(parseRunsheetPoints("viel"), null)
   assert.equal(parseRunsheetBaseline("4"), 4)
   assert.equal(parseRunsheetBaseline("11"), null)
-  assert.equal(parseRunsheetBaseline("4,5"), null)
+  assert.equal(parseRunsheetBaseline("4,5"), 4.5)
+  assert.equal(parseRunsheetBaseline("7.5"), 7.5)
+  assert.equal(parseRunsheetBaseline("4,25"), null)
+  assert.equal(parseRunsheetBaseline("0,5"), null)
 })
 
 test("touchpoint dates: +2/+4 weeks as ISO dates, shown as German dates", () => {

@@ -675,12 +675,18 @@ test("V2 compiler selects canonical damp or dry heat copy for each heat event", 
   })
 
   assert.deepEqual(result.pointerIssues, [])
-  const copies = result.days
-    .find(({ key }) => key === "styling_day")
-    ?.productBlocks.filter((block) => block.productId === productId)
-    .flatMap((block) => block.steps.map(({ copyDe }) => copyDe))
-  assert.deepEqual(copies, [
+  const copies = (key: string) =>
+    result.days
+      .find((day) => day.key === key)
+      ?.productBlocks.filter((block) => block.productId === productId)
+      .flatMap((block) => block.steps.map(({ copyDe }) => copyDe))
+  // Each heat event on its own days (Nomi consult finish T6): with required reapplication the
+  // wash day protects before the dryer AND before the iron; the Styling-Tag only has the iron.
+  assert.deepEqual(copies("wash_day"), [
     "Gleichmäßig auf handtuchtrockenem Haar verteilen. Erst danach föhnen oder stylen.",
+    "Gleichmäßig auf vollständig trockenem Haar verteilen. Erst danach das heiße Tool verwenden.",
+  ])
+  assert.deepEqual(copies("styling_day"), [
     "Gleichmäßig auf vollständig trockenem Haar verteilen. Erst danach das heiße Tool verwenden.",
   ])
 })
@@ -1303,4 +1309,54 @@ test("verified overnight Bondbuilder treatment stays a standalone Bond-Repair st
     },
   ])
     assert.equal(productApplicationPointerV2Schema.safeParse(invalid).success, false)
+})
+
+test("a rinse-out mask gets its intensive care day: shampoo, then the timed mask (shared templates)", () => {
+  // Regression (Nomi consult finish T5): the V2 standard cleanse template is wash-day only, so
+  // `intensive_care_day` (requires cleanse + intensive_care) never formed and every rinse-out
+  // mask silently lost its instructions.
+  const result = compileApplicationViewV2({
+    input: input("mask", "intensive_care"),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [
+      supportingShampooPointer(),
+      pointer({
+        scope: { kind: "product", category: "mask", productId },
+        sourceRole: "intensive_conditioning_mask",
+        role: "intensive_care",
+        applicationFamily: "post_shampoo_rinse_out_mask",
+        facts: {
+          ...pointer().facts,
+          applicationArea: "hair_lengths_ends",
+          contactTime: { kind: "seconds", seconds: 300 },
+          conditionerPolicy: "replaces_conditioner",
+        },
+      }),
+    ],
+  })
+  assert.deepEqual(result.pointerIssues, [])
+  const day = result.days.find(({ key }) => key === "intensive_care_day")
+  assert.ok(day, "intensive care day compiles")
+  assert.deepEqual(
+    day.productBlocks.map((block) => block.productId),
+    [shampooProductId, productId],
+  )
+  // The wash day keeps the shampoo, without the mask.
+  const wash = result.days.find(({ key }) => key === "wash_day")
+  assert.deepEqual(
+    wash?.productBlocks.map((block) => block.productId),
+    [shampooProductId],
+  )
+})
+
+test("without a mask in the routine the shampoo stays wash-day only", () => {
+  const result = compileApplicationViewV2({
+    input: input("shampoo", "cleanse"),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [pointer()],
+  })
+  assert.equal(
+    result.days.some(({ key }) => key === "intensive_care_day"),
+    false,
+  )
 })

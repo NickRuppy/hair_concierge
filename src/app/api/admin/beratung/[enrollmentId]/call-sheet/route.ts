@@ -32,7 +32,8 @@ import {
 const TEXT_MAX = 20_000
 const LIST_MAX = 50
 
-const score = z.number().int().min(1).max(10)
+// Half points („7,5"): participants rate like that (Nomi, 2026-10-09).
+const score = z.number().min(1).max(10).multipleOf(0.5)
 const isoTimestamp = z.iso.datetime({ offset: true })
 const isoDate = z.iso.date()
 const text = z.string().max(TEXT_MAX)

@@ -10,15 +10,6 @@ import type {
 
 type ShampooTarget = Extract<PlanCategoryTarget, { category: "shampoo" }>
 
-const SCALP_CADENCE: Record<
-  PlanNeedAssessment["shampooCadence"]["scalpRoute"],
-  { preferred: ProductFrequency; min: ProductFrequency; max: ProductFrequency }
-> = {
-  oily: { preferred: "weekly_3_4x", min: "weekly_2x", max: "weekly_5_6x" },
-  balanced: { preferred: "weekly_2x", min: "weekly_1x", max: "weekly_3_4x" },
-  dry: { preferred: "weekly_1x", min: "biweekly_1x", max: "weekly_1x" },
-}
-
 function reason(
   id: string,
   salience: PlanReasonFact["salience"],
@@ -70,7 +61,13 @@ export function computeShampooDecision(
     ? ["shampoo_everyday", "shampoo_dandruff"]
     : ["shampoo_everyday"]
 
-  const cadence = SCALP_CADENCE[assessments.shampooCadence.scalpRoute]
+  // The band is the need assessment's (scalp route, and hair pattern for a dry scalp) — one
+  // table, `needs.ts`, so the target can never disagree with the assessment.
+  const cadence = {
+    preferred: assessments.shampooCadence.preferred,
+    min: assessments.shampooCadence.minimum,
+    max: assessments.shampooCadence.maximum,
+  }
   const currentFrequency = shampooFrequencyValue(profile)
   const targetFrequency = currentFrequency
     ? nearestBoundary(currentFrequency, cadence.min, cadence.max)

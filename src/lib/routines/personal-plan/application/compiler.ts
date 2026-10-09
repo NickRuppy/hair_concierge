@@ -14,6 +14,8 @@ import {
   isAlwaysRelevantRoleForDay,
   routineItemsForDay,
 } from "./day-type-registry"
+import { heatEventDayContext } from "@/lib/personal-plan/oil-heat-context"
+
 import { heatProtectionNote } from "./german-copy"
 import { requiresExactProductGuidance, resolveApplicationGuidance } from "./guidance-resolver"
 
@@ -884,13 +886,22 @@ function materializeHeatOccurrences(
       return true
     })
     if (compatibleEvents.length === 0) return [item]
+    // Without required reapplication one application covers one heat sequence — but blow-drying
+    // (wash days) and hot tools (Styling-Tag) are different days, so each day context gets its
+    // own occurrence (Nomi consult finish T6). Within a context: the direct event first.
     const selectedEvents =
       reapplication === "required"
         ? compatibleEvents
         : [
-            compatibleEvents.find((event) => event.route === "direct_contact_heat") ??
-              compatibleEvents[0]!,
-          ]
+            ...new Map(
+              compatibleEvents.map((event) => [heatEventDayContext(event), event] as const),
+            ).keys(),
+          ].map((context) => {
+            const inContext = compatibleEvents.filter(
+              (event) => heatEventDayContext(event) === context,
+            )
+            return inContext.find((event) => event.route === "direct_contact_heat") ?? inContext[0]!
+          })
     return selectedEvents.map((event) => {
       const family =
         applicationState === "damp"

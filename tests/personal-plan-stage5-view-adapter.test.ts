@@ -490,3 +490,46 @@ test("counts open placeholders toward the five-slot shelf row cap", () => {
   assert.equal((html.match(/data-application-shelf-row="true"/g) ?? []).length, 2)
   assert.equal((html.match(/data-application-shelf-slot="open"/g) ?? []).length, 6)
 })
+
+test("a variant heading keeps its section kind; instructions carry none", () => {
+  const compiled = compiledView()
+  const block = compiled.days[0]!.productBlocks[0]!
+  const withVariants = {
+    ...block,
+    steps: [
+      {
+        stepKey: "method-dry",
+        action: "section" as const,
+        copyDe: "Auf trockenem Haar (empfohlen)",
+      },
+      // A preparation step the compiler also files as `section` — an instruction, not a heading.
+      { stepKey: "wet", action: "section" as const, copyDe: "Haare anfeuchten." },
+      ...block.steps,
+    ],
+  }
+  const view = toApplicationPageView({
+    compiled: {
+      ...compiled,
+      days: [
+        {
+          ...compiled.days[0]!,
+          productBlocks: [withVariants],
+          outerSequence: [{ kind: "product", block: withVariants }],
+        },
+        compiled.days[1]!,
+      ],
+    } as CompiledApplicationViewV1,
+    dayDefinitions: definitions,
+  })
+  const step = view.state === "ready" ? view.days[0]!.steps[0]! : null
+  assert.equal(step?.kind, "product")
+  if (step?.kind !== "product") return
+  assert.deepEqual(
+    step.actions.map((action) => [action.copyDe, action.kind ?? null]),
+    [
+      ["Auf trockenem Haar (empfohlen)", "variant_heading"],
+      ["Haare anfeuchten.", null],
+      ["Auf die nasse Kopfhaut geben und sanft einmassieren.", null],
+    ],
+  )
+})

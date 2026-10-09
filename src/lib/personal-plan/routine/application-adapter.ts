@@ -71,8 +71,10 @@ type Query = {
 export type ApplicationRoutineReadClient = { from(table: string): Query }
 const PRODUCT_PROTOCOL_SELECT =
   "product_id,category,role,guidance_payload,application_state,reapplication,source_url,source_text,updated_at"
+// `source_text` is required: `adaptReviewedProductApplicationPointersV2` keeps a generic
+// `bondbuilder_verified_product` pointer only with its reviewed source text.
 const PRODUCT_PROTOCOL_V2_SELECT =
-  "product_id,category,role,guidance_payload_v2,application_state,reapplication,source_url,updated_at"
+  "product_id,category,role,guidance_payload_v2,application_state,reapplication,source_url,source_text,updated_at"
 const first = <T>(value: unknown): T | null =>
   Array.isArray(value)
     ? value.length === 1

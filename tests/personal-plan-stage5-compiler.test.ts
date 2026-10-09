@@ -1015,9 +1015,12 @@ test("Heat uses one direct event by default and repeats only when exact guidance
   assert.equal(onceDay.productBlocks.length, 1)
   assert.deepEqual(onceDay.productBlocks[0]!.heatEventIds, ["heat:straightener"])
 
+  // A damp-only protectant serves the hair dryer — which follows a wash (Nomi consult finish
+  // T6): its occurrence sits on the wash day, never on the Styling-Tag.
   const dampOnly = compileApplicationView({
     input: {
       ...input([
+        shampoo,
         {
           ...heatItem,
           catalogFacts: { applicationState: "damp", reapplication: "not_stated" },
@@ -1025,12 +1028,31 @@ test("Heat uses one direct event by default and repeats only when exact guidance
       ] as never),
       profile: heatProfile,
     } as never,
-    protocols: [exactDamp],
+    protocols: [
+      protocol("shampoo", "cleanse", "standard_rinse_out_cleanse", "wash_day", "wet_cleanse"),
+      {
+        ...exactDamp,
+        compatibleDayTypes: [
+          "wash_day",
+          "styling_day",
+        ] as ApplicationGuidanceProtocolV1["compatibleDayTypes"],
+      },
+    ],
   })
-  const dampDay = dampOnly.days.find((day) => day.key === "styling_day")
+  const dampDay = dampOnly.days.find((day) => day.key === "wash_day")
   assert.ok(dampDay)
-  assert.deepEqual(dampDay.productBlocks[0]!.heatEventIds, ["heat:dryer"])
+  assert.deepEqual(
+    dampDay.productBlocks
+      .filter((block) => block.category === "heat_protectant")
+      .map((block) => block.heatEventIds),
+    [["heat:dryer"]],
+  )
+  assert.equal(
+    dampOnly.days.some((day) => day.key === "styling_day"),
+    false,
+  )
 
+  // Repetition is per heat event on the same day: two hot tools on the Styling-Tag.
   const repeated = compileApplicationView({
     input: {
       ...input([
@@ -1039,7 +1061,13 @@ test("Heat uses one direct event by default and repeats only when exact guidance
           catalogFacts: { applicationState: "either", reapplication: "required" },
         },
       ] as never),
-      profile: heatProfile,
+      profile: {
+        thickness: "normal" as const,
+        heatEvents: [
+          { id: "heat:straightener", tool: "straightener", route: "direct_contact_heat" as const },
+          { id: "heat:curler", tool: "curling_iron", route: "direct_contact_heat" as const },
+        ],
+      },
     } as never,
     protocols: [
       {
@@ -1061,6 +1089,89 @@ test("Heat uses one direct event by default and repeats only when exact guidance
   const repeatedDay = repeated.days.find((day) => day.key === "styling_day")
   assert.ok(repeatedDay)
   assert.equal(repeatedDay.productBlocks.length, 2)
+})
+
+test("Heat protection follows its heat event's days: once per day, before blow-drying first; never on the care day", () => {
+  // Nomi consult finish T6: one occurrence per heat context (blow-dryer, hot tools), each only on
+  // days its heat can happen on; one application per day unless reapplication is required.
+  const heatItem = {
+    ...leaveInAndHeat,
+    itemId: "heat",
+    productName: "Hitzeschutz",
+    category: "heat_protectant" as const,
+    role: "heat_protection" as const,
+    sourceRoutineRole: "pre_heat_protection",
+    applicationInstanceKey: undefined,
+    catalogFacts: { applicationState: "either", reapplication: "not_stated" },
+  }
+  const everyHeatDay = [
+    "wash_day",
+    "styling_day",
+    "between_wash_care_day",
+    "refresh_day",
+  ] as ApplicationGuidanceProtocolV1["compatibleDayTypes"]
+  const dryHeat = {
+    ...protocol(
+      "heat_protectant",
+      "heat_protection",
+      "dry_hair_protection",
+      "wash_day",
+      "dry_pre_heat",
+    ),
+    guidanceKey: "heat-dry",
+    compatibleDayTypes: everyHeatDay,
+    scope: { kind: "product" as const, category: "heat_protectant" as const, productId: ids[2] },
+  }
+  const dampHeat = {
+    ...dryHeat,
+    guidanceKey: "heat-damp",
+    applicationFamily: "damp_hair_protection" as const,
+    sequence: { ...dryHeat.sequence, anchor: "damp_leave_on" as const },
+  }
+  const leaveIn = {
+    ...protocol("leave_in", "leave_in", "post_wash_damp_conditioning", "wash_day", "damp_leave_on"),
+    compatibleDayTypes: [
+      "wash_day",
+      "between_wash_care_day",
+      "refresh_day",
+    ] as ApplicationGuidanceProtocolV1["compatibleDayTypes"],
+  }
+  const result = compileApplicationView({
+    input: {
+      ...input([shampoo, leaveInAndHeat, heatItem] as never),
+      profile: {
+        thickness: "normal" as const,
+        heatEvents: [
+          { id: "heat:dryer", tool: "hair_dryer", route: "airflow_shaping" as const },
+          { id: "heat:iron", tool: "curling_iron", route: "direct_contact_heat" as const },
+        ],
+      },
+    } as never,
+    protocols: [
+      protocol("shampoo", "cleanse", "standard_rinse_out_cleanse", "wash_day", "wet_cleanse"),
+      leaveIn,
+      dampHeat,
+      dryHeat,
+    ],
+  })
+  const heatBlocks = (key: string) =>
+    result.days
+      .find((day) => day.key === key)
+      ?.productBlocks.filter((block) => block.category === "heat_protectant") ?? []
+  assert.deepEqual(
+    heatBlocks("wash_day").map((block) => block.heatEventIds),
+    [["heat:dryer"]],
+  )
+  assert.deepEqual(
+    heatBlocks("styling_day").map((block) => block.heatEventIds),
+    [["heat:iron"]],
+  )
+  assert.deepEqual(heatBlocks("between_wash_care_day"), [])
+  // A refresh may re-dampen and blow-dry: one application, before the dryer.
+  assert.deepEqual(
+    heatBlocks("refresh_day").map((block) => block.heatEventIds),
+    [["heat:dryer"]],
+  )
 })
 
 test("no non-rest day ever compiles with an empty outer sequence", () => {
