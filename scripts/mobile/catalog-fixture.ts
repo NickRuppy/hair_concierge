@@ -75,6 +75,7 @@ export function buildMobileCatalogFixture() {
     is_active: true,
     lifecycle_status: "active",
     is_chaarlie_recommended: true,
+    market_segment: "drugstore",
     origin: "curated",
     sort_order: index + 1,
   }))
