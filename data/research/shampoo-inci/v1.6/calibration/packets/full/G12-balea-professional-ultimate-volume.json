@@ -1,0 +1,64 @@
+{
+  "slot": "G12",
+  "productId": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+  "name": "Balea Professional Shampoo Ultimate Volume, 250 ml (DELISTED at dm; replaced in catalog by Balea Professional Hydra Volume)",
+  "brand": "Balea Professional",
+  "packSize": "250 ml",
+  "gtins": [
+    "4067796075021"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/1703262/balea-professional-shampoo-ultimate-volume (via https://products.dm.de/product/products/detail/DE/dan/1703262)",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "retailer_dm_de_own_brand_exact_gtin",
+      "gtinShown": "4067796075021",
+      "inciVerbatim": "AQUA | SODIUM LAURETH SULFATE | COCAMIDOPROPYL HYDROXYSULTAINE | SODIUM CHLORIDE | COCO|GLUCOSIDE | HYDROLYZED WHEAT PROTEIN | BIOTIN | ORYZA SATIVA EXTRACT | GLYCERIN | GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE | CITRIC ACID | LAURETH|2 | PARFUM | TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES | LINALOOL | HEXYL CINNAMAL | LINALYL ACETATE | SODIUM BENZOATE",
+      "claimsVerbatim": "Volumen Shampoo; Für feines, plattes Haar; Mit Anti-Platt-Effekt; Pflege-Formel mit Biotin & Reis-Extrakt; Kräftigt die Haarstruktur & verleiht mehr Griffigkeit. Das Shampoo Ultimate Volume von Balea Professional verwandelt feines, plattes Haar in eine voluminöse Mähne. Mit seiner speziellen Formel, die Biotin und Reis-Extrakt enthält, kräftigt es die feine Haarstruktur und sorgt für einen bemerkenswerten Anti-Platt-Effekt. Diese sanfte Reinigung entfernt nicht nur Verunreinigungen, sondern pflegt das Haar auch gezielt, ohne es zu beschweren. Das Ergebnis ist sichtbar volleres und griffigeres Haar, das gesund glänzt. Rezeptur ohne Mikroplastik und wasserlösliche rein synthetische Polymere. Produktmerkmale: Wirkung Pflege, Glanz, Volumen; vegan, Ohne Alkohol, ohne Silikone; Haartyp feines Haar. Hergestellt in: Schweiz",
+      "directionsVerbatim": "Sanft in die nassen Längen und Spitzen verteilen, kurz einwirken lassen und sorgfältig mit lauwarmem Wasser ausspülen. Versuchs mal mit Reverse Washing. Schritt 1: Conditioner in den feuchten Längen und Spitzen verteilen. Schritt 2: Ansatz mit Shampoo reinigen. Alles sorgfältig ausspülen.",
+      "note": "PDP status line 2026-10-08 (browser): 'Nicht lieferbar' / 'Keine Anzeige für die Verfügbarkeit im dm-Markt möglich' (= delisted per the price-audit trap). Price shown 1,25 EUR, 'nicht erhöht seit 21.08.2023'. The page still shows INCI, claims and directions. dm company address: dm-drogerie markt GmbH + Co. KG, Karlsruhe."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1703262/balea-professional-shampoo-ultimate-volume",
+      "retrievedAt": "2026-08-22 (prior v1.3 capture)",
+      "sourceType": "retailer_dm_de_own_brand_exact_gtin_prior_capture",
+      "gtinShown": "4067796075021",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Hydroxysultaine, Sodium Chloride, Coco-Glucoside, Hydrolyzed Wheat Protein, Biotin, Oryza Sativa Extract, Glycerin, Guar Hydroxypropyltrimonium Chloride, Citric Acid, Laureth-2, Parfum, Tetramethyl Acetyloctahydronaphthalenes, Linalool, Hexyl Cinnamal, Linalyl Acetate, Sodium Benzoate.",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "typographic_only",
+      "description": "dm API renders the list with ' | ' separators and shows 'COCO|GLUCOSIDE' and 'LAURETH|2' (hyphen replaced by a pipe). The 2026-08-22 capture has 'Coco-Glucoside' and 'Laureth-2'. Treated as a rendering artifact; item-for-item identical otherwise (18 items)."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Hydroxysultaine",
+    "Sodium Chloride",
+    "Coco-Glucoside",
+    "Hydrolyzed Wheat Protein",
+    "Biotin",
+    "Oryza Sativa Extract",
+    "Glycerin",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Citric Acid",
+    "Laureth-2",
+    "Parfum",
+    "Tetramethyl Acetyloctahydronaphthalenes",
+    "Linalool",
+    "Hexyl Cinnamal",
+    "Linalyl Acetate",
+    "Sodium Benzoate"
+  ],
+  "canonicalReason": "Single manufacturer-equivalent source (dm is the Balea own-brand owner and the only retailer), exact GTIN, identical in both captures (2026-08-22, 2026-10-08). No second independent source exists because Balea is a dm exclusive brand and the product is now delisted.",
+  "inciFingerprintSha256": "926b4f48400d27a381a3854afd2573d0e1c4e1d435d55a78e60691c1f68f60ba",
+  "identityConfidence": "high",
+  "status": "frozen",
+  "blockReason": null,
+  "notes": "Ultimate Volume is DELISTED at dm.de (PDP 'Nicht lieferbar', no dm-Markt availability display), consistent with the 2026-10-05 price-audit swap to Hydra Volume (1311e51c-7941-4d2c-b9b4-7a450ee37f15, GTIN 4066447990126, listed on dm as 'Shampoo Hydra Volume, 250 ml', Lieferbar, 1,35 EUR). The delisted product's formula page remains live, so the freeze uses the last available source (dm PDP, still serving INCI). Catalog row d01de47e is already not recommended in prod (per price-audit receipt), so G12 as a gold row calibrates a product users no longer receive; consider swapping the gold slot to Hydra Volume (needs its own freeze) if the calibration should mirror what is recommended. Prior v1.3 fingerprint 8c9386d5... was computed with a different method than the brief's.",
+  "normalization": "Split the canonical INCI string on commas (or bullets/pipes where the source uses them), trimmed; lower-case each item, trim, collapse internal whitespace to single spaces, join with '|' (no other change: parentheses, slashes, hyphens, spelling kept), sha256 over the UTF-8 string. Batch/F.I.L. codes, the 'INGREDIENTS:' prefix and the trailing period are removed before splitting."
+}

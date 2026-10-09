@@ -1,0 +1,59 @@
+{
+  "blindId": "L03",
+  "productName": "Lavera Pflegeshampoo basis sensitiv Hydrate & Care",
+  "brand": "Lavera",
+  "packSize": "250 ml",
+  "canonicalInci": [
+    "Water (Aqua)",
+    "Aloe Barbadensis Leaf Juice*",
+    "Sodium Coco-Sulfate",
+    "Glycerin",
+    "Cocamidopropyl Betaine",
+    "Lauryl Glucoside",
+    "Citric Acid",
+    "Cucumis Sativus (Cucumber) Fruit Extract*",
+    "Melissa Officinalis (Lemon Balm) Leaf Extract*",
+    "Sodium Hyaluronate",
+    "Helianthus Annuus (Sunflower) Seed Oil",
+    "Tocopherol",
+    "Sea Salt (Maris Sal)",
+    "Levulinic Acid",
+    "Cetearyl Alcohol",
+    "PCA Glyceryl Oleate",
+    "Betaine",
+    "Sodium Levulinate",
+    "Sodium Cetearyl Sulfate",
+    "Sodium Anisate",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Arginine",
+    "Tridecane",
+    "Coco-Glucoside",
+    "Undecane",
+    "Sodium Sulfate",
+    "Sodium Chloride",
+    "Fragrance (Parfum)**",
+    "Limonene**",
+    "Citrus Aurantium Peel Oil**",
+    "Linalool**",
+    "Citrus Limon (Lemon) Peel Oil**",
+    "Linalyl Acetate**",
+    "Pinene**",
+    "Citronellol**",
+    "Citrus Aurantium Bergamia (Bergamot) Peel Oil**",
+    "Geraniol**",
+    "Citral**",
+    "Lavandula Oil/Extract**"
+  ],
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer",
+      "claimsVerbatim": "Pflegeshampoo basis sensitive Hydrate & Care, 250 ml | 100% bestätigen: Sanft zur Kopfhaut¹ (¹Anwenderstudie: 30 Teilnehmer, 28 Tage) | Für normales und trockenes Haar | Ohne Silikone | Spendet intensive Feuchtigkeit | pH-hautneutrale Formel | Für Veganer:innen geeignet. Nach PETA-Kriterien zertifiziert | Meine sanfte Haarpflege. Natürliche Feuchtigkeitspflege für dein Haar: Bio-Aloe Vera und Hyaluron schenken dem Haar intensive Frische und milde Pflege. Bio-Aloe Vera, bekannt für ihre beruhigende Wirkung, spendet wertvolle Feuchtigkeit – für ein angenehm erfrischtes Haargefühl. Hyaluron pflegt das Haar bis in die Spitzen und hilft, Trockenheit spürbar zu mildern. Für die extra Portion Feuchtigkeit – Tag für Tag. | Natürlich: Bio-Aloe Vera ist bekannt dafür, die Kopfhaut zu beruhigen; Hyaluron spendet intensive Feuchtigkeit | Mild: pH-hautneutrale Formel; Schont empfindliche Kopfhaut; Für normales und trockenes Haar | 99 % natürlicher Ursprung im Gesamtprodukt | 10 % Bio-Anteil am Gesamtprodukt | COSMOS ORGANIC nach dem COSMOS Standard durch Ecocert Greenlife zertifiziert",
+      "directionsVerbatim": "Anwendung tab on the page is rendered as an image; only the closing sentence was captured as text: \"...empfehlen wir den lavera Conditioner basis sensitive Hydrate & Care.\" (full text equals dm directions, below, but not verified as page text)"
+    },
+    {
+      "sourceType": "retailer",
+      "claimsVerbatim": "Haartyp: normales Haar, trockenes Haar (Produktmerkmale); no description text captured",
+      "directionsVerbatim": "Shampoo im nassen Haar aufschäumen und einmassieren. Danach gründlich mit Wasser ausspülen. Für ein noch besseres Ergebnis empfehlen wir den lavera Conditioner basis sensitive Hydrate Care."
+    }
+  ]
+}

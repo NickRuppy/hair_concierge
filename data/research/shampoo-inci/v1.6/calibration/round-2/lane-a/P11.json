@@ -1,0 +1,136 @@
+{
+  "blindId": "P11",
+  "identity": {
+    "productName": "Balea Professional Shampoo Ultimate Volume",
+    "brand": "Balea Professional",
+    "market": "DE",
+    "packSize": "250 ml",
+    "formulaSource": "frozen packet canonicalInci (tier not stated; treated as approved canonical capture, ID-1)",
+    "normalizedInciCount": 18,
+    "formulaFingerprintSha256": "1bade2a784f13fa6d70a2b76d348f4f2757244783bc62eb116405ab6a43b1309",
+    "fingerprintMethod": "lane-computed SHA-256 of ID-2-normalized INCI names joined with ', '",
+    "positioningSourceGrades": "retailer only -> low; product name high ('Ultimate Volume')",
+    "conflicts": "'Reis-Extrakt' maps to Oryza Sativa Extract (8) - no conflict."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate (2) with two prominent buffers Cocamidopropyl Hydroxysultaine (3) and Coco-Glucoside (5), no reinforcing route; Laureth-2 (12) is a thickener (C3); E3 point Parfum (13).",
+      "ruleIds": ["C1", "C3", "C4", "E3"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one prominent cationic guar, Guar Hydroxypropyltrimonium Chloride (10), with Hydrolyzed Wheat Protein (6) and Glycerin (9) as light routes: bounded rinse-off care. No silicone, lipid or pearlizer; C2 not met. Neighbor low (cleansing-led, single light polymer).",
+      "ruleIds": ["§5", "C2", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "formulaIdentifiers": {"fingerprint": "1bade2a784f13fa6d70a2b76d348f4f2757244783bc62eb116405ab6a43b1309", "sourceTier": "frozen packet canonical INCI (tier not stated)", "captureDate": "not stated in packet"},
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride (10)"],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "protein_film": ["Hydrolyzed Wheat Protein (6)"],
+        "film_former": [],
+        "reset": ["anionic: Sodium Laureth Sulfate (2)", "amphoteric: Cocamidopropyl Hydroxysultaine (3)", "nonionic: Coco-Glucoside (5)"],
+        "humectantContext": ["Glycerin (9)", "Biotin (7) - vitamin, no deposition role"],
+        "excluded": ["Laureth-2 (12) - low-ethoxylate thickener", "Oryza Sativa Extract (8) - botanical extract"],
+        "unresolved": []
+      },
+      "depositionLoad": {"value": "light", "rationale": "One guar plus a water-soluble protein hydrolysate; no silicone, lipid or film former."},
+      "persistence": {"value": "low", "rationale": "Protein hydrolysate is weakly retained; single guar without coacervate partner."},
+      "resetCapacity": {"value": "moderate", "rationale": "SLES with two buffers: effective ordinary reset facing only light routes."},
+      "counterEvidence": "Two deposition families (cationic polymer + protein film) are present.",
+      "whyThisBand": "Light, low-persistence deposit facing effective reset; no noticeable loss of lift expected.",
+      "whyNotNeighborBand": "Not moderate (W2): the two families are a single mid-list guar and a water-soluble wheat protein hydrolysate (low persistence); there is no silicone, payload lipid, film former or second polymer to make residue persistent, and a two-buffer SLES reset faces only these light routes.",
+      "limitingFactor": "Two families present with unknown levels; moderate is a realistic neighbor.",
+      "rationale": "Low (depositionLoad light, persistence low, resetCapacity moderate).",
+      "ruleIds": ["§6.3", "§6.6", "W2", "§6.9", "N-ALT"],
+      "selfCheck": "Fingerprint matches; blind judgment ('ohne es zu beschweren' ignored, 6.5 step 5); no count/position assigned band; three subjudgments present; W2 reason specific; no in-lane comparison."
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedConditioningRoutes": [], "limitation": "Volume focus."},
+      "claimRole": "candidate",
+      "counterSignal": "Descriptive copy is retailer-only (low); guar deposits a little.",
+      "rationale": "Volume: 'Ultimate Volume' is in the exact product name (high); retailer copy ('Anti-Platt-Effekt', 'für feines, plattes Haar') corroborates. Formula compatible: weightPotential low, silicone-free, protein body route.",
+      "decisionTrace": {"claimDirection": "volume (name, high)", "formulaCompatible": true, "compatibleRoute": "Hydrolyzed Wheat Protein (6) in a low-weight silicone-free architecture", "decisionReason": "Dominant name claim, compatible formula."},
+      "ruleIds": ["§7.1", "§7.2", "CL-SRC", "E1", "T2", "F-TRACE"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: 'Glanz' and 'kräftigt die Haarstruktur' are retailer-only (low) without independent route.",
+      "decisionTrace": {"emptyDefaultConsidered": true, "selected": [], "matchingClaims": [], "independentRoutes": [], "exceptionCode": null},
+      "ruleIds": ["§8", "CL-SRC", "F-TRACE"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "rationale": "Regular: no trigger wording (reverse-washing tip is not a trigger).",
+      "decisionTrace": "default regular; no trigger fired.",
+      "ruleIds": ["§9", "U1"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No E2 scalp claim.",
+      "ruleIds": ["§10", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "ruleIds": ["§11"]
+    }
+  },
+  "projection": {
+    "thicknessFit": {"fine": "ideal", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitDetail": {
+      "fine": {"confidence": "moderate", "rationale": "T1 W low -> ideal. T4: W neighbor moderate -> acceptable (lower) -> flag fine. 'für feines Haar' claim never changes fit (T2)."},
+      "normal": {"confidence": "moderate", "rationale": "T1 W low -> ideal; neighbor moderate keeps ideal."},
+      "coarse": {"confidence": "moderate", "rationale": "T1 W low, C moderate -> acceptable; neighbors keep acceptable."},
+      "ruleIds": ["T1", "T2", "T4", "13.8"]
+    },
+    "weight": "light",
+    "weightDetail": {"confidence": "moderate", "rationale": "W-LIVE low -> light.", "ruleIds": ["W-LIVE"]},
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetsDetail": {
+      "primary": {"target": "ordinary", "bucket": "normal", "route": "balanced", "confidence": "moderate", "rationale": "S-ORDINARY way 1; retailer copy only -> moderate (13.8)."},
+      "secondary": null,
+      "ruleIds": ["S-ORDINARY", "13.8"]
+    },
+    "cleansingIntensity": "regular",
+    "cleansingIntensityDetail": {"confidence": "high", "rationale": "I1 moderate -> regular; no I3 (high confidence).", "ruleIds": ["I1", "I3"]},
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserDetail": {"confidence": "moderate", "rationale": "D1 false; D2 not met.", "ruleIds": ["D1", "D2"]},
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "light", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [
+      {"code": "review_thickness_boundary", "detail": "fine: weightPotential neighbor moderate would make fine acceptable (T4)."}
+    ],
+    "informationalNotes": []
+  },
+  "uncertainties": []
+}

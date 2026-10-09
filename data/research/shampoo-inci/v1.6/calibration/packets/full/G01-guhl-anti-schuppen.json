@@ -1,0 +1,68 @@
+{
+  "slot": "G01",
+  "productId": "744de604-d266-453b-a56b-eea92c5ca565",
+  "name": "Guhl Anti Schuppen",
+  "brand": "Guhl",
+  "packSize": "250 ml",
+  "gtins": [
+    "4072600282205"
+  ],
+  "sources": [
+    {
+      "url": "https://www.guhl.com/produkt/anti-schuppen-shampoo/",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "manufacturer_de",
+      "gtinShown": "4072600282205 (schema.org gtin13 in page markup)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Piroctone Olamine, Glyceryl Oleate, Sorbitan Caprylate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Chloride, Zinc PCA, Panthenol, Tetrasodium Glutamate Diacetate, Glycerin, Citric Acid, Malva Sylvestris Flower Extract, Sodium Sulfate, Sodium Benzoate, Parfum, CI 15510, CI 42090",
+      "claimsVerbatim": "Mit blauer Malve ohne Silikone | Bei Schuppen und juckender Kopfhaut | Befreie dich mit unserem Anti-Schuppen Shampoo effektiv von Schuppen und einer juckenden, spannenden Kopfhaut*. | Die hochwirksame Formel mit blauer Malve und hochwirksamem Zink PCA bekämpft bei regelmäßiger Anwendung wirksam die Ursache von Schuppen und schützt vor Neubildung. Deine juckende Kopfhaut wird beruhigt und das Spannungsgefühl reduziert. | Der reichhaltige, feine Schaum umhüllt sanft dein Haar mit einem erfrischenden Duft von taufrischen grünen Blättern und einem lebendigen Blumenbouquet – für ein Frischegefühl wie am Frühlingsmorgen. *Bei regelmäßiger Anwendung | Inhaltsstoffe zu 93% natürlichen Ursprungs* und zu 99% biologisch abbaubar** | ohne Silikone | keine Parabene | keine Mikroplastik | *gem. ISO 16128, inkl. 79% Wasser **gem. OECD Richtlinien & inkl. Wasser | Das Shampoo ist dermatologisch bestätigt und sanft zur Kopfhaut sowie ohne Silikone, Parabene und Mikroplastik formuliert. | Die Standardgröße beträgt 250 ml. (FAQ; Geprüft von Guhl, 2026-07-23)",
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.dm.de/p/d/1446893/guhl-shampoo-anti-schuppen",
+      "retrievedAt": "2026-08-10 (prior v1.3 capture; NOT re-verified 2026-10-08 - page is a JS/captcha shell, failed twice)",
+      "sourceType": "retailer_dm_de_prior_evidence",
+      "gtinShown": "4072600282205 (per prior formula-source.json; WebSearch snippet 2026-10-08 also reports dm GTIN 4072600282205, article 1446893)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Piroctone Olamine, Glyceryl Oleate, Sorbitan Caprylate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Chloride, Zinc PCA, Panthenol, Tetrasodium Glutamate Diacetate, Glycerin, Citric Acid, Malva Sylvestris Flower Extract, Sodium Sulfate, Sodium Benzoate, Parfum, CI 15510, CI 42090",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    }
+  ],
+  "conflicts": [],
+  "canonicalReason": "Manufacturer DE page for the exact 250 ml pack (GTIN 4072600282205 in page markup, reviewed by Guhl 2026-07-23) wins; list is identical to the prior dm capture of 2026-08-10, so no change since v1.3.",
+  "identityConfidence": "high",
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Prior v1.3/v1.4 fingerprint (comma-joined) e74bc4e08a06833cdb1c42bbd857db4984aea14de8037c5d69bc9b3415aff054 - list unchanged.",
+    "Live dm.de PDP could not be re-read (JS shell/recaptcha via curl, built-in browser, WebFetch; stopped after 2 attempts). Rossmann returned a 3 KB bot shell; REWE returned HTTP 403.",
+    "Non-INCI claim discrepancy (from a WebSearch summary, unverified): dm/Galaxus reportedly show 91% natural origin / 98% biodegradable vs. Guhl page and Rossmann/REWE 93% / 99%. Does not affect INCI.",
+    "No usage directions are published on the Guhl product page (directionsVerbatim null).",
+    "Page claim wording currently centres on Zink PCA and blue mallow ('hochwirksamem Zink PCA bekämpft ... Ursache von Schuppen'); piroctone olamine is in the INCI but not named in the claims text.",
+    "A WebSearch snippet mentioned an office-partner listing with a different EAN (5439334009) for a women's 'GUHL ANTI-SCHUPPEN' 250 ml - different article, not this GTIN; ignored."
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Coco-Glucoside",
+    "Lactic Acid",
+    "Piroctone Olamine",
+    "Glyceryl Oleate",
+    "Sorbitan Caprylate",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Sodium Chloride",
+    "Zinc PCA",
+    "Panthenol",
+    "Tetrasodium Glutamate Diacetate",
+    "Glycerin",
+    "Citric Acid",
+    "Malva Sylvestris Flower Extract",
+    "Sodium Sulfate",
+    "Sodium Benzoate",
+    "Parfum",
+    "CI 15510",
+    "CI 42090"
+  ],
+  "inciFingerprintSha256": "2c79251eb5b8c7ff1b1f626154c752255ac0d7d43384f1ee90d444652876c9bf",
+  "normalization": "Split the canonical raw INCI on ',' (or '•' where the source uses bullets); per ingredient: lower-case, trim, collapse internal whitespace; drop leading code/prefix text that is not an ingredient (e.g. '1229017 - INGREDIENTS:'); keep asterisks, parentheses and slashes as published; join the normalized ingredients with '|' and sha256 the UTF-8 string. Note: the v1.3/v1.4 fingerprints in earlier files were computed over ', '-joined (comma, no space) lists, so they differ from this '|' fingerprint even for identical lists."
+}

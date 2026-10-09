@@ -1,6 +1,6 @@
 # Shampoo classification v1.6 (candidate)
 
-Status: **revised after round 2 (2026-10-09). Draft candidate, not locked, not production-active.** Earlier revisions: 2026-10-07 implemented Nick's rulings R2–R6; 2026-10-09 prepared round 2. Nothing here changes the catalog, Supabase, Production Light or recommendations.
+Status: **final candidate with the pre-lock rulings R15/R16 applied (2026-10-10); locked as v1.6 (R14).** The locked, normative text is `docs/research/shampoo-inci/v1.6/classification-standard.md`, pinned by `data/research/shampoo-inci/v1.6/v1.6-logic-lock-receipt.json`. This directory is the working record of how the candidate got there. Earlier revisions: 2026-10-07 implemented Nick's rulings R2–R6; 2026-10-09 prepared and closed round 2. Nothing here changes the catalog, Supabase, Production Light or recommendations.
 
 What this is: one self-contained standard. It merges the frozen v1.4 method (`../v1.4/`, unchanged) with the Focus v1.5 overlay Nick approved on 2026-09-03, which adds `moisture`, retires `gentle` as a focus and adds the formula-first care-direction rule. It also adds Section 13, *Production projection assessment*. Section 13 writes down the rules for thickness fit (three tiers: green, amber, not shown), the projected live `weight`, scalp targets, cleansing intensity and deep-cleanser dual listing; these used to be unwritten researcher judgment. It also adds the no-gap apply gate and the exception register. Every uncertain rule fails toward the cautious value or to Nick's review, never toward recommending a product.
 
@@ -17,11 +17,20 @@ Post-round-2 revision (2026-10-09, lock path R13):
 - **R12 applied (option A).** Soothing, itch or tension words next to a dandruff claim never add an irritated- or dry-scalp target; live rows stay dandruff-only. When the formula also passes the sensitive-scalp formula check, the research record carries `researchCombinationTargets: ["sensitive"]` for a later profile feature (rule E2b). A separate sensitive-scalp claim keeps the old behaviour; whether it should is question 6.
 - **Round-2 clarifications closed** with general rules: emulsifier-grade fatty sulfates (C3a), sparing and ingredient-reputation wording (SC1/E2a), "credible supportive architecture" (CSA), "limited reset" for rich formulas (W-RICH), W1 without amodimethicone, acrylate thickeners (6.4), neighbors for `focusSecondary`, split water entries (ID-2), foreign-language maker pages (E1), several S-ORDINARY ways (13.8), non-scalp "Sensitiv" in a name (F7). Changelog rows 87–101.
 
+Pre-lock revision (2026-10-10, rulings R14–R16):
+
+- **R14 (lock).** Lock approved after round 1 (97.4%), round 2 (97.1%) and the unseen check v2 (95.8%); Kokosmilch & Macadamia weight adjudicated `moderate`, Aussie Bouncy Curls stays `needs_research`.
+- **R15 + R16.1 (anti-dandruff is the path).** A dandruff-primary product never projects a secondary sensitive- or dry-scalp target, whether the claim is next to the dandruff claim or separate. A separate sensitive or dry claim whose formula passes the matching check is kept as research-only `researchCombinationTargets` (`"sensitive"`, `"dry"`).
+- **R16.2 (oily scalp green).** Only explicit deep cleansers (D1) with a strong formula record `clarifying`; a strong oily-scalp shampoo records `regular`.
+- **R16.3 (deep-cleanser entry needs a strong formula).** A "Tiefenreinigung" name on an ordinary formula keeps only its regular entry; the review flag becomes a note.
+- **R16.4 (closed lists).** E4, C2 humectant and CSA lists unchanged; additions decided in one batch after the Track A/B research.
+- Changelog rows 102–108. Open questions 3–6 are ruled; 1–2 stay open for the later app PR.
+
 | File | Purpose |
 | --- | --- |
 | `classification-standard.md` | The full normative candidate, with rule IDs that calibration lanes cite. |
 | `changelog-vs-v1.4.md` | Every change from v1.4, with its source (ruling, weight method, or the round-1 ambiguity it closes) and whether it could change a live value. |
-| `open-questions.md` | What R2–R6, R11 and R12 settled, the two remaining live-display questions, three product questions from round 1 and one from round 2, each with an example and a recommendation. |
+| `open-questions.md` | What R2–R6, R11, R12, R15 and R16 settled, and the two live-display questions (1–2) that stay open for the later app PR, each with an example and a recommendation. |
 
 Relationship to earlier versions:
 
@@ -29,4 +38,4 @@ Relationship to earlier versions:
 - **v1.5** was a focus-only overlay. This candidate absorbs it, so a separate v1.5 overlay is not needed for v1.6 work.
 - **v1.3, the v1.4-draft route-count weight calibration (`shampoo-weight-v1`), holdout-v1 and holdout-v2** are provenance only. Holdout-v3 adjudications are used only where they settled a rule question; its operator clarifications stay non-normative explanation (F2 was adopted earlier as a rule).
 
-Next (R13): the unseen check on fresh Track B products under this revision; no third calibration round. If it holds, the standard is locked as `shampoo-classification-v1.6` with a hash-pinned receipt, and the adapter is re-pinned in a separate reviewed change. Questions 1–2 must be settled before the R2 `weight` PR; questions 3–6 before any catalog apply. See `plans/shampoo-v16/plan.md` (decisions D1–D9).
+Next: the unseen check held (95.8%) and the standard is locked as `shampoo-classification-v1.6` (R14). The Production Light adapter is re-pinned in a separate reviewed change. Questions 1–2 must be settled before the R2 `weight` PR. See `plans/shampoo-v16/plan.md` (decisions D1–D9) and `docs/research/shampoo-inci/v1.6/README.md`.

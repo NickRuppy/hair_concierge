@@ -1,0 +1,252 @@
+{
+  "schema_version": "shampoo-research-logic-lock.v1",
+  "locked_standard_version": "1.6",
+  "policy_id": "shampoo-classification-v1.6",
+  "model_version": "shampoo-inci-v1.6",
+  "locked_at": "2026-10-10",
+  "decision": "approved_and_locked_for_reuse",
+  "decision_ruling": "R14",
+  "normative_standard": {
+    "path": "docs/research/shampoo-inci/v1.6/classification-standard.md",
+    "bytes": 125769,
+    "sha256": "eb89b8961322295be957433ee7cc06a5cf34c059b15e50f14d424ee7af8fd7cd"
+  },
+  "base_method": {
+    "policy_id": "shampoo-classification-v1.4",
+    "path": "docs/research/shampoo-inci/v1.4/classification-standard.md",
+    "sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "status": "parked_frozen_predecessor",
+    "integrity_command": "npm run research:shampoo:validate-parked-v14"
+  },
+  "candidate_working_record": {
+    "path": "plans/shampoo-v16/v1.6-candidate/classification-standard.md",
+    "sha256_at_lock": "022ea0dfd12c741095879033d433e2edb6accd978b85e5ce74e978579433f0ac",
+    "note": "Not normative and not pinned. The locked text equals this candidate except for the Version preamble, the 'What locked means' list, file references re-pointed to the locked package (rule-changes.md, the calibration copy, the rulings-ledger snapshot), the T7 open-question reference and the Section 14 lock-gate heading."
+  },
+  "approved_scope": {
+    "category": "shampoo",
+    "category_description": "current German-market regular shampoos for healthy users with cosmetic hair/scalp needs; explicit deep cleansers stay in the regular-shampoo cohort (deep-cleanser entry classified under its own category rules)",
+    "market": "DE",
+    "out_of_scope": [
+      "medical treatment",
+      "diagnosed disease",
+      "hair-loss efficacy"
+    ],
+    "direct_properties": [
+      "cleansingStrength",
+      "conditioningLevel",
+      "weightPotential",
+      "focusPrimary",
+      "focusSecondary",
+      "usageRole",
+      "scalpComfortTarget",
+      "dandruffSupport"
+    ],
+    "focus_values": [
+      "volume",
+      "shine",
+      "repair",
+      "moisture",
+      "clarifying",
+      "scalp_active",
+      "general"
+    ],
+    "projection_fields": [
+      "thicknesses[].fit",
+      "weight",
+      "scalpTargets.primary.target",
+      "scalpTargets.secondary.target",
+      "observedCleansingIntensity",
+      "positioning.explicitResetPositioning",
+      "deepCleanserListing",
+      "reviewFlags",
+      "informationalNotes",
+      "researchCombinationTargets"
+    ],
+    "research_only_fields": [
+      "researchCombinationTargets"
+    ],
+    "live_vocabulary": {
+      "thickness": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "shampoo_bucket": [
+        "normal",
+        "dehydriert-fettig",
+        "trocken",
+        "irritationen",
+        "schuppen"
+      ],
+      "scalp_route": [
+        "balanced",
+        "oily",
+        "dry",
+        "irritated",
+        "dandruff"
+      ],
+      "cleansing_intensity": [
+        "gentle",
+        "regular",
+        "clarifying"
+      ],
+      "weight": [
+        "light",
+        "moderate",
+        "heavy"
+      ]
+    }
+  },
+  "rulings": {
+    "ledger_snapshot": {
+      "path": "data/research/shampoo-inci/v1.6/rulings-ledger.md",
+      "bytes": 11111,
+      "sha256": "3a8126584fa47bc33695b31c767f3510c2381f75f3d85e4470c097e6499a7ad6"
+    },
+    "living_ledger_path": "plans/shampoo-v16/rulings.md",
+    "applied": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "R8",
+      "R9",
+      "R10",
+      "R11",
+      "R12",
+      "R13",
+      "R14",
+      "R15",
+      "R16.1",
+      "R16.2",
+      "R16.3",
+      "R16.4"
+    ],
+    "normative_in_standard": {
+      "R2_R3": "three-tier thickness fit (T1/T5) and projected live weight (W-LIVE, T7)",
+      "R4": "scalp-concern floor (T6); scalp match stays exact",
+      "R5": "no-gap apply gate N1 and exception register entry X1 (Monday Volume, coarse x oily)",
+      "R6": "deep-cleanser dual listing (D2)",
+      "R11": "C2 humectant element (closed list)",
+      "R12": "comfort wording bundled with a dandruff claim never projects a target; research-only researchCombinationTargets",
+      "R15": "a separate sensitive-scalp unit on a dandruff-primary product never projects a secondary sensitive target",
+      "R16.1": "the same for a separate dry-scalp unit; research-only combination value dry",
+      "R16.2": "only D1-true explicit deep cleansers with a strong formula record clarifying; strong oily-scalp shampoos without D1 record regular",
+      "R16.3": "a deep-cleanser entry needs a strong formula; D1 on an ordinary formula gets the informational note deep_cleansing_name_ordinary_formula instead of a review flag",
+      "R16.4": "E4, C2 humectant and CSA lists stay closed; additions deferred to one batch decision after the Track A/B research"
+    },
+    "process_or_catalog_rulings": [
+      "R1 calibration set",
+      "R7 Fructis Coco Water deciding source",
+      "R8 'kurz einwirken lassen' = standard use",
+      "R9 numeric wait times",
+      "R10 earlier holdout products researched fresh",
+      "R13 lock path, no third calibration round",
+      "R14 lock + adjudication"
+    ]
+  },
+  "calibration_evidence": {
+    "corpus_root": "data/research/shampoo-inci/v1.6/calibration/",
+    "copied_from": "plans/shampoo-v16/calibration/",
+    "lanes_per_run": 2,
+    "lane_design": "two independent sealed Opus lanes per run; frozen, blinded lane packets (catalog ids, GTINs, URLs and conflicts removed); scrubbed standard copy without worked examples; no web",
+    "runs": [
+      {
+        "id": "round-1",
+        "products": 19,
+        "composition": "13 gold + 6 unseen (U1-U6)",
+        "agreement": "296/304",
+        "raw_agreement": 0.974,
+        "report": "data/research/shampoo-inci/v1.6/calibration/round-1/round-1-report.md",
+        "standard_revision": {
+          "commit": "6edd1b14",
+          "candidate_sha256": "c99626e13fc3d81dabb4c694e43094662937e6c4af9a97eee5ae04c483afe96b"
+        },
+        "outcome": "about 50 lane-reported ambiguities closed with general rules (rule-changes rows 43-86); U1-U6 retired as unseen products because rule fixes touched them"
+      },
+      {
+        "id": "round-2",
+        "products": 13,
+        "composition": "13 gold, fresh blind ids",
+        "agreement": "202/208",
+        "raw_agreement": 0.971,
+        "report": "data/research/shampoo-inci/v1.6/calibration/round-2/round-2-report.md",
+        "standard_revision": {
+          "commit": "ebe435c9",
+          "candidate_sha256": "9aecd883c1b1042dcff47296cbda404690d6cc02454fb0d2ff4bdd20e2057496"
+        },
+        "outcome": "one toward-recommending disagreement (G02 coarse fit) traced to the undefined C2 humectant element and closed by R11; weight matched all 11 of Nick's 2026-08-26 approvals"
+      },
+      {
+        "id": "unseen-v2",
+        "products": 6,
+        "composition": "6 fresh Track B products never used to tune a rule",
+        "agreement": "92/96",
+        "raw_agreement": 0.958,
+        "report": "data/research/shampoo-inci/v1.6/calibration/unseen-v2/unseen-v2-report.md",
+        "standard_revision": {
+          "commit": "0d3bbe56",
+          "candidate_sha256": "912aa036f80e1f2cd5b1cc0b15d1eb4afea12925df501e8bfc70bb8cbfeb72b2"
+        },
+        "outcome": "one toward-recommending disagreement (Kokosmilch & Macadamia weight) adjudicated as a genuine boundary, resolved conservatively (R14)"
+      }
+    ],
+    "lock_gate": "D2: >= 90% raw lane agreement over judged direct and projection decisions; no unresolved toward-recommending disagreement caused by an ambiguity in the standard; Nick adjudicates; unseen re-run",
+    "adjudications": [
+      {
+        "product": "Garnier Wahre Schätze Kokosmilch & Macadamia",
+        "field": "weightPotential",
+        "value": "moderate",
+        "projection_effect": "fine acceptable (amber)",
+        "basis": "genuine low/moderate boundary resolved conservatively per P0/W3",
+        "ruling": "R14"
+      },
+      {
+        "product": "AUSSIE Shampoo Bouncy Curls",
+        "field": "status",
+        "value": "needs_research",
+        "basis": "retailer claims name oils absent from the frozen INCI (ID-3 material conflict); re-verify the formula source",
+        "ruling": "R14"
+      }
+    ]
+  },
+  "post_calibration_rulings": {
+    "applied": [
+      "R15",
+      "R16.1",
+      "R16.2",
+      "R16.3",
+      "R16.4"
+    ],
+    "recalibrated": false,
+    "basis": "R13: lock path without a third calibration round; R14 approved the lock. Rule-changes rows 102-108.",
+    "expected_effect": "R15/R16.1 remove sensitive/dry secondary rows from dandruff-primary products (conservative; N1 must confirm the irritated and dry cells before any apply); R16.2 turns strong oily-scalp shampoos without D1 from amber to green for oily scalp (by ruling); R16.3 turns the ordinary-formula D1 review flag into a note; R16.4 changes nothing"
+  },
+  "known_limits_retained": [
+    "R15 and R16.1-R16.4 were applied after the unseen check v2 and were not exercised by two sealed lanes.",
+    "The unseen check covered six products; the dandruff + dry combination value (R16.1) and the ordinary-formula D1 note (R16.3) have no calibrated record.",
+    "Lane agreement measures repeatability, not finished-product or consumer accuracy; INCI order is a prominence proxy, never a concentration.",
+    "Exception register entry X1 (Monday Volume, coarse x oily) stays a temporary bridge until a lighter oily-scalp shampoo passes review (R5).",
+    "Closed ingredient lists may be too narrow; additions wait for the batch decision after the Track A/B research (R16.4).",
+    "AUSSIE Bouncy Curls stays needs_research until its formula source is re-verified."
+  ],
+  "separate_gates": {
+    "production_light_adapter": "pinned_to_v1.4; re-pin to v1.6 is a separate reviewed PR",
+    "live_weight_column_and_authority_rule": "not_built (R2 PR)",
+    "open_live_display_questions": [
+      "Q1: how the live rule turns weight into green or amber (T7 recommendation)",
+      "Q2: Monday Volume green or amber for coarse x oily under X1"
+    ],
+    "n1_no_gap_preflight": "required before any catalog apply",
+    "individual_product_review": "required (every review flag blocks until Nick rules)",
+    "catalog_activation": false,
+    "production_database_write": false,
+    "user_facing_copy_change": false,
+    "commit_push_or_pr": false
+  },
+  "production_writes": false
+}

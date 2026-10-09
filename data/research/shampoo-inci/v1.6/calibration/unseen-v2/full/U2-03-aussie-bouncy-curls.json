@@ -1,0 +1,66 @@
+{
+  "slot": "U2-03",
+  "productId": null,
+  "name": "Shampoo Bouncy Curls",
+  "brand": "AUSSIE",
+  "packSize": "300 ml",
+  "gtins": [
+    "8006530325530"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/3135993/aussie-shampoo-bouncy-curls",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "german_retailer_gtin_on_page",
+      "gtinShown": "GTIN: 8006530325530 (page text and JSON-LD); dm-Artikelnummer 3135993",
+      "inciVerbatim": "Aqua, Sodium Cocoyl Isethionate, Lauramidopropyl Betaine, Cocamidopropyl Betaine, Sodium Lauroyl Sarcosinate, Sodium Chloride, Sodium Benzoate, Parfum, Sodium Salicylate, Polyquaternium-10, Sodium Citrate, Citric Acid, Tetrasodium EDTA, Citrus Aurantium Peel Oil, Dimethyl Phenethyl Acetate, Limonene, Benzyl Salicylate, Hexyl Cinnamal, Benzyl Alcohol, Sodium Hydroxide, Linalool, Coumarin, Butylene Glycol, Fragaria Chiloensis Fruit Extract",
+      "claimsVerbatim": "Shampoo für welliges und lockiges Haar | Mit Jojoba-, Kokosnuss- und Macadamianussöl | Feuchtigkeitsspendend | Vegan | Ohne Silikone | Das Shampoo Bouncy Curls von AUSSIE reinigt sanft und spendet eine Extraportion Feuchtigkeit für trockenes, welliges und lockiges Haar. Angereichert mit einer Mischung aus Jojobaöl, Kokosnussöl und australischem Macadamianussöl, kann die Formulierung die natürliche Sprungkraft der Haare unterstützen. Zudem verwöhnt das Locken-Shampoo die Sinne mit einem fruchtigen Duft nach Passionsfrucht, Orange und Kokosmilch. Die vegane Formel erfrischt das Haar und verleiht ihm ein gepflegtes Aussehen. | Wirkung: Pflege, für Locken, Feuchtigkeit | Produkteigenschaften: ohne Silikone",
+      "directionsVerbatim": "Schritt 1: Haare anfeuchten, einmassieren und ausspülen Schritt 2: Verwende den Conditioner oder die Maske Schritt 3: Bei feinem Haar mit der Detangling Lotion und dem Mousse nachbehandeln. Bei mittlerem/dickem Haar mit der Leave-In-Creme und dem Gel nachbehandeln – egal wie, wir haben alles für dich! Schritt 4: Beende mit dem Öl, um die Festigkeit zu lösen und Glanz hinzuzufügen.",
+      "note": "Procter & Gamble, Schwalbach."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-aussie-shampoo-curls/p/8006530325530",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "german_retailer_exact_gtin_url",
+      "gtinShown": "8006530325530 (URL ends /p/8006530325530)",
+      "inciVerbatim": "Aqua, Sodium Cocoyl Isethionate, Lauramidopropyl Betaine, Cocamidopropyl Betaine, Sodium Lauroyl Sarcosinate, Sodium Chloride, Sodium Benzoate, Parfum, Sodium Salicylate, Polyquaternium-10, Sodium Citrate, Citric Acid, Tetrasodium EDTA, Citrus Aurantium Peel Oil, Dimethyl Phenethyl Acetate, Limonene, Benzyl Salicylate, Hexyl Cinnamal, Benzyl Alcohol, Sodium Hydroxide, Linalool, Coumarin, Butylene Glycol, Fragaria Chiloensis Fruit Extract",
+      "claimsVerbatim": "Sag G'day zu Wellen und Locken, die so Bouncy sind wie ein Känguru! Das Aussie Bouncy Curls Shampoo mit einer Mischung aus Jojobaöl, Kokosnussöl und australischem Macadamianussöl bietet eine sanfte Reinigung und jede Menge Feuchtigkeit. Dein welliges und lockiges Haar wird extra hydratisiert, erfrischt und hüpfender als ein Känguru! Dieses Locken-Shampoo ist silikonfrei, vegan* und PETA-zertifiziert tierversuchsfrei. Für zusätzliche Pflege verwende es mit der Aussie Bouncy Curls Haarpflegereihe. *Vegane Formel: keine tierischen Inhaltsstoffe oder Nebenprodukte. | Stille den Durst deiner lockigen Haare: Sanftes und extra feuchtigkeitsspendendes Shampoo für trockenes welliges und lockiges Haar | TIERVERSUCHSFREI & VEGAN: Aussie wird von PETA als eine tierversuchsfreie Marke anerkannt—und weißt du was? Dieses Shampoo ist auch vegan! | BONZA MISCHUNGEN AUS ÖLEN: Angereichert mit einer Mischung aus Jojoba-, Kokosnuss- und australischen Macadamianussölen, spendet dieses Shampoo Feuchtigkeit, erfrischt und verleiht deinem Haar eine natürliche Sprungkraft | Ikonische australische Düfte: Köstlich frische, fruchtige Düfte mit Noten von Passionsfrucht, Orange und Kokosmilch für Haare, die himmlisch riechen | Für beste Resultate: Verwende es mit dem Aussie Bouncy Curls Conditioner und füge eine Prise unserer Leave-in-Curl-Creme hinzu, um zusätzliche Feuchtigkeit zu erhalten | Die australische Philosophie: \"Es gibt mehr im Leben als Haare, aber es ist ein guter Anfang.\"",
+      "directionsVerbatim": "Schritt 1: Haare anfeuchten, einmassieren und ausspülen Schritt 2: Verwende den Conditioner oder die Maske Schritt 3: Bei feinem Haar mit der Detangling Lotion und dem Mousse nachbehandeln. Bei mittlerem/dickem Haar mit der Leave-In-Creme und dem Gel nachbehandeln – egal wie, wir haben alles für dich! Schritt 4: Beende mit dem Öl, um die Festigkeit zu lösen und Glanz hinzuzufügen!",
+      "note": "Price 4,99 EUR, 300 ml."
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Cocoyl Isethionate",
+    "Lauramidopropyl Betaine",
+    "Cocamidopropyl Betaine",
+    "Sodium Lauroyl Sarcosinate",
+    "Sodium Chloride",
+    "Sodium Benzoate",
+    "Parfum",
+    "Sodium Salicylate",
+    "Polyquaternium-10",
+    "Sodium Citrate",
+    "Citric Acid",
+    "Tetrasodium EDTA",
+    "Citrus Aurantium Peel Oil",
+    "Dimethyl Phenethyl Acetate",
+    "Limonene",
+    "Benzyl Salicylate",
+    "Hexyl Cinnamal",
+    "Benzyl Alcohol",
+    "Sodium Hydroxide",
+    "Linalool",
+    "Coumarin",
+    "Butylene Glycol",
+    "Fragaria Chiloensis Fruit Extract"
+  ],
+  "canonicalReason": "Two independent German retailers with GTIN anchoring (dm GTIN on page, Rossmann exact-GTIN URL) show identical lists. Manufacturer aussiehair.de not opened; the two retailer lists agree character for character.",
+  "inciFingerprintSha256": "73bdd2c65b1b2628b0487200aeab7a3c7616ba194060b38a9780b72f8d9287a8",
+  "normalization": "Split verbatim INCI on commas outside parentheses; per item trim, lower-case, collapse internal whitespace; join items with '|'; sha256 (utf-8) hex. Original-case ingredient list is kept in canonicalInci[].",
+  "identityConfidence": "high",
+  "status": "frozen",
+  "blockReason": null,
+  "notes": "Catalog productId: none (not yet in catalog); Track B row b04-i07. Fresh capture (no INCI on file). Directions are a four-step routine (conditioner/mask, styling follow-ups) with the shampoo step being step 1; dm text ends step 4 without final punctuation, Rossmann with '!'. Marketing names jojoba/coconut/macadamia oils that do not appear in the INCI list."
+}
